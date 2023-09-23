@@ -1,8 +1,13 @@
 package elide.runtime.core.internals.graalvm
 
+import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
+import org.graalvm.polyglot.PolyglotAccess
+import org.graalvm.polyglot.proxy.Proxy
+import kotlin.io.path.Path
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
@@ -11,8 +16,12 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
+import elide.runtime.core.extensions.disableOption
+import elide.runtime.core.extensions.enableOption
+import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
+import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
 /**
  * A [PolyglotEngine] implementation built around a GraalVM [engine]. This class allows plugins to configure the
@@ -45,10 +54,29 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
 
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
   private fun createContext(): GraalVMContext {
+    val contextHostAccess = PolyglotHostAccess.newBuilder(PolyglotHostAccess.ALL)
+      .allowImplementations(Proxy::class.java)
+      .allowAccessAnnotatedBy(PolyglotHostAccess.Export::class.java)
+      .allowArrayAccess(true)
+      .allowBufferAccess(true)
+      .allowAccessInheritance(true)
+      .allowIterableAccess(true)
+      .allowIteratorAccess(true)
+      .allowListAccess(true)
+      .allowMapAccess(true)
+      .build()
+
     // build a new context using the shared engine
     val builder = Context.newBuilder()
       .allowExperimentalOptions(true)
       .allowEnvironmentAccess(config.hostAccess.toEnvAccess())
+      .allowPolyglotAccess(PolyglotAccess.ALL)
+      .allowHostAccess(contextHostAccess)
+      .allowInnerContextOptions(false)
+      .allowCreateThread(true)
+      .allowCreateProcess(false)
+      .allowHostClassLoading(false)
+      .allowNativeAccess(true)
       .engine(engine)
 
     // allow plugins to customize the context on creation
@@ -66,6 +94,27 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
   }
 
   internal companion object {
+    /** Whether to enable VM isolates. */
+    private const val ENABLE_ISOLATES = false
+
+    /** Whether to enable the auxiliary cache. */
+    private const val ENABLE_AUX_CACHE = false
+
+    /** Whether the runtime is built as a native image. */
+    private val isNativeImage = ImageInfo.inImageCode()
+
+    /** Whether the auxiliary cache is actually enabled. */
+    private val useAuxCache = (
+      ENABLE_AUX_CACHE &&
+      isNativeImage &&
+      System.getProperty("elide.test") != "true" &&
+      System.getProperty("ELIDE_TEST") != "true" &&
+      System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
+      !ImageInfo.isSharedLibrary() &&
+      !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
+      !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
+    )
+
     /**
      * Creates a new [GraalVMEngine] using the provided [configuration]. This method triggers the [EngineCreated] event
      * for registered plugins.
@@ -75,7 +124,38 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
       lifecycle: MutableEngineLifecycle,
     ): GraalVMEngine {
       val languages = configuration.languages.map { it.languageId }.toTypedArray()
-      val builder = Engine.newBuilder(*languages).allowExperimentalOptions(true)
+      val builder = Engine.newBuilder(*languages).apply {
+        allowExperimentalOptions(true)
+
+        // base options enabled for every engine
+        enableOptions(
+          "engine.BackgroundCompilation",
+          "engine.UsePreInitializedContext",
+          "engine.Compilation",
+          "engine.MultiTier",
+          "engine.Splitting",
+          "engine.Inlining",
+          "engine.InlineAcrossTruffleBoundary",
+        )
+
+        // isolate options
+        if (ENABLE_ISOLATES) {
+          disableOption("engine.SpawnIsolate")
+          option("engine.UntrustedCodeMitigation", "none")
+          option("engine.MaxIsolateMemory", "2GB")
+        }
+
+        // if we're running in a native image, enabled the code compile cache
+        if (useAuxCache) {
+          enableOption("engine.CachePreinitializeContext")
+          option("engine.PreinitializeContexts", "js")
+          option("engine.CacheCompile", "hot")
+          option(
+            "engine.Cache",
+            Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString(),
+          )
+        }
+      }
 
       // allow plugins to customize the engine builder
       lifecycle.emit(EngineCreated, builder)

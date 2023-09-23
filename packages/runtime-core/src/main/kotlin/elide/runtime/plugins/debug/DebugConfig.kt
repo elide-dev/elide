@@ -17,8 +17,8 @@ import elide.runtime.core.DelicateElideApi
      */
     public var enabled: Boolean = false
 
-    /** Whether to suspend execution at the first source line. Defaults to `true` */
-    public var suspend: Boolean = true
+    /** Whether to suspend execution at the first source line. Defaults to `false` */
+    public var suspend: Boolean = false
 
     /** Whether to wait until the inspector is attached before executing any code. Defaults to `false`. */
     public var waitAttached: Boolean = false
@@ -47,8 +47,8 @@ import elide.runtime.core.DelicateElideApi
      */
     public var sourcePaths: List<String>? = null
 
-    /** Whether to suspend execution at the first source line. Defaults to `true` */
-    public var suspend: Boolean = true
+    /** Whether to suspend execution at the first source line. Defaults to `false` */
+    public var suspend: Boolean = false
 
     /** Whether to wait until the inspector is attached before executing any code. Defaults to `false`. */
     public var waitAttached: Boolean = false

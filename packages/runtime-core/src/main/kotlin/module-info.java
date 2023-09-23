@@ -1,4 +1,5 @@
 module elide.runtime.core {
+  requires elide.base;
   requires elide.graalvm;
   requires org.graalvm.polyglot;
 

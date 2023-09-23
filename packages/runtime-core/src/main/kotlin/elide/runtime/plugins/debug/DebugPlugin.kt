@@ -2,6 +2,7 @@ package elide.runtime.plugins.debug
 
 import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
+import elide.runtime.core.EngineLifecycleEvent.EngineCreated
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.extensions.enableOption
@@ -16,20 +17,34 @@ import elide.runtime.core.extensions.enableOption
   public val config: DebugConfig,
   private val platform: HostPlatform,
 ) {
-  /** Apply debug [config] to a context [builder] during the [ContextCreated] event. */
-  internal fun onContextCreated(builder: PolyglotContextBuilder): Unit = with(builder) {
-    config.path?.let { path -> option("inspect.Path", path) }
+  private fun configureDap(builder: PolyglotEngineBuilder): Unit = with(builder) {
+    option("dap", "${config.debugger.host}:${config.debugger.port}")
+    if (config.debugger.waitAttached) enableOption("dap.WaitAttached")
+    if (config.debugger.suspend) enableOption("dap.Suspend")
+  }
+
+  private fun configureChromeInspector(builder: PolyglotEngineBuilder): Unit = with(builder) {
+    option("inspect", "${config.inspector.host}:${config.inspector.port}")
+
+    config.inspector.path?.let { path -> option("inspect.Path", path) }
 
     // source path delimiters are platform-specific
-    config.sourcePaths?.let { paths ->
+    config.inspector.sourcePaths?.let { paths ->
       option(
         /* key = */ "inspect.SourcePath",
         /* value = */ paths.joinToString(if (platform.os.isUnix) UNIX_SOURCE_DELIMITER else WINDOWS_SOURCE_DELIMITER),
       )
     }
 
-    if (config.waitAttached) enableOption("inspect.WaitAttached")
-    if (config.suspend) enableOption("inspect.Suspend")
+    if (config.inspector.waitAttached) enableOption("inspect.WaitAttached")
+    if (config.inspector.suspend) enableOption("inspect.Suspend")
+    if (config.inspector.internal) enableOption("inspect.Internal")
+  }
+
+  /** Apply debug [config] to a context [builder] during the [EngineCreated] event. */
+  internal fun onEngineCreated(builder: PolyglotEngineBuilder) {
+    if (config.inspector.enabled) configureChromeInspector(builder)
+    if (config.debugger.enabled) configureDap(builder)
   }
 
   /** Identifier for the [Debug] plugin, which provides debugging options for embedded languages. */
@@ -48,7 +63,7 @@ import elide.runtime.core.extensions.enableOption
       val instance = Debug(config, scope.configuration.hostPlatform)
 
       // subscribe to lifecycle events
-      scope.lifecycle.on(ContextCreated, instance::onContextCreated)
+      scope.lifecycle.on(EngineCreated, instance::onEngineCreated)
 
       return instance
     }

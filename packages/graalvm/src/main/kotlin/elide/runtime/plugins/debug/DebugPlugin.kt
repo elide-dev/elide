@@ -6,6 +6,7 @@ import elide.runtime.core.EngineLifecycleEvent.EngineCreated
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.extensions.enableOption
+import elide.runtime.core.extensions.setOption
 
 /**
  * Engine plugin providing debug and inspection features for guest code.
@@ -19,8 +20,8 @@ import elide.runtime.core.extensions.enableOption
 ) {
   private fun configureDap(builder: PolyglotEngineBuilder): Unit = with(builder) {
     option("dap", "${config.debugger.host}:${config.debugger.port}")
-    if (config.debugger.waitAttached) enableOption("dap.WaitAttached")
-    if (config.debugger.suspend) enableOption("dap.Suspend")
+    setOption("dap.WaitAttached", config.debugger.waitAttached)
+    setOption("dap.Suspend", config.debugger.suspend)
   }
 
   private fun configureChromeInspector(builder: PolyglotEngineBuilder): Unit = with(builder) {
@@ -36,9 +37,9 @@ import elide.runtime.core.extensions.enableOption
       )
     }
 
-    if (config.inspector.waitAttached) enableOption("inspect.WaitAttached")
-    if (config.inspector.suspend) enableOption("inspect.Suspend")
-    if (config.inspector.internal) enableOption("inspect.Internal")
+    setOption("inspect.WaitAttached", config.inspector.waitAttached)
+    setOption("inspect.Suspend", config.inspector.suspend)
+    setOption("inspect.Internal", config.inspector.internal)
   }
 
   /** Apply debug [config] to a context [builder] during the [EngineCreated] event. */

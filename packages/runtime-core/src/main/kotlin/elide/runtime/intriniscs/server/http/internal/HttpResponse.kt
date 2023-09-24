@@ -31,7 +31,7 @@ import elide.runtime.core.PolyglotValue
    * @param status The HTTP status code for the response.
    * @param content The raw content buffer for this response.
    */
-  private fun sendBody(status: HttpResponseStatus, content: ByteBuf?) {
+  internal fun sendBody(status: HttpResponseStatus, content: ByteBuf?) {
     headers
       .set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.TEXT_PLAIN)
       .set(HttpHeaderNames.SERVER, "Elide")
@@ -58,7 +58,7 @@ import elide.runtime.core.PolyglotValue
   }
 
   /** Send an empty response, setting only the status code. */
-  fun send(status: HttpResponseStatus) {
+  internal fun send(status: HttpResponseStatus) {
     sendBody(status, null)
   }
 

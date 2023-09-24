@@ -1,5 +1,6 @@
 package elide.runtime.intriniscs.server.http.netty
 
+import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
@@ -25,7 +26,7 @@ import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
   @Suppress("unused_parameter")
   /** Provide a default handler function for cases where no handler can be resolved by the [router]. */
   private fun handleNotFound(request: HttpRequest, response: HttpResponse, context: HttpRequestContext) {
-    response.send(HttpResponseStatus.NOT_FOUND)
+    response.sendBody(HttpResponseStatus.NOT_FOUND, Unpooled.EMPTY_BUFFER)
   }
 
   override fun channelRead(channelContext: ChannelHandlerContext, message: Any) {

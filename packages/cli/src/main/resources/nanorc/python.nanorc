@@ -1,6 +1,6 @@
 ## Python syntax highlighting rules for Nano
 
-syntax "python" "\.py$"
+syntax "Python" "\.py$"
 header "^#!.*/(env +)?python[-0-9._]*( |$)"
 magic "Python script"
 comment "#"

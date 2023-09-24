@@ -4,6 +4,48 @@
       "name":"byte[]"
     },
     {
+      "name":"ch.qos.logback.classic.model.ConfigurationModel"
+    },
+    {
+      "name":"ch.qos.logback.classic.model.LoggerContextListenerModel"
+    },
+    {
+      "name":"ch.qos.logback.classic.model.LoggerModel"
+    },
+    {
+      "name":"ch.qos.logback.classic.model.RootLoggerModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.AppenderModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.AppenderRefModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.ComponentModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.ImplicitModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.Model"
+    },
+    {
+      "name":"ch.qos.logback.core.model.NamedComponentModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.NamedModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.PropertyModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.SerializeModelModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.SiftModel"
+    },
+    {
       "name":"io.micronaut.context.exceptions.BeanContextException"
     },
     {

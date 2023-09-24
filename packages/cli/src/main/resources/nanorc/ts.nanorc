@@ -1,4 +1,4 @@
-syntax "typescript" "\.(ts)$"
+syntax "TypeScript" "\.(ts)$"
 header "^#!.*\/(env +)ts-node"
 
 ## Default

@@ -12,6 +12,14 @@
   "name":"[Ljava.lang.String;"
 },
 {
+  "name":"com.apple.eawt._AppEventHandler",
+  "methods":[{"name":"handleNativeNotification","parameterTypes":["int"] }]
+},
+{
+  "name":"com.apple.eawt._AppMenuBarHandler",
+  "methods":[{"name":"initMenuStates","parameterTypes":["boolean","boolean","boolean","boolean"] }]
+},
+{
   "name":"com.sun.management.internal.DiagnosticCommandArgumentInfo",
   "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean","boolean","int"] }]
 },
@@ -41,7 +49,11 @@
   "fields":[{"name":"count"}, {"name":"memoryAddress"}, {"name":"recipientAddr"}, {"name":"recipientAddrLen"}, {"name":"recipientPort"}, {"name":"recipientScopeId"}, {"name":"segmentSize"}, {"name":"senderAddr"}, {"name":"senderAddrLen"}, {"name":"senderPort"}, {"name":"senderScopeId"}]
 },
 {
-  "name":"io.netty.channel.epoll.NativeStaticallyReferencedJniMethods"
+  "name":"io.netty.channel.epoll.NativeStaticallyReferencedJniMethods",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
 },
 {
   "name":"io.netty.channel.kqueue.BsdSocket"
@@ -54,6 +66,13 @@
 },
 {
   "name":"io.netty.channel.kqueue.Native"
+},
+{
+  "name":"io.netty.channel.kqueue.NativeStaticallyReferencedJniMethods",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
 },
 {
   "name":"io.netty.channel.unix.Buffer"
@@ -94,7 +113,12 @@
   "methods":[{"name":"<init>","parameterTypes":["long","byte[][]","java.lang.String","io.netty.internal.tcnative.CertificateVerifier"] }]
 },
 {
-  "name":"io.netty.internal.tcnative.NativeStaticallyReferencedJniMethods"
+  "name":"io.netty.internal.tcnative.NativeStaticallyReferencedJniMethods",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"sslOpCipherServerPreference","parameterTypes":[] }]
 },
 {
   "name":"io.netty.internal.tcnative.SSL"
@@ -120,6 +144,10 @@
 {
   "name":"io.netty.internal.tcnative.SSLTask",
   "fields":[{"name":"complete"}, {"name":"returnValue"}]
+},
+{
+  "name":"java.awt.event.InputEvent",
+  "methods":[{"name":"getButtonDownMasks","parameterTypes":[] }]
 },
 {
   "name":"java.io.FileDescriptor",
@@ -161,7 +189,7 @@
 },
 {
   "name":"java.lang.System",
-  "methods":[{"name":"getProperty","parameterTypes":["java.lang.String"] }, {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }]
+  "methods":[{"name":"getProperty","parameterTypes":["java.lang.String"] }, {"name":"load","parameterTypes":["java.lang.String"] }, {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }]
 },
 {
   "name":"java.net.InetSocketAddress",
@@ -314,6 +342,14 @@
   "allPublicConstructors":true,
   "fields":[{"name":"SIZEOF"}, {"name":"size"}],
   "methods":[{"name":"init","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"sun.awt.AWTAutoShutdown",
+  "methods":[{"name":"notifyToolkitThreadBusy","parameterTypes":[] }, {"name":"notifyToolkitThreadFree","parameterTypes":[] }]
+},
+{
+  "name":"sun.lwawt.macosx.LWCToolkit",
+  "methods":[{"name":"installToolkitThreadInJava","parameterTypes":[] }]
 },
 {
   "name":"sun.management.VMManagementImpl",

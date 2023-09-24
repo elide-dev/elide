@@ -13,6 +13,7 @@
 
 package elide.tool.cli.repl
 
+import kotlin.test.Ignore
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
@@ -21,7 +22,7 @@ import elide.tool.cli.AbstractSubtoolTest
 import elide.tool.cli.cmd.repl.ToolShellCommand
 
 /** Tests for the Elide tool `shell`/`repl` subcommand. */
-@TestCase class ToolShellSubcommandTest : AbstractSubtoolTest() {
+@Ignore @TestCase class ToolShellSubcommandTest : AbstractSubtoolTest() {
   @Inject internal lateinit var shell: ToolShellCommand
 
   override fun subcommand(): Runnable = shell

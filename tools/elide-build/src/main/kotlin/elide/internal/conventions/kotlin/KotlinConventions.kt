@@ -83,7 +83,7 @@ internal fun Project.configureKotlinBuild(
         JVM -> if (configureKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
         JsBrowser, JsNode -> Elide.JsCompilerArgs
         is Multiplatform, Native, WASM -> Elide.KmpCompilerArgs
-      }).plus(customKotlinCompilerArgs).toSortedSet().toList()
+      }).plus(customKotlinCompilerArgs).toList()
     }
   }
 

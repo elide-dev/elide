@@ -13,7 +13,18 @@
 
 package elide.tool.cli
 
+import com.google.common.util.concurrent.ListeningExecutorService
+import com.google.common.util.concurrent.MoreExecutors
+import lukfor.progress.TaskService
+import lukfor.progress.TaskServiceBuilder
+import lukfor.progress.executors.ITaskExecutor
+import lukfor.progress.tasks.ITaskRunnable
+import lukfor.progress.tasks.Task
+import lukfor.progress.tasks.TaskFailureStrategy.IGNORE_FAILURES
 import org.graalvm.polyglot.Language
+import picocli.CommandLine.Mixin
+import picocli.CommandLine.Model.CommandSpec
+import picocli.CommandLine.Spec
 import java.io.BufferedReader
 import java.io.Closeable
 import java.io.InputStream
@@ -21,6 +32,7 @@ import java.io.PrintStream
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.*
@@ -31,12 +43,22 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.tool.cli.err.AbstractToolError
+import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.state.CommandState
+import elide.tool.err.DefaultErrorHandler
+import elide.tool.err.ErrorHandler
 import org.graalvm.polyglot.Engine as VMEngine
 
 
 /**
- * TBD.
+ * # Sub-command
+ *
+ * Abstract class which provides baseline logic for sub-commands which are part of the Elide CLI. This class provides
+ * facilities for logging, resource management, input/output control, managed execution, and more; all sub-commands
+ * inherit.
+ *
+ * @param State Structure used for tooling state, which can be specific to this sub-command type.
+ * @param Context Command execution context shape, which can be specific to this sub-command type.
  */
 @Suppress("MemberVisibilityCanBePrivate") internal abstract class AbstractSubcommand<
   State: ToolState,
@@ -47,15 +69,30 @@ import org.graalvm.polyglot.Engine as VMEngine
   AutoCloseable,
   ToolCommandBase<Context>() {
   protected companion object {
+    private const val enableVirtualThreads = false
+    private const val enableFixedThreadPool = false
+    private const val enableFlexibleThreadPool = true
+
     private val _stdout = System.out
     private val _stderr = System.err
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
     private val _engine = VMEngine.create()
-    private val threadFactory: ToolThreadFactory = ToolThreadFactory()
-    private val threadedExecutor: ExecutorService = Executors.newCachedThreadPool(threadFactory)
+    private val _cpus = Runtime.getRuntime().availableProcessors()
+
+    private val threadFactory: ToolThreadFactory = ToolThreadFactory(
+      enableVirtualThreads,
+      DefaultErrorHandler.acquire(),
+    )
+    private val threadedExecutor: ListeningExecutorService = when {
+      enableVirtualThreads -> MoreExecutors.listeningDecorator(Executors.newThreadPerTaskExecutor(threadFactory))
+      enableFixedThreadPool -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(_cpus, threadFactory))
+      enableFlexibleThreadPool -> MoreExecutors.listeningDecorator(
+        MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory))
+      )
+      else -> MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(threadFactory))
+    }
     private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
-    private val engineInitialized: AtomicBoolean = AtomicBoolean(false)
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
@@ -82,22 +119,29 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Implements a thread factory for tool execution operations. */
-  private class ToolThreadFactory : ThreadFactory {
-    override fun newThread(target: Runnable): Thread {
-//      Thread
-//        .ofPlatform()
-//        .allowSetThreadLocals(true)
-//        .inheritInheritableThreadLocals(true)
-//        .name("elide", 1337L)
-//        .priority(Thread.MAX_PRIORITY)
-//        .unstarted(target)
-      return Thread().apply {
-        priority = Thread.MAX_PRIORITY
-        isDaemon = true
-//        isUncaughtExceptionHandler = Thread.UncaughtExceptionHandler { _, e ->
-//          e.printStackTrace()
-//        }
-      }
+  private class ToolThreadFactory (
+    private val virtualThreads: Boolean,
+    private val errorHandler: ErrorHandler,
+  ) : ThreadFactory {
+    override fun newThread(target: Runnable): Thread = when (virtualThreads) {
+      true -> Thread
+        .ofVirtual()
+        .allowSetThreadLocals(true)
+        .inheritInheritableThreadLocals(true)
+        .name("elide-vt")
+        .unstarted(target)
+
+      false -> Thread
+        .ofPlatform()
+        .allowSetThreadLocals(true)
+        .inheritInheritableThreadLocals(true)
+        .name("elide")
+        .priority(Thread.MAX_PRIORITY)
+        .unstarted(target)
+        .apply { isDaemon = true }
+
+    }.apply {
+      uncaughtExceptionHandler = errorHandler
     }
   }
 
@@ -105,9 +149,6 @@ import org.graalvm.polyglot.Engine as VMEngine
   internal sealed interface OutputController : Logger {
     /** Current output settings. */
     val settings: ToolState.OutputSettings
-
-    /** Active output session. */
-//    val session: Int?
 
     /** Direct access to standard-out. */
     val stdout: PrintStream get() = _stdout
@@ -164,6 +205,18 @@ import org.graalvm.polyglot.Engine as VMEngine
     suspend fun readLineAsync(): Deferred<String?>
   }
 
+  /** Central task service interface. */
+  internal interface ExecutionService {
+    /** Task executor. */
+    val taskExecutor: ITaskExecutor
+
+    /** Run tasks against the main service. */
+    fun run(vararg tasks: ITaskRunnable)
+
+    /** Run tasks against the main service. */
+    fun run(tasks: List<ITaskRunnable>)
+  }
+
   /** Controller for parallel execution. */
   internal sealed interface ExecutionController {
     /** Co-routine scope of the current execution. */
@@ -174,6 +227,9 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     /** Active dispatcher. */
     val dispatcher: CoroutineDispatcher
+
+    /** Central task execution service and orchestration. */
+    val service: ExecutionService
   }
 
   /** Execution context for a run of the Elide tool. */
@@ -240,10 +296,24 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   /** Default (wrapped) execution controller. */
   protected open class DefaultExecutionController(
+    val backgroundExecutor: ITaskExecutor,
+    val runner: (List<ITaskRunnable>) -> Unit,
     override val dispatcher: CoroutineDispatcher,
     override val scope: CoroutineScope,
     override val context: CoroutineContext,
-  ) : ExecutionController
+  ) : ExecutionController {
+    override val service: ExecutionService get() = object: ExecutionService {
+      override val taskExecutor: ITaskExecutor get() = backgroundExecutor
+
+      override fun run(vararg tasks: ITaskRunnable) {
+        runner.invoke(tasks.toList())
+      }
+
+      override fun run(tasks: List<ITaskRunnable>) {
+        runner.invoke(tasks)
+      }
+    }
+  }
 
   /** Private implementation of tool execution context. */
   protected abstract class ToolExecutionContextImpl<T: ToolState> constructor (private val _state: T) : ToolContext<T> {
@@ -269,8 +339,11 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Shared resources which should be closed at the conclusion of processing.
   private val sharedResources: MutableList<AutoCloseable> = LinkedList()
 
-  // Main top-level tool.
-  @Inject internal lateinit var base: ElideTool
+  // Common options shared by all commands.
+  @Mixin internal lateinit var commons: CommonOptions
+
+  // Command specification from Picocli.
+  @Spec internal lateinit var commandSpec: CommandSpec
 
   /** A thread-local [PolyglotContext] instance acquired from the [engine]. */
   private val contextHandle: ThreadLocal<PolyglotContext> = ThreadLocal()
@@ -298,16 +371,16 @@ import org.graalvm.polyglot.Engine as VMEngine
   val interactive: AtomicBoolean = AtomicBoolean(false)
 
   /** Debug flag status. */
-  val debug: Boolean get() = base.debug
+  val debug: Boolean get() = commons.debug
 
   /** Verbose output flag status. */
-  val verbose: Boolean get() = base.verbose
+  val verbose: Boolean get() = false  // @TODO(sgammon): fix mixin injection
 
   /** Quiet output flag status. */
-  val quiet: Boolean get() = base.quiet
+  val quiet: Boolean get() = commons.quiet
 
   /** Pretty output flag status. */
-  val pretty: Boolean get() = base.pretty
+  val pretty: Boolean get() = commons.pretty
 
   // Base execution context.
   private val baseExecContext: CoroutineContext = Dispatchers.Default + CoroutineName("elide")
@@ -485,41 +558,106 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /**
-   * TBD.
+   * ## Output Controller
+   *
+   * Create a wrapped [OutputController] which can manage receiving and emitting output from the sub-command implemented
+   * by this class.
+   *
+   * @param state Tool state to use for output configuration.
+   * @return Wrapped output controller.
    */
-  protected open fun outputController(
-    state: ToolState,
-//    session: OutputSession?,
-  ): OutputController =
+  protected open fun outputController(state: ToolState): OutputController =
     DefaultOutputController(state, Statics.logging)
 
   /**
-   * TBD.
+   * ## Input Controller
+   *
+   * Create a wrapped [InputController] which can manage receiving input from the user and providing it to the sub-
+   * command implemented by this class.
+   *
+   * @param state Tool state to use for input configuration.
+   * @param input Input stream to consume.
+   * @param buffer Buffered reader of input.
+   * @return Wrapped input controller.
    */
   @Suppress("SameParameterValue")
   protected open fun inputController(state: ToolState, input: InputStream, buffer: BufferedReader): InputController =
     DefaultInputController.DEFAULT
 
   /**
-   * TBD.
+   * ## Execution Controller
+   *
+   * Create a wrapped [ExecutionController] which can manage the execution of tasks on behalf of the sub-command
+   * implemented by this class.
+   *
+   * @param state Tool state to use for execution configuration.
+   * @param scope Co-routine scope to use for execution.
+   * @param context Co-routine context to use for execution.
+   * @return Execution controller.
    */
   protected open fun execController(
     state: ToolState,
     scope: CoroutineScope,
     context: CoroutineContext,
-  ): ExecutionController = DefaultExecutionController(
-    dispatcher,
-    scope,
-    context,
-  )
+  ): ExecutionController {
+    // prepare background task service executor
+    val taskExecutor = object: ITaskExecutor {
+      override fun setThreads(threads: Int) {
+        TODO("Not yet implemented")
+      }
+
+      override fun getThreads(): Int {
+        TODO("Not yet implemented")
+      }
+
+      override fun waitForAll() {
+        TODO("Not yet implemented")
+      }
+
+      override fun run(vararg tasks: Task?) {
+        TODO("Not yet implemented")
+      }
+
+      override fun run(tasks: MutableList<out Task>?) {
+        TODO("Not yet implemented")
+      }
+    }
+
+    val taskService = TaskServiceBuilder()
+      // @TODO(sgammon): customize these defaults
+      .animated(true)
+      .threads(1)
+      .target(System.out)
+      .onFailure(IGNORE_FAILURES)
+      .executor(taskExecutor)
+
+    return DefaultExecutionController(
+      taskExecutor,
+      taskService::run,
+      dispatcher,
+      scope,
+      context,
+    )
+  }
 
   /**
-   * TBD.
+   * ## VM Initialization
+   *
+   * Given the provided [base] [State], initialize a VM context; this gives sub-commands a chance to customize a guest
+   * VM before it is used.
+   *
+   * @param base Baseline state/configuration for the VM.
    */
   protected open fun initializeVM(base: State): Boolean = false
 
   /**
-   * TBD.
+   * ## Initialize Resources
+   *
+   * Initialize any resources which need to be available for the sub-command implemented by this class; such resources
+   * (all [AutoCloseable]) are held by the sub-command for the entire lifecycle of the CI run, and are closed/disposed
+   * of afterward automatically.
+   *
+   * @return List of resources which should be managed on behalf of the sub-command implemented by this class.
    */
   protected open fun initialize(): List<AutoCloseable> = emptyList()
 

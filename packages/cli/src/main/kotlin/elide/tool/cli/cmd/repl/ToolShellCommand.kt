@@ -56,6 +56,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
+import javax.script.ScriptEngineManager
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -83,8 +84,12 @@ import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.err.ShellError
+import elide.tool.cli.options.AccessControlOptions
+import elide.tool.cli.options.EngineJavaScriptOptions
 import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.extensions.installIntrinsics
+import elide.tool.io.RuntimeWorkdirManager
+import elide.tool.io.WorkdirManager
 
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
@@ -110,7 +115,8 @@ import elide.tool.extensions.installIntrinsics
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
   ],
 )
-@Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal class ToolShellCommand @Inject constructor (private val workdir: WorkdirManager) :
+  AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
     private const val TOOL_LOGGER_NAME: String = "tool"
     private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
@@ -213,11 +219,8 @@ import elide.tool.extensions.installIntrinsics
       }
     }
 
-    internal fun primary(): GuestLanguage = if (langs.isNotEmpty()) {
-      langs.first()
-    } else {
-      JS
-    }
+    // Resolve the primary interactive language.
+    internal fun primary(): GuestLanguage = langs.first { it.id != GraalVMGuest.JAVASCRIPT.symbol } ?: JS
 
     // Resolve the specified language.
     internal fun resolve(): EnumSet<GuestLanguage> = langs
@@ -362,63 +365,6 @@ import elide.tool.extensions.installIntrinsics
 
   internal sealed class LanguageSettings
 
-  /** Settings which apply to JavaScript only. */
-  @Introspected @ReflectiveAccess class JavaScriptSettings : LanguageSettings() {
-    /** Whether to activate JavaScript debug mode. */
-    @Option(
-      names = ["--js:debug"],
-      description = ["Activate JavaScript debug mode"],
-      defaultValue = "false",
-    )
-    internal var debug: Boolean = false
-
-    /** Whether to activate JS strict mode. */
-    @Option(
-      names = ["--js:strict"],
-      description = ["Activate JavaScript strict mode"],
-      defaultValue = "true",
-    )
-    internal var strict: Boolean = true
-
-    /** Whether to activate JS strict mode. */
-    @Option(
-      names = ["--js:ecma"],
-      description = ["ECMA standard to use for JavaScript."],
-      defaultValue = "ES2022",
-    )
-    internal var ecma: JsLanguageLevel = JsLanguageLevel.ES2022
-
-    /** Whether to activate NPM support. */
-    @Option(
-      names = ["--js:npm"],
-      description = ["Whether to enable NPM support. Experimental."],
-      defaultValue = "false",
-    )
-    internal var nodeModules: Boolean = false
-
-    /** Whether to activate NPM support. */
-    @Option(
-      names = ["--js:esm"],
-      description = ["Whether to enable ESM support. Experimental."],
-      defaultValue = "false",
-    )
-    internal var esm: Boolean = false
-
-    /** Whether to activate WASM support. */
-    @Option(
-      names = ["--js:wasm"],
-      description = ["Whether to enable WebAssembly support. Experimental."],
-      defaultValue = "false",
-    )
-    internal var wasm: Boolean = false
-
-    /** Apply these settings to the configuration for the JavaScript runtime plugin. */
-    internal fun apply(config: JavaScriptConfig) {
-      config.language = JavaScriptVersion.valueOf(ecma.name)
-      config.wasm = wasm
-    }
-  }
-
   /** Settings which apply to Python only. */
   @Introspected @ReflectiveAccess class PythonSettings : LanguageSettings() {
     /** Whether to activate Python debug mode. */
@@ -515,6 +461,11 @@ import elide.tool.extensions.installIntrinsics
   // Whether a server is running.
   private val serverRunning: AtomicBoolean = AtomicBoolean(false)
 
+  // Main script engine manager.
+  private val scriptEngineManager: ScriptEngineManager by lazy {
+    ScriptEngineManager(this::class.java.classLoader)
+  }
+
   /** Specifies the guest language to run. */
   @Option(
     names = ["--languages"],
@@ -557,53 +508,11 @@ import elide.tool.extensions.installIntrinsics
   internal var filesystems: List<String> = emptyList()
 
   /** Host access settings. */
-  class HostAccessSettings {
-    /** Whether to allow all host access. */
-    @Option(
-      names = ["--host:allow-all"],
-      description = ["Whether to allow host access. Careful, this can be dangerous!"],
-      defaultValue = "false",
-    )
-    internal var allowAll: Boolean = false
-
-    /** Whether to allow host I/O access. */
-    @Option(
-      names = ["--host:allow-io"],
-      description = ["Allows I/O access to the host from guest VMs (Experimental)"],
-      defaultValue = "false",
-    )
-    internal var allowIo: Boolean = false
-
-    /** Whether to allow host environment access. */
-    @Option(
-      names = ["--host:allow-env"],
-      description = ["Allows environment access to the host from guest VMs (Experimental)"],
-      defaultValue = "false",
-    )
-    internal var allowEnv: Boolean = false
-
-    /** Apply these settings to the root engine configuration container. */
-    internal fun apply(config: PolyglotEngineConfiguration) {
-      config.hostAccess = when {
-        allowAll || (allowIo && allowEnv) -> ALLOW_ALL
-        allowIo -> ALLOW_IO
-        allowEnv -> ALLOW_ENV
-        else -> ALLOW_NONE
-      }
-    }
-
-    companion object {
-      /** Defaults for host access. */
-      val DEFAULTS = HostAccessSettings()
-    }
-  }
-
-  /** Host access settings. */
   @ArgGroup(
     validate = false,
     exclusive = false,
     heading = "%nAccess Control:%n",
-  ) internal var accessControl: HostAccessSettings = HostAccessSettings.DEFAULTS
+  ) internal lateinit var accessControl: AccessControlOptions
 
   /** Chrome inspector settings. */
   @ArgGroup(
@@ -627,7 +536,7 @@ import elide.tool.extensions.installIntrinsics
   @ArgGroup(
     validate = false,
     heading = "%nEngine: JavaScript%n",
-  ) internal var jsSettings: JavaScriptSettings = JavaScriptSettings()
+  ) internal var jsSettings: EngineJavaScriptOptions = EngineJavaScriptOptions()
 
   /** Settings specific to Python. */
   @ArgGroup(
@@ -679,13 +588,28 @@ import elide.tool.extensions.installIntrinsics
 
   // Executed when a guest statement is entered.
   private fun onStatementEnter(event: ExecutionEvent) {
+    if (verbose) {
+      val highlighter = langSyntax.get()
+      val lineReader = lineReader.get()
+
+      val txt: CharSequence? = event.location.characters
+      if (!txt.isNullOrBlank()) {
+        if (highlighter != null && lineReader != null) {
+          lineReader.printAbove(highlighter.highlight(txt.toString()))
+        } else {
+          println(txt)
+        }
+      }
+    }
+  }
+
+  private fun printHighlightedResult(txt: String) {
     val highlighter = langSyntax.get()
     val lineReader = lineReader.get()
 
-    val txt: CharSequence? = event.location.characters
     if (!txt.isNullOrBlank()) {
       if (highlighter != null && lineReader != null) {
-        lineReader.printAbove(highlighter.highlight(txt.toString()))
+        lineReader.printAbove(highlighter.highlight(txt))
       } else {
         println(txt)
       }
@@ -702,9 +626,15 @@ import elide.tool.extensions.installIntrinsics
     interactive: Boolean = false,
     literal: Boolean = false,
   ): Value {
+    // fix: python fails in interactive mode without special characters
+    val actullyInteractive = if (primaryLanguage.engine == "python") {
+      false
+    } else interactive
+
     // build a source code chunk from the line @TODO(sgammon): resolve source from all languages
     val chunk = Source.newBuilder(primaryLanguage.engine, code, origin)
-      .interactive(interactive)
+      .interactive(actullyInteractive)
+      .internal(false)
 
     val source = if (literal) {
       chunk.buildLiteral()
@@ -716,6 +646,9 @@ import elide.tool.extensions.installIntrinsics
     val result = try {
       ctx.evaluate(source)
     } catch (exc: PolyglotException) {
+      if (interactive) {
+        throw exc  // don't capture exceptions during interactive sessions; they are handled separately
+      }
       when (val throwable = processUserCodeError(primaryLanguage, exc)) {
         null -> {
           logging.trace("Caught exception from code statement ${statementCounter.get()}", exc)
@@ -790,7 +723,7 @@ import elide.tool.extensions.installIntrinsics
   private fun buildHistory(): History = DefaultHistory()
 
   // Resolve the current guest language to a named syntax highlighting package.
-  private fun syntaxHighlightName(language: GuestLanguage): String = language.name
+  private fun syntaxHighlightName(language: GuestLanguage): String = language.label
 
   // Build a highlighting manager for use by the line reader.
   private fun buildHighlighter(language: GuestLanguage, jnanorc: Path): Pair<SystemHighlighter, SyntaxHighlighter> {
@@ -805,7 +738,7 @@ import elide.tool.extensions.installIntrinsics
   private fun initCLI(
     root: String,
     language: GuestLanguage,
-    jnanorcFile: Path,
+    jnanorcFile: Path?,
     workDir: Supplier<Path>,
     configPath: ConfigurationPath,
     op: LineReader.(SystemRegistryImpl) -> Unit,
@@ -823,7 +756,11 @@ import elide.tool.extensions.installIntrinsics
 
     // order matters: initialize these last, because they depend on `ReplSystemRegistry` being registered as a
     // singleton, which happens in `setCommandRegistries`.
-    val (highlighter, languageHighlighter) = buildHighlighter(language, jnanorcFile)
+    val (highlighter, languageHighlighter) = if (jnanorcFile != null) {
+      buildHighlighter(language, jnanorcFile)
+    } else {
+      SystemHighlighter(null, null, null) to null
+    }
     val history = buildHistory()
 
     val reader = LineReaderBuilder.builder()
@@ -854,7 +791,11 @@ import elide.tool.extensions.installIntrinsics
   }
 
   // Initialize nano-rc syntax highlighting configurations.
-  private fun initNanorcConfig(rootPath: Path, userHome: String): File {
+  private fun initNanorcConfig(rootPath: Path, userHome: String): File? {
+    if (!rootPath.exists() || Statics.noColor) {
+      logging.debug("Syntax highlighting disabled by flags, missing root, or NO_COLOR")
+      return null
+    }
     val jnanorcDir = rootPath.resolve("nanorc")
     val jnanorcFile = Paths.get(
       userHome,
@@ -862,9 +803,9 @@ import elide.tool.extensions.installIntrinsics
     ).toFile()
 
     logging.debug("Checking nanorc root at path '${jnanorcFile.toPath()}'")
+    var jnanocDirReady = false
     if (!jnanorcDir.exists()) {
       logging.debug("Nano config directory does not exist. Creating...")
-      var jnanocDirReady = false
 
       try {
         File(jnanorcDir.absolutePathString()).mkdirs()
@@ -872,32 +813,40 @@ import elide.tool.extensions.installIntrinsics
       } catch (e: Exception) {
         logging.debug("Failed to create nanorc directory: ${e.message}")
       }
-      if (jnanocDirReady) {
-        // copy syntax files
-        listOf(
-          "dark.nanorctheme",
-          "light.nanorctheme",
-          "args.nanorc",
-          "command.nanorc",
-          "javascript.nanorc",
-          "python.nanorc",
-          "ruby.nanorc",
-          "java.nanorc",
-          "kotlin.nanorc",
-          "json.nanorc",
-        ).forEach {
-          val target = jnanorcDir.resolve(it)
-          logging.debug("- Initializing syntax file '$it' ($target)")
-          val fileStream = ToolShellCommand::class.java.getResourceAsStream("/nanorc/$it") ?: return@forEach
-          val contents = IOUtils.readText(fileStream.bufferedReader(StandardCharsets.UTF_8))
+    } else {
+      jnanocDirReady = true
+    }
+    if (jnanocDirReady) {
+      // copy syntax files
+      listOf(
+        "args.nanorc",
+        "command.nanorc",
+        "dark.nanorctheme",
+        "javascript.nanorc",
+        "json.nanorc",
+        "kotlin.nanorc",
+        "light.nanorctheme",
+        "nanorctheme.template",
+        "python.nanorc",
+        "ruby.nanorc",
+        "java.nanorc",
+        "ts.nanorc",
+      ).parallelStream().forEach {
+        val target = jnanorcDir.resolve(it)
+        logging.debug("- Initializing syntax file '$it' ($target)")
+        if (target.exists()) {
+          logging.debug("Syntax file '$it' already exists. Skipping...")
+          return@forEach
+        }
+        val fileStream = ToolShellCommand::class.java.getResourceAsStream("/nanorc/$it") ?: return@forEach
+        val contents = IOUtils.readText(fileStream.bufferedReader(StandardCharsets.UTF_8))
 
-          try {
-            File(target.absolutePathString()).bufferedWriter(StandardCharsets.UTF_8).use { outbuf ->
-              outbuf.write(contents)
-            }
-          } catch (ioe: IOException) {
-            logging.debug("Failed to write nanorc config file.", ioe)
+        try {
+          File(target.absolutePathString()).bufferedWriter(StandardCharsets.UTF_8).use { outbuf ->
+            outbuf.write(contents)
           }
+        } catch (ioe: IOException) {
+          logging.debug("Failed to write nanorc config file.", ioe)
         }
       }
     }
@@ -971,7 +920,7 @@ import elide.tool.extensions.installIntrinsics
     stacktrace: Boolean = false,
   ) {
     val term = terminal.get()
-    val reader = lineReader.get() ?: return
+    val reader = lineReader.get()
     if (exc !is PolyglotException) return
 
     // begin calculating with source context
@@ -1035,10 +984,9 @@ import elide.tool.extensions.installIntrinsics
         // advice
         (advice?.length ?: 0) + pad,
 
-        // stacktrace
-        stacktraceLines.maxOf { it.length + pad + 2 },
-      ),
-    )
+      // stacktrace
+      if (stacktrace) stacktraceLines.maxOf { it.length + pad + 2 } else 0,
+    ))
 
     val textWidth = width - (pad / 2)
     val top = ("╔" + "═".repeat(textWidth) + "╗")
@@ -1057,19 +1005,22 @@ import elide.tool.extensions.installIntrinsics
       }
       // ╟──^───────────────────╢
       if (lineContextRendered.isNotEmpty()) appendLine(divider)
-      // ║ SomeError: A message ║
-      append(middlePrefix).append(message.padEnd(textWidth - 1, ' ')).append("║\n")
+
+      if (message.isNotBlank()) {
+        // ║ SomeError: A message ║
+        append(middlePrefix).append(message.padEnd(textWidth - 1, ' ')).append("║\n")
+      }
 
       if (stacktrace || advice?.isNotBlank() == true) {
         // ╟──────────────────────╢
-        if (lineContextRendered.isNotEmpty() || message.isNotBlank()) appendLine(divider)
+        if (lineContextRendered.isNotEmpty() && message.isNotBlank()) appendLine(divider)
 
         // append advice next
         if (advice?.isNotBlank() == true) {
           // ║ Advice:              ║
-          append(middlePrefix).append("Advice:\n")
+          append(middlePrefix).append("Advice:".padEnd(textWidth - 1, ' ') + "║\n")
           // ║ Example advice.      ║
-          append(middlePrefix).append(advice.padEnd(textWidth + 1, ' ') + "║\n")
+          append(middlePrefix).append(advice.padEnd(textWidth - 1, ' ') + "║\n")
           // ╟──────────────────────╢
           if (stacktrace) appendLine(divider)
         }
@@ -1093,12 +1044,16 @@ import elide.tool.extensions.installIntrinsics
 
     // format error string
     val style = AttributedStyle.BOLD.foreground(AttributedStyle.RED)
-    val formatted = AttributedString(rendered, style)
-    reader.printAbove(formatted)
+
+    if (reader != null) {
+      val formatted = AttributedString(rendered, style)
+      reader.printAbove(formatted)
+    } else System.err.use {
+      it.writeBytes(rendered.toByteArray(StandardCharsets.UTF_8))
+    }
   }
 
   // Handle an error which occurred within guest code.
-  @Suppress("RedundantNullableReturnType")  // might want to return `null` at a later time
   private fun processUserCodeError(language: GuestLanguage, exc: PolyglotException): Throwable? {
     when {
       exc.isSyntaxError -> displayFormattedError(
@@ -1122,6 +1077,7 @@ import elide.tool.extensions.installIntrinsics
       exc.isGuestException -> displayFormattedError(
         exc,
         exc.message ?: "An error was thrown",
+        stacktrace = !interactive.get(),
       )
 
       // @TODO(sgammon): interrupts
@@ -1136,7 +1092,17 @@ import elide.tool.extensions.installIntrinsics
         internal = true,
       )
     }
-    return ShellError.USER_CODE_ERROR.raise(exc)
+    // in interactive sessions, return `null` if the error is non-fatal; this tells the outer execution loop to ignore
+    // the exception (since it has been printed to the user), and continue with the interactive session.
+    return if (interactive.get()) {
+      null
+    } else {
+      ShellError.USER_CODE_ERROR.raise(exc)
+    }
+  }
+
+  private fun showValue(value: Value) {
+    printHighlightedResult(value.toString())
   }
 
   // Wrap an interactive REPL session in exit protection.
@@ -1148,8 +1114,8 @@ import elide.tool.extensions.installIntrinsics
   ) {
     // resolve working directory
     val workDir = Supplier { Paths.get(System.getProperty("user.dir")) }
-    val userHome = CONFIG_PATH_USR.replaceFirst("~", System.getProperty("user.home"))
-    val userConfigPath = Paths.get(userHome)
+    val userHome = Paths.get(System.getProperty("user.home")).absolutePathString()
+    val userConfigPath = workdir.configRoot().toPath()
     val root = userConfigPath.absolutePathString()
     val rootPath = Path(root)
 
@@ -1164,7 +1130,7 @@ import elide.tool.extensions.installIntrinsics
 
     // execution step listener
     ExecutionListener.newBuilder().onEnter(::onStatementEnter).statements(true).attach(engine).use {
-      initCLI(root, primaryLanguage, jnanorcFile.toPath(), workDir, configPath) { registry ->
+      initCLI(root, primaryLanguage, jnanorcFile?.toPath(), workDir, configPath) { registry ->
         // before beginning execution loop, redirect logging to a new appender, which will add logs *above* the user
         // input section of an interactive session.
         redirectLoggingToJLine(this)
@@ -1179,15 +1145,8 @@ import elide.tool.extensions.installIntrinsics
             logging.debug("Source line received; executing as statement")
             logging.trace { "Code provided: '$line'" }
 
-            allSeenStatements.add(line)
-            val statement = statementCounter.incrementAndGet()
-            logging.trace { "Statement counter: $statement" }
-            if (statement > 1000L) {
-              allSeenStatements.drop(1)  // drop older lines at the 1000-statement mark
-            }
-
             // build a source code chunk from the line
-            executeOneChunk(
+            val result = executeOneChunk(
               languages,
               primaryLanguage,
               ctx,
@@ -1196,7 +1155,21 @@ import elide.tool.extensions.installIntrinsics
               interactive = true,
               literal = true,
             )
-            exitSeen.set(false)
+
+            // only add to statement counter and index if we didn't experience an error
+            allSeenStatements.add(line)
+            val statement = statementCounter.incrementAndGet()
+            logging.trace { "Statement counter: $statement" }
+            if (statement > 1000L) {
+              allSeenStatements.drop(1)  // drop older lines at the 1000-statement mark
+            }
+
+            // if the user had broken with ctrl+c before, they've now processed code, so we should reset the `exitSeen`
+            // cookie state for the next exit opportunity.
+            if (exitSeen.get()) exitSeen.set(false)
+
+            // if we are running in modes which show the result, print it
+            if (!quiet && primaryLanguage.id != RUBY.id) showValue(result)
 
           } catch (exc: NoSuchElementException) {
             logging.debug("User expressed no input: exiting.")
@@ -1368,6 +1341,14 @@ import elide.tool.extensions.installIntrinsics
     else -> File(bundleSpec).toURI()
   }
 
+  // Resolve the primary interactive language for the provided `file`.
+  private fun primaryFromFile(file: File): GuestLanguage? {
+    return when (val engine = scriptEngineManager.getEngineByExtension(file.extension)) {
+      null -> null
+      else -> TODO("")
+    }
+  }
+
   // Resolve the default language to use when interpreting a given `fileInput`, or use a sensible fallback from the set
   // of supported languages. If JS is disabled, there can only be one language; otherwise the default language is JS. If
   // a file is provided with a specific matching file extension for a given language, that language is used.
@@ -1376,8 +1357,11 @@ import elide.tool.extensions.installIntrinsics
     languages: EnumSet<GuestLanguage>,
     fileInput: File?,
   ): GuestLanguage = when {
-    // we have to have at least one language
-    languages.size == 0 -> error("Cannot start VM with no enabled guest languages")
+    // if we have a file input, the extension for the file takes next precedence
+    fileInput != null && fileInput.exists() -> {
+      val ext = fileInput.extension
+      languages.find { it.extensions.contains(ext) } ?: primaryFromFile(fileInput) ?: JS
+    }
 
     // if there is only one language, that's the result
     languages.size == 1 -> languages.first()
@@ -1385,11 +1369,8 @@ import elide.tool.extensions.installIntrinsics
     // an explicit flag from a user takes top precedence
     languageSelector != null -> languageSelector.primary()
 
-    // if we have a file input, the extension for the file takes next precedence
-    fileInput != null && fileInput.exists() -> {
-      val ext = fileInput.extension
-      languages.find { it.extensions.contains(ext) } ?: JS
-    }
+    // we have to have at least one language
+    languages.size == 0 -> error("Cannot start VM with no enabled guest languages")
 
     // otherwise, if JS is included in the set of languages, that is the default.
     else -> if (languages.contains(JS)) JS else languages.first()
@@ -1446,12 +1427,12 @@ import elide.tool.extensions.installIntrinsics
           jsSettings.apply(this)
         }
 
-        PYTHON -> install(Python) {
+        PYTHON -> install(elide.runtime.plugins.python.Python) {
           logging.debug("Configuring Python VM")
           installIntrinsics(intrinsics, GraalVMGuest.PYTHON)
         }
 
-        RUBY -> install(Ruby) {
+        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
           logging.debug("Configuring Ruby VM")
           installIntrinsics(intrinsics, GraalVMGuest.RUBY)
         }
@@ -1485,7 +1466,8 @@ import elide.tool.extensions.installIntrinsics
     }
 
     // resolve the language to use
-    val langs = (language ?: LanguageSelector()).resolve()
+    val selector = language ?: LanguageSelector()
+    val langs = selector.resolve()
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     supported.find { langs.contains(it.first) }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
     logging.debug("Initializing language contexts (${langs.joinToString(", ") { it.id }})")

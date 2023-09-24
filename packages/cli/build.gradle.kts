@@ -21,12 +21,15 @@ import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+import org.gradle.api.internal.plugins.UnixStartScriptGenerator
+import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import elide.internal.conventions.elide
 import elide.internal.conventions.kotlin.KotlinTarget
 import org.jetbrains.kotlin.konan.target.HostManager
+import java.io.Writer
 
 plugins {
   java
@@ -91,8 +94,8 @@ val entrypoint = "elide.tool.cli.ElideTool"
 val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
-val enablePython = true
-val enableRuby = true
+val enablePython = false
+val enableRuby = false
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
@@ -100,13 +103,19 @@ val enableLlvm = false
 val enableEspresso = false
 val enableExperimental = false
 val enableEmbeddedResources = false
+val enableResourceFilter = true
+val enableAuxCache = true
 val enableJpms = false
+val enableEmbeddedBuilder = false
 val enableDashboard = false
-val enableStrictHeap = enableExperimental
-val enableG1 = oracleGvm
+val enableBuildReport = false
+val enableStrictHeap = false
+val enableG1 = oracleGvm && HostManager.hostIsLinux
 val enablePgo = oracleGvm && isRelease
-val enablePgoInstrumentation = oracleGvm && !isRelease
-val enableSbom = oracleGvm && enableTools
+val enablePgoSampling = false
+val enablePgoInstrumentation = false
+val enableSbom = true
+val enableSbomStrict = false
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 val globalExclusions = emptyList<Pair<String, String>>()
@@ -129,21 +138,40 @@ buildscript {
 
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
-val jvmCompileArgs = listOf(
+val nativesRootTemplate: (String) -> String = { version ->
+  "/tmp/elide-runtime/v$version/native"
+}
+
+val jvmCompileArgs = listOfNotNull(
   "--enable-preview",
-  "--add-exports=java.base/jdk.internal.module=elide.cli",
+  "--add-modules=jdk.incubator.vector",
+  "--enable-native-access=" + listOfNotNull(
+    "ALL-UNNAMED",
+    "org.graalvm.polyglot",
+    "org.graalvm.js",
+    if (enableRuby) "org.graalvm.ruby" else null,
+    if (enablePython) "org.graalvm.py" else null,
+    if (enableEspresso) "org.graalvm.espresso" else null,
+  ).joinToString(","),
   "--add-exports=org.graalvm.truffle/com.oracle.truffle.object=ALL-UNNAMED",
   "--add-exports=org.graalvm.truffle.runtime/com.oracle.truffle.runtime=ALL-UNNAMED",
-  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
+).plus(if (enableJpms) listOf(
+  "--add-reads=elide.cli=ALL-UNNAMED",
+  "--add-reads=elide.graalvm=ALL-UNNAMED",
+  "--add-exports=java.base/jdk.internal.module=elide.cli",
+  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
+) else emptyList()).plus(if (enableEmbeddedBuilder) listOf(
+  "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
-  "--add-reads=elide.graalvm=ALL-UNNAMED",
-  "--add-reads=elide.cli=ALL-UNNAMED",
-)
+) else emptyList())
 
 val jvmRuntimeArgs = emptyList<String>()
 
@@ -170,7 +198,7 @@ val ktCompilerArgs = listOf(
   "-opt-in=elide.runtime.core.DelicateElideApi",
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta2",
 )
 
 java {
@@ -221,18 +249,21 @@ the<MosaicExtension>().kotlinCompilerPlugin =
   libs.versions.compose.get()
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
+val cliVersion = if (stamp) {
+  libs.versions.elide.asProvider().get()
+} else {
+  "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
+}
+val nativesPath = nativesRootTemplate(cliVersion)
 
 buildConfig {
   className("ElideCLITool")
   packageName("elide.tool.cli.cfg")
   useKotlinOutput()
 
-  val cliVersion = if (stamp) {
-    libs.versions.elide.asProvider().get()
-  } else {
-    "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
-  }
+  buildConfigField("String", "ELIDE_RELEASE_TYPE", if (isRelease) "\"RELEASE\"" else "\"DEV\"")
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"$cliVersion\"")
+  buildConfigField("String", "NATIVES_PATH", "\"${nativesPath}\"")
 }
 
 val modules: Configuration by configurations.creating
@@ -353,10 +384,18 @@ dependencies {
         Os.isFamily(Os.FAMILY_MAC) -> {
           compileOnly(libs.netty.transport.native.epoll)
           compileOnly(libs.netty.transport.native.iouring)
+          implementation(libs.netty.transport.native.unix)
           implementation(libs.netty.transport.native.kqueue)
           implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
-          implementation(libs.netty.resolver.dns.native.macos)
+          implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-$arch") })
           implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-$arch") })
+          if (enableExperimental) {
+            if (targetArch == "aarch64") {
+              implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
+            } else {
+              implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
+            }
+          }
         }
 
         else -> {
@@ -365,6 +404,13 @@ dependencies {
           implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
           implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
           implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
+          if (enableExperimental) {
+            if (targetArch == "aarch64") {
+              implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
+            } else {
+              implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
+            }
+          }
         }
       }
     }
@@ -376,13 +422,18 @@ dependencies {
   compileOnly(libs.graalvm.svm)
 
   api(libs.graalvm.polyglot)
+  api(libs.graalvm.js.language)
   api(libs.bundles.graalvm.tools)
-  api(libs.bundles.graalvm.espresso)
   api(libs.graalvm.regex)
-//  api(libs.graalvm.truffle.nfi)
-//  api(libs.graalvm.truffle.nfi.libffi)
-//  api(libs.graalvm.truffle.nfi.panama)
   compileOnly(libs.graalvm.svm)
+
+  if (enableEspresso) {
+    api(libs.bundles.graalvm.espresso)
+  }
+  if (enableExperimental) {
+    api(libs.graalvm.truffle.nfi)
+    api(libs.graalvm.truffle.nfi.panama)
+  }
 
   runtimeOnly(mn.micronaut.runtime)
 
@@ -412,7 +463,32 @@ val targetArch: String = System.getProperty("os.arch", "unknown")
 val targetTag = "$targetOs-$targetArch"
 
 distributions {
-  create("bin") {
+  main {
+    distributionBaseName = "elide-jvm"
+    distributionClassifier = targetTag
+
+    contents {
+      from(
+        tasks.shadowJar,
+        tasks.createOptimizedStartScripts,
+        layout.projectDirectory.dir("packaging/content"),
+      )
+    }
+  }
+
+  create("debug") {
+    distributionBaseName = "elide-debug"
+    distributionClassifier = targetTag
+
+    contents {
+      from(
+        tasks.nativeCompile,
+        layout.projectDirectory.dir("packaging/content"),
+      )
+    }
+  }
+
+  create("opt") {
     distributionBaseName = "elide"
     distributionClassifier = targetTag
 
@@ -425,14 +501,18 @@ distributions {
   }
 }
 
-val binDistZip by tasks.getting(Zip::class)
-val binDistTar by tasks.getting(Tar::class) {
+val optDistZip by tasks.getting(Zip::class)
+val optDistTar by tasks.getting(Tar::class) {
+  compression = Compression.GZIP
+}
+val debugDistZip by tasks.getting(Zip::class)
+val debugDistTar by tasks.getting(Tar::class) {
   compression = Compression.GZIP
 }
 
 signing {
   isRequired = properties["enableSigning"] == "true"
-  sign(binDistZip, binDistTar)
+  sign(optDistZip, optDistTar, debugDistZip, debugDistTar)
 }
 
 tasks {
@@ -441,8 +521,10 @@ tasks {
     description = "Generates checksums for the distribution archives"
 
     dependsOn(
-      binDistZip,
-      binDistTar,
+      debugDistZip,
+      debugDistTar,
+      optDistZip,
+      optDistTar,
     )
     inputFiles.setFrom(
       layout.buildDirectory.file("distributions/elide-$version-$targetTag.zip"),
@@ -454,10 +536,16 @@ tasks {
     outputs.cacheIf { true }
   }
 
-  val signBinDistZip by getting(Sign::class) {
+  val signOptDistZip by getting(Sign::class) {
     dependsOn(distributionChecksums)
   }
-  val signBinDistTar by getting(Sign::class) {
+  val signOptDistTar by getting(Sign::class) {
+    dependsOn(distributionChecksums)
+  }
+  val signDebugDistZip by getting(Sign::class) {
+    dependsOn(distributionChecksums)
+  }
+  val signDebugDistTar by getting(Sign::class) {
     dependsOn(distributionChecksums)
   }
 
@@ -474,13 +562,17 @@ tasks {
 
       // Distribution: Archives
       assembleDist,
-      binDistTar,
-      binDistZip,
+      debugDistTar,
+      debugDistZip,
+      optDistTar,
+      optDistZip,
 
       // Distribution: Archive Checksums & Signatures
       distributionChecksums,
-      signBinDistZip,
-      signBinDistTar,
+      signOptDistZip,
+      signOptDistTar,
+      signOptDistZip,
+      signOptDistTar,
     )
   }
 }
@@ -537,39 +629,44 @@ tasks.withType(Test::class).configureEach {
 
 val commonGvmArgs = listOf(
   "-H:+UseCompressedReferences",
-//  "-H:+BuildReport",
-)
+).plus(if (enableBuildReport) listOf("-H:+BuildReport") else emptyList())
 
-val commonNativeArgs = listOf(
+val commonNativeArgs = listOfNotNull(
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
   "--enable-https",
   "--enable-all-security-services",
   "--install-exit-handlers",
+  "--configure-reflection-metadata",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
+  "-H:+AddAllCharsets",
+  "-H:CLibraryPath=$nativesPath",
+  "--trace-object-instantiation=java.nio.DirectByteBuffer",
+  if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
+  if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
+  if (enableEspresso) "-J-Despresso.finalization.UnsafeOverride=true" else null,
   "-R:MaxDirectMemorySize=256M",
-  "-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
+  "-J-Dio.netty.allocator.type=unpooled",
+  "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
+  "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
     "js",
-    if (enablePython) "python" else null,
-    if (enableRuby) "ruby" else null,
+    if (enableExperimental && enableRuby) "ruby" else null,
+    if (enableExperimental && enablePython) "python" else null,
     if (enableExperimental && enableEspresso) "java" else null,
   ).joinToString(","),
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
-).asSequence().plus(
-  if (enableEdge) listOf(
-    "-H:+UnlockExperimentalVMOptions",
-  ) else emptyList(),
-).plus(
-  if (oracleGvm) commonGvmArgs else emptyList(),
-).plus(
-  if (enableStrictHeap) listOf(
-    "--strict-image-heap",
-  ) else emptyList(),
-).toList()
+  if (enablePgoSampling) "--pgo-sampling" else null,
+).asSequence().plus(if (enableEdge) listOf(
+  "-H:+UnlockExperimentalVMOptions",
+) else emptyList()).plus(
+  if (oracleGvm) commonGvmArgs else emptyList()
+).plus(if (enableStrictHeap) listOf(
+  "--strict-image-heap",
+) else emptyList()).toList()
 
 val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
@@ -612,11 +709,6 @@ val experimentalFlags = listOf(
 
   // Significant slowdowns
   "-H:+RunMainInNewThread",
-
-  // Not yet supported/causes issues
-  "--tool:sandbox",
-  "--tool:insight",
-  "--tool:insightheap",
 )
 
 // CFlags for release mode.
@@ -651,30 +743,27 @@ val releaseFlags: List<String> = listOf(
   "-O3",
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
-  "-J-Djdk.image.use.jvm.map=false",
-).asSequence().plus(
-  releaseCFlags.flatMap {
-    listOf(
-      "-H:NativeLinkerOption=$it",
-      "--native-compiler-options=$it",
-    )
-  },
-).plus(
-  if (enablePgo) listOf(
-    "--pgo=${profiles.joinToString(",")}",
-    "-H:CodeSectionLayoutOptimization=ClusterByEdges",
-  ) else emptyList(),
-).plus(
+).asSequence().plus(releaseCFlags.flatMap {
   listOf(
-    if (enableSbom) listOf("--enable-sbom=cyclonedx,export") else emptyList(),
-    if (enableDashboard) dashboardFlags else emptyList(),
-    if (oracleGvm) gvmReleaseFlags else emptyList(),
-  ).flatten(),
-).toList()
+    "-H:NativeLinkerOption=$it",
+    "--native-compiler-options=$it",
+  )
+}).plus(if (enablePgo) listOf(
+  "--pgo=${profiles.joinToString(",")}",
+  "-H:CodeSectionLayoutOptimization=ClusterByEdges",
+) else emptyList()).plus(listOf(
+  if (enableSbom) listOf(
+    if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
+  ) else emptyList(),
+  if (enableDashboard) dashboardFlags else emptyList(),
+  if (oracleGvm) gvmReleaseFlags else emptyList(),
+).flatten()).toList()
 
 val jvmDefs = mapOf(
   "user.country" to "US",
   "user.language" to "en",
+  "io.netty.allocator.type" to "unpooled",
+  "logback.statusListenerClass" to "ch.qos.logback.core.status.NopStatusListener",
 )
 
 val hostedRuntimeOptions = mapOf(
@@ -786,6 +875,96 @@ val initializeAtBuildTime = listOf(
   "io.micronaut.inject.provider.ProviderTypeInformationProvider",
   "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
 
+  // --- Netty ------
+
+  "io.netty.channel.unix.Unix",
+  "io.netty.util.internal.CleanerJava9",
+  "io.netty.util.CharsetUtil",
+  "io.netty.util.internal.SystemPropertyUtil",
+  "io.netty.incubator.codec.quic.BoringSSLSessionCallback",
+  "io.netty.channel.epoll.Epoll",
+  "io.netty.channel.epoll.Native",
+  "io.netty.channel.kqueue.KQueue",
+  "io.netty.channel.kqueue.Native",
+  "io.netty.handler.ssl.OpenSsl",
+  "io.netty.util.internal.SocketUtils",
+  "io.netty.channel.unix.FileDescriptor",
+  "io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider",
+  "io.netty.channel.kqueue.KQueueEventArray",
+  "io.netty.channel.kqueue.Native",
+  "io.netty.util.NetUtil",
+  "io.netty.util.AbstractReferenceCounted",
+  "io.netty.util.internal.logging.LocationAwareSlf4JLogger",
+  "io.netty.util.NetUtilInitializations",
+  "io.netty.channel.DefaultFileRegion",
+  "io.netty.incubator.codec.quic.BoringSSLCertificateVerifyCallback",
+  "io.netty.util.internal.logging.Slf4JLoggerFactory${'$'}NopInstanceHolder",
+  "io.netty.channel.kqueue.BsdSocket",
+  "io.netty.incubator.codec.quic.Quiche",
+  "io.netty.channel.unix.Socket",
+  "io.netty.util.internal.PlatformDependent0",
+  "io.netty.util.internal.PlatformDependent",
+  "io.netty.util.internal.NativeLibraryLoader",
+  "io.netty.incubator.codec.quic.BoringSSL",
+  "io.netty.incubator.codec.quic.BoringSSLCertificateCallback",
+  "io.netty.buffer.PooledSlicedByteBuf",
+  "io.netty.buffer.AbstractByteBufAllocator",
+  "io.netty.buffer.UnpooledUnsafeDirectByteBuf",
+  "io.netty.buffer.PoolThreadCache${'$'}1",
+  "io.netty.buffer.UnsafeByteBufUtil",
+  "io.netty.buffer.UnpooledByteBufAllocator${'$'}InstrumentedUnpooledUnsafeDirectByteBuf",
+  "io.netty.buffer.PoolChunkList",
+  "io.netty.buffer.PoolArena${'$'}DirectArena",
+  "io.netty.buffer.PooledUnsafeDirectByteBuf",
+  "io.netty.buffer.ByteBufUtil",
+  "io.netty.buffer.PoolArena${'$'}1",
+  "io.netty.buffer.AbstractPooledDerivedByteBuf",
+  "io.netty.buffer.EmptyByteBuf",
+  "io.netty.buffer.AbstractDerivedByteBuf",
+  "io.netty.buffer.ByteBufAllocator",
+  "io.netty.buffer.AbstractByteBufAllocator${'$'}1",
+  "io.netty.buffer.UnpooledHeapByteBuf",
+  "io.netty.buffer.PoolArena${'$'}HeapArena",
+  "io.netty.buffer.PooledByteBufAllocator",
+  "io.netty.buffer.UnpooledByteBufAllocator",
+  "io.netty.buffer.AbstractReferenceCountedByteBuf",
+  "io.netty.buffer.UnpooledSlicedByteBuf",
+  "io.netty.buffer.AbstractUnpooledSlicedByteBuf",
+  "io.netty.buffer.AbstractByteBuf",
+  "io.netty.buffer.Unpooled",
+  "io.netty.buffer.PooledByteBuf",
+  "io.netty.buffer.UnpooledDirectByteBuf",
+  "io.netty.buffer.PoolThreadCache",
+  "io.netty.buffer.PoolArena",
+  "io.netty.handler.ssl.SslUtils",
+  "io.netty.handler.ssl.SslContext",
+  "io.netty.handler.ssl.PemX509Certificate",
+  "io.netty.handler.ssl.SslProvider${'$'}1",
+  "io.netty.handler.ssl.ReferenceCountedOpenSslContext",
+  "io.netty.handler.ssl.CipherSuiteConverter",
+  "io.netty.handler.ssl.PemPrivateKey",
+  "io.netty.internal.tcnative.SSL",
+  "io.netty.util.Recycler",
+  "io.netty.util.Recycler${'$'}DefaultHandle",
+  "io.netty.util.ResourceLeakDetector",
+  "io.netty.util.ResourceLeakDetectorFactory",
+  "io.netty.util.ResourceLeakDetectorFactory${'$'}DefaultResourceLeakDetectorFactory",
+  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueProducerFields",
+  "io.netty.util.internal.StringUtil",
+  "io.netty.util.internal.PlatformDependent${'$'}Mpsc",
+  "io.netty.util.internal.InternalThreadLocalMap",
+  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueConsumerFields",
+  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueuePad3",
+  "io.netty.util.internal.ThreadExecutorMap",
+  "io.netty.util.internal.shaded.org.jctools.queues.MpscChunkedArrayQueue",
+  "io.netty.util.internal.shaded.org.jctools.util.UnsafeAccess",
+  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueue",
+  "io.netty.util.internal.shaded.org.jctools.util.UnsafeRefArrayAccess",
+  "io.netty.util.internal.ObjectPool${'$'}RecyclerObjectPool${'$'}1",
+  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueuePad2",
+  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueColdProducerFields",
+  "io.netty.util.internal.shaded.org.jctools.queues.MpscChunkedArrayQueueColdProducerFields",
+
   // --- Elide ------
 
   // Elide Runtime Core
@@ -838,9 +1017,19 @@ val initializeAtBuildTime = listOf(
   "elide.tool.cli.control",
   "elide.tool.cli.err",
   "elide.tool.cli.state",
+  "elide.tool.cli.Statics",
   "elide.tool.err",
   "elide.tool.io",
   "elide.tool.testing",
+  "elide.tool.engine.NativeUtil",
+  "elide.tool.engine.NativeEngine${'$'}WhenMappings",
+  "elide.tool.engine.EngineCondition",
+  "elide.tool.engine.JsEngineCondition",
+  "elide.tool.engine.RubyEngineCondition",
+  "elide.tool.engine.WasmEngineCondition",
+  "elide.tool.engine.PythonEngineCondition",
+  "elide.tool.engine.JvmEngineCondition",
+  "elide.tool.engine.LlvmEngineCondition",
 
   // Elide Packages: Framework
   "elide.annotations",
@@ -883,8 +1072,8 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
-  "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "com.sun.tools.javac.file.Locations",
+  "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
   "io.netty.handler.codec.compression.BrotliOptions",
@@ -892,6 +1081,13 @@ val initializeAtRuntime: List<String> = listOf(
   "io.netty.handler.ssl.JdkNpnApplicationProtocolNegotiator",
   "io.netty.handler.codec.http.HttpObjectEncoder",
   "io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder",
+  "org.truffleruby.aot.ParserCache",
+  "org.truffleruby.core.encoding.Encodings",
+  "org.truffleruby.core.format.FormatEncoding",
+  "org.truffleruby.core.format.rbsprintf.RBSprintfSimpleTreeBuilder",
+  "org.truffleruby.core.format.printf.PrintfSimpleTreeBuilder",
+  "org.truffleruby.core.string.FrozenStrings",
+  "org.truffleruby.parser.lexer.RubyLexer${'$'}Keyword${'$'}Maps",
   "kotlin.random.AbstractPlatformRandom",
   "kotlin.random.XorWowRandom",
   "kotlin.random.Random${'$'}Default",
@@ -899,6 +1095,7 @@ val initializeAtRuntime: List<String> = listOf(
   "kotlin.random.jdk8.PlatformThreadLocalRandom",
   "kotlin.internal.jdk8.JDK8PlatformImplementations",
   "kotlin.internal.jdk8.JDK8PlatformImplementations${'$'}ReflectSdkVersion",
+  "kotlin.jvm.internal.MutablePropertyReference1Impl",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -914,43 +1111,31 @@ val defaultPlatformArgs = listOf(
   "--libc=glibc",
 )
 
-val windowsOnlyArgs = defaultPlatformArgs.plus(
-  listOf(
-    "-march=native",
-    "--gc=serial",
-    "-Delide.vm.engine.preinitialize=true",
-    "-H:InitialCollectionPolicy=Adaptive",
-    "-R:MaximumHeapSizePercent=80",
-  ).plus(
-    if (project.properties["elide.ci"] == "true") listOf(
-      "-J-Xmx12g",
-    ) else emptyList(),
-  ),
-).plus(
-  if (oracleGvm) listOf(
-    "-H:-AuxiliaryEngineCache",
-  ) else emptyList(),
-)
+val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
+  "-march=native",
+  "--gc=serial",
+  "-Delide.vm.engine.preinitialize=true",
+  "-H:InitialCollectionPolicy=Adaptive",
+  "-R:MaximumHeapSizePercent=80",
+).plus(if (project.properties["elide.ci"] == "true") listOf(
+  "-J-Xmx12g",
+) else emptyList())).plus(if (oracleGvm && enableAuxCache) listOf(
+  "-H:-AuxiliaryEngineCache",
+) else emptyList())
 
-val darwinOnlyArgs = defaultPlatformArgs.plus(
-  listOf(
-    "-march=native",
-    "--gc=serial",
-    "-Delide.vm.engine.preinitialize=true",
-    "-H:InitialCollectionPolicy=Adaptive",
-    "-R:MaximumHeapSizePercent=80",
-  ).plus(
-    if (project.properties["elide.ci"] == "true") listOf(
-      "-J-Xmx12g",
-    ) else listOf(
-      "-J-Xmx24g",
-    ),
-  ),
-).plus(
-  if (oracleGvm) listOf(
-    "-H:+AuxiliaryEngineCache",
-  ) else emptyList(),
-)
+val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
+  "-march=native",
+  "--gc=serial",
+  "-Delide.vm.engine.preinitialize=true",
+  "-H:InitialCollectionPolicy=Adaptive",
+  "-R:MaximumHeapSizePercent=80",
+).plus(if (project.properties["elide.ci"] == "true") listOf(
+  "-J-Xmx12g",
+) else listOf(
+  "-J-Xmx24g",
+))).plus(if (oracleGvm && enableAuxCache) listOf(
+  "-H:+AuxiliaryEngineCache",
+) else emptyList())
 
 val windowsReleaseArgs = windowsOnlyArgs
 
@@ -994,18 +1179,14 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
-  ).plus(
-    if (oracleGvm) listOf(
-      "-H:+AuxiliaryEngineCache",
-    ) else emptyList(),
-  ),
-).plus(
-  if (project.properties["elide.ci"] == "true") listOf(
-    "-J-Xmx12g",
-  ) else listOf(
-    "-J-Xmx24g",
-  ),
-)
+  ).plus(if (oracleGvm && enableAuxCache) listOf(
+    "-H:+AuxiliaryEngineCache",
+  ) else emptyList())
+).plus(if (project.properties["elide.ci"] == "true") listOf(
+  "-J-Xmx12g",
+) else listOf(
+  "-J-Xmx24g",
+))
 
 val linuxGvmReleaseFlags = listOf(
   "-H:+ObjectInlining",
@@ -1106,6 +1287,7 @@ graalvmNative {
       quickBuild = quickbuild
       sharedLibrary = false
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
+      classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
     }
 
     named("optimized") {
@@ -1121,13 +1303,9 @@ graalvmNative {
       imageName = "elide.test"
       fallback = false
       quickBuild = true
-      buildArgs.addAll(
-        nativeCliImageArgs(test = true, platform = targetOs).filter {
-          it != "--language:java"  // espresso is not supported in test mode
-        }.plus(
-          nativeCompileJvmArgs,
-        ),
-      )
+      buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).plus(
+        nativeCompileJvmArgs
+      ))
     }
   }
 }
@@ -1268,10 +1446,25 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
   )
 }
 
+fun CreateStartScripts.applyStartScriptSettings() {
+  applicationName = "elide"
+  optsEnvironmentVar = "ELIDE_OPTS"
+  defaultJvmOpts = jvmDefs.map { "-D${it.key}=${it.value}" }
+  unixStartScriptGenerator = UnixStartScriptGenerator().apply {
+    template = resources.text.fromFile(layout.projectDirectory.file("packaging/unixStartScript.txt"))
+  }
+  windowsStartScriptGenerator = WindowsStartScriptGenerator().apply {
+    template = resources.text.fromFile(layout.projectDirectory.file("packaging/windowsStartScript.bat"))
+  }
+}
+
 fun Jar.applyJarSettings() {
   // include collected reachability metadata
   duplicatesStrategy = EXCLUDE
-  filterResources(properties["elide.targetArch"] as? String)
+
+  if (enableResourceFilter) {
+    filterResources(properties["elide.targetArch"] as? String)
+  }
 
   manifest {
     attributes(
@@ -1304,7 +1497,17 @@ tasks {
   }
 
   runnerJar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = EXCLUDE
+  }
+
+  listOf(
+    startScripts,
+    startShadowScripts,
+    createOptimizedStartScripts,
+  ).forEach {
+    it.configure {
+      applyStartScriptSettings()
+    }
   }
 
   listOf(
@@ -1319,15 +1522,17 @@ tasks {
   }
 
   compileJava {
-    if (enableJpms) {
-      options.javaModuleVersion = provider { version as String }
-      modularity.inferModulePath = true
-    }
+    options.javaModuleVersion = provider { version as String }
+    if (enableJpms) modularity.inferModulePath = true
   }
 
   named("run", JavaExec::class).configure {
     systemProperty("micronaut.environments", "dev")
     systemProperty("picocli.ansi", "tty")
+    jvmDefs.map {
+      systemProperty(it.key, it.value)
+    }
+
     jvmArgs(jvmModuleArgs)
 
     standardInput = System.`in`
@@ -1346,8 +1551,22 @@ tasks {
   }
 
   optimizedRun {
+    val separator = when (HostManager.hostIsMingw) {
+      true -> ";"
+      false -> ":"
+    }
+    val libPath = System.getProperty("java.library.path", "").split(separator).toMutableList().apply {
+      add(0, nativesPath)
+    }.joinToString(separator)
+
     systemProperty("micronaut.environments", "dev")
+    systemProperty("java.library.path", libPath)
+    jvmDefs.map {
+      systemProperty(it.key, it.value)
+    }
+
     jvmArgs(jvmModuleArgs)
+
     standardInput = System.`in`
     standardOutput = System.out
 

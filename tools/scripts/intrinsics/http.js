@@ -1,7 +1,8 @@
 // retrieve the binding from global symbols
 console.log("Resolving server intrinsics");
-const router = Elide.http.router;
-const config = Elide.http.config;
+const server = Elide.http;
+const router = server.router;
+const config = server.config;
 
 // define local dependencies to demonstrate guest references
 // (note that this counter will be thread-local)
@@ -19,19 +20,21 @@ function getMessage() {
 // define route handlers
 console.log("Configuring route handlers");
 router.handle("GET", "/hello", (request, response, context) => {
-  console.log("Received request");
   response.send(200, getMessage());
 });
 
+// specific options for the Netty backend
+console.log("Configuring server transport");
+config.transport = "nio";
+
 // set the port to listen on and register a callback
+console.log("Configuring binding options");
 config.port = 3000;
 config.onBind(() => {
   console.log("Server listening! 🚀");
 });
 
-// specific options for the Netty backend
-console.log("configuring other stuff")
-config.transport = "nio";
-
-// we're done!
-console.log("✨ Configuration finished! ✨");
+// start listening for connections
+// (this call is inert when issued from handler threads)
+console.log("✨ Configuration finished ✨");
+server.start();

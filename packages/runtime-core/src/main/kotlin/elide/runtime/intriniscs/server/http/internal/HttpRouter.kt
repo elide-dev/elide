@@ -121,7 +121,6 @@ import elide.runtime.gvm.internals.intrinsics.js.JsProxy
           // store request params in the context
           context["params"] = requestParams
         } != null
-        return@matcher true
       }
     }
   }

@@ -59,7 +59,7 @@ class WasmEngineCondition: LanguageCondition("wasm")
 }
 
 /** JavaScript engine tests. */
-@Requires(classes = [JsEngineCondition::class])
+@Requires(condition = JsEngineCondition::class)
 @Bean @EmbeddedTest class JsEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("js").engine(Engine.create()).build()
@@ -90,7 +90,7 @@ class WasmEngineCondition: LanguageCondition("wasm")
 }
 
 /** WASM engine tests. */
-@Requires(classes = [WasmEngineCondition::class])
+@Requires(condition = WasmEngineCondition::class)
 @Bean @EmbeddedTest class WasmEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("wasm").engine(Engine.create()).build()
@@ -100,7 +100,7 @@ class WasmEngineCondition: LanguageCondition("wasm")
 }
 
 /** Python engine tests. */
-@Requires(classes = [PythonEngineCondition::class])
+@Requires(condition = PythonEngineCondition::class)
 @Bean @EmbeddedTest class PythonEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("python").engine(Engine.create()).build()
@@ -130,7 +130,7 @@ class WasmEngineCondition: LanguageCondition("wasm")
 }
 
 /** Ruby engine tests. */
-@Requires(classes = [RubyEngineCondition::class])
+@Requires(condition = RubyEngineCondition::class)
 @Bean @EmbeddedTest class RubyEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("ruby").engine(Engine.create()).build()
@@ -161,7 +161,7 @@ class WasmEngineCondition: LanguageCondition("wasm")
 }
 
 /** JVM engine tests. */
-@Requires(classes = [JvmEngineCondition::class])
+@Requires(condition = JvmEngineCondition::class)
 @Bean @EmbeddedTest class JvmEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("java").engine(Engine.create()).build()

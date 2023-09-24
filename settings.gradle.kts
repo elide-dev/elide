@@ -42,6 +42,8 @@ val embeddedCompose: String by settings
 val embeddedR8: String by settings
 val buildUuid: String by settings
 
+val buildlessApiKey: String by settings
+
 dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
   repositories {

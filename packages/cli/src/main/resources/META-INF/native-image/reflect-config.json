@@ -262,6 +262,10 @@
   "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
+  "name":"ch.qos.logback.core.status.NopStatusListener",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -930,7 +934,8 @@
 {
   "name":"elide.tool.cli.cmd.repl.ToolShellCommand",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "fields":[{"name":"server"}]
 },
 {
   "name":"elide.tool.cli.cmd.repl.ToolShellCommand$DebugConfig",
@@ -1015,6 +1020,16 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.options.$CommonOptions$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.options.CommonOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDebug","parameterTypes":["boolean"] }, {"name":"setQuiet","parameterTypes":["boolean"] }, {"name":"setVerbose","parameterTypes":["boolean"] }]
+},
+{
   "name":"elide.tool.cli.repl.$ToolShellCommand$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1028,11 +1043,27 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$JsEngineCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$JsEngineTest$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$JvmEngineCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$JvmEngineTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$LanguageCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$LlvmEngineCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1044,11 +1075,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$PythonEngineCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$PythonEngineTest$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$RubyEngineCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$RubyEngineTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$WasmEngineCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -4710,6 +4753,10 @@
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
+  "name":"org.truffleruby.core.string.StringNodesFactory$AddNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
   "name":"org.truffleruby.core.string.StringNodesFactory$CompareNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
@@ -4786,6 +4833,10 @@
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
+  "name":"org.truffleruby.core.string.StringNodesFactory$ToSNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
   "name":"org.truffleruby.core.string.StringNodesFactory$ToSymNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
@@ -4811,6 +4862,10 @@
 },
 {
   "name":"org.truffleruby.core.support.IONodesFactory$IOSetFDNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
+  "name":"org.truffleruby.core.support.IONodesFactory$IOWritePolyglotNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
@@ -4847,6 +4902,10 @@
 },
 {
   "name":"org.truffleruby.core.support.TypeNodesFactory$ObjectIVarSetPrimitiveNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
+  "name":"org.truffleruby.core.support.TypeNodesFactory$ObjectToSNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {

@@ -16,12 +16,17 @@ package elide.tool.io
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.SortedMap
+import java.util.SortedSet
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Supplier
 import jakarta.inject.Provider
 import kotlin.io.path.absolute
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Factory
@@ -41,9 +46,24 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     private const val flightRecorderDir = "blackbox"
     private const val nixTempPath = "/tmp/elide-runtime"
     private const val runtimeDirPrefix = "elide-runtime-"
+    private const val elideHomeDirectory = ".elide"
+    private const val elideConfigDirectory = "elide"
+    private const val configDirectory = ".config"
 
     private val linuxCachesPath = "~/elide/caches/v${ElideTool.version()}"
     private val darwinCachesPath = "/Library/caches/elide/v${ElideTool.version()}"
+    private val projectAnchorFiles = sortedSetOf(
+      ".git",
+      "package.json",
+      "pkg.elide.yml",
+      "pkg.elide.yaml",
+      "pkg.elide.toml",
+      "pkg.elide.json",
+      "pkg.elide.js",
+      "pkg.elide.kts",
+      "pkg.elide.py",
+      "pkg.elide.rb",
+    )
 
     @OptIn(DelicateElideApi::class)
     private val persistentTempPath = when (HostPlatform.resolve().os) {
@@ -173,6 +193,30 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     prepareDirectory(this, temporary, lazy)
   }
 
+  // Find the nearest parent directory to `cwd` with one of the provided `files` present.
+  private fun nearestDirectoryWithAnyOfTheseFiles(files: SortedSet<String>, base: File? = null): File? {
+    val cwd = (base ?: File(System.getProperty("user.dir"))).apply {
+      // if the cwd doesn't exist, we're jailed and can't find it anyway
+      if (base == null && !exists()) return null
+    }
+
+    val cwdFiles = cwd.listFiles()
+    if (cwdFiles != null) {
+      val cwdFileNames = cwdFiles.map { it.name }.toSortedSet()
+      val found = files.intersect(cwdFileNames)
+      if (found.isNotEmpty()) {
+        return cwd
+      }
+    }
+    return nearestDirectoryWithAnyOfTheseFiles(files, cwd.parentFile)
+  }
+
+  // Find the nearest parent directory with one of the provided `projectAnchorFiles`.
+  private fun walkLocateProjectRoot(base: File? = null): File? = nearestDirectoryWithAnyOfTheseFiles(
+    projectAnchorFiles,
+    base,
+  )
+
   private fun prepareDirectory(
     target: File,
     temporary: Boolean = true,
@@ -223,6 +267,29 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     workSubdir(flightRecorderDir, temporary = false, lazy = true)
   }
 
+  // User-level configurations for Elide.
+  private val userConfigDirectory by lazy {
+    val homeDir = Paths.get(System.getProperty("user.home"))
+    val defaultPath = homeDir.resolve(configDirectory).resolve(elideConfigDirectory)
+
+    val userConfigPaths = listOf(
+      homeDir.resolve(elideHomeDirectory),
+      defaultPath,
+    )
+
+    (userConfigPaths.first {
+      // the first one that exists, wins, and if nothing exists, the default path is used
+      it.toAbsolutePath().exists()
+    } ?: defaultPath).let {
+      it.toFile()
+    }
+  }
+
+  // Root directory for the current project, as applicable.
+  private val projectRootDirectory by lazy {
+    walkLocateProjectRoot()
+  }
+
   @OptIn(DelicateElideApi::class)
   private val cachesDirectory by lazy {
     when (HostPlatform.resolve().os) {
@@ -230,6 +297,14 @@ internal class RuntimeWorkdirManager : WorkdirManager {
       LINUX -> prepareDirectory(File(userDir(linuxCachesPath)), temporary = false, lazy = true)
       else -> workSubdir(cachesDir, temporary = false, lazy = true)
     }
+  }
+
+  override fun configRoot(): WorkdirHandle = requireActive {
+    userConfigDirectory.toHandle()
+  }
+
+  override fun projectRoot(): WorkdirHandle? = requireActive {
+    projectRootDirectory?.toHandle()
   }
 
   override fun workingRoot(): File = requireActive {

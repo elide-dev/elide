@@ -55,7 +55,8 @@ elide {
 }
 
 dependencies {
-  api(libs.graalvm.polyglot.python)
+//  api(libs.graalvm.polyglot.python)
+//  implementation(libs.bundles.graalvm.python)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
   implementation(projects.packages.graalvmLlvm)

@@ -221,6 +221,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
        * @receiver Error event to generate coordinates for.
        * @return Coordinates for the error.
        */
+      @Suppress("DEPRECATION")  // need to preserve ability to build on JDK17 and JDK21
       @JvmStatic fun ErrorEvent.coordinates(): ErrorCoordinates {
         val firstFrame = frames?.firstOrNull()
 

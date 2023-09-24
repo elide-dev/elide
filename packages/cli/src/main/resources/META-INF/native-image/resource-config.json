@@ -31,6 +31,20 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/ruby/runtime.json.gz\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/facade.js\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/js.modules.tar.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/js.runtime.tar.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/polyfills.js\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/runtime.json\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/ruby/ruby-darwin-aarch64.tar.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/ruby/runtime.json\\E"
+  }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
@@ -782,5 +796,11 @@
   "bundles":[{
     "name":"ElideTool",
     "locales":["en-US"]
+  }, {
+    "name":"sun.awt.resources.awt",
+    "classNames":["sun.awt.resources.awt"]
+  }, {
+    "name":"sun.awt.resources.awtosx",
+    "classNames":["sun.awt.resources.awtosx"]
   }]
 }

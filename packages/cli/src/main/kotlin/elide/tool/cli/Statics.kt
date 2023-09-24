@@ -29,6 +29,13 @@ internal object Statics {
     Logging.named("tool:server")
   }
 
+  /** Whether to disable color output and syntax highlighting. */
+  internal val noColor: Boolean by lazy {
+    System.getenv("NO_COLOR") != null || args.get().let { args ->
+      args.contains("--no-pretty") || args.contains("--no-color")
+    }
+  }
+
   /** Invocation args. */
   internal val args: AtomicReference<List<String>> = AtomicReference(emptyList())
 

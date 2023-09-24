@@ -1,8 +1,5 @@
 module elide.runtime.core {
   requires elide.base;
-  requires elide.graalvm;
-  requires elide.base;
-
   requires org.graalvm.polyglot;
 
   requires kotlin.stdlib;

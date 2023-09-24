@@ -40,7 +40,6 @@ internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
     private const val issueTemplateFeature: String = "new_feature.yaml"
     private const val issueTemplateBugReport: String = "bug_report.yaml"
     private const val templateParam = "template"
-    private const val labelsParam = "label"
     private const val versionParam = "version"
 
     @JvmStatic private fun assembleIssueUrl(type: String): URI {

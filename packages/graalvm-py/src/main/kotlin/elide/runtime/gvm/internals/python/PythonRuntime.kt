@@ -93,7 +93,7 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
     VMStaticProperty.active("python.LazyStrings"),
     VMStaticProperty.active("python.WithCachedSources"),
     VMStaticProperty.active("python.WithTRegex"),
-    VMStaticProperty.inactive("python.UsePanama"),
+    VMStaticProperty.active("python.UsePanama"),
     VMStaticProperty.inactive("python.EmulateJython"),
     VMStaticProperty.of("python.CoreHome", "/python/lib/graalpy23.1"),
     VMStaticProperty.of("python.PythonHome", "/python"),

@@ -1,11 +1,11 @@
 [versions]
 elide = "1.0-v3-alpha4-b12"
 elide_plugin = "1.0.0-beta23"
-kotlin_sdk = "1.9.20-Beta"
+kotlin_sdk = "1.9.20-Beta2"
 kotlin_language = "1.9"
 confundus = "1.0.0"
 jna = "5.8.0"
-ksp = "1.9.20-Beta-1.0.13"
+ksp = "1.9.20-Beta2-1.0.13"
 koin = "3.4.3"
 koin_ksp = "1.2.2"
 graalvm = "23.1.0"
@@ -34,7 +34,7 @@ capnproto = "0.1.16"
 netty_iouring = "0.0.22.Final"
 netty_tcnative = "2.0.61.Final"
 dekorate = "3.1.1"
-micronaut_lib = "4.1.1"
+micronaut_lib = "4.1.2"
 micronaut_aot = "2.1.1"
 micronaut_plugin = "4.1.1"
 compose = "1.5.2"
@@ -417,7 +417,7 @@ graalvm_js_isolate = { group = "org.graalvm.js", name = "js-isolate", version.re
 graalvm_js_language = { group = "org.graalvm.js", name = "js-language", version.ref = "graalvm" }
 graalvm_espresso_polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm" }
 graalvm_espresso_hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm" }
-graalvm_espresso_language = { group = "org.graalvm.espresso", name = "language", version.ref = "graalvm" }
+graalvm_espresso_language = { group = "org.graalvm.espresso", name = "espresso-language", version.ref = "graalvm" }
 graalvm_launcher_common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm" }
 graalvm_launcher_js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm" }
 graalvm_tools_lsp_api = { group = "org.graalvm.tools", name = "lsp_api", version.ref = "graalvm" }
@@ -504,6 +504,7 @@ netty_transport_native_unixCommon = { group = "io.netty", name = "netty-transpor
 netty_transport_native_epoll = { group = "io.netty", name = "netty-transport-native-epoll", version.ref = "netty" }
 netty_transport_native_iouring = { group = "io.netty.incubator", name = "netty-incubator-transport-native-io_uring", version.ref = "netty_iouring" }
 netty_transport_native_kqueue = { group = "io.netty", name = "netty-transport-native-kqueue", version.ref = "netty" }
+netty_transport_native_unix = { group = "io.netty", name = "netty-transport-native-unix-common", version.ref = "netty" }
 netty_tcnative = { group = "io.netty", name = "netty-tcnative", version.ref = "netty_tcnative" }
 netty_tcnative_boringssl_static = { group = "io.netty", name = "netty-tcnative-boringssl-static", version.ref = "netty_tcnative" }
 netty_resolver_dns_native_macos = { group = "io.netty", name = "netty-resolver-dns-native-macos", version.ref = "netty" }
@@ -761,8 +762,8 @@ graalvm_nfi = [
 graalvm_llvm = [
   "graalvm_llvm_api",
   "graalvm_llvm_language_nfi",
-  "graalvm_llvm_language_enterprise",
-  "graalvm_llvm_language_native_enterprise",
+  "graalvm_llvm_language",
+  "graalvm_llvm_language_native",
 ]
 
 graalvm_espresso = [
@@ -770,8 +771,8 @@ graalvm_espresso = [
 ]
 
 graalvm_python = [
-  "graalvm_python_launcher",
-  "graalvm_python_language_enterprise",
+  "graalvm_python_resources",
+  "graalvm_polyglot_python",
 ]
 
 graalvm_ruby = [

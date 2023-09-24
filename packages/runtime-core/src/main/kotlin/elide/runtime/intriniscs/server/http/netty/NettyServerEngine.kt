@@ -1,20 +1,25 @@
-package elide.runtime.intriniscs.server.http.internal
+package elide.runtime.intriniscs.server.http.netty
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelOption
+import org.graalvm.polyglot.HostAccess.Export
 import java.net.InetSocketAddress
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.intriniscs.server.http.netty.NettyChannelInitializer
-import elide.runtime.intriniscs.server.http.netty.NettyRequestHandler
-import elide.runtime.intriniscs.server.http.netty.NettyTransport
+import elide.runtime.intriniscs.server.http.HttpServerEngine
+import elide.runtime.intriniscs.server.http.internal.PipelineRouter
 
 /**
- * The Server Engine manages the implementation of the underlying transport (e.g. Netty), and binds the server when
- * requested by [start].
+ * Netty-based [HttpServerEngine] implementation.
+ *
+ * This class resolves a platform-specific [NettyTransport], which uses native libraries if available for increased
+ * performance.
  */
-@DelicateElideApi internal class HttpServerEngine(private val router: HttpRouter) {
+@DelicateElideApi internal class NettyServerEngine(
+  @Export override val config: NettyServerConfig,
+  @Export override val router: PipelineRouter,
+) : HttpServerEngine {
   /** Private logger instance. */
   private val logging by lazy { Logging.of(HttpServerEngine::class) }
 
@@ -23,10 +28,12 @@ import elide.runtime.intriniscs.server.http.netty.NettyTransport
     return NettyChannelInitializer(NettyRequestHandler(router))
   }
 
-  /** Start listening at the given [port], using a native transport resolved for the current platform. */
-  internal fun start(port: Int) {
+  /**
+   * Start listening at the port specified by [config], using a native transport resolved for the current platform.
+   */
+  override fun start() {
     // acquire platform-specific Netty components
-    val transport = NettyTransport.resolve()
+    val transport = config.resolveTransport()
     logging.debug { "Using transport: $transport" }
 
     with(ServerBootstrap()) {
@@ -43,9 +50,12 @@ import elide.runtime.intriniscs.server.http.netty.NettyTransport
       childOption(ChannelOption.SO_REUSEADDR, true)
 
       // start listening
-      val address = InetSocketAddress(port)
+      val address = InetSocketAddress(config.port)
       bind(address).sync().channel()
+
+      // notify listeners if applicable
       logging.debug { "Server listening at $address" }
+      config.onBindCallback?.invoke()
     }
   }
 

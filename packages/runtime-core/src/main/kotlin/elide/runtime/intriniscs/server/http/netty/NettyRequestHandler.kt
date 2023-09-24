@@ -1,17 +1,16 @@
 package elide.runtime.intriniscs.server.http.netty
 
-import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.LastHttpContent
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.intriniscs.server.http.HttpContext
+import elide.runtime.intriniscs.server.http.HttpRequest
+import elide.runtime.intriniscs.server.http.HttpResponse
 import elide.runtime.intriniscs.server.http.internal.GuestHandlerFunction
-import elide.runtime.intriniscs.server.http.internal.HttpRequest
-import elide.runtime.intriniscs.server.http.internal.HttpRequestContext
-import elide.runtime.intriniscs.server.http.internal.HttpResponse
-import elide.runtime.intriniscs.server.http.internal.HttpRouter
+import elide.runtime.intriniscs.server.http.internal.PipelineRouter
 import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
 
 /**
@@ -21,12 +20,12 @@ import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
  * used from different threads (hence the [@Sharable][Sharable] marker).
  */
 @DelicateElideApi @Sharable internal class NettyRequestHandler(
-  private val router: HttpRouter
+  private val router: PipelineRouter
 ) : ChannelInboundHandlerAdapter() {
-  @Suppress("unused_parameter")
   /** Provide a default handler function for cases where no handler can be resolved by the [router]. */
-  private fun handleNotFound(request: HttpRequest, response: HttpResponse, context: HttpRequestContext) {
-    response.sendBody(HttpResponseStatus.NOT_FOUND, Unpooled.EMPTY_BUFFER)
+  @Suppress("unused_parameter")
+  private fun handleNotFound(request: HttpRequest, response: HttpResponse, context: HttpContext) {
+    response.send(HttpResponseStatus.NOT_FOUND.code(), null)
   }
 
   override fun channelRead(channelContext: ChannelHandlerContext, message: Any) {
@@ -34,9 +33,9 @@ import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
     if (message == LastHttpContent.EMPTY_LAST_CONTENT || message !is NettyHttpRequest) return
 
     // prepare the wrappers
-    val request = HttpRequest(message)
-    val response = HttpResponse(channelContext)
-    val context = HttpRequestContext()
+    val request = NettyHttpRequest(message)
+    val response = NettyHttpResponse(channelContext)
+    val context = HttpContext()
 
     // resolve the handler (or default to 'not found')
     // TODO: to support a full handler stack, an iterable should be returned here

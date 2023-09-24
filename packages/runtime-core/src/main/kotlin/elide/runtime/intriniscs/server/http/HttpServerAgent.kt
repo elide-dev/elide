@@ -6,6 +6,8 @@ import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
 import elide.runtime.intriniscs.ElideBindings
 import elide.runtime.intriniscs.server.http.internal.*
+import elide.runtime.intriniscs.server.http.netty.NettyServerConfig
+import elide.runtime.intriniscs.server.http.netty.NettyServerEngine
 
 /**
  * A Server Agent manages the lifecycle of HTTP Server intrinsics and their injection into guest code.
@@ -57,24 +59,24 @@ import elide.runtime.intriniscs.server.http.internal.*
     }
 
     // configure the router and server engine
-    val router = HttpRouter(handlerRegistry)
-    val server = HttpServerEngine(router)
+    val config = NettyServerConfig()
+    val router = PipelineRouter(handlerRegistry)
+    val engine = NettyServerEngine(config, router)
 
     // prepare a new context, injecting the router to allow guest code to register
     // handlers, this differs from thread-local initialization in that the router
     // also constructs a shared handler pipeline that does not require references
     val context = acquireContext()
-    context.installRouter(router, entrypoint)
+    context.installEngine(engine, entrypoint)
     context.evaluate(entrypoint)
 
-    // TODO(@darvld): allow customizing this from guest code
     // start the server
-    server.start(8080)
+    engine.start()
   }
 
   /**
    * Initialize a thread-local [HandlerRegistry] by re-evaluating a given [entrypoint]. The [registry] is wrapped in
-   * a [RoutingRegistry] and injected into the [context] before evaluating the guest configuration code.
+   * a [NoopServerEngine] and injected into the [context] before evaluating the guest configuration code.
    *
    * @param registry The thread-local registry being initialized.
    * @param context The context to be used for evaluating the [entrypoint], must belong to the current thread.
@@ -88,17 +90,17 @@ import elide.runtime.intriniscs.server.http.internal.*
     // inject the registry into the context to allow guest code to register handlers,
     // this is required for correct initialization of the registry since thread-local
     // references to each handler are required
-    context.installRouter(RoutingRegistry(registry), entrypoint)
+    context.installEngine(NoopServerEngine(NettyServerConfig(), registry), entrypoint)
     context.evaluate(entrypoint)
   }
 
   public companion object {
     /** Binding path for the route builder. */
-    private const val ROUTER_BIND_PATH: String = "Elide.http.router"
+    private const val ENGINE_BIND_PATH: String = "Elide.http"
 
-    /** Install a [router] at the standard [ROUTER_BIND_PATH] in this context. */
-    private fun PolyglotContext.installRouter(router: RoutingRegistry, entrypoint: Source) {
-      ElideBindings.install(ROUTER_BIND_PATH, router, this, resolveLanguage(entrypoint))
+    /** Install a server [engine] at the standard [ENGINE_BIND_PATH] in this context. */
+    private fun PolyglotContext.installEngine(engine: HttpServerEngine, entrypoint: Source) {
+      ElideBindings.install(ENGINE_BIND_PATH, engine, this, resolveLanguage(entrypoint))
     }
 
     // TODO(@darvld): use a cleaner approach here

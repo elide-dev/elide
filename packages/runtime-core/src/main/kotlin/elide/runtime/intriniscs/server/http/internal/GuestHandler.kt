@@ -2,6 +2,9 @@ package elide.runtime.intriniscs.server.http.internal
 
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
+import elide.runtime.intriniscs.server.http.HttpRequest
+import elide.runtime.intriniscs.server.http.HttpContext
+import elide.runtime.intriniscs.server.http.HttpResponse
 
 /**
  * Lightweight wrapper around a [PolyglotValue] that represents an executable request handler, allowing calls to the
@@ -13,7 +16,7 @@ import elide.runtime.core.PolyglotValue
 @DelicateElideApi @JvmInline internal value class GuestHandler private constructor(
   private val value: PolyglotValue
 ) : GuestHandlerFunction {
-  override fun invoke(request: HttpRequest, response: HttpResponse, context: HttpRequestContext) {
+  override fun invoke(request: HttpRequest, response: HttpResponse, context: HttpContext) {
     value.executeVoid(request, response, context)
   }
   

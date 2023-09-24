@@ -184,6 +184,20 @@ public final class elide/runtime/core/extensions/ExecutionListenerKt {
 	public static final fun attach (Lorg/graalvm/polyglot/management/ExecutionListener$Builder;Lelide/runtime/core/PolyglotEngine;)Lorg/graalvm/polyglot/management/ExecutionListener;
 }
 
+public final class elide/runtime/intriniscs/ElideBindings {
+	public static final field INSTANCE Lelide/runtime/intriniscs/ElideBindings;
+	public final fun install (Ljava/lang/String;Ljava/lang/Object;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
+}
+
+public final class elide/runtime/intriniscs/server/http/HttpServerAgent {
+	public static final field Companion Lelide/runtime/intriniscs/server/http/HttpServerAgent$Companion;
+	public fun <init> ()V
+	public final fun run (Lorg/graalvm/polyglot/Source;Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class elide/runtime/intriniscs/server/http/HttpServerAgent$Companion {
+}
+
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public fun <init> ()V
 	protected final fun applyBindings (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V

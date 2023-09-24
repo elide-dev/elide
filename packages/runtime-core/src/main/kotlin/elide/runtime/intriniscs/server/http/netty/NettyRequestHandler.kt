@@ -13,10 +13,17 @@ import elide.runtime.intriniscs.server.http.internal.HttpResponse
 import elide.runtime.intriniscs.server.http.internal.HttpRouter
 import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
 
+/**
+ * A custom shareable (thread-safe) handler used to bridge the Netty server with guest code.
+ *
+ * Given the thread-local approach used by the the server intrinsics, a single [NettyRequestHandler] can be safely
+ * used from different threads (hence the [@Sharable][Sharable] marker).
+ */
 @DelicateElideApi @Sharable internal class NettyRequestHandler(
   private val router: HttpRouter
 ) : ChannelInboundHandlerAdapter() {
   @Suppress("unused_parameter")
+  /** Provide a default handler function for cases where no handler can be resolved by the [router]. */
   private fun handleNotFound(request: HttpRequest, response: HttpResponse, context: HttpRequestContext) {
     response.send(HttpResponseStatus.NOT_FOUND)
   }

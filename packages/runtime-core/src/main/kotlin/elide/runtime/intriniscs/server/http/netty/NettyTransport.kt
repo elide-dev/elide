@@ -16,13 +16,23 @@ import io.netty.incubator.channel.uring.IOUring
 import io.netty.incubator.channel.uring.IOUringEventLoopGroup
 import io.netty.incubator.channel.uring.IOUringServerSocketChannel
 import kotlin.reflect.KClass
+import elide.runtime.intriniscs.server.http.netty.NettyTransport.Companion.resolve
 
+/**
+ * Defines a specific transport used by the Netty backend, the [resolve] function will return the preferred
+ * [NettyTransport] for the current platform.
+ */
 internal sealed interface NettyTransport<T : ServerSocketChannel> {
-
+  /** Configure and return a transport-specific [EventLoopGroup]. */
   fun eventLoopGroup(): EventLoopGroup
 
+  /** Return the class marker used to indicate Netty which server socket type should be used. */
   fun socketChannel(): KClass<T>
 
+  /**
+   * Apply this transport in the target [ServerBootstrap] [scope]. The default implementation configures the
+   * [eventLoopGroup] and [socketChannel] options.
+   */
   fun bootstrap(scope: ServerBootstrap) {
     scope.group(eventLoopGroup())
     scope.channel(socketChannel().java)
@@ -46,6 +56,7 @@ internal sealed interface NettyTransport<T : ServerSocketChannel> {
   }
 }
 
+/** IO-Uring transport layer, available on Linux only. */
 internal data object IOUringTransport : NettyTransport<IOUringServerSocketChannel> {
   override fun eventLoopGroup(): EventLoopGroup {
     return IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors())
@@ -56,6 +67,7 @@ internal data object IOUringTransport : NettyTransport<IOUringServerSocketChanne
   }
 }
 
+/** Epoll transport layer, available on most Linux kernels. */
 internal data object EpollTransport : NettyTransport<EpollServerSocketChannel> {
   override fun eventLoopGroup(): EventLoopGroup {
     return EpollEventLoopGroup()
@@ -71,6 +83,7 @@ internal data object EpollTransport : NettyTransport<EpollServerSocketChannel> {
   }
 }
 
+/** KQueue transport layer, available for Unix-like systems */
 internal data object KQueueTransport : NettyTransport<KQueueServerSocketChannel> {
   override fun eventLoopGroup(): EventLoopGroup {
     return KQueueEventLoopGroup()
@@ -81,6 +94,7 @@ internal data object KQueueTransport : NettyTransport<KQueueServerSocketChannel>
   }
 }
 
+/** Generic Java NIO transport layer, used as fallback where native transport is not available. */
 internal data object NioTransport : NettyTransport<NioServerSocketChannel> {
   override fun eventLoopGroup(): EventLoopGroup {
     return NioEventLoopGroup()

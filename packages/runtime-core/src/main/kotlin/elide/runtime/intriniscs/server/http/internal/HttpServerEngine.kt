@@ -10,14 +10,20 @@ import elide.runtime.intriniscs.server.http.netty.NettyChannelInitializer
 import elide.runtime.intriniscs.server.http.netty.NettyRequestHandler
 import elide.runtime.intriniscs.server.http.netty.NettyTransport
 
+/**
+ * The Server Engine manages the implementation of the underlying transport (e.g. Netty), and binds the server when
+ * requested by [start].
+ */
 @DelicateElideApi internal class HttpServerEngine(private val router: HttpRouter) {
   /** Private logger instance. */
   private val logging by lazy { Logging.of(HttpServerEngine::class) }
 
+  /** Construct a new [ChannelHandler] used as initializer for client channels. */
   private fun prepareChannelInitializer(): ChannelHandler {
     return NettyChannelInitializer(NettyRequestHandler(router))
   }
 
+  /** Start listening at the given [port], using a native transport resolved for the current platform. */
   internal fun start(port: Int) {
     // acquire platform-specific Netty components
     val transport = NettyTransport.resolve()
@@ -44,6 +50,7 @@ import elide.runtime.intriniscs.server.http.netty.NettyTransport
   }
 
   private companion object {
+    /** Backlog size for the server socket. */
     private const val SERVER_BACKLOG = 8192
   }
 }

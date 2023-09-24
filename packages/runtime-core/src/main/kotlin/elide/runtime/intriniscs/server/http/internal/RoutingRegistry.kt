@@ -6,6 +6,10 @@ import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 
+/**
+ * Base class providing route registration APIs to guest code, compiling routing keys that can be used to resolve
+ * handler references from a [HandlerRegistry].
+ */
 @DelicateElideApi internal open class RoutingRegistry internal constructor(
   protected val handlerRegistry: HandlerRegistry
 ) {
@@ -17,6 +21,7 @@ import elide.runtime.core.PolyglotValue
     handlerRegistry.register(compileRouteKey(path, method), GuestHandler.of(handler))
   }
 
+  /** Guest-accessible method used to register a[handler] for the provided [method] and [path]. */
   @Export fun handle(method: String?, path: String?, handler: PolyglotValue) {
     logging.trace { "Registering handler with method '$method' and path '$path'" }
     handle(method?.let { HttpMethod.valueOf(it) }, path, handler)

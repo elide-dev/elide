@@ -4,7 +4,8 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 
 /**
- * Lightweight wrapper around a [PolyglotValue] that represents an executable request handler.
+ * Lightweight wrapper around a [PolyglotValue] that represents an executable request handler, allowing calls to the
+ * underlying guest callable as a normal Kotlin [function][GuestHandlerFunction].
  *
  * Note that using [GuestHandler.of] to wrap a value will verify that it can be executed, but signature checks are not
  * available, meaning that function-like values that don't match a handler's signature are technically possible.

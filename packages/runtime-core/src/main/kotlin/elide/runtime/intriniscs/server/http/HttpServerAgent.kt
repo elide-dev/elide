@@ -6,11 +6,31 @@ import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
 import elide.runtime.intriniscs.ElideBindings
 import elide.runtime.intriniscs.server.http.internal.*
-import elide.runtime.intriniscs.server.http.internal.HandlerRegistry
-import elide.runtime.intriniscs.server.http.internal.HttpRouter
-import elide.runtime.intriniscs.server.http.internal.HttpServerEngine
-import elide.runtime.intriniscs.server.http.internal.RoutingRegistry
 
+/**
+ * A Server Agent manages the lifecycle of HTTP Server intrinsics and their injection into guest code.
+ *
+ * Use the [run] method to start a new HTTP server that allows routing configuration to be specified by guest code from
+ * a provided entry point.
+ *
+ * The server routing intrinsic is bound as `Elide.http.router`, regardless of the target language. For example, in
+ * JavaScript, the following code may be used to retrieve it:
+ * ```javascript
+ * // the 'Elide' object is available as a top-level symbol
+ * // no import statements are required to use it
+ * const router = Elide.http.router;
+ *
+ * // handlers can be specified by calling the 'handle' method,
+ * // this can be used to create wrappers simulating popular APIs
+ * // in the target ecosystem (e.g. Express.js in JavaScript)
+ * router.handle("GET", "/hello", (request, response, context) => {
+ *   response.send(200, getMessage());
+ * });
+ * ```
+ *
+ * After evaluating the guest entry point, the HTTP server is automatically started, without requiring an explicit call
+ * (such as `server.start()` or any similar constructs).
+ */
 @DelicateElideApi public class HttpServerAgent {
   /**
    * Configure and start a new HTTP server, using the provided [entrypoint] to configure the routing and binding

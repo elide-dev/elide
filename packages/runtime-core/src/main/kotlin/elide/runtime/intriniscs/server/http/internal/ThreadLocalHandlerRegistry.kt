@@ -2,6 +2,16 @@ package elide.runtime.intriniscs.server.http.internal
 
 import elide.runtime.core.DelicateElideApi
 
+/**
+ * An implementation of [HandlerRegistry] that keeps a per-thread backing map.
+ *
+ * Whenever the registry is accessed for the first time on a given thread, the [initializeForThread] function is
+ * called to obtain new thread-scoped references provided by guest code.
+ *
+ * By scoping handler references to the current thread, this registry guarantees that they can safely be used with a
+ * simiarily scoped context, avoiding the limitations on concurrency imposed by GraalVM's JavaScript engine and other
+ * single-threaded guest languages.
+ */
 @DelicateElideApi internal class ThreadLocalHandlerRegistry(
   private val initializeForThread: (ThreadLocalHandlerRegistry) -> Unit
 ) : HandlerRegistry {

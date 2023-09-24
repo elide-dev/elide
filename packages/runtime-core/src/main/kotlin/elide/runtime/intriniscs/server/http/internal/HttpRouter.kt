@@ -6,6 +6,11 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.internals.intrinsics.js.JsProxy
 
+/**
+ * The HTTP Router resolves [GuestHandler] references for an incoming [HttpRequest].
+ *
+ * Route handlers are registered using the [handle] method, which also writes to an internal [handlerRegistry].
+ */
 @DelicateElideApi internal class HttpRouter(handlerRegistry: HandlerRegistry) : RoutingRegistry(handlerRegistry) {
   /** Private logger instance. */
   private val logging by lazy { Logging.of(HttpRouter::class) }
@@ -16,6 +21,7 @@ import elide.runtime.gvm.internals.intrinsics.js.JsProxy
    */
   private val pipeline = mutableListOf<PipelineStage>()
 
+  /** Register a route [handler] with the given [method] and [path]. */
   override fun handle(method: HttpMethod?, path: String?, handler: PolyglotValue) {
     val key = compileRouteKey(path, method)
 
@@ -23,6 +29,10 @@ import elide.runtime.gvm.internals.intrinsics.js.JsProxy
     pipeline.add(PipelineStage(key, compileMatcher(path, method)))
   }
 
+  /**
+   * Resolve a [GuestHandlerFunction] for an incoming [request], storing any path variable values in the [context]. If
+   * no handler can be resolved for the given request, `null` is return.
+   */
   fun route(request: HttpRequest, context: HttpRequestContext): GuestHandlerFunction? {
     return checkPipelineStage(request, context)
   }

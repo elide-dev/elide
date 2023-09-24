@@ -63,6 +63,7 @@ dependencies {
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.kotlin.scripting.jvm.engine)
+  implementation(libs.kotlin.compiler.embedded)
 
   // Testing
   testImplementation(projects.packages.test)

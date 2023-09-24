@@ -81,6 +81,7 @@ import elide.runtime.gvm.GuestLanguage
   }
 
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
+    super.beforeAnalysis(access)
     registerRuntimeTypes(access)
   }
 

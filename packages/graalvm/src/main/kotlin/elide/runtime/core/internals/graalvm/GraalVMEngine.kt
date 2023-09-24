@@ -147,7 +147,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     private const val ENABLE_ISOLATES = false
 
     /** Whether to enable the auxiliary cache. */
-    private const val ENABLE_AUX_CACHE = false
+    private const val ENABLE_AUX_CACHE = true
 
     /** Whether the runtime is built as a native image. */
     private val isNativeImage = ImageInfo.inImageCode()
@@ -171,10 +171,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
      * Creates a new [GraalVMEngine] using the provided [configuration]. This method triggers the [EngineCreated] event
      * for registered plugins.
      */
-    fun create(
-      configuration: GraalVMConfiguration,
-      lifecycle: MutableEngineLifecycle,
-    ): GraalVMEngine {
+    fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
       val languages = configuration.languages.map { it.languageId }.toTypedArray()
       val builder = Engine.newBuilder(*languages).apply {
         useSystemProperties(false)

@@ -93,6 +93,7 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
     VMStaticProperty.inactive("java.EnableAgents"),
     VMStaticProperty.inactive("java.EnableManagement"),
     VMStaticProperty.inactive("java.ExposeNativeJavaVM"),
+//    VMStaticProperty.of("java.JImageMode", "native"),
   ).stream()
 
   override fun prepare(context: VMContext, globals: Value) {

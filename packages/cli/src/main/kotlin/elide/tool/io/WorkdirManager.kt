@@ -93,6 +93,21 @@ interface WorkdirManager : AutoCloseable {
   }
 
   /**
+   * Obtain the directory where user configurations are stored and read.
+   *
+   * @return Directory to use for user-level configuration.
+   */
+  fun configRoot(): WorkdirHandle
+
+  /**
+   * Obtain the directory where user project configurations originate; this is typically the root `.git` repository, or
+   * the nearest `app.elide.[yml|toml|json|js|kt|py]` file.
+   *
+   * @return Directory to use for as the project root; if no project root can be located, `null` is returned.
+   */
+  fun projectRoot(): WorkdirHandle?
+
+  /**
    * Obtain the root temporary working directory for this run.
    *
    * @return Temporary working directory, which may be shared across calls/components; guaranteed to be readable.

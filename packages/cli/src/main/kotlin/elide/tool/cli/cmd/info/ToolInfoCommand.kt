@@ -22,6 +22,8 @@ import elide.annotations.Singleton
 import elide.tool.cli.*
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.ToolState
+import elide.tool.cli.cfg.ElideCLITool
+import elide.tool.engine.NativeEngine
 import elide.tool.io.RuntimeWorkdirManager
 
 /** TBD. */
@@ -33,6 +35,13 @@ import elide.tool.io.RuntimeWorkdirManager
 @Singleton internal class ToolInfoCommand @Inject constructor(
   private val workdir: RuntimeWorkdirManager,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
+  companion object {
+    private fun Boolean.label(): String = if (this) "Yes" else "No"
+  }
+
+  // Check if the library group at the name `group` was loaded.
+  private fun libraryGroupLoaded(group: String): Boolean = NativeEngine.didLoad(group)
+
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val version = ElideTool.version()
@@ -41,13 +50,14 @@ import elide.tool.io.RuntimeWorkdirManager
     val tempRoot = workdir.tmpDirectory()
     val caches = workdir.cacheDirectory()
     val natives = workdir.nativesDirectory()
-    val operatingMode = if (ImageInfo.inImageCode()) "NATIVE" else "JVM"
+    val operatingMode = if (ImageInfo.inImageCode()) "Native" else "JVM"
 
     output {
-      appendLine("Elide v${version}")
+      appendLine("Elide v${version} (${ElideCLITool.ELIDE_RELEASE_TYPE})")
       appendLine("Engine: ${engine.implementationName} v${engine.version}")
       appendLine("Platform: $operatingMode")
       appendLine("Languages: " + engine.languages.keys.joinToString(", "))
+      appendLine()
       appendLine("Paths: ")
       appendLine("- Working Root: ${workingRoot.absolutePath}")
       appendLine("- Temporary Root: ${tempRoot.absolutePath}")

@@ -53,19 +53,13 @@ elide {
   }
 }
 
-val encloseEspressoResources = false
-
 dependencies {
   api(libs.graalvm.polyglot.java)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
+  implementation(libs.graalvm.espresso.hotswap)
+  implementation(libs.graalvm.espresso.language)
   compileOnly(libs.graalvm.espresso.polyglot)
-  compileOnly(libs.graalvm.espresso.hotswap)
-
-  if (encloseEspressoResources) {
-    api(files(layout.projectDirectory.file("lib/espresso-libs-resources.jar")))
-    api(files(layout.projectDirectory.file("lib/espresso-runtime-resources.jar")))
-  }
 
   // Testing
   testImplementation(projects.packages.test)

@@ -69,10 +69,21 @@ import org.graalvm.polyglot.Source
  * Evaluate a fragment of [source] code in the specified [language], returning the result of the execution. Depending
  * on the configuration of the context, this method may fail if the [language] is not enabled in the underlying engine.
  *
+ * @param name Name for this source fragment.
  * @param language The language of the [source] code.
  * @param source The guest code to be executed.
+ * @param internal Indicates that the source in question is "internal."
  * @return The result of evaluating the [source].
  */
-@DelicateElideApi public fun PolyglotContext.evaluate(language: GuestLanguage, source: String): PolyglotValue {
-  return evaluate(Source.create(language.languageId, source))
+@DelicateElideApi public fun PolyglotContext.evaluate(
+  language: GuestLanguage,
+  source: String,
+  name: String? = null,
+  internal: Boolean = false,
+): PolyglotValue {
+  return evaluate(
+    Source.newBuilder(language.languageId, source, name ?: "(inline)")
+      .internal(internal)
+      .build()
+  )
 }

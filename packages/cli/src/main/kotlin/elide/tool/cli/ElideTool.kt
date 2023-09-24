@@ -15,20 +15,19 @@
 
 package elide.tool.cli
 
-import ch.qos.logback.classic.Level
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.ContextConfigurer
-import org.slf4j.LoggerFactory
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
+import java.security.Security
 import java.util.*
-import kotlin.properties.Delegates
 import kotlin.system.exitProcess
 import elide.annotations.Context
 import elide.annotations.Eager
@@ -47,7 +46,7 @@ import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
 import elide.tool.io.RuntimeWorkdirManager
-import elide.tool.io.WorkdirManager
+
 
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
@@ -77,12 +76,16 @@ import elide.tool.io.WorkdirManager
 @Eager @Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
   companion object {
     init {
+//      Security.insertProviderAt(OpenSSLProvider(), 0)
+      Security.insertProviderAt(BouncyCastleProvider(), 1)
+
       // load natives
       NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
         listOf(
           "elide.js.vm.enableStreams" to "true",
           "io.netty.allocator.maxOrder" to "3",
           "io.netty.serviceThreadPrefix" to "elide-svc",
+          "io.netty.native.deleteLibAfterLoading" to "true",  // reversed bc of bug (actually does not delete)
           "io.netty.buffer.bytebuf.checkAccessible" to "false",
           org.fusesource.jansi.AnsiConsole.JANSI_MODE to org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE,
           org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL to "false",
@@ -95,11 +98,6 @@ import elide.tool.io.WorkdirManager
 
     // Maps exceptions to process exit codes.
     private val exceptionMapper = DefaultErrorHandler.acquire()
-
-    // Tool-wide main logger.
-    private val logging by lazy {
-      Statics.logging
-    }
 
     @JvmStatic private fun initializeTerminal() {
       org.fusesource.jansi.AnsiConsole.systemInstall()
@@ -149,9 +147,8 @@ import elide.tool.io.WorkdirManager
         .setUsageHelpAutoWidth(true)
         .setColorScheme(
           Help.defaultColorScheme(
-            if (args.find { arg ->
-                arg == "--no-pretty" || arg == "--pretty=false"
-              } != null) {
+            if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
+                System.getenv("NO_COLOR") != null) {
               Help.Ansi.OFF
             } else {
               Help.Ansi.ON
@@ -180,61 +177,8 @@ import elide.tool.io.WorkdirManager
     }
   }
 
-  // Respond to logging level flags.
-  private fun setLoggingLevel(level: Level) {
-    ((LoggerFactory.getLogger("ROOT")) as ch.qos.logback.classic.Logger).level = level
-  }
-
   // Bean context.
   @Inject internal lateinit var beanContext: BeanContext
-
-  /** Verbose logging mode (wins over `--quiet`). */
-  @set:Option(
-    names = ["-v", "--verbose"],
-    description = ["Activate verbose logging. Wins over `--quiet` when both are passed."],
-    scope = ScopeType.INHERIT,
-  )
-  var verbose: Boolean by Delegates.observable(false) { _, _, active ->
-    if (active) {
-      setLoggingLevel(Level.INFO)
-      logging.info("Verbose logging enabled.")
-    }
-  }
-
-  /** Verbose logging mode. */
-  @set:Option(
-    names = ["-q", "--quiet"],
-    description = ["Squelch most logging"],
-    scope = ScopeType.INHERIT,
-  )
-  var quiet: Boolean by Delegates.observable(false) { _, _, active ->
-    if (active) {
-      setLoggingLevel(Level.OFF)
-    }
-  }
-
-  /** Debug mode. */
-  @set:Option(
-    names = ["--debug"],
-    description = ["Activate debugging features and extra logging"],
-    scope = ScopeType.INHERIT,
-  )
-  var debug: Boolean by Delegates.observable(false) { _, _, active ->
-    if (active) {
-      logging.trace("Debug mode enabled.")
-      setLoggingLevel(Level.TRACE)
-    }
-  }
-
-  /** Whether to activate pretty logging; on by default. */
-  @Option(
-    names = ["--pretty"],
-    negatable = true,
-    description = ["Whether to colorize and animate output."],
-    defaultValue = "true",
-    scope = ScopeType.INHERIT,
-  )
-  var pretty: Boolean = true
 
   /** Request timeout value to apply. */
   @Option(

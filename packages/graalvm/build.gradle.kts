@@ -41,6 +41,9 @@ plugins {
   id("elide.internal.conventions")
 }
 
+val enableJpms = false
+val ktCompilerArgs = emptyList<String>()
+
 elide {
   publishing {
     id = "graalvm"
@@ -53,7 +56,7 @@ elide {
   }
 
   java {
-    configureModularity = true
+    configureModularity = enableJpms
   }
 
   kotlin {
@@ -72,16 +75,14 @@ allOpen {
   annotation("org.openjdk.jmh.annotations.State")
 }
 
+
 group = "dev.elide"
 version = rootProject.version as String
 
 java {
   sourceCompatibility = JavaVersion.VERSION_20
   targetCompatibility = JavaVersion.VERSION_20
-}
-
-kotlin {
-  explicitApi()
+  if (enableJpms) modularity.inferModulePath = true
 }
 
 sourceSets {
@@ -258,6 +259,7 @@ dependencies {
   api(libs.graalvm.polyglot.tools.profiler)
   api(libs.graalvm.regex)
   api(libs.graalvm.polyglot.js)
+  compileOnly(libs.graalvm.svm)
 
   testImplementation(libs.bundles.graalvm.polyglot)
   testImplementation(libs.bundles.graalvm.tools)
@@ -302,8 +304,17 @@ tasks {
   }
 
   compileJava {
-//    options.javaModuleVersion = version as String
-//    modularity.inferModulePath = true
+    options.javaModuleVersion = version as String
+    if (enableJpms) modularity.inferModulePath = true
+
+    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+      listOf(
+        "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
+        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+      )
+    })
   }
 
   /**

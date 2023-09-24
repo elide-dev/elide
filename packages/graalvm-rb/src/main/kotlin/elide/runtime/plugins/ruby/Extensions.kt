@@ -10,8 +10,9 @@ import elide.runtime.core.evaluate
  * [PolyglotContext.evaluate] and selecting [Ruby] as source language.
  *
  * @param source The source code to be executed.
+ * @param name Name to provide for this source fragment.
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.ruby(source: String): PolyglotValue {
-  return evaluate(Ruby, source)
+@DelicateElideApi public fun PolyglotContext.ruby(source: String, name: String? = null): PolyglotValue {
+  return evaluate(Ruby, source, name = name)
 }

@@ -31,7 +31,7 @@ import elide.runtime.intriniscs.server.http.internal.PipelineRouter
   /**
    * Start listening at the port specified by [config], using a native transport resolved for the current platform.
    */
-  override fun start() {
+  @Export override fun start() {
     // acquire platform-specific Netty components
     val transport = config.resolveTransport()
     logging.debug { "Using transport: $transport" }

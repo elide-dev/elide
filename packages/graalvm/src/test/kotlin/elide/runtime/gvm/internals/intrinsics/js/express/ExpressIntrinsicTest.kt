@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.internals.intrinsics.js.express
 
 import org.junit.jupiter.api.Test
@@ -18,6 +20,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import elide.annotations.Inject
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.TestCase
 

@@ -12,12 +12,14 @@
  */
 
 @file:Suppress("JSUnusedLocalSymbols")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.js
 
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.*
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.ExecutableScript.ScriptSource
 import elide.runtime.gvm.internals.GVMInvocationBindings
 import elide.runtime.gvm.js.AbstractJsTest

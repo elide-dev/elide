@@ -200,7 +200,6 @@ dependencies {
   kover(projects.packages.core)
   kover(projects.packages.graalvm)
   kover(projects.packages.model)
-  kover(projects.packages.runtimeCore)
   kover(projects.packages.proto.protoCore)
   kover(projects.packages.proto.protoCapnp)
   kover(projects.packages.proto.protoFlatbuffers)

@@ -1,5 +1,5 @@
 module elide.runtime.rb {
-  requires elide.runtime.core;
+  requires elide.graalvm;
   
   requires kotlin.stdlib;
   requires org.graalvm.polyglot;

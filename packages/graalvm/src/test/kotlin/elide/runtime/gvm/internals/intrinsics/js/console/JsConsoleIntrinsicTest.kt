@@ -12,9 +12,11 @@
  */
 
 @file:Suppress("JSUnresolvedVariable")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.intrinsics.js.console
 
+import org.graalvm.polyglot.Value.asValue
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
@@ -26,6 +28,7 @@ import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.LogLevel
 import elide.runtime.Logger
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase

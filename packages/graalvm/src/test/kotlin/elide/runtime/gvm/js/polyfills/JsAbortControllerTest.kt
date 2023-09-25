@@ -12,13 +12,14 @@
  */
 
 @file:Suppress("JSCheckFunctionSignatures", "JSUnresolvedFunction")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.js.polyfills
 
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import kotlin.test.Ignore
 
 /** Tests that the `AbortController` and `AbortSignal` polyfills are available globally. */
 @TestCase internal class JsAbortControllerTest : AbstractJsTest() {

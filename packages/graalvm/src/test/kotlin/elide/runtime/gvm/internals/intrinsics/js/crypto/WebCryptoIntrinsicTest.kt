@@ -17,6 +17,7 @@
   "JSVoidFunctionReturnValueUsed",
   "JSCheckFunctionSignatures",
 )
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.intrinsics.js.crypto
 
@@ -27,6 +28,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.js.typed.UUIDValue
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.js.err.ValueError

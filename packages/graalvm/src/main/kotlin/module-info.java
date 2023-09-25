@@ -54,4 +54,11 @@ module elide.graalvm {
   exports elide.runtime.gvm.internals.intrinsics.js.express;
   exports elide.runtime.gvm.internals.intrinsics.js.url;
   exports elide.runtime.gvm.vfs;
+
+  exports elide.runtime.core;
+  exports elide.runtime.core.extensions;
+  exports elide.runtime.plugins;
+  exports elide.runtime.plugins.debug;
+  exports elide.runtime.plugins.vfs;
+  exports elide.runtime.plugins.js;
 }

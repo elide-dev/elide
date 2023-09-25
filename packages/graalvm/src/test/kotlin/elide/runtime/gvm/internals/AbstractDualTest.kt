@@ -12,27 +12,26 @@
  */
 
 @file:Suppress("MemberVisibilityCanBePrivate")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotEngine
+import elide.runtime.core.PolyglotEngineConfiguration
 import elide.vm.annotations.Polyglot
-import org.graalvm.polyglot.Engine
+import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.atomic.AtomicReference
-import kotlinx.coroutines.test.runTest
-import org.graalvm.polyglot.Context
-import org.intellij.lang.annotations.Language
-import org.junit.jupiter.api.Assertions
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
-import org.graalvm.polyglot.Context as VMContext
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
 abstract class AbstractDualTest {
@@ -42,7 +41,7 @@ abstract class AbstractDualTest {
       return requireNotNull(AbstractDualTest::class.java.getResource(path)) {
         "failed to locate resource at $path"
       }.readText(
-        StandardCharsets.UTF_8
+        StandardCharsets.UTF_8,
       )
     }
 
@@ -178,11 +177,11 @@ abstract class AbstractDualTest {
         is Value -> if (value.isBoolean) {
           value.asBoolean()
         } else error(
-          "Guest value '$value' is not a boolean"
+          "Guest value '$value' is not a boolean",
         )
 
         else -> error(
-          "Value '$value' is not a boolean"
+          "Value '$value' is not a boolean",
         )
       }
       Assertions.assertTrue(
@@ -198,11 +197,11 @@ abstract class AbstractDualTest {
         is Value -> if (value.isBoolean) {
           value.asBoolean()
         } else error(
-          "Guest value '$value' is not a boolean"
+          "Guest value '$value' is not a boolean",
         )
 
         else -> error(
-          "Value '$value' is not a boolean"
+          "Value '$value' is not a boolean",
         )
       }
       Assertions.assertFalse(
@@ -242,7 +241,7 @@ abstract class AbstractDualTest {
       Assertions.assertEquals(
         other,
         assertion.value,
-        message ?: "expected guest value equality mismatch (got `${assertion.value}`, but expected `$other`)"
+        message ?: "expected guest value equality mismatch (got `${assertion.value}`, but expected `$other`)",
       )
     }
 
@@ -251,7 +250,7 @@ abstract class AbstractDualTest {
       Assertions.assertNotEquals(
         assertion.value,
         other,
-        message ?: "expected guest value inequality mismatch (got `${assertion.value}``)"
+        message ?: "expected guest value inequality mismatch (got `${assertion.value}``)",
       )
     }
 
@@ -261,7 +260,7 @@ abstract class AbstractDualTest {
         is Value -> if (value.canExecute()) {
           { value.executeVoid() }
         } else error(
-          "Guest value is not executable, cannot execute failure test"
+          "Guest value is not executable, cannot execute failure test",
         )
 
         is Runnable -> {
@@ -288,43 +287,32 @@ abstract class AbstractDualTest {
     }
   }
 
-  /** @return Initialized and exclusively-owned context for use with this test. */
-  protected abstract fun buildContext(engine: Engine, conf: (VMContext.Builder.() -> Unit)?): VMContext.Builder
+  /** A [PolyglotEngine] used to acquire context instances for testing, configurable trough [configureEngine]. */
+  protected val engine: PolyglotEngine by lazy { PolyglotEngine(::configureEngine) }
 
-  /** @return Initialized and exclusively-owned context for use with this test. */
-  protected abstract fun <V : Any> withContext(op: VMContext.() -> V): V
+  /** Configure the [engine] used to acquire contexts passed to [withContext]. */
+  protected open fun configureEngine(config: PolyglotEngineConfiguration) {
+    // nothing by default
+  }
 
-  /** @return Initialized and exclusively-owned context for use with this test. */
-  protected abstract fun <V : Any> withContext(op: VMContext.() -> V, conf: (VMContext.Builder.() -> Unit)?): V
+  /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
+  protected open fun <T> withContext(block: PolyglotContext.() -> T): T {
+    return block(engine.acquire())
+  }
 
   /** @return Execute a guest script with the subject intrinsics bound. */
-  protected abstract fun executeGuest(bind: Boolean = true, op: VMContext.() -> String): GuestTestExecution
+  protected abstract fun executeGuest(bind: Boolean = true, op: PolyglotContext.() -> String): GuestTestExecution
 
   /** Single test execution within the scope of a guest VM. */
   inner class GuestTestExecution(
-    private val builder: (VMContext.Builder.() -> Unit)?,
-    val factory: (VMContext.() -> Unit) -> Unit,
-    val test: VMContext.() -> Value?
+    val factory: (PolyglotContext.() -> Unit) -> Unit,
+    val test: PolyglotContext.() -> Value?
   ) {
-    constructor (
-      factory: (VMContext.() -> Unit) -> Unit,
-      test: VMContext.() -> Value?
-    ) : this(
-      null,
-      factory,
-      test = test
-    )
-
     // Return value, if any.
     private val returnValue: AtomicReference<Value?> = AtomicReference(null)
 
     // Set the return value from a test execution.
     fun setReturnValue(value: Value): Unit = returnValue.set(value)
-
-    // Use the provided `builder` or generate one that just builds the context without changing it.
-    internal fun builder(): VMContext.Builder.() -> Unit {
-      return builder ?: { /* no-op */ }
-    }
 
     // Retrieve the return value from a test execution.
     fun returnValue(): Value? = returnValue.get()
@@ -332,7 +320,7 @@ abstract class AbstractDualTest {
     /** After guest execution concludes, execute the provided [assertions] against the test context. */
     fun thenAssert(
       allowFailure: Boolean = false,
-      assertions: (VMContext.(GuestTestExecution) -> Unit)? = null,
+      assertions: (PolyglotContext.(GuestTestExecution) -> Unit)? = null,
     ) = factory {
       if (allowFailure) {
         failsWith<Throwable> {
@@ -349,7 +337,7 @@ abstract class AbstractDualTest {
 
     /** After guest execution concludes, execute the provided [assertions] against the test context. */
     inline fun <reified X : Throwable> failsWith(
-      noinline assertions: (VMContext.(GuestTestExecution) -> Unit)? = null
+      noinline assertions: (PolyglotContext.(GuestTestExecution) -> Unit)? = null
     ) = factory {
       val exc = assertThrows<Throwable> {
         val result = test.invoke(this)
@@ -364,13 +352,13 @@ abstract class AbstractDualTest {
         is PolyglotException -> if (exc.isHostException) {
           assert(exc.asHostException() is X) {
             "Invalid exception type '${exc::class.simpleName}' raised " +
-              "(expected '${X::class.java.simpleName}')"
+                    "(expected '${X::class.java.simpleName}')"
           }
         }
 
         else -> throw AssertionError(
           "Invalid exception type '${exc::class.simpleName}' raised " +
-            "(expected '${X::class.java.simpleName}')"
+                  "(expected '${X::class.java.simpleName}')",
         )
       }
     }
@@ -393,7 +381,7 @@ abstract class AbstractDualTest {
      *
      * @param guestOperation Operation to run on the guest.
      */
-    abstract fun guest(guestOperation: VMContext.() -> String)
+    abstract fun guest(guestOperation: PolyglotContext.() -> String)
 
     /**
      * Wire together the guest-side of a dual test, but defer for additional assertions.
@@ -401,7 +389,7 @@ abstract class AbstractDualTest {
      * @param guestOperation Operation to run on the guest.
      * @return Guest test execution control proxy.
      */
-    abstract fun thenRun(guestOperation: VMContext.() -> String): GuestTestExecution
+    abstract fun thenRun(guestOperation: PolyglotContext.() -> String): GuestTestExecution
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.

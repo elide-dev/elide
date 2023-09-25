@@ -12,22 +12,24 @@
  */
 
 @file:Suppress("JSUnresolvedFunction", "JSUnresolvedVariable")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import java.net.URI
-import kotlin.test.assertFailsWith
 import elide.annotations.Inject
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import kotlin.test.Ignore
+import org.graalvm.polyglot.Value.asValue
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import java.net.URI
+import kotlin.test.assertFailsWith
 
 /** Tests for the intrinsic `URL` implementation provided by Elide. */
 @Suppress("HttpUrlsUsage")

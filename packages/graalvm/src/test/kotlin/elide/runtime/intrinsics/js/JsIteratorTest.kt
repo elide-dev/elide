@@ -12,15 +12,18 @@
  */
 
 @file:Suppress("JSUnresolvedVariable", "JSUnresolvedFunction")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.intrinsics.js
 
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.*
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMutableMap
 import elide.runtime.gvm.js.AbstractJsTest
+import elide.runtime.plugins.js.JavaScript
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
@@ -136,7 +139,7 @@ import elide.testing.annotations.TestCase
 
     executeGuest {
       // inject `testIter`
-      getBindings("js").putMember("testIter", testIter)
+      bindings(JavaScript).putMember("testIter", testIter)
 
       // language=javascript
       """
@@ -167,7 +170,7 @@ import elide.testing.annotations.TestCase
 
     executeGuest {
       // inject `testIter`
-      getBindings("js").putMember("testIter", testIter)
+      bindings(JavaScript).putMember("testIter", testIter)
 
       // language=javascript
       """

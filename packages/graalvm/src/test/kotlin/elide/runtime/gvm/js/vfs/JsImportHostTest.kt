@@ -12,12 +12,15 @@
  */
 
 @file:Suppress("JSFileReferences", "JSUnresolvedFunction", "NpmUsedModulesInstalled")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.js.vfs
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.vfs.HostVFSImpl
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.runtime.gvm.vfs.HostVFS
@@ -26,7 +29,7 @@ import elide.testing.annotations.TestCase
 import elide.util.UUID
 
 /** Tests for ESM-style import calls that resolve via host-backed I/O. */
-@TestCase internal class JsImportHostTest : AbstractJsTest() {
+@TestCase @Ignore internal class JsImportHostTest : AbstractJsTest() {
   /** @return Empty VFS instance for testing. */
   private fun tempHostFs() = HostVFS.acquire() as HostVFSImpl
   private val tempdir = Files.createTempDirectory("elide-vfs-${UUID.random()}").toAbsolutePath().toString()

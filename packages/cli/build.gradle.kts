@@ -267,8 +267,6 @@ dependencies {
   if (enableWasm) implementation(projects.packages.graalvmWasm)
 
   // Runtime engines
-  implementation(projects.packages.runtimeCore)
-  implementation(projects.packages.runtimeJs)
   implementation(projects.packages.runtimePy)
   implementation(projects.packages.runtimeRb)
 
@@ -288,7 +286,6 @@ dependencies {
   implementation(projects.packages.base)
   implementation(projects.packages.server)
   implementation(projects.packages.test)
-  implementation(projects.packages.runtimeCore)
 
   implementation(libs.jansi)
   implementation(libs.picocli.jline3)

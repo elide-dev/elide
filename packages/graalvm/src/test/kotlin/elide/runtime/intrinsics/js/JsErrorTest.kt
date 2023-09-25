@@ -17,10 +17,11 @@
   "JSCheckFunctionSignatures",
   "ExceptionCaughtLocallyJS",
 )
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.intrinsics.js
 
-import kotlin.test.Ignore
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase

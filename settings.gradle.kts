@@ -84,8 +84,6 @@ include(
   ":packages:base",
   ":packages:bom",
   ":packages:core",
-  ":packages:runtime-core",
-  ":packages:runtime-js",
   ":packages:runtime-py",
   ":packages:runtime-rb",
   ":packages:frontend",

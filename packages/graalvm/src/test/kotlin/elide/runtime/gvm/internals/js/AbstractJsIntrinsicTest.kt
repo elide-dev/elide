@@ -15,66 +15,28 @@
 
 package elide.runtime.gvm.internals.js
 
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Engine
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
-import kotlinx.coroutines.runBlocking
-import elide.annotations.Inject
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
-import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
+import elide.runtime.plugins.js.JavaScript
+import elide.runtime.plugins.js.javascript
 import elide.vm.annotations.Polyglot
-import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
 /** Abstract base for JS intrinsics. */
+@OptIn(DelicateElideApi::class)
 internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   private val testInject: Boolean = true,
 ) : AbstractIntrinsicTest<T>() {
   companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")
-    }
-  }
-
-  private val initialized: AtomicBoolean = AtomicBoolean(false)
-
-  // Guest context manager.
-  @Inject lateinit var contextManager: ContextManager<Context, Context.Builder>
-
-  // JS runtime.
-  @Inject lateinit var jsvm: JsRuntime
-
-  // Build a customized guest context from scratch.
-  override fun buildContext(engine: Engine, conf: (Context.Builder.() -> Unit)?): Context.Builder {
-    throw UnsupportedOperationException("not supported for this test case")
-  }
-
-  // Prepare an operation with a customized guest context.
-  override fun <V : Any> withContext(op: Context.() -> V, conf: (Context.Builder.() -> Unit)?): V {
-    throw UnsupportedOperationException("not supported for this test case")
-  }
-
-  // Run the provided `op` with an active (and exclusively owned) JS VM context.
-  override fun <V: Any> withContext(op: VMContext.() -> V): V = runBlocking {
-    if (!initialized.get()) {
-      contextManager.installContextFactory {
-        jsvm.builder(it)
-      }
-      contextManager.installContextConfigurator {
-        jsvm.configureVM(it)
-      }
-      contextManager.installContextSpawn {
-        jsvm.spawn(it)
-      }
-      contextManager.activate(start = false)
-      initialized.set(true)
-    }
-    contextManager {
-      op.invoke(this)
     }
   }
 
@@ -96,10 +58,10 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
   // Logic to execute a guest-side test.
   private inline fun executeGuestInternal(
-    ctx: VMContext,
+    ctx: PolyglotContext,
     bind: Boolean,
     bindUtils: Boolean,
-    op: VMContext.() -> String,
+    op: PolyglotContext.() -> String,
   ): GuestValue {
     // resolve the script
     val script = op.invoke(ctx)
@@ -114,7 +76,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     }
 
     // install bindings under test, if directed
-    val target = ctx.getBindings("js")
+    val target = ctx.bindings(JavaScript)
     bindings.forEach {
       target.putMember(it.key.symbol, it.value)
     }
@@ -131,7 +93,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     // execute script
     val returnValue = try {
       ctx.enter()
-      ctx.eval("js", script)
+      ctx.javascript(script)
     } catch (err: Throwable) {
       hasErr.set(true)
       subjectErr.set(err)
@@ -142,8 +104,12 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     return returnValue
   }
 
+  override fun configureEngine(config: PolyglotEngineConfiguration) {
+    config.install(JavaScript)
+  }
+
   // Run the provided factory to produce a script, then run that test within a warmed `Context`.
-  override fun executeGuest(bind: Boolean, op: VMContext.() -> String) = GuestTestExecution(::withContext) {
+  override fun executeGuest(bind: Boolean, op: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       this,
       bind,
@@ -153,13 +119,13 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun executeDual(op: () -> Unit, guest: VMContext.() -> String) = executeDual(true, op, guest)
+  protected fun executeDual(op: () -> Unit, guest: PolyglotContext.() -> String) = executeDual(true, op, guest)
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
   protected fun executeDual(
     bind: Boolean,
     op: () -> Unit,
-    guest: VMContext.() -> String,
+    guest: PolyglotContext.() -> String,
   ) = GuestTestExecution(::withContext) {
     op.invoke()
     executeGuestInternal(
@@ -174,7 +140,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
     op.invoke()
     return object : DualTestExecutionProxy() {
-      override fun guest(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
+      override fun guest(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,
@@ -183,7 +149,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         )
       }.doesNotFail()
 
-      override fun thenRun(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
+      override fun thenRun(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,

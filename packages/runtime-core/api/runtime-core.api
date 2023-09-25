@@ -136,7 +136,8 @@ public abstract interface class elide/runtime/core/PolyglotContext {
 }
 
 public final class elide/runtime/core/PolyglotContextKt {
-	public static final fun evaluate (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static final fun evaluate (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;Z)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun evaluate$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
 }
 
 public abstract interface class elide/runtime/core/PolyglotEngine {
@@ -145,6 +146,7 @@ public abstract interface class elide/runtime/core/PolyglotEngine {
 
 public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/runtime/core/PluginRegistry {
 	public abstract fun enableLanguage (Lelide/runtime/core/GuestLanguage;)V
+	public final fun getEnvironment ()Ljava/util/Map;
 	public final fun getHostAccess ()Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
 	public final fun getHostPlatform ()Lelide/runtime/core/HostPlatform;
 	public final fun setHostAccess (Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;)V
@@ -221,6 +223,7 @@ protected final class elide/runtime/plugins/AbstractLanguagePlugin$Companion {
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/util/List;
@@ -332,6 +335,141 @@ public final class elide/runtime/plugins/debug/DebugConfig$InspectorConfig {
 
 public final class elide/runtime/plugins/debug/DebugPluginKt {
 	public static final fun debug (Lelide/runtime/core/PolyglotEngineConfiguration;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class elide/runtime/plugins/env/EnvConfig {
+	public final fun environment (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun environment (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public final fun environment (Lkotlin/jvm/functions/Function1;)V
+	public final fun exposeHostEnv (Ljava/lang/String;Ljava/lang/String;)V
+	public static synthetic fun exposeHostEnv$default (Lelide/runtime/plugins/env/EnvConfig;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun fromDotenv (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun mapToHostEnv (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public static synthetic fun mapToHostEnv$default (Lelide/runtime/plugins/env/EnvConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class elide/runtime/plugins/env/EnvConfig$AppEnvConfig {
+	public final fun getEnabled ()Z
+	public final fun getIsolatedEnvironmentVariables ()Ljava/util/Map;
+	public final fun setEnabled (Z)V
+}
+
+public abstract interface class elide/runtime/plugins/env/EnvConfig$EnvVar {
+	public static final field Companion Lelide/runtime/plugins/env/EnvConfig$EnvVar$Companion;
+	public static fun fromDotenv (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getSource ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public abstract fun getValue ()Ljava/lang/String;
+	public fun isPresent ()Z
+	public static fun mapToHost (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+	public static fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+	public static fun provide (Ljava/lang/String;Ljava/util/function/Supplier;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+}
+
+public final class elide/runtime/plugins/env/EnvConfig$EnvVar$Companion {
+	public final fun fromDotenv (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+	public final fun mapToHost (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+	public static synthetic fun mapToHost$default (Lelide/runtime/plugins/env/EnvConfig$EnvVar$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+	public final fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+	public final fun provide (Ljava/lang/String;Ljava/util/function/Supplier;)Lelide/runtime/plugins/env/EnvConfig$EnvVar;
+}
+
+public final class elide/runtime/plugins/env/EnvConfig$EnvVar$DotEnvVar : java/lang/Record, elide/runtime/plugins/env/EnvConfig$EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$DotEnvVar;
+	public static synthetic fun copy$default (Lelide/runtime/plugins/env/EnvConfig$EnvVar$DotEnvVar;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$DotEnvVar;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun file ()Ljava/lang/String;
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/plugins/env/EnvConfig$EnvVar$HostMappedVar : java/lang/Record, elide/runtime/plugins/env/EnvConfig$EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$HostMappedVar;
+	public static synthetic fun copy$default (Lelide/runtime/plugins/env/EnvConfig$EnvVar$HostMappedVar;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$HostMappedVar;
+	public final fun defaultValue ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun mapped ()Ljava/lang/String;
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/plugins/env/EnvConfig$EnvVar$InlineEnvVar : java/lang/Record, elide/runtime/plugins/env/EnvConfig$EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$InlineEnvVar;
+	public static synthetic fun copy$default (Lelide/runtime/plugins/env/EnvConfig$EnvVar$InlineEnvVar;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$InlineEnvVar;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/plugins/env/EnvConfig$EnvVar$SuppliedEnvVar : java/lang/Record, elide/runtime/plugins/env/EnvConfig$EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/util/function/Supplier;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/util/function/Supplier;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$SuppliedEnvVar;
+	public static synthetic fun copy$default (Lelide/runtime/plugins/env/EnvConfig$EnvVar$SuppliedEnvVar;Ljava/lang/String;Ljava/util/function/Supplier;ILjava/lang/Object;)Lelide/runtime/plugins/env/EnvConfig$EnvVar$SuppliedEnvVar;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/plugins/env/EnvConfig$EnvVariableSource : java/lang/Enum {
+	public static final field DOTENV Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public static final field HOST Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public static final field INLINE Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+	public static fun values ()[Lelide/runtime/plugins/env/EnvConfig$EnvVariableSource;
+}
+
+public final class elide/runtime/plugins/env/EnvPluginKt {
+	public static final fun environment (Lelide/runtime/core/PolyglotEngineConfiguration;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class elide/runtime/plugins/env/Environment {
+	public static final field Plugin Lelide/runtime/plugins/env/Environment$Plugin;
+	public synthetic fun <init> (Lelide/runtime/plugins/env/EnvConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfig ()Lelide/runtime/plugins/env/EnvConfig;
+}
+
+public final class elide/runtime/plugins/env/Environment$Plugin : elide/runtime/core/EnginePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/env/Environment;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
 public final class elide/runtime/plugins/vfs/Vfs {

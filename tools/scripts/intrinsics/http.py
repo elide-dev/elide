@@ -23,7 +23,7 @@ decorations = Decorations()
 
 # iterate over different emojis for an easy visual demo
 def getMessage():
-  return f"{decorations.getDecoration()} Hello Elide.py!\n"
+  return f"{decorations.getDecoration()} Hello Elide.py!"
 
 
 # define route handlers

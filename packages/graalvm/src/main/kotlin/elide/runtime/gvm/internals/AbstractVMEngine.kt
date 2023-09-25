@@ -109,7 +109,7 @@ public abstract class AbstractVMEngine<
 > (protected val language: GraalVMGuest) : VMEngineImpl<Config> {
   public companion object {
     /** Version of the Elide GVM engine. */
-    private const val ENGINE_VERSION = "v3"
+    private const val ENGINE_VERSION = "v4"
 
     /** Manifest name for runtime info. */
     private const val RUNTIME_MANIFEST = "runtime.json"
@@ -140,6 +140,9 @@ public abstract class AbstractVMEngine<
       name: String,
       mime: String? = null,
     ): Pair<RuntimeInfo, Source> {
+      val json = Json {
+        ignoreUnknownKeys = true
+      }
       return try {
         runtimeLangConfig(engine).let { (compressed, manifestFile) ->
           manifestFile ?: error(
@@ -149,19 +152,19 @@ public abstract class AbstractVMEngine<
           // decode manifest from JSON to discover injected artifacts
           val manifest = if (compressed) {
             GZIPInputStream(manifestFile).use {
-              Json.decodeFromStream(RuntimeInfo.serializer(), it)
+              json.decodeFromStream(RuntimeInfo.serializer(), it)
             }
           } else {
-            Json.decodeFromStream(RuntimeInfo.serializer(), manifestFile)
+            json.decodeFromStream(RuntimeInfo.serializer(), manifestFile)
           }
           require(manifest.engine == ENGINE_VERSION) {
             "Cannot load runtime for engine version: ${manifest.engine} (expected: $ENGINE_VERSION)"
           }
 
           // collect JS runtime internal sources as a string
-          val collectedRuntimeSource = manifest.artifacts.stream().flatMap {
-            (AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/${it.name}") ?: error(
-              "Failed to locate embedded runtime artifact (engine: '$engine'): ${it.name}"
+          val collectedRuntimeSource = manifest.scripts.stream().flatMap {
+            (AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/${it.path}") ?: error(
+              "Failed to locate embedded runtime artifact (engine: '$engine'): ${it.path}"
             )).bufferedReader(StandardCharsets.UTF_8).lines()
           }.filter {
             it.isNotBlank() && !it.startsWith("//")
@@ -313,6 +316,7 @@ public abstract class AbstractVMEngine<
     val language: tools.elide.meta.GuestLanguage,
     val vfs: List<RuntimeVFS> = emptyList(),
     val artifacts: List<RuntimeArtifact> = emptyList(),
+    val scripts: List<RuntimeArtifact> = emptyList(),
     val image: RuntimeImageInfo? = null,
     val entry: String? = null,
   )
@@ -444,11 +448,11 @@ public abstract class AbstractVMEngine<
    * Listed files must be directly evaluable code within the context of the guest language implemented by a VM. During
    * initialization of the VM, intrinsics for that language are mounted and available.
    *
-   * @param name Name of the file to load and evaluate.
+   * @param path Path or name of the file to load and evaluate.
    */
   @Serializable
   public data class RuntimeArtifact(
-    val name: String,
+    val path: String,
   )
 
   // Abstract VM engine logger.

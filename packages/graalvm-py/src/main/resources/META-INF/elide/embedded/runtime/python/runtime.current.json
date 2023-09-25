@@ -1,18 +1,31 @@
 {
-  "engine": "v3",
+  "engine": "v4",
   "language": "PYTHON",
   "vfs": [],
   "artifacts": [],
+  "scripts": [
+    { "path": "environment.py" }
+  ],
+  "bundles": [
+    {
+      "path": "python-darwin-aarch64.tar.xz",
+      "platform": "darwin_aarch64"
+    },
+    {
+      "path": "python-linux-amd64.tar.xz",
+      "platform": "linux_amd64"
+    }
+  ],
   "image": {
     "type": "native",
     "darwin": {
       "arm64": {
         "bundle": "python-darwin-aarch64.tar.xz",
-        "sha256": "b716836044d613a4ac02958d018c16f80025a83148e9fd47e6b5e9da6b0cc308",
+        "sha256": "c81c39d9d697af958947687689fd27f863898f6e950444144e8be8587d5e07e9",
         "signature": {
           "bundle": "python-darwin-aarch64.sigstore.json.gz",
-          "sha256": "7ada91bf5b9aa52b336f6b890de52490da8a2e35c68d2c22959405f62e766f79",
-          "stamp": "MEUCIQCR4uEV143+9nWeD9VDyedgJoN9vAo0KQi+qamdkK2x3gIgcoGWLB88/kJ11lIBEjxQkQXeroYAXsasPqh2DR98//E="
+          "sha256": "1603ebe72446c1ea8d3065cc677aa1cd62f7f9a9d08d57957bc8099de28be01b",
+          "stamp": "MEQCIAzXCwAgLRGjjLl7y713PXKDmfvAfH/z3f/vSpCyDnBqAiBaQNQM7dg1XDaIcmy5LV9KbgXp1/0CS3OYIBxTJfHUtg=="
         }
       }
     },

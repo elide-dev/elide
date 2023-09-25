@@ -26,18 +26,18 @@ import elide.runtime.plugins.llvm.LLVM
     // run embedded initialization code
     initializeEmbeddedScripts(context, resources)
   }
-  
+
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.disableOptions(
-      "python.UsePanama",
       "python.EmulateJython",
     )
-    
+
     builder.enableOptions(
       "llvm.AOTCacheStore",
       "llvm.AOTCacheLoad",
       "llvm.C++Interop",
       "llvm.lazyParsing",
+      "python.UsePanama",
       "python.NativeModules",
       "python.LazyStrings",
       "python.WithCachedSources",
@@ -47,11 +47,12 @@ import elide.runtime.plugins.llvm.LLVM
     builder.setOptions(
       "llvm.OSR" to "BYTECODE",
       "python.PosixModuleBackend" to "java",
-      "python.CoreHome" to "/python/lib/graalpy23.1",
-      "python.PythonHome" to "/python",
+      "python.CoreHome" to "/python/python-home/lib/graalpy23.1",
+      "python.StdLibHome" to "/python/python-home/lib/python3.10",
+      "python.PythonHome" to "/python/python-home",
     )
   }
-  
+
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"

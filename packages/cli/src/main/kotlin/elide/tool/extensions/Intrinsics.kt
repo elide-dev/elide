@@ -11,7 +11,8 @@ import elide.runtime.gvm.GuestLanguage as LegacyGuestLanguage
  */
 internal fun AbstractLanguageConfig.installIntrinsics(
   intrinsics: IntrinsicsResolver,
-  language: LegacyGuestLanguage
+  language: LegacyGuestLanguage,
+  version: Pair<String, String>,
 ) = bindings {
   // create an intermediate container to obtain the bindings
   val container = MutableIntrinsicBindings.Factory.create()
@@ -19,4 +20,15 @@ internal fun AbstractLanguageConfig.installIntrinsics(
 
   // transfer the bindings to the language plugin configuration
   container.entries.forEach { (key, value) -> put(key.symbol, value) }
+  installCliBaseline(version)
+}
+
+/**
+ * Install baseline properties provided by the runtime when operating as a CLI.
+ */
+internal fun AbstractLanguageConfig.installCliBaseline(
+  version: Pair<String, String>,
+) = bindings {
+  // add runtime version
+  put(version.first, version.second)
 }

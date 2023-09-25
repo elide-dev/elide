@@ -17,8 +17,7 @@ import elide.runtime.intrinsics.js.MapLike
 import elide.vm.annotations.Polyglot
 
 /** Implements a JavaScript-compatible `Map` with no mutable abilities. */
-@Suppress("unused") internal class JsMap<K: Any, V> (backingMap: Map<K, V>) :
-  BaseJsMap<K, V>(backingMap) {
+@Suppress("unused") public class JsMap<K: Any, V> (backingMap: Map<K, V>) : BaseJsMap<K, V>(backingMap) {
   // Count of keys present in the map.
   private val keyCount: Int = backingMap.size
 
@@ -27,7 +26,7 @@ import elide.vm.annotations.Polyglot
    *
    * Internal-use-only constructor for an empty backed map.
    */
-  constructor() : this(mapOf())
+  public constructor() : this(mapOf())
 
   /**
    * Constructor: Sized.
@@ -36,10 +35,10 @@ import elide.vm.annotations.Polyglot
    *
    * @param size Size of the desired map.
    */
-  constructor(size: Int) : this(mapImpl(size))
+  public constructor(size: Int) : this(mapImpl(size))
 
   /** Immutable map factory. */
-  @Suppress("unused") internal companion object Factory : MapFactory<JsMap<*, *>> {
+  @Suppress("unused") public companion object Factory : MapFactory<JsMap<*, *>> {
     // Singleton empty map instance.
     private val EMPTY_MAP = JsMap<Any, Any?>(emptyMap())
 
@@ -64,7 +63,7 @@ import elide.vm.annotations.Polyglot
      * @param map Existing map instance to wrap.
      * @return Copied JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> copyOf(map: Map<K, V>) = JsMap(mapImpl<K, V>(map.size).apply {
+    @JvmStatic override fun <K: Any, V> copyOf(map: Map<K, V>): JsMap<K, V> = JsMap(mapImpl<K, V>(map.size).apply {
       putAll(map)
     })
 
@@ -75,11 +74,13 @@ import elide.vm.annotations.Polyglot
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> fromPairs(pairs: Collection<Pair<K, V>>) = JsMap(mapImpl<K, V>().apply {
-      pairs.forEach {
-        put(it.first, it.second)
+    @JvmStatic override fun <K: Any, V> fromPairs(pairs: Collection<Pair<K, V>>): JsMap<K, V> = JsMap(
+      mapImpl<K, V>().apply {
+        pairs.forEach {
+          put(it.first, it.second)
+        }
       }
-    })
+    )
 
     /**
      * Return a generic immutable [JsMap] instance, created from the provided sized collection of [entries], each an
@@ -121,7 +122,7 @@ import elide.vm.annotations.Polyglot
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>) =
+    @JvmStatic override fun <K: Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>): JsMap<K, V> =
       JsMap(entries.associate { it.key to it.value })
 
     /**
@@ -150,9 +151,10 @@ import elide.vm.annotations.Polyglot
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>) = JsMap(entries.associate {
-      it.key to it.value
-    })
+    @JvmStatic override fun <K: Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>): JsMap<K, V> =
+      JsMap(entries.associate {
+        it.key to it.value
+      })
 
     /**
      * Return an empty JS map instance, pre-sized to the provided [size].
@@ -161,7 +163,7 @@ import elide.vm.annotations.Polyglot
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic fun <K: Any, V> empty(size: Int): JsMap<K, V> = JsMap(mapImpl(size))
+    @JvmStatic public fun <K: Any, V> empty(size: Int): JsMap<K, V> = JsMap(mapImpl(size))
 
     /**
      * Return an empty and immutable JS map instance.

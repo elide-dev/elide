@@ -29,6 +29,5 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine
 @DelicateElideApi public fun PolyglotEngine(configure: PolyglotEngineConfiguration.() -> Unit = { }): PolyglotEngine {
   val lifecycle = MutableEngineLifecycle()
   val configuration = GraalVMConfiguration(lifecycle).apply(configure)
-
   return GraalVMEngine.create(configuration, lifecycle)
 }

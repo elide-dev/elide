@@ -1,5 +1,6 @@
 package elide.runtime.core
 
+import java.util.concurrent.ConcurrentSkipListMap
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
 
 /**
@@ -36,6 +37,9 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
 
   /** The access granted to guest code over host resources, such as environment variables and the file system. */
   public var hostAccess: HostAccess = ALLOW_NONE
+
+  /** Environment to apply to the context. */
+  public val environment: MutableMap<String, String> = ConcurrentSkipListMap()
 
   /** Enables support for the specified [language] on all contexts created by the engine. */
   public abstract fun enableLanguage(language: GuestLanguage)

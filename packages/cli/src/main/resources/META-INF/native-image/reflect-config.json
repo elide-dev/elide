@@ -900,7 +900,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$EnvironmentConfig$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$GroovySettings$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$InspectorConfig$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -943,12 +951,22 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.cmd.repl.ToolShellCommand$EnvironmentConfig",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"elide.tool.cli.cmd.repl.ToolShellCommand$GroovySettings",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
 },
 {
   "name":"elide.tool.cli.cmd.repl.ToolShellCommand$HostAccessSettings",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"elide.tool.cli.cmd.repl.ToolShellCommand$InspectorConfig",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
 },
@@ -1020,14 +1038,41 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.options.$AbstractEngineOptions$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.options.$AccessControlOptions$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.options.$CommonOptions$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.options.$EngineJavaScriptOptions$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.options.AbstractEngineOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"elide.tool.cli.options.AccessControlOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"elide.tool.cli.options.CommonOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDebug","parameterTypes":["boolean"] }, {"name":"setQuiet","parameterTypes":["boolean"] }, {"name":"setVerbose","parameterTypes":["boolean"] }]
+},
+{
+  "name":"elide.tool.cli.options.EngineJavaScriptOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"elide.tool.cli.repl.$ToolShellCommand$Definition$Reference",
@@ -1148,6 +1193,10 @@
 },
 {
   "name":"elide.tool.io.$WorkdirTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.project.$DefaultProjectManager$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1661,6 +1710,10 @@
 },
 {
   "name":"io.micronaut.http.netty.channel.$IoUringAvailabilityCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$IoUringEventLoopGroupFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -3817,6 +3870,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"org.bouncycastle.jcajce.provider.digest.SHA256$Digest",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"org.bouncycastle.jcajce.provider.digest.SHA256$Mappings",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -3849,8 +3906,16 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"org.bouncycastle.jcajce.provider.drbg.DRBG$Default",
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"<init>","parameterTypes":["java.security.SecureRandomParameters"] }]
+},
+{
   "name":"org.bouncycastle.jcajce.provider.drbg.DRBG$Mappings",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.bouncycastle.jcajce.provider.drbg.DRBG$NonceAndIV",
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"<init>","parameterTypes":["java.security.SecureRandomParameters"] }]
 },
 {
   "name":"org.bouncycastle.jcajce.provider.keystore.BC$Mappings",

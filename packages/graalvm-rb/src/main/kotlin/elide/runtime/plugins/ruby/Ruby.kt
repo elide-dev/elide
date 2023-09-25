@@ -34,12 +34,22 @@ import elide.runtime.plugins.llvm.LLVM
       "ruby.platform-native",
       "ruby.polyglot-stdio",
       "ruby.rubygems",
+      "ruby.lazy-default",
+      "ruby.lazy-builtins",
+      "ruby.lazy-calltargets",
+      "ruby.lazy-rubygems",
+      "ruby.lazy-translation-core",
+      "ruby.lazy-translation-user",
+      "ruby.shared-objects",
+      "ruby.experimental-engine-caching",
     )
     
     builder.disableOptions(
       "ruby.virtual-thread-fibers",
       "ruby.cexts",
     )
+
+    builder.option("log.level", "OFF")
   }
   
   public companion object Plugin : AbstractLanguagePlugin<RubyConfig, Ruby>() {

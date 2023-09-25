@@ -145,11 +145,8 @@ import elide.runtime.plugins.vfs.include
   }
 
   protected companion object {
-    /** Elide version used for resolving embedded resource paths. */
-    private const val ENGINE_VERSION = "v4"
-
     /** Root resources path where embedded language resources are placed. */
-    private const val EMBEDDED_RESOURCES_ROOT = "/META-INF/elide/$ENGINE_VERSION/embedded/runtime"
+    private const val EMBEDDED_RESOURCES_ROOT = "/META-INF/elide/embedded/runtime"
 
     /** Name of the manifest file for embedded language resources */
     private const val RUNTIME_MANIFEST = "runtime.json"

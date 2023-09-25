@@ -12,7 +12,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
-import elide.runtime.core.HostPlatform
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.EmbeddedResource
 import elide.runtime.plugins.vfs.Vfs
 import elide.runtime.plugins.vfs.include
@@ -63,11 +62,12 @@ import elide.runtime.plugins.vfs.include
    * manifest are filtered to match the current platform information provided in the [scope].
    *
    * @param scope The installation scope used to resolve host platform information.
+   * @param lenient Whether to load the manifest in a backwards-compatible manner, e.g. ignoring unknown keys.
    * @return The [LanguagePluginManifest] for this plugin's language.
    * @see installEmbeddedBundles
    */
-  protected fun resolveEmbeddedManifest(scope: InstallationScope): LanguagePluginManifest {
-    return resolveEmbeddedManifest(scope.configuration.hostPlatform)
+  protected fun resolveEmbeddedManifest(scope: InstallationScope, lenient: Boolean = false): LanguagePluginManifest {
+    return resolveEmbeddedManifest(scope.configuration.hostPlatform, lenient)
   }
 
   /**
@@ -75,11 +75,15 @@ import elide.runtime.plugins.vfs.include
    * manifest are filtered to match the given [platform].
    *
    * @param platform the host platform used to filter embedded resources.
+   * @param lenient Whether to load the manifest in a backwards-compatible manner, e.g. ignoring unknown keys.
    * @return The [LanguagePluginManifest] for this plugin's language.
    * @see installEmbeddedBundles
    */
   @OptIn(ExperimentalSerializationApi::class)
-  protected fun resolveEmbeddedManifest(platform: HostPlatform): LanguagePluginManifest = runCatching {
+  protected fun resolveEmbeddedManifest(
+    platform: HostPlatform,
+    lenient: Boolean = false
+  ): LanguagePluginManifest = runCatching {
     // resolve path relative to the common root
     val resourcesRoot = "$EMBEDDED_RESOURCES_ROOT/${languageId}"
     fun relativeToRoot(path: String) = "$resourcesRoot/$path"
@@ -87,7 +91,7 @@ import elide.runtime.plugins.vfs.include
     // read and deserialize manifest
     val manifest = AbstractLanguagePlugin::class.java.getResourceAsStream(relativeToRoot(RUNTIME_MANIFEST))?.let {
       // deserialize the manifest
-      Json.decodeFromStream<LanguagePluginManifest>(it)
+      (if (lenient) LenientJson else Json).decodeFromStream<LanguagePluginManifest>(it)
     } ?: error(
       "Failed to locate embedded runtime manifest at path '$resourcesRoot'",
     )
@@ -150,5 +154,10 @@ import elide.runtime.plugins.vfs.include
 
     /** Name of the manifest file for embedded language resources */
     private const val RUNTIME_MANIFEST = "runtime.json"
+
+    /** Lenient variant of the [Json] codec, used for backwards-compatibility reasons. */
+    private val LenientJson by lazy {
+      Json { ignoreUnknownKeys = true }
+    }
   }
 }

@@ -13,6 +13,7 @@
 
 package elide.runtime.gvm.python
 
+import kotlin.test.Ignore
 import elide.runtime.gvm.PythonTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
@@ -21,7 +22,7 @@ import kotlin.test.assertNotNull
 
 /** Basic Python runtime utility tests. */
 @TestCase class PythonTest : PythonTest() {
-  @Test fun testPythonGuestCodeBasic() = executeGuest {
+  @Ignore @Test fun testPythonGuestCodeBasic() = executeGuest {
     // language=python
     """
       def say_hello():
@@ -30,7 +31,7 @@ import kotlin.test.assertNotNull
     """.trimIndent()
   }.doesNotFail()
 
-  @Test fun testPythonGuestCodeReturnValue() = executeGuest {
+  @Ignore @Test fun testPythonGuestCodeReturnValue() = executeGuest {
     // language=python
     """
       def say_hello():

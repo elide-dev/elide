@@ -6,7 +6,7 @@
     { "path": "js.runtime.tar.gz" }
   ],
   "scripts": [
-    { "path": "facade.js" },
-    { "path": "polyfills.js" }
+    { "path": "polyfills.js" },
+    { "path": "facade.js" }
   ]
 }

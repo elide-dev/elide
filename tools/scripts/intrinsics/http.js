@@ -11,7 +11,7 @@ let counter = 0;
 
 // iterate over different emojis for an easy visual demo
 function getMessage() {
-  const message = `${decorations[counter % decorations.length]} Hello Elide!\n`;
+  const message = `${decorations[counter % decorations.length]} Hello Elide!`;
   counter += 1;
 
   return message;

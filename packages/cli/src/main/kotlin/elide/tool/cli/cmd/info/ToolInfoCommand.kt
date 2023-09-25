@@ -25,6 +25,7 @@ import elide.tool.cli.ToolState
 import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.engine.NativeEngine
 import elide.tool.io.RuntimeWorkdirManager
+import elide.tool.project.ProjectManager
 
 /** TBD. */
 @Command(
@@ -33,6 +34,7 @@ import elide.tool.io.RuntimeWorkdirManager
   mixinStandardHelpOptions = true,
 )
 @Singleton internal class ToolInfoCommand @Inject constructor(
+  private val projectManager: ProjectManager,
   private val workdir: RuntimeWorkdirManager,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
@@ -50,7 +52,26 @@ import elide.tool.io.RuntimeWorkdirManager
     val tempRoot = workdir.tmpDirectory()
     val caches = workdir.cacheDirectory()
     val natives = workdir.nativesDirectory()
+    val project = projectManager.resolveProject()
     val operatingMode = if (ImageInfo.inImageCode()) "Native" else "JVM"
+
+    val projectBlock = if (project == null) StringBuilder("") else StringBuilder().apply {
+      appendLine("Project:")
+      appendLine("- Name: ${project.name ?: "(None)"}")
+      appendLine("- Version: ${project.version ?: "(None)"}")
+      appendLine("- Config: ${project.config?.path ?: "(None)"}")
+      appendLine("- Root Path: ${project.root}")
+      when (val env = project.env) {
+        null -> {}
+        else -> {
+          appendLine("")
+          appendLine("Environment:")
+          env.vars.forEach {
+            appendLine("- ${it.key} = ${it.value}")
+          }
+        }
+      }
+    }
 
     output {
       appendLine("Elide v${version} (${ElideCLITool.ELIDE_RELEASE_TYPE})")
@@ -58,11 +79,19 @@ import elide.tool.io.RuntimeWorkdirManager
       appendLine("Platform: $operatingMode")
       appendLine("Languages: " + engine.languages.keys.joinToString(", "))
       appendLine()
+      appendLine("Native:")
+      appendLine("- Crypto: ${libraryGroupLoaded("crypto").label()}")
+      appendLine("- Transport: ${libraryGroupLoaded("transport").label()}")
+      appendLine()
       appendLine("Paths: ")
       appendLine("- Working Root: ${workingRoot.absolutePath}")
       appendLine("- Temporary Root: ${tempRoot.absolutePath}")
       appendLine("- Native Libs: ${natives.absolutePath}")
       appendLine("- Caches: ${caches.absolutePath}")
+      if (projectBlock.isNotBlank()) {
+        appendLine()
+        append(projectBlock)
+      }
     }
     return success()
   }

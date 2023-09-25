@@ -79,11 +79,12 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       .allowExperimentalOptions(true)
       .allowEnvironmentAccess(config.hostAccess.toEnvAccess())
       .allowPolyglotAccess(PolyglotAccess.ALL)
+      .allowValueSharing(true)
       .allowHostAccess(contextHostAccess)
       .allowInnerContextOptions(false)
       .allowCreateThread(true)
       .allowCreateProcess(false)
-      .allowHostClassLoading(false)
+      .allowHostClassLoading(true)
       .allowNativeAccess(true)
       .engine(engine)
 

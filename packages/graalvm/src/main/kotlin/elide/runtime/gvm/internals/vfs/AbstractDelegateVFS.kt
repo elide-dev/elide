@@ -213,7 +213,15 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
       path,
       attributes,
       *options
-    )
+    ).apply {
+      if (containsKey("ino")) {
+        // fix: convert `ino` to `long`, which gvm filesystems expect
+        this["ino"] = when (val ino = this["ino"]) {
+          is Int -> ino.toLong()
+          else -> ino
+        }
+      }
+    }
   }
 
   override fun setAttribute(path: Path, attribute: String, value: Any, vararg options: LinkOption) {

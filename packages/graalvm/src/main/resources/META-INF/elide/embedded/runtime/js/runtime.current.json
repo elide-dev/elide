@@ -1,12 +1,18 @@
 {
-  "engine": "v3",
+  "engine": "v4",
   "language": "JAVASCRIPT",
   "vfs": [
     { "name": "js.modules.tar.gz" }
   ],
-  "artifacts": [
-    { "name": "polyfills.js" },
-    { "name": "facade.js" }
+  "artifacts": [],
+  "scripts": [
+    { "path": "polyfills.js" },
+    { "path": "facade.js" }
+  ],
+  "bundles": [
+    {
+      "path": "js.runtime.tar.gz"
+    }
   ],
   "image": {
     "type": "universal",

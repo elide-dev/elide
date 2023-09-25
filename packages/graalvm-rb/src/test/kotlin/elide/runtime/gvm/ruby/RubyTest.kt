@@ -18,8 +18,10 @@ import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.runtime.core.DelicateElideApi
 
 /** Basic Ruby runtime utility tests. */
+@OptIn(DelicateElideApi::class)
 @TestCase class RubyTest : RubyTest() {
   @Test fun testRubyGuestCodeBasic() = executeGuest {
     // language=ruby

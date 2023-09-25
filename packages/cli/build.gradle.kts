@@ -92,7 +92,7 @@ val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
-val enableRuby = false
+val enableRuby = true
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
@@ -265,9 +265,6 @@ dependencies {
   if (enableRuby) implementation(projects.packages.graalvmRb)
   if (enableEspresso) implementation(projects.packages.graalvmKt)
   if (enableWasm) implementation(projects.packages.graalvmWasm)
-
-  // Runtime engines
-  implementation(projects.packages.runtimeRb)
 
   api(libs.picocli)
   api(libs.slf4j)

@@ -2,3 +2,18 @@ public final class elide/runtime/gvm/wasm/WebAssembly {
 	public static final field INSTANCE Lelide/runtime/gvm/wasm/WebAssembly;
 }
 
+public final class elide/runtime/plugins/wasm/Wasm {
+	public static final field Plugin Lelide/runtime/plugins/wasm/Wasm$Plugin;
+	public synthetic fun <init> (Lelide/runtime/plugins/wasm/WasmConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/runtime/plugins/wasm/Wasm$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun getLanguageId ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/wasm/Wasm;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/wasm/WasmConfig : elide/runtime/plugins/AbstractLanguageConfig {
+}
+

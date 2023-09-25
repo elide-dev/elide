@@ -24,7 +24,7 @@ internal class AbstractLanguagePluginTest {
     assertContentEquals(
       expected = listOf(
         EmbeddedResource(
-          path = "/META-INF/elide/v4/embedded/runtime/testLang/sample-vfs.tar.gz",
+          path = "/META-INF/elide/embedded/runtime/testLang/sample-vfs.tar.gz",
           platform = null,
         )
       ),
@@ -35,7 +35,7 @@ internal class AbstractLanguagePluginTest {
     assertContentEquals(
       expected = listOf(
         EmbeddedResource(
-          path = "/META-INF/elide/v4/embedded/runtime/testLang/setup.txt",
+          path = "/META-INF/elide/embedded/runtime/testLang/setup.txt",
           platform = null,
         )
       ),

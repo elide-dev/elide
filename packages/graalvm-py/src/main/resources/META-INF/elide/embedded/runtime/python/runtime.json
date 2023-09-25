@@ -1,0 +1,15 @@
+{
+  "engine": "v3",
+  "language": "Python",
+  "bundles": [
+    {
+      "path": "python-darwin-aarch64.tar.xz",
+      "platform": "darwin_aarch64"
+    },
+    {
+      "path": "python-linux-amd64.tar.xz",
+      "platform": "linux_amd64"
+    }
+  ],
+  "scripts": []
+}

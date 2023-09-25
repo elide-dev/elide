@@ -18,8 +18,10 @@ import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.runtime.core.DelicateElideApi
 
 /** Basic Python runtime utility tests. */
+@OptIn(DelicateElideApi::class)
 @TestCase class PythonTest : PythonTest() {
   @Test fun testPythonGuestCodeBasic() = executeGuest {
     // language=python

@@ -13,20 +13,22 @@
 
 package elide.runtime.gvm.internals
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.gvm.internals.python.PythonRuntime
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.intrinsics.Symbol
-import elide.vm.annotations.Polyglot
-import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.Symbol
+import elide.runtime.plugins.python.Python
+import elide.runtime.plugins.python.python
+import elide.vm.annotations.Polyglot
 
 /** Specializes the [AbstractIntrinsicTest] base with support for Python guest testing. */
+@OptIn(DelicateElideApi::class)
 abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T>() {
   /** Assertion capture interface. */
   @FunctionalInterface internal interface PythonAssertion : TestAssertion, Function<Any?, TestContext> {
@@ -45,40 +47,16 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
     }
   }
 
-  private val initialized: AtomicBoolean = AtomicBoolean(false)
-
-  // Guest context manager.
-  @Inject lateinit var contextManager: ContextManager<Context, Context.Builder>
-
-  // Python runtime.
-  @Inject internal lateinit var python: PythonRuntime
-
-  // Run the provided `op` with an active (and exclusively owned) Python VM context.
-  override fun <V: Any> withContext(op: Context.() -> V): V = runBlocking {
-    if (!initialized.get()) {
-      contextManager.installContextFactory {
-        python.builder(it)
-      }
-      contextManager.installContextConfigurator {
-        python.configureVM(it)
-      }
-      contextManager.installContextSpawn {
-        python.spawn(it)
-      }
-      contextManager.activate(start = false)
-      initialized.set(true)
-    }
-    contextManager {
-      op.invoke(this)
-    }
+  override fun configureEngine(config: PolyglotEngineConfiguration) {
+    config.install(Python)
   }
 
   // Logic to execute a guest-side test.
   private inline fun executeGuestInternal(
-    ctx: Context,
+    ctx: PolyglotContext,
     bind: Boolean,
     bindUtils: Boolean,
-    op: Context.() -> String,
+    op: PolyglotContext.() -> String,
   ): Value {
     // resolve the script
     val script = op.invoke(ctx)
@@ -93,7 +71,7 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
     }
 
     // install bindings under test, if directed
-    val target = ctx.getBindings("python")
+    val target = ctx.bindings(Python)
     bindings.forEach {
       target.putMember(it.key.symbol, it.value)
     }
@@ -110,7 +88,7 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
     // execute script
     val returnValue = try {
       ctx.enter()
-      ctx.eval("python", script)
+      ctx.python(script)
     } catch (err: Throwable) {
       hasErr.set(true)
       subjectErr.set(err)
@@ -125,7 +103,7 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
   override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
     op.invoke()
     return object : DualTestExecutionProxy() {
-      override fun guest(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
+      override fun guest(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,
@@ -134,7 +112,7 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
         )
       }.doesNotFail()
 
-      override fun thenRun(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
+      override fun thenRun(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,

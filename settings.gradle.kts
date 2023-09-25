@@ -84,7 +84,6 @@ include(
   ":packages:base",
   ":packages:bom",
   ":packages:core",
-  ":packages:runtime-rb",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",

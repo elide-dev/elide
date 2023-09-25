@@ -1892,8 +1892,10 @@ public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runti
 	public fun <init> ()V
 	protected final fun initializeEmbeddedScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	protected final fun installEmbeddedBundles (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
-	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/EnginePlugin$InstallationScope;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
-	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/HostPlatform;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/EnginePlugin$InstallationScope;Z)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/HostPlatform;Z)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	public static synthetic fun resolveEmbeddedManifest$default (Lelide/runtime/plugins/AbstractLanguagePlugin;Lelide/runtime/core/EnginePlugin$InstallationScope;ZILjava/lang/Object;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	public static synthetic fun resolveEmbeddedManifest$default (Lelide/runtime/plugins/AbstractLanguagePlugin;Lelide/runtime/core/HostPlatform;ZILjava/lang/Object;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
 }
 
 protected final class elide/runtime/plugins/AbstractLanguagePlugin$Companion {
@@ -1902,6 +1904,7 @@ protected final class elide/runtime/plugins/AbstractLanguagePlugin$Companion {
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/util/List;

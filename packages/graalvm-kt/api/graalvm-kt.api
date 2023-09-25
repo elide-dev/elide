@@ -1,0 +1,15 @@
+public final class elide/runtime/plugins/kotlin/Kotlin {
+	public static final field Plugin Lelide/runtime/plugins/kotlin/Kotlin$Plugin;
+	public synthetic fun <init> (Lelide/runtime/plugins/kotlin/KotlinConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/runtime/plugins/kotlin/Kotlin$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun getLanguageId ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/kotlin/Kotlin;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/kotlin/KotlinConfig : elide/runtime/plugins/AbstractLanguageConfig {
+}
+

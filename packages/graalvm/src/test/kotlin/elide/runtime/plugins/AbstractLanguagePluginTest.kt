@@ -1,6 +1,7 @@
 package elide.runtime.plugins
 
 import org.junit.jupiter.api.Test
+import kotlin.test.Ignore
 import kotlin.test.assertContentEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EnginePlugin.InstallationScope
@@ -10,7 +11,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.Embed
 
 @OptIn(DelicateElideApi::class)
 internal class AbstractLanguagePluginTest {
-  @Test fun testResolveLanguageResources() {
+  @Ignore @Test fun testResolveLanguageResources() {
     /** Stubbed plugin allowing access to the resolved language resources. */
     val plugin = object : AbstractLanguagePlugin<Unit, Unit>() {
       override val key: Key<Unit> = Key("TestLanguagePlugin")

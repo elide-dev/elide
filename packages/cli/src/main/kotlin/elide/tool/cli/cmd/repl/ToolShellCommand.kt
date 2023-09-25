@@ -76,6 +76,7 @@ import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.js.JavaScriptConfig
 import elide.runtime.plugins.js.JavaScriptVersion
+import elide.runtime.plugins.jvm.Jvm
 import elide.runtime.plugins.python.Python
 import elide.runtime.plugins.ruby.Ruby
 import elide.runtime.plugins.vfs.vfs
@@ -1475,7 +1476,11 @@ import elide.tool.extensions.installIntrinsics
         }
 
         // Secondary Engines: JVM
-        JVM -> logging.warn("JVM runtime plugin is not yet implemented")
+        JVM -> install(Jvm) {
+          logging.debug("Configuring JVM")
+          installIntrinsics(intrinsics, GraalVMGuest.JVM)
+        }
+
         GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
         KOTLIN -> logging.warn("Kotlin runtime plugin is not yet implemented")
         SCALA -> logging.warn("Scala runtime plugin is not yet implemented")

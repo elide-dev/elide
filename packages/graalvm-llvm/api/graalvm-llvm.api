@@ -2,3 +2,18 @@ public final class elide/runtime/gvm/llvm/LLVM {
 	public static final field INSTANCE Lelide/runtime/gvm/llvm/LLVM;
 }
 
+public final class elide/runtime/plugins/llvm/LLVM {
+	public static final field Plugin Lelide/runtime/plugins/llvm/LLVM$Plugin;
+	public synthetic fun <init> (Lelide/runtime/plugins/llvm/LLVMConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/runtime/plugins/llvm/LLVM$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun getLanguageId ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/llvm/LLVM;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/llvm/LLVMConfig : elide/runtime/plugins/AbstractLanguageConfig {
+}
+

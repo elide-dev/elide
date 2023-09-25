@@ -47,3 +47,18 @@ public final class elide/runtime/gvm/jvm/cfg/JvmRuntimeConfig$Companion {
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
 }
 
+public final class elide/runtime/plugins/jvm/Jvm {
+	public static final field Plugin Lelide/runtime/plugins/jvm/Jvm$Plugin;
+	public synthetic fun <init> (Lelide/runtime/plugins/jvm/JvmConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/runtime/plugins/jvm/Jvm$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun getLanguageId ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/jvm/Jvm;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/jvm/JvmConfig : elide/runtime/plugins/AbstractLanguageConfig {
+}
+

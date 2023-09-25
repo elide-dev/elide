@@ -20,7 +20,7 @@ import elide.runtime.intrinsics.js.MapLike
 import elide.vm.annotations.Polyglot
 
 /** Base implementation of a regular (non-mutable) JS map which is backed by a Java map. */
-internal sealed class BaseJsMap<K: Any, V> constructor (
+public sealed class BaseJsMap<K: Any, V> (
   protected var backingMap: Map<K, V>,
   threadsafe: Boolean = false,
   multi: Boolean = false,
@@ -103,7 +103,7 @@ internal sealed class BaseJsMap<K: Any, V> constructor (
   )
 
   /** @inheritDoc */
-  @Polyglot override fun forEach(op: (MapLike.Entry<K, V>) -> Unit) = backingMap.entries.stream().forEach {
+  @Polyglot override fun forEach(op: (MapLike.Entry<K, V>) -> Unit): Unit = backingMap.entries.stream().forEach {
     op.invoke(entry(it.key, it.value))
   }
 

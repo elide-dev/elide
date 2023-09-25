@@ -1,18 +1,21 @@
 {
-  "engine": "v3",
+  "engine": "v4",
   "language": "RUBY",
   "vfs": [],
   "artifacts": [],
+  "scripts": [
+    { "path": "environment.rb" }
+  ],
   "image": {
     "type": "native",
     "darwin": {
       "arm64": {
-        "bundle": "ruby-darwin-aarch64.tar.gz",
-        "sha256": "36d14f64fd2c908bb67999fcbec92e95a0f7f921d3f92d4d7e7fe7ae7633284c",
+        "bundle": "ruby-darwin-aarch64.tar.xz",
+        "sha256": "a20c00f712fcf60686b5f266d00a074fb789fec53e8943d6235877f59bd89f0e",
         "signature": {
           "bundle": "ruby-darwin-aarch64.sigstore.json.gz",
-          "sha256": "50c3053d7b8c2864461efa5210d83c2a541ca9e00efc00815f081d496283e610",
-          "stamp": "MEUCIQCy0WQUX7bicQErA5ghorIYzkMXgnLVE10lVK5biSEpPwIgeUekb8fLDO088hKbK6czZ7GohcR7FVLfAnF8+748Lxs="
+          "sha256": "56e93672047d28a6b5845c36c1d7161fd19272a7ce9a9cc3cc7757ee74e8ac63",
+          "stamp": "MEYCIQC0y1CzUrHwOR8YacPikfOL+5TR6/IIi/YTcjYySzwj5wIhAPb8L63GDYS5GMEL/a/1dHlI1aKA1Anp5FjiCs3EwgKa"
         }
       }
     },

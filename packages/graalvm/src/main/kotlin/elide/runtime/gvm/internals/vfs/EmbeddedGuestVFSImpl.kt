@@ -273,6 +273,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
     /** Default in-memory filesystem attribute views. */
     private val defaultViews: Array<String> = arrayOf(
       "basic",
+      "owner",
+      "posix",
+      "unix",
     )
 
     /** Calculate a set of supported [Feature]s for a new in-memory filesystem instance. */
@@ -280,7 +283,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       if (this.supportsSymbolicLinks) {
         listOf(
           Feature.LINKS,
-          Feature.SYMBOLIC_LINKS
+          Feature.SYMBOLIC_LINKS,
         )
       } else {
         emptyList()

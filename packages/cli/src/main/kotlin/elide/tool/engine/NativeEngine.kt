@@ -131,7 +131,7 @@ object NativeEngine {
     loader: ClassLoader,
     group: String,
     workdir: File,
-    forceLoad: Boolean = false,
+    forceLoad: Boolean = !ImageInfo.inImageCode(),
     linux: (() -> List<NativeLibInfo>?)? = null,
     darwin: (() -> List<NativeLibInfo>?)? = null,
     windows: (() -> List<NativeLibInfo>?)? = null,
@@ -261,6 +261,14 @@ object NativeEngine {
     }
 
     loadAllNatives(platform, natives.toFile(), this::class.java.classLoader)
+
+    // fix: account for static jni
+    if (ImageInfo.inImageCode()) listOf(
+      "crypto",
+      "transport",
+    ).forEach {
+      nativeLibraryGroups[it] = true
+    }
   }
 
   /**

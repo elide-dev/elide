@@ -50,7 +50,7 @@ import elide.runtime.intrinsics.js.MapLike
  * @param multi Whether the map implementation allows multiple values per key.
  * @param threadsafe Whether the map implementation is thread-safe.
  */
-internal sealed class AbstractJsMap<K: Any, V> constructor (
+public sealed class AbstractJsMap<K: Any, V> (
   internal val sorted: Boolean,
   internal val mutable: Boolean,
   internal val multi: Boolean,

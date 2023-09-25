@@ -1,5 +1,6 @@
 package elide.runtime.plugins
 
+import java.util.zip.GZIPInputStream
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -25,12 +26,15 @@ import elide.runtime.plugins.vfs.include
   @Serializable public data class LanguagePluginManifest(
     /** The engine version these resources are meant to be used with. */
     val engine: String,
+
     /** The language these resources are meant to be used with. */
     val language: String,
+
     /** A list of URIs representing bundles to be preloaded into the VFS by the plugin. */
-    val bundles: List<EmbeddedResource>,
+    val bundles: List<EmbeddedResource> = emptyList(),
+
     /** Guest scripts to be evaluated on context initialization. */
-    val scripts: List<EmbeddedResource>,
+    val scripts: List<EmbeddedResource> = emptyList(),
   ) {
     /** Represents an embedded resource that should be loaded by the language plugin. */
     @Serializable public data class EmbeddedResource(
@@ -85,9 +89,14 @@ import elide.runtime.plugins.vfs.include
     fun relativeToRoot(path: String) = "$resourcesRoot/$path"
 
     // read and deserialize manifest
+    val json = Json {
+      ignoreUnknownKeys = true
+    }
     val manifest = AbstractLanguagePlugin::class.java.getResourceAsStream(relativeToRoot(RUNTIME_MANIFEST))?.let {
-      // deserialize the manifest
-      Json.decodeFromStream<LanguagePluginManifest>(it)
+      GZIPInputStream(it).use { gzipStream ->
+        // deserialize the manifest
+        json.decodeFromStream<LanguagePluginManifest>(gzipStream)
+      }
     } ?: error(
       "Failed to locate embedded runtime manifest at path '$resourcesRoot'",
     )
@@ -150,13 +159,10 @@ import elide.runtime.plugins.vfs.include
   }
 
   protected companion object {
-    /** Elide version used for resolving embedded resource paths. */
-    private const val ENGINE_VERSION = "v4"
-
     /** Root resources path where embedded language resources are placed. */
-    private const val EMBEDDED_RESOURCES_ROOT = "/META-INF/elide/$ENGINE_VERSION/embedded/runtime"
+    private const val EMBEDDED_RESOURCES_ROOT = "/META-INF/elide/embedded/runtime"
 
     /** Name of the manifest file for embedded language resources */
-    private const val RUNTIME_MANIFEST = "runtime.json"
+    private const val RUNTIME_MANIFEST = "runtime.json.gz"
   }
 }

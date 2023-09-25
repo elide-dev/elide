@@ -43,7 +43,6 @@ import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.*
-import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import java.io.*
 import java.net.URI
 import java.nio.charset.StandardCharsets
@@ -68,15 +67,15 @@ import elide.runtime.Logging
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
-import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
 import elide.runtime.core.extensions.attach
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.intriniscs.server.http.HttpServerAgent
 import elide.runtime.plugins.debug.debug
+import elide.runtime.plugins.env.EnvConfig.EnvVar
+import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.*
+import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.js.JavaScript
-import elide.runtime.plugins.js.JavaScriptConfig
-import elide.runtime.plugins.js.JavaScriptVersion
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
@@ -84,9 +83,11 @@ import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
 import elide.tool.cli.options.EngineJavaScriptOptions
 import elide.tool.cli.output.JLineLogbackAppender
+import elide.tool.extensions.installCliBaseline
 import elide.tool.extensions.installIntrinsics
-import elide.tool.io.RuntimeWorkdirManager
 import elide.tool.io.WorkdirManager
+import elide.tool.project.ProjectInfo
+import elide.tool.project.ProjectManager
 
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
@@ -112,13 +113,16 @@ import elide.tool.io.WorkdirManager
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
   ],
 )
-@Singleton internal class ToolShellCommand @Inject constructor (private val workdir: WorkdirManager) :
-  AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal class ToolShellCommand @Inject constructor (
+  private val projectManager: ProjectManager,
+  private val workdir: WorkdirManager,
+) : AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
     private const val TOOL_LOGGER_NAME: String = "tool"
     private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
+    private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
@@ -217,10 +221,11 @@ import elide.tool.io.WorkdirManager
     }
 
     // Resolve the primary interactive language.
-    internal fun primary(): GuestLanguage = langs.first { it.id != GraalVMGuest.JAVASCRIPT.symbol } ?: JS
+    internal fun primary(project: ProjectInfo? = null): GuestLanguage =
+      langs.first { it.id != GraalVMGuest.JAVASCRIPT.symbol } ?: JS
 
     // Resolve the specified language.
-    internal fun resolve(): EnumSet<GuestLanguage> = langs
+    internal fun resolve(project: ProjectInfo? = null): EnumSet<GuestLanguage> = langs
   }
 
   /** Specifies settings for the Chrome DevTools inspector. */
@@ -360,6 +365,69 @@ import elide.tool.io.WorkdirManager
     }
   }
 
+  /** Specifies settings for application environment. */
+  @Introspected @ReflectiveAccess class EnvironmentConfig {
+    /** Specifies whether the runtime should honor dotenv files. */
+    @Option(
+      names = ["--env:dotenv"],
+      description = ["Whether to honor .env files; defaults to `true`"],
+      defaultValue = "true",
+    )
+    internal var dotenv: Boolean = true
+
+    /** Specifies whether the runtime should honor dotenv files. */
+    @Option(
+      names = ["--env"],
+      description = ["Additional environment variables to set, in x=y format"],
+      arity = "0..N",
+    )
+    internal var envVars: Map<String, String> = emptyMap()
+
+    /** Apply these settings to created execution contexts. */
+    internal fun apply(project: ProjectInfo, config: PolyglotEngineConfiguration) = config.environment {
+      val effectiveInjectedEnv = TreeMap<String, EnvVar>()
+
+      // apply project-level environment variables first
+      project.env?.vars?.forEach {
+        if (it.value.isPresent) {
+          if (it.value.source == DOTENV && !dotenv) {
+            return@forEach  // skip .env vars if so instructed
+          }
+          effectiveInjectedEnv[it.key] = requireNotNull(it.value)
+        }
+      }
+
+      // apply manually-installed environment variables
+      envVars.forEach {
+        if (it.value.isNotBlank() && it.value.isNotBlank()) {
+          effectiveInjectedEnv[it.key] = EnvVar.of(it.key, it.value)
+        }
+      }
+
+      effectiveInjectedEnv.forEach {
+        when (it.value.source) {
+          INLINE -> environment(it.key, it.value.value)
+
+          HOST -> (it.value as EnvVar.HostMappedVar).let { hostMappedVar ->
+            mapToHostEnv(
+              hostMappedVar.mapped,
+              hostMappedVar.name,
+              defaultValue = hostMappedVar.defaultValue,
+            )
+          }
+
+          DOTENV -> (it.value as EnvVar.DotEnvVar).let { dotEnvVar ->
+            fromDotenv(
+              dotEnvVar.file,
+              it.key,
+              it.value.value,
+            )
+          }
+        }
+      }
+    }
+  }
+
   internal sealed class LanguageSettings
 
   /** Settings which apply to Python only. */
@@ -458,6 +526,9 @@ import elide.tool.io.WorkdirManager
   // Whether a server is running.
   private val serverRunning: AtomicBoolean = AtomicBoolean(false)
 
+  // Active project configuration.
+  private val activeProject: AtomicReference<ProjectInfo> = AtomicReference(null)
+
   // Main script engine manager.
   private val scriptEngineManager: ScriptEngineManager by lazy {
     ScriptEngineManager(this::class.java.classLoader)
@@ -510,6 +581,12 @@ import elide.tool.io.WorkdirManager
     exclusive = false,
     heading = "%nAccess Control:%n",
   ) internal lateinit var accessControl: AccessControlOptions
+
+  /** App environment settings. */
+  @ArgGroup(
+    exclusive = false,
+    heading = "%nEnvironment:%n",
+  ) internal var appEnvironment: EnvironmentConfig = EnvironmentConfig()
 
   /** Chrome inspector settings. */
   @ArgGroup(
@@ -902,19 +979,19 @@ import elide.tool.io.WorkdirManager
 
       // otherwise, resolve from seen statements
       else -> {
-        ctxLines.addAll(allSeenStatements.subList(errorBase, topLine))
+        ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
         (errorBase + 1) to ctxLines
       }
     }
   }
 
   // Given an error, render a table explaining the error, along with any source context if we have it.
-  @Suppress("UNUSED_PARAMETER") private fun displayFormattedError(
+  private fun displayFormattedError(
     exc: Throwable,
     message: String,
     advice: String? = null,
     internal: Boolean = false,
-    stacktrace: Boolean = false,
+    stacktrace: Boolean = internal,
   ) {
     val term = terminal.get()
     val reader = lineReader.get()
@@ -985,10 +1062,14 @@ import elide.tool.io.WorkdirManager
       if (stacktrace) stacktraceLines.maxOf { it.length + pad + 2 } else 0,
     ))
 
-    val textWidth = width - (pad / 2)
+    val textWidth = width - (pad / 2) + if (stacktrace) {
+      "      ".length
+    } else 0
+
     val top = ("╔" + "═".repeat(textWidth) + "╗")
     val bottom = ("╚" + "═".repeat(textWidth) + "╝")
     val divider = ("╟" + "─".repeat(textWidth) + "╢")
+    val blankLine = ("║" + " ".repeat(textWidth) + "║")
 
     // render error string
     val rendered = StringBuilder().apply {
@@ -1011,6 +1092,7 @@ import elide.tool.io.WorkdirManager
       if (stacktrace || advice?.isNotBlank() == true) {
         // ╟──────────────────────╢
         if (lineContextRendered.isNotEmpty() && message.isNotBlank()) appendLine(divider)
+        else if (message.isNotBlank()) appendLine(divider)
 
         // append advice next
         if (advice?.isNotBlank() == true) {
@@ -1025,11 +1107,17 @@ import elide.tool.io.WorkdirManager
         // append stacktrace next
         if (stacktrace) {
           // ║ Stacktrace:          ║
-          append(middlePrefix).append("Stacktrace:\n")
+          append(middlePrefix).append("Stacktrace:".padEnd(textWidth - 1, ' ') + "║\n")
+          appendLine(blankLine)
 
           // ║ ...                  ║
           stacktraceLines.forEach {
-            append(middlePrefix).append(it.padEnd(textWidth + 1, ' ') + "║\n")
+            if (it.startsWith(" ") || it.startsWith('\t')) {
+              // if it's a spaced line, don't add additional end-spacing
+              append(middlePrefix).append(it.padEnd(textWidth - pad - middlePrefix.length, ' ') + "║\n")
+            } else {
+              append(middlePrefix).append(it.padEnd(textWidth - 1, ' ') + "║\n")
+            }
           }
         }
       }
@@ -1039,14 +1127,19 @@ import elide.tool.io.WorkdirManager
       append("\n")
     }.toString()
 
-    // format error string
-    val style = AttributedStyle.BOLD.foreground(AttributedStyle.RED)
 
     if (reader != null) {
-      val formatted = AttributedString(rendered, style)
-      reader.printAbove(formatted)
+      // format error string
+      val style = AttributedStyle.BOLD.foreground(AttributedStyle.RED)
+      if (pretty) {
+        val formatted = AttributedString(rendered, style)
+        reader.printAbove(formatted)
+      } else {
+        reader.printAbove(rendered)
+      }
     } else System.err.use {
       it.writeBytes(rendered.toByteArray(StandardCharsets.UTF_8))
+      it.flush()
     }
   }
 
@@ -1065,10 +1158,12 @@ import elide.tool.io.WorkdirManager
         "${language.label} syntax is incomplete",
       )
 
-      exc.isHostException -> displayFormattedError(
+      exc.isHostException || exc.message?.contains("HostException: ") == true -> displayFormattedError(
         exc,
         exc.message ?: "An runtime error was thrown",
+        advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
         stacktrace = true,
+        internal = true,
       )
 
       exc.isGuestException -> displayFormattedError(
@@ -1350,6 +1445,7 @@ import elide.tool.io.WorkdirManager
   // of supported languages. If JS is disabled, there can only be one language; otherwise the default language is JS. If
   // a file is provided with a specific matching file extension for a given language, that language is used.
   private fun resolvePrimaryLanguage(
+    project: ProjectInfo?,
     languageSelector: LanguageSelector?,
     languages: EnumSet<GuestLanguage>,
     fileInput: File?,
@@ -1364,7 +1460,7 @@ import elide.tool.io.WorkdirManager
     languages.size == 1 -> languages.first()
 
     // an explicit flag from a user takes top precedence
-    languageSelector != null -> languageSelector.primary()
+    languageSelector != null -> languageSelector.primary(project)
 
     // we have to have at least one language
     languages.size == 0 -> error("Cannot start VM with no enabled guest languages")
@@ -1374,7 +1470,12 @@ import elide.tool.io.WorkdirManager
   }
 
   override fun PolyglotEngineConfiguration.configureEngine() {
+    // grab project configurations, if available
+    val project = activeProject.get()
+    if (project != null) logging.debug("Resolved project info: $project")
+
     // conditionally apply debugging settings
+    if (project != null) appEnvironment.apply(project, this)
     if (debug) debugger.apply(this)
     inspector.apply(this)
 
@@ -1415,34 +1516,31 @@ import elide.tool.io.WorkdirManager
     }
 
     // configure support for guest languages
+    val versionProp = VERSION_INSTRINSIC_NAME to ElideTool.version()
     val intrinsics = intrinsicsManager.resolver()
+
+    install(JavaScript) {
+      logging.debug("Configuring JS VM")
+      installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
+      jsSettings.apply(this)
+    }
+    install(elide.runtime.plugins.python.Python) {
+      logging.debug("Configuring Python VM")
+      installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+    }
+    install(elide.runtime.plugins.ruby.Ruby) {
+      logging.debug("Configuring Ruby VM")
+      installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+    }
+
     (language ?: LanguageSelector()).resolve().forEach { lang ->
       when (lang) {
-        JS -> install(JavaScript) {
-          logging.debug("Configuring JS VM")
-          installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT)
-          jsSettings.apply(this)
-        }
-
-        PYTHON -> install(elide.runtime.plugins.python.Python) {
-          logging.debug("Configuring Python VM")
-          installIntrinsics(intrinsics, GraalVMGuest.PYTHON)
-        }
-
-        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
-          logging.debug("Configuring Ruby VM")
-          installIntrinsics(intrinsics, GraalVMGuest.RUBY)
-        }
-
         // Secondary Engines: JVM
         JVM -> logging.warn("JVM runtime plugin is not yet implemented")
         GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
         KOTLIN -> logging.warn("Kotlin runtime plugin is not yet implemented")
         SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
-
-        else -> if (!lang.suppressExperimentalWarning) {
-          Statics.logging.warn("Language is not supported yet for CLI use: ${lang.name}")
-        }
+        else -> {}
       }
     }
   }
@@ -1450,6 +1548,11 @@ import elide.tool.io.WorkdirManager
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
+
+    // resolve project configuration
+    val projectConfigJob = projectManager.resolveProjectAsync()
+
+    // begin resolving language support
     val supported = determineSupportedLanguages()
     val allSupported = EnumSet.copyOf(supported.map { it.first })
     if (languages) {
@@ -1459,8 +1562,9 @@ import elide.tool.io.WorkdirManager
     }
 
     // resolve the language to use
+    val project = projectConfigJob.await()
     val selector = language ?: LanguageSelector()
-    val langs = selector.resolve()
+    val langs = selector.resolve(project)
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     supported.find { langs.contains(it.first) }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
     logging.debug("Initializing language contexts (${langs.joinToString(", ") { it.id }})")
@@ -1475,6 +1579,7 @@ import elide.tool.io.WorkdirManager
     }
     val primaryLang: (File?) -> GuestLanguage = { target ->
       resolvePrimaryLanguage(
+        project,
         language,
         langs,
         when {
@@ -1485,6 +1590,11 @@ import elide.tool.io.WorkdirManager
           else -> target
         },
       )
+    }
+
+    // apply project configurations to context, if needed
+    project?.let { prj ->
+      activeProject.set(prj)
     }
 
     withContext {

@@ -1,0 +1,20 @@
+{
+  "engine": "v4",
+  "language": "JVM",
+  "vfs": [],
+  "artifacts": [],
+  "image": {
+    "type": "native",
+    "darwin": {
+      "arm64": {
+        "bundle": "java-darwin-aarch64.tar.xz",
+        "sha256": "eba65a557167035524e6bf0c3518f27d47db82014f60496ca77da3a89147f2c1",
+        "signature": {
+          "bundle": "java-darwin-aarch64.sigstore.json.gz",
+          "sha256": "e02d5a57758141ad14da7454bae529c0c35b1d2c25ae3fc7758473373dc4fefc",
+          "stamp": "MEUCIDDuwVXn/oF+irOOevmc27eDEh4GutTvYtxVqPK7baU3AiEAyAGAbPhWvX85NZdWmKkSmNYAfVEjZEfDwfKBbKtgqNk="
+        }
+      }
+    }
+  }
+}

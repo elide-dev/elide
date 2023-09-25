@@ -3,6 +3,22 @@
   "includes":[{
     "pattern":"META-INF/services/org/jline/terminal/provider/.*"
   }, {
+    "pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/native/libnetty_quiche_osx_aarch_64.jnilib)\\E"
+  }, {
+    "pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/nativelibnetty_quiche_osx_aarch_64.dylib\\E"
+  }, {
+    "pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/native/libnetty_resolver_dns_native_macos_aarch_64.jnilib)\\E"
+  }, {
+    "pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/nativelibnetty_resolver_dns_native_macos_aarch_64.dylib\\E"
+  }, {
+    "pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/native/libnetty_tcnative_osx_aarch_64.jnilib)\\E"
+  }, {
+    "pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/nativelibnetty_tcnative_osx_aarch_64.dylib\\E"
+  }, {
+    "pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib)\\E"
+  }, {
+    "pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/nativelibnetty_transport_native_kqueue_aarch_64.dylib\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/**/*.*"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"

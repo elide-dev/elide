@@ -84,19 +84,20 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
 
   override fun configure(engine: VMEngine, context: VMBuilder): Stream<out VMProperty> = listOfNotNull(
     VMStaticProperty.of("llvm.OSR", "BYTECODE"),
-    VMStaticProperty.of("python.PosixModuleBackend", "java"),
+    VMStaticProperty.of("python.PosixModuleBackend", "native"),
     VMStaticProperty.active("llvm.AOTCacheStore"),
     VMStaticProperty.active("llvm.AOTCacheLoad"),
     VMStaticProperty.active("llvm.C++Interop"),
     VMStaticProperty.active("llvm.lazyParsing"),
+    VMStaticProperty.active("llvm.enableExternalNativeAccess"),
     VMStaticProperty.active("python.NativeModules"),
     VMStaticProperty.active("python.LazyStrings"),
     VMStaticProperty.active("python.WithCachedSources"),
     VMStaticProperty.active("python.WithTRegex"),
     VMStaticProperty.active("python.UsePanama"),
     VMStaticProperty.inactive("python.EmulateJython"),
-    VMStaticProperty.of("python.CoreHome", "/python/lib/graalpy23.1"),
-    VMStaticProperty.of("python.PythonHome", "/python"),
+    VMStaticProperty.of("python.CoreHome", "/python/python-home/lib/graalpy23.1"),
+    VMStaticProperty.of("python.PythonHome", "/python/python-home"),
   ).stream()
 
   override fun prepare(context: VMContext, globals: GuestValue) {

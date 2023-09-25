@@ -430,11 +430,10 @@ dependencies {
   if (enableEspresso) {
     api(libs.bundles.graalvm.espresso)
   }
-  if (enableExperimental) {
-    api(libs.graalvm.truffle.nfi)
-    api(libs.graalvm.truffle.nfi.panama)
-  }
 
+  api(libs.graalvm.truffle.nfi)
+  api(libs.graalvm.truffle.nfi.libffi)
+  api(libs.graalvm.truffle.nfi.panama)
   runtimeOnly(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))
@@ -966,6 +965,7 @@ val initializeAtBuildTime = listOf(
   // Elide Runtime Core
   "elide.runtime.core.HostPlatform${'$'}Architecture",
   "elide.runtime.core.HostPlatform${'$'}OperatingSystem",
+  "elide.runtime.plugins.env.EnvConfig${'$'}EnvVariableSource",
 
   // Elide VM Internals
   "tools.elide",

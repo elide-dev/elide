@@ -28,9 +28,9 @@ import elide.runtime.plugins.vfs.include
     /** The language these resources are meant to be used with. */
     val language: String,
     /** A list of URIs representing bundles to be preloaded into the VFS by the plugin. */
-    val bundles: List<EmbeddedResource>,
+    val bundles: List<EmbeddedResource> = emptyList(),
     /** Guest scripts to be evaluated on context initialization. */
-    val scripts: List<EmbeddedResource>,
+    val scripts: List<EmbeddedResource> = emptyList(),
   ) {
     /** Represents an embedded resource that should be loaded by the language plugin. */
     @Serializable public data class EmbeddedResource(

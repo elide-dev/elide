@@ -140,8 +140,6 @@ import elide.testing.annotations.TestCase
     """
       const uuid = crypto.randomUUID();
       const uuid2 = crypto.randomUUID();
-      console.log(uuid);
-      console.log(uuid2);
       test(uuid).isNotNull("should not get `null` for `randomUUID`");
       test(uuid).isEqualTo(uuid);
       test(uuid).isNotEqualTo(uuid2);

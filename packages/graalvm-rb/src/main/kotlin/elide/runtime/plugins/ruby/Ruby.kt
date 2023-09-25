@@ -9,8 +9,10 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
+import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
+import elide.runtime.plugins.llvm.LLVM
 
 @DelicateElideApi public class Ruby(
   private val config: RubyConfig,
@@ -48,6 +50,9 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     override val key: Key<Ruby> = Key(RUBY_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: RubyConfig.() -> Unit): Ruby {
+      // apply the llvm plugin first
+      scope.configuration.getOrInstall(LLVM)
+
       // apply the configuration and create the plugin instance
       val config = RubyConfig().apply(configuration)
       val resources = resolveEmbeddedManifest(scope)

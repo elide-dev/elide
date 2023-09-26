@@ -36,13 +36,13 @@ importers:
     devDependencies:
       '@mdx-js/esbuild':
         specifier: 2.3.0
-        version: registry.npmjs.org/@mdx-js/esbuild@2.3.0(esbuild@0.19.3)
+        version: registry.npmjs.org/@mdx-js/esbuild@2.3.0(esbuild@0.18.17)
       '@types/google-protobuf':
         specifier: 3.15.6
         version: 3.15.6
       esbuild:
-        specifier: 0.19.3
-        version: registry.npmjs.org/esbuild@0.19.3
+        specifier: 0.18.17
+        version: registry.npmjs.org/esbuild@0.18.17
       husky:
         specifier: 8.0.3
         version: 8.0.3
@@ -105,7 +105,7 @@ importers:
         version: registry.npmjs.org/@mdx-js/mdx@2.3.0
       '@mdx-js/preact':
         specifier: 2.3.0
-        version: registry.npmjs.org/@mdx-js/preact@2.3.0(preact@10.16.0)
+        version: registry.npmjs.org/@mdx-js/preact@2.3.0(preact@10.17.1)
       '@mdx-js/react':
         specifier: 2.3.0
         version: registry.npmjs.org/@mdx-js/react@2.3.0(react@18.2.0)
@@ -115,13 +115,13 @@ importers:
     devDependencies:
       '@mdx-js/esbuild':
         specifier: 2.3.0
-        version: registry.npmjs.org/@mdx-js/esbuild@2.3.0(esbuild@0.18.17)
+        version: registry.npmjs.org/@mdx-js/esbuild@2.3.0(esbuild@0.19.3)
       '@mdx-js/loader':
         specifier: 2.3.0
         version: registry.npmjs.org/@mdx-js/loader@2.3.0(webpack@5.88.2)
       webpack:
         specifier: 5.88.2
-        version: registry.npmjs.org/webpack@5.88.2(esbuild@0.18.17)
+        version: registry.npmjs.org/webpack@5.88.2(esbuild@0.19.3)
 
   tools/plugin/gradle-plugin:
     dependencies:
@@ -792,7 +792,7 @@ packages:
     dependencies:
       '@mdx-js/mdx': registry.npmjs.org/@mdx-js/mdx@2.3.0
       source-map: registry.npmjs.org/source-map@0.7.4
-      webpack: registry.npmjs.org/webpack@5.88.2(esbuild@0.18.17)
+      webpack: registry.npmjs.org/webpack@5.88.2(esbuild@0.19.3)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -822,7 +822,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  registry.npmjs.org/@mdx-js/preact@2.3.0(preact@10.16.0):
+  registry.npmjs.org/@mdx-js/preact@2.3.0(preact@10.17.1):
     resolution: {integrity: sha512-aDk1NVPlaqacA8e+5li3bhMPac6SE6iOys+Jh3Qz4yPU+/vbNxU2iqrIjH9oV1tyziY8nDT6CJLA6s43xzf7AA==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/@mdx-js/preact/-/preact-2.3.0.tgz}
     id: registry.npmjs.org/@mdx-js/preact/2.3.0
     name: '@mdx-js/preact'
@@ -831,7 +831,7 @@ packages:
       preact: '>=10.0.0'
     dependencies:
       '@types/mdx': registry.npmjs.org/@types/mdx@2.0.3
-      preact: registry.npmjs.org/preact@10.16.0
+      preact: registry.npmjs.org/preact@10.17.1
     dev: false
 
   registry.npmjs.org/@mdx-js/react@2.3.0(react@18.2.0):
@@ -3883,12 +3883,6 @@ packages:
       picocolors: registry.npmjs.org/picocolors@1.0.0
       source-map-js: registry.npmjs.org/source-map-js@1.0.2
 
-  registry.npmjs.org/preact@10.16.0:
-    resolution: {integrity: sha512-XTSj3dJ4roKIC93pald6rWuB2qQJO9gO2iLLyTe87MrjQN+HklueLsmskbywEWqCHlclgz3/M4YLL2iBr9UmMA==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/preact/-/preact-10.16.0.tgz}
-    name: preact
-    version: 10.16.0
-    dev: false
-
   registry.npmjs.org/preact@10.17.1:
     resolution: {integrity: sha512-X9BODrvQ4Ekwv9GURm9AKAGaomqXmip7NQTZgY7gcNmr7XE83adOMJvd3N42id1tMFU7ojiynRsYnY6/BRFxLA==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/preact/-/preact-10.17.1.tgz}
     name: preact
@@ -4414,7 +4408,7 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  registry.npmjs.org/terser-webpack-plugin@5.3.9(esbuild@0.18.17)(webpack@5.88.2):
+  registry.npmjs.org/terser-webpack-plugin@5.3.9(esbuild@0.19.3)(webpack@5.88.2):
     resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/terser-webpack-plugin/-/terser-webpack-plugin-5.3.9.tgz}
     id: registry.npmjs.org/terser-webpack-plugin/5.3.9
     name: terser-webpack-plugin
@@ -4434,12 +4428,12 @@ packages:
         optional: true
     dependencies:
       '@jridgewell/trace-mapping': registry.npmjs.org/@jridgewell/trace-mapping@0.3.18
-      esbuild: registry.npmjs.org/esbuild@0.18.17
+      esbuild: registry.npmjs.org/esbuild@0.19.3
       jest-worker: registry.npmjs.org/jest-worker@27.5.1
       schema-utils: registry.npmjs.org/schema-utils@3.3.0
       serialize-javascript: registry.npmjs.org/serialize-javascript@6.0.1
       terser: registry.npmjs.org/terser@5.19.2
-      webpack: registry.npmjs.org/webpack@5.88.2(esbuild@0.18.17)
+      webpack: registry.npmjs.org/webpack@5.88.2(esbuild@0.19.3)
     dev: true
 
   registry.npmjs.org/terser@5.19.2:
@@ -4704,7 +4698,7 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  registry.npmjs.org/webpack@5.88.2(esbuild@0.18.17):
+  registry.npmjs.org/webpack@5.88.2(esbuild@0.19.3):
     resolution: {integrity: sha512-JmcgNZ1iKj+aiR0OvTYtWQqJwq37Pf683dY9bVORwVbUrDhLhdn/PlO2sHsFHPkj7sHNQF3JwaAkp49V+Sq1tQ==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/webpack/-/webpack-5.88.2.tgz}
     id: registry.npmjs.org/webpack/5.88.2
     name: webpack
@@ -4738,7 +4732,7 @@ packages:
       neo-async: registry.npmjs.org/neo-async@2.6.2
       schema-utils: registry.npmjs.org/schema-utils@3.3.0
       tapable: registry.npmjs.org/tapable@2.2.1
-      terser-webpack-plugin: registry.npmjs.org/terser-webpack-plugin@5.3.9(esbuild@0.18.17)(webpack@5.88.2)
+      terser-webpack-plugin: registry.npmjs.org/terser-webpack-plugin@5.3.9(esbuild@0.19.3)(webpack@5.88.2)
       watchpack: registry.npmjs.org/watchpack@2.4.0
       webpack-sources: registry.npmjs.org/webpack-sources@3.2.3
     transitivePeerDependencies:

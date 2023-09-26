@@ -5,6 +5,10 @@
       <verify-signatures>true</verify-signatures>
       <trusted-artifacts>
          <trust file="micronaut-aot-api-2.1.1.jar"/>
+         <trust file="buildless-plugin-gradle-1.0.0-beta1.jar"/>
+         <trust file="buildless-plugin-gradle-1.0.0-beta1.module"/>
+         <trust file="gradle-enterprise-gradle-plugin-3.15.jar"/>
+         <trust file="gradle-enterprise-gradle-plugin-3.15.module"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta.pom"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta2.pom"/>
          <trust group="com.autonomousapps.dependency-analysis"/>
@@ -68,6 +72,7 @@
          </trusted-key>
          <trusted-key id="1a55f091ad28c07f831fa44d7905de25c78ad456" group="com.google.protobuf"/>
          <trusted-key id="1bd97a6a154e7810ee0bc832e2f38302c8075e3d" group="org.gradle.toolchains" name="foojay-resolver" version="0.7.0"/>
+         <trusted-key id="1be2dd4b1fcf252fe4f0a1d103281aa0289ff53a" group="com.soywiz.korlibs.korte" name="korte-jvm" version="2.7.0"/>
          <trusted-key id="1d0a8b5e77c678a7c724445abf984b4145ea13f7" group="com.squareup" name="javapoet" version="1.13.0"/>
          <trusted-key id="1dbb44e80f61493d6369b5fb95c15058a5eda4f1" group="com.google.gradle" name="osdetector-gradle-plugin" version="1.7.3"/>
          <trusted-key id="1f47744c9b6e14f2049c2857f1f111af65925306" group="io.github.classgraph" name="classgraph" version="4.8.156"/>
@@ -95,6 +100,7 @@
          <trusted-key id="2e3a1affe42b5f53af19f780bcf4173966770193" group="org.jetbrains" name="annotations" version="13.0"/>
          <trusted-key id="2e5b73c6efd2eb453104c2eae6ec76b4c6d3ae8e" group="com.google.protobuf"/>
          <trusted-key id="2e92113263fc31c74ccbaab20e91c2de43b72bb1" group="org.ec4j.core"/>
+         <trusted-key id="2f528d36d67b69edf998d85778bd65473cb3bd13" group="com.google.cloud.tools"/>
          <trusted-key id="314fe82e5a4c5377bca2edec5208812e1e4a6db0">
             <trusting group="com.gradle"/>
             <trusting group="org.gradle"/>
@@ -123,6 +129,7 @@
          <trusted-key id="4db1a49729b053caf015cee9a6adfc93ef34893e" group="org.hamcrest"/>
          <trusted-key id="4f7e32d440ef90a83011a8fc6425559c47cc79c4" group="javax.annotation" name="javax.annotation-api"/>
          <trusted-key id="50a628ffaf58480736b1079fd1031d14464180e0" group="org.reactivestreams" name="reactive-streams" version="1.0.4"/>
+         <trusted-key id="51608dea69f297bea56adf9baeaa0761df8ca3a1" group="com.google.protobuf"/>
          <trusted-key id="517b94f8d0a46317a28d8ab30da8a5ec02d11ead" group="net.sf.jopt-simple" name="jopt-simple" version="5.0.4"/>
          <trusted-key id="53c935821aa6a755bd337db53595395eb3d8e1ba" group="org.apache.logging.log4j"/>
          <trusted-key id="57b8b76a967c5c26bbcf9cc7348a1b6e762c08a0" group="com.google.template" name="soy" version="2022-10-26"/>
@@ -144,7 +151,10 @@
             <trusting group="org.codehaus.woodstox" name="stax2-api" version="4.2.1"/>
             <trusting group="^com[.]fasterxml($|([.].*))" regex="true"/>
          </trusted-key>
-         <trusted-key id="635ee627345f3c1dd422b2e207d3516820bcf6b1" group="com.github.ben-manes.caffeine" name="caffeine" version="3.1.0"/>
+         <trusted-key id="635ee627345f3c1dd422b2e207d3516820bcf6b1">
+            <trusting group="com.github.ben-manes.caffeine" name="caffeine" version="3.1.0"/>
+            <trusting group="com.github.ben-manes.caffeine" name="caffeine" version="3.1.7"/>
+         </trusted-key>
          <trusted-key id="66ca61ea0fc7e9ea1216f83396b88eacd463b90b" group="^com[.]diffplug($|([.].*))" regex="true"/>
          <trusted-key id="682f765eea718d250bbdb2f1685c46769dbb5e5d" group="com.squareup" name="kotlinpoet" version="1.3.0"/>
          <trusted-key id="6847bfa6411965a23f08c6366a97bb242496b68a" group="com.google.re2j" name="re2j" version="1.7"/>
@@ -166,6 +176,7 @@
             <trusting group="org.vafer" name="jdependency" version="2.7.0"/>
             <trusting group="org.vafer" name="jdependency" version="2.8.0"/>
          </trusted-key>
+         <trusted-key id="7b121b76a7ed6ce6e60ad51784e913a8e3a748c0" group="org.bouncycastle"/>
          <trusted-key id="7c669810892cbd3148fa92995b05ccde140c2876" group="org.eclipse.jgit"/>
          <trusted-key id="7e22d50a7ebd9d2cd269b2d4056aca74d46000bf" group="^io[.]netty($|([.].*))" regex="true"/>
          <trusted-key id="7faa0f2206de228f0db01ad741321490758aad6f" group="org.codehaus.groovy" name="groovy" version="2.5.8"/>
@@ -192,6 +203,7 @@
             <trusting group="io.ktor" name="ktor-bom" version="2.3.4"/>
             <trusting group="org.jetbrains.kotlinx"/>
          </trusted-key>
+         <trusted-key id="8ff806c764d25f704d3c83b029e5155bdeccb208" group="com.glureau" name="html-mermaid-dokka-plugin" version="0.4.5"/>
          <trusted-key id="90ee19787a7bcf6fd37a1e9180c08b1c29100955" group="com.jakewharton.mosaic"/>
          <trusted-key id="92c116894045b1900f9800249f019a04fab052e7" group="com.google.javascript"/>
          <trusted-key id="939b0d42eb73eda659af78ec37d490c301d1b205" group="de.cketti.unicode"/>
@@ -244,7 +256,10 @@
          <trusted-key id="cacfbd4755a2fc78709bdd92be096e29edb8d141" group="com.guardsquare"/>
          <trusted-key id="cb3190ca7842439e57f3712e44ce7bf2825ea2cd" group="com.ibm.icu" name="icu4j" version="71.1"/>
          <trusted-key id="cc4483cd6a3eb2939b948667a1b4460d8ba7b9af" group="org.mockito" name="mockito-core" version="1.10.19"/>
-         <trusted-key id="ce8075a251547bee249bc151a2115ae15f6b8b72" group="org.apache.ant"/>
+         <trusted-key id="ce8075a251547bee249bc151a2115ae15f6b8b72">
+            <trusting group="org.apache.ant"/>
+            <trusting group="org.apache.commons"/>
+         </trusted-key>
          <trusted-key id="cf17e92c9ffa55316b5db83901d734ee5ee9c3f8" group="org.eclipse.sisu"/>
          <trusted-key id="cf4b3a3f53bef9a2ce2cbfb895962c5e716c39aa" group="^com[.]autonomousapps($|([.].*))" regex="true"/>
          <trusted-key id="d066f5c471d32a00d244f99d6ed0f678b90eb06e" group="com.github.johnrengelman" name="shadow" version="8.1.1"/>
@@ -1225,6 +1240,11 @@
             <sha256 value="74da05b3ca50a8158101b7e12fbfbf902e011340f14bf31c1776cb51f96147f3" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="com.google" name="google" version="1">
+         <artifact name="google-1.pom">
+            <sha256 value="cd6db17a11a31ede794ccbd1df0e4d9750f640234731f21cff885a9997277e81" origin="Generated by Gradle" reason="Artifact is not signed"/>
+         </artifact>
+      </component>
       <component group="com.google" name="google" version="5">
          <artifact name="google-5.pom">
             <pgp value="ec86f41279f2ec8ffd2f54906ccc36cc6c69fc17"/>
@@ -2165,6 +2185,19 @@
       <component group="com.google.cloud" name="native-image-support-parent" version="0.14.1">
          <artifact name="native-image-support-parent-0.14.1.pom">
             <sha256 value="35f0d0aa4d6d3380f2f26c73d9269922a2ba81372fe3eb4929b6d7b6ec741c78" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
+      <component group="com.google.cloud.tools" name="jib-gradle-plugin" version="3.3.2">
+         <artifact name="jib-gradle-plugin-3.3.2.jar">
+            <sha256 value="d5a110a24b35eb1dc38e00696aa717481e787ee1b2a7982b6ad04198256e348c" origin="Generated by Gradle" reason="Artifact is not signed"/>
+         </artifact>
+         <artifact name="jib-gradle-plugin-3.3.2.module">
+            <sha256 value="c5f04e16b152c720237b78e01174edbb0f3e45f9523ebbc58f356e899fa38604" origin="Generated by Gradle" reason="Artifact is not signed"/>
+         </artifact>
+      </component>
+      <component group="com.google.cloud.tools.jib" name="com.google.cloud.tools.jib.gradle.plugin" version="3.3.2">
+         <artifact name="com.google.cloud.tools.jib.gradle.plugin-3.3.2.pom">
+            <sha256 value="7e41bc5fbf049977aec38fc5b55b655240230083fc6a5f760877152bd77bfebb" origin="Generated by Gradle" reason="Artifact is not signed"/>
          </artifact>
       </component>
       <component group="com.google.code.findbugs" name="jsr305" version="1.3.9">

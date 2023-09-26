@@ -83,8 +83,8 @@ public final class elide/server/SSRExtensionsKt {
 	public static final fun getDEFAULT_INVOCATION_BASE ()Ljava/lang/String;
 	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun ssr (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun ssr$default (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun ssr (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun ssr$default (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun streamSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun streamSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }

@@ -9,6 +9,8 @@
          <trust file="buildless-plugin-gradle-1.0.0-beta1.module"/>
          <trust file="gradle-enterprise-gradle-plugin-3.15.jar"/>
          <trust file="gradle-enterprise-gradle-plugin-3.15.module"/>
+         <trust file="micronaut-context-4.1.6.jar"/>
+         <trust file="micronaut-inject-4.1.6.jar"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta.pom"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta2.pom"/>
          <trust group="com.autonomousapps.dependency-analysis"/>

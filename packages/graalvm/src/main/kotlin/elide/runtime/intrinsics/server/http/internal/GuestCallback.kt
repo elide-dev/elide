@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs.server.http.internal
+package elide.runtime.intrinsics.server.http.internal
 
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue

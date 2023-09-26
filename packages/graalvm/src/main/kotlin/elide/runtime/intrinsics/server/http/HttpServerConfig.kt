@@ -1,9 +1,9 @@
-package elide.runtime.intriniscs.server.http
+package elide.runtime.intrinsics.server.http
 
 import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intriniscs.server.http.internal.GuestCallback
+import elide.runtime.intrinsics.server.http.internal.GuestCallback
 
 /**
  * An extensible container for HTTP server configuration values. Backend-specific implementations may be added to allow

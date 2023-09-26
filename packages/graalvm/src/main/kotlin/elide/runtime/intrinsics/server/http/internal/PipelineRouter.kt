@@ -1,14 +1,14 @@
-package elide.runtime.intriniscs.server.http.internal
+package elide.runtime.intrinsics.server.http.internal
 
 import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.internals.intrinsics.js.JsProxy
-import elide.runtime.intriniscs.server.http.HttpContext
-import elide.runtime.intriniscs.server.http.HttpMethod
-import elide.runtime.intriniscs.server.http.HttpRequest
-import elide.runtime.intriniscs.server.http.HttpRouter
+import elide.runtime.intrinsics.server.http.HttpContext
+import elide.runtime.intrinsics.server.http.HttpMethod
+import elide.runtime.intrinsics.server.http.HttpRequest
+import elide.runtime.intrinsics.server.http.HttpRouter
 
 /**
  * The HTTP Router resolves [GuestHandler] references for an incoming [HttpRequest].

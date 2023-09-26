@@ -1,9 +1,9 @@
-package elide.runtime.intriniscs.server.http
+package elide.runtime.intrinsics.server.http
 
 import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intriniscs.server.http.internal.HandlerRegistry
+import elide.runtime.intrinsics.server.http.internal.HandlerRegistry
 
 /**
  * Base class providing route registration APIs to guest code, compiling routing keys that can be used to resolve

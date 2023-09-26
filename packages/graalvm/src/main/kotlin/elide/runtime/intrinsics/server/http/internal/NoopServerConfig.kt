@@ -1,9 +1,9 @@
-package elide.runtime.intriniscs.server.http.internal
+package elide.runtime.intrinsics.server.http.internal
 
 import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intriniscs.server.http.HttpServerConfig
+import elide.runtime.intrinsics.server.http.HttpServerConfig
 
 /** A stub implementation that doesn't register callbacks. */
 @DelicateElideApi internal object NoopServerConfig : HttpServerConfig() {

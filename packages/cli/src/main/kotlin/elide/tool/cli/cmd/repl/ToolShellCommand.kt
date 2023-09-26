@@ -71,7 +71,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
 import elide.runtime.core.extensions.attach
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
-import elide.runtime.intriniscs.server.http.HttpServerAgent
+import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.js.JavaScriptConfig

@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs.server.http.netty
+package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
@@ -6,8 +6,8 @@ import io.netty.handler.codec.http.*
 import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intriniscs.server.http.HttpRequest
-import elide.runtime.intriniscs.server.http.HttpResponse
+import elide.runtime.intrinsics.server.http.HttpRequest
+import elide.runtime.intrinsics.server.http.HttpResponse
 
 /** [HttpRequest] implementation wrapping a Netty handler context. */
 @DelicateElideApi internal class NettyHttpResponse(private val context: ChannelHandlerContext) : HttpResponse {

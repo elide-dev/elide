@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs.server.http
+package elide.runtime.intrinsics.server.http
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject

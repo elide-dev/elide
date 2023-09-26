@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs.server.http.netty
+package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.ChannelHandlerContext
@@ -6,11 +6,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.LastHttpContent
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.intriniscs.server.http.HttpContext
-import elide.runtime.intriniscs.server.http.HttpRequest
-import elide.runtime.intriniscs.server.http.HttpResponse
-import elide.runtime.intriniscs.server.http.internal.GuestHandlerFunction
-import elide.runtime.intriniscs.server.http.internal.PipelineRouter
+import elide.runtime.intrinsics.server.http.HttpContext
+import elide.runtime.intrinsics.server.http.HttpRequest
+import elide.runtime.intrinsics.server.http.HttpResponse
+import elide.runtime.intrinsics.server.http.internal.GuestHandlerFunction
+import elide.runtime.intrinsics.server.http.internal.PipelineRouter
 import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
 
 /**

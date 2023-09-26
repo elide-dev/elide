@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs.server.http.netty
+package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel

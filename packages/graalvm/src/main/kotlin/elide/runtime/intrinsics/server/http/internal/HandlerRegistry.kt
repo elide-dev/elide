@@ -1,9 +1,9 @@
-package elide.runtime.intriniscs.server.http.internal
+package elide.runtime.intrinsics.server.http.internal
 
 import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intriniscs.server.http.HttpRouter
+import elide.runtime.intrinsics.server.http.HttpRouter
 
 /**
  * A Handler Registry manages references to guest values that act as request handlers. [GuestHandler] references are

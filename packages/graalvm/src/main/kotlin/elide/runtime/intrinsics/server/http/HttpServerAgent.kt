@@ -1,13 +1,13 @@
-package elide.runtime.intriniscs.server.http
+package elide.runtime.intrinsics.server.http
 
 import org.graalvm.polyglot.Source
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
-import elide.runtime.intriniscs.ElideBindings
-import elide.runtime.intriniscs.server.http.internal.*
-import elide.runtime.intriniscs.server.http.netty.NettyServerConfig
-import elide.runtime.intriniscs.server.http.netty.NettyServerEngine
+import elide.runtime.intrinsics.ElideBindings
+import elide.runtime.intrinsics.server.http.internal.*
+import elide.runtime.intrinsics.server.http.netty.NettyServerConfig
+import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
 
 /**
  * A Server Agent manages the lifecycle of HTTP Server intrinsics and their injection into guest code.

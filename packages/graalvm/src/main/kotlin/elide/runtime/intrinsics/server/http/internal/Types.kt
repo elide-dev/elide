@@ -1,9 +1,9 @@
-package elide.runtime.intriniscs.server.http.internal
+package elide.runtime.intrinsics.server.http.internal
 
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.intriniscs.server.http.HttpRequest
-import elide.runtime.intriniscs.server.http.HttpContext
-import elide.runtime.intriniscs.server.http.HttpResponse
+import elide.runtime.intrinsics.server.http.HttpRequest
+import elide.runtime.intrinsics.server.http.HttpContext
+import elide.runtime.intrinsics.server.http.HttpResponse
 
 /**
  * Represents the signature of a method used as request handler. The [GuestHandler] wrapper implements this signature

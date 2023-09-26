@@ -1,10 +1,10 @@
-package elide.runtime.intriniscs.server.http.internal
+package elide.runtime.intrinsics.server.http.internal
 
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intriniscs.server.http.HttpRequest
-import elide.runtime.intriniscs.server.http.HttpContext
-import elide.runtime.intriniscs.server.http.HttpResponse
+import elide.runtime.intrinsics.server.http.HttpRequest
+import elide.runtime.intrinsics.server.http.HttpContext
+import elide.runtime.intrinsics.server.http.HttpResponse
 
 /**
  * Lightweight wrapper around a [PolyglotValue] that represents an executable request handler, allowing calls to the

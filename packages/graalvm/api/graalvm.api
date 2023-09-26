@@ -1431,89 +1431,9 @@ public final class elide/runtime/gvm/vfs/HostVFS {
 	public final fun acquireWritable ()Lelide/runtime/gvm/internals/GuestVFS;
 }
 
-public final class elide/runtime/intriniscs/ElideBindings {
-	public static final field INSTANCE Lelide/runtime/intriniscs/ElideBindings;
+public final class elide/runtime/intrinsics/ElideBindings {
+	public static final field INSTANCE Lelide/runtime/intrinsics/ElideBindings;
 	public final fun install (Ljava/lang/String;Ljava/lang/Object;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
-}
-
-public final class elide/runtime/intriniscs/server/http/HttpContext : java/util/Map, kotlin/jvm/internal/markers/KMutableMap, org/graalvm/polyglot/proxy/ProxyObject {
-	public fun clear ()V
-	public final fun containsKey (Ljava/lang/Object;)Z
-	public fun containsKey (Ljava/lang/String;)Z
-	public fun containsValue (Ljava/lang/Object;)Z
-	public final fun entrySet ()Ljava/util/Set;
-	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
-	public fun get (Ljava/lang/String;)Ljava/lang/Object;
-	public fun getEntries ()Ljava/util/Set;
-	public fun getKeys ()Ljava/util/Set;
-	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
-	public fun getMemberKeys ()Ljava/lang/Object;
-	public fun getSize ()I
-	public fun getValues ()Ljava/util/Collection;
-	public fun hasMember (Ljava/lang/String;)Z
-	public fun isEmpty ()Z
-	public final fun keySet ()Ljava/util/Set;
-	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun put (Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun putAll (Ljava/util/Map;)V
-	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
-	public fun remove (Ljava/lang/String;)Ljava/lang/Object;
-	public final fun size ()I
-	public final fun values ()Ljava/util/Collection;
-}
-
-public final class elide/runtime/intriniscs/server/http/HttpMethod : java/lang/Enum {
-	public static final field CONNECT Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field DELETE Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field GET Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field HEAD Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field OPTIONS Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field PATCH Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field POST Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field PUT Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static final field TRACE Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public static fun values ()[Lelide/runtime/intriniscs/server/http/HttpMethod;
-}
-
-public abstract interface class elide/runtime/intriniscs/server/http/HttpRequest {
-	public abstract fun getMethod ()Lelide/runtime/intriniscs/server/http/HttpMethod;
-	public abstract fun getUri ()Ljava/lang/String;
-}
-
-public abstract interface class elide/runtime/intriniscs/server/http/HttpResponse {
-	public abstract fun send (ILorg/graalvm/polyglot/Value;)V
-}
-
-public abstract interface class elide/runtime/intriniscs/server/http/HttpRouter {
-	public static final field Companion Lelide/runtime/intriniscs/server/http/HttpRouter$Companion;
-	public abstract fun handle (Ljava/lang/String;Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-}
-
-public final class elide/runtime/intriniscs/server/http/HttpRouter$Companion {
-}
-
-public final class elide/runtime/intriniscs/server/http/HttpServerAgent {
-	public static final field Companion Lelide/runtime/intriniscs/server/http/HttpServerAgent$Companion;
-	public fun <init> ()V
-	public final fun run (Lorg/graalvm/polyglot/Source;Lkotlin/jvm/functions/Function0;)V
-}
-
-public final class elide/runtime/intriniscs/server/http/HttpServerAgent$Companion {
-}
-
-public class elide/runtime/intriniscs/server/http/HttpServerConfig {
-	public fun getPort ()I
-	public fun onBind (Lorg/graalvm/polyglot/Value;)V
-	public fun setPort (I)V
-}
-
-public abstract interface class elide/runtime/intriniscs/server/http/HttpServerEngine {
-	public abstract fun getConfig ()Lelide/runtime/intriniscs/server/http/HttpServerConfig;
-	public abstract fun getRouter ()Lelide/runtime/intriniscs/server/http/HttpRouter;
-	public abstract fun start ()V
 }
 
 public abstract interface class elide/runtime/intrinsics/GuestIntrinsic {
@@ -1962,6 +1882,86 @@ public final class elide/runtime/intrinsics/js/typed/UUID$UUIDType : java/lang/E
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 	public static fun values ()[Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
+}
+
+public final class elide/runtime/intrinsics/server/http/HttpContext : java/util/Map, kotlin/jvm/internal/markers/KMutableMap, org/graalvm/polyglot/proxy/ProxyObject {
+	public fun clear ()V
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public fun containsValue (Ljava/lang/Object;)Z
+	public final fun entrySet ()Ljava/util/Set;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun get (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getMemberKeys ()Ljava/lang/Object;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun putAll (Ljava/util/Map;)V
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/String;)Ljava/lang/Object;
+	public final fun size ()I
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class elide/runtime/intrinsics/server/http/HttpMethod : java/lang/Enum {
+	public static final field CONNECT Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field DELETE Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field GET Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field HEAD Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field OPTIONS Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field PATCH Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field POST Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field PUT Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static final field TRACE Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public static fun values ()[Lelide/runtime/intrinsics/server/http/HttpMethod;
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/HttpRequest {
+	public abstract fun getMethod ()Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public abstract fun getUri ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/HttpResponse {
+	public abstract fun send (ILorg/graalvm/polyglot/Value;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/HttpRouter {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/HttpRouter$Companion;
+	public abstract fun handle (Ljava/lang/String;Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+}
+
+public final class elide/runtime/intrinsics/server/http/HttpRouter$Companion {
+}
+
+public final class elide/runtime/intrinsics/server/http/HttpServerAgent {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/HttpServerAgent$Companion;
+	public fun <init> ()V
+	public final fun run (Lorg/graalvm/polyglot/Source;Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class elide/runtime/intrinsics/server/http/HttpServerAgent$Companion {
+}
+
+public class elide/runtime/intrinsics/server/http/HttpServerConfig {
+	public fun getPort ()I
+	public fun onBind (Lorg/graalvm/polyglot/Value;)V
+	public fun setPort (I)V
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/HttpServerEngine {
+	public abstract fun getConfig ()Lelide/runtime/intrinsics/server/http/HttpServerConfig;
+	public abstract fun getRouter ()Lelide/runtime/intrinsics/server/http/HttpRouter;
+	public abstract fun start ()V
 }
 
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {

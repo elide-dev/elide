@@ -20,7 +20,7 @@
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    id("org.jetbrains.kotlin.kapt") apply false
+    kotlin("kapt") apply false
     alias(libs.plugins.kover)
     alias(libs.plugins.detekt)
     alias(libs.plugins.versionCheck)

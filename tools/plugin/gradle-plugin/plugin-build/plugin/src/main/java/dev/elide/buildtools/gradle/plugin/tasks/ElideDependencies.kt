@@ -13,7 +13,8 @@ import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_GRAAL
 import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_MODEL
 import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_PLATFORM
 import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_PROCESSOR
-import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_PROTO
+import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_PROTO_CORE
+import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_PROTO_PROTOBUF
 import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_SERVER
 import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_SUBSTRATE
 import dev.elide.buildtools.gradle.plugin.cfg.ElidePluginConfig.DEPENDENCY_TEST
@@ -145,8 +146,16 @@ internal object ElideDependencies {
         ),
 
         /** Protocol Buffers package. */
-        PROTO(
-            spec = DEPENDENCY_PROTO,
+        PROTO_CORE(
+            spec = DEPENDENCY_PROTO_CORE,
+            config = DependencyVisibility.API,
+            type = DependencyTarget.MAIN,
+            supports = EnumSet.of(DependencyPlatform.JVM),
+        ),
+
+        /** Protocol Buffers package. */
+        PROTO_PROTOBUF(
+            spec = DEPENDENCY_PROTO_PROTOBUF,
             config = DependencyVisibility.API,
             type = DependencyTarget.MAIN,
             supports = EnumSet.of(DependencyPlatform.JVM),
@@ -276,8 +285,11 @@ internal object ElideDependencies {
         /** `model` library. */
         val MODEL = ElideDependency.CommonLibrary(Package.MODEL)
 
-        /** `proto` library. */
-        val PROTO = ElideDependency.JVMLibrary(Package.PROTO)
+        /** `proto-core` library. */
+        val PROTO_CORE = ElideDependency.JVMLibrary(Package.PROTO_CORE)
+
+        /** `proto-protobuf` library. */
+        val PROTO_PROTOBUF = ElideDependency.JVMLibrary(Package.PROTO_PROTOBUF)
 
         /** `server` library. */
         val SERVER = ElideDependency.JVMLibrary(Package.SERVER)
@@ -444,6 +456,9 @@ internal object ElideDependencies {
             logger.debug("[Elide]: Dependency '${spec.groupId}:${spec.artifactId}' requested")
         }
         val extension = extensions.getByType(ElideExtension::class.java)
+        if (!extension.injectDependencies.get()) {
+            return  // skip if instructed
+        }
         val configuration = resolveConfigurationForSpec(spec)
 
         // check for an existing dependency

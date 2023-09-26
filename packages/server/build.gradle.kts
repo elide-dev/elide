@@ -98,6 +98,7 @@ dependencies {
   implementation(libs.jackson.module.kotlin)
   implementation(mn.micronaut.jackson.databind)
 
+//  implementation("dev.elide:proto:1.0-v3-alpha1-rc38")
   implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoProtobuf)
   implementation(projects.packages.proto.protoKotlinx)
@@ -155,6 +156,10 @@ dependencies {
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
 
+  // Runtime
+  runtimeOnly(libs.jansi)
+  runtimeOnly(mn.snakeyaml)
+
   // Netty: Native
   implementation(libs.netty.tcnative)
 
@@ -191,14 +196,12 @@ dependencies {
   }
 
   // Testing
-//  kaptTest(mn.micronaut.inject)
-//  kaptTest(mn.micronaut.inject.java)
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)
   testImplementation(mn.micronaut.test.junit5)
-  testImplementation(kotlin("test"))
   testImplementation(projects.packages.test)
+  testImplementation(kotlin("test-junit5"))
 }
 
 tasks {

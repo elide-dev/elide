@@ -4,36 +4,46 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import dev.elide.buildtools.gradle.plugin.BuildMode
+import com.google.cloud.tools.jib.api.buildplan.ImageFormat.Docker
+import dev.elide.buildtools.gradle.plugin.BuildMode.DEVELOPMENT
+import dev.elide.buildtools.gradle.plugin.BuildMode.PRODUCTION
+import io.micronaut.gradle.MicronautRuntime.NETTY
 import tools.elide.assets.EmbeddedScriptLanguage
+import tools.elide.assets.ManifestFormat.BINARY
 
 plugins {
-  id("dev.elide.build.samples.backend")
-  id("dev.elide.build.docker")
+  kotlin("jvm")
+  kotlin("plugin.serialization")
+  id(libs.plugins.ksp.get().pluginId)
   id("dev.elide.buildtools.plugin")
   id("io.micronaut.application")
+  id("io.micronaut.docker")
+  id("io.micronaut.graalvm")
   id("io.micronaut.aot")
-  id("dev.elide.build.native.app")
   alias(libs.plugins.jib)
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
+val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 elide {
+  injectDependencies = false
+
   mode = if (devMode) {
-    BuildMode.DEVELOPMENT
+    DEVELOPMENT
   } else {
-    BuildMode.PRODUCTION
+    PRODUCTION
   }
 
   server {
     ssr(EmbeddedScriptLanguage.JS) {
-      bundle(project(":samples:fullstack:react-ssr:node"))
+      bundle(projects.samples.fullstack.reactSsr.node)
     }
     assets {
       bundler {
-        format(tools.elide.assets.ManifestFormat.BINARY)
+        format(BINARY)
+
         compression {
           minimumSizeBytes(0)
           keepAllVariants()
@@ -46,42 +56,44 @@ elide {
       }
 
       script("scripts.ui") {
-        from(project(":samples:fullstack:react-ssr:frontend"))
+        from(projects.samples.fullstack.reactSsr.frontend)
       }
     }
   }
 }
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+  version = libs.versions.micronaut.lib.get()
+  runtime = NETTY
+
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.addAll(listOf(
       "$mainPackage.*",
     ))
   }
+
   aot {
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
-    optimizeClassLoading.set(true)
-    optimizeNetty.set(true)
+    optimizeServiceLoading = true
+    convertYamlToJava = true
+    precomputeOperations = true
+    cacheEnvironment = true
+    optimizeClassLoading = true
+    optimizeNetty = true
 
     netty {
-      enabled.set(true)
+      enabled = true
     }
   }
 }
 
 val mainPackage = "fullstack.reactssr"
 val mainEntry = "$mainPackage.App"
-val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 application {
-  mainClass.set(mainEntry)
-  if (project.hasProperty("elide.vm.inspect") && project.properties["elide.vm.inspect"] == "true") {
+  mainClass = mainEntry
+
+  if (project.hasProperty("elide.vm.inspect") && properties["elide.vm.inspect"] == "true") {
     applicationDefaultJvmArgs = listOf(
       "-Delide.vm.inspect=true",
     )
@@ -92,8 +104,9 @@ dependencies {
   api(kotlin("stdlib"))
   api(kotlin("stdlib-jdk8"))
   implementation(projects.packages.base)
-  implementation(project(":packages:server"))
-  implementation(project(":packages:graalvm"))
+  implementation(projects.packages.ssr)
+  implementation(projects.packages.server)
+  implementation(projects.packages.graalvm)
 
   implementation(libs.jsoup)
   implementation(mn.micronaut.context)
@@ -111,38 +124,38 @@ dependencies {
   implementation(libs.conscrypt)
   implementation(libs.tink)
   runtimeOnly(libs.logback)
+  runtimeOnly(mn.snakeyaml)
 
-  testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
   testImplementation(projects.packages.test)
   testImplementation(mn.micronaut.test.junit5)
 }
 
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
-  images.set(listOf(
-    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/jvm:latest"
-  ))
-}
-
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuild") {
-  images.set(listOf(
-    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/jvm:opt-latest"
-  ))
-}
-
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
-  images.set(listOf(
-    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:latest"
-  ))
-}
-
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
-  images.set(listOf(
-    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:opt-latest"
-  ))
-}
-
 tasks {
+  dockerBuild {
+    images = listOf(
+      "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/jvm:latest"
+    )
+  }
+
+  optimizedDockerBuild {
+    images = listOf(
+      "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/jvm:opt-latest"
+    )
+  }
+
+  dockerBuildNative {
+    images = listOf(
+      "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:latest"
+    )
+  }
+
+  optimizedDockerBuildNative {
+    images = listOf(
+      "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:opt-latest"
+    )
+  }
+
   jib {
     from {
       image = "us-docker.pkg.dev/elide-fw/tools/runtime/jvm17:latest"
@@ -155,27 +168,27 @@ tasks {
       jvmFlags = listOf("-Delide.runtime=JVM", "-Xms512m", "-Xdebug")
       mainClass = mainEntry
       ports = listOf("8080", "50051")
-      format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.Docker
+      format = Docker
     }
   }
 }
 
 graalvmNative {
-  testSupport.set(false)
+  testSupport = false
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = "0.3.3"
   }
 
   agent {
-    defaultMode.set("standard")
-    builtinCallerFilter.set(true)
-    builtinHeuristicFilter.set(true)
-    enableExperimentalPredefinedClasses.set(false)
-    enableExperimentalUnsafeAllocationTracing.set(false)
-    trackReflectionMetadata.set(true)
-    enabled.set(System.getenv("GRAALVM_AGENT") == "true")
+    defaultMode = "standard"
+    builtinCallerFilter = true
+    builtinHeuristicFilter = true
+    enableExperimentalPredefinedClasses = false
+    enableExperimentalUnsafeAllocationTracing = false
+    trackReflectionMetadata = true
+    enabled = System.getenv("GRAALVM_AGENT") == "true"
 
     modes {
       standard {}
@@ -183,14 +196,15 @@ graalvmNative {
     metadataCopy {
       inputTaskNames.add("test")
       outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting.set(true)
+      mergeWithExisting = true
     }
   }
 
   binaries {
     named("main") {
-      fallback.set(false)
-      quickBuild.set(false)
+      fallback = false
+      quickBuild = false
+
       buildArgs.addAll(listOf(
         "-g",
         "--no-fallback",
@@ -217,6 +231,15 @@ graalvmNative {
   }
 }
 
+tasks {
+  distTar {
+    enabled = false
+  }
+  distZip {
+    enabled = false
+  }
+}
+
 afterEvaluate {
   listOf(
     "buildLayers",
@@ -227,4 +250,3 @@ afterEvaluate {
     }
   }
 }
-

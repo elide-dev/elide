@@ -17,6 +17,7 @@ package elide.server
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
@@ -148,8 +149,9 @@ public suspend fun ssr(
   request: HttpRequest<*>,
   path: String = SSR_SCRIPT_DEFAULT,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
+  wrap: Boolean = false,
   block: suspend HTML.() -> Unit
-): Mono<HttpResponse<Publisher<ByteArrayOutputStream>>> {
+): Mono<HttpResponse<Publisher<ByteArray>>> {
   // prepare a render job
   return mono {
     if (path.isBlank()) {
@@ -158,14 +160,14 @@ public suspend fun ssr(
       response.body(publish {
         val outputStream = ByteArrayOutputStream()
         outputStream.bufferedWriter(StandardCharsets.UTF_8).apply {
-          append("<!doctype html>")
+          if (wrap) append("<!doctype html>")
           appendHTML(prettyPrint = false).htmlSuspend(
             block = block
           )
           flush()
         }
 
-        send(outputStream)
+        send(outputStream.toByteArray())
       }).characterEncoding(
         StandardCharsets.UTF_8
       ).contentType(

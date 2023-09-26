@@ -5,23 +5,23 @@
 )
 
 plugins {
-  id("dev.elide.build.site.frontend")
+  kotlin("js")
 }
 
 group = "dev.elide.site.docs"
 version = rootProject.version as String
 
-val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
+val kotlinWrapperVersion: String = libs.versions.kotlinxWrappers.get()
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 sourceSets {
   val mdx by creating {
-    // it holds MDX sources
+    // holds MDX sources
   }
 }
 
 kotlin {
-  js(IR) {
+  js {
     browser {
       binaries.executable()
 
@@ -79,8 +79,10 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.datetime)
+  implementation(libs.kotlinx.wrappers.js)
   implementation(libs.kotlinx.wrappers.css)
   implementation(libs.kotlinx.wrappers.browser)
+  implementation(libs.kotlinx.wrappers.history)
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)
   implementation(libs.kotlinx.wrappers.react.router.dom)
@@ -103,7 +105,7 @@ val assetStatic by configurations.creating {
 artifacts {
   add(assetStatic.name, file("${projectDir}/src/main/assets/base.css"))
 
-  add(assetDist.name, file(layout.buildDirectory.file("distributions/ui.js"))) {
+  add(assetDist.name, file(layout.buildDirectory.file("dist/js/productionExecutable/ui.js"))) {
     builtBy("browserDistribution")
   }
 }
@@ -112,17 +114,21 @@ tasks.create("copyStaticSources", Copy::class.java) {
   from("$projectDir/src/main/assets") {
     include("**/*.*")
   }
-  into("${rootProject.buildDir}/js/packages/elide-ui/kotlin/")
+  into("${rootProject.buildDir}/js/packages/elide-site-docs-ui/kotlin/")
 }
 
 tasks.create("copyMdxSources", Copy::class.java) {
   from("$projectDir/src/main/mdx") {
     include("**/*.*")
   }
-  into("${rootProject.buildDir}/js/packages/elide-ui/kotlin/")
+  into("${rootProject.buildDir}/js/packages/elide-site-docs-ui/kotlin/")
 }
 
 tasks.named("browserDevelopmentRun").configure {
+  dependsOn("copyMdxSources", "copyStaticSources")
+}
+
+tasks.named("browserProductionWebpack").configure {
   dependsOn("copyMdxSources", "copyStaticSources")
 }
 

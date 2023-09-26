@@ -93,14 +93,10 @@ catalog {
   versionCatalog {
     // map Elide versions
     version("elide.framework", libs.versions.elide.asProvider().get())
-    version("elide.plugin", libs.versions.elide.plugin.get())
 
     // map each peer version
     peers.forEach { alias, (_, version) -> version(alias, version.get()) }
     versionAliases.forEach { (alias, version) -> version(alias, version.get()) }
-
-    // define Elide build plugin
-    plugin("buildtools", "dev.elide.buildtools.plugin").versionRef("elide.plugin")
 
     // define the BOM (this module)
     library("elide.bom", Elide.GROUP, "bom").versionRef("elide.framework")

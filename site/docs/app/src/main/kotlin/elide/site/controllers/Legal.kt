@@ -6,7 +6,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 
 /** Legal pages (top-level). */
-@Page(name = "legal") class Legal : SitePageController(page = Tooling) {
+@Page(name = "legal") open class Legal : SitePageController(page = Tooling) {
   // Add FOSSA to `img-src` in CSP.
   protected override fun csp(state: PageRenderState): List<Pair<String, String>> = super.csp(state).map { stanza ->
     val (directive, policy) = stanza

@@ -21,6 +21,7 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
 import io.micronaut.http.annotation.Get
 import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
 import kotlinx.html.h1
 import kotlinx.html.p
 import kotlinx.html.tagext.body
@@ -65,12 +66,8 @@ import elide.server.html
 
   // Serve a 500 in plaintext.
   private fun servePlaintext(): RawResponse {
-    val baos = ByteArrayOutputStream()
-    baos.use {
-      it.writeBytes("Not found.".toByteArray())
-    }
     return HttpResponse.serverError<RawPayload>().contentType(MediaType.TEXT_PLAIN).body(
-      baos
+      "Server error.".toByteArray(StandardCharsets.UTF_8)
     )
   }
 }

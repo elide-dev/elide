@@ -108,8 +108,14 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
   implementation(projects.packages.core)
-  implementation(libs.google.common.html.types.proto)
-  api(libs.google.common.html.types.types)
+  implementation(libs.google.common.html.types.proto) {
+    exclude(group = "com.google.protobuf", module = "protobuf-java")
+    exclude(group = "com.google.protobuf", module = "protobuf-util")
+  }
+  api(libs.google.common.html.types.types) {
+    exclude(group = "com.google.protobuf", module = "protobuf-java")
+    exclude(group = "com.google.protobuf", module = "protobuf-util")
+  }
 
   // Compile-only
   compileOnly(libs.google.cloud.nativeImageSupport)

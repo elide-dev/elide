@@ -4,7 +4,6 @@ import elide.server.controller.PageController
 import elide.server.css
 import elide.server.html
 import elide.server.stylesheet
-import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.runtime.Micronaut.build
 import kotlinx.css.Color
@@ -14,11 +13,12 @@ import kotlinx.html.body
 import kotlinx.html.head
 import kotlinx.html.strong
 import kotlinx.html.title
+import elide.server.annotations.Page
 
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App {
   /** GET `/`: Controller for index page. */
-  @Controller class Index : PageController() {
+  @Page class Index : PageController() {
     // Serve the page itself.
     @Get("/") suspend fun index() = html {
       head {

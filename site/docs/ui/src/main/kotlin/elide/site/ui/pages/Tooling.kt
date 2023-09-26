@@ -9,7 +9,7 @@ import mui.system.Box
 import mui.system.sx
 import react.create
 import react.router.Outlet
-import react.router.Route
+import react.router.PathRoute
 import react.router.Routes
 
 // Root page for the tooling section.
@@ -23,7 +23,7 @@ private val ToolingRoot = react.FC<react.Props> {
 /** Renders the tooling page on the Elide site. */
 val Tooling = react.FC<react.Props> {
   Routes {
-    Route {
+    PathRoute {
       key = elide.site.pages.tooling.Gradle.name
       path = elide.site.pages.tooling.Gradle.path.removePrefix("/tools")
       element = react.Fragment.create {
@@ -38,7 +38,7 @@ val Tooling = react.FC<react.Props> {
       }
     }
 
-    Route {
+    PathRoute {
       key = elide.site.pages.tooling.Bazel.name
       path = elide.site.pages.tooling.Bazel.path.removePrefix("/tools")
       element = react.Fragment.create {
@@ -53,7 +53,7 @@ val Tooling = react.FC<react.Props> {
       }
     }
 
-    Route {
+    PathRoute {
       path = "*"
       index = true
       element = react.Fragment.create {

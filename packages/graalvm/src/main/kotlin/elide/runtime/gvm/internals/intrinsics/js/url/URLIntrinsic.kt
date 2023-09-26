@@ -213,6 +213,16 @@ import java.net.URI as NativeURL
         ParsedURL(uri = parsed, absolute = parsed.toString())
       }
 
+      // Parse a URL and wrap it in a `ParsedURL` object, with an existing base, pre-initializing anything else we need.
+      @JvmStatic fun fromString(string: String, base: String?): ParsedURL {
+        return if (base == null) {
+          fromString(string)
+        } else {
+          // @TODO(sgammon): this is surely wrong
+          fromString(base).copySplicePathname(string)
+        }
+      }
+
       // Calculate a spec-compliant value for the `protocol` property.
       @JvmStatic private fun computeProtocol(uri: NativeURL, proto: KnownProtocol?): String {
         if (proto == KnownProtocol.RELATIVE)
@@ -1007,24 +1017,28 @@ import java.net.URI as NativeURL
       // -- Internals -- //
 
       // Shortcut to parse a string as a URL (used internally only).
-      @JvmStatic private fun parseString(url: String): AtomicReference<ParsedURL> =
-        if (url.isNotEmpty() && url.isNotBlank()) {
-          if (!url.startsWith("//") && url.startsWith("/"))
-            throw valueError("Invalid URL: Relative URLs are not supported")
+      @JvmStatic private fun parseString(url: String, base: GuestValue? = null): AtomicReference<ParsedURL> {
+        return if (url.isNotEmpty() && url.isNotBlank()) {
+          if (!url.startsWith("//") && url.startsWith("/")) {
+            if (base == null)
+              throw valueError("Invalid URL: Relative URLs are not supported")
+            val baseAsString = base.asString()
+            return AtomicReference(ParsedURL.fromString(url, baseAsString))
+          }
           AtomicReference(ParsedURL.fromString(url))
         } else throw valueError(
           "Cannot construct URL from empty string value"
         )
+      }
 
       // Relative entrypoint for string parsing (with base URL).
-      @Suppress("UNUSED_PARAMETER")
-      @JvmStatic private fun parseString(url: GuestValue, base: Any?): AtomicReference<ParsedURL> =
-        parseString(url.asString())  // @TODO(sgammon): base URL support during parsing
+      @JvmStatic private fun parseString(url: GuestValue, base: GuestValue?): AtomicReference<ParsedURL> =
+        parseString(url.asString(), base)
 
       // Shortcut for parsing a constructor guest value.
       @JvmStatic private fun constructFromGuestValue(
         target: GuestValue,
-        base: Any? = null,
+        base: GuestValue? = null,
       ): AtomicReference<ParsedURL> = when {
         // if we are given a guest value string, handle it as a regular URL string
         target.isString -> parseString(target, base)
@@ -1071,7 +1085,7 @@ import java.net.URI as NativeURL
      */
     @Polyglot constructor (target: Any?, base: Any?) : this(when (target) {
       null -> throw typeError("Cannot construct URL from: `null`")
-      is GuestValue -> constructFromGuestValue(target, base)
+      is GuestValue -> constructFromGuestValue(target, base as? GuestValue)
       is String -> parseString(target)
       is NativeURL -> AtomicReference(ParsedURL.fromURL(target))
       is java.net.URL -> AtomicReference(ParsedURL.fromURL(target.toURI()))

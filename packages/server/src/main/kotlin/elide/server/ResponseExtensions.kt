@@ -17,6 +17,7 @@ package elide.server
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
 import org.reactivestreams.Publisher
@@ -37,7 +38,7 @@ import elide.ssr.ResponseRenderer
 /**
  * Raw bytes body type used internally by Elide.
  */
-public typealias RawPayload = ByteArrayOutputStream
+public typealias RawPayload = ByteArray
 
 /**
  * Raw bytes response typealias used internally by Elide.
@@ -47,12 +48,22 @@ public typealias RawResponse = HttpResponse<RawPayload>
 /**
  * Raw streamed file alias, used internally for assets.
  */
-public typealias StreamedAsset = Pair<MediaType, InputStream>
+public typealias StreamedAsset = Pair<MediaType, ByteArray>
 
 /**
- * Raw streamed file response, used internally for assets.
+ * Raw streamed file response, used internally for assets with a type attached.
  */
 public typealias StreamedAssetResponse = MutableHttpResponse<StreamedAsset>
+
+/**
+ * Raw streamed file wrapper, after unwrapping the type.
+ */
+public typealias FinalizedAsset = ByteArray
+
+/**
+ * Raw streamed asset response, used internally for assets.
+ */
+public typealias FinalizedAssetResponse = MutableHttpResponse<FinalizedAsset>
 
 /** Describes the expected interface for a response rendering object which leverages co-routines. */
 public interface SuspensionRenderer<R> {
@@ -113,7 +124,7 @@ public fun staticFile(file: String, contentType: String): HttpResponse<*> {
   val target = HtmlRenderer::class.java.getResourceAsStream("/static/$cleanedPath")
   return if (target != null) {
     HttpResponse.ok(
-      target
+      target.bufferedReader(StandardCharsets.UTF_8).readText()
     ).contentType(
       contentType
     )
@@ -148,7 +159,7 @@ public suspend fun PageController.asset(
   request: HttpRequest<*>,
   moduleId: AssetModuleId,
   type: AssetType? = null
-): StreamedAssetResponse {
+): FinalizedAssetResponse {
   val handler = AssetHandler(type, this, request)
   handler.module(moduleId)
   return handler.finalize()
@@ -162,7 +173,7 @@ public suspend fun PageController.asset(
  * @param moduleId Module ID for the asset which we wish to serve.
  * @return Streamed asset response for the desired module ID.
  */
-public suspend fun PageController.script(request: HttpRequest<*>, moduleId: AssetModuleId): StreamedAssetResponse {
+public suspend fun PageController.script(request: HttpRequest<*>, moduleId: AssetModuleId): FinalizedAssetResponse {
   return asset(
     request,
     moduleId,
@@ -181,7 +192,7 @@ public suspend fun PageController.script(request: HttpRequest<*>, moduleId: Asse
 public suspend fun PageController.script(
   request: HttpRequest<*>,
   block: AssetHandler.() -> Unit
-): StreamedAssetResponse {
+): FinalizedAssetResponse {
   return asset(
     request,
     AssetType.SCRIPT,
@@ -197,7 +208,7 @@ public suspend fun PageController.script(
  * @param moduleId Module ID for the asset which we wish to serve.
  * @return Streamed asset response for the desired module ID.
  */
-public suspend fun PageController.stylesheet(request: HttpRequest<*>, moduleId: AssetModuleId): StreamedAssetResponse {
+public suspend fun PageController.stylesheet(request: HttpRequest<*>, moduleId: AssetModuleId): FinalizedAssetResponse {
   return asset(
     request,
     moduleId,
@@ -216,7 +227,7 @@ public suspend fun PageController.stylesheet(request: HttpRequest<*>, moduleId: 
 public suspend fun PageController.stylesheet(
   request: HttpRequest<*>,
   block: AssetHandler.() -> Unit
-): StreamedAssetResponse {
+): FinalizedAssetResponse {
   return asset(
     request,
     AssetType.STYLESHEET,
@@ -237,7 +248,7 @@ public suspend fun PageController.asset(
   request: HttpRequest<*>,
   type: AssetType? = null,
   block: suspend AssetHandler.() -> Unit
-): StreamedAssetResponse {
+): FinalizedAssetResponse {
   val handler = AssetHandler(type, this, request)
   block.invoke(handler)
   return handler.finalize()
@@ -250,7 +261,7 @@ public class AssetHandler(
   private val request: HttpRequest<*>,
   private val moduleId: AtomicReference<AssetModuleId?> = AtomicReference(null),
   private val expectedType: AtomicReference<AssetType?> = AtomicReference(initialExpectedType),
-) : BaseResponseHandler<StreamedAsset>() {
+) : BaseResponseHandler<ByteArray>() {
   /** Bind an asset handler to an asset module ID. */
   public fun module(id: AssetModuleId, type: AssetType? = null) {
     moduleId.set(id)
@@ -262,12 +273,22 @@ public class AssetHandler(
     expectedType.set(type)
   }
 
-  override suspend fun finalize(): MutableHttpResponse<StreamedAsset> {
+  override suspend fun finalize(): MutableHttpResponse<ByteArray> {
     return respond(
       handler.assets().serveAsync(
         request,
         moduleId.get(),
-      ).await()
+      ).await().let { streamedAsset ->
+        val obj = streamedAsset.body()
+        if (obj != null) {
+          val (type, data) = streamedAsset.body()
+          streamedAsset.contentType(type).body(data)
+        } else if (streamedAsset.status().code == HttpStatus.NOT_MODIFIED.code) {
+          streamedAsset.body(ByteArray(0))
+        } else {
+          error("Failed to resolve pair of type and data")
+        }
+      }
     )
   }
 }
@@ -283,9 +304,11 @@ public suspend fun PageController.html(block: suspend HTML.() -> Unit): RawRespo
     HtmlRenderer(
       builder = block,
       handler = this,
-    ).render()
-  ).characterEncoding(StandardCharsets.UTF_8).contentType(
-    "text/html; charset=utf-8"
+    ).render().toByteArray()
+  ).characterEncoding(
+    StandardCharsets.UTF_8
+  ).contentType(
+    "text/html;charset=utf-8",
   )
 }
 
@@ -315,13 +338,13 @@ public class HtmlRenderer(
  * @param block Block to execute to build the CSS document.
  * @return HTTP response wrapping the CSS content, with a content type of `text/css; charset=utf-8`.
  */
-public fun css(block: CssBuilder.() -> Unit): StreamedAssetResponse {
+public fun css(block: CssBuilder.() -> Unit): FinalizedAssetResponse {
   return HttpResponse.ok(
-    CssContent(block).render()
+    CssContent(block).render().second
   ).characterEncoding(
     StandardCharsets.UTF_8
   ).contentType(
-    "text/css; chartset=utf-8"
+    "text/css;chartset=utf-8"
   )
 }
 
@@ -330,10 +353,8 @@ internal class CssContent(
   private val builder: CssBuilder.() -> Unit
 ) : ResponseRenderer<StreamedAsset> {
   override fun render(): StreamedAsset {
-    val contentBytes = CssBuilder().apply(builder).toString().toByteArray(
-      StandardCharsets.UTF_8
-    )
-    return AssetType.STYLESHEET.mediaType to ByteArrayInputStream(contentBytes)
+    val content = CssBuilder().apply(builder).toString().toByteArray(StandardCharsets.UTF_8)
+    return AssetType.STYLESHEET.mediaType to content
   }
 }
 

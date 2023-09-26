@@ -1,6 +1,6 @@
 package elide.site.ui.theme
 
-import csstype.ident
+import web.cssom.ident
 
 /** Area anchor definitions for the Elide site. */
 object Area {

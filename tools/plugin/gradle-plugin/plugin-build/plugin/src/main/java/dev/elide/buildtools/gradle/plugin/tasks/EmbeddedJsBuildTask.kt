@@ -202,7 +202,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
             inflateRuntime: InflateRuntimeTask,
         ) {
             if (tool == BundleTool.ESBUILD && target == BundleTarget.EMBEDDED) {
-                BuildMode.values().forEach { mode ->
+                BuildMode.entries.forEach { mode ->
                     setupEmbeddedEsbuildTask(
                         mode,
                         project,
@@ -217,7 +217,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                     extension,
                 )
             } else if (tool == BundleTool.WEBPACK && target != BundleTarget.EMBEDDED) {
-                BuildMode.values().forEach { mode ->
+                BuildMode.entries.forEach { mode ->
                     setupBrowserWebpackBuildTask(
                         mode,
                         project,
@@ -233,40 +233,37 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         }
 
         @JvmStatic public fun setupEsbuildEntrypointTask(project: Project, extension: ElideExtension) {
-            project.afterEvaluate {
-                val activeMode = extension.mode
-                val targetBundleTask = "generate${activeMode.name.lowercase().capitalized()}EsBuildConfig"
-                val genSpecTaskName = "generate${activeMode.name.lowercase().capitalized()}EmbeddedJsSpec"
-                val targetEmbeddedTask = "${activeMode.name.lowercase()}EmbeddedExecutable"
+            val activeMode = extension.mode.get()
+            val targetBundleTask = "generate${activeMode.name.lowercase().capitalized()}EsBuildConfig"
+            val genSpecTaskName = "generate${activeMode.name.lowercase().capitalized()}EmbeddedJsSpec"
+            val targetEmbeddedTask = "${activeMode.name.lowercase()}EmbeddedExecutable"
 
-                // create a synthesized distribution as an output
-                val mainDist = project.configurations.create("elideSsrDist") {
-                    it.isCanBeConsumed = true
-                    it.isCanBeResolved = false
-                }
-                project.artifacts.apply {
-                    add(
-                        mainDist.name,
-                        project.tasks.named(targetEmbeddedTask).map {
-                            it.outputs.files.files.single()
-                        },
-                    )
-                    add(
-                        mainDist.name,
-                        project.tasks.named(genSpecTaskName).map {
-                            it.outputs.files.files.single()
-                        },
-                    )
-                }
-
-                project.tasks.create(TASK_NAME) {
-                    it.dependsOn(genSpecTaskName)
-                    it.dependsOn(targetBundleTask)
-                    it.dependsOn(targetEmbeddedTask)
-                }
-                project.tasks.named("assemble") {
-                    it.dependsOn(TASK_NAME)
-                }
+            // create a synthesized distribution as an output
+            val mainDist = project.configurations.create("elideSsrDist") {
+                it.isCanBeConsumed = true
+                it.isCanBeResolved = false
+            }
+            project.artifacts.apply {
+                add(
+                    mainDist.name,
+                    project.tasks.named(targetEmbeddedTask).map {
+                        it.outputs.files.files.single()
+                    },
+                )
+                add(
+                    mainDist.name,
+                    project.tasks.named(genSpecTaskName).map {
+                        it.outputs.files.files.single()
+                    },
+                )
+            }
+            project.tasks.create(TASK_NAME) {
+                it.dependsOn(genSpecTaskName)
+                it.dependsOn(targetBundleTask)
+                it.dependsOn(targetEmbeddedTask)
+            }
+            project.tasks.named("assemble") {
+                it.dependsOn(TASK_NAME)
             }
         }
 
@@ -653,9 +650,10 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                     "2018" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2018
                     "2019" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2019
                     "2020" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2020
-                    "2021" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2021
-                    "2022" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
-                    else -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
+                    else -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2020
+//                    "2021" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2021
+//                    "2022" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
+//                    else -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
                 }
             }
         }

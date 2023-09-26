@@ -1,3 +1,5 @@
+@file:Suppress("DataClassPrivateConstructor", "MemberVisibilityCanBePrivate")
+
 package elide.site.controllers
 
 import com.aayushatharva.brotli4j.Brotli4jLoader
@@ -10,7 +12,6 @@ import elide.runtime.Logging
 import elide.server.*
 import elide.server.controller.PageController
 import elide.server.controller.PageWithProps
-import elide.server.type.RequestState
 import elide.site.AppServerProps
 import elide.site.Assets
 import elide.site.ElideSite
@@ -51,6 +52,7 @@ import java.util.concurrent.ConcurrentSkipListMap
 import java.util.zip.Deflater
 import java.util.zip.GZIPOutputStream
 import java.util.concurrent.atomic.AtomicReference
+import elide.ssr.type.RequestState
 
 /** Extend a [PageController] with access to a [SitePage] configuration. */
 @Suppress("unused")
@@ -522,13 +524,10 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
 
     // consume data into a static buffer
-    val body = data?.use {
-      it.toByteArray()
-    }
     return CachedResponse.from(
       state,
       copyResponse(response, subResponse) {
-        body
+        data
       }
     )
   }
@@ -606,9 +605,9 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
      "sync-xhr=()",
     ).joinToString(", ")
 
-    response.headers[cspHeader()] = csp(state).map {
+    response.headers[cspHeader()] = csp(state).joinToString("; ") {
       "${it.first} ${it.second}"
-    }.joinToString("; ").replace(
+    }.replace(
       "NONCE",
       state.nonce(),
     )
@@ -640,7 +639,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   }
 
   /** Finalize an HTTP response. */
-  protected open fun finalizeAsset(locale: Locale, response: StreamedAssetResponse) {
+  protected open fun finalizeAsset(locale: Locale, response: FinalizedAssetResponse) {
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"

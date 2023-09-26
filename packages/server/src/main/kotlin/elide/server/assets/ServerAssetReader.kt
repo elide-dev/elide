@@ -97,6 +97,7 @@ public class ServerAssetReader @Inject internal constructor(
         }
       }
     }
+
     // fallback to serve the non-compressed version of the asset.
     return baselineHeaders(content, identity) to identity
   }

@@ -5,7 +5,7 @@ package fullstack.reactssr
 import elide.server.*
 import elide.server.annotations.Page
 import elide.server.controller.PageWithProps
-import elide.server.type.RequestState
+import elide.ssr.type.RequestState
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.http.HttpRequest

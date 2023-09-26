@@ -1,6 +1,6 @@
 package elide.site.ui.theme
 
-import csstype.px
+import web.cssom.px
 
 /** [Area] size definitions for the Elide size. */
 object Sizes {

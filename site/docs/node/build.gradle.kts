@@ -10,7 +10,7 @@ import dev.elide.buildtools.gradle.plugin.js.BundleTool
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 
 plugins {
-  id("dev.elide.build.site.frontend")
+  kotlin("js")
   id("dev.elide.buildtools.plugin")
 }
 
@@ -19,6 +19,8 @@ version = rootProject.version as String
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 elide {
+  injectDependencies = false
+
   mode = if (devMode) {
     BuildMode.DEVELOPMENT
   } else {

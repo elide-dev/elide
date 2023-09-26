@@ -14,7 +14,7 @@ import kotlinx.html.link
 import java.util.*
 
 /** GET `/`: Controller for index page. */
-@Page(name = "index") class Index : SitePageController(page = Home) {
+@Page(name = "index") open class Index : SitePageController(page = Home) {
   // Make sure to pre-load homepage styles.
   override protected fun finalize(state: PageRenderState, response: MutableHttpResponse<ByteArray>) {
     super.finalize(state, response)

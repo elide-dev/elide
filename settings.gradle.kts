@@ -21,14 +21,17 @@ pluginManagement {
   repositories {
     maven("https://gradle.pkg.st/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     gradlePluginPortal()
     google()
+    mavenCentral()
   }
+  includeBuild("tools/plugin/gradle-plugin")
 }
 
 plugins {
   id("build.less") version("1.0.0-beta1")
-  id("com.gradle.enterprise") version("3.14.1")
+  id("com.gradle.enterprise") version("3.15")
   id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version("1.11.1")
 }
@@ -81,6 +84,9 @@ if (buildUuid == "true") {
   }
 }
 
+includeBuild("tools/conventions")
+includeBuild("tools/substrate")
+
 // Build modules.
 include(
   ":packages:base",
@@ -126,36 +132,28 @@ if (buildWasm == "true") {
   include(":packages:wasm")
 }
 
-if (buildPlugins == "true") {
-  includeBuild(
-    "tools/plugin/gradle-plugin",
-  )
-}
-
 includeBuild(
   "tools/elide-build",
+)
+
+include(
+  ":samples:server:helloworld",
+  ":samples:server:hellocss",
+  ":samples:fullstack:basic:frontend",
+  ":samples:fullstack:basic:server",
+  ":samples:fullstack:ssr:node",
+  ":samples:fullstack:ssr:server",
+  ":samples:fullstack:react:frontend",
+  ":samples:fullstack:react:server",
+  ":samples:fullstack:react-ssr:frontend",
+  ":samples:fullstack:react-ssr:node",
+  ":samples:fullstack:react-ssr:server",
 )
 
 if (buildSsg == "true") {
   include(
     ":packages:ssg",
     ":tools:bundler",
-  )
-}
-
-if (buildSamples == "true") {
-  include(
-    ":samples:server:helloworld",
-    ":samples:server:hellocss",
-    ":samples:fullstack:basic:frontend",
-    ":samples:fullstack:basic:server",
-    ":samples:fullstack:react:frontend",
-    ":samples:fullstack:react:server",
-    ":samples:fullstack:ssr:node",
-    ":samples:fullstack:ssr:server",
-    ":samples:fullstack:react-ssr:frontend",
-    ":samples:fullstack:react-ssr:node",
-    ":samples:fullstack:react-ssr:server",
   )
 }
 

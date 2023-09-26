@@ -65,10 +65,11 @@ public class ServerAssetManager @Inject internal constructor(
 
   // Build an HTTP asset response from the provided asset result.
   private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
-    val responseData = asset.type.mediaType to ByteArrayInputStream(asset.producer.invoke().toByteArray())
+    val responseData = asset.type.mediaType to asset.producer.invoke()
+      .toByteArray()
 
     val response = HttpResponse.ok(
-      responseData as Pair<MediaType, InputStream>
+      responseData
     ).characterEncoding(
       StandardCharsets.UTF_8
     ).contentType(

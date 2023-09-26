@@ -6,13 +6,12 @@ import elide.js.ssr.boot
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.site.abstract.SitePage
-import elide.site.pages.Home
 import elide.site.ui.ElideSite
 import elide.site.ui.components.ThemeModuleWeb
 import elide.site.ui.initializeSite
-import emotion.cache.EmotionCache
 import emotion.cache.createCache
 import emotion.react.CacheProvider
+import emotion.utils.EmotionCache
 import js.core.jso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -22,9 +21,6 @@ import web.dom.document
 import web.events.EventType
 import web.location.location
 import kotlin.coroutines.CoroutineContext
-
-// Main application logger.
-private val mainLogger: Logger = Logging.named("elide:site")
 
 // Setup Emotion cache.
 private val emotionCache: EmotionCache = createCache(jso {

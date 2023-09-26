@@ -5,11 +5,11 @@
 )
 
 plugins {
+  kotlin("jvm")
   id("io.micronaut.application")
   id("io.micronaut.aot")
-  id("dev.elide.build.samples.backend")
-  id("dev.elide.build.native.app")
-  id("dev.elide.build.docker")
+  id("io.micronaut.docker")
+  id("io.micronaut.graalvm")
   id("dev.elide.buildtools.plugin")
 }
 
@@ -17,6 +17,8 @@ group = "dev.elide.samples"
 version = rootProject.version as String
 
 elide {
+  injectDependencies = false
+
   server {
     assets {
       script("scripts.ui") {
@@ -49,7 +51,7 @@ micronaut {
 }
 
 dependencies {
-  implementation(project(":packages:server"))
+  implementation(projects.packages.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
@@ -90,6 +92,15 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   ))
 }
 
+tasks {
+  distTar {
+    enabled = false
+  }
+  distZip {
+    enabled = false
+  }
+}
+
 afterEvaluate {
   listOf(
     "buildLayers",
@@ -100,4 +111,3 @@ afterEvaluate {
     }
   }
 }
-

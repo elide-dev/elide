@@ -6,13 +6,13 @@
 )
 
 plugins {
-  id("dev.elide.build.samples.frontend")
+  kotlin("js")
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
 
-val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
+val kotlinWrapperVersion: String = libs.versions.kotlinxWrappers.get()
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 kotlin {
@@ -36,10 +36,12 @@ kotlin {
 
 dependencies {
   implementation(projects.packages.base)
-  implementation(project(":packages:frontend"))
-  implementation(project(":packages:graalvm-react"))
+  implementation(projects.packages.frontend)
+  implementation(projects.packages.graalvmReact)
 
   implementation(kotlin("stdlib-js"))
+  implementation(libs.kotlinx.wrappers.css)
+  implementation(libs.kotlinx.wrappers.cssType)
   implementation(libs.kotlinx.wrappers.browser)
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)
@@ -53,7 +55,7 @@ tasks.withType<Zip>{
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-val assetDist by configurations.creating {
+val assetDist: Configuration by configurations.creating {
   isCanBeConsumed = true
   isCanBeResolved = false
 }

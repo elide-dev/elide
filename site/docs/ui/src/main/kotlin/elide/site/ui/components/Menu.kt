@@ -1,9 +1,9 @@
 package elide.site.ui.components
 
-import csstype.Color
-import csstype.None.none
-import csstype.Position.Companion.absolute
-import csstype.px
+import web.cssom.Color
+import web.cssom.None.Companion.none
+import web.cssom.Position.Companion.absolute
+import web.cssom.px
 import elide.site.ElideSite
 import elide.site.ui.theme.Sizes
 import emotion.react.css
@@ -13,7 +13,7 @@ import mui.material.ListItemText
 import mui.material.SwipeableDrawer
 import mui.material.SpeedDial
 import mui.material.Toolbar
-import mui.material.DrawerAnchor.left
+import mui.material.DrawerAnchor.Companion.left
 import mui.system.Box
 import mui.system.sx
 import react.create

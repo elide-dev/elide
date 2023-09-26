@@ -1,0 +1,19 @@
+public final synthetic class fullstack/ssr/$App$Index$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class fullstack/ssr/App : elide/server/Application {
+	public static final field INSTANCE Lfullstack/ssr/App;
+	public static final fun main ([Ljava/lang/String;)V
+}
+
+public final class fullstack/ssr/App$Index : elide/server/controller/PageController {
+	public fun <init> ()V
+	public final fun index (Lio/micronaut/http/HttpRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun styles ()Lio/micronaut/http/MutableHttpResponse;
+}
+

@@ -6,7 +6,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 
 /** Tooling guide page (top-level). */
-@Page(name = "tooling") class Tooling : SitePageController(page = Tooling) {
+@Page(name = "tooling") open class Tooling : SitePageController(page = Tooling) {
   // Serve the tooling top page.
   @Get("/tools") suspend fun top(request: HttpRequest<*>) = page(request)
 

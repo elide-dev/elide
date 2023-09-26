@@ -2,7 +2,7 @@
 
 package elide.site.ui.pages.startup
 
-import csstype.ClassName
+import web.cssom.ClassName
 import elide.site.ui.MDX
 import elide.site.ui.pages.startup.mdx.GettingStartedInstallLibrary
 import elide.site.ui.pages.startup.mdx.GettingStartedInstallRuntime

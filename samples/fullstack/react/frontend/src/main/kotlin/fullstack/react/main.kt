@@ -6,7 +6,6 @@ import react.create
 import react.dom.client.createRoot
 import fullstack.react.ui.SampleApp
 
-
 fun main() {
   val target = document.getElementById("root")
   val container = if (target == null) {

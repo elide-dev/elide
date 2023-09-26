@@ -53,7 +53,6 @@ import java.util.zip.CRC32
 import java.util.zip.Deflater
 import java.util.zip.DeflaterOutputStream
 import javax.inject.Inject
-import kotlin.streams.toList
 
 /** Task to interpret server-side asset configuration and content into a compiled asset bundle. */
 @Suppress("UnstableApiUsage", "SameParameterValue", "LargeClass")
@@ -102,7 +101,7 @@ public abstract class GenerateAssetGraphTask @Inject constructor(objects: Object
             var digestTarget = digester.digest()
 
             if (rounds - 1 > 0) {
-                (1 until rounds).forEach { _ ->
+                for (round in (1 until rounds)) {
                     digester = algo.digester()!!
                     digestTarget = digester.digest(digestTarget)
                 }
@@ -556,7 +555,6 @@ public abstract class GenerateAssetGraphTask @Inject constructor(objects: Object
         }.toList()
     }
 
-    @Suppress("USELESS_ELVIS")
     private fun buildAssetDescriptor(
         hashAlgorithm: HashAlgorithm,
         collectedBuilders: List<Pair<AssetBundle.Builder, AssetContent>>,

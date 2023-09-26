@@ -4,11 +4,17 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import dev.elide.buildtools.gradle.plugin.BuildMode.DEVELOPMENT
+import dev.elide.buildtools.gradle.plugin.BuildMode.PRODUCTION
+import io.micronaut.gradle.MicronautRuntime.NETTY
+
 plugins {
-  id("dev.elide.build.samples.backend")
-  id("dev.elide.build.native.app")
+  kotlin("jvm")
+  id(libs.plugins.ksp.get().pluginId)
   id("dev.elide.buildtools.plugin")
   id("io.micronaut.application")
+  id("io.micronaut.graalvm")
+  id("io.micronaut.docker")
   id("io.micronaut.aot")
 }
 
@@ -16,58 +22,68 @@ group = "dev.elide.samples"
 version = rootProject.version as String
 val devMode = (project.property("elide.buildMode") ?: "dev") != "prod"
 
+kotlin {
+  // nothing at this time
+}
+
 application {
   mainClass.set("fullstack.ssr.App")
 }
 
 elide {
+  // we manage deps internally for this sample (it's embedded within the elide codebase)
+  injectDependencies = false
+
+  // swap build mode based on `devMode` flag
   mode = if (devMode) {
-    dev.elide.buildtools.gradle.plugin.BuildMode.DEVELOPMENT
+    DEVELOPMENT
   } else {
-    dev.elide.buildtools.gradle.plugin.BuildMode.PRODUCTION
+    PRODUCTION
   }
 
   server {
     ssr(tools.elide.assets.EmbeddedScriptLanguage.JS) {
-      bundle(project(":samples:fullstack:ssr:node"))
+      bundle(projects.samples.fullstack.ssr.node)
     }
   }
 }
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+  version = libs.versions.micronaut.lib.get()
+  runtime = NETTY
+
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.add("fullstack.ssr.*")
   }
   aot {
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
+    optimizeServiceLoading = true
+    convertYamlToJava = true
+    precomputeOperations = true
+    cacheEnvironment = true
+
     netty {
-      enabled.set(true)
+      enabled = true
     }
   }
 }
 
 graalvmNative {
-  testSupport.set(false)
+  testSupport = false
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = "0.3.3"
   }
 
   agent {
-    defaultMode.set("standard")
-    builtinCallerFilter.set(true)
-    builtinHeuristicFilter.set(true)
-    enableExperimentalPredefinedClasses.set(false)
-    enableExperimentalUnsafeAllocationTracing.set(false)
-    trackReflectionMetadata.set(true)
-    enabled.set(true)
+    defaultMode = "standard"
+    builtinCallerFilter = true
+    builtinHeuristicFilter = true
+    enableExperimentalPredefinedClasses = false
+    enableExperimentalUnsafeAllocationTracing = false
+    trackReflectionMetadata = true
+    enabled = System.getenv("GRAALVM_AGENT") == "true"
 
     modes {
       standard {}
@@ -75,14 +91,14 @@ graalvmNative {
     metadataCopy {
       inputTaskNames.add("test")
       outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting.set(true)
+      mergeWithExisting = true
     }
   }
 
   binaries {
     named("main") {
-      fallback.set(false)
-      quickBuild.set(true)
+      fallback = false
+      quickBuild = true
       buildArgs.addAll(listOf(
         "--no-fallback",
         "--language:js",
@@ -113,13 +129,15 @@ graalvmNative {
 
 dependencies {
   implementation(projects.packages.base)
-  implementation(project(":packages:server"))
-  implementation(project(":packages:graalvm"))
+  implementation(projects.packages.server)
+  implementation(projects.packages.graalvm)
+  implementation(projects.packages.runtimeJs)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
+  runtimeOnly(mn.snakeyaml)
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
@@ -146,6 +164,15 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   ))
 }
 
+tasks {
+  distTar {
+    enabled = false
+  }
+  distZip {
+    enabled = false
+  }
+}
+
 afterEvaluate {
   listOf(
     "buildLayers",
@@ -156,4 +183,3 @@ afterEvaluate {
     }
   }
 }
-

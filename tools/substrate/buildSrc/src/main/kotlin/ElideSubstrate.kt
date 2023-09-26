@@ -45,7 +45,7 @@ object ElideSubstrate {
         artifactId = artifact
         groupId = group
 
-        url.set("https://github.com/elide-dev/v3")
+        url.set("https://github.com/elide-dev/elide")
         description.set(summary)
         if (!parent && !bom) from(project.components.get("kotlin"))
         else if (bom) from(project.components.get("javaPlatform"))
@@ -65,7 +65,7 @@ object ElideSubstrate {
           }
         }
         scm {
-          url.set("https://github.com/elide-dev/v3")
+          url.set("https://github.com/elide-dev/elide")
         }
       }
     }

@@ -6,7 +6,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 
 /** Code samples page (top-level). */
-@Page(name = "samples") class Samples : SitePageController(page = Samples) {
+@Page(name = "samples") open class Samples : SitePageController(page = Samples) {
   // Serve the samples top page.
   @Get("/samples") suspend fun top(request: HttpRequest<*>) = page(request)
 }

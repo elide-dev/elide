@@ -11,7 +11,7 @@ import dev.elide.buildtools.gradle.plugin.js.BundleTool
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 
 plugins {
-  id("dev.elide.build.samples.frontend")
+  kotlin("js")
   id("dev.elide.buildtools.plugin")
 }
 
@@ -19,6 +19,21 @@ group = "dev.elide.samples"
 version = rootProject.version as String
 
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
+
+kotlin {
+  js {
+    browser()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
+  }
+}
 
 elide {
   mode = if (devMode) {
@@ -39,6 +54,8 @@ elide {
 }
 
 dependencies {
+  implementation(kotlin("stdlib"))
+  implementation(libs.kotlinx.wrappers.js)
   implementation(projects.packages.base)
   implementation(project(":packages:graalvm-js"))
   implementation(npm("esbuild", libs.versions.npm.esbuild.get()))

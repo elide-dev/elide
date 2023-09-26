@@ -104,10 +104,10 @@ public object Constants {
     private const val MAJOR_VERSION = "1.0"
 
     /** Major library version tag. */
-    private const val VERSION_TAG = "alpha4"
+    private const val VERSION_TAG = "alpha6"
 
     /** Revision value for the library. */
-    private const val REVISION = 12
+    private const val REVISION = 15
 
     /** Version string for the library. */
     public const val VERSION: String = "$MAJOR_VERSION-$TRACK-$VERSION_TAG-b$REVISION"

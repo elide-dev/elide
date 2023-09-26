@@ -5,7 +5,7 @@
 )
 
 plugins {
-  id("dev.elide.build.samples.frontend")
+  kotlin("js")
 }
 
 group = "dev.elide.samples"

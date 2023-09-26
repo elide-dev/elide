@@ -1,10 +1,10 @@
 package elide.site.ui
 
-import csstype.Auto.auto
-import csstype.ClassName
-import csstype.Display
-import csstype.GridTemplateAreas
-import csstype.array
+import web.cssom.Auto
+import web.cssom.ClassName
+import web.cssom.Display
+import web.cssom.GridTemplateAreas
+import web.cssom.array
 import elide.site.ui.components.*
 import elide.site.ui.theme.Area
 import elide.site.ui.theme.Sizes
@@ -105,7 +105,7 @@ fun initializeSite(enableDebug: Boolean) {
  * @param location Location to use.
  * @return Whether full-bleed mode is active.
  */
-private fun determineFullbleed(location: history.Location): Boolean {
+private fun determineFullbleed(location: remix.run.router.Location<*>): Boolean {
   return location.pathname == "/"
 }
 
@@ -146,12 +146,12 @@ val ElideSite = react.FC<ElideSiteProps> {
       display = Display.grid
       gridTemplateRows = array(
         Sizes.Header.Height,
-        auto,
+        Auto.auto,
       )
 
       gridTemplateColumns = array(
         Sizes.Sidebar.Width,
-        auto,
+        Auto.auto,
       )
 
       gridTemplateAreas = GridTemplateAreas(

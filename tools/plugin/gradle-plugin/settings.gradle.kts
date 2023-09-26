@@ -18,36 +18,39 @@ pluginManagement {
         maven("https://maven.pkg.st/")
         maven("https://gradle.pkg.st/")
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 }
 
 plugins {
     id("build.less") version("1.0.0-beta1")
-    id("com.gradle.enterprise") version("3.14.1")
+    id("com.gradle.enterprise") version("3.15")
     id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
 }
 
 dependencyResolutionManagement {
     repositories {
         maven("https://maven.pkg.st/")
-        maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
         maven("https://gradle.pkg.st/")
+        maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+        mavenLocal()
     }
 }
 
 rootProject.name = "elide-gradle-plugin"
 
-val buildExamples: String? by settings
-if (buildExamples == "true") {
-    include(
-        ":example:fullstack:browser",
-        ":example:fullstack:node",
-        ":example:fullstack:server",
-        ":example:static:frontend",
-        ":example:static:server",
-        ":example:mixed",
-    )
-}
+//include(
+//    ":example:fullstack:browser",
+//    ":example:fullstack:node",
+//    ":example:fullstack:server",
+//    ":example:static:frontend",
+//    ":example:static:server",
+//    ":example:mixed",
+//)
+
 includeBuild("plugin-build")
 
 gradleEnterprise {

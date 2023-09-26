@@ -5,11 +5,15 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import io.micronaut.gradle.MicronautRuntime.NETTY
+
 plugins {
-  id("dev.elide.build.samples.backend")
-  id("dev.elide.build.docker")
+  kotlin("jvm")
+  id(libs.plugins.ksp.get().pluginId)
   id("io.micronaut.application")
   id("io.micronaut.aot")
+  id("io.micronaut.graalvm")
+  id("io.micronaut.docker")
   id("dev.elide.buildtools.plugin")
 }
 
@@ -17,44 +21,50 @@ group = "dev.elide.samples"
 version = rootProject.version as String
 
 elide {
+  injectDependencies = false
+
   server {
     assets {
       script("scripts.ui") {
-        from(project(":samples:fullstack:react:frontend"))
+        from(projects.samples.fullstack.react.frontend)
       }
     }
   }
 }
 
 application {
-  mainClass.set("fullstack.react.App")
+  mainClass = "fullstack.react.App"
 }
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+  version = libs.versions.micronaut.lib.get()
+  runtime = NETTY
+
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.add("fullstack.react.*")
   }
+
   aot {
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
+    optimizeServiceLoading = true
+    convertYamlToJava = true
+    precomputeOperations = true
+    cacheEnvironment = true
+
     netty {
-      enabled.set(true)
+      enabled = true
     }
   }
 }
 
 dependencies {
-  implementation(project(":packages:server"))
+  implementation(projects.packages.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
+  runtimeOnly(mn.snakeyaml)
 }
 
 tasks.withType<Copy>().named("processResources") {
@@ -90,6 +100,15 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   ))
 }
 
+tasks {
+  distTar {
+    enabled = false
+  }
+  distZip {
+    enabled = false
+  }
+}
+
 afterEvaluate {
   listOf(
     "buildLayers",
@@ -100,4 +119,3 @@ afterEvaluate {
     }
   }
 }
-

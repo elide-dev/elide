@@ -4,6 +4,7 @@ public final class dev/elide/buildtools/gradle/plugin/BuildMode : java/lang/Enum
 	public static final field DEVELOPMENT_NAME Ljava/lang/String;
 	public static final field PRODUCTION Ldev/elide/buildtools/gradle/plugin/BuildMode;
 	public static final field PRODUCTION_NAME Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/elide/buildtools/gradle/plugin/BuildMode;
 	public static fun values ()[Ldev/elide/buildtools/gradle/plugin/BuildMode;
 }
@@ -60,6 +61,7 @@ public final class dev/elide/buildtools/gradle/plugin/cfg/AssetType : java/lang/
 	public static final field SCRIPT Ldev/elide/buildtools/gradle/plugin/cfg/AssetType;
 	public static final field STYLESHEET Ldev/elide/buildtools/gradle/plugin/cfg/AssetType;
 	public static final field TEXT Ldev/elide/buildtools/gradle/plugin/cfg/AssetType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/elide/buildtools/gradle/plugin/cfg/AssetType;
 	public static fun values ()[Ldev/elide/buildtools/gradle/plugin/cfg/AssetType;
 }
@@ -85,6 +87,7 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$AssetBund
 
 public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$AssetCopySpec : org/gradle/api/file/CopySpec {
 	public fun <init> (Lorg/gradle/api/Project;Ldev/elide/buildtools/gradle/plugin/cfg/AssetType;Lorg/gradle/api/model/ObjectFactory;)V
+	public fun dirPermissions (Lorg/gradle/api/Action;)Lorg/gradle/api/file/CopyProcessingSpec;
 	public synthetic fun eachFile (Lgroovy/lang/Closure;)Lorg/gradle/api/file/CopyProcessingSpec;
 	public fun eachFile (Lgroovy/lang/Closure;)Lorg/gradle/api/file/CopySpec;
 	public synthetic fun eachFile (Lorg/gradle/api/Action;)Lorg/gradle/api/file/CopyProcessingSpec;
@@ -101,6 +104,7 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$AssetCopy
 	public fun expand (Ljava/util/Map;)Lorg/gradle/api/file/CopySpec;
 	public synthetic fun expand (Ljava/util/Map;Lorg/gradle/api/Action;)Lorg/gradle/api/file/ContentFilterable;
 	public fun expand (Ljava/util/Map;Lorg/gradle/api/Action;)Lorg/gradle/api/file/CopySpec;
+	public fun filePermissions (Lorg/gradle/api/Action;)Lorg/gradle/api/file/CopyProcessingSpec;
 	public fun filesMatching (Ljava/lang/Iterable;Lorg/gradle/api/Action;)Lorg/gradle/api/file/CopySpec;
 	public fun filesMatching (Ljava/lang/String;Lorg/gradle/api/Action;)Lorg/gradle/api/file/CopySpec;
 	public fun filesNotMatching (Ljava/lang/Iterable;Lorg/gradle/api/Action;)Lorg/gradle/api/file/CopySpec;
@@ -120,9 +124,11 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$AssetCopy
 	public synthetic fun from ([Ljava/lang/Object;)Lorg/gradle/api/file/CopySourceSpec;
 	public fun from ([Ljava/lang/Object;)Lorg/gradle/api/file/CopySpec;
 	public fun getDirMode ()Ljava/lang/Integer;
+	public fun getDirPermissions ()Lorg/gradle/api/provider/Property;
 	public fun getDuplicatesStrategy ()Lorg/gradle/api/file/DuplicatesStrategy;
 	public fun getExcludes ()Ljava/util/Set;
 	public fun getFileMode ()Ljava/lang/Integer;
+	public fun getFilePermissions ()Lorg/gradle/api/provider/Property;
 	public fun getFilteringCharset ()Ljava/lang/String;
 	public fun getIncludeEmptyDirs ()Z
 	public fun getIncludes ()Ljava/util/Set;
@@ -244,38 +250,15 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideKotlinPluginsHandler$Pl
 	public final fun mask (Ljava/lang/String;)V
 }
 
-public final class dev/elide/buildtools/gradle/plugin/cfg/ElidePluginConfig {
-	public static final field DEPENDENCY_BASE Ljava/lang/String;
-	public static final field DEPENDENCY_CATALOG Ljava/lang/String;
-	public static final field DEPENDENCY_CONVENTION Ljava/lang/String;
-	public static final field DEPENDENCY_FRONTEND Ljava/lang/String;
-	public static final field DEPENDENCY_GRAALVM Ljava/lang/String;
-	public static final field DEPENDENCY_GRAALVM_JS Ljava/lang/String;
-	public static final field DEPENDENCY_GRAALVM_REACT Ljava/lang/String;
-	public static final field DEPENDENCY_MODEL Ljava/lang/String;
-	public static final field DEPENDENCY_PLATFORM Ljava/lang/String;
-	public static final field DEPENDENCY_PROCESSOR Ljava/lang/String;
-	public static final field DEPENDENCY_PROTO Ljava/lang/String;
-	public static final field DEPENDENCY_SERVER Ljava/lang/String;
-	public static final field DEPENDENCY_SSG Ljava/lang/String;
-	public static final field DEPENDENCY_SUBSTRATE Ljava/lang/String;
-	public static final field DEPENDENCY_TEST Ljava/lang/String;
-	public static final field ELIDE_LIB_VERSION Ljava/lang/String;
-	public static final field INSTANCE Ldev/elide/buildtools/gradle/plugin/cfg/ElidePluginConfig;
-}
-
 public class dev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler {
 	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
 	public final fun assets (Lorg/gradle/api/Action;)V
 	public final fun getActive ()Ljava/util/concurrent/atomic/AtomicBoolean;
 	public final fun getAssets ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler;
-	public final fun getSsg ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$StaticSiteHandler;
 	public final fun getSsr ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$ServerSSRHandler;
 	public final fun getSsrRuntime ()Ljava/util/concurrent/atomic/AtomicReference;
 	public final fun hasAssets ()Z
-	public final fun hasSsgConfig ()Z
 	public final fun hasSsrBundle ()Z
-	public final fun ssg (Lorg/gradle/api/Action;)V
 	public final fun ssr (Ltools/elide/assets/EmbeddedScriptLanguage;Lorg/gradle/api/Action;)V
 	public static synthetic fun ssr$default (Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler;Ltools/elide/assets/EmbeddedScriptLanguage;Lorg/gradle/api/Action;ILjava/lang/Object;)V
 }
@@ -286,16 +269,11 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$ServerSSR
 	public static synthetic fun bundle$default (Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$ServerSSRHandler;Lorg/gradle/api/Project;Ljava/lang/String;ILjava/lang/Object;)V
 }
 
-public class dev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$StaticSiteHandler {
-	public fun <init> ()V
-	public final fun disable ()V
-	public final fun enable ()V
-}
-
 public final class dev/elide/buildtools/gradle/plugin/js/BundleTarget : java/lang/Enum {
 	public static final field EMBEDDED Ldev/elide/buildtools/gradle/plugin/js/BundleTarget;
 	public static final field NODE Ldev/elide/buildtools/gradle/plugin/js/BundleTarget;
 	public static final field WEB Ldev/elide/buildtools/gradle/plugin/js/BundleTarget;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/elide/buildtools/gradle/plugin/js/BundleTarget;
 	public static fun values ()[Ldev/elide/buildtools/gradle/plugin/js/BundleTarget;
 }
@@ -306,6 +284,7 @@ public final class dev/elide/buildtools/gradle/plugin/js/BundleTool : java/lang/
 	public static final field ESBUILD_NAME Ljava/lang/String;
 	public static final field WEBPACK Ldev/elide/buildtools/gradle/plugin/js/BundleTool;
 	public static final field WEBPACK_NAME Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/elide/buildtools/gradle/plugin/js/BundleTool;
 	public static fun values ()[Ldev/elide/buildtools/gradle/plugin/js/BundleTool;
 }
@@ -318,6 +297,7 @@ public final class dev/elide/buildtools/gradle/plugin/js/BundleType : java/lang/
 	public static final field Companion Ldev/elide/buildtools/gradle/plugin/js/BundleType$Companion;
 	public static final field ESM Ldev/elide/buildtools/gradle/plugin/js/BundleType;
 	public static final field IIFE Ldev/elide/buildtools/gradle/plugin/js/BundleType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/elide/buildtools/gradle/plugin/js/BundleType;
 	public static fun values ()[Ldev/elide/buildtools/gradle/plugin/js/BundleType;
 }
@@ -416,17 +396,6 @@ public abstract class dev/elide/buildtools/gradle/plugin/tasks/GenerateAssetGrap
 }
 
 public final class dev/elide/buildtools/gradle/plugin/tasks/GenerateAssetGraphTask$Companion {
-}
-
-public abstract class dev/elide/buildtools/gradle/plugin/tasks/GenerateStaticSiteTask : org/gradle/api/DefaultTask {
-	public static final field Companion Ldev/elide/buildtools/gradle/plugin/tasks/GenerateStaticSiteTask$Companion;
-	public fun <init> ()V
-	public static final fun install (Ldev/elide/buildtools/gradle/plugin/ElideExtension;Lorg/gradle/api/Project;)V
-	public final fun runAction ()V
-}
-
-public final class dev/elide/buildtools/gradle/plugin/tasks/GenerateStaticSiteTask$Companion {
-	public final fun install (Ldev/elide/buildtools/gradle/plugin/ElideExtension;Lorg/gradle/api/Project;)V
 }
 
 public abstract class dev/elide/buildtools/gradle/plugin/tasks/InflateRuntimeTask : org/gradle/api/DefaultTask {

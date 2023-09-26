@@ -9,11 +9,12 @@ import org.jetbrains.kotlin.konan.target.HostManager
 import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
+  kotlin("jvm")
   kotlin("plugin.allopen")
   kotlin("plugin.noarg")
   id("com.github.johnrengelman.shadow")
-  id("io.micronaut.application")
-  id("io.micronaut.aot")
+  id("io.micronaut.application") version "4.1.1"
+  id("io.micronaut.aot") version "4.1.1"
   id("dev.elide.build.site.backend")
   id("dev.elide.build.docker")
   id("dev.elide.buildtools.plugin")
@@ -134,6 +135,8 @@ allOpen {
 }
 
 elide {
+  injectDependencies = false
+
   mode = if (devMode) {
     BuildMode.DEVELOPMENT
   } else {
@@ -141,10 +144,6 @@ elide {
   }
 
   server {
-    ssg {
-      enable()
-    }
-
     ssr(EmbeddedScriptLanguage.JS) {
       bundle(project(":site:docs:node"))
     }
@@ -222,7 +221,7 @@ application {
 
 dependencies {
   annotationProcessor(mn.micronaut.serde.processor)
-  compileOnly(libs.graalvm.sdk)
+  compileOnly(libs.graalvm.svm)
   ksp(project(":tools:processor"))
   ksp(libs.autoService.ksp)
   api(project(":packages:base"))
@@ -237,13 +236,6 @@ dependencies {
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
   implementation(libs.jackson.jsr310)
-  implementation(mn.micronaut.context)
-  implementation(mn.micronaut.runtime)
-  implementation(mn.micronaut.cache.core)
-  implementation(mn.micronaut.cache.caffeine)
-  implementation(mn.micronaut.views.core)
-  implementation(libs.micronaut.serde.api)
-  implementation(libs.micronaut.jackson.databind)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
@@ -261,8 +253,18 @@ dependencies {
   implementation(libs.netty.tcnative)
   implementation(libs.netty.tcnative.boringssl.static)
   implementation(libs.brotli)
-  runtimeOnly(libs.logback)
   implementation(libs.netty.transport.native.unixCommon)
+
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.runtime)
+  implementation(mn.micronaut.cache.core)
+  implementation(mn.micronaut.cache.caffeine)
+  implementation(mn.micronaut.views.core)
+  implementation(mn.micronaut.serde.api)
+  implementation(mn.micronaut.jackson.databind)
+
+  runtimeOnly(libs.logback)
+  runtimeOnly(mn.snakeyaml)
 
   if (HostManager.hostIsMac) {
     implementation(libs.netty.resolver.dns.native.macos)
@@ -280,10 +282,10 @@ dependencies {
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
   testImplementation(projects.packages.test)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 }
 
-val shadowAppJar by configurations.creating {
+val shadowAppJar: Configuration by configurations.creating {
   isCanBeConsumed = true
   isCanBeResolved = false
 }
@@ -408,8 +410,14 @@ graalvmNative {
 configurations.all {
     resolutionStrategy.dependencySubstitution {
         substitute(module("io.micronaut:micronaut-jackson-databind"))
-            .using(module("io.micronaut.serde:micronaut-serde-jackson:${libs.versions.micronaut.serde.get()}"))
+            .using(module("io.micronaut.serde:micronaut-serde-jackson:${mn.versions.micronaut.serde.get()}"))
     }
+}
+
+tasks {
+  dokkaJavadoc {
+    enabled = false
+  }
 }
 
 afterEvaluate {

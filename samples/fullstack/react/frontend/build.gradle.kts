@@ -6,13 +6,13 @@
 )
 
 plugins {
-  id("dev.elide.build.samples.frontend")
+  kotlin("js")
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
 
-val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
+val kotlinWrapperVersion: String = libs.versions.kotlinxWrappers.get()
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 kotlin {
@@ -36,7 +36,8 @@ kotlin {
 
 dependencies {
   implementation(projects.packages.base)
-  implementation(kotlin("stdlib-js"))
+  implementation(kotlin("stdlib"))
+  implementation(libs.kotlinx.wrappers.js)
   implementation(libs.kotlinx.wrappers.browser)
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)

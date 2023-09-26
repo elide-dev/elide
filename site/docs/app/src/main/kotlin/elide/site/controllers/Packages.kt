@@ -6,7 +6,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 
 /** Library and packages page (top-level). */
-@Page(name = "packages") class Packages : SitePageController(page = Packages) {
+@Page(name = "packages") open class Packages : SitePageController(page = Packages) {
   // Add FOSSA to `img-src` in CSP.
   protected override fun csp(state: PageRenderState): List<Pair<String, String>> = super.csp(state).map { stanza ->
     val (directive, policy) = stanza

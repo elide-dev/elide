@@ -14,7 +14,7 @@ plugins {
     alias(libs.plugins.micronaut.aot)
 
     kotlin("jvm")
-//    alias(libs.plugins.ksp)
+    alias(libs.plugins.ksp)
     id("dev.elide.buildtools.plugin")
 }
 
@@ -23,8 +23,8 @@ application {
 }
 
 dependencies {
-//    ksp(libs.elide.tools.processor)
-//    ksp(libs.autoService.ksp)
+    ksp(libs.elide.tools.processor)
+    ksp(libs.autoService.ksp)
 
     implementation(libs.elide.server)
     implementation(libs.elide.proto.core)
@@ -36,17 +36,13 @@ dependencies {
 }
 
 micronaut {
-    version = "3.10.0"
+    version = "4.1.2"
 }
 
 elide {
     mode = BuildMode.DEVELOPMENT
 
     server {
-//        ssg {
-//            enable()
-//        }
-
         assets {
             bundler {
                 format(ManifestFormat.BINARY)

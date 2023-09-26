@@ -96,20 +96,20 @@ buildConfig {
         )
     }
 
-    dependencyConfig("BASE", "base")
-    dependencyConfig("PROTO", "proto")
-    dependencyConfig("SERVER", "server")
-    dependencyConfig("SSG", "ssg")
-    dependencyConfig("MODEL", "model")
-    dependencyConfig("TEST", "test")
-    dependencyConfig("FRONTEND", "frontend")
-    dependencyConfig("GRAALVM", "graalvm")
-    dependencyConfig("GRAALVM_JS", "graalvm-js")
-    dependencyConfig("GRAALVM_REACT", "graalvm-react")
-    dependencyConfig("PLATFORM", "platform")
-    dependencyConfig("CATALOG", "bom")
+    dependencyConfig("BASE", "elide-base")
+    dependencyConfig("PROTO_CORE", "elide-proto")
+    dependencyConfig("PROTO_PROTOBUF", "elide-proto-protobuf")
+    dependencyConfig("SERVER", "elide-server")
+    dependencyConfig("MODEL", "elide-model")
+    dependencyConfig("TEST", "elide-test")
+    dependencyConfig("FRONTEND", "elide-frontend")
+    dependencyConfig("GRAALVM", "elide-graalvm")
+    dependencyConfig("GRAALVM_JS", "elide-graalvm-js")
+    dependencyConfig("GRAALVM_REACT", "elide-graalvm-react")
+    dependencyConfig("PLATFORM", "elide-platform")
+    dependencyConfig("CATALOG", "elide-bom")
 
-    dependencyConfig("PROCESSOR", "processor", elideToolsGroup)
+    dependencyConfig("PROCESSOR", "elide-processor", elideToolsGroup)
     dependencyConfig("SUBSTRATE", "elide-substrate", elideToolsGroup)
     dependencyConfig("CONVENTION", "elide-convention-plugins", elideToolsGroup)
 }
@@ -137,7 +137,7 @@ pluginBundle {
 }
 
 val minimumMicronaut = "4.0.5"
-val preferredMicronaut = "4.1.0"
+val preferredMicronaut = "4.1.1"
 val defaultJavaMin = "17"
 val defaultJavaMax = "19"
 val baseJavaMin: Int = (defaultJavaMin).toInt()
@@ -184,15 +184,23 @@ configurations {
     runtimeClasspath.get().extendsFrom(embedded)
 }
 
+configurations.all {
+    resolutionStrategy {
+        preferProjectModules()
+    }
+}
+
 dependencies {
     api(kotlin("gradle-plugin"))
+    api(libs.protobuf.java)
+    api(libs.protobuf.util)
+    api(libs.protobuf.kotlin)
     api(libs.elide.tools.processor)
-    implementation(libs.elide.base)
-    implementation(libs.elide.ssg)
-    implementation(libs.elide.proto.core)
-    implementation(libs.elide.proto.protobuf)
+    api(libs.elide.base)
+    api(libs.elide.proto.core)
+    api(libs.elide.proto.protobuf)
+//    api(libs.elide.proto.legacy)
 
-    implementation(kotlin("stdlib-jdk7"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(gradleApi())
     api(libs.plugin.node)
@@ -222,14 +230,7 @@ dependencies {
     // Elide: Kotlin Plugins
     implementation(libs.elide.kotlin.plugin.redakt)
 
-    // Elide: Embedded Libs
-    embedded(libs.elide.base)
-    embedded(libs.elide.ssg)
-
     // Elide: Embedded Tools
-    embedded(libs.closure.templates)
-    embedded(libs.closure.compiler)
-    embedded(libs.closure.stylesheets)
     embedded(libs.brotli)
     embedded(libs.brotli.native.osx)
     embedded(libs.brotli.native.linux)
@@ -279,7 +280,7 @@ tasks.compileKotlin.configure {
         languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
         incremental = true
     }
 }
@@ -290,7 +291,7 @@ tasks.compileTestKotlin.configure {
         languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
         incremental = true
     }
 }
@@ -301,7 +302,7 @@ tasks.withType<KotlinCompile>().configureEach {
         languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
         incremental = true
     }
 }

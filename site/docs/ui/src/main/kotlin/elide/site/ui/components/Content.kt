@@ -1,9 +1,9 @@
 package elide.site.ui.components
 
-import csstype.ClassName
-import csstype.Overflow
-import csstype.pct
-import csstype.px
+import web.cssom.ClassName
+import web.cssom.Overflow
+import web.cssom.pct
+import web.cssom.px
 import elide.site.ElideSite
 import elide.site.abstract.SitePage
 import elide.site.ui.ElidePageProps
@@ -18,6 +18,7 @@ import mui.system.sx
 import react.ElementType
 import react.create
 import react.router.Outlet
+import react.router.PathRoute
 import react.router.Route
 import react.router.Routes
 
@@ -60,7 +61,7 @@ val Content = react.FC<ElidePageProps> {
 
     Routes {
       ElideSite.pages.filter { !it.hidden }.forEach { page ->
-        Route {
+        PathRoute {
           key = page.name
           if (page.name == "home") index = true
           path = if (page.children.isEmpty()) {
@@ -91,7 +92,7 @@ val Content = react.FC<ElidePageProps> {
         }
       }
 
-      Route {
+      PathRoute {
         path = "/legal/privacy"
         element = react.Suspense.create {
           fallback = loadingFragment
@@ -101,7 +102,7 @@ val Content = react.FC<ElidePageProps> {
         }
       }
 
-      Route {
+      PathRoute {
         path = "/legal/license"
         element = react.Suspense.create {
           fallback = loadingFragment
@@ -111,7 +112,7 @@ val Content = react.FC<ElidePageProps> {
         }
       }
 
-      Route {
+      PathRoute {
         path = "*"
         element = react.Fragment.create {
           NotFound {

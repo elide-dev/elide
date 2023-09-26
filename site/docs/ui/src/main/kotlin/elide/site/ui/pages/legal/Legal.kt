@@ -1,6 +1,6 @@
 package elide.site.ui.pages.legal
 
-import csstype.ClassName
+import web.cssom.ClassName
 import elide.site.ui.MDX
 import elide.site.ui.pages.legal.mdx.LicenseMdx
 import elide.site.ui.pages.legal.mdx.PrivacyMdx

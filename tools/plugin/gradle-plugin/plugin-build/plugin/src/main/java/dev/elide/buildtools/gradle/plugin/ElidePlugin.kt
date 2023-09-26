@@ -8,7 +8,6 @@ import dev.elide.buildtools.gradle.plugin.tasks.ElideDependencies.installElidePr
 import dev.elide.buildtools.gradle.plugin.tasks.ElideDependencies.installJavaPlatform
 import dev.elide.buildtools.gradle.plugin.tasks.ElideDependencies.installServerLibs
 import dev.elide.buildtools.gradle.plugin.tasks.EmbeddedJsBuildTask
-import dev.elide.buildtools.gradle.plugin.tasks.GenerateStaticSiteTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -59,14 +58,6 @@ public abstract class ElidePlugin : Plugin<Project> {
                 // if we are configuring a JVM project, install the Java Platform library, which will make sure lib
                 // versions remain consistent throughout.
                 if (isKotlinJVM) project.installJavaPlatform()
-            }
-
-            // install the SSG compiler task, which will avoid running if the project is not eligible.
-            if (kotlinPluginFound && !isKotlinJS) {
-                GenerateStaticSiteTask.install(
-                    elide,
-                    project,
-                )
             }
         }
 

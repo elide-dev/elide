@@ -17,10 +17,11 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import java.nio.charset.StandardCharsets
 import jakarta.inject.Inject
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.server.StreamedAssetResponse
+import elide.server.FinalizedAssetResponse
 import elide.server.controller.StatusEnabledController
 
 /**
@@ -47,12 +48,20 @@ public class AssetController @Inject constructor(private val assetManager: Asset
    * @param ext Extension value from the URL.
    */
   @Get("/{tag}.{ext}")
-  public suspend fun assetGet(request: HttpRequest<*>, tag: String, ext: String): StreamedAssetResponse {
+  public suspend fun assetGet(request: HttpRequest<*>, tag: String, ext: String): FinalizedAssetResponse {
     logging.debug(
       "Loading asset with tag '$tag' (extension: '$ext')"
     )
     return assetManager.serveAsync(
       request
-    ).await()
+    ).await().let { response ->
+      val body = response.body()
+      if (body != null) {
+        val (type, stream) = response.body()
+        response.contentType(type).body(stream)
+      } else {
+        response.body("Not found".toByteArray(StandardCharsets.UTF_8))
+      }
+    }
   }
 }

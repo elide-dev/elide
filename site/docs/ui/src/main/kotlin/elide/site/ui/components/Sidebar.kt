@@ -1,9 +1,9 @@
 package elide.site.ui.components
 
-import csstype.ClassName
-import csstype.Color
-import csstype.Display
-import csstype.None.none
+import web.cssom.ClassName
+import web.cssom.Color
+import web.cssom.Display
+import web.cssom.None.Companion.none
 import elide.site.ElideSite
 import elide.site.abstract.PageInfo
 import elide.site.pages.Home
@@ -17,8 +17,8 @@ import mui.material.List
 import mui.material.ListItemButton
 import mui.material.ListItemText
 import mui.material.Toolbar
-import mui.material.DrawerAnchor.left
-import mui.material.DrawerVariant.permanent
+import mui.material.DrawerAnchor.Companion.left
+import mui.material.DrawerVariant.Companion.permanent
 import mui.system.Box
 import mui.system.sx
 import react.dom.html.ReactHTML.nav

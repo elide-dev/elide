@@ -1,9 +1,9 @@
 package elide.site.ui.components
 
-import csstype.ClassName
-import csstype.Color
-import csstype.integer
-import csstype.px
+import web.cssom.ClassName
+import web.cssom.Color
+import web.cssom.integer
+import web.cssom.px
 import elide.site.Assets
 import elide.site.ElideSite
 import elide.site.ExternalLinks
@@ -35,10 +35,10 @@ import mui.material.SwitchColor
 import mui.material.Toolbar
 import mui.material.Tooltip
 import mui.material.Typography
-import mui.material.styles.TypographyVariant.h6
+import mui.material.styles.TypographyVariant.Companion.h6
 import mui.system.sx
 import react.create
-import react.dom.aria.AriaHasPopup.`false`
+import react.dom.aria.AriaHasPopup.Companion.`false`
 import react.dom.aria.ariaHasPopup
 import react.dom.aria.ariaLabel
 import react.dom.html.ReactHTML.div
@@ -47,7 +47,7 @@ import react.dom.html.ReactHTML.img
 /** Renders the main Elide site header. */
 val Header = react.FC<react.Props> {
   val siteInfo = ElideSite.defaultInfo
-  var themeCtx by react.useContext(ThemeContext)
+//  var themeCtx by react.useContext(ThemeContext)
 
   AppBar {
     position = AppBarPosition.fixed
@@ -110,14 +110,14 @@ val Header = react.FC<react.Props> {
                   borderRadius = 5.px
                   height = 25.px
 
-                  @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-                  val ctx = themeCtx as ThemePackage
+//                  @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+//                  val ctx = themeCtx as ThemePackage
 
-                  color = Themes.styled(ctx.mode, light = {
-                    Color("#EDEDED")
-                  }, dark = {
-                    Color("#333")
-                  })
+//                  color = Themes.styled(ctx.mode, light = {
+//                    Color("#EDEDED")
+//                  }, dark = {
+//                    Color("#333")
+//                  })
                 }
               }
             }
@@ -132,17 +132,17 @@ val Header = react.FC<react.Props> {
           Switch {
             icon = Brightness7.create()
             checkedIcon = Brightness4.create()
-            checked = themeCtx == Themes.Dark
+//            checked = themeCtx == Themes.Dark
             color = SwitchColor.default
             ariaLabel = "theme"
 
             onChange = { _, checked ->
-              val currentTheme = if (checked) Themes.Dark else Themes.Light
-              val paletteMode = if (checked) PaletteMode.dark else PaletteMode.light
-
-              themeCtx = Object.assign(currentTheme, jso<ThemePackage> {
-                mode = paletteMode
-              })
+//              val currentTheme = if (checked) Themes.Dark else Themes.Light
+//              val paletteMode = if (checked) PaletteMode.dark else PaletteMode.light
+//
+//              themeCtx = Object.assign(currentTheme, jso<ThemePackage> {
+//                mode = paletteMode
+//              })
             }
           }
         }

@@ -1,8 +1,8 @@
 package elide.site
 
-import elide.annotations.Props
-import elide.vm.annotations.Polyglot
 import elide.annotations.data.Sensitive
+import elide.ssr.annotations.Props
+import elide.vm.annotations.Polyglot
 import kotlinx.serialization.Transient
 
 /** Top-level application properties. */
@@ -11,5 +11,5 @@ import kotlinx.serialization.Transient
   @Polyglot val page: String,
 
   /** CSR nonce to use. */
-  @get:Polyglot @Transient @Sensitive val nonce: String? = null,
+  @Polyglot @Transient @Sensitive val nonce: String? = null,
 )

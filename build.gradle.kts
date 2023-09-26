@@ -138,6 +138,8 @@ apiValidation {
     "proto",
     "processor",
     "reports",
+    "samples",
+    "basic",
   ).plus(
     if (buildSsg == "true") {
       listOf("bundler")
@@ -146,13 +148,9 @@ apiValidation {
     }
   ).plus(
     if (project.properties["buildDocs"] == "true") {
-      listOf("docs")
-    } else {
-      emptyList()
-    }
-  ).plus(
-    if (project.properties["buildSamples"] == "true") {
-      listOf("samples")
+      listOf(
+        "docs",
+      )
     } else {
       emptyList()
     }

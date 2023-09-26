@@ -1,7 +1,7 @@
 
 import elide.frontend.ssr.ResponseChunk
 import elide.frontend.ssr.SSRContext
-import fullstack.react.ui.SampleApp
+import fullstack.reactssr.ui.SampleApp
 import org.w3c.fetch.Request
 import react.Fragment
 import react.Props

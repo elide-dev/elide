@@ -19,7 +19,10 @@ public open class ElideExtension @Inject constructor(project: Project) {
     public val version: Property<String> = objects.property(String::class.java)
 
     /** Whether to auto-configure the build, including injected dependencies. */
-    public val autoConfig: AtomicBoolean = AtomicBoolean(true)
+    public val autoConfig: Property<Boolean> = objects.property(Boolean::class.java).value(true)
+
+    /** Whether to auto-configure the build, including injected dependencies. */
+    public val injectDependencies: Property<Boolean> = objects.property(Boolean::class.java).value(true)
 
     /** Configuration for JS runtime settings. */
     public val js: ElideJsHandler = objects.newInstance(ElideJsHandler::class.java)
@@ -83,5 +86,7 @@ public open class ElideExtension @Inject constructor(project: Project) {
     }
 
     /** Operating build mode for a given plugin run. */
-    @get:Optional public var mode: BuildMode = BuildMode.PRODUCTION
+    @get:Optional public val mode: Property<BuildMode> = objects.property(BuildMode::class.java).value(
+        BuildMode.PRODUCTION
+    )
 }

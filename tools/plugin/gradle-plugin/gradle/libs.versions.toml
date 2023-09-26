@@ -1,5 +1,6 @@
 [versions]
-elide = "1.0-v3-alpha4-b12"
+elide = "1.0-v3-alpha6-b15"
+elideTools = "1.0-v3-alpha6-b15"
 ksp = "1.9.20-Beta2-1.0.13"
 detekt = "1.23.1"
 kotlin = "1.9.20-Beta2"
@@ -7,9 +8,9 @@ kotlin_dsl = "4.0.7"
 ktlint = "0.50.0"
 ktlintGradle = "11.5.0"
 kotlinx_coroutines = "1.7.3"
-kotlinx_collections = "0.4-wasm0"
+kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.1"
-kotlinx_serialization = "1.5.1"
+kotlinx_serialization = "1.6.0"
 kotlinx_abiValidator = "0.13.2"
 google_api_common = "2.14.1"
 google_html_types = "1.0.8"
@@ -19,7 +20,7 @@ pluginProtobuf = "0.9.3"
 versionCheck = "0.47.0"
 nodePlugin = "5.0.0"
 sonar = "4.3.0.3225"
-protobuf = "3.24.3"
+protobuf = "3.21.2"
 truth = "1.1.5"
 picocli = "4.7.4"
 slf4j = "2.0.9"
@@ -34,12 +35,12 @@ shadow_plugin = "7.1.2"
 soy = "2022-10-26"
 closure = "v20230103"
 closure_stylesheets = "1.5.0"
-buildconfig_plugin = "3.1.0"
+buildconfig_plugin = "4.1.2"
 auto_service = "1.1.1"
 kover_plugin = "0.7.3"
 testLoggerPlugin = "3.2.0"
 dependencyAnalysis = "1.20.0"
-micronaut = "4.1.0"
+micronaut = "4.1.2"
 micronaut_plugin = "4.0.3"
 
 [plugins]
@@ -123,25 +124,23 @@ google_auto_service_annotations = { group = "com.google.auto.service", name = "a
 
 elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
-elide_ssg = { group = "dev.elide", name = "elide-ssg", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
 elide_proto_core = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
-elide_proto_legacy = { group = "dev.elide", name = "elide-proto-core", version = "1.0-v3-alpha1-rc38" }
 elide_proto_protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
 elide_proto_flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }
 elide_proto_kotlinx = { group = "dev.elide", name = "elide-proto-kotlinx", version.ref = "elide" }
-elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
-elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
-elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }
 elide_bom_catalog = { group = "dev.elide", name = "bom", version.ref = "elide" }
 elide_bom_platform = { group = "dev.elide", name = "platform", version.ref = "elide" }
-elide_kotlin_plugin_injekt = { group = "dev.elide.tools.kotlin.plugin", name = "injekt-plugin", version.ref = "elide" }
-elide_kotlin_plugin_interakt = { group = "dev.elide.tools.kotlin.plugin", name = "interakt-plugin", version.ref = "elide" }
-elide_kotlin_plugin_redakt = { group = "dev.elide.tools.kotlin.plugin", name = "redakt-plugin", version.ref = "elide" }
-elide_kotlin_plugin_sekret = { group = "dev.elide.tools.kotlin.plugin", name = "sekret-plugin", version.ref = "elide" }
+elide_tools_processor = { group = "dev.elide.tools", name = "elide-processor", version.ref = "elideTools" }
+elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elideTools" }
+elide_kotlin_plugin_redakt = { group = "dev.elide.tools.kotlin.plugin", name = "redakt-plugin", version.ref = "elideTools" }
+#elide_proto_legacy = { group = "dev.elide", name = "proto", version = "1.0-v3-alpha1-rc38" }
+#elide_kotlin_plugin_injekt = { group = "dev.elide.tools.kotlin.plugin", name = "injekt-plugin", version.ref = "elideTools" }
+#elide_kotlin_plugin_interakt = { group = "dev.elide.tools.kotlin.plugin", name = "interakt-plugin", version.ref = "elideTools" }
+#elide_kotlin_plugin_sekret = { group = "dev.elide.tools.kotlin.plugin", name = "sekret-plugin", version.ref = "elideTools" }
 
 plugin_node = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "nodePlugin" }
-plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
+plugin_buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin", version.ref = "buildconfig_plugin" }
 plugin_kotlin_allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
 plugin_kotlin_noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
 plugin_kotlinx_atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }

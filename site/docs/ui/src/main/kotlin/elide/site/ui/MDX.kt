@@ -2,7 +2,7 @@
 
 package elide.site.ui
 
-import csstype.ClassName
+import web.cssom.ClassName
 import elide.site.ui.components.CodeSample
 import elide.site.ui.components.SyntaxLanguage
 import js.core.jso
@@ -193,29 +193,25 @@ object MDX {
     E: ReactElement<P>,
     T: ElementType<P>
   > render(children: ChildrenBuilder, mui: Boolean, elementType: T, block: P.() -> Unit): Unit = if (mui) {
-    children.child(react.Fragment.create {
-      elementType {
-        components = jso {
-          a = Link
-          blockquote = wrappedBlockquote
-          p = wrappedP
-          h1 = wrappedH1
-          h2 = wrappedH2
-          h3 = wrappedH3
-          h4 = wrappedH4
-          h5 = wrappedH5
-          h6 = wrappedH6
-          code = wrappedCode
-        }
-
-        block.invoke(this)
+    children.child(elementType, jso {
+      components = jso {
+        a = Link
+        blockquote = wrappedBlockquote
+        p = wrappedP
+        h1 = wrappedH1
+        h2 = wrappedH2
+        h3 = wrappedH3
+        h4 = wrappedH4
+        h5 = wrappedH5
+        h6 = wrappedH6
+        code = wrappedCode
       }
+
+      block.invoke(this)
     })
   } else {
-    children.child(react.Fragment.create {
-      elementType {
-        block.invoke(this)
-      }
+    children.child(elementType, jso {
+      block.invoke(this)
     })
   }
 

@@ -2,12 +2,12 @@
 
 package elide.site.ui.theme
 
-import csstype.Color
+import web.cssom.Color
 import js.core.jso
 import mui.material.PaletteMode
 import mui.material.styles.Theme
-import mui.material.PaletteMode.dark as darkMode
-import mui.material.PaletteMode.light as lightMode
+import mui.material.PaletteMode.Companion.dark as darkMode
+import mui.material.PaletteMode.Companion.light as lightMode
 import mui.material.styles.createTheme
 
 /** Defines theming information and overrides for the Elide site. */
@@ -38,6 +38,7 @@ object Themes {
       fun from(mode: PaletteMode): Mode = when (mode) {
         lightMode -> LIGHT
         darkMode -> DARK
+        else -> LIGHT
       }
     }
   }
@@ -84,8 +85,9 @@ object Themes {
   /** @return Color for the current theme. */
   internal fun <R> styled(theme: PaletteMode, light: Theme.() -> R, dark: Theme.() -> R): R {
     return when (theme) {
-      PaletteMode.light -> light.invoke(Dark)
+      PaletteMode.light -> light.invoke(Light)
       PaletteMode.dark -> dark.invoke(Dark)
+      else -> light.invoke(Light)
     }
   }
 

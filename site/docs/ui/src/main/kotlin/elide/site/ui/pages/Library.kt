@@ -8,9 +8,7 @@ import elide.site.ui.theme.Area
 import mui.system.Box
 import mui.system.sx
 import react.create
-import react.router.Outlet
-import react.router.Route
-import react.router.Routes
+import react.router.*
 
 /** Library root page. */
 private val LibraryRoot = react.FC<react.Props> {
@@ -23,7 +21,7 @@ private val LibraryRoot = react.FC<react.Props> {
 /** Elide-as-library root component and router. */
 val Library = react.FC<react.Props> {
   Routes {
-    Route {
+    PathRoute {
       key = PackagesPage.name
       path = PackagesPage.path.removePrefix("/library")
       element = react.Fragment.create {
@@ -38,7 +36,7 @@ val Library = react.FC<react.Props> {
       }
     }
 
-    Route {
+    PathRoute {
       path = "*"
       index = true
       element = react.Fragment.create {

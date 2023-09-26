@@ -82,7 +82,8 @@ public typealias GenericEngine = (
       context: Any?,
       receiver: StreamingReceiver
     ): Job {
-      TODO("Not yet implemented")
+      if (engines.size > 1) error("Cannot execute with multiple VM engines")
+      return engines.first().executeRender(script, request, context, receiver)
     }
 
     override suspend fun <R> execute(script: ExecutableScript, returnType: Class<R>, args: ExecutionInputs?): R? {

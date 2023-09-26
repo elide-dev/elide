@@ -1,6 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha4-b12"
-elide_plugin = "1.0.0-beta23"
+elide = "1.0-v3-alpha6-b15"
 kotlin_sdk = "1.9.20-Beta2"
 kotlin_language = "1.9"
 confundus = "1.0.0"
@@ -15,7 +14,7 @@ graalvm_metadata = "0.3.3"
 graalvm_plugin = "0.9.27"
 node = "20.2.0"
 react = "18.2.0"
-protobuf = "3.24.3"
+protobuf = "3.21.7"
 protobufJavalite = "3.0.0"
 grpc_java = "1.58.0"
 grpc_kotlin = "1.3.1"
@@ -108,8 +107,8 @@ kotlinx_wrappers_react_select = "5.7.0-pre.625"
 kotlinx_wrappers_remix_run_router = "1.9.0-pre.625"
 kotlinx_wrappers_ringUi = "4.1.5-pre.625"
 kotlinx_wrappers_mui = "5.14.7-pre.625"
-kotlinx_wrappers_mui_icons = "5.10.9-pre.625"
-kotlinx_wrappers_styled = "5.3.6-pre.625"
+kotlinx_wrappers_mui_icons = "5.14.7-pre.625"
+kotlinx_wrappers_styled = "5.3.11-pre.625"
 kotlinx_wrappers_styled_next = "1.2.1-pre.625"
 kotlinx_wrappers_popper = "2.11.6-pre.625"
 kotlinx_wrappers_history = "5.3.0-pre.506"
@@ -226,7 +225,6 @@ strikt = "0.34.1"
 powerAssert = "0.13.0"
 
 [plugins]
-elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 doctor = { id = "com.osacky.doctor", version.ref = "doctor_plugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
@@ -633,7 +631,7 @@ wasmtime = { group = "io.github.kawamuray.wasmtime", name = "wasmtime-java", ver
 plugin_nexusPublishing = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexusPublishing" }
 plugin_mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
-plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
+plugin_buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin", version.ref = "buildconfig_plugin" }
 plugin_versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }
 plugin_testLogger = { group = "com.adarshr", name = "gradle-test-logger-plugin", version.ref = "testLoggerPlugin" }
 plugin_detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
@@ -680,7 +678,7 @@ elide_graalvm_react = { group = "dev.elide", name = "elide-graalvm-react", versi
 elide_model = { group = "dev.elide", name = "elide-model", version.ref = "elide" }
 elide_rpc = { group = "dev.elide", name = "elide-rpc", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
-elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
+elide_tools_processor = { group = "dev.elide.tools", name = "elide-processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
 elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }
 elide_tools_substrate_bom = { group = "dev.elide.tools", name = "elide-substrate-bom", version.ref = "elide" }

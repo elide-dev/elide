@@ -1,10 +1,10 @@
-package fullstack.react.ui
+package fullstack.reactssr.ui
 
-import csstype.ClassName
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.strong
+import web.cssom.ClassName
 
 
 external interface SampleProps: Props {

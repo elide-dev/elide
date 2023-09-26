@@ -5,9 +5,10 @@
 )
 
 plugins {
+  kotlin("jvm")
   id("com.github.johnrengelman.shadow")
-  id("dev.elide.build.samples.backend")
-  id("dev.elide.build.docker")
+//  id("dev.elide.build.samples.backend")
+//  id("dev.elide.build.docker")
   id("io.micronaut.application")
   id("io.micronaut.aot")
   id("com.google.devtools.ksp")
@@ -38,9 +39,15 @@ micronaut {
   }
 }
 
+configurations.all {
+  resolutionStrategy {
+    preferProjectModules()
+  }
+}
+
 dependencies {
-  ksp(project(":tools:processor"))
-  implementation(project(":packages:server"))
+  ksp(projects.tools.processor)
+  implementation(projects.packages.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
@@ -94,8 +101,18 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   ))
 }
 
+tasks {
+  distTar {
+    enabled = false
+  }
+  distZip {
+    enabled = false
+  }
+}
+
 afterEvaluate {
   listOf(
+    "shadowJar",
     "buildLayers",
     "optimizedBuildLayers",
     "optimizedJitJarAll",

@@ -1,9 +1,7 @@
 @file:OptIn(ExperimentalJsExport::class)
-@file:Suppress("NON_EXPORTABLE_TYPE")
+@file:Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 
-import elide.runtime.ssr.*
 import elide.frontend.ssr.*
-import elide.site.pages.Home
 import js.core.jso
 import elide.site.ui.ElideSite as App
 import elide.site.ui.components.ThemeModuleServer
@@ -11,12 +9,10 @@ import react.Fragment
 import react.create
 import react.router.dom.server.StaticRouter
 import emotion.react.CacheProvider
-import emotion.cache.EmotionCache
 import emotion.cache.createCache
 import emotion.server.worker.EmotionServer
 import emotion.server.worker.createEmotionServer
-import js.core.Object
-import js.json.JSON
+import emotion.utils.EmotionCache
 import org.w3c.fetch.Request
 import react.ReactElement
 import web.url.URL
@@ -28,7 +24,7 @@ private fun setupCache(context: dynamic): EmotionCache {
   return createCache(jso {
     key = "es"
     nonce = cspNonce
-  })
+  }) as EmotionCache
 }
 
 /** App entrypoint fragment. */
@@ -37,7 +33,7 @@ val app: SSRContext<AppProps>.(Request, EmotionCache) -> ReactElement<*> = { _, 
     null -> URL("https://elide.dev")
     else -> when {
       url.startsWith("/") -> URL("https://elide.dev$url")
-      else -> URL(url)
+      else -> URL("https://elide.dev")  // @TODO(sgammon): relative URL parsing fix
     }
   }
 

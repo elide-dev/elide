@@ -1,18 +1,17 @@
-@file:Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 
 package elide.site.ui.pages
 
-import csstype.BorderBottom
-import csstype.BorderColor
-import csstype.ClassName
-import csstype.Color
-import csstype.FontFamily
-import csstype.FontWeight
-import csstype.TextTransform
-import csstype.LineHeight
-import csstype.em
-import csstype.pct
-import csstype.rem
+import web.cssom.BorderBottom
+import web.cssom.BorderColor
+import web.cssom.ClassName
+import web.cssom.Color
+import web.cssom.FontFamily
+import web.cssom.FontWeight
+import web.cssom.TextTransform
+import web.cssom.LineHeight
+import web.cssom.em
+import web.cssom.pct
+import web.cssom.rem
 import elide.site.abstract.SitePage
 import elide.site.pages.GettingStarted
 import elide.site.ui.ElidePageProps
@@ -176,11 +175,11 @@ val HomeNavIcon = react.FC<HomeNavLinkIconProps> {
 /** Homepage component for the Elide site. */
 val Home = react.FC<HomeProps> {
   val navigator = useNavigate()
-  val themeCtx by react.useContext(ThemeContext)
+//  val themeCtx by react.useContext(ThemeContext)
   val (codeSampleTabState, setCodeSampleTabState) = react.useState("server.kt")
-  val isDarkMode = (themeCtx as ThemePackage).mode == PaletteMode.dark
+//  val isDarkMode = (themeCtx as ThemePackage).mode == PaletteMode.dark
 
-  val themeClass = if (isDarkMode) {
+  @Suppress("ConstantConditionIf") val themeClass = if (false) {
     "elide-theme__dark"
   } else {
     "elide-theme__light"

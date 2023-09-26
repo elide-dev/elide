@@ -5,8 +5,9 @@
 )
 
 plugins {
-  id("dev.elide.build.samples.backend")
-  id("dev.elide.build.docker")
+  kotlin("jvm")
+  id("com.google.devtools.ksp")
+  id("io.micronaut.docker")
   id("io.micronaut.application")
   id("io.micronaut.aot")
 }
@@ -37,13 +38,14 @@ micronaut {
 }
 
 dependencies {
-  implementation(project(":packages:server"))
-  implementation(project(":packages:graalvm"))
+  ksp(projects.tools.processor)
+  implementation(projects.packages.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
+  runtimeOnly(mn.snakeyaml)
 }
 
 tasks.withType<Copy>().named("processResources") {
@@ -79,6 +81,15 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   ))
 }
 
+tasks {
+  distTar {
+    enabled = false
+  }
+  distZip {
+    enabled = false
+  }
+}
+
 afterEvaluate {
   listOf(
     "buildLayers",
@@ -90,4 +101,3 @@ afterEvaluate {
     }
   }
 }
-

@@ -16,7 +16,7 @@
 VERSION ?= $(shell cat .version)
 STRICT ?= yes
 RELOCK ?= no
-SITE ?= no
+SITE ?= yes
 DEFAULT_REPOSITORY ?= gcs://elide-snapshots/repository/v3
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
@@ -108,7 +108,7 @@ BUILD_ARGS += -PbuildWasm=false
 endif
 
 ifeq ($(RELOCK),yes)
-BUILD_ARGS += --write-verification-metadata $(DEP_HASH_ALGO) --export-keys
+BUILD_ARGS += kotlinUpgradeYarnLock --write-verification-metadata $(DEP_HASH_ALGO) --export-keys --write-locks
 endif
 
 ifeq ($(CI),yes)

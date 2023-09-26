@@ -4,14 +4,13 @@ import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.CopySpec
+import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.model.ObjectFactory
 import tools.elide.assets.ManifestFormat
 import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.CompressionMode
 import java.io.File
-import java.util.EnumSet
-import java.util.SortedSet
-import java.util.TreeSet
+import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -206,6 +205,22 @@ public open class ElideAssetsHandler @Inject constructor(
          * @param project Project to pull from.
          */
         public fun from(project: Project) {
+            projectDeps.get().add(
+                InterProjectAssetHandler.fromProject(
+                    objects,
+                    project.path,
+                    BROWSER_DIST_TARGET,
+                )
+            )
+        }
+
+        /**
+         * Pull an asset from somewhere else in a Gradle project where the plugin is equipped; in this case, using a
+         * symbolic project dependency.
+         *
+         * @param accessor Symbolic dependency.
+         */
+        public fun from(accessor: DelegatingProjectDependency): Unit = accessor.dependencyProject.let { project ->
             projectDeps.get().add(
                 InterProjectAssetHandler.fromProject(
                     objects,

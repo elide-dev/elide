@@ -1,0 +1,67 @@
+public final synthetic class fullstack/reactssr/$App$HelloProps$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class fullstack/reactssr/$App$HelloProps$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class fullstack/reactssr/$App$Index$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class fullstack/reactssr/App : elide/server/Application {
+	public static final field INSTANCE Lfullstack/reactssr/App;
+	public static final fun main ([Ljava/lang/String;)V
+}
+
+public final class fullstack/reactssr/App$HelloProps {
+	public static final field Companion Lfullstack/reactssr/App$HelloProps$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lfullstack/reactssr/App$HelloProps;
+	public static synthetic fun copy$default (Lfullstack/reactssr/App$HelloProps;Ljava/lang/String;ILjava/lang/Object;)Lfullstack/reactssr/App$HelloProps;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class fullstack/reactssr/App$HelloProps$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lfullstack/reactssr/App$HelloProps$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lfullstack/reactssr/App$HelloProps;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lfullstack/reactssr/App$HelloProps;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class fullstack/reactssr/App$HelloProps$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class fullstack/reactssr/App$Index : elide/server/controller/PageWithProps {
+	public fun <init> ()V
+	public final fun baseStyles (Lio/micronaut/http/HttpRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun basic ()Lio/micronaut/http/MutableHttpResponse;
+	public final fun indexPage (Lio/micronaut/http/HttpRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun js (Lio/micronaut/http/HttpRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun props (Lelide/ssr/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun styles ()Lio/micronaut/http/MutableHttpResponse;
+}
+

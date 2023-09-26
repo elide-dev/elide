@@ -16,8 +16,14 @@ import elide.runtime.intrinsics.server.http.HttpResponse
 @DelicateElideApi @JvmInline internal value class GuestHandler private constructor(
   private val value: PolyglotValue
 ) : GuestHandlerFunction {
-  override fun invoke(request: HttpRequest, response: HttpResponse, context: HttpContext) {
-    value.executeVoid(request, response, context)
+  override fun invoke(request: HttpRequest, response: HttpResponse, context: HttpContext): Boolean {
+    val result = value.execute(request, response, context)
+
+    return when {
+      result.isBoolean -> result.asBoolean()
+      // don't forward by default
+      else -> false
+    }
   }
   
   internal companion object {

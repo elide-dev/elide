@@ -26,46 +26,28 @@ import elide.runtime.intrinsics.server.http.HttpRouter
   private val pipeline = mutableListOf<PipelineStage>()
 
   @Export override fun handle(method: String?, path: String?, handler: PolyglotValue) {
-    val key = HttpRouter.compileRouteKey(path, method)
+    // store the handler reference and get the key
+    val key = handlerRegistry.register(GuestHandler.of(handler))
 
-    handlerRegistry.register(key, GuestHandler.of(handler))
+    // register the handler as a stage in the pipeline
     pipeline.add(PipelineStage(key, compileMatcher(path, method?.let(HttpMethod::valueOf))))
   }
 
-  /**
-   * Resolve a [GuestHandlerFunction] for an incoming [request], storing any path variable values in the [context]. If
-   * no handler can be resolved for the given request, `null` is return.
-   */
-  internal fun route(request: HttpRequest, context: HttpContext): GuestHandlerFunction? {
-    return checkPipelineStage(request, context)
-  }
+  /** Resolve a handler pipeline that iterates over every stage matching the incoming [request]. */
+  internal fun pipeline(request: HttpRequest, context: HttpContext): ResolvedPipeline = sequence {
+    // iterate over every handler in the pipeline
+    pipeline.forEachIndexed { index, stage ->
+      // test the stage against the incoming request
+      logging.debug { "Handling pipeline stage: $index" }
+      if (stage.matcher(request, context)) {
+        // found a match, resolve the handler reference
+        logging.debug { "Handler condition matches request at stage $index" }
+        val handler = handlerRegistry.resolve(index) ?: error(
+          "Fatal error: unable to resolve handler reference for pipeline stage $stage",
+        )
 
-  /**
-   * Iterate over the pipeline until a matching stage is found, returning a [GuestHandler] reference associated with
-   * it, or `null` if no matching stage is found.
-   *
-   * @param request The incoming [HttpRequest], currently being routed.
-   * @param context The context for the incoming request, used to store information such as path variable values.
-   * @return a [GuestHandler] for the incoming [request], or null if no registered handler is found matching the URI.
-   */
-  private tailrec fun checkPipelineStage(
-    request: HttpRequest,
-    context: HttpContext,
-    index: Int = 0,
-  ): GuestHandler? {
-    // get the next handler in the pipeline (or end if no more handlers remaining)
-    logging.debug { "Handling pipeline stage: $index" }
-    val stage = pipeline.getOrNull(index) ?: return null
-
-    // test the stage against the incoming request
-    if (stage.matcher(request, context)) {
-      // found a match, resolve the handler reference
-      logging.debug { "Handler condition matches request at stage $index" }
-      return handlerRegistry.resolve(stage.key)
-    } else {
-      // skip this stage
-      logging.debug { "Handler condition does not match request at stage $index" }
-      return checkPipelineStage(request, context, index + 1)
+        yield(handler)
+      }
     }
   }
 
@@ -112,7 +94,7 @@ import elide.runtime.intrinsics.server.http.HttpRouter
 
         // otherwise return true when the pattern matches the requested path
         pattern.matchEntire(request.uri)?.also { match ->
-          // TODO(@darvld): maybe we don't need this if the instrinsics handle the unwrapping logic
+          // TODO(@darvld): replace with polyglot equivalent
           val requestParams = JsProxy.build { /* empty */ }
 
           // extract path variables and add them to the request

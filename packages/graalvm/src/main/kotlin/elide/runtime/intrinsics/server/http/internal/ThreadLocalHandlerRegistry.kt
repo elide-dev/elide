@@ -19,35 +19,36 @@ import elide.runtime.core.DelicateElideApi
   private val initializeForThread: (ThreadLocalHandlerRegistry) -> Unit
 ) : HandlerRegistry() {
   /** Backing thread-local map, populated by [initializeForThread]. */
-  private val backing: ThreadLocal<HandlerMap> = ThreadLocal()
+  private val backing: ThreadLocal<HandlerStack> = ThreadLocal()
 
   init {
-    // pre-initialize with an empty map for the construction thread
+    // pre-initialize with an empty list for the construction thread
     // this avoids incorrect re-evaluation of the entrypoint on start
-    if (preInitialized) backing.set(mutableMapOf())
+    if (preInitialized) backing.set(mutableListOf())
   }
 
-  /** Shorthand for calling [ThreadLocal.get] on the [backing] map. */
-  private inline val backingRegistry: HandlerMap
+  /** Shorthand for calling [ThreadLocal.get] on the [backing] list. */
+  private inline val backingRegistry: HandlerStack
     get() {
-      // map already exists for this thread, return it
+      // value already exists for this thread, return it
       backing.get()?.let { return it }
 
-      // prepare a new empty map
-      val map: HandlerMap = mutableMapOf()
+      // prepare a new empty list
+      val map: HandlerStack = mutableListOf()
       backing.set(map)
 
-      // initialize for this thread (populate the map)
+      // initialize for this thread (populate the list)
       initializeForThread(this)
 
       return map
     }
 
-  override fun register(key: String, handler: GuestHandler) {
-    backingRegistry[key] = handler
+  override fun register(handler: GuestHandler): Int {
+    backingRegistry.add(handler)
+    return backingRegistry.size - 1
   }
 
-  override fun resolve(key: String): GuestHandler? {
-    return backingRegistry[key]
+  override fun resolve(stage: Int): GuestHandler? {
+    return backingRegistry.getOrNull(stage)
   }
 }

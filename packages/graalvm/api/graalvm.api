@@ -1936,11 +1936,7 @@ public abstract interface class elide/runtime/intrinsics/server/http/HttpRespons
 }
 
 public abstract interface class elide/runtime/intrinsics/server/http/HttpRouter {
-	public static final field Companion Lelide/runtime/intrinsics/server/http/HttpRouter$Companion;
 	public abstract fun handle (Ljava/lang/String;Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-}
-
-public final class elide/runtime/intrinsics/server/http/HttpRouter$Companion {
 }
 
 public final class elide/runtime/intrinsics/server/http/HttpServerAgent {

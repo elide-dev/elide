@@ -414,9 +414,13 @@ configurations.all {
     }
 }
 
+val buildDocs by properties
+
 tasks {
-  dokkaJavadoc {
-    enabled = false
+  if (buildDocs == "true") {
+    named("dokkaJavadoc").configure {
+      enabled = false
+    }
   }
 }
 

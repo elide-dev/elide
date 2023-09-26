@@ -13,22 +13,22 @@ import elide.runtime.intrinsics.server.http.HttpRouter
  */
 @DelicateElideApi internal abstract class HandlerRegistry : HttpRouter {
   /**
-   * Register a [handler] with the given [key].
+   * Register a new [handler] reference, assigned to the next stage in the pipeline.
    *
-   * @param key A unique key to associate the handler with.
    * @param handler A reference to an executable guest value.
+   * @return The index of the stage to which the handler is associated.
    */
-  abstract fun register(key: String, handler: GuestHandler)
+  abstract fun register(handler: GuestHandler): Int
 
   /**
-   * Resolve a [GuestHandler] reference associated with the given [key].
+   * Resolve a [GuestHandler] reference associated with the given [stage].
    *
-   * @param key The key used to retrieve the handler, previously used with [register].
-   * @return A [GuestHandler] reference, or `null` if no handler with that [key] is found.
+   * @param stage The stage key (index) used to retrieve the handler, previously return by [register].
+   * @return A [GuestHandler] reference, or `null` if no handler with that [stage] is found.
    */
-  abstract fun resolve(key: String): GuestHandler?
+  abstract fun resolve(stage: Int): GuestHandler?
 
   @Export override fun handle(method: String?, path: String?, handler: PolyglotValue) {
-    register(HttpRouter.compileRouteKey(path, method), GuestHandler.of(handler))
+    register(GuestHandler.of(handler))
   }
 }

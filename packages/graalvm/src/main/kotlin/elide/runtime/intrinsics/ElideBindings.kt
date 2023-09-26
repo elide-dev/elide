@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs
+package elide.runtime.intrinsics
 
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguage

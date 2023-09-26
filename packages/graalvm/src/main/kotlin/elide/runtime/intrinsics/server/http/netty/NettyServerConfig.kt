@@ -1,8 +1,8 @@
-package elide.runtime.intriniscs.server.http.netty
+package elide.runtime.intrinsics.server.http.netty
 
 import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.intriniscs.server.http.HttpServerConfig
+import elide.runtime.intrinsics.server.http.HttpServerConfig
 
 /** Configuration options specific to the [NettyServerEngine]. */
 @DelicateElideApi internal class NettyServerConfig : HttpServerConfig() {

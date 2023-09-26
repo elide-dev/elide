@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs.server.http.netty
+package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelHandler
@@ -7,8 +7,8 @@ import org.graalvm.polyglot.HostAccess.Export
 import java.net.InetSocketAddress
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.intriniscs.server.http.HttpServerEngine
-import elide.runtime.intriniscs.server.http.internal.PipelineRouter
+import elide.runtime.intrinsics.server.http.HttpServerEngine
+import elide.runtime.intrinsics.server.http.internal.PipelineRouter
 
 /**
  * Netty-based [HttpServerEngine] implementation.

@@ -1,4 +1,4 @@
-package elide.runtime.intriniscs.server.http.netty
+package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.EventLoopGroup
@@ -16,7 +16,7 @@ import io.netty.incubator.channel.uring.IOUring
 import io.netty.incubator.channel.uring.IOUringEventLoopGroup
 import io.netty.incubator.channel.uring.IOUringServerSocketChannel
 import kotlin.reflect.KClass
-import elide.runtime.intriniscs.server.http.netty.NettyTransport.Companion.resolve
+import elide.runtime.intrinsics.server.http.netty.NettyTransport.Companion.resolve
 
 /**
  * Defines a specific transport used by the Netty backend, the [resolve] function will return the preferred

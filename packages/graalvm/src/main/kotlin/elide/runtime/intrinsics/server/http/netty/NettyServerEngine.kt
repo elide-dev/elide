@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelOption
 import org.graalvm.polyglot.HostAccess.Export
 import java.net.InetSocketAddress
+import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.intrinsics.server.http.HttpServerEngine
@@ -20,18 +21,28 @@ import elide.runtime.intrinsics.server.http.internal.PipelineRouter
   @Export override val config: NettyServerConfig,
   @Export override val router: PipelineRouter,
 ) : HttpServerEngine {
+  /** Thread-safe flag to signal  */
+  private val serverRunning = AtomicBoolean(false)
+
   /** Private logger instance. */
-  private val logging by lazy { Logging.of(HttpServerEngine::class) }
+  private val logging by lazy { Logging.of(NettyServerEngine::class) }
+
+  @get:Export override val running: Boolean get() = serverRunning.get()
 
   /** Construct a new [ChannelHandler] used as initializer for client channels. */
   private fun prepareChannelInitializer(): ChannelHandler {
     return NettyChannelInitializer(NettyRequestHandler(router))
   }
 
-  /**
-   * Start listening at the port specified by [config], using a native transport resolved for the current platform.
-   */
   @Export override fun start() {
+    logging.debug("Starting server")
+
+    // allow this call only once
+    if (!serverRunning.compareAndSet(false, true)) {
+      logging.debug("Server already running, ignoring start() call")
+      return
+    }
+
     // acquire platform-specific Netty components
     val transport = config.resolveTransport()
     logging.debug { "Using transport: $transport" }

@@ -21,6 +21,12 @@ import elide.runtime.intrinsics.server.http.internal.GuestCallback
   @Export public open var port: Int = 8080
 
   /**
+   * Whether to automatically start the server after evaluating the configuration code. If `true`, calling
+   * [HttpServerEngine.start] explicitly from guest code is not necessary. Defaults to `false`.
+   */
+  @Export public open var autoStart: Boolean = false
+
+  /**
    * Register a [callback] to be invoked when the server starts listening for connections. The [callback] value must
    * be executable, otherwise an exception will be thrown.
    *

@@ -69,6 +69,9 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     val context = acquireContext()
     context.installEngine(engine, entrypoint)
     context.evaluate(entrypoint)
+
+    // automatically start if requested
+    if(config.autoStart) engine.start()
   }
 
   /**

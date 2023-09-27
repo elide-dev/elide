@@ -11,7 +11,7 @@ class Decorations:
   decorations = ["🚀", "👋", "🙂", "👍", "🎉", "✨"]
   counter = 0
 
-  def getDecoration(self):
+  def get_decoration(self):
     decor = self.decorations[self.counter % len(self.decorations)]
     self.counter += 1
 
@@ -22,8 +22,8 @@ decorations = Decorations()
 
 
 # iterate over different emojis for an easy visual demo
-def getMessage():
-  return f"{decorations.getDecoration()} Hello Elide.py!"
+def get_message():
+  return f"{decorations.get_decoration()} Hello Elide.py!"
 
 
 # define route handlers
@@ -31,7 +31,7 @@ print("Configuring route handlers")
 
 
 def hello(request, response, context):
-  response.send(200, getMessage())
+  response.send(200, get_message())
 
 
 router.handle("GET", "/hello", hello)
@@ -44,12 +44,12 @@ config.setTransport("nio")
 print("Configuring binding options")
 
 
-def bindListener():
+def bind_listener():
   print("Server listening! 🚀")
 
 
 config.setPort(3000)
-config.onBind(bindListener)
+config.onBind(bind_listener)
 
 # start listening for connections
 # (this call is inert when issued from handler threads)

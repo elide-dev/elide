@@ -11,6 +11,8 @@ import elide.runtime.intrinsics.server.http.HttpServerEngine
   @Export override val config: HttpServerConfig,
   @Export override val router: HttpRouter,
 ) : HttpServerEngine {
+  @get:Export override val running: Boolean = false
+
   @Export override fun start() {
     // nothing to do here
   }

@@ -1,11 +1,15 @@
 import functools
 
 
+# region
 class Flask:
   def __init__(self, name: str):
     self.server = Elide.http
     self.router = self.server.getRouter()
     self.config = self.server.getConfig()
+
+    # set the server to start automatically
+    self.config.setAutoStart(True)
 
   def route(self, path: str):
     def decorator(func):
@@ -34,6 +38,9 @@ class Flask:
     self.server.start()
 
 
+# endregion
+# -------------------------------------------------------------------------
+
 # create a new app
 app = Flask(__name__)
 
@@ -45,13 +52,9 @@ def hello(request, response, context):
 
 
 # configure the server (not idiomatic for Flask)
-def bindListener():
+def bind_listener():
   print("'Flask' server running! 😉")
 
 
-app.configure(port=3000, onBind=bindListener)
-
-# start listening for connections (not idiomatic for Flask)
-# (this call is inert when issued from handler threads)
+app.configure(port=3000, onBind=bind_listener)
 print("✨ Configuration finished ✨")
-app.start()

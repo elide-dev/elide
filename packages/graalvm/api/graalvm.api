@@ -1949,14 +1949,17 @@ public final class elide/runtime/intrinsics/server/http/HttpServerAgent$Companio
 }
 
 public class elide/runtime/intrinsics/server/http/HttpServerConfig {
+	public fun getAutoStart ()Z
 	public fun getPort ()I
 	public fun onBind (Lorg/graalvm/polyglot/Value;)V
+	public fun setAutoStart (Z)V
 	public fun setPort (I)V
 }
 
 public abstract interface class elide/runtime/intrinsics/server/http/HttpServerEngine {
 	public abstract fun getConfig ()Lelide/runtime/intrinsics/server/http/HttpServerConfig;
 	public abstract fun getRouter ()Lelide/runtime/intrinsics/server/http/HttpRouter;
+	public abstract fun getRunning ()Z
 	public abstract fun start ()V
 }
 

@@ -48,7 +48,8 @@ public final class elide/runtime/gvm/python/cfg/PythonRuntimeConfig$Companion {
 }
 
 public final class elide/runtime/plugins/python/ExtensionsKt {
-	public static final fun python (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static final fun python (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun python$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
 }
 
 public final class elide/runtime/plugins/python/Python {

@@ -433,7 +433,7 @@ dependencies {
 
   api(libs.graalvm.truffle.nfi)
   api(libs.graalvm.truffle.nfi.libffi)
-  api(libs.graalvm.truffle.nfi.panama)
+//  api(libs.graalvm.truffle.nfi.panama)
   runtimeOnly(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))

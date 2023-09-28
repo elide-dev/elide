@@ -29,6 +29,7 @@ elide {
   publishing {
     id = "platform"
     name = "Elide Platform"
+    description = "Elide Platform; Java platform for use with Gradle"
 
     publish("maven") {
       from(components["javaPlatform"])

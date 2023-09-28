@@ -10,6 +10,8 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMap
+import elide.runtime.plugins.env.Environment.Plugin.APP_ENV_ACCESSOR
+import elide.runtime.plugins.env.Environment.Plugin.APP_ENV_SYMBOL
 import elide.vm.annotations.Polyglot
 
 /**
@@ -21,11 +23,19 @@ import elide.vm.annotations.Polyglot
   private val effectiveEnvironment: AtomicReference<MutableMap<String, String?>> = AtomicReference(null)
   private val languageSupport: MutableMap<String, Boolean> = ConcurrentSkipListMap()
 
+  // Maybe inject an environment variable, otherwise run `or`.
+  private fun maybeInjectedVar(variable: String, or: () -> Any?) : Any? {
+    return when (variable.lowercase().trim()) {
+      nodeEnvVariable -> "production"
+      else -> or.invoke()
+    }
+  }
+
   // Build proxied map for guest language access to env; it should not be mutable.
   private val proxiedEnvMap: ProxyHashMap by lazy {
     val jsMap = JsMap.of(effectiveEnvironment.get() ?: error("Could not resolve effective environment"))
     object: ProxyHashMap, ProxyIterable, ProxyObject {
-      @Polyglot override fun getHashSize(): Long = jsMap.size.toLong()
+      @Polyglot override fun getHashSize(): Long = jsMap.size.toLong() + injectedVariableCount
       @Polyglot override fun hasHashEntry(key: Value): Boolean = jsMap.has(key.asString())
       @Polyglot override fun getHashValue(key: Value): Any? = jsMap[key.asString()]
       @Polyglot override fun getHashEntriesIterator(): Any = jsMap.entries()
@@ -101,6 +111,8 @@ import elide.vm.annotations.Polyglot
 
   /** Identifier for the [Environment] plugin, which provides isolated application environment. */
   public companion object Plugin : EnginePlugin<EnvConfig, Environment> {
+    private const val injectedVariableCount = 1L
+    private const val nodeEnvVariable = "NODE_ENV"
     private const val APP_ENV_SYMBOL = "__Elide_app_env__"
     private const val APP_ENV_ACCESSOR = "elide_app_environment"
     override val key: Key<Environment> = Key("Environment")

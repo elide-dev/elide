@@ -76,19 +76,16 @@ import elide.runtime.plugins.env.EnvConfig.EnvVar
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.*
 import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.js.JavaScript
-import elide.runtime.plugins.js.JavaScriptConfig
-import elide.runtime.plugins.js.JavaScriptVersion
 import elide.runtime.plugins.jvm.Jvm
 import elide.runtime.plugins.python.Python
-import elide.runtime.plugins.ruby.Ruby
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
+import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
 import elide.tool.cli.options.EngineJavaScriptOptions
 import elide.tool.cli.output.JLineLogbackAppender
-import elide.tool.extensions.installCliBaseline
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectInfo
@@ -389,8 +386,16 @@ import elide.tool.project.ProjectManager
     internal var envVars: Map<String, String> = emptyMap()
 
     /** Apply these settings to created execution contexts. */
+    @Suppress("KotlinConstantConditions")
     internal fun apply(project: ProjectInfo, config: PolyglotEngineConfiguration) = config.environment {
       val effectiveInjectedEnv = TreeMap<String, EnvVar>()
+
+      // inject `NODE_ENV`
+      effectiveInjectedEnv["NODE_ENV"] = EnvVar.of("NODE_ENV", if (ElideCLITool.ELIDE_RELEASE_TYPE == "DEV") {
+        "development"
+      } else {
+        "production"
+      })
 
       // apply project-level environment variables first
       project.env?.vars?.forEach {
@@ -1529,6 +1534,7 @@ import elide.tool.project.ProjectManager
       installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
       jsSettings.apply(this)
     }
+
     install(elide.runtime.plugins.python.Python) {
       logging.debug("Configuring Python VM")
       installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)

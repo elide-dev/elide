@@ -27,5 +27,16 @@
         }
       }
     }
-  }
+  },
+  "scripts": [],
+  "bundles": [
+    {
+      "path": "llvm-darwin-aarch64.tar.xz",
+      "platform": "darwin_aarch64"
+    },
+    {
+      "path": "llvm-linux-amd64.tar.xz",
+      "platform": "linux_amd64"
+    }
+  ]
 }

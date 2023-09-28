@@ -8,7 +8,7 @@ import elide.runtime.core.PolyglotEngine
 
 @OptIn(DelicateElideApi::class)
 internal class PythonPluginTest {
-  @Ignore @Test fun testExecution() {
+  @Test fun testExecution() {
     val engine = PolyglotEngine { install(Python) }
     val context = engine.acquire()
     

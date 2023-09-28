@@ -11,7 +11,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.Embed
 
 @OptIn(DelicateElideApi::class)
 internal class AbstractLanguagePluginTest {
-  @Ignore @Test fun testResolveLanguageResources() {
+  @Test fun testResolveLanguageResources() {
     /** Stubbed plugin allowing access to the resolved language resources. */
     val plugin = object : AbstractLanguagePlugin<Unit, Unit>() {
       override val key: Key<Unit> = Key("TestLanguagePlugin")

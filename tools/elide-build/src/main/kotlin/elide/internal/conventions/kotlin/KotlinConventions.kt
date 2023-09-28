@@ -125,13 +125,22 @@ internal fun Project.configureKotlinBuild(
 /** Configure Dokka tasks to depend on KAPT or KSP generation tasks. */
 internal fun Project.configureDokka() {
   // dokka should run after KAPT tasks are done (dokkaHtml for KMP projects, dokkaJavadoc for pure JVM)
-  if(plugins.hasPlugin("org.jetbrains.kotlin.kapt")) {
+  if (plugins.hasPlugin("org.jetbrains.kotlin.kapt")) {
     tasks.findByName("dokkaHtml")?.dependsOn(tasks.withType(KaptTask::class.java))
     tasks.findByName("dokkaJavadoc")?.dependsOn("kaptKotlin")
   }
 
   // same principle applies to KSP tasks
-  if(plugins.hasPlugin("com.google.devtools.ksp")) {
+  if (plugins.hasPlugin("com.google.devtools.ksp")) {
     tasks.findByName("dokkaHtml")?.dependsOn(tasks.withType(KspTask::class.java))
+  }
+
+  // if dokka is applied, we must depend on C-interop tasks
+  if (plugins.hasPlugin("org.jetbrains.dokka")) {
+    tasks.findByName("dokkaHtml")?.apply {
+      tasks.findByName("transformNativeMainCInteropDependenciesMetadataForIde")?.let {
+        dependsOn(it)
+      }
+    }
   }
 }

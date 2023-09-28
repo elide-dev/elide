@@ -15,6 +15,17 @@
           "stamp": "MEUCIDDuwVXn/oF+irOOevmc27eDEh4GutTvYtxVqPK7baU3AiEAyAGAbPhWvX85NZdWmKkSmNYAfVEjZEfDwfKBbKtgqNk="
         }
       }
+    },
+    "linux": {
+      "amd64": {
+        "bundle": "java-linux-amd64.tar.xz",
+        "sha256": "f6bfd897896bad60792388acc5d5558136ec43b799a99c0fea34312bfab5fdc7",
+        "signature": {
+          "bundle": "java-linux-amd64.sigstore.json.gz",
+          "sha256": "cdc0dac30530fdd81bf21c61d3c3593ea11d545eafb3f459b33acdd8bb3fc346",
+          "stamp": "MEYCIQD3v8D4jmEOS32SfLflCfnQsFB/oWIWdxSaUPZq3GTo1AIhALdUbQzoTw9qjnnVaFtAdo2jW/UMiyW6HtQfn4om0zem"
+        }
+      }
     }
   },
   "scripts": [],

@@ -19,11 +19,11 @@
     "linux": {
       "amd64": {
         "bundle": "ruby-linux-amd64.tar.xz",
-        "sha256": "d1aaa8f382401a0f83af1c8d1d25346fb958ebd249f577b282feb514ce98ac49",
+        "sha256": "2fdd449ff110029090793d0a6a944f9fd1007c7d9aa732ecda39f9ff671f6b10",
         "signature": {
           "bundle": "ruby-linux-amd64.sigstore.json.gz",
-          "sha256": "a30a614e0f2d4844f6c21db15f8645b95216aec85325d90f6f91b01b1fae811a",
-          "stamp": "MEYCIQDg60VIghxGnikfydAKVuI6OvvXHq5ht5UBecqHOcLocgIhAJdznFZMyC650CzvLSKpIsu/gSD3TmHt48SmLdV4Gbwz"
+          "sha256": "15a0f31d0af1755188d07f1675bc1cd53bee7f2b8a1d5a1740f290c8b58bcb1a",
+          "stamp": "MEQCIAeYJHC/ZP8dU0w4VIlpZlHGYEU5/pBfdZnts21F4MuDAiA3pn12zvMaIjpdEJwbhz04w2LTH7ZIhZICdR3cxyvoRA=="
         }
       }
     }

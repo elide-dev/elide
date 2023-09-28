@@ -19,11 +19,11 @@
     "linux": {
       "amd64": {
         "bundle": "python-linux-amd64.tar.xz",
-        "sha256": "cd324270d8ad7659878d79a602e05043ce703a3d1a56ae65562c0339e8da01e2",
+        "sha256": "73476b874eebf9aaa315a271fd1235cd1cf0ffa45d5bf56830814772df2ec4a1",
         "signature": {
           "bundle": "python-linux-amd64.sigstore.json.gz",
-          "sha256": "fb919933cccae2bbf3c36d6a26caa0a6a12b6d5075d2043bbdcdd400c970a4ab",
-          "stamp": "MEQCIFT/uL5fWF+BDSnY8zE0ejK3ebkFhL/ZGg8XfzlsmSmYAiBcaqMT0talV7VGsDm+eX/YbKEWcuraX+qLLt/QOjLmvw=="
+          "sha256": "65033a5638645694fbb5335d047e69bcec25b2bde486eb7b3310b0765242cc81",
+          "stamp": "MEYCIQDH7cGZGjEwD7i2oM8RW3PJehrwuvLghhrUGJuj7G353gIhANdh0wJKCQa13R9dqhVThe1LS6tWniU6nARcFBy3Djj1"
         }
       }
     }

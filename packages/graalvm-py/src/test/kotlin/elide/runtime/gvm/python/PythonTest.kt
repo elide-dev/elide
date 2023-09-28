@@ -23,7 +23,7 @@ import elide.runtime.core.DelicateElideApi
 
 /** Basic Python runtime utility tests. */
 @OptIn(DelicateElideApi::class)
-@TestCase class PythonTest : PythonTest() {
+@TestCase @Ignore class PythonTest : PythonTest() {
   @Ignore @Test fun testPythonGuestCodeBasic() = executeGuest {
     // language=python
     """

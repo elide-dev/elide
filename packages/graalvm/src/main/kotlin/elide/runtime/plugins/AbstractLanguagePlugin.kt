@@ -67,7 +67,7 @@ import elide.runtime.plugins.vfs.include
    * @return The [LanguagePluginManifest] for this plugin's language.
    * @see installEmbeddedBundles
    */
-  protected fun resolveEmbeddedManifest(scope: InstallationScope, lenient: Boolean = false): LanguagePluginManifest {
+  protected fun resolveEmbeddedManifest(scope: InstallationScope, lenient: Boolean = true): LanguagePluginManifest {
     return resolveEmbeddedManifest(scope.configuration.hostPlatform, lenient)
   }
 

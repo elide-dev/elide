@@ -1543,7 +1543,7 @@ import elide.tool.project.ProjectManager
         // Secondary Engines: JVM
         JVM -> install(Jvm) {
           logging.debug("Configuring JVM")
-          installIntrinsics(intrinsics, GraalVMGuest.JVM)
+          installIntrinsics(intrinsics, GraalVMGuest.JVM, versionProp)
         }
 
         GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")

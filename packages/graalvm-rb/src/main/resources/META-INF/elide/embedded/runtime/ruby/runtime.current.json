@@ -3,9 +3,6 @@
   "language": "RUBY",
   "vfs": [],
   "artifacts": [],
-  "scripts": [
-    { "path": "environment.rb" }
-  ],
   "image": {
     "type": "native",
     "darwin": {
@@ -30,5 +27,18 @@
         }
       }
     }
-  }
+  },
+  "scripts": [
+    { "path": "environment.rb" }
+  ],
+  "bundles": [
+    {
+      "path": "ruby-darwin-aarch64.tar.xz",
+      "platform": "darwin_aarch64.tar.xz"
+    },
+    {
+      "path": "ruby-linux-amd64.tar.xz",
+      "platform": "linux_amd64"
+    }
+  ]
 }

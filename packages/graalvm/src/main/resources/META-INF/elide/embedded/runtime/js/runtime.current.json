@@ -5,17 +5,16 @@
     { "name": "js.modules.tar.gz" }
   ],
   "artifacts": [],
+  "image": {
+    "type": "universal",
+    "universal": "js.runtime.tar.gz"
+  },
   "scripts": [
     { "path": "polyfills.js" },
     { "path": "facade.js" }
   ],
   "bundles": [
-    {
-      "path": "js.runtime.tar.gz"
-    }
-  ],
-  "image": {
-    "type": "universal",
-    "universal": "js.runtime.tar.gz"
-  }
+    { "path": "js.runtime.tar.gz" },
+    { "path": "js.modules.tar.gz" }
+  ]
 }

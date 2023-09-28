@@ -131,7 +131,6 @@ dependencies {
   implementation(projects.packages.base)
   implementation(projects.packages.server)
   implementation(projects.packages.graalvm)
-  implementation(projects.packages.runtimeJs)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)

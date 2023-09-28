@@ -1,5 +1,6 @@
 package elide.runtime.plugins
 
+import java.util.zip.GZIPInputStream
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -82,7 +83,7 @@ import elide.runtime.plugins.vfs.include
   @OptIn(ExperimentalSerializationApi::class)
   protected fun resolveEmbeddedManifest(
     platform: HostPlatform,
-    lenient: Boolean = false
+    lenient: Boolean = true
   ): LanguagePluginManifest = runCatching {
     // resolve path relative to the common root
     val resourcesRoot = "$EMBEDDED_RESOURCES_ROOT/${languageId}"
@@ -91,7 +92,9 @@ import elide.runtime.plugins.vfs.include
     // read and deserialize manifest
     val manifest = AbstractLanguagePlugin::class.java.getResourceAsStream(relativeToRoot(RUNTIME_MANIFEST))?.let {
       // deserialize the manifest
-      (if (lenient) LenientJson else Json).decodeFromStream<LanguagePluginManifest>(it)
+      GZIPInputStream(it).use { gzipStream ->
+        (if (lenient) LenientJson else Json).decodeFromStream<LanguagePluginManifest>(gzipStream)
+      }
     } ?: error(
       "Failed to locate embedded runtime manifest at path '$resourcesRoot'",
     )
@@ -158,7 +161,7 @@ import elide.runtime.plugins.vfs.include
     private const val EMBEDDED_RESOURCES_ROOT = "/META-INF/elide/embedded/runtime"
 
     /** Name of the manifest file for embedded language resources */
-    private const val RUNTIME_MANIFEST = "runtime.json"
+    private const val RUNTIME_MANIFEST = "runtime.json.gz"
 
     /** Lenient variant of the [Json] codec, used for backwards-compatibility reasons. */
     private val LenientJson by lazy {

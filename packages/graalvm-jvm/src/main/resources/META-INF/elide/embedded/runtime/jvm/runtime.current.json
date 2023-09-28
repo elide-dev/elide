@@ -16,5 +16,12 @@
         }
       }
     }
-  }
+  },
+  "scripts": [],
+  "bundles": [
+    {
+      "path": "java-darwin-aarch64.tar.xz",
+      "platform": "darwin_aarch64"
+    }
+  ]
 }

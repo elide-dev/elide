@@ -26,109 +26,98 @@
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7690/badge)](https://bestpractices.coreinfrastructure.org/projects/7690)
 
-Latest version: `1.0-v3-alpha4-b12`
+Latest version: `1.0-v3-alpha5-b15`
 
 <hr />
 
-Elide is a **Kotlin/Multiplatform meta-framework** for **rapid, cross-platform application development**. Write once in
-Kotlin and deploy everywhere: your server, the browser, and native app targets.
+Elide is a cloud-first polyglot runtime for developing fast web applications. It aims to reduce the barriers between languages and improve performance of existing code, without forcing developers to abandon their favorite APIs and libraries.
 
-## Using Elide as a runtime
+> [!IMPORTANT]
+> Elide is still in alpha, some features are not fully supported and others may fail on certain environments.
 
-First and foremost, Elide is a runtime. The runtime is **still in alpha**. You can try it with:
-```bash
+## Using the runtime binaries
+
+You can install the runtime by running:
+
+```shell
 curl -sSL --tlsv1.2 "dl.elide.dev/cli/install.sh" | bash -s -
 ```
 
-Or you can try it via NPM:
-```bash
-npx @elide-dev/elide@alpha --help
+After installation, you can run `elide help` or `elide info` to see more information.
+
+## Features
+
+The Elide CLI supports JavaScript out of the box, and includes experimental support for Python, while more languages such as Ruby are planned for future releases.
+### Environment files
+
+Elide provides `.env` files support at the runtime level, without the need for manual configuration or third-party packages. Environment variables from `.env` files will be picked up and injected into the application using a language-specific API (e.g. `process.env` in JavaScript).
+
+### Server engine
+
+Let's see an example, the following JavaScript application configures a built-in HTTP server and adds a route handler with path variables:
+
+```javascript
+// access the built-in HTTP server engine
+const app = Elide.http
+
+// register a route handler
+app.router.handle("GET", "/hello/:name", (request, response, context) => {
+  // respond using the captured path variables
+  response.send(200, `Hello, ${context.params.name}`)
+})
+
+// configure the server binding options
+app.config.port = 3000
+
+// receive a callback when the server starts
+app.config.onBind(() => {
+  console.log(`Server listening at "http://localhost:${app.config.port}"! 🚀`)
+})
+
+// start the server
+app.start()
 ```
 
+The server can be started with:
 
-## Using Elide as a library
+```shell
+> elide serve app.js
+> elide 17:43:09.587 DEBUG Server listening at "http://localhost:3000"! 🚀
+```
 
-Elide is available on [Maven Central](https://search.maven.org/artifact/dev.elide). To use it, pick the package you want
-to use (typically `server`) and add it via Gradle or Maven:
+> [!IMPORTANT]
+> The Elide HTTP intrinsics are under active development and provide only limited features. We are actively working to improve performance and support more use cases.
 
-### Gradle
+### Planned features
 
-**`build.gradle`:**
+The following features are currently planned or under construction:
+
+- **Secret management**: access secrets as environment variables visible only to your application, decouple your code from secret management SDKs and let the runtime handle that complexity for you.
+- **Isolated I/O**: use pre-packaged archives to provide read-only, sealed Virtual File Systems, allowing access to the host File System only where needed.
+- **Built-in telemetry**: managed, configurable integration with telemetry APIs.
+- **Native distributions**: build your app into a truly native binary using GraalVM's [Native Image](https://www.graalvm.org/22.0/reference-manual/native-image/) technology, ship optimized applications without including a runtime in your container.
+
+## Use with server frameworks
+
+Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering options with very high performance, by running JavaScript code inside your JVM server:
+
+```kotlin
+// build.gradle.kts
+implementation("dev.elide:elide-server:1.0-v3-alpha5-b15")
+```
+
+or if you use Groovy:
+
 ```groovy
-dependencies {
-    implementation 'dev.elide:elide-server:1.0-v3-alpha4-b10'
-}
+// build.gradle
+implementation 'dev.elide:elide-server:1.0-v3-alpha5-b15'
 ```
 
-**`build.gradle.kts`:**
-```kotlin
-dependencies {
-    implementation("dev.elide:elide-server:1.0-v3-alpha4-b10")
-}
-```
-
-**`libs.versions.toml`:**
-```toml
-[versions]
-elide = "1.0-v3-alpha4-b10"
-
-# ...
-
-[libraries]
-elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
-```
-
-### Maven
-
-```xml
-<dependency>
-    <groupId>dev.elide</groupId>
-    <artifactId>elide-server</artifactId>
-    <version>1.0-v3-alpha4-b10</version>
-</dependency>
-```
-
-## Distinguishing features
-
-- **Full-stack development.** Share code across platforms with Kotlin Multiplatform. Quickly develop performant UIs in
-  Kotlin, TypeScript, or JavaScript, and execute them server-side (streaming SSR) or client-side (SPA).
-
-- **Countless ways to run.** Use SSR (server rendering), CSR (client rendering), or an isomorphic approach. Compile your
-  app to HTML via SSG. Run your app on a JVM, Node.js, JS runtime, or compile it to a native binary and run it without
-  a runtime at all.
-
-- **Pure Kotlin when you want it.** Write your core application logic and models once, and share them across platforms
-  transparently. Leverage [Kotest](https://kotest.io) for cross-platform, write-once-run-native testing. Enjoy
-  first-class support for the full suite of KotlinX libraries, including
-  [`serialization`](https://kotlinlang.org/docs/serialization.html),
-  [`atomicfu`](https://github.com/Kotlin/kotlinx.atomicfu), [`coroutines`](https://github.com/Kotlin/kotlinx.coroutines)
-  and [`datetime`](https://github.com/Kotlin/kotlinx-datetime).
-
-- **TypeScript/JavaScript when you need it.** Plug your Kotlin code into the JavaScript ecosystem with embedded guest VM
-  support for ES2022.
-
-- **Isomorphic SSR with React.** Write your UI in React, using JavaScript, TypeScript, or Kotlin. Package it for serving
-  via [client-side rendering or hybrid isomorphic rendering](https://web.dev/rendering-on-the-web/) directly from your
-  Kotlin server.
-
-- **Model-driven development.** Write your models once, and use them everywhere, across platforms, **without copying**,
-  **without glue-code**, and **without DTOs**. Via [Protobuf][5] and
-  [Kotlin data classes](https://kotlinlang.org/docs/data-classes.html), the same Elide model is code-generated for use
-  with your database, API, and UI.
-
-- **Extreme performance.** Enjoy fast development locally with Kotlin and Gradle, and insanely fast runtime performance
-  thanks to GraalVM Native, Netty, and Micronaut. Deploy to bare metal, Docker `scratch` images, or JARs.
-
-## Code samples
-
-A full suite of [code samples](./samples) demo various functionality. The samples are runnable locally or via pre-built
-Docker images. Click through to each one for a short tour and getting started guide.
-
-"Blah blah blah, okay, show me some code." Certainly:
-
-**`App.kt`** (for the server)
+See our [samples](samples) to explore the features available when integrating with server frameworks, the following code for a server application uses React with Server-Side Rendering:
 
 ```kotlin
+// server/App.kt
+
 /** GET `/`: Controller for index page. */
 @Controller class Index {
   // Serve an HTML page with isomorphic React SSR.
@@ -160,9 +149,11 @@ Docker images. Click through to each one for a short tour and getting started gu
 }
 ```
 
-**`main.kt`** (for the browser)
+By evaluating the JavaScript code built using a Kotlin/JS browser app:
 
 ```kotlin
+// client/main.kt
+
 // React props for a component
 external interface HelloProps: Props {
   var name: String
@@ -190,122 +181,52 @@ fun main() {
 }
 ```
 
-That's it. That's the entire app. In fact, it's just the [`fullstack/react-ssr`](./samples/fullstack/react-ssr) sample
-pasted into the README. What we get out of this is surprising:
+> [!NOTE]
+> More versatile integration with frameworks like [Micronaut](https://micronaut.io) and [Ktor](https://ktor.io/) is planned but not yet supported. The API and packages used for these integrations may change as we add more features.
 
-- **Server:** JVM or Native server (via GraalVM) that serves our root page, our CSS, and our JS
-- **Client:** Embedded JS VM that executes a Node copy of our React UI and splices it into the page for isomorphic rendering
-- **For us** (the developer):
-  - Completely type-checked calls across platforms, with almost no boilerplate
-  - Single build graph, with aggressive caching and tool support
-  - Build & test virtualized on any platform
-  - Ship & perform natively on any platform
+## Building a custom runtime
 
-What's going on here? Elide has helped us wire together code from **Micronaut** (that's where `@Controller` comes from),
-**Kotlin/JS**, **GraalVM**, and **esbuild** to make the above code make sense on both platforms. The React code builds
-for the browser _and_ a pure server environment; both are embedded into the JAR and served through a thin runtime layer
-provided by the framework.
+If you are building a JVM application that runs guest code in one of the languages supported by Elide, you can use the Runtime DSL to configure your own embedded polyglot engine:
 
-#### Why is this useful?
-
-If you're participating in the React and Java ecosystems, this gives you a fantastic best-of-both-worlds runtime option:
-superb tooling support for React and Kotlin and an ideal serving and rendering mode, all handled for you.
-
-You can do the same thing with these same tools in a custom codebase, but setting up the build environment for this kind
-of app is challenging and error-prone. Elide _intentionally_ leverages existing frameworks with rich ecosystems and
-docs, _instead of_ re-providing existing functionality so that you always have an escape hatch up to a more industrial
-toolset if you need it.
-
-### Trying it out
-
-> **Note**
-> Elide is early. This guide will soon be usable without cloning the source.
-
-There are currently two ways to try out Elide. You can build a sample from source, or run the pre-built Docker images.
-Native images are not yet available via Docker, but you can build and test them locally.
-
-The `react-ssr` sample is recommended, because it demoes the broadest set of functionality currently available. Source
-code for each sample is in the [`samples/`](./samples) directory. If you're going to build from source, make sure to see
-the _Requirements to build_ section.
-
-**Run the `helloworld` sample via Docker (JVM):**
-
-```
-docker run --rm -it -p 8080:8080 ghcr.io/elide-dev/samples-server-helloworld-jvm
+```kotlin
+implementation("dev.elide:elide-graalvm:1.0-v3-alpha5-b15")
 ```
 
-**Run the `react-ssr` sample via Docker (JVM):**
+or for Groovy scripts:
 
-```
-docker run --rm -it -p 8080:8080 ghcr.io/elide-dev/samples-fullstack-react-ssr-jvm:latest
-```
-
-**Run the `react-ssr` sample via Gradle (JVM):**
-
-```
-git clone git@github.com:elide-dev/v3.git && cd v3
-./gradlew :samples:fullstack:react-ssr:server:run
+```groovy
+implementation 'dev.elide:elide-graalvm:1.0-v3-alpha5-b15'
 ```
 
-**Run the `react-ssr` sample via Gradle (Native):**
+The DSL is used internally by the Elide binaries and by the SSR packages and provides a simplified API to harness the power of the underlying [GraalVM](https://graalvm.org) engine:
 
+```kotlin
+// configure and create a new engine
+val engine = PolyglotEngine {
+  // add support for the JavaScript language
+  install(JavaScript) {
+    // enable ESM support
+    esm = true
+    
+    // include custom bindings into the engine, these
+    // will be available as top level symbols
+    bindings {
+      put("version", "1.0.0")
+    }
+  }
+}
+
+// obtain a context to evaluate source code
+val context = engine.acquire()
+
+// evaluate guest JavaScript code
+context.javascript("""
+  console.log(`Hello from custom runtime v${version}`)
+""")
 ```
-git clone git@github.com:elide-dev/v3.git && cd v3
-./gradlew :samples:fullstack:react-ssr:server:runNative
-```
 
-#### Requirements to build
-
-To build the JVM or JS samples in Kotlin, you will need **JDK 11 or later**. [Zulu](https://www.azul.com/downloads/) is
-a good option if you don't have a preferred JVM.
-
-To build native code, you'll need a recent version of [GraalVM](https://www.graalvm.org/downloads/). Make sure to
-install the `native-image` tool after initially downloading, which you can do with:
-
-```
-gu install native-image espresso
-gu rebuild-images
-```
-
-Finally, you'll need a recent [Node.js](https://nodejs.org/) runtime if you want to build JS or frontend code. That's
-it!
-
-To summarize:
-
-- **For building via Gradle:** JDK11+, any reasonable JVM should work.
-- **For building native:** GraalVM (consult compat table for version advice).
-- **For building browser/embedded JS:** Recent Node.js toolchain. 16.x+ is recommended.
-
-### Powered-by
-
-Elide is modular. You can mix and match the following technologies in **server**, **client**, or **hybrid/fullstack**
-development scenarios:
-
-- [**Kotlin**][1]. Elide is written from the inside out with support for Kotlin/Multiplatform, including native
-  platforms. Write once and use the same consistent code across server-side and client-side(s) platforms.
-
-- [**GraalVM**][2]. GraalVM is a JVM and toolchain from Oracle which includes modernized JIT support, cross-language
-  [polyglot][10] development in JS, Ruby, Python, and LLVM, and the ability to build native binaries from JVM apps.
-
-- [**Micronaut**][3]. Micronaut is a new JVM-based framework for building server-side applications. Elide leverages
-  [Micronaut's](https://docs.micronaut.io/latest/guide/#ioc)
-  [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) and
-  [AOP](https://docs.micronaut.io/latest/guide/#aop) features, and transparently works with most add-ons.
-
-- [**React**][4]. React is a popular UI library written for browser and server environments. Elide leverages
-  [Kotlin/JS support for React](https://kotlinlang.org/docs/js-get-started.html) for isomorphic UI rendering. CSR and
-  SSR modes are supported natively.
-
-- [**Protobuf**][5] / [**gRPC**][6]. Elide leverages cross-platform serialization through KotlinX's
-  [`protobuf`](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/formats.md#protobuf-experimental)
-  module, and includes **native support for [gRPC Web](https://github.com/grpc/grpc-web)** without running a proxy.
-
-- [**Gradle**][9]. Early support for building multi-platform Kotlin applications via Gradle, including integrated
-  support for [Webpack](https://webpack.js.org/)-based frontend builds and [esbuild](https://esbuild.github.io/)-based
-  embedded SSR builds.
-
-- [**`esbuild`**][14]. Elide leverages ESBuild when compiling and minifying JS code for the server or browser. ESBuild
-  sports extremely fast build times, modern language support, and tunable minification/DCE.
+> [!WARNING]
+> The Elide Runtime DSL is intended for advanced use cases, and while we try not to break compatibility between releases, there are no guarantees.
 
 ## Version compatibility
 
@@ -324,83 +245,6 @@ not need some of these components:
 | ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --            | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
-
-## Contributing
-
-Elide is structured as a Gradle codebase, with additional support for Make and Node. Bazel is also coming soon. After
-cloning the project, you can run `make help` to get familiar with some standard local dev tasks.
-
-1) **Clone the repo.**
-   ```
-   git clone git@github.com:elide-dev/v3.git
-   ```
-2) **Install GraalVM.** You can download CE [here](https://www.graalvm.org/downloads/). Make sure to install the
-   `native-image`, `espresso`, and `js` tools after initially downloading, which you can do with:
-   ```
-   gu install native-image js espresso
-   gu rebuild-images
-   ```
-3) **Explore the Makefile.** The `Makefile` is self-describing. Run `make help` to see what it can do for you:
-  ```
-  Elide:
-  api-check                      Check API/ABI compatibility with current changes.
-  build                          Build the main library, and code-samples if SAMPLES=yes.
-  clean-cli                      Clean built CLI targets.
-  clean-docs                     Clean documentation targets.
-  clean-site                     Clean site targets.
-  clean                          Clean build outputs and caches.
-  cli-local                      Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
-  cli-release                    Build an Elide command-line release.
-  cli                            Build the Elide command-line tool (native target).
-  distclean                      DANGER: Clean and remove any persistent caches. Drops changes.
-  docs                           Generate docs for all library modules.
-  forceclean                     DANGER: Clean, distclean, and clear untracked files.
-  help                           Show this help text ('make help').
-  image-base-alpine              Build base Alpine image.
-  image-base                     Build base Ubuntu image.
-  image-gvm17                    Build GVM17 builder image.
-  image-jdk17                    Build JDK17 builder image.
-  image-native-alpine            Build native Alpine base image.
-  image-native                   Build native Ubuntu base image.
-  image-runtime-jvm17            Build runtime GVM17 builder image.
-  images                         Build all Docker images.
-  publish                        Publish a new version of all Elide packages.
-  release                        Perform a full release, including publishing to Maven Central and the Elide repository.
-  relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
-  reports                        Generate reports for tests, coverage, etc.
-  serve-docs                     Serve documentation locally.
-  serve-site                     Serve Elide site locally.
-  site                           Generate the static Elide website.
-  test                           Run the library testsuite, and code-sample tests if SAMPLES=yes.
-  update-deps                    Perform interactive dependency upgrades across Yarn and Gradle.
-  update-jdeps                   Interactively update Gradle dependencies.
-  update-jsdeps                  Interactively update Yarn dependencies.
-  ```
-4) **Take a look at the Makefile flags.** The `Makefile` defines flags at the top of the source code:
-  ```
-  # Flags that control this makefile, along with their defaults:
-  #
-  # DEBUG ?= no
-  # STRICT ?= yes
-  # RELEASE ?= no
-  # JVMDEBUG ?= no
-  # NATIVE ?= no
-  # CI ?= no
-  # DRY ?= no
-  # SCAN ?= no
-  # IGNORE_ERRORS ?= no
-  # RELOCK ?= no
-  # SIGNING ?= no
-  # SIGSTORE ?= no
-  # WASM ?= no
-  # SIGNING_KEY ?= "F812016B"
-  # REMOTE ?= no
-  # PUSH ?= no
-  ```
-
-When committing to Elide, make sure to follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
-standard. This helps us keep changelogs clean and obvious.
-
 ## Reports
 
 ### Licensing
@@ -416,6 +260,10 @@ Code coverage is continuously reported to [Codecov](https://app.codecov.io/gh/el
 [SonarCloud](https://sonarcloud.io/project/overview?id=elide-dev_v3):
 
 [![Coverage grid](https://codecov.io/gh/elide-dev/elide/branch/v3/graphs/tree.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
+
+## Contributing
+
+Issue reports and pull requests are welcome! See our [contribution guidelines](CONTRIBUTING.md) or join our [discord community](https://elide.dev/discord) and let us know which features you would like to see implemented, or simply participate in the discussions to help shape the future of the project.
 
 
 [1]: https://kotlinlang.org/

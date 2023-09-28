@@ -1528,10 +1528,10 @@ import elide.tool.project.ProjectManager
       logging.debug("Configuring Python VM")
       installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
     }
-    install(elide.runtime.plugins.ruby.Ruby) {
-      logging.debug("Configuring Ruby VM")
-      installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-    }
+//    install(elide.runtime.plugins.ruby.Ruby) {
+//      logging.debug("Configuring Ruby VM")
+//      installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+//    }
 
     (language ?: LanguageSelector()).resolve().forEach { lang ->
       when (lang) {

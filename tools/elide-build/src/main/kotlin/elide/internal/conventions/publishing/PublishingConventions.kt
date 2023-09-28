@@ -66,7 +66,6 @@ internal fun Project.configurePublishing(
     listOf(
       "publishToSonatype",
       "publishAllPublicationsToElideRepository",
-      "publishAllPublicationsToGithubRepository",
     ).map(project.tasks::named).map { pubTask ->
       dependsOn(pubTask)
     }
@@ -92,7 +91,7 @@ internal fun Project.configurePublishingRepositories() {
   extensions.getByType(PublishingExtension::class.java).apply {
     // configure repositories for publishing
     repositories.apply {
-      // configurable repository, to be overriden by project settings 
+      // configurable repository, to be overridden by project settings
       maven {
         name = "elide"
         url = URI.create(project.properties[Publishing.MAVEN_REPO_URL] as String)

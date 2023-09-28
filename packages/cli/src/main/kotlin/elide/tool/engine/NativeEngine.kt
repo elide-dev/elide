@@ -260,7 +260,9 @@ object NativeEngine {
       System.setProperty(it.first, it.second)
     }
 
-    loadAllNatives(platform, natives.toFile(), this::class.java.classLoader)
+    if (ImageInfo.inImageRuntimeCode()) {
+      loadAllNatives(platform, natives.toFile(), this::class.java.classLoader)
+    }
 
     // fix: account for static jni
     if (ImageInfo.inImageCode()) listOf(

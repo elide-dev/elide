@@ -291,10 +291,13 @@ dependencies {
   // Runtime engines
   implementation(projects.packages.runtimeCore)
   implementation(projects.packages.runtimeJs)
-  implementation(projects.packages.runtimeRb)
-  implementation(projects.packages.graalvmRb)
   implementation(projects.packages.runtimePy)
   implementation(projects.packages.graalvmPy)
+
+  if (enableRuby) {
+    implementation(projects.packages.runtimeRb)
+    implementation(projects.packages.graalvmRb)
+  }
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
@@ -433,7 +436,7 @@ dependencies {
 
   api(libs.graalvm.truffle.nfi)
   api(libs.graalvm.truffle.nfi.libffi)
-  api(libs.graalvm.truffle.nfi.panama)
+//  api(libs.graalvm.truffle.nfi.panama)
   runtimeOnly(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))

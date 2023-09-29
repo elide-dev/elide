@@ -43,7 +43,6 @@ module elide.graalvm {
   requires java.logging;
 
   exports elide.runtime.intrinsics.js;
-  exports elide.runtime.intrinsics.js.express;
   exports elide.runtime.gvm;
   exports elide.runtime.gvm.cfg;
   exports elide.runtime.gvm.internals;
@@ -52,7 +51,6 @@ module elide.graalvm {
   exports elide.runtime.gvm.internals.intrinsics.js.base64;
   exports elide.runtime.gvm.internals.intrinsics.js.console;
   exports elide.runtime.gvm.internals.intrinsics.js.crypto;
-  exports elide.runtime.gvm.internals.intrinsics.js.express;
   exports elide.runtime.gvm.internals.intrinsics.js.url;
   exports elide.runtime.gvm.vfs;
 

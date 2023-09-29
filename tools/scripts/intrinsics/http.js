@@ -1,5 +1,5 @@
 // retrieve the binding from global symbols
-console.log("🏗️ Resolving server intrinsics");
+console.log("🏗️ Resolving server intrinsics");``
 const server = Elide.http;
 const router = server.router;
 const config = server.config;

@@ -1,6 +1,6 @@
 {
   "name": "@elide-dev/framework",
-  "version": "1.0.0-v3-alpha4-b9",
+  "version": "1.0-v3-alpha5-b15",
   "private": true,
   "packageManager": "yarn@3.2.1",
   "lint-staged": {

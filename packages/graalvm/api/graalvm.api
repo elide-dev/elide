@@ -1103,23 +1103,6 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$W
 	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1741,10 +1724,6 @@ public abstract interface class elide/runtime/intrinsics/js/ReadableStream$Facto
 	public abstract fun wrap ([B)Lelide/runtime/intrinsics/js/ReadableStream;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/ServerAgent {
-	public abstract fun initialize (Lorg/graalvm/polyglot/Context;Ljava/util/concurrent/Phaser;)V
-}
-
 public abstract interface class elide/runtime/intrinsics/js/StringLike : java/lang/CharSequence {
 }
 
@@ -1839,31 +1818,6 @@ public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/ru
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
-}
-
-public abstract interface class elide/runtime/intrinsics/js/express/Express : elide/runtime/intrinsics/js/ServerAgent {
-}
-
-public abstract interface class elide/runtime/intrinsics/js/express/ExpressApp {
-	public abstract fun delete (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public abstract fun get (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public abstract fun head (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public fun listen (I)V
-	public abstract fun listen (ILorg/graalvm/polyglot/Value;)V
-	public static synthetic fun listen$default (Lelide/runtime/intrinsics/js/express/ExpressApp;ILorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
-	public abstract fun options (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public abstract fun post (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public abstract fun put (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public abstract fun use (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public abstract fun use (Lorg/graalvm/polyglot/Value;)V
-}
-
-public abstract interface class elide/runtime/intrinsics/js/express/ExpressRequest {
-	public abstract fun getParams ()Lorg/graalvm/polyglot/Value;
-}
-
-public abstract interface class elide/runtime/intrinsics/js/express/ExpressResponse {
-	public abstract fun send (Lorg/graalvm/polyglot/Value;)V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/typed/UUID : elide/runtime/intrinsics/js/StringLike {

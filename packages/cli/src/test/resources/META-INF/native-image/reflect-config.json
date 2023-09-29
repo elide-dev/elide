@@ -185,10 +185,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.runtime.gvm.internals.intrinsics.js.express.$ExpressIntrinsic$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchIntrinsic$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },

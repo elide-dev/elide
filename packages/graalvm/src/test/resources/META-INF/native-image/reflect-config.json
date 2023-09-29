@@ -379,41 +379,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testRandomUUID","parameterTypes":[] }, {"name":"testRandomValuesAsGuestValue","parameterTypes":[] }, {"name":"testRandomValuesAsGuestValueInvalid","parameterTypes":[] }, {"name":"testRandomValuesGuestInt16Array","parameterTypes":[] }, {"name":"testRandomValuesGuestInt8Array","parameterTypes":[] }, {"name":"testRandomValuesGuestUInt32Array","parameterTypes":[] }, {"name":"testRandomValuesGuestUInt8Array","parameterTypes":[] }, {"name":"testRandomValuesHost","parameterTypes":[] }, {"name":"testRandomValuesNonArray","parameterTypes":[] }, {"name":"testRandomValuesNonNumericArray","parameterTypes":[] }, {"name":"testRandomValuesNullArray","parameterTypes":[] }, {"name":"testRandomValuesTooBigGuest","parameterTypes":[] }, {"name":"testRandomValuesTooBigHost","parameterTypes":[] }, {"name":"testSubtleCryptoAvailable","parameterTypes":[] }, {"name":"testUUIDParseError","parameterTypes":[] }, {"name":"testUUIDValueCopy","parameterTypes":[] }, {"name":"testUUIDValueFromJava","parameterTypes":[] }, {"name":"testUUIDValueFromString","parameterTypes":[] }, {"name":"testUUIDValueGetChar","parameterTypes":[] }, {"name":"testUUIDValueLength","parameterTypes":[] }, {"name":"testUUIDValueRandom","parameterTypes":[] }, {"name":"testUUIDValueRandomUnique","parameterTypes":[] }, {"name":"testUUIDValueSubstring","parameterTypes":[] }]
 },
 {
-  "name":"elide.runtime.gvm.internals.intrinsics.js.express.$ExpressIntrinsic$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.runtime.gvm.internals.intrinsics.js.express.$ExpressIntrinsicTest$Definition",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.runtime.gvm.internals.intrinsics.js.express.$ExpressIntrinsicTest$Definition$Exec",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.runtime.gvm.internals.intrinsics.js.express.$ExpressIntrinsicTest$Definition$Reference",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.runtime.gvm.internals.intrinsics.js.express.ExpressAppIntrinsic"
-},
-{
-  "name":"elide.runtime.gvm.internals.intrinsics.js.express.ExpressIntrinsicTest",
-  "allDeclaredFields":true,
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testGuestCreateApp","parameterTypes":[] }, {"name":"testGuestRouteGet","parameterTypes":[] }, {"name":"testInjectableGuest","parameterTypes":[] }, {"name":"testRouteMapping","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchIntrinsic$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },

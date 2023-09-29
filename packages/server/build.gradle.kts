@@ -98,7 +98,6 @@ dependencies {
   implementation(libs.jackson.module.kotlin)
   implementation(mn.micronaut.jackson.databind)
 
-//  implementation("dev.elide:proto:1.0-v3-alpha1-rc38")
   implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoProtobuf)
   implementation(projects.packages.proto.protoKotlinx)

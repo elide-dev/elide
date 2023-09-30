@@ -30,6 +30,9 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   /** A set of languages enabled for use in the engine. */
   internal val languages: Set<GuestLanguage> get() = langs
 
+  /** Runtime info, resolved from GraalVM static properties. */
+  override val hostRuntime: HostRuntime = GraalVMRuntime()
+
   override fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit): I {
     require(plugin.key.id !in plugins) { "A plugin with the provided key is already registered" }
 

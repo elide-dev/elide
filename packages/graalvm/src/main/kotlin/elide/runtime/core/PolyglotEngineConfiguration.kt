@@ -44,12 +44,15 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
     /** Restrict all access to the host environment. */
     ALLOW_NONE,
   }
+  
+  /** The access granted to guest code over host resources, such as environment variables and the file system. */
+  public var hostAccess: HostAccess = ALLOW_NONE
 
   /** Information about the platform hosting the runtime. */
   public val hostPlatform: HostPlatform = HostPlatform.resolve()
 
-  /** The access granted to guest code over host resources, such as environment variables and the file system. */
-  public var hostAccess: HostAccess = ALLOW_NONE
+  /** Information about the runtime engine. */
+  public abstract val hostRuntime: HostRuntime
 
   /** Environment to apply to the context. */
   public val environment: MutableMap<String, String> = ConcurrentSkipListMap()

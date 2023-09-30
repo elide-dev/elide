@@ -28,12 +28,9 @@ import java.util.logging.LogRecord
 import kotlin.io.path.Path
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.EngineLifecycleEvent
+import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
 import elide.runtime.core.EngineLifecycleEvent.EngineInitialized
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
 import elide.runtime.core.extensions.disableOption
@@ -41,7 +38,8 @@ import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
-import elide.runtime.gvm.internals.VMStaticProperty
+import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23
+import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23_1
 import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
 /**
@@ -215,16 +213,23 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
         // TODO(@darvld): swap for throughput in server mode
         option("engine.Mode", "latency")
 
-        // TODO(@darvld): translate this to an API in the core package
-        listOfNotNull(
-          VMStaticProperty.activeWhenAtMost("23.0", "engine.Inlining"),
-          VMStaticProperty.activeWhenAtMost("23.0", "engine.InlineAcrossTruffleBoundary"),
-          VMStaticProperty.activeWhenAtLeast("23.1", "compiler.Inlining"),
-          VMStaticProperty.activeWhenAtLeast("23.1", "compiler.EncodedGraphCache"),
-          VMStaticProperty.activeWhenAtLeast("23.1", "compiler.InlineAcrossTruffleBoundary"),
-          VMStaticProperty.inactiveWhenAtLeast("23.1", "engine.WarnOptionDeprecation"),
-        ).forEach {
-          option(it.symbol, it.value())
+        configuration.hostRuntime.on(GVM_23.andLower()) {
+          enableOptions(
+            "engine.Inlining",
+            "engine.InlineAcrossTruffleBoundary",
+          )
+        }
+
+        configuration.hostRuntime.on(GVM_23_1.andHigher()) {
+          enableOptions(
+            "engine.Inlining",
+            "engine.InlineAcrossTruffleBoundary",
+            "compiler.Inlining",
+            "compiler.EncodedGraphCache",
+            "compiler.InlineAcrossTruffleBoundary",
+          )
+
+          disableOption("engine.WarnOptionDeprecation")
         }
 
         // isolate options

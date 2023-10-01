@@ -112,6 +112,17 @@ public final class elide/runtime/core/HostPlatformKt {
 	public static final fun isUnix (Lelide/runtime/core/HostPlatform$OperatingSystem;)Z
 }
 
+public abstract interface class elide/runtime/core/HostRuntime {
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getVariant ()Ljava/lang/String;
+	public abstract fun getVersion ()Lelide/runtime/core/Version;
+}
+
+public final class elide/runtime/core/HostRuntimeKt {
+	public static final fun on (Lelide/runtime/core/HostRuntime;Lelide/runtime/core/Version$Range;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public static final fun on (Lelide/runtime/core/HostRuntime;Lelide/runtime/core/Version;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+}
+
 public abstract interface class elide/runtime/core/PluginRegistry {
 	public abstract fun install (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun install$default (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
@@ -147,6 +158,7 @@ public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/run
 	public abstract fun enableLanguage (Lelide/runtime/core/GuestLanguage;)V
 	public final fun getHostAccess ()Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
 	public final fun getHostPlatform ()Lelide/runtime/core/HostPlatform;
+	public abstract fun getHostRuntime ()Lelide/runtime/core/HostRuntime;
 	public final fun setHostAccess (Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;)V
 }
 
@@ -158,6 +170,55 @@ public final class elide/runtime/core/PolyglotEngineConfiguration$HostAccess : j
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
 	public static fun values ()[Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
+}
+
+public final class elide/runtime/core/Version : java/lang/Comparable {
+	public static final field Companion Lelide/runtime/core/Version$Companion;
+	public fun <init> (III)V
+	public synthetic fun <init> (IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun compareTo (Lelide/runtime/core/Version;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (III)Lelide/runtime/core/Version;
+	public static synthetic fun copy$default (Lelide/runtime/core/Version;IIIILjava/lang/Object;)Lelide/runtime/core/Version;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMajor ()I
+	public final fun getMinor ()I
+	public final fun getPatch ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/core/Version$Companion {
+	public final fun getZero ()Lelide/runtime/core/Version;
+	public final fun parse (Ljava/lang/String;)Lelide/runtime/core/Version;
+}
+
+public final class elide/runtime/core/Version$Range {
+	public fun <init> ()V
+	public fun <init> (Lelide/runtime/core/Version;Lelide/runtime/core/Version;ZZ)V
+	public synthetic fun <init> (Lelide/runtime/core/Version;Lelide/runtime/core/Version;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/core/Version;
+	public final fun component2 ()Lelide/runtime/core/Version;
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun contains (Lelide/runtime/core/Version;)Z
+	public final fun copy (Lelide/runtime/core/Version;Lelide/runtime/core/Version;ZZ)Lelide/runtime/core/Version$Range;
+	public static synthetic fun copy$default (Lelide/runtime/core/Version$Range;Lelide/runtime/core/Version;Lelide/runtime/core/Version;ZZILjava/lang/Object;)Lelide/runtime/core/Version$Range;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIncludeMax ()Z
+	public final fun getIncludeMin ()Z
+	public final fun getMax ()Lelide/runtime/core/Version;
+	public final fun getMin ()Lelide/runtime/core/Version;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/core/VersionKt {
+	public static final fun andHigher (Lelide/runtime/core/Version;)Lelide/runtime/core/Version$Range;
+	public static final fun andLower (Lelide/runtime/core/Version;)Lelide/runtime/core/Version$Range;
 }
 
 public final class elide/runtime/core/extensions/ContextBuilderKt {
@@ -182,6 +243,28 @@ public final class elide/runtime/core/extensions/EngineBuilderKt {
 
 public final class elide/runtime/core/extensions/ExecutionListenerKt {
 	public static final fun attach (Lorg/graalvm/polyglot/management/ExecutionListener$Builder;Lelide/runtime/core/PolyglotEngine;)Lorg/graalvm/polyglot/management/ExecutionListener;
+}
+
+public final class elide/runtime/core/internals/graalvm/GraalVMRuntime : elide/runtime/core/HostRuntime {
+	public static final field Companion Lelide/runtime/core/internals/graalvm/GraalVMRuntime$Companion;
+	public static final field VARIANT_JVM Ljava/lang/String;
+	public static final field VARIANT_NATIVE Ljava/lang/String;
+	public fun <init> ()V
+	public fun <init> (Lelide/runtime/core/Version;Ljava/lang/String;)V
+	public synthetic fun <init> (Lelide/runtime/core/Version;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getName ()Ljava/lang/String;
+	public final fun getNative ()Z
+	public fun getVariant ()Ljava/lang/String;
+	public fun getVersion ()Lelide/runtime/core/Version;
+}
+
+public final class elide/runtime/core/internals/graalvm/GraalVMRuntime$Companion {
+	public final fun getGVM_23 ()Lelide/runtime/core/Version;
+	public final fun getGVM_23_1 ()Lelide/runtime/core/Version;
+}
+
+public final class elide/runtime/core/internals/graalvm/GraalVMRuntimeKt {
+	public static final fun isNativeImage (Lelide/runtime/core/HostRuntime;)Z
 }
 
 public abstract interface class elide/runtime/feature/FrameworkFeature : org/graalvm/nativeimage/hosted/Feature {

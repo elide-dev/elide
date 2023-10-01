@@ -426,7 +426,9 @@ tasks {
 
 afterEvaluate {
   listOf(
+    "shadowJar",
     "buildLayers",
+    "optimizedJitJarAll",
     "optimizedBuildLayers",
   ).forEach {
     tasks.named(it).configure {

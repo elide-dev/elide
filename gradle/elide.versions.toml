@@ -29,7 +29,7 @@ errorprone = "2.21.1"
 jline = "3.23.0"
 spdx = "0.2.0"
 netty = "4.1.97.Final"
-capnproto = "0.1.16"
+capnproto = "0.1.17-elide-SNAPSHOT"
 netty_iouring = "0.0.22.Final"
 netty_tcnative = "2.0.61.Final"
 dekorate = "3.1.1"
@@ -299,8 +299,9 @@ errorprone_annotations = { group = "com.google.errorprone", name = "error_prone_
 flatbuffers_parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
 flatbuffers_java_core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers_java" }
 flatbuffers_java_grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }
-capnproto_compiler = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
+capnproto_compiler = { group = "org.capnproto", name = "compiler", version.ref = "capnproto" }
 capnproto_runtime = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
+capnproto_runtime_rpc = { group = "org.capnproto", name = "runtime-rpc", version.ref = "capnproto" }
 kotlin_compiler_embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin_sdk" }
 kotlin_scripting_common = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-common", version.ref = "kotlin_sdk" }
 kotlin_scripting_dependencies = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-dependencies", version.ref = "kotlin_sdk" }

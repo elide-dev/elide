@@ -248,6 +248,7 @@ dependencies {
   implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoProtobuf)
   implementation(projects.packages.proto.protoKotlinx)
+  implementation(projects.packages.proto.protoFlatbuffers)
   implementation(projects.packages.proto.protoCapnp)
   implementation(libs.capnproto.runtime)
   implementation(libs.capnproto.runtime.rpc)

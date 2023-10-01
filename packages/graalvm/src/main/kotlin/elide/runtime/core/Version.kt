@@ -33,8 +33,8 @@ import elide.runtime.core.Version.Range
     public val includeMax: Boolean = true,
   ) {
     public operator fun contains(version: Version): Boolean {
-      val minResult = min.compareTo(version)
-      val maxResult = max?.compareTo(version)
+      val minResult = version.compareTo(min)
+      val maxResult = max?.let { version.compareTo(it) }
 
       return when (includeMin) {
         true -> when (includeMax) {
@@ -72,18 +72,25 @@ import elide.runtime.core.Version.Range
     public val Zero: Version by lazy { Version(0, 0, 0) }
 
 
-    /** Parse a string [spec] and return a rich [Version] object. */
-    public fun parse(spec: String): Version {
+    /**
+     * Parse a string [spec] and return a rich [Version] object.
+     *
+     * @return A parsed [Version] containing the [major], [minor], and [patch] fields.
+     * @throws IllegalArgumentException if the provided [spec] is not a semantic version.
+     */
+    public fun parse(spec: String): Version = runCatching {
       // replace '-' and '_' with '.', then split and check for basic contraints
-      val parts = spec.replace(SpecRegex, ".").split('.').takeIf { it.size >= MIN_SEGMENTS }
-        ?: error("Invalid semantic version '$spec'")
+      val parts = spec.replace(SpecRegex, ".").split('.')
+      check(parts.size >= MIN_SEGMENTS) { "Semantic version should have at least 'major' and 'minor' components" }
 
       // parse the digits, only major and minor components are required
-      return Version(
-        major = parts.getOrNull(0)?.toIntOrNull() ?: error("Invalid semantic version '$spec'"),
-        minor = parts.getOrNull(1)?.toIntOrNull() ?: error("Invalid semantic version '$spec'"),
-        patch = parts.getOrNull(2)?.toIntOrNull() ?: 0,
+      Version(
+        major = parts[0].toInt(),
+        minor = parts[1].toInt(),
+        patch = parts.getOrNull(2)?.toInt() ?: 0,
       )
+    }.getOrElse { cause ->
+      throw IllegalArgumentException("Invalid semantic version '$spec'", cause)
     }
   }
 }

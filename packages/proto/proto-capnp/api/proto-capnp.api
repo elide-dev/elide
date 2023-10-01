@@ -47,7 +47,7 @@ public final class tools/elide/assets/Embedded$EmbeddedScript$Builder : org/capn
 
 public final class tools/elide/assets/Embedded$EmbeddedScript$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/assets/Embedded$EmbeddedScript$Builder;)Ltools/elide/assets/Embedded$EmbeddedScript$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$EmbeddedScript$Builder;
@@ -107,7 +107,7 @@ public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder : 
 
 public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder;)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder;
@@ -138,7 +138,7 @@ public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$B
 
 public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Builder;)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Builder;
@@ -190,7 +190,7 @@ public final class tools/elide/assets/Embedded$JsScriptMetadata$Builder : org/ca
 
 public final class tools/elide/assets/Embedded$JsScriptMetadata$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/assets/Embedded$JsScriptMetadata$Builder;)Ltools/elide/assets/Embedded$JsScriptMetadata$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$JsScriptMetadata$Builder;
@@ -216,7 +216,7 @@ public final class tools/elide/assets/Embedded$PyScriptMetadata$Builder : org/ca
 
 public final class tools/elide/assets/Embedded$PyScriptMetadata$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/assets/Embedded$PyScriptMetadata$Builder;)Ltools/elide/assets/Embedded$PyScriptMetadata$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$PyScriptMetadata$Builder;
@@ -292,7 +292,7 @@ public final class tools/elide/data/Data$CompressedData$Builder : org/capnproto/
 
 public final class tools/elide/data/Data$CompressedData$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/data/Data$CompressedData$Builder;)Ltools/elide/data/Data$CompressedData$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$CompressedData$Builder;
@@ -344,7 +344,7 @@ public final class tools/elide/data/Data$DataContainer$Builder : org/capnproto/S
 
 public final class tools/elide/data/Data$DataContainer$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/data/Data$DataContainer$Builder;)Ltools/elide/data/Data$DataContainer$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainer$Builder;
@@ -376,7 +376,7 @@ public final class tools/elide/data/Data$DataContainerRef$Builder : org/capnprot
 
 public final class tools/elide/data/Data$DataContainerRef$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/data/Data$DataContainerRef$Builder;)Ltools/elide/data/Data$DataContainerRef$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainerRef$Builder;
@@ -406,7 +406,7 @@ public final class tools/elide/data/Data$DataContainerRef$FingerprintPathPair$Bu
 
 public final class tools/elide/data/Data$DataContainerRef$FingerprintPathPair$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;)Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;
@@ -452,7 +452,7 @@ public final class tools/elide/data/Data$DataContainerRef$Reference$Builder : or
 
 public final class tools/elide/data/Data$DataContainerRef$Reference$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/data/Data$DataContainerRef$Reference$Builder;)Ltools/elide/data/Data$DataContainerRef$Reference$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainerRef$Reference$Builder;
@@ -518,7 +518,7 @@ public final class tools/elide/data/Data$DataFingerprint$Builder : org/capnproto
 
 public final class tools/elide/data/Data$DataFingerprint$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/data/Data$DataFingerprint$Builder;)Ltools/elide/data/Data$DataFingerprint$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataFingerprint$Builder;
@@ -595,7 +595,7 @@ public final class tools/elide/std/Temporal$Timestamp$Builder : org/capnproto/St
 
 public final class tools/elide/std/Temporal$Timestamp$Factory : org/capnproto/StructFactory {
 	public fun <init> ()V
-	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public synthetic fun asReader (Lorg/capnproto/StructBuilder;)Lorg/capnproto/StructReader;
 	public final fun asReader (Ltools/elide/std/Temporal$Timestamp$Builder;)Ltools/elide/std/Temporal$Timestamp$Reader;
 	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
 	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/std/Temporal$Timestamp$Builder;

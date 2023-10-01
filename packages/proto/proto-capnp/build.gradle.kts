@@ -80,7 +80,7 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
 
-  capnproto(libs.capnproto.compiler)
+  capnproto(libs.capnproto.runtime)
 }
 
 afterEvaluate {

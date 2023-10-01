@@ -16,8 +16,6 @@ env:
   CACHE_ENDPOINT: "https://gradle.less.build/cache/generic/"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
   GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
-  GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
-  GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
 jobs:
   ##
@@ -85,6 +83,8 @@ jobs:
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
         env:
           CI: true
+          GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
           cache-read-only: false
           arguments: |

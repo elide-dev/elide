@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha6-b15"
+elide = "1.0.0-alpha7"
 kotlin_sdk = "1.9.20-Beta2"
 kotlin_language = "1.9"
 confundus = "1.0.0"

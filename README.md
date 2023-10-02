@@ -26,7 +26,7 @@
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7690/badge)](https://bestpractices.coreinfrastructure.org/projects/7690)
 
-Latest version: `1.0-v3-alpha5-b15`
+Latest version: `1.0.0-alpha7`
 
 <hr />
 
@@ -103,14 +103,14 @@ Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering 
 
 ```kotlin
 // build.gradle.kts
-implementation("dev.elide:elide-server:1.0-v3-alpha5-b15")
+implementation("dev.elide:elide-server:1.0.0-alpha7")
 ```
 
 or if you use Groovy:
 
 ```groovy
 // build.gradle
-implementation 'dev.elide:elide-server:1.0-v3-alpha5-b15'
+implementation 'dev.elide:elide-server:1.0.0-alpha7'
 ```
 
 See our [samples](samples) to explore the features available when integrating with server frameworks, the following code for a server application uses React with Server-Side Rendering:
@@ -189,13 +189,13 @@ fun main() {
 If you are building a JVM application that runs guest code in one of the languages supported by Elide, you can use the Runtime DSL to configure your own embedded polyglot engine:
 
 ```kotlin
-implementation("dev.elide:elide-graalvm:1.0-v3-alpha5-b15")
+implementation("dev.elide:elide-graalvm:1.0.0-alpha7")
 ```
 
 or for Groovy scripts:
 
 ```groovy
-implementation 'dev.elide:elide-graalvm:1.0-v3-alpha5-b15'
+implementation 'dev.elide:elide-graalvm:1.0.0-alpha7'
 ```
 
 The DSL is used internally by the Elide binaries and by the SSR packages and provides a simplified API to harness the power of the underlying [GraalVM](https://graalvm.org) engine:

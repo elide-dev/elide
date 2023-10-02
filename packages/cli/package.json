@@ -1,13 +1,13 @@
 {
   "name": "@elide-dev/elide",
-  "version": "1.0.0-alpha4-b9",
+  "version": "1.0.0-alpha7",
   "description": "Elide polyglot application runtime",
   "homepage": "https://elide.dev",
   "license": "(MIT OR Apache-2.0)",
   "keywords": ["runtime", "js", "ts", "polyglot", "server", "framework", "kotlin", "javascript", "typescript"],
   "repository": "github:elide-dev/v3",
   "config": {
-    "elideVersion": "1.0-v3-alpha4-b12"
+    "elideVersion": "1.0.0-alpha7"
   },
   "author": {
     "name": "Sam Gammon",

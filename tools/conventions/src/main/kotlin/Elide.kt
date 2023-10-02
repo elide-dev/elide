@@ -18,23 +18,17 @@ object Elide {
   /** Name of the library. */
   const val name = "elide"
 
-  /** Major release version for Elide. */
-  const val track = "v3"
-
   /** Major library version. */
-  const val majorVersion = "1.0"
+  const val majorVersion = "1.0.0"
 
   /** Major library version tag. */
-  const val versionTag = "alpha6"
-
-  /** Revision value for the library. */
-  const val revision = 15
+  const val versionTag = "alpha7"
 
   /** Version string for the library. */
-  const val version = "$majorVersion-$track-$versionTag-b$revision"
+  const val version = "$majorVersion-$versionTag"
 
   /** Latest plugin version. */
-  const val pluginVersion = "1.0.0-beta23"
+  const val pluginVersion = "1.0.0-beta27"
 
   /** Maven group shared by Elide artifacts. */
   const val group = "dev.elide"

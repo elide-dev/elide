@@ -206,7 +206,7 @@ jobs:
             -PbuildDocs=false
       - name: "Build reports"
         if: failure()
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
           name: build-reports-${{ matrix.os }}-latest-gvm-latest
           path: |
@@ -341,7 +341,7 @@ jobs:
             -PbuildDocs=false
             -PbuildDocsSite=false
             --args="selftest"
-      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+      - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
           name: test-reports-jvm
           path: |
@@ -461,7 +461,7 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+      - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
           name: test-reports-native
           path: |
@@ -579,21 +579,21 @@ jobs:
           popd;
           echo "Binary compressed.";
       - name: "Artifacts: Debug Binary (Unix)"
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug.xz
       - name: "Artifacts: Debug Binary (Windows)"
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug
       - name: "Artifacts: Dashboard Dump"
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         if: success()
         with:
           name: cli-debug-report-${{ matrix.tag }}
@@ -705,7 +705,7 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
       - name: "Artifacts: Release Binary"
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         if: success()
         with:
           name: cli-release-${{ matrix.tag }}

@@ -52,12 +52,6 @@ dependencyResolutionManagement {
   repositories {
     maven("https://maven.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
-    maven("https://maven.pkg.github.com/elide-dev/capnproto-java-rpc") {
-      credentials {
-        username = System.getenv("GITHUB_ACTOR")
-        password = System.getenv("GITHUB_TOKEN")
-      }
-    }
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")

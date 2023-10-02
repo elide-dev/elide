@@ -86,6 +86,7 @@ val enableKnit: String? by properties
 val enableProguard: String? by properties
 
 val buildSsg: String by properties
+val buildSamples: String by properties
 val buildDocs: String by properties
 
 buildscript {
@@ -138,8 +139,13 @@ apiValidation {
     "proto",
     "processor",
     "reports",
-    "samples",
-    "basic",
+  ).plus(
+    if (buildSamples == "true") {
+      listOf(
+        "samples",
+        "basic",
+      )
+    } else emptyList()
   ).plus(
     if (buildSsg == "true") {
       listOf("bundler")

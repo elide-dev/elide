@@ -42,7 +42,7 @@
 set -e;
 set +x;
 
-TOOL_REVISION="1.0-v3-alpha6-b15";
+TOOL_REVISION="1.0.0-alpha7";
 INSTALLER_VERSION="v0.10";
 
 TOOL="cli";

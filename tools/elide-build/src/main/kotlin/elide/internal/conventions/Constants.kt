@@ -97,20 +97,14 @@ public object Constants {
 
   /** Static library configuration values. */
   public object Elide {
-    /** Major release version for Elide. */
-    private const val TRACK = "v3"
-
     /** Major library version. */
-    private const val MAJOR_VERSION = "1.0"
+    private const val MAJOR_VERSION = "1.0.0"
 
     /** Major library version tag. */
-    private const val VERSION_TAG = "alpha6"
-
-    /** Revision value for the library. */
-    private const val REVISION = 15
+    private const val VERSION_TAG = "alpha7"
 
     /** Version string for the library. */
-    public const val VERSION: String = "$MAJOR_VERSION-$TRACK-$VERSION_TAG-b$REVISION"
+    public const val VERSION: String = "$MAJOR_VERSION-$VERSION_TAG"
 
     /** Maven group shared by Elide artifacts. */
     public const val GROUP: String = "dev.elide"

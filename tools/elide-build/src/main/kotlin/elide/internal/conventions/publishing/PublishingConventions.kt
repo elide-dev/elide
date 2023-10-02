@@ -25,6 +25,7 @@ internal fun Project.configurePublishing(
     check(publications.isNotEmpty()) { "Cannot setup publishable Elide package '$packageId' with no publications" }
     publications.withType(MavenPublication::class.java) {
       artifactId = artifactId.replace(packageId, "elide-$packageId")
+
       pom {
         name.set(packageName)
         description.set(packageDescription)

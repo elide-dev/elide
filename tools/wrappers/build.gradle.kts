@@ -13,7 +13,7 @@
 
 plugins {
   id("base")
-  id("org.gradle.wrapper-upgrade") version "0.11.1"
+  id("org.gradle.wrapper-upgrade") version "0.11.4"
 }
 
 wrapperUpgrade {

@@ -136,7 +136,7 @@ includeBuild(
   "tools/elide-build",
 )
 
-include(
+if (buildSamples == "true") include(
   ":samples:server:helloworld",
   ":samples:server:hellocss",
   ":samples:fullstack:basic:frontend",

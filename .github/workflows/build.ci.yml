@@ -78,7 +78,7 @@ jobs:
       - name: "Patch: Restore Yarn Lock"
         run: mv yarn.inert yarn.lock
       - name: "Check: Library ABI"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         id: abicheck
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
         env:
@@ -177,7 +177,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "🛠️ Build"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}
         env:
@@ -288,7 +288,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Testsuite (JVM)"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         env:
           CI: true
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -316,7 +316,7 @@ jobs:
             -PbuildDocs=false
             -PbuildDocsSite=false
       - name: "Runtime Self-tests (JVM)"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         continue-on-error: true
         env:
           CI: true
@@ -439,7 +439,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Run Tests (Native)"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         continue-on-error: true
         env:
           CI: true
@@ -554,7 +554,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Build: CLI (Native/Debug)"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         env:
           CI: true
         with:
@@ -686,7 +686,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Build: CLI (Native/Release)"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         env:
           CI: true
         with:
@@ -808,7 +808,7 @@ jobs:
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
         continue-on-error: ${{ fromJson(matrix.labs) }}
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         with:
           arguments: |
             --no-daemon
@@ -920,7 +920,7 @@ jobs:
 
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
-        uses: gradle/gradle-build-action@b5126f31dbc19dd434c3269bf8c28c315e121da2 # v2.8.1
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
         continue-on-error: true
         with:
           arguments: |

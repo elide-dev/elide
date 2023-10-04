@@ -149,7 +149,7 @@ import elide.server.annotations.Eager
       System.setProperty(entry.key, entry.value)
     }
     // basics
-    builder.eagerInitSingletons(true)
+    builder
       .banner(false)
       .deduceEnvironment(true)
       .enableDefaultPropertySources(true)

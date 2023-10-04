@@ -27,6 +27,12 @@ importers:
       preact:
         specifier: 10.17.1
         version: registry.npmjs.org/preact@10.17.1
+      react:
+        specifier: 18.2.0
+        version: registry.npmjs.org/react@18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: registry.npmjs.org/react-dom@18.2.0(react@18.2.0)
       typescript:
         specifier: 4.9.5
         version: registry.npmjs.org/typescript@4.9.5
@@ -3997,6 +4003,19 @@ packages:
       unpipe: registry.npmjs.org/unpipe@1.0.0
     dev: false
 
+  registry.npmjs.org/react-dom@18.2.0(react@18.2.0):
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz}
+    id: registry.npmjs.org/react-dom/18.2.0
+    name: react-dom
+    version: 18.2.0
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      loose-envify: registry.npmjs.org/loose-envify@1.4.0
+      react: registry.npmjs.org/react@18.2.0
+      scheduler: registry.npmjs.org/scheduler@0.23.0
+    dev: false
+
   registry.npmjs.org/react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/react/-/react-18.2.0.tgz}
     name: react
@@ -4127,6 +4146,14 @@ packages:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz}
     name: safer-buffer
     version: 2.1.2
+    dev: false
+
+  registry.npmjs.org/scheduler@0.23.0:
+    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/scheduler/-/scheduler-0.23.0.tgz}
+    name: scheduler
+    version: 0.23.0
+    dependencies:
+      loose-envify: registry.npmjs.org/loose-envify@1.4.0
     dev: false
 
   registry.npmjs.org/schema-utils@3.3.0:

@@ -40,7 +40,6 @@ object App : Application {
     @Get("/") suspend fun indexPage(request: HttpRequest<*>) = ssr(request) {
       head {
         title { +"Hello, Elide!" }
-//        stylesheet(asset("styles.base"))
         stylesheet("/styles/base.css")
         stylesheet("/styles/main.css")
         script("/scripts/ui.js", defer = true)

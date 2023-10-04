@@ -22,13 +22,10 @@ import java.util.SortedSet
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import java.util.function.Supplier
 import jakarta.inject.Provider
 import kotlin.io.path.absolute
-import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import elide.annotations.Context
-import elide.annotations.Eager
 import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi

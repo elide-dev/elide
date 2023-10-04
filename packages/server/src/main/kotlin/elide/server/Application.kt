@@ -13,6 +13,7 @@
 
 package elide.server
 
+import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.Micronaut
@@ -122,7 +123,7 @@ public interface Application {
   }
 
   /** Application startup listener and callback trigger. */
-  @Context @Eager public class AppStartupListener : ApplicationEventListener<ServerStartupEvent> {
+  @Bean public class AppStartupListener : ApplicationEventListener<ServerStartupEvent> {
     override fun onApplicationEvent(event: ServerStartupEvent): Unit = runBlocking {
       Initialization.trigger(
         Initialization.CallbackStage.INIT
@@ -163,7 +164,6 @@ public interface Application {
     Micronaut
       .build()
       .eagerInitConfiguration(true)
-      .eagerInitSingletons(true)
       .eagerInitAnnotated(Eager::class.java, Context::class.java)
       .args(*args)
       .start()

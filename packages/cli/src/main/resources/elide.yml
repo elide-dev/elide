@@ -33,3 +33,5 @@ micronaut.server.netty.use-native-transport: true
 micronaut.server.netty.parent.prefer-native-transport: true
 micronaut.server.netty.worker.prefer-native-transport: true
 micronaut.netty.event-loops.default.prefer-native-transport: true
+micronaut.netty.event-loops.default.num-threads: 2
+micronaut.netty.event-loops.parent.num-threads: 2

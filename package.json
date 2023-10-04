@@ -33,6 +33,8 @@
     "google-protobuf": "3.21.2",
     "postcss": "8.4.30",
     "preact": "10.17.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "typescript": "4.9.5",
     "web-streams-polyfill": "3.2.1"
   },

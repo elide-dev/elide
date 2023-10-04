@@ -1,10 +1,11 @@
 <configuration debug="false">
-  <contextName>elide</contextName>
+  <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
   <variable name="APPENDER" value="${log.file.root:-ASYNC_LAZY}" />
   <variable name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-warn}" />
-  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
   <serializeModel file="src/main/resources/logback.scmo"/>
+  <contextName>elide</contextName>
 
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <target>System.out</target>
     <encoder>

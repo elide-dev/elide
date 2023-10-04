@@ -19,8 +19,6 @@
   }, {
     "pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/nativelibnetty_transport_native_kqueue_aarch_64.dylib\\E"
   }, {
-    "pattern":"\\QMETA-INF/elide/**/*.*"
-  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.modules.tar.gz\\E"
@@ -37,13 +35,9 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/jvm/runtime.json\\E"
   }, {
-    "pattern":"\\QMETA-INF/elide/embedded/runtime/python/python-darwin-aarch64.tar.xz\\E"
-  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/python/runtime.json.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/python/runtime.json\\E"
-  }, {
-    "pattern":"\\QMETA-INF/elide/embedded/runtime/ruby/ruby-darwin-aarch64.tar.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/ruby/runtime.json.gz\\E"
   }, {
@@ -56,8 +50,6 @@
     "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/polyfills.js\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/runtime.json\\E"
-  }, {
-    "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/ruby/ruby-darwin-aarch64.tar.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/ruby/runtime.json\\E"
   }, {
@@ -552,6 +544,10 @@
     "pattern":"\\Qlogback.xml\\E"
   }, {
     "pattern":"\\Qmicronaut-version.properties\\E"
+  }, {
+    "pattern":"\\Qorg/fusesource/jansi/*.*"
+  }, {
+    "pattern":"\\Qorg/fusesource/jansi/**/*.*"
   }, {
     "pattern":"\\Qorg/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib\\E"
   }, {

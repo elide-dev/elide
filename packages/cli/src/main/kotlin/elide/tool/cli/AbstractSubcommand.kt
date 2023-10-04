@@ -78,21 +78,6 @@ import org.graalvm.polyglot.Engine as VMEngine
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
     private val _engine = VMEngine.create()
-    private val _cpus = Runtime.getRuntime().availableProcessors()
-
-    private val threadFactory: ToolThreadFactory = ToolThreadFactory(
-      enableVirtualThreads,
-      DefaultErrorHandler.acquire(),
-    )
-    private val threadedExecutor: ListeningExecutorService = when {
-      enableVirtualThreads -> MoreExecutors.listeningDecorator(Executors.newThreadPerTaskExecutor(threadFactory))
-      enableFixedThreadPool -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(_cpus, threadFactory))
-      enableFlexibleThreadPool -> MoreExecutors.listeningDecorator(
-        MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory))
-      )
-      else -> MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(threadFactory))
-    }
-    private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
@@ -113,6 +98,22 @@ import org.graalvm.polyglot.Engine as VMEngine
       }
     }
   }
+
+  private val _cpus = Runtime.getRuntime().availableProcessors()
+
+  private val threadFactory: ToolThreadFactory = ToolThreadFactory(
+    enableVirtualThreads,
+    DefaultErrorHandler.acquire(),
+  )
+  private val threadedExecutor: ListeningExecutorService = when {
+    enableVirtualThreads -> MoreExecutors.listeningDecorator(Executors.newThreadPerTaskExecutor(threadFactory))
+    enableFixedThreadPool -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(_cpus, threadFactory))
+    enableFlexibleThreadPool -> MoreExecutors.listeningDecorator(
+      MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory))
+    )
+    else -> MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(threadFactory))
+  }
+  private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
 
   private val logging: Logger by lazy {
     Statics.logging

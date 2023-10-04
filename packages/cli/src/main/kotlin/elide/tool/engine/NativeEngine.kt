@@ -33,6 +33,7 @@ import elide.tool.io.WorkdirManager
  * Provides utilities for loading native portions of Elide early in the boot lifecycle.
  */
 object NativeEngine {
+  private const val loadEager = false
   private const val DEFAULT_NATIVES_PATH = "META-INF/native/"
   private val nativeTransportAvailable: AtomicBoolean = AtomicBoolean(false)
   private val errHolder: AtomicReference<Throwable?> = AtomicReference(null)
@@ -260,7 +261,7 @@ object NativeEngine {
       System.setProperty(it.first, it.second)
     }
 
-    if (ImageInfo.inImageRuntimeCode()) {
+    if (loadEager) {
       loadAllNatives(platform, natives.toFile(), this::class.java.classLoader)
     }
 

@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-const express = require('express')
 const app = express()
 const port = 3000
 

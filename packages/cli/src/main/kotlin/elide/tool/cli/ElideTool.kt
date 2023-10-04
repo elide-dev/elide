@@ -33,6 +33,8 @@ import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
 import elide.annotations.Singleton
+import elide.runtime.core.HostPlatform
+import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
@@ -73,11 +75,11 @@ import elide.tool.io.RuntimeWorkdirManager
   ),
 )
 @Suppress("MemberVisibilityCanBePrivate")
-@Eager @Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
+@Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
   companion object {
     init {
 //      Security.insertProviderAt(OpenSSLProvider(), 0)
-      Security.insertProviderAt(BouncyCastleProvider(), 1)
+//      Security.insertProviderAt(BouncyCastleProvider(), 1)
 
       // load natives
       NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
@@ -106,9 +108,6 @@ import elide.tool.io.RuntimeWorkdirManager
     // Maybe install terminal support for Windows if it is needed.
     private fun installWindowsTerminalSupport(op: () -> Int): Int {
       return AnsiConsole.windowsInstall().use {
-        if (!org.fusesource.jansi.AnsiConsole.isInstalled()) {
-          initializeTerminal()
-        }
         op.invoke()
       }
     }
@@ -117,8 +116,19 @@ import elide.tool.io.RuntimeWorkdirManager
     private fun installStatics(op: () -> Int): Int {
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
-      return installWindowsTerminalSupport {
+      val runner = {
+        if (!org.fusesource.jansi.AnsiConsole.isInstalled()) {
+          initializeTerminal()
+        }
         op.invoke()
+      }
+
+      return when {
+        // on windows, provide native terminal support fix
+        HostPlatform.resolve().os == OperatingSystem.WINDOWS -> installWindowsTerminalSupport(runner)
+
+        // otherwise, install terminal and begin execution
+        else -> runner.invoke()
       }
     }
 

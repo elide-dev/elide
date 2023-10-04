@@ -19,6 +19,9 @@ import elide.annotations.internal.VMFeature
 
 /** Registers native transport libraries for static JNI. */
 @VMFeature internal class NativeTransportFeature : AbstractStaticNativeLibraryFeature() {
+  companion object {
+    const val enabled = false
+  }
   override fun getDescription(): String = "Registers native transport libraries"
 
   override fun isInConfiguration(access: IsInConfigurationAccess): Boolean {
@@ -29,7 +32,7 @@ import elide.annotations.internal.VMFeature
     )
   }
 
-  override fun nativeLibs(access: BeforeAnalysisAccess) = listOf(
+  override fun nativeLibs(access: BeforeAnalysisAccess) = if (enabled) listOf(
     // Native Transport: Linux
     nativeLibrary(linux = libraryNamed("netty_transport_native_epoll")),
     nativeLibrary(linux = libraryNamed("netty_quiche_linux")),
@@ -38,5 +41,5 @@ import elide.annotations.internal.VMFeature
     nativeLibrary(darwin = libraryNamed("netty_transport_native_kqueue")),
     nativeLibrary(darwin = libraryNamed("netty_resolver_dns_native_macos")),
     nativeLibrary(darwin = libraryNamed("netty_quiche_osx")),
-  )
+  ) else emptyList()
 }

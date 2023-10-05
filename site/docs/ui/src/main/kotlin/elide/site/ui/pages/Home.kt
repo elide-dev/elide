@@ -393,21 +393,21 @@ val Home = react.FC<HomeProps> {
                     )
 
                     /** Render a page using JavaScript SSR from Kotlin. */
-                    @Page class Index : PageWithProps<HelloProps>() {
+                    @Page class Index : PageWithProps<HelloProps>(HelloProps::class) {
                       /** Calculate shared SSR props. */
                       override suspend fun props(state: RequestState) =
-                        HelloProps(name = "Elide")
+                        HelloProps(name = state.request.parameters["name"] ?: "Elide")
 
                       /** Render the root page. */
                       @Get("/")
-                      suspend fun index(request: HttpRequest<*>) = ssr(request) {
+                      suspend fun index(request: HttpRequest<*>) = html(request) {
                         head {
                           // 👇 Elide will package & serve your client-side assets.
                           script("/scripts/ui.js", defer = true)
                         }
                         body {
-                          // 👇 Elide can also dispatch your server-side JS.
-                          injectSSR(this@Index, request)
+                          // 👇 Elide dispatches server-side JS, passing in the `props` from above.
+                          render()
                         }
                       }
                     }

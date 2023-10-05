@@ -2,8 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>Elide Framework | API Docs | All modules</title>
-    <link rel="canonical" href="https://docs.elide.dev/" />
+    <title>All modules</title>
     <link href="images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
@@ -32,6 +31,7 @@
 <script type="text/javascript" src="scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="scripts/prism.js" async="async"></script>
 <script type="text/javascript" src="scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<script type="text/javascript" src="dokka-mermaid.js" async="async"></script>
 <link href="styles/multimodule.css" rel="Stylesheet">
 </head>
 <body>
@@ -42,7 +42,7 @@
             <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
             <div class="library-name">
                     <a class="library-name--link" href="index.html">
-                            elide
+                            Elide
                     </a>
             </div>
             <div class="library-version">
@@ -59,189 +59,55 @@
                 <div class="sidebar--inner" id="sideMenu"></div>
             </div>
             <div id="main">
-<div class="main-content" id="content" pageIds="elide::.ext/allModules///PointingToDeclaration//0">
+<div class="main-content" id="content" pageIds="Elide::.ext/allModules///PointingToDeclaration//0">
   <div class="breadcrumbs"></div>
   <div class="cover ">
-    <div class="cover "><p align="center">
-</p><p align="left">
-<i>elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge.</i>
-</p>
-      <br />
-      <p class="paragraph"><a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img alt="Build" src="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml/badge.svg"></a> <a href="https://codecov.io/gh/elide-dev/elide"></a> <a href="https://sonarcloud.io/summary/new_code?id=elide-dev_v3"></a> <a href="https://sonarcloud.io/summary/new_code?id=elide-dev_v3"></a> <a href="https://sonarcloud.io/summary/new_code?id=elide-dev_v3"></a> <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield"></a> <a href="https://openjdk.org/projects/jdk/19/"></a> <a href="https://www.graalvm.org/"></a> <a href="http://kotlinlang.org"></a> <a href="https://kotl.in/jsirsupported"></a> <a href="https://262.ecma-international.org/11.0/"></a> <a href="https://bestpractices.coreinfrastructure.org/projects/7690"></a></p>
-      <p class="paragraph">Latest version: <code class="lang-kotlin">1.0.0-alpha7</code></p>
-      <br />
-     <p class="paragraph">Elide is a cloud-first polyglot runtime for developing fast web applications. It aims to reduce the barriers between languages and improve performance of existing code, without forcing developers to abandon their favorite APIs and libraries.</p>
-      <br />
-      <blockquote class="quotation">
-        <p class="paragraph"><b>Important:</b> Elide is still in alpha, some features are not fully supported and others may fail on certain environments.</p>
-      </blockquote>
-      <h2 class=""> Using the runtime binaries</h2>
-      <p class="paragraph">You can install the runtime by running:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-shell" theme="idea">curl -sSL --tlsv1.2 &quot;dl.elide.dev/cli/install.sh&quot; | bash -s -</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <p class="paragraph">After installation, you can run <code class="lang-kotlin">elide help</code> or <code class="lang-kotlin">elide info</code> to see more information.</p>
-      <h2 class=""> Features</h2>
-      <p class="paragraph">The Elide CLI supports JavaScript out of the box, and includes experimental support for Python, while more languages such as Ruby are planned for future releases.</p>
-      <h3 class=""> Environment files</h3>
-      <p class="paragraph">Elide provides <code class="lang-kotlin">.env</code> files support at the runtime level, without the need for manual configuration or third-party packages. Environment variables from <code class="lang-kotlin">.env</code> files will be picked up and injected into the application using a language-specific API (e.g. <code class="lang-kotlin">process.env</code> in JavaScript).</p>
-      <h3 class=""> Server engine</h3>
-      <p class="paragraph">Let's see an example, the following JavaScript application configures a built-in HTTP server and adds a route handler with path variables:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-javascript" theme="idea">// access the built-in HTTP server engine<br>const app = Elide.http<br><br>// register a route handler<br>app.router.handle(&quot;GET&quot;, &quot;/hello/:name&quot;, (request, response, context) =&gt; {<br>  // respond using the captured path variables<br>  response.send(200, `Hello, ${context.params.name}`)<br>})<br><br>// configure the server binding options<br>app.config.port = 3000<br><br>// receive a callback when the server starts<br>app.config.onBind(() =&gt; {<br>  console.log(`Server listening at &quot;http://localhost:${app.config.port}&quot;! 🚀`)<br>})<br><br>// start the server<br>app.start()</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <p class="paragraph">The server can be started with:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-shell" theme="idea">&gt; elide serve app.js<br>&gt; elide 17:43:09.587 DEBUG Server listening at &quot;http://localhost:3000&quot;! 🚀</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <blockquote class="quotation">
-        <p class="paragraph">!IMPORTANT The Elide HTTP intrinsics are under active development and provide only limited features. We are actively working to improve performance and support more use cases.</p>
-      </blockquote>
-      <h3 class=""> Planned features</h3>
-      <p class="paragraph">The following features are currently planned or under construction:</p>
-      <ul>
-        <li>
-          <p class="paragraph"><strong>Secret management</strong>: access secrets as environment variables visible only to your application, decouple your code from secret management SDKs and let the runtime handle that complexity for you.</p>
-        </li>
-        <li>
-          <p class="paragraph"><strong>Isolated I/O</strong>: use pre-packaged archives to provide read-only, sealed Virtual File Systems, allowing access to the host File System only where needed.</p>
-        </li>
-        <li>
-          <p class="paragraph"><strong>Built-in telemetry</strong>: managed, configurable integration with telemetry APIs.</p>
-        </li>
-        <li>
-          <p class="paragraph"><strong>Native distributions</strong>: build your app into a truly native binary using GraalVM's <a href="https://www.graalvm.org/22.0/reference-manual/native-image/">Native Image</a> technology, ship optimized applications without including a runtime in your container.</p>
-        </li>
-      </ul>
-      <h2 class=""> Use with server frameworks</h2>
-      <p class="paragraph">Elide integrates with <a href="">Micronaut</a> to provide Server-Side and Hybrid rendering options with very high performance, by running JavaScript code inside your JVM server:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-kotlin" theme="idea">// build.gradle.kts<br>implementation(&quot;dev.elide:elide-server:1.0.0-alpha7&quot;)</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <p class="paragraph">or if you use Groovy:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-groovy" theme="idea">// build.gradle<br>implementation 'dev.elide:elide-server:1.0.0-alpha7'</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <p class="paragraph">See our samples to explore the features available when integrating with server frameworks, the following code for a server application uses React with Server-Side Rendering:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-kotlin" theme="idea">// server/App.kt<br><br>/** GET `/`: Controller for index page. */<br>@Controller class Index {<br>  // Serve an HTML page with isomorphic React SSR.<br>  @Get(&quot;/&quot;) fun index() = ssr {<br>    head {<br>      title { +&quot;Hello, Elide!&quot; }<br>      stylesheet(&quot;/styles/main.css&quot;)<br>      script(&quot;/scripts/ui.js&quot;, defer = true)<br>    }<br>    body {<br>      injectSSR()<br>    }<br>  }<br><br>  // Serve styles for the page.<br>  @Get(&quot;/styles/main.css&quot;) fun styles() = css {<br>    rule(&quot;body&quot;) {<br>      backgroundColor = Color(&quot;#bada55&quot;)<br>    }<br>    rule(&quot;strong&quot;) {<br>      fontFamily = &quot;-apple-system, BlinkMacSystemFont, sans-serif&quot;<br>    }<br>  }<br><br>  // Serve the built &amp; embedded JavaScript.<br>  @Get(&quot;/scripts/ui.js&quot;) suspend fun js(request: HttpRequest&lt;*&gt;) = script(request) {<br>    module(&quot;scripts.ui&quot;)<br>  }<br>}</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <p class="paragraph">By evaluating the JavaScript code built using a Kotlin/JS browser app:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-kotlin" theme="idea">// client/main.kt<br><br>// React props for a component<br>external interface HelloProps: Props {<br>  var name: String<br>}<br><br>// React component which says hello<br>val HelloApp = FC&lt;HelloProps&gt; { props -&gt;<br>  div {<br>    strong {<br>      +props.name<br>    }<br>  }<br>}<br><br>// Entrypoint for the browser<br>fun main() {<br>  hydrateRoot(<br>    document.getElementById(&quot;root&quot;),<br>    Fragment.create() {<br>      HelloApp {<br>        name = &quot;Elide&quot;<br>      }<br>    }<br>  )<br>}</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <blockquote class="quotation">
-        <p class="paragraph">!NOTE More versatile integration with frameworks like <a href="https://micronaut.io">Micronaut</a> and <a href="https://ktor.io/">Ktor</a> is planned but not yet supported. The API and packages used for these integrations may change as we add more features.</p>
-      </blockquote>
-      <h2 class=""> Building a custom runtime</h2>
-      <p class="paragraph">If you are building a JVM application that runs guest code in one of the languages supported by Elide, you can use the Runtime DSL to configure your own embedded polyglot engine:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-kotlin" theme="idea">implementation(&quot;dev.elide:elide-graalvm:1.0.0-alpha7&quot;)</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <p class="paragraph">or for Groovy scripts:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-groovy" theme="idea">implementation 'dev.elide:elide-graalvm:1.0.0-alpha7'</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <p class="paragraph">The DSL is used internally by the Elide binaries and by the SSR packages and provides a simplified API to harness the power of the underlying <a href="https://graalvm.org">GraalVM</a> engine:</p>
-      <div class="sample-container">
-        <pre><code class="block lang-kotlin" theme="idea">// configure and create a new engine<br>val engine = PolyglotEngine {<br>  // add support for the JavaScript language<br>  install(JavaScript) {<br>    // enable ESM support<br>    esm = true<br>    <br>    // include custom bindings into the engine, these<br>    // will be available as top level symbols<br>    bindings {<br>      put(&quot;version&quot;, &quot;1.0.0&quot;)<br>    }<br>  }<br>}<br><br>// obtain a context to evaluate source code<br>val context = engine.acquire()<br><br>// evaluate guest JavaScript code<br>context.javascript(&quot;&quot;&quot;<br>  console.log(`Hello from custom runtime v${version}`)<br>&quot;&quot;&quot;)</code></pre>
-<span class="top-right-position"><span class="copy-icon"></span>
-          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
-        </span></div>
-      <blockquote class="quotation">
-        <p class="paragraph">!WARNING The Elide Runtime DSL is intended for advanced use cases, and while we try not to break compatibility between releases, there are no guarantees.</p>
-      </blockquote>
-      <h2 class=""> Version compatibility</h2>
-      <p class="paragraph">The following version matrix indicates tested support across tool and platform versions, including <strong>Java</strong>, <strong>Kotlin</strong>, <strong>GraalVM</strong>, <strong>Micronaut</strong>, and <strong>React</strong>.</p>
-      <p class="paragraph">Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may not need some of these components:</p>
+    <div class="cover ">
+      <h2 class=""> Elide Framework: API Docs</h2>
+      <p class="paragraph"><a href="https://elide.dev">Elide</a> is a <strong>polyglot runtime and framework</strong> for building really cool web apps which can mix languages. It's a <strong>runtime</strong> in the sense that you can run software with it, like with <code class="lang-kotlin">node</code> or <code class="lang-kotlin">python</code>, and it is a <strong>framework</strong>, in the sense that it can be used on the JVM via <a href="https://search.maven.org/search?q=g:dev.elide">Maven Central</a>.</p>
+      <h3 class=""> Where these docs fit in</h3>
+      <p class="paragraph">These docs are the API docs for using Elide <i>as a framework</i>. If you are looking for <i>Getting Started</i> docs, or you're looking for docs describing Elide's use as a runtime, head to our <a href="https://elide.dev">website</a> or the main <a href="https://github.com/elide-dev/elide">GitHub repo</a>.</p>
+      <h3 class=""> Framework architecture</h3>
+      <p class="paragraph">Elide, as a framework, ranges from a Nothing Burger to Everything You Could Want, based on the set of modules you choose to add to your app.</p>
       <table>
         <thead>
           <tr>
-            <th>Status</th>
-            <th><strong>Java</strong></th>
-            <th><strong>Kotlin</strong></th>
-            <th><strong>GraalVM</strong></th>
-            <th><strong>Micronaut</strong></th>
-            <th><strong>React</strong></th>
-            <th><strong>Protobuf/gRPC</strong></th>
+            <th>Module</th>
+            <th>Platforms</th>
+            <th>Description</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">Java 20</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.9.20-Beta2</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">23.0.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">4.0.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">18.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">3.21.11</code>/<code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.56.1</code></td>
+            <td><a href="https://docs.elide.dev/apidocs/packages/core/index.html"><code class="org.jetbrains.dokka.pages.commenttable@2f8cf102 lang-kotlin">core</code></a></td>
+            <td>JVM, JavaScript, Native, WASM</td>
+            <td>Broadest platform support; simplest tools.</td>
           </tr>
           <tr>
-            <td></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">Java 20</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.9.10</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">23.0.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">3.10.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">18.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">3.21.11</code>/<code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.56.1</code></td>
+            <td><a href="https://docs.elide.dev/apidocs/packages/base/index.html"><code class="org.jetbrains.dokka.pages.commenttable@2f8cf102 lang-kotlin">base</code></a></td>
+            <td>JVM, JavaScript, Native</td>
+            <td>Useful tools which aren't yet available on all platforms.</td>
           </tr>
           <tr>
-            <td></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">Java 17</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.8.20</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">22.3.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">3.9.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">18.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">3.21.11</code>/<code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.42.0</code></td>
+            <td><a href="https://docs.elide.dev/apidocs/packages/test/index.html"><code class="org.jetbrains.dokka.pages.commenttable@2f8cf102 lang-kotlin">test</code></a></td>
+            <td>JVM, JavaScript, Native</td>
+            <td>Test and assertion utilities and annotations.</td>
           </tr>
           <tr>
-            <td></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">Java 11</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.7.22</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">22.3.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">3.5.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">18.x</code></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">3.20.1</code>/<code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">1.46.0</code></td>
+            <td><a href="https://docs.elide.dev/apidocs/packages/ssr/index.html"><code class="org.jetbrains.dokka.pages.commenttable@2f8cf102 lang-kotlin">ssr</code></a></td>
+            <td>JVM, JavaScript</td>
+            <td>Shared SSR annotations and logic across platforms.</td>
           </tr>
           <tr>
-            <td></td>
-            <td><code class="org.jetbrains.dokka.pages.commenttable@e803de0 lang-kotlin">Java 8-10</code></td>
-            <td>--</td>
-            <td>--</td>
-            <td>--</td>
-            <td>--</td>
-            <td>--</td>
+            <td><a href="https://docs.elide.dev/apidocs/packages/server/index.html"><code class="org.jetbrains.dokka.pages.commenttable@2f8cf102 lang-kotlin">server</code></a></td>
+            <td>JVM</td>
+            <td>Server operational code, annotations, controllers.</td>
           </tr>
         </tbody>
       </table>
-      <p class="paragraph">If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.</p>
-      <h2 class=""> Reports</h2>
-      <h3 class=""> Licensing</h3>
-      <p class="paragraph">Elide itself is licensed LICENSE as of November 2022. Dependencies are scanned for license compatibility; the report is available via FOSSA:</p>
-      <p class="paragraph"><a href="https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_large"></a></p>
-      <h3 class=""> Coverage</h3>
-      <p class="paragraph">Code coverage is continuously reported to <a href="https://app.codecov.io/gh/elide-dev/v3">Codecov</a> and <a href="https://sonarcloud.io/project/overview?id=elide-dev_v3">SonarCloud</a>:</p>
-      <p class="paragraph"><a href="https://codecov.io/gh/elide-dev/v3"></a></p>
-      <h2 class=""> Contributing</h2>
-      <p class="paragraph">Issue reports and pull requests are welcome! See our CONTRIBUTING.md or join our <a href="https://elide.dev/discord">discord community</a> and let us know which features you would like to see implemented, or simply participate in the discussions to help shape the future of the project.</p>
+      <p class="paragraph"><strong>Note:</strong> In this case, <i>Native</i> refers to <a href="https://kotlinlang.org/docs/native-overview.html">Kotlin Native</a>, not the GraalVM Native Image tool, which Elide also uses (when used as a runtime).</p>
+      <h3 class=""> Unsupported modules</h3>
+      <p class="paragraph">Additional modules exist, but are either internal to the Elide framework or runtime, or aren't yet supported for public use. You can feel free to try and use them, but they may not work as expected and APIs may shift without warning.</p>
     </div>
     <h2 class="">All modules:</h2>
     <div class="table"><a data-name="-847608156%2FMain%2F0" anchor-label="base" id="-847608156%2FMain%2F0" data-filterable-set=""></a>
@@ -252,7 +118,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-847608156%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">The <code class="lang-kotlin">elide-base</code> module is a multi-platform Kotlin module which provides basic utilities which are typically useful for all applications.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-387464810%2FMain%2F0" anchor-label="core" id="-387464810%2FMain%2F0" data-filterable-set=""></a>
@@ -263,40 +131,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-387464810%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
-        </div>
-      </div>
-<a data-name="-40258172%2FMain%2F0" anchor-label="model" id="-40258172%2FMain%2F0" data-filterable-set=""></a>
-      <div class="table-row">
-        <div class="main-subrow ">
-          <div class="w-100"><span class="inline-flex">
-              <div><a href="packages/model/index.html">model</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-40258172%2FMain%2F0"></span>
-                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-              </span></span></div>
-          <div><span class="brief-comment"></span></div>
-        </div>
-      </div>
-<a data-name="1112910152%2FMain%2F0" anchor-label="rpc" id="1112910152%2FMain%2F0" data-filterable-set=""></a>
-      <div class="table-row">
-        <div class="main-subrow ">
-          <div class="w-100"><span class="inline-flex">
-              <div><a href="packages/rpc/index.html">rpc</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1112910152%2FMain%2F0"></span>
-                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-              </span></span></div>
-          <div><span class="brief-comment"></span></div>
-        </div>
-      </div>
-<a data-name="-1209987915%2FMain%2F0" anchor-label="runtime" id="-1209987915%2FMain%2F0" data-filterable-set=""></a>
-      <div class="table-row">
-        <div class="main-subrow ">
-          <div class="w-100"><span class="inline-flex">
-              <div><a href="packages/runtime/index.html">runtime</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1209987915%2FMain%2F0"></span>
-                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-              </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><code class="lang-kotlin">elide-core</code> provides the widest possible platform support for Elide tooling and logic.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-726898318%2FMain%2F0" anchor-label="server" id="-726898318%2FMain%2F0" data-filterable-set=""></a>
@@ -308,7 +145,7 @@
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div><span class="brief-comment">
-              <p class="paragraph">Module docs here</p>
+              <p class="paragraph">The <code class="lang-kotlin">elide-server</code> module provides support for server apps built with the Elide Framework on JVM.</p>
             </span></div>
         </div>
       </div>
@@ -320,7 +157,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-86654533%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">The <code class="lang-kotlin">elide-ssr</code> module provides cross-platform types for polyglot SSR (<i>Server-side Rendering</i>) operations.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-1810328573%2FMain%2F0" anchor-label="test" id="-1810328573%2FMain%2F0" data-filterable-set=""></a>
@@ -331,7 +170,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1810328573%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">The <code class="lang-kotlin">elide-test</code> module is a multi-platform Kotlin module which provides cross-platform test and assertion utilities and annotations.</p>
+            </span></div>
         </div>
       </div>
     </div>

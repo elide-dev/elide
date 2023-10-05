@@ -1,6 +1,6 @@
 version: v1
 
-name: buf.build/elide/v3
+name: buf.build/elide/elide
 
 build:
   excludes:
@@ -49,5 +49,6 @@ breaking:
   use:
     - FILE
 deps:
-  - buf.build/googleapis/googleapis:cc916c31859748a68fd229a3c8d7a2e8
-  - buf.build/elide/safe-html-types
+  - buf.build/googleapis/googleapis:28151c0d0a1641bf938a7672c500e01d
+  - buf.build/elide/safe-html-types:6483157565f94944bd23c9aa43fb9b25
+

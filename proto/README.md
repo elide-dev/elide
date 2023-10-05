@@ -27,7 +27,7 @@ User models can use Elide annotations to explain their models to the framework. 
 Protocol Buffers syntax version 3.
 
 
-[1]: https://buf.build/elide/v3
+[1]: https://buf.build/elide/elide
 [2]: https://google.github.io/flatbuffers/
 [3]: https://github.com/Kotlin/kotlinx.serialization
 [4]: https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/formats.md

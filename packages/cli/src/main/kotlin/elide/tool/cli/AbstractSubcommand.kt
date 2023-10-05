@@ -69,7 +69,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   AutoCloseable,
   ToolCommandBase<Context>() {
   protected companion object {
-    private const val enableVirtualThreads = false
+    private const val enableVirtualThreads = true
     private const val enableFixedThreadPool = false
     private const val enableFlexibleThreadPool = true
 

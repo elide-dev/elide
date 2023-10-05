@@ -14,13 +14,15 @@ micronaut:
     default-charset: utf-8
 
   executors:
-    type: FIXED
     default:
       threads: 1
+      type: VIRTUAL
     io:
       threads: 2
+      type: VIRTUAL
     scheduled:
       threads: 1
+      type: VIRTUAL
 
 jackson:
   serialization:

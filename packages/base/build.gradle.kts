@@ -77,3 +77,13 @@ dependencies {
     api(libs.kotlinx.datetime)
   }
 }
+
+tasks {
+  withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
+    dokkaSourceSets {
+      configureEach {
+        includes.from("module.md")
+      }
+    }
+  }
+}

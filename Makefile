@@ -533,9 +533,9 @@ relock-deps:  ## Update dependency locks and hashes across Yarn and Gradle.
 
 serve-docs:  ## Serve documentation locally.
 	@echo "Serving docs at http://localhost:8000..."
-	$(CMD)cd $(SITE_BUILD)/docs/kotlin \
+	$(CMD)cd docs \
 		&& open http://localhost:8000 \
-		&& python -m SimpleHTTPServer
+		&& python3 -m http.server
 
 serve-site:  ## Serve Elide site locally.
 	@echo "Serving site at http://localhost:8000..."

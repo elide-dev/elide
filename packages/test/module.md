@@ -34,6 +34,14 @@ implementation "dev.elide:elide-test"
 </dependency>
 ```
 
+# Package elide.testing
+
+Provides testing and assertion utilities.
+
+# Package elide.testing.annotations
+
+Provides cross-platform annotations for use in tests.
+
 [0]: https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-test
 [1]: https://github.com/orgs/elide-dev/packages?ecosystem=maven&q=core&tab=packages&ecosystem=maven&q=elide-test
 [2]: https://junit.org/junit5/docs/current/user-guide/

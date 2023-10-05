@@ -87,6 +87,9 @@ public object Projects {
     "app",
     "ui",
     "processor",
+    "runtime",
+    "rpc",
+    "model",
   )
 
   /** Modules which should not be reported on for testing. */

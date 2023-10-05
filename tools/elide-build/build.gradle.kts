@@ -65,6 +65,7 @@ dependencies {
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
   implementation(libs.plugin.docker)
+  implementation(libs.plugin.dokka)
   implementation(libs.plugin.kotlin)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.graalvm)

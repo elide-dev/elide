@@ -20,8 +20,13 @@ import java.net.URI
     URI.create(SiteLinks.ReferenceDocs.kotlin)
   )
 
+  // Redirect to the API docs.
+  @Get("/apidocs") fun apiDocs(): HttpResponse<*> = HttpResponse.temporaryRedirect<Any>(
+    URI.create(SiteLinks.ReferenceDocs.kotlin)
+  )
+
   // Redirect to the Java reference docs.
   @Get("/javadoc") fun javaDocs(): HttpResponse<*> = HttpResponse.temporaryRedirect<Any>(
-    URI.create(SiteLinks.ReferenceDocs.javadoc)
+    URI.create(SiteLinks.ReferenceDocs.kotlin)
   )
 }

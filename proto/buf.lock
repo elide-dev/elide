@@ -4,10 +4,10 @@ deps:
   - remote: buf.build
     owner: elide
     repository: safe-html-types
-    commit: 3d5d7e9b28be4293bba1e2571091590e
-    digest: shake256:7456d665f7d46d01a546fb74d48fe9233b39fc75f0a5dd8d3f645963ddb7347ac51ca9ade346f19d3ee59f787761f13619860f0a16a20a5dc2e78d0d08322931
+    commit: 6483157565f94944bd23c9aa43fb9b25
+    digest: shake256:b5c1a237dc99fea3c90cd29fefac1c8896763e9dfe5f79f8178278ef85f61e9c0d0a920aee04cef5206c28a1ed27e214ec9fd3ae37e4c92f2e011732fb976cea
   - remote: buf.build
     owner: googleapis
     repository: googleapis
-    commit: cc916c31859748a68fd229a3c8d7a2e8
-    digest: shake256:469b049d0eb04203d5272062636c078decefc96fec69739159c25d85349c50c34c7706918a8b216c5c27f76939df48452148cff8c5c3ae77fa6ba5c25c1b8bf8
+    commit: 28151c0d0a1641bf938a7672c500e01d
+    digest: shake256:49215edf8ef57f7863004539deff8834cfb2195113f0b890dd1f67815d9353e28e668019165b9d872395871eeafcbab3ccfdb2b5f11734d3cca95be9e8d139de

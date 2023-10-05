@@ -1,0 +1,235 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PageWithProps</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.server.controller/-page-with-props/index.html&quot;}">1.0.0-alpha7</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:server:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="server::elide.server.controller/PageWithProps///PointingToDeclaration//-1592384214">
+  <div class="breadcrumbs"><a href="../../index.html">server</a><span class="delimiter">/</span><a href="../index.html">elide.server.controller</a><span class="delimiter">/</span><span class="current">PageWithProps</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Page</span><wbr><span>With</span><wbr><span><span>Props</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">PageWithProps</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">State</a><span class="token operator">&gt;</span> : <a href="../-page-controller/index.html">PageController</a></div><p class="paragraph">Extends <a href="../-page-controller/index.html">PageController</a> with support for page-level <a href="index.html">State</a>, produced via the <a href="props.html">props</a> method; computed state is shared with VM render executions, and can additionally be injected into the page for use by frontend code (typically to hydrate a server-rendered UI).</p><h3 class=""> Defining custom page state</h3><p class="paragraph">When extending <code class="lang-kotlin">PageWithProps</code>, a <a href="index.html">State</a> class must be provided which follows a set of requirements. All <a href="index.html">State</a> classes must:</p><ul><li><p class="paragraph">Be annotated with <span data-unresolved-link="kotlinx.serialization/Serializable///PointingToDeclaration/">kotlinx.serialization.Serializable</span> to facilitate DOM injection of prop structure. Annotating a class with <code class="lang-kotlin">Serializable</code> has its own set of requirements; see the Kotlin Serialization Guide for more info.</p></li><li><p class="paragraph">Annotated with <span data-unresolved-link="org.graalvm.polyglot/HostAccess.Export///PointingToDeclaration/">HostAccess.Export</span> for each SSR-available property -- this can occur at the top level of a tree of properties, for instance</p></li></ul><p class="paragraph">An example of compliant custom page <a href="index.html">State</a>:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Serializable<br>data class HelloProps(<br>  @get:HostAccess.Export val message: String = "Hello World!",<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">And providing that state via the <a href="index.html">PageWithProps</a> controller:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Page class HelloPage : PageWithProps&lt;HelloProps&gt;(HelloProps.serializer()) {<br>  override suspend fun props(): HelloProps {<br>    // ...<br>  }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class=""> Using state from SSR executions</h3><p class="paragraph">When running guest language code for SSR, for instance JavaScript, <a href="index.html">State</a> is made available and can be loaded using frontend tools -- for instance, elide.js.ssr.boot:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">boot&lt;HelloProps&gt; { props -&gt;<br>  // ...<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Optionally, the developer can load the inlined server-side props on their own, via a known DOM ID:</p><div class="sample-container"><pre><code class="block lang-js" theme="idea">JSON.parse(document.getElementById("ssr-data").textContent || '{}')</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">In SSR mode, elide.js.ssr.boot will read the props (if any), and provide them to the entrypoint for the application so initial render or hydration may be performed, based on the active serving mode.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>State</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Represents the serializable property state associated with this controller. <a href="props-async.html">propsAsync</a> is executed to produce the rendered set of page props. If no state is needed, use <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>serializer</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Kotlin serializer to use for the state attached to this controller.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>default</span><wbr><span><span>State</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Default state value to inject, if any.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1673854364%2FFunctions%2F-1592384214" anchor-label="asset" id="-1673854364%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-page-controller/asset.html"><span><span>asset</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1673854364%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-page-controller/asset.html"><span class="token function">asset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">module<span class="token operator">: </span><a href="../../elide.server/-asset-module-id/index.html">AssetModuleId</a><span class="token punctuation">, </span></span><span class="parameter ">handler<span class="token operator">: </span><span class="token keyword"></span><a href="../-page-controller/-asset-reference-builder/index.html">PageController.AssetReferenceBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server.assets/-asset-reference/index.html">AssetReference</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-595666950%2FFunctions%2F-1592384214" anchor-label="asset" id="-595666950%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.server/asset.html"><span><span>asset</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-595666950%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-page-controller/index.html">PageController</a><span class="token punctuation">.</span><a href="../../elide.server/asset.html"><span class="token function">asset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">type<span class="token operator">: </span><a href="../../elide.server.assets/-asset-type/index.html">AssetType</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">block<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token keyword"></span><a href="../../elide.server/-asset-handler/index.html">AssetHandler</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server/-finalized-asset-response/index.html">FinalizedAssetResponse</a></div><div class="brief "><p class="paragraph">Generate a <a href="../../elide.server/-streamed-asset-response/index.html">StreamedAssetResponse</a> which serves an asset embedded within the application, and specified by the provided <a href="../../elide.server/asset.html">block</a>; <a href="../../elide.server/asset.html">request</a> will be considered when producing the response.</p></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-page-controller/index.html">PageController</a><span class="token punctuation">.</span><a href="../../elide.server/asset.html"><span class="token function">asset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">moduleId<span class="token operator">: </span><a href="../../elide.server/-asset-module-id/index.html">AssetModuleId</a><span class="token punctuation">, </span></span><span class="parameter ">type<span class="token operator">: </span><a href="../../elide.server.assets/-asset-type/index.html">AssetType</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server/-finalized-asset-response/index.html">FinalizedAssetResponse</a></div><div class="brief "><p class="paragraph">Serve an application asset file which is embedded in the application JAR as a registered server asset, from the application resource path <code class="lang-kotlin">/assets</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1421478665%2FFunctions%2F-1592384214" anchor-label="assets" id="1421478665%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-page-controller/assets.html"><span><span>assets</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1421478665%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../-page-controller/assets.html"><span class="token function">assets</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server.assets/-asset-manager/index.html">AssetManager</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-920773281%2FFunctions%2F-1592384214" anchor-label="context" id="-920773281%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-page-controller/context.html"><span><span>context</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-920773281%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../-page-controller/context.html"><span class="token function">context</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="io.micronaut.context/ApplicationContext///PointingToDeclaration/">ApplicationContext</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="767944749%2FFunctions%2F-1592384214" anchor-label="finalizeAsync" id="767944749%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="finalize-async.html"><span>finalize</span><wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="767944749%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="finalize-async.html"><span class="token function">finalizeAsync</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">state<span class="token operator">: </span><a href="../../../../packages/ssr/elide.ssr.type/-request-state/index.html">RequestState</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/Deferred///PointingToDeclaration/">Deferred</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/index.html">Pair</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">State</a><span class="token operator">?</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">"Finalize" the state for this controller, by (1) computing the state, if necessary, and (2) serializing it for embedding into the page; frontend tools can then read this state to hydrate the UI without causing additional calls to the server.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="42751144%2FFunctions%2F-1592384214" anchor-label="html" id="42751144%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.server/html.html"><span><span>html</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="42751144%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-page-controller/index.html">PageController</a><span class="token punctuation">.</span><a href="../../elide.server/html.html"><span class="token function">html</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">block<span class="token operator">: </span><span class="token keyword">suspend </span><span class="token keyword"></span><a href="../../../../packages/server/kotlinx.html/-h-t-m-l/index.html">HTML</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server/-raw-response/index.html">RawResponse</a></div><div class="brief "><p class="paragraph">Responds to a client with an HTML response, using specified <a href="../../elide.server/html.html">block</a> to build an HTML page via Kotlin's HTML DSL.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1043238047%2FFunctions%2F-1592384214" anchor-label="props" id="1043238047%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="props.html"><span><span>props</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1043238047%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="props.html"><span class="token function">props</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">state<span class="token operator">: </span><a href="../../../../packages/ssr/elide.ssr.type/-request-state/index.html">RequestState</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">State</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Compute the server-side <a href="index.html">State</a> (also referred to as "props") which should be active for the lifetime of the current request; developer-provided props must follow guidelines to be usable safely (see below).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1134605815%2FFunctions%2F-1592384214" anchor-label="propsAsync" id="-1134605815%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="props-async.html"><span>props</span><wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1134605815%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="props-async.html"><span class="token function">propsAsync</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">state<span class="token operator">: </span><a href="../../../../packages/ssr/elide.ssr.type/-request-state/index.html">RequestState</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/Deferred///PointingToDeclaration/">Deferred</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">State</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Asynchronously compute the server-side <a href="index.html">State</a> (also referred to as "props") which should be active for the lifetime of the current request; developer-provided props must follow guidelines to be usable safely (see below).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-805824869%2FFunctions%2F-1592384214" anchor-label="script" id="-805824869%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.server/script.html"><span><span>script</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-805824869%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-page-controller/index.html">PageController</a><span class="token punctuation">.</span><a href="../../elide.server/script.html"><span class="token function">script</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">block<span class="token operator">: </span><span class="token keyword"></span><a href="../../elide.server/-asset-handler/index.html">AssetHandler</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server/-finalized-asset-response/index.html">FinalizedAssetResponse</a></div><div class="brief "><p class="paragraph">Serve a static script asset embedded within the application, based on the provided <a href="../../elide.server/script.html">block</a>, which should customize the serving of the script and declare a module ID.</p></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-page-controller/index.html">PageController</a><span class="token punctuation">.</span><a href="../../elide.server/script.html"><span class="token function">script</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">moduleId<span class="token operator">: </span><a href="../../elide.server/-asset-module-id/index.html">AssetModuleId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server/-finalized-asset-response/index.html">FinalizedAssetResponse</a></div><div class="brief "><p class="paragraph">Serve a static script asset embedded within the application, based on the provided <a href="../../elide.server/script.html">moduleId</a>, and customizing the response based on the provided <a href="../../elide.server/script.html">request</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-924078277%2FFunctions%2F-1592384214" anchor-label="stylesheet" id="-924078277%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.server/stylesheet.html"><span><span>stylesheet</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-924078277%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-page-controller/index.html">PageController</a><span class="token punctuation">.</span><a href="../../elide.server/stylesheet.html"><span class="token function">stylesheet</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">block<span class="token operator">: </span><span class="token keyword"></span><a href="../../elide.server/-asset-handler/index.html">AssetHandler</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server/-finalized-asset-response/index.html">FinalizedAssetResponse</a></div><div class="brief "><p class="paragraph">Serve a static stylesheet asset embedded within the application, based on the provided <a href="../../elide.server/stylesheet.html">block</a>, which should customize the serving of the document and declare a module ID.</p></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-page-controller/index.html">PageController</a><span class="token punctuation">.</span><a href="../../elide.server/stylesheet.html"><span class="token function">stylesheet</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">moduleId<span class="token operator">: </span><a href="../../elide.server/-asset-module-id/index.html">AssetModuleId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server/-finalized-asset-response/index.html">FinalizedAssetResponse</a></div><div class="brief "><p class="paragraph">Serve a static stylesheet asset embedded within the application, based on the provided <a href="../../elide.server/stylesheet.html">moduleId</a>, and customizing the response based on the provided <a href="../../elide.server/stylesheet.html">request</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

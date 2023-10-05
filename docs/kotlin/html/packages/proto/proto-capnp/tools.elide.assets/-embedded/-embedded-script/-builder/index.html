@@ -1,0 +1,569 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Builder</title>
+<link href="../../../../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;tools.elide.assets/-embedded/-embedded-script/-builder/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:proto:proto-capnp:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="proto-capnp::tools.elide.assets/Embedded.EmbeddedScript.Builder///PointingToDeclaration//2052388024">
+  <div class="breadcrumbs"><a href="../../../../index.html">proto-capnp</a><span class="delimiter">/</span><a href="../../../index.html">tools.elide.assets</a><span class="delimiter">/</span><a href="../../index.html">Embedded</a><span class="delimiter">/</span><a href="../index.html">EmbeddedScript</a><span class="delimiter">/</span><span class="current">Builder</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Builder</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">Builder</a> : <span data-unresolved-link="org.capnproto/StructBuilder///PointingToDeclaration/">StructBuilder</span></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="16705090%2FProperties%2F2052388024" anchor-label="capTable" id="16705090%2FProperties%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#16705090%2FProperties%2F2052388024"><span>cap</span><wbr><span><span>Table</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="16705090%2FProperties%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="index.html#16705090%2FProperties%2F2052388024">capTable</a><span class="token operator">: </span><span data-unresolved-link="org.capnproto/CapTableBuilder///PointingToDeclaration/">CapTableBuilder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="2068574769%2FFunctions%2F2052388024" anchor-label="asReader" id="2068574769%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="as-reader.html"><span>as</span><wbr><span><span>Reader</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2068574769%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="as-reader.html"><span class="token function">asReader</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-reader/index.html">Embedded.EmbeddedScript.Reader</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1665363094%2FFunctions%2F2052388024" anchor-label="getDirectDependency" id="-1665363094%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-direct-dependency.html"><span>get</span><wbr><span>Direct</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1665363094%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-direct-dependency.html"><span class="token function">getDirectDependency</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/TextList.Builder///PointingToDeclaration/">TextList.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="658822615%2FFunctions%2F2052388024" anchor-label="getFilename" id="658822615%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-filename.html"><span>get</span><wbr><span><span>Filename</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="658822615%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-filename.html"><span class="token function">getFilename</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/Text.Builder///PointingToDeclaration/">Text.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-851115610%2FFunctions%2F2052388024" anchor-label="getLanguage" id="-851115610%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-language.html"><span>get</span><wbr><span><span>Language</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-851115610%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-language.html"><span class="token function">getLanguage</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-embedded-script-language/index.html">Embedded.EmbeddedScriptLanguage</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1252904225%2FFunctions%2F2052388024" anchor-label="getLastModified" id="-1252904225%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-last-modified.html"><span>get</span><wbr><span>Last</span><wbr><span><span>Modified</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1252904225%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-last-modified.html"><span class="token function">getLastModified</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../tools.elide.std/-temporal/-timestamp/-builder/index.html">Temporal.Timestamp.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="145803695%2FFunctions%2F2052388024" anchor-label="getMetadata" id="145803695%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-metadata.html"><span>get</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="145803695%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-metadata.html"><span class="token function">getMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-embedded-script-metadata/-builder/index.html">Embedded.EmbeddedScriptMetadata.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1647417006%2FFunctions%2F2052388024" anchor-label="getModule" id="-1647417006%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-module.html"><span>get</span><wbr><span><span>Module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1647417006%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-module.html"><span class="token function">getModule</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/Text.Builder///PointingToDeclaration/">Text.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="213735379%2FFunctions%2F2052388024" anchor-label="getScript" id="213735379%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-script.html"><span>get</span><wbr><span><span>Script</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="213735379%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-script.html"><span class="token function">getScript</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../tools.elide.data/-data/-data-container-ref/-builder/index.html">Data.DataContainerRef.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1192965797%2FFunctions%2F2052388024" anchor-label="getSourcemap" id="-1192965797%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-sourcemap.html"><span>get</span><wbr><span><span>Sourcemap</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1192965797%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-sourcemap.html"><span class="token function">getSourcemap</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../tools.elide.data/-data/-data-container-ref/-builder/index.html">Data.DataContainerRef.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1521995986%2FFunctions%2F2052388024" anchor-label="getTransitiveDependency" id="-1521995986%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-transitive-dependency.html"><span>get</span><wbr><span>Transitive</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1521995986%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-transitive-dependency.html"><span class="token function">getTransitiveDependency</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/TextList.Builder///PointingToDeclaration/">TextList.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1019343706%2FFunctions%2F2052388024" anchor-label="hasDirectDependency" id="-1019343706%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="has-direct-dependency.html"><span>has</span><wbr><span>Direct</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1019343706%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="has-direct-dependency.html"><span class="token function">hasDirectDependency</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1023325421%2FFunctions%2F2052388024" anchor-label="hasFilename" id="-1023325421%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="has-filename.html"><span>has</span><wbr><span><span>Filename</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1023325421%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="has-filename.html"><span class="token function">hasFilename</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1532951950%2FFunctions%2F2052388024" anchor-label="hasModule" id="1532951950%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="has-module.html"><span>has</span><wbr><span><span>Module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1532951950%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="has-module.html"><span class="token function">hasModule</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1337109098%2FFunctions%2F2052388024" anchor-label="hasTransitiveDependency" id="1337109098%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="has-transitive-dependency.html"><span>has</span><wbr><span>Transitive</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1337109098%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="has-transitive-dependency.html"><span class="token function">hasTransitiveDependency</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="101257169%2FFunctions%2F2052388024" anchor-label="initDirectDependency" id="101257169%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-direct-dependency.html"><span>init</span><wbr><span>Direct</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="101257169%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-direct-dependency.html"><span class="token function">initDirectDependency</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/TextList.Builder///PointingToDeclaration/">TextList.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-30268860%2FFunctions%2F2052388024" anchor-label="initFilename" id="-30268860%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-filename.html"><span>init</span><wbr><span><span>Filename</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-30268860%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-filename.html"><span class="token function">initFilename</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/Text.Builder///PointingToDeclaration/">Text.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1326598487%2FFunctions%2F2052388024" anchor-label="initLastModified" id="1326598487%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-last-modified.html"><span>init</span><wbr><span>Last</span><wbr><span><span>Modified</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1326598487%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-last-modified.html"><span class="token function">initLastModified</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../tools.elide.std/-temporal/-timestamp/-builder/index.html">Temporal.Timestamp.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="221174823%2FFunctions%2F2052388024" anchor-label="initMetadata" id="221174823%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-metadata.html"><span>init</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="221174823%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-metadata.html"><span class="token function">initMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-embedded-script-metadata/-builder/index.html">Embedded.EmbeddedScriptMetadata.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="305175273%2FFunctions%2F2052388024" anchor-label="initModule" id="305175273%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-module.html"><span>init</span><wbr><span><span>Module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="305175273%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-module.html"><span class="token function">initModule</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/Text.Builder///PointingToDeclaration/">Text.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1542608821%2FFunctions%2F2052388024" anchor-label="initScript" id="-1542608821%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-script.html"><span>init</span><wbr><span><span>Script</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1542608821%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-script.html"><span class="token function">initScript</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../tools.elide.data/-data/-data-container-ref/-builder/index.html">Data.DataContainerRef.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1143539171%2FFunctions%2F2052388024" anchor-label="initSourcemap" id="1143539171%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-sourcemap.html"><span>init</span><wbr><span><span>Sourcemap</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1143539171%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-sourcemap.html"><span class="token function">initSourcemap</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../tools.elide.data/-data/-data-container-ref/-builder/index.html">Data.DataContainerRef.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="679487885%2FFunctions%2F2052388024" anchor-label="initTransitiveDependency" id="679487885%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="init-transitive-dependency.html"><span>init</span><wbr><span>Transitive</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="679487885%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="init-transitive-dependency.html"><span class="token function">initTransitiveDependency</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="org.capnproto/TextList.Builder///PointingToDeclaration/">TextList.Builder</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1129870998%2FFunctions%2F2052388024" anchor-label="setDirectDependency" id="-1129870998%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-direct-dependency.html"><span>set</span><wbr><span>Direct</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1129870998%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-direct-dependency.html"><span class="token function">setDirectDependency</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><span data-unresolved-link="org.capnproto/TextList.Reader///PointingToDeclaration/">TextList.Reader</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="487065497%2FFunctions%2F2052388024" anchor-label="setFilename" id="487065497%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-filename.html"><span>set</span><wbr><span><span>Filename</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="487065497%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-filename.html"><span class="token function">setFilename</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-filename.html"><span class="token function">setFilename</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><span data-unresolved-link="org.capnproto/Text.Reader///PointingToDeclaration/">Text.Reader</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-767993706%2FFunctions%2F2052388024" anchor-label="setLanguage" id="-767993706%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-language.html"><span>set</span><wbr><span><span>Language</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-767993706%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-language.html"><span class="token function">setLanguage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="../../-embedded-script-language/index.html">Embedded.EmbeddedScriptLanguage</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1329346545%2FFunctions%2F2052388024" anchor-label="setLastModified" id="1329346545%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-last-modified.html"><span>set</span><wbr><span>Last</span><wbr><span><span>Modified</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1329346545%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-last-modified.html"><span class="token function">setLastModified</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="../../../../tools.elide.std/-temporal/-timestamp/-reader/index.html">Temporal.Timestamp.Reader</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="708216809%2FFunctions%2F2052388024" anchor-label="setMetadata" id="708216809%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-metadata.html"><span>set</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="708216809%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-metadata.html"><span class="token function">setMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="../../-embedded-script-metadata/-reader/index.html">Embedded.EmbeddedScriptMetadata.Reader</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="222727801%2FFunctions%2F2052388024" anchor-label="setModule" id="222727801%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-module.html"><span>set</span><wbr><span><span>Module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="222727801%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-module.html"><span class="token function">setModule</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-module.html"><span class="token function">setModule</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><span data-unresolved-link="org.capnproto/Text.Reader///PointingToDeclaration/">Text.Reader</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1976056036%2FFunctions%2F2052388024" anchor-label="setScript" id="1976056036%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-script.html"><span>set</span><wbr><span><span>Script</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1976056036%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-script.html"><span class="token function">setScript</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="../../../../tools.elide.data/-data/-data-container-ref/-reader/index.html">Data.DataContainerRef.Reader</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="74318532%2FFunctions%2F2052388024" anchor-label="setSourcemap" id="74318532%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-sourcemap.html"><span>set</span><wbr><span><span>Sourcemap</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="74318532%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-sourcemap.html"><span class="token function">setSourcemap</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="../../../../tools.elide.data/-data/-data-container-ref/-reader/index.html">Data.DataContainerRef.Reader</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1455927770%2FFunctions%2F2052388024" anchor-label="setTransitiveDependency" id="-1455927770%2FFunctions%2F2052388024" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-capnp:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-capnp:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-transitive-dependency.html"><span>set</span><wbr><span>Transitive</span><wbr><span><span>Dependency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1455927770%2FFunctions%2F2052388024"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-capnp:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-transitive-dependency.html"><span class="token function">setTransitiveDependency</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><span data-unresolved-link="org.capnproto/TextList.Reader///PointingToDeclaration/">TextList.Reader</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

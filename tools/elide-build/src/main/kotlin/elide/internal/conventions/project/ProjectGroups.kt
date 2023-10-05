@@ -66,7 +66,30 @@ public object Projects {
     "graalvm-react",
   )
 
-  /** Modules which should not be reported on for testing.. */
+  /** Modules which should not be exported for documentation. */
+  public val noDocModules: Set<String> = sortedSetOf(
+    "cli",
+    "frontend",
+    "graalvm",
+    "graalvm-js",
+    "graalvm-jvm",
+    "graalvm-kt",
+    "graalvm-llvm",
+    "graalvm-py",
+    "graalvm-rb",
+    "graalvm-react",
+    "graalvm-wasm",
+    "proto-capnp",
+    "proto-core",
+    "proto-flatbuffers",
+    "proto-kotlinx",
+    "proto-protobuf",
+    "app",
+    "ui",
+    "processor",
+  )
+
+  /** Modules which should not be reported on for testing. */
   public val noTestModules: List<String> = listOf(
     "bom",
     "platform",

@@ -1,0 +1,145 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>AssetReader</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.server.assets/-asset-reader/index.html&quot;}">1.0.0-alpha7</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:server:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="server::elide.server.assets/AssetReader///PointingToDeclaration//-1592384214">
+  <div class="breadcrumbs"><a href="../../index.html">server</a><span class="delimiter">/</span><a href="../index.html">elide.server.assets</a><span class="delimiter">/</span><span class="current">AssetReader</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Asset</span><wbr><span><span>Reader</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="../../../../packages/base/elide.annotations/-a-p-i/index.html"><span class="token annotation builtin">API</span></a></div></div><span class="token keyword">interface </span><a href="index.html">AssetReader</a> : <a href="../-asset-resolver/index.html">AssetResolver</a></div><p class="paragraph">Describes the API surface expected for a reader of static assets from some data source; responsible for efficiently reading assets from a resource path and producing resulting content.</p><p class="paragraph">Asset readers can cache the results of their reads, if desired, and may base caching decisions on the asset descriptors provided when resolving assets.</p><h3 class=""> Resource assets</h3><p class="paragraph">Typically, resources are embedded in the application JAR or native image, in zipped form, alongside embedded SSR assets and compiled JVM or native classes. The main <a href="index.html">AssetReader</a> implementation knows how to interpret these assets based on a binary-encoded protocol buffer message <i>also</i> embedded within the application.</p><h3 class=""> Replacing the main reader</h3><p class="paragraph">The developer may find it desirable to write and provide their own <a href="index.html">AssetReader</a> implementation, which can be accomplished via Micronaut's DI system (read on below). In particular, this may be a requirement for stable testing of a broader <a href="../-asset-manager/index.html">AssetManager</a> implementation.</p><h4 class=""> Replacing components of the <a href="../-asset-manager/index.html">AssetManager</a></h4><p class="paragraph">To replace the stock <a href="index.html">AssetReader</a> implementation, Micronaut's <code class="lang-kotlin">Replaces</code> annotation can be used:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">package your.package.here;<br><br>import elide.server.assets.AssetReader;<br>import io.micronaut.context.annotation.Replaces;<br><br>@Replaces(ServerAssetReader::class)<br>public class MyCoolAssetReader: AssetReader {<br>  // (impl here)<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-asset-manager/index.html"><span>Asset</span><wbr><span><span>Manager</span></span></a></div></span></div><div><div class="title"><p class="paragraph">which coordinates between the <a href="index.html">AssetReader</a> and <a href="../-asset-resolver/index.html">AssetResolver</a>.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-rendered-asset/index.html"><span>Rendered</span><wbr><span><span>Asset</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the generic return value model leveraged by <a href="../-asset-manager/index.html">AssetManager</a>.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-server-asset/index.html"><span>Server</span><wbr><span><span>Asset</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the symbolic asset reference model leveraged by <a href="../-asset-manager/index.html">AssetManager</a>.</p></div></div></div></div></div><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-server-asset-reader/index.html">ServerAssetReader</a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-602256285%2FFunctions%2F-1592384214" anchor-label="findByModuleId" id="-602256285%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-asset-resolver/find-by-module-id.html"><span>find</span><wbr><span>By</span><wbr><span>Module</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-602256285%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-asset-resolver/find-by-module-id.html"><span class="token function">findByModuleId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">moduleId<span class="token operator">: </span><a href="../../elide.server/-asset-module-id/index.html">AssetModuleId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-server-asset/index.html">ServerAsset</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Return the asset module corresponding to the provided <a href="../-asset-resolver/find-by-module-id.html">moduleId</a>, if possible, or return <code class="lang-kotlin">null</code> to indicate that the asset could not be located.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-915454953%2FFunctions%2F-1592384214" anchor-label="pointerTo" id="-915454953%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="pointer-to.html"><span>pointer</span><wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-915454953%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="pointer-to.html"><span class="token function">pointerTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">moduleId<span class="token operator">: </span><a href="../../elide.server/-asset-module-id/index.html">AssetModuleId</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-asset-pointer/index.html">AssetPointer</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Resolve a reference to an asset identified by the provided <a href="pointer-to.html">moduleId</a>, in the form of an <a href="../-asset-pointer/index.html">AssetPointer</a>; if no matching asset can be found, return <code class="lang-kotlin">null</code> to indicate a not-found failure.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="236157041%2FFunctions%2F-1592384214" anchor-label="readAsync" id="236157041%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="read-async.html"><span>read</span><wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="236157041%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="read-async.html"><span class="token function">readAsync</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descriptor<span class="token operator">: </span><a href="../-server-asset/index.html">ServerAsset</a><span class="token punctuation">, </span></span><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/Deferred///PointingToDeclaration/">Deferred</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-rendered-asset/index.html">RenderedAsset</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Given a resolved asset <a href="read-async.html">descriptor</a> which should be known to exist, read the associated asset content, and return it as an async <span data-unresolved-link="kotlinx.coroutines/Deferred///PointingToDeclaration/">Deferred</span> task which can be awaited, and then consumed.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-263740271%2FFunctions%2F-1592384214" anchor-label="resolve" id="-263740271%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-asset-resolver/resolve.html"><span><span>resolve</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-263740271%2FFunctions%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-asset-resolver/resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-server-asset/index.html">ServerAsset</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Resolve the provided HTTP <a href="../-asset-resolver/resolve.html">request</a> to an asset path string, and then resolve the asset path string to a loaded <a href="../-server-asset/index.html">ServerAsset</a>, if possible; return <code class="lang-kotlin">null</code> if the asset cannot be located.</p></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-asset-resolver/resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-server-asset/index.html">ServerAsset</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Resolve the provided <a href="../-asset-resolver/resolve.html">path</a> to a server asset, if possible, or return <code class="lang-kotlin">null</code> to indicate that the asset could not be located; the given <a href="../-asset-resolver/resolve.html">path</a> value can be prefixed with the asset serving prefix (<code class="lang-kotlin">/_/asset</code> by default) or not prefixed at all.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

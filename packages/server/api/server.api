@@ -401,6 +401,7 @@ public abstract class elide/server/controller/PageController : elide/server/cont
 	public static synthetic fun asset$default (Lelide/server/controller/PageController;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/server/assets/AssetReference;
 	public fun assets ()Lelide/server/assets/AssetManager;
 	public fun context ()Lio/micronaut/context/ApplicationContext;
+	protected final fun html (Lio/micronaut/http/HttpRequest;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class elide/server/controller/PageController$AssetReferenceBuilder {
@@ -412,9 +413,19 @@ public final class elide/server/controller/PageController$AssetReferenceBuilder 
 	public final fun setPreload (Z)V
 }
 
+public final class elide/server/controller/PageController$ServerRenderAgent {
+	public fun <init> (Lkotlinx/html/HTML;Lelide/server/controller/PageController;Lio/micronaut/http/HttpRequest;)V
+	public final fun body (Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun body$default (Lelide/server/controller/PageController$ServerRenderAgent;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getDom ()Lkotlinx/html/HTML;
+	public final fun head (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun render (Lkotlinx/html/BODY;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun render$default (Lelide/server/controller/PageController$ServerRenderAgent;Lkotlinx/html/BODY;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
 public abstract class elide/server/controller/PageWithProps : elide/server/controller/PageController {
-	protected fun <init> (Lkotlinx/serialization/KSerializer;Ljava/lang/Object;)V
-	public synthetic fun <init> (Lkotlinx/serialization/KSerializer;Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected fun <init> (Lkotlin/reflect/KClass;Ljava/lang/Object;)V
+	public synthetic fun <init> (Lkotlin/reflect/KClass;Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun finalizeAsync (Lelide/ssr/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun props (Lelide/ssr/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun propsAsync (Lelide/ssr/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

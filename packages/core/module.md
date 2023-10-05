@@ -1,7 +1,6 @@
 # Module core
 
-The `elide-core` module is a multi-platform Kotlin module which provides the widest possible platform support for Elide
-tooling and logic; utilities which reside here are supported for all [Kotlin platforms][2].
+`elide-core` provides the widest possible platform support for Elide tooling and logic.
 
 ## Universal applicability
 
@@ -37,6 +36,38 @@ implementation "dev.elide:elide-core"
   <artifactId>elide-core</artifactId>
 </dependency>
 ```
+
+# Package elide.core
+
+Platform and global defaults.
+
+# Package elide.core.annotations
+
+Cross-platform annotations which are made available to all apps.
+
+# Package elide.core.api
+
+API utilities and markers.
+
+# Package elide.core.crypto
+
+Enumerations for cryptography and hashing.
+
+# Package elide.core.encoding
+
+Cross-platform encoding utilities and API.
+
+# Package elide.core.encoding.base64
+
+Pure-Kotlin base64 encoding via `elide.core.encoding`.
+
+# Package elide.core.encoding.hex
+
+Pure-Kotlin hex encoding via `elide.core.encoding`.
+
+# Package elide.core.platform
+
+Platform-specific defaults.
 
 [0]: https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-core
 [1]: https://github.com/orgs/elide-dev/packages?ecosystem=maven&q=core&tab=packages&ecosystem=maven&q=elide-core

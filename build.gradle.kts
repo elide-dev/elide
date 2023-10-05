@@ -19,7 +19,10 @@
 
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
@@ -249,6 +252,28 @@ subprojects {
 
     if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
       plugin("org.jetbrains.dokka")
+
+      val docAsset: (String) -> File = {
+        layout.projectDirectory.file("docs/$it").asFile
+      }
+      val creativeAsset: (String) -> File = {
+        layout.projectDirectory.file("creative/$it").asFile
+      }
+
+      tasks.withType<DokkaTask>().configureEach {
+        pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+          footerMessage = "© 2022 Elide Ventures, LLC"
+          separateInheritedMembers = false
+          templatesDir = layout.projectDirectory.dir("docs/templates").asFile
+          customAssets = listOf(
+            creativeAsset("logo/logo-wide-1200-w-r2.png"),
+            creativeAsset("logo/gray-elide-symbol-lg.png"),
+          )
+          customStyleSheets = listOf(docAsset(
+            "styles/logo-styles.css",
+          ))
+        }
+      }
     }
   }
 
@@ -458,8 +483,9 @@ tasks.register("preMerge") {
 
 if (buildDocs == "true") {
   tasks.named("dokkaHtmlMultiModule", DokkaMultiModuleTask::class).configure {
-    includes.from("README.md")
-    outputDirectory = layout.buildDirectory.dir("docs/kotlin/html").get().asFile
+    moduleName = "Elide"
+    includes.from(layout.projectDirectory.dir("docs/docs.md").asFile)
+    outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
   }
 }
 
@@ -471,13 +497,13 @@ tasks {
   }
 
   htmlDependencyReport {
-    reports.html.outputLocation = file(layout.buildDirectory.dir("reports/project/dependencies"))
+    reports.html.outputLocation = layout.projectDirectory.dir("docs/reports").asFile
   }
 }
 
 if (enableKnit == "true") {
-  the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://beta.elide.dev/docs/kotlin"
-  the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "build/dokka/htmlMultiModule"
+  the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://docs.elide.dev/"
+  the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "docs/apidocs"
   the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
     include("README.md")
     include("docs/guide/**/*.md")
@@ -521,7 +547,6 @@ tasks.create("docs") {
       listOf(
         "dokkaHtml",
         "dokkaHtmlMultiModule",
-        "dokkaGfm",
         "htmlDependencyReport",
       )
     )

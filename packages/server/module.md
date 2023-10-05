@@ -1,7 +1,6 @@
 # Module server
 
-The `elide-server` module provides logic and tools to prepare server applications with the Elide Framework, in JVM-based
-languages like Java, Kotlin, Groovy, Scala, and so on.
+The `elide-server` module provides support for server apps built with the Elide Framework on JVM.
 
 ## Built with Micronaut
 
@@ -83,6 +82,30 @@ This particular sample is embedded within the Elide codebase, and can be run wit
 - Intelligent build-time compression support (Brotli, Gzip, etc.)
 - Execute JavaScript, Python, Ruby, and other languages via Elide's SSR tools
 - Share objects between languages for SSR calls
+
+# Package elide.server
+
+# Package elide.server.annotations
+
+# Package elide.server.assets
+
+# Package elide.server.cfg
+
+# Package elide.server.controller
+
+# Package elide.server.controller.builtin
+
+# Package elide.server.http
+
+# Package elide.server.runtime
+
+# Package elide.server.runtime.jvm
+
+# Package elide.server.ssr
+
+# Package kotlinx.html
+
+# Package kotlinx.html.tagext
 
 [0]: https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-server
 [1]: https://github.com/elide-dev/elide/packages/1933415

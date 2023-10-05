@@ -49,9 +49,30 @@ After installation, you can run `elide help` or `elide info` to see more informa
 
 The Elide CLI supports JavaScript out of the box, and includes experimental support for Python, while more languages such as Ruby are planned for future releases.
 
-### Environment files
+### Multi-language
 
-Elide provides `.env` files support at the runtime level, without the need for manual configuration or third-party packages. Environment variables from `.env` files will be picked up and injected into the application using a language-specific API (e.g. `process.env` in JavaScript).
+With Elide, you can write your app in **any combination of JavaScript, Python, Ruby, and JVM.** You can even pass objects between languages, and use off-the-shelf code
+from multiple dependency ecosystems (e.g. NPM and Maven Central) all without leaving the warm embrace of your running app.
+
+That means fast polyglot code with:
+- No network border, no IPC border
+- No serialization requirement
+
+### "Just enough" Node API support
+
+Elide supports enough of the Node API to run things like [React](https://reactjs.org/) and [MUI](https://mui.com). Just
+like platforms such as [Cloudflare Workers](https://workers.cloudflare.com/) and [Bun](https://bun.sh), Elide aims for
+drop-in compatibility with _most_ Node.js software, but does not aim to be a full replacement.
+
+### Dotenv support
+
+Elide provides `.env` files support at the runtime level, without the need for manual configuration or third-party packages.
+Environment variables from `.env` files will be picked up and injected into the application using a language-specific API (e.g. `process.env` in JavaScript).
+
+### Closed-world I/O
+
+Elide, by default, works on a closed-world I/O assumption, meaning that it will **not allow access** to the host machine's file system unless told to do so.
+This is a security feature but also an immutability feature which can be used to "seal" your application or perform advanced build caching.
 
 ### Server engine
 
@@ -103,6 +124,7 @@ The following features are currently planned or under construction:
 Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering options with very high performance, by running JavaScript code inside your JVM server:
 
 ```properties
+// gradle.properties
 elideVersion = 1.0.0-alpha7
 ```
 
@@ -204,50 +226,6 @@ fun main() {
 > [!NOTE]
 > More versatile integration with frameworks like [Micronaut](https://micronaut.io) and [Ktor](https://ktor.io/) is planned but not yet supported. The API and packages used for these integrations may change as we add more features.
 
-## Building a custom runtime
-
-If you are building a JVM application that runs guest code in one of the languages supported by Elide, you can use the Runtime DSL to configure your own embedded polyglot engine:
-
-```kotlin
-implementation("dev.elide:elide-graalvm:1.0.0-alpha7")
-```
-
-or for Groovy scripts:
-
-```groovy
-implementation 'dev.elide:elide-graalvm:1.0.0-alpha7'
-```
-
-The DSL is used internally by the Elide binaries and by the SSR packages and provides a simplified API to harness the power of the underlying [GraalVM](https://graalvm.org) engine:
-
-```kotlin
-// configure and create a new engine
-val engine = PolyglotEngine {
-  // add support for the JavaScript language
-  install(JavaScript) {
-    // enable ESM support
-    esm = true
-    
-    // include custom bindings into the engine, these
-    // will be available as top level symbols
-    bindings {
-      put("version", "1.0.0")
-    }
-  }
-}
-
-// obtain a context to evaluate source code
-val context = engine.acquire()
-
-// evaluate guest JavaScript code
-context.javascript("""
-  console.log(`Hello from custom runtime v${version}`)
-""")
-```
-
-> [!WARNING]
-> The Elide Runtime DSL is intended for advanced use cases, and while we try not to break compatibility between releases, there are no guarantees.
-
 ## Version compatibility
 
 The following version matrix indicates tested support across tool and platform versions, including **Java**,
@@ -256,13 +234,13 @@ The following version matrix indicates tested support across tool and platform v
 Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may
 not need some of these components:
 
-| Status                                                          | **Java**    | **Kotlin**    | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
-|-----------------------------------------------------------------|-------------|---------------|-------------|---------------|-----------|--------------------|
+| Status                                                          | **Java**    | **Kotlin**     | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
+|-----------------------------------------------------------------|-------------|----------------|-------------|---------------|-----------|--------------------|
 | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 20`   | `1.9.20-Beta2` | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`      | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`      | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`      | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
-| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --            | --          | --            | --        | --                 |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`       | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`       | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`       | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --             | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
 ## Reports
@@ -273,6 +251,9 @@ Elide itself is licensed [under MIT](LICENSE) as of November 2022. Dependencies 
 the report is available via FOSSA:
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_large)
+
+Building and using Elide with Oracle GraalVM requires license compliance through Oracle. For more information, see the
+[GraalVM website](https://graalvm.org).
 
 ### Coverage
 

@@ -31,9 +31,19 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/runtime.json\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/jvm/java-darwin-aarch64.tar.xz\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/jvm/runtime.json.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/jvm/runtime.json\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/llvm/llvm-darwin-aarch64.tar.xz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/llvm/runtime.json.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/python/environment.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/python/python-darwin-aarch64.tar.xz\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/python/runtime.json.gz\\E"
   }, {
@@ -167,11 +177,19 @@
   }, {
     "pattern":"\\Qbootstrap-dev.properties\\E"
   }, {
+    "pattern":"\\Qbootstrap-dev.yaml\\E"
+  }, {
+    "pattern":"\\Qbootstrap-dev.yml\\E"
+  }, {
     "pattern":"\\Qbootstrap.conf\\E"
   }, {
     "pattern":"\\Qbootstrap.json\\E"
   }, {
     "pattern":"\\Qbootstrap.properties\\E"
+  }, {
+    "pattern":"\\Qbootstrap.yaml\\E"
+  }, {
+    "pattern":"\\Qbootstrap.yml\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/PythonBuiltins.class\\E"
   }, {
@@ -523,11 +541,19 @@
   }, {
     "pattern":"\\Qelide.yml/application-dev.properties\\E"
   }, {
+    "pattern":"\\Qelide.yml/application-dev.yaml\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application-dev.yml\\E"
+  }, {
     "pattern":"\\Qelide.yml/application.conf\\E"
   }, {
     "pattern":"\\Qelide.yml/application.json\\E"
   }, {
     "pattern":"\\Qelide.yml/application.properties\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application.yaml\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application.yml\\E"
   }, {
     "pattern":"\\Qgraalpy_versions\\E"
   }, {
@@ -545,13 +571,17 @@
   }, {
     "pattern":"\\Qmicronaut-version.properties\\E"
   }, {
-    "pattern":"\\Qorg/fusesource/jansi/*.*"
-  }, {
     "pattern":"\\Qorg/fusesource/jansi/**/*.*"
+  }, {
+    "pattern":"\\Qorg/fusesource/jansi/*.*"
   }, {
     "pattern":"\\Qorg/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib\\E"
   }, {
     "pattern":"\\Qorg/fusesource/jansi/jansi.properties\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/ICUConfig.properties\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt72b/uprops.icu\\E"
   }, {
     "pattern":"\\Qtruffleruby/core/argf.rb\\E"
   }, {

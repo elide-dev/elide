@@ -128,3 +128,47 @@ buildSamples = true
 ```
 
 Check the `gradle.properties` file at the project root to see all available options.
+
+## Building a custom runtime
+
+If you are building a JVM application that runs guest code in one of the languages supported by Elide, you can use the Runtime DSL to configure your own embedded polyglot engine:
+
+```kotlin
+implementation("dev.elide:elide-graalvm:1.0.0-alpha7")
+```
+
+or for Groovy scripts:
+
+```groovy
+implementation 'dev.elide:elide-graalvm:1.0.0-alpha7'
+```
+
+The DSL is used internally by the Elide binaries and by the SSR packages and provides a simplified API to harness the power of the underlying [GraalVM](https://graalvm.org) engine:
+
+```kotlin
+// configure and create a new engine
+val engine = PolyglotEngine {
+  // add support for the JavaScript language
+  install(JavaScript) {
+    // enable ESM support
+    esm = true
+
+    // include custom bindings into the engine, these
+    // will be available as top level symbols
+    bindings {
+      put("version", "1.0.0")
+    }
+  }
+}
+
+// obtain a context to evaluate source code
+val context = engine.acquire()
+
+// evaluate guest JavaScript code
+context.javascript("""
+  console.log(`Hello from custom runtime v${version}`)
+""")
+```
+
+> [!WARNING]
+> The Elide Runtime DSL is intended for advanced use cases, and while we try not to break compatibility between releases, there are no guarantees.

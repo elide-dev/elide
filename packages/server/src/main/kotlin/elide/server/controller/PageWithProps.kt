@@ -20,8 +20,11 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.guava.asDeferred
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
+import kotlin.reflect.KClass
 import elide.ssr.type.RequestState
 
 /**
@@ -78,12 +81,12 @@ import elide.ssr.type.RequestState
  *
  * @param State Represents the serializable property state associated with this controller. [propsAsync] is executed to
  *   produce the rendered set of page props. If no state is needed, use [Any].
- * @param serializer Kotlin serializer to use for the state attached to this controller.
+ * @param props Type to use for shared props.
  * @param defaultState Default state value to inject, if any.
  */
 @Suppress("MemberVisibilityCanBePrivate")
-public abstract class PageWithProps<State> protected constructor (
-  @VisibleForTesting internal val serializer: KSerializer<State>,
+public abstract class PageWithProps<State : Any> protected constructor (
+  @VisibleForTesting internal val props: KClass<State>,
   @VisibleForTesting internal val defaultState: State? = null,
 ) : PageController() {
   /** @return Finalized context from this controller, which can then be passed to render processes. */
@@ -156,12 +159,13 @@ public abstract class PageWithProps<State> protected constructor (
    *   [props] and [propsAsync] methods, and the second item is the same state, serialized as a JSON [String]. If no
    *   state is available, both pair members are `null`.
    */
+  @OptIn(InternalSerializationApi::class)
   public open suspend fun finalizeAsync(state: RequestState): Deferred<Pair<State?, String?>> = coroutineScope {
     return@coroutineScope async {
       val computed = computePropsAsync(state).await()
       if (computed != null) {
         computed to Json.encodeToString(
-          serializer,
+          props.serializer(),
           computed,
         )
       } else {

@@ -87,6 +87,8 @@ This particular sample is embedded within the Elide codebase, and can be run wit
 
 # Package elide.server.annotations
 
+Server-specific JVM annotations, for use with Jakarta-compliant DI containers.
+
 # Package elide.server.assets
 
 # Package elide.server.cfg

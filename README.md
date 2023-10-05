@@ -48,6 +48,7 @@ After installation, you can run `elide help` or `elide info` to see more informa
 ## Features
 
 The Elide CLI supports JavaScript out of the box, and includes experimental support for Python, while more languages such as Ruby are planned for future releases.
+
 ### Environment files
 
 Elide provides `.env` files support at the runtime level, without the need for manual configuration or third-party packages. Environment variables from `.env` files will be picked up and injected into the application using a language-specific API (e.g. `process.env` in JavaScript).
@@ -101,34 +102,53 @@ The following features are currently planned or under construction:
 
 Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering options with very high performance, by running JavaScript code inside your JVM server:
 
-```kotlin
-// build.gradle.kts
-implementation("dev.elide:elide-server:1.0.0-alpha7")
+```properties
+elideVersion = 1.0.0-alpha7
 ```
 
-or if you use Groovy:
+```kotlin
+// settings.gradle.kts
+val elideVersion: String by settings
 
-```groovy
-// build.gradle
-implementation 'dev.elide:elide-server:1.0.0-alpha7'
+dependencyResolutionManagement {
+  versionCatalogs {
+    create("framework") {
+      from("dev.elide:elide-bom:$elideVersion")
+    }
+  }
+}
+
+// then, in your build.gradle.kts files, add the modules you want...
+implementation(framework.elide.core)
+implementation(framework.elide.base)
+implementation(framework.elide.server)
 ```
 
 See our [samples](samples) to explore the features available when integrating with server frameworks, the following code for a server application uses React with Server-Side Rendering:
 
 ```kotlin
 // server/App.kt
+/** State properties for the root page. */
+@Props data class HelloProps (
+  @Polyglot val name: String = "Elide"
+)
 
 /** GET `/`: Controller for index page. */
-@Controller class Index {
+@Page class Index : PageWithProps<HelloProps>(HelloProps::class) {
+  /** @return Props to use when rendering this page. */
+  override suspend fun props(state: RequestState) =
+    HelloProps(name = state.request.parameters["name"] ?: "Elide v3")
+
   // Serve an HTML page with isomorphic React SSR.
-  @Get("/") fun index() = ssr {
+  @Get("/") suspend fun index(request: HttpRequest<*>) = html(request) {
     head {
       title { +"Hello, Elide!" }
+      stylesheet("/styles/base.css")
       stylesheet("/styles/main.css")
       script("/scripts/ui.js", defer = true)
     }
     body {
-      injectSSR()
+      render()  // 👈 this line executes javascript without leaving your JVM!
     }
   }
 

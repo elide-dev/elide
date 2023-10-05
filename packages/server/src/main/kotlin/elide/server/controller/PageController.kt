@@ -14,8 +14,17 @@
 package elide.server.controller
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
 import jakarta.inject.Inject
-import elide.server.AssetModuleId
+import kotlinx.html.BODY
+import kotlinx.html.HEAD
+import kotlinx.html.HTML
+import kotlinx.html.tagext.body
+import kotlinx.html.tagext.head
+import elide.server.*
 import elide.server.annotations.Page
 import elide.server.assets.AssetManager
 import elide.server.assets.AssetPointer
@@ -73,6 +82,58 @@ public abstract class PageController : BaseController() {
       return builder.build(generatedLink)
     } else {
       AssetReference.fromPointer(pointer, generatedLink)
+    }
+  }
+
+  /** */
+  protected suspend inline fun html(
+    request: HttpRequest<*>,
+    crossinline renderer: suspend ServerRenderAgent.() -> Unit,
+  ): Mono<HttpResponse<Publisher<ByteArray>>> = ssr(request) {
+    ServerRenderAgent(this, this@PageController, request).let { agent ->
+      renderer.invoke(agent)
+    }
+  }
+
+  /**
+   * TBD.
+   */
+  public class ServerRenderAgent (
+    public val dom: HTML,
+    private val controller: PageController,
+    private val request: HttpRequest<*>,
+  ) {
+    public suspend inline fun head(crossinline block: suspend HEAD.() -> Unit) {
+      dom.head {
+        block.invoke(this)
+      }
+    }
+
+    public suspend inline fun body(classes : String? = null, crossinline block: suspend BODY.() -> Unit) {
+      dom.body(classes) {
+        block.invoke(this)
+      }
+    }
+
+    /**
+     * TBD.
+     */
+    public suspend fun BODY.render(
+      domId: String = DEFAULT_SSR_DOM_ID,
+      classes: Set<String> = emptySet(),
+      attrs: List<Pair<String, String>> = emptyList(),
+      path: String? = null,
+      embeddedRoot: String? = null,
+    ) {
+      injectSSR(
+        controller,
+        request,
+        domId,
+        classes,
+        attrs,
+        path,
+        embeddedRoot,
+      )
     }
   }
 

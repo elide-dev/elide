@@ -6,38 +6,30 @@ import elide.server.*
 import elide.server.annotations.Page
 import elide.server.controller.PageWithProps
 import elide.ssr.type.RequestState
-import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Get
 import kotlinx.css.*
-import kotlinx.html.tagext.body
-import kotlinx.html.tagext.head
 import kotlinx.html.title
-import kotlinx.serialization.Serializable
-import org.graalvm.polyglot.HostAccess
+import elide.ssr.annotations.Props
+import elide.vm.annotations.Polyglot
 
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App : Application {
   /** State properties for the root page. */
-  @Serializable
-  @Introspected
-  @ReflectiveAccess
-  data class HelloProps (
-    @get:HostAccess.Export val name: String = "Elide"
+  @Props data class HelloProps (
+    @Polyglot val name: String = "Elide"
   )
 
   /** GET `/`: Controller for index page. */
-  @Page class Index : PageWithProps<HelloProps>(HelloProps.serializer()) {
+  @Page class Index : PageWithProps<HelloProps>(HelloProps::class) {
     /** @return Props to use when rendering this page. */
-    override suspend fun props(state: RequestState): HelloProps {
-      return HelloProps(name = state.request.parameters["name"] ?: "Elide v3")
-    }
+    override suspend fun props(state: RequestState) =
+      HelloProps(name = state.request.parameters["name"] ?: "Elide v3")
 
     // Serve the root page.
-    @Get("/") suspend fun indexPage(request: HttpRequest<*>) = ssr(request) {
+    @Get("/") suspend fun index(request: HttpRequest<*>) = html(request) {
       head {
         title { +"Hello, Elide!" }
         stylesheet("/styles/base.css")
@@ -45,7 +37,7 @@ object App : Application {
         script("/scripts/ui.js", defer = true)
       }
       body {
-        injectSSR(this@Index, request)
+        render()
       }
     }
 
@@ -72,7 +64,7 @@ object App : Application {
       }
     }
 
-    // Serve the built & embedded JavaScript.
+    // Serve the built & embedded JavaScript (for browser execution).
     @Get("/scripts/ui.js") suspend fun js(request: HttpRequest<*>) = script(request) {
       module("scripts.ui")
     }

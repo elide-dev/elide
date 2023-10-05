@@ -1,0 +1,194 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ExtensionFieldBinaryInfo</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;lib.protobuf/-extension-field-binary-info/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector js-like" data-active="" data-filter=":packages:frontend:dokkaHtmlPartial/jsMain">js</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="frontend::lib.protobuf/ExtensionFieldBinaryInfo///PointingToDeclaration//-389915096">
+  <div class="breadcrumbs"><a href="../../index.html">frontend</a><span class="delimiter">/</span><a href="../index.html">lib.protobuf</a><span class="delimiter">/</span><span class="current">ExtensionFieldBinaryInfo</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Extension</span><wbr><span>Field</span><wbr><span>Binary</span><wbr><span><span>Info</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">external </span><span class="token keyword">class </span><a href="index.html">ExtensionFieldBinaryInfo</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fieldInfo<span class="token operator">: </span><a href="../-extension-field-info/index.html">ExtensionFieldInfo</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">binaryReaderFn<span class="token operator">: </span><a href="../-binary-read/index.html">BinaryRead</a><span class="token punctuation">, </span></span><span class="parameter ">binaryWriterFn<span class="token operator">: </span><a href="../-binary-write/index.html">BinaryWrite</a><span class="token punctuation">, </span></span><span class="parameter ">opt_binaryMessageSerializeFn<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>msg<span class="token operator">: </span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span><span class="token keyword"></span>writer<span class="token operator">: </span><a href="../-binary-writer/index.html">BinaryWriter</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">opt_binaryMessageDeserializeFn<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>msg<span class="token operator">: </span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span><span class="token keyword"></span>reader<span class="token operator">: </span><a href="../-binary-reader/index.html">BinaryReader</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span></span><span class="parameter ">opt_isPacked<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-1994189815%2FConstructors%2F-389915096" anchor-label="ExtensionFieldBinaryInfo" id="-1994189815%2FConstructors%2F-389915096" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":packages:frontend:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-extension-field-binary-info.html"><span>Extension</span><wbr><span>Field</span><wbr><span>Binary</span><wbr><span><span>Info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1994189815%2FConstructors%2F-389915096"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fieldInfo<span class="token operator">: </span><a href="../-extension-field-info/index.html">ExtensionFieldInfo</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">binaryReaderFn<span class="token operator">: </span><a href="../-binary-read/index.html">BinaryRead</a><span class="token punctuation">, </span></span><span class="parameter ">binaryWriterFn<span class="token operator">: </span><a href="../-binary-write/index.html">BinaryWrite</a><span class="token punctuation">, </span></span><span class="parameter ">opt_binaryMessageSerializeFn<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>msg<span class="token operator">: </span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span><span class="token keyword"></span>writer<span class="token operator">: </span><a href="../-binary-writer/index.html">BinaryWriter</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">opt_binaryMessageDeserializeFn<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>msg<span class="token operator">: </span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span><span class="token keyword"></span>reader<span class="token operator">: </span><a href="../-binary-reader/index.html">BinaryReader</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span></span><span class="parameter ">opt_isPacked<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-750397241%2FProperties%2F-389915096" anchor-label="binaryReaderFn" id="-750397241%2FProperties%2F-389915096" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-filterable-current=":packages:frontend:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="binary-reader-fn.html"><span>binary</span><wbr><span>Reader</span><wbr><span><span>Fn</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-750397241%2FProperties%2F-389915096"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="binary-reader-fn.html">binaryReaderFn</a><span class="token operator">: </span><a href="../-binary-read/index.html">BinaryRead</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-452935913%2FProperties%2F-389915096" anchor-label="binaryWriterFn" id="-452935913%2FProperties%2F-389915096" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-filterable-current=":packages:frontend:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="binary-writer-fn.html"><span>binary</span><wbr><span>Writer</span><wbr><span><span>Fn</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-452935913%2FProperties%2F-389915096"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="binary-writer-fn.html">binaryWriterFn</a><span class="token operator">: </span><a href="../-binary-write/index.html">BinaryWrite</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1505777311%2FProperties%2F-389915096" anchor-label="fieldInfo" id="1505777311%2FProperties%2F-389915096" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-filterable-current=":packages:frontend:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="field-info.html"><span>field</span><wbr><span><span>Info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1505777311%2FProperties%2F-389915096"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="field-info.html">fieldInfo</a><span class="token operator">: </span><a href="../-extension-field-info/index.html">ExtensionFieldInfo</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-759836314%2FProperties%2F-389915096" anchor-label="opt_binaryMessageDeserializeFn" id="-759836314%2FProperties%2F-389915096" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-filterable-current=":packages:frontend:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="opt_binary-message-deserialize-fn.html"><span>opt_binary</span><wbr><span>Message</span><wbr><span>Deserialize</span><wbr><span><span>Fn</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-759836314%2FProperties%2F-389915096"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="opt_binary-message-deserialize-fn.html">opt_binaryMessageDeserializeFn</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>msg<span class="token operator">: </span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span><span class="token keyword"></span>reader<span class="token operator">: </span><a href="../-binary-reader/index.html">BinaryReader</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../-message/index.html">Message</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="13405541%2FProperties%2F-389915096" anchor-label="opt_binaryMessageSerializeFn" id="13405541%2FProperties%2F-389915096" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-filterable-current=":packages:frontend:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="opt_binary-message-serialize-fn.html"><span>opt_binary</span><wbr><span>Message</span><wbr><span>Serialize</span><wbr><span><span>Fn</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="13405541%2FProperties%2F-389915096"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="opt_binary-message-serialize-fn.html">opt_binaryMessageSerializeFn</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>msg<span class="token operator">: </span><a href="../-message/index.html">Message</a><span class="token punctuation">, </span><span class="token keyword"></span>writer<span class="token operator">: </span><a href="../-binary-writer/index.html">BinaryWriter</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="15824453%2FProperties%2F-389915096" anchor-label="opt_isPacked" id="15824453%2FProperties%2F-389915096" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain"></a>
+          <div class="table-row" data-filterable-current=":packages:frontend:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:frontend:dokkaHtmlPartial/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="opt_is-packed.html"><span>opt_is</span><wbr><span><span>Packed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="15824453%2FProperties%2F-389915096"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:frontend:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="opt_is-packed.html">opt_isPacked</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

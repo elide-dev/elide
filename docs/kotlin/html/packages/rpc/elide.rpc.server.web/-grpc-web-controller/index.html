@@ -1,0 +1,125 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>GrpcWebController</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.rpc.server.web/-grpc-web-controller/index.html&quot;}">1.0.0-alpha7</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:rpc:dokkaHtmlPartial/jvmMain">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="rpc::elide.rpc.server.web/GrpcWebController///PointingToDeclaration//-393041765">
+  <div class="breadcrumbs"><a href="../../index.html">rpc</a><span class="delimiter">/</span><a href="../index.html">elide.rpc.server.web</a><span class="delimiter">/</span><span class="current">GrpcWebController</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Grpc</span><wbr><span>Web</span><wbr><span><span>Controller</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:rpc:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:rpc:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:rpc:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.context.annotation/Requires///PointingToDeclaration/"><span class="token annotation builtin">Requires</span></span><span class="token punctuation">(</span><span>property<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"elide.grpc.web.isEnabled"</span></span><span class="token punctuation">, </span></span><wbr><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"true"</span></span></span><wbr><span class="token punctuation">)</span></div><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.http.annotation/Controller///PointingToDeclaration/"><span class="token annotation builtin">Controller</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"${elide.grpc.web.endpoint:/_/rpc}"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">class </span><a href="index.html">GrpcWebController</a> : <a href="../../../../packages/server/elide.server.controller/-status-enabled-controller/index.html">StatusEnabledController</a></div><p class="paragraph">Entrypoint controller for gRPC Web traffic handled on behalf of the user's application by Elide's RPC framework.</p><p class="paragraph">This controller is responsible for resolving the appropriate service to dispatch, enforcing expectations against the incoming request, and performing serialization back and forth between the browser and backing gRPC service. Each of these functions is implemented in other classes, but all are driven via this controller.</p><p class="paragraph">Services are resolved via <a href="../../../../packages/rpc/elide.rpc.server/-rpc-runtime/index.html">RpcRuntime</a>, which is notified of service registration at the time the gRPC server starts up (managed by Micronaut).</p></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="1395953562%2FConstructors%2F-393041765" anchor-label="GrpcWebController" id="1395953562%2FConstructors%2F-393041765" data-filterable-set=":packages:rpc:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":packages:rpc:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:rpc:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-grpc-web-controller.html"><span>Grpc</span><wbr><span>Web</span><wbr><span><span>Controller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1395953562%2FConstructors%2F-393041765"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:rpc:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:rpc:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:rpc:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1262949724%2FFunctions%2F-393041765" anchor-label="handleRequest" id="-1262949724%2FFunctions%2F-393041765" data-filterable-set=":packages:rpc:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:rpc:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:rpc:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="handle-request.html"><span>handle</span><wbr><span><span>Request</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1262949724%2FFunctions%2F-393041765"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:rpc:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:rpc:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:rpc:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.http.annotation/Post///PointingToDeclaration/"><span class="token annotation builtin">Post</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"/{servicePath}/{methodName}"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="handle-request.html"><span class="token function">handleRequest</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">servicePath<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">methodName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">request<span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpRequest///PointingToDeclaration/">HttpRequest</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-raw-rpc-payload/index.html">RawRpcPayload</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">principal<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/security/Principal.html">Principal</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="io.micronaut.http/HttpResponse///PointingToDeclaration/">HttpResponse</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-raw-rpc-payload/index.html">RawRpcPayload</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Main RPC request handler; all gRPC-Web requests are expected to operate over <code class="lang-kotlin">POST</code>.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

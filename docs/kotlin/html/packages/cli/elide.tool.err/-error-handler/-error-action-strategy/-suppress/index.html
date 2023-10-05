@@ -1,0 +1,228 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Suppress</title>
+<link href="../../../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.tool.err/-error-handler/-error-action-strategy/-suppress/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:cli:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="cli::elide.tool.err/ErrorHandler.ErrorActionStrategy.Suppress///PointingToDeclaration//622514005">
+  <div class="breadcrumbs"><a href="../../../../index.html">cli</a><span class="delimiter">/</span><a href="../../../index.html">elide.tool.err</a><span class="delimiter">/</span><a href="../../index.html">ErrorHandler</a><span class="delimiter">/</span><a href="../index.html">ErrorActionStrategy</a><span class="delimiter">/</span><span class="current">Suppress</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Suppress</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-record/index.html"><span class="token annotation builtin">JvmRecord</span></a></div></div><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Suppress</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>warning<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>logger<span class="token operator">: </span><a href="../../../../../../packages/base/elide.runtime/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>event<span class="token operator">: </span><a href="../../-error-event/index.html">ErrorHandler.ErrorEvent</a></span></span><span class="token punctuation">)</span> : <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Record.html">Record</a>, <a href="../index.html">ErrorHandler.ErrorActionStrategy</a></div><h3 class=""> Error Strategy: Suppression</h3><p class="paragraph">This strategy advises that the caller should force-crash the VM, due to the provided <a href="event.html">event</a>, with the provided <a href="../../../../../../packages/cli/elide.tool.err/-error-handler/-error-action-strategy/-suppress/exit-code.html">exitCode</a>.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>warning</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Warning message that should result from this error.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>logger</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Logger used/to use for this error.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>event</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Error event which caused this re-throw.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="334568712%2FConstructors%2F622514005" anchor-label="Suppress" id="334568712%2FConstructors%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-suppress.html"><span><span>Suppress</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="334568712%2FConstructors%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">warning<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><a href="../../../../../../packages/base/elide.runtime/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">event<span class="token operator">: </span><a href="../../-error-event/index.html">ErrorHandler.ErrorEvent</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1838073825%2FProperties%2F622514005" anchor-label="action" id="1838073825%2FProperties%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="action.html"><span><span>action</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1838073825%2FProperties%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="action.html">action</a><span class="token operator">: </span><a href="../../-action/index.html">ErrorHandler.Action</a></div><div class="brief "><p class="paragraph">Describes the follow-up action which should take place.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="952991113%2FProperties%2F622514005" anchor-label="event" id="952991113%2FProperties%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="event.html"><span><span>event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="952991113%2FProperties%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="event.html">event</a><span class="token operator">: </span><a href="../../-error-event/index.html">ErrorHandler.ErrorEvent</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-614719555%2FProperties%2F622514005" anchor-label="exitCode" id="-614719555%2FProperties%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../exit-code.html"><span>exit</span><wbr><span><span>Code</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-614719555%2FProperties%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../exit-code.html">exitCode</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Exit code to crash with.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1220433237%2FProperties%2F622514005" anchor-label="loggable" id="-1220433237%2FProperties%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../loggable.html"><span><span>loggable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1220433237%2FProperties%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../loggable.html">loggable</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether this error should be sent to logs.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="724658631%2FProperties%2F622514005" anchor-label="logger" id="724658631%2FProperties%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="logger.html"><span><span>logger</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="724658631%2FProperties%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="logger.html">logger</a><span class="token operator">: </span><a href="../../../../../../packages/base/elide.runtime/-logger/index.html">Logger</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2087799314%2FProperties%2F622514005" anchor-label="throwable" id="2087799314%2FProperties%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../throwable.html"><span><span>throwable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2087799314%2FProperties%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../throwable.html">throwable</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a></div><div class="brief "><p class="paragraph">Error that caused this crash originally, <strong>or</strong> error that should be re-thrown (in <a href="../../-action/-r-e-t-h-r-o-w/index.html">Action.RETHROW</a> mode); in many cases these are the same error.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1041847623%2FProperties%2F622514005" anchor-label="warning" id="1041847623%2FProperties%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="warning.html"><span><span>warning</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1041847623%2FProperties%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="warning.html">warning</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1361383728%2FFunctions%2F622514005" anchor-label="invoke" id="-1361383728%2FFunctions%2F622514005" data-filterable-set=":packages:cli:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:cli:dokkaHtmlPartial/main" data-filterable-set=":packages:cli:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../invoke.html"><span><span>invoke</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1361383728%2FFunctions%2F622514005"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:cli:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="../invoke.html"><span class="token function">invoke</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">"Invoke" the follow-up default action; for each mode, this action is listed below.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,550 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Companion</title>
+<link href="../../../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.page.Context_/-metadata/-companion/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="proto-flatbuffers::elide.page.Context_/Metadata.Companion///PointingToDeclaration//-1708860494">
+  <div class="breadcrumbs"><a href="../../../index.html">proto-flatbuffers</a><span class="delimiter">/</span><a href="../../index.html">elide.page.Context_</a><span class="delimiter">/</span><a href="../index.html">Metadata</a><span class="delimiter">/</span><span class="current">Companion</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Companion</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Companion</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-137701692%2FFunctions%2F-1708860494" anchor-label="addColorScheme" id="-137701692%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-color-scheme.html"><span>add</span><wbr><span>Color</span><wbr><span><span>Scheme</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-137701692%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-color-scheme.html"><span class="token function">addColorScheme</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">colorScheme<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-86930851%2FFunctions%2F-1708860494" anchor-label="addDelegatePackage" id="-86930851%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-delegate-package.html"><span>add</span><wbr><span>Delegate</span><wbr><span><span>Package</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-86930851%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-delegate-package.html"><span class="token function">addDelegatePackage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">delegatePackage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2084422104%2FFunctions%2F-1708860494" anchor-label="addDescription" id="2084422104%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-description.html"><span>add</span><wbr><span><span>Description</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2084422104%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-description.html"><span class="token function">addDescription</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">description<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1893300892%2FFunctions%2F-1708860494" anchor-label="addFbAppId" id="1893300892%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-fb-app-id.html"><span>add</span><wbr><span>Fb</span><wbr><span>App</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1893300892%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-fb-app-id.html"><span class="token function">addFbAppId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">fbAppId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1942204086%2FFunctions%2F-1708860494" anchor-label="addGooglebot" id="-1942204086%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-googlebot.html"><span>add</span><wbr><span><span>Googlebot</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1942204086%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-googlebot.html"><span class="token function">addGooglebot</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">googlebot<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2086288841%2FFunctions%2F-1708860494" anchor-label="addGtmId" id="-2086288841%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-gtm-id.html"><span>add</span><wbr><span>Gtm</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2086288841%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-gtm-id.html"><span class="token function">addGtmId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">gtmId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1754841925%2FFunctions%2F-1708860494" anchor-label="addKeyword" id="1754841925%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-keyword.html"><span>add</span><wbr><span><span>Keyword</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1754841925%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-keyword.html"><span class="token function">addKeyword</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">keyword<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2067201416%2FFunctions%2F-1708860494" anchor-label="addLanguage" id="2067201416%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-language.html"><span>add</span><wbr><span><span>Language</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2067201416%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-language.html"><span class="token function">addLanguage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">language<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="906968106%2FFunctions%2F-1708860494" anchor-label="addLink" id="906968106%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-link.html"><span>add</span><wbr><span><span>Link</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="906968106%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-link.html"><span class="token function">addLink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">link<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-676145697%2FFunctions%2F-1708860494" anchor-label="addManifest" id="-676145697%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-manifest.html"><span>add</span><wbr><span><span>Manifest</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-676145697%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-manifest.html"><span class="token function">addManifest</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">manifest<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="731889792%2FFunctions%2F-1708860494" anchor-label="addOpenGraph" id="731889792%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-open-graph.html"><span>add</span><wbr><span>Open</span><wbr><span><span>Graph</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="731889792%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-open-graph.html"><span class="token function">addOpenGraph</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">openGraph<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1805123650%2FFunctions%2F-1708860494" anchor-label="addPrefix" id="1805123650%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-prefix.html"><span>add</span><wbr><span><span>Prefix</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1805123650%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-prefix.html"><span class="token function">addPrefix</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">prefix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1727655629%2FFunctions%2F-1708860494" anchor-label="addRating" id="1727655629%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-rating.html"><span>add</span><wbr><span><span>Rating</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1727655629%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-rating.html"><span class="token function">addRating</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">rating<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-584409479%2FFunctions%2F-1708860494" anchor-label="addRobots" id="-584409479%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-robots.html"><span>add</span><wbr><span><span>Robots</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-584409479%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-robots.html"><span class="token function">addRobots</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">robots<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1180644086%2FFunctions%2F-1708860494" anchor-label="addSemantic" id="1180644086%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-semantic.html"><span>add</span><wbr><span><span>Semantic</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1180644086%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-semantic.html"><span class="token function">addSemantic</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">semantic<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1863125262%2FFunctions%2F-1708860494" anchor-label="addStartupImage" id="1863125262%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-startup-image.html"><span>add</span><wbr><span>Startup</span><wbr><span><span>Image</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1863125262%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-startup-image.html"><span class="token function">addStartupImage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">startupImage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-836943707%2FFunctions%2F-1708860494" anchor-label="addTheme" id="-836943707%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-theme.html"><span>add</span><wbr><span><span>Theme</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-836943707%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-theme.html"><span class="token function">addTheme</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">theme<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-25913676%2FFunctions%2F-1708860494" anchor-label="addTitle" id="-25913676%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-title.html"><span>add</span><wbr><span><span>Title</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-25913676%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-title.html"><span class="token function">addTitle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">title<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1328333236%2FFunctions%2F-1708860494" anchor-label="addTouchIcon" id="1328333236%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-touch-icon.html"><span>add</span><wbr><span>Touch</span><wbr><span><span>Icon</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1328333236%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-touch-icon.html"><span class="token function">addTouchIcon</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">touchIcon<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="403402198%2FFunctions%2F-1708860494" anchor-label="addViewport" id="403402198%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-viewport.html"><span>add</span><wbr><span><span>Viewport</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="403402198%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-viewport.html"><span class="token function">addViewport</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">viewport<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="920873642%2FFunctions%2F-1708860494" anchor-label="createKeywordVector" id="920873642%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-keyword-vector.html"><span>create</span><wbr><span>Keyword</span><wbr><span><span>Vector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="920873642%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="create-keyword-vector.html"><span class="token function">createKeywordVector</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html">IntArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-230362509%2FFunctions%2F-1708860494" anchor-label="createLinkVector" id="-230362509%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-link-vector.html"><span>create</span><wbr><span>Link</span><wbr><span><span>Vector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-230362509%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="create-link-vector.html"><span class="token function">createLinkVector</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html">IntArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1335765515%2FFunctions%2F-1708860494" anchor-label="createMetadata" id="-1335765515%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-metadata.html"><span>create</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1335765515%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="create-metadata.html"><span class="token function">createMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">titleOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">descriptionOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">keywordOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">semanticOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">viewportOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">manifestOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">themeOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">touchIconOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">startupImageOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">linkOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">languageOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">gtmIdOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">fbAppIdOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">openGraphOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">robotsOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">colorSchemeOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">prefixOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">googlebotOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">ratingOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">delegatePackageOffset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1582808475%2FFunctions%2F-1708860494" anchor-label="createPrefixVector" id="1582808475%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-prefix-vector.html"><span>create</span><wbr><span>Prefix</span><wbr><span><span>Vector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1582808475%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="create-prefix-vector.html"><span class="token function">createPrefixVector</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int-array/index.html">IntArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="974108868%2FFunctions%2F-1708860494" anchor-label="endMetadata" id="974108868%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="end-metadata.html"><span>end</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="974108868%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="end-metadata.html"><span class="token function">endMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1743789350%2FFunctions%2F-1708860494" anchor-label="getRootAsMetadata" id="-1743789350%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-root-as-metadata.html"><span>get</span><wbr><span>Root</span><wbr><span>As</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1743789350%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-root-as-metadata.html"><span class="token function">getRootAsMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">_bb<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/ByteBuffer.html">ByteBuffer</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Metadata</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-root-as-metadata.html"><span class="token function">getRootAsMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">_bb<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/ByteBuffer.html">ByteBuffer</a><span class="token punctuation">, </span></span><span class="parameter ">obj<span class="token operator">: </span><a href="../index.html">Metadata</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Metadata</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-570321273%2FFunctions%2F-1708860494" anchor-label="startKeywordVector" id="-570321273%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-keyword-vector.html"><span>start</span><wbr><span>Keyword</span><wbr><span><span>Vector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-570321273%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="start-keyword-vector.html"><span class="token function">startKeywordVector</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">numElems<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="553267406%2FFunctions%2F-1708860494" anchor-label="startLinkVector" id="553267406%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-link-vector.html"><span>start</span><wbr><span>Link</span><wbr><span><span>Vector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="553267406%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="start-link-vector.html"><span class="token function">startLinkVector</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">numElems<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2132778147%2FFunctions%2F-1708860494" anchor-label="startMetadata" id="-2132778147%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-metadata.html"><span>start</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2132778147%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="start-metadata.html"><span class="token function">startMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1944901286%2FFunctions%2F-1708860494" anchor-label="startPrefixVector" id="1944901286%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-prefix-vector.html"><span>start</span><wbr><span>Prefix</span><wbr><span><span>Vector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1944901286%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="start-prefix-vector.html"><span class="token function">startPrefixVector</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="com.google.flatbuffers/FlatBufferBuilder///PointingToDeclaration/">FlatBufferBuilder</span><span class="token punctuation">, </span></span><span class="parameter ">numElems<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2083613554%2FFunctions%2F-1708860494" anchor-label="validateVersion" id="2083613554%2FFunctions%2F-1708860494" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="validate-version.html"><span>validate</span><wbr><span><span>Version</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2083613554%2FFunctions%2F-1708860494"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-flatbuffers:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="validate-version.html"><span class="token function">validateVersion</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

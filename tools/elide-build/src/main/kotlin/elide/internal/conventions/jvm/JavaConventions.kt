@@ -20,6 +20,7 @@ import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.kotlin.dsl.the
 import org.gradle.testing.base.TestingExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import elide.internal.conventions.Constants.Build
@@ -97,17 +98,24 @@ internal fun Project.configureJavadoc() {
   if (!buildDocs) return
 
   // resolve or create the task
-  tasks.maybeCreate("javadocJar", Jar::class.java).apply {
-    archiveClassifier.set("javadoc")
+  if (tasks.findByName("dokkaHtml") != null) {
+    tasks.maybeCreate("javadocJar", Jar::class.java).apply {
+      archiveClassifier.set("javadoc")
 
+      isPreserveFileTimestamps = false
+      isReproducibleFileOrder = true
+
+      from(tasks.named("dokkaHtml"))
+    }
+
+    tasks.withType(Javadoc::class.java).configureEach {
+      isFailOnError = false
+    }
+  } else tasks.register("javadocJar", Jar::class.java) {
+    // create empty javadoc jar
+    archiveClassifier.set("javadoc")
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
-
-    from(tasks.named("dokkaHtml"))
-  }
-
-  tasks.withType(Javadoc::class.java).configureEach {
-    isFailOnError = false
   }
 }
 

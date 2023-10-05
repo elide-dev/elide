@@ -11,6 +11,7 @@ packages/graalvm/src/test/resources/embedded/** -linguist-detectable linguist-ge
 packages/graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated
 packages/graalvm-react/src/main/node/** -linguist-detectable linguist-generated
 packages/graalvm-react/src/main/node/*.js -linguist-detectable linguist-generated
+docs linguist-documentation
 docs/* linguist-documentation
 tools/plugin/gradle-plugin/plugin-build/plugin/src/model/java -linguist-detectable linguist-generated
 tools/plugin/gradle-plugin/plugin-build/plugin/src/model/kotlin -linguist-detectable linguist-generated

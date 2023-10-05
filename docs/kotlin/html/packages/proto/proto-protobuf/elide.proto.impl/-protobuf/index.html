@@ -1,0 +1,149 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Protobuf</title>
+<link href="../../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.proto.impl/-protobuf/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:proto:proto-protobuf:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="proto-protobuf::elide.proto.impl/Protobuf///PointingToDeclaration//-133320789">
+  <div class="breadcrumbs"><a href="../../index.html">proto-protobuf</a><span class="delimiter">/</span><a href="../index.html">elide.proto.impl</a><span class="delimiter">/</span><span class="current">Protobuf</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Protobuf</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Protobuf</a></div><h1 class="">Utilities: Protocol Buffers</h1><p class="paragraph">General common utilities for protocol buffer objects in Java and Kotlin (JVM-only). This includes assembly of proto- message objects from universal Elide entities and vice versa, as well as Java type checking and null checking facilities used when building generic protocol messages.</p><h2 class=""> Adapting between models and messages</h2><p class="paragraph">All inheritors of <a href="../../elide.util.proto.adapters/-proto-convertible/index.html">ProtoConvertible</a> gain the suite of methods defined here, but they are also usable on a static basis, outside of entity contexts. Additionally, since <code class="lang-kotlin">UniversalModel</code> also extends <a href="../../elide.util.proto.adapters/-proto-convertible/index.html">ProtoConvertible</a>, any Elide universal model is immediately usable with these tools.</p><p class="paragraph">To adopt <a href="../../elide.util.proto.adapters/-proto-convertible/index.html">ProtoConvertible</a> (and its static cousin, <a href="../../elide.util.proto.adapters/-proto-schema-convertible/index.html">ProtoSchemaConvertible</a>), adopt the former on the object, and the latter on the companion. The former is used to convert the object to a protocol message, and the latter is used to create a new object from a protocol message.</p><p class="paragraph">For example:</p><div class="sample-container"><pre><code class="block lang-proto" theme="idea">syntax = "proto3";<br>option java_package = "my.cool.models";<br>// ...<br><br>// Some cool model.<br>message MyCoolModel {<br>  // ID of the model.<br>  string id = 1;<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">// imports...<br>import my.cool.models.MyCoolModel as MyCoolModelProto<br><br>/** Kotlin implementation of `MyCoolModel`. */<br>@Serializable data class MyCoolModel(<br>  @ProtoNumber(1) @SerialName("id") val id: String,<br>): ProtoConvertible&lt;MyCoolModelProto&gt; {<br>    /** here is the implementation for moving *to* protos */<br>        override fun toMessage(): MyCoolModelProto = buildFrom(::myCoolModel) { model -&gt;<br>            id = ifNotBlank(model.id) { id = it }<br>        }<br>    }</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Note how <code class="lang-kotlin">buildFrom</code> and <code class="lang-kotlin">ifNotBlank</code> are automatically available via Kotlin context receivers. This interface is modeled by <a href="-proto-builder-context/index.html">ProtoBuilderContext</a> and operates in addition to the context established by the builder itself. The current model is made available as a parameter for easy reference.</p><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":packages:proto:proto-protobuf:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-proto-builder-context/index.html"><span>Protobuf.</span><wbr><span>Proto</span><wbr><span>Builder</span><wbr><span><span>Context</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the context surface available when building protocol buffer messages.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-2128877926%2FClasslikes%2F-133320789" anchor-label="ProtoBuilderContext" id="-2128877926%2FClasslikes%2F-133320789" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-protobuf:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-proto-builder-context/index.html"><span>Proto</span><wbr><span>Builder</span><wbr><span><span>Context</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2128877926%2FClasslikes%2F-133320789"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-proto-builder-context/index.html">ProtoBuilderContext</a></div><div class="brief "><p class="paragraph">Describes the API surface area made available as context during assembly of a Protocol Buffer object via this interface. The context may be used as if the methods are present on <code class="lang-kotlin">this</code>. Methods are provided which perform presence / null-ness checks, and which do conversion of essential types to Protocol Buffer Well Known Types.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-330922318%2FFunctions%2F-133320789" anchor-label="buildFrom" id="-330922318%2FFunctions%2F-133320789" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:proto:proto-protobuf:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="build-from.html"><span>build</span><wbr><span><span>From</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-330922318%2FFunctions%2F-133320789"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="build-from.html">In</a><span class="token operator"> : </span><a href="../../elide.util.proto.adapters/-proto-schema-convertible/index.html">ProtoSchemaConvertible</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">M</a><span class="token operator"> : </span><span data-unresolved-link="com.google.protobuf/Message///PointingToDeclaration/">Message</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token operator"> : </span><span data-unresolved-link="com.google.protobuf/Message.Builder///PointingToDeclaration/">Message.Builder</span><span class="token operator">&gt; </span><a href="build-from.html"><span class="token function">buildFrom</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instance<span class="token operator">: </span><a href="build-from.html">In</a><span class="token punctuation">, </span></span><span class="parameter ">builder<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="build-from.html">M</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>op<span class="token operator">: </span><span class="token keyword"></span><a href="-proto-builder-context/index.html">Protobuf.ProtoBuilderContext</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">In</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="build-from.html">M</a></div><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="build-from.html">In</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">M</a><span class="token operator"> : </span><span data-unresolved-link="com.google.protobuf/Message///PointingToDeclaration/">Message</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token operator"> : </span><span data-unresolved-link="com.google.protobuf/Message.Builder///PointingToDeclaration/">Message.Builder</span><span class="token operator">&gt; </span><a href="build-from.html"><span class="token function">buildFrom</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instance<span class="token operator">: </span><a href="build-from.html">In</a><span class="token punctuation">, </span></span><span class="parameter ">builder<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="build-from.html">M</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>op<span class="token operator">: </span><span class="token keyword"></span><a href="-proto-builder-context/index.html">Protobuf.ProtoBuilderContext</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">In</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="build-from.html">M</a></div><div class="brief "><p class="paragraph">Establish a <a href="-proto-builder-context/index.html">ProtoBuilderContext</a> instance based on the provided inputs (a model <a href="build-from.html">instance</a> to build from, and a code-generated Kotlin <a href="build-from.html">builder</a>), and then run the provided operation (<a href="build-from.html">op</a>) in order to build the instance; once the instance <a href="build-from.html">M</a> is built, return it.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1253239180%2FFunctions%2F-133320789" anchor-label="buildFrom" id="1253239180%2FFunctions%2F-133320789" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":packages:proto:proto-protobuf:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="build-from.html"><span>build</span><wbr><span><span>From</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1253239180%2FFunctions%2F-133320789"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="build-from.html">M</a><span class="token operator"> : </span><span data-unresolved-link="com.google.protobuf/Message///PointingToDeclaration/">Message</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">Model</a><span class="token operator"> : </span><a href="../../elide.util.proto.adapters/-proto-convertible/index.html">ProtoConvertible</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="build-from.html">M</a><span class="token operator">&gt;</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token operator">&gt; </span><a href="build-from.html">Model</a><span class="token punctuation">.</span><a href="build-from.html"><span class="token function">buildFrom</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="build-from.html">M</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>op<span class="token operator">: </span><span class="token keyword"></span><a href="-proto-builder-context/index.html">Protobuf.ProtoBuilderContext</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword"></span><a href="build-from.html">B</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="build-from.html">Model</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="build-from.html">M</a></div><div class="brief "><p class="paragraph">Within the context of a <a href="build-from.html">Model</a> type which extends <a href="../../elide.util.proto.adapters/-proto-convertible/index.html">ProtoConvertible</a> and produces <span data-unresolved-link="com.google.protobuf/Message///PointingToDeclaration/">Message</span> instances of type <a href="build-from.html">M</a>, and a matching <a href="build-from.html">builder</a>, establish a <a href="-proto-builder-context/index.html">ProtoBuilderContext</a> instance based on the provided inputs and then dispatch the provided operation (<a href="build-from.html">op</a>) in order to build the instance; once the instance <a href="build-from.html">M</a> is built, return it.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1718186626%2FFunctions%2F-133320789" anchor-label="fromMessage" id="-1718186626%2FFunctions%2F-133320789" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":packages:proto:proto-protobuf:dokkaHtmlPartial/main" data-filterable-set=":packages:proto:proto-protobuf:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="from-message.html"><span>from</span><wbr><span><span>Message</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1718186626%2FFunctions%2F-133320789"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:proto:proto-protobuf:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Instant.Companion///PointingToDeclaration/">Instant.Companion</span><span class="token punctuation">.</span><a href="from-message.html"><span class="token function">fromMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">proto<span class="token operator">: </span><span data-unresolved-link="com.google.protobuf/Timestamp///PointingToDeclaration/">Timestamp</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Convert a Protocol Buffer WKT <span data-unresolved-link="com.google.protobuf/Timestamp///PointingToDeclaration/">Timestamp</span> (<a href="from-message.html">proto</a>) to a KotlinX <span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span>; if the provided <a href="from-message.html">proto</a> is empty or otherwise uninitialized, then <code class="lang-kotlin">null</code> is returned.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

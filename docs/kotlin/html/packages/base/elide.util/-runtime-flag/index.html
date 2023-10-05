@@ -1,0 +1,312 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>RuntimeFlag</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.util/-runtime-flag/index.html&quot;}">1.0.0-alpha7</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="base::elide.util/RuntimeFlag///PointingToDeclaration//1954770927">
+  <div class="breadcrumbs"><a href="../../index.html">base</a><span class="delimiter">/</span><a href="../index.html">elide.util</a><span class="delimiter">/</span><span class="current">RuntimeFlag</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Runtime</span><wbr><span><span>Flag</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">RuntimeFlag</a></div><p class="paragraph">Static server flags, which may be set via Java system properties or environment variables.</p></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1918682820%2FProperties%2F1954770927" anchor-label="appEnv" id="1918682820%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="app-env.html"><span>app</span><wbr><span><span>Env</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1918682820%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="app-env.html">appEnv</a><span class="token operator">: </span><a href="../../elide/-app-environment/index.html">AppEnvironment</a></div><div class="brief "><p class="paragraph">Operating environment for the application.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2124368134%2FProperties%2F1954770927" anchor-label="DEFAULT_INSPECT_PORT" id="2124368134%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-e-f-a-u-l-t_-i-n-s-p-e-c-t_-p-o-r-t.html"><span><span>DEFAULT_INSPECT_PORT</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2124368134%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-d-e-f-a-u-l-t_-i-n-s-p-e-c-t_-p-o-r-t.html">DEFAULT_INSPECT_PORT</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">4200</span></div><div class="brief "><p class="paragraph">Default port to listen on for the VM inspector.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1976246794%2FProperties%2F1954770927" anchor-label="inspect" id="-1976246794%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect.html"><span><span>inspect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1976246794%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect.html">inspect</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether to enable VM inspection.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-416694098%2FProperties%2F1954770927" anchor-label="inspectHost" id="-416694098%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect-host.html"><span>inspect</span><wbr><span><span>Host</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-416694098%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect-host.html">inspectHost</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Host where inspection should mount.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-448959303%2FProperties%2F1954770927" anchor-label="inspectInternal" id="-448959303%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect-internal.html"><span>inspect</span><wbr><span><span>Internal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-448959303%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect-internal.html">inspectInternal</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether to show internal sources in the inspector.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="693872849%2FProperties%2F1954770927" anchor-label="inspectPath" id="693872849%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect-path.html"><span>inspect</span><wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="693872849%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect-path.html">inspectPath</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Path where inspection should mount.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-128461835%2FProperties%2F1954770927" anchor-label="inspectPort" id="-128461835%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect-port.html"><span>inspect</span><wbr><span><span>Port</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-128461835%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect-port.html">inspectPort</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Port where inspection should mount.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1459761023%2FProperties%2F1954770927" anchor-label="inspectSecure" id="1459761023%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect-secure.html"><span>inspect</span><wbr><span><span>Secure</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1459761023%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect-secure.html">inspectSecure</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether to enable VM inspection secure mode (TLS).</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="518457032%2FProperties%2F1954770927" anchor-label="inspectSuspend" id="518457032%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect-suspend.html"><span>inspect</span><wbr><span><span>Suspend</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="518457032%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect-suspend.html">inspectSuspend</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether to suspend the VM at first execution.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-364964479%2FProperties%2F1954770927" anchor-label="inspectWait" id="-364964479%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inspect-wait.html"><span>inspect</span><wbr><span><span>Wait</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-364964479%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inspect-wait.html">inspectWait</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether to wait for the debugger to attach before executing.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1381474192%2FProperties%2F1954770927" anchor-label="warmup" id="-1381474192%2FProperties%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="warmup.html"><span><span>warmup</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1381474192%2FProperties%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="warmup.html">warmup</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether to enable VM pre-warming.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1179972136%2FFunctions%2F1954770927" anchor-label="resolve" id="-1179972136%2FFunctions%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="resolve.html"><span><span>resolve</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1179972136%2FFunctions%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="resolve.html">R</a><span class="token operator">&gt; </span><a href="resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">defaultValue<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">then<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="resolve.html">R</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="resolve.html">R</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1408115497%2FFunctions%2F1954770927" anchor-label="setArgs" id="1408115497%2FFunctions%2F1954770927" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-args.html"><span>set</span><wbr><span><span>Args</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1408115497%2FFunctions%2F1954770927"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:base:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:base:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html"><span class="token annotation builtin">JvmStatic</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-args.html"><span class="token function">setArgs</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">args<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Install server flag value state.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

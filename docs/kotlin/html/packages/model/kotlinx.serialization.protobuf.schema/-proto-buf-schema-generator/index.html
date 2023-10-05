@@ -1,0 +1,104 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ProtoBufSchemaGenerator</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;kotlinx.serialization.protobuf.schema/-proto-buf-schema-generator/index.html&quot;}">1.0.0-alpha7</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:model:dokkaHtmlPartial/jvmMain">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="model::kotlinx.serialization.protobuf.schema/ProtoBufSchemaGenerator///PointingToDeclaration//1665703135">
+  <div class="breadcrumbs"><a href="../../index.html">model</a><span class="delimiter">/</span><a href="../index.html">kotlinx.serialization.protobuf.schema</a><span class="delimiter">/</span><span class="current">ProtoBufSchemaGenerator</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Proto</span><wbr><span>Buf</span><wbr><span>Schema</span><wbr><span><span>Generator</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:model:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:model:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:model:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:model:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlinx.serialization/ExperimentalSerializationApi///PointingToDeclaration/"><span class="token annotation builtin">ExperimentalSerializationApi</span></span></div></div><span class="token keyword">object </span><a href="index.html">ProtoBufSchemaGenerator</a></div><p class="paragraph">Experimental generator of ProtoBuf schema that is compatible with <span data-unresolved-link="kotlinx.serialization/Serializable///PointingToDeclaration/">serializable</span> Kotlin classes and data encoded and decoded by <a href="../../../../packages/model/kotlinx.serialization.protobuf/-proto-buf/index.html">ProtoBuf</a> format.</p><p class="paragraph">The schema is generated based on provided <span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor///PointingToDeclaration/">SerialDescriptor</span> and is compatible with proto2 schema definition. An arbitrary Kotlin class represent much wider object domain than the ProtoBuf specification, thus schema generator has the following list of restrictions:</p><ul><li><p class="paragraph">Serial name of the class and all its fields should be a valid Proto <a href="https://developers.google.com/protocol-buffers/docs/reference/proto2-spec">identifier</a></p></li><li><p class="paragraph">Nullable values are allowed only for Kotlin <span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor/isNullable/#/PointingToDeclaration/">nullable</span> types, but not <span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor/isElementOptional/#kotlin.Int/PointingToDeclaration/">optional</span>     in order to properly distinguish "default" and "absent" values.</p></li><li><p class="paragraph">The name of the type without the package directive uniquely identifies the proto message type and two or more fields with the same serial name     are considered to have the same type. Schema generator allows to specify a separate package directive for the pack of classes in order     to mitigate this limitation.</p></li><li><p class="paragraph">Nested collections, e.g. <code class="lang-kotlin">List&lt;List&lt;Int&gt;&gt;</code> are represented using the artificial wrapper message in order to distinguish     repeated fields boundaries.</p></li><li><p class="paragraph">Default Kotlin values are not representable in proto schema. A special commentary is generated for properties with default values.</p></li><li><p class="paragraph">Empty nullable collections are not supported by the generated schema and will be prohibited in <a href="../../../../packages/model/kotlinx.serialization.protobuf/-proto-buf/index.html">ProtoBuf</a> as well     due to their ambiguous nature.</p></li></ul><p class="paragraph">Temporary restrictions:</p><ul><li><p class="paragraph"><span data-unresolved-link="kotlinx.serialization/Contextual///PointingToDeclaration/">Contextual</span> data is represented as as <code class="lang-kotlin">bytes</code> type</p></li><li><p class="paragraph"><span data-unresolved-link="kotlinx.serialization/Polymorphic///PointingToDeclaration/">Polymorphic</span> data is represented as a artificial <code class="lang-kotlin">KotlinxSerializationPolymorphic</code> message.</p></li></ul><p class="paragraph">Other types are mapped according to their specification: primitives as primitives, lists as 'repeated' fields and maps as 'repeated' map entries.</p><p class="paragraph">The name of messages and enums is extracted from <span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor/serialName/#/PointingToDeclaration/">SerialDescriptor.serialName</span> in <span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor///PointingToDeclaration/">SerialDescriptor</span> without the package directive, as substring after the last dot character, the <code class="lang-kotlin">'?'</code> character is also removed if it is present at the end of the string.</p></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1242344390%2FFunctions%2F1665703135" anchor-label="generateSchemaText" id="-1242344390%2FFunctions%2F1665703135" data-filterable-set=":packages:model:dokkaHtmlPartial/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":packages:model:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:model:dokkaHtmlPartial/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="generate-schema-text.html"><span>generate</span><wbr><span>Schema</span><wbr><span><span>Text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1242344390%2FFunctions%2F1665703135"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:model:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:model:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":packages:model:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:model:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlinx.serialization/ExperimentalSerializationApi///PointingToDeclaration/"><span class="token annotation builtin">ExperimentalSerializationApi</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="generate-schema-text.html"><span class="token function">generateSchemaText</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descriptors<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor///PointingToDeclaration/">SerialDescriptor</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><a href="../-proto-buf-generator-options/index.html">ProtoBufGeneratorOptions</a><span class="token operator"> = </span>ProtoBufGeneratorOptions.DEFAULTS</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Generate text of protocol buffers schema for the given serializable <a href="generate-schema-text.html">descriptors</a>, and applying any provided <a href="generate-schema-text.html">options</a> (where the dialect version and other parameters may be specified).</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlinx.serialization/ExperimentalSerializationApi///PointingToDeclaration/"><span class="token annotation builtin">ExperimentalSerializationApi</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="generate-schema-text.html"><span class="token function">generateSchemaText</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descriptors<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor///PointingToDeclaration/">SerialDescriptor</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">packageName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyMap()</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Generate text of protocol buffers schema version 2 for the given serializable <a href="generate-schema-text.html">descriptors</a>. <a href="generate-schema-text.html">packageName</a> define common protobuf package for all messages and enum in the schema, it may contain <code class="lang-kotlin">'a'</code>..<code class="lang-kotlin">'z'</code> letters in upper and lower case, decimal digits, <code class="lang-kotlin">'.'</code> or <code class="lang-kotlin">'_'</code> chars, but started only from a letter and not finished by dot.</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlinx.serialization/ExperimentalSerializationApi///PointingToDeclaration/"><span class="token annotation builtin">ExperimentalSerializationApi</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="generate-schema-text.html"><span class="token function">generateSchemaText</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rootDescriptor<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization.descriptors/SerialDescriptor///PointingToDeclaration/">SerialDescriptor</span><span class="token punctuation">, </span></span><span class="parameter ">packageName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyMap()</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Generate text of protocol buffers schema version 2 for the given <a href="generate-schema-text.html">rootDescriptor</a>. The resulting schema will contain all types referred by <a href="generate-schema-text.html">rootDescriptor</a>.</p></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

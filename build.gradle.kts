@@ -247,7 +247,7 @@ subprojects {
     plugin("org.jlleitschuh.gradle.ktlint")
     plugin("org.sonarqube")
 
-    if (buildDocs == "true") {
+    if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
       plugin("org.jetbrains.dokka")
     }
   }
@@ -521,9 +521,8 @@ tasks.create("docs") {
       listOf(
         "dokkaHtml",
         "dokkaHtmlMultiModule",
-        "dokkaJavadoc",
+        "dokkaGfm",
         "htmlDependencyReport",
-        ":packages:server:dokkaJavadoc",
       )
     )
   }

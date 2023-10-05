@@ -139,13 +139,17 @@ internal fun Project.configureKotlinBuild(
 internal fun Project.configureDokka() {
   // dokka should run after KAPT tasks are done (dokkaHtml for KMP projects, dokkaJavadoc for pure JVM)
   if (plugins.hasPlugin("org.jetbrains.kotlin.kapt")) {
-    tasks.findByName("dokkaHtml")?.dependsOn(tasks.withType(KaptTask::class.java))
-    tasks.findByName("dokkaJavadoc")?.dependsOn("kaptKotlin")
+    val kaptTasks = tasks.withType(KaptTask::class.java)
+    tasks.findByName("dokkaHtml")?.dependsOn(kaptTasks)
+    tasks.findByName("dokkaHtmlPartial")?.dependsOn(kaptTasks)
+    tasks.findByName("dokkaJavadoc")?.dependsOn(kaptTasks)
   }
 
   // same principle applies to KSP tasks
   if (plugins.hasPlugin("com.google.devtools.ksp")) {
-    tasks.findByName("dokkaHtml")?.dependsOn(tasks.withType(KspTask::class.java))
+    val kspTasks = tasks.withType(KspTask::class.java)
+    tasks.findByName("dokkaHtml")?.dependsOn(kspTasks)
+    tasks.findByName("dokkaHtmlPartial")?.dependsOn(kspTasks)
   }
 
   // if dokka is applied, we must depend on C-interop tasks

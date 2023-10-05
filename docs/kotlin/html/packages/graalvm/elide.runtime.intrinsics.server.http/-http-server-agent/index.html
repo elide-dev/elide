@@ -1,0 +1,138 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>HttpServerAgent</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.runtime.intrinsics.server.http/-http-server-agent/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:graalvm:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="graalvm::elide.runtime.intrinsics.server.http/HttpServerAgent///PointingToDeclaration//-1883836547">
+  <div class="breadcrumbs"><a href="../../index.html">graalvm</a><span class="delimiter">/</span><a href="../index.html">elide.runtime.intrinsics.server.http</a><span class="delimiter">/</span><span class="current">HttpServerAgent</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Http</span><wbr><span>Server</span><wbr><span><span>Agent</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="../../elide.runtime.core/-delicate-elide-api/index.html"><span class="token annotation builtin">DelicateElideApi</span></a></div></div><span class="token keyword">class </span><a href="index.html">HttpServerAgent</a></div><p class="paragraph">A Server Agent manages the lifecycle of HTTP Server intrinsics and their injection into guest code.</p><p class="paragraph">Use the <a href="run.html">run</a> method to start a new HTTP server that allows routing configuration to be specified by guest code from a provided entry point.</p><p class="paragraph">The server routing intrinsic is bound as <code class="lang-kotlin">Elide.http.router</code>, regardless of the target language. For example, in JavaScript, the following code may be used to retrieve it:</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">// the 'Elide' object is available as a top-level symbol<br>// no import statements are required to use it<br>const router = Elide.http.router;<br><br>// handlers can be specified by calling the 'handle' method,<br>// this can be used to create wrappers simulating popular APIs<br>// in the target ecosystem (e.g. Express.js in JavaScript)<br>router.handle("GET", "/hello", (request, response, context) =&gt; {<br>  response.send(200, getMessage());<br>});</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">After evaluating the guest entry point, the HTTP server is automatically started, without requiring an explicit call (such as <code class="lang-kotlin">server.start()</code> or any similar constructs).</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="355506611%2FConstructors%2F-1883836547" anchor-label="HttpServerAgent" id="355506611%2FConstructors%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-http-server-agent.html"><span>Http</span><wbr><span>Server</span><wbr><span><span>Agent</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="355506611%2FConstructors%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1501471092%2FClasslikes%2F-1883836547" anchor-label="Companion" id="1501471092%2FClasslikes%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1501471092%2FClasslikes%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="659552848%2FFunctions%2F-1883836547" anchor-label="run" id="659552848%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="run.html"><span><span>run</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="659552848%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="run.html"><span class="token function">run</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entrypoint<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Source///PointingToDeclaration/">Source</span><span class="token punctuation">, </span></span><span class="parameter ">acquireContext<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../elide.runtime.core/-polyglot-context/index.html">PolyglotContext</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Configure and start a new HTTP server, using the provided <a href="run.html">entrypoint</a> to configure the routing and binding behavior through injected intrinsics.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,310 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ThemePackage</title>
+<link href="../../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.site.ui.components/-theme-package/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector js-like" data-active="" data-filter=":site:docs:ui:dokkaHtmlPartial/main">js</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="ui::elide.site.ui.components/ThemePackage///PointingToDeclaration//-581368514">
+  <div class="breadcrumbs"><a href="../../index.html">ui</a><span class="delimiter">/</span><a href="../index.html">elide.site.ui.components</a><span class="delimiter">/</span><span class="current">ThemePackage</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Theme</span><wbr><span><span>Package</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="index.html">ThemePackage</a> : <span data-unresolved-link="mui.material.styles/Theme///PointingToDeclaration/">Theme</span></div><p class="paragraph">Package of a theme <a href="mode.html">mode</a> and <span data-unresolved-link="mui.material.styles/Theme///PointingToDeclaration/">Theme</span> info.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-841760012%2FProperties%2F-581368514" anchor-label="breakpoints" id="-841760012%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-841760012%2FProperties%2F-581368514"><span><span>breakpoints</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-841760012%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="index.html#-841760012%2FProperties%2F-581368514">breakpoints</a><span class="token operator">: </span><span data-unresolved-link="mui.system/Breakpoints///PointingToDeclaration/">Breakpoints</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1810523406%2FProperties%2F-581368514" anchor-label="components" id="1810523406%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1810523406%2FProperties%2F-581368514"><span><span>components</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1810523406%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#1810523406%2FProperties%2F-581368514">components</a><span class="token operator">: </span>dynamic</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-168506633%2FProperties%2F-581368514" anchor-label="direction" id="-168506633%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-168506633%2FProperties%2F-581368514"><span><span>direction</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-168506633%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="index.html#-168506633%2FProperties%2F-581368514">direction</a><span class="token operator">: </span><span data-unresolved-link="mui.system/Direction///PointingToDeclaration/">Direction</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1450331201%2FProperties%2F-581368514" anchor-label="mixins" id="1450331201%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1450331201%2FProperties%2F-581368514"><span><span>mixins</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1450331201%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#1450331201%2FProperties%2F-581368514">mixins</a><span class="token operator">: </span><span data-unresolved-link="mui.material.styles/Mixins///PointingToDeclaration/">Mixins</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-91596605%2FProperties%2F-581368514" anchor-label="mode" id="-91596605%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mode.html"><span><span>mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-91596605%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="mode.html">mode</a><span class="token operator">: </span><a href="../../../../../packages/graalvm-react/mui.material/-palette-mode/index.html">PaletteMode</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-579210228%2FProperties%2F-581368514" anchor-label="palette" id="-579210228%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-579210228%2FProperties%2F-581368514"><span><span>palette</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-579210228%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#-579210228%2FProperties%2F-581368514">palette</a><span class="token operator">: </span><span data-unresolved-link="mui.material.styles/Palette///PointingToDeclaration/">Palette</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-378699212%2FProperties%2F-581368514" anchor-label="shadows" id="-378699212%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-378699212%2FProperties%2F-581368514"><span><span>shadows</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-378699212%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#-378699212%2FProperties%2F-581368514">shadows</a><span class="token operator">: </span>dynamic</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1802133909%2FProperties%2F-581368514" anchor-label="shape" id="1802133909%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1802133909%2FProperties%2F-581368514"><span><span>shape</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1802133909%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="index.html#1802133909%2FProperties%2F-581368514">shape</a><span class="token operator">: </span><span data-unresolved-link="mui.system/Shape///PointingToDeclaration/">Shape</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="41137395%2FProperties%2F-581368514" anchor-label="spacing" id="41137395%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#41137395%2FProperties%2F-581368514"><span><span>spacing</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="41137395%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="index.html#41137395%2FProperties%2F-581368514">spacing</a><span class="token operator">: </span><span data-unresolved-link="mui.system/Spacing///PointingToDeclaration/">Spacing</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2020693719%2FProperties%2F-581368514" anchor-label="transitions" id="-2020693719%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-2020693719%2FProperties%2F-581368514"><span><span>transitions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2020693719%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#-2020693719%2FProperties%2F-581368514">transitions</a><span class="token operator">: </span><span data-unresolved-link="mui.material.styles/Transitions///PointingToDeclaration/">Transitions</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1019562692%2FProperties%2F-581368514" anchor-label="typography" id="1019562692%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1019562692%2FProperties%2F-581368514"><span><span>typography</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1019562692%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#1019562692%2FProperties%2F-581368514">typography</a><span class="token operator">: </span>dynamic</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="94463216%2FProperties%2F-581368514" anchor-label="unstable_strictMode" id="94463216%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#94463216%2FProperties%2F-581368514"><span>unstable_strict</span><wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="94463216%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">var </span><a href="index.html#94463216%2FProperties%2F-581368514">unstable_strictMode</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="99217286%2FProperties%2F-581368514" anchor-label="unstable_sx" id="99217286%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#99217286%2FProperties%2F-581368514"><span><span>unstable_sx</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="99217286%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#99217286%2FProperties%2F-581368514">unstable_sx</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><span data-unresolved-link="mui.system/SxProps///PointingToDeclaration/">SxProps</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="mui.material.styles/Theme///PointingToDeclaration/">Theme</span><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span>dynamic</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-459114588%2FProperties%2F-581368514" anchor-label="unstable_sxConfig" id="-459114588%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-459114588%2FProperties%2F-581368514"><span>unstable_sx</span><wbr><span><span>Config</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-459114588%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#-459114588%2FProperties%2F-581368514">unstable_sxConfig</a><span class="token operator">: </span>dynamic</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="81787547%2FProperties%2F-581368514" anchor-label="zIndex" id="81787547%2FProperties%2F-581368514" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":site:docs:ui:dokkaHtmlPartial/main" data-filterable-set=":site:docs:ui:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#81787547%2FProperties%2F-581368514"><span>z</span><wbr><span><span>Index</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="81787547%2FProperties%2F-581368514"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":site:docs:ui:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">var </span><a href="index.html#81787547%2FProperties%2F-581368514">zIndex</a><span class="token operator">: </span><span data-unresolved-link="mui.material.styles/ZIndex///PointingToDeclaration/">ZIndex</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

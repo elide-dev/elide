@@ -1,0 +1,299 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DefaultBase64</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.core.encoding.base64/-default-base64/index.html&quot;}">1.0.0-alpha7</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":packages:core:dokkaHtmlPartial/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="core::elide.core.encoding.base64/DefaultBase64///PointingToDeclaration//1458347289">
+  <div class="breadcrumbs"><a href="../../index.html">core</a><span class="delimiter">/</span><a href="../index.html">elide.core.encoding.base64</a><span class="delimiter">/</span><span class="current">DefaultBase64</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Default</span><wbr><span><span>Base64</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">DefaultBase64</a> : <a href="../../elide.core.encoding/-codec/index.html">Codec</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-base64-data/index.html">Base64Data</a><span class="token operator">&gt; </span></div><h1 class="">Base64</h1><p class="paragraph">This class consists exclusively of static methods for obtaining encoders and decoders for the Base64 encoding scheme. This implementation supports Base64 encodings as specified in <a href="http://www.ietf.org/rfc/rfc4648.txt">RFC 4648</a> and <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.</p><h2 class=""> Basic Encoding</h2><p class="paragraph">Uses "The Base64 Alphabet" as specified in Table 1 of RFC 4648 and RFC 2045 for encoding and decoding operation. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p><h2 class=""> URL-safe Encoding</h2><p class="paragraph">Uses the "URL and Filename safe Base64 Alphabet" as specified in Table 2 of RFC 4648 for encoding and decoding. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p><h2 class=""> MIME</h2><p class="paragraph">Uses "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded output must be represented in lines of no more than 76 characters each and uses a carriage return <code class="lang-kotlin">'\r'</code> followed immediately by a linefeed <code class="lang-kotlin">'\n'</code> as the line separator. No line separator is added to the end of the encoded output.</p><p class="paragraph">All line separators or other characters not found in the base64 alphabet table are ignored in the decoding operation.</p><p class="paragraph">Unless otherwise noted, passing a <code class="lang-kotlin">null</code> argument to a method of this class will cause a <code class="lang-kotlin">NullPointerException</code> to be thrown.</p><span class="kdoc-tag"><h4 class="">Author</h4><p class="paragraph">Xueming Shen</p><p class="paragraph">Sam Gammon</p></span></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-1361289036%2FClasslikes%2F1458347289" anchor-label="Decoder" id="-1361289036%2FClasslikes%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-decoder/index.html"><span><span>Decoder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1361289036%2FClasslikes%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-decoder/index.html">Decoder</a></div><div class="brief "><p class="paragraph">This class implements a decoder for decoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-214193444%2FClasslikes%2F1458347289" anchor-label="Encoder" id="-214193444%2FClasslikes%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-encoder/index.html"><span><span>Encoder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-214193444%2FClasslikes%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-encoder/index.html">Encoder</a></div><div class="brief "><p class="paragraph">This class implements an encoder for encoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="712742741%2FFunctions%2F1458347289" anchor-label="decode" id="712742741%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-base64/index.html#712742741%2FFunctions%2F1458347289"><span><span>decode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="712742741%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base64/index.html#712742741%2FFunctions%2F1458347289"><span class="token function">decode</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">data<span class="token operator">: </span><a href="../-base64-data/index.html">Base64Data</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">Decode the provided raw <a href="../-base64/index.html#712742741%2FFunctions%2F1458347289">data</a> from the <a href="../../../../packages/core/elide.core.encoding/-decoder/encoding.html">encoding</a> implemented by this encoder; return a raw <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a> of the resulting data.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1848586876%2FFunctions%2F1458347289" anchor-label="decodeBytes" id="-1848586876%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="decode-bytes.html"><span>decode</span><wbr><span><span>Bytes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1848586876%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="decode-bytes.html"><span class="token function">decodeBytes</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">Decode the provided <a href="decode-bytes.html">data</a> from the <a href="encoding.html">encoding</a> implemented by this encoder; return a raw <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a> of the resulting bytes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="673477450%2FFunctions%2F1458347289" anchor-label="decoder" id="673477450%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.core.encoding/-codec/decoder.html"><span><span>decoder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="673477450%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-codec/decoder.html"><span class="token function">decoder</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.core.encoding/-decoder/index.html">Decoder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-base64-data/index.html">Base64Data</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Provide an <a href="../../elide.core.encoding/-encoder/index.html">Encoder</a> specialized to the format implemented by this <a href="../../elide.core.encoding/-codec/index.html">Codec</a>; the resulting object can only guarantee a capability to encode data to the target encoding.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-847207191%2FFunctions%2F1458347289" anchor-label="decodeString" id="-847207191%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.core.encoding/-decoder/decode-string.html"><span>decode</span><wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-847207191%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-decoder/decode-string.html"><span class="token function">decodeString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">string<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">Decode the provided <a href="../../elide.core.encoding/-decoder/decode-string.html">string</a> using the <a href="../../../../packages/core/elide.core.encoding/-decoder/encoding.html">encoding</a> implemented by this encoder; return a raw <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a> of the resulting bytes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1403034732%2FFunctions%2F1458347289" anchor-label="decodeToString" id="-1403034732%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.core.encoding/-decoder/decode-to-string.html"><span>decode</span><wbr><span>To</span><wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1403034732%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-decoder/decode-to-string.html"><span class="token function">decodeToString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Decode the provided <a href="../../elide.core.encoding/-decoder/decode-to-string.html">data</a> from the <a href="../../../../packages/core/elide.core.encoding/-decoder/encoding.html">encoding</a> implemented by this encoder; return a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> representation of the resulting data.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-decoder/decode-to-string.html"><span class="token function">decodeToString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">string<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Decode the provided <a href="../../elide.core.encoding/-decoder/decode-to-string.html">string</a> from the <a href="../../../../packages/core/elide.core.encoding/-decoder/encoding.html">encoding</a> implemented by this encoder; return a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> representation of the resulting data.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="188946779%2FFunctions%2F1458347289" anchor-label="encode" id="188946779%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="encode.html"><span><span>encode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="188946779%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="encode.html"><span class="token function">encode</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-base64-data/index.html">Base64Data</a></div><div class="brief "><p class="paragraph">Encoded the provided <a href="encode.html">data</a> using the <a href="encoding.html">encoding</a> implemented by this encoder; the returned Raw instance is able to provide a resulting <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a> or <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="918533903%2FFunctions%2F1458347289" anchor-label="encodeBytes" id="918533903%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.core.encoding/-encoder/encode-bytes.html"><span>encode</span><wbr><span><span>Bytes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="918533903%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-encoder/encode-bytes.html"><span class="token function">encodeBytes</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">Encode the provided <a href="../../elide.core.encoding/-encoder/encode-bytes.html">data</a> using the <a href="../../../../packages/core/elide.core.encoding/-encoder/encoding.html">encoding</a> implemented by this encoder; return a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a> representation of the result.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1820573042%2FFunctions%2F1458347289" anchor-label="encoder" id="1820573042%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.core.encoding/-codec/encoder.html"><span><span>encoder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1820573042%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-codec/encoder.html"><span class="token function">encoder</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.core.encoding/-encoder/index.html">Encoder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-base64-data/index.html">Base64Data</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Provide a <a href="../../elide.core.encoding/-decoder/index.html">Decoder</a> specialized to the format implemented by this <a href="../../elide.core.encoding/-codec/index.html">Codec</a>; the resulting object can only guarantee a capability to decode data from the subject encoding.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1709040327%2FFunctions%2F1458347289" anchor-label="encodeString" id="-1709040327%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.core.encoding/-encoder/encode-string.html"><span>encode</span><wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1709040327%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-encoder/encode-string.html"><span class="token function">encodeString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">string<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">Encode the provided <a href="../../elide.core.encoding/-encoder/encode-string.html">string</a> data using the <a href="../../../../packages/core/elide.core.encoding/-encoder/encoding.html">encoding</a> implemented by this encoder; by default, the string will be interpreted using <code class="lang-kotlin">UTF-8</code> encoding, then encoded to the target encoding.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1542632852%2FFunctions%2F1458347289" anchor-label="encodeToString" id="1542632852%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.core.encoding/-encoder/encode-to-string.html"><span>encode</span><wbr><span>To</span><wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1542632852%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-encoder/encode-to-string.html"><span class="token function">encodeToString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Encode the provided <a href="../../elide.core.encoding/-encoder/encode-to-string.html">data</a> to a string representation using the <a href="../../../../packages/core/elide.core.encoding/-encoder/encoding.html">encoding</a> implemented by this encoder.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.core.encoding/-encoder/encode-to-string.html"><span class="token function">encodeToString</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">string<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Encode the provided <a href="../../elide.core.encoding/-encoder/encode-to-string.html">string</a> to a string representation using the <a href="../../../../packages/core/elide.core.encoding/-encoder/encoding.html">encoding</a> implemented by this encoder; the string is interpreted using <code class="lang-kotlin">UTF-8</code> encoding.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="145226836%2FFunctions%2F1458347289" anchor-label="encodeWebSafe" id="145226836%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="encode-web-safe.html"><span>encode</span><wbr><span>Web</span><wbr><span><span>Safe</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="145226836%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="encode-web-safe.html"><span class="token function">encodeWebSafe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">data<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">Encode the provided <a href="encode-web-safe.html">data</a> into a Base64-encoded set of bytes, omitting characters which are unsafe for use on the web, including padding characters, which are not emitted.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="encode-web-safe.html"><span class="token function">encodeWebSafe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">string<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Encode the provided <a href="encode-web-safe.html">string</a> into a Base64-encoded string, omitting characters which are unsafe for use on the web, including padding characters, which are not emitted.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1597535394%2FFunctions%2F1458347289" anchor-label="encoding" id="1597535394%2FFunctions%2F1458347289" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:core:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:core:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="encoding.html"><span><span>encoding</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1597535394%2FFunctions%2F1458347289"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="encoding.html"><span class="token function">encoding</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.core.encoding/-encoding/index.html">Encoding</a></div><div class="brief "><p class="paragraph">Return the enumerated <a href="../../elide.core.encoding/-encoding/index.html">Encoding</a> which is implemented by this <a href="../../elide.core.encoding/-codec/index.html">Codec</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

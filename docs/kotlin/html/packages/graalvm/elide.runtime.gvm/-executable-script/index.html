@@ -1,0 +1,239 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ExecutableScript</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.runtime.gvm/-executable-script/index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:graalvm:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="graalvm::elide.runtime.gvm/ExecutableScript///PointingToDeclaration//-1883836547">
+  <div class="breadcrumbs"><a href="../../index.html">graalvm</a><span class="delimiter">/</span><a href="../index.html">elide.runtime.gvm</a><span class="delimiter">/</span><span class="current">ExecutableScript</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Executable</span><wbr><span><span>Script</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">ExecutableScript</a></div><h1 class="">Executable Script</h1><p class="paragraph">Defines the interface which executable scripts must comply with in order to be compatible with Elide's Guest VM layer and associated features. Executable scripts maintain an internal <a href="-state/index.html">State</a> describing their current point in the script execution lifecycle.</p><p class="paragraph">Elide doesn't care what language an executable script is written in, so long as it is described by a valid language descriptor (<a href="../-guest-language/index.html">GuestLanguage</a>) and supported by the guest VM. Each step in the script lifecycle is described below. See ancillary classes for more information.</p><h2 class=""> Script Lifecycle</h2><p class="paragraph">When a script is first created, it is initialized with a source target, language, and any relevant arguments, state, or environment. As applicable, Elide may elect to prepend or append content before evaluating user code (in order to produce a stable global environment). At this stage, the script is considered <a href="-state/-u-n-i-n-i-t-i-a-l-i-z-e-d/index.html">State.UNINITIALIZED</a>.</p><p class="paragraph">Once the script has been assembled (linked), it is ready to be parsed/evaluated. At this stage, a VM is exclusively acquired to parse and evaluate the script, and, at the successful conclusion of this initial execution, it moves into the <a href="-state/-p-a-r-s-e-d/index.html">State.PARSED</a> stage.</p><p class="paragraph">Parsed scripts are no longer executing from source, but still need to be interrogated for a proper entrypoint. After this stage completes, the script enters <a href="-state/-e-v-a-l-u-a-t-e-d/index.html">State.EVALUATED</a> and is ready to be invoked. At this stage, the active VM is released back into the pool, and the executable script is ready.</p><p class="paragraph">At some point later (potentially immediately), the script is executed, which moves it into the <a href="-state/-e-x-e-c-u-t-e-d/index.html">State.EXECUTED</a> stage terminally. The script remains in this stage for the duration of the server's lifecycle, and is re-executed from the cache for each invocation.</p><h2 class=""> Sealed Interface</h2><p class="paragraph">This interface is sealed to prevent direct external implementation; sub-classes are provided which describe common script loading strategies. The developer may opt to extend one of these sub-classes, where needed and supported.</p><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-guest-language/index.html"><span>Guest</span><wbr><span><span>Language</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the expected specification adhered to by guest language descriptors.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-state/index.html"><span>Executable</span><wbr><span>Script.</span><wbr><span>State</span></a></div></span></div><div><div class="title"><p class="paragraph">for an exhaustive enumeration of states that a script may inhabit during its lifecycle.</p></div></div></div></div></div><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-developer-script/index.html">DeveloperScript</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-guest-script/index.html">GuestScript</a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-962862204%2FClasslikes%2F-1883836547" anchor-label="ScriptSource" id="-962862204%2FClasslikes%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-script-source/index.html"><span>Script</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-962862204%2FClasslikes%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="-script-source/index.html">ScriptSource</a></div><div class="brief "><p class="paragraph">Specifies the source code <a href="../../../../packages/graalvm/elide.runtime.gvm/-executable-script/-script-source/target.html">target</a> for a guest VM script. This may be a file, a literal string, an embedded asset, or any other source permitted by the interface defined herein.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2110101701%2FClasslikes%2F-1883836547" anchor-label="ScriptType" id="2110101701%2FClasslikes%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-script-type/index.html"><span>Script</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2110101701%2FClasslikes%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="-script-type/index.html">ScriptType</a></div><div class="brief "><p class="paragraph">Specifies the type of code contained in a guest VM script, typically in the form of a MIME type; e.g. <code class="lang-kotlin">text/javascript</code>. Alternative symbols are provided as calculated properties from the underlying <a href="../../../../packages/graalvm/elide.runtime.gvm/-executable-script/-script-type/spec.html">spec</a>/</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1256404649%2FClasslikes%2F-1883836547" anchor-label="SourceMap" id="-1256404649%2FClasslikes%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-source-map/index.html"><span>Source</span><wbr><span><span>Map</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1256404649%2FClasslikes%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="-source-map/index.html">SourceMap</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">target<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Specifies the source code map <a href="../../../../packages/graalvm/elide.runtime.gvm/-executable-script/-source-map/target.html">target</a> for a guest VM script. This may be a file, a literal string, an embedded asset, or any other source permitted by the interface defined herein. This source map is expected to correspond with an associated <a href="-script-source/index.html">ScriptSource</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1129519737%2FClasslikes%2F-1883836547" anchor-label="State" id="-1129519737%2FClasslikes%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-state/index.html"><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1129519737%2FClasslikes%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-state/index.html">State</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-state/index.html">ExecutableScript.State</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Enumerates each state that an executable guest script may inhabit during its lifecycle. The process of these states is described in the main <a href="index.html">ExecutableScript</a> docs.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1727233211%2FFunctions%2F-1883836547" anchor-label="invocation" id="-1727233211%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="invocation.html"><span><span>invocation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1727233211%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="invocation.html"><span class="token function">invocation</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/EnumSet.html">EnumSet</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-invocation-mode/index.html">InvocationMode</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="439697277%2FFunctions%2F-1883836547" anchor-label="language" id="439697277%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="language.html"><span><span>language</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="439697277%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="language.html"><span class="token function">language</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-guest-language/index.html">GuestLanguage</a></div><div class="brief "><p class="paragraph">Indicate the guest language that this script is written in; it is expected that the returned <a href="../-guest-language/index.html">GuestLanguage</a> is supported by the active VM, or no execution can take place.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1413747401%2FFunctions%2F-1883836547" anchor-label="map" id="1413747401%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="map.html"><span><span>map</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1413747401%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="map.html"><span class="token function">map</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-source-map/index.html">ExecutableScript.SourceMap</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">TBD.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-234331622%2FFunctions%2F-1883836547" anchor-label="source" id="-234331622%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="source.html"><span><span>source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-234331622%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="source.html"><span class="token function">source</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-script-source/index.html">ExecutableScript.ScriptSource</a></div><div class="brief "><p class="paragraph">TBD.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="387477300%2FFunctions%2F-1883836547" anchor-label="state" id="387477300%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="state.html"><span><span>state</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="387477300%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="state.html"><span class="token function">state</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-state/index.html">ExecutableScript.State</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="746508763%2FFunctions%2F-1883836547" anchor-label="type" id="746508763%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="type.html"><span><span>type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="746508763%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="type.html"><span class="token function">type</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-script-type/index.html">ExecutableScript.ScriptType</a></div><div class="brief "><p class="paragraph">TBD.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

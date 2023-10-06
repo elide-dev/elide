@@ -40,7 +40,7 @@ Elide is a cloud-first polyglot runtime for developing fast web applications. It
 You can install the runtime by running:
 
 ```shell
-curl -sSL --tlsv1.2 "dl.elide.dev/cli/install.sh" | bash -s -
+curl -sSL --tlsv1.2 elide.sh | bash -s -
 ```
 
 After installation, you can run `elide help` or `elide info` to see more information.

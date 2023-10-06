@@ -23,6 +23,7 @@ import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.intrinsics.server.http.HttpServerEngine
 import elide.runtime.intrinsics.server.http.internal.PipelineRouter
+import elide.vm.annotations.Polyglot
 
 /**
  * Netty-based [HttpServerEngine] implementation.
@@ -31,8 +32,8 @@ import elide.runtime.intrinsics.server.http.internal.PipelineRouter
  * performance.
  */
 @DelicateElideApi internal class NettyServerEngine(
-  @Export override val config: NettyServerConfig,
-  @Export override val router: PipelineRouter,
+  @Polyglot override val config: NettyServerConfig,
+  @Polyglot override val router: PipelineRouter,
 ) : HttpServerEngine {
   /** Thread-safe flag to signal  */
   private val serverRunning = AtomicBoolean(false)
@@ -40,7 +41,7 @@ import elide.runtime.intrinsics.server.http.internal.PipelineRouter
   /** Private logger instance. */
   private val logging by lazy { Logging.of(NettyServerEngine::class) }
 
-  @get:Export override val running: Boolean get() = serverRunning.get()
+  @get:Polyglot override val running: Boolean get() = serverRunning.get()
 
   /** Construct a new [ChannelHandler] used as initializer for client channels. */
   private fun prepareChannelInitializer(): ChannelHandler {

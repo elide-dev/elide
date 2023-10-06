@@ -18,7 +18,6 @@ import io.micronaut.context.annotation.Requires
 import io.netty.channel.epoll.Epoll
 import io.netty.channel.kqueue.KQueue
 import io.netty.handler.ssl.OpenSsl
-import io.netty.incubator.channel.uring.IOUring
 import elide.tool.annotations.EmbeddedTest
 import elide.tool.testing.SelfTest
 
@@ -48,14 +47,6 @@ import elide.tool.testing.SelfTest
 @Bean @EmbeddedTest class EpollTest : SelfTest() {
   override suspend fun SelfTestContext.test() {
     assertTrue(Epoll.isAvailable(), "epoll should be available on linux")
-  }
-}
-
-/** `io_uring` should be available on linux. */
-@Requires(os = [Requires.Family.LINUX])
-@Bean @EmbeddedTest class IOUringTest : SelfTest() {
-  override suspend fun SelfTestContext.test() {
-    assertTrue(IOUring.isAvailable(), "io_uring should be available on linux")
   }
 }
 

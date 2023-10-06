@@ -881,8 +881,6 @@ val initializeAtBuildTime = listOf(
   "io.netty.util.CharsetUtil",
   "io.netty.util.internal.SystemPropertyUtil",
   "io.netty.incubator.codec.quic.BoringSSLSessionCallback",
-  "io.netty.channel.epoll.Epoll",
-  "io.netty.channel.epoll.Native",
   "io.netty.channel.kqueue.KQueue",
   "io.netty.channel.kqueue.Native",
   "io.netty.handler.ssl.OpenSsl",

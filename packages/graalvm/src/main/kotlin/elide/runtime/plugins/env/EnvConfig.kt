@@ -32,9 +32,20 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
     public var enabled: Boolean = true
 
     /**
-     * Isolated suite of environment variables to provide to the guest application.
+     * Isolated suite of environment variables to provide to the guest application. Use [setEnv] to register new
+     * variable values or override existing ones.
      */
-    public val isolatedEnvironmentVariables: MutableMap<String, EnvVar> = ConcurrentSkipListMap()
+    public val isolatedEnvironmentVariables: Map<String, EnvVar> get() = mutableEnvironmentVariables
+
+    /**
+     * Private mutable map for setting environment variables.
+     */
+    private val mutableEnvironmentVariables: MutableMap<String, EnvVar> = ConcurrentSkipListMap()
+
+    /** Register an [EnvVar] with the given [key]. */
+    public fun setEnv(key: String, value: EnvVar) {
+      mutableEnvironmentVariables[key] = value
+    }
   }
 
   /** Describes different sources for an environment variable. */
@@ -75,7 +86,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
     @DelicateElideApi @JvmRecord public data class InlineEnvVar(
       override val name: String,
       override val value: String?,
-    ): EnvVar {
+    ) : EnvVar {
       override val source: EnvVariableSource get() = INLINE
     }
 
@@ -83,7 +94,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
     @DelicateElideApi @JvmRecord public data class SuppliedEnvVar(
       override val name: String,
       private val supplier: Supplier<String?>,
-    ): EnvVar {
+    ) : EnvVar {
       override val source: EnvVariableSource get() = INLINE
       override val value: String? get() = supplier.get()
     }
@@ -93,7 +104,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
       public val file: String,
       override val name: String,
       override val value: String?,
-    ): EnvVar {
+    ) : EnvVar {
       override val source: EnvVariableSource get() = INLINE
     }
 
@@ -102,7 +113,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
       public val mapped: String,
       public val defaultValue: String? = null,
       override val name: String,
-    ): EnvVar {
+    ) : EnvVar {
       override val source: EnvVariableSource get() = INLINE
       override val value: String? get() = System.getenv(name) ?: defaultValue
     }
@@ -138,19 +149,19 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
   public fun environment(name: String, value: String?) {
     if (value == null) return
     if (!app.enabled) app.enabled = true
-    app.isolatedEnvironmentVariables[name] = EnvVar.of(name, value)
+    app.setEnv(name, EnvVar.of(name, value))
   }
 
   /** Inject an explicit application environment variable resolved from a [callback]. */
   public fun environment(name: String, callback: () -> String?) {
     if (!app.enabled) app.enabled = true
-    app.isolatedEnvironmentVariables[name] = EnvVar.provide(name, callback)
+    app.setEnv(name, EnvVar.provide(name, callback))
   }
 
   /** Expose or map a [hostVariable] to the provided [alias] (defaults to the same name). */
   public fun mapToHostEnv(hostVariable: String, alias: String = hostVariable, defaultValue: String? = null) {
     if (!app.enabled) app.enabled = true
-    app.isolatedEnvironmentVariables[alias] = EnvVar.mapToHost(hostVariable, alias, defaultValue)
+    app.setEnv(alias, EnvVar.mapToHost(hostVariable, alias, defaultValue))
   }
 
   /** Expose or map a [hostVariable] to the provided [alias] (defaults to the same name). */
@@ -161,6 +172,6 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
   /** Inject an environment variable at [name] that was loaded from a `.env` [file]. */
   public fun fromDotenv(file: String, name: String, value: String?) {
     if (!app.enabled) app.enabled = true
-    app.isolatedEnvironmentVariables[name] = EnvVar.fromDotenv(file, name, value)
+    app.setEnv(name, EnvVar.fromDotenv(file, name, value))
   }
 }

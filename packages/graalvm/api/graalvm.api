@@ -2292,6 +2292,7 @@ public final class elide/runtime/plugins/env/EnvConfig$AppEnvConfig {
 	public final fun getEnabled ()Z
 	public final fun getIsolatedEnvironmentVariables ()Ljava/util/Map;
 	public final fun setEnabled (Z)V
+	public final fun setEnv (Ljava/lang/String;Lelide/runtime/plugins/env/EnvConfig$EnvVar;)V
 }
 
 public abstract interface class elide/runtime/plugins/env/EnvConfig$EnvVar {
@@ -2404,6 +2405,7 @@ public final class elide/runtime/plugins/env/Environment {
 	public static final field Plugin Lelide/runtime/plugins/env/Environment$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/env/EnvConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getConfig ()Lelide/runtime/plugins/env/EnvConfig;
+	public final fun install (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
 }
 
 public final class elide/runtime/plugins/env/Environment$Plugin : elide/runtime/core/EnginePlugin {
@@ -2419,7 +2421,7 @@ public final class elide/runtime/plugins/js/ExtensionsKt {
 
 public final class elide/runtime/plugins/js/JavaScript {
 	public static final field Plugin Lelide/runtime/plugins/js/JavaScript$Plugin;
-	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lelide/runtime/plugins/env/Environment;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class elide/runtime/plugins/js/JavaScript$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {

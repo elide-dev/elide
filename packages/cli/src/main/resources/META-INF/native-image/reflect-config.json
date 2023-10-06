@@ -185,6 +185,18 @@
   "allPublicClasses":true
 },
 {
+  "name":"elide.runtime.intrinsics.server.http.HttpServerAgent",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name": "elide.runtime.intrinsics.server.http.netty.NettyServerEngine",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
   "name":"ch.qos.logback.classic.pattern.color.HighlightingCompositeConverter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },

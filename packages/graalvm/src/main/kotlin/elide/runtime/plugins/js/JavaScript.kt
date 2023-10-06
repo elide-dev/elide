@@ -23,8 +23,10 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
+import elide.runtime.core.plugin
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
+import elide.runtime.plugins.env.Environment
 import elide.runtime.plugins.js.JavaScriptVersion.*
 
 /**
@@ -33,9 +35,13 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 @DelicateElideApi public class JavaScript private constructor(
   private val config: JavaScriptConfig,
   private val resources: LanguagePluginManifest,
+  private val environment: Environment? = null,
 ) {
 
   private fun initializeContext(context: PolyglotContext) {
+    // if applicable, install the env plugin bindings
+    environment?.install(context, JavaScript)
+
     // apply init-time settings
     config.applyTo(context)
 
@@ -105,7 +111,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.v8-compat" to config.v8,
     )
 
-    if(config.wasm) {
+    if (config.wasm) {
       enableOptions(
         "wasm.Memory64",
         "wasm.MultiValue",
@@ -142,10 +148,13 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
+      // resolve the env plugin (if present, otherwise ignore silently)
+      val env = scope.configuration.plugin(Environment)
+
       // apply the configuration and create the plugin instance
       val config = JavaScriptConfig().apply(configuration)
       val embedded = resolveEmbeddedManifest(scope)
-      val instance = JavaScript(config, embedded)
+      val instance = JavaScript(config, embedded, env)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)

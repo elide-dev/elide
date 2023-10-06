@@ -13,7 +13,6 @@
 
 package elide.runtime.intrinsics.server.http.internal
 
-import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
@@ -22,6 +21,7 @@ import elide.runtime.intrinsics.server.http.HttpContext
 import elide.runtime.intrinsics.server.http.HttpMethod
 import elide.runtime.intrinsics.server.http.HttpRequest
 import elide.runtime.intrinsics.server.http.HttpRouter
+import elide.vm.annotations.Polyglot
 
 /**
  * The HTTP Router resolves [GuestHandler] references for an incoming [HttpRequest].
@@ -38,7 +38,7 @@ import elide.runtime.intrinsics.server.http.HttpRouter
    */
   private val pipeline = mutableListOf<PipelineStage>()
 
-  @Export override fun handle(method: String?, path: String?, handler: PolyglotValue) {
+  @Polyglot override fun handle(method: String?, path: String?, handler: PolyglotValue) {
     // store the handler reference and get the key
     val key = handlerRegistry.register(GuestHandler.of(handler))
 

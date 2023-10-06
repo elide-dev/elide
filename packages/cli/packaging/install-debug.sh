@@ -18,7 +18,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.10
+# Version: 0.11
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -41,6 +41,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.11 2023-08-01  Sam Gammon  Archive support fixes, fix for uuid package
 #   0.10 2023-08-01  Sam Gammon  Version bump for launch
 #   0.9  2023-08-01  Sam Gammon  Version bump for release
 #   0.8  2022-12-28  Sam Gammon  Add --no-banner flag to skip banner
@@ -56,15 +57,15 @@ set -e;
 set +x;
 
 TOOL_REVISION="1.0.0-alpha7";
-INSTALLER_VERSION="v0.10";
+INSTALLER_VERSION="v0.11";
 
 TOOL="cli";
 VERSION="v1";
 RELEASE="snapshot";
-COMPRESSION="gz";
+COMPRESSION="tgz";
 BINARY="elide";
-DOWNLOAD_BASE="https://dl.elide.dev";
-DEFAULT_INSTALL_DIR="$HOME/bin";
+DOWNLOAD_BASE="https://elide.zip";
+DEFAULT_INSTALL_DIR="$HOME/elide";
 
 ENABLE_DEBUG="false";
 ENABLE_COLOR="true";
@@ -123,7 +124,7 @@ if [[ "$@" == *"help"* ]]; then
     echo -e "Usage:";
     echo -e "  ./install.sh";
     echo -e "  ./install.sh | bash [options]";
-    echo -e "  curl https://dl.elide.dev/cli/v1/snapshot/install.sh | bash";
+    echo -e "  curl https://elide.sh | bash";
     echo -e "  curl https://dl.elide.dev/cli/v1/snapshot/install.sh | bash [options]";
     echo -e "";
     echo -e "Options:";
@@ -199,7 +200,7 @@ fi
 if [ -x "$(command -v xz)" ]; then
     debug "Found compression: xz"
     COMPRESSION_TOOL="xz";
-    COMPRESSION="xz";
+    COMPRESSION="txz";
 fi
 debug "Using compression tool: $COMPRESSION_TOOL (extension $COMPRESSION)";
 
@@ -207,6 +208,17 @@ debug "Using compression tool: $COMPRESSION_TOOL (extension $COMPRESSION)";
 PARAM_INSTALL_DIR=$(echo "$@" | grep -o -E "install-dir=? ?([^ ]+)" | cut -d' ' -f2 | cut -d'=' -f2 || $INSTALL_DIR);
 INSTALL_DIR=${PARAM_INSTALL_DIR:-$DEFAULT_INSTALL_DIR};
 debug "Resolved install dir: $INSTALL_DIR";
+
+## resolve symlink
+
+# if the directory `$HOME/bin` exists, we should symlink elide into it. check if it exists, then capture the path and
+# a variable indicating whether we should symlink.
+if [ -d "$HOME/bin" ]; then
+    debug "Found $HOME/bin, will symlink elide into it.";
+    INSTALL_SYMLINK_DIR="$HOME/bin";
+else
+    INSTALL_SYMLINK_DIR="";
+fi
 
 ## resolve architecture
 ARCH=$(uname -m);
@@ -237,11 +249,14 @@ if [ -f ~/.elide/.host_id ]; then
     HOST_ID=$(cat ~/.elide/.host_id);
     debug "Host fingerprint loaded: $HOST_ID";
 else
-    ## otherwise, generate it
-    HOST_ID=$(uuidgen);
-    debug "Issued host fingerprint: $HOST_ID";
     mkdir -p ~/.elide;
-    echo "$HOST_ID" >> ~/.elide/.host_id;
+
+    # check if `uuidgen` is installed, and if so, use it to generate a unique host id
+    if [ -x "$(command -v uuidgen)" ]; then
+        HOST_ID=$(uuidgen);
+        debug "Issued host fingerprint: $HOST_ID";
+        echo "$HOST_ID" >> ~/.elide/.host_id;
+    fi
 fi
 
 VARIANT="$OS-$ARCH";
@@ -255,10 +270,10 @@ CURL_ARGS="--no-buffer --progress-bar --location --fail --tlsv1.2 --retry 3 --re
 
 debug "Downloading binary with command: curl $CURL_ARGS";
 
-DECOMPRESS_ARGS="-d";
+DECOMPRESS_ARGS="-xz";
 if [ "$ENABLE_DEBUG" = true ]; then
     CURL_ARGS="$CURL_ARGS $DEBUG_FLAGS";
-    DECOMPRESS_ARGS="-d -v";
+    DECOMPRESS_ARGS="-xzv";
     set -x;
 fi
 
@@ -267,8 +282,33 @@ debug "Decompressing with command: $COMPRESSION_TOOL $DECOMPRESS_ARGS";
 ## okay, it's time to download the binary and decompress it as we go.
 
 # shellcheck disable=SC2086
-mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-installer/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | $COMPRESSION_TOOL $DECOMPRESS_ARGS > "$INSTALL_DIR/$BINARY" && chmod +x "$INSTALL_DIR/$BINARY";
+mkdir -p "$INSTALL_DIR" && \
+  curl $CURL_ARGS \
+    -H "User-Agent: elide-installer/$INSTALLER_VERSION" \
+    -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT \
+    | tar $DECOMPRESS_ARGS -C "$INSTALL_DIR" -f - \
+    && chmod +x "$INSTALL_DIR/$BINARY";
+
 set +x;
+
+## if we have our symlink variable, symlink elide into the target directory
+if [ "$INSTALL_SYMLINK_DIR" != "" ]; then
+    debug "Symlinking elide into $INSTALL_SYMLINK_DIR";
+
+    ## if the symlink target already exists, rename it to `elide.old` and warn the user
+    if [ -f "$INSTALL_SYMLINK_DIR/$BINARY" ]; then
+        warn "Found existing $INSTALL_SYMLINK_DIR/$BINARY, renaming to $INSTALL_SYMLINK_DIR/$BINARY.old";
+
+        ## if `elide.old` already exists, delete it
+        if [ -f "$INSTALL_SYMLINK_DIR/$BINARY.old" ]; then
+            rm -f "$INSTALL_SYMLINK_DIR/$BINARY.old";
+        fi
+
+        mv "$INSTALL_SYMLINK_DIR/$BINARY" "$INSTALL_SYMLINK_DIR/$BINARY.old";
+    fi
+
+    ln -s "$INSTALL_DIR/$BINARY" "$INSTALL_SYMLINK_DIR/$BINARY";
+fi
 
 ## test the binary
 if [ -x "$INSTALL_DIR/$BINARY" ]; then

@@ -270,10 +270,12 @@ CURL_ARGS="--no-buffer --progress-bar --location --fail --tlsv1.2 --retry 3 --re
 
 debug "Downloading binary with command: curl $CURL_ARGS";
 
-DECOMPRESS_ARGS="-xz";
+DECOMPRESS_ARGS="-d";
+UNTAR_ARGS="-x";
 if [ "$ENABLE_DEBUG" = true ]; then
     CURL_ARGS="$CURL_ARGS $DEBUG_FLAGS";
-    DECOMPRESS_ARGS="-xzv";
+    UNTAR_ARGS="-xv";
+    DECOMPRESS_ARGS="-d -v";
     set -x;
 fi
 
@@ -286,7 +288,8 @@ mkdir -p "$INSTALL_DIR" && \
   curl $CURL_ARGS \
     -H "User-Agent: elide-installer/$INSTALLER_VERSION" \
     -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT \
-    | tar $DECOMPRESS_ARGS -C "$INSTALL_DIR" -f - \
+    | $COMPRESSION_TOOL $DECOMPRESS_ARGS \
+    | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f - \
     && chmod +x "$INSTALL_DIR/$BINARY";
 
 set +x;

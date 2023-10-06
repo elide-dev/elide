@@ -57,7 +57,7 @@ import elide.ssr.type.RequestState
 /** Extend a [PageController] with access to a [SitePage] configuration. */
 @Suppress("unused")
 abstract class SitePageController protected constructor(val page: SitePage) : PageWithProps<AppServerProps>(
-  AppServerProps.serializer(),
+  AppServerProps::class,
   AppServerProps(page = page.name, nonce = currentNonce),
 ) {
   companion object {
@@ -65,7 +65,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     const val enableStreaming = true
     const val securityReportOnly = false
 
-    // Random data generator for generating nonces.
+    // Random data generator for generating nonce values.
     private val nonceRandom = java.security.SecureRandom()
 
     // Length, in bytes, of the random nonce to append to each apex response.

@@ -47,8 +47,13 @@ internal sealed interface NettyTransport<T : ServerSocketChannel> {
    * [eventLoopGroup] and [socketChannel] options.
    */
   fun bootstrap(scope: ServerBootstrap) {
-    scope.group(eventLoopGroup())
-    scope.channel(socketChannel().java)
+    try {
+      scope.group(eventLoopGroup())
+      scope.channel(socketChannel().java)
+    } catch (unsatisfied: UnsatisfiedLinkError) {
+      scope.group(NioEventLoopGroup())
+      scope.channel(NioServerSocketChannel::class.java)
+    }
   }
 
   companion object {

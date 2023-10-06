@@ -883,6 +883,10 @@ val initializeAtBuildTime = listOf(
   "io.netty.incubator.codec.quic.BoringSSLSessionCallback",
   "io.netty.channel.kqueue.KQueue",
   "io.netty.channel.kqueue.Native",
+  // "io.netty.incubator.channel.uring.IOUring",
+  // "io.netty.incubator.channel.uring.IOUringSubmissionQueue",
+  // "io.netty.incubator.channel.uring.Native",
+  // "io.netty.incubator.channel.uring.LinuxSocket",
   "io.netty.handler.ssl.OpenSsl",
   "io.netty.util.internal.SocketUtils",
   "io.netty.channel.unix.FileDescriptor",
@@ -1077,7 +1081,6 @@ val initializeAtRuntime: List<String> = listOf(
   "io.netty.handler.codec.compression.BrotliOptions",
   "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
   "io.netty.handler.ssl.JdkNpnApplicationProtocolNegotiator",
-  "io.netty.handler.codec.http.HttpObjectEncoder",
   "io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder",
   "org.truffleruby.aot.ParserCache",
   "org.truffleruby.core.encoding.Encodings",
@@ -1100,6 +1103,7 @@ val initializeAtRuntimeTest: List<String> = emptyList()
 
 val rerunAtRuntime: List<String> = listOf(
   "elide.tool.cli.ElideTool",
+  "io.netty.handler.codec.http.HttpObjectEncoder",
   "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
 )
 

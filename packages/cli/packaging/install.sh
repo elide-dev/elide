@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e;set +x;TOOL_REVISION="1.0.0-alpha7";INSTALLER_VERSION="v0.10";TOOL="cli";VERSION="v1";RELEASE="snapshot";
-COMPRESSION="gz";BINARY="elide";DOWNLOAD_BASE="https://dl.elide.dev";DEFAULT_INSTALL_DIR="$HOME/bin";
+set -e;set +x;TOOL_REVISION="1.0.0-alpha7";INSTALLER_VERSION="v0.11";TOOL="cli";VERSION="v1";RELEASE="snapshot";
+COMPRESSION="tgz";BINARY="elide";DOWNLOAD_BASE="https://elide.zip";DEFAULT_INSTALL_DIR="$HOME/elide";
 ENABLE_DEBUG="false";ENABLE_COLOR="true";INSTALL_INTO_PATH="true";
 if [[ "$@" == *"no-color"* ]]; then MAGENTA="";CYAN="";RED="";YELLOW="";GRAY="";BOLD="";NC="";else MAGENTA="\033[0;35m";
 CYAN="\033[0;36m";RED="\033[0;31m";YELLOW="\033[0;33m";GRAY="\033[0;37m";BOLD="\033[1m";NC="\033[0m"; fi
@@ -32,7 +32,7 @@ echo -e "";
 echo -e "Usage:";
 echo -e "  ./install.sh";
 echo -e "  ./install.sh | bash [options]";
-echo -e "  curl https://dl.elide.dev/cli/v1/snapshot/install.sh | bash";
+echo -e "  curl https://elide.sh | bash";
 echo -e "  curl https://dl.elide.dev/cli/v1/snapshot/install.sh | bash [options]";
 echo -e "";
 echo -e "Options:";
@@ -96,12 +96,18 @@ fi
 if [ -x "$(command -v xz)" ]; then
 debug "Found compression: xz";
 COMPRESSION_TOOL="xz";
-COMPRESSION="xz";
+COMPRESSION="txz";
 fi
 debug "Using compression tool: $COMPRESSION_TOOL (extension $COMPRESSION)";
 PARAM_INSTALL_DIR=$(echo "$@" | grep -o -E "install-dir=? ?([^ ]+)" | cut -d' ' -f2 | cut -d'=' -f2 || $INSTALL_DIR);
 INSTALL_DIR=${PARAM_INSTALL_DIR:-$DEFAULT_INSTALL_DIR};
 debug "Resolved install dir: $INSTALL_DIR";
+if [ -d "$HOME/bin" ]; then
+debug "Found $HOME/bin, will symlink elide into it.";
+INSTALL_SYMLINK_DIR="$HOME/bin";
+else
+INSTALL_SYMLINK_DIR="";
+fi
 ARCH=$(uname -m);
 debug "Resolved architecture: $ARCH";
 if [ "$ARCH" = "x86_64" ]; then
@@ -122,10 +128,12 @@ if [ -f ~/.elide/.host_id ]; then
 HOST_ID=$(cat ~/.elide/.host_id);
 debug "Host fingerprint loaded: $HOST_ID";
 else
+mkdir -p ~/.elide;
+if [ -x "$(command -v uuidgen)" ]; then
 HOST_ID=$(uuidgen);
 debug "Issued host fingerprint: $HOST_ID";
-mkdir -p ~/.elide;
 echo "$HOST_ID" >> ~/.elide/.host_id;
+fi
 fi
 VARIANT="$OS-$ARCH";
 DOWNLOAD_ENDPOINT="$DOWNLOAD_BASE/$TOOL/$VERSION/$RELEASE/$VARIANT/$TOOL_REVISION/$BINARY.$COMPRESSION";
@@ -134,14 +142,26 @@ say "Installing Elide (variant: $VARIANT, version: $TOOL_REVISION)...";
 DEBUG_FLAGS="-vv";
 CURL_ARGS="--no-buffer --progress-bar --location --fail --tlsv1.2 --retry 3 --retry-delay 2 --http2";
 debug "Downloading binary with command: curl $CURL_ARGS";
-DECOMPRESS_ARGS="-d";
+DECOMPRESS_ARGS="-xz";
 if [ "$ENABLE_DEBUG" = true ]; then
 CURL_ARGS="$CURL_ARGS $DEBUG_FLAGS";
-DECOMPRESS_ARGS="-d -v";
+DECOMPRESS_ARGS="-xzv";
 set -x;
 fi
 debug "Decompressing with command: $COMPRESSION_TOOL $DECOMPRESS_ARGS";
-mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-download/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | $COMPRESSION_TOOL $DECOMPRESS_ARGS > "$INSTALL_DIR/$BINARY" && chmod +x "$INSTALL_DIR/$BINARY";
+mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-installer/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | tar $DECOMPRESS_ARGS -C "$INSTALL_DIR" -f - && chmod +x "$INSTALL_DIR/$BINARY";
+set +x;
+if [ "$INSTALL_SYMLINK_DIR" != "" ]; then
+debug "Symlinking elide into $INSTALL_SYMLINK_DIR";
+if [ -f "$INSTALL_SYMLINK_DIR/$BINARY" ]; then
+warn "Found existing $INSTALL_SYMLINK_DIR/$BINARY, renaming to $INSTALL_SYMLINK_DIR/$BINARY.old";
+if [ -f "$INSTALL_SYMLINK_DIR/$BINARY.old" ]; then
+rm -f "$INSTALL_SYMLINK_DIR/$BINARY.old";
+fi
+mv "$INSTALL_SYMLINK_DIR/$BINARY" "$INSTALL_SYMLINK_DIR/$BINARY.old";
+fi
+ln -s "$INSTALL_DIR/$BINARY" "$INSTALL_SYMLINK_DIR/$BINARY";
+fi
 set +x;
 if [ -x "$INSTALL_DIR/$BINARY" ]; then
 debug "Binary installed successfully.";
@@ -157,44 +177,44 @@ echo "";
 echo -e "Elide installed successfully! 🎉";
 IS_ON_PATH="false";
 if [ -x "$(command -v $BINARY)" ]; then
-    IS_ON_PATH="true";
+IS_ON_PATH="true";
 else
-    if [ "$INSTALL_INTO_PATH" == true ]; then
-        DID_INSTALL="false";
-        if [ -f ~/.profile ]; then
-            DID_INSTALL="true";
-            IS_ON_PATH="true";
-            echo "" >> ~/.profile;
-            echo "# Elide PATH export" >> ~/.profile;
-            echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.profile;
-        fi
-        if [ "$DID_INSTALL" != true ]; then
-            if [ -f ~/.zshrc ]; then
-                DID_INSTALL="true";
-                IS_ON_PATH="true";
-                echo "" >> ~/.zshrc;
-                echo "# Elide PATH export" >> ~/.zshrc;
-                echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.zshrc;
-            fi
-        fi
-        if [ "$DID_INSTALL" != true ]; then
-            if [ -f ~/.bashrc ]; then
-                DID_INSTALL="true";
-                IS_ON_PATH="true";
-                echo "" >> ~/.bashrc;
-                echo "# Elide PATH export" >> ~/.bashrc;
-                echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.bashrc;
-            fi
-        fi
-    fi
-    if [ "$IS_ON_PATH" != true ]; then
-        echo -e "";
-        echo -e "Note: Elide is not available on your PATH.";
-        echo -e "Add the following to your shell profile to add it to your PATH:";
-        echo -e "";
-        echo -e "  export PATH=\"\$PATH:$INSTALL_DIR\"";
-        echo -e "";
-    fi
+if [ "$INSTALL_INTO_PATH" == true ]; then
+DID_INSTALL="false";
+if [ -f ~/.profile ]; then
+DID_INSTALL="true";
+IS_ON_PATH="true";
+echo "" >> ~/.profile;
+echo "# Elide PATH export" >> ~/.profile;
+echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.profile;
+fi
+if [ "$DID_INSTALL" != true ]; then
+if [ -f ~/.zshrc ]; then
+DID_INSTALL="true";
+IS_ON_PATH="true";
+echo "" >> ~/.zshrc;
+echo "# Elide PATH export" >> ~/.zshrc;
+echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.zshrc;
+fi
+fi
+if [ "$DID_INSTALL" != true ]; then
+if [ -f ~/.bashrc ]; then
+DID_INSTALL="true";
+IS_ON_PATH="true";
+echo "" >> ~/.bashrc;
+echo "# Elide PATH export" >> ~/.bashrc;
+echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.bashrc;
+fi
+fi
+fi
+if [ "$IS_ON_PATH" != true ]; then
+echo -e "";
+echo -e "Note: Elide is not available on your PATH.";
+echo -e "Add the following to your shell profile to add it to your PATH:";
+echo -e "";
+echo -e "  export PATH=\"\$PATH:$INSTALL_DIR\"";
+echo -e "";
+fi
 fi
 echo -e "";
 echo -e " Get started with:";

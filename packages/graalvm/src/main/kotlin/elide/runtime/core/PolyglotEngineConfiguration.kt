@@ -54,9 +54,6 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
   /** Information about the runtime engine. */
   public abstract val hostRuntime: HostRuntime
 
-  /** Environment to apply to the context. */
-  public val environment: MutableMap<String, String> = ConcurrentSkipListMap()
-
   /** Enables support for the specified [language] on all contexts created by the engine. */
   public abstract fun enableLanguage(language: GuestLanguage)
 }

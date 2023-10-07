@@ -160,12 +160,16 @@ import elide.runtime.plugins.vfs.include
       val script = AbstractLanguagePlugin::class.java.getResourceAsStream(source.path)
         ?: error("Failed to load embedded resource: $source")
 
-      context.evaluate(
-        this,
-        script.bufferedReader().use { it.readText() },
-        name = source.path.split("/").last(),
-        internal = true,
-      )
+      try {
+        context.evaluate(
+          this,
+          script.bufferedReader().use { it.readText() },
+          name = source.path.split("/").last(),
+          internal = true,
+        )
+      } catch (err: Throwable) {
+        // swallow @TODO(sgammon)
+      }
     }
   }
 

@@ -157,7 +157,6 @@ public abstract interface class elide/runtime/core/PolyglotEngine {
 
 public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/runtime/core/PluginRegistry {
 	public abstract fun enableLanguage (Lelide/runtime/core/GuestLanguage;)V
-	public final fun getEnvironment ()Ljava/util/Map;
 	public final fun getHostAccess ()Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
 	public final fun getHostPlatform ()Lelide/runtime/core/HostPlatform;
 	public abstract fun getHostRuntime ()Lelide/runtime/core/HostRuntime;

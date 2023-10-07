@@ -20,15 +20,19 @@
 
 # noinspection PyPep8Naming
 class _Elide_ApplicationEnvironment(object):
+
     """Handler for resolving application-level environment, and withholding system environment, as needed."""
 
     __app_environ = {}
     __virtual_env = {}
 
     def __init__(self):
-        import polyglot
-        data = polyglot.import_value("elide_app_environment")()
-        self.__app_environ = {x: data[x] for x in data}
+        try:
+            import polyglot
+            data = (polyglot.import_value("elide_app_environment") or (lambda: {}))()
+            self.__app_environ = {x: data[x] for x in data}
+        except Exception:
+            pass  # silent fail
 
     def contains_key(self, item):
         return item in self.__app_environ or item in self.__virtual_env

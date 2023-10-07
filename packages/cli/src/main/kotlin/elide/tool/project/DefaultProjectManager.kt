@@ -143,10 +143,10 @@ import elide.tool.project.struct.nodepkg.NodePackage
       val env = readDotEnv(dir)
 
       return when (mainConfig) {
-        null -> if (env != null) ProjectInfo.of(
+        null -> ProjectInfo.of(
           root = rootPath,
           env = env,
-        ) else null
+        )
 
         else -> ProjectInfo.of(
           name = mainConfig.name,

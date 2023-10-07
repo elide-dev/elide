@@ -387,7 +387,7 @@ import elide.tool.project.ProjectManager
 
     /** Apply these settings to created execution contexts. */
     @Suppress("KotlinConstantConditions")
-    internal fun apply(project: ProjectInfo, config: PolyglotEngineConfiguration) = config.environment {
+    internal fun apply(project: ProjectInfo?, config: PolyglotEngineConfiguration) = config.environment {
       val effectiveInjectedEnv = TreeMap<String, EnvVar>()
 
       // inject `NODE_ENV`
@@ -397,8 +397,8 @@ import elide.tool.project.ProjectManager
         "production"
       })
 
-      // apply project-level environment variables first
-      project.env?.vars?.forEach {
+      // apply project-level environment variables first (if applicable)
+      project?.env?.vars?.forEach {
         if (it.value.isPresent) {
           if (it.value.source == DOTENV && !dotenv) {
             return@forEach  // skip .env vars if so instructed
@@ -1485,9 +1485,11 @@ import elide.tool.project.ProjectManager
     if (project != null) logging.debug("Resolved project info: $project")
 
     // conditionally apply debugging settings
-    if (project != null) appEnvironment.apply(project, this)
     if (debug) debugger.apply(this)
     inspector.apply(this)
+
+    // configure environment variables
+    appEnvironment.apply(project, this)
 
     // configure VFS with user-specified bundles
     vfs {

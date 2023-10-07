@@ -17,10 +17,11 @@ public class dev/elide/buildtools/gradle/plugin/ElideExtension {
 	public fun <init> (Lorg/gradle/api/Project;)V
 	public final fun disableAutoConfig ()V
 	public final fun enableAutoConfig ()V
-	public final fun getAutoConfig ()Ljava/util/concurrent/atomic/AtomicBoolean;
+	public final fun getAutoConfig ()Lorg/gradle/api/provider/Property;
+	public final fun getInjectDependencies ()Lorg/gradle/api/provider/Property;
 	public final fun getJs ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideJsHandler;
 	public final fun getKotlinPluginOptions ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideKotlinPluginsHandler;
-	public final fun getMode ()Ldev/elide/buildtools/gradle/plugin/BuildMode;
+	public final fun getMode ()Lorg/gradle/api/provider/Property;
 	public final fun getServer ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler;
 	public final fun getVersion ()Lorg/gradle/api/provider/Property;
 	public final fun hasJsTarget ()Z
@@ -28,7 +29,6 @@ public class dev/elide/buildtools/gradle/plugin/ElideExtension {
 	public final fun js (Lorg/gradle/api/Action;)V
 	public final fun kotlinPlugins (Lorg/gradle/api/Action;)V
 	public final fun server (Lorg/gradle/api/Action;)V
-	public final fun setMode (Ldev/elide/buildtools/gradle/plugin/BuildMode;)V
 }
 
 public final class dev/elide/buildtools/gradle/plugin/ElideExtension$Companion {
@@ -207,6 +207,7 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$ServerAss
 	public final fun from (Lorg/gradle/api/Action;)V
 	public final fun from (Lorg/gradle/api/Project;)V
 	public final fun from (Lorg/gradle/api/artifacts/Configuration;Lorg/gradle/api/Project;)V
+	public final fun from (Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;)V
 	public final fun fromProject (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun fromProject (Lorg/gradle/api/Project;Ljava/lang/String;)V
 	public static synthetic fun fromProject$default (Ldev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$ServerAsset;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
@@ -266,7 +267,9 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler {
 public class dev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$ServerSSRHandler {
 	public fun <init> ()V
 	public final fun bundle (Lorg/gradle/api/Project;Ljava/lang/String;)V
+	public final fun bundle (Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;Ljava/lang/String;)V
 	public static synthetic fun bundle$default (Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$ServerSSRHandler;Lorg/gradle/api/Project;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun bundle$default (Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler$ServerSSRHandler;Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;Ljava/lang/String;ILjava/lang/Object;)V
 }
 
 public final class dev/elide/buildtools/gradle/plugin/js/BundleTarget : java/lang/Enum {

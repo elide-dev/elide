@@ -457,7 +457,7 @@ internal object ElideDependencies {
         }
         val extension = extensions.getByType(ElideExtension::class.java)
         if (!extension.injectDependencies.get()) {
-            return  // skip if instructed
+            return // skip if instructed
         }
         val configuration = resolveConfigurationForSpec(spec)
 

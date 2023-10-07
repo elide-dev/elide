@@ -6,13 +6,11 @@ import com.google.protobuf.util.JsonFormat
 import dev.elide.buildtools.gradle.plugin.ElideExtension
 import dev.elide.buildtools.gradle.plugin.cfg.StaticValues
 import org.gradle.api.DefaultTask
-import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.options.Option
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
 import tools.elide.assets.ManifestFormat
@@ -108,7 +106,6 @@ public abstract class BundleBaseTask : DefaultTask() {
                 )
             }
         }
-
 
         @JvmStatic
         protected fun fingerprintMessage(catalog: Message): ByteString? {

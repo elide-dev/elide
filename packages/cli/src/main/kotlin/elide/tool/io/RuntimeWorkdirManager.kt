@@ -191,12 +191,19 @@ internal class RuntimeWorkdirManager : WorkdirManager {
   }
 
   // Find the nearest parent directory to `cwd` with one of the provided `files` present.
-  private fun nearestDirectoryWithAnyOfTheseFiles(files: SortedSet<String>, base: File? = null): File? {
-    if (base?.path == "/")
+  private fun nearestDirectoryWithAnyOfTheseFiles(
+    files: SortedSet<String>,
+    base: File? = null,
+    depth: Int? = null,
+  ): File? {
+    val currentDepth = depth ?: 0
+    if ((base != null && (base.parentFile == null || base.absolutePath == "/")) || files.isEmpty())
       return null  // can't search base
+    if (currentDepth > 15) return null  // don't search too deep
     val cwd = (base ?: File(System.getProperty("user.dir"))).apply {
       // if the cwd doesn't exist, we're jailed and can't find it anyway
       if (base == null && !exists()) return null
+      else if (base != null && base.parentFile == null) return null
     }
 
     val cwdFiles = cwd.listFiles()
@@ -207,7 +214,7 @@ internal class RuntimeWorkdirManager : WorkdirManager {
         return cwd
       }
     }
-    return nearestDirectoryWithAnyOfTheseFiles(files, cwd.parentFile)
+    return nearestDirectoryWithAnyOfTheseFiles(files, cwd.parentFile, currentDepth + 1)
   }
 
   // Find the nearest parent directory with one of the provided `projectAnchorFiles`.

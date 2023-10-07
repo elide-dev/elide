@@ -192,6 +192,8 @@ internal class RuntimeWorkdirManager : WorkdirManager {
 
   // Find the nearest parent directory to `cwd` with one of the provided `files` present.
   private fun nearestDirectoryWithAnyOfTheseFiles(files: SortedSet<String>, base: File? = null): File? {
+    if (base?.path == "/")
+      return null  // can't search base
     val cwd = (base ?: File(System.getProperty("user.dir"))).apply {
       // if the cwd doesn't exist, we're jailed and can't find it anyway
       if (base == null && !exists()) return null

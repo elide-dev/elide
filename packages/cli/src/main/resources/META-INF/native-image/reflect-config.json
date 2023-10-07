@@ -180,47 +180,6 @@
   "allPublicClasses":true
 },
 {
-  "name":"elide.runtime.intrinsics.server.http.internal.PipelineRouter",
-  "allPublicMethods":true,
-  "allPublicClasses":true
-},
-{
-  "name":"elide.runtime.intrinsics.server.http.HttpServerAgent",
-  "allPublicFields":true,
-  "allPublicMethods":true,
-  "allPublicClasses":true
-},
-{
-  "name": "elide.runtime.intrinsics.server.http.netty.NettyServerEngine",
-  "allPublicFields":true,
-  "allPublicMethods":true,
-  "allPublicClasses":true
-},
-{
-  "name": "elide.runtime.intrinsics.server.http.netty.NettyServerConfig",
-  "allPublicFields":true,
-  "allPublicMethods":true,
-  "allPublicClasses":true
-},
-{
-  "name": "elide.runtime.intrinsics.server.http.netty.NettyHttpRequest",
-  "allPublicFields":true,
-  "allPublicMethods":true,
-  "allPublicClasses":true
-},
-{
-  "name": "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
-  "allPublicFields":true,
-  "allPublicMethods":true,
-  "allPublicClasses":true
-},
-{
-  "name": "elide.runtime.intrinsics.server.http.HttpServerConfig",
-  "allPublicFields":true,
-  "allPublicMethods":true,
-  "allPublicClasses":true
-},
-{
   "name":"ch.qos.logback.classic.pattern.color.HighlightingCompositeConverter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -656,6 +615,54 @@
 {
   "name":"elide.runtime.gvm.ruby.cfg.$RubyRuntimeConfig$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.HttpServerAgent",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.HttpServerConfig",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.internal.PipelineRouter",
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.netty.NettyChannelInitializer"
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.netty.NettyHttpRequest",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
+  "methods":[{"name":"channelRead","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Object"] }, {"name":"channelReadComplete","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"exceptionCaught","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Throwable"] }]
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.netty.NettyServerConfig",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.netty.NettyServerEngine",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
 },
 {
   "condition":{"typeReachable":"elide.server.$Application$AppStartupListener$Definition$Reference"},
@@ -2944,6 +2951,10 @@
   "methods":[{"name":"bind","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.net.SocketAddress","io.netty.channel.ChannelPromise"] }, {"name":"close","parameterTypes":["io.netty.channel.ChannelHandlerContext","io.netty.channel.ChannelPromise"] }, {"name":"connect","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.net.SocketAddress","java.net.SocketAddress","io.netty.channel.ChannelPromise"] }, {"name":"deregister","parameterTypes":["io.netty.channel.ChannelHandlerContext","io.netty.channel.ChannelPromise"] }, {"name":"disconnect","parameterTypes":["io.netty.channel.ChannelHandlerContext","io.netty.channel.ChannelPromise"] }, {"name":"flush","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"read","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }]
 },
 {
+  "name":"io.netty.channel.ChannelHandlerAdapter",
+  "methods":[{"name":"exceptionCaught","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Throwable"] }]
+},
+{
   "name":"io.netty.channel.ChannelInboundHandlerAdapter",
   "methods":[{"name":"channelActive","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"channelInactive","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"channelRead","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Object"] }, {"name":"channelReadComplete","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"channelRegistered","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"channelUnregistered","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"channelWritabilityChanged","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"exceptionCaught","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Throwable"] }, {"name":"userEventTriggered","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Object"] }]
 },
@@ -2954,6 +2965,10 @@
 {
   "name":"io.netty.channel.ChannelOutboundBuffer",
   "fields":[{"name":"totalPendingSize"}, {"name":"unwritable"}]
+},
+{
+  "name":"io.netty.channel.ChannelOutboundHandlerAdapter",
+  "methods":[{"name":"bind","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.net.SocketAddress","io.netty.channel.ChannelPromise"] }, {"name":"close","parameterTypes":["io.netty.channel.ChannelHandlerContext","io.netty.channel.ChannelPromise"] }, {"name":"connect","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.net.SocketAddress","java.net.SocketAddress","io.netty.channel.ChannelPromise"] }, {"name":"deregister","parameterTypes":["io.netty.channel.ChannelHandlerContext","io.netty.channel.ChannelPromise"] }, {"name":"disconnect","parameterTypes":["io.netty.channel.ChannelHandlerContext","io.netty.channel.ChannelPromise"] }, {"name":"flush","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"read","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }]
 },
 {
   "name":"io.netty.channel.CombinedChannelDuplexHandler",
@@ -2992,6 +3007,10 @@
   "fields":[{"name":"wakenUp"}]
 },
 {
+  "name":"io.netty.channel.kqueue.KQueueServerSocketChannel",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.netty.channel.unix.DatagramSocketAddress"
 },
 {
@@ -3005,7 +3024,25 @@
   "name":"io.netty.channel.unix.PeerCredentials"
 },
 {
+  "name":"io.netty.handler.codec.ByteToMessageDecoder",
+  "methods":[{"name":"channelInactive","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, {"name":"channelRead","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Object"] }, {"name":"channelReadComplete","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }]
+},
+{
   "name":"io.netty.handler.codec.haproxy.HAProxyMessageDecoder"
+},
+{
+  "name":"io.netty.handler.codec.http.HttpObjectDecoder",
+  "methods":[{"name":"userEventTriggered","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Object"] }]
+},
+{
+  "name":"io.netty.handler.codec.http.HttpObjectEncoder",
+  "methods":[{"name":"write","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Object","io.netty.channel.ChannelPromise"] }]
+},
+{
+  "name":"io.netty.handler.codec.http.HttpRequestDecoder"
+},
+{
+  "name":"io.netty.handler.codec.http.HttpResponseEncoder"
 },
 {
   "name":"io.netty.handler.codec.http.HttpServerCodec"

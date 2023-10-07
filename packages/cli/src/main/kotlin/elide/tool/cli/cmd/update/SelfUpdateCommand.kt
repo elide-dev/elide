@@ -19,6 +19,8 @@ import lukfor.progress.TaskService
 import lukfor.progress.tasks.DownloadTask
 import lukfor.progress.tasks.ITaskRunnable
 import lukfor.progress.tasks.TaskFailureStrategy.CANCEL_TASKS
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipFile
 import org.apache.commons.io.IOUtils
@@ -147,7 +149,7 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
     val tag = "$osName-$archName"
     val eligibleExtensions = when {
       platform.os == WINDOWS -> "zip"
-      else -> "gz"
+      else -> "tgz"
     }
     val asset = release.listAssets().find {
       it.name.contains(tag) && eligibleExtensions.any { ext -> it.name.endsWith(ext) }
@@ -169,17 +171,36 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
     }
   }
 
+  private fun unpackFile(archive: TarArchiveInputStream, entry: TarArchiveEntry, dest: File) {
+    if (entry.isDirectory) {
+      dest.resolve(entry.name).mkdirs()
+    } else if (archive.canReadEntryData(entry)) {
+      dest.resolve(entry.name).outputStream().use { out ->
+        if (archive.canReadEntryData(entry)) {
+          entry.file.inputStream().use { `in` ->
+            IOUtils.copy(`in`, out)
+          }
+        }
+      }
+    }
+  }
+
   private fun unpackArchive(ext: String, archive: File, dest: File) {
     when (ext.trim().lowercase()) {
       "zip" -> ZipFile(archive).use {
-        val entries = it.entries.toList()
-
-        entries.stream().forEach { entry ->
+        it.entries.toList().stream().forEach { entry ->
           unpackFile(it, entry, dest)
         }
       }
 
-      "gz" -> GZIPInputStream(archive.inputStream()).use { `in` ->
+      "tgz" -> GZIPInputStream(archive.inputStream()).use { `in` ->
+        TarArchiveInputStream(`in`).use {
+          var entry = it.currentEntry
+          while (entry != null) {
+            unpackFile(it, entry, dest)
+            entry = it.nextTarEntry
+          }
+        }
         dest.resolve("elide.bin").outputStream().use { out ->
           IOUtils.copy(`in`, out)
         }

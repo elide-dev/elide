@@ -31,7 +31,7 @@
     "browserslist": "4.21.10",
     "cssnano": "6.0.1",
     "google-protobuf": "3.21.2",
-    "postcss": "8.4.30",
+    "postcss": "8.4.31",
     "preact": "10.17.1",
     "typescript": "4.9.5",
     "web-streams-polyfill": "3.2.1"

@@ -4,7 +4,7 @@
     "dockerfile": "Dockerfile"
   },
   "runArgs": ["--init", "--privileged"],
-  "postAttachCommand": "code .devcontainer/README.md && elide --help",
+  "postAttachCommand": "echo 'ELIDE_CODESPACE=true' > .env && touch package.json && code .devcontainer/README.md && clear && elide --help",
   "overrideCommand": false,
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},

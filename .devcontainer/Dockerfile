@@ -17,7 +17,7 @@ RUN apt-get update \
       curl \
       uuid-runtime \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /usr/lib/elide \
+    && mkdir -p /usr/lib/elide /home/vscode/.elide \
     && echo "Installing Elide..." \
     && curl -sSL elide.sh | bash -s - --install-dir=/usr/lib/elide \
     && ln -s /usr/lib/elide/elide /bin/elide \

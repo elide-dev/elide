@@ -35,7 +35,7 @@ Elide is a cloud-first polyglot runtime for developing fast web applications. It
 > [!IMPORTANT]
 > Elide is still in alpha, some features are not fully supported and others may fail on certain environments.
 
-## Using the runtime binaries
+## Installation
 
 You can install the runtime by running:
 
@@ -44,6 +44,22 @@ curl -sSL --tlsv1.2 elide.sh | bash -s -
 ```
 
 After installation, you can run `elide help` or `elide info` to see more information.
+
+## Other ways to try Elide
+
+You can also use Elide in a container, or in a GitHub Codespace.
+
+### Using Elide via Docker
+
+```
+docker run --platform linux/amd64 --rm -it ghcr.io/elide-dev/elide --help
+```
+
+### Using Elide via GitHub Codespaces
+
+We provide a [GitHub Codespace](https://github.com/features/codespaces) with Elide pre-installed. You can click below to try it out, right from your browser:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/elide-dev/elide/tree/feat%2Fcodespaces?devcontainer_path=.devcontainer%2Fdevcontainer.json)
 
 ## Features
 

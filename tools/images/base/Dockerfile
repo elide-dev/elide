@@ -20,6 +20,6 @@ RUN apt-get update \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
 
-ENV LC_CTYPE=en_US.UTF-8 \
-  LC_ALL=en_US.UTF-8 \
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin

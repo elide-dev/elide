@@ -1,0 +1,36 @@
+{
+"name": "Elide",
+"build": {
+  "dockerfile": "Elide.dockerfile"
+},
+"settings": {
+  "netbeans.jdkhome": "/usr/lib/gvm",
+  "java.completion.enabled": true,
+  "java.debug.settings.enableRunDebugCodeLens": true,
+  "java.test.editor.enableShortcuts": true
+},
+"runArgs": ["--init", "--privileged"],
+"overrideCommand": false,
+"extensions": [
+  "asf.apache-netbeans-java",
+  "mathiasfrohlich.kotlin",
+  "github.codespaces",
+  "github.copilot",
+  "ms-azuretools.vscode-docker",
+  "ms-vscode-remote.remote-containers",
+  "ms-vscode.vscode-typescript-tslint-plugin",
+  "redhat.vscode-yaml",
+  "sourcegraph.sourcegraph",
+  "oracle-labs-graalvm.graalvm",
+  "oracle-labs-graalvm.graalvm-pack",
+  "oracle-labs-graalvm.dashboard"
+],
+"features": {
+  "ghcr.io/devcontainers/features/git:1": {},
+  "ghcr.io/devcontainers/features/github-cli:1": {},
+  "ghcr.io/devcontainers/features/go:1": {"version":  "1.20"},
+  "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"},
+  "ghcr.io/devcontainers/features/docker-from-docker:1": {}
+},
+"remoteUser": "dev"
+}

@@ -4,7 +4,7 @@
     "dockerfile": "Dockerfile"
   },
   "runArgs": ["--init", "--privileged"],
-  "postAttachCommand": "elide --help",
+  "postAttachCommand": "code .devcontainer/README.md && elide --help",
   "overrideCommand": false,
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
@@ -23,6 +23,10 @@
         "java.completion.enabled": true,
         "java.debug.settings.enableRunDebugCodeLens": true,
         "java.test.editor.enableShortcuts": true,
+        "explorer.autoReveal": "focusNoScroll",
+        "terminal.integrated.gpuAcceleration": "on",
+        "terminal.integrated.enableImages": true,
+        "terminal.integrated.customGlyphs": true,
         "workbench.editorAssociations": {
           "*.md": "vscode.markdown.preview.editor"
         }

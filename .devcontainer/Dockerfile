@@ -1,24 +1,31 @@
-FROM ghcr.io/elide-dev/codespace@sha256:4ee81688a0be011baeca66129ebd73b14e5fa0c8bb72ae5ac67d8696f413d24d
+FROM ghcr.io/elide-dev/elide AS elide
 
-USER root
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
-RUN apt-get update && apt-get install -y uuid-runtime build-essential cmake ruby3.0 libyaml-dev
+LABEL org.opencontainers.image.vendor=Elide
+LABEL org.opencontainers.image.title="Elide Codespace"
+LABEL org.opencontainers.image.description="Elide runtime within a GitHub Codespace"
+LABEL org.opencontainers.image.version=1.0.0-alpha7
+LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
+LABEL org.opencontainers.image.base.name=mcr.microsoft.com/devcontainers/base
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/.devcontainer/Elide.devcontainer
 
-USER dev
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+      bash \
+      ca-certificates \
+      curl \
+      uuid-runtime \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /usr/lib/elide \
+    && echo "Installing Elide..." \
+    && curl -sSL elide.sh | bash -s - --install-dir=/usr/lib/elide \
+    && ln -s /usr/lib/elide/elide /bin/elide \
+    && which elide \
+    && elide --help \
+    && elide selftest \
+    && elide info \
+    && echo "Elide codespace container image ready."
 
-RUN go env -w GOPROXY=https://go.stage.pkg.st,direct;
-
-RUN curl -sSL --tlsv1.2 "dl.elide.dev/cli/install.sh" | bash -s -
-
-RUN curl -sSL --tlsv1.2 "https://github.com/buildless/cli/releases/download/1.0.0-beta1/buildless.linux-amd64.tar.gz" > buildless.tar.gz \
-    && tar -xzvf buildless.tar.gz \
-    && sudo mv buildless.linux-amd64/buildless /usr/local/bin/buildless \
-    && rm -frv buildless.tar.gz buildless.linux-amd64;
-
-ENV GRAALVM_HOME=/usr/lib/gvm \
-    SYSTEM_RUBY=/bin/ruby
-
-COPY buildless.yaml /home/dev/.config/buildless/buildless.yaml
-COPY init.gradle.kts /home/dev/.gradle/init.gradle.kts
 ENTRYPOINT ["/usr/local/share/docker-init.sh"]
 CMD ["sleep", "infinity"]

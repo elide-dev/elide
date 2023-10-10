@@ -1,81 +1,39 @@
 {
-  "name": "elide",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "runArgs": ["--init", "--privileged"],
-  "overrideCommand": false,
-  "hostRequirements": {
-    "cpus": 16,
-    "memory": "32gb",
-    "storage": "128gb"
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/go:1": {"version":  "1.19"},
-    "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"},
-    "ghcr.io/devcontainers/features/docker-from-docker:1": {}
-  },
-  "remoteEnv": {
-    "ELIDE_ENV": "codespace",
-    "TEST_EXCEPTIONS": "true",
-    "GRAALVM_HOME": "/usr/lib/gvm"
-  },
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "gradle.autoDetect": "off",
-        "netbeans.jdkhome": "/usr/lib/gvm",
-        "java.completion.enabled": true,
-        "java.debug.settings.enableRunDebugCodeLens": true,
-        "java.test.editor.enableShortcuts": true
-      },
-      "extensions": [
-        "asf.apache-netbeans-java",
-        "bazelbuild.vscode-bazel",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "mathiasfrohlich.kotlin",
-        "github.codespaces",
-        "github.copilot",
-        "ms-azuretools.vscode-docker",
-        "ms-vscode-remote.remote-containers",
-        "ms-vscode.vscode-typescript-tslint-plugin",
-        "redhat.vscode-yaml",
-        "naco-siren.gradle-language",
-        "bufbuild.vscode-buf",
-        "sswg.swift-lang",
-        "fwcd.kotlin",
-        "sourcegraph.sourcegraph",
-        "oracle-labs-graalvm.graalvm",
-        "oracle-labs-graalvm.graalvm-pack",
-        "oracle-labs-graalvm.micronaut",
-        "oracle-labs-graalvm.dashboard"
-      ]
-		},
-    "codespaces": {
-      "repositories": {
-        "elide-dev/runtime": {
-          "permissions": {
-            "issues": "read",
-            "pull_requests": "read"
-          }
-        }
-      },
-      "openFiles": [
-        "README.md"
-      ]
-    }
-  },
-  "secrets": {
-    "BUILDLESS_APIKEY": {
-      "description": "API key for build caching via Buildless.",
-      "documentationUrl": "https://docs.less.build/reference/intro/getting-started"
-    }
-  },
-  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && ./gradlew tasks && git checkout kotlin-js-store || exit 0 && sudo chown -R dev /home/dev/.gradle || echo 'Failed to set dev permissions'",
-  "postAttachCommand": "elide --help",
-  "forwardPorts": [8080, 50051],
-  "remoteUser": "dev"
+"name": "Elide",
+"build": {
+  "dockerfile": "Dockerfile",
+},
+"runArgs": ["--init", "--privileged"],
+"overrideCommand": false,
+"features": {
+  "ghcr.io/devcontainers/features/git:1": {},
+  "ghcr.io/devcontainers/features/github-cli:1": {},
+  "ghcr.io/devcontainers/features/go:1": {"version":  "1.20"},
+  "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"},
+  "ghcr.io/devcontainers/features/docker-from-docker:1": {}
+},
+"customizations": {
+  "vscode": {
+    "settings": {
+      "netbeans.jdkhome": "/usr/lib/gvm",
+      "java.completion.enabled": true,
+      "java.debug.settings.enableRunDebugCodeLens": true,
+      "java.test.editor.enableShortcuts": true
+    },
+    "extensions": [
+      "asf.apache-netbeans-java",
+      "mathiasfrohlich.kotlin",
+      "github.codespaces",
+      "github.copilot",
+      "ms-azuretools.vscode-docker",
+      "ms-vscode-remote.remote-containers",
+      "ms-vscode.vscode-typescript-tslint-plugin",
+      "redhat.vscode-yaml",
+      "sourcegraph.sourcegraph",
+      "oracle-labs-graalvm.graalvm",
+      "oracle-labs-graalvm.graalvm-pack",
+      "oracle-labs-graalvm.dashboard"
+    ],
+  }
+}
 }

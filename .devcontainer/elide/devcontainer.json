@@ -1,0 +1,43 @@
+{
+  "name": "Elide",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "runArgs": ["--init", "--privileged"],
+  "postAttachCommand": "elide --help",
+  "overrideCommand": false,
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"},
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {}
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        ".devcontainer/elide/README.md"
+      ]
+    },
+    "vscode": {
+      "settings": {
+        "java.completion.enabled": true,
+        "java.debug.settings.enableRunDebugCodeLens": true,
+        "java.test.editor.enableShortcuts": true
+      },
+      "extensions": [
+        "asf.apache-netbeans-java",
+        "mathiasfrohlich.kotlin",
+        "github.codespaces",
+        "github.copilot",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "redhat.vscode-yaml",
+        "sourcegraph.sourcegraph",
+        "oracle-labs-graalvm.graalvm",
+        "oracle-labs-graalvm.graalvm-pack",
+        "oracle-labs-graalvm.dashboard"
+      ]
+    }
+  }
+}

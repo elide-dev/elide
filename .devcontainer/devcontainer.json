@@ -15,7 +15,7 @@
   "customizations": {
     "codespaces": {
       "openFiles": [
-        ".devcontainer/elide/README.md"
+        ".devcontainer/README.md"
       ]
     },
     "vscode": {

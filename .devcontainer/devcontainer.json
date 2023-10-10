@@ -22,7 +22,10 @@
       "settings": {
         "java.completion.enabled": true,
         "java.debug.settings.enableRunDebugCodeLens": true,
-        "java.test.editor.enableShortcuts": true
+        "java.test.editor.enableShortcuts": true,
+        "workbench.editorAssociations": {
+          "*.md": "vscode.markdown.preview.editor"
+        }
       },
       "extensions": [
         "asf.apache-netbeans-java",

@@ -1,3 +1,8 @@
+<p align="center">
+  <a href="https://github.com/elide-dev">
+    <img src="https://static.elide.dev/assets/org-profile/creative/elide-banner-purple.png" alt="Elide" />
+  </a>
+</p>
 
 ## Elide + Codespaces
 

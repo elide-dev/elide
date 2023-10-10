@@ -1,9 +1,6 @@
 <p align="center">
-  <a href="https://github.com/elide-dev/v3">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./creative/logo/logo-wide-1200-w-r2.png">
-      <img src="./creative/logo/logo-wide-1200-w-r2.png" height="300">
-    </picture>
+  <a href="https://github.com/elide-dev">
+    <img src="https://static.elide.dev/assets/org-profile/creative/elide-banner-purple.png" alt="Elide" />
   </a>
 </p>
 

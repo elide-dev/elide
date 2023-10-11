@@ -52,6 +52,16 @@ You can also use Elide in a container, or in a GitHub Codespace.
 docker run --platform linux/amd64 --rm -it ghcr.io/elide-dev/elide --help
 ```
 
+### Using Elide via Homebrew
+
+```
+brew tap elide-dev/elide
+brew install elide
+```
+```
+elide --help
+```
+
 ### Using Elide via GitHub Codespaces
 
 We provide a [GitHub Codespace](https://github.com/features/codespaces) with Elide pre-installed. You can click below to try it out, right from your browser:

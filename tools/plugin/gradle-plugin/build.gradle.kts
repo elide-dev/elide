@@ -15,7 +15,7 @@ import java.util.Properties
 
 plugins {
     java
-    kotlin("kapt") version "1.9.20-Beta2" apply false
+    kotlin("kapt") version "1.9.20-RC" apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kover)
     alias(libs.plugins.detekt)

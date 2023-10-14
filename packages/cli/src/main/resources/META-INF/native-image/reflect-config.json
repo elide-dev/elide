@@ -665,6 +665,24 @@
   "allPublicClasses":true
 },
 {
+  "name":"elide.runtime.intrinsics.server.http.netty.NoopServerConfig",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.internal.NoopServerEngine",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
+  "name":"elide.runtime.intrinsics.server.http.internal.ThreadLocalHandlerRegistry",
+  "allPublicFields":true,
+  "allPublicMethods":true,
+  "allPublicClasses":true
+},
+{
   "condition":{"typeReachable":"elide.server.$Application$AppStartupListener$Definition$Reference"},
   "name":"elide.server.$Application$AppStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]

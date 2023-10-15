@@ -283,12 +283,10 @@ internal class RuntimeWorkdirManager : WorkdirManager {
       defaultPath,
     )
 
-    (userConfigPaths.first {
+    (userConfigPaths.firstOrNull {
       // the first one that exists, wins, and if nothing exists, the default path is used
       it.toAbsolutePath().exists()
-    } ?: defaultPath).let {
-      it.toFile()
-    }
+    } ?: defaultPath).toFile()
   }
 
   // Root directory for the current project, as applicable.

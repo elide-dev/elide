@@ -15,7 +15,7 @@ import react.router.useLocation
 import web.window.window
 
 // Whether to emit debug logs to the console.
-private var debugLogging = false
+private var debugLogging = true
 
 /** Info provided by sidebar context. */
 external interface SidebarState {
@@ -105,7 +105,7 @@ fun initializeSite(enableDebug: Boolean) {
  * @param location Location to use.
  * @return Whether full-bleed mode is active.
  */
-private fun determineFullbleed(location: remix.run.router.Location<*>): Boolean {
+private fun determineFullbleed(location: remix.run.router.Location): Boolean {
   return location.pathname == "/"
 }
 
@@ -169,21 +169,21 @@ val ElideSite = react.FC<ElideSiteProps> {
       }
     }
 
-    SiteWideContextComponent.Provider {
-      value = siteWideState
+//    SiteWideContextComponent.Provider {
+//      value = siteWideState
 
       if (!fullbleed) {
         Header()
       }
       if (!fullbleed) {
-        Menu()
-        Sidebar()
+//        Menu()
+//        Sidebar()
       }
-      Content {
-        page = it.page
-        full = fullbleed
-        mobile = isMobile
-      }
-    }
+//      Content {
+//        page = it.page
+//        full = fullbleed
+//        mobile = isMobile
+//      }
+//    }
   }
 }

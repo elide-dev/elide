@@ -16,7 +16,7 @@
 VERSION ?= $(shell cat .version)
 STRICT ?= yes
 RELOCK ?= no
-SITE ?= yes
+SITE ?= no
 DEFAULT_REPOSITORY ?= gcs://elide-snapshots/repository/v3
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
 

@@ -4,7 +4,6 @@
 import elide.frontend.ssr.*
 import js.core.jso
 import elide.site.ui.ElideSite as App
-import elide.site.ui.components.ThemeModuleServer
 import react.Fragment
 import react.create
 import react.router.dom.server.StaticRouter
@@ -16,7 +15,7 @@ import emotion.utils.EmotionCache
 import org.w3c.fetch.Request
 import react.ReactElement
 import web.url.URL
-
+import elide.site.ui.components.ThemeModuleServer
 
 // Setup Emotion cache.
 private fun setupCache(context: dynamic): EmotionCache {
@@ -29,6 +28,7 @@ private fun setupCache(context: dynamic): EmotionCache {
 
 /** App entrypoint fragment. */
 val app: SSRContext<AppProps>.(Request, EmotionCache) -> ReactElement<*> = { _, emotionCache ->
+  console.log("(2a) rendering app")
   val url: URL = when (val url = request?.url) {
     null -> URL("https://elide.dev")
     else -> when {
@@ -41,6 +41,8 @@ val app: SSRContext<AppProps>.(Request, EmotionCache) -> ReactElement<*> = { _, 
   val currentPage = elide.site.ElideSite.pages.find {
     it.name == currentPageName || it.path == url.pathname
   }
+
+  console.log("(2b) rendering fragment")
 
   Fragment.create {
     CacheProvider(emotionCache) {
@@ -61,11 +63,11 @@ val app: SSRContext<AppProps>.(Request, EmotionCache) -> ReactElement<*> = { _, 
 var modEmotionCache: EmotionCache? = null
 var modEmotionServer: EmotionServer? = null
 
-/** @return Streaming SSR entrypoint for React. */
+/** @return SSR entrypoint for React. */
 @JsExport fun render(request: Request, context: dynamic, responder: RenderCallback): dynamic {
-  var response = ""
-
   // initialize emotion cache
+  var response = ""
+  console.log("(1) rendering response")
   val (emotionServer, emotionCache) = if (modEmotionCache == null) {
     val cache = setupCache(context)
     modEmotionCache = cache
@@ -77,12 +79,16 @@ var modEmotionServer: EmotionServer? = null
   }
 
   return SSRContext.typed<AppProps>(context, request).execute {
+    console.log("(2) executing within context/props")
+
     try {
       return@execute ApplicationBuffer(app.invoke(
         this,
         request,
         emotionCache,
-      ), stream = true).execute {
+      ), stream = false).execute {
+        console.log("(3) executing app")
+
         try {
           if (it.hasContent) {
             response += it.content
@@ -110,12 +116,10 @@ var modEmotionServer: EmotionServer? = null
 
         } catch (err: Throwable) {
           console.error("Failed to dispatch callback: ", err)
-          throw err
         }
       }
     } catch (err: Throwable) {
       console.error("Failed to render stream: ", err)
-      throw err
     }
   }
 }

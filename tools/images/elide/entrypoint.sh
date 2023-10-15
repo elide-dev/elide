@@ -12,5 +12,15 @@
 # License for the specific language governing permissions and limitations under the License.
 #
 
+# check if the binary exists at `/bin/elide`, if it does not, unpack it from the compressed file `/elide/elide.xz`
+if [ ! -f "/bin/elide" ]; then
+  if ! gzip -d -c /elide/elide.gz > /bin/elide; then
+    echo "Failed to unpack Elide.";
+    exit 1;
+  fi
+  chmod +x /bin/elide;
+  rm -f /elide/elide.gz;
+fi
+
 # shellcheck disable=SC2086
 exec /bin/elide "$@"

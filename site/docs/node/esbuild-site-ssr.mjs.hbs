@@ -6,7 +6,7 @@ const settings = {
     entryPoints: ['{{ENTRY}}'],
     outfile: '{{OUTFILE}}',
     format: '{{FORMAT}}',
-    minify: {{MINIFY}},
+    minify: false,
     platform: '{{PLATFORM}}',
     globalName: '{{LIBNAME}}',
     bundle: {{BUNDLE}},
@@ -14,7 +14,7 @@ const settings = {
     nodePaths: [{{NODEPATH}}],
     mainFields: ['module', 'main'],
     resolveExtensions: ['.mts', '.ts', '.mjs', '.cjs', '.js'],
-    sourcemap: !{{PREPACK}},
+    sourcemap: true,
     inject: [ '{{PROCESS}}' ],
     plugins: [
       mdx({})

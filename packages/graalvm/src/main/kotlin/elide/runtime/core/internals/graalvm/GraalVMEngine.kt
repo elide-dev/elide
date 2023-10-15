@@ -19,6 +19,7 @@ import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotAccess
+import org.graalvm.polyglot.io.IOAccess
 import org.graalvm.polyglot.proxy.Proxy
 import java.io.InputStream
 import java.io.OutputStream
@@ -87,6 +88,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
     // build a new context using the shared engine
     val builder = Context.newBuilder()
+      .allowIO(IOAccess.ALL)
       .allowExperimentalOptions(true)
       .allowEnvironmentAccess(config.hostAccess.toEnvAccess())
       .allowPolyglotAccess(PolyglotAccess.ALL)

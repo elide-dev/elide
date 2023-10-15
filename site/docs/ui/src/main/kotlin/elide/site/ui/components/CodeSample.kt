@@ -15,7 +15,7 @@ import kotlin.js.Promise
  * Enumeration of supported languages for syntax highlighting.
  */
 @Suppress("unused")
-enum class SyntaxLanguage constructor (internal val symbol: String) {
+enum class SyntaxLanguage (internal val symbol: String) {
   /** Syntax highlighting for Bash. */
   BASH("bash"),
 

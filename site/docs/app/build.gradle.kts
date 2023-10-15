@@ -137,15 +137,11 @@ allOpen {
 elide {
   injectDependencies = false
 
-  mode = if (devMode) {
-    BuildMode.DEVELOPMENT
-  } else {
-    BuildMode.PRODUCTION
-  }
+  mode = BuildMode.DEVELOPMENT
 
   server {
     ssr(EmbeddedScriptLanguage.JS) {
-      bundle(project(":site:docs:node"))
+      bundle(projects.site.docs.node)
     }
 
     assets {
@@ -169,31 +165,34 @@ elide {
 
       // script: `scripts.ui`
       script("scripts.ui") {
-        from(project(":site:docs:ui"))
+        from(projects.site.docs.ui)
       }
     }
   }
 }
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+  version = libs.versions.micronaut.lib.get()
+  runtime = io.micronaut.gradle.MicronautRuntime.NETTY
+
   processing {
-    incremental.set(true)
+    incremental = true
+
     annotations.addAll(listOf(
       "$mainPackage.*",
     ))
   }
+
   aot {
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
-    optimizeClassLoading.set(true)
-    optimizeNetty.set(true)
+    optimizeServiceLoading = true
+    convertYamlToJava = true
+    precomputeOperations = true
+    cacheEnvironment = true
+    optimizeClassLoading = true
+    optimizeNetty = true
 
     netty {
-      enabled.set(true)
+      enabled = true
     }
   }
 }
@@ -203,19 +202,25 @@ val mainEntry = "$mainPackage.DocsApp"
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 val buildDocsSite: String by project.properties
 
+val defaultJvmArgs = listOfNotNull(
+  "-Xmx2g",
+  "-Xss2m",
+  if (properties["elide.vm.inspect"] == "true") "-Delide.vm.inspect=true" else null,
+  if (properties["elide.vm.inspect.internal"] == "true") "-Delide.vm.inspect.internal=true" else null,
+  if (properties["elide.vm.inspect.suspend"] == "true") "-Delide.vm.inspect.suspend=true" else null,
+  if (properties["elide.js.vm.enableStreams"] == "true") "-Delide.js.vm.enableStreams=true" else null,
+  if (devMode) "-Dmicronaut.io.watch.restart=true" else null,
+)
+
 application {
-  mainClass.set(mainEntry)
-  if (project.hasProperty("elide.vm.inspect") && project.properties["elide.vm.inspect"] == "true") {
-    applicationDefaultJvmArgs = listOf(
-      "-Delide.vm.inspect=true",
-    )
-  }
+  mainClass = mainEntry
+
   if (gradle.startParameter.isContinuous ||
     (project.hasProperty("elide.mode") && project.properties["elide.mode"] == "dev")) {
-    applicationDefaultJvmArgs = listOf(
+    applicationDefaultJvmArgs = applicationDefaultJvmArgs.plus(listOf(
       "-Dmicronaut.io.watch.restart=true",
       "-Dmicronaut.io.watch.enabled=true",
-    )
+    ))
   }
 }
 
@@ -362,6 +367,14 @@ tasks {
       ports = listOf("8080", "50051")
       format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.Docker
     }
+  }
+
+  named("run", JavaExec::class).configure {
+    jvmArgs = defaultJvmArgs
+  }
+
+  optimizedRun {
+    jvmArgs = defaultJvmArgs
   }
 }
 

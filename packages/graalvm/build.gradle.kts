@@ -216,6 +216,8 @@ dependencies {
   // Micronaut
   runtimeOnly(mn.micronaut.graal)
   implementation(mn.micronaut.http)
+  implementation(mn.micronaut.http.netty)
+  implementation(mn.micronaut.http.server.netty)
   implementation(mn.micronaut.context)
 
   // Netty

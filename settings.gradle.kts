@@ -199,6 +199,14 @@ buildless {
   }
 }
 
+buildCache {
+  local {
+    isEnabled = false
+    directory = File(rootDir, ".codebase/cache")
+    removeUnusedEntriesAfterDays = 7
+  }
+}
+
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("GROOVY_COMPILATION_AVOIDANCE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

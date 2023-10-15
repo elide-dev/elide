@@ -4,6 +4,8 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode as WebpackMode
+
 plugins {
   kotlin("js")
 }
@@ -26,15 +28,12 @@ kotlin {
       binaries.executable()
 
       commonWebpackConfig {
-        sourceMaps = devMode
+        sourceMaps = true
+
         cssSupport {
-          enabled.set(false)  // we are handling this manually
+          enabled = false  // we are handling this manually
         }
-        mode = if (devMode) {
-          org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
-        } else {
-          org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.PRODUCTION
-        }
+        mode = WebpackMode.DEVELOPMENT
       }
 
       testTask {
@@ -46,7 +45,7 @@ kotlin {
       }
 
       webpackTask {
-        outputFileName = "ui.js"
+        mainOutputFileName = "ui.js"
         output.libraryTarget = "umd"
       }
     }

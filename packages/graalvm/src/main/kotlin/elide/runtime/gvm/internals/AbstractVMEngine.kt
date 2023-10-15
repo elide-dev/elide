@@ -572,7 +572,11 @@ public abstract class AbstractVMEngine<
   // Context builder factory. Provided to the context manager.
   public fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
     *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray()
-  ).engine(engine).apply {
+  ).apply {
+    if (System.getProperty("elide.vm.inspect") != "true") {
+      engine(engine)
+    }
+
     // configure baseline settings for the builder according to the implemented VM
     configureVM(this)
   }

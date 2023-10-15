@@ -31,6 +31,7 @@ import java.io.OutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ThreadFactory
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
@@ -61,7 +62,7 @@ import java.util.logging.LogRecord
     const val enableIsolates = false
 
     // Whether to enable the auxiliary cache.
-    const val enableAuxiliaryCache = false
+    const val enableAuxiliaryCache = true
 
     // Flipped if we're building or running a native image.
     private val isNativeImage = ImageInfo.inImageCode()
@@ -108,22 +109,21 @@ import java.util.logging.LogRecord
       ),
 
       // enable debug features if so instructed
-      if (!RuntimeFlag.inspectSuspend) null else StaticProperty.active("inspect.Suspend"),
-      if (!RuntimeFlag.inspectWait) null else StaticProperty.active("inspect.WaitAttached"),
-      if (!RuntimeFlag.inspectInternal) null else StaticProperty.active("inspect.Internal"),
-
-      when {
-        RuntimeFlag.inspect && RuntimeFlag.inspectHost.isNotBlank() && RuntimeFlag.inspectPort > 0 ->
-          StaticProperty.of("inspect", "${RuntimeFlag.inspectHost}:${RuntimeFlag.inspectPort}")
-
-        RuntimeFlag.inspect && RuntimeFlag.inspectHost.isNotBlank() ->
-          StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}:4200")
-
-        RuntimeFlag.inspect && RuntimeFlag.inspectPort > 0 ->
-          StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}")
-
-        else -> if (!RuntimeFlag.inspect) null else StaticProperty.active("inspect")
-      },
+//      if (!RuntimeFlag.inspectSuspend) null else StaticProperty.active("inspect.Suspend"),
+//      if (!RuntimeFlag.inspectWait) null else StaticProperty.active("inspect.WaitAttached"),
+//      if (!RuntimeFlag.inspectInternal) null else StaticProperty.active("inspect.Internal"),
+//      when {
+//        RuntimeFlag.inspect && RuntimeFlag.inspectHost.isNotBlank() && RuntimeFlag.inspectPort > 0 ->
+//          StaticProperty.of("inspect", "${RuntimeFlag.inspectHost}:${RuntimeFlag.inspectPort}")
+//
+//        RuntimeFlag.inspect && RuntimeFlag.inspectHost.isNotBlank() ->
+//          StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}:4200")
+//
+//        RuntimeFlag.inspect && RuntimeFlag.inspectPort > 0 ->
+//          StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}")
+//
+//        else -> if (!RuntimeFlag.inspect) null else StaticProperty.active("inspect")
+//      },
     )
 
     // Size of the disruptor ring buffer for each VM executor.
@@ -140,27 +140,34 @@ import java.util.logging.LogRecord
   private val engineLog: Logger = Logging.named("elide:engine")
 
   /** Stubbed output stream. */
-  private class StubbedOutputStream : OutputStream() {
+  private class StubbedOutputStream (private val delegate: OutputStream? = null) : OutputStream() {
     companion object {
       /** Singleton instance for internal use. */
       internal val SINGLETON = StubbedOutputStream()
     }
 
-    override fun write(b: Int): Unit = error(
+    override fun write(b: Int): Unit = (delegate ?: error(
       "Cannot write to stubbed stream from inside a guest VM."
-    )
+    )).write(b)
   }
 
   /** Stubbed input stream. */
-  private class StubbedInputStream : InputStream() {
+  private class StubbedInputStream (private val delegate: InputStream? = null) : InputStream() {
     companion object {
       /** Singleton instance for internal use. */
       internal val SINGLETON = StubbedInputStream()
     }
 
-    override fun read(): Int = error(
-      "Cannot read from stubbed stream from inside a guest VM."
-    )
+    internal val didRead: AtomicBoolean = AtomicBoolean(false)
+
+    override fun read(): Int {
+      require(!didRead.get()) {
+        "Cannot read twice from input stream"
+      }
+      return (delegate ?: error(
+        "Cannot read from stubbed stream from inside a guest VM."
+      )).read()
+    }
   }
 
   /** Implements a thread local which binds a native VM thread to an exclusive VM context. */
@@ -359,8 +366,8 @@ import java.util.logging.LogRecord
         // stub streams
         if (System.getProperty("elide.js.vm.enableStreams", "false") != "true") {
           `in`(StubbedInputStream.SINGLETON)
-          out(StubbedOutputStream.SINGLETON)
-          err(StubbedOutputStream.SINGLETON)
+          out(StubbedOutputStream(System.out))
+          err(StubbedOutputStream(System.err))
         }
 
         // forbid system property overrides

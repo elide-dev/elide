@@ -52,7 +52,7 @@ public typealias RenderCallback = (ResponseChunk) -> Unit
 /**
  *
  */
-public class ApplicationBuffer constructor (private val app: ReactElement<*>, private val stream: Boolean = true) {
+public class ApplicationBuffer (private val app: ReactElement<*>, private val stream: Boolean = false) {
   // Whether we have finished streaming.
   private var fin: Boolean = false
 
@@ -104,13 +104,16 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
    * TBD
    */
   private fun render(callback: (ResponseChunk) -> Unit): Promise<*> {
+    console.log("(3a) rendering streaming: $stream")
     return if (stream) {
+      console.log("(3b) rendering stream")
       renderSSRStreaming(app).then { stream ->
         val reader = stream.getReader()
         pump(reader, callback)
       }
     } else {
       Promise { accept, reject ->
+        console.log("(3b) rendering string")
         try {
           accept(renderSSRString(app))
         } catch (err: Throwable) {

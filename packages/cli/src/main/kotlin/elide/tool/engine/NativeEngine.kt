@@ -242,19 +242,8 @@ object NativeEngine {
     val natives = workdir.nativesDirectory()
     val nativesPath = natives.absolutePath
     val platform = HostPlatform.resolve()
-    val separator = when (HostPlatform.resolve().os) {
-      HostPlatform.OperatingSystem.WINDOWS -> ";"
-      else -> ":"
-    }
-    val libraryPath = System.getProperty("java.library.path", "")
-    val libPath = if (!libraryPath.contains("/elide-runtime")) {
-      libraryPath.split(separator).toMutableList().apply {
-        add(0, nativesPath)
-      }.joinToString(separator)
-    } else libraryPath
 
     listOf(
-      "java.library.path" to libPath,
       "io.netty.tmpdir" to tmpPath,
       "io.netty.native.workdir" to nativesPath,
     ).plus(extraProps).forEach {

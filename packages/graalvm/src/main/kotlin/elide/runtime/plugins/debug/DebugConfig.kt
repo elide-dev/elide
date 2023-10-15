@@ -49,7 +49,7 @@ import elide.runtime.core.DelicateElideApi
      * Whether to enable the devtools inspector, enabled by default if the `chromeInspector` DSL block is requested
      * during configuration.
      */
-    public var enabled: Boolean = false
+    public var enabled: Boolean = System.getProperty("elide.vm.inspect", "false") == "true"
 
     /** A custom path to be used as connection URL for the inspector. */
     public var path: String? = null
@@ -61,16 +61,16 @@ import elide.runtime.core.DelicateElideApi
     public var sourcePaths: List<String>? = null
 
     /** Whether to suspend execution at the first source line. Defaults to `false` */
-    public var suspend: Boolean = false
+    public var suspend: Boolean = System.getProperty("elide.vm.inspect.suspend", "false") == "true"
 
     /** Whether to wait until the inspector is attached before executing any code. Defaults to `false`. */
     public var waitAttached: Boolean = false
 
     /** Whether to show internal sources in the inspector. */
-    public var internal: Boolean = false
+    public var internal: Boolean = System.getProperty("elide.vm.inspect.internal", "false") == "true"
 
     /** Host where inspection should mount. */
-    public var host: String = "localhost"
+    public var host: String = System.getProperty("elide.vm.inspect.host", "localhost")
 
     /** Port where inspection should mount. */
     public var port: Int = 4200

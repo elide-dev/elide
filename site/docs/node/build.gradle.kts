@@ -21,15 +21,11 @@ val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 elide {
   injectDependencies = false
 
-  mode = if (devMode) {
-    BuildMode.DEVELOPMENT
-  } else {
-    BuildMode.PRODUCTION
-  }
+  mode = BuildMode.DEVELOPMENT
 
   js {
     prepack(false)
-    minify(true)
+    minify(false)
     target(BundleTarget.EMBEDDED)
     esbuild(file("${projectDir}/esbuild-site-ssr.mjs.hbs"))
 

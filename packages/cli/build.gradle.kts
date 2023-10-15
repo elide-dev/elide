@@ -582,7 +582,7 @@ tasks {
 
 micronaut {
   version = libs.versions.micronaut.lib.get()
-  runtime = MicronautRuntime.NONE
+  runtime = MicronautRuntime.NETTY
   enableNativeImage(true)
 
   processing {
@@ -644,7 +644,6 @@ val commonNativeArgs = listOfNotNull(
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
   "-H:CLibraryPath=$nativesPath",
-  "--trace-object-instantiation=java.nio.DirectByteBuffer",
   if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
   if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
   if (enableEspresso) "-J-Despresso.finalization.UnsafeOverride=true" else null,
@@ -1076,6 +1075,7 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 val initializeAtRuntime: List<String> = listOf(
   "com.sun.tools.javac.file.Locations",
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
+//  "io.netty.handler.codec.http.HttpObjectEncoder",
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
   "io.netty.handler.codec.compression.BrotliOptions",
@@ -1103,7 +1103,6 @@ val initializeAtRuntimeTest: List<String> = emptyList()
 
 val rerunAtRuntime: List<String> = listOf(
   "elide.tool.cli.ElideTool",
-  "io.netty.handler.codec.http.HttpObjectEncoder",
   "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
 )
 

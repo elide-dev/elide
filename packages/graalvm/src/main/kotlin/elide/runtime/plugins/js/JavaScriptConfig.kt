@@ -41,7 +41,12 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
 
   public inner class BuiltInModulesConfig {
     /** Core module replacement map. */
-    private val moduleReplacements = mutableMapOf<String, String>()
+    private val moduleReplacements: MutableMap<String, String> = mutableMapOf(
+      "buffer" to "/__runtime__/buffer/buffer.cjs",
+      "util" to "/__runtime__/util/util.cjs",
+      "fs" to "/__runtime__/fs/fs.cjs",
+      "express" to "/__runtime__/express/express.cjs",
+    )
 
     internal fun replacements(): Map<String, String> {
       return moduleReplacements

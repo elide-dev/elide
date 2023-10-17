@@ -14,24 +14,30 @@ import elide.vm.annotations.Polyglot
 ) : HttpServerEngine {
   /** Thread-safe flag to signal  */
   private val serverRunning = AtomicBoolean(false)
-  
+
   /** Private logger instance. */
   private val logging by lazy { Logging.of(MicronautServerEngine::class) }
-  
+
   @get:Polyglot override val running: Boolean get() = serverRunning.get()
 
   @Polyglot override fun start() {
     logging.debug("Starting server")
-    
+
     // allow this call only once
     if (!serverRunning.compareAndSet(false, true)) {
       logging.debug("Server already running, ignoring start() call")
       return
     }
-    
+
+    // prepare custom configuration properties for the server
+    val embeddedProperties = mapOf(
+      "elide.embedded" to "true",
+      "micronaut.server.port" to config.port.toString(),
+    )
+
     Micronaut.build()
       .singletons(router)
-      .properties(mapOf("elide.embedded" to "true"))
+      .properties(embeddedProperties)
       .start()
   }
 }

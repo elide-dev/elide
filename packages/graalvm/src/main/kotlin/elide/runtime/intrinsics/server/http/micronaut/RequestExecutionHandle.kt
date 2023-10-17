@@ -22,7 +22,7 @@ internal inline fun requestExecutionHandle(
   return RequestExecutionHandle { args ->
     // unpack and validate arguments
     val request = args.singleOrNull() ?: error("Request handles require exactly one argument (found ${args.size}).")
-    check(request is HttpRequest<*>) { "Request handles require an HTTP Request as argument, found $request" }
+    check(request is HttpRequest<*>) { "Request handles require an HttpRequest as argument, found $request" }
 
     // execute the lambda with the smart-cast request
     handle(request)

@@ -23,4 +23,7 @@ import elide.runtime.core.DelicateElideApi
 
   /** The HTTP method for this request */
   @get:Export public val method: HttpMethod
+
+  /** Parameters extracted from the request path and query variables. */
+  @get:Export public val params: Map<String, Any>
 }

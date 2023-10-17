@@ -20,7 +20,8 @@ import elide.runtime.intrinsics.server.http.HttpRequest
 import io.netty.handler.codec.http.HttpRequest as NettyRequest
 
 /** [HttpRequest] implementation wrapping a Netty request object. */
-@DelicateElideApi @JvmInline internal value class NettyHttpRequest(private val request: NettyRequest) : HttpRequest {
+@DelicateElideApi internal class NettyHttpRequest(private val request: NettyRequest) : HttpRequest {
   @get:Export override val uri: String get() = request.uri()
   @get:Export override val method: HttpMethod get() = HttpMethod.valueOf(request.method().name())
+  @get:Export override val params: MutableMap<String, Any> = mutableMapOf()
 }

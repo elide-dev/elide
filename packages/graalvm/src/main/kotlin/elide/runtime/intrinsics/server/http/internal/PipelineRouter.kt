@@ -38,7 +38,7 @@ import elide.vm.annotations.Polyglot
    */
   private val pipeline = mutableListOf<PipelineStage>()
 
-  @Polyglot override fun handle(method: String?, path: String?, handler: PolyglotValue) {
+  @Polyglot override fun handle(method: String, path: String, handler: PolyglotValue) {
     // store the handler reference and get the key
     val key = handlerRegistry.register(GuestHandler.of(handler))
 

@@ -41,7 +41,7 @@ import elide.runtime.intrinsics.server.http.HttpRouter
    */
   abstract fun resolve(stage: Int): GuestHandler?
 
-  @Export override fun handle(method: String?, path: String?, handler: PolyglotValue) {
+  @Export override fun handle(method: String, path: String, handler: PolyglotValue) {
     register(GuestHandler.of(handler))
   }
 }

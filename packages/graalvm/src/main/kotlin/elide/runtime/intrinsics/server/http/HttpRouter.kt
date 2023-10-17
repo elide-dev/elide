@@ -24,5 +24,5 @@ import elide.runtime.intrinsics.server.http.internal.HandlerRegistry
  */
 @DelicateElideApi public interface HttpRouter {
   /** Guest-accessible method used to register a [handler] for the provided [method] and [path]. */
-  @Export public fun handle(method: String?, path: String?, handler: PolyglotValue)
+  @Export public fun handle(method: String, path: String, handler: PolyglotValue)
 }

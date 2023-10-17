@@ -18,9 +18,10 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
 import elide.runtime.intrinsics.ElideBindings
-import elide.runtime.intrinsics.server.http.internal.*
-import elide.runtime.intrinsics.server.http.netty.NettyServerConfig
-import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
+import elide.runtime.intrinsics.server.http.internal.HandlerRegistry
+import elide.runtime.intrinsics.server.http.internal.NoopServerEngine
+import elide.runtime.intrinsics.server.http.micronaut.MicronautGuestRouter
+import elide.runtime.intrinsics.server.http.micronaut.MicronautServerEngine
 
 /**
  * A Server Agent manages the lifecycle of HTTP Server intrinsics and their injection into guest code.
@@ -63,7 +64,7 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
   ) {
     // a thread-local registry that re-evaluates the entrypoint on each thread to
     // obtain references to guest handler values
-    val handlerRegistry = ThreadLocalHandlerRegistry { registry ->
+    val router = MicronautGuestRouter { registry ->
       initializeHandlerRegistry(
         registry = registry,
         context = acquireContext(),
@@ -72,9 +73,8 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     }
 
     // configure the router and server engine
-    val config = NettyServerConfig()
-    val router = PipelineRouter(handlerRegistry)
-    val engine = NettyServerEngine(config, router)
+    val config = HttpServerConfig()
+    val engine = MicronautServerEngine(config, router)
 
     // prepare a new context, injecting the router to allow guest code to register
     // handlers, this differs from thread-local initialization in that the router
@@ -96,14 +96,14 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
    * @param entrypoint Guest source containing configuration code to register request handlers.
    */
   private fun initializeHandlerRegistry(
-    registry: HandlerRegistry,
+    registry: HttpRouter,
     context: PolyglotContext,
     entrypoint: Source,
   ) {
     // inject the registry into the context to allow guest code to register handlers,
     // this is required for correct initialization of the registry since thread-local
     // references to each handler are required
-    context.installEngine(NoopServerEngine(NettyServerConfig(), registry), entrypoint)
+    context.installEngine(NoopServerEngine(HttpServerConfig(), registry), entrypoint)
     context.evaluate(entrypoint)
   }
 

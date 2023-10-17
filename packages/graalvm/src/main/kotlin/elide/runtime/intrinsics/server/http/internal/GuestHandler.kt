@@ -16,7 +16,6 @@ package elide.runtime.intrinsics.server.http.internal
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.intrinsics.server.http.HttpRequest
-import elide.runtime.intrinsics.server.http.HttpContext
 import elide.runtime.intrinsics.server.http.HttpResponse
 
 /**
@@ -29,8 +28,8 @@ import elide.runtime.intrinsics.server.http.HttpResponse
 @DelicateElideApi @JvmInline internal value class GuestHandler private constructor(
   private val value: PolyglotValue
 ) : GuestHandlerFunction {
-  override fun invoke(request: HttpRequest, response: HttpResponse, context: HttpContext): Boolean {
-    val result = value.execute(request, response, context)
+  override fun invoke(request: HttpRequest, response: HttpResponse): Boolean {
+    val result = value.execute(request, response)
 
     return when {
       result.isBoolean -> result.asBoolean()

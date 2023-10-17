@@ -16,11 +16,10 @@ package elide.runtime.intrinsics.server.http.internal
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.gvm.internals.intrinsics.js.JsProxy
-import elide.runtime.intrinsics.server.http.HttpContext
 import elide.runtime.intrinsics.server.http.HttpMethod
 import elide.runtime.intrinsics.server.http.HttpRequest
 import elide.runtime.intrinsics.server.http.HttpRouter
+import elide.runtime.intrinsics.server.http.netty.NettyHttpRequest
 import elide.vm.annotations.Polyglot
 
 /**
@@ -43,16 +42,16 @@ import elide.vm.annotations.Polyglot
     val key = handlerRegistry.register(GuestHandler.of(handler))
 
     // register the handler as a stage in the pipeline
-    pipeline.add(PipelineStage(key, compileMatcher(path, method?.let(HttpMethod::valueOf))))
+    pipeline.add(PipelineStage(key, compileMatcher(path, HttpMethod.valueOf(method))))
   }
 
   /** Resolve a handler pipeline that iterates over every stage matching the incoming [request]. */
-  internal fun pipeline(request: HttpRequest, context: HttpContext): ResolvedPipeline = sequence {
+  internal fun pipeline(request: HttpRequest): ResolvedPipeline = sequence {
     // iterate over every handler in the pipeline
     pipeline.forEachIndexed { index, stage ->
       // test the stage against the incoming request
       logging.debug { "Handling pipeline stage: $index" }
-      if (stage.matcher(request, context)) {
+      if (stage.matcher(request)) {
         // found a match, resolve the handler reference
         logging.debug { "Handler condition matches request at stage $index" }
         val handler = handlerRegistry.resolve(index) ?: error(
@@ -98,7 +97,7 @@ import elide.vm.annotations.Polyglot
         "(?<$paramName>[^\\/]+)"
       }?.let(::Regex)
 
-      return matcher@{ request, context ->
+      return matcher@{ request ->
         // Filter by HTTP method
         if (method != null && method != request.method) return@matcher false
 
@@ -107,17 +106,10 @@ import elide.vm.annotations.Polyglot
 
         // otherwise return true when the pattern matches the requested path
         pattern.matchEntire(request.uri)?.also { match ->
-          // TODO(@darvld): replace with polyglot equivalent
-          val requestParams = JsProxy.build { /* empty */ }
-
           // extract path variables and add them to the request
           for (variable in pathVariables) match.groups[variable]?.let {
-            requestParams.putMember(variable, PolyglotValue.asValue(it.value))
+            (request as NettyHttpRequest).params[variable] = PolyglotValue.asValue(it.value)
           }
-
-          // TODO(@darvld): use a type-safe key for this
-          // store request params in the context
-          context["params"] = requestParams
         } != null
       }
     }

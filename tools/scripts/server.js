@@ -21,9 +21,9 @@ app.router.handle("GET", "/", (request, response) => {
 })
 
 // register a route handler
-app.router.handle("GET", "/hello/:name", (request, response, context) => {
+app.router.handle("GET", "/hello/{name}", (request, response) => {
   // respond using the captured path variables
-  response.send(200, `Hello, ${context.params.name}`)
+  response.send(200, `Hello, ${request.params["name"]}`)
 })
 
 // configure the server binding options

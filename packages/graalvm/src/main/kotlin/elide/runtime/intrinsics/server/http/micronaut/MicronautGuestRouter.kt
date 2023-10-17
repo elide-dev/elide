@@ -3,7 +3,6 @@ package elide.runtime.intrinsics.server.http.micronaut
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intrinsics.server.http.HttpContext
 import elide.runtime.intrinsics.server.http.HttpMethod
 import elide.runtime.intrinsics.server.http.HttpRouter
 
@@ -56,11 +55,10 @@ import elide.runtime.intrinsics.server.http.HttpRouter
       // wrap the request and create a response to send
       val request = MicronautHttpRequest(incoming)
       val response = MicronautHttpResponse()
-      val context = HttpContext()
 
       // resolve the handle for the current thread and execute it
       val guestHandler = handlerRegistry[key] ?: error("Handler not found for key $key")
-      guestHandler.execute(request, response, context)
+      guestHandler.execute(request, response)
 
       // return the original Micronaut response
       response.unwrap()

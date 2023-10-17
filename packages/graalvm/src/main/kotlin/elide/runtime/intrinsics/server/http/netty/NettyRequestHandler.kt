@@ -19,7 +19,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.LastHttpContent
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.intrinsics.server.http.HttpContext
 import elide.runtime.intrinsics.server.http.internal.GuestHandlerFunction
 import elide.runtime.intrinsics.server.http.internal.PipelineRouter
 import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
@@ -40,11 +39,10 @@ import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
     // prepare the wrappers
     val request = NettyHttpRequest(message)
     val response = NettyHttpResponse(channelContext)
-    val context = HttpContext()
 
     // resolve the handler pipeline (or default to 'not found' if empty)
-    router.pipeline(request, context).ifEmpty { DefaultPipeline }.forEach { handler ->
-      handler(request, response, context)
+    router.pipeline(request).ifEmpty { DefaultPipeline }.forEach { handler ->
+      handler(request, response)
     }
   }
 
@@ -59,7 +57,7 @@ import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
 
   private companion object {
     /** Default request handler used in absence of any matching pipeline stages. */
-    private val DefaultHandler = GuestHandlerFunction { _, response, _ ->
+    private val DefaultHandler = GuestHandlerFunction { _, response ->
       // respond with 404 and end processing
       response.send(HttpResponseStatus.NOT_FOUND.code(), null)
       false

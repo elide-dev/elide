@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@mdx-js/loader": "2.3.0",
-    "@mdx-js/esbuild": "2.3.0",
+    "@mdx-js/esbuild": "3.0.0",
     "webpack": "5.88.2"
   }
 }

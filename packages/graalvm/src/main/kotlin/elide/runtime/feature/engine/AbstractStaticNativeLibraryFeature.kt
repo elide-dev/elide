@@ -41,10 +41,12 @@ internal abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeatur
     linux: NativeLibInfo? = null,
     windows: NativeLibInfo? = null,
   ): NativeLibInfo? {
-    return when (val os = System.getProperty("os.name", "unknown").lowercase().trim()) {
-      "mac os x" -> darwin
-      "linux" -> linux
-      "windows" -> windows
+    val os = System.getProperty("os.name", "unknown").lowercase().trim()
+
+    return when {
+      os.contains("mac") -> darwin
+      os.contains("linux") -> linux
+      os.contains("windows") -> windows
       else -> error("unknown os: $os")
     }
   }

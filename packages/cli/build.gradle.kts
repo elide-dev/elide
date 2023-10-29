@@ -376,6 +376,7 @@ dependencies {
     Os.isFamily(Os.FAMILY_WINDOWS) -> {
       compileOnly(libs.netty.transport.native.epoll)
       compileOnly(libs.netty.transport.native.kqueue)
+      compileOnly(libs.netty.transport.native.iouring)
       implementation(libs.netty.tcnative.boringssl.static)
     }
 

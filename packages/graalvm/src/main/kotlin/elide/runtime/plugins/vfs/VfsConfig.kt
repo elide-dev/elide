@@ -16,27 +16,64 @@ package elide.runtime.plugins.vfs
 import java.net.URI
 import java.net.URL
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.HostPlatform
+import elide.runtime.core.HostPlatform.OperatingSystem.*
 
 /** Configuration DSL for the [Vfs] plugin. */
-@DelicateElideApi public class VfsConfig internal constructor() {
+@DelicateElideApi public class VfsConfig internal constructor(platform: HostPlatform) {
   /** Private mutable list of registered bundles. */
   private val bundles: MutableList<URI> = mutableListOf()
-  
+
   /** Internal list of bundles registered for use in the VFS. */
   internal val registeredBundles: List<URI> get() = bundles
 
   /** Whether the file system is writable. If false, write operations will throw an exception. */
   public var writable: Boolean = false
-  
+
+  /** A path to be used as root for the VFS; defaults to "`/`" on Unix, and "`C:/`" on Windows. */
+  public var root: String = resolveDefaultVfsRoot(platform)
+
+  /** A path to be used as current working directory (cwd); defaults to "`/`" on Unix, and "`C:/`" on Windows. */
+  public var workingDirectory: String = resolveDefaultWorkingDirectory(platform)
+
   /**
    * Whether to use the host's file system instead of an embedded VFS. If true, bundles registered using [include] will
    * not be applied.
    */
   internal var useHost: Boolean = false
-  
+
   /** Register a [bundle] to be added to the VFS on creation. */
   public fun include(bundle: URI) {
     bundles.add(bundle)
+  }
+
+  public companion object {
+    /**
+     * Path to be used as root for the virtual file system when running on Windows platforms. Since the in-memory file
+     * system implementation does not support using "/" as root on Windows.
+     */
+    private const val VFS_ROOT_WINDOWS = "C:/"
+
+    /** Path to be used as root for the virtual file system when running on Unix platforms. */
+    private const val VFS_ROOT_UNIX = "/"
+
+    /**
+     * Resolve a [platform]-specific default value for the VFS root, to avoid issues with unsupported roots when
+     * running on Windows.
+     */
+    public fun resolveDefaultVfsRoot(platform: HostPlatform): String = when (platform.os) {
+      WINDOWS -> VFS_ROOT_WINDOWS
+      LINUX -> VFS_ROOT_UNIX
+      DARWIN -> VFS_ROOT_UNIX
+    }
+
+    /**
+     * Resolve a [platform]-specific default value for the working directory, to avoid issues with unsupported roots
+     * when running on Windows.
+     */
+    public fun resolveDefaultWorkingDirectory(platform: HostPlatform): String {
+      return resolveDefaultVfsRoot(platform)
+    }
   }
 }
 

@@ -69,7 +69,8 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=$classpath
+@rem Avoid exceeding max command line length when specifying the classpath
+set CLASSPATH=%APP_HOME%/lib/*
 <% if ( mainClassName.startsWith('--module ') ) { %>set MODULE_PATH=$modulePath<% } %>
 
 @rem Execute ${applicationName}

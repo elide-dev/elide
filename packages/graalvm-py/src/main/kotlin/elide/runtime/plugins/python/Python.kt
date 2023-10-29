@@ -27,6 +27,7 @@ import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.plugins.llvm.LLVM
+import elide.runtime.plugins.vfs.Vfs
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
@@ -56,13 +57,13 @@ import elide.runtime.plugins.llvm.LLVM
       "python.WithCachedSources",
       "python.WithTRegex",
     )
-    
+
     builder.setOptions(
       "llvm.OSR" to "BYTECODE",
       "python.PosixModuleBackend" to "java",
-      "python.CoreHome" to "/python/python-home/lib/graalpy23.1",
-      "python.StdLibHome" to "/python/python-home/lib/python3.10",
-      "python.PythonHome" to "/python/python-home",
+      "python.CoreHome" to config.coreHome,
+      "python.StdLibHome" to config.stdLibHome,
+      "python.PythonHome" to config.pythonHome,
     )
   }
 
@@ -78,7 +79,9 @@ import elide.runtime.plugins.llvm.LLVM
       scope.configuration.getOrInstall(LLVM)
 
       // apply the configuration and create the plugin instance
-      val config = PythonConfig().apply(configuration)
+      val root = scope.configuration.getOrInstall(Vfs).config.root
+      val config = PythonConfig(root).apply(configuration)
+
       val resources = resolveEmbeddedManifest(scope)
       val instance = Python(config, resources)
 

@@ -17,10 +17,25 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
 
-@DelicateElideApi public class PythonConfig : AbstractLanguageConfig() {
+@DelicateElideApi public class PythonConfig(fileSystemRoot: String) : AbstractLanguageConfig() {
+  /** Path to the Python home directory (GraalVM's python.PythonHome property). */
+  internal val pythonHome: String = "$fileSystemRoot$PYTHON_HOME"
+
+  /** Path to the Python standard library (GraalVM's python.StdLibHome property). */
+  internal val stdLibHome: String = "$pythonHome$STD_LIB_HOME"
+
+  /** Path to the Python root (GraalVM's python.CoreHome property). */
+  internal val coreHome: String = "$pythonHome$CORE_HOME"
+
   /** Apply init-time settings to a new [context]. */
   internal fun applyTo(context: PolyglotContext) {
     // register intrinsics
     applyBindings(context, Python)
+  }
+
+  private companion object {
+    private const val STD_LIB_HOME = "/lib/python3.10"
+    private const val CORE_HOME = "/lib/graalpy23.1"
+    private const val PYTHON_HOME = "python/python-home"
   }
 }

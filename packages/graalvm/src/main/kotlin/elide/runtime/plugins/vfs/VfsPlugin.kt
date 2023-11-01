@@ -15,6 +15,10 @@ package elide.runtime.plugins.vfs
 
 import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.polyglot.io.IOAccess
+import java.net.URI
+import java.nio.file.Path
+import kotlin.io.path.absolutePathString
+import elide.runtime.Logging
 import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
@@ -23,8 +27,9 @@ import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
-import elide.runtime.gvm.vfs.EmbeddedGuestVFS
-import elide.runtime.gvm.vfs.HostVFS
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
+import elide.runtime.gvm.internals.vfs.HostVFSImpl
+import elide.runtime.plugins.vfs.internal.HybridVfs
 
 /**
  * Engine plugin providing configurable VFS support for polyglot contexts. Both embedded and host VFS implementations
@@ -43,22 +48,28 @@ import elide.runtime.gvm.vfs.HostVFS
  * ```
  */
 @DelicateElideApi public class Vfs private constructor(public val config: VfsConfig) {
+  /** Plugin logger instance. */
+  private val logging by lazy { Logging.of(Vfs::class) }
+
   /** Pre-configured VFS, created when the engine is initialized. */
   private lateinit var fileSystem: FileSystem
 
   internal fun onEngineCreated(@Suppress("unused_parameter") builder: PolyglotEngineBuilder) {
     // select the VFS implementation depending on the configuration
-    fileSystem = when (config.useHost) {
-      true -> when (config.writable) {
-        true -> HostVFS.acquireWritable()
-        false -> HostVFS.acquire()
-      }
+    val embedded = acquireEmbeddedVfs(config.writable, config.registeredBundles)
 
-      false -> when (config.writable) {
-        true -> EmbeddedGuestVFS.writable(config.registeredBundles)
-        else -> EmbeddedGuestVFS.forBundles(config.registeredBundles)
-      }
+    // if no host access is requested, use an embedded in-memory vfs
+    if (!config.useHost) {
+      logging.debug("No host access requested, using in-memory vfs")
+
+      fileSystem = embedded
+      return
     }
+
+    // if the configuration requires host access, we use a hybrid vfs
+    logging.debug("Host access requested, using hybrid vfs")
+    val host = acquireHostVfs(config.writable)
+    fileSystem = HybridVfs(host, embedded)
   }
 
   /** Configure a context builder to use a custom [fileSystem]. */
@@ -88,6 +99,25 @@ import elide.runtime.gvm.vfs.HostVFS
     }
 
     private val HostAccess.useHostFs get() = this == ALLOW_IO || this == ALLOW_ALL
+
+    /** Build a new [FileSystem] delegating to the host FS. */
+    private fun acquireHostVfs(writable: Boolean): FileSystem {
+      return HostVFSImpl.Builder.newBuilder()
+        .setReadOnly(!writable)
+        .setWorkingDirectory(Path.of(".").absolutePathString())
+        .build()
+    }
+
+    /** Build a new embedded [FileSystem], optionally [writable], with the specified [root] path and [bundles]. */
+    private fun acquireEmbeddedVfs(
+      writable: Boolean,
+      bundles: List<URI>
+    ): FileSystem {
+      return EmbeddedGuestVFSImpl.Builder.newBuilder()
+        .setBundlePaths(bundles)
+        .setReadOnly(!writable)
+        .build()
+    }
   }
 }
 

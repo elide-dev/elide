@@ -67,6 +67,7 @@ import elide.runtime.Logging
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
@@ -1487,6 +1488,14 @@ import elide.tool.project.ProjectManager
     // conditionally apply debugging settings
     if (debug) debugger.apply(this)
     inspector.apply(this)
+
+    // configure host access rules
+    hostAccess = when {
+      accessControl.allowAll -> HostAccess.ALLOW_ALL
+      accessControl.allowIo -> HostAccess.ALLOW_IO
+      accessControl.allowEnv -> HostAccess.ALLOW_ENV
+      else -> HostAccess.ALLOW_NONE
+    }
 
     // configure environment variables
     appEnvironment.apply(project, this)

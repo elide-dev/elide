@@ -1,4 +1,4 @@
-package elide.runtime.plugins.vfs
+package elide.runtime.gvm.internals.vfs
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -12,9 +12,6 @@ import kotlin.io.path.createFile
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import kotlin.test.assertEquals
-import elide.runtime.gvm.vfs.EmbeddedGuestVFS
-import elide.runtime.gvm.vfs.HostVFS
-import elide.runtime.plugins.vfs.internal.HybridVfs
 
 internal class HybridVfsTest {
   /** Temporary directory used for host-related test cases. */
@@ -40,12 +37,8 @@ internal class HybridVfsTest {
    * @see useVfs
    */
   private fun acquireVfs(): HybridVfs {
-    val host = HostVFS.acquire()
-    val embedded = EmbeddedGuestVFS.forBundle(
-      HybridVfsTest::class.java.getResource("/sample-vfs.tar")!!.toURI(),
-    )
-
-    return HybridVfs(host = host, inMemory = embedded)
+    val bundles = listOf(HybridVfsTest::class.java.getResource("/sample-vfs.tar")!!.toURI())
+    return HybridVfs.acquire(writable = true, overlay = bundles)
   }
 
   /** Convenience method used to [acquire][acquireVfs] a [HybridVfs] instance and use it in a test. */

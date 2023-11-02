@@ -16,24 +16,30 @@ package elide.runtime.plugins.vfs
 import java.net.URI
 import java.net.URL
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
 
 /** Configuration DSL for the [Vfs] plugin. */
-@DelicateElideApi public class VfsConfig internal constructor() {
+@DelicateElideApi public class VfsConfig internal constructor(configuration: PolyglotEngineConfiguration) {
   /** Private mutable list of registered bundles. */
   private val bundles: MutableList<URI> = mutableListOf()
-  
+
   /** Internal list of bundles registered for use in the VFS. */
   internal val registeredBundles: List<URI> get() = bundles
 
   /** Whether the file system is writable. If false, write operations will throw an exception. */
   public var writable: Boolean = false
-  
+
   /**
    * Whether to use the host's file system instead of an embedded VFS. If true, bundles registered using [include] will
    * not be applied.
+   *
+   * Enabled by default if the engine's [hostAccess][PolyglotEngineConfiguration.hostAccess] is set to [ALLOW_ALL] or
+   * [ALLOW_IO], otherwise false.
    */
-  internal var useHost: Boolean = false
-  
+  internal var useHost: Boolean = configuration.hostAccess == ALLOW_ALL || configuration.hostAccess == ALLOW_IO
+
   /** Register a [bundle] to be added to the VFS on creation. */
   public fun include(bundle: URI) {
     bundles.add(bundle)

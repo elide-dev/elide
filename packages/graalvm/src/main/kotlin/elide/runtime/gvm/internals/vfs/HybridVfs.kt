@@ -120,7 +120,7 @@ internal class HybridVfs private constructor(
       // configure an in-memory vfs with the provided bundles as overlay
       val inMemory = EmbeddedGuestVFSImpl.Builder.newBuilder()
         .setBundlePaths(overlay)
-        .setReadOnly(false)
+        .setReadOnly(true)
         .build()
 
       // use the host fs as backing layer

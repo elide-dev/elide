@@ -25,6 +25,18 @@ import elide.runtime.core.extensions.enableOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
+/**
+ * Language plugin providing support for JVM bytecode.
+ *
+ * Unlike for other languages, such as JavaScript, execution using [PolyglotContext.evaluate] is not available for
+ * the JVM.
+ *
+ * When a context with JVM support is created, it will be able load classes from the classpath defined in this
+ * plugin's [configuration][config]. A standard JVM entry point can then be accessed using the [runJvm] extension.
+ *
+ * @see JvmConfig
+ * @see PolyglotContext.runJvm
+ */
 @Suppress("unused") @DelicateElideApi public class Jvm private constructor(
   private val config: JvmConfig,
   private val resources: LanguagePluginManifest,
@@ -32,15 +44,12 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
-
-    // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
   }
-  
+
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.enableOptions(
-      "java.EnablePreview",
-      "java.BuiltInPolyglotCollections",
+      // "java.EnablePreview",
+      // "java.BuiltInPolyglotCollections",
       "java.BytecodeLevelInlining",
       "java.CHA",
       "java.HotSwapAPI",
@@ -50,21 +59,26 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       "java.SoftExit",
       "java.SplitMethodHandles",
     )
-    
+
     builder.disableOptions(
       "java.EnableAgents",
       "java.EnableManagement",
       "java.ExposeNativeJavaVM",
     )
+
+    // guest classpath
+    builder.option("java.Classpath", config.collectClasspath())
   }
-  
+
   public companion object Plugin : AbstractLanguagePlugin<JvmConfig, Jvm>() {
-    private const val JVM_LANGUAGE_ID = "jvm"
+    private const val JVM_MANIFEST_KEY = "jvm"
+    private const val JVM_LANGUAGE_ID = "java"
     private const val JVM_PLUGIN_ID = "JVM"
-    
+
+    override val manifestKey: String = JVM_MANIFEST_KEY
     override val languageId: String = JVM_LANGUAGE_ID
     override val key: Key<Jvm> = Key(JVM_PLUGIN_ID)
-    
+
     override fun install(scope: InstallationScope, configuration: JvmConfig.() -> Unit): Jvm {
       // apply the configuration and create the plugin instance
       val config = JvmConfig().apply(configuration)
@@ -73,6 +87,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
+      scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
       // register resources with the VFS
       installEmbeddedBundles(scope, resources)

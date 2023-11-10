@@ -34,6 +34,14 @@ import elide.runtime.plugins.vfs.include
  * Abstract base class for language plugins.
  */
 @DelicateElideApi public abstract class AbstractLanguagePlugin<C : Any, I : Any> : EnginePlugin<C, I>, GuestLanguage {
+  /**
+   * A key used to resolve the [LanguagePluginManifest] from resources. This is the name of the directory containing
+   * the manifest. Defaults to [languageId].
+   *
+   * @see resolveEmbeddedManifest
+   */
+  protected open val manifestKey: String get() = languageId
+
   /** Provides information about resources embedded into the runtime, used by language plugins. */
   @Serializable public data class LanguagePluginManifest(
     /** The engine version these resources are meant to be used with. */
@@ -99,7 +107,7 @@ import elide.runtime.plugins.vfs.include
     lenient: Boolean = true
   ): LanguagePluginManifest = runCatching {
     // resolve path relative to the common root
-    val resourcesRoot = "$EMBEDDED_RESOURCES_ROOT/${languageId}"
+    val resourcesRoot = "$EMBEDDED_RESOURCES_ROOT/${manifestKey}"
     fun relativeToRoot(path: String) = "$resourcesRoot/$path"
 
     // read and deserialize manifest
@@ -123,7 +131,7 @@ import elide.runtime.plugins.vfs.include
     )
   }.getOrElse { cause ->
     // rethrow with a more meaningful message
-    throw Exception("Failed to resolve embedded language resources for language $languageId", cause)
+    throw Exception("Failed to resolve language resources with key $manifestKey for language $languageId", cause)
   }
 
   /**

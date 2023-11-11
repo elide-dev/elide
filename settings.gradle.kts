@@ -101,6 +101,7 @@ include(
   ":packages:graalvm-py",
   ":packages:graalvm-rb",
   ":packages:graalvm-kt",
+  ":packages:graalvm-java",
   ":packages:graalvm-react",
   ":packages:model",
   ":packages:platform",

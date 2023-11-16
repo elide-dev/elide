@@ -134,13 +134,13 @@ Check the `gradle.properties` file at the project root to see all available opti
 If you are building a JVM application that runs guest code in one of the languages supported by Elide, you can use the Runtime DSL to configure your own embedded polyglot engine:
 
 ```kotlin
-implementation("dev.elide:elide-graalvm:1.0.0-alpha7")
+implementation("dev.elide:elide-graalvm:1.0.0-alpha8")
 ```
 
 or for Groovy scripts:
 
 ```groovy
-implementation 'dev.elide:elide-graalvm:1.0.0-alpha7'
+implementation 'dev.elide:elide-graalvm:1.0.0-alpha8'
 ```
 
 The DSL is used internally by the Elide binaries and by the SSR packages and provides a simplified API to harness the power of the underlying [GraalVM](https://graalvm.org) engine:

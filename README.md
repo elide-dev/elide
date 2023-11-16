@@ -23,7 +23,7 @@
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7690/badge)](https://bestpractices.coreinfrastructure.org/projects/7690)
 
-Latest version: `1.0.0-alpha7`
+Latest version: `1.0.0-alpha8`
 
 <hr />
 
@@ -148,7 +148,7 @@ Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering 
 
 ```properties
 // gradle.properties
-elideVersion = 1.0.0-alpha7
+elideVersion = 1.0.0-alpha8
 ```
 
 ```kotlin

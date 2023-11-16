@@ -1,6 +1,6 @@
 {
   "name": "@elide-dev/framework",
-  "version": "1.0.0-alpha7",
+  "version": "1.0.0-alpha8",
   "private": true,
   "lint-staged": {
     "packages/*": "npx prettier --write --ignore-unknown"

@@ -13,7 +13,7 @@
 # License for the specific language governing permissions and limitations under the License.
 #
 
-latest_known_version="1.0.0-alpha7";
+latest_known_version="1.0.0-alpha8";
 
 # detect elide command, if it is not here, echo a message
 # and exit with a non-zero exit code

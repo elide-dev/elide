@@ -40,8 +40,8 @@ auto_service = "1.1.1"
 kover_plugin = "0.7.3"
 testLoggerPlugin = "3.2.0"
 dependencyAnalysis = "1.20.0"
-micronaut = "4.1.2"
-micronaut_plugin = "4.0.3"
+micronaut = "4.1.6"
+micronaut_plugin = "4.2.0"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

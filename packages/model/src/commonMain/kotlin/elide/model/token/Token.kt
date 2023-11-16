@@ -13,14 +13,13 @@
 
 package elide.model.token
 
-import kotlinx.serialization.Serializable
 import elide.annotations.data.Sensitive
 
 /**
  * # Models: Token
  *
  */
-@Serializable public expect class Token {
+public expect class Token {
   /** Specifies the type of token. */
   public val type: TokenType
 

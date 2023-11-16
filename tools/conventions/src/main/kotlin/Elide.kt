@@ -38,7 +38,6 @@ object Elide {
 
   /** Compiler args to include in all Kotlin targets. */
   val compilerArgs = listOf(
-    "-progressive",
     "-Xcontext-receivers",
     "-Xskip-prerelease-check",
     "-Xexpect-actual-classes",

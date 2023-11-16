@@ -127,7 +127,6 @@ public object Constants {
 
     /** Compiler args to include in all Kotlin targets. */
     private val BaseCompilerArgs = listOf(
-      "-progressive",
       "-Xcontext-receivers",
       "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",

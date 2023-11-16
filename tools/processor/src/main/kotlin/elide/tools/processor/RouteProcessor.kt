@@ -14,7 +14,8 @@
 package elide.tools.processor
 
 import com.google.auto.service.AutoService
-import com.google.devtools.ksp.hasAnnotation
+import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
@@ -307,6 +308,7 @@ public class RouteProcessor(
    * @param anno [elide.server.annotations.Page] annotation fetched from the declared class.
    * @return List of result pairs scoped to this [page], where each pair is an endpoint tag and configured [Endpoint].
    */
+  @OptIn(KspExperimental::class)
   private fun scanHandlerForMethods(page: KSClassDeclaration, anno: KSAnnotation): List<Pair<String, Endpoint>> {
     // grab all methods on the class. for each method, determine if it should be eligible as a page entrypoint; the
     // following criteria must be satisfied for this to be true:
@@ -323,7 +325,13 @@ public class RouteProcessor(
       it.isPublic() &&
 
       // must have at least one eligible annotation
-      eligibleEntrypointAnnotations.any { anno -> it.hasAnnotation(anno.asString()) }
+      eligibleEntrypointAnnotations.any { anno ->
+        it.annotations.mapNotNull { candidate ->
+          candidate.annotationType.resolve().declaration.qualifiedName?.asString()
+        }.contains(
+          anno.asString()
+        )
+      }
     }.map { fn ->
       fn to fn.annotations.filter { sub ->
         eligibleEntrypointAnnotations.any { subject ->

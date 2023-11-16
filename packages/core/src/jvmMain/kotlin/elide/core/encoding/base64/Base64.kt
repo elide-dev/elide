@@ -378,9 +378,9 @@ public actual object Base64 : Codec<Base64Data> {
 
   actual override fun encoding(): Encoding = Encoding.BASE64
 
-  override fun decodeBytes(data: ByteArray): ByteArray = decoder.decode(data)
+  actual override fun decodeBytes(data: ByteArray): ByteArray = decoder.decode(data)
 
-  override fun encode(data: ByteArray): Base64Data = Base64Data(encoder.encode(data))
+  actual override fun encode(data: ByteArray): Base64Data = Base64Data(encoder.encode(data))
 
   /**
    * Encode the provided [string] into a Base64-encoded string, omitting characters which are unsafe for use on the web,

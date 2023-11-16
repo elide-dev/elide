@@ -129,7 +129,25 @@ public expect object Base64 : Codec<Base64Data> {
 
   override fun decode(data: Base64Data): ByteArray
 
+  override fun encode(data: ByteArray): Base64Data
+
   override fun decoder(): elide.core.encoding.Decoder<Base64Data>
+
+  override fun decodeBytes(data: ByteArray): ByteArray
+
+  override fun encodeBytes(data: ByteArray): ByteArray
+
+  override fun decodeString(string: String): ByteArray
+
+  override fun decodeToString(data: ByteArray): String
+
+  override fun decodeToString(string: String): String
+
+  override fun encodeString(string: String): ByteArray
+
+  override fun encodeToString(data: ByteArray): String
+
+  override fun encodeToString(string: String): String
 
   /**
    * Encode the provided [string] into a Base64-encoded string, omitting characters which are unsafe for use on the web,

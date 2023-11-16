@@ -14,8 +14,8 @@
 package elide.tools.processor
 
 import com.google.auto.service.AutoService
-import com.google.devtools.ksp.hasAnnotation
 import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*

@@ -15,6 +15,10 @@ package elide.util
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
 public expect object Base64 : Encoder {
+  // -- Basic: Encoder -- //
+
+  override fun encoding(): Encoding
+
   // -- Basic: Encoding -- //
 
   /**

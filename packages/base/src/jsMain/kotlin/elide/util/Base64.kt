@@ -59,7 +59,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
     }
   }
 
-  override fun encoding(): Encoding = Encoding.BASE64
+  actual override fun encoding(): Encoding = Encoding.BASE64
 
   // -- Base64: Encoding -- //
   /**

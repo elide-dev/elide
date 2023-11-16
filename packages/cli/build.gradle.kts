@@ -198,7 +198,7 @@ val ktCompilerArgs = listOf(
   "-opt-in=elide.runtime.core.DelicateElideApi",
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta2",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-Beta1",
 )
 
 java {

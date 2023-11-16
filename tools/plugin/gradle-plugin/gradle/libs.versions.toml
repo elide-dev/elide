@@ -1,9 +1,9 @@
 [versions]
-elide = "1.0.0-alpha7"
-elideTools = "1.0.0-alpha7"
-ksp = "1.9.20-Beta2-1.0.13"
+elide = "1.0.0-alpha8"
+elideTools = "1.0.0-alpha8"
+ksp = "2.0.0-Beta1-1.0.14"
 detekt = "1.23.1"
-kotlin = "1.9.20-Beta2"
+kotlin = "2.0.0-Beta1"
 kotlin_dsl = "4.0.7"
 ktlint = "0.50.0"
 ktlintGradle = "11.5.0"

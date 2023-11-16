@@ -77,7 +77,7 @@ internal fun Project.configureKotlinBuild(
     sourceSets.all {
       languageSettings {
         if (explicitApi) explicitApi()
-        progressiveMode = true
+        progressiveMode = false
 
         optIn("kotlin.ExperimentalUnsignedTypes")
       }

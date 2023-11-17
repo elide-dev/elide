@@ -2,6 +2,7 @@ package elide.runtime.plugins.java.shell
 
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
+import elide.runtime.plugins.jvm.interop.asStringOrNull
 
 @DelicateElideApi @JvmInline internal value class GuestExceptionWrapper private constructor(val value: PolyglotValue) {
   fun message(): String? {

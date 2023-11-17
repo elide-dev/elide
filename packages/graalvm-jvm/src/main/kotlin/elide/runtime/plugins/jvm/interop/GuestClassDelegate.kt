@@ -1,4 +1,4 @@
-package elide.runtime.plugins.java.shell
+package elide.runtime.plugins.jvm.interop
 
 import kotlin.properties.ReadOnlyProperty
 import elide.runtime.core.DelicateElideApi
@@ -6,10 +6,9 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
 import elide.runtime.plugins.jvm.Jvm
 
-@DelicateElideApi internal fun PolyglotContext.guestClass(
-  name: String
-): ReadOnlyProperty<Any, PolyglotValue> {
+@DelicateElideApi public fun PolyglotContext.guestClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
   var cached: PolyglotValue? = null
+
   return ReadOnlyProperty { _, _ ->
     // early return if already resolved
     cached?.let { return@ReadOnlyProperty it }
@@ -22,4 +21,11 @@ import elide.runtime.plugins.jvm.Jvm
     // cache the resolved value
     guestValue.also { cached = it }
   }
+}
+
+@DelicateElideApi public fun PolyglotContext.loadGuestClass(name: String): PolyglotValue {
+  // resolve the guest class from the bindings and validate the returned value
+  return bindings(Jvm).getMember(name)?.takeUnless { it.isNull } ?: error(
+    "Failed to resolve guest class <$name>",
+  )
 }

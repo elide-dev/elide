@@ -97,18 +97,15 @@ import elide.runtime.plugins.jvm.interop.guestClass
 
     private const val JSHELL_SPI_PACKAGE = "jdk.jshell.spi"
 
-    @Suppress("nothing_to_inline")
-    private inline fun PolyglotContext.jshellClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
+    private fun PolyglotContext.jshellClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
       return guestClass("$JSHELL_PACKAGE.$name")
     }
 
-    @Suppress("nothing_to_inline")
-    private inline fun PolyglotContext.spiClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
+    private fun PolyglotContext.spiClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
       return guestClass("$JSHELL_SPI_PACKAGE.$name")
     }
 
-    @Suppress("nothing_to_inline")
-    private inline fun PolyglotContext.executionControlClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
+    private fun PolyglotContext.executionControlClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
       return guestClass("$JSHELL_SPI_PACKAGE.ExecutionControl\$$name")
     }
   }

@@ -9,17 +9,17 @@ import kotlin.properties.ReadOnlyProperty
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
+import elide.runtime.plugins.jvm.interop.asBooleanArray
+import elide.runtime.plugins.jvm.interop.guestClass
 
 @DelicateElideApi internal class GuestExecutionControlProvider(
   private val context: PolyglotContext
 ) : ExecutionControlProvider, GuestExceptionMapper, GuestBytecodeMapper {
-  private val system by context.guestClass("java.lang.System")
   private val classBytecodes by context.executionControlClass("ClassBytecodes")
   private val byteArray by context.guestClass("[B")
   private val localExecutionControl by context.jshellClass("execution.LocalExecutionControl")
 
   private val executionControlException by context.spiClass("ExecutionControlException")
-  private val runException by context.spiClass("ExecutionControlException")
   private val classInstallException by context.executionControlClass("ClassInstallException")
   private val notImplementedException by context.executionControlClass("NotImplementedException")
   private val engineTerminationException by context.executionControlClass("EngineTerminationException")

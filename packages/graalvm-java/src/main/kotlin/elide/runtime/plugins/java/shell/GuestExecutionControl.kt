@@ -6,6 +6,7 @@ import jdk.jshell.spi.ExecutionControl.NotImplementedException
 import org.graalvm.polyglot.PolyglotException
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
+import elide.runtime.plugins.jvm.interop.asStringOrNull
 
 @DelicateElideApi internal class GuestExecutionControl(
   private val guestDelegate: PolyglotValue,

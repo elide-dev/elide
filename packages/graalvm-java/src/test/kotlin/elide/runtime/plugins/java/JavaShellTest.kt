@@ -1,36 +1,47 @@
 package elide.runtime.plugins.java
 
 import jdk.jshell.JShell
+import jdk.jshell.SnippetEvent
 import org.junit.jupiter.api.Test
-import elide.runtime.Logging
+import org.junit.jupiter.api.assertDoesNotThrow
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.plugins.java.shell.GuestExecutionControlProvider
-import elide.runtime.plugins.jvm.Jvm
 
 @OptIn(DelicateElideApi::class) class JavaShellTest {
-  private val logging by lazy { Logging.of(JavaShellTest::class) }
+  /** Acquire a [PolyglotEngine] configured with the [Java] plugin. */
+  private fun configureEngine() = PolyglotEngine {
+    install(Java)
+  }
 
-  @Test fun testJavaShell() {
-    logging.debug("Configuring engine")
-    val engine = PolyglotEngine {
-      install(Jvm)
-      install(Java)
-    }
+  /**
+   * Attempt to "interpret" this event, throwing an exception if it represents an error, or returning a value if it
+   * provides one.
+   */
+  private fun SnippetEvent.interpret(): String? {
+    exception()?.let { throw it }
+    return this.value()
+  }
 
-    logging.debug("Acquiring context")
-    val context = engine.acquire()
+  /** Throw any exceptions represented by events in this list. */
+  private fun List<SnippetEvent>.interpret() {
+    forEach { it.interpret() }
+  }
 
-    logging.debug("Preparing JShell backend provider")
+  @Test fun testInteractiveJava() {
+    val context = configureEngine().acquire()
     val provider = GuestExecutionControlProvider(context)
 
-    logging.debug("Configuring JShell")
     val shell = JShell.builder()
       .executionEngine(provider, mutableMapOf())
       .build()
 
-    logging.debug("Evaluating sample")
-    shell.eval("int a = 0;").forEach { logging.info { "> $it" } }
-    shell.eval("System.out.println(a);").forEach { logging.info { "> $it" } }
+    assertDoesNotThrow("should allow variable declaration") {
+      shell.eval("int a = 2").interpret()
+    }
+
+    assertDoesNotThrow("should allow references to declared variables") {
+      shell.eval("int b = a + 3").interpret()
+    }
   }
 }

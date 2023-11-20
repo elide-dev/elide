@@ -23,7 +23,6 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
-import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
 /**
  * Language plugin providing support for JVM bytecode.
@@ -37,10 +36,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
  * @see JvmConfig
  * @see PolyglotContext.runJvm
  */
-@Suppress("unused") @DelicateElideApi public class Jvm private constructor(
-  private val config: JvmConfig,
-  private val resources: LanguagePluginManifest,
-) {
+@DelicateElideApi public class Jvm private constructor(public val config: JvmConfig) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
@@ -83,7 +79,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       // apply the configuration and create the plugin instance
       val config = JvmConfig().apply(configuration)
       val resources = resolveEmbeddedManifest(scope)
-      val instance = Jvm(config, resources)
+      val instance = Jvm(config)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)

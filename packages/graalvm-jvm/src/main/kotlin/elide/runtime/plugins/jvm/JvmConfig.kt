@@ -34,6 +34,11 @@ import elide.runtime.plugins.AbstractLanguageConfig
     classpathEntries.addAll(paths)
   }
 
+  /** Add new entries to the guest classpath used by the engine. */
+  public fun classpath(paths: Iterable<String>) {
+    classpathEntries.addAll(paths)
+  }
+
   /** Apply init-time settings to a new [context]. */
   internal fun applyTo(context: PolyglotContext) {
     // register intrinsics

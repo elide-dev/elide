@@ -52,6 +52,10 @@ import elide.runtime.plugins.vfs.include
     val bundles: List<EmbeddedResource> = emptyList(),
     /** Guest scripts to be evaluated on context initialization. */
     val scripts: List<EmbeddedResource> = emptyList(),
+    /** A collection of plugin-specific resource entries. */
+    val resources: Map<String, List<String>> = emptyMap(),
+    /** The path to the directory containing the manifest in the embedded resources. */
+    val root: String? = null,
   ) {
     /** Represents an embedded resource that should be loaded by the language plugin. */
     @Serializable public data class EmbeddedResource(
@@ -128,6 +132,7 @@ import elide.runtime.plugins.vfs.include
     manifest.copy(
       bundles = manifest.bundles.mapNotNull(::mapResource),
       scripts = manifest.scripts.mapNotNull(::mapResource),
+      root = resourcesRoot,
     )
   }.getOrElse { cause ->
     // rethrow with a more meaningful message

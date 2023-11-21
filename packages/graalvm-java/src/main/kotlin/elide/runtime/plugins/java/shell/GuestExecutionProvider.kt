@@ -10,11 +10,10 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
 import elide.runtime.plugins.jvm.interop.asBooleanArray
+import elide.runtime.plugins.jvm.interop.asStringOrNull
 import elide.runtime.plugins.jvm.interop.guestClass
 
-@DelicateElideApi internal class GuestExecutionControlProvider(
-  private val context: PolyglotContext
-) : ExecutionControlProvider, GuestExceptionMapper, GuestBytecodeMapper {
+@DelicateElideApi internal class GuestExecutionProvider(context: PolyglotContext) : ExecutionControlProvider {
   private val classBytecodes by context.executionControlClass("ClassBytecodes")
   private val byteArray by context.guestClass("[B")
   private val localExecutionControl by context.jshellClass("execution.LocalExecutionControl")
@@ -35,11 +34,23 @@ import elide.runtime.plugins.jvm.interop.guestClass
   override fun generate(env: ExecutionEnv, parameters: MutableMap<String, String>): ExecutionControl {
     // delegate to a LocalExecutionControl instance instantiated in the guest context
     val delegate = localExecutionControl.newInstance()
-    return GuestExecutionControl(guestDelegate = delegate, exceptionMapper = this, bytecodeMapper = this)
+    return GuestExecutionControl(delegate = delegate, provider = this)
   }
 
-  override fun map(guestException: PolyglotException): Exception {
-    val exception = GuestExceptionWrapper.of(guestException.guestObject ?: return guestException)
+  fun mapException(guestException: PolyglotException): Exception {
+    val exception = guestException.guestObject ?: return guestException
+
+    fun PolyglotValue.exceptionMessage(): String? {
+      return invokeMember("getMessage").asStringOrNull()
+    }
+
+    fun PolyglotValue.exceptionCause(): String? {
+      return invokeMember("causeExceptionClass").asStringOrNull()
+    }
+
+    infix fun PolyglotValue.isMetaInstanceOf(guestClass: PolyglotValue): Boolean {
+      return guestClass.isMetaInstance(this)
+    }
 
     if (!(exception isMetaInstanceOf executionControlException)) {
       // not a jshell exception
@@ -47,32 +58,32 @@ import elide.runtime.plugins.jvm.interop.guestClass
     }
 
     return when {
-      exception isMetaInstanceOf notImplementedException -> NotImplementedException(exception.message())
-      exception isMetaInstanceOf engineTerminationException -> EngineTerminationException(exception.message())
-      exception isMetaInstanceOf internalException -> InternalException(exception.message())
+      exception isMetaInstanceOf notImplementedException -> NotImplementedException(exception.exceptionMessage())
+      exception isMetaInstanceOf engineTerminationException -> EngineTerminationException(exception.exceptionMessage())
+      exception isMetaInstanceOf internalException -> InternalException(exception.exceptionMessage())
       exception isMetaInstanceOf stoppedException -> StoppedException()
 
       exception isMetaInstanceOf userException -> UserException(
-        exception.message(),
-        exception.cause(),
-        exception.stackTrace(),
+        exception.exceptionMessage(),
+        exception.exceptionCause(),
+        emptyArray(),
       )
 
       exception isMetaInstanceOf classInstallException -> ClassInstallException(
-        exception.message(),
-        exception.value.invokeMember("installed")?.asBooleanArray(),
+        exception.exceptionMessage(),
+        exception.invokeMember("installed")?.asBooleanArray(),
       )
 
       exception isMetaInstanceOf resolutionException -> ResolutionException(
-        exception.value.invokeMember("id").asInt(),
-        exception.stackTrace(),
+        exception.invokeMember("id").asInt(),
+        emptyArray(),
       )
 
       else -> guestException
     }
   }
 
-  override fun map(bytecodes: Array<out ClassBytecodes>): PolyglotValue {
+  fun mapBytecodes(bytecodes: Array<out ClassBytecodes>): PolyglotValue {
     val output = classBytecodes.getMember("array").newInstance(bytecodes.size)
 
     repeat(bytecodes.size) { i ->

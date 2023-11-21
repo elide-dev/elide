@@ -51,6 +51,9 @@ import elide.runtime.core.PolyglotValue
    * Note that a Unit-returning expression (such as `val message = "Hello"`) will return `null`, but an expression
    * that returns null (such as `0.takeIf { it != 0 }`) will actually return a [PolyglotValue], encapsulating the
    * guest value of `null`.
+   *
+   * @param snippet A valid fragment of Kotlin code to be evaluated.
+   * @return The result of the [snippet] evaluation, or `null` if it has no return value.
    */
   public fun evaluate(snippet: String): PolyglotValue? {
     // delegate to the evaluator and interpret the result

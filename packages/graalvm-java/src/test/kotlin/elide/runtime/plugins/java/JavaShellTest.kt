@@ -1,12 +1,11 @@
 package elide.runtime.plugins.java
 
-import jdk.jshell.JShell
-import jdk.jshell.SnippetEvent
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import kotlin.test.assertEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
-import elide.runtime.plugins.java.shell.GuestExecutionControlProvider
+import elide.runtime.plugins.java.shell.GuestJavaInterpreter
 
 @OptIn(DelicateElideApi::class) class JavaShellTest {
   /** Acquire a [PolyglotEngine] configured with the [Java] plugin. */
@@ -14,34 +13,22 @@ import elide.runtime.plugins.java.shell.GuestExecutionControlProvider
     install(Java)
   }
 
-  /**
-   * Attempt to "interpret" this event, throwing an exception if it represents an error, or returning a value if it
-   * provides one.
-   */
-  private fun SnippetEvent.interpret(): String? {
-    exception()?.let { throw it }
-    return this.value()
-  }
-
-  /** Throw any exceptions represented by events in this list. */
-  private fun List<SnippetEvent>.interpret() {
-    forEach { it.interpret() }
-  }
-
   @Test fun testInteractiveJava() {
     val context = configureEngine().acquire()
-    val provider = GuestExecutionControlProvider(context)
-
-    val shell = JShell.builder()
-      .executionEngine(provider, mutableMapOf())
-      .build()
+    val interpreter = GuestJavaInterpreter(context)
 
     assertDoesNotThrow("should allow variable declaration") {
-      shell.eval("int a = 2").interpret()
+      interpreter.evaluate("int a = 2;")
     }
 
     assertDoesNotThrow("should allow references to declared variables") {
-      shell.eval("int b = a + 3").interpret()
+      interpreter.evaluate("int b = a + 3;")
     }
+
+    assertEquals(
+      expected = "5",
+      actual = interpreter.evaluate("b;"),
+      message = "should return value of declared variable.",
+    )
   }
 }

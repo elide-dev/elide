@@ -50,6 +50,7 @@ elide {
 
   native {
     target = NativeTarget.LIB
+    useAgent = false
   }
 }
 

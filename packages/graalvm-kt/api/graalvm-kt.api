@@ -1,6 +1,7 @@
 public final class elide/runtime/plugins/kotlin/Kotlin {
 	public static final field Plugin Lelide/runtime/plugins/kotlin/Kotlin$Plugin;
-	public synthetic fun <init> (Lelide/runtime/plugins/kotlin/KotlinConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/plugins/kotlin/KotlinConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfig ()Lelide/runtime/plugins/kotlin/KotlinConfig;
 }
 
 public final class elide/runtime/plugins/kotlin/Kotlin$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
@@ -11,5 +12,10 @@ public final class elide/runtime/plugins/kotlin/Kotlin$Plugin : elide/runtime/pl
 }
 
 public final class elide/runtime/plugins/kotlin/KotlinConfig : elide/runtime/plugins/AbstractLanguageConfig {
+}
+
+public final class elide/runtime/plugins/kotlin/shell/GuestKotlinInterpreter {
+	public fun <init> (Lelide/runtime/core/PolyglotContext;)V
+	public final fun evaluate (Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
 }
 

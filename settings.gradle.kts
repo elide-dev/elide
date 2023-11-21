@@ -195,6 +195,7 @@ val cachePush: String? by settings
 
 buildless {
   remoteCache {
+    enabled = false
     // allow disabling pushing to the remote cache
     push = cachePush?.toBooleanStrictOrNull() ?: true
   }

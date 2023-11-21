@@ -9,16 +9,15 @@ import elide.runtime.core.PolyglotValue
 import elide.runtime.plugins.jvm.interop.asStringOrNull
 
 @DelicateElideApi internal class GuestExecutionControl(
-  private val guestDelegate: PolyglotValue,
-  private val exceptionMapper: GuestExceptionMapper,
-  private val bytecodeMapper: GuestBytecodeMapper,
+  private val delegate: PolyglotValue,
+  private val provider: GuestExecutionProvider,
 ) : ExecutionControl {
   private fun tryInvoke(method: String, vararg args: Any?): PolyglotValue = try {
     // use the guest-side execution control
-    guestDelegate.invokeMember(method, *args)
+    delegate.invokeMember(method, *args)
   } catch (error: PolyglotException) {
     // map to a host exception and re-throw
-    throw exceptionMapper.map(error)
+    throw provider.mapException(error)
   }
 
   override fun close() {
@@ -26,11 +25,11 @@ import elide.runtime.plugins.jvm.interop.asStringOrNull
   }
 
   override fun load(cbcs: Array<out ClassBytecodes>) {
-    tryInvoke("load", bytecodeMapper.map(cbcs))
+    tryInvoke("load", provider.mapBytecodes(cbcs))
   }
 
   override fun redefine(cbcs: Array<out ClassBytecodes>) {
-    tryInvoke("redefine", bytecodeMapper.map(cbcs))
+    tryInvoke("redefine", provider.mapBytecodes(cbcs))
   }
 
   override fun invoke(className: String?, methodName: String?): String? {

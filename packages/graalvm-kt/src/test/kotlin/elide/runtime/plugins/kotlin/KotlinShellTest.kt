@@ -15,19 +15,19 @@ import elide.testing.annotations.Test
 
   @Test fun testInteractiveKotlin() {
     val context = configureEngine().acquire()
-    val scriptEngine = GuestKotlinInterpreter(context)
+    val interpreter = GuestKotlinInterpreter(context)
 
     assertDoesNotThrow("should allow variable declaration") {
-      scriptEngine.evaluate("val a = 2")
+      interpreter.evaluate("val a = 2")
     }
 
     assertDoesNotThrow("should allow references to declared variables") {
-      scriptEngine.evaluate("val b = a + 3")
+      interpreter.evaluate("val b = a + 3")
     }
 
     assertEquals(
       expected = 5,
-      actual = scriptEngine.evaluate("b")?.asInt(),
+      actual = interpreter.evaluate("b")?.asInt(),
       message = "should return value of previously declared variable",
     )
   }

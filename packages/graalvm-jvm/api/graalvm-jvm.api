@@ -47,9 +47,15 @@ public final class elide/runtime/gvm/jvm/cfg/JvmRuntimeConfig$Companion {
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
 }
 
+public final class elide/runtime/plugins/jvm/ExtensionsKt {
+	public static final fun runJvm (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+	public static synthetic fun runJvm$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;ILjava/lang/Object;)I
+}
+
 public final class elide/runtime/plugins/jvm/Jvm {
 	public static final field Plugin Lelide/runtime/plugins/jvm/Jvm$Plugin;
-	public synthetic fun <init> (Lelide/runtime/plugins/jvm/JvmConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/plugins/jvm/JvmConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfig ()Lelide/runtime/plugins/jvm/JvmConfig;
 }
 
 public final class elide/runtime/plugins/jvm/Jvm$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
@@ -60,5 +66,36 @@ public final class elide/runtime/plugins/jvm/Jvm$Plugin : elide/runtime/plugins/
 }
 
 public final class elide/runtime/plugins/jvm/JvmConfig : elide/runtime/plugins/AbstractLanguageConfig {
+	public final fun classpath (Ljava/lang/Iterable;)V
+	public final fun classpath ([Ljava/lang/String;)V
+}
+
+public final class elide/runtime/plugins/jvm/JvmConfigKt {
+	public static final fun classpath (Lelide/runtime/plugins/jvm/JvmConfig;[Ljava/nio/file/Path;)V
+}
+
+public final class elide/runtime/plugins/jvm/interop/GuestClassDelegateKt {
+	public static final fun guestClass (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;)Lkotlin/properties/ReadOnlyProperty;
+	public static final fun loadGuestClass (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+}
+
+public final class elide/runtime/plugins/jvm/interop/GuestValueMappersKt {
+	public static final fun asBooleanArray (Lorg/graalvm/polyglot/Value;)[Z
+	public static final fun asBooleanOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Boolean;
+	public static final fun asByteArray (Lorg/graalvm/polyglot/Value;)[B
+	public static final fun asByteOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Byte;
+	public static final fun asCharArray (Lorg/graalvm/polyglot/Value;)[C
+	public static final fun asCharOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Character;
+	public static final fun asDoubleArray (Lorg/graalvm/polyglot/Value;)[D
+	public static final fun asDoubleOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Double;
+	public static final fun asFloatArray (Lorg/graalvm/polyglot/Value;)[F
+	public static final fun asFloatOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Float;
+	public static final fun asIntArray (Lorg/graalvm/polyglot/Value;)[I
+	public static final fun asIntOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Integer;
+	public static final fun asLongArray (Lorg/graalvm/polyglot/Value;)[J
+	public static final fun asLongOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Long;
+	public static final fun asShortArray (Lorg/graalvm/polyglot/Value;)[S
+	public static final fun asShortOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/Short;
+	public static final fun asStringOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 }
 

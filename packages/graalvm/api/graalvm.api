@@ -2148,6 +2148,7 @@ public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runtime/core/EnginePlugin, elide/runtime/core/GuestLanguage {
 	protected static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$Companion;
 	public fun <init> ()V
+	protected fun getManifestKey ()Ljava/lang/String;
 	protected final fun initializeEmbeddedScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	protected final fun installEmbeddedBundles (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/EnginePlugin$InstallationScope;Z)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
@@ -2161,18 +2162,22 @@ protected final class elide/runtime/plugins/AbstractLanguagePlugin$Companion {
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
-	public static synthetic fun copy$default (Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/lang/String;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	public static synthetic fun copy$default (Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBundles ()Ljava/util/List;
 	public final fun getEngine ()Ljava/lang/String;
 	public final fun getLanguage ()Ljava/lang/String;
+	public final fun getResources ()Ljava/util/Map;
+	public final fun getRoot ()Ljava/lang/String;
 	public final fun getScripts ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

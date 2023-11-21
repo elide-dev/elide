@@ -1,0 +1,19 @@
+public final class elide/runtime/plugins/java/Java {
+	public static final field Plugin Lelide/runtime/plugins/java/Java$Plugin;
+	public synthetic fun <init> (Lelide/runtime/plugins/java/JavaConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/runtime/plugins/java/Java$Plugin : elide/runtime/core/EnginePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/java/Java;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/java/JavaConfig {
+}
+
+public final class elide/runtime/plugins/java/shell/GuestJavaInterpreter {
+	public fun <init> (Lelide/runtime/core/PolyglotContext;)V
+	public final fun evaluate (Ljava/lang/String;)Ljava/lang/String;
+}
+

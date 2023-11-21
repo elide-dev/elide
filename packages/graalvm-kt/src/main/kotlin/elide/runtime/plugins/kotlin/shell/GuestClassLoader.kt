@@ -5,7 +5,7 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
 import elide.runtime.plugins.jvm.interop.loadGuestClass
 
-@DelicateElideApi @JvmInline internal value class GuestDynamicClassLoader(
+@DelicateElideApi @JvmInline internal value class GuestClassLoader(
   private val delegate: PolyglotValue,
 ) {
   /** Create a new instance by resolving the guest class from a [context]. */

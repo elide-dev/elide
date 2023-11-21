@@ -14,7 +14,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
 
 @DelicateElideApi internal class GuestKotlinScriptEvaluator(context: PolyglotContext) : BasicJvmScriptEvaluator() {
   /** A shared [ClassLoader] instance capable of resolving classes of previously compiled scripts. */
-  private val sharedClassLoader: GuestDynamicClassLoader = GuestDynamicClassLoader(context)
+  private val sharedClassLoader: GuestClassLoader = GuestClassLoader(context)
 
   /** Cached reference to the byte[] type in the guest context. */
   private val guestByteArrayClass by context.guestClass("[B")
@@ -55,7 +55,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
       ResultValue.Value(
         name = fieldName,
         value = scriptInstance.getMember(fieldName),
-        type = "elide.runtime.core.PolyglotValue",
+        type = RETURN_TYPE_POLYGLOT_VALUE,
         scriptInstance = scriptInstance,
         scriptClass = null,
       )
@@ -80,7 +80,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
    * @param loader A dynamic class loader capable of registering new classes from compiled bytecode.
    * @return The compiled script class.
    */
-  private fun loadCompiledScriptClass(script: CompiledScript, loader: GuestDynamicClassLoader): PolyglotValue {
+  private fun loadCompiledScriptClass(script: CompiledScript, loader: GuestClassLoader): PolyglotValue {
     // for our use case, only scripts compiled by the JVM backend are supported
     check(script is KJvmCompiledScript) { "Expected a Kotlin/JVM compiled script, received: $script" }
 
@@ -125,7 +125,10 @@ import elide.runtime.plugins.jvm.interop.guestClass
     return args.toArray()
   }
 
-  private companion object {
+  internal companion object {
+    /** Marker string used to verify the correct type of a value returned by the evaluator. */
+    internal const val RETURN_TYPE_POLYGLOT_VALUE = "elide.runtime.core.PolyglotValue"
+
     /** A mutable map of script classes and evaluation results which servers to reuse script executions. */
     private val JvmScriptEvaluationConfigurationKeys.evaluatedScripts by PropertiesCollection
       .key<MutableMap<PolyglotValue, EvaluationResult>>(isTransient = true)

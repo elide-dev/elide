@@ -12,9 +12,9 @@
  */
 
 import elide.internal.conventions.elide
-import elide.internal.conventions.publishing.publish
-import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.native.NativeTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
   alias(libs.plugins.micronaut.library)
@@ -37,7 +37,7 @@ elide {
       from(components["kotlin"])
     }
   }
-  
+
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
@@ -60,7 +60,6 @@ dependencies {
 
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
-  implementation(libs.kotlin.scripting.jvm.engine)
   implementation(libs.kotlin.compiler.embedded)
 
   // Testing

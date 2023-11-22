@@ -34,7 +34,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
  * as a constructor argument.
  *
  * This limitation is necessary however, to avoid implicit creation of contexts for the sole purpose of running the
- * shell. A suitable entrypoint is provided by the [GuestJavaInterpreter] class, which manages its own JShell instance
+ * shell. A suitable entrypoint is provided by the [GuestJavaEvaluator] class, which manages its own JShell instance
  * using this provider, and does not require a service loader call.
  *
  * #### Guest classes

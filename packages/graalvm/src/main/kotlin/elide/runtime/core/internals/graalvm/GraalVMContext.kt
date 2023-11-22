@@ -15,15 +15,16 @@ package elide.runtime.core.internals.graalvm
 
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
-import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.GuestLanguage
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotValue
+import java.util.concurrent.ConcurrentHashMap
+import elide.runtime.core.*
 
 /**
  * An implementation of the [PolyglotContext] interface wrapping a GraalVM context.
  */
 @DelicateElideApi internal class GraalVMContext(val context: Context) : PolyglotContext {
+  /** Thread-safe mutable map holding this context's elements. */
+  private val elements: MutableMap<PolyglotContextElement<*>, Any?> = ConcurrentHashMap()
+
   override fun bindings(language: GuestLanguage?): PolyglotValue {
     return language?.let { context.getBindings(it.languageId) } ?: context.polyglotBindings
   }
@@ -42,5 +43,13 @@ import elide.runtime.core.PolyglotValue
 
   override fun leave() {
     context.leave()
+  }
+
+  override operator fun <T> get(element: PolyglotContextElement<T>): T? {
+    @Suppress("unchecked_cast") return elements[element] as? T
+  }
+
+  override operator fun <T> set(element: PolyglotContextElement<T>, value: T): Boolean {
+    return elements.put(element, value) != null
   }
 }

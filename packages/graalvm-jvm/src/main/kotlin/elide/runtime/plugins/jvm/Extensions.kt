@@ -1,13 +1,17 @@
-package elide.runtime.plugins.jvm
-
 /*
-so instead the idea is as follows:
-1. Create a GraalVM context with JVM support
-2. Using context options, adjust the classpath of the context (before building it obviously), so that it includes the classes of the guest application
-3. Through the bindings API, obtain a reference to the "main" class (which is a polyglot `Value` to us in the host)
-4. Invoke the static "main" method in that guest class (via `Value.invokeMember`, since we're dealing with guest objects)
-5. Profit
-*/
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
+package elide.runtime.plugins.jvm
 
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext

@@ -19,7 +19,18 @@ import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.jvm.Jvm
+import elide.runtime.plugins.kotlin.shell.GuestKotlinInterpreter
 
+/**
+ * Runtime plugin adding support for evaluating Kotlin in an interactive shell. Applying this plugin will automatically
+ * install the [Jvm] plugin.
+ *
+ * This plugin adds custom guest classpath entries using the [Jvm] plugin configuration which are necessary for the
+ * [GuestKotlinInterpreter] to function, such as the Kotlin standard library, the scripting runtime, and a custom
+ * JAR providing helper classes used to interface with the guest context from the host.
+ *
+ * @see [GuestKotlinInterpreter]
+ */
 @DelicateElideApi public class Kotlin private constructor(public val config: KotlinConfig) {
   public companion object Plugin : AbstractLanguagePlugin<KotlinConfig, Kotlin>() {
     private const val GUEST_CLASSPATH_KEY = "classpath"

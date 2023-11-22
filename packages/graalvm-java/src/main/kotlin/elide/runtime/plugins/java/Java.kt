@@ -19,10 +19,24 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.jvm.Jvm
+import elide.runtime.plugins.java.shell.GuestJavaInterpreter
 
+/**
+ * Runtime plugin adding support for evaluating Java in an interactive shell. Applying this plugin will automatically
+ * install the [Jvm] plugin.
+ *
+ * Note that currently the Java shell feature is available even without applying the [Java] plugin, it only requires
+ * the [Jvm] plugin to be installed, and a [GuestJavaInterpreter] instance.
+ *
+ * In the future however, the plugin will automatically create an interpreter instance and associate it with the
+ * context for use with extensions, reducing the overhead of starting the shell.
+ *
+ * @see [GuestJavaInterpreter]
+ */
 @Suppress("unused") @DelicateElideApi public class Java private constructor(private val config: JavaConfig) {
   public companion object Plugin : EnginePlugin<JavaConfig, Java> {
-    private const val JAVA_PLUGIN_ID = "Kotlin"
+    private const val JAVA_PLUGIN_ID = "Java"
+
     override val key: Key<Java> = Key(JAVA_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: JavaConfig.() -> Unit): Java {

@@ -19,7 +19,11 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
 
-/** Configuration provider for the [Jvm] plugin. */
+/**
+ * Configuration for the [Jvm] plugin.
+ *
+ * @see classpath
+ */
 @DelicateElideApi public class JvmConfig internal constructor() : AbstractLanguageConfig() {
   /** Collection of classpath entries passed to Espresso. */
   private val classpathEntries: MutableList<String> = mutableListOf()

@@ -17,14 +17,16 @@ import jdk.jshell.JShell
 import jdk.jshell.Snippet.Status.DROPPED
 import jdk.jshell.Snippet.Status.REJECTED
 import jdk.jshell.SnippetEvent
+import org.graalvm.polyglot.Source
 import kotlin.streams.asSequence
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.GuestLanguageEvaluator
 import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotValue
 
 /**
- * An interactive Java interpreter capable of compiling and evaluating snippets of code, for use in a REPL.
- *
- * Use the [evaluate] method to execute a Java snippet and receive the result.
+ * An interactive Java interpreter capable of compiling and evaluating snippets of code, for use in a REPL. Use the
+ * [evaluate] method to execute a Java snippet and receive the result as a [PolyglotValue].
  *
  * This class uses [JShell] with a [GuestExecutionControl] backend, which wraps around a guest [context] to execute
  * code using Espresso. Some current limitations apply:
@@ -47,7 +49,7 @@ import elide.runtime.core.PolyglotContext
  * @see GuestExecutionProvider
  * @see GuestExecutionControl
  */
-@DelicateElideApi public class GuestJavaInterpreter(private val context: PolyglotContext) {
+@DelicateElideApi internal class GuestJavaEvaluator(private val context: PolyglotContext) : GuestLanguageEvaluator {
   /** A cached [JShell] instance configured with the [GuestExecutionProvider], using the [context] for execution. */
   private val shell: JShell by lazy {
     JShell.builder().executionEngine(
@@ -62,10 +64,7 @@ import elide.runtime.core.PolyglotContext
    */
   private fun interpret(event: SnippetEvent): String? = when (event.status()) {
     DROPPED, REJECTED -> {
-      val diagnostics = shell.diagnostics(event.snippet()).asSequence().joinToString("\n") {
-        it.getMessage(null)
-      }
-
+      val diagnostics = shell.diagnostics(event.snippet()).asSequence().joinToString("\n") { it.getMessage(null) }
       error("Snippet evaluation resulted in error: $diagnostics")
     }
 
@@ -75,19 +74,14 @@ import elide.runtime.core.PolyglotContext
     }
   }
 
-  /**
-   * Compile and evaluate a [snippet] of Java code, returning the result as a string, `null` if it does not return a
-   * value, or throwing an exception if an error occurs during compilation or evaluation.
-   *
-   * There is currently no support for return values of a type other than [String] due to limitations in the
-   * underlying [JShell] engine.
-   *
-   * @param snippet A valid fragment of Java code to be evaluated.
-   * @return A [String] representing the result value of the [snippet], or `null` if no value is returned.
-   */
-  public fun evaluate(snippet: String): String? {
+  override fun evaluate(source: Source, context: PolyglotContext): PolyglotValue {
+    // binary sources (e.g. jvm bytecode) are not allowed, and only interactive (shell) mode is supported
+    require(source.isInteractive && source.hasCharacters()) {
+      "Only non-binary java sources marked as interactive may be evaluated by the Java plugin."
+    }
+
     // JShell will return a list of snippet events; we need to interpret those, throwing any exceptions, etc.,
-    // and then select the last event that has a non-null value
-    return shell.eval(snippet).map(::interpret).lastOrNull { it != null }
+    // and then select the last event that has a non-null value; the final result is wrapped as a guest Value
+    return PolyglotValue.asValue(shell.eval(source.characters.toString()).map(::interpret).lastOrNull { it != null })
   }
 }

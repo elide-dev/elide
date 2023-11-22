@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(DelicateElideApi::class)
 internal class ContextTest {
@@ -88,5 +89,37 @@ internal class ContextTest {
       expected = "Hello, Elide",
       actual = context.evaluate(JavaScript, code).asString(),
     )
+  }
+
+  @Test fun testCustomEvaluator() {
+    val context = PolyglotEngine { enableLanguage(JavaScript) }.acquire()
+
+    var called = false
+    val evaluator = GuestLanguageEvaluator { _, _ ->
+      // do nothing
+      called = true
+      PolyglotValue.asValue(Unit)
+    }
+
+    context[GuestLanguageEvaluator.contextElementFor(JavaScript)] = evaluator
+    context.evaluate(JavaScript, "throw new Error('should not evaluate')")
+
+    assertTrue(called, "expected custom evaluator to be called")
+  }
+
+  @Test fun testCustomParser() {
+    val context = PolyglotEngine { enableLanguage(JavaScript) }.acquire()
+
+    var called = false
+    val parser = GuestLanguageParser { _, _ ->
+      // do nothing
+      called = true
+      PolyglotValue.asValue(Unit)
+    }
+
+    context[GuestLanguageParser.contextElementFor(JavaScript)] = parser
+    context.parse(JavaScript, "invalid javascript (should not parse)")
+
+    assertTrue(called, "expected custom parser to be called")
   }
 }

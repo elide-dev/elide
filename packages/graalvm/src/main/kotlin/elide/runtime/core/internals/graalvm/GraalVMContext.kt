@@ -25,16 +25,26 @@ import elide.runtime.core.*
   /** Thread-safe mutable map holding this context's elements. */
   private val elements: MutableMap<PolyglotContextElement<*>, Any?> = ConcurrentHashMap()
 
+  private fun resolveCustomEvaluator(source: Source): GuestLanguageEvaluator? {
+    return get(GuestLanguageEvaluator.contextElementFor(source.language))
+  }
+
+  private fun resolveCustomParser(source: Source): GuestLanguageParser? {
+    return get(GuestLanguageParser.contextElementFor(source.language))
+  }
+
   override fun bindings(language: GuestLanguage?): PolyglotValue {
     return language?.let { context.getBindings(it.languageId) } ?: context.polyglotBindings
   }
 
   override fun parse(source: Source): PolyglotValue {
-    return context.parse(source)
+    // prefer using a registered parser for this language, default to using the context
+    return resolveCustomParser(source)?.parse(source, this) ?: context.parse(source)
   }
 
   override fun evaluate(source: Source): PolyglotValue {
-    return context.eval(source)
+    // prefer using a registered evaluator for this language, default to using the context
+    return resolveCustomEvaluator(source)?.evaluate(source, this) ?: context.eval(source)
   }
 
   override fun enter() {

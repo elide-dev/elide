@@ -16,6 +16,21 @@ package elide.runtime.core
 import org.graalvm.polyglot.Source
 
 /**
+ * A type-safe key used to store and retrieve values in a [PolyglotContext].
+ *
+ * Engine plugins can manage elements with [PolyglotContext.set] and [PolyglotContext.get] in order to share and reuse
+ * values created during context initialization. For example, a language plugin providing REPL support might create
+ * the shell evaluator and store it using an element key, which would allow an extension to access a context-bound
+ * instance when necessary.
+ *
+ * Note that the Elements API is meant to be used only by host code, and is not available inside the guest context. If
+ * you need to share values with guest code, use [bindings][PolyglotContext.bindings] instead.
+ *
+ * @see PolyglotContext
+ */
+@DelicateElideApi @JvmInline public value class PolyglotContextElement<T>(public val key: String)
+
+/**
  * The Polyglot Context is the core of the Elide runtime: it evaluates guest code in the embedded VM, returning the
  * execution result. Context instances can be [acquired][PolyglotEngine.acquire] from a [PolyglotEngine].
  *
@@ -56,7 +71,7 @@ import org.graalvm.polyglot.Source
    * @return A [PolyglotValue] representing the parsed source, possibly ready for execution.
    */
   public fun parse(source: Source): PolyglotValue
-  
+
   /**
    * Evaluate the given [source], returning the result of the execution. Depending on the configuration of the context,
    * this method may fail if the selected language is not enabled in the underlying engine.
@@ -76,6 +91,12 @@ import org.graalvm.polyglot.Source
    * is expected; instead, leave once the last call has been received.
    */
   public fun leave()
+
+  /** Returns the value associated with a given context [element], or `null` if the element is not present. */
+  public operator fun <T> get(element: PolyglotContextElement<T>): T?
+
+  /** Sets the value associated with a given context [element], returning `true` if a previous value was replaced. */
+  public operator fun <T> set(element: PolyglotContextElement<T>, value: T): Boolean
 }
 
 /**
@@ -97,6 +118,6 @@ import org.graalvm.polyglot.Source
   return evaluate(
     Source.newBuilder(language.languageId, source, name ?: "(inline)")
       .internal(internal)
-      .build()
+      .build(),
   )
 }

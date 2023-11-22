@@ -30,7 +30,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin
  * Unlike for other languages, such as JavaScript, execution using [PolyglotContext.evaluate] is not available for
  * the JVM.
  *
- * When a context with JVM support is created, it will be able load classes from the classpath defined in this
+ * When a context with JVM support is created, it will be able to load classes from the classpath defined in this
  * plugin's [configuration][config]. A standard JVM entry point can then be accessed using the [runJvm] extension.
  *
  * @see JvmConfig
@@ -44,8 +44,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin
 
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.enableOptions(
-      // "java.EnablePreview",
-      // "java.BuiltInPolyglotCollections",
       "java.BytecodeLevelInlining",
       "java.CHA",
       "java.HotSwapAPI",

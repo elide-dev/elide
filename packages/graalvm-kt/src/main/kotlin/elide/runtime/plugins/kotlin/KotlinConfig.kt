@@ -17,6 +17,7 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
 
+/** Configuration for the [Kotlin] plugin. */
 @DelicateElideApi public class KotlinConfig internal constructor() : AbstractLanguageConfig() {
   /** Apply init-time settings to a new [context]. */
   internal fun applyTo(context: PolyglotContext) {

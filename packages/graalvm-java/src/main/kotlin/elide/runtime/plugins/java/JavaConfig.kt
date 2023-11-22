@@ -15,4 +15,5 @@ package elide.runtime.plugins.java
 
 import elide.runtime.core.DelicateElideApi
 
+/** Configuration for the [Java] plugin. */
 @DelicateElideApi public class JavaConfig internal constructor()

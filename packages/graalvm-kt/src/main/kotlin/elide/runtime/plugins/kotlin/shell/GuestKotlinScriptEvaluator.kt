@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.runtime.plugins.kotlin.shell
 
 import kotlin.script.experimental.api.*
@@ -12,6 +25,16 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
 import elide.runtime.plugins.jvm.interop.guestClass
 
+/**
+ * A [BasicJvmScriptEvaluator] specialization that a [GuestClassLoader] to define compiled script classes in an embedded
+ * context, then loading them and creating new guest instances to execute the scripts using Espresso.
+ *
+ * This class can be used independently with a script compiler in order to evaluate a basic Kotlin script, or as part
+ * of a REPL evaluator to execute code snippets.
+ *
+ * @see GuestKotlinScriptEvaluator
+ * @see GuestClassLoader
+ */
 @DelicateElideApi internal class GuestKotlinScriptEvaluator(context: PolyglotContext) : BasicJvmScriptEvaluator() {
   /** A shared [ClassLoader] instance capable of resolving classes of previously compiled scripts. */
   private val sharedClassLoader: GuestClassLoader = GuestClassLoader(context)
@@ -29,7 +52,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
     val configuration = scriptEvaluationConfiguration.resolveShared()
     val evaluatedScripts = configuration[ScriptEvaluationConfiguration.jvm.evaluatedScripts]
 
-    // load the guest z class from the compiled output
+    // load the guest class from the compiled output
     val scriptClass = loadCompiledScriptClass(compiledScript, sharedClassLoader)
 
     // if the target script has already been evaluated, return the cached result
@@ -50,7 +73,6 @@ import elide.runtime.plugins.jvm.interop.guestClass
 
     // unlike default implementations, we don't store the actual compiled script class (since it's on the guest side),
     // and the 'instance' returned is actually a guest value, which is transparent to the Kotlin scripting engine
-
     val resultValue = compiledScript.resultField?.let { (fieldName) ->
       ResultValue.Value(
         name = fieldName,

@@ -32,10 +32,10 @@ import elide.runtime.plugins.jvm.interop.guestClass
  * This class can be used independently with a script compiler in order to evaluate a basic Kotlin script, or as part
  * of a REPL evaluator to execute code snippets.
  *
- * @see GuestKotlinScriptEvaluator
+ * @see GuestScriptEvaluator
  * @see GuestClassLoader
  */
-@DelicateElideApi internal class GuestKotlinScriptEvaluator(context: PolyglotContext) : BasicJvmScriptEvaluator() {
+@DelicateElideApi internal class GuestScriptEvaluator(context: PolyglotContext) : BasicJvmScriptEvaluator() {
   /** A shared [ClassLoader] instance capable of resolving classes of previously compiled scripts. */
   private val sharedClassLoader: GuestClassLoader = GuestClassLoader(context)
 

@@ -14,24 +14,33 @@
 package elide.runtime.plugins.kotlin
 
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
+import elide.runtime.core.GuestLanguageEvaluator
+import elide.runtime.core.PolyglotContext
 import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.jvm.Jvm
-import elide.runtime.plugins.kotlin.shell.GuestKotlinInterpreter
+import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 
 /**
  * Runtime plugin adding support for evaluating Kotlin in an interactive shell. Applying this plugin will automatically
  * install the [Jvm] plugin.
  *
  * This plugin adds custom guest classpath entries using the [Jvm] plugin configuration which are necessary for the
- * [GuestKotlinInterpreter] to function, such as the Kotlin standard library, the scripting runtime, and a custom
+ * [GuestKotlinEvaluator] to function, such as the Kotlin standard library, the scripting runtime, and a custom
  * JAR providing helper classes used to interface with the guest context from the host.
  *
- * @see [GuestKotlinInterpreter]
+ * @see [GuestKotlinEvaluator]
  */
 @DelicateElideApi public class Kotlin private constructor(public val config: KotlinConfig) {
+  /** Configure a new [context] and attach a [GuestKotlinEvaluator] to allow running snippets. */
+  private fun initializeContext(context: PolyglotContext) {
+    // create an evaluator and bind it to the context
+    context[GuestLanguageEvaluator.contextElementFor(Kotlin)] = GuestKotlinEvaluator(context)
+  }
+
   public companion object Plugin : AbstractLanguagePlugin<KotlinConfig, Kotlin>() {
     private const val GUEST_CLASSPATH_KEY = "classpath"
 
@@ -60,6 +69,8 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinInterpreter
       // apply the configuration and create the plugin instance
       val config = KotlinConfig().apply(configuration)
       val instance = Kotlin(config)
+      
+      scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
       // register resources with the VFS
       installEmbeddedBundles(scope, resources)

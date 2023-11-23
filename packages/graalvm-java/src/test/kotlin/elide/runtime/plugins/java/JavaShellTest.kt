@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.plugins.java.shell.GuestJavaEvaluator
@@ -39,23 +41,28 @@ import elide.runtime.plugins.java.shell.GuestJavaEvaluator
     )
   }
 
-  @Test fun testRejectInvalidSources() {
+  @Test fun testSourceValidation() {
     val context = configureEngine().acquire()
     val interpreter = GuestJavaEvaluator(context)
 
-    assertThrows<IllegalArgumentException>("should reject binary sources") {
-      val binarySource = Source.newBuilder(Java.languageId, ByteSequence.create(ByteArray(10)), "invalid.class")
-        .interactive(true)
-        .build()
+    val validSource = Source.newBuilder(Java.languageId, "int a = 5;", "snippet.java").interactive(true).build()
+    assertTrue(interpreter.accepts(validSource), "should accept interactive character-based sources")
 
+    val binarySource = Source.newBuilder(Java.languageId, ByteSequence.create(ByteArray(10)), "invalid.class")
+      .interactive(true)
+      .build()
+
+    assertFalse(interpreter.accepts(binarySource), "should not accept binary sources")
+    assertThrows<IllegalArgumentException>("should reject binary sources") {
       interpreter.evaluate(binarySource, context)
     }
 
-    assertThrows<IllegalArgumentException>("should reject non-interactive sources") {
-      val nonInteractiveSource = Source.newBuilder(Java.languageId, "...", "invalid.java")
-        .interactive(false)
-        .build()
+    val nonInteractiveSource = Source.newBuilder(Java.languageId, "...", "invalid.java")
+      .interactive(false)
+      .build()
 
+    assertFalse(interpreter.accepts(nonInteractiveSource), "should not non-interactive sources")
+    assertThrows<IllegalArgumentException>("should reject non-interactive sources") {
       interpreter.evaluate(nonInteractiveSource, context)
     }
   }

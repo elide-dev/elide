@@ -74,11 +74,13 @@ import elide.runtime.core.PolyglotValue
     }
   }
 
-  override fun evaluate(source: Source, context: PolyglotContext): PolyglotValue {
+  override fun accepts(source: Source): Boolean {
     // binary sources (e.g. jvm bytecode) are not allowed, and only interactive (shell) mode is supported
-    require(source.isInteractive && source.hasCharacters()) {
-      "Only non-binary java sources marked as interactive may be evaluated by the Java plugin."
-    }
+    return source.isInteractive && source.hasCharacters()
+  }
+
+  override fun evaluate(source: Source, context: PolyglotContext): PolyglotValue {
+    require(accepts(source)) { "Only non-binary, interactive java sources may be evaluated by the Java plugin." }
 
     // JShell will return a list of snippet events; we need to interpret those, throwing any exceptions, etc.,
     // and then select the last event that has a non-null value; the final result is wrapped as a guest Value

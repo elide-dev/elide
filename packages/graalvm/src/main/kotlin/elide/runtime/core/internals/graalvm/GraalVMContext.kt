@@ -26,11 +26,11 @@ import elide.runtime.core.*
   private val elements: MutableMap<PolyglotContextElement<*>, Any?> = ConcurrentHashMap()
 
   private fun resolveCustomEvaluator(source: Source): GuestLanguageEvaluator? {
-    return get(GuestLanguageEvaluator.contextElementFor(source.language))
+    return get(GuestLanguageEvaluator.contextElementFor(source.language))?.takeIf { it.accepts(source) }
   }
 
   private fun resolveCustomParser(source: Source): GuestLanguageParser? {
-    return get(GuestLanguageParser.contextElementFor(source.language))
+    return get(GuestLanguageParser.contextElementFor(source.language))?.takeIf { it.accepts(source) }
   }
 
   override fun bindings(language: GuestLanguage?): PolyglotValue {

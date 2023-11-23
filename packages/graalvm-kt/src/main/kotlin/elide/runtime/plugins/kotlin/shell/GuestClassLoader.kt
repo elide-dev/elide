@@ -22,10 +22,10 @@ import elide.runtime.plugins.jvm.interop.loadGuestClass
  * A wrapper around a [PolyglotValue], used to interface with a dynamic class loader instance in a guest context. The
  * guest loader allows defining a new class by providing the bytecode.
  *
- * This wrapper is used by the [GuestKotlinScriptEvaluator] to define the compiled script classes in the guest context
+ * This wrapper is used by the [GuestScriptEvaluator] to define the compiled script classes in the guest context
  * before evaluating them.
  *
- * @see GuestKotlinScriptEvaluator
+ * @see GuestScriptEvaluator
  */
 @DelicateElideApi @JvmInline internal value class GuestClassLoader(private val delegate: PolyglotValue) {
   /** Create a new instance by resolving the guest class from a [context]. */

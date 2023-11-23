@@ -88,8 +88,12 @@ import elide.runtime.core.PolyglotValue
     )
   }
 
+  override fun accepts(source: Source): Boolean {
+    return source.hasCharacters()
+  }
+
   override fun evaluate(source: Source, context: PolyglotContext): PolyglotValue {
-    require(source.hasCharacters()) { "Only text-based sources are supported." }
+    require(accepts(source)) { "Only text-based sources are supported." }
     val sourceContents = source.characters.toString()
 
     return when (source.isInteractive) {

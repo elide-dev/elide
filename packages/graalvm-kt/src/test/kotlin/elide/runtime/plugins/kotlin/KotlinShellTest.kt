@@ -42,16 +42,24 @@ import elide.testing.annotations.Test
     )
   }
 
-  @Test fun testRejectInvalidSources() {
+  @Test fun testSourceValidation() {
     val context = configureEngine().acquire()
     val interpreter = GuestKotlinEvaluator(context)
 
-    assertThrows<IllegalArgumentException>("should reject binary sources") {
-      val binarySource =
-        Source.newBuilder(Kotlin.languageId, ByteSequence.create(ByteArray(10)), "invalid.class")
-          .interactive(true)
-          .build()
+    val validScriptSource = Source.newBuilder(Kotlin.languageId, "val a = 5", "snippet.kts").build()
+    val validInteractiveSource = Source.newBuilder(Kotlin.languageId, "val a = 5", "snippet.kts")
+      .interactive(true)
+      .build()
 
+    assertTrue(interpreter.accepts(validScriptSource), "should accept character-based non-interactive sources")
+    assertTrue(interpreter.accepts(validInteractiveSource), "should accept character-based interactive sources")
+
+    val binarySource = Source.newBuilder(Kotlin.languageId, ByteSequence.create(ByteArray(10)), "invalid.class")
+      .interactive(true)
+      .build()
+
+    assertFalse(interpreter.accepts(binarySource), message = "should not accept binary sources")
+    assertThrows<IllegalArgumentException>("should reject binary sources") {
       interpreter.evaluate(binarySource, context)
     }
   }

@@ -14,10 +14,12 @@
 package elide.runtime.core
 
 import org.graalvm.polyglot.PolyglotException
+import org.graalvm.polyglot.Source
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @OptIn(DelicateElideApi::class)
@@ -95,31 +97,45 @@ internal class ContextTest {
     val context = PolyglotEngine { enableLanguage(JavaScript) }.acquire()
 
     var called = false
-    val evaluator = GuestLanguageEvaluator { _, _ ->
-      // do nothing
-      called = true
-      PolyglotValue.asValue(Unit)
+    val evaluator = object : GuestLanguageEvaluator {
+      override fun accepts(source: Source): Boolean {
+        return !called
+      }
+
+      override fun evaluate(source: Source, context: PolyglotContext): PolyglotValue {
+        assertFalse(called, "should not use custom evaluator after `accepts` returns false")
+        return PolyglotValue.asValue(Unit).also { called = true }
+      }
     }
 
     context[GuestLanguageEvaluator.contextElementFor(JavaScript)] = evaluator
     context.evaluate(JavaScript, "throw new Error('should not evaluate')")
-
     assertTrue(called, "expected custom evaluator to be called")
+
+    // verify the evaluator is not called when "accepts" returns false
+    context.evaluate(JavaScript, "(() => 5)()")
   }
 
   @Test fun testCustomParser() {
     val context = PolyglotEngine { enableLanguage(JavaScript) }.acquire()
 
     var called = false
-    val parser = GuestLanguageParser { _, _ ->
-      // do nothing
-      called = true
-      PolyglotValue.asValue(Unit)
+    val parser = object : GuestLanguageParser {
+      override fun accepts(source: Source): Boolean {
+        return !called
+      }
+
+      override fun parse(source: Source, context: PolyglotContext): PolyglotValue {
+        assertFalse(called, "should not use custom parser after `accepts` returns false")
+        return PolyglotValue.asValue(Unit).also { called = true }
+      }
     }
 
     context[GuestLanguageParser.contextElementFor(JavaScript)] = parser
     context.parse(JavaScript, "invalid javascript (should not parse)")
-
     assertTrue(called, "expected custom parser to be called")
+
+    // verify the evaluator is not called when "accepts" returns false
+    context.parse(JavaScript, "() => 5")
   }
 }

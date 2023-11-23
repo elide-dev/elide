@@ -14,7 +14,6 @@
 package elide.runtime.core
 
 import org.graalvm.polyglot.Source
-import elide.runtime.core.GuestLanguageEvaluator.Companion.contextElementFor
 
 /**
  * Represents a language supported by a [PolyglotContext], providing a key for identification of guest bindings and
@@ -38,7 +37,10 @@ import elide.runtime.core.GuestLanguageEvaluator.Companion.contextElementFor
  * @see GuestLanguageEvaluator.contextElementFor
  * @see GuestLanguageParser
  */
-@DelicateElideApi public fun interface GuestLanguageEvaluator {
+@DelicateElideApi public interface GuestLanguageEvaluator {
+  /** Analyzes the given [source] and returns whether it can be used with this evaluator. */
+  public fun accepts(source: Source): Boolean = true
+
   /** Evaluate a [source] in the given [context], returning the result. */
   public fun evaluate(source: Source, context: PolyglotContext): PolyglotValue
 
@@ -82,7 +84,10 @@ import elide.runtime.core.GuestLanguageEvaluator.Companion.contextElementFor
  * @see GuestLanguageParser.contextElementFor
  * @see GuestLanguageEvaluator
  */
-@DelicateElideApi public fun interface GuestLanguageParser {
+@DelicateElideApi public interface GuestLanguageParser {
+  /** Analyzes the given [source] and returns whether it can be used with this parser. */
+  public fun accepts(source: Source): Boolean = true
+
   /** Parse a [source] in the given [context] without evaluating it, returning an executable [PolyglotValue]. */
   public fun parse(source: Source, context: PolyglotContext): PolyglotValue
 

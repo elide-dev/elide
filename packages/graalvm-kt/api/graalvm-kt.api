@@ -1,3 +1,11 @@
+public final class elide/runtime/plugins/kotlin/ExtensionsKt {
+	public static final fun kotlin (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun kotlin$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+	public static final fun kotlinScript (Lelide/runtime/core/PolyglotContext;Ljava/io/File;)Lorg/graalvm/polyglot/Value;
+	public static final fun kotlinScript (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun kotlinScript$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+}
+
 public final class elide/runtime/plugins/kotlin/Kotlin {
 	public static final field Plugin Lelide/runtime/plugins/kotlin/Kotlin$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/kotlin/KotlinConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -12,10 +20,5 @@ public final class elide/runtime/plugins/kotlin/Kotlin$Plugin : elide/runtime/pl
 }
 
 public final class elide/runtime/plugins/kotlin/KotlinConfig : elide/runtime/plugins/AbstractLanguageConfig {
-}
-
-public final class elide/runtime/plugins/kotlin/shell/GuestKotlinInterpreter {
-	public fun <init> (Lelide/runtime/core/PolyglotContext;)V
-	public final fun evaluate (Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
 }
 

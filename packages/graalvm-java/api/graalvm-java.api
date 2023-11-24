@@ -1,19 +1,20 @@
+public final class elide/runtime/plugins/java/ExtensionsKt {
+	public static final fun java (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun java$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+}
+
 public final class elide/runtime/plugins/java/Java {
 	public static final field Plugin Lelide/runtime/plugins/java/Java$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/java/JavaConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
-public final class elide/runtime/plugins/java/Java$Plugin : elide/runtime/core/EnginePlugin {
+public final class elide/runtime/plugins/java/Java$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
 	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun getLanguageId ()Ljava/lang/String;
 	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/java/Java;
 	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
 public final class elide/runtime/plugins/java/JavaConfig {
-}
-
-public final class elide/runtime/plugins/java/shell/GuestJavaInterpreter {
-	public fun <init> (Lelide/runtime/core/PolyglotContext;)V
-	public final fun evaluate (Ljava/lang/String;)Ljava/lang/String;
 }
 

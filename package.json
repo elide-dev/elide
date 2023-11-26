@@ -2,7 +2,6 @@
   "name": "@elide-dev/framework",
   "version": "1.0.0-alpha7",
   "private": true,
-  "packageManager": "yarn@3.2.1",
   "lint-staged": {
     "packages/*": "npx prettier --write --ignore-unknown"
   },

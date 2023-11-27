@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.kotlin
 
+import kotlin.io.path.*
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
@@ -50,26 +51,53 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
     override val languageId: String = KOTLIN_LANGUAGE_ID
     override val key: Key<Kotlin> = Key(KOTLIN_PLUGIN_ID)
 
-    private fun resolveGuestClasspathEntries(manifest: LanguagePluginManifest): List<String> {
-      return manifest.resources[GUEST_CLASSPATH_KEY]?.map {
-        Kotlin::class.java.getResource("${manifest.root}/$it")?.toString() ?: error(
-          "Failed to resolve embedded classpath element: $it",
-        )
-      } ?: emptyList()
+    /**
+     * Resolve all guest classpath entries from application resources, extracting them as needed into the root specified
+     * in the plugin [config]. If an entry is already present in the root it will be reused.
+     *
+     * @return The list of classpath entries after extraction.
+     */
+    private fun resolveOrExtractGuestClasspath(config: KotlinConfig, manifest: LanguagePluginManifest): List<String> {
+      return runCatching {
+        val entries = manifest.resources[GUEST_CLASSPATH_KEY] ?: return emptyList()
+        val root = Path(config.guestClasspathRoot)
+
+        entries.map { entry ->
+          val output = root.resolve(entry)
+
+          // reuse entry if already extracted
+          if (output.exists()) return@map output.absolutePathString()
+          output.createParentDirectories()
+          output.createFile()
+
+          val resource = Kotlin::class.java.getResource("${manifest.root}/$entry")
+            ?: error("Resource missing for classpath entry $entry")
+
+          // extract the JAR from the resources
+          resource.openStream().use { source ->
+            output.outputStream().use { dest ->
+              source.transferTo(dest)
+            }
+          }
+
+          output.absolutePathString()
+        }
+      }.getOrElse { cause ->
+        throw IllegalStateException("Failed to prepare guest Kotlin classpath", cause)
+      }
     }
 
     override fun install(scope: InstallationScope, configuration: KotlinConfig.() -> Unit): Kotlin {
+      val config = KotlinConfig().apply(configuration)
       val resources = resolveEmbeddedManifest(scope)
 
-      // apply the JVM plugin first, and register the custom classpath entries
+      // apply the JVM plugin and register the custom classpath entries
       scope.configuration.getOrInstall(Jvm).config.apply {
-        classpath(resolveGuestClasspathEntries(resources))
+        classpath(resolveOrExtractGuestClasspath(config, resources))
       }
 
-      // apply the configuration and create the plugin instance
-      val config = KotlinConfig().apply(configuration)
+      // apply the configuration and register events
       val instance = Kotlin(config)
-      
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
       // register resources with the VFS

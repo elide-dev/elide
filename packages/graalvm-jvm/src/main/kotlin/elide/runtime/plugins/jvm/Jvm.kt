@@ -22,6 +22,7 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
+import elide.runtime.core.extensions.setOption
 import elide.runtime.plugins.AbstractLanguagePlugin
 
 /**
@@ -48,7 +49,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin
       "java.CHA",
       "java.HotSwapAPI",
       "java.InlineMethodHandle",
-      "java.MultiThreaded",
       "java.Polyglot",
       "java.SoftExit",
       "java.SplitMethodHandles",
@@ -62,6 +62,9 @@ import elide.runtime.plugins.AbstractLanguagePlugin
 
     // guest classpath
     builder.option("java.Classpath", config.collectClasspath())
+
+    // threading
+    builder.setOption("java.MultiThreaded", config.multithreading)
   }
 
   public companion object Plugin : AbstractLanguagePlugin<JvmConfig, Jvm>() {

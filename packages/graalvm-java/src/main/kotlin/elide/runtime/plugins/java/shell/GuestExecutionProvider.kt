@@ -52,7 +52,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
   private val byteArray by context.guestClass("[B")
 
   // cached guest exception classes
-  private val executionControlException by context.spiClass("ExecutionControlException")
+  private val executionControlException by context.executionControlClass("ExecutionControlException")
   private val classInstallException by context.executionControlClass("ClassInstallException")
   private val notImplementedException by context.executionControlClass("NotImplementedException")
   private val engineTerminationException by context.executionControlClass("EngineTerminationException")

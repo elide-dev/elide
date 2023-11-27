@@ -77,8 +77,6 @@ import elide.runtime.plugins.env.EnvConfig.EnvVar
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.*
 import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.js.JavaScript
-import elide.runtime.plugins.jvm.Jvm
-import elide.runtime.plugins.kotlin.Kotlin
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
@@ -1550,22 +1548,28 @@ import elide.tool.project.ProjectManager
       logging.debug("Configuring Python VM")
       installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
     }
-//    install(elide.runtime.plugins.ruby.Ruby) {
-//      logging.debug("Configuring Ruby VM")
-//      installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-//    }
+    install(elide.runtime.plugins.ruby.Ruby) {
+      logging.debug("Configuring Ruby VM")
+      installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+    }
 
     (language ?: LanguageSelector()).resolve().forEach { lang ->
       when (lang) {
         // Secondary Engines: JVM
-        JVM -> install(Jvm) {
-          logging.debug("Configuring JVM")
-          installIntrinsics(intrinsics, GraalVMGuest.JVM, versionProp)
+        JVM -> {
+          install(elide.runtime.plugins.jvm.Jvm) {
+            logging.debug("Configuring JVM")
+            multithreading = false
+          }
+
+          install(elide.runtime.plugins.java.Java) {
+            logging.debug("Configuring Java")
+          }
         }
 
         GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
 
-        KOTLIN -> install(Kotlin) {
+        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
           val classpathDir = workdir.cacheDirectory()
             .resolve("elide-kotlin-runtime")
             .absolutePath

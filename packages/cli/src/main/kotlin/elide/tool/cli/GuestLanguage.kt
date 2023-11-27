@@ -69,6 +69,16 @@ enum class GuestLanguage (
     formalName = "JVM",
     experimental = true,
     unimplemented = true,
+    extensions = listOf("class"),
+    mimeTypes = emptyList(),
+  ),
+
+  /** Interactive nested Java. */
+  JAVA (
+    id = "java",
+    formalName = "JVM",
+    experimental = true,
+    unimplemented = true,
     extensions = listOf("java"),
     mimeTypes = emptyList(),
   ),
@@ -139,6 +149,7 @@ enum class GuestLanguage (
 
       // JVM extension guests
       KOTLIN.id -> KOTLIN
+      JAVA.id -> JAVA
       GROOVY.id -> GROOVY
       else -> null
     }

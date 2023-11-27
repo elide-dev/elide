@@ -46,6 +46,8 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     override val key: Key<LLVM> = Key(LLVM_PLUGIN_ID)
     
     override fun install(scope: InstallationScope, configuration: LLVMConfig.() -> Unit): LLVM {
+      configureLanguageSupport(scope)
+
       // apply the configuration and create the plugin instance
       val config = LLVMConfig().apply(configuration)
       val resources = resolveEmbeddedManifest(scope, lenient = true)

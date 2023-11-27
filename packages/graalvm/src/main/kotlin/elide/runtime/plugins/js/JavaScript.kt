@@ -148,6 +148,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
+      configureLanguageSupport(scope)
+
       // resolve the env plugin (if present, otherwise ignore silently)
       val env = scope.configuration.plugin(Environment)
 

@@ -84,6 +84,16 @@ import elide.runtime.plugins.vfs.include
   }
 
   /**
+   * Configure the [scope] to enable support for this guest language. This method will automatically call
+   * [PolyglotEngineConfiguration.enableLanguage].
+   *
+   * @param scope The installation scope during an [install] call.
+   */
+  protected fun configureLanguageSupport(scope: InstallationScope) {
+    scope.configuration.enableLanguage(this)
+  }
+
+  /**
    * Resolve and deserialize the runtime manifest for this plugin from resources. Any embedded resources listed in the
    * manifest are filtered to match the current platform information provided in the [scope].
    *

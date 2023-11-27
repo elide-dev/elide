@@ -19,9 +19,20 @@ import elide.runtime.plugins.AbstractLanguageConfig
 
 /** Configuration for the [Kotlin] plugin. */
 @DelicateElideApi public class KotlinConfig internal constructor() : AbstractLanguageConfig() {
-  /** Apply init-time settings to a new [context]. */
-  internal fun applyTo(context: PolyglotContext) {
-    // register intrinsics
-    applyBindings(context, Kotlin)
+  /**
+   * Sets the directory where custom classpath entries required for the guest context are located. The plugin will
+   * extract the classpath entries if they are not present at the specified path.
+   *
+   * This path should typically be temporary (such as a /tmp directory on Unix) to avoid unintentional residues of
+   * after the application finishes executing. A reasonable platform-specific default value will be used if this
+   * property is not explicitly set.
+   */
+  public var guestClasspathRoot: String = defaultClasspathRoot()
+
+  private companion object {
+    /** Resolve a platform-specific temporary directory used to extract guest classpath entries. */
+    private fun defaultClasspathRoot(): String {
+      return "${System.getProperty("java.io.tmpdir")}/elide-runtime-kt/classpath"
+    }
   }
 }

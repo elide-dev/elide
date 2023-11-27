@@ -4,6 +4,7 @@ import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.io.ByteSequence
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -14,9 +15,14 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.testing.annotations.Test
 
 @OptIn(DelicateElideApi::class) class KotlinShellTest {
+  /** Temporary classpath root used for guest JARs. */
+  @TempDir lateinit var tempClasspathRoot: File
+
   /** Acquire a [PolyglotEngine] configured with the [Kotlin] plugin. */
   private fun configureEngine() = PolyglotEngine {
-    install(Kotlin)
+    install(Kotlin) {
+      guestClasspathRoot = tempClasspathRoot.absolutePath
+    }
   }
 
   @Test fun testKotlinInterpreter() {

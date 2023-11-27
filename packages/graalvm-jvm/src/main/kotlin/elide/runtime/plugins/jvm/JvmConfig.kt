@@ -28,6 +28,14 @@ import elide.runtime.plugins.AbstractLanguageConfig
   /** Collection of classpath entries passed to Espresso. */
   private val classpathEntries: MutableList<String> = mutableListOf()
 
+  /**
+   * Toggle support for multiple threads in the guest context.
+   *
+   * When using a context where [Jvm] is installed along other languages that don't support threading, this option
+   * should be disabled to avoid integration issues.
+   */
+  public var multithreading: Boolean = true
+
   /** Returns a string representation of the classpath to be used by the guest Espresso JVM. */
   internal fun collectClasspath(): String {
     return classpathEntries.joinToString(CLASSPATH_ENTRY_SEPARATOR)

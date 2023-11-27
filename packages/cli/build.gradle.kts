@@ -298,10 +298,11 @@ dependencies {
   }
 
   runtimeIf(enableEspresso, projects.packages.graalvmJvm)
+  runtimeIf(enableEspresso, projects.packages.graalvmJava)
+  runtimeIf(enableEspresso, projects.packages.graalvmKt)
   runtimeIf(enableLlvm, projects.packages.graalvmLlvm)
   runtimeIf(enablePython, projects.packages.graalvmPy)
   runtimeIf(enableRuby, projects.packages.graalvmRb)
-  runtimeIf(enableEspresso, projects.packages.graalvmKt)
   runtimeIf(enableWasm, projects.packages.graalvmWasm)
 
   api(libs.picocli)

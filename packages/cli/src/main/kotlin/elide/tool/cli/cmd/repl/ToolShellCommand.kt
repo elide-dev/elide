@@ -78,7 +78,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.*
 import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.jvm.Jvm
-import elide.runtime.plugins.python.Python
+import elide.runtime.plugins.kotlin.Kotlin
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
@@ -1564,7 +1564,16 @@ import elide.tool.project.ProjectManager
         }
 
         GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
-        KOTLIN -> logging.warn("Kotlin runtime plugin is not yet implemented")
+
+        KOTLIN -> install(Kotlin) {
+          val classpathDir = workdir.cacheDirectory()
+            .resolve("elide-kotlin-runtime")
+            .absolutePath
+
+          logging.debug("Configuring Kotlin with classpath root $classpathDir")
+          guestClasspathRoot = classpathDir
+        }
+
         SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
         else -> {}
       }

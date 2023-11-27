@@ -76,7 +76,6 @@ enum class GuestLanguage (
   /** Interactive nested JVM with Kotlin support. */
   KOTLIN (
     id = "kt",
-    engine = ENGINE_JVM,
     formalName = "Kotlin",
     experimental = true,
     unimplemented = true,

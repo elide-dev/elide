@@ -74,6 +74,8 @@ import elide.runtime.plugins.llvm.LLVM
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: PythonConfig.() -> Unit): Python {
+      configureLanguageSupport(scope)
+
       // apply the llvm plugin first
       scope.configuration.getOrInstall(LLVM)
 

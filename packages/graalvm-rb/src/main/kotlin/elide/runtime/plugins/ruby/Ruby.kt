@@ -73,6 +73,8 @@ import elide.runtime.plugins.llvm.LLVM
     override val key: Key<Ruby> = Key(RUBY_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: RubyConfig.() -> Unit): Ruby {
+      configureLanguageSupport(scope)
+
       // apply the llvm plugin first
       scope.configuration.getOrInstall(LLVM)
 

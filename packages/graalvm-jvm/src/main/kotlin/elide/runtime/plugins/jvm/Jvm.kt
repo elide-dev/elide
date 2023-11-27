@@ -74,6 +74,8 @@ import elide.runtime.plugins.AbstractLanguagePlugin
     override val key: Key<Jvm> = Key(JVM_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: JvmConfig.() -> Unit): Jvm {
+      configureLanguageSupport(scope)
+
       // apply the configuration and create the plugin instance
       val config = JvmConfig().apply(configuration)
       val resources = resolveEmbeddedManifest(scope)

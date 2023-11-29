@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import elide.internal.conventions.elide
 import elide.internal.conventions.kotlin.KotlinTarget
 import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.gradle.tasks.KaptGenerateStubs
 import java.io.Writer
 
 plugins {
@@ -198,12 +199,12 @@ val ktCompilerArgs = listOf(
   "-opt-in=elide.runtime.core.DelicateElideApi",
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta2",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.21",
 )
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
   if (enableJpms) modularity.inferModulePath = true
 }
 
@@ -227,11 +228,16 @@ kapt {
   correctErrorTypes = true
 }
 
+tasks.withType(KaptGenerateStubs::class) {
+  kotlinOptions.jvmTarget = "21"
+}
+
 kotlin {
   target.compilations.all {
     kotlinOptions {
       allWarningsAsErrors = false
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+      jvmTarget = "21"
     }
   }
 }

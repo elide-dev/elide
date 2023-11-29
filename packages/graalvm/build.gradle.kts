@@ -80,8 +80,6 @@ group = "dev.elide"
 version = rootProject.version as String
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
   if (enableJpms) modularity.inferModulePath = true
 }
 

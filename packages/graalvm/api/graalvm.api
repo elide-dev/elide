@@ -2188,6 +2188,7 @@ public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runtime/core/EnginePlugin, elide/runtime/core/GuestLanguage {
 	protected static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$Companion;
 	public fun <init> ()V
+	protected final fun configureLanguageSupport (Lelide/runtime/core/EnginePlugin$InstallationScope;)V
 	protected fun getManifestKey ()Ljava/lang/String;
 	protected final fun initializeEmbeddedScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	protected final fun installEmbeddedBundles (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V

@@ -20,5 +20,7 @@ public final class elide/runtime/plugins/kotlin/Kotlin$Plugin : elide/runtime/pl
 }
 
 public final class elide/runtime/plugins/kotlin/KotlinConfig : elide/runtime/plugins/AbstractLanguageConfig {
+	public final fun getGuestClasspathRoot ()Ljava/lang/String;
+	public final fun setGuestClasspathRoot (Ljava/lang/String;)V
 }
 

@@ -40,7 +40,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
@@ -146,7 +146,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
@@ -257,7 +257,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
@@ -408,7 +408,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
@@ -531,7 +531,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
@@ -663,7 +663,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
@@ -752,7 +752,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
@@ -864,7 +864,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "native-image,js,wasm,ruby,python,llvm"
+          components: "native-image,js,wasm,ruby,python,llvm,espresso"
           distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true

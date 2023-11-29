@@ -15,8 +15,6 @@
   "UnstableApiUsage",
 )
 
-import build.less.plugin.settings.buildless
-
 pluginManagement {
   repositories {
     maven("https://gradle.pkg.st/")
@@ -30,7 +28,7 @@ pluginManagement {
 }
 
 plugins {
-  id("build.less") version("1.0.0-beta1")
+  id("build.less") version("1.0.0-beta6")
   id("com.gradle.enterprise") version("3.15")
   id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version("1.11.1")
@@ -196,7 +194,7 @@ val cachePush: String? by settings
 buildless {
   remoteCache {
     // allow disabling pushing to the remote cache
-    push = cachePush?.toBooleanStrictOrNull() ?: true
+    push.set(cachePush?.toBooleanStrictOrNull() ?: true)
   }
 }
 

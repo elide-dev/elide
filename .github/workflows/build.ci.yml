@@ -37,6 +37,8 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - name: "Setup: Buildless"
+        uses: buildless/setup@e51979b463df4f1b4483420d9a97f78d8f46dd36 # v1
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:

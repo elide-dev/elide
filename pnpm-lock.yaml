@@ -34,8 +34,8 @@ importers:
         specifier: 18.2.0
         version: registry.npmjs.org/react-dom@18.2.0(react@18.2.0)
       typescript:
-        specifier: 4.9.5
-        version: registry.npmjs.org/typescript@4.9.5
+        specifier: 5.3.2
+        version: 5.3.2
       web-streams-polyfill:
         specifier: 3.2.1
         version: 3.2.1
@@ -638,6 +638,12 @@ packages:
   /tslib@2.6.0:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
     dev: true
+
+  /typescript@5.3.2:
+    resolution: {integrity: sha512-6l+RyNy7oAHDfxC4FzSJcz9vnjTKxrLpDG5M2Vu4SHRVNg6xzqZp6LYSR9zjqQTu8DU/f5xwxUdADOkbrIX2gQ==, tarball: https://registry.npmjs.org/typescript/-/typescript-5.3.2.tgz}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: false
 
   /web-streams-polyfill@3.2.1:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}
@@ -4472,14 +4478,6 @@ packages:
     dependencies:
       media-typer: registry.npmjs.org/media-typer@0.3.0
       mime-types: registry.npmjs.org/mime-types@2.1.35
-    dev: false
-
-  registry.npmjs.org/typescript@4.9.5:
-    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/typescript/-/typescript-4.9.5.tgz}
-    name: typescript
-    version: 4.9.5
-    engines: {node: '>=4.2.0'}
-    hasBin: true
     dev: false
 
   registry.npmjs.org/unified@10.1.2:

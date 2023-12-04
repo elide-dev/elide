@@ -64,7 +64,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@0a27862568a8481fbfd3e2ce38c6445e34c0bed4 # v1.1.4
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         if: ${{ matrix.engine == 'graalvm' }}
         with:
           components: "native-image,js,wasm"

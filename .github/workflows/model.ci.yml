@@ -32,7 +32,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@eb60cd0de4f14f1f57cf346916b8cd69a9e7ed0b # v1.26.1
+        uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
         with:
           github_token: ${{ github.token }}
       - name: "Check: Buf Lint"
@@ -60,7 +60,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@eb60cd0de4f14f1f57cf346916b8cd69a9e7ed0b # v1.26.1
+        uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
         with:
           github_token: ${{ github.token }}
       - name: "Check: Buf Breaking"
@@ -96,7 +96,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@eb60cd0de4f14f1f57cf346916b8cd69a9e7ed0b # v1.26.1
+        uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
         with:
           github_token: ${{ github.token }}
       - name: "Push: BSR"

@@ -2,7 +2,7 @@
     "name": "@elide-dev/gradle-plugin",
     "version": "1.0.0-beta23",
     "dependencies": {
-        "esbuild": "0.19.3"
+        "esbuild": "0.19.8"
     },
     "devDependencies": {
         "@mdx-js/esbuild": "2.3.0"

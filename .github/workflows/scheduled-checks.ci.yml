@@ -148,7 +148,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: GraalVM (Java 20)"
-        uses: graalvm/setup-graalvm@0a27862568a8481fbfd3e2ce38c6445e34c0bed4 # v1.1.4
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           components: "native-image,js,wasm"
           distribution: 'graalvm'

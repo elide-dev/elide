@@ -38,7 +38,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buildless"
-        uses: buildless/setup@e51979b463df4f1b4483420d9a97f78d8f46dd36 # v1
+        uses: buildless/setup@v1.0.1
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
@@ -163,6 +163,9 @@ jobs:
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: 'false'
+      - name: "Setup: Buildless"
+        if: contains(matrix.machine, 'macos') == false
+        uses: buildless/setup@v1.0.1
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
@@ -282,6 +285,8 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
+      - name: "Setup: Buildless"
+        uses: buildless/setup@v1.0.1
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
@@ -425,6 +430,8 @@ jobs:
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: 'false'
+      - name: "Setup: Buildless"
+        uses: buildless/setup@v1.0.1
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@67e9c72af6e0492df856527b474995862b7b6591 # v2.0.0
@@ -524,6 +531,9 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
+      - name: "Setup: Buildless"
+        if: contains(matrix.runner, 'macos') == false
+        uses: buildless/setup@v1.0.1
       - name: "Setup: MSVC"
         if: contains(matrix.runner, 'windows')
         uses: ilammy/msvc-dev-cmd@cec98b9d092141f74527d0afa6feb2af698cfe89 # v1.12.1
@@ -649,6 +659,9 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: "Setup: Buildless"
+        if: contains(matrix.runner, 'macos') == false
+        uses: buildless/setup@v1.0.1
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@67e9c72af6e0492df856527b474995862b7b6591 # v2.0.0
@@ -751,6 +764,8 @@ jobs:
         uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           egress-policy: audit
+      - name: "Setup: Buildless"
+        uses: buildless/setup@v1.0.1
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
@@ -863,6 +878,8 @@ jobs:
         uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           egress-policy: audit
+      - name: "Setup: Buildless"
+        uses: buildless/setup@v1.0.1
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:

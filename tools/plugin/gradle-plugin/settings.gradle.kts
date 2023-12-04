@@ -11,8 +11,6 @@
  *  License for the specific language governing permissions and limitations under the License.
  */
 
-import build.less.plugin.settings.buildless
-
 pluginManagement {
     repositories {
         maven("https://maven.pkg.st/")
@@ -23,7 +21,7 @@ pluginManagement {
 }
 
 plugins {
-    id("build.less") version("1.0.0-beta1")
+    id("build.less") version("1.0.0-beta8")
     id("com.gradle.enterprise") version("3.15")
     id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
 }
@@ -48,10 +46,6 @@ gradleEnterprise {
         termsOfServiceUrl = "https://gradle.com/terms-of-service"
         termsOfServiceAgree = "yes"
     }
-}
-
-buildless {
-    // nothing at this time
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")

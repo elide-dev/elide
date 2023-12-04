@@ -15,8 +15,6 @@
   "UnstableApiUsage",
 )
 
-import build.less.plugin.settings.buildless
-
 pluginManagement {
   repositories {
     maven("https://gradle.pkg.st/")
@@ -27,7 +25,7 @@ pluginManagement {
 }
 
 plugins {
-  id("build.less") version("1.0.0-beta1")
+  id("build.less") version("1.0.0-beta8")
   id("com.gradle.enterprise") version("3.14.1")
 }
 
@@ -51,10 +49,6 @@ gradleEnterprise {
     termsOfServiceUrl = "https://gradle.com/terms-of-service"
     termsOfServiceAgree = "yes"
   }
-}
-
-buildless {
-  // nothing to configure at this time
 }
 
 include(

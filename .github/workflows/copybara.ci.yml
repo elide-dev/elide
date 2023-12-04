@@ -25,7 +25,7 @@ jobs:
           egress-policy: audit
 
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3
       - name: "Migrate: Protocol"
         uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
         with:
@@ -58,7 +58,7 @@ jobs:
           egress-policy: audit
 
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3
       - name: "Migrate: Cluster"
         uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
         with:

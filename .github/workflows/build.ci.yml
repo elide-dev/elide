@@ -36,7 +36,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buildless"
         uses: buildless/setup@e51979b463df4f1b4483420d9a97f78d8f46dd36 # v1
       - name: "Setup: GraalVM (Java 20)"
@@ -144,7 +144,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
@@ -253,7 +253,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
       - name: "Setup: GraalVM (Java 20)"
@@ -406,7 +406,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
@@ -515,7 +515,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
@@ -648,7 +648,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
@@ -777,7 +777,7 @@ jobs:
         with:
           install: true
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Node"
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
@@ -889,7 +889,7 @@ jobs:
         with:
           install: true
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Node"
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:

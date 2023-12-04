@@ -85,7 +85,7 @@ jobs:
           egress-policy: audit
 
       - name: "Setup: Checkout"
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Fly"
         uses: superfly/flyctl-actions/setup-flyctl@5e0688e3d0586e2cad2288e6c49c3e9bedac39e5 # master
       - name: "Deploy: Fly (${{ inputs.environment }})"

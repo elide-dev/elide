@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@mdx-js/esbuild": "2.3.0",
-    "@types/google-protobuf": "3.15.6",
+    "@types/google-protobuf": "3.15.12",
     "esbuild": "0.18.17",
     "husky": "8.0.3",
     "lint-staged": "14.0.1",

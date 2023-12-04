@@ -44,8 +44,8 @@ importers:
         specifier: 2.3.0
         version: registry.npmjs.org/@mdx-js/esbuild@2.3.0(esbuild@0.18.17)
       '@types/google-protobuf':
-        specifier: 3.15.6
-        version: 3.15.6
+        specifier: 3.15.12
+        version: 3.15.12
       esbuild:
         specifier: 0.18.17
         version: registry.npmjs.org/esbuild@0.18.17
@@ -521,8 +521,8 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@types/google-protobuf@3.15.6:
-    resolution: {integrity: sha512-pYVNNJ+winC4aek+lZp93sIKxnXt5qMkuKmaqS3WGuTq0Bw1ZDYNBgzG5kkdtwcv+GmYJGo3yEg6z2cKKAiEdw==}
+  /@types/google-protobuf@3.15.12:
+    resolution: {integrity: sha512-40um9QqwHjRS92qnOaDpL7RmDK15NuZYo9HihiJRbYkMQZlWnuH8AdvbMy8/o6lgLmKbDUKa+OALCltHdbOTpQ==, tarball: https://registry.npmjs.org/@types/google-protobuf/-/google-protobuf-3.15.12.tgz}
     dev: true
 
   /dot-properties@1.0.1:

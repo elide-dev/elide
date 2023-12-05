@@ -38,7 +38,7 @@
     "web-streams-polyfill": "3.2.1"
   },
   "devDependencies": {
-    "@mdx-js/esbuild": "2.3.0",
+    "@mdx-js/esbuild": "3.0.0",
     "@types/google-protobuf": "3.15.12",
     "esbuild": "0.18.17",
     "husky": "8.0.3",

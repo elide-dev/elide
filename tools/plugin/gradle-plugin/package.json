@@ -5,6 +5,6 @@
         "esbuild": "0.19.3"
     },
     "devDependencies": {
-        "@mdx-js/esbuild": "2.3.0"
+        "@mdx-js/esbuild": "3.0.0"
     }
 }

@@ -15,8 +15,6 @@
   "UnstableApiUsage",
 )
 
-import build.less.plugin.settings.buildless
-
 pluginManagement {
   repositories {
     maven("https://gradle.pkg.st/")
@@ -43,8 +41,5 @@ dependencyResolutionManagement {
   }
 }
 
-buildless {
-  // nothing to configure at this time
-}
-
 rootProject.name = "substrateBuild"
+

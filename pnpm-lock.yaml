@@ -59,8 +59,8 @@ importers:
         specifier: 10.1.0
         version: registry.npmjs.org/postcss-cli@10.1.0(postcss@8.4.32)
       prettier:
-        specifier: 3.0.3
-        version: registry.npmjs.org/prettier@3.0.3
+        specifier: 3.1.0
+        version: 3.1.0
       prettier-plugin-java:
         specifier: 2.3.1
         version: registry.npmjs.org/prettier-plugin-java@2.3.1
@@ -69,10 +69,10 @@ importers:
         version: 0.2.0
       prettier-plugin-sh:
         specifier: 0.13.1
-        version: 0.13.1(prettier@3.0.3)
+        version: 0.13.1(prettier@3.1.0)
       prettier-plugin-toml:
         specifier: 1.0.0
-        version: registry.npmjs.org/prettier-plugin-toml@1.0.0(prettier@3.0.3)
+        version: registry.npmjs.org/prettier-plugin-toml@1.0.0(prettier@3.1.0)
       readable-stream:
         specifier: 4.4.2
         version: registry.npmjs.org/readable-stream@4.4.2
@@ -1653,15 +1653,27 @@ packages:
       dot-properties: 1.0.1
     dev: true
 
-  /prettier-plugin-sh@0.13.1(prettier@3.0.3):
+  /prettier-plugin-sh@0.13.1(prettier@3.1.0):
     resolution: {integrity: sha512-ytMcl1qK4s4BOFGvsc9b0+k9dYECal7U29bL/ke08FEUsF/JLN0j6Peo0wUkFDG4y2UHLMhvpyd6Sd3zDXe/eg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       prettier: ^3.0.0
     dependencies:
       mvdan-sh: 0.10.1
-      prettier: registry.npmjs.org/prettier@3.0.3
+      prettier: 3.1.0
       sh-syntax: 0.4.1
+    dev: true
+
+  /prettier@3.0.3:
+    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==, tarball: https://registry.npmjs.org/prettier/-/prettier-3.0.3.tgz}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
+
+  /prettier@3.1.0:
+    resolution: {integrity: sha512-TQLvXjq5IAibjh8EpBIkNKxO749UEWABoiIZehEPiY4GNpVdhaFKqSTu+QrlU6D2dPAfubRmtJTi4K4YkQ5eXw==, tarball: https://registry.npmjs.org/prettier/-/prettier-3.1.0.tgz}
+    engines: {node: '>=14'}
+    hasBin: true
     dev: true
 
   /property-information@6.2.0:
@@ -4580,10 +4592,10 @@ packages:
     dependencies:
       java-parser: registry.npmjs.org/java-parser@2.0.5
       lodash: registry.npmjs.org/lodash@4.17.21
-      prettier: registry.npmjs.org/prettier@3.0.3
+      prettier: 3.0.3
     dev: true
 
-  registry.npmjs.org/prettier-plugin-toml@1.0.0(prettier@3.0.3):
+  registry.npmjs.org/prettier-plugin-toml@1.0.0(prettier@3.1.0):
     resolution: {integrity: sha512-YMn4Fqy/ANHommZh61s5qqtpfcgPB00Ty890bFPr73B0HAy77zgyH89SvAK+NyPPx3AdM56a4Yo66LH9GPnuZw==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/prettier-plugin-toml/-/prettier-plugin-toml-1.0.0.tgz}
     id: registry.npmjs.org/prettier-plugin-toml/1.0.0
     name: prettier-plugin-toml
@@ -4593,15 +4605,7 @@ packages:
     dependencies:
       '@toml-tools/lexer': registry.npmjs.org/@toml-tools/lexer@1.0.0
       '@toml-tools/parser': registry.npmjs.org/@toml-tools/parser@1.0.0
-      prettier: registry.npmjs.org/prettier@3.0.3
-    dev: true
-
-  registry.npmjs.org/prettier@3.0.3:
-    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/prettier/-/prettier-3.0.3.tgz}
-    name: prettier
-    version: 3.0.3
-    engines: {node: '>=14'}
-    hasBin: true
+      prettier: 3.1.0
     dev: true
 
   registry.npmjs.org/pretty-hrtime@1.0.3:

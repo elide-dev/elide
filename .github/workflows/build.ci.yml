@@ -38,7 +38,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
@@ -165,7 +165,7 @@ jobs:
           set-java-home: 'false'
       - name: "Setup: Buildless"
         if: contains(matrix.machine, 'macos') == false
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
@@ -286,7 +286,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
@@ -431,7 +431,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: 'false'
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@67e9c72af6e0492df856527b474995862b7b6591 # v2.0.0
@@ -533,7 +533,7 @@ jobs:
           cleanup_credentials: true
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - name: "Setup: MSVC"
         if: contains(matrix.runner, 'windows')
         uses: ilammy/msvc-dev-cmd@cec98b9d092141f74527d0afa6feb2af698cfe89 # v1.12.1
@@ -661,7 +661,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@67e9c72af6e0492df856527b474995862b7b6591 # v2.0.0
@@ -765,7 +765,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
@@ -879,7 +879,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.1
+        uses: buildless/setup@v1.0.2
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:

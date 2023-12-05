@@ -110,8 +110,8 @@ importers:
         specifier: 2.3.0
         version: registry.npmjs.org/@mdx-js/mdx@2.3.0
       '@mdx-js/preact':
-        specifier: 2.3.0
-        version: registry.npmjs.org/@mdx-js/preact@2.3.0(preact@10.17.1)
+        specifier: 3.0.0
+        version: 3.0.0(preact@10.17.1)
       '@mdx-js/react':
         specifier: 2.3.0
         version: registry.npmjs.org/@mdx-js/react@2.3.0(react@18.2.0)
@@ -562,6 +562,15 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@mdx-js/preact@3.0.0(preact@10.17.1):
+    resolution: {integrity: sha512-0r7Txv5IBBNdX88muCei4nwbjJ409RHrR8mzMwPWdQHTeDyqp/mGGmy5C0Ssse3ZKYYXiKVofm58EroDChyWNw==, tarball: https://registry.npmjs.org/@mdx-js/preact/-/preact-3.0.0.tgz}
+    peerDependencies:
+      preact: '>=10.0.0'
+    dependencies:
+      '@types/mdx': 2.0.3
+      preact: 10.17.1
+    dev: false
 
   /@types/acorn@4.0.6:
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==, tarball: https://registry.npmjs.org/@types/acorn/-/acorn-4.0.6.tgz}
@@ -2066,18 +2075,6 @@ packages:
       vfile: 5.3.6
     transitivePeerDependencies:
       - supports-color
-
-  registry.npmjs.org/@mdx-js/preact@2.3.0(preact@10.17.1):
-    resolution: {integrity: sha512-aDk1NVPlaqacA8e+5li3bhMPac6SE6iOys+Jh3Qz4yPU+/vbNxU2iqrIjH9oV1tyziY8nDT6CJLA6s43xzf7AA==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/@mdx-js/preact/-/preact-2.3.0.tgz}
-    id: registry.npmjs.org/@mdx-js/preact/2.3.0
-    name: '@mdx-js/preact'
-    version: 2.3.0
-    peerDependencies:
-      preact: '>=10.0.0'
-    dependencies:
-      '@types/mdx': registry.npmjs.org/@types/mdx@2.0.3
-      preact: 10.17.1
-    dev: false
 
   registry.npmjs.org/@mdx-js/react@2.3.0(react@18.2.0):
     resolution: {integrity: sha512-zQH//gdOmuu7nt2oJR29vFhDv88oGPmVw6BggmrHeMI+xgEkp1B2dX9/bMBSYtK0dyLX/aOmesKS09g222K1/g==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/@mdx-js/react/-/react-2.3.0.tgz}

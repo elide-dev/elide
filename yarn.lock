@@ -368,10 +368,10 @@
     unist-util-visit "^5.0.0"
     vfile "^6.0.0"
 
-"@mdx-js/preact@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/@mdx-js/preact/-/preact-2.3.0.tgz#3b22fb6320f590512f6b8171d7a61165cd9c5214"
-  integrity sha512-aDk1NVPlaqacA8e+5li3bhMPac6SE6iOys+Jh3Qz4yPU+/vbNxU2iqrIjH9oV1tyziY8nDT6CJLA6s43xzf7AA==
+"@mdx-js/preact@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@mdx-js/preact/-/preact-3.0.0.tgz#18f5c043d628737fc460e6e5b9372a07a61d277b"
+  integrity sha512-0r7Txv5IBBNdX88muCei4nwbjJ409RHrR8mzMwPWdQHTeDyqp/mGGmy5C0Ssse3ZKYYXiKVofm58EroDChyWNw==
   dependencies:
     "@types/mdx" "^2.0.0"
 

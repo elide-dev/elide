@@ -25,8 +25,8 @@ importers:
         specifier: 8.4.32
         version: 8.4.32
       preact:
-        specifier: 10.17.1
-        version: registry.npmjs.org/preact@10.17.1
+        specifier: 10.19.2
+        version: 10.19.2
       react:
         specifier: 18.2.0
         version: registry.npmjs.org/react@18.2.0
@@ -1645,6 +1645,10 @@ packages:
 
   /preact@10.17.1:
     resolution: {integrity: sha512-X9BODrvQ4Ekwv9GURm9AKAGaomqXmip7NQTZgY7gcNmr7XE83adOMJvd3N42id1tMFU7ojiynRsYnY6/BRFxLA==, tarball: https://registry.npmjs.org/preact/-/preact-10.17.1.tgz}
+    dev: false
+
+  /preact@10.19.2:
+    resolution: {integrity: sha512-UA9DX/OJwv6YwP9Vn7Ti/vF80XL+YA5H2l7BpCtUr3ya8LWHFzpiO5R+N7dN16ujpIxhekRFuOOF82bXX7K/lg==, tarball: https://registry.npmjs.org/preact/-/preact-10.19.2.tgz}
     dev: false
 
   /prettier-plugin-properties@0.2.0:
@@ -4565,12 +4569,6 @@ packages:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz}
     name: postcss-value-parser
     version: 4.2.0
-    dev: false
-
-  registry.npmjs.org/preact@10.17.1:
-    resolution: {integrity: sha512-X9BODrvQ4Ekwv9GURm9AKAGaomqXmip7NQTZgY7gcNmr7XE83adOMJvd3N42id1tMFU7ojiynRsYnY6/BRFxLA==, registry: https://npm.pkg.st/, tarball: https://registry.npmjs.org/preact/-/preact-10.17.1.tgz}
-    name: preact
-    version: 10.17.1
     dev: false
 
   registry.npmjs.org/prettier-plugin-java@2.3.1:

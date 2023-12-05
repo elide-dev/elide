@@ -3438,10 +3438,10 @@ postcss@8.4.32:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-preact@10.17.1:
-  version "10.17.1"
-  resolved "https://registry.npmjs.org/preact/-/preact-10.17.1.tgz#0a1b3c658c019e759326b9648c62912cf5c2dde1"
-  integrity sha512-X9BODrvQ4Ekwv9GURm9AKAGaomqXmip7NQTZgY7gcNmr7XE83adOMJvd3N42id1tMFU7ojiynRsYnY6/BRFxLA==
+preact@10.19.2:
+  version "10.19.2"
+  resolved "https://registry.npmjs.org/preact/-/preact-10.19.2.tgz#841797620dba649aaac1f8be42d37c3202dcea8b"
+  integrity sha512-UA9DX/OJwv6YwP9Vn7Ti/vF80XL+YA5H2l7BpCtUr3ya8LWHFzpiO5R+N7dN16ujpIxhekRFuOOF82bXX7K/lg==
 
 prettier-plugin-java@2.3.1:
   version "2.3.1"

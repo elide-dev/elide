@@ -12,16 +12,12 @@
 
 [![Build](https://github.com/elide-dev/elide/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/elide/actions/workflows/build.ci.yml)
 [![codecov](https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/elide)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield)
-[![Java 20](https://img.shields.io/badge/Java-20-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/19/)
-[![GraalVM](https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
-[![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
+![Discord](https://img.shields.io/discord/1119121740161884252?b1)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7690/badge)](https://bestpractices.coreinfrastructure.org/projects/7690)
+[![GraalVM](https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
+[![Java 21](https://img.shields.io/badge/Java-21-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/21/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![ECMA](https://img.shields.io/badge/ECMA-2022-blue.svg?logo=javascript)](https://262.ecma-international.org/13.0/)
 
 Latest version: `1.0.0-alpha7`
 

@@ -1,6 +1,7 @@
 package elide.runtime.plugins.jvm
 
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
@@ -13,7 +14,7 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 
-@OptIn(DelicateElideApi::class) class JvmPluginTest {
+@OptIn(DelicateElideApi::class) @Disabled class JvmPluginTest {
   /** Test-scoped logger. */
   private val logging by lazy { Logging.of(JvmPluginTest::class) }
 

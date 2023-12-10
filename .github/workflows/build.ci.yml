@@ -37,6 +37,8 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - name: "Setup: Buildless"
         uses: buildless/setup@v1.0.2
       - name: "Setup: GraalVM (Java 21)"
@@ -133,6 +135,8 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
@@ -233,6 +237,8 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
       - name: "Setup: GraalVM (Java 21)"
@@ -376,6 +382,8 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
@@ -475,6 +483,8 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@67e9c72af6e0492df856527b474995862b7b6591 # v2.0.0
@@ -599,6 +609,8 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
         uses: buildless/setup@v1.0.2
@@ -709,6 +721,8 @@ jobs:
           install: true
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
@@ -811,6 +825,8 @@ jobs:
           install: true
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:

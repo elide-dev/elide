@@ -127,14 +127,12 @@ import org.graalvm.polyglot.Engine as VMEngine
     override fun newThread(target: Runnable): Thread = when (virtualThreads) {
       true -> Thread
         .ofVirtual()
-        .allowSetThreadLocals(true)
         .inheritInheritableThreadLocals(true)
         .name("elide-vt")
         .unstarted(target)
 
       false -> Thread
         .ofPlatform()
-        .allowSetThreadLocals(true)
         .inheritInheritableThreadLocals(true)
         .name("elide")
         .priority(Thread.MAX_PRIORITY)

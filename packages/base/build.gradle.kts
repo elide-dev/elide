@@ -42,7 +42,6 @@ dependencies {
     implementation(libs.elide.uuid)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.core)
-    implementation(libs.kotlinx.atomicfu)
   }
 
   jvm {

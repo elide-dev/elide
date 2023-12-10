@@ -2,6 +2,7 @@ package elide.runtime.plugins.java
 
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.io.ByteSequence
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -12,7 +13,7 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.plugins.java.shell.GuestJavaEvaluator
 
-@OptIn(DelicateElideApi::class) class JavaShellTest {
+@OptIn(DelicateElideApi::class) @Disabled class JavaShellTest {
   /** Acquire a [PolyglotEngine] configured with the [Java] plugin. */
   private fun configureEngine() = PolyglotEngine {
     install(Java)

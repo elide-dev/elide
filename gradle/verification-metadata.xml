@@ -14,6 +14,7 @@
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta.pom"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta2.pom"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.21.pom"/>
+         <trust file="com.gradle.common-custom-user-data-gradle-plugin.gradle.plugin-.*" regex="true" />
          <trust group="com.autonomousapps.dependency-analysis"/>
          <trust group="dev.elide"/>
          <trust group="io.freefair.lombok"/>

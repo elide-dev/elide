@@ -27,8 +27,8 @@ val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as String
 
 repositories {
-  maven("https://maven.pkg.st/")
-  maven("https://gradle.pkg.st/")
+  maven("https://maven.pkg.st")
+  maven("https://gradle.pkg.st")
 }
 
 val kotlinVersion by properties

@@ -13,11 +13,12 @@
 
 @file:Suppress(
   "UnstableApiUsage",
+  "DSL_SCOPE_VIOLATION",
 )
 
 pluginManagement {
   repositories {
-    maven("https://gradle.pkg.st/")
+    maven("https://gradle.pkg.st")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     gradlePluginPortal()
@@ -28,17 +29,17 @@ pluginManagement {
 }
 
 plugins {
-  id("build.less") version("1.0.0-beta8")
-  id("com.gradle.enterprise") version("3.15")
+  id("build.less") version("1.0.0-beta9")
+  id("com.gradle.enterprise") version("3.15.1")
   id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version("1.11.1")
+  id("io.micronaut.platform.catalog") version(extra.properties["micronautVersion"] as String)
 }
 
 // Fix: Force CWD to proper value and store secondary value.
 System.setProperty("user.dir", rootProject.projectDir.toString())
 System.setProperty("elide.home", rootProject.projectDir.toString())
 
-val micronautVersion: String by settings
 val embeddedCompose: String by settings
 val embeddedR8: String by settings
 val buildUuid: String by settings
@@ -48,7 +49,7 @@ val buildlessApiKey: String by settings
 dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
   repositories {
-    maven("https://maven.pkg.st/")
+    maven("https://maven.pkg.st")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
@@ -60,9 +61,6 @@ dependencyResolutionManagement {
   versionCatalogs {
     create("libs") {
       from(files("./gradle/elide.versions.toml"))
-    }
-    create("mn") {
-      from("io.micronaut.platform:micronaut-platform:$micronautVersion")
     }
   }
 }

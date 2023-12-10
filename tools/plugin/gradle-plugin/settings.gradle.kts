@@ -13,23 +13,23 @@
 
 pluginManagement {
     repositories {
-        maven("https://maven.pkg.st/")
-        maven("https://gradle.pkg.st/")
+        maven("https://maven.pkg.st")
+        maven("https://gradle.pkg.st")
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
         maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 }
 
 plugins {
-    id("build.less") version("1.0.0-beta8")
+    id("build.less") version("1.0.0-beta9")
     id("com.gradle.enterprise") version("3.15")
     id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
 }
 
 dependencyResolutionManagement {
     repositories {
-        maven("https://maven.pkg.st/")
-        maven("https://gradle.pkg.st/")
+        maven("https://maven.pkg.st")
+        maven("https://gradle.pkg.st")
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
         maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")

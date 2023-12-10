@@ -17,7 +17,7 @@ plugins {
 
 buildscript {
   repositories {
-    maven("https://maven.pkg.st/")
+    maven("https://maven.pkg.st")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
@@ -28,6 +28,6 @@ buildscript {
   }
 
   dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20-Beta2")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.21")
   }
 }

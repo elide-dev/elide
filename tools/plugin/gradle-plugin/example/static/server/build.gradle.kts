@@ -36,7 +36,7 @@ dependencies {
 }
 
 micronaut {
-    version = "4.1.2"
+    version = "4.2.1"
 }
 
 elide {

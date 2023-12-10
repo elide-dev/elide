@@ -39,24 +39,12 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Buildless"
         uses: buildless/setup@v1.0.2
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@67e9c72af6e0492df856527b474995862b7b6591 # v2.0.0
@@ -70,7 +58,7 @@ jobs:
       - name: "Check: Dependency Review"
         uses: actions/dependency-review-action@6c5ccdad469c9f8a2996bfecaec55a631a347034 # v3.1.0
         continue-on-error: true
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request'
         with:
           config-file: "./.github/dependency-review-config.yml"
           license-check: true
@@ -145,24 +133,12 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - name: "Setup: Buildless"
         if: contains(matrix.machine, 'macos') == false
         uses: buildless/setup@v1.0.2
@@ -259,24 +235,12 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@67e9c72af6e0492df856527b474995862b7b6591 # v2.0.0
@@ -412,24 +376,12 @@ jobs:
           egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - name: "Setup: Buildless"
         uses: buildless/setup@v1.0.2
       - id: "auth"
@@ -540,24 +492,12 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
           cache: 'gradle'
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
@@ -675,24 +615,12 @@ jobs:
         uses: ilammy/msvc-dev-cmd@cec98b9d092141f74527d0afa6feb2af698cfe89 # v1.12.1
         with:
           arch: ${{ matrix.arch }}
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - name: "Setup: Node"
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
@@ -766,24 +694,12 @@ jobs:
           egress-policy: audit
       - name: "Setup: Buildless"
         uses: buildless/setup@v1.0.2
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
       - name: "Setup: Docker"
@@ -880,24 +796,12 @@ jobs:
           egress-policy: audit
       - name: "Setup: Buildless"
         uses: buildless/setup@v1.0.2
-      - name: "Setup: GraalVM (Java 20)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        with:
-          components: "native-image,js,wasm,ruby,python,llvm,espresso"
-          distribution: 'graalvm'
-          java-version: '20'
-          check-for-updates: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
-        if: false
+        uses: graalvm/setup-graalvm@b8dc5fccfbc65b21dd26e8341e7b21c86547f61b # v1
         with:
-          components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm'
-          distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
-          java-version: 'dev'
+          java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
       - name: "Setup: Docker"

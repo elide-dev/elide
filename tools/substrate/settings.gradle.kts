@@ -17,21 +17,21 @@
 
 pluginManagement {
   repositories {
-    maven("https://gradle.pkg.st/")
-    maven("https://maven.pkg.st/")
+    maven("https://gradle.pkg.st")
+    maven("https://maven.pkg.st")
     gradlePluginPortal()
     google()
   }
 }
 
 plugins {
-  id("build.less") version("1.0.0-beta8")
+  id("build.less") version("1.0.0-beta9")
   id("com.gradle.enterprise") version("3.14.1")
 }
 
 dependencyResolutionManagement {
   repositories {
-    maven("https://maven.pkg.st/")
+    maven("https://maven.pkg.st")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     mavenCentral()
   }

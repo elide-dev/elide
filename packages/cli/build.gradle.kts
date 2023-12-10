@@ -126,8 +126,8 @@ val moduleExclusions = listOf(
 
 buildscript {
   repositories {
-    maven("https://maven.pkg.st/")
-    maven("https://gradle.pkg.st/")
+    maven("https://maven.pkg.st")
+    maven("https://gradle.pkg.st")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {
@@ -198,12 +198,12 @@ val ktCompilerArgs = listOf(
   "-opt-in=elide.runtime.core.DelicateElideApi",
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta2",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.21",
 )
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
   if (enableJpms) modularity.inferModulePath = true
 }
 
@@ -1558,12 +1558,12 @@ tasks {
   }
 
   dockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm21:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 
   optimizedDockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm21:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 }

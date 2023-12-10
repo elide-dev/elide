@@ -95,7 +95,7 @@ val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
-val enableRuby = false
+val enableRuby = true
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
@@ -276,7 +276,7 @@ dependencies {
   implementation(platform(libs.netty.bom))
 
   kapt(mn.micronaut.inject.java)
-  annotationProcessor(libs.picocli.codegen)
+  kapt(libs.picocli.codegen)
   classpathExtras(mn.micronaut.core.processor)
 
   api(projects.packages.base)

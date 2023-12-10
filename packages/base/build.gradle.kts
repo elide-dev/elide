@@ -32,6 +32,16 @@ elide {
   }
 }
 
+kotlin {
+  sourceSets {
+    val nativeMain by getting {
+      dependencies {
+        implementation("org.jetbrains.kotlinx:atomicfu:0.23.1")
+      }
+    }
+  }
+}
+
 dependencies {
   common {
     api(projects.packages.core)

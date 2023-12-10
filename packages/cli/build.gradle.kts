@@ -353,7 +353,6 @@ dependencies {
   implementation(mn.netty.codec.http)
   implementation(mn.netty.codec.http2)
   implementation(mn.netty.buffer)
-  implementation(mn.netty.incubator.codec.http3)
   implementation(mn.micronaut.websocket)
 
   runtimeOnly(mn.micronaut.context)
@@ -798,6 +797,7 @@ val initializeAtBuildTime = listOf(
   "kotlin.reflect.jvm.internal.CacheByClassKt",
   "kotlin.reflect.jvm.internal.KClassImpl",
   "kotlin.reflect.jvm.internal.KClassImpl${'$'}Data",
+  "kotlin.reflect.jvm.internal.KProperty1Impl",
   "kotlin.reflect.jvm.internal.KDeclarationContainerImpl",
   "kotlin.reflect.jvm.internal.KDeclarationContainerImpl${'$'}Data",
   "kotlin.reflect.jvm.internal.RuntimeTypeMapper",
@@ -810,6 +810,7 @@ val initializeAtBuildTime = listOf(
   "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}SuspendFunction",
   "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}KSuspendFunction",
   "kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap",
+  "kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap${'$'}PlatformMutabilityMapping",
   "kotlin.reflect.jvm.internal.impl.descriptors.runtime.structure.ReflectClassUtilKt",
   "kotlin.reflect.jvm.internal.impl.name.FqName",
   "kotlin.reflect.jvm.internal.impl.name.FqNameUnsafe",
@@ -876,6 +877,9 @@ val initializeAtBuildTime = listOf(
   "io.micronaut.inject.provider.ProviderTypeInformationProvider",
   "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
   "io.micronaut.inject.beans.visitor.MapperAnnotationMapper",
+  "io.micronaut.inject.beans.visitor.JsonCreatorAnnotationMapper",
+  "io.micronaut.inject.beans.visitor.IntrospectedToBeanPropertiesTransformer",
+  "io.micronaut.inject.beans.visitor.persistence.JakartaMappedSuperClassIntrospectionMapper",
 
   // --- Netty ------
 
@@ -883,7 +887,6 @@ val initializeAtBuildTime = listOf(
   "io.netty.util.internal.CleanerJava9",
   "io.netty.util.CharsetUtil",
   "io.netty.util.internal.SystemPropertyUtil",
-  "io.netty.incubator.codec.quic.BoringSSLSessionCallback",
   "io.netty.channel.kqueue.KQueue",
   "io.netty.channel.kqueue.Native",
   // "io.netty.incubator.channel.uring.IOUring",
@@ -900,16 +903,12 @@ val initializeAtBuildTime = listOf(
   "io.netty.util.internal.logging.LocationAwareSlf4JLogger",
   "io.netty.util.NetUtilInitializations",
   "io.netty.channel.DefaultFileRegion",
-  "io.netty.incubator.codec.quic.BoringSSLCertificateVerifyCallback",
   "io.netty.util.internal.logging.Slf4JLoggerFactory${'$'}NopInstanceHolder",
   "io.netty.channel.kqueue.BsdSocket",
-  "io.netty.incubator.codec.quic.Quiche",
   "io.netty.channel.unix.Socket",
   "io.netty.util.internal.PlatformDependent0",
   "io.netty.util.internal.PlatformDependent",
   "io.netty.util.internal.NativeLibraryLoader",
-  "io.netty.incubator.codec.quic.BoringSSL",
-  "io.netty.incubator.codec.quic.BoringSSLCertificateCallback",
   "io.netty.util.Recycler",
   "io.netty.util.Recycler${'$'}DefaultHandle",
   "io.netty.util.ResourceLeakDetector",
@@ -1039,6 +1038,7 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
+  "elide.tool.io.RuntimeWorkdirManager",
   "com.sun.tools.javac.file.Locations",
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",

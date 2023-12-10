@@ -119,9 +119,10 @@ private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project)
     val nativeMain = create("nativeMain") { dependsOn(commonMain) }
     val nativeTest = create("nativeTest") { dependsOn(commonTest) }
 
-    named("mingwX64Main") { dependsOn(nativeMain) }
-    named("mingwX64Test") { dependsOn(nativeTest) }
-    
+    if (project.properties["buildMingw"] != "false") {
+      named("mingwX64Main") { dependsOn(nativeMain) }
+      named("mingwX64Test") { dependsOn(nativeTest) }
+    }
     named("linuxX64Main") { dependsOn(nativeMain) }
     named("linuxX64Test") { dependsOn(nativeTest) }
     

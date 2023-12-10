@@ -223,6 +223,10 @@ dependencies {
   implementation(libs.netty.codec.http)
   implementation(libs.netty.codec.http2)
 
+  // Micrometer
+  implementation(mn.micrometer.core)
+  implementation(mn.micrometer.observation)
+
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
     "arm64", "aarch64", "aarch_64" -> "aarch_64"

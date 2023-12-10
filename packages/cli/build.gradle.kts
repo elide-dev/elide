@@ -875,6 +875,7 @@ val initializeAtBuildTime = listOf(
   "io.micronaut.http.util.HttpTypeInformationProvider",
   "io.micronaut.inject.provider.ProviderTypeInformationProvider",
   "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
+  "io.micronaut.inject.beans.visitor.MapperAnnotationMapper",
 
   // --- Netty ------
 

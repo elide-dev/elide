@@ -589,7 +589,7 @@ import elide.tool.project.ProjectManager
     validate = false,
     exclusive = false,
     heading = "%nAccess Control:%n",
-  ) internal lateinit var accessControl: AccessControlOptions
+  ) internal var accessControl: AccessControlOptions = AccessControlOptions()
 
   /** App environment settings. */
   @ArgGroup(

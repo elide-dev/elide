@@ -341,6 +341,7 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
 
+  api(libs.snakeyaml)
   api(mn.micronaut.inject)
   implementation(mn.micronaut.picocli)
   implementation(mn.micronaut.http)

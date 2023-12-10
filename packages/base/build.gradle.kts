@@ -36,7 +36,8 @@ kotlin {
   sourceSets {
     val nativeMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:atomicfu:0.23.1")
+        // fix: KT-64111. Remove when fixed.
+        implementation(libs.kotlinx.atomicfu)
       }
     }
   }

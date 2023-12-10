@@ -76,7 +76,7 @@ internal fun Project.configureKotlinMultiplatform(
     }
 
     // add native targets
-    if (Native in target) registerNativeTargets()
+    if (Native in target) registerNativeTargets(this@configureKotlinMultiplatform)
 
     // main host publication lock (for KMP projects targeting platforms without cross-compilation)
     if (project.findProperty("publishMainHostLock") == "true") {
@@ -95,14 +95,16 @@ internal fun Project.configureKotlinMultiplatform(
   }
 }
 
-private fun KotlinMultiplatformExtension.registerNativeTargets() {
+private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project) {
   // add all basic native targets for both architecture families (mingw not available for ARM)
-  mingwX64()
   linuxX64()
 
   macosX64()
   macosArm64()
-  
+  if (project.properties["buildMingw"] != "false") {
+    mingwX64()
+  }
+
   sourceSets.apply {
     val commonMain = getByName("commonMain").apply {
       dependencies {

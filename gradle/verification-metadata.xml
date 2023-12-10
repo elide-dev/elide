@@ -11,6 +11,9 @@
          <trust file="micronaut-aot-api-2.1.1.jar"/>
          <trust file="micronaut-context-4.1.6.jar"/>
          <trust file="micronaut-inject-4.1.6.jar"/>
+         <trust file="json-schema-.*" regex="true" />
+         <trust file="plexus-classworlds-.*" regex="true" />
+         <trust file="spdx-gradle-plugin-.*" regex="true" />
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta.pom"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta2.pom"/>
          <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.21.pom"/>

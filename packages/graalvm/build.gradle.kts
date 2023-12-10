@@ -219,7 +219,6 @@ dependencies {
   implementation(mn.micronaut.context)
 
   // Netty
-  implementation(libs.reactor.netty)
   implementation(libs.netty.codec.http)
   implementation(libs.netty.codec.http2)
 

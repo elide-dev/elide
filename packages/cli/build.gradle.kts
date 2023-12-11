@@ -111,7 +111,7 @@ val enableDashboard = false
 val enableBuildReport = false
 val enableStrictHeap = false
 val enableG1 = oracleGvm && HostManager.hostIsLinux
-val enablePgo = oracleGvm && isRelease
+val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enableSbom = true
@@ -864,6 +864,7 @@ val initializeAtBuildTime = listOf(
   "org.bouncycastle.crypto.macs.HMac",
   "org.bouncycastle.crypto.prng.drbg.Utils",
   "org.bouncycastle.jcajce.provider.drbg.DRBG",
+  "org.bouncycastle.jcajce.provider.drbg.EntropyDaemon",
   "org.xml.sax.helpers.LocatorImpl",
   "org.xml.sax.helpers.AttributesImpl",
   "jdk.jshell.Snippet${'$'}SubKind",
@@ -1038,7 +1039,6 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
-  "elide.tool.io.RuntimeWorkdirManager",
   "com.sun.tools.javac.file.Locations",
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",

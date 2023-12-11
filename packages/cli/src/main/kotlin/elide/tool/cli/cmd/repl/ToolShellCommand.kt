@@ -1538,23 +1538,25 @@ import elide.tool.project.ProjectManager
     val versionProp = VERSION_INSTRINSIC_NAME to ElideTool.version()
     val intrinsics = intrinsicsManager.resolver()
 
-    install(JavaScript) {
-      logging.debug("Configuring JS VM")
-      installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
-      jsSettings.apply(this)
-    }
-
-    install(elide.runtime.plugins.python.Python) {
-      logging.debug("Configuring Python VM")
-      installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-    }
-    install(elide.runtime.plugins.ruby.Ruby) {
-      logging.debug("Configuring Ruby VM")
-      installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-    }
-
     (language ?: LanguageSelector()).resolve().forEach { lang ->
       when (lang) {
+        // Primary Engines
+        JS -> install(elide.runtime.plugins.js.JavaScript) {
+          logging.debug("Configuring JS VM")
+          installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
+          jsSettings.apply(this)
+        }
+
+        PYTHON -> install(elide.runtime.plugins.python.Python) {
+          logging.debug("Configuring Python VM")
+          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+        }
+
+        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
+          logging.debug("Configuring Ruby VM")
+          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+        }
+
         // Secondary Engines: JVM
         JVM -> {
           install(elide.runtime.plugins.jvm.Jvm) {

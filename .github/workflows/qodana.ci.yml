@@ -39,6 +39,6 @@ jobs:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@ddccb873888234080b77e9bc2d4764d5ccaaccf9 # v2.21.9
+        uses: github/codeql-action/upload-sarif@c0d1daa7f7e14667747d73a7dbbe8c074bc8bfe2 # v2.22.9
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

@@ -1229,23 +1229,6 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$W
 	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

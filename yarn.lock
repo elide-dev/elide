@@ -3474,10 +3474,10 @@ prettier-plugin-java@2.3.1:
     lodash "4.17.21"
     prettier "3.0.3"
 
-prettier-plugin-properties@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/prettier-plugin-properties/-/prettier-plugin-properties-0.2.0.tgz#ad025de49ea55ce2c20ee498d1ed713f6ee99311"
-  integrity sha512-Mt+z2nPkG+apJJLxfv8/Z/knhF/pTFUyxTeaRCuvQhs33rzQEkquGXSyKyvcWfijOTlOvB6KnmSJXpmblLNYrQ==
+prettier-plugin-properties@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npmjs.org/prettier-plugin-properties/-/prettier-plugin-properties-0.3.0.tgz#4645b0ad9600c69e047c8e3bd8e22a96230041e8"
+  integrity sha512-j2h4NbG6hIaRx0W7CDPUH+yDbzXHmI2urPC1EC8pYrsS5R5AYgAmcSDN0oea+C5mBiN6BK0AkiSKPj0RC17NDQ==
   dependencies:
     dot-properties "^1.0.0"
 

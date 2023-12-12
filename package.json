@@ -47,7 +47,7 @@
     "esbuild": "0.18.17",
     "husky": "8.0.3",
     "lint-staged": "15.2.2",
-    "postcss-cli": "10.1.0",
+    "postcss-cli": "11.0.0",
     "prettier": "3.2.4",
     "prettier-plugin-java": "2.5.0",
     "prettier-plugin-properties": "0.3.0",

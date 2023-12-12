@@ -30,6 +30,7 @@
     "browserslist": "4.21.10",
     "cssnano": "6.0.1",
     "google-protobuf": "3.21.2",
+    "jszip": "3.10.1",
     "postcss": "8.4.32",
     "preact": "10.17.1",
     "react": "18.2.0",

@@ -32,6 +32,17 @@ elide {
   }
 }
 
+kotlin {
+  sourceSets {
+    val nativeMain by getting {
+      dependencies {
+        // fix: KT-64111. Remove when fixed.
+        implementation(libs.kotlinx.atomicfu)
+      }
+    }
+  }
+}
+
 dependencies {
   common {
     api(projects.packages.core)

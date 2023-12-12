@@ -80,8 +80,8 @@ group = "dev.elide"
 version = rootProject.version as String
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
   if (enableJpms) modularity.inferModulePath = true
 }
 
@@ -219,9 +219,12 @@ dependencies {
   implementation(mn.micronaut.context)
 
   // Netty
-  implementation(libs.reactor.netty)
   implementation(libs.netty.codec.http)
   implementation(libs.netty.codec.http2)
+
+  // Micrometer
+  implementation(mn.micrometer.core)
+  implementation(mn.micrometer.observation)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"

@@ -218,6 +218,9 @@
   "name":"jdk.internal.loader.ClassLoaders$AppClassLoader"
 },
 {
+  "name":"jdk.internal.loader.Loader"
+},
+{
   "name":"org.fusesource.jansi.internal.CLibrary",
   "allDeclaredMethods":true,
   "allPublicMethods":true,

@@ -13,7 +13,7 @@ plugins {
   kotlin("plugin.allopen")
   kotlin("plugin.noarg")
   id("com.github.johnrengelman.shadow")
-  id("io.micronaut.application") version "4.2.0"
+  id("io.micronaut.application") version "4.2.1"
   id("io.micronaut.aot") version "4.2.1"
   id("dev.elide.build.site.backend")
   id("dev.elide.build.docker")

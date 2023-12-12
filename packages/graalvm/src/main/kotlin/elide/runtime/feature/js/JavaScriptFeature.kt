@@ -51,12 +51,6 @@ import elide.runtime.gvm.internals.GraalVMGuest
       "url.URLSearchParamsIntrinsic",
       "url.URLSearchParamsIntrinsic${'$'}URLSearchParams",
       "url.URLSearchParamsIntrinsic${'$'}MutableURLSearchParams",
-
-      // Express API
-      "express.ExpressIntrinsic",
-      "express.ExpressAppIntrinsic",
-      "express.ExpressRequestIntrinsic",
-      "express.ExpressResponseIntrinsic",
     ).map {
       "elide.runtime.gvm.internals.intrinsics.js.$it"
     }

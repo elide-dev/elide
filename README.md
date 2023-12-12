@@ -253,13 +253,14 @@ The following version matrix indicates tested support across tool and platform v
 Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may
 not need some of these components:
 
-| Status                                                          | **Java**    | **Kotlin**     | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
-|-----------------------------------------------------------------|-------------|----------------|-------------|---------------|-----------|--------------------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 20`   | `1.9.20-Beta2` | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`       | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`       | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`       | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
-| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --             | --          | --            | --        | --                 |
+| Status                                                          | **Java**    | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
+|-----------------------------------------------------------------|-------------|------------|-------------|---------------|-----------|--------------------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 21`   | `1.9.21`   | `23.1.x`    | `4.2.x`       | `18.x`    | `3.25.1`/`1.60.0`  |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`   | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.20`   | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`   | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --         | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
 ## Reports

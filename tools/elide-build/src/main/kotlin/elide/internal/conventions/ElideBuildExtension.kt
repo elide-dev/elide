@@ -106,7 +106,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     override var requested: Boolean = true
 
     /** Whether to configure code coverage reports with Kover */
-    public var kover: Boolean = false
+    public var kover: Boolean = true
 
     /** Whether to configure code coverage reports with Jacoco */
     public var jacoco: Boolean = false

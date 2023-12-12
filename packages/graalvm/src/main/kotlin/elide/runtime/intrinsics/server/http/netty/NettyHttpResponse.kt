@@ -17,6 +17,7 @@ import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.http.*
 import org.graalvm.polyglot.HostAccess.Export
+import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.intrinsics.server.http.HttpRequest
@@ -24,6 +25,9 @@ import elide.runtime.intrinsics.server.http.HttpResponse
 
 /** [HttpRequest] implementation wrapping a Netty handler context. */
 @DelicateElideApi internal class NettyHttpResponse(private val context: ChannelHandlerContext) : HttpResponse {
+  /** Whether the response has already been sent. */
+  private val sent = AtomicBoolean(false)
+
   /** Headers for this response, dispatched once the response is sent to the client. */
   private val headers = DefaultHttpHeaders(false)
 
@@ -38,6 +42,8 @@ import elide.runtime.intrinsics.server.http.HttpResponse
    * @param body A guest value to be unwrapped and used as response content.
    */
   private fun send(status: HttpResponseStatus, body: PolyglotValue?) {
+    if (!sent.compareAndSet(false, true)) return
+
     // TODO: support JSON objects and other types of content
     // treat any type of value as a string (force conversion)
     val content = body?.let { Unpooled.wrappedBuffer(it.toString().toByteArray()) } ?: Unpooled.EMPTY_BUFFER

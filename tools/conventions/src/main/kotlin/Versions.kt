@@ -14,25 +14,25 @@
 /** Declares common build script versions. */
 object Versions {
   /** Kotlin version. */
-  const val kotlin = "1.9.20-Beta2"
+  const val kotlin = "1.9.21"
 
   /** Micronaut version. */
-  const val micronaut = "4.1.0"
+  const val micronaut = "4.2.1"
 
   /** Ant/JUnit version. */
   const val antJUnit = "1.10.12"
 
   /** Static Netty version. */
-  const val netty = "4.1.97.Final"
+  const val netty = "4.1.101.Final"
 
   /** Protocol Buffers version. */
-  const val protobuf = "3.21.7"
+  const val protobuf = "3.25.1"
 
   /** Guava version. */
   const val guava = "32.1.1-jre"
 
   /** gRPC version. */
-  const val grpc = "1.58.0"
+  const val grpc = "1.60.0"
 
   /** GraalVM version. */
   const val graalvm = "23.1.0"

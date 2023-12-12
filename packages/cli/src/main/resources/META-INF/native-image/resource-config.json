@@ -19,6 +19,12 @@
   }, {
     "pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/nativelibnetty_transport_native_kqueue_aarch_64.dylib\\E"
   }, {
+    "pattern":"\\QElideTool.properties\\E"
+  }, {
+    "pattern":"\\QElideTool_en.properties\\E"
+  }, {
+    "pattern":"\\QElideTool_en_US.properties\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.modules.tar.gz\\E"
@@ -96,6 +102,8 @@
     "pattern":"\\QMETA-INF/services/com.oracle.graal.python.builtins.PythonBuiltins\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.impl.TruffleLocator\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
   }, {
@@ -805,6 +813,124 @@
   }, {
     "pattern":"\\Qtruffleruby/post-boot/post-boot.rb\\E"
   }, {
+    "pattern":"com.oracle.truffle.enterprise:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.enterprise:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.enterprise:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.enterprise:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.enterprise:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.enterprise:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.enterprise:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.regex:\\Qcom/oracle/truffle/regex/RegexLanguage.class\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.chromeinspector:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.chromeinspector:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.chromeinspector:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.chromeinspector:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.chromeinspector:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.chromeinspector:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.chromeinspector:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.coverage:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.coverage:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.coverage:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.coverage:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.coverage:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.coverage:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.coverage:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.dap:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.dap:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.dap:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.dap:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.dap:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.dap:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.dap:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.profiler:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.profiler:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.profiler:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.profiler:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.profiler:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.profiler:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.tools.profiler:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi:\\Qcom/oracle/truffle/nfi/NFILanguage.class\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"com.oracle.truffle.truffle_nfi_libffi:\\Qcom/oracle/truffle/nfi/backend/libffi/LibFFILanguage.class\\E"
+  }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt67b/nfc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt67b/nfkc.nrm\\E"
@@ -819,11 +945,515 @@
   }, {
     "pattern":"java.base:\\Qsun/net/www/content-types.properties\\E"
   }, {
+    "pattern":"java.base:\\Qsun/text/resources/LineBreakIteratorData\\E"
+  }, {
     "pattern":"jdk.jfr:\\Qjdk/jfr/internal/query/view.ini\\E"
   }, {
     "pattern":"jdk.jfr:\\Qjdk/jfr/internal/types/metadata.bin\\E"
   }, {
+    "pattern":"org.bouncycastle.pkix:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.bouncycastle.pkix:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.bouncycastle.pkix:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.pkix:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.pkix:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.pkix:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.pkix:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.provider:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.bouncycastle.provider:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.bouncycastle.provider:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.provider:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.provider:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.provider:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.provider:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.util:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.bouncycastle.util:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.bouncycastle.util:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.util:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.util:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.util:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.bouncycastle.util:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.libs:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.libs:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.libs:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.libs:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.libs:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.libs:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.libs:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.runtime:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.runtime:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.runtime:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.runtime:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.runtime:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.runtime:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso.resources.runtime:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.espresso:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.jniutils:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.jniutils:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.jniutils:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.jniutils:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.jniutils:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.jniutils:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.jniutils:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.js:\\Qcom/oracle/truffle/js/lang/JavaScriptLanguage.class\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.api:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.api:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.api:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.api:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.api:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.api:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.api:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode.resources:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode.resources:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode.resources:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode.resources:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode.resources:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode.resources:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode.resources:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode_community:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode_community:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode_community:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode_community:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode_community:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode_community:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nativemode_community:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm.nfi:\\Qcom/oracle/truffle/llvm/nfi/SulongNFI.class\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.llvm_community:\\Qcom/oracle/truffle/llvm/runtime/LLVMLanguage.class\\E"
+  }, {
+    "pattern":"org.graalvm.nativebridge:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.nativebridge:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.nativebridge:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.nativebridge:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.nativebridge:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.nativebridge:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.nativebridge:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.polyglot:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.polyglot:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.polyglot:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.polyglot:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.polyglot:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.polyglot:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.polyglot:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py.resources:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.py.resources:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.py.resources:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py.resources:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py.resources:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py.resources:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py.resources:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.py:\\Qcom/oracle/graal/python/PythonLanguage.class\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.annotations:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.annotations:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.annotations:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.annotations:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.annotations:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.annotations:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.annotations:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.resources:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.resources:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.resources:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.resources:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.resources:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.resources:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.resources:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.shared:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.shared:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.shared:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.shared:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.shared:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.shared:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby.shared:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.ruby:\\Qorg/truffleruby/RubyLanguage.class\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.antlr4:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.antlr4:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.antlr4:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.antlr4:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.antlr4:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.antlr4:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.antlr4:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.icu4j:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.icu4j:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.icu4j:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.icu4j:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.icu4j:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.icu4j:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.icu4j:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.jline:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.jline:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.jline:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.jline:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.jline:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.jline:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.jline:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.org.json:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.org.json:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.org.json:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.org.json:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.org.json:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.org.json:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.shadowed.org.json:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.api.lsp:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.api.lsp:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.api.lsp:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.api.lsp:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.api.lsp:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.api.lsp:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.api.lsp:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight.heap:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight.heap:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight.heap:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight.heap:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight.heap:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight.heap:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight.heap:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.insight:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.lsp:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.lsp:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.lsp:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.lsp:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.lsp:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.lsp:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.tools.lsp:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
     "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/resources/engine/libtruffleattach/darwin/aarch64/sha256\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.truffle:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.graalvm.wasm:\\Qorg/graalvm/wasm/WasmLanguage.class\\E"
+  }, {
+    "pattern":"org.jruby.jcodings:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.jruby.jcodings:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.jruby.jcodings:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.jruby.jcodings:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.jruby.jcodings:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.jruby.jcodings:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.jruby.jcodings:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.jruby.joni:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.jruby.joni:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.jruby.joni:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.jruby.joni:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.jruby.joni:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.jruby.joni:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.jruby.joni:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"org.tukaani.xz:\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"org.tukaani.xz:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"org.tukaani.xz:\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"org.tukaani.xz:\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.tukaani.xz:\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"org.tukaani.xz:\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"org.tukaani.xz:\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
   }, {
     "pattern":"org/fusesource/jansi/internal/native/.*"
   }, {
@@ -844,5 +1474,17 @@
   }, {
     "name":"sun.awt.resources.awtosx",
     "classNames":["sun.awt.resources.awtosx"]
+  }, {
+    "name":"sun.text.resources.BreakIteratorInfo",
+    "locales":["und"]
+  }, {
+    "name":"sun.text.resources.BreakIteratorResources",
+    "locales":["en", "en-US", "und"]
+  }, {
+    "name":"sun.text.resources.cldr.FormatData",
+    "locales":["und"]
+  }, {
+    "name":"sun.util.resources.cldr.TimeZoneNames",
+    "locales":["en", "en-US", "und"]
   }]
 }

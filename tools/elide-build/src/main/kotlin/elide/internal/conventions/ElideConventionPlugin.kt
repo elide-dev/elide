@@ -27,6 +27,7 @@ import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.plugins.signing.SigningPlugin
 import org.sonarqube.gradle.SonarQubePlugin
 import javax.inject.Inject
+import kotlinx.kover.gradle.plugin.KoverGradlePlugin
 import elide.internal.conventions.ElideBuildExtension.Convention
 import elide.internal.conventions.archives.excludeDuplicateArchives
 import elide.internal.conventions.archives.reproducibleArchiveTasks
@@ -64,6 +65,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     plugins.apply(SpotlessPlugin::class.java)
     plugins.apply(DetektPlugin::class.java)
     plugins.apply(SonarQubePlugin::class.java)
+    plugins.apply(KoverGradlePlugin::class.java)
 
     // publishing and distribution
     plugins.apply(PublishingPlugin::class.java)

@@ -14,10 +14,10 @@
 package elide.tools.processor
 
 import com.google.auto.service.AutoService
-import com.google.devtools.ksp.hasAnnotation
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.symbol.impl.hasAnnotation
 import com.google.protobuf.Timestamp
 import elide.runtime.Runtime
 import elide.tools.processor.util.annotationArgument

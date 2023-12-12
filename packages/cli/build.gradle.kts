@@ -95,7 +95,7 @@ val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
-val enableRuby = false
+val enableRuby = true
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
@@ -111,7 +111,7 @@ val enableDashboard = false
 val enableBuildReport = false
 val enableStrictHeap = false
 val enableG1 = oracleGvm && HostManager.hostIsLinux
-val enablePgo = oracleGvm && isRelease
+val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enableSbom = true
@@ -126,8 +126,8 @@ val moduleExclusions = listOf(
 
 buildscript {
   repositories {
-    maven("https://maven.pkg.st/")
-    maven("https://gradle.pkg.st/")
+    maven("https://maven.pkg.st")
+    maven("https://gradle.pkg.st")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {
@@ -198,12 +198,12 @@ val ktCompilerArgs = listOf(
   "-opt-in=elide.runtime.core.DelicateElideApi",
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta2",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.21",
 )
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
   if (enableJpms) modularity.inferModulePath = true
 }
 
@@ -276,7 +276,7 @@ dependencies {
   implementation(platform(libs.netty.bom))
 
   kapt(mn.micronaut.inject.java)
-  annotationProcessor(libs.picocli.codegen)
+  kapt(libs.picocli.codegen)
   classpathExtras(mn.micronaut.core.processor)
 
   api(projects.packages.base)
@@ -341,6 +341,7 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
 
+  api(libs.snakeyaml)
   api(mn.micronaut.inject)
   implementation(mn.micronaut.picocli)
   implementation(mn.micronaut.http)
@@ -352,7 +353,6 @@ dependencies {
   implementation(mn.netty.codec.http)
   implementation(mn.netty.codec.http2)
   implementation(mn.netty.buffer)
-  implementation(mn.netty.incubator.codec.http3)
   implementation(mn.micronaut.websocket)
 
   runtimeOnly(mn.micronaut.context)
@@ -797,6 +797,7 @@ val initializeAtBuildTime = listOf(
   "kotlin.reflect.jvm.internal.CacheByClassKt",
   "kotlin.reflect.jvm.internal.KClassImpl",
   "kotlin.reflect.jvm.internal.KClassImpl${'$'}Data",
+  "kotlin.reflect.jvm.internal.KProperty1Impl",
   "kotlin.reflect.jvm.internal.KDeclarationContainerImpl",
   "kotlin.reflect.jvm.internal.KDeclarationContainerImpl${'$'}Data",
   "kotlin.reflect.jvm.internal.RuntimeTypeMapper",
@@ -809,6 +810,7 @@ val initializeAtBuildTime = listOf(
   "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}SuspendFunction",
   "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}KSuspendFunction",
   "kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap",
+  "kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap${'$'}PlatformMutabilityMapping",
   "kotlin.reflect.jvm.internal.impl.descriptors.runtime.structure.ReflectClassUtilKt",
   "kotlin.reflect.jvm.internal.impl.name.FqName",
   "kotlin.reflect.jvm.internal.impl.name.FqNameUnsafe",
@@ -862,6 +864,7 @@ val initializeAtBuildTime = listOf(
   "org.bouncycastle.crypto.macs.HMac",
   "org.bouncycastle.crypto.prng.drbg.Utils",
   "org.bouncycastle.jcajce.provider.drbg.DRBG",
+  "org.bouncycastle.jcajce.provider.drbg.EntropyDaemon",
   "org.xml.sax.helpers.LocatorImpl",
   "org.xml.sax.helpers.AttributesImpl",
   "jdk.jshell.Snippet${'$'}SubKind",
@@ -874,6 +877,10 @@ val initializeAtBuildTime = listOf(
   "io.micronaut.http.util.HttpTypeInformationProvider",
   "io.micronaut.inject.provider.ProviderTypeInformationProvider",
   "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
+  "io.micronaut.inject.beans.visitor.MapperAnnotationMapper",
+  "io.micronaut.inject.beans.visitor.JsonCreatorAnnotationMapper",
+  "io.micronaut.inject.beans.visitor.IntrospectedToBeanPropertiesTransformer",
+  "io.micronaut.inject.beans.visitor.persistence.JakartaMappedSuperClassIntrospectionMapper",
 
   // --- Netty ------
 
@@ -881,7 +888,6 @@ val initializeAtBuildTime = listOf(
   "io.netty.util.internal.CleanerJava9",
   "io.netty.util.CharsetUtil",
   "io.netty.util.internal.SystemPropertyUtil",
-  "io.netty.incubator.codec.quic.BoringSSLSessionCallback",
   "io.netty.channel.kqueue.KQueue",
   "io.netty.channel.kqueue.Native",
   // "io.netty.incubator.channel.uring.IOUring",
@@ -898,16 +904,12 @@ val initializeAtBuildTime = listOf(
   "io.netty.util.internal.logging.LocationAwareSlf4JLogger",
   "io.netty.util.NetUtilInitializations",
   "io.netty.channel.DefaultFileRegion",
-  "io.netty.incubator.codec.quic.BoringSSLCertificateVerifyCallback",
   "io.netty.util.internal.logging.Slf4JLoggerFactory${'$'}NopInstanceHolder",
   "io.netty.channel.kqueue.BsdSocket",
-  "io.netty.incubator.codec.quic.Quiche",
   "io.netty.channel.unix.Socket",
   "io.netty.util.internal.PlatformDependent0",
   "io.netty.util.internal.PlatformDependent",
   "io.netty.util.internal.NativeLibraryLoader",
-  "io.netty.incubator.codec.quic.BoringSSL",
-  "io.netty.incubator.codec.quic.BoringSSLCertificateCallback",
   "io.netty.util.Recycler",
   "io.netty.util.Recycler${'$'}DefaultHandle",
   "io.netty.util.ResourceLeakDetector",
@@ -1558,12 +1560,12 @@ tasks {
   }
 
   dockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm21:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 
   optimizedDockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm21:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 }

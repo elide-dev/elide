@@ -86,7 +86,6 @@ dependencies {
   api(projects.packages.model)
   api(projects.packages.ssr)
   api(projects.packages.graalvm)
-  api(libs.reactor.core)
 
   // KSP
   ksp(mn.micronaut.inject)
@@ -107,11 +106,6 @@ dependencies {
   implementation(libs.bouncycastle.pkix)
   implementation(libs.conscrypt)
   implementation(libs.tink)
-
-  // Reactive Java
-  implementation(libs.reactor.core)
-  implementation(libs.reactor.netty.core)
-  implementation(libs.reactor.netty.http)
 
   // Kotlin
   implementation(libs.kotlinx.html.jvm)

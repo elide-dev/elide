@@ -85,7 +85,7 @@ jobs:
       - name: "Setup: Yarn"
         run: yarn
       - name: "Run Benchmarks"
-        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
+        uses: gradle/gradle-build-action@8cbcb9948b5892387aed077daf6f90e1f0ba5b27 # v2.11.0
         id: gradlebench
         continue-on-error: ${{ matrix.experimental }}
         env:

@@ -2,7 +2,7 @@
   "name": "@elide-dev/graalvm",
   "version": "0.0.1",
   "dependencies": {
-    "readable-stream": "4.4.2",
+    "readable-stream": "4.5.1",
     "web-streams-polyfill": "3.2.1"
   }
 }

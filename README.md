@@ -15,13 +15,16 @@
   <a href="https://codecov.io/gh/elide-dev/elide"><img src="https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3" /></a>
   <a href="https://elide.dev/discord"><img src="https://img.shields.io/discord/1119121740161884252?b1" /></a>
   <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>
+  <br />
   <a href="https://www.graalvm.org/"><img src="https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle" /></a>
   <a href="https://openjdk.org/projects/jdk/21/"><img src="https://img.shields.io/badge/Java-21-blue.svg?logo=oracle" /></a>
   <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-1.9.21-blue.svg?logo=kotlin" /></a>
   <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/ECMA-2022-blue.svg?logo=javascript" /></a>
 </p>
 
-Latest version: `1.0.0-alpha7`
+<p align="center">
+Latest version: <code>1.0.0-alpha7</code>
+</p>
 
 <hr />
 

@@ -10,14 +10,16 @@
 
 <hr />
 
-[![Build](https://github.com/elide-dev/elide/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/elide/actions/workflows/build.ci.yml)
-[![codecov](https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/elide)
-![Discord](https://img.shields.io/discord/1119121740161884252?b1)
-[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7690/badge)](https://bestpractices.coreinfrastructure.org/projects/7690)
-[![GraalVM](https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
-[![Java 21](https://img.shields.io/badge/Java-21-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/21/)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![ECMA](https://img.shields.io/badge/ECMA-2022-blue.svg?logo=javascript)](https://262.ecma-international.org/13.0/)
+<p align="center">
+  <a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img src="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml/badge.svg" /></a>
+  <a href="https://codecov.io/gh/elide-dev/elide"><img src="https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3" /></a>
+  <a href="https://elide.dev/discord"><img src="https://img.shields.io/discord/1119121740161884252?b1" /></a>
+  <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>
+  <a href="https://www.graalvm.org/"><img src="https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle" /></a>
+  <a href="https://openjdk.org/projects/jdk/21/"><img src="https://img.shields.io/badge/Java-21-blue.svg?logo=oracle" /></a>
+  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-1.9.21-blue.svg?logo=kotlin" /></a>
+  <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/ECMA-2022-blue.svg?logo=javascript" /></a>
+</p>
 
 Latest version: `1.0.0-alpha7`
 
@@ -286,6 +288,9 @@ Code coverage is continuously reported to [Codecov](https://app.codecov.io/gh/el
 
 Issue reports and pull requests are welcome! See our [contribution guidelines](CONTRIBUTING.md) or join our [discord community](https://elide.dev/discord) and let us know which features you would like to see implemented, or simply participate in the discussions to help shape the future of the project.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=elide-dev/elide&type=Date)](https://star-history.com/#elide-dev/elide)
 
 [1]: https://kotlinlang.org/
 [2]: https://graalvm.org/

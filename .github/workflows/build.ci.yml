@@ -738,7 +738,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Setup Cloud SDK"
-        uses: google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1
+        uses: google-github-actions/setup-gcloud@5a5f7b85fca43e76e53463acaa9d408a03c98d3a # v2.0.1
         with:
           version: 389.0.0
           project_id: elide-fw
@@ -842,7 +842,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Cloud SDK"
-        uses: google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1
+        uses: google-github-actions/setup-gcloud@5a5f7b85fca43e76e53463acaa9d408a03c98d3a # v2.0.1
         with:
           version: 389.0.0
           project_id: elide-fw

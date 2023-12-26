@@ -100,7 +100,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - name: "Push: BSR"
-        uses: bufbuild/buf-push-action@1c45f6a21ec277ee4c1fa2772e49b9541ea17f38 # v1.1.1
+        uses: bufbuild/buf-push-action@a654ff18effe4641ebea4a4ce242c49800728459 # v1.2.0
         with:
           buf_token: ${{ secrets.BUF_TOKEN }}
           input: proto

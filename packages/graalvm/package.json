@@ -3,6 +3,6 @@
   "version": "0.0.1",
   "dependencies": {
     "readable-stream": "4.4.2",
-    "web-streams-polyfill": "3.2.1"
+    "web-streams-polyfill": "3.3.2"
   }
 }

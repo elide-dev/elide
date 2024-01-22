@@ -87,7 +87,7 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: "Setup: Fly"
-        uses: superfly/flyctl-actions/setup-flyctl@5e0688e3d0586e2cad2288e6c49c3e9bedac39e5 # master
+        uses: superfly/flyctl-actions/setup-flyctl@fc53c09e1bc3be6f54706524e3b82c4f462f77be # master
       - name: "Deploy: Fly (${{ inputs.environment }})"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

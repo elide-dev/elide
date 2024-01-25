@@ -427,14 +427,14 @@ if (tasks.findByName("resolveAllDependencies") == null) {
   }
 }
 
-tasks.register("samples") {
+/*tasks.register("samples") {
   description = "Build and test all built-in code samples, in the `samples` path and with Knit."
 
-  dependsOn(
-    "buildSamples",
-    "testSamples",
-    "nativeTestSamples",
-  )
+  //dependsOn(
+    //"buildSamples",
+    //"testSamples",
+    //"nativeTestSamples",
+  //)
 }
 
 tasks.register("buildSamples") {
@@ -459,7 +459,7 @@ tasks.register("nativeTestSamples") {
   Projects.samples.forEach {
     dependsOn("$it:nativeTest")
   }
-}
+}*/
 
 tasks.register("reports") {
   description = "Build all reports."

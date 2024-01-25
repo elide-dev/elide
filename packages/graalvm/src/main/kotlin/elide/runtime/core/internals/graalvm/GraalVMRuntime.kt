@@ -82,10 +82,15 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
       }
 
       // running on GraalVM JVM (e.g. 20.0.2+9-jvmci-23.0-b14)
-      if (source.contains("jvmci")) source.split("-").getOrNull(2)?.let { jvm ->
-        return Version.parse(jvm)
+      val tag = source.lowercase().trim()
+      if (source.contains("jvmci")) {
+        // check for LTS version tag, for example:
+        // `21.0.2+13-LTS-jvmci-23.1-b30`
+        val index = if (tag.contains("lts")) 3 else 2
+        source.split("-").getOrNull(index)?.let { jvm ->
+          return Version.parse(jvm)
+        }
       }
-
       // unknown version
       return null
     }

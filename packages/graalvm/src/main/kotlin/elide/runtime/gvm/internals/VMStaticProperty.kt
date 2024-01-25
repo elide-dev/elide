@@ -35,11 +35,15 @@ public data class VMStaticProperty internal constructor (
     )
 
     private fun currentVersion(): SemanticVersion? {
-      // example: 20.0.2+9-jvmci-23.0-b14
-      return System.getProperty("java.vm.version").let { vmVersion ->
+      // example: 20.0.2+9-jvmci-23.0-b14 (or) 21.0.2+13-LTS-jvmci-23.1-b30
+      return (System.getProperty("java.vm.version") ?: "unknown").lowercase().trim().let { vmVersion ->
         when {
           // running on JVM
-          vmVersion.contains("jvmci") -> parseSemanticVersion(vmVersion.split("-")[2])
+          vmVersion.contains("jvmci") -> if (vmVersion.contains("lts")) {
+            parseSemanticVersion(vmVersion.split("-")[3])
+          } else {
+            parseSemanticVersion(vmVersion.split("-")[2])
+          }
 
           // in a native image, we'll need to translate the SVM release to a known SDK release
           ImageInfo.inImageCode() -> parseSemanticVersion(

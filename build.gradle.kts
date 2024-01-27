@@ -118,10 +118,9 @@ buildscript {
 if (enableKnit == "true") apply(plugin = "kotlinx-knit")
 
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
-  // 16+ required for Apple Silicon support
-  // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
   rootProject.the<NodeJsRootExtension>().download = true
-  rootProject.the<NodeJsRootExtension>().version = "20.5.0"
+  rootProject.the<NodeJsRootExtension>().version = "21.0.0-v8-canary20231024d0ddc81258"
+  rootProject.the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
 }
 rootProject.plugins.withType(YarnPlugin::class.java) {
   rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING

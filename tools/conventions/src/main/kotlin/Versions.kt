@@ -14,10 +14,10 @@
 /** Declares common build script versions. */
 object Versions {
   /** Kotlin version. */
-  const val kotlin = "1.9.21"
+  const val kotlin = "1.9.22"
 
   /** Micronaut version. */
-  const val micronaut = "4.2.1"
+  const val micronaut = "4.3.1"
 
   /** Ant/JUnit version. */
   const val antJUnit = "1.10.12"
@@ -29,10 +29,10 @@ object Versions {
   const val protobuf = "3.25.1"
 
   /** Guava version. */
-  const val guava = "32.1.1-jre"
+  const val guava = "33.0.0-jre"
 
   /** gRPC version. */
-  const val grpc = "1.60.0"
+  const val grpc = "1.60.1"
 
   /** GraalVM version. */
   const val graalvm = "23.1.0"

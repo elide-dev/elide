@@ -24,3 +24,4 @@ app-musl
 tmpdocs/
 test-results-native/
 .codebase/cache
+.kotlin/

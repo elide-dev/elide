@@ -97,7 +97,7 @@ val enableWasm = true
 val enablePython = true
 val enableRuby = true
 val enableTools = true
-val enableMosaic = true
+val enableMosaic = false
 val enableProguard = false
 val enableLlvm = false
 val enableEspresso = true
@@ -136,6 +136,7 @@ buildscript {
   }
 }
 
+// @TODO(sgammon): mosaic is broken on kotlin v2
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val nativesRootTemplate: (String) -> String = { version ->
@@ -232,6 +233,10 @@ kotlin {
     kotlinOptions {
       allWarningsAsErrors = false
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+
+      // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)
+      apiVersion = "1.9"
+      languageVersion = "1.9"
     }
   }
 }
@@ -245,7 +250,7 @@ sourceSets {
 }
 
 // use consistent compose plugin version
-the<MosaicExtension>().kotlinCompilerPlugin =
+if (enableMosaic) the<MosaicExtension>().kotlinCompilerPlugin =
   libs.versions.compose.get()
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
@@ -1578,6 +1583,10 @@ tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
     freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = false  // module path breaks @TODO: fix
+
+    // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)
+    apiVersion = "1.9"
+    languageVersion = "1.9"
   }
 }
 

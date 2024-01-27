@@ -272,7 +272,6 @@ jobs:
           arguments: |
             test
             check
-            jacocoTestReport
             koverXmlReport
             :tools:reports:reports
             --scan

@@ -273,7 +273,6 @@ jobs:
             test
             check
             koverXmlReport
-            :tools:reports:reports
             --scan
             --no-daemon
             --warning-mode=none

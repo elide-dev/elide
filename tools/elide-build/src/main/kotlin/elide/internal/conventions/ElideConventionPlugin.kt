@@ -36,6 +36,7 @@ import elide.internal.conventions.dependencies.configureDependencyResolution
 import elide.internal.conventions.docker.useGoogleCredentialsForDocker
 import elide.internal.conventions.jvm.*
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
+import elide.internal.conventions.kotlin.KotlinTarget.WASM
 import elide.internal.conventions.kotlin.configureKotlinBuild
 import elide.internal.conventions.native.configureNativeBuild
 import elide.internal.conventions.native.publishNativeLibrary
@@ -127,6 +128,11 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
         }
       }
 
+      // if we're creating a WASM target, create a tree of source sets which can be used as commons.
+      if (WASM in kotlinTarget || kotlinTarget is WASM) {
+        conventions.kotlin.wasmSourceSets = true
+      }
+
       configureKotlinBuild(
         target = kotlinTarget,
         configureKapt = kapt,
@@ -136,6 +142,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
         explicitApi = explicitApi,
         configureJavaModules = conventions.java.configureModularity,
         customKotlinCompilerArgs = customKotlinCompilerArgs,
+        wasmSourceSets = conventions.kotlin.wasmSourceSets,
       )
     }
 

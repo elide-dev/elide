@@ -75,6 +75,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to enable explicit API mode. */
     public var explicitApi: Boolean = false
 
+    /** Whether to spawn common WASM source sets. */
+    public var wasmSourceSets: Boolean = false
+
     /** Custom Kotlin compiler args to apply. */
     public var customKotlinCompilerArgs: MutableList<String> = ArrayList()
   }

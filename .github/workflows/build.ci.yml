@@ -23,7 +23,7 @@ jobs:
   ##
   preflight-checks:
     name: "Pre-flight Checks"
-    runs-on: "ubuntu-latest"
+    runs-on: ${{ vars.RUNNER_DEFAULT || "ubuntu-latest" }}
     permissions:
       contents: "read"
       id-token: "write"
@@ -100,7 +100,8 @@ jobs:
       matrix:
         os: [Ubuntu]
         mode: ['Strict']
-        machine: [ubuntu-latest]
+        machine:
+          - ${{ vars.RUNNER_DEFAULT || "ubuntu-latest" }}
         provenance: [true]
         include:
           - os: macOS
@@ -217,7 +218,7 @@ jobs:
   ##
   tests-jvm:
     name: "Tests: JVM"
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_DEFAULT || "ubuntu-latest" }}
     needs: [preflight-checks]
 
     permissions:
@@ -355,7 +356,7 @@ jobs:
   ##
   tests-native:
     name: "Tests: Native"
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ${{ vars.RUNNER_LARGE || "ubuntu-latest-8-cores" }}
     needs: [tests-jvm, preflight-checks]
     if: |
       (
@@ -455,7 +456,7 @@ jobs:
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ubuntu-latest-8-cores
+            runner: ${{ vars.RUNNER_LARGE || "ubuntu-latest-8-cores" }}
             arch: amd64
             labs: false
             tag: linux-amd64
@@ -571,12 +572,13 @@ jobs:
       matrix:
         os: ["Linux"]
         arch: ["amd64"]
-        runner: ["ubuntu-latest-8-cores"]
+        runner:
+          - ${{ vars.RUNNER_LARGE || "ubuntu-latest-8-cores" }}
         labs: [false]
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ubuntu-latest-8-cores
+            runner: ${{ vars.RUNNER_LARGE || "ubuntu-latest-8-cores" }}
             arch: amd64
             labs: false
             tag: linux-amd64
@@ -661,7 +663,7 @@ jobs:
   ##
   docker-jvm:
     name: "Docker: JVM"
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER || "ubuntu-latest-8" }}
     needs: [gradle, preflight-checks]
     if: |
       (
@@ -759,12 +761,12 @@ jobs:
             :samples:${{ matrix.project }}:optimizedDockerPush
 
   ##
-  ## Job: Docker Samples (JVM)
+  ## Job: Docker Samples (Native)
   ##
 
   docker-native:
     name: "Docker: Native"
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_LARGE || "ubuntu-latest-8-cores" }}
     continue-on-error: true
     needs: [gradle, preflight-checks]
     if: |

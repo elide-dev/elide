@@ -29,6 +29,7 @@
          <trust file="gradle-versions-plugin-.*" regex="true" />
          <trust file=".*wasm.*" regex="true" />
          <trust file=".*kotlinx.*" regex="true" />
+         <trust file="node-.*" regex="true" />
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="3FCFA3B530AFDCE3" reason="Key couldn't be downloaded from any key server"/>

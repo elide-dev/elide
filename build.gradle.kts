@@ -129,6 +129,9 @@ rootProject.plugins.withType(YarnPlugin::class.java) {
   rootProject.the<YarnRootExtension>().lockFileDirectory = project.rootDir
   rootProject.the<YarnRootExtension>().lockFileName = "yarn.lock"
 }
+tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask::class.java).configureEach {
+  args.add("--ignore-engines")
+}
 
 apiValidation {
   nonPublicMarkers += listOf(

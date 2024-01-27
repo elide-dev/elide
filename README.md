@@ -18,7 +18,7 @@
   <br />
   <a href="https://www.graalvm.org/"><img src="https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle" /></a>
   <a href="https://openjdk.org/projects/jdk/21/"><img src="https://img.shields.io/badge/Java-21-blue.svg?logo=oracle" /></a>
-  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-1.9.22-blue.svg?logo=kotlin" /></a>
+  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.0.0-blue.svg?logo=kotlin" /></a>
   <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/ECMA-2022-blue.svg?logo=javascript" /></a>
 </p>
 
@@ -260,7 +260,7 @@ not need some of these components:
 
 | Status                                                          | **Java**    | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
 |-----------------------------------------------------------------|-------------|------------|-------------|---------------|-----------|--------------------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 21`   | `1.9.22`   | `23.1.x`    | `4.2.x`       | `18.x`    | `3.25.1`/`1.60.1`  |
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 21`   | `2.0.0-Beta3`   | `23.1.x`    | `4.2.x`       | `18.x`    | `3.25.1`/`1.60.1`  |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`   | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.20`   | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`   | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |

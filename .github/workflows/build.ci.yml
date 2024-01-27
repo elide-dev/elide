@@ -177,9 +177,6 @@ jobs:
             -x jvmTest
             -x jsTest
             -x jsBrowserTest
-            -x nativeCompile
-            -x nativeTest
-            -x nativeOptimizedCompile
             --scan
             --no-daemon
             --warning-mode=none
@@ -285,9 +282,6 @@ jobs:
             -x ktlintCheck
             -x ktlintKotlinScriptCheck
             -x apiCheck
-            -x nativeTest
-            -x nativeCompile
-            -x nativeOptimizedCompile
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
@@ -310,9 +304,6 @@ jobs:
             -x ktlintCheck
             -x ktlintKotlinScriptCheck
             -x apiCheck
-            -x nativeTest
-            -x nativeCompile
-            -x nativeOptimizedCompile
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false

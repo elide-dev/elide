@@ -63,15 +63,28 @@ internal fun Project.configureKotlinMultiplatform(
       if (JsBrowser in target) browser()
     }
 
-    if(WASM in target) wasmJs {
-      nodejs()
-      browser()
-      d8()
+    if (WASM in target) {
+      wasmJs {
+        nodejs()
+        browser()
+        d8()
 
-      sourceSets.apply {
-        // optional WASM source sets
-        findByName("wasmMain")?.apply { dependsOn(getByName("commonMain")) }
-        findByName("wasmTest")?.apply { dependsOn(getByName("commonTest")) }
+        sourceSets.apply {
+          // optional WASM source sets
+          findByName("wasmMain")?.apply { dependsOn(getByName("commonMain")) }
+          findByName("wasmTest")?.apply { dependsOn(getByName("commonTest")) }
+          findByName("wasmJsMain")?.apply { dependsOn(getByName("commonMain")) }
+          findByName("wasmJsTest")?.apply { dependsOn(getByName("commonTest")) }
+        }
+      }
+      wasmWasi {
+        nodejs()
+
+        sourceSets.apply {
+          // optional WASM source sets
+          findByName("wasmWasiMain")?.apply { dependsOn(getByName("commonMain")) }
+          findByName("wasmWasiTest")?.apply { dependsOn(getByName("commonTest")) }
+        }
       }
     }
 

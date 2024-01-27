@@ -125,9 +125,9 @@ val buildRpc: String by settings
 val buildSsg: String by settings
 val buildWasm: String by settings
 
-if (buildWasm == "true") {
-  include(":packages:wasm")
-}
+//if (buildWasm == "true") {
+//  include(":packages:wasm")
+//}
 
 includeBuild(
   "tools/elide-build",

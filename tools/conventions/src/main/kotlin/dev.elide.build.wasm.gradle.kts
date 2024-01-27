@@ -36,9 +36,12 @@ kotlin {
   org.jetbrains.kotlin.gradle.plugin.VariantImplementationFactories.getProvider(project)
 
   wasmJs {
-    d8()
     nodejs()
     browser()
+  }
+  wasmWasi {
+    nodejs()
+    applyBinaryen()
   }
 }
 

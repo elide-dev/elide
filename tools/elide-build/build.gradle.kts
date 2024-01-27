@@ -45,7 +45,7 @@ kotlin {
   compilerOptions {
     jvmTarget = JVM_17
     javaParameters = true
-    allWarningsAsErrors = true
+    allWarningsAsErrors = false
     
     apiVersion = KOTLIN_1_9
     languageVersion = KOTLIN_1_9

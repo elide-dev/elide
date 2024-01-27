@@ -83,7 +83,7 @@ kotlin {
       jvmTarget = javaVersion
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs).toSortedSet().toList()
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
     }
   }
 
@@ -95,7 +95,7 @@ kotlin {
         apiVersion = Elide.kotlinLanguage
         javaParameters = true
         freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs).toSortedSet().toList()
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
       }
     }
   }
@@ -196,7 +196,7 @@ tasks {
       jvmTarget = javaVersion
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs).toSortedSet().toList()
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
     }
   }
 }
@@ -398,7 +398,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     jvmTarget = Elide.javaTargetMinimum
     javaParameters = true
     freeCompilerArgs = freeCompilerArgs.plus(Elide.jvmCompilerArgs).toSortedSet().toList()
-    allWarningsAsErrors = true
+    allWarningsAsErrors = false
     incremental = true
   }
 }

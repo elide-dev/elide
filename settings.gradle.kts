@@ -113,7 +113,7 @@ include(
   ":tools:processor",
   ":tools:reports",
   ":tools:wrappers",
-  ":packages:cli",
+//  ":packages:cli",  @TODO(sgammon): Disabled for Kotlin v2 transition
 )
 
 val buildDocs: String by settings

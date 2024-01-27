@@ -1,10 +1,10 @@
 [versions]
 elide = "1.0.0-alpha7"
-kotlin-sdk = "1.9.22"
+kotlin-sdk = "2.0.0-Beta3"
 kotlin-language = "1.9"
 confundus = "1.0.0"
 jna = "5.8.0"
-ksp = "1.9.22-1.0.17"
+ksp = "2.0.0-Beta3-1.0.17"
 koin = "3.4.3"
 koin-ksp = "1.2.2"
 graalvm = "23.1.2"

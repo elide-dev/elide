@@ -15,7 +15,7 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-val kotlinVersion = "1.9.22"
+val kotlinVersion = "2.0.0-Beta3"
 val javaVersion = "17"
 
 plugins {

@@ -42,6 +42,7 @@ import elide.internal.conventions.publishing.publishJavadocJar
  * @param configureNoArgs Whether to configure the NoArgs plugin with annotations used often in Elide packages.
  * @param configureJavaModules Whether to enable processing of `module-info.java` files for JPMS support.
  * @param customKotlinCompilerArgs Custom Kotlin compiler args to apply.
+ * @param wasmSourceSets Whether to spawn WASM source sets for use as commons.
  */
 internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
@@ -52,6 +53,7 @@ internal fun Project.configureKotlinBuild(
   configureNoArgs: Boolean = false,
   configureJavaModules: Boolean = false,
   customKotlinCompilerArgs: List<String> = emptyList(),
+  wasmSourceSets: Boolean = false,
 ) {
   val kotlinVersion = findProperty(Versions.KOTLIN)?.toString()
   val kotlinSdk = findProperty(Versions.KOTLIN_SDK)?.toString()
@@ -74,6 +76,28 @@ internal fun Project.configureKotlinBuild(
 
   // base Kotlin options
   extensions.getByType(KotlinProjectExtension::class.java).apply {
+    sourceSets.apply {
+      if (wasmSourceSets) {
+        val wasmMain = create("wasmMain") {
+          findByName("commonMain")?.let { dependsOn(it) }
+        }
+        val wasmTest = create("wasmTest") {
+          findByName("commonTest")?.let { dependsOn(it) }
+        }
+        (findByName("wasmJsMain") ?: create("wasmJsMain")).apply {
+          dependsOn(wasmMain)
+        }
+        (findByName("wasmJsTest") ?: create("wasmJsTest")).apply {
+          dependsOn(wasmTest)
+        }
+        (findByName("wasmWasiMain") ?: create("wasmWasiMain")).apply {
+          dependsOn(wasmMain)
+        }
+        (findByName("wasmWasiTest") ?: create("wasmWasiTest")).apply {
+          dependsOn(wasmTest)
+        }
+      }
+    }
     sourceSets.all {
       languageSettings {
         if (explicitApi) explicitApi()

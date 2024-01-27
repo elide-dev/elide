@@ -91,7 +91,6 @@ public interface Symbolic<T> {
      * @param symbol Symbol to resolve to a [Concrete] type.
      * @return Concrete result, or `null`.
      */
-    @Throws(Unresolved::class)
     override fun resolve(symbol: T): Concrete
 
     /**

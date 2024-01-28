@@ -19,10 +19,10 @@ import org.gradle.kotlin.dsl.get
 /** Build tools for the build tools. */
 object ElideSubstrate {
   // Substrate Kotlin API version.
-  const val API_VERSION = "1.9"
+  const val API_VERSION = "2.0"
 
   // Substrate Kotlin language version.
-  const val KOTLIN_VERSION = "1.9"
+  const val KOTLIN_VERSION = "2.0"
 
   // Publishing: Repositories
   // ------------------------

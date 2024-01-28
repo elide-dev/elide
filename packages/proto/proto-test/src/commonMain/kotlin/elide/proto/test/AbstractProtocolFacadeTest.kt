@@ -16,8 +16,8 @@ package elide.proto.test
 import kotlin.test.assertNotNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
+import kotlin.test.Test
 import elide.proto.ElideProtocol
-import elide.testing.annotations.Test
 
 /** Tests for the protocol facade for each implementation. */
 abstract class AbstractProtocolFacadeTest<Facade: ElideProtocol> {

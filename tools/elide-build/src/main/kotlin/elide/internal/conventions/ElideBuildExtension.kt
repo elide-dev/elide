@@ -75,6 +75,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to enable explicit API mode. */
     public var explicitApi: Boolean = false
 
+    /** Override the Kotlin API and language version for this module. */
+    public var kotlinVersionOverride: String? = null
+
     /** Whether to spawn common WASM source sets. */
     public var wasmSourceSets: Boolean = false
 

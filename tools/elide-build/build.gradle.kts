@@ -13,8 +13,8 @@
 
 @file:Suppress("DSL_SCOPE_VIOLATION")
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -46,15 +46,15 @@ kotlin {
     jvmTarget = JVM_17
     javaParameters = true
     allWarningsAsErrors = false
-    
-    apiVersion = KOTLIN_1_9
-    languageVersion = KOTLIN_1_9
+
+    apiVersion = KOTLIN_2_0
+    languageVersion = KOTLIN_2_0
   }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
-    languageVersion = "1.9"
+    languageVersion = "2.0"
   }
 }
 

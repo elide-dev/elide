@@ -43,6 +43,7 @@ elide {
     target = KotlinTarget.JVM
     explicitApi = true
     ksp = true
+    kotlinVersionOverride = "1.9"  // @TODO: remove when KSP supports v2.0
   }
 
   java {

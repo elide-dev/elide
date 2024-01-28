@@ -16,13 +16,13 @@ package elide.internal.conventions.kotlin
 import com.google.devtools.ksp.gradle.KspExtension
 import com.google.devtools.ksp.gradle.KspTask
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.targets
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.noarg.gradle.NoArgExtension
 import elide.internal.conventions.Constants.Elide
 import elide.internal.conventions.Constants.Kotlin
@@ -109,21 +109,24 @@ internal fun Project.configureKotlinBuild(
       }
     }
   }
-
   // Kotlin compilation tasks
-  tasks.withType(KotlinCompile::class.java).configureEach {
-    incremental = true
-    kotlinOptions {
-      apiVersion = kotlinVersion
-      languageVersion = kotlinVersion
-      allWarningsAsErrors = useStrictMode
-      javaParameters = true
+  tasks.withType(KotlinCompilationTask::class.java).configureEach {
+    compilerOptions {
+      val kotlinVersionParsed = KotlinVersion.fromVersion(kotlinVersion ?: Versions.KOTLIN_DEFAULT)
+      apiVersion.set(kotlinVersionParsed)
+      languageVersion.set(kotlinVersionParsed)
+      allWarningsAsErrors.set(useStrictMode)
+      progressiveMode.set(kotlinVersion != "2.0" && useStrictMode)  // progressive mode makes no sense for bleeding-edge
 
-      freeCompilerArgs = freeCompilerArgs.plus(when (target) {
-        JVM -> if (configureKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
-        JsBrowser, JsNode -> Elide.JsCompilerArgs
-        is Multiplatform, Native, WASM -> Elide.KmpCompilerArgs
-      }).plus(customKotlinCompilerArgs).toList()
+      if (this is KotlinJvmCompilerOptions) {
+        javaParameters.set(true)
+      }
+
+      freeCompilerArgs.set(freeCompilerArgs.get().plus(when (target) {
+       JVM -> if (configureKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
+       JsBrowser, JsNode -> Elide.JsCompilerArgs
+       is Multiplatform, Native, WASM -> Elide.KmpCompilerArgs
+     }).plus(customKotlinCompilerArgs).toList())
     }
   }
 
@@ -155,7 +158,7 @@ internal fun Project.configureKotlinBuild(
   configurations.all {
     resolutionStrategy.eachDependency {
       if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
-        useVersion(kotlinSdk ?: "1.9.21")
+        useVersion(kotlinSdk ?: findProperty(Versions.KOTLIN_SDK)?.toString() ?: Versions.KOTLIN_SDK_DEFAULT)
         because("pin kotlin stdlib")
       }
     }

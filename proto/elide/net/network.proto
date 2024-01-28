@@ -1,0 +1,70 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+syntax = "proto3";
+
+/**
+ * Provides common definitions for network-related types, such as domains, URLs, and ports; these structures are used
+ * throughout the wider protocol model.
+ */
+package elide.net;
+
+import "elide/net/dns.proto";
+import "elide/net/ip.proto";
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELDN";
+option swift_prefix = "ElideNet";
+option objc_class_prefix = "ELDN";
+option java_package = "tools.elide.net";
+option csharp_namespace = "Elide.Net";
+option go_package = "github.com/elide-tools/elide/net";
+
+// Enumerates networking modes common to various container or isolation protocols.
+enum NetworkingMode {
+  // Default networking mode.
+  NETWORK_MODE_DEFAULT = 0;
+
+  // Host networking mode.
+  HOST = 1;
+
+  // Bridge networking mode.
+  BRIDGE = 2;
+
+  // NAT networking mode.
+  NAT = 3;
+}
+
+// Describes a reference to a named network, in some operating context for an application.
+message Network {
+  // Name of the network.
+  string name = 1;
+}
+
+// Describes a suite of networking settings.
+message Networking {
+  // Operating mode for networking.
+  NetworkingMode mode = 1;
+
+  // Named network to use. Optional.
+  Network network = 2;
+
+  // DNS settings.
+  DnsSettings dns = 3;
+
+  // Assigned IP addresses.
+  repeated IpAddress addresses = 4;
+}

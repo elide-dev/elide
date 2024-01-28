@@ -1,0 +1,152 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+syntax = "proto3";
+package elide.app;
+
+import "elide/net/dns.proto";
+import "elide/net/domain.proto";
+import "google/protobuf/timestamp.proto";
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.app";
+option csharp_namespace = "Elide.App";
+option go_package = "github.com/elide-tools/elide/app;app";
+
+// Application domain status, with regard to mapping and verification.
+enum DomainStatus {
+  // Domain is pending verification.
+  PENDING = 0;
+
+  // Domain is verified and mapped to the application.
+  VERIFIED = 1;
+
+  // Domain is live and serving traffic.
+  SERVING = 2;
+}
+
+// Specifies domain verification state for a domain attached to an Elide application.
+message DomainVerification {
+  // Describes current verification status.
+  DomainStatus status = 1;
+
+  // Last verification check for this domain.
+  google.protobuf.Timestamp last_check = 2;
+
+  // Problem messages to resolve verification.
+  repeated string problem = 3;
+}
+
+// Enumerates domain verification and provisioning modes.
+enum DomainVerificationMode {
+  // Unrecognized or protocol-incompatible domain verification mode; regular code should not use this value.
+  UNRECOGNIZED_VERIFICATION_MODE = 0;
+
+  // Verification with DNS TXT records.
+  DNS_TXT = 1;
+
+  // Verification with DNS HTTP endpoints.
+  DNS_HTTP = 2;
+}
+
+// Specifies a DNS record which is requested for domain verification.
+message VerificationDnsRecord {
+  // Expected DNS record for verification.
+  elide.net.DnsRecord expected = 1;
+
+  // Whether the DNS record was found.
+  bool found = 2;
+
+  // Whether the DNS record has verified.
+  bool verified = 3;
+
+  // Current DNS record verification state; only provided if the record is not yet verified.
+  string current = 4;
+
+  // Last verification check for this record.
+  google.protobuf.Timestamp last_check = 5;
+
+  // When this record was found and validated; only provided if the record is verified.
+  google.protobuf.Timestamp valid = 6;
+}
+
+// Specifies an HTTP endpoint which is requested for domain verification.
+message VerificationHttpEndpoint {
+
+}
+
+// Specifies DNS verification information for a domain.
+message DomainDnsVerification {
+  // Records requested for verification.
+  repeated VerificationDnsRecord record = 1;
+}
+
+// Specifies HTTP verification information for a domain.
+message DomainHttpVerification {
+  // Endpoint requested for verification.
+  VerificationHttpEndpoint endpoint = 1;
+}
+
+// Specifies verification request information for binding a custom domain to an Elide application.
+message DomainVerificationTicket {
+  // Verification mode setting for this domain ticket.
+  DomainVerificationMode mode = 1;
+
+  // Specifies the verification ticket, based on the operating mode.
+  oneof ticket {
+    // DNS-based verification for the domain.
+    DomainDnsVerification dns = 2;
+
+    // HTTP-based verification for the domain.
+    DomainHttpVerification http = 3;
+  }
+}
+
+// Specifies DCV verification information for a domain delegation.
+message DomainDelegationTicket {
+  // DNS records required to enable delegated certificate issuance.
+  repeated VerificationDnsRecord record = 1;
+}
+
+// Specifies information about a domain bound to an Elide application.
+message Domain {
+  // Requested domain name.
+  string domain = 1;
+
+  // Whether this should be the application's default domain.
+  bool default = 2;
+
+  // Another domain to redirect to from this one.
+  string redirect_to = 3;
+}
+
+// Specifies an active mapped application domain, along with verification info and current state.
+message MappedDomain {
+  // Information about the subject domain.
+  elide.net.Domain domain = 1;
+
+  // Current domain verification state.
+  DomainVerification verification = 2;
+
+  // Domain verification request information.
+  DomainVerificationTicket ticket = 3;
+
+  // Specifies delegation information for a given application domain.
+  DomainDelegationTicket dcv = 4;
+}

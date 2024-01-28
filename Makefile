@@ -65,7 +65,8 @@ TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
 SITE_BUILD ?= $(PWD)/build/site
 REPORTS ?= $(SITE_BUILD)/reports
-JVM ?= 20
+BUF ?= $(shell which buf)
+JVM ?= 21
 SYSTEM ?= $(shell uname -s)
 JQ ?= $(shell which jq)
 
@@ -392,6 +393,20 @@ clean-site:  ## Clean site targets.
 	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS)) $(SITE_BUILD)
 
 docs: $(DOCS) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc  ## Generate docs for all library modules.
+
+model:  ## Build proto model targets.
+	@echo "Building proto model..."
+	$(RULE)$(BUF) lint
+	@echo "- Building binary model..."
+	$(RULE)$(BUF) build -o proto/buf.pb.bin
+	@echo "- Building JSON model..."
+	$(RULE)$(BUF) build -o proto/buf.pb.json.gz
+	@echo "Model build complete."
+
+model-update:  ## Update the proto model and re-build it.
+	@echo "Updating proto model..."
+	$(RULE)cd proto && $(BUF) mod update
+	$(RULE)$(MAKE) model
 
 $(TARGET)/docs:
 	@echo "Generating docs..."

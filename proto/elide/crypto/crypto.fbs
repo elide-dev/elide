@@ -16,32 +16,3 @@
  * throughout the codebase as a standard base set of definitions for hashing, encryption, and more.
  */
 namespace elide.crypto;
-
-
-// Specifies hash algorithms supported by the asset manifest code. We keep a token for this around so that we can
-// easily detect configuration changes and make evictions accordingly.
-enum HashAlgorithm : int {
-  // No hash algorithm was/is active.
-  IDENTITY = 0,
-
-  // Algorithm: MD5.
-  MD5 = 1,
-
-  // Algorithm: SHA1.
-  SHA1 = 2,
-
-  // Algorithm: SHA-256.
-  SHA256 = 3,
-
-  // Algorithm: SHA-512.
-  SHA512 = 4,
-
-  // Algorithm: SHA3-224.
-  SHA3_224 = 5,
-
-  // Algorithm: SHA3-256.
-  SHA3_256 = 6,
-
-  // Algorithm: SHA3-512.
-  SHA3_512 = 7,
-}

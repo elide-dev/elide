@@ -1,0 +1,244 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/*
+ * Specifies the service definitions which constitute the Elide Invocation API, version `v1alpha`; this API is used to
+ * satisfy remote calls for dispatch through Elide.
+ */
+syntax = "proto3";
+package elide.call.v1alpha1;
+
+import "elide/call/call.proto";
+import "elide/http/http.proto";
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.call.v1alpha1";
+option csharp_namespace = "Elide.CallApi.V1Alpha1";
+option go_package = "github.com/elide-tools/elide/call/v1alpha1;call_api";
+
+// # Elide Invocation API
+//
+// The Invocation API provides a remote-capable interface which can be used to dispatch Elide applications. Multiple
+// dispatch styles are supported: HTTP invocation via `fetch`-compliant handlers, scheduled invocation via cron-like
+// orchestration, and queue-style invocation with message-based processing.
+service InvocationApi {
+  // Invoke an Elide application through a `fetch`-style interface.
+  //
+  // This method is used to invoke an Elide application through a universal HTTP service interface, which specifies a
+  // single unary HTTP request, and from which a single unary HTTP response is returned. This method is intended to be
+  // used in conjunction with the `fetch`-style interface provided by Elide.
+  //
+  // Applications must export an HTTP handler for this interface to be able to dispatch into their code. The request is
+  // translated under the hood to the appropriate structure for the native guest language.
+  rpc Fetch(FetchRequest) returns (FetchResponse);
+
+  // Invoke an Elide application through a scheduled (cron-like) interface.
+  //
+  // This method is used to invoke an Elide application through a scheduled (cron-like) interface. This method is called
+  // by external systems which orchestrate the scheduling of these calls. This method is intended to be used in
+  // conjunction with the `scheduled`-style interface provided by Elide.
+  //
+  // Applications must export a suitable handler for this interface to be able to dispatch into their code. The request
+  // is translated under the hood to the appropriate structure for the native guest language.
+  rpc Scheduled(ScheduledInvocationRequest) returns (ScheduledInvocationResponse);
+
+  // Invoke an Elide application through a queue interface.
+  //
+  // This method is used to invoke an Elide application through a queue interface. This method is called by external
+  // systems which orchestrate the scheduling of these calls. This method is intended to be used in conjunction with the
+  // `queue`-style interface provided by Elide.
+  //
+  // Applications must export a suitable handler for this interface to be able to dispatch into their code. The request
+  // is translated under the hood to the appropriate structure for the native guest language.
+  rpc Queue(QueueInvocationRequest) returns (QueueInvocationResponse);
+}
+
+// Enumerates the outcome statuses for an invocation.
+enum InvocationStatus {
+  // The invocation completed without error.
+  OK = 0;
+
+  // The invocation failed terminally.
+  ERR = 1;
+}
+
+// Describes a request to invoke an Elide app via a unary interface.
+message UnaryInvocationRequest {
+  // Specifies the request payload for this invocation.
+  oneof request {
+    // Specifies a fetch invocation request.
+    FetchRequest fetch = 1;
+
+    // Specifies a scheduled invocation request.
+    ScheduledInvocationRequest scheduled = 2;
+
+    // Specifies a queue invocation request.
+    QueueInvocationRequest queue = 3;
+  }
+}
+
+// Describes a response to a unary invocation request.
+message UnaryInvocationResponse {
+  // Specifies the response payload for this invocation.
+  oneof response {
+    // Specifies a fetch invocation response.
+    FetchResponse fetch = 1;
+
+    // Specifies a scheduled invocation response.
+    ScheduledInvocationResponse scheduled = 2;
+
+    // Specifies a queue invocation response.
+    QueueInvocationResponse queue = 3;
+  }
+}
+
+// Describes a full-cycle unary invocation.
+message UnaryInvocation {
+  // Specifies the request payload for this invocation.
+  UnaryInvocationRequest request = 1;
+
+  // Specifies the response payload for this invocation.
+  UnaryInvocationResponse response = 2;
+}
+
+/* ===== Fetch API =============================================================================================== */
+
+// Describes a single unary fetch invocation with a request and response.
+message FetchInvocation {
+  // Specifies the fetch invocation request.
+  FetchRequest request = 1;
+
+  // Specifies the fetch invocation response.
+  FetchResponse response = 2;
+}
+
+// Specifies a request to invoke an Elide app via a `fetch`-style interface.
+message FetchRequest {
+  // Generic call metadata for an invocation API response.
+  elide.call.CallMetadata metadata = 1;
+
+  // Specifies the HTTP request info enclosed for this fetch invocation request.
+  elide.http.HttpRequest request = 2;
+}
+
+// Specifies a response from a request to invoke an Elide app via a `fetch`-style interface.
+message FetchResponse {
+  // Generic call metadata for an invocation API response.
+  elide.call.CallMetadata metadata = 1;
+
+  // Describes the status resulting from this invocation.
+  InvocationStatus status = 2;
+
+  // Specifies the HTTP response info enclosed for this fetch invocation response.
+  elide.http.HttpResponse response = 3;
+}
+
+/* ===== Scheduled API =========================================================================================== */
+
+// Describes a single unary scheduled invocation with a request and response.
+message ScheduledInvocation {
+  // Specifies the scheduled invocation request.
+  ScheduledInvocationRequest request = 1;
+
+  // Specifies the scheduled invocation response.
+  ScheduledInvocationResponse response = 2;
+}
+
+// Specifies a request to invoke an Elide app via a scheduled (cron-like) interface.
+message ScheduledInvocationRequest {
+  // Generic call metadata for an invocation API response.
+  elide.call.CallMetadata metadata = 1;
+}
+
+// Specifies a response from a request to invoke an Elide app via a scheduled (cron-like) interface.
+message ScheduledInvocationResponse {
+  // Generic call metadata for an invocation API response.
+  elide.call.CallMetadata metadata = 1;
+
+  // Describes the status resulting from this invocation.
+  InvocationStatus status = 2;
+}
+
+/* ===== Queue API =============================================================================================== */
+
+// Describes a single unary queue invocation with a request and response.
+message QueueInvocation {
+  // Specifies the queue invocation request.
+  QueueInvocationRequest request = 1;
+
+  // Specifies the queue invocation response.
+  QueueInvocationResponse response = 2;
+}
+
+// Specifies a request to invoke an Elide app via a queue interface.
+message QueueInvocationRequest {
+  // Generic call metadata for an invocation API response.
+  elide.call.CallMetadata metadata = 1;
+
+  // Specifies a batch of messages which should be provided for this invocation.
+  QueueMessageBatch batch = 2;
+}
+
+// Specifies a response from a request to invoke an Elide app via a queue interface.
+message QueueInvocationResponse {
+  // Generic call metadata for an invocation API response.
+  elide.call.CallMetadata metadata = 1;
+
+  // Describes the status resulting from this invocation.
+  InvocationStatus status = 2;
+
+  // Specifies a batch of outcomes for the messages provided in the request.
+  QueueMessageOutcomeBatch result = 3;
+}
+
+// Enumerates outcome statuses for processing of a specific queued task.
+enum QueueMessageStatus {
+  // The message was processed successfully.
+  ACK = 0;
+
+  // The message failed to process.
+  NACK = 1;
+}
+
+// Specifies a single message which should be processed by a queue.
+message QueueMessage {
+  // Unique ID of this queue message.
+  string id = 1;
+}
+
+// Specifies the outcome of processing a single `QueueMessage`.
+message QueueMessageOutcome {
+  // Specifies the status of this message.
+  QueueMessageStatus status = 1;
+
+  // ID of the message which this is responding to.
+  string id = 2;
+}
+
+// Specifies a batch of messages which should be processed by a queue.
+message QueueMessageBatch {
+  // Specifies the messages which should be processed by this batch.
+  repeated QueueMessage messages = 1;
+}
+
+// Specifies a batch of messages which should be processed by a queue.
+message QueueMessageOutcomeBatch {
+  // Specifies an aligned list of outcomes for a given input batch of messages.
+  repeated QueueMessageOutcome outcome = 1;
+}

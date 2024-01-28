@@ -16,6 +16,7 @@
 package elide.proto.impl
 
 import java.util.*
+import kotlin.reflect.KClass
 import elide.proto.ElideProtocol
 import elide.proto.ElideProtocol.*
 import elide.proto.api.data.DataModelStrategy
@@ -43,7 +44,7 @@ public abstract class AbstractElideFlatbuffersProtocol : ElideProtocol {
     Dialect.FLATBUFFERS,
   )
 
-  override fun base(): Class<*>? = null
+  override fun base(): KClass<*>? = null
 
   override fun strategy() = strategy
 

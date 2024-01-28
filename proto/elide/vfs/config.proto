@@ -27,7 +27,6 @@ option objc_class_prefix = "EVS";
 option java_package = "tools.elide.vfs";
 option csharp_namespace = "Elide.VFS";
 
-
 // # VFS: Policy
 //
 // Specifies configuration values which are included in a guest VM configuration record, and which relate to the guest

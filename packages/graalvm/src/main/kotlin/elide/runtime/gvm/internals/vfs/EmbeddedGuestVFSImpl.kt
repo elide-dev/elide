@@ -25,7 +25,6 @@ import io.micronaut.context.annotation.Requires
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
-import tools.elide.crypto.HashAlgorithm
 import tools.elide.vfs.TreeEntry
 import java.io.File
 import java.io.IOException
@@ -45,6 +44,7 @@ import elide.runtime.gvm.internals.GuestVFS
 import elide.util.UUID
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
+import tools.elide.std.HashAlgorithm
 import kotlin.io.path.exists
 
 /**

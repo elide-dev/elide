@@ -125,5 +125,5 @@ dependencies {
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)
-  testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
+  testImplementation(projects.packages.proto.protoTest)
 }

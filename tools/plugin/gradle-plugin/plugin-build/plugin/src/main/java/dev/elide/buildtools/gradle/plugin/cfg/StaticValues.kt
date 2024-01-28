@@ -1,7 +1,7 @@
 package dev.elide.buildtools.gradle.plugin.cfg
 
 import tools.elide.assets.ManifestFormat
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 
 /** Hard-coded or constant values that relate to asset bundles. */
 internal object StaticValues {

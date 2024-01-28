@@ -1,6 +1,6 @@
 package dev.elide.buildtools.gradle.plugin.cfg
 
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 
 /** Configuration specific to the asset tag generator. */
 internal data class AssetTagConfig(

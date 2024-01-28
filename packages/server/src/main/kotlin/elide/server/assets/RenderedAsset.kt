@@ -14,8 +14,8 @@
 package elide.server.assets
 
 import com.google.protobuf.ByteString
-import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.CompressionMode
+import tools.elide.std.HashAlgorithm
 import elide.server.AssetModuleId
 
 /**

@@ -18,6 +18,10 @@
 syntax = "proto3";
 package elide.assets;
 
+import "elide/model/model.proto";
+import "elide/data/data.proto";
+import "google/protobuf/timestamp.proto";
+
 option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
@@ -27,11 +31,6 @@ option swift_prefix = "Elide";
 option objc_class_prefix = "ELD";
 option java_package = "tools.elide.assets";
 option csharp_namespace = "Elide.Assets";
-
-import "google/protobuf/timestamp.proto";
-import "elide/model/model.proto";
-import "elide/data/data.proto";
-
 
 // Enumerates languages which are supported for embedded scripting in Elide.
 enum EmbeddedScriptLanguage {

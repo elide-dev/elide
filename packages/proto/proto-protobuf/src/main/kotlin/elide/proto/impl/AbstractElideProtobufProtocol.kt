@@ -16,9 +16,10 @@
 package elide.proto.impl
 
 import com.google.protobuf.GeneratedMessageV3
-import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.Encoding
+import tools.elide.std.HashAlgorithm
 import java.util.*
+import kotlin.reflect.KClass
 import elide.proto.ElideProtocol
 import elide.proto.ElideProtocol.*
 import elide.proto.api.data.DataModelStrategy
@@ -44,7 +45,7 @@ public abstract class AbstractElideProtobufProtocol : ElideProtocol {
     Dialect.PROTO,
   )
 
-  override fun base(): Class<*>? = GeneratedMessageV3::class.java
+  override fun base(): KClass<*>? = GeneratedMessageV3::class
 
   override fun strategy(): ModelAdapterStrategy = strategy
 

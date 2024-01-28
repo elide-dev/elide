@@ -11,7 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
- import elide.internal.conventions.elide
+@file:Suppress("UnstableApiUsage")
+
+import elide.internal.conventions.elide
  import elide.internal.conventions.kotlin.*
 
 plugins {
@@ -47,26 +49,33 @@ elide {
 }
 
 dependencies {
-  jvm {
+  common {
     // API
     api(libs.kotlinx.datetime)
     api(projects.packages.proto.protoCore)
     api(projects.packages.core)
-    implementation(libs.kotlinx.serialization.core.jvm)
-    implementation(libs.kotlinx.serialization.protobuf.jvm)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.protobuf)
 
     // Implementation
     implementation(kotlin("stdlib"))
-    implementation(kotlin("stdlib-jdk8"))
     runtimeOnly(kotlin("reflect"))
+  }
+
+  commonTest {
+    implementation(projects.packages.test)
+    implementation(kotlin("test"))
+    implementation(projects.packages.proto.protoTest)
+  }
+
+  jvm {
+    implementation(kotlin("stdlib-jdk8"))
   }
 
   jvmTest {
     // Testing
     implementation(libs.truth)
     implementation(libs.truth.java8)
-    implementation(projects.packages.test)
-    implementation(project(":packages:proto:proto-core", configuration = "testBase"))
   }
 }
 

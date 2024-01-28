@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.targets
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.noarg.gradle.NoArgExtension
 import elide.internal.conventions.Constants.Elide
@@ -102,7 +103,6 @@ internal fun Project.configureKotlinBuild(
       languageSettings {
         if (explicitApi) explicitApi()
         progressiveMode = false
-
         optIn("kotlin.ExperimentalUnsignedTypes")
       }
     }

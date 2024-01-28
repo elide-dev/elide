@@ -28,7 +28,6 @@ option java_package = "tools.elide.data";
 option csharp_namespace = "Elide.Data";
 option go_package = "github.com/elide-tools/elide/data;data";
 
-
 // Data Encoding
 //
 // Describes supported file encodings. By default, files are encoded with `UTF-8`.

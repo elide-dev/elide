@@ -14,7 +14,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
 import tools.elide.assets.ManifestFormat
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 import java.security.MessageDigest
 
 /** Base task which provides shared logic and declarations across all Elide plugin tasks. */

@@ -23,6 +23,9 @@ plugins {
 
 val buildWasm = project.properties["buildWasm"] == "true"
 
+val commonMain: SourceSet by sourceSets.creating
+val commonTest: SourceSet by sourceSets.creating
+
 elide {
   publishing {
     id = "proto-core"
@@ -31,9 +34,7 @@ elide {
   }
 
   kotlin {
-    target = (KotlinTarget.JVM + KotlinTarget.JsNode).let {
-      if(buildWasm) it + KotlinTarget.WASM else it
-    }
+    target = KotlinTarget.All
   }
 
   jvm {
@@ -51,10 +52,7 @@ dependencies {
     api(libs.kotlinx.datetime)
     implementation(projects.packages.core)
     implementation(projects.packages.base)
-  }
-
-  commonTest {
-    implementation(projects.packages.test)
+    implementation(kotlin("stdlib"))
   }
 
   jvm {
@@ -70,17 +68,9 @@ dependencies {
   }
 }
 
-// Configurations: Testing
-val testBase: Configuration by configurations.creating {}
-
-tasks {
-  val testJar by registering(Jar::class) {
-    description = "Base (abstract) test classes for all implementations"
-    archiveClassifier = "tests"
-    from(sourceSets.named("test").get().output)
-  }
-
-  artifacts {
-    add("testBase", testJar)
+afterEvaluate {
+  // @TODO(sgammon): breakage while fetching `joda-core` dependency
+  tasks.named("wasmJsBrowserTest").configure {
+    enabled = false
   }
 }

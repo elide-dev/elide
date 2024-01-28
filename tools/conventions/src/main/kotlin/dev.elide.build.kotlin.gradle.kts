@@ -24,7 +24,7 @@ plugins {
 }
 
 val defaultJavaVersion = "17"
-val defaultKotlinVersion = "1.9"
+val defaultKotlinVersion = "2.0"
 
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
@@ -93,7 +93,7 @@ extensions.configure<kotlinx.kover.gradle.plugin.dsl.KoverReportExtension> {
 configurations.all {
   resolutionStrategy.eachDependency {
     if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
-      useVersion(kotlinVersion ?: "1.9.21")
+      useVersion(kotlinVersion ?: "2.0.0-Beta3")
       because("pin kotlin stdlib")
     }
   }

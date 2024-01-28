@@ -39,6 +39,7 @@ elide {
 
   kotlin {
     explicitApi = true
+    kotlinVersionOverride = "1.9"  // @TODO: ksp processors don't work with 2.0 yet
   }
 
   java {

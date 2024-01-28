@@ -27,7 +27,7 @@ plugins {
 }
 
 val defaultJavaVersion = "17"
-val defaultKotlinVersion = "1.9"
+val defaultKotlinVersion = "2.0"
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion

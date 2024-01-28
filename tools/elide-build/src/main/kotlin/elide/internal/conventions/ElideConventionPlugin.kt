@@ -28,6 +28,7 @@ import org.gradle.plugins.signing.SigningPlugin
 import org.sonarqube.gradle.SonarQubePlugin
 import javax.inject.Inject
 import kotlinx.kover.gradle.plugin.KoverGradlePlugin
+import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.ElideBuildExtension.Convention
 import elide.internal.conventions.archives.excludeDuplicateArchives
 import elide.internal.conventions.archives.reproducibleArchiveTasks
@@ -143,6 +144,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
         configureJavaModules = conventions.java.configureModularity,
         customKotlinCompilerArgs = customKotlinCompilerArgs,
         wasmSourceSets = conventions.kotlin.wasmSourceSets,
+        kotlinVersionOverride = kotlinVersionOverride,
       )
     }
 
@@ -156,7 +158,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
 
     maybeApplyConvention(conventions.jvm) {
       if (alignVersions) alignJvmVersion()
-      if (forceJvm17) alignJvmVersion(overrideVersion = "17")
+      if (forceJvm17) alignJvmVersion(overrideVersion = Versions.JVM_DEFAULT)
     }
 
     maybeApplyConvention(conventions.native) {

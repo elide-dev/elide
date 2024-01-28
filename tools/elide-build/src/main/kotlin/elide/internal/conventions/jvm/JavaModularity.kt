@@ -97,12 +97,14 @@ internal object Java9Modularity {
     }
 
     val processModuleInfoFile by tasks.registering(ProcessModuleInfoFile::class) {
-      moduleInfoFile = if (multiplatform) {
+      moduleInfoFile.set(if (multiplatform) {
         file("${project.projectDir}/src/jvmMain/kotlin/module-info.java")
       } else {
         file("${project.projectDir}/src/main/kotlin/module-info.java")
-      }
-      processedModuleInfoFile = project.layout.buildDirectory.file("generated-sources/module-info-processor/module-info.java")
+      })
+      processedModuleInfoFile.set(
+        project.layout.buildDirectory.file("generated-sources/module-info-processor/module-info.java")
+      )
     }
 
     val compileJavaModuleInfo = tasks.register("compileModuleInfoJava", JavaCompile::class.java) {
@@ -126,7 +128,7 @@ internal object Java9Modularity {
 
       // Set the task outputs and destination directory
       outputs.dir(targetDir)
-      destinationDirectory = targetDir
+      destinationDirectory.set(targetDir)
 
       // Configure JVM compatibility
       sourceCompatibility = JavaVersion.VERSION_11.toString()

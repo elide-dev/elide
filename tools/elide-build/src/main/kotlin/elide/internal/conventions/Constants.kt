@@ -82,13 +82,20 @@ public object Constants {
     /** Property: defines the version of the Kotlin SDK. */
     const val KOTLIN_SDK = "versions.kotlin.sdk"
 
+    /** Constant: default Kotlin SDK version if no other version is defined. */
+    const val KOTLIN_SDK_DEFAULT = "2.0.0-Beta3"
+
     /** Constant: default Kotlin version. */
-    const val KOTLIN_DEFAULT = "1.9"
+    const val KOTLIN_DEFAULT = "2.0"
 
     /** Property: defines the target JVM version. */
     const val JVM_TARGET = "versions.java.target"
 
-    const val GRAALVM_METADATA = "0.3.3"
+    /** Property: JVM bytecode target if no other version is specified. */
+    const val JVM_DEFAULT = "17"
+
+    /** GraalVM metadata repository version. */
+    const val GRAALVM_METADATA = "0.3.6"
   }
 
   /** Kotlin conventions. */

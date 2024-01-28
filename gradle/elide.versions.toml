@@ -1,7 +1,7 @@
 [versions]
 elide = "1.0.0-alpha7"
 kotlin-sdk = "2.0.0-Beta3"
-kotlin-language = "1.9"
+kotlin-language = "2.0"
 confundus = "1.0.0"
 jna = "5.8.0"
 ksp = "2.0.0-Beta3-1.0.17"

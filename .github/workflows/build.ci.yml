@@ -172,7 +172,7 @@ jobs:
           cache-read-only: false
           dependency-graph: generate-and-submit
           arguments: |
-            build
+            assemble
             -x check
             -x test
             -x jvmTest
@@ -271,7 +271,7 @@ jobs:
         with:
           cache-read-only: false
           arguments: |
-            test
+            allTests
             check
             koverXmlReport
             --scan

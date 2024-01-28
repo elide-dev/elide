@@ -32,7 +32,7 @@ public data class VMStaticProperty internal constructor (
 
     private val svmVersionMap = sortedMapOf(
       "35" to "23.1.0",
-      "13.1" to "23.1.1",
+      "13.1" to "23.1.2",
     )
 
     private fun currentVersion(): SemanticVersion? {

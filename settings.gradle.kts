@@ -29,7 +29,7 @@ pluginManagement {
 }
 
 plugins {
-  id("build.less") version("1.0.0-beta9")
+  id("build.less") version("1.0.0-rc2")
   id("com.gradle.enterprise") version("3.15.1")
   id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version("1.12")

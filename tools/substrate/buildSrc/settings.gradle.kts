@@ -23,10 +23,6 @@ pluginManagement {
   }
 }
 
-plugins {
-  id("build.less")
-}
-
 dependencyResolutionManagement {
   repositories {
     maven("https://maven.pkg.st")

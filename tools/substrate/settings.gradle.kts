@@ -25,8 +25,8 @@ pluginManagement {
 }
 
 plugins {
-  id("build.less") version("1.0.0-beta9")
-  id("com.gradle.enterprise") version("3.14.1")
+  id("build.less") version("1.0.0-rc2")
+  id("com.gradle.enterprise") version("3.15.1")
 }
 
 dependencyResolutionManagement {

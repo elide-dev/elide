@@ -15,10 +15,10 @@
 
 package elide.proto.impl.data
 
-import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.DataFingerprint
 import tools.elide.data.DataFingerprintOrBuilder
 import tools.elide.data.Encoding
+import tools.elide.std.HashAlgorithm
 import elide.core.encoding.base64.Base64Data
 import elide.core.encoding.hex.HexData
 import tools.elide.data.DataFingerprint.Builder as ProtoBuilder

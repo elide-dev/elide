@@ -15,7 +15,7 @@ package elide.server.assets
 
 import com.google.protobuf.ByteString
 import org.junit.jupiter.api.assertThrows
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 import tools.elide.data.CompressionMode
 import java.nio.charset.StandardCharsets
 import kotlinx.serialization.json.Json

@@ -7,7 +7,7 @@ import org.gradle.api.file.CopySpec
 import org.gradle.api.internal.catalog.DelegatingProjectDependency
 import org.gradle.api.model.ObjectFactory
 import tools.elide.assets.ManifestFormat
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 import tools.elide.data.CompressionMode
 import java.io.File
 import java.util.*

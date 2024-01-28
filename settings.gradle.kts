@@ -103,6 +103,7 @@ include(
   ":packages:platform",
   ":packages:runtime",
   ":packages:proto:proto-core",
+  ":packages:proto:proto-test",
   ":packages:proto:proto-capnp",
   ":packages:proto:proto-flatbuffers",
   ":packages:proto:proto-kotlinx",

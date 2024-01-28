@@ -18,7 +18,7 @@
 syntax = "proto3";
 package elide.crypto;
 
-option optimize_for = CODE_SIZE;
+option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_string_check_utf8 = true;
@@ -29,36 +29,41 @@ option java_package = "tools.elide.crypto";
 option csharp_namespace = "Elide.Crypto";
 option go_package = "github.com/elide-tools/elide/crypto;crypto";
 
+// Specifies known ciphers to this version of the protocol.
+enum KnownCipher {
+  // Specifies an unrecognized cipher for this version of the protocol; should not be used by regular code.
+  CIPHER_UNRECOGNIZED = 0;
 
-// Specifies well-known hash algorithms.
-enum HashAlgorithm {
-  // No hash algorithm was/is active.
-  IDENTITY = 0;
+  // Specifies the AES-128 cipher, operating in CBC mode.
+  AES_128_CBC = 1;
 
-  // Algorithm: MD5.
-  MD5 = 1;
+  // Specifies the AES-256 cipher, operating in CBC mode.
+  AES_256_CBC = 2;
 
-  // Algorithm: SHA1.
-  SHA1 = 2;
+  // Specifies the AES-128 cipher, operating in GCM mode.
+  AES_128_GCM = 3;
 
-  // Algorithm: SHA2.
-  SHA2 = 3;
+  // Specifies the AES-256 cipher, operating in GCM mode.
+  AES_256_GCM = 4;
 
-  // Algorithm: SHA-256.
-  SHA256 = 4;
+  // Specifies the ChaCha20 cipher, operating in Poly1305 mode.
+  CHACHA20_POLY1305 = 5;
+}
 
-  // Algorithm: SHA-384.
-  SHA384 = 5;
+// Specifies cipher information in a given context.
+message CipherInfo {
+  // Specifies a cipher in use.
+  oneof cipher {
+    // Specifies a known cipher.
+    KnownCipher known = 1;
 
-  // Algorithm: SHA-512.
-  SHA512 = 6;
+    // Specifies a custom cipher.
+    string custom = 2;
+  }
 
-  // Algorithm: SHA3-224.
-  SHA3_224 = 7;
+  // Key ID in use for this value; expected to be accessible to the receiving application.
+  string kid = 3;
 
-  // Algorithm: SHA3-256.
-  SHA3_256 = 8;
-
-  // Algorithm: SHA3-512.
-  SHA3_512 = 9;
+  // IV for encryption/decryption of this value.
+  bytes iv = 4;
 }

@@ -12,8 +12,7 @@
  */
 
 /**
- * Defines basic framework structures related to modelling human language. These structures are render-able by the Soy
- * templates stored alongside them, and are used for various things throughout the codebase.
+ * Defines basic framework structures which are used throughout all protocol modules.
  */
 syntax = "proto3";
 package elide.base;
@@ -29,7 +28,6 @@ option objc_class_prefix = "ELD";
 option java_package = "tools.elide.base";
 option csharp_namespace = "Elide.Base";
 option go_package = "github.com/elide-tools/elide/base";
-
 
 // Specifies common/major languages present in software development or the open internet. This is not an exhaustive list
 // and if you need to specify an entry that isn't present (without a code change), it is best to opt for the `iso_`-

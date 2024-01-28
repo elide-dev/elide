@@ -1,0 +1,472 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/*
+ * Specifies common HTTP protocol structures which are used throughout the Elide framework; in particular, these records
+ * are used to express fetch interactions over the Elide Invocation API.
+ */
+syntax = "proto3";
+package elide.http;
+
+import "elide/crypto/tls.proto";
+import "elide/data/encoding.proto";
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.http";
+option csharp_namespace = "Elide.Http";
+option go_package = "github.com/elide-tools/elide/http;http";
+
+// Specifies information about the active HTTP connection.
+message ConnectionInfo {
+  // Specifies the remote address of the connection.
+  string remote_address = 1;
+
+  // Specifies the local address of the connection.
+  string local_address = 2;
+
+  // Specifies the remote port of the connection.
+  uint32 remote_port = 3;
+
+  // Specifies the local port of the connection.
+  uint32 local_port = 4;
+}
+
+// HTTP versions known to this protocol.
+enum HttpVersion {
+  // Unspecified HTTP version; this indicates a forward-incompatible value and should not be used by regular code.
+  UNSPECIFIED_HTTP_VERSION = 0;
+
+  // HTTP 1.0.
+  HTTP_1_0 = 1;
+
+  // HTTP 1.1.
+  HTTP_1_1 = 2;
+
+  // HTTP 2.0.
+  HTTP_2_0 = 3;
+
+  // HTTP 3.0.
+  HTTP_3_0 = 4;
+}
+
+// HTTP request method.
+enum HttpMethod {
+  // Unspecified HTTP method; this indicates a forward-incompatible value and should not be used by regular code.
+  UNSPECIFIED_METHOD = 0;
+
+  // HTTP GET.
+  GET = 1;
+
+  // HTTP POST.
+  POST = 2;
+
+  // HTTP PUT.
+  PUT = 3;
+
+  // HTTP DELETE.
+  DELETE = 4;
+
+  // HTTP PATCH.
+  PATCH = 5;
+
+  // HTTP HEAD.
+  HEAD = 6;
+
+  // HTTP OPTIONS.
+  OPTIONS = 7;
+
+  // HTTP TRACE.
+  TRACE = 8;
+
+  // HTTP CONNECT.
+  CONNECT = 9;
+}
+
+// HTTP header.
+message HttpHeader {
+  // Specifies the HTTP header name.
+  string name = 1;
+
+  // Specifies the HTTP header value.
+  string value = 2;
+}
+
+// HTTP headers.
+message HttpHeaders {
+  // Specifies the HTTP headers constituent to the request or response.
+  repeated HttpHeader header = 1;
+}
+
+// Describes HTTP body parameters for a request or response payload.
+message HttpBody {
+  // Whether an HTTP body is present.
+  bool present = 1;
+
+  // Size of the HTTP body, in bytes.
+  uint64 size = 2;
+
+  // Content type declared for this payload, if available.
+  string type = 3;
+
+  // Content chunks which constitute this payload; fixed-size responses have only one chunk.
+  repeated bytes content = 4;
+}
+
+// Informational structure describing a version-agnostic HTTP request.
+message HttpRequestInfo {
+  // Specifies the HTTP method.
+  oneof method {
+    // Standard HTTP method.
+    HttpMethod standard = 1;
+
+    // Custom HTTP method.
+    string custom = 2;
+  }
+
+  // Specifies the HTTP request path.
+  string path = 3;
+
+  // Specifies "search" (query) parameters for this URL.
+  string search = 4;
+
+  // Specifies the HTTP headers constituent to the request.
+  HttpHeaders headers = 5;
+}
+
+// Enumerates known HTTP authorization types.
+enum HttpAuthorizationType {
+  // Exotic or unknown HTTP authorization type; this indicates a forward-incompatible value and should not be used by
+  // regular application code.
+  HTTP_AUTHORIZATION_UNKNOWN = 0;
+
+  // HTTP Basic authorization.
+  BASIC = 1;
+
+  // HTTP Digest authorization.
+  DIGEST = 2;
+
+  // HTTP Bearer authorization.
+  BEARER = 3;
+}
+
+// Specifies HTTP authorization metadata, detected from a request (as applicable).
+message HttpAuthorization {
+  // Specifies a string value for authorization.
+  message TokenValue {
+    // Specifies the token value.
+    string token = 1;
+  }
+
+  // Specifies an HTTP username and password pair.
+  message UsernamePassword {
+    // Specifies the HTTP authorization username-equivalent field.
+    string username = 1;
+
+    // Specifies the HTTP authorization password-equivalent field.
+    string password = 2;
+  }
+
+  // Specifies a realm value, as applicable.
+  string realm = 1;
+
+  // Specifies the scheme for authorization.
+  oneof scheme {
+    // Specifies the HTTP authorization type.
+    HttpAuthorizationType type = 2;
+
+    // Specifies the HTTP authorization scheme.
+    string spec = 3;
+  }
+
+  // Specifies the HTTP authorization value.
+  oneof value {
+    // Specifies the HTTP authorization token value.
+    TokenValue token = 4;
+
+    // Specifies the HTTP authorization username/password pair.
+    UsernamePassword user = 5;
+  }
+}
+
+// Specifies authorization info returned in an HTTP response header.
+message HttpAuthorizationInfo {
+  // Encoded authorization info returned as part of a response.
+  string info = 1;
+}
+
+// Specifies request metadata provided by an active HTTP edge proxy, as applicable.
+message HttpEdgeInfo {
+  // Specifies the HTTP edge proxy's IP address.
+  string ip = 1;
+
+  // Specifies the edge proxy datacenter or point-of-presence.
+  string datacenter = 2;
+
+  // Specifies the edge proxy datacenter's region or locale.
+  string region = 3;
+}
+
+// Specifies metadata relating to proxied HTTP requests.
+message ProxyMetadata {
+  // Forwarded client in front of this machine.
+  string fowarded_for = 1;
+
+  // Forwarded host in front of this machine.
+  string fowarded_host = 2;
+
+  // Forwarded protocol in front of this machine.
+  string fowarded_proto = 3;
+
+  // Proxy authorization for a given interaction or connection.
+  HttpAuthorization authorization = 4;
+}
+
+// Specifies transport-related HTTP connection or interaction metadata.
+message TransportMetadata {
+  // Specifies information about the underlying TCP connection.
+  ConnectionInfo connection = 1;
+
+  // Information relating to TLS (Transport Layer Security) for this connection.
+  elide.crypto.TlsConnectionInfo tls = 2;
+}
+
+// Informational structure describing metadata known for a given HTTP interaction or cycle.
+message HttpCommonMetadata {
+  // Specifies the HTTP version.
+  HttpVersion version = 1;
+
+  // Metadata related to HTTP transport.
+  TransportMetadata transport = 2;
+
+  // Encoding for this HTTP payload/interaction.
+  elide.data.Encoding encoding = 3;
+}
+
+// HTTP request-specific metadata.
+message HttpRequestMetadata {
+  // Specifies metadata common to both requests and responses.
+  HttpCommonMetadata common = 1;
+
+  // Metadata related to HTTP proxying.
+  ProxyMetadata proxy = 2;
+
+  // HTTP primary authorization present on this request, as applicable.
+  HttpAuthorization authorization = 3;
+
+  // Specifies request metadata provided by an active HTTP edge proxy, as applicable.
+  HttpEdgeInfo edge = 4;
+}
+
+// HTTP response-specific metadata.
+message HttpResponseMetadata {
+  // Specifies metadata common to both requests and responses.
+  HttpCommonMetadata common = 1;
+
+  // Specifies authorization info metadata to include in the response.
+  HttpAuthorizationInfo authorization_info = 2;
+}
+
+// HTTP request structure.
+message HttpRequest {
+  // Specifies metadata known or available about the HTTP request.
+  HttpRequestMetadata metadata = 1;
+
+  // Specifies the HTTP method.
+  oneof method {
+    // Standard HTTP method.
+    HttpMethod standard = 2;
+
+    // Custom HTTP method.
+    string custom = 3;
+  }
+
+  // Specifies the HTTP request path.
+  string path = 4;
+
+  // Query/search parameters attached to the URI.
+  string search = 5;
+
+  // Specifies the HTTP headers constituent to the request.
+  HttpHeaders headers = 6;
+
+  // Body payload, if specified/available.
+  HttpBody body = 7;
+}
+
+// Enumerates HTTP status codes known to this protocol.
+enum HttpStatus {
+  // Unspecified HTTP status; this indicates a forward-incompatible value and should not be used by regular code.
+  HTTP_STATUS_UNSPECIFIED = 0;
+
+  // HTTP 100 Continue.
+  CONTINUE = 100;
+
+  // HTTP 200 Okay.
+  OK = 200;
+
+  // HTTP 201 Created.
+  CREATED = 201;
+
+  // HTTP 202 Accepted.
+  ACCEPTED = 202;
+
+  // HTTP 203 Non-Authoritative Information.
+  NON_AUTHORITATIVE_INFORMATION = 203;
+
+  // HTTP 204 No Content.
+  NO_CONTENT = 204;
+
+  // HTTP 205 Reset Content.
+  RESET_CONTENT = 205;
+
+  // HTTP 206 Partial Content.
+  PARTIAL_CONTENT = 206;
+
+  // HTTP 300 Multiple Choices.
+  MULTIPLE_CHOICES = 300;
+
+  // HTTP 301 Moved Permanently.
+  MOVED_PERMANENTLY = 301;
+
+  // HTTP 302 Found.
+  FOUND = 302;
+
+  // HTTP 303 See Other.
+  SEE_OTHER = 303;
+
+  // HTTP 304 Not Modified.
+  NOT_MODIFIED = 304;
+
+  // HTTP 305 Use Proxy.
+  USE_PROXY = 305;
+
+  // HTTP 307 Temporary Redirect.
+  TEMPORARY_REDIRECT = 307;
+
+  // HTTP 400 Bad Request.
+  BAD_REQUEST = 400;
+
+  // HTTP 401 Unauthorized.
+  UNAUTHORIZED = 401;
+
+  // HTTP 402 Payment Required.
+  PAYMENT_REQUIRED = 402;
+
+  // HTTP 403 Forbidden.
+  FORBIDDEN = 403;
+
+  // HTTP 404 Not Found.
+  NOT_FOUND = 404;
+
+  // HTTP 405 Method Not Allowed.
+  METHOD_NOT_ALLOWED = 405;
+
+  // HTTP 406 Not Acceptable.
+  NOT_ACCEPTABLE = 406;
+
+  // HTTP 407 Proxy Authentication Required.
+  PROXY_AUTHENTICATION_REQUIRED = 407;
+
+  // HTTP 408 Request Timeout.
+  REQUEST_TIMEOUT = 408;
+
+  // HTTP 409 Conflict.
+  CONFLICT = 409;
+
+  // HTTP 410 Gone.
+  GONE = 410;
+
+  // HTTP 411 Length Required.
+  LENGTH_REQUIRED = 411;
+
+  // HTTP 412 Precondition Failed.
+  PRECONDITION_FAILED = 412;
+
+  // HTTP 413 Request Entity Too Large.
+  REQUEST_ENTITY_TOO_LARGE = 413;
+
+  // HTTP 414 Request-URI Too Long.
+  REQUEST_URI_TOO_LONG = 414;
+
+  // HTTP 415 Unsupported Media Type.
+  UNSUPPORTED_MEDIA_TYPE = 415;
+
+  // HTTP 416 Requested Range Not Satisfiable.
+  REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+
+  // HTTP 417 Expectation Failed.
+  EXPECTATION_FAILED = 417;
+
+  // HTTP 500 Internal Server Error.
+  INTERNAL_SERVER_ERROR = 500;
+
+  // HTTP 501 Not Implemented.
+  NOT_IMPLEMENTED = 501;
+
+  // HTTP 502 Bad Gateway.
+  BAD_GATEWAY = 502;
+
+  // HTTP 503 Service Unavailable.
+  SERVICE_UNAVAILABLE = 503;
+
+  // HTTP 504 Gateway Timeout.
+  GATEWAY_TIMEOUT = 504;
+
+  // HTTP 505 HTTP Version Not Supported.
+  HTTP_VERSION_NOT_SUPPORTED = 505;
+
+  // HTTP 511 Network Authentication Required.
+  NETWORK_AUTHENTICATION_REQUIRED = 511;
+
+  // HTTP 520 Unknown Error.
+  UNKNOWN_ERROR = 520;
+}
+
+// HTTP response structure.
+message HttpResponse {
+  // Specifies metadata known or available about the HTTP request.
+  HttpResponseMetadata metadata = 1;
+
+  // Specifies the HTTP status code resulting from an HTTP request.
+  oneof status {
+    // Standard HTTP status code.
+    HttpStatus standard = 2;
+
+    // Custom HTTP status code.
+    uint32 custom = 3;
+  }
+
+  // Specifies the HTTP headers constituent to the response.
+  HttpHeaders headers = 4;
+
+  // Body payload, if specified/available.
+  HttpBody body = 5;
+
+  // Specifies the HTTP trailers constituent to the response.
+  HttpHeaders trailers = 6;
+}
+
+// HTTP request and response cycle.
+message HttpCycle {
+  // Specifies the HTTP request.
+  HttpRequest request = 1;
+
+  // Specifies the HTTP response.
+  HttpResponse response = 2;
+}

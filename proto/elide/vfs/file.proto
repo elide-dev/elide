@@ -29,9 +29,8 @@ option java_package = "tools.elide.vfs";
 option csharp_namespace = "Elide.VFS";
 
 import "google/protobuf/timestamp.proto";
-import "elide/crypto/crypto.proto";
+import "elide/std/hash.proto";
 import "elide/data/encoding.proto";
-
 
 // # VFS: Known MIME-Type
 //
@@ -64,7 +63,7 @@ message File {
     }
 
     // If this fingerprint carries a `hash` value, this describes the algorithm used.
-    crypto.HashAlgorithm algorithm = 3;
+    std.HashAlgorithm algorithm = 3;
   }
 
   // Combines a compressed and uncompressed fingerprint of file data.

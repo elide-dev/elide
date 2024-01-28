@@ -16,7 +16,7 @@ package tools.elide.data
 import com.google.protobuf.kotlin.toByteString
 import com.google.protobuf.kotlin.toByteStringUtf8
 import com.google.protobuf.util.JsonFormat
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import kotlin.test.assertNotNull

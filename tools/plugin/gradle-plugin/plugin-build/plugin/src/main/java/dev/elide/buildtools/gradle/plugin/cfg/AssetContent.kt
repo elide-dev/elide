@@ -3,7 +3,7 @@ package dev.elide.buildtools.gradle.plugin.cfg
 import com.google.protobuf.ByteString
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.AssetBundleKt.assetContent
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 import tools.elide.data.CompressionMode
 import tools.elide.data.compressedData
 import tools.elide.data.dataContainer

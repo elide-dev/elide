@@ -1,0 +1,124 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+syntax = "proto3";
+package elide.net;
+
+import "elide/net/ip.proto";
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELDN";
+option swift_prefix = "ElideNet";
+option objc_class_prefix = "ELDN";
+option java_package = "tools.elide.net";
+option csharp_namespace = "Elide.Net";
+option go_package = "github.com/elide-tools/elide/net";
+
+// Specifies well-known DNS record types.
+enum DnsRecordType {
+  // Unspecified or unrecognized DNS record type; should not be used.
+  DNS_RECORD_TYPE_UNSPECIFIED = 0;
+
+  // A DNS A record, which maps a hostname to an IPv4 address.
+  A = 1;
+
+  // A DNS AAAA record, which maps a hostname to an IPv6 address.
+  AAAA = 2;
+
+  // A DNS CNAME record, which maps a hostname to another hostname.
+  CNAME = 3;
+
+  // A DNS TXT record, which holds generic text information.
+  TXT = 4;
+
+  // A DNS MX record, which holds mail server information.
+  MX = 5;
+}
+
+// Specifies a DNS record, with type, content, and TTL information.
+message DnsRecord {
+  // Specifies a simple DNS value, expressed as a string.
+  message StringValue {
+    // String record value.
+    string value = 1;
+  }
+
+  // Specifies a simple DNS string value which is associated with a priority; these are used for MX records.
+  message PriorityValue {
+    // String record value.
+    string value = 1;
+
+    // Priority value.
+    uint32 priority = 2;
+  }
+
+  // Specifies a DNS record which is associated with a hostname; these are used for CNAME records.
+  message HostnameValue {
+    // Hostname record value.
+    string value = 1;
+  }
+
+  // Specifies a DNS record which is associated with an IP address; these are used for A and AAAA records.
+  message AddressValue {
+    // IP address record value.
+    IpAddress value = 1;
+  }
+
+  // Specifies the domain owner of this record.
+  string domain = 1;
+
+  // Specifies the subject (name) of the record.
+  string name = 2;
+
+  // Specifies the time-to-live (TTL) value for the record.
+  uint64 ttl = 3;
+
+  // Specifies the value associated with the record.
+  oneof value {
+    // String value.
+    StringValue string = 4;
+
+    // Priority value.
+    PriorityValue priority = 5;
+
+    // Hostname value.
+    HostnameValue hostname = 6;
+
+    // Address value.
+    AddressValue address = 7;
+  }
+}
+
+// Specifies a hostname which is mapped in a hosts file.
+message MappedHost {
+  // Hostname to map.
+  string hostname = 1;
+
+  // IP address to map to.
+  string address = 2;
+}
+
+// Specifies DNS settings which apply to a given suite of networking settings.
+message DnsSettings {
+  // Whether to enable DNS defaults.
+  bool defaults = 1;
+
+  // Upstream servers to use for DNS resolution.
+  repeated string upstream = 2;
+
+  // Mapped hosts to use for DNS resolution.
+  repeated MappedHost hosts = 3;
+}

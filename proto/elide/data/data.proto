@@ -18,6 +18,9 @@
 syntax = "proto3";
 package elide.data;
 
+import "elide/data/encoding.proto";
+import "elide/std/hash.proto";
+
 option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
@@ -28,10 +31,6 @@ option objc_class_prefix = "ELD";
 option java_package = "tools.elide.data";
 option csharp_namespace = "Elide.Data";
 option go_package = "github.com/elide-tools/elide/data;data";
-
-import "elide/crypto/crypto.proto";
-import "elide/data/encoding.proto";
-
 
 // Specifies compression modes that are supported by the framework for pre-compressed assets stored inline within the
 // manifest. These inlined assets do not replace original source assets, which are enclosed in the resource JAR.
@@ -52,12 +51,11 @@ enum CompressionMode {
   DEFLATE = 4;
 }
 
-
 // Stores a generic cryptographic fingerprint of some arbitrary data. This is a utility record, which simply gathers the
 // specification of a hash algorithm with a raw data field storing the result of the hash.
 message DataFingerprint {
   // Algorithm in use when fingerprinting the associated data.
-  crypto.HashAlgorithm hash = 1;
+  std.HashAlgorithm hash = 1;
 
   // Specifies the encoding for the affixed fingerprint data. If unspecified, the fingerprint is expressed in raw bytes.
   data.Encoding encoding = 2;
@@ -75,7 +73,6 @@ message DataFingerprint {
   bytes fingerprint = 6;
 }
 
-
 // Specifies an arbitrary container, which is used to hold raw data, along with the optional specification of a
 // cryptographic fingerprint calculated from the data.
 message DataContainer {
@@ -89,7 +86,6 @@ message DataContainer {
   // Raw bytes for the data referenced by this container.
   bytes raw = 3;
 }
-
 
 // Generic container for compressed data, which simply combines an enumerated `CompressionMode` with a blob of raw bytes
 // which are expected to be compressed by the specified algorithm or tool.

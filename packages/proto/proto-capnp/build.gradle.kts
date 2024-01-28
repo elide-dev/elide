@@ -11,7 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
- import elide.internal.conventions.elide
+@file:Suppress("UnstableApiUsage")
+
+import elide.internal.conventions.elide
  import elide.internal.conventions.publishing.publish
  import elide.internal.conventions.kotlin.KotlinTarget
 
@@ -31,8 +33,13 @@ elide {
     }
   }
   
-  kotlin { target = KotlinTarget.JVM }
-  jvm { forceJvm17 = true }
+  kotlin {
+    target = KotlinTarget.JVM
+  }
+
+  jvm {
+    forceJvm17 = true
+  }
 
   // disable module-info processing (not present)
   java {
@@ -78,7 +85,7 @@ dependencies {
   api(libs.capnproto.runtime)
   implementation(kotlin("stdlib"))
   implementation(kotlin("stdlib-jdk8"))
-  testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
+  testImplementation(projects.packages.proto.protoTest)
 
   capnproto(libs.capnproto.runtime)
 }

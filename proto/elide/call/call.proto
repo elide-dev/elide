@@ -1,0 +1,57 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/*
+ * Specifies common structures which are used within the Elide Invocation API; these structures live outside the borders
+ * of API version control, so should be kept stable and backwards-compatible.
+ */
+syntax = "proto3";
+package elide.call;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.call";
+option csharp_namespace = "Elide.Call";
+option go_package = "github.com/elide-tools/elide/call;call";
+
+// Common record for information about a call through Elide's invocation API.
+message CallInfo {
+  // Call-level metadata.
+  CallMetadata metadata = 1;
+
+  // Call-level timing information.
+  CallTiming timing = 2;
+}
+
+// Common metadata for a call through Elide's invocation API; this record carries metadata which is pertinent to the
+// call itself, and to logging records which describe the call.
+message CallMetadata {
+  // Specifies an optional "application ID," which can be used to identify the app being invoked.
+  string app_id = 1;
+
+  // Specifies an optional "request ID," which can be used to identify this invocation cycle in logging or telemetry
+  // systems. Request IDs should always be attached to tracing which results from a given request cycle.
+  string request_id = 2;
+}
+
+// Describes timing for a call through Elide's invocation API, including hints about how long the call took, and how
+// long different specific processes took while processing the call.
+message CallTiming {
+  // Time, in milliseconds, that the call took to complete.
+  uint64 call_time_ms = 1;
+}

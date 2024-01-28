@@ -29,7 +29,7 @@ import org.junit.jupiter.api.assertThrows
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.AssetBundle.*
 import tools.elide.assets.ManifestFormat
-import tools.elide.crypto.HashAlgorithm
+import tools.elide.std.HashAlgorithm
 import tools.elide.data.CompressedData
 import tools.elide.data.compressedData
 import tools.elide.data.dataContainer

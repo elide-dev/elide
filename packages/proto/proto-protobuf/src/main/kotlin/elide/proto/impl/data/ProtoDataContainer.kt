@@ -15,10 +15,10 @@
 
 package elide.proto.impl.data
 
-import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.DataContainer
 import tools.elide.data.DataContainerOrBuilder
 import tools.elide.data.Encoding
+import tools.elide.std.HashAlgorithm
 import elide.core.encoding.base64.Base64Data
 import elide.core.encoding.hex.HexData
 import elide.proto.api.data.DataContainer as IDataContainer

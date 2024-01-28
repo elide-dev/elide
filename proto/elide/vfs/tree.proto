@@ -32,7 +32,6 @@ import "google/protobuf/timestamp.proto";
 import "elide/data/data.proto";
 import "elide/vfs/file.proto";
 
-
 // # VFS: Directory
 //
 // Describes a directory-type entry within a given `TreeEntry`, within a virtual file system managed by Elide. Directory
@@ -48,7 +47,6 @@ message Directory {
   // Children held by this directory.
   repeated TreeEntry children = 3;
 }
-
 
 // # VFS: Tree Entry
 //
@@ -68,7 +66,6 @@ message TreeEntry {
     File file = 10;
   }
 }
-
 
 // # VFS: File System
 //

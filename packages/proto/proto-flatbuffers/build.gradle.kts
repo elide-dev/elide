@@ -86,7 +86,7 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.flatbuffers.java.core)
-  testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
+  testImplementation(projects.packages.proto.protoTest)
 }
 
 afterEvaluate {

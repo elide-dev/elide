@@ -18,7 +18,14 @@
 syntax = "proto3";
 package elide.assets;
 
-option optimize_for = CODE_SIZE;
+import "elide/std/hash.proto";
+import "elide/data/data.proto";
+import "elide/model/model.proto";
+import "elide/page/page.proto";
+import "elide/structs/bloom.proto";
+import "google/protobuf/timestamp.proto";
+
+option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_string_check_utf8 = true;
@@ -27,15 +34,6 @@ option swift_prefix = "Elide";
 option objc_class_prefix = "ELD";
 option java_package = "tools.elide.assets";
 option csharp_namespace = "Elide.Assets";
-
-import "google/protobuf/timestamp.proto";
-
-import "elide/crypto/crypto.proto";
-import "elide/data/data.proto";
-import "elide/model/model.proto";
-import "elide/page/page.proto";
-import "elide/structs/bloom.proto";
-
 
 // Enumerates supported asset manifest formats. These are all powered by Protocol Buffers' encoding tools. For maximum
 // performance, use the binary format.
@@ -68,7 +66,7 @@ message AssetBundle {
   // the hash to take for the resulting token.
   message DigestSettings {
     // Hash algorithm in use for asset digestion.
-    crypto.HashAlgorithm algorithm = 1;
+    std.HashAlgorithm algorithm = 1;
 
     // Number of characters to pluck from the tail of the hash.
     uint32 tail = 2;

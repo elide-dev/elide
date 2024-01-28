@@ -32,7 +32,6 @@ option csharp_namespace = "Elide.VFS";
 import "elide/data/data.proto";
 import "elide/vfs/tree.proto";
 
-
 // # VFS: Bundle Header
 //
 // Defines the packed layout of an Elide VFS bundle's file header. The file header contains just enough data to safely

@@ -1,0 +1,103 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+syntax = "proto3";
+
+/*
+ * Specifies common structures which are used to define Elide applications; these are used from configuration structures
+ * and from APIs like the Host Control API. These structures live outside the boundaries of versioned proto-APIs, so
+ * they must remain stable and backwards-compatible.
+ */
+package elide.app;
+
+import "elide/app/config.proto";
+import "elide/app/capability.proto";
+import "elide/app/identity.proto";
+import "elide/app/io.proto";
+import "elide/app/isolation.proto";
+import "elide/app/secret.proto";
+import "elide/std/version.proto";
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.app";
+option csharp_namespace = "Elide.App";
+option go_package = "github.com/elide-tools/elide/app;app";
+
+// Specifies primary key information for an application; this includes the application's unique ID and ownership info.
+message ApplicationKey {
+  // Unique ID assigned to this application.
+  string id = 1;
+
+  // Owner user or tenant ID for this application.
+  string owner = 2;
+}
+
+// Top-level structure which describes an Elide application, including all relevant configuration and metadata.
+message Application {
+  // Primary key describing this application's identity.
+  ApplicationKey key = 1;
+
+  // User-assigned short name for this application.
+  string name = 2;
+
+  // Display name to show for this application.
+  string display_name = 3;
+
+  // Entrypoint types supported by this application.
+  elide.app.EntrypointType entry = 4;
+
+  // Full suite of rendered configuration for this application.
+  elide.app.AppConfiguration config = 5;
+
+  // Assets which should be made available to this application.
+  repeated elide.app.AppAsset asset = 6;
+
+  // Code bundles which implement the application.
+  repeated elide.app.AppBundle bundle = 7;
+}
+
+// Rendered environment value associated with a rendered app environment variable.
+message RenderedEnvironment {
+  // Specifies the value for this rendered environment variable.
+  oneof value {
+    // Specifies a literal plaintext value.
+    string literal = 1;
+
+    // Specifies a secret encrypted value.
+    elide.app.EncryptedSecret secret = 2;
+  }
+}
+
+// Activated application record, which includes the rendered/merged result of all input configurations and state.
+message ActiveApplication {
+  // Application which is addressed by this record.
+  Application app = 1;
+
+  // Active application version.
+  elide.std.Version version = 2;
+
+  // Rendered application environment.
+  map<string, RenderedEnvironment> env = 3;
+
+  // Privileges granted to this application.
+  elide.app.Privileges isolation = 4;
+
+  // Runtime identity allocated and activated for this application's use.
+  elide.app.Identity identity = 5;
+}

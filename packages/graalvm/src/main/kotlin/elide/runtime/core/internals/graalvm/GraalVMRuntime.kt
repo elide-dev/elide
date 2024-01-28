@@ -50,7 +50,7 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
      */
     private val SubstrateVersionMap = sortedMapOf(
       "35" to "23.1.0",
-      "13.1" to "23.1.1",
+      "13.1" to "23.1.2",
     )
 
     /** Constant value used to provide the [HostRuntime.name] property for the [GraalVMRuntime]. */

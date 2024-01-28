@@ -44,6 +44,7 @@ import elide.internal.conventions.publishing.publishJavadocJar
  * @param configureJavaModules Whether to enable processing of `module-info.java` files for JPMS support.
  * @param customKotlinCompilerArgs Custom Kotlin compiler args to apply.
  * @param wasmSourceSets Whether to spawn WASM source sets for use as commons.
+ * @param kotlinVersionOverride Override the API and language version of Kotlin for this module only.
  */
 internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
@@ -55,8 +56,9 @@ internal fun Project.configureKotlinBuild(
   configureJavaModules: Boolean = false,
   customKotlinCompilerArgs: List<String> = emptyList(),
   wasmSourceSets: Boolean = false,
+  kotlinVersionOverride: String? = null,
 ) {
-  val kotlinVersion = findProperty(Versions.KOTLIN)?.toString()
+  val kotlinVersion = kotlinVersionOverride ?: findProperty(Versions.KOTLIN)?.toString()
   val kotlinSdk = findProperty(Versions.KOTLIN_SDK)?.toString()
   val useStrictMode = findProperty(Kotlin.STRICT_MODE).toString().toBoolean()
 

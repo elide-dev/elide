@@ -70,24 +70,34 @@ internal fun Project.alignJvmVersion(overrideVersion: String? = null) {
     ?: findProperty(Versions.JVM_TARGET)?.toString()
     ?: error("JVM target not set")
 
+  val parsedJvmVersion = JavaVersion.toVersion(targetJvmVersion)
+  val parsedJvmTarget = JvmTarget.fromTarget(targetJvmVersion)
   extensions.getByType(JavaPluginExtension::class.java).apply {
-    sourceCompatibility = JavaVersion.toVersion(targetJvmVersion)
-    targetCompatibility = JavaVersion.toVersion(targetJvmVersion)
+    sourceCompatibility = parsedJvmVersion
+    targetCompatibility = parsedJvmVersion
   }
+  tasks.apply {
+    withType(JavaCompile::class.java).configureEach {
+      sourceCompatibility = targetJvmVersion
+      targetCompatibility = targetJvmVersion
 
-  tasks.withType(JavaCompile::class.java).configureEach {
-    sourceCompatibility = targetJvmVersion
-    targetCompatibility = targetJvmVersion
-
-    options.isFork = true
-    options.isIncremental = true
-  }
-
-  tasks.withType(KotlinCompile::class.java).configureEach {
-    incremental = true
-    kotlinOptions {
-      jvmTarget = targetJvmVersion
-      javaParameters = true
+      options.isFork = true
+      options.isIncremental = true
+    }
+    withType(KotlinCompile::class.java).configureEach {
+      incremental = true
+      kotlinOptions {
+        jvmTarget = targetJvmVersion
+        javaParameters = true
+      }
+    }
+    withType(KotlinCompilationTask::class.java).configureEach {
+      compilerOptions {
+        if (this is KotlinJvmCompilerOptions) {
+          jvmTarget.set(parsedJvmTarget)
+          javaParameters.set(true)
+        }
+      }
     }
   }
 }

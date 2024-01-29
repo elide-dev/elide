@@ -48,9 +48,9 @@ pluginManagement {
 
 plugins {
   id("build.less") version("1.0.0-rc2")
-  id("com.gradle.enterprise") version("3.15.1")
-  id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
-  id("com.gradle.common-custom-user-data-gradle-plugin") version("1.12")
+  id("com.gradle.enterprise") version("3.16.2")
+  id("org.gradle.toolchains.foojay-resolver-convention") version("0.8.0")
+  id("com.gradle.common-custom-user-data-gradle-plugin") version("1.12.1")
   id("io.micronaut.platform.catalog") version(extra.properties["micronautVersion"] as String)
 }
 

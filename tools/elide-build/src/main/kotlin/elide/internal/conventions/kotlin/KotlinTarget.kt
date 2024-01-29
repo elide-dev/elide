@@ -40,6 +40,9 @@ public sealed interface KotlinTarget {
   /** Kotlin Multiplatform target for the native backend. This will target every available native platform. */
   public data object Native : KotlinTarget
 
+  /** Kotlin Multiplatform target for the native backend, tuned for embedded targets only. */
+  public data object NativeEmbedded : KotlinTarget
+
   /** Kotlin target for the Jvm backend. */
   public data object JVM : KotlinTarget
 
@@ -84,13 +87,24 @@ public sealed interface KotlinTarget {
   }
 
   public companion object {
-    /** Lazy target containing every avialable platform. */
+    /** Lazy target containing every available platform. */
     public val All: KotlinTarget by lazy {
       Multiplatform(arrayOf(
         JVM,
         JsBrowser,
         JsNode,
         Native,
+        WASM,
+      ))
+    }
+
+    /** Lazy target containing platforms for embedded targets. */
+    public val Embedded: KotlinTarget by lazy {
+      Multiplatform(arrayOf(
+        JVM,
+        JsBrowser,
+        JsNode,
+        NativeEmbedded,
         WASM,
       ))
     }

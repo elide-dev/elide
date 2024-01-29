@@ -71,8 +71,8 @@ internal fun Project.configureKotlinMultiplatform(
       }
     }
 
-    if (WASM in target) {
-      wasmJs {
+    if (WASM in target || WASI in target) {
+      if (WASM in target) wasmJs {
         nodejs()
         browser()
       }

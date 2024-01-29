@@ -125,7 +125,7 @@ internal fun Project.configureKotlinBuild(
       freeCompilerArgs.set(freeCompilerArgs.get().plus(when (target) {
        JVM -> if (configureKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
        JsBrowser, JsNode -> Elide.JsCompilerArgs
-       is Multiplatform, Native, WASM -> Elide.KmpCompilerArgs
+       is Multiplatform, Native, WASM, WASI -> Elide.KmpCompilerArgs
      }).plus(customKotlinCompilerArgs).toList())
     }
   }

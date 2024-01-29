@@ -184,6 +184,7 @@ include(
   ":packages:server",
   ":packages:ssr",
   ":packages:test",
+  ":packages:wasm",
   ":tools:processor",
   ":tools:reports",
   ":tools:wrappers",
@@ -196,11 +197,6 @@ val buildPlugins: String by settings
 val buildBenchmarks: String by settings
 val buildRpc: String by settings
 val buildSsg: String by settings
-val buildWasm: String by settings
-
-//if (buildWasm == "true") {
-//  include(":packages:wasm")
-//}
 
 includeBuild(
   "tools/elide-build",

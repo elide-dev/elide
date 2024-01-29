@@ -82,12 +82,14 @@ public sealed interface KotlinTarget {
 
   public companion object {
     /** Lazy target containing every avialable platform. */
-    public val All: KotlinTarget by lazy { Multiplatform(arrayOf(
-      JVM,
-      JsBrowser,
-      JsNode,
-      Native,
-      WASM,
-    )) }
+    public val All: KotlinTarget by lazy {
+      Multiplatform(arrayOf(
+        JVM,
+        JsBrowser,
+        JsNode,
+        Native,
+        WASM,
+      ))
+    }
   }
 }

@@ -103,10 +103,37 @@ internal fun Project.configureKotlinMultiplatform(
 }
 
 private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project) {
-  // add all basic native targets for both architecture families (mingw not available for ARM)
+  // Linux
   linuxX64()
+  linuxArm64()
+
+  // macOS
   macosX64()
   macosArm64()
+
+  // iOS
+  iosX64()
+  iosArm64()
+  iosSimulatorArm64()
+
+  // watchOS
+  watchosArm32()
+  watchosArm64()
+  watchosX64()
+  watchosSimulatorArm64()
+  watchosDeviceArm64()
+
+  // tvOS
+  tvosArm64()
+  tvosX64()
+  tvosSimulatorArm64()
+
+  // Android Native
+  androidNativeX86()
+  androidNativeX64()
+  androidNativeArm32()
+  androidNativeArm64()
+
   if (project.properties["buildMingw"] != "false") {
     mingwX64()
   }

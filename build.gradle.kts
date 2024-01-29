@@ -96,7 +96,22 @@ buildscript {
   repositories {
     maven("https://maven.pkg.st")
     maven("https://gradle.pkg.st")
-    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+
+    maven {
+      name = "elide-snapshots"
+      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      content {
+        includeGroup("dev.elide")
+        includeGroup("org.capnproto")
+      }
+    }
+    maven {
+      name = "oss-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      content {
+        includeGroup("dev.elide")
+      }
+    }
   }
   dependencies {
     val enableProguard: String? by properties

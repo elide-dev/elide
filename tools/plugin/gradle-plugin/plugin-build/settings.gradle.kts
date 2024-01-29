@@ -17,7 +17,14 @@ pluginManagement {
     repositories {
         maven("https://gradle.pkg.st")
         maven("https://maven.pkg.st")
-        maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+
+        maven {
+            name = "elide-snapshots"
+            url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+            content {
+                includeGroup("dev.elide")
+            }
+        }
     }
 }
 
@@ -33,9 +40,46 @@ dependencyResolutionManagement {
     repositories {
         maven("https://maven.pkg.st")
         maven("https://gradle.pkg.st")
-        maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
+
+        maven {
+            name = "elide-snapshots"
+            url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+            content {
+                includeGroup("dev.elide")
+            }
+        }
+        maven {
+            name = "wasm-dev"
+            url = uri("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+            content {
+                includeGroup("io.ktor")
+                includeGroup("org.jetbrains.compose")
+                includeGroup("org.jetbrains.compose.compiler")
+                includeGroup("org.jetbrains.kotlin")
+                includeGroup("org.jetbrains.kotlinx")
+            }
+        }
+        maven {
+            name = "compose-dev"
+            url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
+            content {
+                includeGroup("androidx.compose")
+                includeGroup("androidx.compose.compiler")
+                includeGroup("org.jetbrains.compose")
+                includeGroup("org.jetbrains.compose.compiler")
+                includeGroup("web")
+            }
+        }
+        maven {
+            name = "compose-edge"
+            url = uri("https://androidx.dev/storage/compose-compiler/repository/")
+            content {
+                includeGroup("androidx.compose")
+                includeGroup("androidx.compose.compiler")
+                includeGroup("org.jetbrains.compose")
+                includeGroup("org.jetbrains.compose.compiler")
+            }
+        }
         mavenLocal()
     }
     versionCatalogs {

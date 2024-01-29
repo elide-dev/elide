@@ -83,7 +83,10 @@ internal fun Project.configureKotlinMultiplatform(
     }
 
     // add native targets
-    if (Native in target) registerNativeTargets(this@configureKotlinMultiplatform)
+    if (Native in target || NativeEmbedded in target) registerNativeTargets(
+      this@configureKotlinMultiplatform,
+      all = Native in target,
+    )
 
     // main host publication lock (for KMP projects targeting platforms without cross-compilation)
     if (project.findProperty("publishMainHostLock") == "true") {
@@ -102,7 +105,7 @@ internal fun Project.configureKotlinMultiplatform(
   }
 }
 
-private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project) {
+private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project, all: Boolean = false) {
   // Linux
   linuxX64()
   linuxArm64()
@@ -111,33 +114,35 @@ private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project)
   macosX64()
   macosArm64()
 
-  // iOS
-  iosX64()
-  iosArm64()
-  iosSimulatorArm64()
-
-  // watchOS
-  watchosArm32()
-  watchosArm64()
-  watchosX64()
-  watchosSimulatorArm64()
-  watchosDeviceArm64()
-
-  // tvOS
-  tvosArm64()
-  tvosX64()
-  tvosSimulatorArm64()
-
-  // Android Native
-  if (project.properties["buildAndroid"] != "false") {
-    androidNativeX86()
-    androidNativeX64()
-    androidNativeArm32()
-    androidNativeArm64()
-  }
-
   if (project.properties["buildMingw"] != "false") {
     mingwX64()
+  }
+
+  if (all) {
+    // iOS
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    // watchOS
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+
+    // tvOS
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+
+    // Android Native
+    if (project.properties["buildAndroid"] != "false") {
+      androidNativeX86()
+      androidNativeX64()
+      androidNativeArm32()
+      androidNativeArm64()
+    }
   }
 
   sourceSets.apply {
@@ -159,24 +164,26 @@ private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project)
     nativeTargetSuites.add("linuxArm64Main" to "linuxArm64Test")
     nativeTargetSuites.add("macosX64Main" to "macosX64Test")
     nativeTargetSuites.add("macosArm64Main" to "macosArm64Test")
-    nativeTargetSuites.add("iosX64Main" to "iosX64Test")
-    nativeTargetSuites.add("iosArm64Main" to "iosArm64Test")
-    nativeTargetSuites.add("iosSimulatorArm64Main" to "iosSimulatorArm64Test")
-    nativeTargetSuites.add("watchosArm32Main" to "watchosArm32Test")
-    nativeTargetSuites.add("watchosArm64Main" to "watchosArm64Test")
-    nativeTargetSuites.add("watchosX64Main" to "watchosX64Test")
-    nativeTargetSuites.add("watchosSimulatorArm64Main" to "watchosSimulatorArm64Test")
-    nativeTargetSuites.add("watchosDeviceArm64Main" to "watchosDeviceArm64Test")
-    nativeTargetSuites.add("tvosArm64Main" to "tvosArm64Test")
-    nativeTargetSuites.add("tvosX64Main" to "tvosX64Test")
-    nativeTargetSuites.add("tvosSimulatorArm64Main" to "tvosSimulatorArm64Test")
-    nativeTargetSuites.add("androidNativeX86Main" to "androidNativeX86Test")
-    nativeTargetSuites.add("androidNativeX64Main" to "androidNativeX64Test")
-    nativeTargetSuites.add("androidNativeArm32Main" to "androidNativeArm32Test")
-    nativeTargetSuites.add("androidNativeArm64Main" to "androidNativeArm64Test")
-
     if (project.properties["buildMingw"] != "false") {
       nativeTargetSuites.add("mingwX64Main" to "mingwX64Test")
+    }
+
+    if (all) {
+      nativeTargetSuites.add("iosX64Main" to "iosX64Test")
+      nativeTargetSuites.add("iosArm64Main" to "iosArm64Test")
+      nativeTargetSuites.add("iosSimulatorArm64Main" to "iosSimulatorArm64Test")
+      nativeTargetSuites.add("watchosArm32Main" to "watchosArm32Test")
+      nativeTargetSuites.add("watchosArm64Main" to "watchosArm64Test")
+      nativeTargetSuites.add("watchosX64Main" to "watchosX64Test")
+      nativeTargetSuites.add("watchosSimulatorArm64Main" to "watchosSimulatorArm64Test")
+      nativeTargetSuites.add("watchosDeviceArm64Main" to "watchosDeviceArm64Test")
+      nativeTargetSuites.add("tvosArm64Main" to "tvosArm64Test")
+      nativeTargetSuites.add("tvosX64Main" to "tvosX64Test")
+      nativeTargetSuites.add("tvosSimulatorArm64Main" to "tvosSimulatorArm64Test")
+      nativeTargetSuites.add("androidNativeX86Main" to "androidNativeX86Test")
+      nativeTargetSuites.add("androidNativeX64Main" to "androidNativeX64Test")
+      nativeTargetSuites.add("androidNativeArm32Main" to "androidNativeArm32Test")
+      nativeTargetSuites.add("androidNativeArm64Main" to "androidNativeArm64Test")
     }
 
     nativeTargetSuites.forEach { (main, test) ->

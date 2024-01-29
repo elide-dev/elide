@@ -51,6 +51,8 @@ internal fun Project.configureKotlinMultiplatform(
     if (JsBrowser in target || JsNode in target) js {
       // common options
       generateTypeScriptDefinitions()
+      useEsModules()
+
       compilations.all {
         kotlinOptions {
           sourceMap = true
@@ -59,8 +61,14 @@ internal fun Project.configureKotlinMultiplatform(
         }
       }
 
-      if (JsNode in target) nodejs()
-      if (JsBrowser in target) browser()
+      if (JsNode in target) nodejs {
+        useEsModules()
+        generateTypeScriptDefinitions()
+      }
+      if (JsBrowser in target) browser {
+        useEsModules()
+        generateTypeScriptDefinitions()
+      }
     }
 
     if (WASM in target) {

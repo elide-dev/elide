@@ -75,6 +75,15 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to enable explicit API mode. */
     public var explicitApi: Boolean = false
 
+    /** Whether to enable a split-JVM target tree. */
+    public var splitJvmTargets: Boolean = false
+
+    /** Name to use for the non-JVM default source set. */
+    public var nonJvmSourceSet: String = "default"
+
+    /** Name to use for the non-JVM default source set. */
+    public var jvmSourceSet: String = "jvm"
+
     /** Override the Kotlin API and language version for this module. */
     public var kotlinVersionOverride: String? = null
 

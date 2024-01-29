@@ -31,6 +31,9 @@ import elide.internal.conventions.kotlin.KotlinTarget.*
 internal fun Project.configureKotlinMultiplatform(
   target: KotlinTarget,
   configureJavaModules: Boolean,
+  splitJvmTargets: Boolean,
+  nonJvmSourceSet: String,
+  jvmSourceSet: String,
 ) {
   // quick sanity check (JVM is not allowed as a pure target, only as part of a KMP target)
   require(target !is JVM) { "Kotlin JVM target should use the Multiplatform plugin." }
@@ -39,7 +42,7 @@ internal fun Project.configureKotlinMultiplatform(
     // add JVM target
     if (JVM in target) jvm {
       withJava()
-      
+
       // java modules support
       if(configureJavaModules) configureJavaModularity()
 
@@ -100,6 +103,37 @@ internal fun Project.configureKotlinMultiplatform(
         tasks.withType(AbstractPublishToMaven::class.java)
           .matching { it.publication == this@all }
           .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+      }
+    }
+
+    // if "split JVM targets" are requested, then we need to institute a default (or baseline) source-set for all non-
+    // JVM source sets.
+    //
+    // this is accomplished by looping over each one, ignoring `jvmSourceSet`, and installing the provided
+    // `nonJvmSourceSet` as a dependency.
+    if (splitJvmTargets) {
+      val nonJvmMain = sourceSets.findByName("${nonJvmSourceSet}Main")
+      val nonJvmTest = sourceSets.findByName("${nonJvmSourceSet}Test")
+
+      if (nonJvmMain != null || nonJvmTest != null) sourceSets.all {
+        if (name.startsWith("common")) {
+          // special case: skip common source sets to avoid circular dependency.
+          return@all
+        }
+
+        if (name != jvmSourceSet && !name.startsWith(jvmSourceSet)) {
+          if (name.contains("Main")) {
+            if (nonJvmMain != null) {
+              dependsOn(nonJvmMain)
+            }
+          } else if (name.contains("Test")) {
+            if (nonJvmTest != null) {
+              dependsOn(nonJvmTest)
+            }
+          }
+        }
+      } else {
+        project.logger.warn("Unable to find non-JVM source set '$nonJvmSourceSet'.")
       }
     }
   }

@@ -108,6 +108,7 @@ object Elide {
   val multiplatformModules = listOf(
     "base",
     "core",
+    "http",
     "model",
     "rpc",
     "ssr",
@@ -183,6 +184,7 @@ object Elide {
     "graalvm-py",
     "graalvm-rb",
     "graalvm-react",
+    "http",
     "model",
     "proto:proto-core",
     "proto:proto-capnp",

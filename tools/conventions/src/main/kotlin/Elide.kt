@@ -113,7 +113,10 @@ object Elide {
     "ssr",
     "test",
     "runtime",
+    "embedded",
+    "serverless",
     "proto:proto-core",
+    "proto:proto-kotlinx",
   )
 
   /** Server-side only modules. */
@@ -129,7 +132,6 @@ object Elide {
     "graalvm-react",
     "proto:proto-capnp",
     "proto:proto-flatbuffers",
-    "proto:proto-kotlinx",
     "proto:proto-protobuf",
     "server",
   )
@@ -171,6 +173,7 @@ object Elide {
     // Library Packages
     "base",
     "core",
+    "embedded",
     "frontend",
     "graalvm",
     "graalvm-js",
@@ -188,6 +191,7 @@ object Elide {
     "proto:proto-protobuf",
     "rpc",
     "server",
+    "serverless",
     "ssg",
     "ssr",
     "test",

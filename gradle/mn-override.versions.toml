@@ -1,6 +1,6 @@
 [versions]
 jackson = "2.16.1"
-micronaut = "4.3.1"
+micronaut = "4.2.4"
 micronaut-core = "4.3.1"
 micronaut-grpc = "4.3.0"
 micronaut-platform = "4.2.4"

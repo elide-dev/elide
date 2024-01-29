@@ -25,7 +25,10 @@
          <trust file="plexus-classworlds-.*" regex="true"/>
          <trust file="spdx-gradle-plugin-.*" regex="true"/>
          <trust file=".*foojay.*" regex="true"/>
-         <trust file=".*gradle-enterprise.*" regex="true"/>
+         <trust file="com.gradle.enterprise.gradle.plugin.*" regex="true"/>
+         <trust file="gradle-enterprise-gradle-plugin.*" regex="true"/>
+         <trust file="nl.littlerobots.version-catalog-update.gradle.plugin-0.8.4.pom"/>
+         <trust file="org.jetbrains.kotlin.plugin.serialization.gradle.plugin-2.0.0-Beta3.pom"/>
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="3FCFA3B530AFDCE3" reason="Key couldn't be downloaded from any key server"/>

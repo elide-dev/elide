@@ -28,7 +28,7 @@ elide {
   }
   
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Embedded
     explicitApi = true
   }
 }

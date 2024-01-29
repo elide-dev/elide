@@ -140,7 +140,7 @@ apiValidation {
 
   ignoredProjects += listOf(
     "bom",
-//    "cli", @TODO(sgammon): Disabled for Kotlin v2 transition
+    "cli",
     "proto",
     "processor",
     "reports",
@@ -205,7 +205,7 @@ val mermaidDokka: Provider<String> = libs.versions.mermaidDokka
 dependencies {
   // Kover: Merged Coverage Reporting
   kover(projects.packages.base)
-//  kover(projects.packages.cli)  @TODO(sgammon): Disabled for Kotlin v2 transition
+  kover(projects.packages.cli)
   kover(projects.packages.core)
   kover(projects.packages.graalvm)
   kover(projects.packages.model)

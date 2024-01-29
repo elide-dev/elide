@@ -129,10 +129,12 @@ private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project)
   tvosSimulatorArm64()
 
   // Android Native
-  androidNativeX86()
-  androidNativeX64()
-  androidNativeArm32()
-  androidNativeArm64()
+  if (project.properties["buildAndroid"] != "false") {
+    androidNativeX86()
+    androidNativeX64()
+    androidNativeArm32()
+    androidNativeArm64()
+  }
 
   if (project.properties["buildMingw"] != "false") {
     mingwX64()
@@ -152,17 +154,34 @@ private fun KotlinMultiplatformExtension.registerNativeTargets(project: Project)
     val nativeMain = create("nativeMain") { dependsOn(commonMain) }
     val nativeTest = create("nativeTest") { dependsOn(commonTest) }
 
+    val nativeTargetSuites: MutableList<Pair<String, String>> = ArrayList()
+    nativeTargetSuites.add("linuxX64Main" to "linuxX64Test")
+    nativeTargetSuites.add("linuxArm64Main" to "linuxArm64Test")
+    nativeTargetSuites.add("macosX64Main" to "macosX64Test")
+    nativeTargetSuites.add("macosArm64Main" to "macosArm64Test")
+    nativeTargetSuites.add("iosX64Main" to "iosX64Test")
+    nativeTargetSuites.add("iosArm64Main" to "iosArm64Test")
+    nativeTargetSuites.add("iosSimulatorArm64Main" to "iosSimulatorArm64Test")
+    nativeTargetSuites.add("watchosArm32Main" to "watchosArm32Test")
+    nativeTargetSuites.add("watchosArm64Main" to "watchosArm64Test")
+    nativeTargetSuites.add("watchosX64Main" to "watchosX64Test")
+    nativeTargetSuites.add("watchosSimulatorArm64Main" to "watchosSimulatorArm64Test")
+    nativeTargetSuites.add("watchosDeviceArm64Main" to "watchosDeviceArm64Test")
+    nativeTargetSuites.add("tvosArm64Main" to "tvosArm64Test")
+    nativeTargetSuites.add("tvosX64Main" to "tvosX64Test")
+    nativeTargetSuites.add("tvosSimulatorArm64Main" to "tvosSimulatorArm64Test")
+    nativeTargetSuites.add("androidNativeX86Main" to "androidNativeX86Test")
+    nativeTargetSuites.add("androidNativeX64Main" to "androidNativeX64Test")
+    nativeTargetSuites.add("androidNativeArm32Main" to "androidNativeArm32Test")
+    nativeTargetSuites.add("androidNativeArm64Main" to "androidNativeArm64Test")
+
     if (project.properties["buildMingw"] != "false") {
-      named("mingwX64Main") { dependsOn(nativeMain) }
-      named("mingwX64Test") { dependsOn(nativeTest) }
+      nativeTargetSuites.add("mingwX64Main" to "mingwX64Test")
     }
-    named("linuxX64Main") { dependsOn(nativeMain) }
-    named("linuxX64Test") { dependsOn(nativeTest) }
-    
-    named("macosX64Main") { dependsOn(nativeMain) }
-    named("macosX64Test") { dependsOn(nativeTest) }
-    
-    named("macosArm64Main") { dependsOn(nativeMain) }
-    named("macosArm64Test") { dependsOn(nativeTest) }
+
+    nativeTargetSuites.forEach { (main, test) ->
+      findByName(main)?.apply { dependsOn(nativeMain) }
+      findByName(test)?.apply { dependsOn(nativeTest) }
+    }
   }
 }

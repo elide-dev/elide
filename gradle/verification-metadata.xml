@@ -4,7 +4,7 @@
       <verify-metadata>true</verify-metadata>
       <verify-signatures>true</verify-signatures>
       <trusted-artifacts>
-         <trust file="buildless-plugin-.*" regex="true" />
+         <trust file="com.github.ben-manes.versions.gradle.plugin-0.51.0.pom"/>
          <trust file="gradle-enterprise-gradle-plugin-3.15.jar"/>
          <trust file="gradle-enterprise-gradle-plugin-3.15.module"/>
          <trust file="micronaut-aot-api-2.1.1.jar"/>
@@ -22,14 +22,14 @@
          <trust group="org.jetbrains.kotlin"/>
          <trust group="org.jetbrains.kotlin.mulitplatform"/>
          <trust file=".*common-custom-user-data-gradle-plugin.*" regex="true"/>
+         <trust file=".*kotlinx.*" regex="true"/>
+         <trust file=".*wasm.*" regex="true"/>
+         <trust file="buildless-plugin-.*" regex="true"/>
+         <trust file="gradle-versions-plugin-.*" regex="true"/>
          <trust file="json-schema-.*" regex="true"/>
+         <trust file="node-.*" regex="true"/>
          <trust file="plexus-classworlds-.*" regex="true"/>
          <trust file="spdx-gradle-plugin-.*" regex="true"/>
-         <trust file="com.github.ben-manes.versions.gradle.plugin-0.51.0.pom" />
-         <trust file="gradle-versions-plugin-.*" regex="true" />
-         <trust file=".*wasm.*" regex="true" />
-         <trust file=".*kotlinx.*" regex="true" />
-         <trust file="node-.*" regex="true" />
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="3FCFA3B530AFDCE3" reason="Key couldn't be downloaded from any key server"/>
@@ -42,6 +42,7 @@
          <trusted-key id="0400C98336119B50D51106DE831EE9CA8C4D7525">
             <trusting group="build.less" name="buildless-plugin-gradle" version="1.0.0-beta1"/>
             <trusting group="build.less" name="buildless-plugin-gradle" version="1.0.0-beta9"/>
+            <trusting group="build.less" name="buildless-plugin-gradle" version="1.0.0-rc2"/>
             <trusting group="^dev[.]elide($|([.].*))" regex="true"/>
          </trusted-key>
          <trusted-key id="050A37A2E0577F4BAA095B52602EC18D20C4661C">
@@ -225,6 +226,7 @@
          </trusted-key>
          <trusted-key id="80F6D6B0D90C6747753344CAB5A9E81B565E89E0" group="org.tomlj" name="tomlj" version="1.1.0"/>
          <trusted-key id="82C9EC0E52C47A936A849E0113D979595E6D01E1" group="org.apache.maven.shared" name="maven-shared-utils" version="3.3.4"/>
+         <trusted-key id="82F833963889D7ED06F1E4DC6525FD70CC303655" group="org.codehaus.mojo"/>
          <trusted-key id="8446B9E902A3F3DDEE711FDB8E26FF248BC7AEAD" group="^org[.]jruby($|([.].*))" regex="true"/>
          <trusted-key id="84789D24DF77A32433CE1F079EB80E92EB2135B1">
             <trusting group="org.codehaus.mojo"/>
@@ -287,7 +289,10 @@
          <trusted-key id="B286846C341BB72D1E5F85CAB460E7C4ED66826D" group="com.ethlo.time" name="itu" version="1.7.0"/>
          <trusted-key id="B47034C19C9B1F3DC3702F8D476634A4694E716A" group="com.googlecode.java-diff-utils" name="diffutils" version="1.3.0"/>
          <trusted-key id="B6E73D84EA4FCC47166087253FAAD2CD5ECBB314" group="org.apache.commons"/>
-         <trusted-key id="B801E2F8EF035068EC1139CC29579F18FA8FD93B" group="com.google.j2objc" name="j2objc-annotations" version="1.3"/>
+         <trusted-key id="B801E2F8EF035068EC1139CC29579F18FA8FD93B">
+            <trusting group="com.google.j2objc" name="j2objc-annotations" version="1.1"/>
+            <trusting group="com.google.j2objc" name="j2objc-annotations" version="1.3"/>
+         </trusted-key>
          <trusted-key id="B829146841894118F8DCABF1E270B36858DB4EAE" group="^io[.]micronaut($|([.].*))" regex="true"/>
          <trusted-key id="B91AB7D2121DC6B0A61AA182D7742D58455ECC7C" group="org.codehaus.plexus" name="plexus-classworlds" version="2.7.0"/>
          <trusted-key id="BC87A3FD0A54480F0BADBEBD21939FF0CA2A6567" group="commons-codec" name="commons-codec" version="1.15"/>
@@ -362,6 +367,7 @@
          <trusted-key id="EBB4A00DDEFB45874C6984D3FDC09E28DF98A023" group="io.grpc"/>
          <trusted-key id="EE0CA873074092F806F59B65D364ABAA39A47320" group="com.google.errorprone"/>
          <trusted-key id="F046369B06B761AC86D9849F71B329993BFFCFDD" group="^org[.]graalvm($|([.].*))" regex="true"/>
+         <trusted-key id="F05E5F90E43E837F9DD8C781BF935C771A8474F8" group="com.google.errorprone"/>
          <trusted-key id="F06E94A01B835825E6AB4DA369B8E32E23138662" group="org.spdx"/>
          <trusted-key id="F0C6F963AE4C1E0465E5EF4B2E55C136C4729D19" group="^io[.]freefair($|([.].*))" regex="true"/>
          <trusted-key id="F254B35617DC255D9344BCFA873A8E86B4372146" group="^org[.]codehaus($|([.].*))" regex="true"/>
@@ -394,6 +400,9 @@
    </configuration>
    <components>
       <component group="aopalliance" name="aopalliance" version="1.0">
+         <artifact name="aopalliance-1.0-sources.jar">
+            <sha256 value="e6ef91d439ada9045f419c77543ebe0416c3cdfc5b063448343417a3e4a72123" origin="Generated by Gradle" reason="Artifact is not signed"/>
+         </artifact>
          <artifact name="aopalliance-1.0.jar">
             <sha256 value="0addec670fedcd3f113c5c8091d783280d23f75e3acb841b61a9cdb079376a08" origin="Generated by Gradle" reason="Artifact is not signed"/>
          </artifact>
@@ -484,6 +493,11 @@
       <component group="build.less" name="build.less.gradle.plugin" version="1.0.0-beta9">
          <artifact name="build.less.gradle.plugin-1.0.0-beta9.pom">
             <sha256 value="a2105c97ea769e473a4cb188ac1574ea9ee2d50de9cacc15dc09a12e42c599ba" origin="Generated by Gradle" reason="Artifact is not signed"/>
+         </artifact>
+      </component>
+      <component group="build.less" name="build.less.gradle.plugin" version="1.0.0-rc2">
+         <artifact name="build.less.gradle.plugin-1.0.0-rc2.pom">
+            <sha256 value="187f49a2e46d07f45802501a67f5f09b84d606f89efa06ee949b5a1d2a25154c" origin="Generated by Gradle" reason="Artifact is not signed"/>
          </artifact>
       </component>
       <component group="build.less" name="buildless-plugin-gradle" version="1.0.0-beta1">
@@ -8724,6 +8738,9 @@
          </artifact>
       </component>
       <component group="javax.inject" name="javax.inject" version="1">
+         <artifact name="javax.inject-1-sources.jar">
+            <sha256 value="c4b87ee2911c139c3daf498a781967f1eb2e75bc1a8529a2e7b328a15d0e433e" origin="Generated by Gradle" reason="Artifact is not signed"/>
+         </artifact>
          <artifact name="javax.inject-1.jar">
             <sha256 value="91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff" origin="Generated by Gradle" reason="Artifact is not signed"/>
          </artifact>
@@ -10231,6 +10248,11 @@
             <sha256 value="b38672c17f455276b210ed3402ff92dce666770b1a8c610c7cc34ad54c532d20" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="org.codehaus" name="codehaus-parent" version="4">
+         <artifact name="codehaus-parent-4.pom">
+            <pgp value="2BCBDD0F23EA1CAFCC11D4860374CF2E8DD1BDFD"/>
+         </artifact>
+      </component>
       <component group="org.codehaus.groovy" name="groovy" version="2.5.8">
          <artifact name="groovy-2.5.8.jar">
             <sha256 value="a388c9770b8500d27881a867a02f1b117f749e5d7593817876dd0aac24b0dd86" origin="Generated by Gradle"/>
@@ -10284,6 +10306,11 @@
       <component group="org.codehaus.mojo" name="animal-sniffer-parent" version="1.23">
          <artifact name="animal-sniffer-parent-1.23.pom">
             <sha256 value="6b7f054ab86a87f8e2599f35808b0989922e86b6cab13988021cd12640a4b404" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.mojo" name="mojo-parent" version="34">
+         <artifact name="mojo-parent-34.pom">
+            <pgp value="190D5A957FF22273E601F7A7C92C5FEC70161C62"/>
          </artifact>
       </component>
       <component group="org.codehaus.mojo" name="mojo-parent" version="65">

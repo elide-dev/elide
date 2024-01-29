@@ -27,9 +27,14 @@ internal fun Project.reproducibleArchiveTasks() {
     isPreserveFileTimestamps = false
     isZip64 = true
   }
+  fun configureArchiveTarTask(task: Tar) = task.apply {
+    isReproducibleFileOrder = true
+    isPreserveFileTimestamps = false
+  }
 
   tasks.withType(Jar::class.java).configureEach(::configureArchiveTask)
   tasks.withType(Zip::class.java).configureEach(::configureArchiveTask)
+  tasks.withType(Tar::class.java).configureEach(::configureArchiveTarTask)
 }
 
 /** Adjusts [Zip], [Jar], and [Tar] tasks to set the duplicate strategy to [EXCLUDE]. */

@@ -20,7 +20,6 @@ import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
-import org.gradle.kotlin.dsl.the
 import org.gradle.testing.base.TestingExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
@@ -30,6 +29,13 @@ import elide.internal.conventions.Constants.Build
 import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.publishing.publishJavadocJar
 import elide.internal.conventions.publishing.publishSourcesJar
+
+private val lockedConfigurations = listOf(
+  "compileClasspath",
+  "runtimeClasspath",
+)
+
+private val unverifiedConfigurations = emptyList<String>()
 
 /** Apply base Java options to the project. */
 @Suppress("UnstableApiUsage")
@@ -57,8 +63,38 @@ internal fun Project.includeJavadocJar() {
   publishJavadocJar()
 }
 
+/** Apply dependency locking and verification rules. */
+internal fun Project.configureDependencySecurity() {
+  configureDependencyVerification()
+  if (findProperty(Build.LOCK_DEPS)?.toString()?.toBoolean() != false) {
+    configureDependencyLocking()
+  }
+}
+
+/** Apply dependency verification rules. */
+private fun Project.configureDependencyVerification() {
+  configurations.apply {
+    unverifiedConfigurations.forEach {
+      findByName(it)?.apply {
+        resolutionStrategy.disableDependencyVerification()
+      }
+    }
+  }
+}
+
+/** Apply dependency locking rules. */
+private fun Project.configureDependencyLocking() {
+  configurations.apply {
+    lockedConfigurations.forEach {
+      findByName(it)?.apply {
+        resolutionStrategy.activateDependencyLocking()
+      }
+    }
+  }
+}
+
 /** Include the "sources" JAR in the Java compilation. */
-internal fun Project.includeSourcesJar() {
+internal fun Project.includeSourceJar() {
   extensions.getByType(JavaPluginExtension::class.java).apply {
     withSourcesJar()
   }

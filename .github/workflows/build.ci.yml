@@ -178,6 +178,9 @@ jobs:
             -x jvmTest
             -x jsTest
             -x jsBrowserTest
+            -x nativeTest
+            -x nativeCompile
+            -x nativeOptimizedCompile
             --scan
             --no-daemon
             --warning-mode=none

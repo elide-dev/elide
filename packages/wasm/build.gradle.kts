@@ -27,7 +27,7 @@ elide {
   }
   
   kotlin {
-    target = KotlinTarget.WASM
+    target = KotlinTarget.WASI
   }
 }
 

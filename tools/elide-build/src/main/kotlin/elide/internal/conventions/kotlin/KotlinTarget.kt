@@ -46,6 +46,9 @@ public sealed interface KotlinTarget {
   /** Kotlin target for the experimental WASM backend. */
   public data object WASM : KotlinTarget
 
+  /** Kotlin target for WASI-only support. */
+  public data object WASI : KotlinTarget
+
   /**
    * Multiplatform target consisting of a combination of other targets. A [JVM] target wrapped by a [Multiplatform]
    * target will produce a KMP project with a single target (JVM).

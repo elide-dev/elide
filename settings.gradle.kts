@@ -75,7 +75,9 @@ if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose
 if (buildUuid == "true") {
   includeBuild("packages/uuid") {
     dependencySubstitution {
-      substitute(module("dev.elide:elide-uuid")).using(project(":"))
+      substitute(module("dev.elide:uuid")).using(project(":subprojects:uuid-core"))
+      substitute(module("dev.elide:elide-uuid")).using(project(":subprojects:uuid-core"))
+      substitute(module("dev.elide:elide-uuid-kotlinx")).using(project(":subprojects:uuid-kotlinx"))
     }
   }
 }

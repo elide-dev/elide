@@ -58,6 +58,7 @@ plugins {
 elide {
   kotlin {
     target = KotlinTarget.JVM
+    kotlinVersionOverride = "1.9"  // @TODO(sgammon) compose breaks at kotlin v2.0
   }
 
   docker {
@@ -81,13 +82,13 @@ elide {
 // - `elide.targetArch`: `amd64`, `arm64`
 
 val quickbuild = (
-        project.properties["elide.release"] != "true" ||
-                project.properties["elide.buildMode"] == "dev"
-        )
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
 val isRelease = !quickbuild && (
-        project.properties["elide.release"] == "true" ||
-                project.properties["elide.buildMode"] == "release"
-        )
+  project.properties["elide.release"] == "true" ||
+  project.properties["elide.buildMode"] == "release"
+)
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
@@ -97,7 +98,7 @@ val enableWasm = true
 val enablePython = true
 val enableRuby = true
 val enableTools = true
-val enableMosaic = false
+val enableMosaic = true
 val enableProguard = false
 val enableLlvm = false
 val enableEspresso = true
@@ -251,7 +252,7 @@ sourceSets {
 
 // use consistent compose plugin version
 if (enableMosaic) the<MosaicExtension>().kotlinCompilerPlugin =
-  libs.versions.compose.get()
+  libs.androidx.compose.compiler.get().toString()
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 val cliVersion = if (stamp) {

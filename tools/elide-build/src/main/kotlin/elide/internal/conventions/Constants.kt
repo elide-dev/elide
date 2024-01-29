@@ -113,6 +113,9 @@ public object Constants {
   internal object Build {
     /** Property: whether to build and bundle documentation from project sources, defaults to "true". */
     const val BUILD_DOCS = "buildDocs"
+
+    /** Property: Whether to enable dependency locking. */
+    const val LOCK_DEPS = "elide.lockDeps"
   }
 
   /** Static library configuration values. */

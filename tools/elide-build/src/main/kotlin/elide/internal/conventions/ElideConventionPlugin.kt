@@ -91,7 +91,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     configureProject()
 
     // configure the redacted compiler plugin
-//    configureRedactedPlugin() @TODO(sgammon): broken on kotlin v2
+    // configureRedactedPlugin() @TODO(sgammon): broken on kotlin v2
 
     if (conventions.lockDependencies) configureDependencyLocking()
     if (conventions.strictDependencies) configureDependencyResolution()
@@ -152,7 +152,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       configureJava()
 
       if (includeJavadoc) includeJavadocJar()
-      if (includeSources) includeSourcesJar()
+      if (includeSources) includeSourceJar()
       if (configureModularity) configureJavaModularity()
     }
 
@@ -187,6 +187,9 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       if (kover) configureKoverCI()
       if (jacoco) configureJacoco()
     }
+
+    // finally: apply dependency security rules (verification, locking)
+    configureDependencySecurity()
   }
 
   private inline fun <T : Convention> maybeApplyConvention(convention: T, block: T.() -> Unit) {

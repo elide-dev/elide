@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha7",
   "private": true,
   "lint-staged": {
-    "packages/*": "npx prettier --write --ignore-unknown"
+    "packages/*": "pnpm exec prettier --write --ignore-unknown"
   },
   "browserslist": [
     "last 3 chrome versions",

@@ -32,7 +32,7 @@ object Versions {
   const val guava = "33.0.0-jre"
 
   /** gRPC version. */
-  const val grpc = "1.60.1"
+  const val grpc = "1.61.0"
 
   /** GraalVM version. */
   const val graalvm = "23.1.2"

@@ -121,6 +121,9 @@ configurations.all {
 
     // prefer modules that are part of this build
     preferProjectModules()
+
+    // lock by default
+    activateDependencyLocking()
   }
 }
 

@@ -31,6 +31,7 @@ import elide.internal.conventions.publishing.publishJavadocJar
 import elide.internal.conventions.publishing.publishSourcesJar
 
 private val lockedConfigurations = listOf(
+  "classpath",
   "compileClasspath",
   "runtimeClasspath",
 )

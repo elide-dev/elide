@@ -12,25 +12,29 @@
  */
 
 import elide.internal.conventions.elide
-import elide.internal.conventions.kotlin.*
+import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
-
-  alias(libs.plugins.micronaut.library)
-  alias(libs.plugins.micronaut.graalvm)
-
-  id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")
+}
+
+kotlin {
+  sourceSets {
+    val commonMain by getting
+    val commonTest by getting
+    val defaultMain by creating { dependsOn(commonMain) }
+    val defaultTest by creating { dependsOn(commonTest) }
+  }
 }
 
 elide {
   publishing {
-    id = "server"
-    name = "Elide for Embedded"
-    description = "Embedded host interfaces for Elide applications."
+    id = "http"
+    name = "Elide HTTP"
+    description = "Cross-platform HTTP utilities and wrappers."
 
     publish("maven") {
       from(components["kotlin"])
@@ -38,8 +42,9 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Embedded
     explicitApi = true
+    splitJvmTargets = true
   }
 
   java {
@@ -50,28 +55,19 @@ elide {
 group = "dev.elide"
 version = rootProject.version as String
 
-micronaut {
-  version = libs.versions.micronaut.lib.get()
-
-  processing {
-    incremental = true
-    annotations.addAll(listOf(
-      "elide.embedded",
-      "elide.embedded.*",
-      "elide.embedded.annotations",
-      "elide.embedded.annotations.*",
-    ))
-  }
-}
-
 dependencies {
-  common {
-    api(projects.packages.http)
-    api(projects.packages.serverless)
-  }
-
-  commonTest {
-    api(projects.packages.test)
-    api(kotlin("test"))
-  }
+//  common {
+//    implementation(projects.packages.base)
+//    implementation(projects.packages.core)
+//  }
+//
+//  commonTest {
+//    // Testing
+//    implementation(projects.packages.test)
+//    implementation(kotlin("test"))
+//  }
+//
+//  jvm {
+//    implementation(mn.micronaut.http)
+//  }
 }

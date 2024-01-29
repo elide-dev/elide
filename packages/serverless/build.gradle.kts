@@ -12,7 +12,7 @@
  */
 
 import elide.internal.conventions.elide
-import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.*
 import elide.internal.conventions.publishing.publish
 
 plugins {
@@ -38,7 +38,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Embedded
     explicitApi = true
   }
 
@@ -65,9 +65,16 @@ micronaut {
 }
 
 dependencies {
-  // Nothing yet.
+  common {
+    api(projects.packages.core)
+    api(projects.packages.base)
+    api(projects.packages.http)
+    api(projects.packages.ssr)
+  }
 
   // Testing
-  testImplementation(projects.packages.test)
-  testImplementation(kotlin("test"))
+  commonTest {
+    api(projects.packages.test)
+    api(kotlin("test"))
+  }
 }

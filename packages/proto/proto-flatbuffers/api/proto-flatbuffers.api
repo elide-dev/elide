@@ -2862,8 +2862,9 @@ public final class elide/page/VideoResolution$Companion {
 
 public abstract class elide/proto/impl/AbstractElideFlatbuffersProtocol : elide/proto/ElideProtocol {
 	public fun <init> ()V
-	public fun base ()Ljava/lang/Class;
+	public fun base ()Lkotlin/reflect/KClass;
 	public fun dialects ()Ljava/util/EnumSet;
+	public synthetic fun dialects ()Ljava/util/Set;
 	public fun engine ()Lelide/proto/ElideProtocol$ImplementationLibrary;
 	public fun getCompression ()Z
 	public fun getReflection ()Z
@@ -3071,8 +3072,6 @@ public final class elide/proto/impl/wkt/FlatTimestamp : elide/proto/api/wkt/Time
 	public static fun toBuilder-impl (Lgoogle/protobuf/Timestamp;)Lelide/proto/impl/wkt/FlatTimestamp$TimestampBuilder;
 	public fun toInstant ()Lkotlinx/datetime/Instant;
 	public static fun toInstant-impl (Lgoogle/protobuf/Timestamp;)Lkotlinx/datetime/Instant;
-	public fun toJavaInstant ()Ljava/time/Instant;
-	public static fun toJavaInstant-impl (Lgoogle/protobuf/Timestamp;)Ljava/time/Instant;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Lgoogle/protobuf/Timestamp;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Lgoogle/protobuf/Timestamp;
@@ -3097,12 +3096,6 @@ public final class elide/proto/impl/wkt/FlatTimestamp$Factory : elide/proto/api/
 	public fun defaultInstance-H99Res0 ()Lgoogle/protobuf/Timestamp;
 	public synthetic fun empty ()Ljava/lang/Object;
 	public fun empty-H99Res0 ()Lgoogle/protobuf/Timestamp;
-	public synthetic fun from (Ljava/sql/Date;)Ljava/lang/Object;
-	public synthetic fun from (Ljava/time/Instant;)Ljava/lang/Object;
-	public synthetic fun from (Ljava/util/Date;)Ljava/lang/Object;
-	public fun from-naF9VOA (Ljava/sql/Date;)Lgoogle/protobuf/Timestamp;
-	public fun from-naF9VOA (Ljava/time/Instant;)Lgoogle/protobuf/Timestamp;
-	public fun from-naF9VOA (Ljava/util/Date;)Lgoogle/protobuf/Timestamp;
 	public synthetic fun fromNow-LRDsOJo (J)Ljava/lang/Object;
 	public fun fromNow-SlsQ_FY (J)Lgoogle/protobuf/Timestamp;
 	public synthetic fun millisFromNow (J)Ljava/lang/Object;

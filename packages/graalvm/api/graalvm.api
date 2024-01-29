@@ -704,13 +704,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -747,13 +747,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -776,13 +776,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -816,13 +816,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -847,13 +847,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -878,13 +878,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -909,13 +909,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -936,13 +936,13 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -2207,13 +2207,13 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
@@ -2237,13 +2237,13 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public synthetic class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }

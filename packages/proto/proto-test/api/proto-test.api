@@ -1,0 +1,33 @@
+public abstract class elide/proto/test/AbstractModelTest {
+	public fun <init> ()V
+}
+
+public abstract class elide/proto/test/AbstractProtocolFacadeTest {
+	public fun <init> ()V
+	public abstract fun provide ()Lelide/proto/ElideProtocol;
+	public final fun testDataContainerFactoryAcquire ()V
+	public final fun testDataFingerprintFactoryAcquire ()V
+	public final fun testDialectJSON ()V
+	public final fun testDialects ()V
+	public final fun testEngine ()V
+	public abstract fun testExpectedDialects ()V
+	public abstract fun testExpectedLibrary ()V
+	public final fun testLoader ()V
+	public final fun testModelStrategy ()V
+	public final fun testModelStrategySingleton ()V
+	public final fun testTimestampFactoryAcquire ()V
+}
+
+public abstract class elide/proto/test/AbstractProtocolTest {
+	public fun <init> ()V
+}
+
+public abstract class elide/proto/test/data/AbstractDataContainerTests {
+	public fun <init> ()V
+	public abstract fun allocateContainer ()Ljava/lang/Object;
+	public abstract fun allocateContainer (Ljava/lang/String;)Ljava/lang/Object;
+	public abstract fun allocateContainer ([B)Ljava/lang/Object;
+	public abstract fun testDataContainer ()V
+	public abstract fun testDataContainerJson ()V
+}
+

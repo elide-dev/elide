@@ -1,7 +1,7 @@
 public abstract class elide/proto/impl/AbstractElideKotlinXProtocol : elide/proto/ElideProtocol {
 	public fun <init> ()V
-	public fun base ()Ljava/lang/Class;
-	public fun dialects ()Ljava/util/EnumSet;
+	public fun base ()Lkotlin/reflect/KClass;
+	public fun dialects ()Ljava/util/Set;
 	public fun engine ()Lelide/proto/ElideProtocol$ImplementationLibrary;
 	public fun getCompression ()Z
 	public fun getReflection ()Z
@@ -209,8 +209,6 @@ public final class elide/proto/impl/wkt/KxTimestamp : elide/proto/api/wkt/Timest
 	public static fun toBuilder-impl (Lkotlin/Pair;)Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
 	public fun toInstant ()Lkotlinx/datetime/Instant;
 	public static fun toInstant-impl (Lkotlin/Pair;)Lkotlinx/datetime/Instant;
-	public fun toJavaInstant ()Ljava/time/Instant;
-	public static fun toJavaInstant-impl (Lkotlin/Pair;)Ljava/time/Instant;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Lkotlin/Pair;
@@ -235,12 +233,6 @@ public final class elide/proto/impl/wkt/KxTimestamp$Factory : elide/proto/api/wk
 	public fun defaultInstance-sGgy6_s ()Lkotlin/Pair;
 	public synthetic fun empty ()Ljava/lang/Object;
 	public fun empty-sGgy6_s ()Lkotlin/Pair;
-	public synthetic fun from (Ljava/sql/Date;)Ljava/lang/Object;
-	public synthetic fun from (Ljava/time/Instant;)Ljava/lang/Object;
-	public synthetic fun from (Ljava/util/Date;)Ljava/lang/Object;
-	public fun from-Ls1ehMI (Ljava/sql/Date;)Lkotlin/Pair;
-	public fun from-Ls1ehMI (Ljava/time/Instant;)Lkotlin/Pair;
-	public fun from-Ls1ehMI (Ljava/util/Date;)Lkotlin/Pair;
 	public fun fromNow-9DaZEWo (J)Lkotlin/Pair;
 	public synthetic fun fromNow-LRDsOJo (J)Ljava/lang/Object;
 	public synthetic fun millisFromNow (J)Ljava/lang/Object;

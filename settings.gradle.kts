@@ -173,6 +173,7 @@ include(
   ":packages:graalvm-kt",
   ":packages:graalvm-java",
   ":packages:graalvm-react",
+  ":packages:http",
   ":packages:model",
   ":packages:platform",
   ":packages:runtime",

@@ -37,13 +37,16 @@ val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 dependencies {
   common {
-    implementation(kotlin("stdlib-common"))
-    implementation(projects.packages.base)
-    implementation(libs.kotlinx.serialization.core)
+    implementation(kotlin("stdlib"))
+    api(projects.packages.http)
+    api(projects.packages.base)
+
+    api(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.protobuf)
-    implementation(libs.kotlinx.collections.immutable)
-    implementation(libs.kotlinx.datetime)
+
+    api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.datetime)
   }
 
   commonTest {
@@ -71,7 +74,7 @@ dependencies {
 
   js {
     // KT-57235: fix for atomicfu-runtime error
-    api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+    api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:2.0.0-Beta3")
   }
 }
 

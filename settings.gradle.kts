@@ -192,6 +192,12 @@ gradleEnterprise {
 
 val cachePush: String? by settings
 
+buildCache {
+  local {
+    isEnabled = true
+  }
+}
+
 buildless {
   remoteCache {
     // allow disabling pushing to the remote cache

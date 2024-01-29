@@ -18,9 +18,27 @@
 
 pluginManagement {
   repositories {
-    maven("https://gradle.pkg.st")
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+    maven {
+      name = "pkgst-gradle"
+      url = uri("https://gradle.pkg.st")
+    }
+    maven {
+      name = "pkgst-maven"
+      url = uri("https://maven.pkg.st")
+    }
+    maven {
+      name = "oss-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+
+      content {
+        includeGroup("dev.elide")
+      }
+    }
+    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/") {
+      content {
+        includeGroup("dev.elide")
+      }
+    }
     gradlePluginPortal()
     google()
     mavenCentral()
@@ -49,12 +67,64 @@ val buildlessApiKey: String by settings
 dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
   repositories {
-    maven("https://maven.pkg.st")
-    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
+    maven {
+      name = "pkgst-maven"
+      url = uri("https://maven.pkg.st")
+    }
+    maven {
+      name = "elide-snapshots"
+      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      content {
+        includeGroup("dev.elide")
+        includeGroup("org.capnproto")
+      }
+    }
+    maven {
+      name = "oss-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      content {
+        includeGroup("dev.elide")
+      }
+    }
+    maven {
+      name = "dokka-dev"
+      url = uri("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
+      content {
+        includeGroup("org.jetbrains.dokka")
+      }
+    }
+    maven {
+      name = "wasm-dev"
+      url = uri("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+      content {
+        includeGroup("io.ktor")
+        includeGroup("org.jetbrains.compose")
+        includeGroup("org.jetbrains.compose.compiler")
+        includeGroup("org.jetbrains.kotlin")
+        includeGroup("org.jetbrains.kotlinx")
+      }
+    }
+    maven {
+      name = "compose-dev"
+      url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
+      content {
+        includeGroup("androidx.compose")
+        includeGroup("androidx.compose.compiler")
+        includeGroup("org.jetbrains.compose")
+        includeGroup("org.jetbrains.compose.compiler")
+        includeGroup("web")
+      }
+    }
+    maven {
+      name = "compose-edge"
+      url = uri("https://androidx.dev/storage/compose-compiler/repository/")
+      content {
+        includeGroup("androidx.compose")
+        includeGroup("androidx.compose.compiler")
+        includeGroup("org.jetbrains.compose")
+        includeGroup("org.jetbrains.compose.compiler")
+      }
+    }
     mavenCentral()
     google()
   }
@@ -89,6 +159,7 @@ includeBuild("tools/substrate")
 include(
   ":packages:base",
   ":packages:bom",
+  ":packages:cli",
   ":packages:core",
   ":packages:frontend",
   ":packages:graalvm",
@@ -116,7 +187,6 @@ include(
   ":tools:processor",
   ":tools:reports",
   ":tools:wrappers",
-//  ":packages:cli",  @TODO(sgammon): Disabled for Kotlin v2 transition
 )
 
 val buildDocs: String by settings

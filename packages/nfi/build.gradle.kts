@@ -11,6 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import elide.internal.conventions.elide
+import elide.internal.cpp.cpp
+
 plugins {
   id("elide.internal.conventions")
   id("elide.internal.cpp")

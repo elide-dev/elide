@@ -24,8 +24,8 @@ import java.io.IOException
 import java.nio.file.Files
 
 @CacheableTask
-public class GenerateDummyCppSource : DefaultTask() {
-  private val symbolName: Property<String> = project.objects.property(String::class.java)
+public abstract class GenerateDummyCppSource : DefaultTask() {
+  private val symbolName: Property<String> = project.objects.property(String::class.java).value("dummy")
   @get:OutputFile public val outputFile: RegularFileProperty = project.objects.fileProperty()
 
   @TaskAction @Throws(IOException::class) private fun doGenerate() {

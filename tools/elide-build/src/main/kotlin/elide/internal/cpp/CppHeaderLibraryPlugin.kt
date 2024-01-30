@@ -23,15 +23,15 @@ import org.gradle.language.cpp.CppLibrary
 import org.gradle.nativeplatform.Linkage.STATIC
 import elide.internal.cpp.tasks.GenerateDummyCppSource as GenerateDummy
 
-public class CppHeaderLibraryPlugin : Plugin<Project> {
+public abstract class CppHeaderLibraryPlugin : Plugin<Project> {
   public override fun apply(project: Project) {
     project.pluginManager.apply("cpp-library")
 
     val library: CppLibrary = project.extensions.getByType(CppLibrary::class.java)
     library.linkage.set(listOf(STATIC))
 
-    val generateTask: TaskProvider<GenerateDummy> = createTask(project.tasks, project)
-    library.source.from(generateTask.flatMap { it: GenerateDummy -> it.outputFile })
+//    val generateTask: TaskProvider<GenerateDummy> = createTask(project.tasks, project)
+//    library.source.from(generateTask.flatMap { it: GenerateDummy -> it.outputFile })
   }
 
   public companion object {

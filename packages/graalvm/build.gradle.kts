@@ -202,7 +202,6 @@ dependencies {
 
   // General
   implementation(libs.jimfs)
-  implementation(libs.lmax.disruptor.core)
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
   implementation(libs.jackson.module.kotlin)

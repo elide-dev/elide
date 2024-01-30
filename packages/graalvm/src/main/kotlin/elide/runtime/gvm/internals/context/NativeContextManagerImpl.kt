@@ -13,45 +13,26 @@
 
 package elide.runtime.gvm.internals.context
 
-import com.lmax.disruptor.EventFactory
-import com.lmax.disruptor.EventHandler
-import com.lmax.disruptor.LifecycleAware
-import com.lmax.disruptor.SleepingWaitStrategy
-import com.lmax.disruptor.dsl.Disruptor
-import com.lmax.disruptor.dsl.ProducerType
 import org.graalvm.nativeimage.ImageInfo
-import org.graalvm.nativeimage.LogHandler
 import org.graalvm.nativeimage.Platform
-import org.graalvm.nativeimage.c.type.CCharPointer
 import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
-import org.graalvm.word.UnsignedWord
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ThreadFactory
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
-import java.util.concurrent.locks.ReentrantLock
 import java.util.stream.Stream
 import kotlin.io.path.Path
 import elide.annotations.Inject
 import elide.annotations.Singleton
-import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.VMProperty
 import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
-
-import java.util.logging.Handler
-import java.util.logging.Level
-import java.util.logging.LogRecord
 
 /** TBD. */
 @Singleton internal class NativeContextManagerImpl @Inject constructor (config: GuestVMConfiguration) :
@@ -214,111 +195,6 @@ import java.util.logging.LogRecord
 //    }
 //  }
 
-  /**
-   * TBD.
-   */
-  internal inner class NativeVMInvocation<Inputs: ExecutionInputs> : ContextManager.VMInvocation<Inputs> {
-    // Nothing at this time.
-  }
-
-  /**
-   * TBD.
-   */
-  private inner class VMInvocationFactory<Inputs: ExecutionInputs> : EventFactory<NativeVMInvocation<Inputs>> {
-    override fun newInstance(): NativeVMInvocation<Inputs> = NativeVMInvocation()
-  }
-
-  /**
-   * TBD.
-   */
-  private inner class NativeVMExecutor<I: ExecutionInputs> :
-    EventHandler<NativeVMInvocation<I>>,
-    LifecycleAware,
-    AutoCloseable {
-    /** Last-seen exception. */
-    private val threadId: AtomicLong = AtomicLong(-1)
-
-    /** Last-seen exception. */
-    private lateinit var threadName: String
-
-    /** Execution lock for this thread. */
-    private val mutex = ReentrantLock()
-
-    /** Last-seen exception. */
-    private val lastException: AtomicReference<Throwable?> = AtomicReference(null)
-
-    // Initialize VM context for this executor.
-    private fun initializeVMContext() {
-      val thread = Thread.currentThread()
-      logging.debug { "Allocating VM context for thread '${thread.name}'" }
-      val ctx = allocateContext()
-      logging.trace { "Context ready for VM thread '${thread.name}'" }
-      workerContext.set(ctx)
-      threadId.set(thread.threadId())
-      threadName = thread.name
-      logging.trace { "VM worker initialized for thread '${thread.name}'" }
-    }
-
-    override fun close() {
-      try {
-        logging.debug("Closing executor context: $threadName")
-        val ctx = workerContext.get()
-        if (ctx == null) {
-          logging.warn("Context already de-allocated")
-          return
-        }
-        ctx.close(true)
-        logging.trace("VM context closed: $threadName")
-      } catch (err: Throwable) {
-        logging.error("Unhandled exception while closing VM context", err)
-      }
-    }
-
-    override fun onStart() {
-      try {
-        initializeVMContext()
-      } catch (err: Throwable) {
-        error("Failed to initialize VM context: $err")
-      }
-    }
-
-    override fun onShutdown() = close()
-
-    // Prepare to enter the VM context.
-    private fun preExecute(context: VMContext) {
-      if (logging.isEnabled(LogLevel.TRACE))
-        logging.trace("Entering VM execution context: $threadName")
-      context.enter()
-    }
-
-    // Clean up after exiting the VM context.
-    private fun postExecute(context: VMContext) {
-      if (logging.isEnabled(LogLevel.TRACE))
-        logging.trace("Leaving VM execution context: $threadName")
-      context.leave()
-    }
-
-    // Lock for execution.
-    private fun withLock(op: (VMContext) -> Unit) {
-      logging.trace { "Acquiring locked execution context: $threadName" }
-      val ctx = workerContext.get() ?: error("Failed to acquire VM context")
-      mutex.lock()
-      try {
-        preExecute(ctx)
-        op.invoke(ctx)
-      } catch (err: Throwable) {
-        lastException.set(err)
-      } finally {
-        postExecute(ctx)
-        mutex.unlock()
-      }
-    }
-
-    override fun onEvent(event: NativeVMInvocation<I>, sequence: Long, endOfBatch: Boolean) {
-      TODO("Not yet implemented")
-    }
-  }
-
   // Private logger.
   private val logging: Logger = Logging.of(NativeContextManagerImpl::class)
 
@@ -337,17 +213,8 @@ import java.util.logging.LogRecord
   // Context configuration function.
   private val contextConfigure: MutableList<(VMContext.Builder) -> Unit> = ArrayList()
 
-  // Counter for VM thread spawns.
-  private val threadCounter: AtomicInteger = AtomicInteger(0)
-
   // Thread-local VM execution context.
   private val workerContext: VMThreadLocal = VMThreadLocal()
-
-  // Factory for VM invocation events.
-  private val invocationEventFactory: VMInvocationFactory<ExecutionInputs> = VMInvocationFactory()
-
-  // Main VM executor.
-  private val vmExecutor: NativeVMExecutor<ExecutionInputs> = NativeVMExecutor()
 
   // Additional properties to apply to created contexts.
   private val additionalProperties: MutableSet<VMProperty> = TreeSet()

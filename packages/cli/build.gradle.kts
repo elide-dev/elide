@@ -657,6 +657,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
+  "-H:DeadlockWatchdogInterval=15",
   "-H:CLibraryPath=$nativesPath",
   "--trace-object-instantiation=java.nio.DirectByteBuffer",
   if (enableEspresso) "-H:+AllowJRTFileSystem" else null,

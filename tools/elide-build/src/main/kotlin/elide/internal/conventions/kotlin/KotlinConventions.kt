@@ -45,6 +45,10 @@ import elide.internal.conventions.publishing.publishJavadocJar
  * @param customKotlinCompilerArgs Custom Kotlin compiler args to apply.
  * @param wasmSourceSets Whether to spawn WASM source sets for use as commons.
  * @param kotlinVersionOverride Override the API and language version of Kotlin for this module only.
+ * @param javaEnabled Whether to enable mixed Java/Kotlin source sets; defaults to `false`.
+ * @param splitJvmTargets Whether to split and carry default source sets for non-JVM targets; defaults to `false`.
+ * @param nonJvmSourceSet The name of the non-JVM source set; defaults to `default`.
+ * @param jvmSourceSet The name of the JVM source set; defaults to `jvm`. Only used if [splitJvmTargets] is `true`.
  */
 internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
@@ -57,6 +61,7 @@ internal fun Project.configureKotlinBuild(
   customKotlinCompilerArgs: List<String> = emptyList(),
   wasmSourceSets: Boolean = false,
   kotlinVersionOverride: String? = null,
+  javaEnabled: Boolean = false,
   splitJvmTargets: Boolean = false,
   nonJvmSourceSet: String = "default",
   jvmSourceSet: String = "jvm",
@@ -88,6 +93,9 @@ internal fun Project.configureKotlinBuild(
 
   // base Kotlin options
   extensions.getByType(KotlinProjectExtension::class.java).apply {
+    if (javaEnabled) {
+
+    }
     sourceSets.apply {
       if (wasmSourceSets) {
         val wasmMain = create("wasmMain") {

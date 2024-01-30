@@ -36,6 +36,12 @@ public object Projects {
     "proto:proto-core",
   )
 
+  /** Projects which have no Kotlin in them. */
+  public val nonKotlinProjects: List<String> = listOf(
+    "embedded",
+    "nfi",
+  )
+
   /** Server-side only modules. */
   public val serverModules: List<String> = listOf(
     "graalvm",

@@ -12,7 +12,7 @@
  */
 
 import elide.internal.conventions.elide
-import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.*
 import elide.internal.conventions.publishing.publish
 
 plugins {
@@ -56,18 +56,20 @@ group = "dev.elide"
 version = rootProject.version as String
 
 dependencies {
-//  common {
-//    implementation(projects.packages.base)
-//    implementation(projects.packages.core)
-//  }
-//
-//  commonTest {
-//    // Testing
-//    implementation(projects.packages.test)
-//    implementation(kotlin("test"))
-//  }
-//
-//  jvm {
-//    implementation(mn.micronaut.http)
-//  }
+  common {
+    api(projects.packages.base)
+    api(projects.packages.core)
+    api(libs.kotlinx.datetime)
+    api(libs.kotlinx.collections.immutable)
+  }
+
+  commonTest {
+    // Testing
+    implementation(projects.packages.test)
+    implementation(kotlin("test"))
+  }
+
+  jvm {
+    implementation(mn.micronaut.http)
+  }
 }

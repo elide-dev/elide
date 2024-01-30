@@ -31,6 +31,10 @@ gradlePlugin {
       id = "elide.internal.conventions"
       implementationClass = "elide.internal.conventions.ElideConventionPlugin"
     }
+    create("elideInternalCpp") {
+      id = "elide.internal.cpp"
+      implementationClass = "elide.internal.cpp.ElideCppPlugin"
+    }
   }
 }
 

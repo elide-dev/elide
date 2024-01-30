@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import java.util.Properties
+import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.project.Projects
 
 plugins {
@@ -85,6 +86,7 @@ val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
+val nodeVersion: String by properties
 val enableKnit: String? by properties
 val enableProguard: String? by properties
 
@@ -114,8 +116,10 @@ buildscript {
     }
   }
   dependencies {
-    val enableProguard: String? by properties
     classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
+    classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${libs.versions.atomicfu.get()}")
+
+    val enableProguard: String? by properties
     if (enableProguard == "true") {
       classpath("com.guardsquare:proguard-gradle:${libs.versions.proguard.get()}")
     }
@@ -134,8 +138,10 @@ if (enableKnit == "true") apply(plugin = "kotlinx-knit")
 
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   rootProject.the<NodeJsRootExtension>().download = true
-  rootProject.the<NodeJsRootExtension>().version = "21.0.0-v8-canary20231024d0ddc81258"
-  rootProject.the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
+  rootProject.the<NodeJsRootExtension>().version = nodeVersion
+  if (nodeVersion.contains("canary")) {
+    rootProject.the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
+  }
 }
 rootProject.plugins.withType(YarnPlugin::class.java) {
   rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING
@@ -156,6 +162,7 @@ apiValidation {
   ignoredProjects += listOf(
     "bom",
     "cli",
+    "embedded",
     "proto",
     "processor",
     "reports",
@@ -263,32 +270,34 @@ subprojects {
   val name = this.name
 
   apply {
-    plugin("io.gitlab.arturbosch.detekt")
-    plugin("org.jlleitschuh.gradle.ktlint")
-    plugin("org.sonarqube")
+    if (!Projects.nonKotlinProjects.contains(name)) {
+      plugin("io.gitlab.arturbosch.detekt")
+      plugin("org.jlleitschuh.gradle.ktlint")
+      plugin("org.sonarqube")
 
-    if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
-      plugin("org.jetbrains.dokka")
+      if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
+        plugin("org.jetbrains.dokka")
 
-      val docAsset: (String) -> File = {
-        layout.projectDirectory.file("docs/$it").asFile
-      }
-      val creativeAsset: (String) -> File = {
-        layout.projectDirectory.file("creative/$it").asFile
-      }
+        val docAsset: (String) -> File = {
+          layout.projectDirectory.file("docs/$it").asFile
+        }
+        val creativeAsset: (String) -> File = {
+          layout.projectDirectory.file("creative/$it").asFile
+        }
 
-      tasks.withType<DokkaTask>().configureEach {
-        pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-          footerMessage = "© 2022 Elide Ventures, LLC"
-          separateInheritedMembers = false
-          templatesDir = layout.projectDirectory.dir("docs/templates").asFile
-          customAssets = listOf(
-            creativeAsset("logo/logo-wide-1200-w-r2.png"),
-            creativeAsset("logo/gray-elide-symbol-lg.png"),
-          )
-          customStyleSheets = listOf(docAsset(
-            "styles/logo-styles.css",
-          ))
+        tasks.withType<DokkaTask>().configureEach {
+          pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+            footerMessage = "© 2022 Elide Ventures, LLC"
+            separateInheritedMembers = false
+            templatesDir = layout.projectDirectory.dir("docs/templates").asFile
+            customAssets = listOf(
+              creativeAsset("logo/logo-wide-1200-w-r2.png"),
+              creativeAsset("logo/gray-elide-symbol-lg.png"),
+            )
+            customStyleSheets = listOf(docAsset(
+              "styles/logo-styles.css",
+            ))
+          }
         }
       }
     }
@@ -339,61 +348,63 @@ subprojects {
     }
   }
 
-  ktlint {
-    version = "0.50.0"
+  if (!Projects.nonKotlinProjects.contains(name)) {
+    ktlint {
+      version = "0.50.0"
 
-    debug = false
-    verbose = false
-    android = false
-    outputToConsole = false
-    ignoreFailures = true
-    enableExperimentalRules = true
-    coloredOutput = true
+      debug = false
+      verbose = false
+      android = false
+      outputToConsole = false
+      ignoreFailures = true
+      enableExperimentalRules = true
+      coloredOutput = true
 
-    filter {
-      exclude("**/proto/**")
-      exclude("**/generated/**")
-      exclude("**/tools/plugin/gradle-plugin/**")
-      include("**/kotlin/**")
-    }
-  }
-
-  detekt {
-    parallel = true
-    ignoreFailures = true
-    config.from(rootProject.files("config/detekt/detekt.yml"))
-  }
-
-  val detektMerge by tasks.registering(ReportMergeTask::class) {
-    output = rootProject.layout.buildDirectory.file("reports/detekt/elide.sarif")
-  }
-
-  plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
-    tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
-      finalizedBy(detektMerge)
-      reports.sarif.required = true
-      detektMerge.configure {
-        input.from(this@detekt.sarifReportFile) // or .sarifReportFile
+      filter {
+        exclude("**/proto/**")
+        exclude("**/generated/**")
+        exclude("**/tools/plugin/gradle-plugin/**")
+        include("**/kotlin/**")
       }
     }
-  }
 
-  afterEvaluate {
-    if (tasks.findByName("check") != null) {
-      tasks.getByName("check") {
-        setDependsOn(
-          dependsOn.filterNot {
-            it is TaskProvider<*> && it.name == "detekt"
-          }
-        )
+    detekt {
+      parallel = true
+      ignoreFailures = true
+      config.from(rootProject.files("config/detekt/detekt.yml"))
+    }
+
+    val detektMerge by tasks.registering(ReportMergeTask::class) {
+      output = rootProject.layout.buildDirectory.file("reports/detekt/elide.sarif")
+    }
+
+    plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
+      tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
+        finalizedBy(detektMerge)
+        reports.sarif.required = true
+        detektMerge.configure {
+          input.from(this@detekt.sarifReportFile) // or .sarifReportFile
+        }
       }
+    }
 
-      tasks.getByName("build") {
-        setDependsOn(
-          dependsOn.filterNot {
-            it is TaskProvider<*> && it.name == "check"
-          }
-        )
+    afterEvaluate {
+      if (tasks.findByName("check") != null) {
+        tasks.getByName("check") {
+          setDependsOn(
+            dependsOn.filterNot {
+              it is TaskProvider<*> && it.name == "detekt"
+            }
+          )
+        }
+
+        tasks.getByName("build") {
+          setDependsOn(
+            dependsOn.filterNot {
+              it is TaskProvider<*> && it.name == "check"
+            }
+          )
+        }
       }
     }
   }

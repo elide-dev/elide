@@ -11,7 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import elide.internal.conventions.elide
+@file:Suppress("UnstableApiUsage")
+
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 import com.google.protobuf.gradle.id
@@ -44,7 +45,6 @@ elide {
   }
 
   java {
-    configureModularity = false
     includeJavadoc = false
   }
 }
@@ -92,6 +92,19 @@ tasks {
   }
   jar {
     dependsOn(generateProto)
+
+    manifest {
+      attributes["Automatic-Module-Name"] = "elide.protocol.protobuf"
+    }
+  }
+  compileJava {
+    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+      listOf(
+        "--add-exports=elide.protocol.core/elide.proto=elide.protocol.protobuf",
+        "--add-exports=elide.protocol.core/elide.proto.internal.annotations=elide.protocol.protobuf",
+        "--add-reads=elide.protocol.protobuf=ALL-UNNAMED"
+      )
+    })
   }
 }
 
@@ -100,7 +113,6 @@ dependencies {
   api(libs.kotlinx.datetime)
   api(projects.packages.proto.protoCore)
   api(libs.protobuf.java)
-  api(libs.protobuf.util)
   api(libs.protobuf.kotlin)
 
   // Implementation

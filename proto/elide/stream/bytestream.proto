@@ -20,3 +20,13 @@
  */
 syntax = "proto3";
 package elide.stream;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "EVFR";
+option swift_prefix = "ElideVFR";
+option objc_class_prefix = "EVR";
+option java_package = "tools.elide.stream";
+option csharp_namespace = "Elide.Stream";

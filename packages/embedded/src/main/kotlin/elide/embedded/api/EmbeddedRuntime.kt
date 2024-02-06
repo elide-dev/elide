@@ -13,15 +13,17 @@
 
 package elide.embedded.api
 
+import elide.annotations.API
+
 /**
  *
  */
-public interface EmbeddedRuntime {
+@API public interface EmbeddedRuntime {
   /**
    *
    */
   public interface EmbeddedDispatcher {
-    public suspend fun handle(call: NativeCall)
+    public suspend fun handle(call: UnaryNativeCall)
   }
 
   /**
@@ -47,12 +49,12 @@ public interface EmbeddedRuntime {
   /**
    *
    */
-  public fun configure(config: InstanceConfiguration)
+  public fun start()
 
   /**
    *
    */
-  public fun start()
+  public fun notify(capabilities: Set<Capability>)
 
   /**
    *

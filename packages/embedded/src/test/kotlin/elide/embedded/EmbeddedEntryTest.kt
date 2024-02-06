@@ -13,26 +13,87 @@
 
 package elide.embedded
 
+import tools.elide.call.engineConfiguration
+import tools.elide.http.HttpMethod.GET
+import tools.elide.http.httpHeader
+import tools.elide.http.httpHeaders
+import tools.elide.http.httpRequest
 import kotlinx.coroutines.test.runTest
-import elide.embedded.ElideEmbedded.initialize
-import elide.embedded.ElideEmbedded.capability
-import elide.embedded.ElideEmbedded.configure
-import elide.embedded.ElideEmbedded.teardown
-import elide.embedded.api.Capability
-import elide.embedded.api.ProtocolMode
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import elide.embedded.api.Capability.BASELINE
+import elide.embedded.api.ProtocolMode.PROTOBUF
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
 /** Tests Elide's embedded entrypoint. */
 @TestCase class EmbeddedEntryTest : AbstractEmbeddedTest() {
   @Test fun testEntryNoArgs() = runTest {
-    ElideEmbedded.entry(emptyArray())
+    ElideEmbedded.create().entry(emptyArray())
   }
 
-  @Test fun testInitializeEmptyLifecycle() {
-    initialize(ProtocolMode.PROTOBUF)
-    capability(Capability.BASELINE)
-    configure(EMBEDDED_API_VERSION, null)  // configure with defaults
-    teardown()
+  @Test fun testInitializeEmptyLifecycle(): Unit = ElideEmbedded.create().let {
+    it.initialize(PROTOBUF)
+    it.capability(BASELINE)
+    it.configure(EMBEDDED_API_VERSION, null)  // configure with defaults
+    it.teardown()
+  }
+
+  @Test fun testInstanceConfigBasic() = withConfig {
+    engine = engineConfiguration {
+      caching = false
+    }
+  }.thenAssert {
+    assertFalse(config.engine.caching, "caching should be disabled because we disabled it")
+  }
+
+  @Test fun testInstanceDispatchFetch() = embedded().fetch {
+    // no changes
+  }.then {
+    assertTrue(isRunning, "instance should be running")
+    exec(it.call, it.inflight).let { response ->
+      assertNotNull(response, "should not get `null` from embedded response (fetch)")
+    }
+  }
+
+  @Test fun testInstanceDispatchScheduled() = embedded().scheduled {
+    // no changes
+  }.then {
+    assertTrue(isRunning, "instance should be running")
+    exec(it.call, it.inflight).let { response ->
+      assertNotNull(response, "should not get `null` from embedded response (scheduled)")
+    }
+  }
+
+  @Test fun testInstanceDispatchQueued() = embedded().queue {
+    // no changes
+  }.then {
+    assertTrue(isRunning, "instance should be running")
+    exec(it.call, it.inflight).let { response ->
+      assertNotNull(response, "should not get `null` from embedded response (queued)")
+    }
+  }
+
+  @Test fun testInstanceDispatchFetchNative() = withConfig {
+    // nothing yet
+  }.thenAssert {
+    assertTrue(isRunning, "instance should be running")
+    val (call, inflight) = createFetch(native = true) {
+      request = httpRequest {
+        standard = GET
+        path = "/"
+        headers = httpHeaders {
+          header.add(httpHeader {
+            name = "User-Agent"
+            value = "ElideEmbeddedTest"
+          })
+        }
+      }
+    }
+
+    exec(call, inflight).let {
+      assertNotNull(it, "should not get `null` from embedded response")
+    }
   }
 }

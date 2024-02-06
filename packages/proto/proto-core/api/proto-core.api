@@ -47,6 +47,10 @@ public abstract interface class elide/proto/ElideProtocol$ModelAdapterStrategy {
 	public abstract fun model ()Lelide/proto/api/data/DataModelStrategy;
 }
 
+public final class elide/proto/ProtoAPI {
+	public static final field VERSION Ljava/lang/String;
+}
+
 public abstract interface class elide/proto/ProtocolModel {
 }
 

@@ -13,10 +13,10 @@
 
 @file:Suppress("UnstableApiUsage")
 
-import elide.internal.conventions.elide
- import elide.internal.conventions.kotlin.*
+import elide.internal.conventions.kotlin.*
 
 plugins {
+  java
   kotlin("multiplatform")
   kotlin("plugin.serialization")
 
@@ -43,8 +43,8 @@ elide {
   }
 
   java {
-    configureModularity = false
     includeSources = false
+    moduleName = "elide.protocol.kotlinx"
   }
 }
 
@@ -88,4 +88,14 @@ configurations {
 
     extendsFrom(configurations["jvmRuntimeClasspath"])
   }
+}
+
+tasks.compileJava {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "--add-exports=elide.protocol.core/elide.proto=elide.protocol.kotlinx",
+      "--add-exports=elide.protocol.core/elide.proto.internal.annotations=elide.protocol.kotlinx",
+      "--add-reads=elide.protocol.kotlinx=ALL-UNNAMED"
+    )
+  })
 }

@@ -16,8 +16,11 @@ package elide.internal.conventions.kotlin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.process.CommandLineArgumentProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import elide.internal.conventions.jvm.configureJavaModularity
 import elide.internal.conventions.kotlin.KotlinTarget.*
 
@@ -34,6 +37,7 @@ internal fun Project.configureKotlinMultiplatform(
   splitJvmTargets: Boolean,
   nonJvmSourceSet: String,
   jvmSourceSet: String,
+  jvmModuleName: String?,
 ) {
   // quick sanity check (JVM is not allowed as a pure target, only as part of a KMP target)
   require(target !is JVM) { "Kotlin JVM target should use the Multiplatform plugin." }
@@ -44,7 +48,22 @@ internal fun Project.configureKotlinMultiplatform(
       withJava()
 
       // java modules support
-      if(configureJavaModules) configureJavaModularity()
+      if (configureJavaModules) {
+        configureJavaModularity(jvmModuleName)
+
+        // make sure to unify the kotlin and java build destinations
+        val javaCompile = project.tasks.findByName("compileJava") as? JavaCompile
+        val kotlinJvmCompile = project.tasks.findByName("compileKotlinJvm") as? KotlinJvmCompile
+        if (javaCompile != null && kotlinJvmCompile != null) javaCompile.apply {
+          dependsOn(kotlinJvmCompile)
+          mustRunAfter(kotlinJvmCompile)
+
+          options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+            // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
+            listOf("--patch-module", "$jvmModuleName=${kotlinJvmCompile.destinationDirectory.asFile.get().path}")
+          })
+        }
+      }
 
       // use JUnit5 runner
       testRuns.getByName("test").executionTask.configure { useJUnitPlatform() }

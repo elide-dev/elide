@@ -15,18 +15,21 @@ package elide.internal.conventions.dependencies
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.LockMode
+import elide.internal.conventions.ElideBuildExtension
 
 /** Introduces dependency locking settings. */
-internal fun Project.configureDependencyLocking() {
-  // configure dependency locking
-  dependencyLocking {
-    lockMode.set(LockMode.LENIENT)
-    ignoredDependencies.addAll(
-      listOf(
-        "org.jetbrains.kotlinx:atomicfu*",
-        "org.jetbrains.kotlinx:kotlinx-serialization*",
-      ),
-    )
+internal fun Project.configureDependencyLocking(conventions: ElideBuildExtension) {
+  if (conventions.deps.locking) {
+    // configure dependency locking
+    dependencyLocking {
+      lockMode.set(LockMode.LENIENT)
+      ignoredDependencies.addAll(
+        listOf(
+          "org.jetbrains.kotlinx:atomicfu*",
+          "org.jetbrains.kotlinx:kotlinx-serialization*",
+        ),
+      )
+    }
   }
 
   tasks.register("resolveAndLockAll") {

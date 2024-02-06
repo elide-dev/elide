@@ -1,0 +1,140 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+syntax = "proto3";
+package elide.std;
+
+import "google/protobuf/any.proto";
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.std";
+option csharp_namespace = "Elide.Std";
+option go_package = "github.com/elide-tools/elide/std;std";
+
+// # Log Level
+//
+// Enumerates well-known or widely-recognized logging levels. These are used to indicate the severity of a given log
+// message, and to decide at what severity level log messages should be emitted.
+enum LogLevel {
+  option allow_alias = true;
+
+  // ## Default
+  //
+  // This value indicates a system-default logging level, or fallback to a declared logging level from somewhere else.
+  LOG_LEVEL_DEFAULT = 0;
+
+  // ## Trace
+  //
+  // Trace-level logging is typically used to show the path that code takes during execution; it is often considered the
+  // "finest" or "highest-grain" logging level.
+  TRACE = 100;
+
+  // Alias for `TRACE`-level logging.
+  FINEST = 100;
+
+  // ## Debug
+  //
+  // Debug-level logging is typically used during development, or diagnosis of bugs; it is often only activated in rare
+  // circumstances. Debug logging should withhold enough messages to be useful in diagnosis, so it is one level above
+  // `TRACE`-level logging.
+  DEBUG = 200;
+
+  // Alias for `DEBUG`-level logging.
+  FINE = 200;
+
+  // ## Info
+  //
+  // Info-level logging is considered informative but not critical in any capacity. It is often used to announce various
+  // system or software states, or to show regular activity which is not errant.
+  INFO = 300;
+
+  // ## Warnings
+  //
+  // Warning-level logging is used to indicate conditions that are not necessarily errors, and which may be recoverable,
+  // but still need operator or developer or user attention.
+  WARNING = 400;
+
+  // Alias for `WARNING`-level logging.
+  WARN = 400;
+
+  // ## Errors
+  //
+  // Errors are states in execution which are considered invalid or illegal, and therefore must be surfaced to the user,
+  // developer, or operator. Error cases are not always critical, but always important enough to be advertised.
+  ERROR = 500;
+
+  // ## Critical
+  //
+  // Critical error states are unexpected states in program execution which are completely invalid or illegal, and which
+  // may cause a crash of the program or system. Critical error messages are the highest available level of logging and
+  // are typically never squelched from output.
+  CRITICAL = 99;
+}
+
+// # Logging Handler
+//
+// Describes a named "handler," which receives logs and acts on them in some manner. Logging handlers are typically
+// instantiated in a small set of objects which are shared with all loggers in a given application.
+message LogHandler {
+  // Name of this logging handler.
+  string name = 1;
+
+  // Implementation type declared for this log handler.
+  string impl = 2;
+
+  // Typed configuration for this log handler.
+  google.protobuf.Any config = 3;
+}
+
+// # Logging Settings
+//
+// Describes general or default logging settings.
+message LoggingSettings {
+  // Logging level applied.
+  LogLevel level = 1;
+
+  // Handlers active for these settings.
+  repeated string handler = 2;
+}
+
+// # Logger Settings
+//
+// Describes a suite of settings which should apply to one or more logger instances.
+message LoggerSettings {
+  // Logging level applied to this logger.
+  LogLevel level = 1;
+
+  // Handlers active for this logger; referenced by name.
+  repeated string handler = 2;
+}
+
+// # Logger
+//
+// Describes a logger, which is a single named logging instance. Loggers are typically acquired at the point they are
+// used, or in an enclosing class, and are used to emit log messages at various levels of severity.
+message Logger {
+  // Assigned name of the logger.
+  string name = 1;
+
+  // Whether this payload represents the root logger; `false` in all other cases.
+  bool root = 2;
+
+  // Settings applied to this logger; only available in some circumstances.
+  LoggerSettings settings = 3;
+}

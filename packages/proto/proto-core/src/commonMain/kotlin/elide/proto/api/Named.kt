@@ -16,9 +16,9 @@ package elide.proto.api
 /**
  * TBD.
  */
-interface Named {
+public interface Named {
   /**
    * TBD.
    */
-  val name: String
+  public val name: String
 }

@@ -23,7 +23,7 @@ import elide.proto.ElideProtocol
 @MustBeDocumented
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
-annotation class Protocol(
+public annotation class Protocol(
   /** Protocol implementation library. */
-  val value: ElideProtocol.ImplementationLibrary,
+  public val value: ElideProtocol.ImplementationLibrary,
 )

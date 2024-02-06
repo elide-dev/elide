@@ -13,9 +13,20 @@
 
 package elide.embedded
 
-import elide.embedded.api.*
-import org.graalvm.nativeimage.IsolateThread
+import io.micronaut.context.ApplicationContext
+import io.micronaut.runtime.Micronaut
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.conscrypt.OpenSSLProvider
+import org.graalvm.nativeimage.ImageInfo
+import org.slf4j.bridge.SLF4JBridgeHandler
+import tools.elide.call.v1alpha1.UnaryInvocationResponse
+import java.security.Security
+import java.util.SortedSet
+import kotlinx.atomicfu.AtomicRef
+import kotlinx.atomicfu.atomic
 import kotlin.system.exitProcess
+import elide.annotations.Eager
+import elide.embedded.api.*
 
 /**
  * # Elide: Embedded
@@ -46,18 +57,54 @@ import kotlin.system.exitProcess
  * Calls are submitted to endpoints (TCP, Unix socket, etc.), and routed to the appropriate application. Methods are
  * provided in the Host Control API for resolving an application ID.
  */
-public object ElideEmbedded {
-  /**
-   * ## Main Entrypoint
-   *
-   * When dispatched as an executable, this entrypoint takes over execution; executable use of Elide Embedded is used
-   * for testing and development purposes.
-   *
-   * This method will exit with a descriptive code.
-   *
-   * @param args Command-line arguments.
-   */
-  @JvmStatic public fun main(args: Array<String>): Unit = exitProcess(entry(args))
+public class ElideEmbedded private constructor () {
+  public companion object {
+    @JvmStatic public fun main(args: Array<String>) {
+      ElideEmbedded().entry(args)
+      exitProcess(0)
+    }
+
+    /** Static initialization, during entrypoint boot. */
+    @JvmStatic private fun initializeStatic() {
+      listOf(
+        "elide.js.vm.enableStreams" to "true",
+        "io.netty.allocator.maxOrder" to "3",
+        "io.netty.serviceThreadPrefix" to "elide-svc",
+        "io.netty.native.deleteLibAfterLoading" to "true",  // reversed bc of bug (actually does not delete)
+        "io.netty.buffer.bytebuf.checkAccessible" to "false",
+        org.fusesource.jansi.AnsiConsole.JANSI_MODE to org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE,
+        org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL to "false",
+      ).forEach {
+        System.setProperty(it.first, it.second)
+      }
+
+      Security.insertProviderAt(BouncyCastleProvider(), 0)
+      Security.insertProviderAt(OpenSSLProvider(), 0)
+      SLF4JBridgeHandler.removeHandlersForRootLogger()
+      SLF4JBridgeHandler.install()
+    }
+
+    /** @return Empty un-initialized instance. */
+    @JvmStatic public fun create(): ElideEmbedded = ElideEmbedded()
+  }
+
+  // Active API version.
+  private val activeApiVersion: AtomicRef<String> = atomic(Constants.API_VERSION)
+
+  // Active protocol mode.
+  private val activeProtocolMode: AtomicRef<ProtocolMode> = atomic(ProtocolMode.PROTOBUF)
+
+  // Active instance configuration.
+  private val activeInstanceConfig: AtomicRef<InstanceConfiguration?> = atomic(null)
+
+  // Active application context.
+  private val activeApplicationContext: AtomicRef<ApplicationContext?> = atomic(null)
+
+  // Active embedded implementation.
+  private val activeImpl: AtomicRef<EmbeddedRuntime?> = atomic(null)
+
+  // Active instance configuration.
+  private val declaredCapabilities: SortedSet<Capability> = sortedSetOf(Capability.BASELINE)
 
   /**
    * ## Code Entrypoint
@@ -68,8 +115,21 @@ public object ElideEmbedded {
    *
    * @param args Command-line arguments.
    */
-  @JvmStatic public fun entry(args: Array<String>): Int {
-    println("Hello from Elide Embedded")
+  public fun entry(args: Array<String>): Int {
+    initialize(ProtocolMode.PROTOBUF)
+    capability(Capability.BASELINE)
+    configure(Constants.API_VERSION, null)
+    try {
+      start(args.toList())
+    } catch (ixe: InterruptedException) {
+      println("Interrupted: ${ixe.message}")
+      Thread.interrupted()
+      stop()
+    } catch (e: Exception) {
+      println("Error: ${e.message}")
+    } finally {
+      teardown()
+    }
     return 0
   }
 
@@ -87,7 +147,9 @@ public object ElideEmbedded {
    * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
    *   codes during initialization, see the [InitializationError] enum.
    */
-  @JvmStatic public fun initialize(protocol: ProtocolMode): Int {
+  public fun initialize(protocol: ProtocolMode): Int {
+    initializeStatic()
+    activeProtocolMode.value = protocol
     return 0
   }
 
@@ -104,7 +166,8 @@ public object ElideEmbedded {
    * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
    *   codes during initialization, see the [InitializationError] enum.
    */
-  @JvmStatic public fun capability(capability: Capability): Int {
+  public fun capability(capability: Capability): Int {
+    declaredCapabilities.add(capability)
     return 0
   }
 
@@ -116,43 +179,110 @@ public object ElideEmbedded {
    * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
    *   codes during initialization, see the [InitializationError] enum.
    */
-  @JvmStatic public fun configure(version: String, config: InstanceConfiguration?): Int {
-    // nothing
+  public fun configure(version: String, config: InstanceConfiguration?): Int {
+    assert (version == Constants.API_VERSION) { "Unsupported API version: $version" }
+    activeApiVersion.value = version
+    activeInstanceConfig.value = config
+    return 0
+  }
+
+  /**
+   * ## Native: Start
+   *
+   * TBD.
+   *
+   * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
+   *   codes during initialization, see the [InitializationError] enum.
+   */
+  public fun start(args: List<String>? = null): Int {
+    require(activeApiVersion.value.isNotBlank()) {
+      "API version must be set before starting the instance"
+    }
+    val configuration = requireNotNull(activeInstanceConfig.value) {
+      "Instance configuration must be set before starting the instance"
+    }
+    require(activeApplicationContext.value == null && activeImpl.value == null) {
+      "Instance is already running"
+    }
+    try {
+      val applicationContext = Micronaut.build(*(args?.toTypedArray() ?: emptyArray<String>())).apply {
+        banner(false)
+        bootstrapEnvironment(true)
+        deduceEnvironment(false)
+        eagerInitSingletons(true)
+        eagerInitAnnotated(Eager::class.java)
+        enableDefaultPropertySources(false)
+        singletons(configuration)
+        environments("embedded", if (ImageInfo.inImageCode()) "native" else "jvm")
+      }.build()
+
+      // mount
+      val impl = applicationContext.getBean(EmbeddedRuntime::class.java)
+      activeApplicationContext.value = applicationContext
+      activeImpl.value = impl
+      impl.notify(declaredCapabilities)
+      applicationContext.start()
+    } catch (err: Throwable) {
+      println("Error in `start`: ${err.message}")
+      return 1
+    }
     return 0
   }
 
   /**
    * ## Native: Entry Dispatch
    */
-  @JvmStatic public fun enterDispatch(call: NativeCall, ticket: InFlightCallInfo): Int {
+  public fun enterDispatch(call: UnaryNativeCall, ticket: InFlightCallInfo): Int {
+    System.err.println("Call ticket:\n$ticket")
+    System.err.println("Call received:\n${call.request}")
     return 0
   }
 
   /**
    * ## Native: Call Cancellation
    */
-  @JvmStatic public fun dispatchCancel(handle: InFlightCallInfo): Int {
+  public fun dispatchCancel(handle: InFlightCallInfo): Int {
     return 0
   }
 
   /**
    * ## Native: Call Polling
    */
-  @JvmStatic public fun dispatchPoll(handle: InFlightCallInfo): Int {
+  public fun dispatchPoll(handle: InFlightCallInfo): Int {
+    return 0
+  }
+
+  /**
+   * ## Native: Gather Response
+   */
+  public fun response(call: UnaryNativeCall, ticket: InFlightCallInfo): UnaryInvocationResponse {
+    return UnaryInvocationResponse.getDefaultInstance()  // not yet implemented
+  }
+
+  /**
+   * ## Native: Exit Dispatch
+   */
+  public fun exitDispatch(call: UnaryNativeCall, ticket: InFlightCallInfo): Int {
+    return 0
+  }
+
+  /**
+   * ## Native: Stop
+   *
+   * TBD.
+   *
+   * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
+   *   codes during initialization, see the [InitializationError] enum.
+   */
+  public fun stop(): Int {
+    // nothing
     return 0
   }
 
   /**
    * ## Native: Exit Dispatch
    */
-  @JvmStatic public fun exitDispatch(call: NativeCall, ticket: InFlightCallInfo): Int {
-    return 0
-  }
-
-  /**
-   * ## Native: Exit Dispatch
-   */
-  @JvmStatic public fun teardown(): Int {
+  public fun teardown(): Int {
     return 0
   }
 }

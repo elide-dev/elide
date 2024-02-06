@@ -11,11 +11,15 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
 import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
-import elide.internal.conventions.elide
+
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 
@@ -71,11 +75,11 @@ val enableExperimental = false
 val enableEmbeddedResources = true
 val enableResourceFilter = true
 val enableAuxCache = false
-val enableJpms = true
+val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableDashboard = false
 val enableBuildReport = false
-val enableStrictHeap = true
+val enableStrictHeap = false
 val enableG1 = oracleGvm && HostManager.hostIsLinux
 val enablePgo = false
 val enablePgoSampling = false
@@ -117,6 +121,7 @@ val jvmCompileArgs = listOfNotNull(
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.embedded=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
+  "--add-reads=elide.protocol.protobuf=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.module=elide.embedded",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.embedded",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.embedded",
@@ -168,17 +173,11 @@ val embeddedVersion: String = if (stamp) {
 }
 
 val headers: Configuration by configurations.creating
-val modules: Configuration by configurations.creating
+val jpmsModules: Configuration by configurations.creating
+configurations.compileClasspath.extendsFrom(configurations.named("jpmsModules"))
 
-val classpathExtras: Configuration by configurations.creating {
-  extendsFrom(configurations.runtimeClasspath.get())
-}
-
-// @TODO(sgammon): more precise module path
-val compileClasspath: Configuration by configurations.getting
-compileClasspath.extendsFrom(modules)
-val testCompileClasspath: Configuration by configurations.getting
-testCompileClasspath.extendsFrom(modules)
+// @TODO(sgammon): proper modulepath
+val modules = configurations.api
 
 /**
  * Build: Embedded Native Image (Shared Library)
@@ -194,7 +193,7 @@ val commonNativeArgs = listOfNotNull(
   "--enable-http",
   "--enable-https",
   "--enable-all-security-services",
-  "--install-exit-handlers",
+  "--no-install-exit-handlers",
   "--configure-reflection-metadata",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
@@ -202,7 +201,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
   "-H:TempDirectory=${layout.buildDirectory.dir("native/tmp").get().asFile.path}",
-  "--trace-object-instantiation=java.nio.DirectByteBuffer",
+  "--trace-class-initialization=io.netty.channel.DefaultFileRegion,io.netty.util.AbstractReferenceCounted",
   if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
   if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
   if (enableEspresso) "-J-Despresso.finalization.UnsafeOverride=true" else null,
@@ -318,6 +317,7 @@ val jvmDefs = mapOf(
   "user.language" to "en",
   "io.netty.allocator.type" to "unpooled",
   "logback.statusListenerClass" to "ch.qos.logback.core.status.NopStatusListener",
+  "slf4j.provider" to "ch.qos.logback.classic.spi.LogbackServiceProvider",
 )
 
 val hostedRuntimeOptions = mapOf(
@@ -349,6 +349,7 @@ val initializeAtBuildTime = listOf(
   "kotlin.coroutines.ContinuationInterceptor",
   "kotlin.sequences",
   "kotlin.text.Charsets",
+  "kotlin.text.Regex",
   "kotlin.time",
   "kotlin.time.DurationJvmKt",
   "kotlin.time.Duration",
@@ -575,6 +576,10 @@ val initializeAtRuntime: List<String> = listOf(
   "kotlin.internal.jdk8.JDK8PlatformImplementations",
   "kotlin.internal.jdk8.JDK8PlatformImplementations${'$'}ReflectSdkVersion",
   "kotlin.jvm.internal.MutablePropertyReference1Impl",
+  "io.netty.channel.kqueue.KQueue",
+  "io.netty.channel.kqueue.Native",
+  "io.netty.channel.epoll.EPoll",
+  "io.netty.channel.epoll.Native",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -690,8 +695,8 @@ val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
 
 application {
   mainClass = entrypoint
-  mainModule = module
   applicationDefaultJvmArgs = jvmRuntimeArgs
+  if (enableJpms) mainModule = module
 }
 
 java {
@@ -716,6 +721,8 @@ testlogger {
   showPassed = true
   showSkipped = true
   showFailedStandardStreams = true
+  showStandardStreams = System.getenv("TEST_STDOUT") == "true"
+  showPassedStandardStreams = System.getenv("TEST_STDOUT") == "true"
   showFullStackTraces = true
   slowThreshold = 30000L
 }
@@ -738,9 +745,10 @@ elide {
   }
 
   java {
-    configureModularity = false
     includeJavadoc = false
     includeSources = false
+    configureModularity = enableJpms
+    moduleName = module
   }
 
   docker {
@@ -812,6 +820,7 @@ dependencies {
   // Dependencies: Baseline
   annotationProcessor(mn.micronaut.inject.java)
   ksp(mn.micronaut.inject.kotlin)
+  ksp(libs.protobuf.java)
   modules(kotlin("stdlib"))
 
   // Dependencies: Project
@@ -833,6 +842,7 @@ dependencies {
   modules(projects.packages.runtime)
 
   // Dependencies: KotlinX
+  modules(libs.kotlinx.atomicfu)
   modules(libs.kotlinx.coroutines.core)
   modules(libs.kotlinx.coroutines.jdk8)
   modules(libs.kotlinx.coroutines.jdk9)
@@ -920,12 +930,33 @@ dependencies {
   modules(libs.graalvm.truffle.nfi.native.linux.amd64)
   modules(libs.graalvm.truffle.nfi.native.darwin.aarch64)
 
+  // General
+  implementation(libs.snakeyaml)
+  implementation(libs.jansi)
+  implementation(libs.jline.graal)
+  implementation(libs.jline.console)
+  implementation(libs.jline.terminal.jansi)
+  implementation(libs.jline.terminal.jni)
+  implementation(libs.jline.terminal.jna)
+  implementation(libs.jline.terminal.ffm)
+
   // GraalVM: SVM
   compileOnly(libs.graalvm.svm)
 
-  // Runtime Only
+  // Logging
+  api(mn.slf4j.api)
+  api(mn.slf4j.ext)
+  api(mn.slf4j.jcl.over.slf4j)
+  api(mn.slf4j.jul.to.slf4j)
+  api(mn.slf4j.log4j.over.slf4j)
   runtimeOnly(mn.logback.core)
   runtimeOnly(mn.logback.classic)
+
+  // Crypto
+  runtimeOnly(libs.bouncycastle.tls)
+  runtimeOnly(libs.bouncycastle.pkix)
+  runtimeOnly(libs.bouncycastle.util)
+  implementation(libs.conscrypt)
 
   // Dependencies: Test
   testImplementation(projects.packages.test)
@@ -1062,14 +1093,21 @@ fun nativeImageArgs(
     "--strict-image-heap",
   ) else emptyList()).toList()
 
-tasks.test {
-  useJUnitPlatform()
-  outputs.upToDateWhen { false }
-}
+tasks {
+  test {
+    useJUnitPlatform()
+    outputs.upToDateWhen { false }
+  }
 
-tasks.compileJava.configure {
-  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-    // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
-    listOf("--patch-module", "elide.embedded=${tasks.compileKotlin.get().destinationDirectory.asFile.get().path}")
-  })
+  compileJava.configure {
+    dependsOn(compileKotlin)
+    mustRunAfter(compileKotlin)
+
+    if (enableJpms) {
+      options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+        // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
+        listOf("--patch-module", "$module=${compileKotlin.get().destinationDirectory.asFile.get().path}")
+      })
+    }
+  }
 }

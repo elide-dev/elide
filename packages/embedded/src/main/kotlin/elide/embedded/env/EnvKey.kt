@@ -11,31 +11,22 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.embedded.api
-
-import java.nio.ByteBuffer
+package elide.embedded.env
 
 /**
+ * # Environment Key
  *
+ * Describes a single value which can be resolved from [EnvResolver] implementations; this typically pairs a "system
+ * property" name with an environment variable name, both of which apply to one value.
  */
-public class NativeCall private constructor (private val call: DecodedNativeCall) {
-  @JvmRecord private data class DecodedNativeCall(
-    val id: InFlightCallID,
-  )
+public interface EnvKey {
+  /**
+   * The system property name.
+   */
+  public val propertyName: String
 
-  public companion object {
-    /**
-     *
-     */
-    @JvmStatic public fun create(callId: Long): NativeCall = NativeCall(DecodedNativeCall(
-      id = callId,
-    ))
-
-    /**
-     *
-     */
-    @JvmStatic public fun of(callId: Long, byteview: ByteBuffer): NativeCall = NativeCall(DecodedNativeCall(
-      id = callId,
-    ))
-  }
+  /**
+   * The environment variable name.
+   */
+  public val envName: String
 }

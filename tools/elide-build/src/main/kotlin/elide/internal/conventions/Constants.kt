@@ -83,7 +83,7 @@ public object Constants {
     const val KOTLIN_SDK = "versions.kotlin.sdk"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_DEFAULT = "2.0.0-Beta3"
+    const val KOTLIN_SDK_PIN = "2.0.0-Beta3"
 
     /** Constant: default Kotlin version. */
     const val KOTLIN_DEFAULT = "2.0"
@@ -96,6 +96,24 @@ public object Constants {
 
     /** GraalVM metadata repository version. */
     const val GRAALVM_METADATA = "0.3.6"
+
+    /** Pinned Protobuf version. */
+    const val PROTOBUF = "3.21.11"
+
+    /** Micronaut version. */
+    const val MICRONAUT = "4.3.1"
+
+    /** Static Netty version. */
+    const val NETTY = "4.1.101.Final"
+
+    /** Guava version. */
+    const val GUAVA = "33.0.0-jre"
+
+    /** gRPC version. */
+    const val GRPC = "1.61.0"
+
+    /** GraalVM version. */
+    const val GRAALVM = "23.1.2"
   }
 
   /** Kotlin conventions. */

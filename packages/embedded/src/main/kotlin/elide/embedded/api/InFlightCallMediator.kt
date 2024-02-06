@@ -13,12 +13,13 @@
 
 package elide.embedded.api
 
+import elide.annotations.API
 import elide.embedded.impl.InMemoryCallMediator
 
 /**
  *
  */
-public interface InFlightCallMediator {
+@API public interface InFlightCallMediator {
   public companion object {
     /**
      *

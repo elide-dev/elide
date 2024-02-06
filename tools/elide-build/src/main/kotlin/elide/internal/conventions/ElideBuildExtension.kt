@@ -11,9 +11,18 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package elide.internal.conventions
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.MinimalExternalModuleDependency
+import org.gradle.api.provider.Provider
+import java.util.SortedMap
+import java.util.SortedSet
+import java.util.concurrent.ConcurrentSkipListMap
+import java.util.concurrent.ConcurrentSkipListSet
+import java.util.concurrent.atomic.AtomicBoolean
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.native.NativeTarget.APP
@@ -104,6 +113,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Whether to configure Java 9 modularity. */
     public var configureModularity: Boolean = true
+
+    /** Override the generated JPMS module name. */
+    public var moduleName: String? = null
   }
 
   /** Configuration for the JVM platform */
@@ -148,6 +160,39 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var configureLauncher: Boolean = false
   }
 
+  /** Configuration for dependency management and resolution. */
+  public class Dependencies(project: Project) : Convention(project) {
+    /** Whether to use dependency locking. */
+    public var locking: Boolean = false
+
+    /** Whether to enable dependency verification. */
+    public var verification: Boolean = true
+
+    /** Whether to fail on dependency version conflicts. */
+    public var strict: Boolean = false
+
+    /** Whether to enable dependency pinning. Shutting this off is probably dangerous. */
+    public var pinning: Boolean = true
+
+    /** Whether to activate automatic module transforms. */
+    public var automaticModules: Boolean = true
+
+    /** Whether to activate module minification transforms. */
+    public var minification: Boolean = false
+
+    /** Configuration for dependency exclusions. */
+    public var exclusions: DependencyExclusions = DependencyExclusions()
+
+    /** Configuration for dependency pinning. */
+    public var pins: DependencyPinning = DependencyPinning()
+
+    /** Configuration for JPMS. */
+    public var jpms: ModularContext = ModularContext()
+
+    /** Whether any transforms are enabled (internal use). */
+    internal val enableTransforms: Boolean get() = automaticModules || minification
+  }
+
   internal val archives = Archives(project)
   internal val publishing = Publishing(project)
   internal val kotlin = Kotlin(project)
@@ -156,12 +201,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   internal val testing = Testing(project)
   internal val docker = Docker(project)
   internal val native = Native(project)
-
-  /** Whether to use dependency locking. */
-  public var lockDependencies: Boolean = true
-
-  /** Whether to fail on dependency version conflicts. */
-  public var strictDependencies: Boolean = true
+  public val deps: Dependencies = Dependencies(project)
 
   private fun <T : Convention> configure(target: T, block: T.() -> Unit) {
     target.requested = true

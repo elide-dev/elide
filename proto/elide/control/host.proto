@@ -18,8 +18,13 @@
 syntax = "proto3";
 package elide.host;
 
+import "elide/app/config.proto";
 import "elide/machine/machine.proto";
+import "elide/meta/guest.proto";
+import "elide/meta/syntax.proto";
 import "elide/net/ip.proto";
+import "elide/net/protocol.proto";
+import "elide/std/logging.proto";
 import "google/protobuf/timestamp.proto";
 
 option optimize_for = SPEED;
@@ -88,4 +93,164 @@ message ActiveHostSystem {
 
   // Last update timestamp.
   google.protobuf.Timestamp as_of = 3;
+}
+
+// Specifies VM-level configuration, which is applied at different levels of the VM lifecycle and configuration.
+message VMConfiguration {
+  // Defines the structure of a VM flag value.
+  message VMFlag {
+    // Name or string for this flag.
+    string flag = 1;
+
+    // Flag value to provide.
+    oneof value {
+      // Boolean value for the flag; `true` indicates activation.
+      bool bool = 2;
+
+      // String literal value for the flag.
+      string string = 3;
+    }
+  }
+
+  // Specifies VM runtime flags.
+  repeated VMFlag flag = 1;
+}
+
+// Host-level configuration for guest VMs and engine settings.
+message EngineConfiguration {
+  // Enabled guest languages.
+  repeated elide.meta.GuestLanguage language = 1;
+
+  // General configuration for guest VMs.
+  elide.meta.GeneralLanguageSettings general = 2;
+
+  // Guest-specific configuration, associated with each language.
+  repeated elide.meta.GuestSettingsStanza settings = 3;
+
+  // Enable caching for this engine.
+  bool caching = 4;
+
+  // Flags for the guest VM environment.
+  VMConfiguration gvm = 5;
+
+  // Flags for the host VM environment.
+  VMConfiguration hvm = 6;
+}
+
+// Informs the runtime configuration about various host identity parameters.
+message HostIdentity {
+  // Hostname of the machine.
+  string hostname = 1;
+
+  // Datacenter name/assigned label.
+  string datacenter = 2;
+
+  // Regional label or name.
+  string region = 3;
+
+  // Vendor for the host or host software.
+  string vendor = 4;
+
+  // Tag or model for the host or host software.
+  string tag = 5;
+
+  // "Agent" name or value; this is a free-form string which can be used to identify the host software.
+  string agent = 6;
+}
+
+// Describes logging configurations for the runtime.
+message LoggingConfiguration {
+  // Default logging settings.
+  elide.std.LoggingSettings root = 1;
+
+  // Assigned or created handlers.
+  repeated elide.std.LogHandler handler = 2;
+
+  // Settings specific to named loggers.
+  repeated elide.std.Logger logger = 3;
+}
+
+// Enumerates supported types of server listeners.
+enum ListenerType {
+  // Unrecognized or unknown listener type. This value should not be used from regular code.
+  UNRECOGNIZED_LISTENER_TYPE = 0;
+
+  // HTTP v1.1 listener, in plaintext.
+  HTTP_PLAINTEXT = 1;
+
+  // HTTP v1.1/v2/v3 listener, wrapped in TLS.
+  HTTP2_TLS = 2;
+
+  // Raw TCP listener.
+  TCP_PLAINTEXT = 3;
+
+  // TCP listener, wrapped in TLS.
+  TCP_TLS = 4;
+}
+
+// Describes listener configurations for the main runtime server.
+message ListenerConfiguration {
+  // Describes the structure of a port/address-based listener.
+  message PortListener {
+    // IP address; if not provided, all addresses are used.
+    elide.net.IpAddress address = 1;
+
+    // Layer 4 protocols to support through this listener.
+    repeated elide.net.Layer4Protocol protocol = 2;
+
+    // Port for this listener.
+    uint32 port = 3;
+  }
+
+  // Describes the structure of a socket-based listener.
+  message SocketListener {
+    // Path to the socket.
+    string path = 1;
+
+    // Whether this socket is symbolic or abstract (where supported).
+    bool symbolic = 2;
+  }
+
+  // Describes general settings which can apply to any listener.
+  message ListenerSettings {
+    // Whether to enable TLS, where applicable.
+    bool tls = 1;
+  }
+
+  // Describes the type of listener in use.
+  ListenerType type = 1;
+
+  // Describes type-specific listener settings.
+  oneof listener {
+    // Describes a port-based listener.
+    PortListener port = 2;
+
+    // Describes a socket-based listener.
+    SocketListener socket = 3;
+  }
+
+  // General settings for this listener.
+  ListenerSettings settings = 4;
+}
+
+// Describes a payload of configuration, provided by the host application to an embedded instance of Elide; this message
+// is used to configure the runtime early in the boot process.
+message HostConfiguration {
+  // Identity information about the hosting system.
+  HostIdentity host = 1;
+
+  // Engine-level configuration for this instance.
+  EngineConfiguration engine = 2;
+
+  // Configuration for runtime logging.
+  LoggingConfiguration logging = 3;
+
+  // Listeners to apply to this host. If empty, only native calls are accepted.
+  repeated ListenerConfiguration listener = 4;
+
+  // Generic host configuration payloads.
+  repeated elide.app.AppConfigurationSuite config = 5;
+
+  // Default suite of configurations applied to hosted applications.
+  repeated elide.app.AppConfigurationSuite defaults = 6;
 }

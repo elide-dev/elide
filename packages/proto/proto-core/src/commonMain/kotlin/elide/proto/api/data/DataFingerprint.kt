@@ -89,41 +89,41 @@ public interface DataFingerprint<Concrete, Builder, Algorithm, Encoding> :
     /**
      * TBD.
      */
-    fun create(algorithm: Algorithm, data: ByteArray): Concrete
+    public fun create(algorithm: Algorithm, data: ByteArray): Concrete
 
     /**
      * TBD.
      */
-    fun create(algorithm: Algorithm, base64: Base64Data): Concrete
+    public fun create(algorithm: Algorithm, base64: Base64Data): Concrete
 
     /**
      * TBD.
      */
-    fun create(algorithm: Algorithm, hex: HexData): Concrete
+    public fun create(algorithm: Algorithm, hex: HexData): Concrete
 
     /**
      * TBD.
      */
-    fun create(algorithm: Algorithm, data: String): Concrete
+    public fun create(algorithm: Algorithm, data: String): Concrete
 
     /**
      * TBD.
      */
-    fun create(algorithm: Algorithm, data: String, encoding: Encoding): Concrete
+    public fun create(algorithm: Algorithm, data: String, encoding: Encoding): Concrete
   }
 
   /**
    * TBD.
    */
-  fun bytes(): ByteArray
+  public fun bytes(): ByteArray
 
   /**
    * TBD.
    */
-  fun encoding(): Encoding
+  public fun encoding(): Encoding
 
   /**
    * TBD.
    */
-  fun algorithm(): Algorithm
+  public fun algorithm(): Algorithm
 }

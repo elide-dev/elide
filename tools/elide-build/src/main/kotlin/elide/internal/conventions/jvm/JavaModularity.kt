@@ -79,7 +79,7 @@ internal object Java9Modularity {
   }
 
   @JvmStatic
-  fun configure(project: Project) = with(project) {
+  fun configure(project: Project, moduleNameOverride: String? = null) = with(project) {
     val (target, multiplatform) = when (val kotlin = extensions.getByName("kotlin")) {
       is KotlinJvmProjectExtension -> kotlin.target to false
       is KotlinMultiplatformExtension -> kotlin.targets.getByName("jvm") to true
@@ -97,11 +97,35 @@ internal object Java9Modularity {
     }
 
     val processModuleInfoFile by tasks.registering(ProcessModuleInfoFile::class) {
-      moduleInfoFile.set(if (multiplatform) {
-        file("${project.projectDir}/src/jvmMain/kotlin/module-info.java")
-      } else {
-        file("${project.projectDir}/src/main/kotlin/module-info.java")
-      })
+      moduleInfoFile.set(
+        if (multiplatform) {
+          listOf(
+            "${project.projectDir}/src/jvmMain/kotlin/module-info.java",
+            "${project.projectDir}/src/jvmMain/java/module-info.java",
+          ).map {
+            file(it)
+          }.singleOrNull {
+            it.exists()
+          } ?: run {
+            throw IllegalStateException(
+              "Exactly one module-info.java file must be present in ${project.projectDir}/src/jvmMain/{kotlin,java}",
+            )
+          }
+        } else {
+          listOf(
+            "${project.projectDir}/src/main/kotlin/module-info.java",
+            "${project.projectDir}/src/main/java/module-info.java",
+          ).map {
+            file(it)
+          }.singleOrNull {
+            it.exists()
+          } ?: run {
+            throw IllegalStateException(
+              "Exactly one module-info.java file must be present in ${project.projectDir}/src/main/{kotlin,java}"
+            )
+          }
+        },
+      )
       processedModuleInfoFile.set(
         project.layout.buildDirectory.file("generated-sources/module-info-processor/module-info.java")
       )
@@ -109,7 +133,7 @@ internal object Java9Modularity {
 
     val compileJavaModuleInfo = tasks.register("compileModuleInfoJava", JavaCompile::class.java) {
       val plainModuleName = project.name.replace('-', '.') // this module's name
-      val moduleName = "elide.$plainModuleName"
+      val moduleName = moduleNameOverride ?: "elide.$plainModuleName"
       val compileKotlinTask =
         compilation.compileTaskProvider.get() as? org.jetbrains.kotlin.gradle.tasks.KotlinCompile
           ?: error("Cannot access Kotlin compile task ${compilation.compileKotlinTaskName}")

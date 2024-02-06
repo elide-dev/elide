@@ -33,7 +33,6 @@ import elide.internal.conventions.ElideBuildExtension.Convention
 import elide.internal.conventions.archives.excludeDuplicateArchives
 import elide.internal.conventions.archives.reproducibleArchiveTasks
 import elide.internal.conventions.dependencies.configureDependencyLocking
-import elide.internal.conventions.dependencies.configureDependencyResolution
 import elide.internal.conventions.docker.useGoogleCredentialsForDocker
 import elide.internal.conventions.jvm.*
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
@@ -51,10 +50,6 @@ import elide.internal.conventions.tests.configureJacoco
 import elide.internal.conventions.tests.configureKoverCI
 import elide.internal.conventions.tests.configureTestExecution
 import elide.internal.conventions.tests.configureTestLogger
-
-public fun Project.elide(block: ElideBuildExtension.() -> Unit) {
-  plugins.getPlugin(ElideConventionPlugin::class.java).applyElideConventions(this, block)
-}
 
 public abstract class ElideConventionPlugin : Plugin<Project> {
   @get:Inject protected abstract val javaToolchainService: JavaToolchainService
@@ -76,7 +71,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     plugins.apply(SigningPlugin::class.java)
 
     // other plugins
-//    plugins.apply(RedactedGradleSubplugin::class.java) @TODO(sgammon): broken on kotlin v2
+    // plugins.apply(RedactedGradleSubplugin::class.java) @TODO(sgammon): broken on kotlin v2
 
     // testing
     plugins.apply(TestLoggerPlugin::class.java)
@@ -87,14 +82,12 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     // resolve extension
     val conventions = ElideBuildExtension(project).apply(config)
 
-    // apply conventions
+    // apply baseline conventions
     configureProject()
+    configureDependencyLocking(conventions)
 
     // configure the redacted compiler plugin
     // configureRedactedPlugin() @TODO(sgammon): broken on kotlin v2
-
-    if (conventions.lockDependencies) configureDependencyLocking()
-    if (conventions.strictDependencies) configureDependencyResolution()
 
     maybeApplyConvention(conventions.archives) {
       if (reproducibleTasks) reproducibleArchiveTasks()
@@ -149,6 +142,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
         customKotlinCompilerArgs = customKotlinCompilerArgs,
         wasmSourceSets = conventions.kotlin.wasmSourceSets,
         kotlinVersionOverride = kotlinVersionOverride,
+        jvmModuleName = conventions.java.moduleName,
       )
     }
 
@@ -157,7 +151,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
 
       if (includeJavadoc) includeJavadocJar()
       if (includeSources) includeSourceJar()
-      if (configureModularity) configureJavaModularity()
+      if (configureModularity && !conventions.kotlin.requested) configureJavaModularity(conventions.java.moduleName)
     }
 
     maybeApplyConvention(conventions.jvm) {
@@ -192,8 +186,17 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       if (jacoco) configureJacoco()
     }
 
+    // configure custom attribute schema and defaults
+    configureAttributeSchema(conventions)
+
+    // install transforms
+    configureTransforms(conventions)
+
+    // configure pinned critical dependencies
+    configurePinnedDependencies(conventions)
+
     // finally: apply dependency security rules (verification, locking)
-    configureDependencySecurity()
+    configureDependencySecurity(conventions)
   }
 
   private inline fun <T : Convention> maybeApplyConvention(convention: T, block: T.() -> Unit) {

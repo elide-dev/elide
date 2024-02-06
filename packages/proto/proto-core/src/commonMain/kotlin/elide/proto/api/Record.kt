@@ -18,54 +18,54 @@ import elide.proto.ProtocolModel
 /**
  * TBD.
  */
-interface Record<Model: Record<Model, Builder>, Builder>: ProtocolModel {
+public interface Record<Model: Record<Model, Builder>, Builder>: ProtocolModel {
   /**
    * TBD.
    */
-  interface IBuilder<Type> {
+  public interface IBuilder<Type> {
     /**
      * TBD.
      */
-    fun build(): Type
+    public fun build(): Type
   }
 
   /**
    * TBD.
    */
-  interface Factory<Model, Builder> {
+  public interface Factory<Model, Builder> {
     /**
      * TBD.
      */
-    fun empty(): Model
+    public fun empty(): Model
 
     /**
      * TBD.
      */
-    fun copy(model: Model): Model
+    public fun copy(model: Model): Model
 
     /**
      * TBD.
      */
-    fun defaultInstance(): Model
+    public fun defaultInstance(): Model
 
     /**
      * TBD.
      */
-    fun builder(): Builder
+    public fun builder(): Builder
 
     /**
      * TBD.
      */
-    fun create(op: Builder.() -> Unit): Model
+    public fun create(op: Builder.() -> Unit): Model
   }
 
   /**
    * TBD.
    */
-  fun factory(): Factory<out Model, Builder>
+  public fun factory(): Factory<out Model, Builder>
 
   /**
    * TBD.
    */
-  fun toBuilder(): Builder
+  public fun toBuilder(): Builder
 }

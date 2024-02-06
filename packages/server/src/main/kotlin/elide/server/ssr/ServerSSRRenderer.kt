@@ -117,7 +117,7 @@ public class ServerSSRRenderer (
   public suspend fun renderSuspendAsync(): Deferred<String> = coroutineScope {
     return@coroutineScope async {
       prepareContext { _, props ->
-        val js = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
+        val vm = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
           error("Failed to resolve JavaScript runtime provider")
         }.acquireVM(
           GraalVMGuest.JAVASCRIPT  // @TODO(sgammon): don't hard-code this
@@ -125,7 +125,7 @@ public class ServerSSRRenderer (
 
         buffer.apply {
           logging.trace("Starting SSR execution")
-          val op = js.executeRender(
+          val op = vm.executeRender(
             script,
             request,
             receiver = ::chunkReady,

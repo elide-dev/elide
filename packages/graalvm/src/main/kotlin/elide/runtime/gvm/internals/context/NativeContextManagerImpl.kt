@@ -106,15 +106,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
         else -> if (!RuntimeFlag.inspect) null else StaticProperty.active("inspect")
       },
     )
-
-    // Size of the disruptor ring buffer for each VM executor.
-    private const val ringBufferSize = 32
-
-    // Number of retries to apply to the sleeping-wait strategy.
-    private const val sleepingRetries: Int = 200
-
-    // Default thread-sleep (in nanoseconds).
-    private const val defaultSleepNs: Long = 100L
   }
 
   // Engine logger to use.

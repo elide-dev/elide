@@ -37,7 +37,9 @@ import elide.server.controller.StatusEnabledController
 @Controller("\${elide.assets.prefix:/_/assets}")
 public class AssetController @Inject constructor(private val assetManager: AssetManager) : StatusEnabledController {
   // Logger pipe.
-  private val logging: Logger = Logging.of(AssetController::class)
+  private val logging: Logger by lazy {
+    Logging.of(AssetController::class)
+  }
 
   /**
    * Handles HTTP `GET` calls to asset endpoints based on "asset tag" values, which are generated at build time, and are
@@ -49,18 +51,11 @@ public class AssetController @Inject constructor(private val assetManager: Asset
    */
   @Get("/{tag}.{ext}")
   public suspend fun assetGet(request: HttpRequest<*>, tag: String, ext: String): FinalizedAssetResponse {
-    logging.debug(
-      "Loading asset with tag '$tag' (extension: '$ext')"
-    )
-    return assetManager.serveAsync(
-      request
-    ).await().let { response ->
+    logging.debug("Loading asset with tag '$tag' (extension: '$ext')")
+    return assetManager.serveAsync(request).await().let { response ->
       val body = response.body()
-      if (body != null) {
-        val (type, stream) = response.body()
-        response.contentType(type).body(stream)
-      } else {
-        response.body("Not found".toByteArray(StandardCharsets.UTF_8))
+      if (body == null) response.body("Not found".toByteArray(StandardCharsets.UTF_8)) else response.body().let {
+        response.contentType(it.first).body(it.second)
       }
     }
   }

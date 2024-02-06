@@ -14,7 +14,6 @@
 package elide.runtime.gvm
 
 import io.micronaut.context.BeanContext
-import io.micronaut.context.annotation.Prototype
 import io.micronaut.http.HttpRequest
 import java.util.ServiceLoader
 import kotlinx.coroutines.Deferred

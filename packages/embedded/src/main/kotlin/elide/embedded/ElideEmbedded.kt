@@ -16,14 +16,17 @@ package elide.embedded
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.Micronaut
 import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.conscrypt.OpenSSLProvider
 import org.graalvm.nativeimage.ImageInfo
 import org.slf4j.bridge.SLF4JBridgeHandler
+import tools.elide.call.HostConfiguration
 import tools.elide.call.v1alpha1.UnaryInvocationResponse
 import java.security.Security
 import java.util.SortedSet
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
+import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 import elide.annotations.Eager
 import elide.embedded.api.*
@@ -79,7 +82,6 @@ public class ElideEmbedded private constructor () {
       }
 
       Security.insertProviderAt(BouncyCastleProvider(), 0)
-      Security.insertProviderAt(OpenSSLProvider(), 0)
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
     }
@@ -119,6 +121,7 @@ public class ElideEmbedded private constructor () {
     initialize(ProtocolMode.PROTOBUF)
     capability(Capability.BASELINE)
     configure(Constants.API_VERSION, null)
+
     try {
       start(args.toList())
     } catch (ixe: InterruptedException) {
@@ -179,10 +182,10 @@ public class ElideEmbedded private constructor () {
    * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
    *   codes during initialization, see the [InitializationError] enum.
    */
-  public fun configure(version: String, config: InstanceConfiguration?): Int {
+  public fun configure(version: String, config: InstanceConfiguration? = null): Int {
     assert (version == Constants.API_VERSION) { "Unsupported API version: $version" }
     activeApiVersion.value = version
-    activeInstanceConfig.value = config
+    activeInstanceConfig.value = config ?: InstanceConfiguration.createFrom(HostConfiguration.getDefaultInstance())
     return 0
   }
 
@@ -195,15 +198,10 @@ public class ElideEmbedded private constructor () {
    *   codes during initialization, see the [InitializationError] enum.
    */
   public fun start(args: List<String>? = null): Int {
-    require(activeApiVersion.value.isNotBlank()) {
-      "API version must be set before starting the instance"
-    }
-    val configuration = requireNotNull(activeInstanceConfig.value) {
-      "Instance configuration must be set before starting the instance"
-    }
-    require(activeApplicationContext.value == null && activeImpl.value == null) {
-      "Instance is already running"
-    }
+    require(activeApiVersion.value.isNotBlank()) { "API version must be set before starting the instance" }
+    val configuration = requireNotNull(activeInstanceConfig.value) { "Configuration must be set before starting" }
+    require(activeApplicationContext.value == null && activeImpl.value == null) { "Instance is already running" }
+
     try {
       val applicationContext = Micronaut.build(*(args?.toTypedArray() ?: emptyArray<String>())).apply {
         banner(false)
@@ -217,14 +215,14 @@ public class ElideEmbedded private constructor () {
       }.build()
 
       // mount
+      applicationContext.start()
       val impl = applicationContext.getBean(EmbeddedRuntime::class.java)
       activeApplicationContext.value = applicationContext
       activeImpl.value = impl
       impl.notify(declaredCapabilities)
-      applicationContext.start()
     } catch (err: Throwable) {
-      println("Error in `start`: ${err.message}")
-      return 1
+      println("Error in `start` (${err::class.java.simpleName}): ${err.message}")
+      throw err
     }
     return 0
   }
@@ -232,10 +230,15 @@ public class ElideEmbedded private constructor () {
   /**
    * ## Native: Entry Dispatch
    */
-  public fun enterDispatch(call: UnaryNativeCall, ticket: InFlightCallInfo): Int {
-    System.err.println("Call ticket:\n$ticket")
-    System.err.println("Call received:\n${call.request}")
-    return 0
+  public fun enterDispatch(call: UnaryNativeCall, ticket: InFlightCallInfo): Int = ticket.use {
+    requireNotNull(activeImpl.value) { "Instance is already running" }.let {
+      runBlocking {
+        Dispatchers.Default.invoke {
+          it.dispatcher().handle(call)
+        }
+        0
+      }
+    }
   }
 
   /**

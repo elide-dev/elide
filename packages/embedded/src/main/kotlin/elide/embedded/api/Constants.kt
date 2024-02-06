@@ -45,6 +45,9 @@ public data object Constants {
 
     /** Engine defaults. */
     public data object Engine {
+      /** Whether to run in isolates. */
+      public const val SPAWN_ISOLATE: Boolean = false
+
       /** Default maximum isolate memory. */
       public const val MAX_ISOLATE_MEMORY: String = "256MB"
 
@@ -53,9 +56,6 @@ public data object Constants {
 
       /** Compile in background threads. */
       public const val COMPILE_BACKGROUND: Boolean = true
-
-      /** Whether to run in isolates. */
-      public const val SPAWN_ISOLATE: Boolean = true
 
       /** Untrusted code mitigation mode. */
       public const val UNTRUSTED_CODE_MITIGATION: String = "software"

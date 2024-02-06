@@ -271,12 +271,6 @@ public final class elide/proto/impl/wkt/ProtoTimestamp$TimestampBuilder : elide/
 	public fun setSeconds (J)V
 }
 
-public final class elide/stream/Bytestream {
-	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
-	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
-	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
-}
-
 public abstract interface class elide/util/proto/adapters/ProtoConvertible : elide/util/proto/adapters/ProtoSchemaConvertible {
 	public fun toDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public abstract fun toMessage ()Lcom/google/protobuf/Message;
@@ -38806,6 +38800,12 @@ public abstract interface class tools/elide/std/VersionOrBuilder : com/google/pr
 }
 
 public final class tools/elide/std/VersionOuterClass {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
+public final class tools/elide/stream/Bytestream {
 	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
 	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
 	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V

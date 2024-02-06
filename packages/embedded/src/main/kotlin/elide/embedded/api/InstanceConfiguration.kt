@@ -13,14 +13,28 @@
 
 package elide.embedded.api
 
+import tools.elide.call.HostConfiguration
+import tools.elide.call.HostConfigurationOrBuilder
+
 /**
  *
  */
-public class InstanceConfiguration {
+public class InstanceConfiguration private constructor (private val config: HostConfiguration) :
+  HostConfigurationOrBuilder by config {
   public companion object {
     /**
      *
      */
-    @JvmStatic public fun create(native: NativeConfiguration? = null): InstanceConfiguration = InstanceConfiguration()
+    @JvmStatic public fun createFrom(host: HostConfiguration): InstanceConfiguration = InstanceConfiguration(host)
+
+    /**
+     *
+     */
+    @JvmStatic public fun loadNative(native: NativeConfiguration): InstanceConfiguration = InstanceConfiguration(
+      native.applyTo(HostConfiguration.newBuilder()).build()
+    )
   }
+
+  /** @return Host configuration payload. */
+  public val host: HostConfiguration get() = config
 }

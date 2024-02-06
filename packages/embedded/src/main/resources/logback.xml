@@ -11,48 +11,32 @@
   ~ License for the specific language governing permissions and limitations under the License.
   -->
 
-<configuration debug="false">
+<configuration debug="${elide.logging.debug:-false}">
   <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
-  <variable name="APPENDER" value="${log.file.root:-ASYNC_LAZY}" />
+  <variable name="APPENDER" value="${elide.logging.appender:-stderr}" />
   <variable name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-warn}" />
   <serializeModel file="src/main/resources/logback.scmo"/>
-  <contextName>elide</contextName>
+
+  <contextName>embedded</contextName>
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <target>System.out</target>
-    <encoder>
-      <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
-    </encoder>
-  </appender>
-
-  <appender name="RICH_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
     <withJansi>true</withJansi>
-    <target>System.err</target>
-    <immediateFlush>false</immediateFlush>
+    <target>elide.embedded.Streams.out</target>
     <encoder>
       <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
     </encoder>
   </appender>
-
-  <appender name="ASYNC_LAZY" class="ch.qos.logback.classic.sift.SiftingAppender">
-    <discriminator>
-      <key>codesource</key>
-      <defaultValue>user</defaultValue>
-    </discriminator>
-    <sift>
-      <appender name="RICH_CONSOLE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>20</discardingThreshold>
-        <appender-ref ref="CONSOLE" />
-        <queueSize>256</queueSize>
-        <includeCallerData>false</includeCallerData>
-        <neverBlock>true</neverBlock>
-      </appender>
-    </sift>
+  <appender name="stderr" class="ch.qos.logback.core.ConsoleAppender">
+    <withJansi>true</withJansi>
+    <target>elide.embedded.Streams.err</target>
+    <encoder>
+      <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
+    </encoder>
   </appender>
 
   <!-- Root Logger -->
   <root level="${ROOT_LOGLEVEL:-warn}">
-    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="${APPENDER:-stderr}" />
   </root>
 </configuration>

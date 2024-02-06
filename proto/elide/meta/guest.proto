@@ -19,6 +19,8 @@ syntax = "proto3";
  */
 package elide.meta;
 
+import "elide/meta/syntax.proto";
+
 option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
@@ -28,9 +30,6 @@ option swift_prefix = "Elide";
 option objc_class_prefix = "ELD";
 option java_package = "tools.elide.meta";
 option csharp_namespace = "Elide.Meta";
-
-import "elide/meta/syntax.proto";
-
 
 // Enumerates supported JavaScript language levels.
 enum JsLanguageLevel {
@@ -83,10 +82,19 @@ message JsSettings {
 
     // NPM: Support for NPM modules and CommonJS `require`.
     NPM = 2;
+
+    // WASM: Integration with JavaScript. Requires WASM to be installed as a language.
+    WASM = 3;
   }
 
   // Describes the JavaScript language level for an embedded guest script.
   JsLanguageLevel level = 1;
+
+  // JavaScript language features which are enabled for the guest.
+  repeated JsFeature enabled = 2;
+
+  // JavaScript language features which are disabled for the guest.
+  repeated JsFeature disabled = 3;
 }
 
 // # Language Settings: Python
@@ -107,7 +115,54 @@ message RubySettings {
 //
 // Specifies JVM-specific settings and configurations.
 message JvmSettings {
-  // Nothing at this time.
+  // ## JVM Target
+  //
+  // Describes supported JVM target version levels.
+  enum JvmTarget {
+    // Use the default or system-provided target.
+    JVM_TARGET_DEFAULT = 0;
+
+    // Targeting for JDK 8.
+    JDK_8 = 1;
+
+    // Targeting for JDK 9.
+    JDK_9 = 2;
+
+    // Targeting for JDK 10.
+    JDK_10 = 3;
+
+    // Targeting for JDK 11.
+    JDK_11 = 4;
+
+    // Targeting for JDK 17.
+    JDK_17 = 5;
+
+    // Targeting for JDK 21.
+    JDK_21 = 6;
+
+    // Targeting for latest stable JDK (LTS).
+    STABLE = 98;
+
+    // Targeting for latest possible JDK (edge).
+    LATEST = 99;
+  }
+
+  // ## Classpath Entry
+  //
+  // Describes a single entry in the JVM classpath.
+  message ClasspathEntry {
+    // Path to the classpath entry within VFS or host storage.
+    string path = 1;
+  }
+
+  // JVM target version.
+  JvmTarget target = 1;
+
+  // Arguments to provide to the JVM.
+  repeated string jvm_flag = 2;
+
+  // Arguments to provide to the JVM.
+  repeated ClasspathEntry classpath = 3;
 }
 
 // # Language Settings: WASM
@@ -191,6 +246,14 @@ message GuestPolicy {
   // Maximum execution time to allow for execution within this guest; there is a sensible Elide-wide default if
   // unspecified. Expressed in a count of milliseconds. `0` disables the restriction.
   uint64 execution_time = 11;
+
+  // Whether to allow process control for the guest; the guest will be able to launch OS-native processes if this flag
+  // is activated. In most secure operating modes this flag defaults to being off.
+  bool processes = 12;
+
+  // Whether to allow thread control for the guest; the guest will be able to launch OS-native threads if this flag is
+  // activated. In most secure operating modes this flag defaults to being off.
+  bool threads = 13;
 }
 
 // # Language Settings: General
@@ -207,6 +270,38 @@ message GeneralLanguageSettings {
   // Default security and isolation policy to apply to guest VMs. If left unspecified, reasonable defaults are used. Any
   // same-type payload for an individual language overrides these settings within the scope of that language.
   GuestPolicy default_policy = 3;
+}
+
+// # Guest Settings
+//
+// Describes a single group of settings which apply to a given guest language as part of a bigger set of configurations.
+message GuestSettings {
+  // Specifies the language which these settings apply to.
+  GuestLanguage lang = 1;
+
+  // Language-specific settings, bound to the specified `lang`.
+  oneof lang_settings {
+    // JavaScript-specific language settings.
+    JsSettings js = 10;
+
+    // JVM-specific language settings.
+    JvmSettings jvm = 20;
+
+    // Kotlin-specific language settings.
+    KotlinSettings kotlin = 21;
+
+    // WASM-specific language settings.
+    WasmSettings wasm = 30;
+
+    // LLVM-specific language settings.
+    LlvmSettings llvm = 40;
+
+    // Ruby-specific language settings.
+    RubySettings ruby = 50;
+
+    // Python-specific language settings.
+    PythonSettings python = 60;
+  }
 }
 
 // # Guest Settings: Stanza
@@ -252,6 +347,9 @@ message GuestConfiguration {
   // Whether to enable guest VMs at all.
   bool enabled = 1;
 
+  // General and default settings to apply as part of this suite of policies.
+  repeated GeneralLanguageSettings general = 2;
+
   // Settings stanzas, each of which describe general and language-specific settings for a given guest language.
-  repeated GuestSettingsStanza settings = 2;
+  repeated GuestSettings settings = 3;
 }

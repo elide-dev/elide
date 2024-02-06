@@ -11,8 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
- import elide.internal.conventions.elide
- import elide.internal.conventions.kotlin.*
+
+import elide.internal.conventions.kotlin.*
 
 plugins {
   kotlin("multiplatform")

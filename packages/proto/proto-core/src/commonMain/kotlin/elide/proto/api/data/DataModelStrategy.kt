@@ -18,7 +18,7 @@ import elide.proto.api.wkt.Timestamp
 /**
  * TBD.
  */
-interface DataModelStrategy<
+public interface DataModelStrategy<
   HashAlgorithms,
   Encodings,
   Container,
@@ -38,7 +38,7 @@ interface DataModelStrategy<
   /**
    * TBD.
    */
-  fun fingerprints(): DataFingerprint.Factory<
+  public fun fingerprints(): DataFingerprint.Factory<
     Fingerprint,
     FingerprintB,
     HashAlgorithms,
@@ -48,7 +48,7 @@ interface DataModelStrategy<
   /**
    * TBD.
    */
-  fun containers(): DataContainer.Factory<
+  public fun containers(): DataContainer.Factory<
     Container,
     ContainerB,
     Fingerprint,
@@ -60,7 +60,7 @@ interface DataModelStrategy<
   /**
    * TBD.
    */
-  fun timestamps(): Timestamp.Factory<
+  public fun timestamps(): Timestamp.Factory<
     Stamp,
     StampB,
   >

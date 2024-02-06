@@ -19,7 +19,8 @@ import elide.embedded.NativeApi.InstanceConfiguration;
 import elide.embedded.NativeApi.SerializedInvocation;
 import elide.embedded.NativeApi.PayloadByteConsumer;
 import elide.embedded.NativeApi.PayloadTipSupplier;
-import elide.embedded.api.NativeCall;
+import elide.embedded.NativeApi.ProtocolMode;
+import elide.embedded.api.UnaryNativeCall;
 import elide.embedded.api.NativeConfiguration;
 import org.graalvm.nativeimage.IsolateThread;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
@@ -107,9 +108,10 @@ class NativeBytes {
    * @param walk
    * @return
    */
-  public static NativeCall inflateCall(IsolateThread thread, long callId, SerializedInvocation call, boolean walk) {
+  public static UnaryNativeCall inflateCall(IsolateThread thread, long callId, SerializedInvocation call, boolean walk) {
     final ByteBuffer buffer = inflate(thread, call, walk);
-    return NativeCall.of(callId, buffer);
+    final ProtocolMode mode = ProtocolMode.fromCValue(call.getProtocolMode());
+    return UnaryNativeCall.of(callId, elide.embedded.api.ProtocolMode.resolve(mode), buffer);
   }
 
   /**
@@ -119,7 +121,7 @@ class NativeBytes {
    * @param call
    * @return
    */
-  public static NativeCall inflateCall(IsolateThread thread, long callId, SerializedInvocation call) {
+  public static UnaryNativeCall inflateCall(IsolateThread thread, long callId, SerializedInvocation call) {
     return inflateCall(thread, callId, call, DEFAULT_WALK_BYTEARRAY);
   }
 
@@ -136,10 +138,11 @@ class NativeBytes {
       IsolateThread thread,
       InstanceConfiguration config,
       String version,
+      ProtocolMode mode,
       boolean walk
   ) {
     ByteBuffer buffer = inflate(thread, config, walk);
-    return NativeConfiguration.of(version, buffer);
+    return NativeConfiguration.of(version, elide.embedded.api.ProtocolMode.resolve(mode), buffer);
   }
 
   /**
@@ -150,7 +153,12 @@ class NativeBytes {
    * @param config
    * @return
    */
-  public static NativeConfiguration inflateConfig(IsolateThread thread, String version, InstanceConfiguration config) {
-    return inflateConfig(thread, config, version, DEFAULT_WALK_BYTEARRAY);
+  public static NativeConfiguration inflateConfig(
+      IsolateThread thread,
+      String version,
+      ProtocolMode mode,
+      InstanceConfiguration config
+  ) {
+    return inflateConfig(thread, config, version, mode, DEFAULT_WALK_BYTEARRAY);
   }
 }

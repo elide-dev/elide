@@ -23,7 +23,7 @@ package elide.embedded.api
     /**
      *
      */
-    @JvmStatic public fun of(callId: InFlightCallID, native: NativeCall? = null): InFlightCallInfo =
+    @JvmStatic public fun of(callId: InFlightCallID, native: UnaryNativeCall? = null): InFlightCallInfo =
       InFlightCallInfo(callId)
   }
 }

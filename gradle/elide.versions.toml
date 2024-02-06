@@ -14,7 +14,7 @@ graalvm-metadata = "0.3.6"
 graalvm-plugin = "0.9.28"
 node = "20.2.0"
 react = "18.2.0"
-protobuf = "3.25.1"
+protobuf = "3.21.11"
 protobufJavalite = "3.0.0"
 grpc-java = "1.61.0"
 grpc-kotlin = "1.4.1"
@@ -76,6 +76,7 @@ truth = "1.3.0"
 soy = "2022-03-07" # next: "2022-07-20"
 closure = "v20221004"
 closure-stylesheets = "1.5.0"
+clikt = "4.2.2"
 picocli = "4.7.5"
 picocli-jansi-graalvm = "1.2.0"
 slf4j = "2.0.9"
@@ -609,6 +610,9 @@ jline-graal = { module = "org.jline:jline-graal", version.ref = "jline" }
 jline-console = { module = "org.jline:jline-console", version.ref = "jline" }
 jline-terminal-core = { module = "org.jline:jline-terminal", version.ref = "jline" }
 jline-terminal-jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
+jline-terminal-jni = { module = "org.jline:jline-terminal-jni", version.ref = "jline" }
+jline-terminal-jna = { module = "org.jline:jline-terminal-jna", version.ref = "jline" }
+jline-terminal-ffm = { module = "org.jline:jline-terminal-ffm", version.ref = "jline" }
 jline-reader = { module = "org.jline:jline-reader", version.ref = "jline" }
 jline-style = { module = "org.jline:jline-style", version.ref = "jline" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
@@ -629,6 +633,7 @@ jdoctor = { group = "me.champeau.jdoctor", name = "jdoctor-core", version.ref = 
 strikt-bom = { group = "io.strikt", name = "strikt-bom", version.ref = "strikt" }
 strikt-jackson = { group = "io.strikt", name = "strikt-jackson", version.ref = "strikt" }
 strikt-jvm = { group = "io.strikt", name = "strikt-jvm", version.ref = "strikt" }
+clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 ## Build Classpath
 openrewrite-kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite-lib" }
 openrewrite-test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite-lib" }

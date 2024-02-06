@@ -28,7 +28,6 @@ option objc_class_prefix = "ELD";
 option java_package = "tools.elide.meta";
 option csharp_namespace = "Elide.Meta";
 
-
 // # Guest Language
 //
 // Enumerates known guest programming languages, which may be used alongside JVM technologies in an Elide application.

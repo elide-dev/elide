@@ -15,28 +15,64 @@ package elide.internal.conventions.jvm
 
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ModuleVersionSelector
+import org.gradle.api.attributes.Attribute
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.plugins.jvm.JvmTestSuite
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.exclude
+import org.gradle.kotlin.dsl.registerTransform
 import org.gradle.testing.base.TestingExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.SortedSet
 import elide.internal.conventions.Constants.Build
 import elide.internal.conventions.Constants.Versions
+import elide.internal.conventions.DependencyPin
+import elide.internal.conventions.ElideBuildExtension
+import elide.internal.conventions.ModuleConfiguration
 import elide.internal.conventions.publishing.publishJavadocJar
 import elide.internal.conventions.publishing.publishSourcesJar
+import elide.internal.transforms.AutomaticModuleTransform
+import elide.internal.transforms.JarMinifier
 
-private val lockedConfigurations = listOf(
+private val enableTransforms = false
+
+internal val lockedConfigurations = sortedSetOf(
   "classpath",
   "compileClasspath",
   "runtimeClasspath",
 )
 
-private val unverifiedConfigurations = emptyList<String>()
+internal val automaticModuleConfigurations = sortedSetOf(
+  "compileClasspath",
+  "runtimeClasspath",
+)
+
+internal val minifiedConfigurations = listOf<String>()
+
+internal val globallyPinnedVersions: Map<String, Pair<String, String>> = sortedMapOf(
+  "org.jetbrains.kotlin:kotlin-stdlib" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
+  "org.jetbrains.kotlin:kotlin-reflect" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
+  "com.google.protobuf:protobuf-java" to (Versions.PROTOBUF to "sensitive compatibility"),
+  "com.google.protobuf:protobuf-java-util" to (Versions.PROTOBUF to "sensitive compatibility"),
+  "com.google.protobuf:protobuf-kotlin" to (Versions.PROTOBUF to "sensitive compatibility"),
+)
+
+internal val bannedDependencies: SortedSet<String> = sortedSetOf()
+
+internal val unverifiedConfigurations = emptyList<String>()
+
+internal val defaultModuleTransforms = sortedMapOf(
+  "protobuf-java" to ModuleConfiguration.of { forceClasspath = true },
+  "protobuf-java-util" to ModuleConfiguration.of { forceClasspath = true },
+  "protobuf-kotlin" to ModuleConfiguration.of { forceClasspath = true },
+)
 
 /** Apply base Java options to the project. */
 @Suppress("UnstableApiUsage")
@@ -64,16 +100,73 @@ internal fun Project.includeJavadocJar() {
   publishJavadocJar()
 }
 
+/** Apply dependency pinning rules. */
+internal fun Project.configurePinnedDependencies(conventions: ElideBuildExtension) {
+  configurations.configureEach {
+    resolutionStrategy.apply {
+      // require reproducible resolution
+      failOnNonReproducibleResolution()
+
+      // always prefer project modules
+      preferProjectModules()
+
+      if (conventions.deps.strict) {
+        failOnVersionConflict()
+        failOnChangingVersions()
+        if (!conventions.deps.locking) {
+          failOnDynamicVersions()
+        }
+      } else {
+        // allow module caching
+        cacheDynamicVersionsFor(7, "days")
+        cacheChangingModulesFor(7, "days")
+      }
+      if (conventions.deps.pinning) {
+        eachDependency {
+          val coordinate = "${requested.group}:${requested.name}"
+          val globallyPinnedVersion = globallyPinnedVersions[coordinate]
+          val projectPinnedVersion = conventions.deps.pins.resolve(requested)
+          val pinnedVersion = if (projectPinnedVersion != null) {
+            projectPinnedVersion to "project conventions"
+          } else if (globallyPinnedVersion != null) {
+            val (pinValue, pinReason) = globallyPinnedVersion
+            DependencyPin.of(requested.group, requested.name, pinValue, pinReason) to "global conventions"
+          } else null
+
+          if (pinnedVersion != null) {
+            val (pin, reason) = pinnedVersion
+            useVersion(pin.version)
+            because("pinned by: $reason (reason: ${pin.reason ?: "none given"})")
+          }
+        }
+      }
+    }
+
+    // handle globally excluded dependencies
+    bannedDependencies.forEach {
+      exclude(group = it.substringBefore(":"), module = it.substringAfter(":"))
+    }
+
+    // and any additions for this project
+    conventions.deps.exclusions.drain().map {
+      exclude(group = it.group, module = it.module)
+    }
+  }
+}
+
 /** Apply dependency locking and verification rules. */
-internal fun Project.configureDependencySecurity() {
-  configureDependencyVerification()
-  if (findProperty(Build.LOCK_DEPS)?.toString()?.toBoolean() != false) {
-    configureDependencyLocking()
+internal fun Project.configureDependencySecurity(conventions: ElideBuildExtension) {
+  if (conventions.deps.verification) {
+    configureDependencyVerification(conventions)
+  }
+  if (conventions.deps.locking || findProperty(Build.LOCK_DEPS)?.toString()?.toBoolean() != false) {
+    configureDependencyLocking(conventions)
   }
 }
 
 /** Apply dependency verification rules. */
-private fun Project.configureDependencyVerification() {
+@Suppress("UNUSED_PARAMETER")
+private fun Project.configureDependencyVerification(conventions: ElideBuildExtension) {
   configurations.apply {
     unverifiedConfigurations.forEach {
       findByName(it)?.apply {
@@ -84,7 +177,8 @@ private fun Project.configureDependencyVerification() {
 }
 
 /** Apply dependency locking rules. */
-private fun Project.configureDependencyLocking() {
+@Suppress("UNUSED_PARAMETER")
+private fun Project.configureDependencyLocking(conventions: ElideBuildExtension) {
   configurations.apply {
     lockedConfigurations.forEach {
       findByName(it)?.apply {
@@ -169,7 +263,62 @@ internal fun Project.configureJavadoc() {
   }
 }
 
+public val artifactType: Attribute<String> = Attribute.of("artifactType", String::class.java)
+public val minified: Attribute<String> = Attribute.of("minified", String::class.java)
+public val modularized: Attribute<String> = Attribute.of("modularized", String::class.java)
+
+/** Configure dependency attribute schema. */
+internal fun Project.configureAttributeSchema(conventions: ElideBuildExtension) {
+  if (enableTransforms) {
+    dependencies {
+      attributesSchema {
+        attribute(modularized)
+        attribute(minified)
+      }
+      artifactTypes.findByName("jar")?.apply {
+        attributes.attribute(modularized, "nope")
+        attributes.attribute(minified, "nope")
+      }
+    }
+
+    if (conventions.deps.enableTransforms) {
+      val allTransformEligibleConfigurations = automaticModuleConfigurations.plus(minifiedConfigurations)
+      configurations.all {
+        if (name in allTransformEligibleConfigurations) {
+          val enableAmr = (conventions.deps.automaticModules && automaticModuleConfigurations.contains(name))
+          val enableMin = (conventions.deps.minification && minifiedConfigurations.contains(name))
+          val enabled = enableAmr || enableMin
+          if (enabled) {
+            afterEvaluate {
+              if (isCanBeResolved) {
+                if (enableAmr) attributes.attribute(modularized, "yep")
+                if (enableMin) attributes.attribute(minified, "yep")
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/** Configure transforms for resolved artifacts. */
+internal fun Project.configureTransforms(conventions: ElideBuildExtension) {
+  if (enableTransforms && conventions.deps.enableTransforms) {
+    dependencies {
+      registerTransform(AutomaticModuleTransform::class) {
+        from.attribute(modularized, "nope").attribute(artifactType, "jar")
+        to.attribute(modularized, "yep").attribute(artifactType, "jar")
+      }
+      registerTransform(JarMinifier::class) {
+        from.attribute(minified, "nope").attribute(artifactType, "jar")
+        to.attribute(minified, "yep").attribute(artifactType, "jar")
+      }
+    }
+  }
+}
+
 /** Configures Java 9 modularity. */
-internal fun Project.configureJavaModularity() {
-  Java9Modularity.configure(this)
+internal fun Project.configureJavaModularity(moduleNameOverride: String? = null) {
+  Java9Modularity.configure(this, moduleNameOverride)
 }

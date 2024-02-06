@@ -90,7 +90,7 @@ public interface ElideProtocol {
     /**
      * TBD.
      */
-    fun model(): DataModelStrategy<*, *, *, *, *, *, *, *>
+    public fun model(): DataModelStrategy<*, *, *, *, *, *, *, *>
   }
 
   /** @return Whether this protocol engine supports reflective access. */

@@ -131,19 +131,19 @@ message HttpBody {
 // Informational structure describing a version-agnostic HTTP request.
 message HttpRequestInfo {
   // Specifies the HTTP method.
-  oneof method {
+  oneof http_method {
     // Standard HTTP method.
-    HttpMethod standard = 1;
+    HttpMethod method = 1;
 
     // Custom HTTP method.
-    string custom = 2;
+    string method_name = 2;
   }
 
   // Specifies the HTTP request path.
   string path = 3;
 
   // Specifies "search" (query) parameters for this URL.
-  string search = 4;
+  string query = 4;
 
   // Specifies the HTTP headers constituent to the request.
   HttpHeaders headers = 5;
@@ -300,7 +300,7 @@ message HttpRequest {
   string path = 4;
 
   // Query/search parameters attached to the URI.
-  string search = 5;
+  string query = 5;
 
   // Specifies the HTTP headers constituent to the request.
   HttpHeaders headers = 6;

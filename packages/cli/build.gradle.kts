@@ -26,7 +26,7 @@ import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import elide.internal.conventions.elide
+
 import elide.internal.conventions.kotlin.KotlinTarget
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.io.Writer

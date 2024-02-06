@@ -1,1 +1,12 @@
-# Nothing at this time.
+micronaut:
+  application:
+    name: ${ELIDE_APPLICATION_NAME:embedded}
+    default-charset: UTF-8
+    instance:
+      id: ${ELIDE_INSTANCE_ID:random.shortuuid}
+      group: ${ELIDE_INSTANCE_GROUP:embedded}
+      zone: ${ELIDE_INSTANCE_DATACENTER:global}
+
+elide:
+  embedded:
+    host: true

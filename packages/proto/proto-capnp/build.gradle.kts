@@ -13,7 +13,7 @@
 
 @file:Suppress("UnstableApiUsage")
 
-import elide.internal.conventions.elide
+
  import elide.internal.conventions.publishing.publish
  import elide.internal.conventions.kotlin.KotlinTarget
 

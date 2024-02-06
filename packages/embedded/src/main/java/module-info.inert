@@ -24,6 +24,13 @@ module elide.embedded {
 
   requires kotlin.stdlib;
   requires kotlinx.atomicfu;
+  requires kotlinx.coroutines.core;
+  requires kotlinx.coroutines.jdk8;
+  requires kotlinx.coroutines.jdk9;
+  requires kotlinx.serialization.core;
+  requires kotlinx.serialization.protobuf;
+
+  requires com.google.protobuf;
 
   requires org.graalvm.nativeimage;
   requires org.graalvm.polyglot;
@@ -32,10 +39,10 @@ module elide.embedded {
   requires org.graalvm.py;
   requires org.graalvm.espresso;
 
-  requires elide.core;
-  requires elide.base;
   requires io.micronaut.inject;
 
-  exports elide.embedded.api;
-  exports elide.embedded.err;
+  requires elide.core;
+  requires elide.base;
+  requires elide.protocol.core;
+  requires elide.protocol.protobuf;
 }

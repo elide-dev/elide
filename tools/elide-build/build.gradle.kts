@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+  id("dev.elide.build")
   id("java-gradle-plugin")
   `kotlin-dsl`
 }

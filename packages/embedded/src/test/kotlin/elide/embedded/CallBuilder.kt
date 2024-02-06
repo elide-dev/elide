@@ -23,6 +23,7 @@ import elide.embedded.api.PackedCall
 import elide.embedded.api.ProtocolMode.PROTOBUF
 import elide.embedded.api.UnaryNativeCall
 import elide.embedded.api.UnaryNativeCall.UnaryNativeRequestBuilder
+import elide.embedded.impl.InMemoryCallMediator
 
 interface CallBuilder {
   companion object {
@@ -34,7 +35,7 @@ interface CallBuilder {
     native: Boolean = NATIVE_BY_DEFAULT,
     builder: UnaryNativeRequestBuilder.() -> Unit = {},
   ): Pair<UnaryNativeCall, InFlightCallInfo> {
-    val effectiveCallId = callId ?: Random.nextLong(10_000_000).absoluteValue
+    val effectiveCallId = callId ?: InMemoryCallMediator.obtain().allocateCallId()
     val info = InFlightCallInfo.of(effectiveCallId)
     val call = if (!native) UnaryNativeCall.buildRequest(effectiveCallId, PROTOBUF, builder) else {
       // build request manually

@@ -13,17 +13,45 @@
 
 package elide.embedded.api
 
+import java.io.Closeable
+import java.util.concurrent.atomic.AtomicBoolean
+
 /**
  *
  */
 @JvmRecord public data class InFlightCallInfo private constructor(
   val callId: InFlightCallID,
-) {
+  private val open: AtomicBoolean = AtomicBoolean(false),
+): Closeable, AutoCloseable {
   public companion object {
     /**
      *
      */
     @JvmStatic public fun of(callId: InFlightCallID, native: UnaryNativeCall? = null): InFlightCallInfo =
       InFlightCallInfo(callId)
+  }
+
+  override fun close() {
+    open.set(false)
+  }
+
+  /**
+   *
+   */
+  public fun isOpen(): Boolean = open.get()
+
+  /**
+   *
+   */
+  public fun <R> withLock(block: () -> R): R {
+    return try {
+      open.compareAndSet(false, true)
+      block()
+    } catch (thr: Throwable) {
+      open.set(false)
+      throw thr
+    } finally {
+      close()
+    }
   }
 }

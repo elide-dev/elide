@@ -15,11 +15,9 @@ package elide.embedded.impl
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
-import org.graalvm.nativeimage.LogHandler
-import org.graalvm.nativeimage.c.type.CCharPointer
-import org.graalvm.polyglot.Engine
-import org.graalvm.polyglot.SandboxPolicy.*
-import org.graalvm.word.UnsignedWord
+import org.graalvm.polyglot.Context as VMContext
+import org.graalvm.polyglot.Context.Builder as VMBuilder
+import org.graalvm.polyglot.Engine as VMEngine
 import tools.elide.call.VMConfiguration.VMFlag
 import tools.elide.call.VMConfiguration.VMFlag.ValueCase.BOOL
 import tools.elide.meta.GuestLanguage
@@ -33,11 +31,16 @@ import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
 import elide.annotations.Singleton
-import elide.embedded.Streams
 import elide.embedded.api.*
 import elide.embedded.api.Constants.Flag
 import elide.embedded.api.Constants.Defaults.Engine as EngineDefaults
 import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.ContextFactory
+import elide.runtime.gvm.VMFacadeFactory
+import elide.runtime.gvm.internals.context.ContextManager
 
 /**
  * # Embedded Runtime: V1 Implementation
@@ -48,7 +51,8 @@ import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
  */
 @Singleton @Context @Eager public class EmbeddedRuntimeImpl @Inject constructor (
   private val hostConfig: InstanceConfiguration,
-) : EmbeddedRuntime {
+  private val contextManager: ContextManager<VMContext, VMBuilder>,
+) : EmbeddedRuntime, ContextFactory<VMContext, VMBuilder> by contextManager {
   private companion object {
     // Default activated languages.
     private val defaultLanguages = listOf(
@@ -58,18 +62,18 @@ import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
 
     // Default suite of flags.
     private val defaultEngineFlags = listOf(
-      // `engine.MaxIsolateMemory`
-      vmFlag(Flag.MAX_ISOLATE_MEMORY, EngineDefaults.MAX_ISOLATE_MEMORY),
-
       // `engine.Compilation`
       vmFlag(Flag.COMPILATION, EngineDefaults.COMPILATION),
 
       // `engine.SpawnIsolate`
       vmFlag(Flag.SPAWN_ISOLATE, EngineDefaults.SPAWN_ISOLATE),
+    ).plus(if (!EngineDefaults.SPAWN_ISOLATE) emptyList() else listOf(
+      // `engine.MaxIsolateMemory`
+      vmFlag(Flag.MAX_ISOLATE_MEMORY, EngineDefaults.MAX_ISOLATE_MEMORY),
 
       // `engine.UntrustedCodeMitigation`
       vmFlag(Flag.UNTRUSTED_CODE_MITIGATION, EngineDefaults.UNTRUSTED_CODE_MITIGATION),
-    )
+    ))
 
     @JvmStatic private fun vmFlag(name: String, value: String): VMFlag =
       VMFlag.newBuilder().setFlag(name).setString(value).build()
@@ -115,6 +119,11 @@ import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
     val active: InstanceConfiguration get() = obtain()
   }
 
+  // Logging pipe.
+  private val logging: Logger by lazy {
+    Logging.of(EmbeddedRuntime::class)
+  }
+
   // Whether the embedded runtime has completed the initialization step.
   private val initialized = atomic(false)
 
@@ -133,43 +142,47 @@ import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
   // Active embedded server engine.
   @Inject private lateinit var server: EmbeddedServer
 
+  // VM factory.
+  @Inject private lateinit var vmFactory: VMFacadeFactory
+
   // Logging handler.
   private val engineLogHandler: Handler = object: Handler() {
-    override fun publish(record: LogRecord?) {
+    override fun publish(record: LogRecord) {
+      val level = when (record.level) {
+        java.util.logging.Level.SEVERE -> LogLevel.ERROR
+        java.util.logging.Level.WARNING -> LogLevel.WARN
+        java.util.logging.Level.INFO -> LogLevel.INFO
+        java.util.logging.Level.CONFIG -> LogLevel.DEBUG
+        java.util.logging.Level.FINE -> LogLevel.TRACE
+        else -> LogLevel.DEBUG
+      }
+      val messageArgs = listOf(
+        record.message?.ifBlank { null } ?: ""
+      )
+      logging.log(level, messageArgs)
+    }
+
+    // no-op
+    override fun flush() = Unit
+
+    // no-op
+    override fun close() = Unit
+  }
+
+  // Context-level log handler.
+  private val ctxLogHandler: Handler = object: Handler() {
+    override fun publish(record: LogRecord) {
       TODO("Not yet implemented")
     }
 
     override fun flush() {
-      TODO("Not yet implemented")
+      // no-op
     }
 
     override fun close() {
-      TODO("Not yet implemented")
+      // no-op
     }
   }
-
-  // Active GraalVM engine.
-  private val engine: Engine = Engine.newBuilder(*enabledLanguages()).apply {
-    val config = configManager.active
-
-    // system streams, or delegated streams
-    `in`(Streams.stub.stdin)
-    out(Streams.stub.stdout)
-    err(Streams.stub.stderr)
-
-    // begin adding engine options
-    allowExperimentalOptions(true)
-    useSystemProperties(false)
-
-    // isolated sandbox by default
-    sandbox(TRUSTED)
-    logHandler(engineLogHandler)
-
-    // apply flags for host engine
-    flagsWithDefaults(defaultEngineFlags, config.engine.hvm.flagList).forEach {
-      option(it.first, it.second)
-    }
-  }.build()
 
   override val isConfigured: Boolean get() = true
   override val isRunning: Boolean get() = running.value
@@ -195,13 +208,6 @@ import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
     return op.invoke()
   }
 
-  private inline fun <R> requireNotConfigured(crossinline op: () -> R): R {
-    require(!isConfigured) {
-      "Embedded runtime is already configured"
-    }
-    return op.invoke()
-  }
-
   private inline fun <R> withActive(crossinline op: () -> R): R {
     require(running.value) {
       "Embedded runtime is not running"
@@ -216,11 +222,18 @@ import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
     initialized.value = true
   }
 
-  override fun enable(capability: Capability): Unit = requireNotConfigured {
+  override fun enable(capability: Capability) {
     capabilities.add(capability)
   }
 
   override fun start(): Unit = requireConfigured {
+    require(!running.value) {
+      "Embedded runtime is already running"
+    }
+    contextManager.installContextFactory(this::createContext)
+    contextManager.installContextConfigurator(this::configureContext)
+    contextManager.installContextSpawn(this::buildContext)
+    contextManager.activate(start = true)
     running.value = true
   }
 
@@ -231,10 +244,25 @@ import elide.embedded.api.EmbeddedRuntime.EmbeddedDispatcher
     start()
   }
 
+  private fun createContext(inner: VMEngine): VMContext.Builder {
+    return VMContext.newBuilder(*(enabledLanguages())).apply {
+      // @TODO nothing at this time
+    }
+  }
+
+  private fun configureContext(builder: VMContext.Builder) {
+    // @TODO nothing at this time
+  }
+
+  private fun buildContext(builder: VMContext.Builder): VMContext {
+    // @TODO nothing at this time
+    return builder.build()
+  }
+
   override fun dispatcher(): EmbeddedDispatcher = withActive {
     object : EmbeddedDispatcher {
-      override suspend fun handle(call: UnaryNativeCall) {
-        TODO("Not yet implemented")
+      override suspend fun handle(call: UnaryNativeCall): Unit = contextManager.acquire {
+        // @TODO nothing at this time
       }
     }
   }

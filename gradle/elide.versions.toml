@@ -79,7 +79,7 @@ closure-stylesheets = "1.5.0"
 clikt = "4.2.2"
 picocli = "4.7.5"
 picocli-jansi-graalvm = "1.2.0"
-slf4j = "2.0.9"
+slf4j = "2.0.10"
 jakarta = "2.0.1"
 jakarta-persistence = "3.1.0"
 jakarta-annotation-api = "2.1.1"
@@ -401,6 +401,7 @@ slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j-jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
 slf4j-log4j-bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
+slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-logging", version.ref = "slf4j" }
 jakarta-annotation-api = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakarta-annotation-api" }
 jakarta-inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
 jakarta-persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta-persistence" }
@@ -572,6 +573,7 @@ tink = { group = "com.google.crypto.tink", name = "tink", version.ref = "tink" }
 tink-gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref = "tink" }
 tink-aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
 conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }
+conscrypt-jvm = { group = "org.conscrypt", name = "conscrypt-openjdk", version.ref = "conscrypt" }
 google-common-html-types-proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google-html-types" }
 google-common-html-types-types = { group = "com.google.common.html.types", name = "types", version.ref = "google-html-types" }
 swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swagger" }

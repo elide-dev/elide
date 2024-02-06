@@ -16,7 +16,6 @@
 package elide.runtime.gvm.internals
 
 import io.micronaut.http.HttpRequest
-import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.*
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable

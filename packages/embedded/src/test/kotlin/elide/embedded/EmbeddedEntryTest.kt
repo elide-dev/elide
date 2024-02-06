@@ -19,6 +19,7 @@ import tools.elide.http.httpHeader
 import tools.elide.http.httpHeaders
 import tools.elide.http.httpRequest
 import kotlinx.coroutines.test.runTest
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -30,7 +31,11 @@ import elide.testing.annotations.TestCase
 /** Tests Elide's embedded entrypoint. */
 @TestCase class EmbeddedEntryTest : AbstractEmbeddedTest() {
   @Test fun testEntryNoArgs() = runTest {
-    ElideEmbedded.create().entry(emptyArray())
+    assertEquals(
+      0,
+      ElideEmbedded.create().entry(emptyArray()),
+      "should get `0` exit code from `entry` with no args",
+    )
   }
 
   @Test fun testInitializeEmptyLifecycle(): Unit = ElideEmbedded.create().let {

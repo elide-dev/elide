@@ -88,10 +88,19 @@ val enableSbom = true
 val enableSbomStrict = false
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
-val globalExclusions = emptyList<Pair<String, String>>()
+val globalExclusions = listOf(
+  "org.slf4j" to "slf4j-jdk14",
+  "org.slf4j" to "slf4j-log4j12",
+  "org.slf4j" to "slf4j-reload4j",
+  "org.apache.logging.log4j" to "log4j-core",
+)
 
 val entrypoint = "elide.embedded.Entrypoint"
 val module = "elide.embedded"
+
+val runtimeArgs = emptyList<String>()
+
+val jvmRuntimeArgs = runtimeArgs.plus(emptyList())
 
 val moduleExclusions = listOf(
   "io.micronaut" to "micronaut-core-processor",
@@ -131,8 +140,6 @@ val jvmCompileArgs = listOfNotNull(
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
 ) else emptyList())
-
-val jvmRuntimeArgs = emptyList<String>()
 
 val nativeCompileJvmArgs = jvmCompileArgs.map {
   "-J$it"
@@ -828,14 +835,9 @@ dependencies {
   modules(projects.packages.core)
   modules(projects.packages.base)
   modules(projects.packages.http)
+  modules(projects.packages.server)
   modules(projects.packages.serverless)
   modules(projects.packages.graalvm)
-  modules(projects.packages.graalvmRb)
-  modules(projects.packages.graalvmPy)
-  modules(projects.packages.graalvmKt)
-  modules(projects.packages.graalvmJvm)
-  modules(projects.packages.graalvmJava)
-  modules(projects.packages.graalvmWasm)
   modules(projects.packages.proto.protoCore)
   modules(projects.packages.proto.protoKotlinx)
   modules(projects.packages.proto.protoProtobuf)
@@ -956,7 +958,6 @@ dependencies {
   runtimeOnly(libs.bouncycastle.tls)
   runtimeOnly(libs.bouncycastle.pkix)
   runtimeOnly(libs.bouncycastle.util)
-  implementation(libs.conscrypt)
 
   // Dependencies: Test
   testImplementation(projects.packages.test)
@@ -1097,6 +1098,11 @@ tasks {
   test {
     useJUnitPlatform()
     outputs.upToDateWhen { false }
+    jvmArgs(jvmRuntimeArgs.plus(jvmDefs.map { "-D${it.key}=${it.value}" }))
+  }
+
+  named("run", JavaExec::class.java) {
+    jvmArgs(jvmRuntimeArgs.plus(jvmDefs.map { "-D${it.key}=${it.value}" }))
   }
 
   compileJava.configure {

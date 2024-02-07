@@ -200,7 +200,6 @@ val commonNativeArgs = listOfNotNull(
   "--enable-http",
   "--enable-https",
   "--enable-all-security-services",
-  "--no-install-exit-handlers",
   "--configure-reflection-metadata",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",

@@ -545,15 +545,16 @@ internal class EmbeddedGuestVFSImpl private constructor (
       }, fsConfig)
     }
 
-    /** @return Bundle pair loaded from the provided [files]. */
-    @JvmStatic internal fun loadBundleFiles(
+    /** @return Bundle pair loaded from the provided [URI]. */
+    @JvmStatic internal fun loadBundles(
+      paths: List<URI>,
       files: List<File>,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem>? {
       // if we got no paths, we have no bundles
-      if (files.isEmpty()) return null
+      if (paths.isEmpty() && files.isEmpty()) return null
 
-      val sources = files.map { file ->
+      val fileSources = files.map { file ->
         if (!file.exists())
           throw IOException("Cannot load bundle from file '${file.path}': Does not exist or not a regular file")
         if (!file.canRead())
@@ -562,17 +563,6 @@ internal class EmbeddedGuestVFSImpl private constructor (
         // hand back name + input stream so we can call `loadBundles`
         file.name to file.inputStream()
       }
-      return loadBundles(null, sources, fsConfig)
-    }
-
-    /** @return Bundle pair loaded from the provided [URI]. */
-    @JvmStatic internal fun loadBundleURIs(
-      paths: List<URI>,
-      fsConfig: Configuration.Builder,
-    ): Pair<FilesystemInfo, FileSystem>? {
-      // if we got no paths, we have no bundles
-      if (paths.isEmpty()) return null
-
       val sources = paths.map { path ->
         when (path.scheme) {
           "file" -> path.toPath().toFile().let { file ->
@@ -594,7 +584,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
           else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}' (URL: $path)")
         }
       }
-      return loadBundles(null, sources, fsConfig)
+      return loadBundles(null, fileSources.plus(sources), fsConfig)
     }
 
     /** @return Resolve bundle input data from the provided [builder]. */
@@ -604,8 +594,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     ): Pair<FilesystemInfo, FileSystem>? {
       return when {
         builder.bundle != null -> builder.bundle
-        builder.files.isNotEmpty() -> loadBundleFiles(builder.files, fsConfig)
-        builder.paths.isNotEmpty() -> loadBundleURIs(builder.paths, fsConfig)
+        builder.files.isNotEmpty() || builder.paths.isNotEmpty() -> loadBundles(builder.paths, builder.files, fsConfig)
         else -> null
       }
     }

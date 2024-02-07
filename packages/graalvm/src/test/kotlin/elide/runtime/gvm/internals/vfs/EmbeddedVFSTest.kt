@@ -46,7 +46,7 @@ import elide.testing.annotations.TestCase
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundles(listOf(sampleTarball.toURI()), emptyList(), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
@@ -84,7 +84,7 @@ import elide.testing.annotations.TestCase
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundles(listOf(sampleTarball.toURI()), emptyList(), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
@@ -167,7 +167,7 @@ import elide.testing.annotations.TestCase
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundles(listOf(sampleTarball.toURI()), emptyList(), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
@@ -205,7 +205,7 @@ import elide.testing.annotations.TestCase
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundles(listOf(sampleTarball.toURI()), emptyList(), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")

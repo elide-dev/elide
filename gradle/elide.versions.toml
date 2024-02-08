@@ -699,7 +699,7 @@ plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plug
 plugin-sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }
 plugin-redacted = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin-gradle", version.ref = "redacted-plugin" }
 ## Elide Internal
-elide-uuid = { group = "dev.elide", name = "elide-uuid", version.ref = "elide-uuid" }
+elide-uuid = { group = "dev.elide", name = "elide-uuid-core", version.ref = "elide-uuid" }
 elide-uuid-kotlinx = { group = "dev.elide", name = "elide-uuid-kotlinx", version.ref = "elide-uuid" }
 elide-base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
 elide-core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }

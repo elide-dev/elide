@@ -68,7 +68,6 @@ internal fun Project.configureKotlinBuild(
   jvmModuleName: String? = null,
 ) {
   val kotlinVersion = kotlinVersionOverride ?: findProperty(Versions.KOTLIN)?.toString()
-  val kotlinSdk = findProperty(Versions.KOTLIN_SDK)?.toString()
   val useStrictMode = findProperty(Kotlin.STRICT_MODE).toString().toBoolean()
 
   // Maven Central requires a javadoc JAR artifact
@@ -171,16 +170,6 @@ internal fun Project.configureKotlinBuild(
   // configure NoArgs plugin
   if (configureNoArgs) extensions.getByType(NoArgExtension::class.java).apply {
     annotation("elide.annotations.Model")
-  }
-
-  // pin stdlib
-  configurations.all {
-    resolutionStrategy.eachDependency {
-      if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
-        useVersion(kotlinSdk ?: findProperty(Versions.KOTLIN_SDK)?.toString() ?: Versions.KOTLIN_SDK_PIN)
-        because("pin kotlin stdlib")
-      }
-    }
   }
 }
 

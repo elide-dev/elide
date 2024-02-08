@@ -17,6 +17,7 @@ import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.kotlin.dsl.configure
 import org.gradle.process.CommandLineArgumentProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
@@ -46,7 +47,8 @@ internal fun Project.configureKotlinMultiplatform(
     // add JVM target
     if (JVM in target) jvm {
       withJava()
-
+    }
+    if (JVM in target) jvm {
       // java modules support
       if (configureJavaModules) {
         configureJavaModularity(jvmModuleName)
@@ -54,14 +56,21 @@ internal fun Project.configureKotlinMultiplatform(
         // make sure to unify the kotlin and java build destinations
         val javaCompile = project.tasks.findByName("compileJava") as? JavaCompile
         val kotlinJvmCompile = project.tasks.findByName("compileKotlinJvm") as? KotlinJvmCompile
-        if (javaCompile != null && kotlinJvmCompile != null) javaCompile.apply {
-          dependsOn(kotlinJvmCompile)
-          mustRunAfter(kotlinJvmCompile)
 
-          options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-            // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
-            listOf("--patch-module", "$jvmModuleName=${kotlinJvmCompile.destinationDirectory.asFile.get().path}")
-          })
+        if (javaCompile != null && kotlinJvmCompile != null) {
+          javaCompile.dependsOn(kotlinJvmCompile)
+          javaCompile.mustRunAfter(kotlinJvmCompile)
+          afterEvaluate {
+            javaCompile.apply {
+              val dest = kotlinJvmCompile.destinationDirectory
+              options.compilerArgumentProviders.add(
+                CommandLineArgumentProvider {
+                  // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
+                  listOf("--patch-module", "$jvmModuleName=${dest.asFile.get().path}")
+                }
+              )
+            }
+          }
         }
       }
 
@@ -70,7 +79,7 @@ internal fun Project.configureKotlinMultiplatform(
     }
 
     // add JS targets
-    if (JsBrowser in target || JsNode in target) js {
+    if (JsBrowser in target || JsNode in target) js(IR) {
       // common options
       generateTypeScriptDefinitions()
       useEsModules()

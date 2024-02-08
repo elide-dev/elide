@@ -87,6 +87,12 @@ dependencies {
   implementation(embeddedKotlin("serialization"))
 }
 
+val lockedConfigs = listOf(
+  "classpath",
+  "compileClasspath",
+  "runtimeClasspath",
+)
+
 configurations.all {
   resolutionStrategy {
     // fail eagerly on version conflict (includes transitive dependencies)
@@ -95,7 +101,9 @@ configurations.all {
     // prefer modules that are part of this build
     preferProjectModules()
 
-    // lock by default
-    activateDependencyLocking()
+    if (lockedConfigs.contains(name) && project.findProperty("elide.lockDeps") == "true") {
+      // lock by default
+      activateDependencyLocking()
+    }
   }
 }

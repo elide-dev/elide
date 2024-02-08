@@ -34,7 +34,9 @@ tasks.register("resolveAndLockAll") {
   doLast {
     configurations.filter {
       // Add any custom filtering on the configurations to be resolved
-      it.isCanBeResolved
+      it.isCanBeResolved && !it.name.lowercase().let { name ->
+        name.contains("sources") || name.contains("documentation")
+      }
     }.forEach { it.resolve() }
   }
 }

@@ -62,8 +62,8 @@ System.setProperty("elide.home", rootProject.projectDir.toString())
 val embeddedCompose: String by settings
 val embeddedR8: String by settings
 val buildUuid: String by settings
-
 val buildlessApiKey: String by settings
+val enableSubstrate: String by settings
 
 dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
@@ -153,8 +153,10 @@ if (buildUuid == "true") {
   }
 }
 
-includeBuild("tools/conventions")
-//includeBuild("tools/substrate")
+if (enableSubstrate == "true") {
+  includeBuild("tools/conventions")
+  includeBuild("tools/substrate")
+}
 
 // Build modules.
 include(

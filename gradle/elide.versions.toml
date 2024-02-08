@@ -53,6 +53,8 @@ kotlinx-metadata-jvm = "0.5.0"
 kotlinx-io = "0.3.1"
 kotlinx-benchmark = "0.4.10"
 detekt = "1.23.4"
+okio = "3.7.0"
+okhttp = "4.12.0"
 ktoml = "0.5.1"
 dokka = "1.9.10"
 mermaidDokka = "0.4.6"
@@ -407,6 +409,8 @@ jakarta-inject = { group = "jakarta.inject", name = "jakarta.inject-api", versio
 jakarta-persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta-persistence" }
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm-shadowed-json = { group = "org.graalvm.shadowed", name = "json", version.ref = "graalvm" }

@@ -40,6 +40,11 @@ import elide.embedded.env.EnvResolver
 @Singleton @Factory internal class DefaultConfigFactory @Inject constructor(
   private val envResolver: EnvResolver,
 ) : InstanceConfigurationFactory {
+  private companion object {
+    private const val DEFAULT_STACK_DEPTH = 20_000
+    private const val DEFAULT_MAX_MEMORY = 2_000_000_000  // 2GB
+  }
+
   // Default instance configuration as a built immutable.
   internal val defaults: HostConfiguration = HostConfiguration.newBuilder().apply { buildDefaults() }.build()
 
@@ -54,8 +59,8 @@ import elide.embedded.env.EnvResolver
   private fun defaultGuestPolicy(): GuestPolicy = guestPolicy {
     sandbox = true
     threads = true
-    stackDepth = 20_000
-    maxMemory = 2_000_000_000  // 2gb
+    stackDepth = DEFAULT_STACK_DEPTH
+    maxMemory = DEFAULT_MAX_MEMORY
   }
 
   // Build defaults for configuration.

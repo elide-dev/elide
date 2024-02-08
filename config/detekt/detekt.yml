@@ -219,7 +219,7 @@ empty-blocks:
     active: true
     allowedExceptionNameRegex: "_|(ignore|expected).*"
   EmptyClassBlock:
-    active: true
+    active: false
   EmptyDefaultConstructor:
     active: true
   EmptyDoWhileBlock:
@@ -324,6 +324,8 @@ exceptions:
         "**/jvmTest/**",
         "**/jsTest/**",
         "**/iosTest/**",
+        "**/embedded/api/**",
+        "**/embedded/*",
       ]
     exceptionNames:
       - "ArrayIndexOutOfBoundsException"

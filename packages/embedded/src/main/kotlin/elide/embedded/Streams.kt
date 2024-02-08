@@ -64,6 +64,7 @@ public object Streams {
   /**
    * The standard input stream.
    */
+  @Suppress("ObjectPropertyNaming")
   @JvmStatic public val `in`: SystemStream<InputStream> = SystemStream.create(System.`in`)
 
   /**

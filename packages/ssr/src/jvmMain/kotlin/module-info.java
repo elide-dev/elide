@@ -19,6 +19,7 @@ module elide.ssr {
     requires io.micronaut.http;
 
     requires elide.base;
+    requires org.graalvm.polyglot;
 
     exports elide.ssr;
     exports elide.ssr.annotations;

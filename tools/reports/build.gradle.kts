@@ -52,15 +52,10 @@ reporting {
   }
 }
 
-val buildSsg by properties
-
 dependencies {
   Projects.serverModules.plus(
     Projects.multiplatformModules
   ).forEach {
-    if (it == "ssg" && buildSsg != "true") {
-      return@forEach
-    }
     testReportAggregation(project(":packages:$it"))
   }
 

@@ -24,6 +24,20 @@ plugins {
   id("elide.internal.conventions")
 }
 
+kapt {
+  strictMode = true
+  correctErrorTypes = true
+}
+tasks.withType(JavaCompile::class.java) {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "-nowarn",
+      "-XDenableSunApiLintControl",
+      "-Xlint:-deprecation",
+    )
+  })
+}
+
 elide {
   publishing {
     id = "rpc"

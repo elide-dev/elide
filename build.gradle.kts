@@ -127,7 +127,7 @@ buildscript {
       classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
     }
   }
-  if (project.property("elide.lockDeps") == "true") {
+  if (project.findProperty("elide.lockDeps") == "true") {
     configurations.classpath {
       resolutionStrategy.activateDependencyLocking()
     }
@@ -350,7 +350,7 @@ subprojects {
 
   if (!Projects.nonKotlinProjects.contains(name)) {
     ktlint {
-      version = "0.50.0"
+      version = "0.51.0-FINAL"
 
       debug = false
       verbose = false
@@ -409,7 +409,7 @@ subprojects {
     }
   }
 
-  if (project.property("elide.lockDeps") == "true") {
+  if (project.findProperty("elide.lockDeps") == "true") {
     dependencyLocking {
       lockAllConfigurations()
       lockMode = LockMode.LENIENT
@@ -424,7 +424,9 @@ tasks.register("resolveAndLockAll") {
   doLast {
     configurations.filter {
       // Add any custom filtering on the configurations to be resolved
-      it.isCanBeResolved
+      it.isCanBeResolved && !it.name.lowercase().let { name ->
+        name.contains("sources") || name.contains("documentation")
+      }
     }.forEach { it.resolve() }
   }
 }

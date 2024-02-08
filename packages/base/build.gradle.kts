@@ -12,11 +12,22 @@
  */
 
 
+import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.kotlin.*
 
 plugins {
   id("elide.internal.conventions")
   kotlin("multiplatform")
+  kotlin("plugin.atomicfu")
+}
+
+apply(plugin = "kotlinx-atomicfu")
+
+the<AtomicFUPluginExtension>().apply {
+  dependenciesVersion = null
+  transformJvm = true
+  transformJs = true
+  jvmVariant = "VH"
 }
 
 elide {
@@ -49,6 +60,7 @@ dependencies {
     api(libs.kotlinx.collections.immutable)
     api(libs.kotlinx.datetime)
 
+    implementation(libs.kotlinx.atomicfu)
     implementation(kotlin("stdlib"))
     implementation(libs.elide.uuid)
     implementation(libs.kotlinx.coroutines.core)

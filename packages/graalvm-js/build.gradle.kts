@@ -30,7 +30,7 @@ elide {
 
   kotlin {
     target = KotlinTarget.JsBrowser.let {
-      if(buildWasm) it + KotlinTarget.WASM else it
+      if (buildWasm) it + KotlinTarget.WASM else it
     }
 
     explicitApi = true

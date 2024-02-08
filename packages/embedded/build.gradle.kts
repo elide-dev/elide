@@ -15,7 +15,8 @@
 
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
 import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
@@ -40,6 +41,7 @@ plugins {
 
   id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")
+  idea
 }
 
 group = "dev.elide.embedded"
@@ -699,6 +701,13 @@ val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
 // ====================================================================================================================
 // ====================================================================================================================
 
+idea {
+  module {
+    languageLevel = IdeaLanguageLevel("21")
+    targetBytecodeVersion = JavaVersion.VERSION_21
+  }
+}
+
 application {
   mainClass = entrypoint
   applicationDefaultJvmArgs = jvmRuntimeArgs
@@ -768,8 +777,15 @@ elide {
 
 apply(plugin = "kotlinx-atomicfu")
 
+kotlin {
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_21
+    freeCompilerArgs = ktCompilerArgs
+  }
+}
+
 the<AtomicFUPluginExtension>().apply {
-  dependenciesVersion = libs.versions.atomicfu.get()
+  dependenciesVersion = null  // don't use automatic dependency management
   transformJvm = true
   transformJs = true
   jvmVariant = "VH"

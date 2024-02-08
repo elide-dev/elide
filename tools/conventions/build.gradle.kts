@@ -111,6 +111,12 @@ tasks.register("resolveAndLockAll") {
   }
 }
 
+val lockedConfigs = listOf(
+  "classpath",
+  "compileClasspath",
+  "runtimeClasspath",
+)
+
 // Dependencies: Conflicts
 // -----------------------
 // Establishes a strict conflict policy for dependencies.
@@ -122,8 +128,10 @@ configurations.all {
     // prefer modules that are part of this build
     preferProjectModules()
 
-    // lock by default
-    activateDependencyLocking()
+    if (lockedConfigs.contains(name)) {
+      // lock by default
+      activateDependencyLocking()
+    }
   }
 }
 

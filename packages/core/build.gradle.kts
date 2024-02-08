@@ -12,11 +12,14 @@
  */
 
 
+import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.kotlin.*
 
 plugins {
   id("elide.internal.conventions")
   kotlin("multiplatform")
+  kotlin("plugin.atomicfu")
+  kotlin("plugin.serialization")
 }
 
 elide {
@@ -32,7 +35,20 @@ elide {
   }
 }
 
+apply(plugin = "kotlinx-atomicfu")
+
+the<AtomicFUPluginExtension>().apply {
+  dependenciesVersion = null
+  transformJvm = true
+  transformJs = true
+  jvmVariant = "VH"
+}
+
 dependencies {
+  common {
+    implementation(libs.kotlinx.atomicfu)
+  }
+
   jvm {
     api(kotlin("stdlib-jdk8"))
     api(libs.jetbrains.annotations)

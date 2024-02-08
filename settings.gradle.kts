@@ -154,7 +154,7 @@ if (buildUuid == "true") {
 }
 
 includeBuild("tools/conventions")
-includeBuild("tools/substrate")
+//includeBuild("tools/substrate")
 
 // Build modules.
 include(

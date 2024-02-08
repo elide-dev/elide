@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("FunctionOnlyReturningConstant")
+
 package elide.embedded
 
 import io.micronaut.context.ApplicationContext
@@ -197,6 +199,7 @@ public class ElideEmbedded private constructor () {
    * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
    *   codes during initialization, see the [InitializationError] enum.
    */
+  @Suppress("SpreadOperator")
   public fun start(args: List<String>? = null): Int {
     require(activeApiVersion.value.isNotBlank()) { "API version must be set before starting the instance" }
     val configuration = requireNotNull(activeInstanceConfig.value) { "Configuration must be set before starting" }

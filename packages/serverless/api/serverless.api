@@ -1,0 +1,341 @@
+public final class elide/http/HttpBytes {
+	public fun <init> ()V
+}
+
+public final class elide/http/HttpHeaders : elide/http/api/HttpHeaders {
+	public static final field Companion Lelide/http/HttpHeaders$Companion;
+	public static final fun create ()Lelide/http/HttpHeaders;
+}
+
+public final class elide/http/HttpHeaders$Companion {
+	public final fun create ()Lelide/http/HttpHeaders;
+}
+
+public final class elide/http/HttpMapping : elide/http/api/HttpMapping {
+	public static final field Companion Lelide/http/HttpMapping$Companion;
+	public fun <init> ()V
+	public static final fun empty ()Lelide/http/HttpMapping;
+}
+
+public final class elide/http/HttpMapping$Companion {
+	public final fun empty ()Lelide/http/HttpMapping;
+}
+
+public abstract class elide/http/HttpMessage : elide/http/api/HttpMessage {
+	public fun <init> ()V
+	public fun <init> (Lelide/http/api/HttpVersion;Lelide/http/HttpHeaders;)V
+	public synthetic fun <init> (Lelide/http/api/HttpVersion;Lelide/http/HttpHeaders;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getBody ()Lelide/http/HttpPayload;
+	public fun getHeaders ()Lelide/http/HttpHeaders;
+	public synthetic fun getHeaders ()Lelide/http/api/HttpHeaders;
+	public fun getMutable ()Z
+	public fun getVersion ()Lelide/http/api/HttpVersion;
+}
+
+public abstract interface class elide/http/HttpMethod : elide/http/api/HttpMethod {
+}
+
+public final class elide/http/HttpMethod$Custom : elide/http/HttpMethod {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/http/HttpMethod$Custom;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/http/HttpMethod$Standard : elide/http/HttpMethod {
+	public static final synthetic fun box-impl (Lelide/http/api/StandardHttpMethod;)Lelide/http/HttpMethod$Standard;
+	public static fun constructor-impl (Lelide/http/api/StandardHttpMethod;)Lelide/http/api/StandardHttpMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/http/api/StandardHttpMethod;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/http/api/StandardHttpMethod;Lelide/http/api/StandardHttpMethod;)Z
+	public final fun getMethod ()Lelide/http/api/StandardHttpMethod;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/http/api/StandardHttpMethod;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/http/api/StandardHttpMethod;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/http/api/StandardHttpMethod;
+}
+
+public abstract class elide/http/HttpPayload : elide/http/api/HttpPayload {
+}
+
+public final class elide/http/HttpPayload$Bytes : elide/http/HttpPayload {
+	public fun <init> (Lelide/http/HttpBytes;)V
+	public final fun getBytes ()Lelide/http/HttpBytes;
+}
+
+public final class elide/http/HttpPayload$Empty : elide/http/HttpPayload {
+	public static final field INSTANCE Lelide/http/HttpPayload$Empty;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/http/HttpPayload$Text : elide/http/HttpPayload {
+	public fun <init> (Lelide/http/HttpBytes;Lelide/core/encoding/Encoding;)V
+	public synthetic fun <init> (Lelide/http/HttpBytes;Lelide/core/encoding/Encoding;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEncoding ()Lelide/core/encoding/Encoding;
+	public final fun getText ()Lelide/http/HttpBytes;
+}
+
+public final class elide/http/HttpRequest : elide/http/HttpMessage, elide/http/api/HttpRequest {
+	public fun <init> ()V
+	public fun getMethod ()Lelide/http/api/HttpMethod;
+	public fun getPath ()Ljava/lang/String;
+	public fun getQuery ()Lelide/http/api/HttpMapping;
+	public fun getType ()Lelide/http/api/HttpMessageType;
+	public fun getUrl ()Lelide/net/api/URL;
+}
+
+public final class elide/http/HttpRequests {
+	public static final field INSTANCE Lelide/http/HttpRequests;
+}
+
+public final class elide/http/HttpResponse : elide/http/HttpMessage, elide/http/api/HttpResponse {
+	public fun <init> ()V
+	public fun getStatus ()Lelide/http/api/HttpStatus;
+	public fun getTrailers ()Lelide/http/api/HttpHeaders;
+	public fun getType ()Lelide/http/api/HttpMessageType;
+}
+
+public final class elide/http/HttpStatus : elide/http/api/HttpStatus {
+	public static final synthetic fun box-impl (Lelide/http/HttpStatus$HttpStatusInfo;)Lelide/http/HttpStatus;
+	public static fun constructor-impl (Lelide/http/HttpStatus$HttpStatusInfo;)Lelide/http/HttpStatus$HttpStatusInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/http/HttpStatus$HttpStatusInfo;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/http/HttpStatus$HttpStatusInfo;Lelide/http/HttpStatus$HttpStatusInfo;)Z
+	public fun getCode-pVg5ArA ()I
+	public static fun getCode-pVg5ArA (Lelide/http/HttpStatus$HttpStatusInfo;)I
+	public final fun getStatusInfo ()Lelide/http/HttpStatus$HttpStatusInfo;
+	public fun getText ()Ljava/lang/String;
+	public static fun getText-impl (Lelide/http/HttpStatus$HttpStatusInfo;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/http/HttpStatus$HttpStatusInfo;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/http/HttpStatus$HttpStatusInfo;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/http/HttpStatus$HttpStatusInfo;
+}
+
+public final class elide/http/HttpStatus$HttpStatusInfo : java/lang/Record {
+	public synthetic fun <init> (ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ILjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun code ()I
+	public final fun component1-pVg5ArA ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy-qim9Vi0 (ILjava/lang/String;)Lelide/http/HttpStatus$HttpStatusInfo;
+	public static synthetic fun copy-qim9Vi0$default (Lelide/http/HttpStatus$HttpStatusInfo;ILjava/lang/String;ILjava/lang/Object;)Lelide/http/HttpStatus$HttpStatusInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun reason ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/http/HttpStatusCode : java/lang/Enum {
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/http/HttpStatusCode;
+	public static fun values ()[Lelide/http/HttpStatusCode;
+}
+
+public final class elide/http/MutableHttpMapping : elide/http/api/MutableHttpMapping {
+	public static final field Companion Lelide/http/MutableHttpMapping$Companion;
+	public fun <init> ()V
+	public static final fun empty ()Lelide/http/api/MutableHttpMapping;
+}
+
+public final class elide/http/MutableHttpMapping$Companion {
+	public final fun empty ()Lelide/http/api/MutableHttpMapping;
+}
+
+public abstract class elide/http/MutableHttpMessage : elide/http/api/MutableHttpMessage {
+	public fun <init> ()V
+	public fun <init> (Lelide/http/api/HttpVersion;Lelide/http/HttpHeaders;)V
+	public synthetic fun <init> (Lelide/http/api/HttpVersion;Lelide/http/HttpHeaders;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getBody ()Lelide/http/HttpPayload;
+	public fun getHeaders ()Lelide/http/HttpHeaders;
+	public synthetic fun getHeaders ()Lelide/http/api/HttpHeaders;
+	public fun getMutable ()Z
+	public fun getVersion ()Lelide/http/api/HttpVersion;
+	public final fun setBody (Lelide/http/HttpPayload;)V
+	public fun setHeaders (Lelide/http/HttpHeaders;)V
+	public fun setVersion (Lelide/http/api/HttpVersion;)V
+}
+
+public final class elide/http/MutableHttpRequest : elide/http/MutableHttpMessage, elide/http/api/MutableHttpRequest {
+	public fun <init> ()V
+	public fun getMethod ()Lelide/http/api/HttpMethod;
+	public fun getPath ()Ljava/lang/String;
+	public fun getQuery ()Lelide/http/api/HttpMapping;
+	public fun getType ()Lelide/http/api/HttpMessageType;
+	public fun getUrl ()Lelide/net/api/URL;
+	public fun setMethod (Lelide/http/api/HttpMethod;)V
+	public fun setPath (Ljava/lang/String;)V
+	public fun setQuery (Lelide/http/api/HttpMapping;)V
+	public fun setUrl (Lelide/net/api/URL;)V
+}
+
+public final class elide/http/MutableHttpResponse : elide/http/MutableHttpMessage, elide/http/api/MutableHttpResponse {
+	public fun <init> ()V
+	public fun getStatus ()Lelide/http/api/HttpStatus;
+	public fun getTrailers ()Lelide/http/api/HttpHeaders;
+	public fun getType ()Lelide/http/api/HttpMessageType;
+	public fun setStatus (Lelide/http/api/HttpStatus;)V
+	public fun setTrailers (Lelide/http/api/HttpHeaders;)V
+}
+
+public abstract interface class elide/http/api/HttpHeaders : elide/http/api/HttpMapping {
+}
+
+public abstract interface class elide/http/api/HttpMapping {
+}
+
+public abstract interface class elide/http/api/HttpMessage {
+	public abstract fun getHeaders ()Lelide/http/api/HttpHeaders;
+	public abstract fun getMutable ()Z
+	public abstract fun getType ()Lelide/http/api/HttpMessageType;
+	public abstract fun getVersion ()Lelide/http/api/HttpVersion;
+}
+
+public final class elide/http/api/HttpMessage$DefaultImpls {
+	public static fun getMutable (Lelide/http/api/HttpMessage;)Z
+}
+
+public final class elide/http/api/HttpMessageType : java/lang/Enum {
+	public static final field REQUEST Lelide/http/api/HttpMessageType;
+	public static final field RESPONSE Lelide/http/api/HttpMessageType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/http/api/HttpMessageType;
+	public static fun values ()[Lelide/http/api/HttpMessageType;
+}
+
+public abstract interface class elide/http/api/HttpMethod {
+}
+
+public abstract interface class elide/http/api/HttpPayload {
+}
+
+public abstract interface class elide/http/api/HttpRequest : elide/http/api/HttpMessage {
+	public abstract fun getMethod ()Lelide/http/api/HttpMethod;
+	public abstract fun getPath ()Ljava/lang/String;
+	public abstract fun getQuery ()Lelide/http/api/HttpMapping;
+	public abstract fun getType ()Lelide/http/api/HttpMessageType;
+	public abstract fun getUrl ()Lelide/net/api/URL;
+}
+
+public final class elide/http/api/HttpRequest$DefaultImpls {
+	public static fun getMutable (Lelide/http/api/HttpRequest;)Z
+	public static fun getType (Lelide/http/api/HttpRequest;)Lelide/http/api/HttpMessageType;
+}
+
+public abstract interface class elide/http/api/HttpResponse : elide/http/api/HttpMessage {
+	public abstract fun getStatus ()Lelide/http/api/HttpStatus;
+	public abstract fun getTrailers ()Lelide/http/api/HttpHeaders;
+	public abstract fun getType ()Lelide/http/api/HttpMessageType;
+}
+
+public final class elide/http/api/HttpResponse$DefaultImpls {
+	public static fun getMutable (Lelide/http/api/HttpResponse;)Z
+	public static fun getType (Lelide/http/api/HttpResponse;)Lelide/http/api/HttpMessageType;
+}
+
+public abstract interface class elide/http/api/HttpStatus {
+	public abstract fun getCode-pVg5ArA ()I
+	public abstract fun getText ()Ljava/lang/String;
+}
+
+public final class elide/http/api/HttpStatus$DefaultImpls {
+	public static fun getText (Lelide/http/api/HttpStatus;)Ljava/lang/String;
+}
+
+public final class elide/http/api/HttpVersion : java/lang/Enum {
+	public static final field HTTP_1_1 Lelide/http/api/HttpVersion;
+	public static final field HTTP_2 Lelide/http/api/HttpVersion;
+	public static final field HTTP_3 Lelide/http/api/HttpVersion;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/http/api/HttpVersion;
+	public static fun values ()[Lelide/http/api/HttpVersion;
+}
+
+public abstract interface class elide/http/api/MutableHttpMapping : elide/http/api/HttpMapping {
+}
+
+public abstract interface class elide/http/api/MutableHttpMessage : elide/http/api/HttpMessage {
+	public abstract fun getMutable ()Z
+}
+
+public final class elide/http/api/MutableHttpMessage$DefaultImpls {
+	public static fun getMutable (Lelide/http/api/MutableHttpMessage;)Z
+}
+
+public abstract interface class elide/http/api/MutableHttpPayload {
+}
+
+public abstract interface class elide/http/api/MutableHttpRequest : elide/http/api/HttpRequest, elide/http/api/MutableHttpMessage {
+	public abstract fun getMethod ()Lelide/http/api/HttpMethod;
+	public abstract fun getPath ()Ljava/lang/String;
+	public abstract fun setMethod (Lelide/http/api/HttpMethod;)V
+	public abstract fun setPath (Ljava/lang/String;)V
+}
+
+public final class elide/http/api/MutableHttpRequest$DefaultImpls {
+	public static fun getMutable (Lelide/http/api/MutableHttpRequest;)Z
+	public static fun getType (Lelide/http/api/MutableHttpRequest;)Lelide/http/api/HttpMessageType;
+}
+
+public abstract interface class elide/http/api/MutableHttpResponse : elide/http/api/HttpResponse, elide/http/api/MutableHttpMessage {
+}
+
+public final class elide/http/api/MutableHttpResponse$DefaultImpls {
+	public static fun getMutable (Lelide/http/api/MutableHttpResponse;)Z
+	public static fun getType (Lelide/http/api/MutableHttpResponse;)Lelide/http/api/HttpMessageType;
+}
+
+public final class elide/http/api/StandardHttpMethod : java/lang/Enum, elide/http/api/HttpMethod {
+	public static final field CONNECT Lelide/http/api/StandardHttpMethod;
+	public static final field Companion Lelide/http/api/StandardHttpMethod$Companion;
+	public static final field DELETE Lelide/http/api/StandardHttpMethod;
+	public static final field GET Lelide/http/api/StandardHttpMethod;
+	public static final field HEAD Lelide/http/api/StandardHttpMethod;
+	public static final field OPTIONS Lelide/http/api/StandardHttpMethod;
+	public static final field PATCH Lelide/http/api/StandardHttpMethod;
+	public static final field POST Lelide/http/api/StandardHttpMethod;
+	public static final field PUT Lelide/http/api/StandardHttpMethod;
+	public static final field TRACE Lelide/http/api/StandardHttpMethod;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/http/api/StandardHttpMethod;
+	public static fun values ()[Lelide/http/api/StandardHttpMethod;
+}
+
+public final class elide/http/api/StandardHttpMethod$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/net/URL : elide/net/api/URL {
+	public static final synthetic fun box-impl (Lelide/net/URL$ParsedURL;)Lelide/net/URL;
+	public static fun constructor-impl (Lelide/net/URL$ParsedURL;)Lelide/net/URL$ParsedURL;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/net/URL$ParsedURL;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/net/URL$ParsedURL;Lelide/net/URL$ParsedURL;)Z
+	public final fun getUrlInfo ()Lelide/net/URL$ParsedURL;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/net/URL$ParsedURL;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/net/URL$ParsedURL;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/net/URL$ParsedURL;
+}
+
+public abstract class elide/net/URL$ParsedURL : elide/net/api/URLInfo {
+}
+
+public abstract interface class elide/net/api/URL {
+}
+
+public abstract interface class elide/net/api/URLInfo {
+}
+

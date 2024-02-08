@@ -15,6 +15,8 @@
          <trust group="org.jetbrains.dokka"/>
          <trust group="org.jetbrains.kotlin"/>
          <trust group="org.jetbrains.kotlin.mulitplatform"/>
+         <trust file=".*-javadoc[.]jar" regex="true"/>
+         <trust file=".*-sources[.]jar" regex="true"/>
          <trust file=".*common-custom-user-data-gradle-plugin.*" regex="true"/>
          <trust file=".*foojay.*" regex="true"/>
          <trust file=".*kotlinx.*" regex="true"/>
@@ -22,6 +24,7 @@
          <trust file="buildless-plugin-.*" regex="true"/>
          <trust file="com.github.ben-manes.versions.*" regex="true"/>
          <trust file="com.gradle.enterprise.gradle.plugin.*" regex="true"/>
+         <trust file="gradle-.*-src.zip" regex="true"/>
          <trust file="gradle-enterprise-gradle-plugin.*" regex="true"/>
          <trust file="gradle-versions-plugin-.*" regex="true"/>
          <trust file="json-schema-.*" regex="true"/>

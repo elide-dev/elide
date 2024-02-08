@@ -90,7 +90,6 @@ val nodeVersion: String by properties
 val enableKnit: String? by properties
 val enableProguard: String? by properties
 
-val buildSsg: String by properties
 val buildSamples: String by properties
 val buildDocs: String by properties
 
@@ -174,12 +173,6 @@ apiValidation {
       )
     } else emptyList()
   ).plus(
-    if (buildSsg == "true") {
-      listOf("bundler")
-    } else {
-      emptyList()
-    }
-  ).plus(
     if (project.properties["buildDocs"] == "true") {
       listOf(
         "docs",
@@ -241,12 +234,6 @@ dependencies {
   kover(projects.packages.ssr)
   kover(projects.packages.test)
   kover(projects.tools.processor)
-
-  val buildSsg: String by properties
-  if (buildSsg == "true") {
-    kover(project(":packages:ssg"))
-    kover(project(":tools:bundler"))
-  }
 
   // OpenRewrite: Recipes
   rewrite(platform(libs.openrewrite.recipe.bom))

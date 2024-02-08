@@ -203,7 +203,6 @@ val buildSamples: String by settings
 val buildPlugins: String by settings
 val buildBenchmarks: String by settings
 val buildRpc: String by settings
-val buildSsg: String by settings
 
 includeBuild(
   "tools/elide-build",
@@ -222,13 +221,6 @@ if (buildSamples == "true") include(
   ":samples:fullstack:react-ssr:node",
   ":samples:fullstack:react-ssr:server",
 )
-
-if (buildSsg == "true") {
-  include(
-    ":packages:ssg",
-    ":tools:bundler",
-  )
-}
 
 if (buildRpc == "true") include(":packages:rpc")
 

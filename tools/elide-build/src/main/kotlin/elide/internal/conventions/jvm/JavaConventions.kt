@@ -57,11 +57,16 @@ internal val automaticModuleConfigurations = sortedSetOf(
 internal val minifiedConfigurations = listOf<String>()
 
 internal val globallyPinnedVersions: Map<String, Pair<String, String>> = sortedMapOf(
-  "org.jetbrains.kotlin:kotlin-stdlib" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
-  "org.jetbrains.kotlin:kotlin-reflect" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
   "com.google.protobuf:protobuf-java" to (Versions.PROTOBUF to "sensitive compatibility"),
   "com.google.protobuf:protobuf-java-util" to (Versions.PROTOBUF to "sensitive compatibility"),
   "com.google.protobuf:protobuf-kotlin" to (Versions.PROTOBUF to "sensitive compatibility"),
+  "io.opentelemetry:opentelemetry-bom" to (Versions.OPENTELEMETRY to "senstive compatibility"),
+  "org.apache.groovy:groovy-bom" to (Versions.GROOVY to "critical dependency"),
+  "org.jetbrains.kotlin:kotlin-stdlib" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
+  "org.jetbrains.kotlin:kotlin-reflect" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
+  "org.jetbrains.kotlinx:atomicfu" to (Versions.ATOMICFU to "critical dependency"),
+  "org.junit:junit-bom" to (Versions.JUPITER to "senstive compatibility"),
+  "org.junit.jupiter:junit-jupiter-api" to (Versions.JUPITER to "senstive compatibility"),
 )
 
 internal val bannedDependencies: SortedSet<String> = sortedSetOf()
@@ -104,18 +109,21 @@ internal fun Project.includeJavadocJar() {
 internal fun Project.configurePinnedDependencies(conventions: ElideBuildExtension) {
   configurations.configureEach {
     resolutionStrategy.apply {
-      // require reproducible resolution
-      failOnNonReproducibleResolution()
-
       // always prefer project modules
       preferProjectModules()
 
+      if (
+        !conventions.deps.locking &&
+        !gradle.startParameter.isWriteDependencyLocks &&
+        findProperty("elide.lockDeps")?.toString()?.toBoolean() != true
+      ) {
+        // require reproducible resolution
+        failOnNonReproducibleResolution()
+      }
       if (conventions.deps.strict) {
+        // fail eagerly on version conflict (includes transitive dependencies)
         failOnVersionConflict()
         failOnChangingVersions()
-        if (!conventions.deps.locking) {
-          failOnDynamicVersions()
-        }
       } else {
         // allow module caching
         cacheDynamicVersionsFor(7, "days")

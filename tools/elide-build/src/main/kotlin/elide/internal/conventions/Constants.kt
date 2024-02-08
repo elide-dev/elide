@@ -85,6 +85,15 @@ public object Constants {
     /** Constant: default Kotlin SDK version if no other version is defined. */
     const val KOTLIN_SDK_PIN = "2.0.0-Beta3"
 
+    /** Constant: pinned version of AtomicFU. */
+    const val ATOMICFU = "0.23.2"
+
+    /** Constant: pinned version of Groovy. */
+    const val GROOVY = "4.0.18"
+
+    /** Constant: pinned version of OpenTelemetry. */
+    const val OPENTELEMETRY = "1.32.0"
+
     /** Constant: default Kotlin version. */
     const val KOTLIN_DEFAULT = "2.0"
 
@@ -100,8 +109,8 @@ public object Constants {
     /** Pinned Protobuf version. */
     const val PROTOBUF = "3.21.11"
 
-    /** Micronaut version. */
-    const val MICRONAUT = "4.3.1"
+    /** Pinned Jupiter (JUnit5) version. */
+    const val JUPITER = "5.10.2"
 
     /** Static Netty version. */
     const val NETTY = "4.1.101.Final"
@@ -110,7 +119,7 @@ public object Constants {
     const val GUAVA = "33.0.0-jre"
 
     /** gRPC version. */
-    const val GRPC = "1.61.0"
+    const val GRPC = "1.61.1"
 
     /** GraalVM version. */
     const val GRAALVM = "23.1.2"

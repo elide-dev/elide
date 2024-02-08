@@ -33,6 +33,7 @@ import elide.internal.conventions.ElideBuildExtension.Convention
 import elide.internal.conventions.archives.excludeDuplicateArchives
 import elide.internal.conventions.archives.reproducibleArchiveTasks
 import elide.internal.conventions.dependencies.configureDependencyLocking
+import elide.internal.conventions.dependencies.configureDependencyResolution
 import elide.internal.conventions.docker.useGoogleCredentialsForDocker
 import elide.internal.conventions.jvm.*
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
@@ -84,6 +85,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
 
     // apply baseline conventions
     configureProject()
+    configureDependencyResolution(conventions)
     configureDependencyLocking(conventions)
 
     // configure the redacted compiler plugin

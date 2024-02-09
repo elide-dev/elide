@@ -11,20 +11,11 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.http
-
-import elide.http.api.HttpMapping
-import elide.http.api.HttpMethod
-import elide.http.api.HttpString
-import elide.net.api.URL
-import elide.http.api.MutableHttpRequest as HttpRequestAPI
+package elide.struct.api
 
 /**
  *
  */
-public expect class MutableHttpRequest : MutableHttpMessage, HttpRequestAPI {
-  override var method: HttpMethod
-  override var path: HttpString
-  override var url: URL
-  override var query: HttpMapping<HttpString, HttpString>
+public interface SortedList<Value> : List<Value> where Value: Comparable<Value> {
+  //
 }

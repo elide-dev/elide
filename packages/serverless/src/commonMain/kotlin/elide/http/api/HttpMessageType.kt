@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("RUNTIME_ANNOTATION_NOT_SUPPORTED")
+
 package elide.http.api
 
 import elide.annotations.API

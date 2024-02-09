@@ -25,7 +25,7 @@ import elide.http.api.HttpMessage as HttpMessageAPI
  */
 public abstract class HttpMessage(
   override val version: HttpVersion = HTTP_2,
-  override val headers: HttpHeaders = HttpHeaders.create(),
+  override val headers: HttpHeaders = HttpHeaders.empty(),
 ) : HttpMessageAPI {
   private val payload: AtomicRef<HttpPayload> = atomic(HttpPayload.Empty)
 

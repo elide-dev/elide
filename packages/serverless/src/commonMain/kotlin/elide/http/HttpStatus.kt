@@ -26,7 +26,7 @@ import elide.http.api.HttpStatus as HttpStatusAPI
   /**
    *
    */
-  @JvmRecord public data class HttpStatusInfo(
+  public data class HttpStatusInfo(
     public val code: HttpStatusCode,
     public val reason: HttpString? = null,
   )

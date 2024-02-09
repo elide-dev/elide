@@ -26,5 +26,5 @@ public expect class HttpRequest : HttpMessage, HttpRequestAPI {
   override val method: HttpMethod
   override val url: URL
   override val path: HttpString
-  override val query: HttpMapping
+  override val query: HttpMapping<HttpString, HttpString>
 }

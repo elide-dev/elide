@@ -16,7 +16,7 @@ package elide.http.api
 /**
  *
  */
-public typealias HttpString = String
+public typealias HttpString = CharSequence
 
 /**
  *

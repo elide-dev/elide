@@ -26,5 +26,5 @@ public actual class HttpRequest : HttpMessage(), HttpRequestAPI {
   actual override val method: HttpMethod get() = TODO("Not yet implemented")
   actual override val path: HttpString get() = TODO("Not yet implemented")
   actual override val url: URL get() = TODO("Not yet implemented")
-  actual override val query: HttpMapping get() = TODO("Not yet implemented")
+  actual override val query: HttpMapping<HttpString, HttpString> get() = TODO("Not yet implemented")
 }

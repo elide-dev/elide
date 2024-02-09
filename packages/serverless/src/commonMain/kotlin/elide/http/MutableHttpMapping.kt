@@ -13,18 +13,63 @@
 
 package elide.http
 
+import kotlin.collections.MutableMap.MutableEntry
 import kotlin.jvm.JvmStatic
+import elide.http.api.HttpString
 import elide.http.api.MutableHttpMapping
 import elide.http.api.MutableHttpMapping as MutableHttpMappingAPI
 
 /**
  *
  */
-public class MutableHttpMapping : MutableHttpMappingAPI {
+public class MutableHttpMapping<Key, Value> : MutableHttpMappingAPI<Key, Value>
+        where Key: HttpString, Value: HttpString {
   //
   public companion object {
-    @JvmStatic public fun empty(): MutableHttpMapping {
+    @JvmStatic public fun <Key: HttpString, Value: HttpString> empty(): MutableHttpMapping<Key, Value> {
       TODO("not yet implemented")
     }
+  }
+
+  override val size: Int
+    get() = TODO("Not yet implemented")
+
+  override fun containsKey(key: Key): Boolean {
+    TODO("Not yet implemented")
+  }
+
+  override fun containsValue(value: Value): Boolean {
+    TODO("Not yet implemented")
+  }
+
+  override fun get(key: Key): Value? {
+    TODO("Not yet implemented")
+  }
+
+  override fun isEmpty(): Boolean {
+    TODO("Not yet implemented")
+  }
+
+  override val entries: MutableSet<MutableEntry<Key, Value>>
+    get() = TODO("Not yet implemented")
+  override val keys: MutableSet<Key>
+    get() = TODO("Not yet implemented")
+  override val values: MutableCollection<Value>
+    get() = TODO("Not yet implemented")
+
+  override fun clear() {
+    TODO("Not yet implemented")
+  }
+
+  override fun put(key: Key, value: Value): Value? {
+    TODO("Not yet implemented")
+  }
+
+  override fun putAll(from: Map<out Key, Value>) {
+    TODO("Not yet implemented")
+  }
+
+  override fun remove(key: Key): Value? {
+    TODO("Not yet implemented")
   }
 }

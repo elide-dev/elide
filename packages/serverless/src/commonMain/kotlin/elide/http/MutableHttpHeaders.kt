@@ -13,42 +13,55 @@
 
 package elide.http
 
-import elide.http.api.HttpHeaders as HttpHeadersAPI
 import kotlin.jvm.JvmStatic
 import elide.http.api.HttpHeaders.HeaderName
 import elide.http.api.HttpString
-import elide.struct.api.SortedMap
-import elide.struct.sortedMapOf
+import elide.struct.api.MutableSortedMap
+import elide.struct.mutableSortedMapOf
+import elide.http.api.MutableHttpHeaders as HttpHeadersAPI
 
 /**
  * # HTTP Headers
  *
  * Keeps track of HTTP headers in a given HTTP message payload.
  */
-public class HttpHeaders private constructor (
-  private val headers: SortedMap<HeaderName, HttpString> = sortedMapOf(),
-) : HttpHeadersAPI, Map<HeaderName, HttpString> by headers {
+public class MutableHttpHeaders private constructor (
+  private val headers: MutableSortedMap<HeaderName, HttpString> = mutableSortedMapOf(),
+) : HttpHeadersAPI, MutableMap<HeaderName, HttpString> by headers {
   public companion object {
     /**
      *
      */
-    @JvmStatic public fun empty(): HttpHeaders = HttpHeaders()
+    @JvmStatic public fun create(): MutableHttpHeaders = MutableHttpHeaders()
 
     /**
      *
      */
-    @JvmStatic public fun of(vararg pairs: Pair<String, String>): HttpHeaders = HttpHeaders(
-      sortedMapOf(pairs.map { HeaderName.of(it.first) to it.second })
-    )
+    @JvmStatic public fun of(vararg pairs: Pair<String, String>): MutableHttpHeaders = MutableHttpHeaders().apply {
+      for ((key, value) in pairs) {
+        headers[HeaderName.of(key)] = value
+      }
+    }
 
     /**
      *
      */
-    @JvmStatic public fun copyFrom(map: Map<String, String>): HttpHeaders = HttpHeaders(
-      sortedMapOf(map.entries.map { HeaderName.of(it.key) to it.value })
-    )
+    @JvmStatic public fun copyFrom(map: Map<String, String>): MutableHttpHeaders = MutableHttpHeaders().apply {
+      map.forEach {
+        headers[HeaderName.of(it.key)] = it.value
+      }
+    }
   }
 
   override operator fun get(key: String): HttpString? = headers[HeaderName.of(key)]
+
   override operator fun get(key: HeaderName): HttpString? = headers[key]
+
+  override operator fun set(key: String, value: HttpString) {
+    headers[HeaderName.of(key)] = value
+  }
+
+  override operator fun set(key: HeaderName, value: HttpString) {
+    headers[key] = value
+  }
 }

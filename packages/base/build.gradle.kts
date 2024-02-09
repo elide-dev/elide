@@ -19,6 +19,7 @@ plugins {
   id("elide.internal.conventions")
   kotlin("multiplatform")
   kotlin("plugin.atomicfu")
+  kotlin("plugin.serialization")
 }
 
 apply(plugin = "kotlinx-atomicfu")
@@ -65,6 +66,13 @@ dependencies {
     implementation(libs.elide.uuid)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.core)
+  }
+
+  commonTest {
+    implementation(kotlin("test"))
+    implementation(projects.packages.test)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.protobuf)
   }
 
   jvm {

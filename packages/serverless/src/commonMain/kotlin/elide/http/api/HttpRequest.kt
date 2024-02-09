@@ -43,5 +43,5 @@ import elide.net.api.URL
   /**
    *
    */
-  public val query: HttpMapping
+  public val query: HttpMapping<HttpString, HttpString>
 }

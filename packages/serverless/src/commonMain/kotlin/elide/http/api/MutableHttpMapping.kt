@@ -16,6 +16,7 @@ package elide.http.api
 /**
  *
  */
-public interface MutableHttpMapping : HttpMapping {
+public interface MutableHttpMapping<Key, Value> : MutableMap<Key, Value>, HttpMapping<Key, Value>
+        where Key: HttpString, Value: HttpString {
   //
 }

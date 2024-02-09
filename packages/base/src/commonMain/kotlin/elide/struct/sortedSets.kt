@@ -11,20 +11,27 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.http
+package elide.struct
 
-import elide.http.api.HttpMapping
-import elide.http.api.HttpMethod
-import elide.http.api.HttpString
-import elide.net.api.URL
-import elide.http.api.MutableHttpRequest as HttpRequestAPI
+import elide.struct.api.MutableSortedSet
+import elide.struct.api.SortedSet
+
+private val EMPTY_SORTED_SET: SortedSet<Nothing> = TreeSet(emptyList())
 
 /**
  *
  */
-public expect class MutableHttpRequest : MutableHttpMessage, HttpRequestAPI {
-  override var method: HttpMethod
-  override var path: HttpString
-  override var url: URL
-  override var query: HttpMapping<HttpString, HttpString>
-}
+@Suppress("UNCHECKED_CAST")
+public fun <V: Comparable<V>> sortedSetOf(): SortedSet<V> = EMPTY_SORTED_SET as SortedSet<V>
+
+/**
+ *
+ */
+public fun <V: Comparable<V>> sortedSetOf(vararg values: V): SortedSet<V> =
+  TreeSet(values.toList())
+
+/**
+ *
+ */
+public fun <V: Comparable<V>> mutableSortedSetOf(vararg values: V): MutableSortedSet<V> =
+  MutableTreeSet(values.toList())

@@ -11,20 +11,31 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.http
+package elide.http.api
 
-import elide.http.api.HttpMapping
-import elide.http.api.HttpMethod
-import elide.http.api.HttpString
-import elide.net.api.URL
-import elide.http.api.MutableHttpRequest as HttpRequestAPI
+import elide.http.api.HttpHeaders.HeaderName
 
 /**
  *
  */
-public expect class MutableHttpRequest : MutableHttpMessage, HttpRequestAPI {
-  override var method: HttpMethod
-  override var path: HttpString
-  override var url: URL
-  override var query: HttpMapping<HttpString, HttpString>
+public interface MutableHttpHeaders : MutableHttpMapping<HeaderName, HttpString> {
+  /**
+   *
+   */
+  public override operator fun get(key: HeaderName): HttpString?
+
+  /**
+   *
+   */
+  public operator fun get(key: String): HttpString?
+
+  /**
+   *
+   */
+  public operator fun set(key: String, value: HttpString)
+
+  /**
+   *
+   */
+  public operator fun set(key: HeaderName, value: HttpString)
 }

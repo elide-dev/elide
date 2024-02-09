@@ -16,6 +16,6 @@ package elide.http.api
 /**
  *
  */
-public interface HttpMapping {
+public interface HttpMapping<Key, Value> : Map<Key, Value> where Key: CharSequence, Value: CharSequence {
   //
 }

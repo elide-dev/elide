@@ -46,7 +46,7 @@ public object Hex : Encoder {
     return result.decodeToString()
   }
 
-    override fun encoding(): Encoding {
+  override fun encoding(): Encoding {
     return Encoding.HEX
   }
 

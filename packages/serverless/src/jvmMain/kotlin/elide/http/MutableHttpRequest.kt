@@ -26,5 +26,5 @@ public actual class MutableHttpRequest : MutableHttpMessage(), HttpRequestAPI {
   actual override var method: HttpMethod = TODO("Not yet implemented")
   actual override var url: URL get() = TODO("Not yet implemented")
   actual override var path: HttpString = "/"
-  actual override var query: HttpMapping = MutableHttpMapping.empty()
+  actual override var query: HttpMapping<HttpString, HttpString> = MutableHttpMapping.empty()
 }

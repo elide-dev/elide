@@ -113,6 +113,7 @@ dependencies {
   api(libs.kotlinx.datetime)
   api(projects.packages.proto.protoCore)
   api(libs.protobuf.java)
+  api(libs.protobuf.util)
   api(libs.protobuf.kotlin)
 
   // Implementation

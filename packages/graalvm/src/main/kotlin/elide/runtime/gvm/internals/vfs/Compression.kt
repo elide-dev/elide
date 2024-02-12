@@ -19,9 +19,9 @@
 
 package elide.runtime.gvm.internals.vfs
 
+import tools.elide.data.CompressionMode
 import elide.core.api.Symbolic
 import elide.core.api.Symbolic.SealedResolver
-import elide.data.CompressionMode
 import elide.proto.api.Named
 
 /**
@@ -32,11 +32,11 @@ import elide.proto.api.Named
  *
  * @see CompressionMode for an enumeration of supported algorithms.
  */
-@JvmInline internal value class Compression private constructor (private val mode: Pair<Int, String>) :
+@JvmInline internal value class Compression private constructor (private val mode: Pair<CompressionMode, String>) :
   Symbolic<Int>,
   Named {
   /** @return Integer symbol for this compression mode. */
-  override val symbol: Int get() = mode.first
+  override val symbol: Int get() = mode.first.number
 
   /** @return Name of this compression mode. */
   override val name: String get() = mode.second
@@ -65,11 +65,11 @@ import elide.proto.api.Named
 
     /** Resolve the provided [symbol] to a validated [Compression] instance. */
     @JvmStatic override fun resolve(symbol: Int): Compression = when (symbol) {
-      CompressionMode.IDENTITY -> IDENTITY
-      CompressionMode.GZIP -> GZIP
-      CompressionMode.BROTLI -> BROTLI
-      CompressionMode.DEFLATE -> DEFLATE
-      CompressionMode.SNAPPY -> SNAPPY
+      CompressionMode.IDENTITY.number -> IDENTITY
+      CompressionMode.GZIP.number -> GZIP
+      CompressionMode.BROTLI.number -> BROTLI
+      CompressionMode.DEFLATE.number -> DEFLATE
+      CompressionMode.SNAPPY.number -> SNAPPY
       else -> throw unresolved(symbol)
     }
   }

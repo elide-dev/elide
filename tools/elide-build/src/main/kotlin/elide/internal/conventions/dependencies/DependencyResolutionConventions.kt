@@ -15,9 +15,13 @@ package elide.internal.conventions.dependencies
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.LockMode
-import org.gradle.kotlin.dsl.exclude
 import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.ElideBuildExtension
+
+private val lockingExemptConfigurations = listOf(
+  "nativeMainImplementationDependenciesMetadata",
+  "nativeTestImplementationDependenciesMetadata",
+)
 
 private val nettyExemptions = sortedSetOf(
   "epoll",
@@ -43,13 +47,18 @@ internal fun Project.configureDependencyLocking(conventions: ElideBuildExtension
 
   tasks.register("resolveAndLockAll") {
     doFirst {
-      require(gradle.startParameter.isWriteDependencyLocks)
+      require(gradle.startParameter.isWriteDependencyLocks) {
+        "Please pass `--write-locks` to resolve and lock dependencies"
+      }
+      require(findProperty("elide.lockDeps") == "true") {
+        "Please set `elide.lockDeps=true` to resolve and lock dependencies"
+      }
     }
 
     doLast {
       // resolve all possible configurations
       configurations.filter {
-        it.isCanBeResolved && !it.name.lowercase().let { name ->
+        it.isCanBeResolved && !lockingExemptConfigurations.contains(it.name) && !it.name.lowercase().let { name ->
           name.contains("sources") || name.contains("documentation")
         }
       }.forEach { it.resolve() }

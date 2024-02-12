@@ -48,11 +48,11 @@ pluginManagement {
 }
 
 plugins {
-  id("build.less") version("1.0.0-rc2")
-  id("com.gradle.enterprise") version("3.16.2")
-  id("org.gradle.toolchains.foojay-resolver-convention") version("0.8.0")
-  id("com.gradle.common-custom-user-data-gradle-plugin") version("1.12.1")
-  id("io.micronaut.platform.catalog") version(extra.properties["micronautVersion"] as String)
+  id("build.less") version ("1.0.0-rc2")
+  id("com.gradle.enterprise") version ("3.16.2")
+  id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
+  id("com.gradle.common-custom-user-data-gradle-plugin") version ("1.12.1")
+  id("io.micronaut.platform.catalog") version (extra.properties["micronautVersion"] as String)
 }
 
 // Fix: Force CWD to proper value and store secondary value.
@@ -208,19 +208,21 @@ includeBuild(
   "tools/elide-build",
 )
 
-if (buildSamples == "true") include(
-  ":samples:server:helloworld",
-  ":samples:server:hellocss",
-  ":samples:fullstack:basic:frontend",
-  ":samples:fullstack:basic:server",
-  ":samples:fullstack:ssr:node",
-  ":samples:fullstack:ssr:server",
-  ":samples:fullstack:react:frontend",
-  ":samples:fullstack:react:server",
-  ":samples:fullstack:react-ssr:frontend",
-  ":samples:fullstack:react-ssr:node",
-  ":samples:fullstack:react-ssr:server",
-)
+if (buildSamples == "true") {
+  include(
+    ":samples:server:helloworld",
+    ":samples:server:hellocss",
+    ":samples:fullstack:basic:frontend",
+    ":samples:fullstack:basic:server",
+    ":samples:fullstack:ssr:node",
+    ":samples:fullstack:ssr:server",
+    ":samples:fullstack:react:frontend",
+    ":samples:fullstack:react:server",
+    ":samples:fullstack:react-ssr:frontend",
+    ":samples:fullstack:react-ssr:node",
+    ":samples:fullstack:react-ssr:server",
+  )
+}
 
 if (buildRpc == "true") include(":packages:rpc")
 

@@ -219,8 +219,8 @@ jobs:
   ##
   ## Job: Testsuite (JVM)
   ##
-  tests-jvm:
-    name: "Tests: JVM"
+  tests:
+    name: "Tests: All Suites"
     runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
     needs: [preflight-checks]
 
@@ -265,7 +265,7 @@ jobs:
           cache: "yarn"
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
-      - name: "Testsuite (JVM)"
+      - name: "Testsuite"
         uses: gradle/gradle-build-action@982da8e78c05368c70dac0351bb82647a9e9a5d2 # v2.11.1
         env:
           CI: true
@@ -274,6 +274,7 @@ jobs:
         with:
           cache-read-only: false
           arguments: |
+            test
             allTests
             check
             koverXmlReport
@@ -356,7 +357,7 @@ jobs:
   tests-native:
     name: "Tests: Native"
     runs-on: ${{ vars.RUNNER_LARGE || 'ubuntu-latest-8-cores' }}
-    needs: [tests-jvm, preflight-checks]
+    needs: [tests, preflight-checks]
     if: |
       (
         github.ref == 'refs/heads/stable' ||
@@ -878,7 +879,7 @@ jobs:
 
   deploy-samples:
     name: "Deploy"
-    needs: [gradle, tests-jvm, docker-jvm, docker-native]
+    needs: [gradle, tests, docker-jvm, docker-native]
     if: |
       (
         contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
@@ -916,7 +917,7 @@ jobs:
 
   publish-snapshot:
     name: "Publish: Snapshot"
-    needs: [gradle, tests-jvm]
+    needs: [gradle, tests]
     if: |
       (
         github.ref == 'refs/heads/stable' ||

@@ -1137,6 +1137,8 @@ tasks {
 listOf(
   tasks.buildLayers,
   tasks.buildNativeLayersTask,
+  tasks.optimizedBuildLayers,
+  tasks.optimizedBuildNativeLayersTask,
 ).forEach {
   it.configure {
     enabled = false

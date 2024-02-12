@@ -62,13 +62,14 @@ group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
 val versionFile: File = rootProject.layout.projectDirectory.file(".version").asFile
-version = if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
-  versionFile.readText().trim().replace("\n", "").ifBlank {
-    throw IllegalStateException("Failed to load `.version`")
+version =
+  if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
+    versionFile.readText().trim().replace("\n", "").ifBlank {
+      throw IllegalStateException("Failed to load `.version`")
+    }
+  } else {
+    "1.0-SNAPSHOT"
   }
-} else {
-  "1.0-SNAPSHOT"
-}
 
 val props = Properties()
 props.load(
@@ -154,43 +155,45 @@ tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstall
 }
 
 apiValidation {
-  nonPublicMarkers += listOf(
-    "elide.annotations.Internal",
-  )
+  nonPublicMarkers +=
+    listOf(
+      "elide.annotations.Internal",
+    )
 
-  ignoredProjects += listOf(
-    "bom",
-    "cli",
-    "embedded",
-    "proto",
-    "processor",
-    "reports",
-  ).plus(
-    if (buildSamples == "true") {
-      listOf(
-        "samples",
-        "basic",
-      )
-    } else {
-      emptyList()
-    },
-  ).plus(
-    if (project.properties["buildDocs"] == "true") {
-      listOf(
-        "docs",
-      )
-    } else {
-      emptyList()
-    },
-  ).plus(
-    if (project.properties["buildDocsSite"] == "true") {
-      listOf(
-        "site",
-      )
-    } else {
-      emptyList()
-    },
-  )
+  ignoredProjects +=
+    listOf(
+      "bom",
+      "cli",
+      "embedded",
+      "proto",
+      "processor",
+      "reports",
+    ).plus(
+      if (buildSamples == "true") {
+        listOf(
+          "samples",
+          "basic",
+        )
+      } else {
+        emptyList()
+      },
+    ).plus(
+      if (project.properties["buildDocs"] == "true") {
+        listOf(
+          "docs",
+        )
+      } else {
+        emptyList()
+      },
+    ).plus(
+      if (project.properties["buildDocsSite"] == "true") {
+        listOf(
+          "site",
+        )
+      } else {
+        emptyList()
+      },
+    )
 }
 
 spotless {
@@ -207,7 +210,7 @@ tasks.register("relock") {
       subprojects.map {
         it.tasks.named("dependencies")
       }.toTypedArray()
-    )
+    ),
   )
 }
 
@@ -276,8 +279,9 @@ subprojects {
 
       configure<SpotlessExtension> {
         if (pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
-            pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
-            pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")) {
+          pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
+          pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")
+        ) {
           kotlin {
             licenseHeaderFile(rootProject.layout.projectDirectory.file(".github/license-header.txt"))
             ktlint(libs.versions.ktlint.get()).apply {
@@ -306,13 +310,17 @@ subprojects {
             footerMessage = "© 2022 Elide Ventures, LLC"
             separateInheritedMembers = false
             templatesDir = layout.projectDirectory.dir("docs/templates").asFile
-            customAssets = listOf(
-              creativeAsset("logo/logo-wide-1200-w-r2.png"),
-              creativeAsset("logo/gray-elide-symbol-lg.png"),
-            )
-            customStyleSheets = listOf(docAsset(
-              "styles/logo-styles.css",
-            ))
+            customAssets =
+              listOf(
+                creativeAsset("logo/logo-wide-1200-w-r2.png"),
+                creativeAsset("logo/gray-elide-symbol-lg.png"),
+              )
+            customStyleSheets =
+              listOf(
+                docAsset(
+                  "styles/logo-styles.css",
+                ),
+              )
           }
         }
       }
@@ -336,7 +344,7 @@ subprojects {
                 layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"),
                 layout.buildDirectory.file("reports/kover/xml/coverage.xml"),
                 layout.buildDirectory.file("reports/kover/xml/report.xml"),
-              )
+              ),
             )
           }
 
@@ -356,7 +364,7 @@ subprojects {
               "sonar.coverage.jacoco.xmlReportPaths",
               listOf(
                 layout.buildDirectory.file("reports/kover/xml/report.xml"),
-              )
+              ),
             )
           }
         }
@@ -391,7 +399,7 @@ subprojects {
           setDependsOn(
             dependsOn.filterNot {
               it is TaskProvider<*> && it.name == "detekt"
-            }
+            },
           )
         }
 
@@ -399,7 +407,7 @@ subprojects {
           setDependsOn(
             dependsOn.filterNot {
               it is TaskProvider<*> && it.name == "check"
-            }
+            },
           )
         }
       }
@@ -421,9 +429,10 @@ tasks.register("resolveAndLockAll") {
   doLast {
     configurations.filter {
       // Add any custom filtering on the configurations to be resolved
-      it.isCanBeResolved && !it.name.lowercase().let { name ->
-        name.contains("sources") || name.contains("documentation")
-      }
+      it.isCanBeResolved &&
+        !it.name.lowercase().let { name ->
+          name.contains("sources") || name.contains("documentation")
+        }
     }.forEach { it.resolve() }
   }
 }
@@ -517,9 +526,10 @@ if (buildDocs == "true") {
 
 tasks {
   htmlDependencyReport {
-    projects = project.allprojects.filter {
-      !Projects.multiplatformModules.contains(it.name)
-    }.toSet()
+    projects =
+      project.allprojects.filter {
+        !Projects.multiplatformModules.contains(it.name)
+      }.toSet()
   }
 
   htmlDependencyReport {
@@ -530,17 +540,18 @@ tasks {
 if (enableKnit == "true") {
   the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://docs.elide.dev/"
   the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "docs/apidocs"
-  the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
-    include("README.md")
-    include("docs/guide/**/*.md")
-    include("docs/guide/**/*.kt")
-    include("samples/**/*.md")
-    include("samples/**/*.kt")
-    include("samples/**/*.kts")
-    exclude("**/build/**")
-    exclude("**/.gradle/**")
-    exclude("**/node_modules/**")
-  }
+  the<kotlinx.knit.KnitPluginExtension>().files =
+    fileTree(project.rootDir) {
+      include("README.md")
+      include("docs/guide/**/*.md")
+      include("docs/guide/**/*.kt")
+      include("samples/**/*.md")
+      include("samples/**/*.kt")
+      include("samples/**/*.kts")
+      exclude("**/build/**")
+      exclude("**/.gradle/**")
+      exclude("**/node_modules/**")
+    }
 
   // Build API docs via Dokka before running Knit.
   tasks.named("knitPrepare").configure {
@@ -574,7 +585,7 @@ tasks.create("docs") {
         "dokkaHtml",
         "dokkaHtmlMultiModule",
         "htmlDependencyReport",
-      )
+      ),
     )
   }
 }
@@ -593,22 +604,28 @@ val publishElide by tasks.registering {
   description = "Publish Elide library publications to Elide repositories and Maven Central"
   group = "Publishing"
 
-  dependsOn(Projects.publishedModules.map {
-    project(it).tasks.named("publishAllElidePublications")
-  })
+  dependsOn(
+    Projects.publishedModules.map {
+      project(it).tasks.named("publishAllElidePublications")
+    },
+  )
 }
 
 val publishSubstrate by tasks.registering {
   description = "Publish Elide Substrate and Kotlin compiler plugins to Elide repositories and Maven Central"
   group = "Publishing"
 
-  dependsOn(Projects.publishedSubprojects.map {
-    gradle.includedBuild(it.substringBefore(":")).task(listOf(
-      "",
-      it.substringAfter(":"),
-      "publishAllElidePublications"
-    ).joinToString(":"))
-  })
+  dependsOn(
+    Projects.publishedSubprojects.map {
+      gradle.includedBuild(it.substringBefore(":")).task(
+        listOf(
+          "",
+          it.substringAfter(":"),
+          "publishAllElidePublications",
+        ).joinToString(":"),
+      )
+    },
+  )
 }
 
 val publishAll by tasks.registering {

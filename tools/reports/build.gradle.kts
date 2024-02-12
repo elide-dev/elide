@@ -14,7 +14,6 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
@@ -56,14 +55,15 @@ dependencies {
   Projects.serverModules.plus(
     Projects.multiplatformModules
   ).forEach {
-    testReportAggregation(project(":packages:$it"))
+    // @TODO: flatbuffers project is disabled by default for testing.
+    if (!it.contains("flatbuffers")) testReportAggregation(project(":packages:$it"))
   }
 
   antJUnit("org.apache.ant", "ant-junit", "1.10.12")
 }
 
-task<Copy>("locateCopyJUnitReports") {
-  val testReportPaths: List<String> = rootProject.allprojects.filter { project ->
+val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class) {
+  val testReportPaths: List<String> = allprojects.filter { project ->
     !listOf(
       "proto",
       "sample",
@@ -96,7 +96,7 @@ task<Copy>("locateCopyJUnitReports") {
   )
 }
 
-task("mergeJUnitReports") {
+val mergeJUnitReports: TaskProvider<Task> by tasks.registering {
   dependsOn(tasks.named("locateCopyJUnitReports"))
   val resultsDir = file("build/test-results/allreports")
   val mergedDir = file("build/test-results")
@@ -122,7 +122,7 @@ task("mergeJUnitReports") {
   }
 }
 
-tasks.create("reports") {
+val reports: TaskProvider<Task> by tasks.registering {
   dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
   dependsOn(tasks.named("mergeJUnitReports"))
 }

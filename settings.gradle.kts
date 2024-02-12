@@ -59,8 +59,6 @@ plugins {
 System.setProperty("user.dir", rootProject.projectDir.toString())
 System.setProperty("elide.home", rootProject.projectDir.toString())
 
-val embeddedCompose: String by settings
-val embeddedR8: String by settings
 val buildUuid: String by settings
 val buildlessApiKey: String by settings
 val enableSubstrate: String by settings
@@ -138,10 +136,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "elide"
 
-// Third-party modules.
-if (embeddedR8 == "true") includeBuild("tools/third_party/google/r8")
-if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose/web")
-
 // External builds.
 if (buildUuid == "true") {
   includeBuild("packages/uuid") {
@@ -183,7 +177,6 @@ include(
   ":packages:proto:proto-core",
   ":packages:proto:proto-test",
   ":packages:proto:proto-capnp",
-  ":packages:proto:proto-flatbuffers",
   ":packages:proto:proto-kotlinx",
   ":packages:proto:proto-protobuf",
   ":packages:runtime",
@@ -203,6 +196,7 @@ val buildSamples: String by settings
 val buildPlugins: String by settings
 val buildBenchmarks: String by settings
 val buildRpc: String by settings
+val buildFlatbuffers: String by settings
 
 includeBuild(
   "tools/elide-build",
@@ -225,6 +219,8 @@ if (buildSamples == "true") {
 }
 
 if (buildRpc == "true") include(":packages:rpc")
+
+if (buildFlatbuffers == "true") include(":packages:proto:proto-flatbuffers")
 
 if (buildDocs == "true") {
   include(

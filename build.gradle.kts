@@ -17,13 +17,8 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import com.diffplug.gradle.spotless.SpotlessExtension
-import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
-import org.jetbrains.dokka.base.DokkaBase
-import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
@@ -204,14 +199,45 @@ spotless {
   }
 }
 
-tasks.register("relock") {
-  dependsOn(
-    *(
-      subprojects.map {
-        it.tasks.named("dependencies")
-      }.toTypedArray()
-    ),
-  )
+koverReport {
+  defaults {
+    filters {
+      includes {
+        packages("elide")
+        classes("elide.*")
+      }
+
+      excludes {
+        annotatedBy("*Generated*")
+
+        packages(
+          "tools.elide",
+          "elide.cli",
+          "elide.data",
+          "elide.proto",
+          "elide.runtime.feature",
+          "elide.tool",
+          "elide.tools",
+          "elide.vfs",
+          "google",
+          "kotlinx",
+          "webutil",
+        )
+      }
+    }
+
+    xml {
+      //
+    }
+
+    html {
+      title = "Elide Coverage"
+    }
+
+    verify {
+      //
+    }
+  }
 }
 
 sonarqube {
@@ -239,8 +265,6 @@ dependencies {
   kover(projects.packages.graalvm)
   kover(projects.packages.model)
   kover(projects.packages.proto.protoCore)
-  kover(projects.packages.proto.protoCapnp)
-  kover(projects.packages.proto.protoFlatbuffers)
   kover(projects.packages.proto.protoKotlinx)
   kover(projects.packages.proto.protoProtobuf)
   kover(projects.packages.rpc)
@@ -268,162 +292,6 @@ rewrite {
   )
 }
 
-subprojects {
-  val name = this.name
-
-  apply {
-    if (!Projects.nonKotlinProjects.contains(name)) {
-      plugin("io.gitlab.arturbosch.detekt")
-      plugin("org.sonarqube")
-      pluginManager.apply("com.diffplug.spotless")
-
-      configure<SpotlessExtension> {
-        isEnforceCheck = false
-
-        if (pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
-          pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
-          pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")
-        ) {
-          kotlin {
-            licenseHeaderFile(rootProject.layout.projectDirectory.file(".github/license-header.txt"))
-            ktlint(libs.versions.ktlint.get()).apply {
-              setEditorConfigPath(rootProject.layout.projectDirectory.file(".editorconfig"))
-            }
-          }
-        }
-        kotlinGradle {
-          target("*.gradle.kts")
-          ktlint(libs.versions.ktlint.get())
-        }
-      }
-
-      if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
-        plugin("org.jetbrains.dokka")
-
-        val docAsset: (String) -> File = {
-          layout.projectDirectory.file("docs/$it").asFile
-        }
-        val creativeAsset: (String) -> File = {
-          layout.projectDirectory.file("creative/$it").asFile
-        }
-
-        tasks.withType<DokkaTask>().configureEach {
-          pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-            footerMessage = "© 2022 Elide Ventures, LLC"
-            separateInheritedMembers = false
-            templatesDir = layout.projectDirectory.dir("docs/templates").asFile
-            customAssets =
-              listOf(
-                creativeAsset("logo/logo-wide-1200-w-r2.png"),
-                creativeAsset("logo/gray-elide-symbol-lg.png"),
-              )
-            customStyleSheets =
-              listOf(
-                docAsset(
-                  "styles/logo-styles.css",
-                ),
-              )
-          }
-        }
-      }
-    }
-  }
-
-  sonarqube {
-    properties {
-      if (!Projects.noTestModules.contains(name)) {
-        when {
-          // pure Java/Kotlin coverage
-          Projects.serverModules.contains(name) -> {
-            property("sonar.sources", "src/main/kotlin")
-            property("sonar.tests", "src/test/kotlin")
-            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/main"))
-            property(
-              "sonar.coverage.jacoco.xmlReportPaths",
-              listOf(
-                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"),
-                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"),
-                layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"),
-                layout.buildDirectory.file("reports/kover/xml/coverage.xml"),
-                layout.buildDirectory.file("reports/kover/xml/report.xml"),
-              ),
-            )
-          }
-
-          // KotlinJS coverage via Kover
-          Projects.frontendModules.contains(name) -> {
-            property("sonar.sources", "src/main/kotlin")
-            property("sonar.tests", "src/test/kotlin")
-            property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/xml/report.xml"))
-          }
-
-          // Kotlin MPP coverage via Kover
-          Projects.multiplatformModules.contains(name) -> {
-            property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
-            property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
-            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/jvm/main"))
-            property(
-              "sonar.coverage.jacoco.xmlReportPaths",
-              listOf(
-                layout.buildDirectory.file("reports/kover/xml/report.xml"),
-              ),
-            )
-          }
-        }
-      }
-    }
-  }
-
-  if (!Projects.nonKotlinProjects.contains(name)) {
-    detekt {
-      parallel = true
-      ignoreFailures = true
-      config.from(rootProject.files("config/detekt/detekt.yml"))
-    }
-
-    val detektMerge by tasks.registering(ReportMergeTask::class) {
-      output = rootProject.layout.buildDirectory.file("reports/detekt/elide.sarif")
-    }
-
-    plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
-      tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
-        finalizedBy(detektMerge)
-        reports.sarif.required = true
-        detektMerge.configure {
-          input.from(this@detekt.sarifReportFile) // or .sarifReportFile
-        }
-      }
-    }
-
-    afterEvaluate {
-      if (tasks.findByName("check") != null) {
-        tasks.getByName("check") {
-          setDependsOn(
-            dependsOn.filterNot {
-              it is TaskProvider<*> && it.name == "detekt"
-            },
-          )
-        }
-
-        tasks.getByName("build") {
-          setDependsOn(
-            dependsOn.filterNot {
-              it is TaskProvider<*> && it.name == "check"
-            },
-          )
-        }
-      }
-    }
-  }
-
-  if (project.findProperty("elide.lockDeps") == "true") {
-    dependencyLocking {
-      lockAllConfigurations()
-      lockMode = LockMode.LENIENT
-    }
-  }
-}
-
 tasks.register("resolveAndLockAll") {
   doFirst {
     require(gradle.startParameter.isWriteDependencyLocks)
@@ -438,66 +306,6 @@ tasks.register("resolveAndLockAll") {
     }.forEach { it.resolve() }
   }
 }
-
-tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
-  projects = project.allprojects
-}
-
-if (tasks.findByName("resolveAllDependencies") == null) {
-  tasks.register("resolveAllDependencies") {
-    val npmInstall = tasks.findByName("kotlinNpmInstall")
-    if (npmInstall != null) {
-      dependsOn(npmInstall)
-    }
-    doLast {
-      allprojects {
-        configurations.forEach { c ->
-          if (c.isCanBeResolved) {
-            println("Downloading dependencies for '$path' - ${c.name}")
-            val result = c.incoming.artifactView { lenient(true) }.artifacts
-            result.failures.forEach {
-              println("- Ignoring Error: ${it.message}")
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-/*tasks.register("samples") {
-  description = "Build and test all built-in code samples, in the `samples` path and with Knit."
-
-  //dependsOn(
-    //"buildSamples",
-    //"testSamples",
-    //"nativeTestSamples",
-  //)
-}
-
-tasks.register("buildSamples") {
-  description = "Assemble all sample code."
-
-  Projects.samples.forEach {
-    dependsOn("$it:assemble")
-  }
-}
-
-tasks.register("testSamples") {
-  description = "Run all tests for sample code."
-
-  Projects.samples.forEach {
-    dependsOn("$it:test")
-  }
-}
-
-tasks.register("nativeTestSamples") {
-  description = "Run native (GraalVM) tests for sample code."
-
-  Projects.samples.forEach {
-    dependsOn("$it:nativeTest")
-  }
-}*/
 
 tasks.register("reports") {
   description = "Build all reports."
@@ -527,13 +335,6 @@ if (buildDocs == "true") {
 }
 
 tasks {
-  htmlDependencyReport {
-    projects =
-      project.allprojects.filter {
-        !Projects.multiplatformModules.contains(it.name)
-      }.toSet()
-  }
-
   htmlDependencyReport {
     reports.html.outputLocation = layout.projectDirectory.dir("docs/reports").asFile
   }
@@ -580,7 +381,7 @@ nexusPublishing {
   }
 }
 
-tasks.create("docs") {
+val docs by tasks.registering {
   if (buildDocs == "true") {
     dependsOn(
       listOf(
@@ -636,3 +437,228 @@ val publishAll by tasks.registering {
 
   dependsOn(publishElide, publishSubstrate, publishBom)
 }
+
+
+// @TODO: replace where needed with convention plugin logic
+//
+//subprojects {
+//  val name = this.name
+//
+//  apply {
+//    if (!Projects.nonKotlinProjects.contains(name)) {
+//      plugin("io.gitlab.arturbosch.detekt")
+//      plugin("org.sonarqube")
+//      pluginManager.apply("com.diffplug.spotless")
+//
+//      configure<SpotlessExtension> {
+//        isEnforceCheck = false
+//
+//        if (pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
+//          pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
+//          pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")
+//        ) {
+//          kotlin {
+//            licenseHeaderFile(rootProject.layout.projectDirectory.file(".github/license-header.txt"))
+//            ktlint(libs.versions.ktlint.get()).apply {
+//              setEditorConfigPath(rootProject.layout.projectDirectory.file(".editorconfig"))
+//            }
+//          }
+//        }
+//        kotlinGradle {
+//          target("*.gradle.kts")
+//          ktlint(libs.versions.ktlint.get())
+//        }
+//      }
+//
+//      if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
+//        plugin("org.jetbrains.dokka")
+//
+//        val docAsset: (String) -> File = {
+//          layout.projectDirectory.file("docs/$it").asFile
+//        }
+//        val creativeAsset: (String) -> File = {
+//          layout.projectDirectory.file("creative/$it").asFile
+//        }
+//
+//        tasks.withType<DokkaTask>().configureEach {
+//          pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+//            footerMessage = "© 2022 Elide Ventures, LLC"
+//            separateInheritedMembers = false
+//            templatesDir = layout.projectDirectory.dir("docs/templates").asFile
+//            customAssets =
+//              listOf(
+//                creativeAsset("logo/logo-wide-1200-w-r2.png"),
+//                creativeAsset("logo/gray-elide-symbol-lg.png"),
+//              )
+//            customStyleSheets =
+//              listOf(
+//                docAsset(
+//                  "styles/logo-styles.css",
+//                ),
+//              )
+//          }
+//        }
+//      }
+//    }
+//  }
+//
+//  sonarqube {
+//    properties {
+//      if (!Projects.noTestModules.contains(name)) {
+//        when {
+//          // pure Java/Kotlin coverage
+//          Projects.serverModules.contains(name) -> {
+//            property("sonar.sources", "src/main/kotlin")
+//            property("sonar.tests", "src/test/kotlin")
+//            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/main"))
+//            property(
+//              "sonar.coverage.jacoco.xmlReportPaths",
+//              listOf(
+//                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"),
+//                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"),
+//                layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"),
+//                layout.buildDirectory.file("reports/kover/xml/coverage.xml"),
+//                layout.buildDirectory.file("reports/kover/xml/report.xml"),
+//              ),
+//            )
+//          }
+//
+//          // KotlinJS coverage via Kover
+//          Projects.frontendModules.contains(name) -> {
+//            property("sonar.sources", "src/main/kotlin")
+//            property("sonar.tests", "src/test/kotlin")
+//            property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/xml/report.xml"))
+//          }
+//
+//          // Kotlin MPP coverage via Kover
+//          Projects.multiplatformModules.contains(name) -> {
+//            property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
+//            property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
+//            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/jvm/main"))
+//            property(
+//              "sonar.coverage.jacoco.xmlReportPaths",
+//              listOf(
+//                layout.buildDirectory.file("reports/kover/xml/report.xml"),
+//              ),
+//            )
+//          }
+//        }
+//      }
+//    }
+//  }
+//
+//  if (!Projects.nonKotlinProjects.contains(name)) {
+//    detekt {
+//      parallel = true
+//      ignoreFailures = true
+//      config.from(rootProject.files("config/detekt/detekt.yml"))
+//    }
+//
+//    val detektMerge by tasks.registering(ReportMergeTask::class) {
+//      output = rootProject.layout.buildDirectory.file("reports/detekt/elide.sarif")
+//    }
+//
+//    plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
+//      tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
+//        finalizedBy(detektMerge)
+//        reports.sarif.required = true
+//        detektMerge.configure {
+//          input.from(this@detekt.sarifReportFile) // or .sarifReportFile
+//        }
+//      }
+//    }
+//
+//    afterEvaluate {
+//      if (tasks.findByName("check") != null) {
+//        tasks.getByName("check") {
+//          setDependsOn(
+//            dependsOn.filterNot {
+//              it is TaskProvider<*> && it.name == "detekt"
+//            },
+//          )
+//        }
+//
+//        tasks.getByName("build") {
+//          setDependsOn(
+//            dependsOn.filterNot {
+//              it is TaskProvider<*> && it.name == "check"
+//            },
+//          )
+//        }
+//      }
+//    }
+//  }
+//
+//  if (project.findProperty("elide.lockDeps") == "true") {
+//    dependencyLocking {
+//      lockAllConfigurations()
+//      lockMode = LockMode.LENIENT
+//    }
+//  }
+//}
+
+// @TODO: replace where needed with convention plugin logic
+//
+//tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
+//  projects = project.allprojects
+//}
+
+// @TODO: replace where needed with convention plugin logic
+//
+//if (tasks.findByName("resolveAllDependencies") == null) {
+//  tasks.register("resolveAllDependencies") {
+//    val npmInstall = tasks.findByName("kotlinNpmInstall")
+//    if (npmInstall != null) {
+//      dependsOn(npmInstall)
+//    }
+//    doLast {
+//      allprojects {
+//        configurations.forEach { c ->
+//          if (c.isCanBeResolved) {
+//            println("Downloading dependencies for '$path' - ${c.name}")
+//            val result = c.incoming.artifactView { lenient(true) }.artifacts
+//            result.failures.forEach {
+//              println("- Ignoring Error: ${it.message}")
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
+
+// @TODO: replace where needed with convention plugin logic
+//
+/*tasks.register("samples") {
+  description = "Build and test all built-in code samples, in the `samples` path and with Knit."
+
+  //dependsOn(
+    //"buildSamples",
+    //"testSamples",
+    //"nativeTestSamples",
+  //)
+}
+
+tasks.register("buildSamples") {
+  description = "Assemble all sample code."
+
+  Projects.samples.forEach {
+    dependsOn("$it:assemble")
+  }
+}
+
+tasks.register("testSamples") {
+  description = "Run all tests for sample code."
+
+  Projects.samples.forEach {
+    dependsOn("$it:test")
+  }
+}
+
+tasks.register("nativeTestSamples") {
+  description = "Run native (GraalVM) tests for sample code."
+
+  Projects.samples.forEach {
+    dependsOn("$it:nativeTest")
+  }
+}*/

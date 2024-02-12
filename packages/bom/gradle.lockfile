@@ -77,4 +77,4 @@ org.jetbrains:annotations:13.0=detekt,ktlint,ktlintBaselineReporter,ktlintRulese
 org.jetbrains:annotations:16.0.2=koverJvmReporter
 org.slf4j:slf4j-api:2.0.4=ktlint
 org.snakeyaml:snakeyaml-engine:2.6=detekt
-empty=detektPlugins,koverExternalArtifacts,ktlintReporter
+empty=detektPlugins,koverExternalArtifacts,ktlintReporter,signatures

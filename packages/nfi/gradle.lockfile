@@ -49,4 +49,4 @@ org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1=detekt
 org.jetbrains:annotations:13.0=detekt
 org.jetbrains:annotations:16.0.2=koverJvmReporter
 org.snakeyaml:snakeyaml-engine:2.6=detekt
-empty=cppCompileDebug,cppCompileRelease,cppCompileTest,detektPlugins,koverExternalArtifacts,nativeLinkDebug,nativeLinkRelease,nativeLinkTest,nativeRuntimeDebug,nativeRuntimeRelease,nativeRuntimeTest
+empty=cppCompileDebug,cppCompileRelease,cppCompileTest,detektPlugins,koverExternalArtifacts,nativeLinkDebug,nativeLinkRelease,nativeLinkTest,nativeRuntimeDebug,nativeRuntimeRelease,nativeRuntimeTest,signatures

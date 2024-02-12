@@ -214,6 +214,7 @@ koverReport {
           "tools.elide",
           "elide.cli",
           "elide.data",
+          "elide.embedded.feature",
           "elide.proto",
           "elide.runtime.feature",
           "elide.tool",

@@ -262,6 +262,10 @@ buildCache {
 }
 
 buildless {
+  localCache {
+    enabled = true
+  }
+
   remoteCache {
     // allow disabling pushing to the remote cache
     push.set(cachePush?.toBooleanStrictOrNull() ?: true)

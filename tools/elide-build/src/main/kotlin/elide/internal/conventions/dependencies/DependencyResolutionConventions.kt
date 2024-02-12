@@ -18,16 +18,38 @@ import org.gradle.api.artifacts.dsl.LockMode
 import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.ElideBuildExtension
 
-private val lockingExemptConfigurations = listOf(
+// Configurations which are exempt from locking checks.
+private val lockingExemptConfigurations = sortedSetOf(
   "nativeMainImplementationDependenciesMetadata",
   "nativeTestImplementationDependenciesMetadata",
 )
 
+// Netty dependencies which are exempt from version pins.
 private val nettyExemptions = sortedSetOf(
   "epoll",
   "kqueue",
   "tcnative",
   "boringssl",
+)
+
+// GraalVM Java modules which are included in the distribution, so should be omitted from the classpath.
+private val gvmDistModules = sortedSetOf(
+  "org.graalvm.sdk:collections",
+  "org.graalvm.sdk:nativeimage",
+  "org.graalvm.sdk:word",
+)
+
+// Configurations from which to omit distributed GraalVM modules.
+private val gvmConfigurations = sortedSetOf(
+  "compileClasspath",
+  "runtimeClasspath",
+)
+
+// Whether we are currently running under GraalVM.
+private val isGraalVm: Boolean = (
+  (System.getProperty("java.vm.version") ?: "").let { version ->
+    "jvmci" in version
+  }
 )
 
 /** Introduces dependency locking settings. */
@@ -102,6 +124,16 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
       if (requested.group == "io.grpc" && !requested.name.contains("kotlin")) {
         useVersion(Versions.GRPC)
         because("pin grpc")
+      }
+    }
+
+    if (gvmConfigurations.contains(this@all.name) && isGraalVm) {
+      gvmDistModules.forEach {
+        this@all.exclude(
+          mapOf(
+            "group" to it.substringBefore(":"),
+            "module" to it.substringAfter(":")
+          ))
       }
     }
   }

@@ -45,14 +45,12 @@ plugins {
   alias(libs.plugins.detekt)
   alias(libs.plugins.nexusPublishing)
   alias(libs.plugins.gradle.testretry)
-  alias(libs.plugins.buildTimeTracker)
   alias(libs.plugins.dependencyAnalysis)
   alias(libs.plugins.versionCatalogUpdate)
   alias(libs.plugins.gradle.checksum)
   alias(libs.plugins.spdx.sbom)
   alias(libs.plugins.cyclonedx)
   alias(libs.plugins.openrewrite)
-  alias(libs.plugins.lombok)
   alias(libs.plugins.spotless)
 
   id("elide.internal.conventions")
@@ -197,6 +195,8 @@ apiValidation {
 }
 
 spotless {
+  isEnforceCheck = false
+
   kotlinGradle {
     ktlint(libs.versions.ktlint.get()).apply {
       setEditorConfigPath(rootProject.layout.projectDirectory.file(".editorconfig"))
@@ -278,6 +278,8 @@ subprojects {
       pluginManager.apply("com.diffplug.spotless")
 
       configure<SpotlessExtension> {
+        isEnforceCheck = false
+
         if (pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
           pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
           pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")

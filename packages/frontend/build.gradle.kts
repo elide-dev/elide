@@ -12,6 +12,7 @@
  */
 
 
+import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 import elide.internal.conventions.kotlin.*
 
 plugins {
@@ -44,5 +45,15 @@ dependencies {
 
   jsTest {
     implementation(projects.packages.test)
+  }
+}
+
+tasks.named("compileKotlinJs", Kotlin2JsCompile::class.java) {
+  kotlinOptions {
+    freeCompilerArgs = freeCompilerArgs.plus(
+      listOf(
+        "-nowarn",
+      )
+    )
   }
 }

@@ -846,7 +846,7 @@ dependencies {
   modules(kotlin("stdlib"))
 
   // Dependencies: Project
-  headers(projects.packages.nfi)
+  //  headers(projects.packages.nfi)  @TODO(sgammon): proper configuration target
   modules(projects.packages.core)
   modules(projects.packages.base)
   modules(projects.packages.http)

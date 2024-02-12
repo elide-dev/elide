@@ -1132,3 +1132,13 @@ tasks {
     }
   }
 }
+
+// Fix: This is treated as an application target by Micronaut, but does not produce container images.
+listOf(
+  tasks.buildLayers,
+  tasks.buildNativeLayersTask,
+).forEach {
+  it.configure {
+    enabled = false
+  }
+}

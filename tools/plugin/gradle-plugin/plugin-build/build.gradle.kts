@@ -26,7 +26,6 @@ plugins {
     alias(libs.plugins.versionCheck)
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.pluginPublish) apply false
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.kotlinx.plugin.abiValidator)
 }
 
@@ -52,22 +51,21 @@ allprojects {
 
     apply {
         plugin("io.gitlab.arturbosch.detekt")
-        plugin("org.jlleitschuh.gradle.ktlint")
         plugin("org.jetbrains.kotlinx.kover")
     }
 
-    ktlint {
-        debug = false
-        verbose = true
-        android = false
-        outputToConsole = true
-        ignoreFailures = false
-        enableExperimentalRules = true
-        filter {
-            exclude("**/generated/**")
-            include("**/kotlin/**")
-        }
-    }
+//    ktlint {
+//        debug = false
+//        verbose = true
+//        android = false
+//        outputToConsole = true
+//        ignoreFailures = false
+//        enableExperimentalRules = true
+//        filter {
+//            exclude("**/generated/**")
+//            include("**/kotlin/**")
+//        }
+//    }
 
     detekt {
         config.from(rootProject.files("../config/detekt/detekt.yml"))

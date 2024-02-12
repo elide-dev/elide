@@ -89,9 +89,3 @@ dependencies {
 
   capnproto(libs.capnproto.runtime)
 }
-
-afterEvaluate {
-  tasks.named("runKtlintCheckOverMainSourceSet").configure {
-    enabled = false
-  }
-}

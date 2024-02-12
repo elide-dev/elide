@@ -15,6 +15,7 @@
 import elide.internal.conventions.kotlin.*
 import com.google.protobuf.gradle.id
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 plugins {
   java
@@ -28,15 +29,6 @@ plugins {
 kapt {
   strictMode = true
   correctErrorTypes = true
-}
-tasks.withType(JavaCompile::class.java) {
-  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-    listOf(
-      "-nowarn",
-      "-XDenableSunApiLintControl",
-      "-Xlint:-deprecation",
-    )
-  })
 }
 
 elide {
@@ -187,6 +179,26 @@ afterEvaluate {
     tasks.named(it) {
       dependsOn("generateProto", "generateTestProto")
     }
+  }
+}
+
+tasks.withType(JavaCompile::class.java) {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "-nowarn",
+      "-XDenableSunApiLintControl",
+      "-Xlint:-deprecation",
+    )
+  })
+}
+
+tasks.named("compileKotlinJs", Kotlin2JsCompile::class.java) {
+  kotlinOptions {
+    freeCompilerArgs = freeCompilerArgs.plus(
+      listOf(
+        "-nowarn",
+      )
+    )
   }
 }
 

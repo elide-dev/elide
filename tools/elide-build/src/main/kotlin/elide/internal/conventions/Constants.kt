@@ -167,6 +167,7 @@ public object Constants {
       "-Xcontext-receivers",
       "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
+      "-Xsuppress-version-warnings",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */

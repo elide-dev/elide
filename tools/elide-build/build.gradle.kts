@@ -58,15 +58,33 @@ kotlin {
     jvmTarget = JVM_21
     javaParameters = true
     allWarningsAsErrors = false
-
     apiVersion = KOTLIN_2_0
     languageVersion = KOTLIN_2_0
+    freeCompilerArgs = listOf(
+      "-Xcontext-receivers",
+      "-Xskip-prerelease-check",
+      "-Xsuppress-version-warnings",
+      "-Xjvm-default=all",
+      "-Xjsr305=strict",
+    )
   }
+}
+
+fun MutableList<String>.addIfNotPresent(arg: String) {
+  if (!contains(arg)) add(arg)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
+    apiVersion = "2.0"
     languageVersion = "2.0"
+    freeCompilerArgs = freeCompilerArgs.toMutableList().apply {
+      addIfNotPresent("-Xcontext-receivers")
+      addIfNotPresent("-Xskip-prerelease-check")
+      addIfNotPresent("-Xsuppress-version-warnings")
+      addIfNotPresent("-Xjvm-default=all")
+      addIfNotPresent("-Xjsr305=strict")
+    }
   }
 }
 

@@ -90,6 +90,7 @@ tasks {
     useJUnitPlatform()
     dependsOn(generateTestProto)
   }
+
   jar {
     dependsOn(generateProto)
 
@@ -97,14 +98,26 @@ tasks {
       attributes["Automatic-Module-Name"] = "elide.protocol.protobuf"
     }
   }
+
   compileJava {
     options.compilerArgumentProviders.add(CommandLineArgumentProvider {
       listOf(
         "--add-exports=elide.protocol.core/elide.proto=elide.protocol.protobuf",
         "--add-exports=elide.protocol.core/elide.proto.internal.annotations=elide.protocol.protobuf",
-        "--add-reads=elide.protocol.protobuf=ALL-UNNAMED"
+        "--add-reads=elide.protocol.protobuf=ALL-UNNAMED",
+        "-nowarn",
+        "-XDenableSunApiLintControl",
+        "-Xlint:-deprecation",
       )
     })
+  }
+
+  compileKotlin {
+    kotlinOptions {
+      freeCompilerArgs = freeCompilerArgs.plus(listOf(
+        "-nowarn",
+      ))
+    }
   }
 }
 

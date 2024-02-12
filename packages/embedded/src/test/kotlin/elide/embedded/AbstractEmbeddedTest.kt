@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package elide.embedded
 
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -266,18 +268,6 @@ abstract class AbstractEmbeddedTest : CallBuilder {
           // no defaults at this time
         })
       )
-    }
-
-    /**
-     *
-     */
-    inline fun embedded(crossinline op: suspend EmbeddedTestContext.() -> Unit) {
-//      val (mockThread, mockIsolate) = mock(IsolateThread::class.java) to mock(Isolate::class.java)
-      embedded().apply {
-        runTest {
-          op()
-        }
-      }
     }
 
     /**

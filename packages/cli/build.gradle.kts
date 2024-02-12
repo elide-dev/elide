@@ -216,18 +216,18 @@ java {
   if (enableJpms) modularity.inferModulePath = true
 }
 
-ktlint {
-  debug = false
-  verbose = false
-  android = false
-  outputToConsole = false
-  ignoreFailures = true
-  enableExperimentalRules = true
-
-  filter {
-    exclude("elide/tool/cli/ToolTypealiases.kt")
-  }
-}
+//ktlint {
+//  debug = false
+//  verbose = false
+//  android = false
+//  outputToConsole = false
+//  ignoreFailures = true
+//  enableExperimentalRules = true
+//
+//  filter {
+//    exclude("elide/tool/cli/ToolTypealiases.kt")
+//  }
+//}
 
 kapt {
   useBuildCache = true

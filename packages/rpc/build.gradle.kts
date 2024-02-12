@@ -14,6 +14,7 @@
 
 import elide.internal.conventions.kotlin.*
 import com.google.protobuf.gradle.id
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 plugins {
   java
@@ -166,7 +167,7 @@ dependencies {
   }
 }
 
-val jvmTest by kotlin.sourceSets.getting {
+val jvmTest: KotlinSourceSet by kotlin.sourceSets.getting {
   kotlin.srcDirs(
     layout.projectDirectory.dir("src/jvmTest/kotlin"),
     layout.buildDirectory.dir("generated/source/proto/test/grpckt"),
@@ -182,7 +183,6 @@ afterEvaluate {
   listOf(
     "kaptGenerateStubsKotlinJvm",
     "kaptGenerateStubsTestKotlinJvm",
-    "runKtlintCheckOverJvmTestSourceSet",
   ).forEach {
     tasks.named(it) {
       dependsOn("generateProto", "generateTestProto")

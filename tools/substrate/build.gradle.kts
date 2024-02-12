@@ -27,7 +27,6 @@ plugins {
   idea
   kotlin("jvm")
 
-  alias(libs.plugins.ktlint)
   alias(libs.plugins.dokka)
   alias(libs.plugins.versionCheck)
   alias(libs.plugins.testLogger)

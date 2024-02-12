@@ -206,7 +206,7 @@ micronaut-liquibase = "5.4.1"
 sqlcommenter = "2.1.1-elide"
 jackson = "2.16.1"
 jsr310 = "2.9.8"
-spotless = "6.11.0"
+spotless = "6.25.0"
 micronaut-xml = "3.1.0"
 buildconfig-plugin = "4.2.0"  # TODO(sgammon): 5.x breakage in `conventions:GradleProject.kt`
 kotlin-compile-testing = "1.5.0"
@@ -280,6 +280,7 @@ nexusPublishing = { id = "io.github.gradle-nexus.publish-plugin", version.ref = 
 node = { id = "com.github.node-gradle.node", version.ref = "node-plugin" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker-plugin" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig-plugin" }

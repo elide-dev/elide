@@ -313,11 +313,11 @@ detekt {
     ))
 }
 
-ktlint {
-    filter {
-        exclude("**/model/**")
-    }
-}
+//ktlint {
+//    filter {
+//        exclude("**/model/**")
+//    }
+//}
 
 subprojects {
     apply {
@@ -409,7 +409,7 @@ tasks.named<ProcessResources>("processResources") {
 tasks.named("check").configure {
     dependsOn("test")
     dependsOn("detekt")
-    dependsOn("ktlintCheck")
+//    dependsOn("ktlintCheck")
     dependsOn("koverXmlReport")
     dependsOn("koverVerify")
 }

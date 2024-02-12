@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import java.util.Properties
-import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.project.Projects
 
 plugins {
@@ -51,7 +50,6 @@ plugins {
   alias(libs.plugins.gradle.checksum)
   alias(libs.plugins.spdx.sbom)
   alias(libs.plugins.cyclonedx)
-  alias(libs.plugins.ktlint)
   alias(libs.plugins.openrewrite)
   alias(libs.plugins.lombok)
   
@@ -259,7 +257,6 @@ subprojects {
   apply {
     if (!Projects.nonKotlinProjects.contains(name)) {
       plugin("io.gitlab.arturbosch.detekt")
-      plugin("org.jlleitschuh.gradle.ktlint")
       plugin("org.sonarqube")
 
       if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
@@ -336,25 +333,6 @@ subprojects {
   }
 
   if (!Projects.nonKotlinProjects.contains(name)) {
-    ktlint {
-      version = "0.51.0-FINAL"
-
-      debug = false
-      verbose = false
-      android = false
-      outputToConsole = false
-      ignoreFailures = true
-      enableExperimentalRules = true
-      coloredOutput = true
-
-      filter {
-        exclude("**/proto/**")
-        exclude("**/generated/**")
-        exclude("**/tools/plugin/gradle-plugin/**")
-        include("**/kotlin/**")
-      }
-    }
-
     detekt {
       parallel = true
       ignoreFailures = true
@@ -493,7 +471,6 @@ tasks.register("preMerge") {
   dependsOn(
     ":reports",
     ":detekt",
-    ":ktlintCheck",
     ":check",
   )
 }

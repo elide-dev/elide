@@ -19,7 +19,6 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kover)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.sonar)
     alias(libs.plugins.dependencyAnalysis)
     alias(libs.plugins.versionCheck)
@@ -76,7 +75,6 @@ koverReport {
 subprojects {
     apply {
         plugin("io.gitlab.arturbosch.detekt")
-        plugin("org.jlleitschuh.gradle.ktlint")
         plugin("org.jetbrains.kotlinx.kover")
         plugin("org.sonarqube")
     }
@@ -98,18 +96,18 @@ subprojects {
         }
     }
 
-    ktlint {
-        debug.set(false)
-        verbose.set(true)
-        android.set(false)
-        outputToConsole.set(true)
-        ignoreFailures.set(true)
-        enableExperimentalRules.set(true)
-        filter {
-            exclude("**/generated/**")
-            include("**/kotlin/**")
-        }
-    }
+//    ktlint {
+//        debug.set(false)
+//        verbose.set(true)
+//        android.set(false)
+//        outputToConsole.set(true)
+//        ignoreFailures.set(true)
+//        enableExperimentalRules.set(true)
+//        filter {
+//            exclude("**/generated/**")
+//            include("**/kotlin/**")
+//        }
+//    }
 
     detekt {
         config.from(rootProject.files("config/detekt/detekt.yml"))
@@ -155,8 +153,8 @@ fun String.isNonStable() = "^[0-9,.v-]+(-r)?$".toRegex().matches(this).not()
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"
 
-    dependsOn("ktlintFormat")
-    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:ktlintFormat"))
+//    dependsOn("ktlintFormat")
+//    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:ktlintFormat"))
 }
 
 tasks.register("preMerge") {

@@ -12,6 +12,8 @@
  */
 
 
+@file:Suppress("UnstableApiUsage")
+
 import elide.internal.conventions.publishing.publish
 import elide.internal.conventions.kotlin.KotlinTarget
 import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
@@ -87,10 +89,4 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.flatbuffers.java.core)
   testImplementation(projects.packages.proto.protoTest)
-}
-
-afterEvaluate {
-  tasks.named("runKtlintCheckOverMainSourceSet").configure {
-    enabled = false
-  }
 }

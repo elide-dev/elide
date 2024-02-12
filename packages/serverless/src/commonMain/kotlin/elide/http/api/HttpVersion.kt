@@ -14,15 +14,17 @@
 package elide.http.api
 
 /**
+ * # HTTP: Version
  *
+ * Describes standardized versions of the HTTP protocol.
  */
 public enum class HttpVersion {
-  /** */
+  /** HTTP 1.1 */
   HTTP_1_1,
 
-  /** */
+  /** HTTP/2 */
   HTTP_2,
 
-  /** */
+  /** HTTP/3 */
   HTTP_3,
 }

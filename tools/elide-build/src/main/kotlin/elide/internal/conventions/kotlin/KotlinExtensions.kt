@@ -52,6 +52,26 @@ public fun DependenciesScope.js(block: KotlinDependencyHandler.() -> Unit) {
   sourceSetDependencies("jsMain", block)
 }
 
+/** Configure dependencies for the `wasmJsMain` source set. */
+public fun DependenciesScope.wasm(block: KotlinDependencyHandler.() -> Unit) {
+  sourceSetDependencies("wasmJsMain", block)
+}
+
+/** Configure dependencies for the `wasmJstest` source set. */
+public fun DependenciesScope.wasmTest(block: KotlinDependencyHandler.() -> Unit) {
+  sourceSetDependencies("wasmJsTest", block)
+}
+
+/** Configure dependencies for the `wasmWasiMain` source set. */
+public fun DependenciesScope.wasi(block: KotlinDependencyHandler.() -> Unit) {
+  sourceSetDependencies("wasmWasiMain", block)
+}
+
+/** Configure dependencies for the `wasmWasiTest` source set. */
+public fun DependenciesScope.wasiTest(block: KotlinDependencyHandler.() -> Unit) {
+  sourceSetDependencies("wasmWasiTest", block)
+}
+
 /** Configure dependencies for the `jsTest` source set. */
 public fun DependenciesScope.jsTest(block: KotlinDependencyHandler.() -> Unit) {
   sourceSetDependencies("jsTest", block)

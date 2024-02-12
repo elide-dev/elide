@@ -18,26 +18,56 @@ package elide.http.api
 import elide.annotations.API
 
 /**
+ * # HTTP Message
  *
+ * Represents the top abstract concept of an HTTP message; this includes the concepts of HTTP requests and HTTP
+ * responses, with commonalities between them expressed.
+ *
+ * ## Type ([type])
+ *
+ * Describes the type of message (request or response). This is set automatically by constructor parameters enforced by
+ * base classes.
+ *
+ * ## Mutability ([mutable])
+ *
+ * Describes the mutability of the message. This is set automatically by constructor parameters enforced by base
+ * classes.
+ *
+ * ## Version ([version])
+ *
+ * Describes the HTTP version for the request expressed by this record; implementations should preserve this value from
+ * construction time.
+ *
+ * ## Headers ([headers])
+ *
+ * Describes HTTP headers for this message.
+ *
+ * @see MutableHttpMessage for the mutable form of this interface.
  */
 @API public interface HttpMessage {
   /**
-   *
+   * Describes the type of message (request or response).
    */
   public val type: HttpMessageType
 
   /**
-   *
+   * Describes the mutability of the message.
    */
   public val mutable: Boolean get() = false
 
   /**
-   *
+   * Describes the HTTP version for the request expressed by this record; implementations should preserve this value
+   * from construction time.
    */
   public val version: HttpVersion
 
   /**
-   *
+   * Describes HTTP headers for this message.
    */
   public val headers: HttpHeaders
+
+  /**
+   * Describes HTTP payload info for this message.
+   */
+  public val body: HttpPayload
 }

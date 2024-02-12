@@ -30,7 +30,7 @@ public class MutableTreeMap<Key, Value> internal constructor (
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> empty(): MutableTreeMap<Key, Value> = MutableTreeMap()
+    @JvmStatic public fun <Key: Comparable<Key>, Value> create(): MutableTreeMap<Key, Value> = MutableTreeMap()
 
     /**
      *

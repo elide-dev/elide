@@ -15,37 +15,34 @@ package elide.http
 
 import elide.core.encoding.Encoding
 import elide.http.api.Mimetype
-import elide.http.api.HttpPayload as HttpPayloadAPI
+import elide.http.api.MutableHttpPayload as HttpPayloadAPI
 
 /**
  *
  */
-public sealed class HttpPayload(
-  override val bytes: HttpBytes,
-  override val contentType: Mimetype? = null,
-  override val size: ULong = bytes.size,
-) : HttpPayloadAPI {
-  override val mutable: Boolean get() = false
+public sealed class MutableHttpPayload (
+  override var bytes: HttpBytes,
+  override var contentType: Mimetype? = null,
+) : HttpPayloadAPI, HttpPayload(bytes, contentType) {
+  override val mutable: Boolean get() = true
   override val present: Boolean get() = true
 
   /**
    *
    */
-  public class Bytes(bytes: HttpBytes, contentType: Mimetype? = null) : HttpPayload(
-    bytes,
-    contentType,
-  )
+  public class Bytes(bytes: HttpBytes, contentType: Mimetype? = null) :
+    MutableHttpPayload(bytes, contentType)
 
   /**
    *
    */
-  public class Text(text: HttpBytes, contentType: Mimetype? = null, public val encoding: Encoding = Encoding.UTF_8) :
-    HttpPayload(text, contentType)
+  public class Text(text: HttpBytes, contentType: Mimetype? = null, public var encoding: Encoding = Encoding.UTF_8) :
+    MutableHttpPayload(text, contentType)
 
   /**
    *
    */
-  public data object Empty : HttpPayload(HttpBytes.EMPTY) {
+  public data object Empty : MutableHttpPayload(HttpBytes.EMPTY) {
     override val present: Boolean get() = false
   }
 }

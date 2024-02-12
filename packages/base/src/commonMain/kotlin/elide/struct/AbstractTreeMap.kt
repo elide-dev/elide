@@ -80,16 +80,23 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
     /**
      *
      */
-    @Volatile @JvmField var color: NodeColor = BLACK,
+    @Volatile @JvmField var color: NodeColor = RED,
   ) {
     internal companion object {
-      fun <Key: Comparable<Key>, Value> of(pair: Pair<Key, Value>): TreeNode<Key, Value> = TreeNode(
-        pair.first,
-        pair.second
-      )
+      fun <Key: Comparable<Key>, Value> of(parent: TreeNode<Key, Value>, pair: Pair<Key, Value>): TreeNode<Key, Value> =
+        TreeNode(
+          pair.first,
+          pair.second,
+          parent = parent,
+        )
+
+      fun <Key: Comparable<Key>, Value> root(pair: Pair<Key, Value>): TreeNode<Key, Value> =
+        TreeNode(pair.first, pair.second)
     }
 
     internal fun child(direction: Boolean): TreeNode<Key, Value>? = if (direction) right else left
+
+    internal fun direction(child: TreeNode<Key, Value>): Boolean = right?.key == child.key
 
     internal fun setLeft(child: TreeNode<Key, Value>?) {
       left = child
@@ -135,29 +142,9 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
       /**
        *
        */
-      @JvmStatic public fun <Key: Comparable<Key>, Value> of(pair: Pair<Key, Value>): Entry<Key, Value> = Entry(
-        TreeNode.of(pair)
-      )
-
-      /**
-       *
-       */
-      @JvmStatic public fun <Key: Comparable<Key>, Value> of(key: Key, value: Value): Entry<Key, Value> = Entry(
-        TreeNode.of(key to value)
-      )
-
-      /**
-       *
-       */
       @JvmStatic internal fun <Key: Comparable<Key>, Value> of(node: TreeNode<Key, Value>): Entry<Key, Value> = Entry(
         node
       )
-
-      /**
-       *
-       */
-      @JvmStatic public fun <Key: Comparable<Key>, Value> mutable(pair: Pair<Key, Value>): MutableEntry<Key, Value> =
-        MutableEntry(TreeNode.of(pair))
 
       /**
        *
@@ -221,9 +208,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
   protected fun addNode(key: Key, value: Value): Value? = withRoot { root ->
     // if there is no root on the tree (it's empty), install it
     if (root == null) {
-      applyRoot(TreeNode.of(key to value).apply {
-        color = BLACK
-      })
+      applyRoot(TreeNode.root(key to value))
       return@withRoot value
     }
 
@@ -234,7 +219,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
         val comparison = key.compareTo(current.key)
         current = when {
           comparison < 0 -> when (val left = current.left) {
-            null -> TreeNode.of(key to value).let { node ->
+            null -> TreeNode.of(current, key to value).let { node ->
               current.setLeft(node)
               innerSize++
               return node to value
@@ -242,7 +227,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
             else -> left
           }
           comparison > 0 -> when (val right = current.right) {
-            null -> TreeNode.of(key to value).let { node ->
+            null -> TreeNode.of(current, key to value).let { node ->
               current.setRight(node)
               innerSize++
               return node to value
@@ -275,36 +260,39 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
         node.color = RED
         return
       } else {
-        // if the parent is red, and the uncle is red, recolor the parent and uncle to black, and the grandparent to red
-        val uncle = node.parent?.parent?.child(node.parent == node.parent?.parent?.right)
+        // if the parent is red, and the uncle is red, color the parent and uncle black and the grandparent red
+        val uncle = parent.parent?.child(parent == parent.parent?.left)
         if (uncle?.color == RED) {
-          node.parent?.color = BLACK
+          parent.color = BLACK
           uncle.color = BLACK
-          node.parent?.parent?.color = RED
-          node.parent?.parent?.let {
-            maybeRebalance(it)
+          parent.parent?.color = RED
+          maybeRebalance(parent.parent!!)
+          return
+        }
+
+        // if the parent is red, and the uncle is black, rotate the parent and grandparent
+        val direction = parent.parent?.direction(parent) ?: false
+        if (parent.child(node == parent.left) != node) {
+          if (parent.child(node == parent.left) == parent) {
+            rotateLeft(parent)
+          } else {
+            rotateRight(parent)
           }
+          maybeRebalance(parent)
           return
         }
-
-        // if the parent is red, and the uncle is black, and the node is the right child of the parent, rotate left
-        if (node == node.parent?.right && node.parent == node.parent?.parent?.left) {
-          node.parent?.let { rotateLeft(it) }
-          node.left?.let { maybeRebalance(it) }
-          return
+        if (direction) {
+          rotateRight(parent.parent!!)
+        } else {
+          rotateLeft(parent.parent!!)
         }
-
-        // if the parent is red, and the uncle is black, and the node is the left child of the parent, rotate right
-        if (node == node.parent?.left && node.parent == node.parent?.parent?.right) {
-          node.parent?.let { rotateRight(it) }
-          node.right?.let { maybeRebalance(it) }
-          return
-        }
+        parent.color = BLACK
+        parent.parent?.color = RED
       }
     }
   }
 
-  //
+  // Rotate the red/black tree graph leftward, taking care to preserve child nodes.
   private fun rotateLeft(node: TreeNode<Key, Value>) {
     val pivot = node.right ?: return
     node.setRight(pivot.left)
@@ -312,11 +300,11 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
     pivot.parent = node.parent
     node.parent = pivot
     pivot.parent?.child(node == pivot.parent?.left)?.let { direction ->
-      pivot.parent?.setLeft(pivot)
+      pivot.parent?.setRight(pivot)
     }
   }
 
-  //
+  // Rotate the red/black tree graph rightward, taking care to preserve child nodes.
   private fun rotateRight(node: TreeNode<Key, Value>) {
     val pivot = node.left ?: return
     node.setLeft(pivot.right)
@@ -324,7 +312,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
     pivot.parent = node.parent
     node.parent = pivot
     pivot.parent?.child(node == pivot.parent?.left)?.let { direction ->
-      pivot.parent?.setLeft(pivot)
+      pivot.parent?.setRight(pivot)
     }
   }
 
@@ -436,11 +424,12 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
       else -> when {
         // if the node has one child, replace it with the child and return
         node.left == null || node.right == null -> {
-          val (child, direction) = listOf(
-            node.left to false,
-            node.right to true,
+          val direction = parent.direction(node)
+          val child = listOf(
+            node.left,
+            node.right,
           ).first {
-            it.first != null
+            it != null
           }
           when (direction) {
             true -> parent.setRight(child)

@@ -24,10 +24,17 @@ public sealed interface HttpMethod : HttpMethodAPI {
   /**
    * ## Standard HTTP method.
    */
-  @JvmInline public value class Standard(public val method: StandardHttpMethod): HttpMethod
+  @JvmInline public value class Standard(public val method: StandardHttpMethod): HttpMethodAPI by method {
+    override val name: String get() = method.name
+  }
 
   /**
    * ## Custom HTTP method.
    */
-  @JvmInline public value class Custom(public val name: String): HttpMethod
+  public data class Custom(
+    override val name: String,
+    override val body: Boolean = false,
+    override val idempotent: Boolean = false,
+    override val write: Boolean = false,
+  ): HttpMethod
 }

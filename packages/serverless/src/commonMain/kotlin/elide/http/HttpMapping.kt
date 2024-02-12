@@ -13,44 +13,16 @@
 
 package elide.http
 
-import kotlin.collections.Map.Entry
-import kotlin.jvm.JvmStatic
-import elide.http.api.HttpString
+import elide.http.api.HttpText
+import elide.struct.TreeMap
+import elide.struct.api.SortedMap
 import elide.http.api.HttpMapping as HttpMappingAPI
 
 /**
  *
  */
-public class HttpMapping<Key, Value> : HttpMappingAPI<Key, Value> where Key: HttpString, Value: HttpString {
-  //
-  public companion object {
-    @JvmStatic public fun <Key: HttpString, Value: HttpString> empty(): HttpMapping<Key, Value> {
-      TODO("not yet implemented")
-    }
-  }
-
-  override val entries: Set<Entry<Key, Value>>
-    get() = TODO("Not yet implemented")
-  override val keys: Set<Key>
-    get() = TODO("Not yet implemented")
-  override val size: Int
-    get() = TODO("Not yet implemented")
-  override val values: Collection<Value>
-    get() = TODO("Not yet implemented")
-
-  override fun containsKey(key: Key): Boolean {
-    TODO("Not yet implemented")
-  }
-
-  override fun containsValue(value: Value): Boolean {
-    TODO("Not yet implemented")
-  }
-
-  override fun get(key: Key): Value? {
-    TODO("Not yet implemented")
-  }
-
-  override fun isEmpty(): Boolean {
-    TODO("Not yet implemented")
-  }
-}
+public class HttpMapping<Key, Value> private constructor (
+  /** */
+  private val backing: SortedMap<Key, Value> = TreeMap.empty(),
+) : HttpMappingAPI<Key, Value>, SortedMap<Key, Value> by backing
+        where Key : Comparable<Key>, Key: HttpText, Value: HttpText

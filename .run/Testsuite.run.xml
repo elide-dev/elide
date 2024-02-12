@@ -10,7 +10,15 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="test" />
+          <option value="allTests" />
+          <option value=":packages:base:allTests" />
+          <option value=":packages:core:allTests" />
+          <option value=":packages:graalvm:test" />
+          <option value=":packages:embedded:test" />
+          <option value=":packages:rpc:allTests" />
+          <option value=":packages:model:allTests" />
+          <option value=":packages:server:test" />
+          <option value="--rerun" />
         </list>
       </option>
       <option name="vmOptions" />
@@ -26,6 +34,7 @@
       </extension>
     </EXTENSION>
     <DebugAllEnabled>false</DebugAllEnabled>
+    <RunAsTest>false</RunAsTest>
     <method v="2" />
   </configuration>
 </component>

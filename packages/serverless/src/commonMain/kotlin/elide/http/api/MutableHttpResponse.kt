@@ -18,8 +18,23 @@ package elide.http.api
 import elide.annotations.API
 
 /**
- *
+ * # HTTP: Response (Mutable)
  */
 @API public interface MutableHttpResponse : MutableHttpMessage, HttpResponse {
+  /**
+   * # Mutable HTTP Response: Factory
+   */
+  @API public interface Factory : HttpResponse.Factory {
+    //
+  }
 
+  /**
+   *
+   */
+  override var status: HttpStatus
+
+  /**
+   *
+   */
+  override val trailers: HttpHeaders
 }

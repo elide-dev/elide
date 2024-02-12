@@ -15,6 +15,7 @@ package elide.http
 
 import elide.http.api.HttpMapping
 import elide.http.api.HttpMethod
+import elide.http.api.HttpRequest
 import elide.http.api.HttpString
 import elide.net.api.URL
 import elide.http.api.HttpRequest as HttpRequestAPI
@@ -27,4 +28,23 @@ public actual class HttpRequest : HttpMessage(), HttpRequestAPI {
   actual override val path: HttpString get() = TODO("Not yet implemented")
   actual override val url: URL get() = TODO("Not yet implemented")
   actual override val query: HttpMapping<HttpString, HttpString> get() = TODO("Not yet implemented")
+
+  public actual companion object : HttpRequestAPI.Factory {
+    @JvmStatic actual override fun create(
+      method: HttpMethod,
+      path: HttpString,
+      query: HttpMapping<HttpString, HttpString>?
+    ): HttpRequest {
+      TODO("Not yet implemented")
+    }
+
+    @JvmStatic actual override fun copy(
+      source: HttpRequest,
+      method: HttpMethod?,
+      path: HttpString?,
+      query: HttpMapping<HttpString, HttpString>?
+    ): HttpRequest {
+      TODO("Not yet implemented")
+    }
+  }
 }

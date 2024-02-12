@@ -16,10 +16,21 @@
 package elide.http.api
 
 import elide.annotations.API
+import elide.http.MutableHttpHeaders
 
 /**
  *
  */
 @API public interface MutableHttpMessage : HttpMessage {
   override val mutable: Boolean get() = true
+
+  /**
+   * Headers of the message; for this type, the headers are mutable.
+   */
+  override val headers: MutableHttpHeaders
+
+  /**
+   * Body of the message; for this type, the body is mutable.
+   */
+  override val body: MutableHttpPayload
 }

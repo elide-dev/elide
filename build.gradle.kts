@@ -17,6 +17,7 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import com.diffplug.gradle.spotless.SpotlessExtension
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.dokka.base.DokkaBase
@@ -52,7 +53,8 @@ plugins {
   alias(libs.plugins.cyclonedx)
   alias(libs.plugins.openrewrite)
   alias(libs.plugins.lombok)
-  
+  alias(libs.plugins.spotless)
+
   id("elide.internal.conventions")
 }
 
@@ -75,8 +77,8 @@ props.load(
       "gradle-ci.properties"
     } else {
       "local.properties"
-    }
-  ).inputStream()
+    },
+  ).inputStream(),
 )
 
 val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
@@ -169,7 +171,9 @@ apiValidation {
         "samples",
         "basic",
       )
-    } else emptyList()
+    } else {
+      emptyList()
+    },
   ).plus(
     if (project.properties["buildDocs"] == "true") {
       listOf(
@@ -177,7 +181,7 @@ apiValidation {
       )
     } else {
       emptyList()
-    }
+    },
   ).plus(
     if (project.properties["buildDocsSite"] == "true") {
       listOf(
@@ -185,15 +189,23 @@ apiValidation {
       )
     } else {
       emptyList()
-    }
+    },
   )
+}
+
+spotless {
+  kotlinGradle {
+    ktlint(libs.versions.ktlint.get()).apply {
+      setEditorConfigPath(rootProject.layout.projectDirectory.file(".editorconfig"))
+    }
+  }
 }
 
 tasks.register("relock") {
   dependsOn(
     *(
       subprojects.map {
-          it.tasks.named("dependencies")
+        it.tasks.named("dependencies")
       }.toTypedArray()
     )
   )
@@ -258,6 +270,24 @@ subprojects {
     if (!Projects.nonKotlinProjects.contains(name)) {
       plugin("io.gitlab.arturbosch.detekt")
       plugin("org.sonarqube")
+      pluginManager.apply("com.diffplug.spotless")
+
+      configure<SpotlessExtension> {
+        if (pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
+            pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
+            pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")) {
+          kotlin {
+            licenseHeaderFile(rootProject.layout.projectDirectory.file(".github/license-header.txt"))
+            ktlint(libs.versions.ktlint.get()).apply {
+              setEditorConfigPath(rootProject.layout.projectDirectory.file(".editorconfig"))
+            }
+          }
+        }
+        kotlinGradle {
+          target("*.gradle.kts")
+          ktlint(libs.versions.ktlint.get())
+        }
+      }
 
       if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
         plugin("org.jetbrains.dokka")

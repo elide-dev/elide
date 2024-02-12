@@ -665,7 +665,7 @@ openrewrite-recipe-sandbox = { group = "org.openrewrite.recipe", name = "rewrite
 wasmtime = { group = "io.github.kawamuray.wasmtime", name = "wasmtime-java", version.ref = "wasmtime" }
 ## Testing Libraries
 testing-mockito-bom = { group = "org.mockito", name = "mockito-bom", version.ref = "mockito-bom" }
-testing-mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter" }
+testing-mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito-junit" }
 testing-hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest-core" }
 testing-hamcrest-junit = { group = "org.hamcrest", name = "hamcrest-junit", version.ref = "hamcrest-junit" }
 testing-faker = { group = "io.github.serpro69", name = "kotlin-faker", version.ref = "faker" }

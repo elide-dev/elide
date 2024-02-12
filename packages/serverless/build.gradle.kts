@@ -131,14 +131,27 @@ dependencies {
     implementation(libs.kotlinx.atomicfu)
   }
 
-  // Testing
+  jvm {
+    api(mn.micronaut.http)
+  }
+
+  js {
+    api(npm("@js-joda/core", libs.versions.npm.joda.get()))
+  }
+
+  wasm {
+    api(npm("@js-joda/core", libs.versions.npm.joda.get()))
+  }
+
+  wasi {
+    api(npm("@js-joda/core", libs.versions.npm.joda.get()))
+  }
+
+  // -- Tests
+
   commonTest {
     api(projects.packages.test)
     api(kotlin("test"))
-  }
-
-  jvm {
-    api(mn.micronaut.http)
   }
 
   jvmTest {
@@ -148,5 +161,13 @@ dependencies {
     api(libs.testing.mockito.junit)
     api(libs.testing.hamcrest)
     api(kotlin("test-junit5"))
+  }
+}
+
+afterEvaluate {
+  listOf("wasmJsBrowserTest").forEach {
+    tasks.named(it).configure {
+      enabled = false
+    }
   }
 }

@@ -23,4 +23,8 @@ import elide.http.api.HttpResponse as HttpResponseAPI
 public actual class HttpResponse : HttpMessage(), HttpResponseAPI {
   actual override val status: HttpStatus get() = TODO("Not yet implemented")
   actual override val trailers: HttpHeaders get() = TODO("Not yet implemented")
+
+  public actual companion object : HttpResponseAPI.Factory {
+
+  }
 }

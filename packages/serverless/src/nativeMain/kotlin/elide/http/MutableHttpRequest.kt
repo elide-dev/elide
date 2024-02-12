@@ -13,9 +13,9 @@
 
 package elide.http
 
-import elide.http.api.HttpMapping
 import elide.http.api.HttpMethod
 import elide.http.api.HttpString
+import elide.http.api.MutableHttpMapping
 import elide.net.api.URL
 import elide.http.api.MutableHttpRequest as HttpRequestAPI
 
@@ -26,5 +26,7 @@ public actual class MutableHttpRequest : MutableHttpMessage(), HttpRequestAPI {
   actual override var method: HttpMethod = TODO("Not yet implemented")
   actual override var url: URL get() = TODO("Not yet implemented")
   actual override var path: HttpString = "/"
-  actual override var query: HttpMapping<HttpString, HttpString> = MutableHttpMapping.empty()
+  actual override var query: MutableHttpMapping<HttpString, HttpString>
+    get() = TODO("Not yet implemented")
+    set(value) {}
 }

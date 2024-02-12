@@ -16,4 +16,16 @@ package elide.http
 /**
  *
  */
-public expect class HttpBytes
+public expect class HttpBytes {
+  /**
+   *
+   */
+  public val size: ULong
+
+  public companion object {
+    /**
+     *
+     */
+    public val EMPTY: HttpBytes
+  }
+}

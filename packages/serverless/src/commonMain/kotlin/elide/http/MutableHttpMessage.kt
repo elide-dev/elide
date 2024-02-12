@@ -23,12 +23,20 @@ import elide.http.api.MutableHttpMessage as HttpMessageAPI
  *
  */
 public abstract class MutableHttpMessage(
+  body: MutableHttpPayload? = null,
   override var version: HttpVersion = HTTP_2,
-  override var headers: HttpHeaders = HttpHeaders.empty(),
+  override val headers: MutableHttpHeaders = MutableHttpHeaders.create(),
 ) : HttpMessageAPI {
-  private val payload: AtomicRef<HttpPayload> = atomic(HttpPayload.Empty)
+  private val payload: AtomicRef<MutableHttpPayload> = atomic(MutableHttpPayload.Empty)
 
-  public var body: HttpPayload
-    get() = payload.value
-    set(value) { payload.value = value }
+  init {
+    when (body) {
+      null -> {}
+      else -> payload.value = body
+    }
+  }
+
+  override var body: MutableHttpPayload
+    get() = TODO("Not yet implemented")
+    set(value) { TODO("Not yet implemented") }
 }

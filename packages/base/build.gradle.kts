@@ -103,6 +103,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
   }
 
+  wasi {
+    api(npm("@js-joda/core", libs.versions.npm.joda.get()))
+  }
+
   native {
     api(libs.kotlinx.collections.immutable)
     api(libs.kotlinx.datetime)

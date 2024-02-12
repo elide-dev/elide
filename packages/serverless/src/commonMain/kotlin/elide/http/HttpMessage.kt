@@ -29,5 +29,5 @@ public abstract class HttpMessage(
 ) : HttpMessageAPI {
   private val payload: AtomicRef<HttpPayload> = atomic(HttpPayload.Empty)
 
-  public val body: HttpPayload get() = payload.value
+  override val body: HttpPayload get() = payload.value
 }

@@ -14,8 +14,14 @@
 package elide.http.api
 
 /**
+ * # HTTP Mapping
  *
+ * Describes the abstract concept of an "HTTP mapping," which is generally a map of key-value string pairs; keys are
+ * ordered by default and comparable on a case-insensitive basis.
+ *
+ * Examples of HTTP mappings include URL query parameters, HTTP headers, and so on.
+ *
+ * @see HttpHeaders for an example of a mutable HTTP mapping.
+ * @see MutableHttpMapping for the mutable form of this interface.
  */
-public interface HttpMapping<Key, Value> : Map<Key, Value> where Key: CharSequence, Value: CharSequence {
-  //
-}
+public interface HttpMapping<Key, Value> : Map<Key, Value> where Key: HttpText

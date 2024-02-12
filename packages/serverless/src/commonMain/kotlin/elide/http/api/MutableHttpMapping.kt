@@ -14,9 +14,15 @@
 package elide.http.api
 
 /**
+ * # HTTP Mapping: Mutable
  *
+ * Describes the abstract concept of an "HTTP mapping," in mutable form, which is generally a map of key-value string
+ * pairs; keys are ordered by default and comparable on a case-insensitive basis.
+ *
+ * Examples of HTTP mappings include URL query parameters, HTTP headers, and so on.
+ *
+ * @see HttpMapping for the immutable base form of this interface.
+ * @see MutableHttpHeaders for an example of a mutable HTTP mapping.
  */
 public interface MutableHttpMapping<Key, Value> : MutableMap<Key, Value>, HttpMapping<Key, Value>
-        where Key: HttpString, Value: HttpString {
-  //
-}
+        where Key: HttpText

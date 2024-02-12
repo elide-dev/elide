@@ -18,9 +18,13 @@ import elide.http.api.HttpStatus
 import elide.http.api.HttpResponse as HttpResponseAPI
 
 /**
- *
+ * # HTTP Response
  */
-public expect class HttpResponse : HttpMessage, HttpResponseAPI {
+public expect class HttpResponse private constructor() : HttpMessage, HttpResponseAPI {
   override val status: HttpStatus
   override val trailers: HttpHeaders
+
+  public companion object {
+    //
+  }
 }

@@ -16,5 +16,10 @@ package elide.http
 /**
  *
  */
-public actual class HttpBytes {
+public actual class HttpBytes private constructor(private val bytes: ByteArray) {
+  public actual val size: ULong get() = TODO("not yet implemented")
+
+  public actual companion object {
+    public actual val EMPTY: HttpBytes = HttpBytes(ByteArray(0))
+  }
 }

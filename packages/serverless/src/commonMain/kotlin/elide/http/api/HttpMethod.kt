@@ -14,8 +14,32 @@
 package elide.http.api
 
 /**
+ * # HTTP: Method
  *
+ * Describes the interface guaranteed by HTTP method description classes or objects; this includes standard HTTP methods
+ * described within Elide, and interfaces which allow extension for custom methods.
  */
 public interface HttpMethod {
-  //
+  /**
+   * Describes the name of the HTTP method; this should be the exact string value of the method, as it would appear in
+   * an HTTP request.
+   */
+  public val name: HttpString
+
+  /**
+   * Whether this operation, by spec, is allowed to carry a body payload.
+   */
+  public val body: Boolean
+
+  /**
+   * Whether this operation is expected to modify the state of the server or its resources; if `true`, the operation is
+   * considered a write operation, and is not expected to be idempotent by default.
+   */
+  public val write: Boolean
+
+  /**
+   * Whether this operation is expected to perform idempotent work; if `true`, the operation is considered safe for
+   * certain use cases.
+   */
+  public val idempotent: Boolean
 }

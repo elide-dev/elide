@@ -14,7 +14,6 @@
 package elide.http.api
 
 /**
- *
+ * # HTTP: Payload (Mutable)
  */
-public interface MutableHttpPayload {
-}
+public interface MutableHttpPayload : HttpPayload

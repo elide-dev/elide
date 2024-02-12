@@ -15,6 +15,9 @@ package elide.util
 
 /** Enumerates supported encodings and binds [Encoder] instances to each. */
 public enum class Encoding {
+  /** Plain UTF-8 encoding. */
+  UTF_8,
+
   /** Hex encoding. */
   HEX,
 

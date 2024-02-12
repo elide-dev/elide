@@ -13,9 +13,9 @@
 
 package elide.http
 
-import elide.http.api.HttpMapping
 import elide.http.api.HttpMethod
 import elide.http.api.HttpString
+import elide.http.api.MutableHttpMapping
 import elide.net.api.URL
 import elide.http.api.MutableHttpRequest as HttpRequestAPI
 
@@ -26,5 +26,5 @@ public expect class MutableHttpRequest : MutableHttpMessage, HttpRequestAPI {
   override var method: HttpMethod
   override var path: HttpString
   override var url: URL
-  override var query: HttpMapping<HttpString, HttpString>
+  override var query: MutableHttpMapping<HttpString, HttpString>
 }

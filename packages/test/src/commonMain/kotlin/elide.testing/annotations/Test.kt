@@ -13,9 +13,11 @@
 
 package elide.testing.annotations
 
+import kotlin.annotation.AnnotationTarget.*
+
 /**
  * TBD.
  */
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Target(ANNOTATION_CLASS, FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER)
 public expect annotation class Test

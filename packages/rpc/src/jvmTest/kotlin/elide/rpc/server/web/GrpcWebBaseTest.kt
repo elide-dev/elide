@@ -62,12 +62,12 @@ import elide.runtime.Logging
     service: String,
     method: String,
     payload: Message?,
-    overridePayload: ByteArray?,
+    overridePayload: ByteArray,
     contentType: GrpcWebContentType = GrpcWebContentType.BINARY,
   ): HttpRequest<RawRpcPayload> {
     // serialize the payload as a gRPC Web request
     val bytestream = ByteArrayOutputStream()
-    val serialized = overridePayload ?: if (payload != null) {
+    val serialized = if (overridePayload.isNotEmpty()) overridePayload else if (payload != null) {
       val rawMessageBytes = payload.toByteArray()
       val prefix = MessageFramer.getPrefix(rawMessageBytes, RpcSymbol.DATA)
       bytestream.use { stream ->
@@ -144,7 +144,7 @@ import elide.runtime.Logging
           service,
           method,
           payload,
-          null,
+          ByteArray(0),
           contentType,
         ),
         principal,

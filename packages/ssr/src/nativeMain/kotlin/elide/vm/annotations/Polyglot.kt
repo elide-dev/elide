@@ -16,4 +16,7 @@ package elide.vm.annotations
 /**
  * TBD
  */
+@Target(AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+
 public actual annotation class Polyglot

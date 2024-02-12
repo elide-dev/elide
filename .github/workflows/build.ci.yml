@@ -281,8 +281,6 @@ jobs:
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
-            -x ktlintCheck
-            -x ktlintKotlinScriptCheck
             -x apiCheck
             -Pelide.ci=true
             -PbuildSamples=false
@@ -303,8 +301,6 @@ jobs:
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
-            -x ktlintCheck
-            -x ktlintKotlinScriptCheck
             -x apiCheck
             -Pelide.ci=true
             -PbuildSamples=false
@@ -415,8 +411,6 @@ jobs:
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
-            -x ktlintCheck
-            -x ktlintKotlinScriptCheck
             -x apiCheck
             -x :packages:server:nativeTest
             -Pelide.ci=true

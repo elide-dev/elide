@@ -34,6 +34,7 @@
          <trust file="plexus-classworlds-.*" regex="true"/>
          <trust file="rhino-.*" regex="true"/>
          <trust file="spdx-gradle-plugin-.*" regex="true"/>
+         <trust file="bctls-jdk18on-.*" regex="true"/>
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="3FCFA3B530AFDCE3" reason="Key couldn't be downloaded from any key server"/>

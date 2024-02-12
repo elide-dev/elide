@@ -293,4 +293,4 @@ jobs:
 
       - name: "Deploy Site: GitHub Pages"
         id: site-deploy
-        uses: actions/deploy-pages@13b55b33dd8996121833dbc1db458c793a334630 # v3.0.1
+        uses: actions/deploy-pages@decdde0ac072f6dcbe43649d82d9c635fff5b4e4 # v4.0.4

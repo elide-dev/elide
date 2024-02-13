@@ -87,7 +87,7 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
     /** @return Java [java.time.Instant] from a regular Protocol Buffers [Timestamp]. */
     public fun Timestamp.toJavaInstant() = toKotlinInstant().toJavaInstant()
 
-    /** @return [ProtoTimestamp] instance from a regular Protocol Buffers [Timestamp]. */
+    /** @return Timestamp instance from a regular Protocol Buffers [Timestamp]. */
     public fun Timestamp.toModel() = FlatTimestamp(this)
 
     override fun empty(): FlatTimestamp = TimestampBuilder.newBuilder().build()

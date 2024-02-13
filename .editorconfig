@@ -1043,6 +1043,10 @@ ij_jsp_keep_indents_on_empty_lines = false
 ij_visual_guides = none
 ij_jspx_keep_indents_on_empty_lines = false
 
+[{*.kts}]
+max_line_length = 140
+ij_visual_guides = 140
+
 [{*.kt,*.kts}]
 ktlint_code_style = intellij_idea
 ktlint_experimental = disabled
@@ -1057,8 +1061,6 @@ ktlint_standard_trailing-comma-on-declaration-site = disabled
 ktlint_standard_no-multi-spaces = disabled
 ktlint_no-wildcard-imports = disabled
 ktlint_argument-list-wrapping = disabled
-max_line_length = 140
-ij_visual_guides = 140
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false

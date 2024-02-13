@@ -337,7 +337,10 @@ dependencies {
   implementation(projects.packages.test)
 
   implementation(libs.jansi)
-  implementation(libs.picocli.jline3)
+  implementation(libs.picocli.jline3) {
+    exclude(group = "org.jline", module = "jline")
+  }
+
   implementation(libs.picocli.jansi.graalvm)
   implementation(libs.jline.reader)
   implementation(libs.jline.console)
@@ -1236,7 +1239,7 @@ fun nativeCliImageArgs(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
   ).plus(
     if (debug && !release) debugFlags else if (release) releaseFlags else emptyList(),
-  ).filterNotNull().toList()
+  ).toList()
 
 graalvmNative {
   toolchainDetection = false

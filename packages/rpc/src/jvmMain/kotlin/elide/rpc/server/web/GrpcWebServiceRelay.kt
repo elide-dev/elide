@@ -41,9 +41,9 @@ import elide.runtime.Logging
  * Implementation of a [GrpcWebService] which calls the underlying gRPC service directly, in essence simulating an
  * incoming HTTP/2 gRPC request without engaging the TCP/IP stack.
  *
- * This connection manager leverages the [elide.server.rpc.RpcRuntime] to dispatch services over a stubbed "connection"
+ * This connection manager leverages the [elide.rpc.server.RpcRuntime] to dispatch services over a stubbed "connection"
  * without leaving the JVM. The default service relay implementation works based on reflection, much like gRPC itself.
- * gRPC stubs are loaded by qualified class name (but still must be registered with [elide.server.rpc.RpcRuntime]).
+ * gRPC stubs are loaded by qualified class name (but still must be registered with [elide.rpc.server.RpcRuntime]).
  *
  * Once a class is loaded, a stub is acquired and connected to the channel provided by the [runtime]. If the class in
  * question cannot be loaded, or a stub cannot be acquired, [IllegalStateException] is thrown. See [fulfillAsync] for

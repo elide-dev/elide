@@ -46,7 +46,7 @@ import elide.ssr.type.RequestState
  *
  * ## File scripts
  *
- * An external file can be loaded via the [file] series of methods. Note that these methods always pull from Host I/O,
+ * An external file can be loaded via the `file` series of methods. Note that these methods always pull from Host I/O,
  * as they are executed outside the guest VM. Once executing, a script can only "see" or access I/O according to the
  * applied guest I/O policy.
  */

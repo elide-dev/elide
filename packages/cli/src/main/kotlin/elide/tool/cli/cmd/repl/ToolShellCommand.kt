@@ -690,7 +690,7 @@ import elide.tool.project.ProjectManager
     val highlighter = langSyntax.get()
     val lineReader = lineReader.get()
 
-    if (!txt.isNullOrBlank()) {
+    if (txt.isNotBlank()) {
       if (highlighter != null && lineReader != null) {
         lineReader.printAbove(highlighter.highlight(txt))
       } else {

@@ -36,7 +36,7 @@ import elide.runtime.plugins.jvm.interop.loadGuestClass
     delegate.invokeMember("define", name, bytecode)
   }
 
-  /** Load a class from the guest context by [Z]. */
+  /** Load a class from the guest context by [name]. */
   fun loadClass(name: String): PolyglotValue {
     return delegate.invokeMember("loadClass", name)
   }

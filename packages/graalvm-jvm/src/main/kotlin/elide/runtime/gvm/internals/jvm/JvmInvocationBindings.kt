@@ -17,7 +17,6 @@ import org.graalvm.polyglot.Value
 import java.util.*
 import elide.runtime.gvm.InvocationBindings
 import elide.runtime.gvm.internals.GVMInvocationBindings
-import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 
 /**
  * TBD.
@@ -45,7 +44,7 @@ internal class JvmInvocationBindings (
   /**
    * ## Entrypoint info.
    *
-   * Used as a key in a mapping of JVM entrypoints to their resolved [GuestValue] instances.
+   * Used as a key in a mapping of JVM entrypoints to their resolved [Value] instances.
    *
    * @param type JVM entrypoint type specified by this info key.
    * @param name Name of the function, or entrypoint, etc. Defaults to `null` (anonymous).

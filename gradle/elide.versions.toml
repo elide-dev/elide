@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0.0-alpha7"
+elide = "1.0.0-alpha8"
 kotlin-sdk = "2.0.0-Beta3"
 kotlin-language = "2.0"
 jacoco = "0.8.11"

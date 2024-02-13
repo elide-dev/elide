@@ -22,13 +22,13 @@ object Elide {
   const val majorVersion = "1.0.0"
 
   /** Major library version tag. */
-  const val versionTag = "alpha7"
+  const val versionTag = "alpha8"
 
   /** Version string for the library. */
   const val version = "$majorVersion-$versionTag"
 
   /** Latest plugin version. */
-  const val pluginVersion = "1.0.0-beta27"
+  const val pluginVersion = "1.0.0-beta28"
 
   /** Maven group shared by Elide artifacts. */
   const val group = "dev.elide"

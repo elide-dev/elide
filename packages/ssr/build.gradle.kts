@@ -74,7 +74,7 @@ dependencies {
 
   js {
     // KT-57235: fix for atomicfu-runtime error
-    api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:2.0.0-Beta3")
+    api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:2.0.255-SNAPSHOT")
   }
 }
 

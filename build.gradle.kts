@@ -487,6 +487,46 @@ val copyCoverageReports by tasks.registering(Copy::class) {
   into(layout.projectDirectory.dir(".qodana/code-coverage"))
 }
 
+val quicktest: TaskProvider<Task> by tasks.registering {
+  description = "Run all quick tests"
+  group = "Verification"
+  dependsOn("jvmTest")
+}
+
+val precheck: TaskProvider<Task> by tasks.registering {
+  description = "Run all pre-check tasks"
+  group = "Verification"
+
+  dependsOn(
+    "quicktest",
+    "koverVerify",
+    "apiCheck",
+  )
+}
+
+val format: TaskProvider<Task> by tasks.registering {
+  description = "Run all formatting tasks"
+  group = "Verification"
+
+  val spotlessApply: Task by tasks
+  dependsOn(spotlessApply)
+}
+
+tasks.check.configure {
+  val apiCheck: Task by tasks
+  val koverVerify: Task by tasks
+  val spotlessCheck: Task by tasks
+
+  dependsOn(
+    quicktest,
+    precheck,
+    koverVerify,
+    apiCheck,
+    spotlessCheck,
+    detekt,
+  )
+}
+
 tasks.koverVerify.configure {
   finalizedBy(copyCoverageReports)
 }

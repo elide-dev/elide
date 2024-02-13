@@ -26,10 +26,10 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlin.test.*
 import elide.server.StreamedAsset
+import elide.testing.annotations.TestCase
 
 /** Tests general asset serving features, like ETags/conditional requests and compression variants. */
-@Ignore
-@MicronautTest class ServerAssetServingTest {
+@TestCase class ServerAssetServingTest {
   companion object {
     private const val assetPrefix = "/_/assets"
     private const val sampleStylesheet = "$assetPrefix/753eb23d.css"
@@ -81,7 +81,7 @@ import elide.server.StreamedAsset
     assertNotNull(index)
   }
 
-  @Test fun testNonConditional() {
+  @Test @Ignore fun testNonConditional() {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertEquals(200, response.status.code)
     assertAsset(
@@ -90,7 +90,7 @@ import elide.server.StreamedAsset
     )
   }
 
-  @Test fun testEtags() {
+  @Test @Ignore fun testEtags() {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
       AssetType.STYLESHEET,
@@ -104,7 +104,7 @@ import elide.server.StreamedAsset
     assertTrue(etag.endsWith("\""))
   }
 
-  @Test fun testConditionalRequestETag() {
+  @Test @Ignore fun testConditionalRequestETag() {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
       AssetType.STYLESHEET,
@@ -192,6 +192,7 @@ import elide.server.StreamedAsset
 
   @CsvSource("gzip", "br", "deflate")
   @ParameterizedTest
+  @Ignore
   fun testCompressionSupported(encodingName: String) {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
@@ -209,7 +210,7 @@ import elide.server.StreamedAsset
     )
   }
 
-  @Test fun testUnsupportedCompression() {
+  @Test @Ignore fun testUnsupportedCompression() {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
       AssetType.STYLESHEET,

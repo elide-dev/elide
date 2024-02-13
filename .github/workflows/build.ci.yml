@@ -106,11 +106,12 @@ jobs:
         machine:
           - ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
         provenance: [true]
-        include:
-          - os: macOS
-            mode: Strict
-            machine: macos-13
-            provenance: false
+        # macOS build is disabled.
+        #  include:
+        #    - os: macOS
+        #      mode: Strict
+        #      machine: macos-13
+        #      provenance: false
 
     name: "Build (${{ matrix.os }})"
     runs-on: ${{ matrix.machine }}
@@ -487,13 +488,11 @@ jobs:
             arch: amd64
             labs: false
             tag: linux-amd64
-            # macOS build is disabled.
-            #
-            # - os: macOS
-            #   runner: macos-13-xl
-            #   arch: amd64
-            #   labs: false
-            #   tag: darwin-amd64
+          - os: macOS
+            runner: macos-13-xl
+            arch: amd64
+            labs: false
+            tag: darwin-amd64
 
     steps:
       - name: Harden Runner

@@ -58,7 +58,7 @@ import java.util.*
         }
       }
     } catch (thr: Throwable) {
-      logging.error("Failed to load asset manifest", thr)
+      logging.debug("Failed to load asset manifest", thr)
       null
     }
     return if (result == null) {

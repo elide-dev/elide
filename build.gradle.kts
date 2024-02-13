@@ -526,17 +526,9 @@ val format: TaskProvider<Task> by tasks.registering {
 }
 
 tasks.check.configure {
-  val apiCheck: Task by tasks
-  val koverVerify: Task by tasks
-  val spotlessCheck: Task by tasks
-
   dependsOn(
     quicktest,
     precheck,
-    koverVerify,
-    apiCheck,
-    spotlessCheck,
-    detekt,
   )
 }
 

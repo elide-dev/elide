@@ -77,10 +77,13 @@ import elide.tool.io.RuntimeWorkdirManager
 @Suppress("MemberVisibilityCanBePrivate")
 @Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
   companion object {
-    init {
-//      Security.insertProviderAt(OpenSSLProvider(), 0)
-//      Security.insertProviderAt(BouncyCastleProvider(), 1)
+    /** Name of the tool. */
+    const val TOOL_NAME: String = "elide"
 
+    // Maps exceptions to process exit codes.
+    private val exceptionMapper = DefaultErrorHandler.acquire()
+
+    @JvmStatic private fun initializeNatives() {
       // load natives
       NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
         listOf(
@@ -95,12 +98,6 @@ import elide.tool.io.RuntimeWorkdirManager
       }
     }
 
-    /** Name of the tool. */
-    const val TOOL_NAME: String = "elide"
-
-    // Maps exceptions to process exit codes.
-    private val exceptionMapper = DefaultErrorHandler.acquire()
-
     @JvmStatic private fun initializeTerminal() {
       org.fusesource.jansi.AnsiConsole.systemInstall()
     }
@@ -114,8 +111,11 @@ import elide.tool.io.RuntimeWorkdirManager
 
     // Install static classes/perform static initialization.
     private fun installStatics(op: () -> Int): Int {
+      Security.insertProviderAt(BouncyCastleProvider(), 0)
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
+      initializeNatives()
+
       val runner = {
         if (!org.fusesource.jansi.AnsiConsole.isInstalled()) {
           initializeTerminal()

@@ -36,6 +36,10 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
 
 /** Main implementation of the runtime working directory manager. */
 internal class RuntimeWorkdirManager : WorkdirManager {
+  internal object SingletonManager {
+    @JvmStatic val singleton: AtomicReference<RuntimeWorkdirManager> = AtomicReference(null)
+  }
+
   internal companion object {
     private const val nativesDir = "native"
     private const val tempDir = "temp"
@@ -76,14 +80,12 @@ internal class RuntimeWorkdirManager : WorkdirManager {
         .absolute()
     }
 
-    private val singleton: AtomicReference<RuntimeWorkdirManager> = AtomicReference(null)
-
     /** @return Created or acquired [RuntimeWorkdirManager] singleton. */
     @JvmStatic fun acquire(): RuntimeWorkdirManager = synchronized(this) {
-      if (singleton.get() == null) {
-        singleton.set(RuntimeWorkdirManager())
+      if (SingletonManager.singleton.get() == null) {
+        SingletonManager.singleton.set(RuntimeWorkdirManager())
       }
-      singleton.get()
+      SingletonManager.singleton.get()
     }
   }
 

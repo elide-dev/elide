@@ -44,7 +44,7 @@ import elide.runtime.gvm.internals.GuestVFS
  */
 internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   config: EffectiveGuestVFSConfig,
-  private val backing: FileSystem,
+  protected val backing: FileSystem,
   private val activeWorkingDirectory: AtomicReference<Path> = AtomicReference(Path.of(config.workingDirectory)),
 ) : GuestVFS, AbstractBaseVFS<VFS>(config) where VFS: AbstractBaseVFS<VFS> {
   internal companion object {
@@ -69,9 +69,8 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
 
   // Debug log messages for the current VFS implementation.
   private fun debugLog(message: () -> String) {
-    val logger = logging()
-    if (logger.isEnabled(LogLevel.DEBUG)) {
-      logger.debug("VFS: ${message()}")
+    if (logging.isEnabled(LogLevel.DEBUG)) {
+      logging.debug("VFS: ${message()}")
     }
   }
 
@@ -148,19 +147,16 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   }
 
   override fun createDirectory(dir: Path, vararg attrs: FileAttribute<*>) {
-    debugLog {
-      "Creating directory at path: '$dir'"
+    debugLog { "Creating directory at path: '$dir'" }
+    enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, scope = AccessScope.DIRECTORY, path = dir)
+
+    try {
+      backing.provider().createDirectory(dir, *attrs)
+    } catch (thr: Throwable) {
+      val stacktrace = thr.printStackTrace()
+      logging.error("Error while creating directory: $dir\n$stacktrace")
+      throw thr
     }
-    enforce(
-      type = AccessType.WRITE,
-      domain = AccessDomain.GUEST,
-      scope = AccessScope.DIRECTORY,
-      path = dir,
-    )
-    backing.provider().createDirectory(
-      dir,
-      *attrs
-    )
   }
 
   override fun newByteChannel(
@@ -168,52 +164,32 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     options: MutableSet<out OpenOption>,
     vararg attrs: FileAttribute<*>
   ): SeekableByteChannel {
-    debugLog {
-      "Opening byte channel for file at path: '$path'"
+    debugLog { "Opening byte channel for file at path: '$path'" }
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, scope = AccessScope.FILE, path = path)
+
+    return try {
+      backing.provider().newByteChannel(
+        path,
+        options,
+        *attrs
+      )
+    } catch (thr: Throwable) {
+      val stacktrace = thr.printStackTrace()
+      logging.error("Error while reading embedded VFS file: $path\n$stacktrace")
+      throw thr
     }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      scope = AccessScope.FILE,
-      path = path,
-    )
-    return backing.provider().newByteChannel(
-      path,
-      options,
-      *attrs
-    )
   }
 
   override fun newDirectoryStream(dir: Path, filter: DirectoryStream.Filter<in Path>): DirectoryStream<Path> {
-    debugLog {
-      "Streaming directory entries at path: '$dir'"
-    }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      scope = AccessScope.DIRECTORY,
-      path = dir,
-    )
-    return backing.provider().newDirectoryStream(
-      dir,
-      filter,
-    )
+    debugLog { "Streaming directory entries at path: '$dir'" }
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, scope = AccessScope.DIRECTORY, path = dir)
+    return backing.provider().newDirectoryStream(dir, filter)
   }
 
   override fun readAttributes(path: Path, attributes: String, vararg options: LinkOption): MutableMap<String, Any> {
-    debugLog {
-      "Reading attributes for file at path: '$path'"
-    }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      path = path,
-    )
-    return backing.provider().readAttributes(
-      path,
-      attributes,
-      *options
-    ).apply {
+    debugLog { "Reading attributes for file at path: '$path'" }
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = path)
+    return backing.provider().readAttributes(path, attributes, *options).apply {
       if (containsKey("ino")) {
         // fix: convert `ino` to `long`, which gvm filesystems expect
         this["ino"] = when (val ino = this["ino"]) {
@@ -225,200 +201,91 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   }
 
   override fun setAttribute(path: Path, attribute: String, value: Any, vararg options: LinkOption) {
-    debugLog {
-      "Setting attribute '$attribute' for file at path: '$path' (value: '$value', options: '$options')"
-    }
-    enforce(
-      type = AccessType.WRITE,
-      domain = AccessDomain.GUEST,
-      path = path,
-    )
-    return backing.provider().setAttribute(
-      path,
-      attribute,
-      value,
-      *options
-    )
+    debugLog { "Setting attribute '$attribute' for file at path: '$path' (value: '$value', options: '$options')" }
+    enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, path = path)
+    return backing.provider().setAttribute(path, attribute, value, *options)
   }
 
   override fun copy(source: Path, target: Path, vararg options: CopyOption?) {
-    debugLog {
-      "Copying from '$source' -> '$target' (options: $options)"
-    }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      path = source,
-    )
-    enforce(
-      type = AccessType.WRITE,
-      domain = AccessDomain.GUEST,
-      path = target,
-    )
-    backing.provider().copy(
-      source,
-      target,
-      *options
-    )
+    debugLog { "Copying from '$source' -> '$target' (options: $options)" }
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = source)
+    enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, path = target)
+    backing.provider().copy(source, target, *options)
   }
 
   override fun move(source: Path, target: Path, vararg options: CopyOption?) {
-    debugLog {
-      "Moving from '$source' -> '$target' (options: $options)"
-    }
-    enforce(
-      type = EnumSet.of(AccessType.READ, AccessType.DELETE),
-      domain = AccessDomain.GUEST,
-      path = source,
-    )
-    enforce(
-      type = AccessType.WRITE,
-      domain = AccessDomain.GUEST,
-      path = target,
-    )
-    backing.provider().move(
-      source,
-      target,
-      *options
-    )
+    debugLog { "Moving from '$source' -> '$target' (options: $options)" }
+    enforce(type = EnumSet.of(AccessType.READ, AccessType.DELETE), domain = AccessDomain.GUEST, path = source)
+    enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, path = target)
+    backing.provider().move(source, target, *options)
   }
 
   override fun delete(path: Path) {
-    debugLog {
-      "Deleting filesystem entry at path: '$path'"
-    }
-    enforce(
-      type = AccessType.DELETE,
-      domain = AccessDomain.GUEST,
-      path = path,
-    )
+    debugLog { "Deleting filesystem entry at path: '$path'" }
+    enforce(type = AccessType.DELETE, domain = AccessDomain.GUEST, path = path)
     backing.provider().delete(path)
   }
 
   override fun createLink(link: Path, existing: Path) {
-    debugLog {
-      "Creating hard-link from '$link' -> '$existing'"
-    }
-    enforce(
-      type = AccessType.WRITE,
-      domain = AccessDomain.GUEST,
-      path = link,
-    )
-    return backing.provider().createLink(
-      link,
-      existing,
-    )
+    debugLog { "Creating hard-link from '$link' -> '$existing'" }
+    enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, path = link)
+    return backing.provider().createLink(link, existing)
   }
 
   override fun createSymbolicLink(link: Path, target: Path, vararg attrs: FileAttribute<*>?) {
-    debugLog {
-      "Creating soft-link from '$link' -> '$target'"
-    }
-    enforce(
-      type = AccessType.WRITE,
-      domain = AccessDomain.GUEST,
-      path = link,
-    )
-    return backing.provider().createLink(
-      link,
-      target,
-    )
+    debugLog { "Creating soft-link from '$link' -> '$target'" }
+    enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, path = link)
+    return backing.provider().createSymbolicLink(link, target)
   }
 
   override fun readSymbolicLink(link: Path): Path {
-    debugLog {
-      "Reading soft-link at '$link'"
-    }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      path = link,
-    )
+    debugLog { "Reading soft-link at '$link'" }
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = link)
     return backing.provider().readSymbolicLink(link)
   }
 
   override fun setCurrentWorkingDirectory(currentWorkingDirectory: Path) {
-    debugLog {
-      "Setting CWD to: '$currentWorkingDirectory'"
-    }
+    debugLog { "Setting CWD to: '$currentWorkingDirectory'" }
     activeWorkingDirectory.set(currentWorkingDirectory)
   }
 
   override fun getMimeType(path: Path): String? {
-    debugLog {
-      "Getting MIME type for file at path: '$path'"
-    }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      path = path,
-    )
+    debugLog { "Getting MIME type for file at path: '$path'" }
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = path)
     return Files.probeContentType(path)
   }
 
   override fun getEncoding(path: Path): Charset {
-    debugLog {
-      "Fetching encoding for path: '$path'"
-    }
+    debugLog { "Fetching encoding for path: '$path'" }
     return StandardCharsets.UTF_8  // TODO(sgammon): make this configurable or resolve from tree
   }
 
   override fun getTempDirectory(): Path {
-    debugLog {
-      "Fetching temp directory path"
-    }
+    debugLog { "Fetching temp directory path" }
     TODO("not yet implemented")
   }
 
   override fun isSameFile(path1: Path, path2: Path, vararg options: LinkOption): Boolean {
-    debugLog {
-      "Checking if '$path1' and '$path2' are the same file"
-    }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      path = path1,
-    )
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.GUEST,
-      path = path2,
-    )
+    debugLog { "Checking if '$path1' and '$path2' are the same file" }
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = path1)
+    enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = path2)
+
     // @TODO(sgammon): what to do about `options` here?
-    return backing.provider().isSameFile(
-      path1,
-      path2,
-    )
+    return backing.provider().isSameFile(path1, path2)
   }
 
   override fun readStream(path: Path, vararg options: OpenOption): InputStream {
-    debugLog {
-      "Performing host-side read for path '$path' (options: '$options')"
-    }
-    enforce(
-      type = AccessType.READ,
-      domain = AccessDomain.HOST,
-      path = path,
-    )
-    return backing.provider().newInputStream(
-      path,
-      *options
-    )
+    require(path.toString().isNotBlank()) { "Cannot read from blank path" }
+    debugLog { "Performing host-side read for path '$path' (options: '$options')" }
+    enforce(type = AccessType.READ, domain = AccessDomain.HOST, path = path)
+    return backing.provider().newInputStream(path, *options)
   }
 
   override fun writeStream(path: Path, vararg options: OpenOption): OutputStream {
-    debugLog {
-      "Performing host-side write for path '$path' (options: '$options')"
-    }
-    enforce(
-      type = AccessType.WRITE,
-      domain = AccessDomain.HOST,
-      path = path,
-    )
-    return backing.provider().newOutputStream(
-      path,
-      *options
-    )
+    require(path.toString().isNotBlank()) { "Cannot write to blank path" }
+    debugLog { "Performing host-side write for path '$path' (options: '$options')" }
+    enforce(type = AccessType.WRITE, domain = AccessDomain.HOST, path = path)
+    return backing.provider().newOutputStream(path, *options)
   }
 
   override fun checkPolicy(request: AccessRequest): AccessResponse {

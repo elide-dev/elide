@@ -16,6 +16,7 @@ package elide.runtime.core.internals.graalvm
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotAccess
@@ -72,7 +73,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
-  private fun createContext(): GraalVMContext {
+  private fun createContext(cfg: Builder.() -> Unit, finalizer: Builder.() -> Context = { build() }): GraalVMContext {
     val contextHostAccess = PolyglotHostAccess.newBuilder(PolyglotHostAccess.ALL)
       .allowImplementations(Proxy::class.java)
       .allowAccessAnnotatedBy(PolyglotHostAccess.Export::class.java)
@@ -103,14 +104,14 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     lifecycle.emit(EngineLifecycleEvent.ContextCreated, builder)
 
     // build the context and notify event listeners
-    val context = GraalVMContext(builder.build())
+    val context = GraalVMContext(finalizer.invoke(builder.apply { cfg.invoke(builder) }))
     lifecycle.emit(EngineLifecycleEvent.ContextInitialized, context)
 
     return context
   }
 
-  override fun acquire(): PolyglotContext {
-    return createContext()
+  override fun acquire(cfg: Builder.() -> Unit): PolyglotContext {
+    return createContext(cfg)
   }
 
   internal companion object {

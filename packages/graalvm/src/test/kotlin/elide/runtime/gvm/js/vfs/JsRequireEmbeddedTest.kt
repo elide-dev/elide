@@ -27,7 +27,7 @@ import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
 /** Tests for CJS and NPM-style require calls that resolve via embedded VFS I/O. */
-@TestCase @Ignore internal class JsRequireEmbeddedTest : AbstractJsTest() {
+@TestCase internal class JsRequireEmbeddedTest : AbstractJsTest() {
   /** @return Empty VFS instance for testing. */
   private fun emptyEmbeddedFs() = EmbeddedGuestVFS.writable() as EmbeddedGuestVFSImpl
 

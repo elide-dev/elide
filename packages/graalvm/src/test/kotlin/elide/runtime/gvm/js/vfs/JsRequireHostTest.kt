@@ -29,15 +29,14 @@ import elide.testing.annotations.TestCase
 import elide.util.UUID
 
 /** Tests for CJS and NPM-style require calls that resolve via host-backed I/O. */
-@TestCase @Ignore internal class JsRequireHostTest : AbstractJsTest() {
-  /** @return Empty VFS instance for testing. */
-  private fun tempHostFs() = HostVFS.acquire() as HostVFSImpl
+@TestCase internal class JsRequireHostTest : AbstractJsTest() {
   private val tempdir = Files.createTempDirectory("elide-vfs-${UUID.random()}").toAbsolutePath().toString()
+  private fun tempHostFs() = HostVFS.scopedTo(tempdir, writable = true) as HostVFSImpl
 
   /** Test: JavaScript `require` call that loads a file from the host file-system. */
   @Test fun testRequireHostFs() {
     val fs = tempHostFs()
-    val testPath = fs.getPath(tempdir, "test.js")
+    val testPath = fs.getPath("test.js")
     fs.writeStream(testPath).use { stream ->
       stream.write("module.exports = {sample: 'Hello, CJS!'};".toByteArray())
     }
@@ -48,7 +47,7 @@ import elide.util.UUID
     }
     assertEquals("module.exports = {sample: 'Hello, CJS!'};", exampleCJSContents.trim())
 
-    withVFS(fs) {
+    withHostFs(fs) {
       // language=javascript
       """
         const testmod = require("./test.js");
@@ -59,10 +58,10 @@ import elide.util.UUID
   }
 
   /** Test: JavaScript `require` call that loads a file from a nested directory within a host-backed file-system. */
-  @Test fun testRequireHostFsNested() {
+  @Test @Ignore fun testRequireHostFsNested() {
     val fs = tempHostFs()
-    fs.createDirectory(fs.getPath(tempdir, "testing"))
-    val testPath = fs.getPath(tempdir, "testing/test.js")
+    fs.createDirectory(fs.getPath("testing"))
+    val testPath = fs.getPath("testing/test.js")
     fs.writeStream(testPath).use { stream ->
       stream.write("module.exports = {sample: 'Hello, CJS!'};".toByteArray())
     }
@@ -73,7 +72,7 @@ import elide.util.UUID
     }
     assertEquals("module.exports = {sample: 'Hello, CJS!'};", exampleCJSContents.trim())
 
-    withVFS(fs) {
+    withHostFs(fs) {
       // language=javascript
       """
         const testmod = require("./testing/test.js");
@@ -84,13 +83,13 @@ import elide.util.UUID
   }
 
   /** Test: JavaScript `require` call that loads a file from the Node modules path. */
-  @Test fun testRequireHostFsNpmModules() {
+  @Test @Ignore fun testRequireHostFsNpmModules() {
     val fs = tempHostFs()
-    fs.createDirectory(fs.getPath(tempdir, "node_modules"))
-    fs.createDirectory(fs.getPath(tempdir, "node_modules/testing"))
+    fs.createDirectory(fs.getPath("node_modules"))
+    fs.createDirectory(fs.getPath("node_modules/testing"))
 
-    val testPath = fs.getPath(tempdir, "node_modules/testing/test.js")
-    val configPath = fs.getPath(tempdir, "node_modules/testing/package.json")
+    val testPath = fs.getPath("node_modules/testing/test.js")
+    val configPath = fs.getPath("node_modules/testing/package.json")
 
     fs.writeStream(testPath).use { stream ->
       stream.write("module.exports = {sample: 'Hello, CJS!'};".toByteArray())
@@ -111,7 +110,7 @@ import elide.util.UUID
     }
     assertEquals("module.exports = {sample: 'Hello, CJS!'};", exampleCJSContents.trim())
 
-    withVFS(fs) {
+    withHostFs(fs) {
       // language=javascript
       """
         const testmod = require("testing");

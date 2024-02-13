@@ -41,7 +41,9 @@ internal class CompoundVFSImpl (
     it.allowsHostSocketAccess()
   }
 
-  override fun logging(): Logger = primary.logging()
+  override val logging: Logger by lazy {
+    primary.logging
+  }
 
   override fun close() {
     TODO("")

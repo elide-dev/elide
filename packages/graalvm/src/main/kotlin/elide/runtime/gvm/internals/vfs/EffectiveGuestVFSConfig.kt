@@ -14,6 +14,7 @@
 package elide.runtime.gvm.internals.vfs
 
 import java.net.URI
+import java.nio.file.Path
 
 /**
  * # VFS: Effective Configuration
@@ -38,6 +39,7 @@ public data class EffectiveGuestVFSConfig internal constructor (
   val bundle: List<URI> = emptyList(),
   val root: String = DEFAULT_ROOT,
   val workingDirectory: String = DEFAULT_CWD,
+  val scope: Path? = null,
 ) {
   internal companion object {
     private const val DEFAULT_READ_ONLY = true

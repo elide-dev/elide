@@ -15,13 +15,16 @@
 
 package elide.runtime.gvm.js
 
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.io.FileSystem
+import org.graalvm.polyglot.io.IOAccess
 import org.intellij.lang.annotations.Language
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.withContext
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
@@ -210,7 +213,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
       this,
       bind,
       bindUtils = true,
-      esm = false,
+      esm = true,
       op,
     )
   }
@@ -223,25 +226,59 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
       this,
       bind = true,
       bindUtils = true,
-      esm = false,
+      esm = true,
       op,
     )
+  }
+
+  // Configure a context and then return a guest test execution bound to it.
+  protected fun withHostFs(op: PolyglotContext.() -> String): GuestTestExecution {
+    return GuestTestExecution(withCustomContext {
+      allowIO(IOAccess.ALL)
+    }) {
+      executeGuestInternal(
+        this,
+        bind = true,
+        bindUtils = true,
+        esm = true,
+        op,
+      )
+    }
+  }
+
+  // Configure a context and then return a guest test execution bound to it.
+  protected fun withHostFs(fs: FileSystem, op: PolyglotContext.() -> String): GuestTestExecution {
+    return GuestTestExecution(withCustomContext {
+      allowIO(IOAccess.newBuilder()
+        .fileSystem(fs)
+        .build())
+    }) {
+      executeGuestInternal(
+        this,
+        bind = true,
+        bindUtils = true,
+        esm = true,
+        op,
+      )
+    }
   }
 
   // TODO(@darlvd): rewrite tests using this to use a common FS
   // Configure a context and then return a guest test execution bound to it.
   protected fun withVFS(fs: FileSystem, op: PolyglotContext.() -> String): GuestTestExecution {
-    // val conf: (Context.Builder.() -> Unit) = { fileSystem(fs).build() }
-    //return GuestTestExecution(conf, { withContext(op, conf) }) {
-    //  executeGuestInternal(
-    //    this,
-    //    bind = true,
-    //    bindUtils = true,
-    //    esm = false,
-    //    op,
-    //  )
-    //}
-    error("not supported")
+    return GuestTestExecution(withCustomContext {
+      allowIO(IOAccess.newBuilder()
+        .fileSystem(fs)
+        .build())
+    }) {
+      executeGuestInternal(
+        this,
+        bind = true,
+        bindUtils = true,
+        esm = true,
+        op,
+      )
+    }
   }
 
   /** Proxy which wires together a dual-test execution (in the guest and on the host). */

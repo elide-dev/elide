@@ -12,10 +12,11 @@
   -->
 
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%cyan(%d{HH:mm:ss.SSS}) %white([%logger:%thread]) %highlight(%-5level) %magenta(sample) - %msg%n</pattern>
-        </encoder>
+    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+      <target>System.err</target>
+      <encoder>
+          <pattern>%cyan(%d{HH:mm:ss.SSS}) %white([%logger:%thread]) %highlight(%-5level) %magenta(sample) - %msg%n</pattern>
+      </encoder>
     </appender>
     <appender name="NO_OP" class="ch.qos.logback.core.helpers.NOPAppender">
     </appender>
@@ -35,7 +36,7 @@
     <logger name="io.micronaut.context.condition" level="off" />
 
     <!-- Root Logger -->
-    <root level="trace">
-      <appender-ref ref="NO_OP" />
+    <root level="info">
+      <appender-ref ref="STDERR" />
     </root>
 </configuration>

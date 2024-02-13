@@ -15,6 +15,7 @@
          <trust file=".*-sources[.]jar" regex="true"/>
          <trust file="^.*.pom$" regex="true"/>
          <trust file="node-.*" regex="true"/>
+         <trust file="^gradle-.*[.]zip$" regex="true"/>
       </trusted-artifacts>
       <trusted-keys>
          <trusted-key id="015479E1055341431B4545AB72475FD306B9CAB7">

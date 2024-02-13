@@ -181,6 +181,12 @@ jobs:
             -x nativeTest
             -x nativeCompile
             -x nativeOptimizedCompile
+            -x shadowJar
+            -x buildLayers
+            -x optimizedBuildLayers
+            -x optimizedJitJarAll
+            -x optimizedDistTar
+            -x optimizedDistZip
             --scan
             --no-daemon
             --warning-mode=none
@@ -350,6 +356,17 @@ jobs:
           flags: jvm,plugin,gradle
           fail_ci_if_error: false
           verbose: true
+      - name: "Check: Qodana Scan"
+        uses: JetBrains/qodana-action@main
+        continue-on-error: true
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+      - name: "Report: SARIF Upload"
+        uses: github/codeql-action/upload-sarif@v3
+        continue-on-error: true
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
 
   ##
   ## Job: Testsuite (Native)

@@ -13,12 +13,10 @@
 
 package elide.tool.control
 
-import elide.runtime.gvm.internals.GraalVMGuest
-import elide.runtime.gvm.internals.GraalVMGuest.*
+import elide.runtime.gvm.internals.GraalVMGuest.JVM
 
 /**
  * TBD.
  */
-class JvmScriptEngine : AbstractScriptEngineFactory() {
-  override val engine: GraalVMGuest get() = JVM
-}
+class JvmScriptEngine : AbstractScriptEngineFactory(JVM)
+

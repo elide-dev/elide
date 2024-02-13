@@ -1,13 +1,7 @@
 name: Qodana
 on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
-      - v3
-      - stable
-      - "releases/*"
+  workflow_dispatch: {}
+  workflow_call: {}
 
 jobs:
   qodana:
@@ -19,26 +13,23 @@ jobs:
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
-      - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          components: "native-image,js,wasm"
           distribution: 'graalvm'
-          java-version: 20
+          java-version: 21
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Check: Qodana Scan"
-        uses: JetBrains/qodana-action@a8363b702c2d2d49a77620bcd10541686df21307 # main
+        uses: JetBrains/qodana-action@main
         env:
-          GRADLE_ARGS: -PstrictMode=false -PbuildDocs=false -PbuildSamples=false
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

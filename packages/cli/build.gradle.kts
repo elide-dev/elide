@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 import elide.internal.conventions.kotlin.KotlinTarget
 import org.jetbrains.kotlin.konan.target.HostManager
-import java.io.Writer
 
 plugins {
   java
@@ -337,8 +336,11 @@ dependencies {
   implementation(projects.packages.test)
 
   implementation(libs.jansi)
+
+  @Suppress("VulnerableLibrariesLocal", "VulnerableLibrariesGlobal")
   implementation(libs.picocli.jline3) {
     exclude(group = "org.jline", module = "jline")
+    exclude(group = "org.jline", module = "jline-groovy")
   }
 
   implementation(libs.picocli.jansi.graalvm)

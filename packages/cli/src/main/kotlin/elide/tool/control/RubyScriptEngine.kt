@@ -13,13 +13,9 @@
 
 package elide.tool.control
 
-import elide.runtime.gvm.internals.GraalVMGuest
-import elide.runtime.gvm.internals.GraalVMGuest.PYTHON
 import elide.runtime.gvm.internals.GraalVMGuest.RUBY
 
 /**
  * TBD.
  */
-class RubyScriptEngine : AbstractScriptEngineFactory() {
-  override val engine: GraalVMGuest get() = RUBY
-}
+class RubyScriptEngine : AbstractScriptEngineFactory(RUBY)

@@ -125,6 +125,12 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
         useVersion(Versions.GRPC)
         because("pin grpc")
       }
+
+      // process dependency pins: jline
+      if (requested.group == "org.jline") {
+        useVersion(Versions.JLINE)
+        because("pin jline")
+      }
     }
 
     if (gvmConfigurations.contains(this@all.name) && isGraalVm) {

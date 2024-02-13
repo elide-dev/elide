@@ -32,7 +32,7 @@ import java.nio.ByteBuffer;
  * Utilities for dealing with native byte arrays.
  */
 class NativeBytes {
-  private static boolean DEFAULT_WALK_BYTEARRAY = false;
+  private static final boolean DEFAULT_WALK_BYTEARRAY = false;
 
   private NativeBytes() { /* Static use only. */ }
 

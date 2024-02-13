@@ -24,12 +24,10 @@ import elide.runtime.gvm.internals.GraalVMGuest
 /**
  * TBD.
  */
-abstract class AbstractScriptEngineFactory : ScriptEngineFactory {
+abstract class AbstractScriptEngineFactory protected constructor (val engine: GraalVMGuest) : ScriptEngineFactory {
   companion object {
     private val polyglotEngine = Engine.newBuilder().build()
   }
-
-  abstract val engine: GraalVMGuest
 
   private val languageId: String = engine.engine
   private val language = polyglotEngine.languages[languageId]

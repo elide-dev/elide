@@ -263,7 +263,7 @@ buildCache {
 
 buildless {
   localCache {
-    enabled = true
+    enabled = System.getenv("CI") != "true"
   }
 
   remoteCache {

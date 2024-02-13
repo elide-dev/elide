@@ -82,7 +82,6 @@ val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as St
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 val nodeVersion: String by properties
 val enableKnit: String? by properties
-val enableProguard: String? by properties
 
 val buildSamples: String by properties
 val buildDocs: String by properties
@@ -112,10 +111,6 @@ buildscript {
     classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${libs.versions.atomicfu.get()}")
 
-    val enableProguard: String? by properties
-    if (enableProguard == "true") {
-      classpath("com.guardsquare:proguard-gradle:${libs.versions.proguard.get()}")
-    }
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
     }

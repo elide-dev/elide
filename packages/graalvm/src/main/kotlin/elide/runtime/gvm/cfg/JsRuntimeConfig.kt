@@ -85,7 +85,7 @@ public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
     public const val DEFAULT_NPM: Boolean = true
 
     /** Default location for NPM modules. */
-    public const val DEFAULT_NPM_MODULES: String = "node_modules"
+    public const val DEFAULT_NPM_MODULES: String = "."
 
     /** Default enablement of TypeScript execution support. */
     public const val DEFAULT_TYPESCRIPT: Boolean = false  // temporary default

@@ -13,6 +13,7 @@
 
 package elide.runtime.gvm.vfs
 
+import java.nio.file.Path
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.vfs.HostVFSImpl
 
@@ -24,5 +25,17 @@ public object HostVFS {
   /** @return Factory for producing new writable instances of [HostVFSImpl]. */
   public fun acquireWritable(): GuestVFS = HostVFSImpl.Builder.newBuilder()
     .setReadOnly(false)
+    .build()
+
+  /** @return Factory for producing a scoped Host I/O provider. */
+  public fun scopedTo(path: Path, writable: Boolean = false): GuestVFS = HostVFSImpl.Builder.newBuilder()
+    .setScope(path)
+    .setReadOnly(!writable)
+    .build()
+
+  /** @return Factory for producing a scoped Host I/O provider. */
+  public fun scopedTo(path: String, writable: Boolean = false): GuestVFS = HostVFSImpl.Builder.newBuilder()
+    .setScope(path)
+    .setReadOnly(!writable)
     .build()
 }

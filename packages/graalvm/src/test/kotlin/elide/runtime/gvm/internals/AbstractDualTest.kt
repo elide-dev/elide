@@ -17,6 +17,7 @@
 package elide.runtime.gvm.internals
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.graalvm.polyglot.Context
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
@@ -298,6 +299,15 @@ abstract class AbstractDualTest {
   /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
   protected open fun <T> withContext(block: PolyglotContext.() -> T): T {
     return block(engine.acquire())
+  }
+
+  /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
+  protected open fun withCustomContext(block: Context.Builder.() -> Unit): (PolyglotContext.() -> Unit) -> Unit {
+    engine.acquire(block).let { ctx ->
+      return { op ->
+        op.invoke(ctx)
+      }
+    }
   }
 
   /** @return Execute a guest script with the subject intrinsics bound. */

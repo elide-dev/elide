@@ -16,8 +16,21 @@ package elide.runtime.gvm.internals.vfs
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Requires
-import java.nio.file.FileSystem
-import java.nio.file.FileSystems
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.net.URI
+import java.nio.channels.SeekableByteChannel
+import java.nio.charset.Charset
+import java.nio.file.*
+import java.nio.file.DirectoryStream.Filter
+import java.nio.file.attribute.FileAttribute
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
+import kotlin.io.path.relativeToOrSelf
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -33,6 +46,7 @@ import elide.runtime.gvm.cfg.GuestIOConfiguration
 internal class HostVFSImpl private constructor (
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
+  private var realCwd: AtomicReference<String> = AtomicReference(System.getProperty("user.dir")),
 ) : AbstractDelegateVFS<HostVFSImpl>(config, backing) {
   /**
    * Private constructor.
@@ -58,6 +72,7 @@ internal class HostVFSImpl private constructor (
     override var workingDirectory: String = DEFAULT_CWD,
     override var caseSensitive: Boolean = GuestIOConfiguration.DEFAULT_CASE_SENSITIVE,
     override var enableSymlinks: Boolean = GuestIOConfiguration.DEFAULT_SYMLINKS,
+    var hostScope: Path? = null,
   ) : VFSBuilder<HostVFSImpl> {
     /** Factory for creating new [Builder] instances. */
     companion object BuilderFactory : VFSBuilderFactory<HostVFSImpl, Builder> {
@@ -76,7 +91,39 @@ internal class HostVFSImpl private constructor (
       }
     }
 
+    /**
+     * Set the host directory scope within which this file system should be allowed to operate.
+     *
+     * @param scope Path to resolve as the scope.
+     * @return This builder.
+     */
+    fun setScope(scope: Path? = null): Builder = apply {
+      this.hostScope = scope?.toAbsolutePath()?.toRealPath()
+    }
+
+    /**
+     * Set the host directory scope within which this file system should be allowed to operate.
+     *
+     * @param scope Path string to resolve as the scope.
+     * @return This builder.
+     */
+    fun setScope(scope: String): Builder = apply {
+      this.hostScope = Path.of(scope).toAbsolutePath().toRealPath()
+    }
+
     override fun build(): HostVFSImpl {
+      val resolvedHostScope: Path? = hostScope?.let {
+        val target = it.toFile()
+        if (!target.exists()) {
+          if (target.canWrite()) {
+            target.mkdirs()
+          } else throw IOException(
+            "Cannot initialize host VFS with non-writable path"
+          )
+        }
+        it
+      }
+
       return HostVFSImpl(EffectiveGuestVFSConfig(
         readOnly = readOnly,
         root = root,
@@ -85,6 +132,7 @@ internal class HostVFSImpl private constructor (
         caseSensitive = caseSensitive,
         supportsSymbolicLinks = enableSymlinks,
         bundle = emptyList(),
+        scope = resolvedHostScope,
       ))
     }
   }
@@ -127,12 +175,151 @@ internal class HostVFSImpl private constructor (
     }
   }
 
-  // Logger.
-  private val logging: Logger = Logging.of(HostVFSImpl::class)
+  // Base path for all host paths, if set.
+  private val hostPath: Path? by lazy {
+    config.scope?.toAbsolutePath()?.toRealPath()
+  }
 
-  override fun logging(): Logger = logging
+  // Logger.
+  override val logging: Logger by lazy {
+    Logging.of(HostVFSImpl::class)
+  }
 
   override fun allowsHostFileAccess(): Boolean = true
 
   override fun allowsHostSocketAccess(): Boolean = true
+
+  private fun Path.relativeFromBase(path: Path, trim: String? = null): Path {
+    val pathAsString = path.toString()
+    val cleaned = when {
+      pathAsString == "/" -> path
+      path.startsWith(this) -> path  // already scoped to host
+      path.isAbsolute && trim != null -> if (path.startsWith(trim)) {
+        Path.of(pathAsString.drop(trim.length))
+      } else {
+        val subject = path.toList()
+        val base = Path.of(trim).toList()
+
+        Path.of(path.asSequence().drop(
+          subject.zip(base).takeWhile { (a, b) -> a == b }.size
+        ).joinToString(File.separator))
+      }
+
+      path.isAbsolute -> resolve(Path.of(path.toString().drop(1)))
+      else -> resolve(path)
+    }
+    return cleaned
+  }
+
+  private fun <R> maybeWithScopedPath(path: Path, op: (path: Path) -> R): R {
+    val real = realCwd.get()
+    return hostPath?.let {
+      op(it.relativeFromBase(path, trim = real))
+    } ?: op(path)
+  }
+
+  override fun checkPolicy(request: AccessRequest): AccessResponse = hostPath?.let {
+    maybeWithScopedPath(request.path) {
+      super.checkPolicy(request.copy(path = it))
+    }
+  } ?: super.checkPolicy(request)
+
+  override fun checkAccess(path: Path, modes: MutableSet<out AccessMode>, vararg linkOptions: LinkOption) =
+    maybeWithScopedPath(path) {
+      super.checkAccess(it, modes, *linkOptions)
+    }
+
+  override fun readStream(path: Path, vararg options: OpenOption): InputStream = maybeWithScopedPath(path) {
+    super.readStream(it, *options)
+  }
+
+  override fun writeStream(path: Path, vararg options: OpenOption): OutputStream = maybeWithScopedPath(path) {
+    super.writeStream(it, *options)
+  }
+
+  override fun newByteChannel(
+    path: Path,
+    options: MutableSet<out OpenOption>,
+    vararg attrs: FileAttribute<*>
+  ): SeekableByteChannel = maybeWithScopedPath(path) {
+    super.newByteChannel(it, options, *attrs)
+  }
+
+  override fun newDirectoryStream(
+    dir: Path,
+    filter: Filter<in Path>,
+  ): DirectoryStream<Path> = maybeWithScopedPath(dir) {
+    super.newDirectoryStream(it, filter)
+  }
+
+  override fun readAttributes(
+    path: Path,
+    attributes: String,
+    vararg options: LinkOption,
+  ): MutableMap<String, Any> = maybeWithScopedPath(path) {
+    super.readAttributes(it, attributes, *options)
+  }
+
+  override fun setAttribute(
+    path: Path,
+    attribute: String,
+    value: Any,
+    vararg options: LinkOption,
+  ) = maybeWithScopedPath(path) {
+    super.setAttribute(it, attribute, value, *options)
+  }
+
+  override fun createDirectory(dir: Path, vararg attrs: FileAttribute<*>) = maybeWithScopedPath(dir) {
+    super.createDirectory(it, *attrs)
+  }
+
+  override fun createLink(link: Path, existing: Path) {
+    require(hostPath == null) { "Cannot create links within a scoped host VFS." }
+    super.createLink(link, existing)
+  }
+
+  override fun createSymbolicLink(link: Path, target: Path, vararg attrs: FileAttribute<*>?) {
+    require(hostPath == null) { "Cannot create links within a scoped host VFS." }
+    super.createSymbolicLink(link, target, *attrs)
+  }
+
+  override fun readSymbolicLink(link: Path): Path = maybeWithScopedPath(link) {
+    super.readSymbolicLink(it)
+  }
+
+  override fun delete(path: Path) = maybeWithScopedPath(path) {
+    super.delete(it)
+  }
+
+  override fun copy(source: Path, target: Path, vararg options: CopyOption?) = maybeWithScopedPath(source) { src ->
+    maybeWithScopedPath(target) { tgt ->
+      super.copy(src, tgt, *options)
+    }
+  }
+
+  override fun move(source: Path, target: Path, vararg options: CopyOption?) = maybeWithScopedPath(source) { src ->
+    maybeWithScopedPath(target) { tgt ->
+      super.move(src, tgt, *options)
+    }
+  }
+
+  override fun getEncoding(path: Path): Charset = maybeWithScopedPath(path) {
+    super.getEncoding(it)
+  }
+
+  override fun getMimeType(path: Path): String? = maybeWithScopedPath(path) {
+    super.getMimeType(it)
+  }
+
+  override fun isSameFile(path1: Path, path2: Path, vararg options: LinkOption): Boolean = maybeWithScopedPath(path1) {
+    maybeWithScopedPath(path2) { other ->
+      super.isSameFile(it, other, *options)
+    }
+  }
+
+  override fun setCurrentWorkingDirectory(currentWorkingDirectory: Path) {
+    maybeWithScopedPath(currentWorkingDirectory) {
+      super.setCurrentWorkingDirectory(it)
+    }
+  }
 }

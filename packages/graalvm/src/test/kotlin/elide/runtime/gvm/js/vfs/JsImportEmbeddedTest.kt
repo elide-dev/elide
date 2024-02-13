@@ -17,6 +17,7 @@
 package elide.runtime.gvm.js.vfs
 
 import java.nio.charset.StandardCharsets
+import kotlin.io.path.Path
 import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.runtime.core.DelicateElideApi
@@ -27,14 +28,14 @@ import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
 /** Tests for ESM-style import calls that resolve via embedded VFS I/O. */
-@TestCase @Ignore internal class JsImportEmbeddedTest : AbstractJsTest() {
+@TestCase internal class JsImportEmbeddedTest : AbstractJsTest() {
   /** @return Empty VFS instance for testing. */
   private fun emptyEmbeddedFs() = EmbeddedGuestVFS.writable() as EmbeddedGuestVFSImpl
 
   /** Test: JavaScript `import` call that loads a file from an embedded guest file-system. */
   @Test fun testImportEmbeddedFs() {
     val fs = emptyEmbeddedFs()
-    val testPath = fs.getPath("test.mjs")
+    val testPath = fs.getPath("/test.mjs")
     fs.writeStream(testPath).use { stream ->
       stream.write("export default {sample: \"Hello, ESM!\"};".toByteArray())
     }
@@ -81,8 +82,9 @@ import elide.testing.annotations.TestCase
   }
 
   /** Test: JavaScript `import` call that loads a file from the Node modules path. */
-  @Test fun testImportEmbeddedFsNpmModules() {
+  @Test @Ignore fun testImportEmbeddedFsNpmModules() {
     val fs = emptyEmbeddedFs()
+    fs.setCurrentWorkingDirectory(Path("/"))
     fs.createDirectory(fs.getPath("node_modules"))
     fs.createDirectory(fs.getPath("node_modules/testing"))
 

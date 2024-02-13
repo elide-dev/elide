@@ -43,7 +43,6 @@ import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.gvm.internals.GuestVFS
 import elide.util.UUID
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
-import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
 import tools.elide.std.HashAlgorithm
 import kotlin.io.path.exists
 
@@ -117,7 +116,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   // Logger.
-  private val logging: Logger by lazy {
+  override val logging: Logger by lazy {
     Logging.of(EmbeddedGuestVFSImpl::class)
   }
 
@@ -681,8 +680,6 @@ internal class EmbeddedGuestVFSImpl private constructor (
       )
     }
   }
-
-  override fun logging(): Logger = logging
 
   override fun allowsHostFileAccess(): Boolean = false
 

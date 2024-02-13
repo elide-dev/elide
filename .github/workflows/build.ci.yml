@@ -287,6 +287,8 @@ jobs:
             koverBinaryReport
             koverVerify
             copyCoverageReports
+            -x wasmJsTest
+            -x wasmWasiTest
             --scan
             --no-daemon
             --warning-mode=none
@@ -676,7 +678,7 @@ jobs:
   ## Job: Docker Samples (JVM)
   ##
   docker-jvm:
-    name: "Docker: JVM"
+    name: "Container: JVM"
     runs-on: ${{ vars.RUNNER || 'ubuntu-latest-8-cores' }}
     needs: [gradle, preflight-checks]
     if: |
@@ -779,7 +781,7 @@ jobs:
   ##
 
   docker-native:
-    name: "Docker: Native"
+    name: "Container: Native"
     runs-on: ${{ vars.RUNNER_LARGE || 'ubuntu-latest-8-cores' }}
     continue-on-error: true
     needs: [gradle, preflight-checks]

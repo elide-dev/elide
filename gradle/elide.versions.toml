@@ -565,6 +565,7 @@ brotli-native-linux-amd64 = { group = "com.aayushatharva.brotli4j", name = "nati
 brotli-native-linux-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-aarch64", version.ref = "brotli4j" }
 brotli-native-windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 brotli-native-windows-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }
 commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons-csv" }
 commons-pool = { group = "org.apache.commons", name = "commons-pool2", version.ref = "commons-pool" }

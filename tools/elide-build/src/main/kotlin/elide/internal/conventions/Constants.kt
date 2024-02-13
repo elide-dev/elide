@@ -124,6 +124,9 @@ public object Constants {
     /** JLine version. */
     const val JLINE = "3.25.1"
 
+    /** Okio version. */
+    const val OKIO = "3.7.0"
+
     /** GraalVM version. */
     const val GRAALVM = "23.1.2"
   }

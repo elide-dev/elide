@@ -81,6 +81,9 @@ dependencies {
     api(libs.kotlinx.datetime)
     api(mn.micronaut.context)
 
+    api(libs.commons.compress)
+    api(libs.commons.codec)
+
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.kotlinx.coroutines.jdk9)
     implementation(libs.kotlinx.coroutines.slf4j)

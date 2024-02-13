@@ -355,28 +355,6 @@ jobs:
           verbose: true
 
   ##
-  ## Job: Checks (CodeQL)
-  ##
-  checks-codeql:
-    name: "Checks: CodeQL"
-    uses: ./.github/workflows/codeql.ci.yml
-    needs: [gradle, tests]
-    secrets: inherit
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
-  ##
-  ## Job: Checks (Qodana)
-  ##
-  checks-qodana:
-    name: "Checks: Qodana"
-    uses: ./.github/workflows/qodana.ci.yml
-    needs: [gradle, tests]
-    secrets: inherit
-
-  ##
   ## Job: Testsuite (Native)
   ##
   tests-native:

@@ -131,6 +131,12 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
         useVersion(Versions.JLINE)
         because("pin jline")
       }
+
+      // process dependency pins: okio
+      if (requested.group == "com.squareup.okio") {
+        useVersion(Versions.OKIO)
+        because("pin okio")
+      }
     }
 
     if (gvmConfigurations.contains(this@all.name) && isGraalVm) {

@@ -485,11 +485,13 @@ jobs:
             arch: amd64
             labs: false
             tag: linux-amd64
-          - os: macOS
-            runner: macos-13-xl
-            arch: amd64
-            labs: false
-            tag: darwin-amd64
+            # macOS build is disabled.
+            #
+            # - os: macOS
+            #   runner: macos-13-xl
+            #   arch: amd64
+            #   labs: false
+            #   tag: darwin-amd64
 
     steps:
       - name: Harden Runner

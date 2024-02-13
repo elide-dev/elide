@@ -49,6 +49,10 @@ public class elide/model/WireMessage {
 public abstract interface annotation class elide/model/annotations/Model : java/lang/annotation/Annotation {
 }
 
+public synthetic class elide/model/annotations/Model$Impl : elide/model/annotations/Model {
+	public fun <init> ()V
+}
+
 public final class elide/model/token/Token {
 	public static final field Companion Lelide/model/token/Token$Companion;
 	public fun <init> (Lelide/model/token/TokenType;Lelide/model/token/TokenValue;)V

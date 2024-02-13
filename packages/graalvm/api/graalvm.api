@@ -192,7 +192,8 @@ public final class elide/runtime/core/PolyglotContextKt {
 }
 
 public abstract interface class elide/runtime/core/PolyglotEngine {
-	public abstract fun acquire ()Lelide/runtime/core/PolyglotContext;
+	public abstract fun acquire (Lkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotContext;
+	public static synthetic fun acquire$default (Lelide/runtime/core/PolyglotEngine;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/core/PolyglotContext;
 }
 
 public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/runtime/core/PluginRegistry {
@@ -1561,8 +1562,9 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 	public final fun component5 ()Ljava/util/List;
 	public final fun component6 ()Ljava/lang/String;
 	public final fun component7 ()Ljava/lang/String;
-	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public final fun component8 ()Ljava/nio/file/Path;
+	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBundle ()Ljava/util/List;
@@ -1571,6 +1573,7 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
 	public final fun getReadOnly ()Z
 	public final fun getRoot ()Ljava/lang/String;
+	public final fun getScope ()Ljava/nio/file/Path;
 	public final fun getSupportsSymbolicLinks ()Z
 	public final fun getWorkingDirectory ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -1626,6 +1629,10 @@ public final class elide/runtime/gvm/vfs/HostVFS {
 	public static final field INSTANCE Lelide/runtime/gvm/vfs/HostVFS;
 	public final fun acquire ()Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun acquireWritable ()Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun scopedTo (Ljava/lang/String;Z)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun scopedTo (Ljava/nio/file/Path;Z)Lelide/runtime/gvm/internals/GuestVFS;
+	public static synthetic fun scopedTo$default (Lelide/runtime/gvm/vfs/HostVFS;Ljava/lang/String;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/GuestVFS;
+	public static synthetic fun scopedTo$default (Lelide/runtime/gvm/vfs/HostVFS;Ljava/nio/file/Path;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/GuestVFS;
 }
 
 public final class elide/runtime/intrinsics/ElideBindings {

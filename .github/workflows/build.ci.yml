@@ -293,6 +293,7 @@ jobs:
             -x wasmJsTest
             -x wasmWasiTest
             -x wasmWasiNodeTest
+            -x detekt
             --scan
             --no-daemon
             --warning-mode=none

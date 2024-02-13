@@ -132,7 +132,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Check: Library ABI"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
         id: abicheck
         if: fromJson(needs.triage.outputs.packages)
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
@@ -141,7 +141,7 @@ jobs:
           GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
-          cache-read-only: false
+          cache-read-only: true
           arguments: |
             apiCheck
             --dependency-verification=lenient

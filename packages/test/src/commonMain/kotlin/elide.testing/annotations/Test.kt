@@ -18,6 +18,5 @@ import kotlin.annotation.AnnotationTarget.*
 /**
  * TBD.
  */
-@Retention(AnnotationRetention.RUNTIME)
 @Target(ANNOTATION_CLASS, FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER)
-public expect annotation class Test
+public expect annotation class Test()

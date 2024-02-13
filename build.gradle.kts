@@ -490,18 +490,31 @@ val copyCoverageReports by tasks.registering(Copy::class) {
 val quicktest: TaskProvider<Task> by tasks.registering {
   description = "Run all quick tests"
   group = "Verification"
-  dependsOn("jvmTest")
+  dependsOn(
+    ":packages:core:jvmTest",
+    ":packages:base:jvmTest",
+    ":packages:graalvm:test",
+    ":packages:serverless:test",
+    ":packages:embedded:test",
+  )
 }
 
 val precheck: TaskProvider<Task> by tasks.registering {
   description = "Run all pre-check tasks"
   group = "Verification"
 
-  dependsOn(
-    "quicktest",
-    "koverVerify",
-    "apiCheck",
-  )
+  dependsOn(quicktest)
+}
+
+afterEvaluate {
+  precheck.configure {
+    listOfNotNull(
+      tasks.findByName("koverVerify"),
+      tasks.findByName("apiCheck"),
+    ).forEach {
+      dependsOn(it)
+    }
+  }
 }
 
 val format: TaskProvider<Task> by tasks.registering {

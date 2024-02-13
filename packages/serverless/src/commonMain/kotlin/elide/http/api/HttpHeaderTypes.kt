@@ -19,9 +19,9 @@ import kotlinx.datetime.Instant
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import kotlin.reflect.KClass
+import elide.core.encoding.Encoding
+import elide.core.encoding.Encoding.BASE64
 import elide.http.api.HttpHeaders.HeaderName
-import elide.util.Encoding
-import elide.util.Encoding.BASE64
 
 /**
  * ## HTTP Header Information
@@ -114,7 +114,9 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  * @param token Token value.
  */
 @JvmInline public value class HttpToken internal constructor (override val token: HttpString) :
-  HeaderValueTokenType<HttpString>, HttpHeaderValue<String>
+  HeaderValueTokenType<HttpString>, HttpHeaderValue<String> {
+  override fun toString(): String = asString
+}
 
 /**
  * ## Generic Multi-Token
@@ -126,6 +128,7 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
 @JvmInline public value class HttpTokenList internal constructor (override val tokens: List<String>) :
   HeaderValueMultiTokenType<String>, HttpHeaderValue<String> {
   override val asString: String get() = tokens.joinToString(DEFAULT_SEPARATOR)
+  override fun toString(): String = asString
 }
 
 /**
@@ -136,7 +139,9 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  * @param token Token value.
  */
 @JvmInline public value class Language internal constructor (override val token: String) :
-  HeaderValueTokenType<String>, HttpHeaderValue<String>
+  HeaderValueTokenType<String>, HttpHeaderValue<String> {
+  override fun toString(): String = asString
+}
 
 /**
  * ## MIME Type Token
@@ -156,7 +161,9 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
       /** Well-known mimetype for a stream of bytes. */
       public val OctetStream: Mimetype = Mimetype("application/octet-stream")
     }
-  }
+
+  override fun toString(): String = asString
+}
 
 /**
  * ## HTTP Encoding
@@ -171,6 +178,7 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
 ) : HeaderValueTokenType<String> {
   override val token: String get() = spec.first
   override val asString: String get() = token
+  override fun toString(): String = asString
 }
 
 /**

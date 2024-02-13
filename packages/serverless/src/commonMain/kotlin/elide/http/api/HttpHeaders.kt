@@ -350,7 +350,6 @@ import elide.http.api.HttpHeaders.HeaderValue
       override fun toString(): String = asString
       override val asString: String get() = values.joinToString(DEFAULT_SEPARATOR)
       override val allValues: List<HttpString> get() = values.toList()
-      override val size: Int get() = values.size
 
       internal fun add(value: String): MultiValue = MultiValue(
         Array(values.size + 1) { i -> if (i == values.size) value else values[i] }

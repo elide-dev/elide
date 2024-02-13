@@ -67,7 +67,6 @@ public class CaseInsensitiveHttpString private constructor (
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
-    if (other !is CharSequence) return false
     return when (other) {
       is CaseInsensitiveHttpString -> normalized == other.normalized
       is String -> normalized.compareTo(other, ignoreCase = true) == 0

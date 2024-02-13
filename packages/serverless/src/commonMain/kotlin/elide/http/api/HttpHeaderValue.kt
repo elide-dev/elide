@@ -15,7 +15,7 @@
 
 package elide.http.api
 
-import elide.util.Encoding
+import elide.core.encoding.Encoding
 
 /**
  * # HTTP Headers: Standard Values

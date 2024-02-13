@@ -21,8 +21,7 @@ import elide.model.token.TokenType
 import elide.model.token.TokenValue
 
 /** Tests for redaction during model formatting, using the Redakt plugin. */
-@Ignore
-class ModelRedactionTest {
+@Ignore class ModelRedactionTest {
   data class SampleNonSensitive(
     val a: Int,
     val b: String,

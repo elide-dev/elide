@@ -42,8 +42,14 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
-          fetch-depth: 0
           persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
@@ -56,6 +62,17 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
+      - name: "Analysis: Build"
+        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        continue-on-error: true
+        with:
+          cache-read-only: true
+          arguments: |
+            compileKotlin
+            -x test
+            -x check
+            -x nativeCompile
+            -x nativeOptimizedCompile
       - name: "Analysis: Qodana Scan"
         uses: JetBrains/qodana-action@9a71424636be05dccc139d34e7248de96fd15d9c # main
         continue-on-error: true

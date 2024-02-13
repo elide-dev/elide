@@ -128,9 +128,6 @@ name: Framework
       BUILDBOT_GHCR_TOKEN:
         required: false
         description: "GHCR Token"
-      SONAR_TOKEN:
-        required: false
-        description: "Sonar token"
       CODECOV_TOKEN:
         required: false
         description: "Codecov token"
@@ -198,6 +195,13 @@ jobs:
         with:
           submodules: true
           persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
@@ -211,10 +215,14 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-      - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
-        run: npm install -g pnpm && pnpm install
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -278,6 +286,29 @@ jobs:
         if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}
         run: |
           echo "hashes=$(sha256sum ./packages/*/build/libs/* | base64 -w0)" >> "$GITHUB_OUTPUT"
+      - name: "Artifact: PNPM Store"
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - name: "Artifact: Caches"
+        uses: actions/cache/save@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+          path: |
+            ${{ env.STORE_PATH }}
+            ~/.gradle/binaryen
+            ~/.gradle/caches
+            ~/.gradle/jdks
+            ~/.gradle/native
+            ~/.gradle/native-build-tools
+            ~/.gradle/nodejs
+            ~/.gradle/notifications
+            ~/.gradle/wrapper
+            ~/.gradle/yarn
+            .gradle/
+            build/
+            packages/*/build/
+            packages/proto/*/build/
+            tools/elide-build/build/
 
   ## Report: Provenance
   provenance:
@@ -316,10 +347,16 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
+          fetch-depth: 0
           submodules: true
           persist-credentials: false
-      - name: "Setup: Git History"
-        run: git fetch --unshallow || exit 0
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
@@ -340,10 +377,14 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-      - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
-        run: npm install -g pnpm && pnpm install
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
         continue-on-error: true
@@ -353,7 +394,6 @@ jobs:
         uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
         env:
           CI: true
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
           cache-read-only: false
@@ -382,7 +422,6 @@ jobs:
         continue-on-error: true
         env:
           CI: true
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
           cache-read-only: false
@@ -448,8 +487,16 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
+          fetch-depth: 0
           submodules: true
           persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
@@ -470,11 +517,14 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: "yarn"
-      - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
-        run: npm install -g pnpm && pnpm install
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
         continue-on-error: true
@@ -558,6 +608,13 @@ jobs:
         with:
           submodules: true
           persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -585,9 +642,14 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: "yarn"
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+        run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
         continue-on-error: true
@@ -692,6 +754,13 @@ jobs:
         with:
           submodules: true
           persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
@@ -718,9 +787,14 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: "yarn"
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+        run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
         continue-on-error: true
@@ -791,6 +865,18 @@ jobs:
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
@@ -806,17 +892,18 @@ jobs:
         id: buildx
         with:
           install: true
-      - name: "Setup: Checkout"
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-        with:
-          submodules: true
-          persist-credentials: false
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+        run: pnpm install -g yarn@1.22.19
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -897,6 +984,18 @@ jobs:
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          restore-keys: |
+            elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
@@ -912,17 +1011,18 @@ jobs:
         id: buildx
         with:
           install: true
-      - name: "Setup: Checkout"
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-        with:
-          submodules: true
-          persist-credentials: false
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+        run: pnpm install -g yarn@1.22.19
       - id: "auth"
         name: "Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1

@@ -155,9 +155,11 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: "yarn"
+          cache: "pnpm"
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+        run: npm install -g yarn@1.22.19
+      - name: "Setup: PNPM"
+        run: pnpm install
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -272,7 +274,9 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: "yarn"
+          cache: "pnpm"
+      - name: "Setup: Yarn"
+        run: npm install -g yarn@1.22.19
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Testsuite"
@@ -425,7 +429,9 @@ jobs:
           node-version: 20
           cache: "yarn"
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+        run: npm install -g yarn@1.22.19
+      - name: "Setup: PNPM"
+        run: pnpm install
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         continue-on-error: true

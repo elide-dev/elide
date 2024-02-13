@@ -16,7 +16,6 @@
 package elide.http.api
 
 import elide.annotations.API
-import elide.http.MutableHttpHeaders
 
 /**
  *

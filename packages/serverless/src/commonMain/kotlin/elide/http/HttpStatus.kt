@@ -11,10 +11,13 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("JVM_RECORD_REQUIRES_JDK15")
+
 package elide.http
 
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmRecord
+import elide.http.api.HttpStatus.Type
 import elide.http.api.HttpStatusCode
 import elide.http.api.HttpString
 import elide.http.api.HttpStatus as HttpStatusAPI
@@ -22,15 +25,16 @@ import elide.http.api.HttpStatus as HttpStatusAPI
 /**
  *
  */
-@JvmInline public value class HttpStatus(public val statusInfo: HttpStatusInfo) : HttpStatusAPI {
+@JvmInline public value class HttpStatus(private val statusInfo: HttpStatusInfo) : HttpStatusAPI {
   /**
    *
    */
-  public data class HttpStatusInfo(
+  @JvmRecord public data class HttpStatusInfo(
     public val code: HttpStatusCode,
     public val reason: HttpString? = null,
   )
 
   override val code: HttpStatusCode get() = statusInfo.code
   override val text: HttpString? get() = statusInfo.reason
+  override val type: Type? get() = Type.fromCode(code)
 }

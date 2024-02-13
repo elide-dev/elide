@@ -14,11 +14,12 @@
 package elide.http
 
 import kotlin.test.*
-import elide.http.api.HttpHeader
-import elide.http.api.HttpHeaderValue
+import elide.core.encoding.Encoding
+import elide.http.api.*
 import elide.http.api.HttpHeaders.HeaderName
 import elide.http.api.HttpHeaders.HeaderName.Companion.asHeaderName
 import elide.http.api.HttpHeaders.HeaderValue
+import elide.http.api.HttpHeaders.HeaderValue.MultiValue
 import elide.struct.sortedSetOf
 
 /** Tests for HTTP header containers. */
@@ -140,6 +141,28 @@ class HttpHeadersTest {
     )
   }
 
+  @Test @Ignore fun testPutExistingMutable() {
+    val headers = MutableHttpHeaders.of("Accept" to "hello", "Content-Type" to "application/json")
+    headers["Content-Type"] = "application/xml"
+    assertEquals("hello", headers["Accept"])
+    assertEquals("hello", headers[HeaderName.of("Accept")]?.asString)
+    assertEquals("application/xml", headers["Content-Type"])
+    assertEquals("application/xml", headers[HeaderName.of("Content-Type")]?.asString)
+  }
+
+  @Test @Ignore fun testPutMultiMutable() {
+    val headers = MutableHttpHeaders.of("Accept" to "hello", "Content-Type" to "application/json")
+    headers["Content-Type"] = "application/xml"
+    assertEquals("hello", headers["Accept"])
+    assertEquals("hello", headers[HeaderName.of("Accept")]?.asString)
+    assertEquals("application/xml", headers["Content-Type"])
+    assertEquals("application/xml", headers[HeaderName.of("Content-Type")]?.asString)
+    headers.add("Accept", "world")
+    assertEquals("hello", headers["Accept"])
+    assertEquals("hello", headers[HeaderName.of("Accept")]?.asString)
+    assertEquals("world", headers.getAll("Accept").last())
+  }
+
   @Test fun testContains() {
     val headers = HttpHeaders.of("Content-Type" to "application/json")
     assertTrue("Content-Type" in headers)
@@ -233,6 +256,71 @@ class HttpHeadersTest {
   @Test fun testHeaderValueStrings() {
     assertEquals("gzip", HeaderValue.single("gzip").toString())
     assertEquals("gzip,deflate", HeaderValue.multi("gzip", "deflate").toString())
+  }
+
+  @Test fun testHeaderValueSize() {
+    assertEquals(1, HeaderValue.single("gzip").size)
+    assertEquals(1, HeaderValue.multi("gzip").size)
+    assertEquals(2, HeaderValue.multi("gzip", "deflate").size)
+    assertEquals(3, HeaderValue.multi("gzip", "deflate", "identity").size)
+  }
+
+  @Test fun testHeaderValueMultiMutableAdd() {
+    val acceptGzip = HeaderValue.multi("gzip", "deflate")
+    assertNotNull(acceptGzip)
+    assertEquals("gzip,deflate", acceptGzip.asString)
+    assertEquals(2, acceptGzip.size)
+    assertEquals("gzip", acceptGzip.allValues.first())
+    assertEquals("deflate", acceptGzip.allValues[1])
+    assertEquals(12, acceptGzip.asString.length)  // `gzip`
+    assertEquals('g', acceptGzip.asString[0])  // `[g]zip`
+    assertEquals("gz", acceptGzip.asString.subSequence(0, 2))  // `[gz]ip`
+    val newValue = (acceptGzip as MultiValue).add("identity")
+    assertNotNull(acceptGzip)
+    assertEquals("gzip,deflate", acceptGzip.asString)
+    assertEquals(2, acceptGzip.size)
+    assertEquals("gzip", acceptGzip.allValues.first())
+    assertEquals("deflate", acceptGzip.allValues[1])
+    assertEquals(12, acceptGzip.asString.length)  // `gzip`
+    assertEquals('g', acceptGzip.asString[0])  // `[g]zip`
+    assertEquals("gz", acceptGzip.asString.subSequence(0, 2))  // `[gz]ip`
+    assertNotNull(newValue)
+    assertEquals("gzip,deflate,identity", newValue.asString)
+    assertEquals(3, newValue.size)
+    assertEquals("gzip", newValue.allValues.first())
+    assertEquals("deflate", newValue.allValues[1])
+    assertEquals("identity", newValue.allValues[2])
+    assertEquals(21, newValue.asString.length)  // `gzip`
+    assertEquals('g', newValue.asString[0])  // `[g]zip`
+    assertEquals("gz", newValue.asString.subSequence(0, 2))  // `[gz]ip`
+  }
+
+  @Test fun testHeaderValueMultiMutableRemove() {
+    val acceptGzip = HeaderValue.multi("gzip", "deflate")
+    assertNotNull(acceptGzip)
+    assertEquals("gzip,deflate", acceptGzip.asString)
+    assertEquals(2, acceptGzip.size)
+    assertEquals("gzip", acceptGzip.allValues.first())
+    assertEquals("deflate", acceptGzip.allValues[1])
+    assertEquals(12, acceptGzip.asString.length)  // `gzip`
+    assertEquals('g', acceptGzip.asString[0])  // `[g]zip`
+    assertEquals("gz", acceptGzip.asString.subSequence(0, 2))  // `[gz]ip`
+    val newValue = (acceptGzip as MultiValue).remove("gzip")
+    assertNotNull(acceptGzip)
+    assertEquals("gzip,deflate", acceptGzip.asString)
+    assertEquals(2, acceptGzip.size)
+    assertEquals("gzip", acceptGzip.allValues.first())
+    assertEquals("deflate", acceptGzip.allValues[1])
+    assertEquals(12, acceptGzip.asString.length)  // `gzip`
+    assertEquals('g', acceptGzip.asString[0])  // `[g]zip`
+    assertEquals("gz", acceptGzip.asString.subSequence(0, 2))  // `[gz]ip`
+    assertNotNull(newValue)
+    assertEquals("deflate", newValue.asString)
+    assertEquals(1, newValue.size)
+    assertEquals("deflate", newValue.allValues.first())
+    assertEquals(7, newValue.asString.length)  // `deflate`
+    assertEquals('d', newValue.asString[0])  // `[d]eflate`
+    assertEquals("de", newValue.asString.subSequence(0, 2))  // `[de]flate`
   }
 
   @Test fun testHeaderValueComparableMultiple() {
@@ -370,5 +458,46 @@ class HttpHeadersTest {
     assertNotNull(factory.of("Content-Type" to "application/json"))
     assertNotNull(factory.of(mapOf("Content-Type" to "application/json")))
     assertNotNull(factory.of(listOf("Content-Type" to "application/json")))
+  }
+
+  @Test fun testHeaderValueSingularToken() {
+    val token = HttpToken("gzip")
+    assertEquals("gzip", token.toString())
+    assertEquals("gzip", token.asString)
+    assertEquals("gzip", token.value)
+    assertEquals("gzip", token.allValues.first())
+  }
+
+  @Test fun testHeaderValueMultiToken() {
+    val token = HttpTokenList(listOf("gzip", "deflate"))
+    assertEquals("gzip,deflate", token.toString())
+    assertEquals("gzip,deflate", token.asString)
+    assertEquals("gzip", token.value)
+    assertEquals("gzip", token.allValues.first())
+    assertEquals("deflate", token.allValues.last())
+  }
+
+  @Test fun testLanguageToken() {
+    val token = Language("en")
+    assertEquals("en", token.toString())
+    assertEquals("en", token.asString)
+    assertEquals("en", token.value)
+    assertEquals("en", token.allValues.first())
+  }
+
+  @Test fun testEncodingToken() {
+    val token = HttpEncoding("utf-8" to Encoding.UTF_8)
+    assertEquals("utf-8", token.toString())
+    assertEquals("utf-8", token.asString)
+    assertEquals("utf-8", token.value)
+    assertEquals("utf-8", token.allValues.first())
+  }
+
+  @Test fun testMimetypeToken() {
+    val token = Mimetype("application/octet-stream")
+    assertEquals("application/octet-stream", token.toString())
+    assertEquals("application/octet-stream", token.asString)
+    assertEquals("application/octet-stream", token.value)
+    assertEquals("application/octet-stream", token.allValues.first())
   }
 }

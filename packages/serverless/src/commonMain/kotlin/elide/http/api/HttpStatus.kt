@@ -13,6 +13,8 @@
 
 package elide.http.api
 
+import kotlin.jvm.JvmStatic
+
 /**
  * # HTTP: Response Status
  *
@@ -40,13 +42,13 @@ public interface HttpStatus {
    * Describes the optional text "reason" or description for the response status expressed by this record. This value is
    * optional.
    */
-  public val text: HttpString? get() = null
+  public val text: HttpString?
 
   /**
    * Describes the inferred "type" of this HTTP status, based on the response [code] enclosed; this value is optional to
    * account for exotic (non-standard) status codes.
    */
-  public val type: Type? get() = null
+  public val type: Type?
 
   /**
    * ## HTTP Status: Type
@@ -98,6 +100,19 @@ public interface HttpStatus {
      * Describes server error HTTP statuses, which are used to indicate that the server failed to process the client's
      * request in some terminal manner. These statuses typically indicate a server-side fault.
      */
-    SERVER_ERROR(500..599, "Server Error", err = true, serverFault = true),
+    SERVER_ERROR(500..599, "Server Error", err = true, serverFault = true);
+
+    /** Methods for resolving HTTP status code types. */
+    public companion object {
+      /**
+       * Describes the type of HTTP status code based on the numeric [code] value.
+       *
+       * @param code The numeric status code to infer the type from.
+       * @return The inferred type, if any; if the code is exotic or out of spec, `null` is returned.
+       */
+      @JvmStatic public fun fromCode(code: HttpStatusCode): Type? = code.toInt().let { codeValue ->
+        entries.firstOrNull { codeValue in it.range }
+      }
+    }
   }
 }

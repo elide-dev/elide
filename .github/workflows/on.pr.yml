@@ -131,20 +131,6 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-      - name: "Patch: Neutralize Yarn Lock"
-        run: mv yarn.lock yarn.inert
-      - name: "Check: Dependency Review"
-        uses: actions/dependency-review-action@4901385134134e04cec5fbe5ddfe3b2c5bd5d976 # v4.0.0
-        continue-on-error: true
-        if: github.event_name == 'pull_request'
-        with:
-          config-file: "./.github/dependency-review-config.yml"
-          license-check: true
-          vulnerability-check: true
-          fail-on-severity: "low"
-          base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || 'v3' }}
-      - name: "Patch: Restore Yarn Lock"
-        run: mv yarn.inert yarn.lock
       - name: "Check: Library ABI"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         id: abicheck
@@ -189,6 +175,16 @@ jobs:
     with:
       tests: true
       provenance: false
+
+  ##
+  ## Job: Checks for Vulnerabilities/Licensing
+  ##
+  check-dependencies:
+    name: "Checks"
+    uses: ./.github/workflows/checks.dependency-review.yml
+    needs: [triage, preflight-checks]
+    permissions:
+      contents: "read"
 
   ##
   ## Job: Checks for Models

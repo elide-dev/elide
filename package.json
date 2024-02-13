@@ -64,6 +64,7 @@
     "upgrade-node": "yarn upgrade-interactive",
     "upgrade-gradle": "gradle-upgrade-interactive",
     "prepare": "husky install",
+    "prettier": "prettier",
     "lint": "prettier --write . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java",
     "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
   }

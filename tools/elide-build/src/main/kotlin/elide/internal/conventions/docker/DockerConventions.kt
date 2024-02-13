@@ -25,12 +25,16 @@ internal fun Project.useGoogleCredentialsForDocker() {
   
   // read credentials
   val credentials = System.getenv(Constants.Credentials.GOOGLE).let {
-    check(it.isNotBlank()) { "Failed to resolve Docker credentials for CI" }
-    file(it).readText()
+    if (it.isNullOrBlank()) {
+      logger.lifecycle("No Google credentials detected; will not mount for container auth.")
+      null
+    } else {
+      file(it).readText()
+    }
   }
   
   // configure Docker
-  extensions.getByType(DockerExtension::class.java).apply {
+  if (credentials != null) extensions.getByType(DockerExtension::class.java).apply {
     registryCredentials.apply {
       url.set(Constants.Repositories.PKG_DOCKER)
       

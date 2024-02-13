@@ -1,11 +1,8 @@
 name: Benchmark
 
-on:
-  push:
-    branches:
-      - stable
-  pull_request:
-    types: [opened, reopened, synchronize]
+"on":
+  workflow_dispatch: {}
+  workflow_call: {}
 
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -68,7 +65,7 @@ jobs:
         if: ${{ matrix.engine == 'graalvm' }}
         with:
           components: "native-image,js,wasm"
-          distribution: 'graalvm'
+          distribution: "graalvm"
           java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Zulu"

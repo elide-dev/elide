@@ -1,6 +1,6 @@
 name: "CodeQL"
 
-on:
+"on":
   workflow_dispatch: {}
   workflow_call: {}
   push:
@@ -35,8 +35,8 @@ jobs:
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Initialize CodeQL"
         uses: github/codeql-action/init@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12

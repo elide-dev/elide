@@ -1,18 +1,8 @@
 name: Site
 
-on:
-  push:
-    branches:
-      - stable
-      - v3
-      - site/*
-  pull_request:
-    types: [labeled, opened, reopened, synchronize]
-    branches:
-      - stable
-      - v3
-      - site/*
-      - release/*
+"on":
+  workflow_dispatch: {}
+  workflow_call: {}
 
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -51,7 +41,7 @@ jobs:
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           components: "native-image,js,wasm"
-          distribution: 'graalvm'
+          distribution: "graalvm"
           java-version: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
@@ -172,7 +162,7 @@ jobs:
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           components: "native-image,js,wasm"
-          distribution: 'graalvm'
+          distribution: "graalvm"
           java-version: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"

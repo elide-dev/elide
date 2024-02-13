@@ -1,14 +1,13 @@
 name: Checks
 
-on:
+"on":
   workflow_dispatch: {}
   push:
     branches:
       - stable
-      - v3
-      - feat/js-runtime-v3
+      - main
   schedule:
-    - cron: '0 0-23/2 * * *'
+    - cron: "0 0-23/2 * * *"
 
 env:
   GRADLE_CACHE_LOCAL: false
@@ -151,7 +150,7 @@ jobs:
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           components: "native-image,js,wasm"
-          distribution: 'graalvm'
+          distribution: "graalvm"
           java-version: 20
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}

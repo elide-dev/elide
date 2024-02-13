@@ -4,7 +4,7 @@ concurrency:
   group: "publish"
   cancel-in-progress: false
 
-on:
+"on":
   ## Publish flows can be invoked from other workflows.
   workflow_call:
     inputs:
@@ -177,7 +177,7 @@ jobs:
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           components: "native-image,js,wasm"
-          distribution: 'graalvm'
+          distribution: "graalvm"
           java-version: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Signing Keys"

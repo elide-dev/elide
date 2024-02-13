@@ -1,13 +1,139 @@
 name: Framework
 
-on:
-  push:
-    branches:
-      - stable
-      - main
-  pull_request:
-    types: [opened, reopened, synchronize]
-  merge_group: {}
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Enable Tests
+      tests:
+        description: "Tests"
+        type: boolean
+        default: true
+
+      ## Input: Enable Native Targets
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+
+      ## Input: Enable Release Targets
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+
+      ## Input: Publish Libraries
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+
+      ## Input: Deploy Samples
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+
+      ## Input: Enable Container Targets
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+
+      ## Input: Enable Provenance
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: true
+
+      ## Input: Enable macOS
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+
+      ## Input: Enable Windows
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+
+      ## Input: Runner
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-latest
+
+  workflow_call:
+    inputs:
+      tests:
+        description: "Tests"
+        type: boolean
+        default: true
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: true
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+      runner:
+        description: "Runner to use"
+        type: string
+        default: ubuntu-latest
+      runner_large:
+        description: "Runner (Large)"
+        type: string
+        default: ubuntu-latest-8-cores
+      runner_large_macos:
+        description: "Runner (Large, macOS)"
+        type: string
+        default: macos-13-xl
+      runner_large_windows:
+        description: "Runner (Large, Windows)"
+        type: string
+        default: windows-latest-8-cores
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      BUILDBOT_GHCR_TOKEN:
+        required: false
+        description: "GHCR Token"
+      SONAR_TOKEN:
+        required: false
+        description: "Sonar token"
+      CODECOV_TOKEN:
+        required: false
+        description: "Codecov token"
 
 env:
   GRADLE_CACHE_LOCAL: false
@@ -22,90 +148,20 @@ permissions:
 
 jobs:
   ##
-  ## Job: Pre-flight Checks
-  ##
-  preflight-checks:
-    name: "Pre-flight Checks"
-    runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
-    permissions:
-      contents: "read"
-      id-token: "write"
-      checks: "write"
-      packages: "read"
-      pull-requests: "write"
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
-      - name: "Setup: Checkout"
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-        with:
-          submodules: true
-      - name: "Setup: Buildless"
-        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
-        with:
-          distribution: 'graalvm'
-          java-version: '21'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - id: "auth"
-        name: "Setup: Authorize Service Account"
-        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
-        with:
-          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
-          create_credentials_file: true
-          export_environment_variables: true
-          cleanup_credentials: true
-      - name: "Patch: Neutralize Yarn Lock"
-        run: mv yarn.lock yarn.inert
-      - name: "Check: Dependency Review"
-        uses: actions/dependency-review-action@4901385134134e04cec5fbe5ddfe3b2c5bd5d976 # v4.0.0
-        continue-on-error: true
-        if: github.event_name == 'pull_request'
-        with:
-          config-file: "./.github/dependency-review-config.yml"
-          license-check: true
-          vulnerability-check: true
-          fail-on-severity: "low"
-          base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || 'v3' }}
-      - name: "Patch: Restore Yarn Lock"
-        run: mv yarn.inert yarn.lock
-      - name: "Check: Library ABI"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
-        id: abicheck
-        continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
-        env:
-          CI: true
-          GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-        with:
-          cache-read-only: false
-          arguments: |
-            apiCheck
-            --dependency-verification=lenient
-            --no-daemon
-            --warning-mode=none
-            -Pelide.ci=true
-            -PbuildDocs=false
-            -PbuildSamples=false
-            -PbuildDocsSite=false
-
-  ##
   ## Job: Library Build
   ##
-
   gradle:
     strategy:
       fail-fast: false
       matrix:
         os: [Ubuntu]
-        mode: ['Strict']
+        mode: ["Strict"]
         machine:
-          - ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+          - ${{ inputs.runner }}
         provenance: [true]
-        # macOS build is disabled.
+
+        # macOS build is disabled until it can be made dynamic.
+        #
         #  include:
         #    - os: macOS
         #      mode: Strict
@@ -133,7 +189,7 @@ jobs:
       hashes: ${{ steps.hash.outputs.hashes }}
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -141,11 +197,12 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
+          persist-credentials: false
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Buildless"
         if: contains(matrix.machine, 'macos') == false
@@ -209,19 +266,20 @@ jobs:
             build/reports/**/*.*
       - name: "Build: Provenance Subject"
         id: hash
-        if: ${{ matrix.os == 'ubuntu' }}
+        if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}
         run: |
           echo "hashes=$(sha256sum ./packages/*/build/libs/* | base64 -w0)" >> "$GITHUB_OUTPUT"
 
   ## Report: Provenance
   provenance:
     name: Provenance
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
+    if: inputs.provenance
     needs: [gradle]
     permissions:
-      actions: read
-      id-token: write
-      contents: write
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
+      actions: "read"
+      id-token: "write"
+      contents: "write"
     with:
       base64-subjects: "${{ needs.gradle.outputs.hashes }}"
       upload-assets: ${{ github.ref == 'refs/heads/stable' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'release/') || startsWith(github.ref, 'refs/tags/v') }}
@@ -231,8 +289,8 @@ jobs:
   ##
   tests:
     name: "Tests: All Suites"
-    runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
-    needs: [preflight-checks]
+    runs-on: ${{ inputs.runner }}
+    if: inputs.tests
 
     permissions:
       contents: "read"
@@ -242,7 +300,7 @@ jobs:
       pull-requests: "write"
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -250,13 +308,14 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
+          persist-credentials: false
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -359,17 +418,16 @@ jobs:
   ##
   tests-native:
     name: "Tests: Native"
-    runs-on: ${{ vars.RUNNER_LARGE || 'ubuntu-latest-8-cores' }}
-    needs: [tests, preflight-checks]
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
-        contains(github.event.head_commit.message, 'ci:test-native')
-      )
+    runs-on: ${{ inputs.runner_large || 'ubuntu-latest-8-cores' }}
+    if: inputs.tests && inputs.native
+#      (
+#        github.ref == 'refs/heads/stable' ||
+#        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
+#        contains(github.event.head_commit.message, 'ci:test-native')
+#      )
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -377,11 +435,12 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
+          persist-credentials: false
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
@@ -439,38 +498,39 @@ jobs:
   cli-build-debug:
     name: "CLI: Native (Debug, ${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
     runs-on: ${{ matrix.runner }}
-    needs: [preflight-checks, gradle]
+    needs: [gradle]
     continue-on-error: true
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        startsWith(github.ref, 'release/') ||
-        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
-        contains(github.event.head_commit.message, 'ci:build-cli')
-      )
+    if: inputs.native
+#    if: |
+#      (
+#        github.ref == 'refs/heads/stable' ||
+#        startsWith(github.ref, 'release/') ||
+#        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
+#        contains(github.event.head_commit.message, 'ci:build-cli')
+#      )
 
     strategy:
       fail-fast: false
       matrix:
         os: ["Linux"]
         arch: ["amd64"]
-        runner: ["ubuntu-latest-8-cores"]
+        runner: ["${{ inputs.runner_large }}"]
         labs: [false]
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ${{ vars.RUNNER_LARGE || 'ubuntu-latest-8-cores' }}
+            runner: ${{ inputs.runner_large }}
             arch: amd64
             labs: false
             tag: linux-amd64
           - os: macOS
-            runner: macos-13-xl
+            runner: ${{ inputs.runner_large_macos }}
             arch: amd64
             labs: false
             tag: darwin-amd64
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -478,6 +538,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
+          persist-credentials: false
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -494,12 +555,12 @@ jobs:
         uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
         with:
           arch: ${{ matrix.arch }}
-          cache: 'gradle'
+          cache: "gradle"
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
@@ -561,14 +622,15 @@ jobs:
   cli-build-release:
     name: "CLI: Native (Release, ${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
     runs-on: ${{ matrix.runner }}
-    needs: [preflight-checks, gradle]
+    needs: [gradle]
     continue-on-error: true
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
-        contains(github.event.head_commit.message, 'ci:build-cli')
-      )
+    if: inputs.native && inputs.release
+#    if: |
+#      (
+#        github.ref == 'refs/heads/stable' ||
+#        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
+#        contains(github.event.head_commit.message, 'ci:build-cli')
+#      )
 
     strategy:
       fail-fast: false
@@ -576,28 +638,28 @@ jobs:
         os: ["Linux"]
         arch: ["amd64"]
         runner:
-          - ${{ vars.RUNNER_LARGE || 'ubuntu-latest-8-cores' }}
+          - ${{ inputs.runner_large }}
         labs: [false]
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ${{ vars.RUNNER_LARGE || 'ubuntu-latest-8-cores' }}
+            runner: ${{ inputs.runner_large }}
             arch: amd64
             labs: false
             tag: linux-amd64
           - os: macOS
-            runner: macos-13-xl
+            runner: ${{ inputs.runner_large_macos }}
             arch: amd64
             labs: false
             tag: darwin-amd64
           - os: Windows
-            runner: windows-latest-8-cores
+            runner: ${{ inputs.runner_large_windows }}
             arch: amd64
             tag: windows-amd64
             labs: true
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -605,6 +667,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
+          persist-credentials: false
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
@@ -624,8 +687,8 @@ jobs:
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
@@ -666,14 +729,15 @@ jobs:
   ##
   docker-jvm:
     name: "Container: JVM"
-    runs-on: ${{ vars.RUNNER || 'ubuntu-latest-8-cores' }}
-    needs: [gradle, preflight-checks]
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
-        contains(github.event.head_commit.message, 'ci:build-img-jvm')
-      )
+    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-latest-8-cores' }}
+    needs: [gradle]
+    if: inputs.containers
+#    if: |
+#      (
+#        github.ref == 'refs/heads/stable' ||
+#        contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
+#        contains(github.event.head_commit.message, 'ci:build-img-jvm')
+#      )
 
     permissions:
       contents: "read"
@@ -694,7 +758,7 @@ jobs:
             labs: true
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -703,8 +767,8 @@ jobs:
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
@@ -717,6 +781,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
+          persist-credentials: false
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
@@ -769,15 +834,16 @@ jobs:
 
   docker-native:
     name: "Container: Native"
-    runs-on: ${{ vars.RUNNER_LARGE || 'ubuntu-latest-8-cores' }}
+    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-latest-8-cores' }}
     continue-on-error: true
-    needs: [gradle, preflight-checks]
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
-        contains(github.event.head_commit.message, 'ci:build-img-native')
-      )
+    needs: [gradle]
+    if: inputs.containers && inputs.native
+#    if: |
+#      (
+#        github.ref == 'refs/heads/stable' ||
+#        contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
+#        contains(github.event.head_commit.message, 'ci:build-img-native')
+#      )
 
     permissions:
       contents: "read"
@@ -798,7 +864,7 @@ jobs:
             image: "elide-fw/samples/fullstack/react-ssr/native"
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -807,8 +873,8 @@ jobs:
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          distribution: "graalvm"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
@@ -821,6 +887,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
+          persist-credentials: false
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
@@ -885,13 +952,14 @@ jobs:
   deploy-samples:
     name: "Deploy"
     needs: [gradle, tests, docker-jvm, docker-native]
-    if: |
-      (
-        contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
-        contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
-        contains(github.event.head_commit.message, 'ci:deploy-samples') ||
-        contains(github.event.head_commit.message, 'ci:deploy')
-      )
+    if: inputs.release && inputs.deploy
+#    if: |
+#      (
+#        contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
+#        contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
+#        contains(github.event.head_commit.message, 'ci:deploy-samples') ||
+#        contains(github.event.head_commit.message, 'ci:deploy')
+#      )
 
     strategy:
       matrix:
@@ -908,7 +976,7 @@ jobs:
       statuses: "write"
       packages: "read"
 
-    uses: ./.github/workflows/deploy.ci.yml
+    uses: ./.github/workflows/job.deploy.yml
     secrets: inherit
     with:
       path: "samples/${{ matrix.category }}/${{ matrix.app }}"
@@ -923,12 +991,13 @@ jobs:
   publish-snapshot:
     name: "Publish: Snapshot"
     needs: [gradle, tests]
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:publish-snapshot') ||
-        contains(github.event.head_commit.message, 'ci:publish-snapshot')
-      )
+    if: inputs.publish
+#    if: |
+#      (
+#        github.ref == 'refs/heads/stable' ||
+#        contains(github.event.pull_request.labels.*.name, 'ci:publish-snapshot') ||
+#        contains(github.event.head_commit.message, 'ci:publish-snapshot')
+#      )
 
     permissions:
       contents: "read"
@@ -939,7 +1008,7 @@ jobs:
       statuses: "write"
       packages: "write"
 
-    uses: ./.github/workflows/publish.ci.yml
+    uses: ./.github/workflows/job.publish.yml
     secrets: inherit
     with:
       environment: snapshots
@@ -958,15 +1027,16 @@ jobs:
   publish-ossrh:
     name: "Publish: OSSRH"
     needs: [publish-snapshot]
-    if: |
-      (
-        contains(github.event.pull_request.labels.*.name, 'ci:publish') ||
-        contains(github.event.head_commit.message, 'ci:publish')
-      ) && (
-        false
-      ) && (
-        startsWith(github.ref, 'refs/tags/v')
-      )
+    if: inputs.release && inputs.publish
+#    if: |
+#      (
+#        contains(github.event.pull_request.labels.*.name, 'ci:publish') ||
+#        contains(github.event.head_commit.message, 'ci:publish')
+#      ) && (
+#        false
+#      ) && (
+#        startsWith(github.ref, 'refs/tags/v')
+#      )
 
     permissions:
       contents: "read"
@@ -977,7 +1047,7 @@ jobs:
       statuses: "write"
       packages: "write"
 
-    uses: ./.github/workflows/publish.ci.yml
+    uses: ./.github/workflows/job.publish.yml
     secrets: inherit
     with:
       environment: central

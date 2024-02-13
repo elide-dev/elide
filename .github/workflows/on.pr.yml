@@ -1,0 +1,216 @@
+name: PR
+
+"on":
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "pr-${{ github.event.pull_request.number }}"
+  cancel-in-progress: true
+
+jobs:
+  ##
+  ## Job: Change Triage
+  ##
+  triage:
+    name: "Triage"
+    runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+    permissions:
+      contents: "read"
+    outputs:
+      changes: ${{ steps.extract_branch.outputs.changes }}
+      branch: ${{ steps.extract_branch.outputs.branch }}
+      base: ${{ steps.filter.outputs.base }}
+      devcontainer: ${{ steps.filter.outputs.base }}
+      model: ${{ steps.filter.outputs.model }}
+      packages: ${{ steps.filter.outputs.packages }}
+      tools: ${{ steps.filter.outputs.tools }}
+      images: ${{ steps.filter.outputs.tools }}
+      srcs: ${{ steps.filter.outputs.srcs }}
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "Triage: Branch Label"
+        id: extract_branch
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      - name: "Triage: PR Labels"
+        uses: actions/labeler@8558fd74291d67161a8a78ce36a881fa63b766a9 # v5.0.0
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: "Triage: PR Changes"
+        id: filter
+        uses: dorny/paths-filter@0bc4621a3135347011ad047f9ecf449bf72ce2bd # v3.0.0
+        with:
+          filters: |
+            base: &base
+              - ".version"
+              - ".release"
+              - ".github/workflows/*.*"
+            devcontainer: &ci
+              - *base
+              - ".devcontainer/*.*"
+              - ".devcontainer/**/*.*"
+            model: &model
+              - *base
+              - "proto/**/*.*"
+            packages: &packages
+              - *base
+              - "packages"
+              - "packages/*"
+              - "packages/**/*.*"
+            tools: &tools
+              - *base
+              - "tools"
+              - "tools/*"
+              - "tools/**/*.*"
+            images: &images
+              - *base
+              - "tools/images/*"
+              - "tools/images/*.*"
+              - "tools/images/**/*.*"
+            srcs: &srcs
+              - *base
+              - *model
+              - *packages
+              - *tools
+
+  ##
+  ## Job: Pre-flight Checks
+  ##
+  preflight-checks:
+    name: "Pre-flight Checks"
+    runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+    needs: [triage]
+    if: fromJson(needs.triage.outputs.srcs)
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      packages: "read"
+      pull-requests: "write"
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Buildless"
+        uses: buildless/setup@v1.0.2
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        if: false  # temporarily disabled
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Patch: Neutralize Yarn Lock"
+        run: mv yarn.lock yarn.inert
+      - name: "Check: Dependency Review"
+        uses: actions/dependency-review-action@4901385134134e04cec5fbe5ddfe3b2c5bd5d976 # v4.0.0
+        continue-on-error: true
+        if: github.event_name == 'pull_request'
+        with:
+          config-file: "./.github/dependency-review-config.yml"
+          license-check: true
+          vulnerability-check: true
+          fail-on-severity: "low"
+          base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || 'v3' }}
+      - name: "Patch: Restore Yarn Lock"
+        run: mv yarn.inert yarn.lock
+      - name: "Check: Library ABI"
+        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        id: abicheck
+        if: fromJson(needs.triage.outputs.packages)
+        continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
+        env:
+          CI: true
+          GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        with:
+          cache-read-only: false
+          arguments: |
+            apiCheck
+            --dependency-verification=lenient
+            --no-daemon
+            --stacktrace
+            --warning-mode=none
+            -Pelide.ci=true
+            -PbuildDocs=false
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+
+  ##
+  ## Job: Multi-platform Build
+  ##
+  pr-build:
+    name: "Build"
+    uses: ./.github/workflows/job.build.yml
+    secrets: inherit
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
+    permissions:
+      actions: "read"
+      contents: "write"
+      id-token: "write"
+      checks: "write"
+      packages: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+      security-events: "write"
+    with:
+      tests: true
+      provenance: false
+
+  ##
+  ## Job: Checks for Models
+  ##
+  check-model:
+    name: "Checks"
+    uses: ./.github/workflows/checks.model.yml
+    secrets: inherit
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model)
+    permissions:
+      contents: read
+
+  ##
+  ## Job: Checks with CodeQL
+  ##
+  check-codeql:
+    name: "Checks"
+    uses: ./.github/workflows/checks.codeql.yml
+    secrets: inherit
+    needs: [triage, preflight-checks, pr-build]
+    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages)
+    permissions:
+      actions: "read"
+      contents: "read"
+      security-events: "write"

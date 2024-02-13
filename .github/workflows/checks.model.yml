@@ -1,12 +1,45 @@
 name: Model
 
-on:
-  push:
-    branches:
-      - main
-      - stable
-  pull_request:
-    types: [labeled, opened, reopened, synchronize]
+"on":
+  workflow_dispatch:
+    inputs:
+      lint:
+        description: "Lint"
+        type: boolean
+        required: false
+        default: true
+      breakcheck:
+        description: "Break-check"
+        type: boolean
+        required: false
+        default: true
+      push:
+        description: "Push"
+        type: boolean
+        required: false
+        default: false
+
+  workflow_call:
+    inputs:
+      lint:
+        description: "Lint"
+        type: boolean
+        required: false
+        default: true
+      breakcheck:
+        description: "Break-check"
+        type: boolean
+        required: false
+        default: true
+      push:
+        description: "Push"
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      BUF_TOKEN:
+        description: "Buf push token"
+        required: false
 
 permissions:
   contents: read
@@ -16,7 +49,9 @@ jobs:
   ## Job: Buf Lint
   ##
   buf-lint:
+    name: "Protocol: Lint"
     runs-on: ubuntu-latest
+    if: inputs.lint
     defaults:
       run:
         shell: bash
@@ -43,7 +78,9 @@ jobs:
   ## Job: Buf Breaking
   ##
   buf-breaking:
+    name: "Protocol: Break-check"
     runs-on: ubuntu-latest
+    if: inputs.breakcheck
     defaults:
       run:
         shell: bash
@@ -73,17 +110,19 @@ jobs:
   ## Job: Buf Push
   ##
   buf-push:
+    name: "Protocol: Push"
     runs-on: ubuntu-latest
+    if: inputs.push
     defaults:
       run:
         shell: bash
     needs: ["buf-lint", "buf-breaking"]
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/main' ||
-        startsWith(github.ref, 'refs/tags/v')
-      )
+#    if: |
+#      (
+#        github.ref == 'refs/heads/stable' ||
+#        github.ref == 'refs/heads/main' ||
+#        startsWith(github.ref, 'refs/tags/v')
+#      )
     permissions:
       contents: "read"
     steps:

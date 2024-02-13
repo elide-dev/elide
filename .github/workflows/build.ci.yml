@@ -286,7 +286,6 @@ jobs:
           arguments: |
             test
             allTests
-            check
             koverXmlReport
             koverBinaryReport
             koverVerify

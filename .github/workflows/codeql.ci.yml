@@ -1,10 +1,10 @@
 name: "CodeQL"
 
 on:
+  workflow_dispatch: {}
+  workflow_call: {}
   push:
-    branches: ["v3"]
-  pull_request:
-    branches: ["v3"]
+    branches: ["main"]
   schedule:
     - cron: "17 14 * * 3"
 
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze
+    name: CodeQL
     runs-on: ubuntu-latest
     continue-on-error: true
     permissions:
@@ -26,16 +26,21 @@ jobs:
         language: ["javascript", "java"]
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
-      - name: Checkout repository
+      - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - name: Initialize CodeQL
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        with:
+          distribution: 'graalvm'
+          java-version: '21'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Initialize CodeQL"
         uses: github/codeql-action/init@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
         with:
           config-file: ./.github/codeql/codeql-config.yml
-      - name: Perform CodeQL Analysis
+      - name: "Analysis: CodeQL"
         uses: github/codeql-action/analyze@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12

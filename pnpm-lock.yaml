@@ -28,8 +28,8 @@ importers:
         specifier: 8.4.33
         version: 8.4.33
       preact:
-        specifier: 10.19.3
-        version: 10.19.3
+        specifier: 10.19.4
+        version: 10.19.4
       react:
         specifier: 18.2.0
         version: registry.npmjs.org/react@18.2.0
@@ -3406,6 +3406,10 @@ packages:
 
   /preact@10.19.3:
     resolution: {integrity: sha512-nHHTeFVBTHRGxJXKkKu5hT8C/YWBkPso4/Gad6xuj5dbptt9iF9NZr9pHbPhBrnT2klheu7mHTxTZ/LjwJiEiQ==, tarball: https://registry.npmjs.org/preact/-/preact-10.19.3.tgz}
+    dev: false
+
+  /preact@10.19.4:
+    resolution: {integrity: sha512-dwaX5jAh0Ga8uENBX1hSOujmKWgx9RtL80KaKUFLc6jb4vCEAc3EeZ0rnQO/FO4VgjfPMfoLFWnNG8bHuZ9VLw==, tarball: https://registry.npmjs.org/preact/-/preact-10.19.4.tgz}
     dev: false
 
   /prettier-plugin-java@2.5.0:

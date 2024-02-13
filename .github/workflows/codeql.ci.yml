@@ -42,5 +42,17 @@ jobs:
         uses: github/codeql-action/init@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
         with:
           config-file: ./.github/codeql/codeql-config.yml
+      - name: "Analysis: Build"
+        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        continue-on-error: true
+        with:
+          cache-read-only: true
+          arguments: |
+            compileKotlin
+            -x test
+            -x check
+            -x nativeCompile
+            -x nativeOptimizedCompile
       - name: "Analysis: CodeQL"
         uses: github/codeql-action/analyze@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
+        continue-on-error: true

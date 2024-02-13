@@ -155,7 +155,6 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: "pnpm"
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
@@ -274,11 +273,10 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 20
-          cache: "pnpm"
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19
-      - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+      - name: "Setup: PNPM"
+        run: npm install -g pnpm && pnpm install
       - name: "Testsuite"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         env:

@@ -333,7 +333,7 @@ jobs:
         uses: elide-tools/action-junit-report@f14b1271fab649beb23e70eae2a258f3ee24a591 # v3.1.0
         if: always() # always run even if the previous step fails
         with:
-          report_paths: "**/build/test-results/test/TEST-*.xml"
+          report_paths: "build/test-results/merged/TESTS-TestSuites.xml"
       - name: "Report: Codecov (Main)"
         uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
         with:

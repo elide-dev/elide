@@ -35,35 +35,25 @@ kover {
   disable()
 }
 
-reporting {
-  reports {
-    val testAggregateTestReport by creating(AggregateTestReport::class) {
-      testType = TestSuiteType.UNIT_TEST
-    }
-    val testCodeCoverageReport by creating(JacocoCoverageReport::class) {
-      testType = TestSuiteType.UNIT_TEST
-      reportTask {
-        reports {
-          xml.required = true
-        }
-      }
+val testAggregateTestReport by reporting.reports.creating(AggregateTestReport::class) {
+  testType = TestSuiteType.UNIT_TEST
+}
+
+val testCodeCoverageReport by reporting.reports.creating(JacocoCoverageReport::class) {
+  testType = TestSuiteType.UNIT_TEST
+  reportTask {
+    reports {
+      xml.required = true
     }
   }
 }
 
 dependencies {
-  Projects.serverModules.plus(
-    Projects.multiplatformModules
-  ).forEach {
-    // @TODO: flatbuffers project is disabled by default for testing.
-    if (!it.contains("flatbuffers")) testReportAggregation(project(":packages:$it"))
-  }
-
   antJUnit("org.apache.ant", "ant-junit", "1.10.12")
 }
 
 val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class) {
-  val testReportPaths: List<String> = allprojects.filter { project ->
+  val testReportPaths: List<File> = rootProject.allprojects.filter { project ->
     !listOf(
       "proto",
       "sample",
@@ -73,7 +63,7 @@ val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class)
       project.path.contains(it) || project.name.contains(it)
     }
   }.map {
-    val path = file(layout.buildDirectory.dir("test-results/test"))
+    val path = file(it.layout.buildDirectory.dir("test-results"))
     if (path.exists()) {
       java.util.Optional.of(path)
     } else {
@@ -82,24 +72,39 @@ val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class)
   }.filter {
     it.isPresent
   }.map {
-    it.get().absolutePath
+    it.get()
   }
 
   testReportPaths.forEach {
     from(it) {
-      include("TEST-*.xml")
-      include("**/TEST-*.xml")
+      include(
+        "TEST-*.xml",
+        "*/TEST-*.xml",
+        "**/TEST-*.xml",
+        "./*/TEST-*.xml",
+        "./**/TEST-*.xml",
+      )
     }
   }
-  into(
-    "build/test-results/allreports"
-  )
+  into(project.layout.buildDirectory.dir("test-results/allreports").get())
+}
+
+val resultsDir = file(layout.buildDirectory.dir("test-results/allreports"))
+val mergedDir = file(layout.buildDirectory.dir("test-results"))
+
+val copyFinalizedReports: TaskProvider<Copy> by tasks.registering(Copy::class) {
+  dependsOn(locateCopyJUnitReports, mergeJUnitReports)
+  mustRunAfter(locateCopyJUnitReports, mergeJUnitReports)
+
+  from(mergedDir) {
+    include("**/*.*")
+  }
+  into(rootProject.layout.buildDirectory.dir("test-results/merged"))
 }
 
 val mergeJUnitReports: TaskProvider<Task> by tasks.registering {
-  dependsOn(tasks.named("locateCopyJUnitReports"))
-  val resultsDir = file("build/test-results/allreports")
-  val mergedDir = file("build/test-results")
+  dependsOn(locateCopyJUnitReports)
+  finalizedBy(copyFinalizedReports)
 
   if (resultsDir.exists()) {
     doLast {
@@ -114,7 +119,7 @@ val mergeJUnitReports: TaskProvider<Task> by tasks.registering {
         "junitreport"("todir" to mergedDir) {
           "fileset"(
             "dir" to resultsDir,
-            "includes" to "TEST-*.xml"
+            "includes" to "**/*.xml"
           )
         }
       }
@@ -123,6 +128,12 @@ val mergeJUnitReports: TaskProvider<Task> by tasks.registering {
 }
 
 val reports: TaskProvider<Task> by tasks.registering {
-  dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
-  dependsOn(tasks.named("mergeJUnitReports"))
+  description = "Generate all project reports"
+  group = "reporting"
+
+  dependsOn("testAggregateTestReport", mergeJUnitReports)
+}
+
+tasks.check.configure {
+  finalizedBy(reports)
 }

@@ -22,7 +22,7 @@ import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.JavaScriptBase64
 import elide.vm.annotations.Polyglot
 
-/** Implements [JavaScriptBase64] via [elide.core.encoding.DefaultBase64], by way of [NativeBase64Intrinsic]. */
+/** Implements [JavaScriptBase64] via the default Base64 implementation. */
 @Intrinsic(global = Base64Intrinsic.GLOBAL_BASE64)
 internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
   internal companion object {

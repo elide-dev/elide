@@ -32,6 +32,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 import elide.annotations.Eager
 import elide.embedded.api.*
+import elide.embedded.err.InitializationError
 
 /**
  * # Elide: Embedded
@@ -141,8 +142,8 @@ public class ElideEmbedded private constructor () {
   /**
    * ## Native: Initialization
    *
-   * Initialize native integration between a host application and embedded Elide. The provided [thread] is expected to
-   * be an initialized GraalVM isolate thread, which should be held for the lifetime of the outer host application.
+   * Initialize native integration between a host application and embedded Elide. The provided thread is expected to be
+   * an initialized GraalVM isolate thread, which should be held for the lifetime of the outer host application.
    *
    * ### API Versioning
    *

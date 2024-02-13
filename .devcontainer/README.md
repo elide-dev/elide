@@ -64,6 +64,7 @@ elide shell --python
 ```
 
 **To see `.env` environment:**
+
 ```python
-import os; os.environ
+import os; print(os.environ)
 ```

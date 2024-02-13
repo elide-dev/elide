@@ -54,8 +54,8 @@ import java.util.*
   }
 
   /**
-   * Given a [response] which has concluded server-side processing, finalize the response headers by applying consistent
-   * casing, de-duplication, and any other transformations stipulated by app configuration.
+   * Given a [baseResponse] which has concluded server-side processing, finalize the response headers by applying
+   * consistent casing, de-duplication, and any other transformations stipulated by app configuration.
    *
    * @param baseResponse HTTP response which was produced by the server.
    * @return Original HTTP response, but with finalized headers.

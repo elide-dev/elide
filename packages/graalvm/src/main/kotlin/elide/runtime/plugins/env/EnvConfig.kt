@@ -164,7 +164,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
     app.setEnv(alias, EnvVar.mapToHost(hostVariable, alias, defaultValue))
   }
 
-  /** Expose or map a [hostVariable] to the provided [alias] (defaults to the same name). */
+  /** Expose or map a [hostVariable] to the provided alias (defaults to the same name). */
   public fun exposeHostEnv(hostVariable: String, defaultValue: String? = null) {
     mapToHostEnv(hostVariable, defaultValue = defaultValue)
   }

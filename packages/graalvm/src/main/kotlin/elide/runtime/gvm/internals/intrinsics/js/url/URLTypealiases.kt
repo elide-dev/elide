@@ -16,6 +16,6 @@ package elide.runtime.gvm.internals.intrinsics.js.url
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsConcurrentSortedMap
 
 /**
- * Backing map type for [URLSearchParams].
+ * Backing map type for URL search params.
  */
 internal typealias URLParamsMap = JsConcurrentSortedMap<String, MutableList<String>>

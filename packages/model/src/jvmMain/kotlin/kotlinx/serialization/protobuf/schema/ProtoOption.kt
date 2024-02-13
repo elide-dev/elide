@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("RedundantVisibilityModifier")
+@file:Suppress("RedundantVisibilityModifier", "KDocUnresolvedReference")
 
 package kotlinx.serialization.protobuf.schema
 

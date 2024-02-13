@@ -1,2 +1,8 @@
 version: "1.0"
 linter: jetbrains/qodana-jvm:latest
+exclude:
+  - name: All
+    paths:
+      - runtime
+      - asm/Visitor.java
+      - benchmarks

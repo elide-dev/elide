@@ -224,11 +224,16 @@ koverReport {
     }
 
     xml {
-      //
+      onCheck = false
     }
 
     html {
+      onCheck = false
       title = "Elide Coverage"
+    }
+
+    binary {
+      onCheck = true
     }
 
     verify {

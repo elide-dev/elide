@@ -17,6 +17,9 @@ env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
   GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
 
+permissions:
+  contents: read
+
 jobs:
   ##
   ## Job: Pre-flight Checks
@@ -360,6 +363,11 @@ jobs:
     name: "Checks: CodeQL"
     uses: ./.github/workflows/codeql.ci.yml
     needs: [gradle, tests]
+    secrets: inherit
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
   ##
   ## Job: Checks (Qodana)
@@ -368,6 +376,7 @@ jobs:
     name: "Checks: Qodana"
     uses: ./.github/workflows/qodana.ci.yml
     needs: [gradle, tests]
+    secrets: inherit
 
   ##
   ## Job: Testsuite (Native)

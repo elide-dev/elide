@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Ventures, LLC.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -11,16 +11,19 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.model.token
+package elide.model
 
-import elide.annotations.data.Sensitive
-import kotlinx.serialization.Serializable
+import kotlin.test.Test
+import kotlin.test.assertNotNull
+import elide.model.annotations.Model
 
-/** Describes a sensitive token value. */
-@Serializable public actual data class Token actual constructor (
-  /** Type of token. */
-  public actual val type: TokenType,
+class ModelTest {
+  @Model data class SampleModel(
+    val a: Int,
+    val b: String,
+  )
 
-  /** Inner token value. */
-  @Sensitive public actual val value: TokenValue,
-)
+  @Test fun testModelSerializer() {
+    assertNotNull(SampleModel.serializer(), "model should provide compile-time serializer")
+  }
+}

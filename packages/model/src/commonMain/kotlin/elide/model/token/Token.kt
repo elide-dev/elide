@@ -19,7 +19,10 @@ import elide.annotations.data.Sensitive
  * # Models: Token
  *
  */
-public expect class Token {
+public expect class Token (
+  type: TokenType,
+  value: TokenValue,
+) {
   /** Specifies the type of token. */
   public val type: TokenType
 

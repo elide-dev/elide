@@ -19,6 +19,6 @@ package elide.model.token
  * Holds a raw sensitive token value, usually wrapped in a [Token] payload; the string representation of this object is
  * never printed literally, but is instead masked.
  */
-public expect class TokenValue {
+public expect class TokenValue (value: String) {
   public val value: String
 }

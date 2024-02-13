@@ -13,6 +13,9 @@
 
 package elide.model.annotations
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.MetaSerializable
+
 /**
  * Marks an application-level class as a data model, which makes it eligible for reflective use (even in native
  * circumstances such as on GraalVM).
@@ -21,7 +24,8 @@ package elide.model.annotations
  * typically only depend on other models (ideally via encapsulation), and should be immutable. Kotlin data classes are
  * an example of good model semantics.
  */
+@OptIn(ExperimentalSerializationApi::class)
+@MetaSerializable
 @MustBeDocumented
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.TYPE)
+@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
 public annotation class Model

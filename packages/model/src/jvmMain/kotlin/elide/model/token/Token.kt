@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 import elide.annotations.data.Sensitive
 
 /** Describes a sensitive token value. */
-@Serializable public actual data class Token (
+@Serializable public actual data class Token actual constructor (
   /** Type of token. */
   public actual val type: TokenType,
 

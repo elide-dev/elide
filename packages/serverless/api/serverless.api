@@ -246,7 +246,6 @@ public final class elide/http/HttpStatus : elide/http/api/HttpStatus {
 	public static final fun equals-impl0 (Lelide/http/HttpStatus$HttpStatusInfo;Lelide/http/HttpStatus$HttpStatusInfo;)Z
 	public fun getCode-pVg5ArA ()I
 	public static fun getCode-pVg5ArA (Lelide/http/HttpStatus$HttpStatusInfo;)I
-	public final fun getStatusInfo ()Lelide/http/HttpStatus$HttpStatusInfo;
 	public fun getText ()Ljava/lang/String;
 	public static fun getText-impl (Lelide/http/HttpStatus$HttpStatusInfo;)Ljava/lang/String;
 	public fun getType ()Lelide/http/api/HttpStatus$Type;
@@ -258,17 +257,17 @@ public final class elide/http/HttpStatus : elide/http/api/HttpStatus {
 	public final synthetic fun unbox-impl ()Lelide/http/HttpStatus$HttpStatusInfo;
 }
 
-public final class elide/http/HttpStatus$HttpStatusInfo {
+public final class elide/http/HttpStatus$HttpStatusInfo : java/lang/Record {
 	public synthetic fun <init> (ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (ILjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun code ()I
 	public final fun component1-pVg5ArA ()I
 	public final fun component2 ()Ljava/lang/String;
 	public final fun copy-qim9Vi0 (ILjava/lang/String;)Lelide/http/HttpStatus$HttpStatusInfo;
 	public static synthetic fun copy-qim9Vi0$default (Lelide/http/HttpStatus$HttpStatusInfo;ILjava/lang/String;ILjava/lang/Object;)Lelide/http/HttpStatus$HttpStatusInfo;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCode-pVg5ArA ()I
-	public final fun getReason ()Ljava/lang/String;
 	public fun hashCode ()I
+	public final fun reason ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -378,6 +377,7 @@ public abstract class elide/http/MutableHttpMessage : elide/http/api/MutableHttp
 	public synthetic fun getBody ()Lelide/http/api/MutableHttpPayload;
 	public fun getHeaders ()Lelide/http/MutableHttpHeaders;
 	public synthetic fun getHeaders ()Lelide/http/api/HttpHeaders;
+	public synthetic fun getHeaders ()Lelide/http/api/MutableHttpHeaders;
 	public fun getMutable ()Z
 	public fun getVersion ()Lelide/http/api/HttpVersion;
 	public fun setBody (Lelide/http/MutableHttpPayload;)V
@@ -829,17 +829,14 @@ public abstract interface class elide/http/api/HttpStatus {
 	public abstract fun getType ()Lelide/http/api/HttpStatus$Type;
 }
 
-public final class elide/http/api/HttpStatus$DefaultImpls {
-	public static fun getText (Lelide/http/api/HttpStatus;)Ljava/lang/String;
-	public static fun getType (Lelide/http/api/HttpStatus;)Lelide/http/api/HttpStatus$Type;
-}
-
 public final class elide/http/api/HttpStatus$Type : java/lang/Enum {
 	public static final field CLIENT_ERROR Lelide/http/api/HttpStatus$Type;
+	public static final field Companion Lelide/http/api/HttpStatus$Type$Companion;
 	public static final field INFORMATIONAL Lelide/http/api/HttpStatus$Type;
 	public static final field REDIRECTION Lelide/http/api/HttpStatus$Type;
 	public static final field SERVER_ERROR Lelide/http/api/HttpStatus$Type;
 	public static final field SUCCESSFUL Lelide/http/api/HttpStatus$Type;
+	public static final fun fromCode-WZ4Q5Ns (I)Lelide/http/api/HttpStatus$Type;
 	public final fun getDescription ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getErr ()Z
@@ -847,6 +844,10 @@ public final class elide/http/api/HttpStatus$Type : java/lang/Enum {
 	public final fun getServerFault ()Z
 	public static fun valueOf (Ljava/lang/String;)Lelide/http/api/HttpStatus$Type;
 	public static fun values ()[Lelide/http/api/HttpStatus$Type;
+}
+
+public final class elide/http/api/HttpStatus$Type$Companion {
+	public final fun fromCode-WZ4Q5Ns (I)Lelide/http/api/HttpStatus$Type;
 }
 
 public final class elide/http/api/HttpToken : elide/http/api/HeaderValueTokenType, elide/http/api/HttpHeaderValue {
@@ -978,7 +979,7 @@ public abstract interface class elide/http/api/MutableHttpMapping : elide/http/a
 
 public abstract interface class elide/http/api/MutableHttpMessage : elide/http/api/HttpMessage {
 	public abstract fun getBody ()Lelide/http/api/MutableHttpPayload;
-	public abstract fun getHeaders ()Lelide/http/MutableHttpHeaders;
+	public abstract fun getHeaders ()Lelide/http/api/MutableHttpHeaders;
 	public abstract fun getMutable ()Z
 }
 

@@ -1,13 +1,11 @@
 name: CI
 
 "on":
+  merge_group: {}
   push:
     branches:
       - stable
       - main
-  pull_request:
-    types: [opened, reopened, synchronize]
-  merge_group: {}
 
 permissions:
   contents: read

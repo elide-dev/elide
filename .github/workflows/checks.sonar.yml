@@ -1,4 +1,4 @@
-name: Qodana
+name: Sonar
 
 "on":
   workflow_dispatch:
@@ -19,8 +19,8 @@ name: Qodana
         default: "elide-framework"
 
     secrets:
-      QODANA_TOKEN:
-        description: "Qodana token"
+      SONAR_TOKEN:
+        description: "Sonar token"
         required: true
       BUILDLESS_APIKEY:
         description: "Buildless API key"
@@ -30,8 +30,8 @@ permissions:
   contents: "read"
 
 jobs:
-  qodana:
-    name: "Qodana"
+  sonar:
+    name: "Sonar"
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -56,14 +56,7 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "Analysis: Qodana Scan"
-        uses: JetBrains/qodana-action@9a71424636be05dccc139d34e7248de96fd15d9c # main
-        continue-on-error: true
-        timeout-minutes: 10
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-      - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@e675ced7a7522a761fc9c8eb26682c8b27c42b2b # v3.24.1
-        with:
-          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
+
+      ## download artifacts, run sonar
+      - name: "Analysis: Sonar"
+        run: echo "Sonar is stubbed."

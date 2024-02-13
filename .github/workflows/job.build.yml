@@ -257,14 +257,23 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-      - name: "Build reports"
+      - name: "Artifact: Build Outputs"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: elide-framework
+          path: |
+            build/libs/**/*.*
+            packages/*/build/libs/*.*
+            packages/proto/*/build/libs/*.*
+            tools/elide-build/build/**/*.*
+      - name: "Artifact: Reports"
         if: failure()
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           name: build-reports-${{ matrix.os }}-latest-gvm-latest
           path: |
             build/reports/**/*.*
-      - name: "Build: Provenance Subject"
+      - name: "Artifact: Provenance Subject"
         id: hash
         if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}
         run: |
@@ -335,6 +344,11 @@ jobs:
         run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
         run: npm install -g pnpm && pnpm install
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
       - name: "Testsuite"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         env:
@@ -461,6 +475,11 @@ jobs:
         run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
         run: npm install -g pnpm && pnpm install
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         continue-on-error: true
@@ -569,6 +588,11 @@ jobs:
           cache: "yarn"
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
       - name: "Build: CLI (Native/Debug)"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         env:
@@ -697,6 +721,11 @@ jobs:
           cache: "yarn"
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
       - name: "Build: CLI (Native/Release)"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         env:

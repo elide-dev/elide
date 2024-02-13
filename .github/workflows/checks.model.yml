@@ -18,6 +18,11 @@ name: Model
         type: boolean
         required: false
         default: false
+      ignore_breaking:
+        description: "Ignore breaking"
+        type: boolean
+        required: false
+        default: false
 
   workflow_call:
     inputs:
@@ -33,6 +38,11 @@ name: Model
         default: true
       push:
         description: "Push"
+        type: boolean
+        required: false
+        default: false
+      ignore_breaking:
+        description: "Ignore breaking"
         type: boolean
         required: false
         default: false
@@ -58,15 +68,17 @@ jobs:
     permissions:
       contents: "read"
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
+        uses: bufbuild/buf-setup-action@88db93f5d74ffa329bb43e42aa95cd822697d214 # v1.29.0
         with:
           github_token: ${{ github.token }}
       - name: "Check: Buf Lint"
@@ -88,20 +100,22 @@ jobs:
       contents: "read"
     continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
       - name: "Setup: Buf"
         uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
         with:
           github_token: ${{ github.token }}
       - name: "Check: Buf Breaking"
         uses: bufbuild/buf-breaking-action@a074e988ee34efcd4927079e79c611f428354c01 # v1.1.3
-        continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
+        continue-on-error: ${{ inputs.ignore_breaking }}
+#        continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
         with:
           against: https://github.com/elide-dev/elide.git#branch=main
           input: proto
@@ -113,10 +127,10 @@ jobs:
     name: "Protocol: Push"
     runs-on: ubuntu-latest
     if: inputs.push
+    needs: ["buf-lint", "buf-breaking"]
     defaults:
       run:
         shell: bash
-    needs: ["buf-lint", "buf-breaking"]
 #    if: |
 #      (
 #        github.ref == 'refs/heads/stable' ||
@@ -126,13 +140,15 @@ jobs:
     permissions:
       contents: "read"
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - name: "Setup: Buf"
         uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
         with:

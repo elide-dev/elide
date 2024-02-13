@@ -70,6 +70,7 @@ jobs:
               - "proto/**/*.*"
             packages: &packages
               - *base
+              - *model
               - "packages"
               - "packages/*"
               - "packages/**/*.*"
@@ -104,7 +105,7 @@ jobs:
       packages: "read"
       pull-requests: "write"
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -195,11 +196,36 @@ jobs:
   check-model:
     name: "Checks"
     uses: ./.github/workflows/checks.model.yml
-    secrets: inherit
     needs: [triage, preflight-checks]
     if: fromJson(needs.triage.outputs.model)
+    secrets:
+      BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
     permissions:
-      contents: read
+      contents: "read"
+
+  ##
+  ## Job: Check for Wrapper
+  ##
+  check-wrapper:
+    name: "Checks"
+    uses: ./.github/workflows/checks.gradle-wrapper.yml
+    needs: [triage]
+    permissions:
+      contents: "read"
+
+  ##
+  ## Job: Checks with Sonar
+  ##
+  check-sonar:
+    name: "Checks"
+    uses: ./.github/workflows/checks.sonar.yml
+    needs: [triage, preflight-checks, pr-build]
+    if: fromJson(needs.triage.outputs.srcs)
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+    permissions:
+      contents: "read"
 
   ##
   ## Job: Checks with CodeQL
@@ -207,10 +233,25 @@ jobs:
   check-codeql:
     name: "Checks"
     uses: ./.github/workflows/checks.codeql.yml
-    secrets: inherit
     needs: [triage, preflight-checks, pr-build]
-    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages)
+    if: fromJson(needs.triage.outputs.packages)
+    secrets:
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
     permissions:
       actions: "read"
       contents: "read"
       security-events: "write"
+
+  ##
+  ## Job: Checks with Qodana
+  ##
+  check-qodana:
+    name: "Checks"
+    uses: ./.github/workflows/checks.qodana.yml
+    needs: [triage, preflight-checks, pr-build]
+    if: fromJson(needs.triage.outputs.packages)
+    secrets:
+      QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+    permissions:
+      contents: "read"

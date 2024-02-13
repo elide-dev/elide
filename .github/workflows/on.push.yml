@@ -13,4 +13,24 @@ permissions:
 concurrency:
   group: "push-${{ github.ref }}"
 
-jobs: []
+jobs:
+  ##
+  ## Job: Multi-platform Build
+  ##
+  build:
+    name: "Build"
+    uses: ./.github/workflows/job.build.yml
+    secrets: inherit
+    permissions:
+      actions: "read"
+      contents: "write"
+      id-token: "write"
+      checks: "write"
+      packages: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+      security-events: "write"
+    with:
+      tests: true
+      provenance: true

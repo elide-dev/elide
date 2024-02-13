@@ -43,7 +43,7 @@ jobs:
         with:
           submodules: true
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
@@ -149,7 +149,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Buildless"
         if: contains(matrix.machine, 'macos') == false
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
@@ -267,7 +267,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
@@ -384,7 +384,7 @@ jobs:
           java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -488,7 +488,7 @@ jobs:
           cleanup_credentials: true
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: MSVC"
         if: contains(matrix.runner, 'windows')
         uses: ilammy/msvc-dev-cmd@cec98b9d092141f74527d0afa6feb2af698cfe89 # v1.12.1
@@ -607,7 +607,7 @@ jobs:
           submodules: true
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -699,7 +699,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:
@@ -803,7 +803,7 @@ jobs:
         with:
           egress-policy: audit
       - name: "Setup: Buildless"
-        uses: buildless/setup@v1.0.2
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
         with:

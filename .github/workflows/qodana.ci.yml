@@ -25,13 +25,13 @@ jobs:
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Check: Qodana Scan"
-        uses: JetBrains/qodana-action@main
+        uses: JetBrains/qodana-action@9a71424636be05dccc139d34e7248de96fd15d9c # main
         continue-on-error: true
         timeout-minutes: 10
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@e675ced7a7522a761fc9c8eb26682c8b27c42b2b # v3.24.1
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

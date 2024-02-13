@@ -250,3 +250,18 @@ updates:
     directory: /tools/scripts
     schedule:
       interval: daily
+
+  - package-ecosystem: docker
+    directory: /.devcontainer/dev
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/bash
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/elide
+    schedule:
+      interval: daily

@@ -159,7 +159,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
-        run: pnpm install
+        run: npm install -g pnpm && pnpm install
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
@@ -426,7 +426,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19
       - name: "Setup: PNPM"
-        run: pnpm install
+        run: npm install -g pnpm && pnpm install
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
         continue-on-error: true

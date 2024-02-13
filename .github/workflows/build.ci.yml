@@ -284,6 +284,9 @@ jobs:
             allTests
             check
             koverXmlReport
+            koverBinaryReport
+            koverVerify
+            copyCoverageReports
             --scan
             --no-daemon
             --warning-mode=none

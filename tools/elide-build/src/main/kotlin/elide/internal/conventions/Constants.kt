@@ -121,6 +121,9 @@ public object Constants {
     /** gRPC version. */
     const val GRPC = "1.61.1"
 
+    /** JLine version. */
+    const val JLINE = "3.25.1"
+
     /** GraalVM version. */
     const val GRAALVM = "23.1.2"
   }

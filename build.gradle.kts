@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import java.util.Properties
+import kotlinx.kover.gradle.plugin.dsl.*
 import elide.internal.conventions.project.Projects
 
 plugins {
@@ -231,7 +232,26 @@ koverReport {
     }
 
     verify {
-      //
+      rule {
+        isEnabled = true
+        entity = GroupingEntityType.APPLICATION
+
+        bound {
+          minValue = 10
+          maxValue = 99
+          metric = MetricType.LINE
+        }
+        bound {
+          minValue = 10
+          maxValue = 99
+          metric = MetricType.BRANCH
+        }
+        bound {
+          minValue = 10
+          maxValue = 99
+          metric = MetricType.INSTRUCTION
+        }
+      }
     }
   }
 }
@@ -444,6 +464,27 @@ val publishAll by tasks.registering {
   dependsOn(publishElide, publishSubstrate, publishBom)
 }
 
+val copyCoverageReports by tasks.registering(Copy::class) {
+  description = "Copy coverage reports to the root project for Qodana"
+  group = "Verification"
+
+  dependsOn(
+    tasks.koverBinaryReport,
+    tasks.koverXmlReport,
+  )
+
+  from(layout.buildDirectory.dir("reports/kover")) {
+    include("report.bin", "report.xml", "verify.err")
+    rename {
+      it.replace("report.", "elide.")
+    }
+  }
+  into(layout.projectDirectory.dir(".qodana/code-coverage"))
+}
+
+tasks.koverVerify.configure {
+  finalizedBy(copyCoverageReports)
+}
 
 // @TODO: replace where needed with convention plugin logic
 //

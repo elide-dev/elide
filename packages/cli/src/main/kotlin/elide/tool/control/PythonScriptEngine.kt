@@ -13,12 +13,9 @@
 
 package elide.tool.control
 
-import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.GraalVMGuest.PYTHON
 
 /**
  * TBD.
  */
-class PythonScriptEngine : AbstractScriptEngineFactory() {
-  override val engine: GraalVMGuest get() = PYTHON
-}
+class PythonScriptEngine : AbstractScriptEngineFactory(PYTHON)

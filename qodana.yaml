@@ -1,8 +1,42 @@
 version: "1.0"
 linter: jetbrains/qodana-jvm:latest
+projectJDK: "21"
+disableSanityInspections: true
+fixesStrategy: none
+
+profile:
+  name: qodana.recommended
+
 exclude:
   - name: All
     paths:
-      - runtime
-      - asm/Visitor.java
+      - .codebase
+      - .devcontainer
+      - .github
+      - .gradle
       - benchmarks
+      - runtime
+      - packages/proto/proto-capnp
+      - packages/proto/proto-protobuf
+
+include:
+  - name: CheckDependencyLicenses
+  - name: VulnerableLibrariesGlobal
+  - name: JvmCoverageInspection
+  - name: BufAnalyze
+
+bootstrap: |
+  set -eu
+  pnpm install
+
+failureConditions:
+  severityThresholds:
+    any: 100
+    critical: 1
+    high: 2
+    moderate: 3
+    low: 4
+    info: 5
+  testCoverageThresholds:
+    fresh: 10
+    total: 10

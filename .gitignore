@@ -25,3 +25,4 @@ tmpdocs/
 test-results-native/
 .codebase/cache
 .kotlin/
+.qodana/

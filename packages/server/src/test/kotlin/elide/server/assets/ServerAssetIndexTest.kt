@@ -42,12 +42,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
 import kotlin.test.*
+import elide.testing.annotations.TestCase
 
 /** Tests for [ServerAssetIndex]. */
 @Suppress("UnstableApiUsage")
-@Ignore
-@MicronautTest
-class ServerAssetIndexTest {
+@TestCase class ServerAssetIndexTest {
   private fun loadSampleManifest(): AssetBundle {
     val data = TestUtil.loadBinary("/manifests/app.assets.pb")
     val baos = ByteArrayInputStream(data)
@@ -268,7 +267,7 @@ class ServerAssetIndexTest {
     )
   }
 
-  @Test fun testGenerateEtagsStrong() {
+  @Test @Ignore fun testGenerateEtagsStrong() {
     // standard config
     val (sample, indexer) = createIndexer(
       config = object : AssetConfig {
@@ -310,7 +309,7 @@ class ServerAssetIndexTest {
     assertTrue(etag.endsWith("\""), "weak etag should end with a double-quote")
   }
 
-  @Test fun testRenderConditionalStrongETagMatch() {
+  @Test @Ignore fun testRenderConditionalStrongETagMatch() {
     // standard config
     val cfg = object : AssetConfig {
       override fun isEnabled(): Boolean = true
@@ -373,7 +372,7 @@ class ServerAssetIndexTest {
     assertEquals(304, response.status.code, "should get HTTP 200 from conditional etag match")
   }
 
-  @Test fun testRenderConditionalStrongETagMismatch() {
+  @Test @Ignore fun testRenderConditionalStrongETagMismatch() {
     // standard config
     val cfg =object : AssetConfig {
       override fun isEnabled(): Boolean = true
@@ -625,7 +624,7 @@ class ServerAssetIndexTest {
     }
   }
 
-  @Test fun testRenderConditionalWeakETagMatchInStrongMode() {
+  @Test @Ignore fun testRenderConditionalWeakETagMatchInStrongMode() {
     val (sample, indexerWithWeakEtags) = createIndexer(
       config = object : AssetConfig {
         override fun isEnabled(): Boolean = true

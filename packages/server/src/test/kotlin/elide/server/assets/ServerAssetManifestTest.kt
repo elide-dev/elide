@@ -21,9 +21,10 @@ import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 import kotlin.test.*
 import elide.server.TestUtil
+import elide.testing.annotations.TestCase
 
 /** Tests for [ServerAssetManifest] and [ServerAssetManifestProvider]. */
-@Ignore class ServerAssetManifestTest {
+@TestCase class ServerAssetManifestTest {
   @Test fun testParseSampleManifestBinary() {
     val data = TestUtil.loadBinary("/manifests/app.assets.pb")
     val baos = ByteArrayInputStream(data)
@@ -87,7 +88,7 @@ import elide.server.TestUtil
     )
   }
 
-  @Test fun testManifestEqualsAcrossFormats() {
+  @Test @Ignore fun testManifestEqualsAcrossFormats() {
     val dataBinary = TestUtil.loadBinary("/manifests/app.assets.pb")
     val dataJson = TestUtil.loadBinary("/manifests/app.assets.pb.json")
     val provider = ServerAssetManifestProvider()

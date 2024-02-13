@@ -293,8 +293,7 @@ jobs:
             copyCoverageReports
             -x wasmJsTest
             -x wasmWasiTest
-            -x compileTestDevelopmentExecutableKotlinWasmWasiOptimize
-            -x compileTestProductionExecutableKotlinWasmWasiOptimize
+            -x wasmWasiNodeTest
             --scan
             --no-daemon
             --warning-mode=none

@@ -324,7 +324,7 @@ jobs:
             **/build/reports/jacoco/test/jacocoTestReport.xml
             **/build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml
             **/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
-            build/reports/kover/merged/html/**/*.*
+            build/reports/kover/**/*.*
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
       - name: "Annotate: Test Results"
@@ -341,15 +341,6 @@ jobs:
           flags: jvm,lib
           fail_ci_if_error: false
           verbose: true
-      - name: "Report: Codecov (Substrate)"
-        uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./tools/substrate/build/reports/kover/merged/xml/report.xml
-          name: substrate
-          flags: jvm,substrate
-          fail_ci_if_error: false
-          verbose: true
       - name: "Report: Codecov (Plugin)"
         uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
         with:
@@ -359,17 +350,22 @@ jobs:
           flags: jvm,plugin,gradle
           fail_ci_if_error: false
           verbose: true
-      - name: "Check: Qodana Scan"
-        uses: JetBrains/qodana-action@main
-        continue-on-error: true
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-      - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@v3
-        continue-on-error: true
-        with:
-          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
+
+  ##
+  ## Job: Checks (CodeQL)
+  ##
+  checks-codeql:
+    name: "Checks: CodeQL"
+    uses: ./.github/workflows/codeql.ci.yml
+    needs: [gradle, tests]
+
+  ##
+  ## Job: Checks (Qodana)
+  ##
+  checks-qodana:
+    name: "Checks: Qodana"
+    uses: ./.github/workflows/qodana.ci.yml
+    needs: [gradle, tests]
 
   ##
   ## Job: Testsuite (Native)

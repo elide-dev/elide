@@ -5,7 +5,7 @@ on:
 
 jobs:
   qodana:
-    name: "Scan"
+    name: "Qodana"
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:

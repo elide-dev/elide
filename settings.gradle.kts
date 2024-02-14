@@ -259,15 +259,9 @@ gradleEnterprise {
 
 val cachePush: String? by settings
 
-buildCache {
-  local {
-    isEnabled = true
-  }
-}
-
 buildless {
   localCache {
-    enabled = System.getenv("CI") != "true"
+    enabled = true
   }
 
   remoteCache {

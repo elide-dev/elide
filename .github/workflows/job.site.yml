@@ -79,7 +79,7 @@ jobs:
         run: |
           make docs reports CI=yes JVM=21
       - name: "Build: Site"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
         with:

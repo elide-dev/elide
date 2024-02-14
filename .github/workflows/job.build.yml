@@ -232,7 +232,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "🛠️ Build"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}
         env:
@@ -270,10 +270,11 @@ jobs:
             -x optimizedDistTar
             -x optimizedDistZip
             --scan
+            --configuration-cache
+            --build-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
-            --configuration-cache
             --stacktrace
             -Pelide.ci=true
             -PbuildSamples=false
@@ -396,7 +397,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Testsuite"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
           TEST_EXCEPTIONS: true
@@ -425,7 +426,13 @@ jobs:
             -x wasmWasiTest
             -x wasmWasiNodeTest
             -x detekt
+            -x compileDebugCpp
+            -x compileReleaseCpp
+            -x compileTestCpp
+            -x :packages:nfi:runTest
             --scan
+            --build-cache
+            --configuration-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
@@ -435,7 +442,7 @@ jobs:
             -PbuildDocs=false
             -PbuildDocsSite=false
       - name: "Runtime Self-tests (JVM)"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         continue-on-error: true
         env:
           CI: true
@@ -550,7 +557,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Run Tests (Native)"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         continue-on-error: true
         env:
           CI: true
@@ -677,7 +684,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Build: CLI (Native/Debug)"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
         with:
@@ -824,7 +831,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Build: CLI (Native/Release)"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
         with:
@@ -955,7 +962,7 @@ jobs:
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
         continue-on-error: ${{ fromJson(matrix.labs) }}
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         with:
           arguments: |
             --no-daemon
@@ -1074,7 +1081,7 @@ jobs:
 
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
-        uses: gradle/actions/setup-gradle@29c0906b64b8fc82467890bfb7a0a7ef34bda89e # v3.1.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         continue-on-error: true
         with:
           arguments: |

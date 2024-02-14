@@ -1,0 +1,25 @@
+test
+allTests
+koverXmlReport
+koverBinaryReport
+koverVerify
+copyCoverageReports
+-x wasmJsTest
+-x wasmWasiTest
+-x wasmWasiNodeTest
+-x detekt
+-x compileDebugCpp
+-x compileReleaseCpp
+-x compileTestCpp
+-x :packages:nfi:runTest
+--scan
+--build-cache
+--configuration-cache
+--no-daemon
+--warning-mode=none
+--dependency-verification=lenient
+-x apiCheck
+-Pelide.ci=true
+-PbuildSamples=false
+-PbuildDocs=false
+-PbuildDocsSite=false

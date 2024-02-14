@@ -126,9 +126,7 @@ name: Framework
         description: "Gradle cache key"
 
 env:
-  CACHE_ENDPOINT: "https://gradle.less.build/cache/generic/"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-  GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
 
 permissions:
   contents: read

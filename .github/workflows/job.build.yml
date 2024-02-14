@@ -199,7 +199,7 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           path: "**/*.*"
           restore-keys: |
             elide-framework-v1-build-
@@ -380,10 +380,10 @@ jobs:
         id: cache-restore-build
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           path: "**/*.*"
           restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
             elide-framework-v1-build-
             elide-framework-v1-
             elide-framework-
@@ -391,7 +391,7 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-v1-tests-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          key: elide-framework-v1-tests-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           path: "**/*.*"
           restore-keys: |
             elide-framework-v1-tests-
@@ -569,8 +569,9 @@ jobs:
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           path: "**/*.*"
+          key: elide-framework-v1-tests-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           restore-keys: |
-            elide-framework-v1-tests-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-tests-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
             elide-framework-v1-tests-
             elide-framework-v1-
             elide-framework-
@@ -694,8 +695,8 @@ jobs:
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           path: "**/*.*"
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
             elide-framework-v1-build-
             elide-framework-v1-
             elide-framework-
@@ -847,8 +848,8 @@ jobs:
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           path: "**/*.*"
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
             elide-framework-v1-build-
             elide-framework-v1-
             elide-framework-
@@ -970,8 +971,8 @@ jobs:
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           path: "**/*.*"
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
             elide-framework-v1-build-
             elide-framework-v1-
             elide-framework-
@@ -1093,8 +1094,8 @@ jobs:
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           path: "**/*.*"
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
           restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
             elide-framework-v1-build-
             elide-framework-v1-
             elide-framework-

@@ -19,7 +19,6 @@
   "COMPATIBILITY_WARNING",
 )
 
-
 import elide.internal.conventions.publishing.publish
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
@@ -37,7 +36,7 @@ plugins {
 
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
-  
+
   id("elide.internal.conventions")
 }
 

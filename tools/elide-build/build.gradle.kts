@@ -110,6 +110,7 @@ dependencies {
   implementation(embeddedKotlin("allopen"))
   implementation(embeddedKotlin("noarg"))
   implementation(embeddedKotlin("serialization"))
+  implementation(libs.plugin.kotlinx.atomicfu)
 }
 
 // Plugin: Test Logger

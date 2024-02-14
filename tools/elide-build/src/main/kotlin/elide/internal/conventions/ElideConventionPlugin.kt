@@ -131,10 +131,10 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
 
       configureKotlinBuild(
         target = kotlinTarget,
-        javaEnabled = conventions.java.requested,
         configureKapt = kapt,
         configureKsp = ksp,
         configureAllOpen = allOpen,
+        configureAtomicFu = atomicFu,
         configureNoArgs = noArgs,
         explicitApi = explicitApi,
         splitJvmTargets = splitJvmTargets,

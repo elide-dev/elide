@@ -30,18 +30,10 @@ elide {
   }
 
   kotlin {
+    atomicFu = true
     target = KotlinTarget.All
     explicitApi = true
   }
-}
-
-apply(plugin = "kotlinx-atomicfu")
-
-the<AtomicFUPluginExtension>().apply {
-  dependenciesVersion = null
-  transformJvm = true
-  transformJs = true
-  jvmVariant = "VH"
 }
 
 dependencies {

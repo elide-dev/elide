@@ -26,6 +26,22 @@ import elide.internal.conventions.jvm.configureJavaModularity
 import elide.internal.conventions.kotlin.KotlinTarget.*
 
 /**
+ * Configure a Kotlin JVM project.
+ */
+internal fun Project.configureKotlinJvm(
+  target: KotlinTarget,
+  configureJavaModules: Boolean,
+  splitJvmTargets: Boolean,
+  jvmModuleName: String?,
+  javaMinimum: Int,
+  javaTarget: Int,
+  configureMultiReleaseJar: Boolean = false,
+  javaTargetRange: IntRange = javaMinimum..javaTarget,
+) {
+  // nothing at this time
+}
+
+/**
  * Configure a Kotlin Multiplatform project.
  *
  * If the [target] includes Kotlin/JVM, the [configureJavaModules] argument controls whether JPMS build is enabled.
@@ -39,6 +55,10 @@ internal fun Project.configureKotlinMultiplatform(
   nonJvmSourceSet: String,
   jvmSourceSet: String,
   jvmModuleName: String?,
+  javaMinimum: Int,
+  javaTarget: Int,
+  configureMultiReleaseJar: Boolean = false,
+  javaTargetRange: IntRange = javaMinimum..javaTarget,
 ) {
   // quick sanity check (JVM is not allowed as a pure target, only as part of a KMP target)
   require(target !is JVM) { "Kotlin JVM target should use the Multiplatform plugin." }

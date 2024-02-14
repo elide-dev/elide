@@ -78,6 +78,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to configure the Kotlin AllOpen plugin with predefined settings. */
     public var allOpen: Boolean = false
 
+    /** Whether to configure the Kotlin atomic field updater plugin with predefined settings. */
+    public var atomicFu: Boolean = false
+
     /** Whether to configure the Kotlin NoArgs plugin with predefined settings. */
     public var noArgs: Boolean = false
 

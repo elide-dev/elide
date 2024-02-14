@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["javascript"]
+        language: ["javascript-typescript"]
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
@@ -85,3 +85,8 @@ jobs:
       - name: "Analysis: CodeQL"
         uses: github/codeql-action/analyze@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
         continue-on-error: true
+        with:
+          languages: ${{ matrix.language }}
+          queries: ./.github/codeql/queries
+          config-file: ./.github/codeql/codeql-config.yml
+          fail-on-severity: "error"

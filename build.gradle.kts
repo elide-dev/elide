@@ -136,7 +136,7 @@ rootProject.plugins.withType(YarnPlugin::class.java) {
   rootProject.the<YarnRootExtension>().reportNewYarnLock = false
   rootProject.the<YarnRootExtension>().yarnLockAutoReplace = false
   rootProject.the<YarnRootExtension>().lockFileDirectory = project.rootDir
-  rootProject.the<YarnRootExtension>().lockFileName = "yarn.lock"
+  rootProject.the<YarnRootExtension>().lockFileName = "gradle-yarn.lock"
 }
 tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask::class.java).configureEach {
   args.add("--ignore-engines")

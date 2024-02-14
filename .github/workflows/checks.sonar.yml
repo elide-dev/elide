@@ -51,6 +51,13 @@ jobs:
           java-version: 21
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          restore-keys: |
+            elide-framework-
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
         continue-on-error: true

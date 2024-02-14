@@ -199,9 +199,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          key: elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
+            elide-framework-v1-build-
+            elide-framework-v1-
             elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
@@ -363,10 +365,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-tests-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          key: elide-framework-v1-tests-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
-            elide-framework-tests-
+            elide-framework-v1-tests-
+            elide-framework-v1-
             elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
@@ -535,9 +538,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
+            elide-framework-v1-tests-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-tests-
+            elide-framework-v1-
             elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
@@ -658,9 +663,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
             elide-framework-
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -809,9 +816,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
             elide-framework-
       - name: "Setup: Buildless"
         if: contains(matrix.runner, 'macos') == false
@@ -930,9 +939,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
             elide-framework-
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
@@ -1051,9 +1062,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
             elide-framework-
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2

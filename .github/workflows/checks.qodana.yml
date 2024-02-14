@@ -50,9 +50,11 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
           path: "**/*.*"
           restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
             elide-framework-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5

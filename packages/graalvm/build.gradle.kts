@@ -252,13 +252,12 @@ dependencies {
   implementation(libs.capnproto.runtime)
   implementation(libs.capnproto.runtime.rpc)
 
-  api(libs.graalvm.polyglot)
-  api(libs.graalvm.polyglot.tools.coverage)
-  api(libs.graalvm.polyglot.tools.dap)
-  api(libs.graalvm.polyglot.tools.inspect)
-  api(libs.graalvm.polyglot.tools.insight)
-  api(libs.graalvm.polyglot.tools.heap)
-  api(libs.graalvm.polyglot.tools.profiler)
+  api("org.graalvm.polyglot:polyglot:${libs.versions.graalvm.pin.get()}") {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
+
   api(libs.graalvm.regex)
   api(libs.graalvm.polyglot.js)
   compileOnly(libs.graalvm.svm)

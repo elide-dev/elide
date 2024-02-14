@@ -15,6 +15,7 @@ package elide.internal.conventions.dependencies
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.LockMode
+import org.gradle.kotlin.dsl.exclude
 import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.ElideBuildExtension
 
@@ -141,11 +142,10 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
 
     if (gvmConfigurations.contains(this@all.name) && isGraalVm) {
       gvmDistModules.forEach {
-        this@all.exclude(
-          mapOf(
-            "group" to it.substringBefore(":"),
-            "module" to it.substringAfter(":")
-          ))
+        exclude(
+          group = it.substringBefore(':'),
+          module = it.substringAfter(':'),
+        )
       }
     }
   }

@@ -55,7 +55,11 @@ dependencies {
 
   jvm {
     api(mn.micronaut.http)
-    implementation(libs.graalvm.polyglot)
+    implementation("org.graalvm.polyglot:polyglot:${libs.versions.graalvm.pin.get()}") {
+      exclude(group = "org.graalvm.sdk", module = "collections")
+      exclude(group = "org.graalvm.sdk", module = "nativeimage")
+      exclude(group = "org.graalvm.sdk", module = "word")
+    }
   }
 
   jvmTest {

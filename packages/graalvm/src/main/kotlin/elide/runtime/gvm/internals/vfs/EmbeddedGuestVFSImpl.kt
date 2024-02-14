@@ -635,10 +635,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** @return Bundle pair loaded from the provided single-file [target]. */
     @JvmStatic internal fun loadWithFileTarget(target: URI): Pair<FilesystemInfo, FileSystem> {
-      val info = FilesystemInfo.getDefaultInstance()
-      val env = mapOf("create" to "true")
-      val zipfs = FileSystems.newFileSystem(target, env)
-      return info to zipfs
+      return FilesystemInfo.getDefaultInstance() to FileSystems.newFileSystem(target, mapOf(
+        "create" to "true",
+        "encoding" to "UTF-8",
+        "enablePosixFileAttributes" to "true",
+        "compressionMethod" to "STORED",
+      ))
     }
 
     /** @return Bundle pair loaded from the provided [URI]. */

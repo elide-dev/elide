@@ -21,8 +21,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: "Patch: Neutralize Yarn Lock"
-        run: mv yarn.lock yarn.inert
       - name: "Check: Dependency Review"
         uses: actions/dependency-review-action@4901385134134e04cec5fbe5ddfe3b2c5bd5d976 # v4.0.0
         continue-on-error: true
@@ -33,5 +31,3 @@ jobs:
           vulnerability-check: true
           fail-on-severity: "low"
           base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || 'v3' }}
-      - name: "Patch: Restore Yarn Lock"
-        run: mv yarn.inert yarn.lock

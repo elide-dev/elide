@@ -11,25 +11,10 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
-import elide.internal.cpp.cpp
-
 plugins {
   id("elide.internal.conventions")
-  id("elide.internal.cpp")
-  `cpp-library`
 }
 
 group = "dev.elide.embedded"
 
-elide {
-  cpp {
-    headersOnly = true
-  }
-}
-
-library {
-  source.from(file("src"))
-  privateHeaders.from(file("src"))
-  publicHeaders.from(file("include"))
-}
+// Nothing yet.

@@ -1,0 +1,388 @@
+name: Framework
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Enable Native Targets
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+
+      ## Input: Enable Release Targets
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+
+      ## Input: Publish Libraries
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+
+      ## Input: Deploy Samples
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+
+      ## Input: Enable Container Targets
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+
+      ## Input: Enable Provenance
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: true
+
+      ## Input: Enable macOS
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+
+      ## Input: Enable Windows
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+
+      ## Input: Runner
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-latest
+
+  workflow_call:
+    inputs:
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: true
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+      runner:
+        description: "Runner to use"
+        type: string
+        default: ubuntu-latest
+      runner_large:
+        description: "Runner (Large)"
+        type: string
+        default: ubuntu-latest-8-cores
+      runner_large_macos:
+        description: "Runner (Large, macOS)"
+        type: string
+        default: macos-13-xl
+      runner_large_windows:
+        description: "Runner (Large, Windows)"
+        type: string
+        default: windows-latest-8-cores
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      BUILDBOT_GHCR_TOKEN:
+        required: false
+        description: "GHCR Token"
+      CODECOV_TOKEN:
+        required: false
+        description: "Codecov token"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+
+env:
+  CACHE_ENDPOINT: "https://gradle.less.build/cache/generic/"
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+  GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Job: Docker Samples (JVM)
+  ##
+  docker-jvm:
+    name: "Container: JVM"
+    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-latest-8-cores' }}
+    if: inputs.containers
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
+    #        contains(github.event.head_commit.message, 'ci:build-img-jvm')
+    #      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      packages: "read"
+      pull-requests: "write"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ["server:hellocss"]
+        labs: [false]
+        include:
+          - project: "server:hellocss"
+            labs: false
+          - project: "fullstack:react-ssr:server"
+            labs: true
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          path: "**/*.*"
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
+          restore-keys: |
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+      - name: "Setup: Buildless"
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: QEMU"
+        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
+      - name: "Setup: Docker"
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+        id: buildx
+        with:
+          install: true
+      - name: "Setup: Node"
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: "8.15.2"
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Setup Cloud SDK"
+        uses: google-github-actions/setup-gcloud@98ddc00a17442e89a24bbf282954a3b65ce6d200 # v2.1.0
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+      - name: "Authorize Docker: GCP"
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
+
+      ## -- Samples -- ##
+      - name: "Build/Push: '${{ matrix.project }}' (JVM)"
+        continue-on-error: ${{ fromJson(matrix.labs) }}
+        uses: gradle/actions/setup-gradle@v3.1.0
+        with:
+          arguments: |
+            --no-daemon
+            --warning-mode=none
+            -Pelide.ci=true
+            -PbuildSamples=true
+            -PbuildDocs=false
+            -Pelide.runtime=JVM
+            -x nativeCompile
+            -x test
+            :samples:${{ matrix.project }}:optimizedDockerBuild
+            :samples:${{ matrix.project }}:optimizedDockerPush
+
+  ##
+  ## Job: Docker Samples (Native)
+  ##
+
+  docker-native:
+    name: "Container: Native"
+    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-latest-8-cores' }}
+    continue-on-error: true
+    if: inputs.containers && inputs.native
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
+    #        contains(github.event.head_commit.message, 'ci:build-img-native')
+    #      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      packages: "read"
+      pull-requests: "write"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ["server:hellocss"]
+        path: ["server/hellocss"]
+        image: ["elide-fw/samples/server/hellocss/native"]
+        include:
+          - project: "fullstack:react-ssr:server"
+            path: "fullstack/react-ssr/server"
+            image: "elide-fw/samples/fullstack/react-ssr/native"
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          path: "**/*.*"
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
+          restore-keys: |
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+      - name: "Setup: Buildless"
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: QEMU"
+        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
+      - name: "Setup: Docker"
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+        id: buildx
+        with:
+          install: true
+      - name: "Setup: Node"
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: "8.15.2"
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
+      - id: "auth"
+        name: "Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Cloud SDK"
+        uses: google-github-actions/setup-gcloud@98ddc00a17442e89a24bbf282954a3b65ce6d200 # v2.1.0
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+          install_components: "beta"
+      - name: "Authorize Docker: GCP"
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
+
+      ## -- Samples -- ##
+      - name: "Build/Push: '${{ matrix.project }}' (Native)"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        continue-on-error: true
+        with:
+          arguments: |
+            --no-daemon
+            --warning-mode=none
+            -Pelide.ci=true
+            -PbuildSamples=true
+            -PbuildDocs=false
+            -Pelide.runtime=NATIVE
+            -Pelide.ci=true
+            -x test
+            :samples:${{ matrix.project }}:optimizedDockerBuildNative
+            :samples:${{ matrix.project }}:optimizedDockerPushNative
+      - name: "Build/Push: Fallback to GCB"
+        if: failure()
+        run: |
+          mv ./samples/${{ matrix.path }}/build/docker/native-optimized/DockerfileNative ./samples/${{ matrix.path }}/build/docker/native-optimized/Dockerfile
+          gcloud beta builds submit \
+            --machine-type e2-highcpu-32 \
+            --timeout=2h \
+            --project elide-fw \
+            --tag=us-docker.pkg.dev/${{ matrix.image }}:opt-latest \
+            ./samples/${{ matrix.path }}/build/docker/native-optimized

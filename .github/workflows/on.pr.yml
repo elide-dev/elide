@@ -172,8 +172,25 @@ jobs:
       statuses: "write"
       security-events: "write"
     with:
-      tests: true
       provenance: false
+
+  ##
+  ## Job: Multi-platform Build
+  ##
+  pr-test:
+    name: "Build"
+    uses: ./.github/workflows/job.test.yml
+    secrets: inherit
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      packages: "read"
+      pull-requests: "write"
+    with:
+      native: false
 
   ##
   ## Job: Checks for Vulnerabilities/Licensing
@@ -211,21 +228,6 @@ jobs:
       contents: "read"
 
   ##
-  ## Job: Checks with Sonar
-  ##
-  check-sonar:
-    name: "Checks"
-    uses: ./.github/workflows/checks.sonar.yml
-    needs: [triage, preflight-checks, pr-build]
-    if: fromJson(needs.triage.outputs.srcs)
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-    permissions:
-      contents: "read"
-
-  ##
   ## Job: Checks with CodeQL
   ##
   check-codeql:
@@ -242,12 +244,27 @@ jobs:
       security-events: "write"
 
   ##
+  ## Job: Checks with Sonar
+  ##
+  check-sonar:
+    name: "Checks"
+    uses: ./.github/workflows/checks.sonar.yml
+    needs: [triage, preflight-checks, pr-build, pr-test]
+    if: fromJson(needs.triage.outputs.srcs)
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+    permissions:
+      contents: "read"
+
+  ##
   ## Job: Checks with Qodana
   ##
   check-qodana:
     name: "Checks"
     uses: ./.github/workflows/checks.qodana.yml
-    needs: [triage, preflight-checks, pr-build]
+    needs: [triage, preflight-checks, pr-build, pr-test]
     if: false  # disabled
     secrets:
       QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}

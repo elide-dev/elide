@@ -1,0 +1,417 @@
+name: Tests
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Enable Native Targets
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+
+      ## Input: Enable Release Targets
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+
+      ## Input: Publish Libraries
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+
+      ## Input: Deploy Samples
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+
+      ## Input: Enable Container Targets
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+
+      ## Input: Enable macOS
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+
+      ## Input: Enable Windows
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+
+      ## Input: Runner
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-latest
+
+  workflow_call:
+    inputs:
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+      runner:
+        description: "Runner to use"
+        type: string
+        default: ubuntu-latest
+      runner_large:
+        description: "Runner (Large)"
+        type: string
+        default: ubuntu-latest-8-cores
+      runner_large_macos:
+        description: "Runner (Large, macOS)"
+        type: string
+        default: macos-13-xl
+      runner_large_windows:
+        description: "Runner (Large, Windows)"
+        type: string
+        default: windows-latest-8-cores
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      BUILDBOT_GHCR_TOKEN:
+        required: false
+        description: "GHCR Token"
+      CODECOV_TOKEN:
+        required: false
+        description: "Codecov token"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+
+env:
+  CACHE_ENDPOINT: "https://gradle.less.build/cache/generic/"
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+  GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Job: Testsuite (JVM)
+  ##
+  tests:
+    name: "Tests: All Suites"
+    runs-on: ${{ inputs.runner }}
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      packages: "read"
+      pull-requests: "write"
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore (Build)"
+        id: cache-restore-build
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
+          path: "**/*.*"
+          restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+      - name: "Setup: Cache Restore (Test)"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-tests-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
+          path: "**/*.*"
+          restore-keys: |
+            elide-framework-v1-tests-
+            elide-framework-v1-
+            elide-framework-
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Buildless"
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - name: "Setup: Node"
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: "8.15.2"
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
+      - name: "Testsuite"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          TEST_EXCEPTIONS: true
+        with:
+          cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          gradle-home-cache-includes:
+            binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+          arguments: |
+            test
+            allTests
+            koverXmlReport
+            koverBinaryReport
+            koverVerify
+            copyCoverageReports
+            -x wasmJsTest
+            -x wasmWasiTest
+            -x wasmWasiNodeTest
+            -x detekt
+            --scan
+            --build-cache
+            --configuration-cache
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -x apiCheck
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+      - name: "Runtime Self-tests (JVM)"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        continue-on-error: true
+        env:
+          CI: true
+          TEST_EXCEPTIONS: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+        with:
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          arguments: |
+            optimizedRun
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -x apiCheck
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+            --args="selftest"
+      - name: "Artifact: Test Reports"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: test-reports-jvm
+          path: |
+            **/build/reports/jacoco/test/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+            build/reports/kover/**/*.*
+            tools/reports/build/reports/**/*.xml
+            tools/reports/build/test-results/**/*.xml
+      - name: "Report: Codecov (Main)"
+        uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./build/reports/kover/merged/xml/report.xml
+          name: elide
+          flags: jvm,lib
+          fail_ci_if_error: false
+          verbose: true
+      - name: "Report: Codecov (Plugin)"
+        uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/plugin/gradle-plugin/plugin-build/plugin/build/reports/kover/xml/report.xml
+          name: plugin-gradle
+          flags: jvm,plugin,gradle
+          fail_ci_if_error: false
+          verbose: true
+      - name: "Artifact: Caches"
+        uses: actions/cache/save@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+          path: |
+            ${{ env.STORE_PATH }}
+            .gradle/
+            build/
+            packages/*/test-results/
+            packages/proto/*/test-results/
+            tools/elide-build/test-results/
+            packages/*/reports/
+            packages/proto/*/reports/
+            tools/elide-build/reports/
+
+  ##
+  ## Job: Testsuite (Native)
+  ##
+  tests-native:
+    name: "Tests: Native"
+    runs-on: ${{ inputs.runner_large || 'ubuntu-latest-8-cores' }}
+    if: inputs.native
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
+    #        contains(github.event.head_commit.message, 'ci:test-native')
+    #      )
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          path: "**/*.*"
+          key: elide-framework-v1-tests-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
+          restore-keys: |
+            elide-framework-v1-tests-${{ hashFiles('**/*.versions.toml', 'pnpm-lock.yaml') }}
+            elide-framework-v1-tests-
+            elide-framework-v1-
+            elide-framework-
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Buildless"
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Node"
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: "8.15.2"
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
+      - name: "Run Tests (Native)"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        continue-on-error: true
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+        with:
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          arguments: |
+            nativeTest
+            check
+            jacocoTestReport
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -x apiCheck
+            -x :packages:server:nativeTest
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
+      - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: test-reports-native
+          path: |
+            **/build/reports/jacoco/test/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+            tools/reports/build/reports/**/*.xml
+            tools/reports/build/test-results/**/*.xml

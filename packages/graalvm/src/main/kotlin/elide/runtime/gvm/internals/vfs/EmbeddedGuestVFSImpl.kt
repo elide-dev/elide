@@ -25,15 +25,20 @@ import io.micronaut.context.annotation.Requires
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
+import tools.elide.std.HashAlgorithm
 import tools.elide.vfs.TreeEntry
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.net.URI
 import java.nio.file.FileSystem
+import java.nio.file.FileSystems
+import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
+import kotlin.io.path.exists
 import kotlin.io.path.toPath
 import elide.annotations.Factory
 import elide.annotations.Singleton
@@ -42,9 +47,7 @@ import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.gvm.internals.GuestVFS
 import elide.util.UUID
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
-import tools.elide.std.HashAlgorithm
-import kotlin.io.path.exists
+
 
 /**
  * # VFS: Embedded.
@@ -185,6 +188,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
     internal var bundle: Pair<FilesystemInfo, FileSystem>? = null,
     internal var paths: List<URI> = emptyList(),
     internal var files: List<File> = emptyList(),
+    internal var zip: URI? = null,
+    internal var file: URI? = null,
   ) : VFSBuilder<EmbeddedGuestVFSImpl> {
     /** Factory for embedded VFS implementations. */
     companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
@@ -196,13 +201,15 @@ internal class EmbeddedGuestVFSImpl private constructor (
     /**
      * Set the [bundle] to use directly (pre-loaded from some data source).
      *
-     * Note that setting this property force-unsets [paths] and [files].
+     * Note that setting this property force-unsets all other source options.
      *
      * @see bundle to set this value as a property.
      * @param bundle [FilesystemInfo] and [FileSystem] pair to use as the bundle.
      * @return This builder.
      */
     fun setBundle(bundle: Pair<FilesystemInfo, FileSystem>): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.file = null
+      this.zip = null
       this.bundle = bundle
       this.paths = emptyList()
       this.files = emptyList()
@@ -213,13 +220,15 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * Set the [paths] to load the bundle file from; can be a regular file-path, or a `classpath:`-prefixed path to load
      * a resource from the host app classpath.
      *
-     * Note that setting this property force-unsets [bundle] and [files].
+     * Note that setting this property force-unsets all other source options.
      *
      * @see paths to set this value as a property.
      * @param paths URI to the bundle file to load.
      * @return This builder.
      */
     fun setBundlePaths(paths: List<URI>): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.file = null
+      this.zip = null
       this.paths = paths
       this.bundle = null
       this.files = emptyList()
@@ -230,15 +239,89 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * Set the [files] to load the bundle data from; expected to be a valid and readable regular file, which is a
      * tarball, a compressed tar-ball, or a bundle in Elide's internal format.
      *
-     * Note that setting this property force-unsets [bundle] and [paths].
+     * Note that setting this property force-unsets all other source options.
      *
      * @see files to set this value as a property.
      * @param files File to load bundle data from.
      * @return This builder.
      */
     fun setBundleFiles(files: List<File>): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.file = null
+      this.zip = null
       this.files = files
       this.bundle = null
+      this.paths = emptyList()
+      return this
+    }
+
+    /**
+     * Set the [zip] to load the bundle data from; expected to be a valid and readable regular file, which is Zip
+     * compressed.
+     *
+     * Note that setting this property force-unsets all other source options.
+     *
+     * @see target Target zip file to use.
+     * @return This builder.
+     */
+    fun setZipTarget(target: URI): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.file = null
+      this.zip = target
+      this.bundle = null
+      this.files = emptyList()
+      this.paths = emptyList()
+      return this
+    }
+
+    /**
+     * Set the [target] file to load the bundle data from; expected to be a valid and readable/writable regular file,
+     * and it will be created if it doesn't exist.
+     *
+     * Note that setting this property force-unsets all other source options.
+     *
+     * @see target Target zip file to use.
+     * @return This builder.
+     */
+    fun setFileTarget(target: URI): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.file = target
+      this.zip = null
+      this.bundle = null
+      this.files = emptyList()
+      this.paths = emptyList()
+      return this
+    }
+
+    /**
+     * Set the [target] file to load the bundle data from; expected to be a valid and readable/writable regular file,
+     * and it will be created if it doesn't exist.
+     *
+     * Note that setting this property force-unsets all other source options.
+     *
+     * @see target Target zip file to use.
+     * @return This builder.
+     */
+    fun setFileTarget(target: Path): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.file = target.toUri()
+      this.zip = null
+      this.bundle = null
+      this.files = emptyList()
+      this.paths = emptyList()
+      return this
+    }
+
+    /**
+     * Set the [target] file to load the bundle data from; expected to be a valid and readable/writable regular file,
+     * and it will be created if it doesn't exist.
+     *
+     * Note that setting this property force-unsets all other source options.
+     *
+     * @see target Target zip file to use.
+     * @return This builder.
+     */
+    fun setFileTarget(target: File): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.file = target.toPath().toUri()
+      this.zip = null
+      this.bundle = null
+      this.files = emptyList()
       this.paths = emptyList()
       return this
     }
@@ -250,14 +333,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
         null -> null to null
         else -> bundle
       }
-
-      return if (tree != null && bundle != null) {
-        EmbeddedGuestVFSImpl(
-          config,
-          bundle,
-          tree,
-        )
-      } else create(config)
+      return if (tree == null || bundle == null) create(config) else EmbeddedGuestVFSImpl(
+        config,
+        bundle,
+        tree,
+      )
     }
   }
 
@@ -286,7 +366,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         )
       } else {
         emptyList()
-      }
+      },
     ).toTypedArray()
 
     /** Calculate a set of supported attribute view names for a new in-memory filesystem instance. */
@@ -345,10 +425,14 @@ internal class EmbeddedGuestVFSImpl private constructor (
       }
 
       val fingerprint = md.digest()
-      builder.setFingerprint(tools.elide.vfs.File.FileFingerprint.newBuilder()
-        .setUncompressed(tools.elide.vfs.File.Fingerprint.newBuilder()
-          .setAlgorithm(Settings.fileDigest)
-          .setHash(ByteString.copyFrom(fingerprint))))
+      builder.setFingerprint(
+        tools.elide.vfs.File.FileFingerprint.newBuilder()
+          .setUncompressed(
+            tools.elide.vfs.File.Fingerprint.newBuilder()
+              .setAlgorithm(Settings.fileDigest)
+              .setHash(ByteString.copyFrom(fingerprint)),
+          ),
+      )
     }
 
     /** @return [FilesystemInfo] metadata generated from a regular tarball. */
@@ -455,9 +539,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
             val lastmod = entry.lastModifiedDate
             if (lastmod != null) {
               val instant = lastmod.toInstant()
-              file.setModified(Timestamp.newBuilder()
-                .setSeconds(instant.epochSecond)
-                .setNanos(instant.nano))
+              file.setModified(
+                Timestamp.newBuilder()
+                  .setSeconds(instant.epochSecond)
+                  .setNanos(instant.nano),
+              )
             }
             fsEntry.setFile(file)
             rootDir.addChildren(fsEntry)
@@ -516,7 +602,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       }.reduce { left, right ->
         left.toBuilder().mergeFrom(right).build()
       }.orElse(
-        FilesystemInfo.getDefaultInstance()
+        FilesystemInfo.getDefaultInstance(),
       ) to inMemoryFS  // <-- map the return filesystem to the in-memory FS we built
     }
 
@@ -527,21 +613,32 @@ internal class EmbeddedGuestVFSImpl private constructor (
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem> {
       // resolve the format from the filename, then pass along
-      return loadBundlesToMemoryFS(when (image) {
-        null -> streams
-        else -> listOf(image) + streams
-      }.map { (name, stream) ->
-        stream to when {
-          name.endsWith(".tar") -> BundleFormat.TARBALL
-          name.endsWith(".tar.gz") -> BundleFormat.TARBALL_GZIP
-          name.endsWith(".tar.xz") -> BundleFormat.TARBALL_XZ
-          name.endsWith(".evfs") -> BundleFormat.ELIDE_INTERNAL
-          else -> error(
-            "Failed to load bundle from file '$name': unknown format. " +
-            "Please provide `.tar`, `.tar.gz`, `.tar.xz`, or `.evfs`."
-          )
-        }
-      }, fsConfig)
+      return loadBundlesToMemoryFS(
+        when (image) {
+          null -> streams
+          else -> listOf(image) + streams
+        }.map { (name, stream) ->
+          stream to when {
+            name.endsWith(".tar") -> BundleFormat.TARBALL
+            name.endsWith(".tar.gz") -> BundleFormat.TARBALL_GZIP
+            name.endsWith(".tar.xz") -> BundleFormat.TARBALL_XZ
+            name.endsWith(".evfs") -> BundleFormat.ELIDE_INTERNAL
+            else -> error(
+              "Failed to load bundle from file '$name': unknown format. " +
+                      "Please provide `.tar`, `.tar.gz`, `.tar.xz`, or `.evfs`.",
+            )
+          }
+        },
+        fsConfig,
+      )
+    }
+
+    /** @return Bundle pair loaded from the provided single-file [target]. */
+    @JvmStatic internal fun loadWithFileTarget(target: URI): Pair<FilesystemInfo, FileSystem> {
+      val info = FilesystemInfo.getDefaultInstance()
+      val env = mapOf("create" to "true")
+      val zipfs = FileSystems.newFileSystem(target, env)
+      return info to zipfs
     }
 
     /** @return Bundle pair loaded from the provided [URI]. */
@@ -576,7 +673,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
               else -> path.path
             }
             val target = EmbeddedGuestVFSImpl::class.java.getResourceAsStream(filename) ?: error(
-              "Failed to load bundle from path '$path': Not found"
+              "Failed to load bundle from path '$path': Not found",
             )
             filename to target
           }
@@ -593,6 +690,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     ): Pair<FilesystemInfo, FileSystem>? {
       return when {
         builder.bundle != null -> builder.bundle
+        builder.zip != null -> loadWithFileTarget(builder.zip!!)
         builder.files.isNotEmpty() || builder.paths.isNotEmpty() -> loadBundles(builder.paths, builder.files, fsConfig)
         else -> null
       }
@@ -652,9 +750,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
         root = config.root
         workingDirectory = config.workingDirectory
         if (config.bundle.isNotEmpty()) {
-          paths = config.bundle.plus(configurators.flatMap {
-            it.bundles()
-          })
+          paths = config.bundle.plus(
+            configurators.flatMap {
+              it.bundles()
+            },
+          )
         } else if (configurators.isNotEmpty()) {
           paths = configurators.flatMap {
             it.bundles()

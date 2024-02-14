@@ -15,6 +15,8 @@ package elide.runtime.gvm.vfs
 
 import java.io.File
 import java.net.URI
+import java.nio.file.Path
+import java.util.zip.ZipFile
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 
@@ -60,5 +62,20 @@ public object EmbeddedGuestVFS {
   public fun forBundles(bundles: List<URI>): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
     .setBundlePaths(bundles)
     .setReadOnly(false)
+    .build()
+
+  /** @return Embedded VFS backed by a single [target] Zip file; this uses the JDK's built-in `zipfs` module. */
+  public fun forZip(target: URI): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setZipTarget(target)
+    .build()
+
+  /** @return Embedded VFS backed by a single [target] file; this uses the JDK's built-in file-based FS logic. */
+  public fun forTargetFile(target: URI): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setFileTarget(target)
+    .build()
+
+  /** @return Embedded VFS backed by a single [target] file; this uses the JDK's built-in file-based FS logic. */
+  public fun forTargetFile(target: Path): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setFileTarget(target)
     .build()
 }

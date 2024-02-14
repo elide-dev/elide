@@ -11,8 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
-import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.kotlin.*
 
 plugins {

@@ -258,15 +258,23 @@ gradleEnterprise {
 }
 
 val cachePush: String? by settings
+val isCI: Boolean = System.getenv("CI") != "true"
 
 buildless {
   localCache {
-    enabled = System.getenv("CI") != "true"
+    enabled = true
+    directory.dir(".codebase/build-cache")
   }
 
   remoteCache {
     // allow disabling pushing to the remote cache
     push.set(cachePush?.toBooleanStrictOrNull() ?: true)
+  }
+}
+
+buildCache {
+  local {
+    removeUnusedEntriesAfterDays = 14
   }
 }
 

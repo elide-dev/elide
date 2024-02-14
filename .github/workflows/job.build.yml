@@ -317,9 +317,24 @@ jobs:
             ${{ env.STORE_PATH }}
             .gradle/
             build/
-            packages/*/build/
-            packages/proto/*/build/
-            tools/elide-build/build/
+            packages/*/build/bin
+            packages/*/build/classes
+            packages/*/build/kotlin
+            packages/*/build/klib
+            packages/*/build/generated
+            packages/*/build/generated-sources
+            packages/proto/*/build/bin
+            packages/proto/*/build/classes
+            packages/proto/*/build/kotlin
+            packages/proto/*/build/klib
+            packages/proto/*/build/generated
+            packages/proto/*/build/generated-sources
+            tools/elide-build/build/bin
+            tools/elide-build/build/classes
+            tools/elide-build/build/kotlin
+            tools/elide-build/build/klib
+            tools/elide-build/build/generated
+            tools/elide-build/build/generated-sources
 
   ## Report: Provenance
   provenance:
@@ -361,7 +376,18 @@ jobs:
           fetch-depth: 0
           submodules: true
           persist-credentials: false
-      - name: "Setup: Cache Restore"
+      - name: "Setup: Cache Restore (Build)"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          path: "**/*.*"
+          restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+      - name: "Setup: Cache Restore (Test)"
         id: cache-restore
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
@@ -506,9 +532,12 @@ jobs:
             ${{ env.STORE_PATH }}
             .gradle/
             build/
-            packages/*/build/
-            packages/proto/*/build/
-            tools/elide-build/build/
+            packages/*/test-results/
+            packages/proto/*/test-results/
+            tools/elide-build/test-results/
+            packages/*/reports/
+            packages/proto/*/reports/
+            tools/elide-build/reports/
 
   ##
   ## Job: Testsuite (Native)

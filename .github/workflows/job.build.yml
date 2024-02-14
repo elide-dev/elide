@@ -237,8 +237,7 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: generate-and-submit
           gradle-home-cache-cleanup: true
-          gradle-home-cache-includes:
-            binaryen
+          gradle-home-cache-includes: binaryen
             caches
             jdks
             native
@@ -349,13 +348,13 @@ jobs:
     needs: [gradle]
     continue-on-error: true
     if: inputs.native
-#    if: |
-#      (
-#        github.ref == 'refs/heads/stable' ||
-#        startsWith(github.ref, 'release/') ||
-#        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
-#        contains(github.event.head_commit.message, 'ci:build-cli')
-#      )
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        startsWith(github.ref, 'release/') ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
+    #        contains(github.event.head_commit.message, 'ci:build-cli')
+    #      )
 
     strategy:
       fail-fast: false
@@ -497,12 +496,12 @@ jobs:
     needs: [gradle]
     continue-on-error: true
     if: inputs.native && inputs.release
-#    if: |
-#      (
-#        github.ref == 'refs/heads/stable' ||
-#        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
-#        contains(github.event.head_commit.message, 'ci:build-cli')
-#      )
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
+    #        contains(github.event.head_commit.message, 'ci:build-cli')
+    #      )
 
     strategy:
       fail-fast: false
@@ -628,12 +627,12 @@ jobs:
     runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-latest-8-cores' }}
     needs: [gradle]
     if: inputs.containers
-#    if: |
-#      (
-#        github.ref == 'refs/heads/stable' ||
-#        contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
-#        contains(github.event.head_commit.message, 'ci:build-img-jvm')
-#      )
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
+    #        contains(github.event.head_commit.message, 'ci:build-img-jvm')
+    #      )
 
     permissions:
       contents: "read"
@@ -751,12 +750,12 @@ jobs:
     continue-on-error: true
     needs: [gradle]
     if: inputs.containers && inputs.native
-#    if: |
-#      (
-#        github.ref == 'refs/heads/stable' ||
-#        contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
-#        contains(github.event.head_commit.message, 'ci:build-img-native')
-#      )
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
+    #        contains(github.event.head_commit.message, 'ci:build-img-native')
+    #      )
 
     permissions:
       contents: "read"
@@ -883,13 +882,13 @@ jobs:
     name: "Deploy"
     needs: [gradle]
     if: inputs.release && inputs.deploy
-#    if: |
-#      (
-#        contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
-#        contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
-#        contains(github.event.head_commit.message, 'ci:deploy-samples') ||
-#        contains(github.event.head_commit.message, 'ci:deploy')
-#      )
+    #    if: |
+    #      (
+    #        contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
+    #        contains(github.event.head_commit.message, 'ci:deploy-samples') ||
+    #        contains(github.event.head_commit.message, 'ci:deploy')
+    #      )
 
     strategy:
       matrix:
@@ -922,12 +921,12 @@ jobs:
     name: "Publish: Snapshot"
     needs: [gradle]
     if: inputs.publish
-#    if: |
-#      (
-#        github.ref == 'refs/heads/stable' ||
-#        contains(github.event.pull_request.labels.*.name, 'ci:publish-snapshot') ||
-#        contains(github.event.head_commit.message, 'ci:publish-snapshot')
-#      )
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:publish-snapshot') ||
+    #        contains(github.event.head_commit.message, 'ci:publish-snapshot')
+    #      )
 
     permissions:
       contents: "read"
@@ -958,15 +957,15 @@ jobs:
     name: "Publish: OSSRH"
     needs: [publish-snapshot]
     if: inputs.release && inputs.publish
-#    if: |
-#      (
-#        contains(github.event.pull_request.labels.*.name, 'ci:publish') ||
-#        contains(github.event.head_commit.message, 'ci:publish')
-#      ) && (
-#        false
-#      ) && (
-#        startsWith(github.ref, 'refs/tags/v')
-#      )
+    #    if: |
+    #      (
+    #        contains(github.event.pull_request.labels.*.name, 'ci:publish') ||
+    #        contains(github.event.head_commit.message, 'ci:publish')
+    #      ) && (
+    #        false
+    #      ) && (
+    #        startsWith(github.ref, 'refs/tags/v')
+    #      )
 
     permissions:
       contents: "read"

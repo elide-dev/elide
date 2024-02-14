@@ -214,8 +214,7 @@ jobs:
           cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
-          gradle-home-cache-includes:
-            binaryen
+          gradle-home-cache-includes: binaryen
             caches
             jdks
             native

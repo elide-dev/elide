@@ -92,6 +92,7 @@ dependencies {
   implementation(gradleApi())
 
   // included plugins
+  implementation(libs.plugin.reflekt)
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
   implementation(libs.plugin.docker)

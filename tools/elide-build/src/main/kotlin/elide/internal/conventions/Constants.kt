@@ -200,6 +200,7 @@ public object Constants {
         "-Xemit-jvm-type-annotations",
         "-Xjvm-default=all",
         "-Xjsr305=strict",
+        // "-Xuse-kapt4",  @TODO(sgammon): breaks codegen in graalvm module
       ),
     )
 

@@ -15,6 +15,10 @@ plugins {
   id("elide.internal.conventions")
 }
 
+elide {
+  // Nothing to set.
+}
+
 group = "dev.elide.embedded"
 
 // Nothing yet.

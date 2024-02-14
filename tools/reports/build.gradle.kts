@@ -17,15 +17,13 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import elide.internal.conventions.project.Projects
-
 plugins {
-  id("project-report")
-  id("test-report-aggregation")
-  id("jacoco-report-aggregation")
-  id("org.sonarqube")
-  id("org.jetbrains.kotlinx.kover")
+  `project-report`
+  `test-report-aggregation`
+  `jacoco-report-aggregation`
 
+  id(libs.plugins.sonar.get().pluginId)
+  id(libs.plugins.kover.get().pluginId)
   id("elide.internal.conventions")
 }
 

@@ -40,6 +40,10 @@ plugins {
   id("elide.internal.conventions")
 }
 
+
+group = "dev.elide"
+version = rootProject.version as String
+
 val enableJpms = false
 val ktCompilerArgs = emptyList<String>()
 
@@ -73,10 +77,6 @@ elide {
 allOpen {
   annotation("org.openjdk.jmh.annotations.State")
 }
-
-
-group = "dev.elide"
-version = rootProject.version as String
 
 java {
   sourceCompatibility = JavaVersion.VERSION_21

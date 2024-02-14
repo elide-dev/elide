@@ -203,7 +203,7 @@ jobs:
           restore-keys: |
             elide-framework-
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -366,7 +366,7 @@ jobs:
             elide-framework-tests-
             elide-framework-
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -534,7 +534,7 @@ jobs:
           restore-keys: |
             elide-framework-
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -672,7 +672,7 @@ jobs:
           arch: ${{ matrix.arch }}
           cache: "gradle"
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -820,7 +820,7 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -925,7 +925,7 @@ jobs:
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -1045,7 +1045,7 @@ jobs:
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@a1b47fdf04e772fed6b3b46131e226f9aea5e169 # v1
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           distribution: "graalvm"
           java-version: "21"

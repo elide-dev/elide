@@ -59,6 +59,7 @@ jobs:
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          path: "**/*.*"
           restore-keys: |
             elide-framework-
       - name: "Setup: Artifacts"
@@ -74,6 +75,7 @@ jobs:
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}

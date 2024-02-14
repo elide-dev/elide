@@ -25,6 +25,9 @@ name: Qodana
       BUILDLESS_APIKEY:
         description: "Buildless API key"
         required: false
+      GRADLE_CONFIGURATION_KEY:
+        description: "Gradle cache key"
+        required: false
 
 permissions:
   contents: "read"

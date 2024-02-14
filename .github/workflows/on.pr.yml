@@ -96,8 +96,6 @@ jobs:
   preflight-checks:
     name: "Pre-flight Checks"
     runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
-    needs: [triage]
-    if: fromJson(needs.triage.outputs.srcs)
     permissions:
       contents: "read"
       id-token: "write"
@@ -122,19 +120,16 @@ jobs:
           distribution: "graalvm"
           java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - id: "auth"
-        name: "Setup: Authorize Service Account"
-        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
-        if: false  # temporarily disabled
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
-          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
-          create_credentials_file: true
-          export_environment_variables: true
-          cleanup_credentials: true
+          key: elide-framework-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}
+          restore-keys: |
+            elide-framework-
       - name: "Check: Library ABI"
         uses: gradle/actions/setup-gradle@v3.1.0
         id: abicheck
-        if: fromJson(needs.triage.outputs.packages)
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
         env:
           CI: true

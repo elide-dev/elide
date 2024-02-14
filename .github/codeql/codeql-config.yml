@@ -1,6 +1,6 @@
 name: "CodeQL"
 
-languages: java, javascript
+languages: javascript-typescript
 
 queries:
   - uses: security-and-quality
@@ -13,3 +13,5 @@ paths-ignore:
   - build
   - samples
   - tools/plugin
+  - packages/embedded
+  - packages/nfi

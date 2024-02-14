@@ -25,6 +25,9 @@ name: Sonar
       BUILDLESS_APIKEY:
         description: "Buildless API key"
         required: false
+      GRADLE_CONFIGURATION_KEY:
+        description: "Gradle cache key"
+        required: false
 
 permissions:
   contents: "read"
@@ -68,6 +71,9 @@ jobs:
       - name: "Analysis: Sonar"
         uses: gradle/actions/setup-gradle@v3.1.0
         continue-on-error: true
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}

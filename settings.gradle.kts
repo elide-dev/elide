@@ -261,7 +261,7 @@ val cachePush: String? by settings
 
 buildless {
   localCache {
-    enabled = true
+    enabled = System.getenv("CI") != "true"
   }
 
   remoteCache {

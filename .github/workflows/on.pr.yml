@@ -217,6 +217,7 @@ jobs:
     if: fromJson(needs.triage.outputs.srcs)
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
     permissions:
       contents: "read"
@@ -231,6 +232,7 @@ jobs:
     if: fromJson(needs.triage.outputs.packages)
     secrets:
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
     permissions:
       actions: "read"
       contents: "read"
@@ -247,5 +249,6 @@ jobs:
     secrets:
       QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
     permissions:
       contents: "read"

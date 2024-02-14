@@ -238,6 +238,7 @@ jobs:
         continue-on-error: ${{ matrix.mode == 'labs' }}
         env:
           CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
         with:
           cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -403,6 +404,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           TEST_EXCEPTIONS: true
         with:
           cache-read-only: false
@@ -446,6 +448,7 @@ jobs:
         env:
           CI: true
           TEST_EXCEPTIONS: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -572,6 +575,7 @@ jobs:
         continue-on-error: true
         env:
           CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -699,6 +703,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -847,6 +852,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}

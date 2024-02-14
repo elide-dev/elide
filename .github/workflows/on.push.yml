@@ -38,17 +38,13 @@ jobs:
   ##
   ## Job: Checks for Models
   ##
-  check-model:
-    name: "Checks"
-    uses: ./.github/workflows/checks.model.yml
+  publish-model:
+    name: "Publish"
+    uses: ./.github/workflows/job.deploy-model.yml
     secrets:
       BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
     permissions:
       contents: "read"
-    with:
-      push: true
-      lint: false
-      breakcheck: false
 
   ##
   ## Job: Check for Wrapper

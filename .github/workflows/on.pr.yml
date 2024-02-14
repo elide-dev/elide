@@ -199,6 +199,8 @@ jobs:
       BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
     permissions:
       contents: "read"
+    with:
+      ignore_breaking: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
 
   ##
   ## Job: Check for Wrapper

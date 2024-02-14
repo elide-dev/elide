@@ -178,9 +178,8 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
-          components: "native-image,js,wasm"
           distribution: "graalvm"
-          java-version: 20
+          java-version: 21
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Signing Keys"
         run: |

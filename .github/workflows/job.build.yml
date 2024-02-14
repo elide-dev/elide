@@ -131,11 +131,11 @@ name: Framework
       CODECOV_TOKEN:
         required: false
         description: "Codecov token"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
 
 env:
-  GRADLE_CACHE_LOCAL: false
-  GRADLE_CACHE_REMOTE: true
-  GRADLE_CACHE_PUSH: true
   CACHE_ENDPOINT: "https://gradle.less.build/cache/generic/"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
   GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
@@ -239,9 +239,22 @@ jobs:
           CI: true
         with:
           cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: generate-and-submit
+          gradle-home-cache-cleanup: true
+          gradle-home-cache-includes:
+            binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
           arguments: |
             assemble
+            compileKotlin
             -x check
             -x test
             -x jvmTest
@@ -295,15 +308,6 @@ jobs:
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
           path: |
             ${{ env.STORE_PATH }}
-            ~/.gradle/binaryen
-            ~/.gradle/caches
-            ~/.gradle/jdks
-            ~/.gradle/native
-            ~/.gradle/native-build-tools
-            ~/.gradle/nodejs
-            ~/.gradle/notifications
-            ~/.gradle/wrapper
-            ~/.gradle/yarn
             .gradle/
             build/
             packages/*/build/
@@ -397,6 +401,18 @@ jobs:
           TEST_EXCEPTIONS: true
         with:
           cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          gradle-home-cache-includes:
+            binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
           arguments: |
             test
             allTests
@@ -424,7 +440,9 @@ jobs:
           CI: true
           TEST_EXCEPTIONS: true
         with:
-          cache-read-only: false
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
           arguments: |
             optimizedRun
             --scan
@@ -536,7 +554,9 @@ jobs:
         env:
           CI: true
         with:
-          cache-read-only: false
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
           arguments: |
             nativeTest
             check
@@ -660,7 +680,9 @@ jobs:
         env:
           CI: true
         with:
-          cache-read-only: false
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
           arguments: |
             :packages:cli:nativeCompile
             -Prelease=false
@@ -805,7 +827,9 @@ jobs:
         env:
           CI: true
         with:
-          cache-read-only: false
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
           arguments: |
             :packages:cli:nativeOptimizedCompile
             :packages:cli:dist

@@ -10,9 +10,6 @@ name: Checks
     - cron: "0 0-23/2 * * *"
 
 env:
-  GRADLE_CACHE_LOCAL: false
-  GRADLE_CACHE_REMOTE: true
-  GRADLE_CACHE_PUSH: true
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
   GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
 
@@ -149,16 +146,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
-          components: "native-image,js,wasm"
           distribution: "graalvm"
-          java-version: 20
+          java-version: 21
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 18
-          cache: "yarn"
+          node-version: 20
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn
       - id: "auth"
@@ -194,4 +189,4 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.minimum=11
-            -Pversions.java.language=19
+            -Pversions.java.language=21

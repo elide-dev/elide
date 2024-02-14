@@ -67,6 +67,7 @@ jobs:
         continue-on-error: true
         with:
           cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
             compileKotlin
             -x test

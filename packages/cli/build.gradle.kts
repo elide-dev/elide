@@ -239,7 +239,7 @@ kapt {
 kotlin {
   target.compilations.all {
     kotlinOptions {
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
 
       // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)

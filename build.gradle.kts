@@ -80,7 +80,6 @@ val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == 
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
-val ecmaVersion = project.properties["versions.ecma.language"] as String
 val nodeVersion: String by properties
 val enableKnit: String? by properties
 

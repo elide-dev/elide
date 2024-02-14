@@ -377,7 +377,7 @@ jobs:
           submodules: true
           persist-credentials: false
       - name: "Setup: Cache Restore (Build)"
-        id: cache-restore
+        id: cache-restore-build
         uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           key: elide-framework-v1-build-${{ hashFiles('**/build.gradle.kts', '**/settings.gradle.kts', '**/*.versions.toml') }}

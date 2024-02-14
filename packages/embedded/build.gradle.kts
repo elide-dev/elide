@@ -19,7 +19,6 @@ import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
-import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
@@ -756,6 +755,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
+    atomicFu = true
     kotlinVersionOverride = "1.9"  // no support in KSP yet for v2.0
   }
 
@@ -775,20 +775,11 @@ elide {
   }
 }
 
-apply(plugin = "kotlinx-atomicfu")
-
 kotlin {
   compilerOptions {
     jvmTarget = JvmTarget.JVM_21
     freeCompilerArgs = ktCompilerArgs
   }
-}
-
-the<AtomicFUPluginExtension>().apply {
-  dependenciesVersion = null  // don't use automatic dependency management
-  transformJvm = true
-  transformJs = true
-  jvmVariant = "VH"
 }
 
 buildConfig {

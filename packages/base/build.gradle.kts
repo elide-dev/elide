@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.kotlin.*
 
 plugins {
@@ -19,15 +18,6 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-}
-
-apply(plugin = "kotlinx-atomicfu")
-
-the<AtomicFUPluginExtension>().apply {
-  dependenciesVersion = null
-  transformJvm = true
-  transformJs = true
-  jvmVariant = "VH"
 }
 
 elide {
@@ -39,6 +29,7 @@ elide {
 
   kotlin {
     target = KotlinTarget.All
+    atomicFu = true
     explicitApi = true
   }
 }
@@ -57,14 +48,16 @@ kotlin {
 dependencies {
   common {
     api(projects.packages.core)
+    api(libs.kotlinx.atomicfu)
     api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.coroutines.core)
     api(libs.kotlinx.datetime)
+    api(libs.kotlinx.io)
+    api(libs.kotlinx.io.bytestring)
+    api(libs.kotlinx.serialization.core)
 
-    implementation(libs.kotlinx.atomicfu)
+    api(libs.elide.uuid)
     implementation(kotlin("stdlib"))
-    implementation(libs.elide.uuid)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.serialization.core)
   }
 
   commonTest {

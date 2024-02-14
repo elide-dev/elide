@@ -14,8 +14,6 @@ compileKotlin
 -x optimizedJitJarAll
 -x optimizedDistTar
 -x optimizedDistZip
--x compileDebugCpp
--x compileReleaseCpp
 --scan
 --configuration-cache
 --build-cache

@@ -83,7 +83,7 @@ public object Constants {
     const val KOTLIN_SDK = "versions.kotlin.sdk"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.0.0-Beta3"
+    const val KOTLIN_SDK_PIN = "2.0.0-Beta4"
 
     /** Constant: pinned version of AtomicFU. */
     const val ATOMICFU = "0.23.2"

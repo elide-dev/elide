@@ -14,7 +14,7 @@
 /** Declares common build script versions. */
 object Versions {
   /** Kotlin version. */
-  const val kotlin = "2.0.0-Beta3"
+  const val kotlin = "2.0.0-Beta4"
 
   /** Micronaut version. */
   const val micronaut = "4.3.0"

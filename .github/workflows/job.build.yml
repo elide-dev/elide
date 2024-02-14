@@ -273,6 +273,7 @@ jobs:
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
+            --configuration-cache
             --stacktrace
             -Pelide.ci=true
             -PbuildSamples=false

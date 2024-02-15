@@ -26,9 +26,7 @@ import elide.runtime.core.evaluate
  * @return The result of the invocation.
  */
 @DelicateElideApi public fun PolyglotContext.python(
-  /*language=python*/
+  /* language=python*/
   source: String,
   name: String? = null,
-): PolyglotValue {
-  return evaluate(Python, source, name = name)
-}
+): PolyglotValue = evaluate(Python, source, name = name)

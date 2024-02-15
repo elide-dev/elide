@@ -44,9 +44,8 @@ import elide.runtime.plugins.jvm.Jvm
   }
 
   public companion object Plugin : AbstractLanguagePlugin<JavaConfig, Java>() {
-    private const val JAVA_PLUGIN_ID = "Java"
     private const val JAVA_LANGUAGE_ID = "java"
-
+    private const val JAVA_PLUGIN_ID = "Java"
     override val key: Key<Java> = Key(JAVA_PLUGIN_ID)
     override val languageId: String = JAVA_LANGUAGE_ID
 

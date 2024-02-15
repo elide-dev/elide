@@ -46,8 +46,6 @@ import elide.runtime.plugins.jvm.Jvm
  * The class will be resolved from the context bindings as specified by the
  * [GraalVM documentation](https://www.graalvm.org/latest/reference-manual/java-on-truffle/interoperability).
  */
-@DelicateElideApi public fun PolyglotContext.loadGuestClass(name: String): PolyglotValue {
-  return bindings(Jvm).getMember(name)?.takeUnless { it.isNull } ?: error(
+@DelicateElideApi public fun PolyglotContext.loadGuestClass(name: String): PolyglotValue = bindings(Jvm).getMember(name)?.takeUnless { it.isNull } ?: error(
     "Failed to resolve guest class <$name>",
   )
-}

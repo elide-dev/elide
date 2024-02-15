@@ -44,7 +44,9 @@ import elide.runtime.core.PolyglotContext
   }
 
   // treat void/null return values as a 0 exit code
-  if (exitCode == null || exitCode.isNull) return 0
+  if (exitCode == null || exitCode.isNull) {
+      return 0
+  }
 
   // unwrap explicit exit code
   check(exitCode.isNumber && exitCode.fitsInInt()) { "Expected return value to be Int, found $exitCode" }

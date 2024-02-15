@@ -21,24 +21,25 @@ import elide.runtime.gvm.internals.GVMInvocationBindings
 /**
  * TBD.
  */
-internal class JvmInvocationBindings (
+internal class JvmInvocationBindings(
   private val mapped: Map<EntrypointInfo, JvmEntrypoint>,
   private val modes: EnumSet<DispatchStyle>,
   private val types: EnumSet<JvmEntrypointType>,
 ) : InvocationBindings, GVMInvocationBindings<JvmInvocationBindings, JvmExecutableScript>() {
   /** Enumerates types of resolved JVM entrypoints; a [JvmInvocationBindings] subclass exists for each. */
   internal enum class JvmEntrypointType {
+    /** Special type of entrypoint which indicates support for multiple [JvmEntrypointType]s. */
+    COMPOUND,
+
     /** Indicates a "default" entrypoint of `main`. */
     MAIN,
-
-    /** Indicates a server-capable interface, which exports a `fetch` function (async). */
-    SERVER,
 
     /** Indicates an SSR-capable interface, which exports a `render` function (async). */
     RENDER,
 
-    /** Special type of entrypoint which indicates support for multiple [JvmEntrypointType]s. */
-    COMPOUND,
+    /** Indicates a server-capable interface, which exports a `fetch` function (async). */
+    SERVER,
+;
   }
 
   /**

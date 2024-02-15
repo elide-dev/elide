@@ -26,10 +26,8 @@ import elide.runtime.core.evaluate
  * @param source The Java snippet to be evaluated.
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.java(source: String, name: String? = null): PolyglotValue {
-  return evaluate(
+@DelicateElideApi public fun PolyglotContext.java(source: String, name: String? = null): PolyglotValue = evaluate(
     Source.newBuilder(Java.languageId, source, name ?: "snippet.java")
       .interactive(true)
       .build(),
   )
-}

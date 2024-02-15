@@ -17,49 +17,31 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 
 /** Returns this value as a [String], or `null` if the value is `null` or not a [String]. */
-@DelicateElideApi public fun PolyglotValue.asStringOrNull(): String? {
-  return takeUnless { isNull || !isString }?.asString()
-}
+@DelicateElideApi public fun PolyglotValue.asStringOrNull(): String? = takeUnless { isNull || !isString }?.asString()
 
 /** Returns this value as a [Boolean], or `null` if the value is `null` or not a [Boolean]. */
-@DelicateElideApi public fun PolyglotValue.asBooleanOrNull(): Boolean? {
-  return takeUnless { isNull || !isBoolean }?.asBoolean()
-}
+@DelicateElideApi public fun PolyglotValue.asBooleanOrNull(): Boolean? = takeUnless { isNull || !isBoolean }?.asBoolean()
 
 /** Returns this value as a [Byte], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asByteOrNull(): Byte? {
-  return takeUnless { isNull || !isNumber }?.asByte()
-}
+@DelicateElideApi public fun PolyglotValue.asByteOrNull(): Byte? = takeUnless { isNull || !isNumber }?.asByte()
 
 /** Returns this value as a [Char], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asCharOrNull(): Char? {
-  return takeUnless { isNull || !isNumber }?.asInt()?.toChar()
-}
+@DelicateElideApi public fun PolyglotValue.asCharOrNull(): Char? = takeUnless { isNull || !isNumber }?.asInt()?.toChar()
 
 /** Returns this value as a [Short], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asShortOrNull(): Short? {
-  return takeUnless { isNull || !isNumber }?.asShort()
-}
+@DelicateElideApi public fun PolyglotValue.asShortOrNull(): Short? = takeUnless { isNull || !isNumber }?.asShort()
 
 /** Returns this value as a [Int], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asIntOrNull(): Int? {
-  return takeUnless { isNull || !isNumber }?.asInt()
-}
+@DelicateElideApi public fun PolyglotValue.asIntOrNull(): Int? = takeUnless { isNull || !isNumber }?.asInt()
 
 /** Returns this value as a [Long], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asLongOrNull(): Long? {
-  return takeUnless { isNull || !isNumber }?.asLong()
-}
+@DelicateElideApi public fun PolyglotValue.asLongOrNull(): Long? = takeUnless { isNull || !isNumber }?.asLong()
 
 /** Returns this value as a [Float], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asFloatOrNull(): Float? {
-  return takeUnless { isNull || !isNumber }?.asFloat()
-}
+@DelicateElideApi public fun PolyglotValue.asFloatOrNull(): Float? = takeUnless { isNull || !isNumber }?.asFloat()
 
 /** Returns this value as a [Double], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asDoubleOrNull(): Double? {
-  return takeUnless { isNull || !isNumber }?.asDouble()
-}
+@DelicateElideApi public fun PolyglotValue.asDoubleOrNull(): Double? = takeUnless { isNull || !isNumber }?.asDouble()
 
 /** Maps this value to a [BooleanArray] by copying its contents, failing if it is not a guest array. */
 @DelicateElideApi public fun PolyglotValue.asBooleanArray(): BooleanArray {

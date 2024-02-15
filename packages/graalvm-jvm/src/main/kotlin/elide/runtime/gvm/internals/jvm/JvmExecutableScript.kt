@@ -23,10 +23,14 @@ import elide.runtime.gvm.internals.GraalVMGuest.JVM
 /**
  * TBD.
  */
-internal class JvmExecutableScript (
+internal class JvmExecutableScript(
   source: ExecutableScript.ScriptSource,
   spec: String,
-) : AbstractGVMScript(JVM, source, spec) {
+) : AbstractGVMScript(
+JVM,
+ source,
+ spec
+) {
   override fun invocation(): EnumSet<InvocationMode> {
     TODO("Not yet implemented")
   }

@@ -68,24 +68,25 @@ import org.graalvm.polyglot.Value as GuestValue
  * @param mapped Resolved values for each binding.
  * @param types Entrypoint types expressed in [mapped].
  */
-internal sealed class PythonInvocationBindings (
+internal sealed class PythonInvocationBindings(
   private val mapped: Map<EntrypointInfo, PythonEntrypoint>,
   private val modes: EnumSet<DispatchStyle>,
   private val types: EnumSet<PythonEntrypointType>,
 ) : InvocationBindings, GVMInvocationBindings<PythonInvocationBindings, PythonExecutableScript>() {
   /** Enumerates types of resolved Python entrypoints; a [PythonInvocationBindings] subclass exists for each. */
   internal enum class PythonEntrypointType {
+    /** Special type of entrypoint which indicates support for multiple [PythonEntrypointType]s. */
+    COMPOUND,
+
     /** Indicates a "default" entrypoint of `__main__`. */
     MAIN,
-
-    /** Indicates a server-capable interface, which exports a `fetch` function (async). */
-    SERVER,
 
     /** Indicates an SSR-capable interface, which exports a `render` function (async). */
     RENDER,
 
-    /** Special type of entrypoint which indicates support for multiple [PythonEntrypointType]s. */
-    COMPOUND,
+    /** Indicates a server-capable interface, which exports a `fetch` function (async). */
+    SERVER,
+;
   }
 
   /**

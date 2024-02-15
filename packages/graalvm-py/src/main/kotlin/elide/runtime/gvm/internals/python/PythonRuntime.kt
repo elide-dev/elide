@@ -39,14 +39,65 @@ import org.graalvm.polyglot.Value as GuestValue
 /**
  * TBD.
  */
-@Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
-@Requires(property = "elide.gvm.python.enabled", value = "true", defaultValue = "true")
+@Requires(
+property = "elide.gvm.enabled",
+ value = "true",
+ defaultValue = "true"
+)
+@Requires(
+property = "elide.gvm.python.enabled",
+ value = "true",
+ defaultValue = "true"
+)
 @GuestRuntime(engine = PythonRuntime.ENGINE_PYTHON)
 internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, PythonBindings>(PYTHON) {
+  /** Python-specific engine configuration. */
+  @Inject lateinit var pyConfig: PythonConfig
+
+  override fun resolveConfig(): PythonConfig = pyConfig
+
+  override fun configure(engine: VMEngine, context: VMBuilder): Stream<out VMProperty> = listOfNotNull(
+    VMStaticProperty.of("llvm.OSR", "BYTECODE"),
+    VMStaticProperty.of("python.PosixModuleBackend", "native"),
+    VMStaticProperty.active("llvm.AOTCacheStore"),
+    VMStaticProperty.active("llvm.AOTCacheLoad"),
+    VMStaticProperty.active("llvm.C++Interop"),
+    VMStaticProperty.active("llvm.lazyParsing"),
+    VMStaticProperty.active("llvm.enableExternalNativeAccess"),
+    VMStaticProperty.active("python.NativeModules"),
+    VMStaticProperty.active("python.LazyStrings"),
+    VMStaticProperty.active("python.WithCachedSources"),
+    VMStaticProperty.active("python.WithTRegex"),
+    VMStaticProperty.active("python.UsePanama"),
+    VMStaticProperty.inactive("python.EmulateJython"),
+    VMStaticProperty.of("python.CoreHome", "/python/python-home/lib/graalpy23.1"),
+    VMStaticProperty.of("python.PythonHome", "/python/python-home"),
+  ).stream()
+
+  override fun prepare(context: VMContext, globals: GuestValue) {
+    // nothing at this time
+  }
+
+  override fun resolve(
+context: VMContext,
+ script: PythonScript,
+ mode: DispatchStyle?
+): PythonBindings {
+    TODO("Not yet implemented")
+  }
+
+  override fun <Inputs : ExecutionInputs> execute(
+    context: VMContext,
+    script: PythonScript,
+    bindings: PythonBindings,
+    inputs: Inputs
+  ): GuestValue {
+    TODO("Not yet implemented")
+  }
   internal companion object {
     const val ENGINE_PYTHON: String = "python"
-    private const val RUNTIME_PREINIT: String = "__runtime__.py"
     private const val PYTHON_MIMETYPE: String = "text/x-python"
+    private const val RUNTIME_PREINIT: String = "__runtime__.py"
 
     // Whether runtime assets have loaded.
     private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
@@ -75,44 +126,4 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
     PYTHON,
     { runtimeInfo.get() }
   )
-
-  /** Python-specific engine configuration. */
-  @Inject lateinit var pyConfig: PythonConfig
-
-  override fun resolveConfig(): PythonConfig = pyConfig
-
-  override fun configure(engine: VMEngine, context: VMBuilder): Stream<out VMProperty> = listOfNotNull(
-    VMStaticProperty.of("llvm.OSR", "BYTECODE"),
-    VMStaticProperty.of("python.PosixModuleBackend", "native"),
-    VMStaticProperty.active("llvm.AOTCacheStore"),
-    VMStaticProperty.active("llvm.AOTCacheLoad"),
-    VMStaticProperty.active("llvm.C++Interop"),
-    VMStaticProperty.active("llvm.lazyParsing"),
-    VMStaticProperty.active("llvm.enableExternalNativeAccess"),
-    VMStaticProperty.active("python.NativeModules"),
-    VMStaticProperty.active("python.LazyStrings"),
-    VMStaticProperty.active("python.WithCachedSources"),
-    VMStaticProperty.active("python.WithTRegex"),
-    VMStaticProperty.active("python.UsePanama"),
-    VMStaticProperty.inactive("python.EmulateJython"),
-    VMStaticProperty.of("python.CoreHome", "/python/python-home/lib/graalpy23.1"),
-    VMStaticProperty.of("python.PythonHome", "/python/python-home"),
-  ).stream()
-
-  override fun prepare(context: VMContext, globals: GuestValue) {
-    // nothing at this time
-  }
-
-  override fun resolve(context: VMContext, script: PythonScript, mode: DispatchStyle?): PythonBindings {
-    TODO("Not yet implemented")
-  }
-
-  override fun <Inputs : ExecutionInputs> execute(
-    context: VMContext,
-    script: PythonScript,
-    bindings: PythonBindings,
-    inputs: Inputs
-  ): GuestValue {
-    TODO("Not yet implemented")
-  }
 }

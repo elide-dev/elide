@@ -37,14 +37,64 @@ import org.graalvm.polyglot.Context as VMContext
 /**
  * TBD.
  */
-@Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
-@Requires(property = "elide.gvm.jvm.enabled", value = "true", defaultValue = "true")
+@Requires(
+property = "elide.gvm.enabled",
+ value = "true",
+ defaultValue = "true"
+)
+@Requires(
+property = "elide.gvm.jvm.enabled",
+ value = "true",
+ defaultValue = "true"
+)
 @GuestRuntime(engine = JvmRuntime.ENGINE_JVM)
 internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScript, JvmInvocationBindings>(JVM) {
+  /** Python-specific engine configuration. */
+  @Inject lateinit var jvmConfig: JvmRuntimeConfig
+
+  override fun resolveConfig(): JvmRuntimeConfig = jvmConfig
+
+  override fun configure(engine: Engine, context: Builder): Stream<out VMProperty> = listOfNotNull(
+    VMStaticProperty.active("java.EnablePreview"),
+    VMStaticProperty.active("java.BuiltInPolyglotCollections"),
+    VMStaticProperty.active("java.BytecodeLevelInlining"),
+    VMStaticProperty.active("java.CHA"),
+    VMStaticProperty.active("java.HotSwapAPI"),
+    VMStaticProperty.active("java.InlineMethodHandle"),
+    VMStaticProperty.active("java.MultiThreaded"),
+    VMStaticProperty.active("java.Polyglot"),
+    VMStaticProperty.active("java.SoftExit"),
+    VMStaticProperty.active("java.SplitMethodHandles"),
+    VMStaticProperty.inactive("java.EnableAgents"),
+    VMStaticProperty.inactive("java.EnableManagement"),
+    VMStaticProperty.inactive("java.ExposeNativeJavaVM"),
+// VMStaticProperty.of("java.JImageMode", "native"),
+  ).stream()
+
+  override fun prepare(context: VMContext, globals: Value) {
+    // nothing at this time
+  }
+
+  override fun resolve(
+context: VMContext,
+ script: JvmExecutableScript,
+ mode: DispatchStyle?
+): JvmInvocationBindings {
+    TODO("Not yet implemented")
+  }
+
+  override fun <Inputs : ExecutionInputs> execute(
+    context: VMContext,
+    script: JvmExecutableScript,
+    bindings: JvmInvocationBindings,
+    inputs: Inputs
+  ): Value {
+    TODO("Not yet implemented")
+  }
   internal companion object {
     const val ENGINE_JVM: String = "jvm"
-    private const val RUNTIME_PREINIT: String = "__runtime__.kt"
     private const val JVM_MIMETYPE: String = "text/x-java"
+    private const val RUNTIME_PREINIT: String = "__runtime__.kt"
 
     // Whether runtime assets have loaded.
     private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
@@ -73,43 +123,4 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
     JVM,
     { runtimeInfo.get() }
   )
-
-  /** Python-specific engine configuration. */
-  @Inject lateinit var jvmConfig: JvmRuntimeConfig
-
-  override fun resolveConfig(): JvmRuntimeConfig = jvmConfig
-
-  override fun configure(engine: Engine, context: Builder): Stream<out VMProperty> = listOfNotNull(
-    VMStaticProperty.active("java.EnablePreview"),
-    VMStaticProperty.active("java.BuiltInPolyglotCollections"),
-    VMStaticProperty.active("java.BytecodeLevelInlining"),
-    VMStaticProperty.active("java.CHA"),
-    VMStaticProperty.active("java.HotSwapAPI"),
-    VMStaticProperty.active("java.InlineMethodHandle"),
-    VMStaticProperty.active("java.MultiThreaded"),
-    VMStaticProperty.active("java.Polyglot"),
-    VMStaticProperty.active("java.SoftExit"),
-    VMStaticProperty.active("java.SplitMethodHandles"),
-    VMStaticProperty.inactive("java.EnableAgents"),
-    VMStaticProperty.inactive("java.EnableManagement"),
-    VMStaticProperty.inactive("java.ExposeNativeJavaVM"),
-//    VMStaticProperty.of("java.JImageMode", "native"),
-  ).stream()
-
-  override fun prepare(context: VMContext, globals: Value) {
-    // nothing at this time
-  }
-
-  override fun resolve(context: VMContext, script: JvmExecutableScript, mode: DispatchStyle?): JvmInvocationBindings {
-    TODO("Not yet implemented")
-  }
-
-  override fun <Inputs : ExecutionInputs> execute(
-    context: VMContext,
-    script: JvmExecutableScript,
-    bindings: JvmInvocationBindings,
-    inputs: Inputs
-  ): Value {
-    TODO("Not yet implemented")
-  }
 }

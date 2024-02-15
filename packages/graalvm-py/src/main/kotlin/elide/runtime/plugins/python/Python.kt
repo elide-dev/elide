@@ -69,7 +69,6 @@ import elide.runtime.plugins.llvm.LLVM
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
-
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 

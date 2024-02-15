@@ -30,23 +30,6 @@ import elide.vm.annotations.Polyglot
 /** Specializes the [AbstractIntrinsicTest] base with support for Ruby guest testing. */
 @OptIn(DelicateElideApi::class)
 abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T>() {
-  /** Assertion capture interface. */
-  @FunctionalInterface internal interface RubyAssertion : TestAssertion, Function<Any?, TestContext> {
-    /** Invoke a null-check-based assertion. */
-    @Polyglot override fun apply(value: Any?): TestContext
-  }
-
-  /** Default top-level assertion implementation. */
-  internal class CaptureAssertion : RubyAssertion {
-    private val heldValue: AtomicReference<Any?> = AtomicReference(null)
-    override val value: Any? get() = heldValue.get()
-
-    @Polyglot override fun apply(value: Any?): TestContext {
-      heldValue.set(value)
-      return TestResultContext(this)
-    }
-  }
-
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.install(Ruby)
   }
@@ -120,6 +103,23 @@ abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsic
           guestOperation,
         )
       }
+    }
+  }
+
+/** Assertion capture interface. */
+  @FunctionalInterface internal interface RubyAssertion : TestAssertion, Function<Any?, TestContext> {
+    /** Invoke a null-check-based assertion. */
+    @Polyglot override fun apply(value: Any?): TestContext
+  }
+
+  /** Default top-level assertion implementation. */
+  internal class CaptureAssertion : RubyAssertion {
+    private val heldValue: AtomicReference<Any?> = AtomicReference(null)
+    override val value: Any? get() = heldValue.get()
+
+    @Polyglot override fun apply(value: Any?): TestContext {
+      heldValue.set(value)
+      return TestResultContext(this)
     }
   }
 }

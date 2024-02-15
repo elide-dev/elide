@@ -41,7 +41,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
   public companion object Plugin : AbstractLanguagePlugin<WasmConfig, Wasm>() {
     private const val WASM_LANGUAGE_ID = "wasm"
     private const val WASM_PLUGIN_ID = "WASM"
-
     override val languageId: String = WASM_LANGUAGE_ID
     override val key: Key<Wasm> = Key(WASM_PLUGIN_ID)
 

@@ -80,17 +80,13 @@ import elide.runtime.core.PolyglotValue
   private val replState by lazy { repl.createState() }
 
   /** Construct the next [ReplCodeLine] for the current REPL [replState], using a text [snippet] as content. */
-  private fun nextLine(snippet: String): ReplCodeLine {
-    return ReplCodeLine(
+  private fun nextLine(snippet: String): ReplCodeLine = ReplCodeLine(
       no = replState.getNextLineNo(),
       generation = replState.currentGeneration,
       code = snippet,
     )
-  }
 
-  override fun accepts(source: Source): Boolean {
-    return source.hasCharacters()
-  }
+  override fun accepts(source: Source): Boolean = source.hasCharacters()
 
   override fun evaluate(source: Source, context: PolyglotContext): PolyglotValue {
     require(accepts(source)) { "Only text-based sources are supported." }

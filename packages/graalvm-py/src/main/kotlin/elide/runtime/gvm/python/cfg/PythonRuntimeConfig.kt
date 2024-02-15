@@ -28,22 +28,6 @@ import elide.runtime.gvm.cfg.JsRuntimeConfig
 @Suppress("MemberVisibilityCanBePrivate")
 @ConfigurationProperties("elide.gvm.python")
 public class PythonRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
-  public companion object {
-    /** Default enablement of the JS VM. */
-    public const val DEFAULT_ENABLED: Boolean = true
-
-    /** Default character set to use with raw data exchanged with the JS VM. */
-    public val DEFAULT_CHARSET: Charset = StandardCharsets.UTF_8
-
-    /** Default JS VM locale. */
-    public val DEFAULT_LOCALE: Locale = Locale.getDefault()
-
-    /** Default JS VM time zone. */
-    public val DEFAULT_TIMEZONE: ZoneId = ZoneId.systemDefault()
-  }
-
-  override fun isEnabled(): Boolean = DEFAULT_ENABLED
-
   /**
    * @return Default locale to apply to the JS VM. Defaults to the system default.
    */
@@ -64,4 +48,19 @@ public class PythonRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
    * @return Locale to use for embedded JS VMs.
    */
   public val locale: Locale? get() = null
+
+  override fun isEnabled(): Boolean = DEFAULT_ENABLED
+  public companion object {
+    /** Default enablement of the JS VM. */
+    public const val DEFAULT_ENABLED: Boolean = true
+
+    /** Default character set to use with raw data exchanged with the JS VM. */
+    public val DEFAULT_CHARSET: Charset = StandardCharsets.UTF_8
+
+    /** Default JS VM locale. */
+    public val DEFAULT_LOCALE: Locale = Locale.getDefault()
+
+    /** Default JS VM time zone. */
+    public val DEFAULT_TIMEZONE: ZoneId = ZoneId.systemDefault()
+  }
 }

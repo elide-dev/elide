@@ -30,8 +30,6 @@ import elide.runtime.plugins.AbstractLanguageConfig
 
   private companion object {
     /** Resolve a platform-specific temporary directory used to extract guest classpath entries. */
-    private fun defaultClasspathRoot(): String {
-      return "${System.getProperty("java.io.tmpdir")}/elide-runtime-kt/classpath"
-    }
+    private fun defaultClasspathRoot(): String = "${System.getProperty("java.io.tmpdir")}/elide-runtime-kt/classpath"
   }
 }

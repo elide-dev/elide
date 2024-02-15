@@ -37,9 +37,7 @@ import elide.runtime.plugins.AbstractLanguageConfig
   public var multithreading: Boolean = true
 
   /** Returns a string representation of the classpath to be used by the guest Espresso JVM. */
-  internal fun collectClasspath(): String {
-    return classpathEntries.joinToString(CLASSPATH_ENTRY_SEPARATOR)
-  }
+  internal fun collectClasspath(): String = classpathEntries.joinToString(CLASSPATH_ENTRY_SEPARATOR)
 
   /** Add new entries to the guest classpath used by the engine. */
   public fun classpath(vararg paths: String) {

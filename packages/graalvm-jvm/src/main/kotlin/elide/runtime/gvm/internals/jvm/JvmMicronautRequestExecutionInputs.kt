@@ -22,14 +22,12 @@ import elide.runtime.intrinsics.js.ReadableStream
 /**
  * TBD.
  */
-internal class JvmMicronautRequestExecutionInputs private constructor (
+internal class JvmMicronautRequestExecutionInputs private constructor(
   private val request: HttpRequest<Any>,
   state: Any?,
-) : FetchRequest, MicronautRequestExecutionInputs<Any>, JvmServerRequestExecutionInputs<HttpRequest<Any>>(state) {
-  override fun request(): HttpRequest<Any> {
-    TODO("Not yet implemented")
-  }
-
+) : FetchRequest,
+ MicronautRequestExecutionInputs<Any>,
+ JvmServerRequestExecutionInputs<HttpRequest<Any>>(state) {
   override val body: ReadableStream
     get() = TODO("Not yet implemented")
   override val bodyUsed: Boolean
@@ -40,4 +38,7 @@ internal class JvmMicronautRequestExecutionInputs private constructor (
     get() = TODO("Not yet implemented")
   override val url: String
     get() = TODO("Not yet implemented")
+  override fun request(): HttpRequest<Any> {
+    TODO("Not yet implemented")
+  }
 }

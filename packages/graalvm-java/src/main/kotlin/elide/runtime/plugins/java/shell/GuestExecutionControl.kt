@@ -65,13 +65,9 @@ import elide.runtime.plugins.jvm.interop.asStringOrNull
     tryInvoke("redefine", provider.mapBytecodes(cbcs))
   }
 
-  override fun invoke(className: String?, methodName: String?): String? {
-    return tryInvoke("invoke", className, methodName).asStringOrNull()
-  }
+  override fun invoke(className: String?, methodName: String?): String? = tryInvoke("invoke", className, methodName).asStringOrNull()
 
-  override fun varValue(className: String?, varName: String?): String? {
-    return tryInvoke("varValue", className, varName).asStringOrNull()
-  }
+  override fun varValue(className: String?, varName: String?): String? = tryInvoke("varValue", className, varName).asStringOrNull()
 
   override fun addToClasspath(path: String?) {
     tryInvoke("addToClasspath", path)

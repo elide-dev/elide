@@ -39,43 +39,18 @@ import org.graalvm.polyglot.Value as GuestValue
 /**
  * TBD.
  */
-@Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
-@Requires(property = "elide.gvm.ruby.enabled", value = "true", defaultValue = "true")
+@Requires(
+property = "elide.gvm.enabled",
+ value = "true",
+ defaultValue = "true"
+)
+@Requires(
+property = "elide.gvm.ruby.enabled",
+ value = "true",
+ defaultValue = "true"
+)
 @GuestRuntime(engine = RubyRuntime.ENGINE_RUBY)
 internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindings>(RUBY) {
-  internal companion object {
-    const val ENGINE_RUBY: String = "ruby"
-    private const val RUNTIME_PREINIT: String = "__runtime__.rb"
-    private const val RUBY_MIMETYPE: String = "application/x-ruby"
-
-    // Whether runtime assets have loaded.
-    private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
-
-    // Info about the runtime, loaded from the runtime bundle manifest.
-    internal val runtimeInfo: AtomicReference<RuntimeInfo> = AtomicReference(null)
-
-    // Assembled runtime init code, loaded from `runtimeInfo`.
-    private val runtimeInit: AtomicReference<Source> = AtomicReference(null)
-
-    init {
-      check(!runtimeReady.get()) {
-        "Runtime cannot be prepared more than once (Ruby runtime must operate as a singleton)"
-      }
-
-      resolveRuntimeInfo(RUBY.symbol, RUNTIME_PREINIT, RUBY_MIMETYPE).let { (info, facade) ->
-        runtimeInfo.set(info)
-        runtimeInit.set(facade)
-        runtimeReady.set(true)
-      }
-    }
-  }
-
-  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
-    RUBY,
-    { runtimeInfo.get() }
-  )
-
   @Inject lateinit var rubyConfig: RubyConfig
 
   override fun resolveConfig(): RubyConfig = rubyConfig
@@ -104,7 +79,11 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
     // nothing at this time
   }
 
-  override fun resolve(context: VMContext, script: RubyScript, mode: DispatchStyle?): RubyBindings {
+  override fun resolve(
+context: VMContext,
+ script: RubyScript,
+ mode: DispatchStyle?
+): RubyBindings {
     TODO("Not yet implemented")
   }
 
@@ -116,4 +95,36 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
   ): GuestValue {
     TODO("Not yet implemented")
   }
+  internal companion object {
+    const val ENGINE_RUBY: String = "ruby"
+    private const val RUBY_MIMETYPE: String = "application/x-ruby"
+    private const val RUNTIME_PREINIT: String = "__runtime__.rb"
+
+    // Whether runtime assets have loaded.
+    private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
+
+    // Info about the runtime, loaded from the runtime bundle manifest.
+    internal val runtimeInfo: AtomicReference<RuntimeInfo> = AtomicReference(null)
+
+    // Assembled runtime init code, loaded from `runtimeInfo`.
+    private val runtimeInit: AtomicReference<Source> = AtomicReference(null)
+
+    init {
+      check(!runtimeReady.get()) {
+        "Runtime cannot be prepared more than once (Ruby runtime must operate as a singleton)"
+      }
+
+      resolveRuntimeInfo(RUBY.symbol, RUNTIME_PREINIT, RUBY_MIMETYPE).let { (info, facade) ->
+        runtimeInfo.set(info)
+        runtimeInit.set(facade)
+        runtimeReady.set(true)
+      }
+    }
+  }
+
+  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
+  @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
+    RUBY,
+    { runtimeInfo.get() }
+  )
 }

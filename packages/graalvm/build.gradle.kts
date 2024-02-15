@@ -259,11 +259,24 @@ dependencies {
   }
 
   api(libs.graalvm.regex)
-  api(libs.graalvm.polyglot.js)
+  api(libs.graalvm.polyglot.js) {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
+
   compileOnly(libs.graalvm.svm)
 
-  testImplementation(libs.bundles.graalvm.polyglot)
-  testImplementation(libs.bundles.graalvm.tools)
+  testImplementation(libs.bundles.graalvm.tools) {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
+  testImplementation(libs.bundles.graalvm.polyglot) {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
 
   // Testing
   testImplementation(projects.packages.test)

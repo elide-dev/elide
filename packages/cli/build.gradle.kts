@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -26,9 +26,8 @@ import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-
-import elide.internal.conventions.kotlin.KotlinTarget
 import org.jetbrains.kotlin.konan.target.HostManager
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   java
@@ -81,13 +80,13 @@ elide {
 // - `elide.targetArch`: `amd64`, `arm64`
 
 val quickbuild = (
-  project.properties["elide.release"] != "true" ||
-  project.properties["elide.buildMode"] == "dev"
-)
+        project.properties["elide.release"] != "true" ||
+                project.properties["elide.buildMode"] == "dev"
+        )
 val isRelease = !quickbuild && (
-  project.properties["elide.release"] == "true" ||
-  project.properties["elide.buildMode"] == "release"
-)
+        project.properties["elide.release"] == "true" ||
+                project.properties["elide.buildMode"] == "release"
+        )
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
@@ -168,18 +167,22 @@ val jvmCompileArgs = listOfNotNull(
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
-).plus(if (enableJpms) listOf(
-  "--add-reads=elide.cli=ALL-UNNAMED",
-  "--add-reads=elide.graalvm=ALL-UNNAMED",
-  "--add-exports=java.base/jdk.internal.module=elide.cli",
-  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
-) else emptyList()).plus(if (enableEmbeddedBuilder) listOf(
-  "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
-) else emptyList())
+).plus(
+  if (enableJpms) listOf(
+    "--add-reads=elide.cli=ALL-UNNAMED",
+    "--add-reads=elide.graalvm=ALL-UNNAMED",
+    "--add-exports=java.base/jdk.internal.module=elide.cli",
+    "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
+  ) else emptyList(),
+).plus(
+  if (enableEmbeddedBuilder) listOf(
+    "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
+  ) else emptyList(),
+)
 
 val jvmRuntimeArgs = emptyList<String>()
 
@@ -216,7 +219,7 @@ java {
   if (enableJpms) modularity.inferModulePath = true
 }
 
-//ktlint {
+// ktlint {
 //  debug = false
 //  verbose = false
 //  android = false
@@ -227,7 +230,7 @@ java {
 //  filter {
 //    exclude("elide/tool/cli/ToolTypealiases.kt")
 //  }
-//}
+// }
 
 kapt {
   useBuildCache = true
@@ -680,13 +683,17 @@ val commonNativeArgs = listOfNotNull(
   ).joinToString(","),
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
   if (enablePgoSampling) "--pgo-sampling" else null,
-).asSequence().plus(if (enableEdge) listOf(
-  "-H:+UnlockExperimentalVMOptions",
-) else emptyList()).plus(
-  if (oracleGvm) commonGvmArgs else emptyList()
-).plus(if (enableStrictHeap) listOf(
-  "--strict-image-heap",
-) else emptyList()).toList()
+).asSequence().plus(
+  if (enableEdge) listOf(
+    "-H:+UnlockExperimentalVMOptions",
+  ) else emptyList(),
+).plus(
+  if (oracleGvm) commonGvmArgs else emptyList(),
+).plus(
+  if (enableStrictHeap) listOf(
+    "--strict-image-heap",
+  ) else emptyList(),
+).toList()
 
 val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
@@ -704,8 +711,11 @@ val debugFlags: List<String> = listOfNotNull(
 )
 
 val experimentalFlags = listOf(
-  "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
-  "-H:+UseStringInlining",  // String inlining optimization is not supported when just-in-time compilation is used
+  // `-H:+SupportContinuations` is in use, but is not supported together with Truffle JIT compilation
+  "-H:+SupportContinuations",
+
+  // String inlining optimization is not supported when just-in-time compilation is used
+  "-H:+UseStringInlining",
 
   // Not enabled for regular builds yet
   "-H:±UseExperimentalReachabilityAnalysis",
@@ -763,21 +773,27 @@ val releaseFlags: List<String> = listOf(
   "-O3",
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
-).asSequence().plus(releaseCFlags.flatMap {
-  listOf(
-    "-H:NativeLinkerOption=$it",
-    "--native-compiler-options=$it",
-  )
-}).plus(if (enablePgo) listOf(
-  "--pgo=${profiles.joinToString(",")}",
-  "-H:CodeSectionLayoutOptimization=ClusterByEdges",
-) else emptyList()).plus(listOf(
-  if (enableSbom) listOf(
-    if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
+).asSequence().plus(
+  releaseCFlags.flatMap {
+    listOf(
+      "-H:NativeLinkerOption=$it",
+      "--native-compiler-options=$it",
+    )
+  },
+).plus(
+  if (enablePgo) listOf(
+    "--pgo=${profiles.joinToString(",")}",
+    "-H:CodeSectionLayoutOptimization=ClusterByEdges",
   ) else emptyList(),
-  if (enableDashboard) dashboardFlags else emptyList(),
-  if (oracleGvm) gvmReleaseFlags else emptyList(),
-).flatten()).toList()
+).plus(
+  listOf(
+    if (enableSbom) listOf(
+      if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export",
+    ) else emptyList(),
+    if (enableDashboard) dashboardFlags else emptyList(),
+    if (oracleGvm) gvmReleaseFlags else emptyList(),
+  ).flatten(),
+).toList()
 
 val jvmDefs = mapOf(
   "user.country" to "US",
@@ -1097,31 +1113,43 @@ val defaultPlatformArgs = listOf(
   "--libc=glibc",
 )
 
-val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
-  "--gc=serial",
-  "-Delide.vm.engine.preinitialize=true",
-  "-H:InitialCollectionPolicy=Adaptive",
-  "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
-) else emptyList())).plus(if (oracleGvm && enableAuxCache) listOf(
-  "-H:-AuxiliaryEngineCache",
-) else emptyList())
+val windowsOnlyArgs = defaultPlatformArgs.plus(
+  listOf(
+    "-march=native",
+    "--gc=serial",
+    "-Delide.vm.engine.preinitialize=true",
+    "-H:InitialCollectionPolicy=Adaptive",
+    "-R:MaximumHeapSizePercent=80",
+  ).plus(
+    if (project.properties["elide.ci"] == "true") listOf(
+      "-J-Xmx12g",
+    ) else emptyList(),
+  ),
+).plus(
+  if (oracleGvm && enableAuxCache) listOf(
+    "-H:-AuxiliaryEngineCache",
+  ) else emptyList(),
+)
 
-val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
-  "--gc=serial",
-  "-Delide.vm.engine.preinitialize=true",
-  "-H:InitialCollectionPolicy=Adaptive",
-  "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
-) else listOf(
-  "-J-Xmx24g",
-))).plus(if (oracleGvm && enableAuxCache) listOf(
-  "-H:+AuxiliaryEngineCache",
-) else emptyList())
+val darwinOnlyArgs = defaultPlatformArgs.plus(
+  listOf(
+    "-march=native",
+    "--gc=serial",
+    "-Delide.vm.engine.preinitialize=true",
+    "-H:InitialCollectionPolicy=Adaptive",
+    "-R:MaximumHeapSizePercent=80",
+  ).plus(
+    if (project.properties["elide.ci"] == "true") listOf(
+      "-J-Xmx12g",
+    ) else listOf(
+      "-J-Xmx24g",
+    ),
+  ),
+).plus(
+  if (oracleGvm && enableAuxCache) listOf(
+    "-H:+AuxiliaryEngineCache",
+  ) else emptyList(),
+)
 
 val windowsReleaseArgs = windowsOnlyArgs
 
@@ -1165,14 +1193,18 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
-  ).plus(if (oracleGvm && enableAuxCache) listOf(
-    "-H:+AuxiliaryEngineCache",
-  ) else emptyList())
-).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
-) else listOf(
-  "-J-Xmx24g",
-))
+  ).plus(
+    if (oracleGvm && enableAuxCache) listOf(
+      "-H:+AuxiliaryEngineCache",
+    ) else emptyList(),
+  ),
+).plus(
+  if (project.properties["elide.ci"] == "true") listOf(
+    "-J-Xmx12g",
+  ) else listOf(
+    "-J-Xmx24g",
+  ),
+)
 
 val linuxGvmReleaseFlags = listOf(
   "-H:+ObjectInlining",
@@ -1192,15 +1224,15 @@ val muslArgs = listOf(
 val testOnlyArgs: List<String> = emptyList()
 
 val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
+val nativeRelease = (!quickbuild && (properties["elide.release"] == "true" || properties["buildMode"] == "release"))
 
 fun nativeCliImageArgs(
   platform: String = "generic",
   target: String = "glibc",
   debug: Boolean = quickbuild,
   test: Boolean = false,
-  release: Boolean = (!quickbuild && !test && (properties["elide.release"] == "true" || properties["buildMode"] == "release")),
-): List<String> =
-  commonNativeArgs.asSequence().plus(
+  release: Boolean = nativeRelease && !test,
+): List<String> = commonNativeArgs.asSequence().plus(
     jvmCompileArgs,
   ).plus(
     jvmCompileArgs.map { "-J$it" },
@@ -1289,9 +1321,11 @@ graalvmNative {
       imageName = "elide.test"
       fallback = false
       quickBuild = true
-      buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).plus(
-        nativeCompileJvmArgs
-      ))
+      buildArgs.addAll(
+        nativeCliImageArgs(test = true, platform = targetOs).plus(
+          nativeCompileJvmArgs,
+        ),
+      )
     }
   }
 }
@@ -1319,7 +1353,7 @@ enum class ElideTarget(override val tag: String) : TargetInfo {
   MACOS_AARCH64("darwin-aarch64"),
   MACOS_AMD64("darwin-amd64"),
   LINUX_AMD64("linux-amd64"),
-  WINDOWS_AMD64("windows-amd64");
+  WINDOWS_AMD64("windows-amd64")
 }
 
 fun resolveTarget(target: String? = properties["elide.targetOs"] as? String): ElideTarget = when {
@@ -1365,12 +1399,15 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
     "META-INF/com.android.tools",
     "META-INF/com.android.tools/*/*",
     *excludedStatics,
-    *(if (!enableEmbeddedResources) arrayOf(
+    *(
+      if (!enableEmbeddedResources) arrayOf(
       "META-INF/elide/embedded/runtime/*/*-windows*",
       "META-INF/elide/embedded/runtime/*/*-darwin*",
       "META-INF/elide/embedded/runtime/*/*-linux*",
-    ) else emptyArray()),
-    *(if (!HostManager.hostIsMingw) arrayOf(
+    ) else emptyArray()
+    ),
+    *(
+      if (!HostManager.hostIsMingw) arrayOf(
       "*.dll",
       "**/*.dll",
       "win",
@@ -1378,9 +1415,11 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
       "win/*/*",
       "win/**/*.*",
       "META-INF/elide/embedded/runtime/*/*-windows*",
-    ) else emptyArray()),
+    ) else emptyArray()
+    ),
 
-    *(if (!HostManager.hostIsMac) arrayOf(
+    *(
+      if (!HostManager.hostIsMac) arrayOf(
       "*.dylib",
       "**/*.dylib",
       "darwin",
@@ -1393,9 +1432,11 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
       "META-INF/native/*macos*",
       "META-INF/native/*.dylib",
       "META-INF/elide/embedded/runtime/*/*-darwin*",
-    ) else emptyArray()),
+    ) else emptyArray()
+    ),
 
-    *(if (!HostManager.hostIsLinux) arrayOf(
+    *(
+      if (!HostManager.hostIsLinux) arrayOf(
       "*.so",
       "**/*.so",
       "linux/aarch64/*.so",
@@ -1405,9 +1446,11 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
       "META-INF/native/*linux*",
       "META-INF/native/*.so",
       "META-INF/elide/embedded/runtime/*/*-linux*",
-    ) else emptyArray()),
+    ) else emptyArray()
+    ),
 
-    *(when (targetArch ?: System.getProperty("os.arch")) {
+    *(
+      when (targetArch ?: System.getProperty("os.arch")) {
       "aarch64" -> arrayOf(
         "*/x86_64/*",
         "*/amd64/*",
@@ -1428,7 +1471,8 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
         "META-INF/native/*arm64*",
         "META-INF/elide/embedded/runtime/*/*-aarch64*",
       )
-    }),
+    }
+    ),
   )
 }
 

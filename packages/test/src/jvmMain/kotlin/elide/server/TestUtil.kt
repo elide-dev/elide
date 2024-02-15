@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,9 +21,11 @@ public object TestUtil {
    * @param name Name of the resource to load
    * @return File contents.
    */
-  public fun loadFixture(name: String): String = requireNotNull(TestUtil::class.java.getResourceAsStream(
-    name
-  )).bufferedReader().use {
+  public fun loadFixture(name: String): String = requireNotNull(
+    TestUtil::class.java.getResourceAsStream(
+      name,
+    ),
+  ).bufferedReader().use {
     it.readText()
   }
 
@@ -33,9 +35,11 @@ public object TestUtil {
    * @param name Name of the resource to load
    * @return File contents.
    */
-  public fun loadBinary(name: String): ByteArray = requireNotNull(TestUtil::class.java.getResourceAsStream(
-    name
-  )).buffered().use {
+  public fun loadBinary(name: String): ByteArray = requireNotNull(
+    TestUtil::class.java.getResourceAsStream(
+      name,
+    ),
+  ).buffered().use {
     it.readAllBytes()
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -33,9 +33,9 @@ internal class VirtualFilesystem : FrameworkFeature {
   /** @inheritDoc */
   override fun isInConfiguration(access: Feature.IsInConfigurationAccess): Boolean {
     return (
-      // the VFS interface and embedded impl must be in the classpath
-      access.findClassByName("elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl") != null
-    )
+            // the VFS interface and embedded impl must be in the classpath
+            access.findClassByName("elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl") != null
+            )
   }
 
   /** @inheritDoc */

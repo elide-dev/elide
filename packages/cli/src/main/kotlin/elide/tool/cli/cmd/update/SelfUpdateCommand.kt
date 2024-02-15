@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -38,15 +38,15 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.zip.GZIPInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.io.path.*
+import kotlin.io.path.Path
+import kotlin.io.path.absolute
+import kotlin.io.path.isWritable
 import kotlin.jvm.optionals.getOrNull
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem.WINDOWS
 import elide.tool.cli.*
-import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.ToolState
 
 /** Perform an update of Elide itself, swapping the binary for a new version (if one is available). */
 @Command(
@@ -72,7 +72,7 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
       // like: 1.0-v3-alpha3-b1
       contains("-v3-") && contains("-alpha") -> {
         val alphaNum = split("-")[2].drop("alpha".length).toIntOrNull() ?: error(
-          "Failed to parse alpha version"
+          "Failed to parse alpha version",
         )
         Semver("${substringBefore("-")}.$alphaNum+${substringAfter("-")}")
       }
@@ -137,7 +137,7 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
     when (path.isWritable()) {
       true -> path.toFile()
       else -> error(
-        "Cannot self-update: target file '$path' is not writable"
+        "Cannot self-update: target file '$path' is not writable",
       )
     }
   }
@@ -154,7 +154,7 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
     val asset = release.listAssets().find {
       it.name.contains(tag) && eligibleExtensions.any { ext -> it.name.endsWith(ext) }
     } ?: error(
-      "No suitable release asset for version '${release.tagName}' (platform: '$tag')"
+      "No suitable release asset for version '${release.tagName}' (platform: '$tag')",
     )
     return URI.create(asset.browserDownloadUrl).toURL()
   }
@@ -248,22 +248,24 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
     }
 
     val failed = AtomicBoolean(false)
-    TaskService.run(ITaskRunnable {
-      try {
-        unpackArchive(ext, downloadedUpdate, tempDir)
-        if (targetBackupFile.exists()) {
-          Files.delete(backupFilePath)
+    TaskService.run(
+      ITaskRunnable {
+        try {
+          unpackArchive(ext, downloadedUpdate, tempDir)
+          if (targetBackupFile.exists()) {
+            Files.delete(backupFilePath)
+          }
+          Files.move(targetPath, backupFilePath)
+          Files.copy(extractedUpdatePath, targetPath)
+          if (!Files.isExecutable(targetPath)) {
+            targetPath.toFile().setExecutable(true)
+          }
+        } catch (err: Throwable) {
+          logging.error("Update failed: ${err.message}")
+          failed.compareAndSet(false, true)
         }
-        Files.move(targetPath, backupFilePath)
-        Files.copy(extractedUpdatePath, targetPath)
-        if (!Files.isExecutable(targetPath)) {
-          targetPath.toFile().setExecutable(true)
-        }
-      } catch (err: Throwable) {
-        logging.error("Update failed: ${err.message}")
-        failed.compareAndSet(false, true)
-      }
-    })
+      },
+    )
     output {
       if (failed.get()) {
         appendLine("⨯ Update failed. Please examine the logs and report this via `elide bug`.")
@@ -276,7 +278,7 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val cmdPath = ProcessHandle.current().info().command().getOrNull() ?: error(
-      "Failed to resolve command path; please report this with `elide bug`"
+      "Failed to resolve command path; please report this with `elide bug`",
     )
     output {
       appendLine("Updating Elide...")

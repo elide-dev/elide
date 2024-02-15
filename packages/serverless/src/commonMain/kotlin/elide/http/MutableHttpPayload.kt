@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import elide.http.api.MutableHttpPayload as HttpPayloadAPI
 /**
  *
  */
-public sealed class MutableHttpPayload (
+public sealed class MutableHttpPayload(
   override var bytes: HttpBytes,
   override var contentType: Mimetype? = null,
 ) : HttpPayloadAPI, HttpPayload(bytes, contentType) {

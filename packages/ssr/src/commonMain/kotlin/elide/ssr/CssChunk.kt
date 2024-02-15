@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,7 +27,7 @@ import elide.vm.annotations.Polyglot
  * @param key Unique key identifying this chunk.
  * @param css CSS code held by this chunk.
  */
-public data class CssChunk @Polyglot constructor (
+public data class CssChunk @Polyglot constructor(
   @field:Polyglot public val ids: Array<String>,
   @field:Polyglot public val key: String,
   @field:Polyglot public val css: String,

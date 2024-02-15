@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -32,7 +32,7 @@ import elide.http.api.HttpHeaders.HeaderName
  * @param name Normalized name of the header.
  * @param type Kotlin type of the header's value.
  */
-internal open class HeaderMetadata<Value: Any> internal constructor (
+internal open class HeaderMetadata<Value : Any> internal constructor(
   override val name: HeaderName,
   override val type: KClass<Value>,
 ) : HttpHeader<Value> {
@@ -54,7 +54,7 @@ internal const val DEFAULT_SEPARATOR = ","
  * @param type Kotlin type of the header's value.
  * @param separator Separator to use when splitting the header's value into tokens.
  */
-internal class TokenizedHeader<Value: Any> internal constructor (
+internal class TokenizedHeader<Value : Any> internal constructor(
   name: HeaderName,
   type: KClass<Value>,
   internal val separator: HttpString,
@@ -70,7 +70,7 @@ internal class TokenizedHeader<Value: Any> internal constructor (
  * @param type Kotlin type of the header's value.
  * @param encoding Encoding to use when reading the header's value.
  */
-internal class EncodedHeader<Value: Any> internal constructor (
+internal class EncodedHeader<Value : Any> internal constructor(
   name: HeaderName,
   type: KClass<Value>,
   internal val encoding: Encoding,
@@ -82,7 +82,7 @@ internal class EncodedHeader<Value: Any> internal constructor (
  * Specifies a type of header value token, for example `en-US` for `Accept-Language` headers (indicating English as a
  * supported language), or `application/json` for `Content-Type` headers (indicating JSON as a response type).
  */
-internal sealed interface HeaderValueTokenType<T: Any> : HttpHeaderValue<T> {
+internal sealed interface HeaderValueTokenType<T : Any> : HttpHeaderValue<T> {
   /** Token value. */
   val token: T
 
@@ -97,7 +97,7 @@ internal sealed interface HeaderValueTokenType<T: Any> : HttpHeaderValue<T> {
  * Specifies a type of header value token, for example `en-US` for `Accept-Language` headers (indicating English as a
  * supported language), or `application/json` for `Content-Type` headers (indicating JSON as a response type).
  */
-internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> where T: Any {
+internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> where T : Any {
   /** Token value. */
   val tokens: Collection<T>
 
@@ -113,7 +113,7 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  *
  * @param token Token value.
  */
-@JvmInline public value class HttpToken internal constructor (override val token: HttpString) :
+@JvmInline public value class HttpToken internal constructor(override val token: HttpString) :
   HeaderValueTokenType<HttpString>, HttpHeaderValue<String> {
   override fun toString(): String = asString
 }
@@ -125,7 +125,7 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  *
  * @param tokens Token values.
  */
-@JvmInline public value class HttpTokenList internal constructor (override val tokens: List<String>) :
+@JvmInline public value class HttpTokenList internal constructor(override val tokens: List<String>) :
   HeaderValueMultiTokenType<String>, HttpHeaderValue<String> {
   override val asString: String get() = tokens.joinToString(DEFAULT_SEPARATOR)
   override fun toString(): String = asString
@@ -138,7 +138,7 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  *
  * @param token Token value.
  */
-@JvmInline public value class Language internal constructor (override val token: String) :
+@JvmInline public value class Language internal constructor(override val token: String) :
   HeaderValueTokenType<String>, HttpHeaderValue<String> {
   override fun toString(): String = asString
 }
@@ -151,16 +151,16 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  *
  * @param token Token value.
  */
-@JvmInline public value class Mimetype internal constructor (override val token: String) :
+@JvmInline public value class Mimetype internal constructor(override val token: String) :
   HeaderValueTokenType<String>, HttpHeaderValue<String> {
-    /** Well-known content types. */
-    public companion object {
-      /** Well-known mimetype for plain text. */
-      public val Text: Mimetype = Mimetype("text/plain")
+  /** Well-known content types. */
+  public companion object {
+    /** Well-known mimetype for plain text. */
+    public val Text: Mimetype = Mimetype("text/plain")
 
-      /** Well-known mimetype for a stream of bytes. */
-      public val OctetStream: Mimetype = Mimetype("application/octet-stream")
-    }
+    /** Well-known mimetype for a stream of bytes. */
+    public val OctetStream: Mimetype = Mimetype("application/octet-stream")
+  }
 
   override fun toString(): String = asString
 }
@@ -173,7 +173,7 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  *
  * @param spec Pair of a string Encoding name or specification, and an optional pre-resolved matching [Encoding].
  */
-@JvmInline public value class HttpEncoding internal constructor (
+@JvmInline public value class HttpEncoding internal constructor(
   private val spec: Pair<String, Encoding?>,
 ) : HeaderValueTokenType<String> {
   override val token: String get() = spec.first
@@ -191,7 +191,7 @@ internal sealed interface HeaderValueMultiTokenType<T> : HttpHeaderValue<T> wher
  * @param name Normalized name of the header.
  * @param type Kotlin type of the header's value.
  */
-internal class AcceptHeader<Value: HeaderValueTokenType<*>> internal constructor (
+internal class AcceptHeader<Value : HeaderValueTokenType<*>> internal constructor(
   name: HeaderName,
   type: KClass<Value>,
 ) : HeaderMetadata<Value>(name, type)
@@ -199,20 +199,20 @@ internal class AcceptHeader<Value: HeaderValueTokenType<*>> internal constructor
 // Factory methods used internally to describe standard headers.
 @Suppress("unused") internal object HeaderTypes {
   // Wrap the header name and type into a `HttpHeaderInfo` instance.
-  @JvmStatic inline fun <reified Value: Any> of(
+  @JvmStatic inline fun <reified Value : Any> of(
     name: HeaderName,
     type: KClass<Value> = Value::class
   ): HttpHeader<Value> = HeaderMetadata(name, type)
 
   // Wrap the header name and type into a `HttpHeaderInfo` instance which supports tokenization.
-  @JvmStatic inline fun <reified Value: Any> tokenized(
+  @JvmStatic inline fun <reified Value : Any> tokenized(
     name: HeaderName,
     type: KClass<Value>,
     separator: HttpString,
   ): TokenizedHeader<Value> = TokenizedHeader(name, type, separator)
 
   // Wrap the header name and type into a `HttpHeaderInfo` instance which supports encoding unwrap.
-  @JvmStatic inline fun <reified Value: Any> encoded(
+  @JvmStatic inline fun <reified Value : Any> encoded(
     name: HeaderName,
     type: KClass<Value>,
     encoding: Encoding,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,13 +17,13 @@ package elide.page.Context_
 
 @Suppress("unused")
 class ConnectionHint private constructor() {
-    companion object {
-        const val UNKNOWNCONNECTIONHINT: Int = 0
-        const val SLOWTWO: Int = 1
-        const val SLOW: Int = 2
-        const val TYPICAL: Int = 3
-        const val FAST: Int = 4
-        val names : Array<String> = arrayOf("UNKNOWN_CONNECTION_HINT", "SLOW_TWO", "SLOW", "TYPICAL", "FAST")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val UNKNOWNCONNECTIONHINT: Int = 0
+    const val SLOWTWO: Int = 1
+    const val SLOW: Int = 2
+    const val TYPICAL: Int = 3
+    const val FAST: Int = 4
+    val names: Array<String> = arrayOf("UNKNOWN_CONNECTION_HINT", "SLOW_TWO", "SLOW", "TYPICAL", "FAST")
+    fun name(e: Int): String = names[e]
+  }
 }

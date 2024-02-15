@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,27 +20,27 @@ import kotlin.random.Random
  */
 object Wasi : WasiFileSystem by DefaultWasiFilesystem, WasiCli by DefaultWasiCli {
 
-    /** The standard output. */
-    val out : WasiPrint = OutputWasiPrint
+  /** The standard output. */
+  val out: WasiPrint = OutputWasiPrint
 
-    /** The standard error. */
-    val err : WasiPrint = ErrorWasiPrint
+  /** The standard error. */
+  val err: WasiPrint = ErrorWasiPrint
 
-    /** Default monotonic clock, suitable for general-purpose application needs. */
-    val monotonicClock: MonotonicClock = DefaultMonotonicClock
+  /** Default monotonic clock, suitable for general-purpose application needs. */
+  val monotonicClock: MonotonicClock = DefaultMonotonicClock
 
-    /**
-     * Default wall clock, suitable for general-purpose application needs.
-     */
-    val wallClock: WallClock = DefaultWallClock
+  /**
+   * Default wall clock, suitable for general-purpose application needs.
+   */
+  val wallClock: WallClock = DefaultWallClock
 
-    /**
-     * Provide a pseudo random generator seeded by a `Long` value generated via WASI.
-     */
-    fun seededRandom(): Random = SeededWasiRandom()
+  /**
+   * Provide a pseudo random generator seeded by a `Long` value generated via WASI.
+   */
+  fun seededRandom(): Random = SeededWasiRandom()
 
-    /**
-     * Provide a secure random generator implemented via WASI.
-     */
-    fun secureRandom(): Random = SecureWasiRandom()
+  /**
+   * Provide a secure random generator implemented via WASI.
+   */
+  fun secureRandom(): Random = SecureWasiRandom()
 }

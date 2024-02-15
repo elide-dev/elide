@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,13 +31,13 @@ import org.graalvm.polyglot.Context as VMContext
 
 
 public typealias GenericEngine = (
-  AbstractVMEngine<out GuestRuntimeConfiguration, out ExecutableScript, out InvocationBindings>
+AbstractVMEngine<out GuestRuntimeConfiguration, out ExecutableScript, out InvocationBindings>
 )
 
 /**
  * TBD.
  */
-@Singleton public class VMFacadeFactory @Inject internal constructor (
+@Singleton public class VMFacadeFactory @Inject internal constructor(
   // VM execution bridge.
   private val contextManager: ContextManager<VMContext, VMContext.Builder>,
 
@@ -50,8 +50,8 @@ public typealias GenericEngine = (
   /**
    * TBD.
    */
-  internal class CompoundVMFacade private constructor (private val engines: Array<out VMFacade>)
-    : VMEngineImpl<GuestRuntimeConfiguration> {
+  internal class CompoundVMFacade private constructor(private val engines: Array<out VMFacade>) :
+    VMEngineImpl<GuestRuntimeConfiguration> {
     internal companion object {
       /**
        * TBD.
@@ -153,24 +153,23 @@ public typealias GenericEngine = (
       when (val instance = resolveBuildTimeInjectedVMactoryImpl(it)) {
         null -> {
           val impl = (
-            resolveStaticVMFactoryImpl(it) ?:
-            resolveDynamicVMFactoryImpl(it)
-          ) ?: error(
-            "Failed to resolve VM implementation for language: ${it.label}. Is it supported and installed?"
+                  resolveStaticVMFactoryImpl(it) ?: resolveDynamicVMFactoryImpl(it)
+                  ) ?: error(
+            "Failed to resolve VM implementation for language: ${it.label}. Is it supported and installed?",
           )
-          object: VMFacade by initializeVMEngine(impl, null) {
+          object : VMFacade by initializeVMEngine(impl, null) {
             /* No overrides at this time. */
           }
         }
 
         // use the existing instance, if found
-        else -> object: VMFacade by initializeVMEngine(instance::class, instance) {
+        else -> object : VMFacade by initializeVMEngine(instance::class, instance) {
           /* No overrides at this time. */
         }
       }
     }
     return CompoundVMFacade.withEngines(
-      engines
+      engines,
     )
   }
 

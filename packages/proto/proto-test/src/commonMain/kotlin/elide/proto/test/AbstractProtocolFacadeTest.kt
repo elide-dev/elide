@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import kotlin.test.Test
 import elide.proto.ElideProtocol
 
 /** Tests for the protocol facade for each implementation. */
-abstract class AbstractProtocolFacadeTest<Facade: ElideProtocol> {
+abstract class AbstractProtocolFacadeTest<Facade : ElideProtocol> {
   /** Provide a loader instance for automatic testing. */
   abstract fun provide(): Facade
 

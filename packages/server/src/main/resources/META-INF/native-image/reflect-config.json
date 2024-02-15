@@ -24,8 +24,15 @@
     "name": "[Ljava.lang.String;"
   },
   {
-    "name":"com.google.common.jimfs.SystemJimfsFileSystemProvider",
-    "methods":[{"name":"removeFileSystemRunnable","parameterTypes":["java.net.URI"] }]
+    "name": "com.google.common.jimfs.SystemJimfsFileSystemProvider",
+    "methods": [
+      {
+        "name": "removeFileSystemRunnable",
+        "parameterTypes": [
+          "java.net.URI"
+        ]
+      }
+    ]
   },
   {
     "name": "[Lsun.security.pkcs.SignerInfo;"
@@ -113,7 +120,9 @@
       },
       {
         "name": "setWithJansi",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       }
     ]
   },
@@ -122,7 +131,9 @@
     "methods": [
       {
         "name": "setEncoder",
-        "parameterTypes": ["ch.qos.logback.core.encoder.Encoder"]
+        "parameterTypes": [
+          "ch.qos.logback.core.encoder.Encoder"
+        ]
       }
     ]
   },
@@ -131,7 +142,9 @@
     "methods": [
       {
         "name": "setParent",
-        "parameterTypes": ["ch.qos.logback.core.spi.ContextAware"]
+        "parameterTypes": [
+          "ch.qos.logback.core.spi.ContextAware"
+        ]
       }
     ]
   },
@@ -140,7 +153,9 @@
     "methods": [
       {
         "name": "setPattern",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -252,11 +267,15 @@
       },
       {
         "name": "setNanos",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "setSeconds",
-        "parameterTypes": ["long"]
+        "parameterTypes": [
+          "long"
+        ]
       }
     ]
   },
@@ -741,7 +760,9 @@
       },
       {
         "name": "testCompressionSupported",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "testConditionalRequestETag",
@@ -753,7 +774,9 @@
       },
       {
         "name": "testGenerateLink",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "testGenerateLinkGeneric",
@@ -1118,11 +1141,15 @@
     "methods": [
       {
         "name": "testRespondsToContentTypes",
-        "parameterTypes": ["io.micronaut.http.MediaType"]
+        "parameterTypes": [
+          "io.micronaut.http.MediaType"
+        ]
       },
       {
         "name": "testRespondsToMethods",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -1783,7 +1810,9 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -4504,11 +4533,15 @@
     "queriedMethods": [
       {
         "name": "channelActive",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelInactive",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelRead",
@@ -4519,19 +4552,27 @@
       },
       {
         "name": "channelReadComplete",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelRegistered",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelUnregistered",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelWritabilityChanged",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "userEventTriggered",
@@ -4547,7 +4588,9 @@
     "queriedMethods": [
       {
         "name": "channelRegistered",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "exceptionCaught",
@@ -4571,11 +4614,15 @@
       },
       {
         "name": "channelActive",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelInactive",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelRead",
@@ -4586,19 +4633,27 @@
       },
       {
         "name": "channelReadComplete",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelRegistered",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelUnregistered",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelWritabilityChanged",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "close",
@@ -4639,11 +4694,15 @@
       },
       {
         "name": "flush",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "read",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "userEventTriggered",
@@ -4667,11 +4726,15 @@
     "queriedMethods": [
       {
         "name": "channelActive",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelInactive",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelRead",
@@ -4682,19 +4745,27 @@
       },
       {
         "name": "channelReadComplete",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelRegistered",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelUnregistered",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "channelWritabilityChanged",
-        "parameterTypes": ["io.netty.channel.ChannelHandlerContext"]
+        "parameterTypes": [
+          "io.netty.channel.ChannelHandlerContext"
+        ]
       },
       {
         "name": "exceptionCaught",
@@ -4756,7 +4827,10 @@
     "methods": [
       {
         "name": "loadLibrary",
-        "parameterTypes": ["java.lang.String", "boolean"]
+        "parameterTypes": [
+          "java.lang.String",
+          "boolean"
+        ]
       }
     ]
   },
@@ -4901,7 +4975,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.String", "java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -4927,7 +5004,9 @@
     "queriedMethods": [
       {
         "name": "alignedSlice",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       }
     ]
   },
@@ -4936,7 +5015,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["long", "int"]
+        "parameterTypes": [
+          "long",
+          "int"
+        ]
       }
     ]
   },
@@ -4997,7 +5079,9 @@
     "queriedMethods": [
       {
         "name": "add",
-        "parameterTypes": ["long"]
+        "parameterTypes": [
+          "long"
+        ]
       },
       {
         "name": "sum",
@@ -5049,7 +5133,9 @@
     "queriedMethods": [
       {
         "name": "<init>",
-        "parameterTypes": ["sun.security.x509.X500Name"]
+        "parameterTypes": [
+          "sun.security.x509.X500Name"
+        ]
       }
     ]
   },
@@ -5875,7 +5961,10 @@
     "methods": [
       {
         "name": "loadLibrary",
-        "parameterTypes": ["java.lang.String", "boolean"]
+        "parameterTypes": [
+          "java.lang.String",
+          "boolean"
+        ]
       }
     ]
   },
@@ -5891,15 +5980,23 @@
     "queriedMethods": [
       {
         "name": "arrayBaseOffset",
-        "parameterTypes": ["java.lang.Class"]
+        "parameterTypes": [
+          "java.lang.Class"
+        ]
       },
       {
         "name": "arrayIndexScale",
-        "parameterTypes": ["java.lang.Class"]
+        "parameterTypes": [
+          "java.lang.Class"
+        ]
       },
       {
         "name": "copyMemory",
-        "parameterTypes": ["long", "long", "long"]
+        "parameterTypes": [
+          "long",
+          "long",
+          "long"
+        ]
       },
       {
         "name": "copyMemory",
@@ -5913,95 +6010,169 @@
       },
       {
         "name": "getAndAddLong",
-        "parameterTypes": ["java.lang.Object", "long", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "long"
+        ]
       },
       {
         "name": "getAndSetObject",
-        "parameterTypes": ["java.lang.Object", "long", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "java.lang.Object"
+        ]
       },
       {
         "name": "getBoolean",
-        "parameterTypes": ["java.lang.Object", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long"
+        ]
       },
       {
         "name": "getByte",
-        "parameterTypes": ["long"]
+        "parameterTypes": [
+          "long"
+        ]
       },
       {
         "name": "getByte",
-        "parameterTypes": ["java.lang.Object", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long"
+        ]
       },
       {
         "name": "getDouble",
-        "parameterTypes": ["java.lang.Object", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long"
+        ]
       },
       {
         "name": "getFloat",
-        "parameterTypes": ["java.lang.Object", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long"
+        ]
       },
       {
         "name": "getInt",
-        "parameterTypes": ["long"]
+        "parameterTypes": [
+          "long"
+        ]
       },
       {
         "name": "getInt",
-        "parameterTypes": ["java.lang.Object", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long"
+        ]
       },
       {
         "name": "getLong",
-        "parameterTypes": ["long"]
+        "parameterTypes": [
+          "long"
+        ]
       },
       {
         "name": "getLong",
-        "parameterTypes": ["java.lang.Object", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long"
+        ]
       },
       {
         "name": "getObject",
-        "parameterTypes": ["java.lang.Object", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long"
+        ]
       },
       {
         "name": "objectFieldOffset",
-        "parameterTypes": ["java.lang.reflect.Field"]
+        "parameterTypes": [
+          "java.lang.reflect.Field"
+        ]
       },
       {
         "name": "putBoolean",
-        "parameterTypes": ["java.lang.Object", "long", "boolean"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "boolean"
+        ]
       },
       {
         "name": "putByte",
-        "parameterTypes": ["long", "byte"]
+        "parameterTypes": [
+          "long",
+          "byte"
+        ]
       },
       {
         "name": "putByte",
-        "parameterTypes": ["java.lang.Object", "long", "byte"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "byte"
+        ]
       },
       {
         "name": "putDouble",
-        "parameterTypes": ["java.lang.Object", "long", "double"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "double"
+        ]
       },
       {
         "name": "putFloat",
-        "parameterTypes": ["java.lang.Object", "long", "float"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "float"
+        ]
       },
       {
         "name": "putInt",
-        "parameterTypes": ["long", "int"]
+        "parameterTypes": [
+          "long",
+          "int"
+        ]
       },
       {
         "name": "putInt",
-        "parameterTypes": ["java.lang.Object", "long", "int"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "int"
+        ]
       },
       {
         "name": "putLong",
-        "parameterTypes": ["long", "long"]
+        "parameterTypes": [
+          "long",
+          "long"
+        ]
       },
       {
         "name": "putLong",
-        "parameterTypes": ["java.lang.Object", "long", "long"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "long"
+        ]
       },
       {
         "name": "putObject",
-        "parameterTypes": ["java.lang.Object", "long", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Object",
+          "long",
+          "java.lang.Object"
+        ]
       },
       {
         "name": "storeFence",
@@ -6011,7 +6182,9 @@
     "methods": [
       {
         "name": "invokeCleaner",
-        "parameterTypes": ["java.nio.ByteBuffer"]
+        "parameterTypes": [
+          "java.nio.ByteBuffer"
+        ]
       }
     ]
   },
@@ -6124,7 +6297,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6133,7 +6309,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6142,7 +6321,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6151,7 +6333,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6163,7 +6348,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6172,7 +6360,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6181,7 +6372,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6190,7 +6384,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6199,7 +6396,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6208,7 +6408,10 @@
     "methods": [
       {
         "name": "<init>",
-        "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+        "parameterTypes": [
+          "java.lang.Boolean",
+          "java.lang.Object"
+        ]
       }
     ]
   },
@@ -6237,7 +6440,9 @@
       },
       {
         "name": "getVariant",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getCompressable",
@@ -6258,7 +6463,9 @@
     "queriedMethods": [
       {
         "name": "getAsset",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetCount",
@@ -6317,7 +6524,9 @@
       },
       {
         "name": "getVariant",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getVariantCount",
@@ -6380,11 +6589,15 @@
       },
       {
         "name": "getVariant",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getVariantBuilder",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getVariantList",
@@ -6392,25 +6605,36 @@
       },
       {
         "name": "setFilenameBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setModuleBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setTokenBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setVariant",
-        "parameterTypes": ["int", "tools.elide.data.CompressedData"]
+        "parameterTypes": [
+          "int",
+          "tools.elide.data.CompressedData"
+        ]
       }
     ],
     "methods": [
       {
         "name": "addVariant",
-        "parameterTypes": ["tools.elide.data.CompressedData"]
+        "parameterTypes": [
+          "tools.elide.data.CompressedData"
+        ]
       },
       {
         "name": "getFilename",
@@ -6430,15 +6654,21 @@
       },
       {
         "name": "setFilename",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "setModule",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "setToken",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -6447,7 +6677,9 @@
     "queriedMethods": [
       {
         "name": "getDirect",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getDirectCount",
@@ -6459,7 +6691,9 @@
       },
       {
         "name": "getTransitive",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getTransitiveCount",
@@ -6490,11 +6724,15 @@
     "queriedMethods": [
       {
         "name": "addDirect",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "addTransitive",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "clearDirect",
@@ -6510,7 +6748,9 @@
       },
       {
         "name": "getDirect",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getDirectList",
@@ -6526,7 +6766,9 @@
       },
       {
         "name": "getTransitive",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getTransitiveList",
@@ -6538,15 +6780,23 @@
       },
       {
         "name": "setDirect",
-        "parameterTypes": ["int", "java.lang.String"]
+        "parameterTypes": [
+          "int",
+          "java.lang.String"
+        ]
       },
       {
         "name": "setMask",
-        "parameterTypes": ["tools.elide.struct.BloomFilter"]
+        "parameterTypes": [
+          "tools.elide.struct.BloomFilter"
+        ]
       },
       {
         "name": "setTransitive",
-        "parameterTypes": ["int", "java.lang.String"]
+        "parameterTypes": [
+          "int",
+          "java.lang.String"
+        ]
       }
     ],
     "methods": [
@@ -6585,11 +6835,15 @@
       },
       {
         "name": "getAsset",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetBuilder",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetList",
@@ -6613,13 +6867,18 @@
       },
       {
         "name": "setAsset",
-        "parameterTypes": ["int", "tools.elide.assets.AssetBundle$AssetContent"]
+        "parameterTypes": [
+          "int",
+          "tools.elide.assets.AssetBundle$AssetContent"
+        ]
       }
     ],
     "methods": [
       {
         "name": "addAsset",
-        "parameterTypes": ["tools.elide.assets.AssetBundle$AssetContent"]
+        "parameterTypes": [
+          "tools.elide.assets.AssetBundle$AssetContent"
+        ]
       },
       {
         "name": "getAssetCount",
@@ -6643,19 +6902,27 @@
       },
       {
         "name": "setDigest",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setGenerated",
-        "parameterTypes": ["com.google.protobuf.Timestamp"]
+        "parameterTypes": [
+          "com.google.protobuf.Timestamp"
+        ]
       },
       {
         "name": "setSettings",
-        "parameterTypes": ["tools.elide.assets.AssetBundle$BundlerSettings"]
+        "parameterTypes": [
+          "tools.elide.assets.AssetBundle$BundlerSettings"
+        ]
       },
       {
         "name": "setVersion",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       }
     ]
   },
@@ -6664,7 +6931,9 @@
     "queriedMethods": [
       {
         "name": "getCompression",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getCompressionList",
@@ -6672,7 +6941,9 @@
       },
       {
         "name": "getCompressionValue",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       }
     ],
     "methods": [
@@ -6711,11 +6982,15 @@
     "queriedMethods": [
       {
         "name": "addCompression",
-        "parameterTypes": ["tools.elide.data.CompressionMode"]
+        "parameterTypes": [
+          "tools.elide.data.CompressionMode"
+        ]
       },
       {
         "name": "addCompressionValue",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "clearCompression",
@@ -6739,7 +7014,9 @@
       },
       {
         "name": "getCompression",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getCompressionList",
@@ -6747,7 +7024,9 @@
       },
       {
         "name": "getCompressionValue",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getDigestSettings",
@@ -6759,11 +7038,17 @@
       },
       {
         "name": "setCompression",
-        "parameterTypes": ["int", "tools.elide.data.CompressionMode"]
+        "parameterTypes": [
+          "int",
+          "tools.elide.data.CompressionMode"
+        ]
       },
       {
         "name": "setCompressionValue",
-        "parameterTypes": ["int", "int"]
+        "parameterTypes": [
+          "int",
+          "int"
+        ]
       }
     ],
     "methods": [
@@ -6789,19 +7074,27 @@
       },
       {
         "name": "setDigestSettings",
-        "parameterTypes": ["tools.elide.assets.AssetBundle$DigestSettings"]
+        "parameterTypes": [
+          "tools.elide.assets.AssetBundle$DigestSettings"
+        ]
       },
       {
         "name": "setMinify",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setPrepack",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setRewriting",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       }
     ]
   },
@@ -6853,7 +7146,9 @@
       },
       {
         "name": "setAlgorithm",
-        "parameterTypes": ["tools.elide.crypto.HashAlgorithm"]
+        "parameterTypes": [
+          "tools.elide.crypto.HashAlgorithm"
+        ]
       }
     ],
     "methods": [
@@ -6871,15 +7166,21 @@
       },
       {
         "name": "setAlgorithmValue",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "setRounds",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "setTail",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       }
     ]
   },
@@ -6897,7 +7198,9 @@
     "queriedMethods": [
       {
         "name": "getAsset",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetCount",
@@ -6968,11 +7271,15 @@
       },
       {
         "name": "getAsset",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetBuilder",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetList",
@@ -6999,7 +7306,9 @@
       },
       {
         "name": "setModuleBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       }
     ],
     "methods": [
@@ -7035,23 +7344,33 @@
       },
       {
         "name": "setCacheable",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setCompressable",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setDependencies",
-        "parameterTypes": ["tools.elide.assets.AssetBundle$AssetDependencies"]
+        "parameterTypes": [
+          "tools.elide.assets.AssetBundle$AssetDependencies"
+        ]
       },
       {
         "name": "setExternal",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setModule",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -7103,11 +7422,15 @@
       },
       {
         "name": "setFilenameBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setTokenBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       }
     ],
     "methods": [
@@ -7121,11 +7444,15 @@
       },
       {
         "name": "setFilename",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "setToken",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -7134,7 +7461,9 @@
     "queriedMethods": [
       {
         "name": "getAsset",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetCount",
@@ -7209,11 +7538,15 @@
       },
       {
         "name": "getAsset",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetBuilder",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getAssetList",
@@ -7252,11 +7585,15 @@
       },
       {
         "name": "setModuleBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setRewriteMap",
-        "parameterTypes": ["tools.elide.assets.AssetBundle$RewriteMap"]
+        "parameterTypes": [
+          "tools.elide.assets.AssetBundle$RewriteMap"
+        ]
       }
     ],
     "methods": [
@@ -7288,19 +7625,27 @@
       },
       {
         "name": "setCacheable",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setCompressable",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setDependencies",
-        "parameterTypes": ["tools.elide.assets.AssetBundle$AssetDependencies"]
+        "parameterTypes": [
+          "tools.elide.assets.AssetBundle$AssetDependencies"
+        ]
       },
       {
         "name": "setModule",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -7360,11 +7705,15 @@
       },
       {
         "name": "setFilenameBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setTokenBytes",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       }
     ],
     "methods": [
@@ -7382,15 +7731,21 @@
       },
       {
         "name": "setFilename",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "setRenaming",
-        "parameterTypes": ["boolean"]
+        "parameterTypes": [
+          "boolean"
+        ]
       },
       {
         "name": "setToken",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -7418,7 +7773,9 @@
       },
       {
         "name": "getIntegrity",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getIntegrityCount",
@@ -7485,11 +7842,15 @@
       },
       {
         "name": "getIntegrity",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getIntegrityBuilder",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getIntegrityList",
@@ -7497,17 +7858,24 @@
       },
       {
         "name": "setCompression",
-        "parameterTypes": ["tools.elide.data.CompressionMode"]
+        "parameterTypes": [
+          "tools.elide.data.CompressionMode"
+        ]
       },
       {
         "name": "setIntegrity",
-        "parameterTypes": ["int", "tools.elide.data.DataFingerprint"]
+        "parameterTypes": [
+          "int",
+          "tools.elide.data.DataFingerprint"
+        ]
       }
     ],
     "methods": [
       {
         "name": "addIntegrity",
-        "parameterTypes": ["tools.elide.data.DataFingerprint"]
+        "parameterTypes": [
+          "tools.elide.data.DataFingerprint"
+        ]
       },
       {
         "name": "getCompressionValue",
@@ -7527,15 +7895,21 @@
       },
       {
         "name": "setCompressionValue",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "setData",
-        "parameterTypes": ["tools.elide.data.DataContainer"]
+        "parameterTypes": [
+          "tools.elide.data.DataContainer"
+        ]
       },
       {
         "name": "setSize",
-        "parameterTypes": ["long"]
+        "parameterTypes": [
+          "long"
+        ]
       }
     ]
   },
@@ -7559,7 +7933,9 @@
     "queriedMethods": [
       {
         "name": "getIntegrity",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getIntegrityCount",
@@ -7594,11 +7970,15 @@
       },
       {
         "name": "getIntegrity",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getIntegrityBuilder",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "getIntegrityList",
@@ -7606,13 +7986,18 @@
       },
       {
         "name": "setIntegrity",
-        "parameterTypes": ["int", "tools.elide.data.DataFingerprint"]
+        "parameterTypes": [
+          "int",
+          "tools.elide.data.DataFingerprint"
+        ]
       }
     ],
     "methods": [
       {
         "name": "addIntegrity",
-        "parameterTypes": ["tools.elide.data.DataFingerprint"]
+        "parameterTypes": [
+          "tools.elide.data.DataFingerprint"
+        ]
       },
       {
         "name": "getIntegrityCount",
@@ -7624,7 +8009,9 @@
       },
       {
         "name": "setRaw",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       }
     ]
   },
@@ -7676,7 +8063,9 @@
       },
       {
         "name": "setHash",
-        "parameterTypes": ["tools.elide.crypto.HashAlgorithm"]
+        "parameterTypes": [
+          "tools.elide.crypto.HashAlgorithm"
+        ]
       }
     ],
     "methods": [
@@ -7694,15 +8083,21 @@
       },
       {
         "name": "setFingerprint",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       },
       {
         "name": "setHashValue",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "setSalt",
-        "parameterTypes": ["com.google.protobuf.ByteString"]
+        "parameterTypes": [
+          "com.google.protobuf.ByteString"
+        ]
       }
     ]
   },

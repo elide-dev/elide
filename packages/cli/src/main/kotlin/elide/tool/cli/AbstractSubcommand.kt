@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@ package elide.tool.cli
 
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
-import lukfor.progress.TaskService
 import lukfor.progress.TaskServiceBuilder
 import lukfor.progress.executors.ITaskExecutor
 import lukfor.progress.tasks.ITaskRunnable
@@ -30,14 +29,12 @@ import java.io.Closeable
 import java.io.InputStream
 import java.io.PrintStream
 import java.util.*
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import elide.annotations.Inject
 import elide.runtime.Logger
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
@@ -61,9 +58,9 @@ import org.graalvm.polyglot.Engine as VMEngine
  * @param Context Command execution context shape, which can be specific to this sub-command type.
  */
 @Suppress("MemberVisibilityCanBePrivate") internal abstract class AbstractSubcommand<
-  State: ToolState,
-  Context: CommandContext,
-> :
+        State : ToolState,
+        Context : CommandContext,
+        > :
   CoroutineScope,
   Closeable,
   AutoCloseable,
@@ -109,8 +106,9 @@ import org.graalvm.polyglot.Engine as VMEngine
     enableVirtualThreads -> MoreExecutors.listeningDecorator(Executors.newThreadPerTaskExecutor(threadFactory))
     enableFixedThreadPool -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(_cpus, threadFactory))
     enableFlexibleThreadPool -> MoreExecutors.listeningDecorator(
-      MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory))
+      MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory)),
     )
+
     else -> MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(threadFactory))
   }
   private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
@@ -120,7 +118,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Implements a thread factory for tool execution operations. */
-  private class ToolThreadFactory (
+  private class ToolThreadFactory(
     private val virtualThreads: Boolean,
     private val errorHandler: ErrorHandler,
   ) : ThreadFactory {
@@ -232,7 +230,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Execution context for a run of the Elide tool. */
-  internal sealed interface ToolContext<State: ToolState> {
+  internal sealed interface ToolContext<State : ToolState> {
     /** Output settings and controls. */
     val output: OutputController
 
@@ -247,7 +245,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Default input controller implementation. */
-  protected open class DefaultInputController (
+  protected open class DefaultInputController(
     private val inbuf: BufferedReader? = null,
   ) : InputController {
     override suspend fun readLine(): String? = readLineAsync().await()
@@ -269,7 +267,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Default output controller implementation. */
-  protected open class DefaultOutputController<State: ToolState> (
+  protected open class DefaultOutputController<State : ToolState>(
     private val _state: State,
     private val _logger: Logger,
     private val _settings: ToolState.OutputSettings = _state.output
@@ -301,23 +299,24 @@ import org.graalvm.polyglot.Engine as VMEngine
     override val scope: CoroutineScope,
     override val context: CoroutineContext,
   ) : ExecutionController {
-    override val service: ExecutionService get() = object: ExecutionService {
-      override val taskExecutor: ITaskExecutor get() = backgroundExecutor
+    override val service: ExecutionService
+      get() = object : ExecutionService {
+        override val taskExecutor: ITaskExecutor get() = backgroundExecutor
 
-      override fun run(vararg tasks: ITaskRunnable) {
-        runner.invoke(tasks.toList())
-      }
+        override fun run(vararg tasks: ITaskRunnable) {
+          runner.invoke(tasks.toList())
+        }
 
-      override fun run(tasks: List<ITaskRunnable>) {
-        runner.invoke(tasks)
+        override fun run(tasks: List<ITaskRunnable>) {
+          runner.invoke(tasks)
+        }
       }
-    }
   }
 
   /** Private implementation of tool execution context. */
-  protected abstract class ToolExecutionContextImpl<T: ToolState> constructor (private val _state: T) : ToolContext<T> {
+  protected abstract class ToolExecutionContextImpl<T : ToolState> constructor(private val _state: T) : ToolContext<T> {
     internal companion object {
-      @JvmStatic fun <T: ToolState> forSuite(
+      @JvmStatic fun <T : ToolState> forSuite(
         state: T,
         output: OutputController,
         input: InputController,
@@ -600,7 +599,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     context: CoroutineContext,
   ): ExecutionController {
     // prepare background task service executor
-    val taskExecutor = object: ITaskExecutor {
+    val taskExecutor = object : ITaskExecutor {
       override fun setThreads(threads: Int) {
         TODO("Not yet implemented")
       }

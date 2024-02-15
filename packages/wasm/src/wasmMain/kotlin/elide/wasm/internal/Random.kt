@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,27 +18,27 @@ import kotlin.wasm.WasmImport
 import kotlin.wasm.unsafe.withScopedMemoryAllocator
 
 internal fun randomGetInt(): Int {
-    withScopedMemoryAllocator { allocator ->
-        val pointer = allocator.allocate(Int.SIZE_BYTES)
-        val returnCode = rawRandomGet(pointer.address.toInt(), Int.SIZE_BYTES)
-        return if (returnCode == 0) {
-            pointer.loadInt()
-        } else {
-            throw WasiException(Errno.values()[returnCode].ordinal)
-        }
+  withScopedMemoryAllocator { allocator ->
+    val pointer = allocator.allocate(Int.SIZE_BYTES)
+    val returnCode = rawRandomGet(pointer.address.toInt(), Int.SIZE_BYTES)
+    return if (returnCode == 0) {
+      pointer.loadInt()
+    } else {
+      throw WasiException(Errno.values()[returnCode].ordinal)
     }
+  }
 }
 
 internal fun randomGetLong(): Long {
-    withScopedMemoryAllocator { allocator ->
-        val pointer = allocator.allocate(Long.SIZE_BYTES)
-        val returnCode = rawRandomGet(pointer.address.toInt(), Long.SIZE_BYTES)
-        return if (returnCode == 0) {
-            pointer.loadLong()
-        } else {
-            throw WasiException(Errno.values()[returnCode].ordinal)
-        }
+  withScopedMemoryAllocator { allocator ->
+    val pointer = allocator.allocate(Long.SIZE_BYTES)
+    val returnCode = rawRandomGet(pointer.address.toInt(), Long.SIZE_BYTES)
+    return if (returnCode == 0) {
+      pointer.loadLong()
+    } else {
+      throw WasiException(Errno.values()[returnCode].ordinal)
     }
+  }
 }
 
 /**
@@ -49,6 +49,6 @@ internal fun randomGetLong(): Long {
  */
 @WasmImport("wasi_snapshot_preview1", "random_get")
 private external fun rawRandomGet(
-    arg0: Int,
-    arg1: Int,
+  arg0: Int,
+  arg1: Int,
 ): Int

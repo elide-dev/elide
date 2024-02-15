@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -59,11 +59,13 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, AbstractJsIntrinsic() {
         if (typedArray.size > MAX_RANDOM_BYTES_SIZE) throw throwRandomValuesOverflow()
         secureRandom.nextBytes(typedArray)
       }
+
       is GuestValue -> {
         // has to be an array
         if (!typedArray.hasArrayElements()) throw ValueError.create("Not an array")
         getRandomValues(typedArray.`as`(List::class.java))
       }
+
       is MutableList<*> -> {
         // resolve size (under cap of MAX_RANDOM...)
         val size = if (typedArray.size > MAX_RANDOM_BYTES_SIZE) throw throwRandomValuesOverflow() else {
@@ -79,6 +81,7 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, AbstractJsIntrinsic() {
           is Int -> {
             { it.first.set(it.second, it.third.toInt()) }
           }
+
           else -> throw ValueError.create("Cannot call `getRandomValues` with non-numeric value")
         }
         for (i in 0 until size) {
@@ -86,6 +89,7 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, AbstractJsIntrinsic() {
           setAs(Triple(typedArray as MutableList<Any>, i, generatedBytes[i]))
         }
       }
+
       else -> throw ValueError.create("Cannot call `getRandomValues` with non-array value")
     }
   }

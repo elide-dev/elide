@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.runtime.core
 /**
  * Engine plugins provide a generic way to extend a [PolyglotEngine] and its [PolyglotContext] instances using an
  * intuitive configuration DSL:
- * 
+ *
  * ```kotlin
  * val engine = PolyglotEngine {
  *  // install support for specific languages
@@ -36,7 +36,7 @@ package elide.runtime.core
  * using builders.
  *
  * ### Writing engine plugins
- * 
+ *
  * Plugins have three main components:
  * 1. The plugin marker, which is typically a singleton (such as a companion object), that can be used as identifier in
  * the [PluginRegistry.install] method.
@@ -44,7 +44,7 @@ package elide.runtime.core
  * 3. The plugin instance, which is attached to the engine after configuration.
  *
  * A simple plugin implementation may look like this:
- * 
+ *
  * ```kotlin
  * // This class is used for instances of the plugin
  * class MyPlugin(private val config: MyConfig) {
@@ -61,7 +61,7 @@ package elide.runtime.core
  *  // a simple function to be called from the context creation event listener
  *  fun greetContext() {
  *    println(config.message)
- *  } 
+ *  }
  *
  *  // The companion object is used as plugin identifier
  *  companion object : EnginePlugin<MyConfig, MyPlugin> {

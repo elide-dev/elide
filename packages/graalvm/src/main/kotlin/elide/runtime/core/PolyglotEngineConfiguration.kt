@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -44,7 +44,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
     /** Restrict all access to the host environment. */
     ALLOW_NONE,
   }
-  
+
   /** The access granted to guest code over host resources, such as environment variables and the file system. */
   public var hostAccess: HostAccess = ALLOW_NONE
 

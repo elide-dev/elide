@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -114,7 +114,7 @@ internal object ResponseUtil {
       response.headers,
     )
     response.contentType(
-      contentType.mediaType()
+      contentType.mediaType(),
     )
   }
 
@@ -167,12 +167,14 @@ internal object ResponseUtil {
     }
 
     // collect the stream in the final response, wrapping the entire thing in Base64 if we're operating in `TEXT` mode.
-    response.body(if (contentType == GrpcWebContentType.TEXT) {
-      Base64.getEncoder().encode(
+    response.body(
+      if (contentType == GrpcWebContentType.TEXT) {
+        Base64.getEncoder().encode(
+          responseStream.toByteArray(),
+        )
+      } else {
         responseStream.toByteArray()
-      )
-    } else {
-      responseStream.toByteArray()
-    })
+      },
+    )
   }
 }

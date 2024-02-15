@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,11 +18,11 @@ import elide.struct.api.MutableSortedList
 /**
  *
  */
-public class MutablePresortedList<Value> internal constructor (
+public class MutablePresortedList<Value> internal constructor(
   values: Collection<Value>,
   presorted: Boolean,
   private val comparator: Comparator<Value>? = null,
-) : MutableSortedList<Value> where Value: Comparable<Value> {
+) : MutableSortedList<Value> where Value : Comparable<Value> {
   //
   public constructor() : this(emptyList())
 
@@ -34,7 +34,7 @@ public class MutablePresortedList<Value> internal constructor (
 
   //
   public constructor(values: Collection<Value>, comparator: Comparator<Value>?) :
-    this(values, false, comparator)
+          this(values, false, comparator)
 
   //
   private val sorted: MutableList<Value> = when {

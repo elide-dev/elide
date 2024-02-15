@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,39 +24,46 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class ElideToolOptions : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): ElideToolOptions {
+    __init(_i, _bb)
+    return this
+  }
+
+  val output: elide.cli.ElideToolOptions_.OutputOptions? get() = output(elide.cli.ElideToolOptions_.OutputOptions())
+  fun output(obj: elide.cli.ElideToolOptions_.OutputOptions): elide.cli.ElideToolOptions_.OutputOptions? {
+    val o = __offset(4)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : ElideToolOptions {
-        __init(_i, _bb)
-        return this
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsElideToolOptions(_bb: ByteBuffer): ElideToolOptions =
+      getRootAsElideToolOptions(_bb, ElideToolOptions())
+
+    fun getRootAsElideToolOptions(_bb: ByteBuffer, obj: ElideToolOptions): ElideToolOptions {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val output : elide.cli.ElideToolOptions_.OutputOptions? get() = output(elide.cli.ElideToolOptions_.OutputOptions())
-    fun output(obj: elide.cli.ElideToolOptions_.OutputOptions) : elide.cli.ElideToolOptions_.OutputOptions? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+
+    fun createElideToolOptions(builder: FlatBufferBuilder, outputOffset: Int): Int {
+      builder.startTable(1)
+      addOutput(builder, outputOffset)
+      return endElideToolOptions(builder)
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsElideToolOptions(_bb: ByteBuffer): ElideToolOptions = getRootAsElideToolOptions(_bb, ElideToolOptions())
-        fun getRootAsElideToolOptions(_bb: ByteBuffer, obj: ElideToolOptions): ElideToolOptions {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createElideToolOptions(builder: FlatBufferBuilder, outputOffset: Int) : Int {
-            builder.startTable(1)
-            addOutput(builder, outputOffset)
-            return endElideToolOptions(builder)
-        }
-        fun startElideToolOptions(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addOutput(builder: FlatBufferBuilder, output: Int) = builder.addOffset(0, output, 0)
-        fun endElideToolOptions(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun startElideToolOptions(builder: FlatBufferBuilder) = builder.startTable(1)
+    fun addOutput(builder: FlatBufferBuilder, output: Int) = builder.addOffset(0, output, 0)
+    fun endElideToolOptions(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
+  }
 }

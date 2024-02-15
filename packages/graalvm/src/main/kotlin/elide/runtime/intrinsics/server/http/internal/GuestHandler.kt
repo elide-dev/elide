@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -38,7 +38,7 @@ import elide.runtime.intrinsics.server.http.HttpResponse
       else -> false
     }
   }
-  
+
   internal companion object {
     /** Wraps a [PolyglotValue] and returns it as a [GuestHandler]. The [value] must be executable. */
     infix fun of(value: PolyglotValue): GuestHandler {

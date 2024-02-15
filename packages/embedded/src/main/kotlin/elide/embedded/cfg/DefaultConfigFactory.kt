@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -90,41 +90,53 @@ import elide.embedded.env.EnvResolver
     // default logging configuration
     loggingBuilder.rootBuilder.level = INFO
     loggingBuilder.rootBuilder.addHandler("stderr")
-    loggingBuilder.addHandler(logHandler {
-      name = "stderr"
-    })
-    loggingBuilder.addHandler(logHandler {
-      name = "stdout"
-    })
-    loggingBuilder.addLogger(logger {
-      root = true
-      settings = loggerSettings {
-        level = INFO
-      }
-    })
+    loggingBuilder.addHandler(
+      logHandler {
+        name = "stderr"
+      },
+    )
+    loggingBuilder.addHandler(
+      logHandler {
+        name = "stdout"
+      },
+    )
+    loggingBuilder.addLogger(
+      logger {
+        root = true
+        settings = loggerSettings {
+          level = INFO
+        }
+      },
+    )
 
     // outer engine configuration, default app configuration
     addConfig(
       appConfigurationSuite {
-      name = "defaults"
-      config.add(configurationValue {
-        key = "elide.embedded"
-        value = Value.newBuilder().setBoolValue(true).build()
-      })
-    }
+        name = "defaults"
+        config.add(
+          configurationValue {
+            key = "elide.embedded"
+            value = Value.newBuilder().setBoolValue(true).build()
+          },
+        )
+      },
     )
     addDefaults(
       appConfigurationSuite {
-      name = "defaults"
-      config.add(configurationValue {
-        key = "elide.embedded"
-        value = Value.newBuilder().setBoolValue(true).build()
-      })
-      config.add(configurationValue {
-        key = "elide.guest"
-        value = Value.newBuilder().setBoolValue(true).build()
-      })
-    }
+        name = "defaults"
+        config.add(
+          configurationValue {
+            key = "elide.embedded"
+            value = Value.newBuilder().setBoolValue(true).build()
+          },
+        )
+        config.add(
+          configurationValue {
+            key = "elide.guest"
+            value = Value.newBuilder().setBoolValue(true).build()
+          },
+        )
+      },
     )
   }
 

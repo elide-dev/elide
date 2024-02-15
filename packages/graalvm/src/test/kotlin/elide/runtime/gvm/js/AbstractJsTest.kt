@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -233,9 +233,11 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
 
   // Configure a context and then return a guest test execution bound to it.
   protected fun withHostFs(op: PolyglotContext.() -> String): GuestTestExecution {
-    return GuestTestExecution(withCustomContext {
-      allowIO(IOAccess.ALL)
-    }) {
+    return GuestTestExecution(
+      withCustomContext {
+        allowIO(IOAccess.ALL)
+      },
+    ) {
       executeGuestInternal(
         this,
         bind = true,
@@ -248,11 +250,15 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
 
   // Configure a context and then return a guest test execution bound to it.
   protected fun withHostFs(fs: FileSystem, op: PolyglotContext.() -> String): GuestTestExecution {
-    return GuestTestExecution(withCustomContext {
-      allowIO(IOAccess.newBuilder()
-        .fileSystem(fs)
-        .build())
-    }) {
+    return GuestTestExecution(
+      withCustomContext {
+        allowIO(
+          IOAccess.newBuilder()
+            .fileSystem(fs)
+            .build(),
+        )
+      },
+    ) {
       executeGuestInternal(
         this,
         bind = true,
@@ -266,11 +272,15 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   // TODO(@darlvd): rewrite tests using this to use a common FS
   // Configure a context and then return a guest test execution bound to it.
   protected fun withVFS(fs: FileSystem, op: PolyglotContext.() -> String): GuestTestExecution {
-    return GuestTestExecution(withCustomContext {
-      allowIO(IOAccess.newBuilder()
-        .fileSystem(fs)
-        .build())
-    }) {
+    return GuestTestExecution(
+      withCustomContext {
+        allowIO(
+          IOAccess.newBuilder()
+            .fileSystem(fs)
+            .build(),
+        )
+      },
+    ) {
       executeGuestInternal(
         this,
         bind = true,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import elide.runtime.gvm.internals.GraalVMGuest
 /**
  * TBD.
  */
-abstract class AbstractScriptEngineFactory protected constructor (val engine: GraalVMGuest) : ScriptEngineFactory {
+abstract class AbstractScriptEngineFactory protected constructor(val engine: GraalVMGuest) : ScriptEngineFactory {
   companion object {
     private val polyglotEngine = Engine.newBuilder().build()
   }
@@ -232,7 +232,7 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
     }
   }
 
-  private class PolyglotContext (private val languageId: String) : ScriptContext {
+  private class PolyglotContext(private val languageId: String) : ScriptContext {
     private var context: Context? = null
     private val `in`: PolyglotReader
     private val out: PolyglotWriter
@@ -434,32 +434,34 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
     override val keys: MutableSet<String>
       get() = languageBindings.memberKeys
 
-    override val values: MutableCollection<Any> get() {
-      val values: MutableList<Any> = ArrayList()
-      for (s in keys) {
-        when (val v = get(s)) {
-          null -> {}
-          else -> values.add(v)
+    override val values: MutableCollection<Any>
+      get() {
+        val values: MutableList<Any> = ArrayList()
+        for (s in keys) {
+          when (val v = get(s)) {
+            null -> {}
+            else -> values.add(v)
+          }
         }
+        return values
       }
-      return values
-    }
 
-    override val entries: MutableSet<MutableEntry<String, Any>> get() {
-      val values: MutableSet<MutableEntry<String, Any>> = HashSet()
-      for (s in keys) {
-        values.add(
-          object : MutableEntry<String, Any> {
-            override val key: String get() = s
-            override val value: Any get() = get(s)!!
-            override fun setValue(value: Any): Any {
-              return put(s, value)!!
-            }
-          },
-        )
+    override val entries: MutableSet<MutableEntry<String, Any>>
+      get() {
+        val values: MutableSet<MutableEntry<String, Any>> = HashSet()
+        for (s in keys) {
+          values.add(
+            object : MutableEntry<String, Any> {
+              override val key: String get() = s
+              override val value: Any get() = get(s)!!
+              override fun setValue(value: Any): Any {
+                return put(s, value)!!
+              }
+            },
+          )
+        }
+        return values
       }
-      return values
-    }
 
     override fun put(name: String, value: Any): Any? {
       val previous = get(name)

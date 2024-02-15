@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ package kotlinx.serialization.protobuf.schema
  *
  * @param symbol Symbol to be emitted when selecting this syntax.
  */
-public enum class ProtoBufSyntaxVersion constructor (internal val symbol: String) {
+public enum class ProtoBufSyntaxVersion constructor(internal val symbol: String) {
   /**
    * ## Syntax: `proto`.
    *

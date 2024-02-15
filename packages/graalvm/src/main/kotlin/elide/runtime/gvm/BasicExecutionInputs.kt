@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.runtime.gvm
 import org.graalvm.polyglot.Value
 
 /** Implements a basic arguments list of any type of values. */
-internal class BasicExecutionInputs private constructor (
+internal class BasicExecutionInputs private constructor(
   private val argsList: Array<Value>,
 ) : ExecutionInputs {
   /** @inheritDoc */

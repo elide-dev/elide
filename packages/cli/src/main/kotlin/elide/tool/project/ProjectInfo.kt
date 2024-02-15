@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,7 +15,7 @@
 
 package elide.tool.project
 
-import java.util.SortedMap
+import java.util.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.runtime.plugins.env.EnvConfig.EnvVar
@@ -23,9 +23,9 @@ import elide.runtime.plugins.env.EnvConfig.EnvVar
 /**
  * TBD.
  */
-@JvmInline value class ProjectInfo private constructor (private val info: ElideProject) {
+@JvmInline value class ProjectInfo private constructor(private val info: ElideProject) {
   /** Environment settings applied to the project. */
-  @JvmRecord @Serializable data class ProjectEnvironment private constructor (
+  @JvmRecord @Serializable data class ProjectEnvironment private constructor(
     @Transient val vars: SortedMap<String, EnvVar> = sortedMapOf(),
   ) {
     companion object {
@@ -35,7 +35,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVar
   }
 
   /** Information about an Elide project. */
-  @JvmRecord @Serializable internal data class ElideProject (
+  @JvmRecord @Serializable internal data class ElideProject(
     val name: String? = null,
     val root: String? = null,
     val version: String? = null,
@@ -65,11 +65,13 @@ import elide.runtime.plugins.env.EnvConfig.EnvVar
       name: String? = null,
       env: ProjectEnvironment? = null,
       config: ProjectConfig? = null,
-    ): ProjectInfo = ProjectInfo(ElideProject(
-      name = name,
-      root = root,
-      env = env,
-      config = config,
-    ))
+    ): ProjectInfo = ProjectInfo(
+      ElideProject(
+        name = name,
+        root = root,
+        env = env,
+        config = config,
+      ),
+    )
   }
 }

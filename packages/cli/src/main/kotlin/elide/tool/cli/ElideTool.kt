@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -66,13 +66,13 @@ import elide.tool.io.RuntimeWorkdirManager
     SelfTestCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
-    "   ______     __         __     _____     ______%n" +
-    " /\\  ___\\   /\\ \\       /\\ \\   /\\  __-.  /\\  ___\\%n" +
-    " \\ \\  __\\   \\ \\ \\____  \\ \\ \\  \\ \\ \\/\\ \\ \\ \\  __\\%n" +
-    "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
-    "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
-    " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n%n"
-  ),
+          "   ______     __         __     _____     ______%n" +
+          " /\\  ___\\   /\\ \\       /\\ \\   /\\  __-.  /\\  ___\\%n" +
+          " \\ \\  __\\   \\ \\ \\____  \\ \\ \\  \\ \\ \\/\\ \\ \\ \\  __\\%n" +
+          "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
+          "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
+          " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n%n"
+          ),
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
@@ -158,7 +158,7 @@ import elide.tool.io.RuntimeWorkdirManager
         .setColorScheme(
           Help.defaultColorScheme(
             if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
-                System.getenv("NO_COLOR") != null) {
+              System.getenv("NO_COLOR") != null) {
               Help.Ansi.OFF
             } else {
               Help.Ansi.ON
@@ -169,7 +169,7 @@ import elide.tool.io.RuntimeWorkdirManager
     }
 
     /** Configures the Micronaut binary. */
-    @ContextConfigurer internal class ToolConfigurator: ApplicationContextConfigurer {
+    @ContextConfigurer internal class ToolConfigurator : ApplicationContextConfigurer {
       override fun configure(context: ApplicationContextBuilder) {
         context
           .bootstrapEnvironment(false)

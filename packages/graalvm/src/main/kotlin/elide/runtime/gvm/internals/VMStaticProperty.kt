@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,10 +22,10 @@ import org.graalvm.nativeimage.ImageInfo
  * @param symbol Symbol to use for the VM property when passing it to a new context.
  * @param staticValue Value for this property.
  */
-public data class VMStaticProperty internal constructor (
+public data class VMStaticProperty internal constructor(
   override val symbol: String,
   val staticValue: String,
-): VMProperty {
+) : VMProperty {
   public companion object {
     private const val ENABLED_TRUE = "true"
     private const val DISABLED_FALSE = "false"
@@ -50,7 +50,7 @@ public data class VMStaticProperty internal constructor (
           ImageInfo.inImageCode() -> parseSemanticVersion(
             requireNotNull(svmVersionMap[vmVersion.split("+").last()]) {
               "SVM version not registered: $vmVersion"
-            }
+            },
           )
 
           // dunno what version

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,12 +17,12 @@ package elide.base
 
 @Suppress("unused")
 class Language private constructor() {
-    companion object {
-        const val ENGLISH: Int = 0
-        const val FRENCH: Int = 1
-        const val SPANISH: Int = 2
-        const val CHINESE: Int = 3
-        val names : Array<String> = arrayOf("ENGLISH", "FRENCH", "SPANISH", "CHINESE")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val ENGLISH: Int = 0
+    const val FRENCH: Int = 1
+    const val SPANISH: Int = 2
+    const val CHINESE: Int = 3
+    val names: Array<String> = arrayOf("ENGLISH", "FRENCH", "SPANISH", "CHINESE")
+    fun name(e: Int): String = names[e]
+  }
 }

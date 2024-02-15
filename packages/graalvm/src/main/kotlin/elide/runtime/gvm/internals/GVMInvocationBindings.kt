@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -45,8 +45,8 @@ import org.graalvm.polyglot.Value as GuestValue
  *   ultimately authoritative over the response or the request lifecycle.
  */
 public abstract class GVMInvocationBindings<Bindings, Script> : InvocationBindings
-  where Bindings : GVMInvocationBindings<Bindings, Script>,
-        Script: ExecutableScript {
+        where Bindings : GVMInvocationBindings<Bindings, Script>,
+              Script : ExecutableScript {
   /** Enumerates dispatch styles supported by this implementation. */
   public enum class DispatchStyle {
     /** Regular "unary"-style dispatch, with a single source execution and output. */
@@ -82,8 +82,8 @@ public abstract class GVMInvocationBindings<Bindings, Script> : InvocationBindin
    * methods to resolve a set of bindings for a given evaluated script.
    */
   internal interface Resolver<Script, Bindings>
-    where Bindings : GVMInvocationBindings<Bindings, Script>,
-          Script: ExecutableScript {
+          where Bindings : GVMInvocationBindings<Bindings, Script>,
+                Script : ExecutableScript {
     /**
      * ## Implementation API: Resolve.
      *

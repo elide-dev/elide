@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.runtime.gvm.internals.vfs
 import java.io.IOException
 
 /** Internal base class for I/O exceptions raised from guest operations. */
-public abstract class GuestIOException (
+public abstract class GuestIOException(
   message: String? = null,
   cause: Throwable? = null,
 ) : IOException(message, cause)

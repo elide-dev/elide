@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,39 +24,44 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class BuildInfo : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): BuildInfo {
+    __init(_i, _bb)
+    return this
+  }
+
+  val stamp: google.protobuf.Timestamp? get() = stamp(google.protobuf.Timestamp())
+  fun stamp(obj: google.protobuf.Timestamp): google.protobuf.Timestamp? {
+    val o = __offset(4)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : BuildInfo {
-        __init(_i, _bb)
-        return this
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsBuildInfo(_bb: ByteBuffer): BuildInfo = getRootAsBuildInfo(_bb, BuildInfo())
+    fun getRootAsBuildInfo(_bb: ByteBuffer, obj: BuildInfo): BuildInfo {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val stamp : google.protobuf.Timestamp? get() = stamp(google.protobuf.Timestamp())
-    fun stamp(obj: google.protobuf.Timestamp) : google.protobuf.Timestamp? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+
+    fun createBuildInfo(builder: FlatBufferBuilder, stampOffset: Int): Int {
+      builder.startTable(1)
+      addStamp(builder, stampOffset)
+      return endBuildInfo(builder)
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsBuildInfo(_bb: ByteBuffer): BuildInfo = getRootAsBuildInfo(_bb, BuildInfo())
-        fun getRootAsBuildInfo(_bb: ByteBuffer, obj: BuildInfo): BuildInfo {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createBuildInfo(builder: FlatBufferBuilder, stampOffset: Int) : Int {
-            builder.startTable(1)
-            addStamp(builder, stampOffset)
-            return endBuildInfo(builder)
-        }
-        fun startBuildInfo(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addStamp(builder: FlatBufferBuilder, stamp: Int) = builder.addOffset(0, stamp, 0)
-        fun endBuildInfo(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun startBuildInfo(builder: FlatBufferBuilder) = builder.startTable(1)
+    fun addStamp(builder: FlatBufferBuilder, stamp: Int) = builder.addOffset(0, stamp, 0)
+    fun endBuildInfo(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
+  }
 }

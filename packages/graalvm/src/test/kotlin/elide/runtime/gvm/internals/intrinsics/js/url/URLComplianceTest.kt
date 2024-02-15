@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,7 +31,7 @@ import elide.testing.annotations.TestCase
 
   private inline fun <T> withURLCases(crossinline op: (URLParseTestCase) -> List<T>): Stream<T> {
     return withJSON<List<Any>, List<T>>(
-      "/wpt/url/resources/urltestdata.json"
+      "/wpt/url/resources/urltestdata.json",
     ) { list ->
       var i = 0
       list.mapNotNull {
@@ -80,7 +80,7 @@ import elide.testing.annotations.TestCase
           port = map["port"] as String?,
           pathname = map["pathname"] as String?,
           search = map["search"] as String?,
-          hash = map["hash"] as String?
+          hash = map["hash"] as String?,
         )
       }
     }
@@ -138,7 +138,7 @@ import elide.testing.annotations.TestCase
     if (case.failure) listOfNotNull(
       urlTest(case) {
         // nothing at this time
-      }
+      },
     ) else listOfNotNull(
       urlTest(case) { parsed ->
         assertNotNull(parsed, "should not get `null` for expected-success URL parse")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -56,11 +56,11 @@ import elide.runtime.gvm.InvocationBindings
  * @param Inputs Shape of main inputs provided to the [Script] for execution.
  */
 internal abstract class AbstractVMAdapter<
-  Output,
-  Bindings: InvocationBindings,
-  Script: ExecutableScript,
-  Inputs: ExecutionInputs,
-> {
+        Output,
+        Bindings : InvocationBindings,
+        Script : ExecutableScript,
+        Inputs : ExecutionInputs,
+        > {
   /**
    * ## Execution: Promise-like.
    *
@@ -102,7 +102,7 @@ internal abstract class AbstractVMAdapter<
    *
    * @param op Operation which is wrapped by this execution, and expected to produce a result of type [Output].
    */
-  internal abstract inner class VMUnaryExecution (
+  internal abstract inner class VMUnaryExecution(
     protected val op: CompletableFuture<Output>,
   ) : AbstractVMExecution<Output>(), PromiseLike<Output>, Future<Output> by op, CompletionStage<Output> by op
 
@@ -118,7 +118,7 @@ internal abstract class AbstractVMAdapter<
    *
    * @param op Publisher which is wrapped by this execution, and expected to produce one or more [Output] results.
    */
-  internal abstract inner class VMStreamingExecution (
+  internal abstract inner class VMStreamingExecution(
     protected val op: CompletableFuture<Output>,
   ) : AbstractVMExecution<Output>(), PromiseLike<Output>, Future<Output> by op, CompletionStage<Output> by op
 

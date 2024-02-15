@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -102,10 +102,10 @@ import org.graalvm.polyglot.Value as GuestValue
  * @param Bindings Invocation bindings surface definition for use with this VM implementation.
  */
 public abstract class AbstractVMEngine<
-  Config : GuestRuntimeConfiguration,
-  Code: ExecutableScript,
-  Bindings: InvocationBindings,
-> (protected val language: GraalVMGuest) : VMEngineImpl<Config> {
+        Config : GuestRuntimeConfiguration,
+        Code : ExecutableScript,
+        Bindings : InvocationBindings,
+        >(protected val language: GraalVMGuest) : VMEngineImpl<Config> {
   public companion object {
     /** Version of the Elide GVM engine. */
     private const val ENGINE_VERSION = "v4"
@@ -118,8 +118,8 @@ public abstract class AbstractVMEngine<
 
     private fun runtimeLangConfig(engine: String): Pair<Boolean, InputStream?> {
       val resource = (
-          AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/$RUNTIME_MANIFEST.gz")
-      )
+              AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/$RUNTIME_MANIFEST.gz")
+              )
       return if (resource != null) {
         true to resource
       } else {
@@ -145,7 +145,7 @@ public abstract class AbstractVMEngine<
       return try {
         runtimeLangConfig(engine).let { (compressed, manifestFile) ->
           manifestFile ?: error(
-            "Failed to locate embedded runtime manifest for language: $engine"
+            "Failed to locate embedded runtime manifest for language: $engine",
           )
 
           // decode manifest from JSON to discover injected artifacts
@@ -163,7 +163,7 @@ public abstract class AbstractVMEngine<
           // collect JS runtime internal sources as a string
           val collectedRuntimeSource = manifest.scripts.stream().flatMap {
             (AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/${it.path}") ?: error(
-              "Failed to locate embedded runtime artifact (engine: '$engine'): ${it.path}"
+              "Failed to locate embedded runtime artifact (engine: '$engine'): ${it.path}",
             )).bufferedReader(StandardCharsets.UTF_8).lines()
           }.filter {
             it.isNotBlank() && !it.startsWith("//")
@@ -205,7 +205,7 @@ public abstract class AbstractVMEngine<
   /**
    * TBD.
    */
-  public abstract class GuestVFSConfigurator (
+  public abstract class GuestVFSConfigurator(
     private val guestLanguage: GuestLanguage,
     private val runtimeInfoProducer: () -> RuntimeInfo
   ) : VFSConfigurator {
@@ -220,16 +220,22 @@ public abstract class AbstractVMEngine<
       return when {
         os.contains("linux") && (arch.contains("x86_64") || arch.contains("amd64")) ->
           "linux" to "amd64"
+
         os.contains("linux") && (arch.contains("arm64") || arch.contains("aarch64")) ->
           "linux" to "arm64"
+
         os.contains("mac") && (arch.contains("x86_64") || arch.contains("amd64")) ->
           "darwin" to "amd64"
+
         os.contains("mac") && (arch.contains("arm64") || arch.contains("aarch64")) ->
           "darwin" to "arm64"
+
         os.contains("windows") && (arch.contains("x86_64") || arch.contains("amd64")) ->
           "windows" to "amd64"
+
         os.contains("windows") && (arch.contains("arm64") || arch.contains("aarch64")) ->
           "windows" to "arm64"
+
         else -> error("Unsupported platform; could not detect OS/architecture pair: $os/$arch")
       }
     }
@@ -276,7 +282,7 @@ public abstract class AbstractVMEngine<
       base.plus(info.vfs).map {
         val path = "$EMBEDDED_ROOT/${guestLanguage.symbol}/${it.name}"
         GuestVFSConfigurator::class.java.getResource(path)?.toURI() ?: error(
-          "Failed to locate embedded runtime bundle: $it (path: '$path')"
+          "Failed to locate embedded runtime bundle: $it (path: '$path')",
         )
       }
     }
@@ -470,36 +476,42 @@ public abstract class AbstractVMEngine<
   @Inject internal lateinit var filesystem: GuestVFS
 
   // Abstract VM options which must be evaluated at the time a context is created.
-  private val conditionalOptions : List<VMProperty> = listOf(
-    VMConditionalMultiProperty(main = VMConditionalProperty("vm.inspect", "inspect", {
-      RuntimeFlag.inspect || guestConfig.inspector?.isEnabled == true
-    }), properties = listOf(
-      // Inspection: Path.
-      VMRuntimeProperty.ofConfigurable("vm.inspect.path", "inspect.Path") {
-        RuntimeFlag.inspectPath ?: guestConfig.inspector?.path
-      },
+  private val conditionalOptions: List<VMProperty> = listOf(
+    VMConditionalMultiProperty(
+      main = VMConditionalProperty(
+        "vm.inspect", "inspect",
+        {
+          RuntimeFlag.inspect || guestConfig.inspector?.isEnabled == true
+        },
+      ),
+      properties = listOf(
+        // Inspection: Path.
+        VMRuntimeProperty.ofConfigurable("vm.inspect.path", "inspect.Path") {
+          RuntimeFlag.inspectPath ?: guestConfig.inspector?.path
+        },
 
-      // Inspection: Secure.
-      VMRuntimeProperty.ofBoolean("vm.inspect.secure", "inspect.Secure") {
-        RuntimeFlag.inspectSecure || guestConfig.inspector?.secure == true
-      },
+        // Inspection: Secure.
+        VMRuntimeProperty.ofBoolean("vm.inspect.secure", "inspect.Secure") {
+          RuntimeFlag.inspectSecure || guestConfig.inspector?.secure == true
+        },
 
-      // Inspection: Wait for debugger.
-      VMRuntimeProperty.ofBoolean("vm.inspect.wait", "inspect.WaitAttached") {
-        (
-          RuntimeFlag.inspectSuspend &&
-          RuntimeFlag.inspectWait
-        ) || (
-          guestConfig.inspector?.suspend == true &&
-          guestConfig.inspector?.wait == true
-        )
-      },
+        // Inspection: Wait for debugger.
+        VMRuntimeProperty.ofBoolean("vm.inspect.wait", "inspect.WaitAttached") {
+          (
+                  RuntimeFlag.inspectSuspend &&
+                          RuntimeFlag.inspectWait
+                  ) || (
+                  guestConfig.inspector?.suspend == true &&
+                          guestConfig.inspector?.wait == true
+                  )
+        },
 
-      // Inspection: Runtime sources.
-      VMRuntimeProperty.ofBoolean("vm.inspect.internal", "inspect.Internal") {
-        RuntimeFlag.inspectInternal
-      },
-    )),
+        // Inspection: Runtime sources.
+        VMRuntimeProperty.ofBoolean("vm.inspect.internal", "inspect.Internal") {
+          RuntimeFlag.inspectInternal
+        },
+      ),
+    ),
 
     // Sandbox: Max CPU time. Limits CPU time of guest executions.
     VMRuntimeProperty.ofConfigurable("vm.sandbox.maxCpuTime", "sandbox.MaxCPUTime") {
@@ -540,7 +552,7 @@ public abstract class AbstractVMEngine<
           null
         }
       }
-    }
+    },
   )
 
   internal fun initialize() {
@@ -570,7 +582,7 @@ public abstract class AbstractVMEngine<
 
   // Context builder factory. Provided to the context manager.
   public fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
-    *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray()
+    *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray(),
   ).engine(engine).apply {
     // configure baseline settings for the builder according to the implemented VM
     configureVM(this)
@@ -661,7 +673,7 @@ public abstract class AbstractVMEngine<
    * @return Collection of intrinsics for the active language.
    */
   protected open fun intrinsics(): Collection<GuestIntrinsic> = intrinsicsManager.resolver().resolve(
-    language()
+    language(),
   )
 
   override suspend fun prewarmScript(script: ExecutableScript) {
@@ -741,66 +753,74 @@ public abstract class AbstractVMEngine<
 
   // Decode a `ServerResponse` value from a guest script.
   private fun decodeServerResponse(hasMembers: Boolean, value: GuestValue): ServerResponse {
-    return object: ServerResponse {
-      override val status: Int? get() = (
-        if (hasMembers && value.hasMember("status")) {
-          value.getMember("status").asInt()
-        } else {
-          null
-        }
-      )
+    return object : ServerResponse {
+      override val status: Int?
+        get() = (
+                if (hasMembers && value.hasMember("status")) {
+                  value.getMember("status").asInt()
+                } else {
+                  null
+                }
+                )
 
-      override val headers: Map<String, String>? get() = (
-        if (hasMembers && value.hasMember("headers")) {
-          val headersData = value.getMember("headers")
-          if (!headersData.isNull && headersData.hasMembers()) {
-            headersData.memberKeys.associateWith { key ->
-              headersData.getMember(key).asString()
-            }
-          } else {
-            null
-          }
-        } else {
-          null
-        }
-      )
+      override val headers: Map<String, String>?
+        get() = (
+                if (hasMembers && value.hasMember("headers")) {
+                  val headersData = value.getMember("headers")
+                  if (!headersData.isNull && headersData.hasMembers()) {
+                    headersData.memberKeys.associateWith { key ->
+                      headersData.getMember(key).asString()
+                    }
+                  } else {
+                    null
+                  }
+                } else {
+                  null
+                }
+                )
 
-      override val content: String get() = (
-        if (hasMembers && value.hasMember("content")) {
-          value.getMember("content").asString()
-        } else {
-          ""
-        }
-      )
+      override val content: String
+        get() = (
+                if (hasMembers && value.hasMember("content")) {
+                  value.getMember("content").asString()
+                } else {
+                  ""
+                }
+                )
 
-      override val css: String get() = (
-        if (hasMembers && value.hasMember("css")) {
-          value.getMember("css").asString()
-        } else {
-          ""
-        }
-      )
+      override val css: String
+        get() = (
+                if (hasMembers && value.hasMember("css")) {
+                  value.getMember("css").asString()
+                } else {
+                  ""
+                }
+                )
 
-      override val hasContent: Boolean get() = (
-        hasMembers && value.getMember("hasContent")?.asBoolean() ?: content.isNotBlank()
-      )
+      override val hasContent: Boolean
+        get() = (
+                hasMembers && value.getMember("hasContent")?.asBoolean() ?: content.isNotBlank()
+                )
 
-      override val fin: Boolean get() = (
-        hasMembers && value.getMember("fin")?.asBoolean() ?: false
-      )
+      override val fin: Boolean
+        get() = (
+                hasMembers && value.getMember("fin")?.asBoolean() ?: false
+                )
     }
   }
 
   // Build a callable function which can receive streamed render output.
-  private fun buildRenderProxy(receiver: StreamingReceiver) : ProxyExecutable {
+  private fun buildRenderProxy(receiver: StreamingReceiver): ProxyExecutable {
     return ProxyExecutable { arguments ->
       val chunk = arguments.firstOrNull()
       if (chunk != null) {
         val hasMembers = chunk.hasMembers()
-        receiver.invoke(decodeServerResponse(
-          hasMembers,
-          chunk,
-        ))
+        receiver.invoke(
+          decodeServerResponse(
+            hasMembers,
+            chunk,
+          ),
+        )
       }
       null  // no return value
     }
@@ -815,11 +835,13 @@ public abstract class AbstractVMEngine<
         out.isNull -> logging.warn("Received `null` from `render` in guest script; skipping")
 
         // if the function returned a string directly, emit it as the final chunk
-        out.isString -> receiver.invoke(object: ServerResponse {
-          override val content: String get() = meta.asString()
-          override val hasContent: Boolean get() = true
-          override val fin: Boolean get() = true
-        })
+        out.isString -> receiver.invoke(
+          object : ServerResponse {
+            override val content: String get() = meta.asString()
+            override val hasContent: Boolean get() = true
+            override val fin: Boolean get() = true
+          },
+        )
 
         // otherwise, if the function returns a promise, we should wait on the output and re-dispatch.
         meta.metaSimpleName == "Promise" -> {
@@ -843,28 +865,28 @@ public abstract class AbstractVMEngine<
           }
           out.invokeMember(
             "then",
-            object: ProxyExecutable {
+            object : ProxyExecutable {
               override fun execute(vararg arguments: GuestValue?): Any? {
                 val arg = arguments.firstOrNull()
                 if (arg != null) {
                   resultReceiver.accept(arg)
                 } else error(
-                  "Failed to resolve `then` argument for `render` promise in guest script"
+                  "Failed to resolve `then` argument for `render` promise in guest script",
                 )
                 return null
               }
             },
-            object: ProxyExecutable {
+            object : ProxyExecutable {
               override fun execute(vararg arguments: GuestValue?): Any? {
                 val arg = arguments.firstOrNull()
                 if (arg != null) {
                   errReceiver.accept(arg)
                 } else error(
-                  "Failed to resolve `catch` argument for `render` promise in guest script"
+                  "Failed to resolve `catch` argument for `render` promise in guest script",
                 )
                 return null
               }
-            }
+            },
           )
           val success = latch.await(90, TimeUnit.SECONDS)
           when {
@@ -883,10 +905,12 @@ public abstract class AbstractVMEngine<
         }
 
         // otherwise, consider it a `ServerResponse`.
-        out.hasMembers() -> receiver.invoke(decodeServerResponse(
-          true,
-          out,
-        ))
+        out.hasMembers() -> receiver.invoke(
+          decodeServerResponse(
+            true,
+            out,
+          ),
+        )
 
         else -> error("Failed to resolve `render` output: Unrecognized value $out")
       }
@@ -945,7 +969,7 @@ public abstract class AbstractVMEngine<
               val entry = bindings.mapped.entries.find {
                 it.key.type == JsInvocationBindings.JsEntrypointType.RENDER
               } ?: error(
-                "Entrypoint unresolved: `render` (for embedded script binding $bindings)"
+                "Entrypoint unresolved: `render` (for embedded script binding $bindings)",
               )
 
               val out = try {
@@ -1036,8 +1060,9 @@ public abstract class AbstractVMEngine<
           ExecutableScript.State.EVALUATED, ExecutableScript.State.EXECUTED -> script as Code
         }
       }
+
       else -> error(
-        "Cannot execute script of type '${script::class.java.simpleName}' via GraalVM engine"
+        "Cannot execute script of type '${script::class.java.simpleName}' via GraalVM engine",
       )
     }
   }
@@ -1098,7 +1123,7 @@ public abstract class AbstractVMEngine<
    * @param inputs Inputs to the script, if any.
    * @return Result of the execution, if any.
    */
-  protected abstract fun <Inputs: ExecutionInputs> execute(
+  protected abstract fun <Inputs : ExecutionInputs> execute(
     context: VMContext,
     script: Code,
     bindings: Bindings,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -113,7 +113,7 @@ internal class ServerAssetIndex @Inject constructor(
         val tailCount = bundle.settings.digestSettings.tail
         val encoded = String(
           Base64.encodeWebSafe(integrityValue.fingerprint.toByteArray().takeLast(tailCount).toByteArray()),
-          StandardCharsets.UTF_8
+          StandardCharsets.UTF_8,
         )
         "\"$encoded\""
       } else {
@@ -155,7 +155,7 @@ internal class ServerAssetIndex @Inject constructor(
         AssetDependency(
           depender = moduleId,
           dependee = it,
-          optional = false
+          optional = false,
         ),
       )
     }
@@ -212,8 +212,8 @@ internal class ServerAssetIndex @Inject constructor(
         { it.first },
         { sortedSetOf(it.second) },
         { _, _ -> error("Assets must hold a maximum of one source file.") },
-        { TreeMap() }
-      )
+        { TreeMap() },
+      ),
     )
 
     // build an index of each module ID => a module record. we can typically get to the module ID from everything else.
@@ -249,8 +249,8 @@ internal class ServerAssetIndex @Inject constructor(
         { it.first }, // module ID
         { it.second }, // pointer
         { value, _ -> error("Two assets cannot have the same module ID: '$value'") },
-        { ConcurrentSkipListMap() }
-      )
+        { ConcurrentSkipListMap() },
+      ),
     )
     return builder.build() to ServerAssetManifest(
       bundle = bundle,
@@ -298,7 +298,7 @@ internal class ServerAssetIndex @Inject constructor(
       // generic assets
       AssetType.TEXT -> {
         bundle.getGenericOrThrow(
-          key
+          key,
         )
       }
 

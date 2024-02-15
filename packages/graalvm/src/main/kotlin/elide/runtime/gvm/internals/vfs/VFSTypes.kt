@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -115,7 +115,7 @@ public enum class AccessResult {
 }
 
 /** Describes a full response to a virtual file-system [AccessRequest]. */
-public class AccessResponse private constructor (
+public class AccessResponse private constructor(
   /** Specifies the ultimate [AccessResult] for a given VFS [AccessRequest]. */
   public val policy: AccessResult,
 

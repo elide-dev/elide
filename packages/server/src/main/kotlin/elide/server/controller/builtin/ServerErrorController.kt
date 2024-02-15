@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -67,7 +67,7 @@ import elide.server.html
   // Serve a 500 in plaintext.
   private fun servePlaintext(): RawResponse {
     return HttpResponse.serverError<RawPayload>().contentType(MediaType.TEXT_PLAIN).body(
-      "Server error.".toByteArray(StandardCharsets.UTF_8)
+      "Server error.".toByteArray(StandardCharsets.UTF_8),
     )
   }
 }

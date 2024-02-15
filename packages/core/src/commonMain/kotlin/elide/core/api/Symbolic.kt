@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,7 +29,7 @@ public interface Symbolic<T> {
    * Thrown when a symbol could not be resolved, usually via the [SealedResolver.unresolved] method; this method is
    * typically used from the resolver implementation only.
    */
-  public class Unresolved internal constructor (internal val requested: Any) : IllegalStateException()
+  public class Unresolved internal constructor(internal val requested: Any) : IllegalStateException()
 
   /** Return the raw symbol represented by this type. */
   public val symbol: T
@@ -47,7 +47,7 @@ public interface Symbolic<T> {
    * @param Concrete Concrete type which can be resolved from type [T].
    * @see [SealedResolver]
    */
-  public sealed interface Resolver<T: Any, Concrete> where Concrete: Symbolic<T> {
+  public sealed interface Resolver<T : Any, Concrete> where Concrete : Symbolic<T> {
     /**
      * ### Resolve Symbol
      *
@@ -81,7 +81,7 @@ public interface Symbolic<T> {
    * @param T Symbolic type which can be resolved, by this resolver, to a [Concrete] type.
    * @param Concrete Concrete type which can be resolved from type [T].
    */
-  public sealed interface Enumerated<T: Any, Concrete>: Resolver<T, Concrete> where Concrete: Symbolic<T> {
+  public sealed interface Enumerated<T : Any, Concrete> : Resolver<T, Concrete> where Concrete : Symbolic<T> {
     /**
      * ### Resolve Symbol
      *
@@ -114,7 +114,7 @@ public interface Symbolic<T> {
    * @param T Symbolic type which can be resolved, by this resolver, to a [Concrete] type.
    * @param Concrete Concrete type which can be resolved from type [T].
    */
-  public interface SealedResolver<T: Any, Concrete>: Enumerated<T, Concrete> where Concrete: Symbolic<T>
+  public interface SealedResolver<T : Any, Concrete> : Enumerated<T, Concrete> where Concrete : Symbolic<T>
 
   /**
    * ## Symbolic: Abstract Resolver
@@ -124,7 +124,7 @@ public interface Symbolic<T> {
    *
    * @param T Symbolic type which can be resolved, by this resolver.
    */
-  public abstract class AbstractResolver<T>: SealedResolver<T, Symbolic<T>> where T: Symbolic<T> {
+  public abstract class AbstractResolver<T> : SealedResolver<T, Symbolic<T>> where T : Symbolic<T> {
     /**
      * Return the name of this resolver.
      */

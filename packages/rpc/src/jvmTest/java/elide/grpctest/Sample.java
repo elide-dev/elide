@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,19 +17,22 @@
 package elide.grpctest;
 
 public final class Sample {
-  private Sample() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
+  private Sample() {
   }
 
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
+          com.google.protobuf.ExtensionRegistryLite registry) {
   }
+
+  public static void registerAllExtensions(
+          com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions(
+            (com.google.protobuf.ExtensionRegistryLite) registry);
+  }
+
   public interface SampleRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:elide.grpctest.SampleRequest)
-      com.google.protobuf.MessageOrBuilder {
+          // @@protoc_insertion_point(interface_extends:elide.grpctest.SampleRequest)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -37,36 +40,42 @@ public final class Sample {
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @return The name.
      */
     String getName();
+
     /**
      * <pre>
      * Rendered message.
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @return The bytes for name.
      */
     com.google.protobuf.ByteString
-        getNameBytes();
+    getNameBytes();
   }
+
   /**
    * <pre>
    * Sample request payload.
    * </pre>
-   *
+   * <p>
    * Protobuf type {@code elide.grpctest.SampleRequest}
    */
   public static final class SampleRequest extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:elide.grpctest.SampleRequest)
-      SampleRequestOrBuilder {
-  private static final long serialVersionUID = 0L;
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:elide.grpctest.SampleRequest)
+          SampleRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+
     // Use SampleRequest.newBuilder() to construct.
     private SampleRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private SampleRequest() {
       name_ = "";
     }
@@ -74,7 +83,7 @@ public final class Sample {
     @Override
     @SuppressWarnings({"unused"})
     protected Object newInstance(
-        UnusedPrivateParameter unused) {
+            UnusedPrivateParameter unused) {
       return new SampleRequest();
     }
 
@@ -83,28 +92,31 @@ public final class Sample {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return Sample.internal_static_elide_grpctest_SampleRequest_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return Sample.internal_static_elide_grpctest_SampleRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              SampleRequest.class, Builder.class);
+              .ensureFieldAccessorsInitialized(
+                      SampleRequest.class, Builder.class);
     }
 
     public static final int NAME_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
     private volatile Object name_ = "";
+
     /**
      * <pre>
      * Rendered message.
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @return The name.
      */
     @Override
@@ -113,29 +125,31 @@ public final class Sample {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         name_ = s;
         return s;
       }
     }
+
     /**
      * <pre>
      * Rendered message.
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @return The bytes for name.
      */
     @Override
     public com.google.protobuf.ByteString
-        getNameBytes() {
+    getNameBytes() {
       Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
         name_ = b;
         return b;
       } else {
@@ -144,6 +158,7 @@ public final class Sample {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -156,7 +171,7 @@ public final class Sample {
 
     @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+            throws java.io.IOException {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
       }
@@ -180,7 +195,7 @@ public final class Sample {
     @Override
     public boolean equals(final Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof SampleRequest)) {
         return super.equals(obj);
@@ -188,7 +203,7 @@ public final class Sample {
       SampleRequest other = (SampleRequest) obj;
 
       if (!getName()
-          .equals(other.getName())) return false;
+              .equals(other.getName())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -208,117 +223,134 @@ public final class Sample {
     }
 
     public static SampleRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static SampleRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static SampleRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static SampleRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static SampleRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static SampleRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static SampleRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
+
     public static SampleRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static SampleRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+              .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static SampleRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static SampleRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
+
     public static SampleRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(SampleRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+            BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      * Sample request payload.
      * </pre>
-     *
+     * <p>
      * Protobuf type {@code elide.grpctest.SampleRequest}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:elide.grpctest.SampleRequest)
-        SampleRequestOrBuilder {
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:elide.grpctest.SampleRequest)
+            SampleRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return Sample.internal_static_elide_grpctest_SampleRequest_descriptor;
       }
 
       @Override
       protected FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return Sample.internal_static_elide_grpctest_SampleRequest_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                SampleRequest.class, Builder.class);
+                .ensureFieldAccessorsInitialized(
+                        SampleRequest.class, Builder.class);
       }
 
       // Construct using elide.grpctest.Sample.SampleRequest.newBuilder()
@@ -327,10 +359,11 @@ public final class Sample {
       }
 
       private Builder(
-          BuilderParent parent) {
+              BuilderParent parent) {
         super(parent);
 
       }
+
       @Override
       public Builder clear() {
         super.clear();
@@ -341,7 +374,7 @@ public final class Sample {
 
       @Override
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return Sample.internal_static_elide_grpctest_SampleRequest_descriptor;
       }
 
@@ -362,7 +395,9 @@ public final class Sample {
       @Override
       public SampleRequest buildPartial() {
         SampleRequest result = new SampleRequest(this);
-        if (bitField0_ != 0) { buildPartial0(result); }
+        if (bitField0_ != 0) {
+          buildPartial0(result);
+        }
         onBuilt();
         return result;
       }
@@ -378,38 +413,44 @@ public final class Sample {
       public Builder clone() {
         return super.clone();
       }
+
       @Override
       public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.setField(field, value);
       }
+
       @Override
       public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @Override
       public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @Override
       public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @Override
       public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof SampleRequest) {
-          return mergeFrom((SampleRequest)other);
+          return mergeFrom((SampleRequest) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -435,9 +476,9 @@ public final class Sample {
 
       @Override
       public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
         if (extensionRegistry == null) {
           throw new NullPointerException();
         }
@@ -469,22 +510,25 @@ public final class Sample {
         } // finally
         return this;
       }
+
       private int bitField0_;
 
       private Object name_ = "";
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string name = 1;</code>
+       *
        * @return The name.
        */
       public String getName() {
         Object ref = name_;
         if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           name_ = s;
           return s;
@@ -492,50 +536,58 @@ public final class Sample {
           return (String) ref;
         }
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string name = 1;</code>
+       *
        * @return The bytes for name.
        */
       public com.google.protobuf.ByteString
-          getNameBytes() {
+      getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
           name_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string name = 1;</code>
+       *
        * @param value The name to set.
        * @return This builder for chaining.
        */
       public Builder setName(
-          String value) {
-        if (value == null) { throw new NullPointerException(); }
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         name_ = value;
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string name = 1;</code>
+       *
        * @return This builder for chaining.
        */
       public Builder clearName() {
@@ -544,33 +596,38 @@ public final class Sample {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string name = 1;</code>
+       *
        * @param value The bytes for name to set.
        * @return This builder for chaining.
        */
       public Builder setNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         checkByteStringIsUtf8(value);
         name_ = value;
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
+
       @Override
       public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @Override
       public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -580,6 +637,7 @@ public final class Sample {
 
     // @@protoc_insertion_point(class_scope:elide.grpctest.SampleRequest)
     private static final SampleRequest DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new SampleRequest();
     }
@@ -589,12 +647,12 @@ public final class Sample {
     }
 
     private static final com.google.protobuf.Parser<SampleRequest>
-        PARSER = new com.google.protobuf.AbstractParser<SampleRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<SampleRequest>() {
       @Override
       public SampleRequest parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
         Builder builder = newBuilder();
         try {
           builder.mergeFrom(input, extensionRegistry);
@@ -604,7 +662,7 @@ public final class Sample {
           throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
         } catch (java.io.IOException e) {
           throw new com.google.protobuf.InvalidProtocolBufferException(e)
-              .setUnfinishedMessage(builder.buildPartial());
+                  .setUnfinishedMessage(builder.buildPartial());
         }
         return builder.buildPartial();
       }
@@ -627,8 +685,8 @@ public final class Sample {
   }
 
   public interface SampleResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:elide.grpctest.SampleResponse)
-      com.google.protobuf.MessageOrBuilder {
+          // @@protoc_insertion_point(interface_extends:elide.grpctest.SampleResponse)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -636,36 +694,42 @@ public final class Sample {
      * </pre>
      *
      * <code>string message = 1;</code>
+     *
      * @return The message.
      */
     String getMessage();
+
     /**
      * <pre>
      * Rendered message.
      * </pre>
      *
      * <code>string message = 1;</code>
+     *
      * @return The bytes for message.
      */
     com.google.protobuf.ByteString
-        getMessageBytes();
+    getMessageBytes();
   }
+
   /**
    * <pre>
    * Sample response payload.
    * </pre>
-   *
+   * <p>
    * Protobuf type {@code elide.grpctest.SampleResponse}
    */
   public static final class SampleResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:elide.grpctest.SampleResponse)
-      SampleResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:elide.grpctest.SampleResponse)
+          SampleResponseOrBuilder {
+    private static final long serialVersionUID = 0L;
+
     // Use SampleResponse.newBuilder() to construct.
     private SampleResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private SampleResponse() {
       message_ = "";
     }
@@ -673,7 +737,7 @@ public final class Sample {
     @Override
     @SuppressWarnings({"unused"})
     protected Object newInstance(
-        UnusedPrivateParameter unused) {
+            UnusedPrivateParameter unused) {
       return new SampleResponse();
     }
 
@@ -682,28 +746,31 @@ public final class Sample {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return Sample.internal_static_elide_grpctest_SampleResponse_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return Sample.internal_static_elide_grpctest_SampleResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              SampleResponse.class, Builder.class);
+              .ensureFieldAccessorsInitialized(
+                      SampleResponse.class, Builder.class);
     }
 
     public static final int MESSAGE_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
     private volatile Object message_ = "";
+
     /**
      * <pre>
      * Rendered message.
      * </pre>
      *
      * <code>string message = 1;</code>
+     *
      * @return The message.
      */
     @Override
@@ -712,29 +779,31 @@ public final class Sample {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         message_ = s;
         return s;
       }
     }
+
     /**
      * <pre>
      * Rendered message.
      * </pre>
      *
      * <code>string message = 1;</code>
+     *
      * @return The bytes for message.
      */
     @Override
     public com.google.protobuf.ByteString
-        getMessageBytes() {
+    getMessageBytes() {
       Object ref = message_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
         message_ = b;
         return b;
       } else {
@@ -743,6 +812,7 @@ public final class Sample {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -755,7 +825,7 @@ public final class Sample {
 
     @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+            throws java.io.IOException {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, message_);
       }
@@ -779,7 +849,7 @@ public final class Sample {
     @Override
     public boolean equals(final Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof SampleResponse)) {
         return super.equals(obj);
@@ -787,7 +857,7 @@ public final class Sample {
       SampleResponse other = (SampleResponse) obj;
 
       if (!getMessage()
-          .equals(other.getMessage())) return false;
+              .equals(other.getMessage())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -807,117 +877,134 @@ public final class Sample {
     }
 
     public static SampleResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static SampleResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static SampleResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static SampleResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static SampleResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static SampleResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static SampleResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
+
     public static SampleResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static SampleResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+              .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static SampleResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static SampleResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
+
     public static SampleResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(SampleResponse prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+            BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      * Sample response payload.
      * </pre>
-     *
+     * <p>
      * Protobuf type {@code elide.grpctest.SampleResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:elide.grpctest.SampleResponse)
-        SampleResponseOrBuilder {
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:elide.grpctest.SampleResponse)
+            SampleResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return Sample.internal_static_elide_grpctest_SampleResponse_descriptor;
       }
 
       @Override
       protected FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return Sample.internal_static_elide_grpctest_SampleResponse_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                SampleResponse.class, Builder.class);
+                .ensureFieldAccessorsInitialized(
+                        SampleResponse.class, Builder.class);
       }
 
       // Construct using elide.grpctest.Sample.SampleResponse.newBuilder()
@@ -926,10 +1013,11 @@ public final class Sample {
       }
 
       private Builder(
-          BuilderParent parent) {
+              BuilderParent parent) {
         super(parent);
 
       }
+
       @Override
       public Builder clear() {
         super.clear();
@@ -940,7 +1028,7 @@ public final class Sample {
 
       @Override
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return Sample.internal_static_elide_grpctest_SampleResponse_descriptor;
       }
 
@@ -961,7 +1049,9 @@ public final class Sample {
       @Override
       public SampleResponse buildPartial() {
         SampleResponse result = new SampleResponse(this);
-        if (bitField0_ != 0) { buildPartial0(result); }
+        if (bitField0_ != 0) {
+          buildPartial0(result);
+        }
         onBuilt();
         return result;
       }
@@ -977,38 +1067,44 @@ public final class Sample {
       public Builder clone() {
         return super.clone();
       }
+
       @Override
       public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.setField(field, value);
       }
+
       @Override
       public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @Override
       public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @Override
       public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @Override
       public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof SampleResponse) {
-          return mergeFrom((SampleResponse)other);
+          return mergeFrom((SampleResponse) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1034,9 +1130,9 @@ public final class Sample {
 
       @Override
       public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
         if (extensionRegistry == null) {
           throw new NullPointerException();
         }
@@ -1068,22 +1164,25 @@ public final class Sample {
         } // finally
         return this;
       }
+
       private int bitField0_;
 
       private Object message_ = "";
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string message = 1;</code>
+       *
        * @return The message.
        */
       public String getMessage() {
         Object ref = message_;
         if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           message_ = s;
           return s;
@@ -1091,50 +1190,58 @@ public final class Sample {
           return (String) ref;
         }
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string message = 1;</code>
+       *
        * @return The bytes for message.
        */
       public com.google.protobuf.ByteString
-          getMessageBytes() {
+      getMessageBytes() {
         Object ref = message_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
           message_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string message = 1;</code>
+       *
        * @param value The message to set.
        * @return This builder for chaining.
        */
       public Builder setMessage(
-          String value) {
-        if (value == null) { throw new NullPointerException(); }
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         message_ = value;
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string message = 1;</code>
+       *
        * @return This builder for chaining.
        */
       public Builder clearMessage() {
@@ -1143,33 +1250,38 @@ public final class Sample {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Rendered message.
        * </pre>
        *
        * <code>string message = 1;</code>
+       *
        * @param value The bytes for message to set.
        * @return This builder for chaining.
        */
       public Builder setMessageBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         checkByteStringIsUtf8(value);
         message_ = value;
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
+
       @Override
       public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @Override
       public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -1179,6 +1291,7 @@ public final class Sample {
 
     // @@protoc_insertion_point(class_scope:elide.grpctest.SampleResponse)
     private static final SampleResponse DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new SampleResponse();
     }
@@ -1188,12 +1301,12 @@ public final class Sample {
     }
 
     private static final com.google.protobuf.Parser<SampleResponse>
-        PARSER = new com.google.protobuf.AbstractParser<SampleResponse>() {
+            PARSER = new com.google.protobuf.AbstractParser<SampleResponse>() {
       @Override
       public SampleResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
         Builder builder = newBuilder();
         try {
           builder.mergeFrom(input, extensionRegistry);
@@ -1203,7 +1316,7 @@ public final class Sample {
           throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
         } catch (java.io.IOException e) {
           throw new com.google.protobuf.InvalidProtocolBufferException(e)
-              .setUnfinishedMessage(builder.buildPartial());
+                  .setUnfinishedMessage(builder.buildPartial());
         }
         return builder.buildPartial();
       }
@@ -1226,8 +1339,8 @@ public final class Sample {
   }
 
   public interface StatusRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:elide.grpctest.StatusRequest)
-      com.google.protobuf.MessageOrBuilder {
+          // @@protoc_insertion_point(interface_extends:elide.grpctest.StatusRequest)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -1235,33 +1348,37 @@ public final class Sample {
      * </pre>
      *
      * <code>int32 statusCode = 1;</code>
+     *
      * @return The statusCode.
      */
     int getStatusCode();
   }
+
   /**
    * <pre>
    * Request to return an error of a given status code.
    * </pre>
-   *
+   * <p>
    * Protobuf type {@code elide.grpctest.StatusRequest}
    */
   public static final class StatusRequest extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:elide.grpctest.StatusRequest)
-      StatusRequestOrBuilder {
-  private static final long serialVersionUID = 0L;
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:elide.grpctest.StatusRequest)
+          StatusRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+
     // Use StatusRequest.newBuilder() to construct.
     private StatusRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private StatusRequest() {
     }
 
     @Override
     @SuppressWarnings({"unused"})
     protected Object newInstance(
-        UnusedPrivateParameter unused) {
+            UnusedPrivateParameter unused) {
       return new StatusRequest();
     }
 
@@ -1270,27 +1387,30 @@ public final class Sample {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return Sample.internal_static_elide_grpctest_StatusRequest_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return Sample.internal_static_elide_grpctest_StatusRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              StatusRequest.class, Builder.class);
+              .ensureFieldAccessorsInitialized(
+                      StatusRequest.class, Builder.class);
     }
 
     public static final int STATUSCODE_FIELD_NUMBER = 1;
     private int statusCode_ = 0;
+
     /**
      * <pre>
      * Status code for the error to throw.
      * </pre>
      *
      * <code>int32 statusCode = 1;</code>
+     *
      * @return The statusCode.
      */
     @Override
@@ -1299,6 +1419,7 @@ public final class Sample {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1311,7 +1432,7 @@ public final class Sample {
 
     @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+            throws java.io.IOException {
       if (statusCode_ != 0) {
         output.writeInt32(1, statusCode_);
       }
@@ -1326,7 +1447,7 @@ public final class Sample {
       size = 0;
       if (statusCode_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, statusCode_);
+                .computeInt32Size(1, statusCode_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -1336,7 +1457,7 @@ public final class Sample {
     @Override
     public boolean equals(final Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof StatusRequest)) {
         return super.equals(obj);
@@ -1344,7 +1465,7 @@ public final class Sample {
       StatusRequest other = (StatusRequest) obj;
 
       if (getStatusCode()
-          != other.getStatusCode()) return false;
+              != other.getStatusCode()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -1364,117 +1485,134 @@ public final class Sample {
     }
 
     public static StatusRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static StatusRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static StatusRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static StatusRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static StatusRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static StatusRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static StatusRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
+
     public static StatusRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static StatusRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+              .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static StatusRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static StatusRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
+
     public static StatusRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(StatusRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+            BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      * Request to return an error of a given status code.
      * </pre>
-     *
+     * <p>
      * Protobuf type {@code elide.grpctest.StatusRequest}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:elide.grpctest.StatusRequest)
-        StatusRequestOrBuilder {
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:elide.grpctest.StatusRequest)
+            StatusRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return Sample.internal_static_elide_grpctest_StatusRequest_descriptor;
       }
 
       @Override
       protected FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return Sample.internal_static_elide_grpctest_StatusRequest_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                StatusRequest.class, Builder.class);
+                .ensureFieldAccessorsInitialized(
+                        StatusRequest.class, Builder.class);
       }
 
       // Construct using elide.grpctest.Sample.StatusRequest.newBuilder()
@@ -1483,10 +1621,11 @@ public final class Sample {
       }
 
       private Builder(
-          BuilderParent parent) {
+              BuilderParent parent) {
         super(parent);
 
       }
+
       @Override
       public Builder clear() {
         super.clear();
@@ -1497,7 +1636,7 @@ public final class Sample {
 
       @Override
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return Sample.internal_static_elide_grpctest_StatusRequest_descriptor;
       }
 
@@ -1518,7 +1657,9 @@ public final class Sample {
       @Override
       public StatusRequest buildPartial() {
         StatusRequest result = new StatusRequest(this);
-        if (bitField0_ != 0) { buildPartial0(result); }
+        if (bitField0_ != 0) {
+          buildPartial0(result);
+        }
         onBuilt();
         return result;
       }
@@ -1534,38 +1675,44 @@ public final class Sample {
       public Builder clone() {
         return super.clone();
       }
+
       @Override
       public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.setField(field, value);
       }
+
       @Override
       public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @Override
       public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @Override
       public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @Override
       public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof StatusRequest) {
-          return mergeFrom((StatusRequest)other);
+          return mergeFrom((StatusRequest) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1589,9 +1736,9 @@ public final class Sample {
 
       @Override
       public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
         if (extensionRegistry == null) {
           throw new NullPointerException();
         }
@@ -1623,43 +1770,50 @@ public final class Sample {
         } // finally
         return this;
       }
+
       private int bitField0_;
 
-      private int statusCode_ ;
+      private int statusCode_;
+
       /**
        * <pre>
        * Status code for the error to throw.
        * </pre>
        *
        * <code>int32 statusCode = 1;</code>
+       *
        * @return The statusCode.
        */
       @Override
       public int getStatusCode() {
         return statusCode_;
       }
+
       /**
        * <pre>
        * Status code for the error to throw.
        * </pre>
        *
        * <code>int32 statusCode = 1;</code>
+       *
        * @param value The statusCode to set.
        * @return This builder for chaining.
        */
       public Builder setStatusCode(int value) {
-        
+
         statusCode_ = value;
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Status code for the error to throw.
        * </pre>
        *
        * <code>int32 statusCode = 1;</code>
+       *
        * @return This builder for chaining.
        */
       public Builder clearStatusCode() {
@@ -1668,15 +1822,16 @@ public final class Sample {
         onChanged();
         return this;
       }
+
       @Override
       public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @Override
       public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -1686,6 +1841,7 @@ public final class Sample {
 
     // @@protoc_insertion_point(class_scope:elide.grpctest.StatusRequest)
     private static final StatusRequest DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new StatusRequest();
     }
@@ -1695,12 +1851,12 @@ public final class Sample {
     }
 
     private static final com.google.protobuf.Parser<StatusRequest>
-        PARSER = new com.google.protobuf.AbstractParser<StatusRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<StatusRequest>() {
       @Override
       public StatusRequest parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
         Builder builder = newBuilder();
         try {
           builder.mergeFrom(input, extensionRegistry);
@@ -1710,7 +1866,7 @@ public final class Sample {
           throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
         } catch (java.io.IOException e) {
           throw new com.google.protobuf.InvalidProtocolBufferException(e)
-              .setUnfinishedMessage(builder.buildPartial());
+                  .setUnfinishedMessage(builder.buildPartial());
         }
         return builder.buildPartial();
       }
@@ -1733,72 +1889,74 @@ public final class Sample {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_elide_grpctest_SampleRequest_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_elide_grpctest_SampleRequest_fieldAccessorTable;
+          internal_static_elide_grpctest_SampleRequest_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_elide_grpctest_SampleRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_elide_grpctest_SampleResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_elide_grpctest_SampleResponse_fieldAccessorTable;
+          internal_static_elide_grpctest_SampleResponse_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_elide_grpctest_SampleResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_elide_grpctest_StatusRequest_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_elide_grpctest_StatusRequest_fieldAccessorTable;
+          internal_static_elide_grpctest_StatusRequest_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_elide_grpctest_StatusRequest_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+
+  private static com.google.protobuf.Descriptors.FileDescriptor
+          descriptor;
+
   static {
     String[] descriptorData = {
-      "\n\014sample.proto\022\016elide.grpctest\"\035\n\rSample" +
-      "Request\022\014\n\004name\030\001 \001(\t\"!\n\016SampleResponse\022" +
-      "\017\n\007message\030\001 \001(\t\"#\n\rStatusRequest\022\022\n\nsta" +
-      "tusCode\030\001 \001(\0052\373\004\n\rSampleService\022W\n\026Metho" +
-      "dThatTakesTooLong\022\035.elide.grpctest.Sampl" +
-      "eRequest\032\036.elide.grpctest.SampleResponse" +
-      "\022Q\n\020MethodThatErrors\022\035.elide.grpctest.St" +
-      "atusRequest\032\036.elide.grpctest.SampleRespo" +
-      "nse\022S\n\022MethodWithTrailers\022\035.elide.grpcte" +
-      "st.SampleRequest\032\036.elide.grpctest.Sample" +
-      "Response\022U\n\024MethodWithFatalError\022\035.elide" +
-      ".grpctest.SampleRequest\032\036.elide.grpctest" +
-      ".SampleResponse\022\\\n\033MethodWithMultipleRes" +
-      "ponses\022\035.elide.grpctest.SampleRequest\032\036." +
-      "elide.grpctest.SampleResponse\022Y\n\030MethodW" +
-      "ithNextAfterClose\022\035.elide.grpctest.Sampl" +
-      "eRequest\032\036.elide.grpctest.SampleResponse" +
-      "\022Y\n\030MethodWithNextAfterError\022\035.elide.grp" +
-      "ctest.SampleRequest\032\036.elide.grpctest.Sam" +
-      "pleResponseB\020\n\016elide.grpctestb\006proto3"
+            "\n\014sample.proto\022\016elide.grpctest\"\035\n\rSample" +
+                    "Request\022\014\n\004name\030\001 \001(\t\"!\n\016SampleResponse\022" +
+                    "\017\n\007message\030\001 \001(\t\"#\n\rStatusRequest\022\022\n\nsta" +
+                    "tusCode\030\001 \001(\0052\373\004\n\rSampleService\022W\n\026Metho" +
+                    "dThatTakesTooLong\022\035.elide.grpctest.Sampl" +
+                    "eRequest\032\036.elide.grpctest.SampleResponse" +
+                    "\022Q\n\020MethodThatErrors\022\035.elide.grpctest.St" +
+                    "atusRequest\032\036.elide.grpctest.SampleRespo" +
+                    "nse\022S\n\022MethodWithTrailers\022\035.elide.grpcte" +
+                    "st.SampleRequest\032\036.elide.grpctest.Sample" +
+                    "Response\022U\n\024MethodWithFatalError\022\035.elide" +
+                    ".grpctest.SampleRequest\032\036.elide.grpctest" +
+                    ".SampleResponse\022\\\n\033MethodWithMultipleRes" +
+                    "ponses\022\035.elide.grpctest.SampleRequest\032\036." +
+                    "elide.grpctest.SampleResponse\022Y\n\030MethodW" +
+                    "ithNextAfterClose\022\035.elide.grpctest.Sampl" +
+                    "eRequest\032\036.elide.grpctest.SampleResponse" +
+                    "\022Y\n\030MethodWithNextAfterError\022\035.elide.grp" +
+                    "ctest.SampleRequest\032\036.elide.grpctest.Sam" +
+                    "pleResponseB\020\n\016elide.grpctestb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
+            .internalBuildGeneratedFileFrom(descriptorData,
+                    new com.google.protobuf.Descriptors.FileDescriptor[]{
+                    });
     internal_static_elide_grpctest_SampleRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+            getDescriptor().getMessageTypes().get(0);
     internal_static_elide_grpctest_SampleRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_elide_grpctest_SampleRequest_descriptor,
-        new String[] { "Name", });
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_elide_grpctest_SampleRequest_descriptor,
+            new String[]{"Name",});
     internal_static_elide_grpctest_SampleResponse_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+            getDescriptor().getMessageTypes().get(1);
     internal_static_elide_grpctest_SampleResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_elide_grpctest_SampleResponse_descriptor,
-        new String[] { "Message", });
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_elide_grpctest_SampleResponse_descriptor,
+            new String[]{"Message",});
     internal_static_elide_grpctest_StatusRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+            getDescriptor().getMessageTypes().get(2);
     internal_static_elide_grpctest_StatusRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_elide_grpctest_StatusRequest_descriptor,
-        new String[] { "StatusCode", });
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_elide_grpctest_StatusRequest_descriptor,
+            new String[]{"StatusCode",});
   }
 
   // @@protoc_insertion_point(outer_class_scope)

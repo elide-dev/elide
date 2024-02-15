@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -73,7 +73,7 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
   @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
     RUBY,
-    { runtimeInfo.get() }
+    { runtimeInfo.get() },
   )
 
   @Inject lateinit var rubyConfig: RubyConfig

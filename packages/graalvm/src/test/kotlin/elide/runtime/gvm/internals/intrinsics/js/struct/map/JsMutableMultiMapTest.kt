@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -49,8 +49,8 @@ import elide.testing.annotations.TestCase
     JsMutableMultiMap.unboundedEntries(entries)
 
   /** @inheritDoc */
-  override fun spawnUnboundedJsEntries(entries: Iterable<MapLike.Entry<String, Any?>>): JsMutableMultiMap<String, Any?>
-    = JsMutableMultiMap.unbounded(entries)
+  override fun spawnUnboundedJsEntries(entries: Iterable<MapLike.Entry<String, Any?>>): JsMutableMultiMap<String, Any?> =
+    JsMutableMultiMap.unbounded(entries)
 
   /** @inheritDoc */
   override fun implName(): String = "JsMutableMultiMap"

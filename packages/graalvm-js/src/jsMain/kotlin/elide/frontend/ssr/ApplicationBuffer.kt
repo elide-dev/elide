@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -52,16 +52,18 @@ public typealias RenderCallback = (ResponseChunk) -> Unit
 /**
  *
  */
-public class ApplicationBuffer constructor (private val app: ReactElement<*>, private val stream: Boolean = true) {
+public class ApplicationBuffer constructor(private val app: ReactElement<*>, private val stream: Boolean = true) {
   // Whether we have finished streaming.
   private var fin: Boolean = false
 
   // Call the `emitter` with a well-formed `ResponseChunk`.
   private fun finishStream(statusCode: Int, emitter: (ResponseChunk) -> Unit) {
-    emitter.invoke(jso {
-      status = statusCode
-      fin = true
-    })
+    emitter.invoke(
+      jso {
+        status = statusCode
+        fin = true
+      },
+    )
   }
 
   private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
@@ -73,11 +75,13 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
       if (rawContent != null && rawContent.isNotEmpty()) {
         resolved = true  // we're handling a content chunk
         val decoded = rawContent.decodeToString()
-        emitter.invoke(jso {
-          content = decoded
-          fin = false
-          hasContent = decoded.isNotBlank()
-        })
+        emitter.invoke(
+          jso {
+            content = decoded
+            fin = false
+            hasContent = decoded.isNotBlank()
+          },
+        )
       }
 
       if (chunk.done) {
@@ -93,7 +97,7 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
       if (!resolved) {
         console.error(
           "Failed to read chunk from stream: got `null` or empty content. Got value: ",
-          JSON.stringify(value)
+          JSON.stringify(value),
         )
         finishStream(500, emitter)
       }

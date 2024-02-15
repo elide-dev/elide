@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,7 +29,7 @@ import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as UR
  * @see JsMicronautRequestExecutionInputs for an implementation of this input shape based on Micronaut types.
  * @param state State ("props") provided for a single execution run against these inputs.
  */
-internal abstract class JsServerRequestExecutionInputs<Request: Any> (
+internal abstract class JsServerRequestExecutionInputs<Request : Any>(
   private val state: Any? = null,
 ) : RequestExecutionInputs<Request>, FetchRequest {
   /** Internal indicator of whether the request body stream has been consumed. */
@@ -48,11 +48,12 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
    *
    * See also: [MDN, Request.body](https://developer.mozilla.org/en-US/docs/Web/API/Request/body).
    */
-  override val body: ReadableStream? get() = if (!hasBody()) {
-    null  // no data available for body
-  } else {
-    ReadableStream.wrap(requestBody())
-  }
+  override val body: ReadableStream?
+    get() = if (!hasBody()) {
+      null  // no data available for body
+    } else {
+      ReadableStream.wrap(requestBody())
+    }
 
   /**
    * ## Request: Body usage.
@@ -95,9 +96,10 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
    *
    * See also: [MDN, Request.headers](https://developer.mozilla.org/en-US/docs/Web/API/Request/headers).
    */
-  override val headers: FetchHeaders get() = FetchHeaders.fromMultiMap(
-    requestHeaders()
-  )
+  override val headers: FetchHeaders
+    get() = FetchHeaders.fromMultiMap(
+      requestHeaders(),
+    )
 
   /**
    * ## Request: URL.

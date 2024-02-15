@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,19 +21,19 @@ import elide.data.DataFingerprint
 import elide.proto.api.data.DataFingerprint as IDataFingerprint
 
 /** TBD. */
-public class FlatDataFingerprint private constructor (private val fingerprint: DataFingerprint) : IDataFingerprint<
-  FlatDataFingerprint,
-  FlatDataFingerprint.Builder,
-  FlatHashAlgorithm,
-  FlatEncoding,
-> {
+public class FlatDataFingerprint private constructor(private val fingerprint: DataFingerprint) : IDataFingerprint<
+        FlatDataFingerprint,
+        FlatDataFingerprint.Builder,
+        FlatHashAlgorithm,
+        FlatEncoding,
+        > {
   /** TBD. */
   public class Builder : IDataFingerprint.IBuilder<
-    FlatDataFingerprint,
-    FlatHashAlgorithm,
-    FlatEncoding,
-    Builder,
-  > {
+          FlatDataFingerprint,
+          FlatHashAlgorithm,
+          FlatEncoding,
+          Builder,
+          > {
     override var fingerprint: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
@@ -77,11 +77,11 @@ public class FlatDataFingerprint private constructor (private val fingerprint: D
 
   /** Factory for protocol buffer-backed data containers. */
   public companion object Factory : IDataFingerprint.Factory<
-    FlatDataFingerprint,
-    Builder,
-    FlatHashAlgorithm,
-    FlatEncoding,
-  > {
+          FlatDataFingerprint,
+          Builder,
+          FlatHashAlgorithm,
+          FlatEncoding,
+          > {
     override fun empty(): FlatDataFingerprint {
       TODO("Not yet implemented")
     }

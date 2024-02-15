@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,13 +17,14 @@ import elide.runtime.LogLevel
 
 
 /** @return SLF4J (JVM) equivalent of the current log level. */
-public val LogLevel.jvmLevel: org.slf4j.event.Level get() = when (this) {
-  LogLevel.TRACE -> org.slf4j.event.Level.TRACE
-  LogLevel.DEBUG -> org.slf4j.event.Level.DEBUG
-  LogLevel.WARN -> org.slf4j.event.Level.WARN
-  LogLevel.INFO -> org.slf4j.event.Level.INFO
-  LogLevel.ERROR -> org.slf4j.event.Level.ERROR
-}
+public val LogLevel.jvmLevel: org.slf4j.event.Level
+  get() = when (this) {
+    LogLevel.TRACE -> org.slf4j.event.Level.TRACE
+    LogLevel.DEBUG -> org.slf4j.event.Level.DEBUG
+    LogLevel.WARN -> org.slf4j.event.Level.WARN
+    LogLevel.INFO -> org.slf4j.event.Level.INFO
+    LogLevel.ERROR -> org.slf4j.event.Level.ERROR
+  }
 
 /** @return Whether the provided [logger] enables the current log level. */
 public fun LogLevel.isEnabled(logger: org.slf4j.Logger): Boolean = when (this) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -44,14 +44,14 @@ private fun <AppProps : Props> renderApp(fragment: ReactElement<*>, props: AppPr
     console.log("Hydrating DOM (SSR active)", props)
     hydrateRoot(
       container,
-      fragment
+      fragment,
     )
   } else {
     console.log("Rendering client-side", props)
     createRoot(
-      container
+      container,
     ).render(
-      fragment
+      fragment,
     )
   }
 }

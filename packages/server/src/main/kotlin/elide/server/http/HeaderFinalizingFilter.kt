@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -60,7 +60,7 @@ import java.util.*
    * @param baseResponse HTTP response which was produced by the server.
    * @return Original HTTP response, but with finalized headers.
    */
-  @VisibleForTesting internal fun finalizeHeaders(baseResponse:  MutableHttpResponse<*>): MutableHttpResponse<*> {
+  @VisibleForTesting internal fun finalizeHeaders(baseResponse: MutableHttpResponse<*>): MutableHttpResponse<*> {
     // sort current headers
     val response = baseResponse as? NettyMutableHttpResponse<*> ?: return baseResponse
     val sortedHeaders = TreeSet<String>()

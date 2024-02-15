@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -42,11 +42,11 @@ import elide.runtime.gvm.internals.GuestVFS
  * @param config Effective guest VFS configuration to apply.
  * @param backing Backing file-system instance which implements the FS to use.
  */
-internal abstract class AbstractDelegateVFS<VFS> protected constructor (
+internal abstract class AbstractDelegateVFS<VFS> protected constructor(
   config: EffectiveGuestVFSConfig,
   protected val backing: FileSystem,
   private val activeWorkingDirectory: AtomicReference<Path> = AtomicReference(Path.of(config.workingDirectory)),
-) : GuestVFS, AbstractBaseVFS<VFS>(config) where VFS: AbstractBaseVFS<VFS> {
+) : GuestVFS, AbstractBaseVFS<VFS>(config) where VFS : AbstractBaseVFS<VFS> {
   internal companion object {
     /** Translate an [AccessMode] to an [AccessType]. */
     fun AccessMode.toAccessType(): AccessType = when (this) {
@@ -171,7 +171,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
       backing.provider().newByteChannel(
         path,
         options,
-        *attrs
+        *attrs,
       )
     } catch (thr: Throwable) {
       val stacktrace = thr.printStackTrace()

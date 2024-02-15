@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,42 +24,47 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class Timestamp : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): Timestamp {
+    __init(_i, _bb)
+    return this
+  }
+
+  val seconds: Long
+    get() {
+      val o = __offset(4)
+      return if (o != 0) bb.getLong(o + bb_pos) else 0L
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Timestamp {
-        __init(_i, _bb)
-        return this
+  val nanos: Int
+    get() {
+      val o = __offset(6)
+      return if (o != 0) bb.getInt(o + bb_pos) else 0
     }
-    val seconds : Long
-        get() {
-            val o = __offset(4)
-            return if(o != 0) bb.getLong(o + bb_pos) else 0L
-        }
-    val nanos : Int
-        get() {
-            val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsTimestamp(_bb: ByteBuffer): Timestamp = getRootAsTimestamp(_bb, Timestamp())
-        fun getRootAsTimestamp(_bb: ByteBuffer, obj: Timestamp): Timestamp {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createTimestamp(builder: FlatBufferBuilder, seconds: Long, nanos: Int) : Int {
-            builder.startTable(2)
-            addSeconds(builder, seconds)
-            addNanos(builder, nanos)
-            return endTimestamp(builder)
-        }
-        fun startTimestamp(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addSeconds(builder: FlatBufferBuilder, seconds: Long) = builder.addLong(0, seconds, 0L)
-        fun addNanos(builder: FlatBufferBuilder, nanos: Int) = builder.addInt(1, nanos, 0)
-        fun endTimestamp(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsTimestamp(_bb: ByteBuffer): Timestamp = getRootAsTimestamp(_bb, Timestamp())
+    fun getRootAsTimestamp(_bb: ByteBuffer, obj: Timestamp): Timestamp {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
+
+    fun createTimestamp(builder: FlatBufferBuilder, seconds: Long, nanos: Int): Int {
+      builder.startTable(2)
+      addSeconds(builder, seconds)
+      addNanos(builder, nanos)
+      return endTimestamp(builder)
+    }
+
+    fun startTimestamp(builder: FlatBufferBuilder) = builder.startTable(2)
+    fun addSeconds(builder: FlatBufferBuilder, seconds: Long) = builder.addLong(0, seconds, 0L)
+    fun addNanos(builder: FlatBufferBuilder, nanos: Int) = builder.addInt(1, nanos, 0)
+    fun endTimestamp(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
+    }
+  }
 }

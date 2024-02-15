@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -28,21 +28,21 @@ internal class EngineFactoryTest {
     var engineCreationIntercepted = false
     var contextCreationIntercepted = false
     var configurationCalled = false
-    
+
     val plugin = object : EnginePlugin<Unit, Unit> {
       override val key: Key<Unit> = Key("TestPlugin")
 
       override fun install(scope: EnginePlugin.InstallationScope, configuration: Unit.() -> Unit) {
         configuration(Unit)
-        
+
         scope.lifecycle.on(EngineCreated) { engineCreationIntercepted = true }
         scope.lifecycle.on(ContextCreated) { contextCreationIntercepted = true }
       }
     }
-    
+
     val engine = PolyglotEngine { install(plugin) { configurationCalled = true } }
     val context = engine.acquire()
-    
+
     assertIs<GraalVMEngine>(engine, "should return a GraalVM engine implementation")
     assertIs<GraalVMContext>(context, "should return a GraalVM context implementation")
     assertTrue(engineCreationIntercepted, "plugin should receive engine creation event")

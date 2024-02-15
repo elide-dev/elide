@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,8 +16,8 @@ package elide.tool.testing
 /**
  * TBD.
  */
-abstract class TestRunner<Test, Context>: Runnable, TestCase<Test, Context>
-        where Context: TestContext, Test: Testable<Context> {
+abstract class TestRunner<Test, Context> : Runnable, TestCase<Test, Context>
+        where Context : TestContext, Test : Testable<Context> {
   /**
    * Run a single test.
    */

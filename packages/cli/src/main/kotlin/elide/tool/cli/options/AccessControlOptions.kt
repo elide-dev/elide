@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -35,7 +35,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
   }
 
   /** Sandbox and isolation settings. */
-  @Serializable @JvmRecord data class SandboxSettings (
+  @Serializable @JvmRecord data class SandboxSettings(
     /** Whether to run guest code in isolates, where supported. */
     val isolates: Boolean = DEFAULT_ISOLATES,
   ) {
@@ -46,7 +46,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
   }
 
   /** Host access settings. */
-  @Serializable @JvmRecord data class HostAccessSettings (
+  @Serializable @JvmRecord data class HostAccessSettings(
     /** Whether to allow all host access. */
     val allowAll: Boolean = DEFAULT_ALLOW_ALL,
 
@@ -136,6 +136,6 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
       allowAll = allowAll,
       allowIo = allowIo,
       allowEnv = allowEnv,
-    )
+    ),
   )
 }

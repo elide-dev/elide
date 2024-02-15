@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -40,10 +40,10 @@ internal class AbstractLanguagePluginTest {
         EmbeddedResource(
           path = "/META-INF/elide/embedded/runtime/testLang/sample-vfs.tar.gz",
           platform = null,
-        )
+        ),
       ),
       actual = resources.bundles,
-      message = "should read embedded bundle paths"
+      message = "should read embedded bundle paths",
     )
 
     assertContentEquals(
@@ -51,10 +51,10 @@ internal class AbstractLanguagePluginTest {
         EmbeddedResource(
           path = "/META-INF/elide/embedded/runtime/testLang/setup.txt",
           platform = null,
-        )
+        ),
       ),
       actual = resources.scripts,
-      message = "should read embedded setup script paths"
+      message = "should read embedded setup script paths",
     )
   }
 }

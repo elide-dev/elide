@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -62,14 +62,14 @@ class ResponseDeframer {
       if (returnPos == -1) {
         throw IllegalStateException(
           "Failed to decode trailer key/value pair: carriage return not found in offset input: " +
-          "Base64(${Base64.getEncoder().encodeToString(offsetInput)}) from original input " +
-          "Base64(${Base64.getEncoder().encodeToString(input)}) with key slice position '${keyPos}'"
+                  "Base64(${Base64.getEncoder().encodeToString(offsetInput)}) from original input " +
+                  "Base64(${Base64.getEncoder().encodeToString(input)}) with key slice position '${keyPos}'",
         )
       }
 
       // extract bytes for the value
       val valueBytes = offsetInput.slice(
-        (keyPos + 1) until returnPos
+        (keyPos + 1) until returnPos,
       ).toByteArray()
       trailerDataReadSoFar += (returnPos - keyPos) + 1
 
@@ -78,7 +78,7 @@ class ResponseDeframer {
         // it's a binary trailer: decode the value as raw bytes.
         val metadataKey = Metadata.Key.of(
           key,
-          Metadata.BINARY_BYTE_MARSHALLER
+          Metadata.BINARY_BYTE_MARSHALLER,
         )
         trailers.put(
           metadataKey,
@@ -88,11 +88,11 @@ class ResponseDeframer {
         // it's a text trailer: decode the value as a UTF-8 string.
         val metadataKey = Metadata.Key.of(
           key,
-          Metadata.ASCII_STRING_MARSHALLER
+          Metadata.ASCII_STRING_MARSHALLER,
         )
         trailers.put(
           metadataKey,
-          String(valueBytes, StandardCharsets.UTF_8)
+          String(valueBytes, StandardCharsets.UTF_8),
         )
 
         // special case: if it's the status header, interpret it
@@ -102,7 +102,7 @@ class ResponseDeframer {
             Integer.parseInt(String(valueBytes, StandardCharsets.UTF_8))
           } catch (err: IllegalArgumentException) {
             throw IllegalArgumentException(
-              "Failed to decode header value as status code: '${String(valueBytes, StandardCharsets.UTF_8)}'"
+              "Failed to decode header value as status code: '${String(valueBytes, StandardCharsets.UTF_8)}'",
             )
           }
 
@@ -111,7 +111,7 @@ class ResponseDeframer {
           }
           assertNotNull(
             statusValue,
-            "should get resolvable gRPC status value back from status code trailer"
+            "should get resolvable gRPC status value back from status code trailer",
           )
           status = Status.fromCode(statusValue)
         }
@@ -120,7 +120,7 @@ class ResponseDeframer {
     }
     throw IllegalStateException(
       "Failed to decode trailer key/value pair: key separator (`:`) not found in input: " +
-      "Base64(${Base64.getEncoder().encodeToString(input)})"
+              "Base64(${Base64.getEncoder().encodeToString(input)})",
     )
   }
 
@@ -129,7 +129,7 @@ class ResponseDeframer {
     val firstByte: Int = (input[0] xor RpcSymbol.TRAILER.value).toInt()
     return if (firstByte != 0) {
       throw IllegalStateException(
-        "Trailer portion of response body did not start with TRAILER symbol byte"
+        "Trailer portion of response body did not start with TRAILER symbol byte",
       )
     } else {
       // grab next 4 bytes, which is the length of the trailer data stanza
@@ -138,15 +138,15 @@ class ResponseDeframer {
 
       if (len == 0) {
         throw IllegalStateException(
-          "gRPC Web responses must contain a trailer portion with their status, but found no trailer (size=0)"
+          "gRPC Web responses must contain a trailer portion with their status, but found no trailer (size=0)",
         )
       }
       // we expect to see the prefix, plus the trailer size, plus the offset (ignoring symbolic bytes)
       val expectedNumBytes = len + 5 + trailerDataReadSoFar
       if (input.size != expectedNumBytes) {
-       throw IllegalStateException(
-         "Wrong number of bytes reported for trailer (expected $expectedNumBytes, but got ${input.size})"
-       )
+        throw IllegalStateException(
+          "Wrong number of bytes reported for trailer (expected $expectedNumBytes, but got ${input.size})",
+        )
       }
 
       // advance to skip over the length tag
@@ -168,7 +168,7 @@ class ResponseDeframer {
     return if (firstByteValue != 0) {
       if (firstByteIsTrailers == 0) {
         decodeTrailerStanza(
-          input.slice(readSoFar until input.size).toByteArray()
+          input.slice(readSoFar until input.size).toByteArray(),
         )
       } else {
         false  // terminate, stream is done and the next portion isn't a trailer
@@ -190,7 +190,7 @@ class ResponseDeframer {
         if (input.size < expectedNumBytes) {
           throw IllegalStateException(
             "Input stream did not provide enough bytes for decoding as gRPC-Web. " +
-            "Expected: $expectedNumBytes, but found ${input.size}."
+                    "Expected: $expectedNumBytes, but found ${input.size}.",
           )
         } else {
           // read `len` into message
@@ -238,7 +238,7 @@ class ResponseDeframer {
     // check minimum stream size
     if (messageBytes.size < 5) {
       throw IllegalStateException(
-        "Stream was too short: expected at least 5 bytes, but got '${messageBytes.size}'"
+        "Stream was too short: expected at least 5 bytes, but got '${messageBytes.size}'",
       )
     }
 

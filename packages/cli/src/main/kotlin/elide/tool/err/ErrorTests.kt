@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -36,15 +36,17 @@ import elide.tool.testing.TestContext
     DefaultStructuredErrorRecorder.acquire()
   }.let { recorder ->
     assertNotNull(recorder, "should be able to acquire the error recorder")
-    recorder.recordError(ErrorEvent.of(
-      IllegalArgumentException("test - test - test"),
-      ErrorContext.DEFAULT.copy(
-        uuid = uuid4(),
-        fatal = false,
-        guest = false,
-        thread = Thread.currentThread(),
-      )
-    )).join()
+    recorder.recordError(
+      ErrorEvent.of(
+        IllegalArgumentException("test - test - test"),
+        ErrorContext.DEFAULT.copy(
+          uuid = uuid4(),
+          fatal = false,
+          guest = false,
+          thread = Thread.currentThread(),
+        ),
+      ),
+    ).join()
   }
 }
 

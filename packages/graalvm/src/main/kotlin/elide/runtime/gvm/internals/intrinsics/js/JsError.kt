@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,13 +24,13 @@ import elide.runtime.intrinsics.js.err.ValueError
 @Suppress("unused") internal object JsError {
   // Wrap a caught `Throwable` in the provided JS error `type`.
   @Suppress("UNCHECKED_CAST")
-  private fun <E: AbstractJSException> wrapped(error: Throwable, type: KClass<out E>): E {
+  private fun <E : AbstractJSException> wrapped(error: Throwable, type: KClass<out E>): E {
     return (type.companionObjectInstance as AbstractJSException.ErrorFactory<E>).create(error)
   }
 
   // Wrap a string `message` and optional `Throwable` `cause` in the provided JS error `type`.
   @Suppress("UNCHECKED_CAST")
-  private fun <E: AbstractJSException> wrapped(message: String, cause: Throwable? = null, type: KClass<out E>): E {
+  private fun <E : AbstractJSException> wrapped(message: String, cause: Throwable? = null, type: KClass<out E>): E {
     return (type.companionObjectInstance as AbstractJSException.ErrorFactory<E>).create(message, cause)
   }
 
@@ -110,7 +110,7 @@ import elide.runtime.intrinsics.js.err.ValueError
    * TBD.
    */
   @Throws(Error::class)
-  fun <R: Any> jsErrors(op: () -> R): R {
+  fun <R : Any> jsErrors(op: () -> R): R {
     return try {
       op.invoke()
     } catch (value: IllegalArgumentException) {

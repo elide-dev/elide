@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ class GraalVMRuntimeTest {
       "20.0.2+9-jvmci-23.0-b14" to GraalVMRuntime.GVM_23,
       "21+35-jvmci-23.1-b15" to GraalVMRuntime.GVM_23_1,
     )
-    
+
     for ((source, version) in cases) assertEquals(
       expected = version,
       actual = GraalVMRuntime.resolveVersion(source),

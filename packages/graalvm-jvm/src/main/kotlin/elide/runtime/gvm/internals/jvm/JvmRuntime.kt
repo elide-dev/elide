@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,7 +14,6 @@
 package elide.runtime.gvm.internals.jvm
 
 import io.micronaut.context.annotation.Requires
-import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
@@ -33,6 +32,7 @@ import elide.runtime.gvm.internals.GraalVMGuest.JVM
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.jvm.cfg.JvmRuntimeConfig
+import org.graalvm.polyglot.Context as VMContext
 
 /**
  * TBD.
@@ -69,9 +69,10 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
   }
 
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class PythonRuntimeVFSConfigurator : GuestVFSConfigurator(
+  @Singleton @Context
+  class PythonRuntimeVFSConfigurator : GuestVFSConfigurator(
     JVM,
-    { runtimeInfo.get() }
+    { runtimeInfo.get() },
   )
 
   /** Python-specific engine configuration. */
@@ -100,11 +101,7 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
     // nothing at this time
   }
 
-  override fun resolve(
-    context: VMContext,
-    script: JvmExecutableScript,
-    mode: DispatchStyle?
-  ): JvmInvocationBindings {
+  override fun resolve(context: VMContext, script: JvmExecutableScript, mode: DispatchStyle?): JvmInvocationBindings {
     TODO("Not yet implemented")
   }
 

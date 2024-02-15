@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import elide.runtime.intrinsics.js.MapLike
 import elide.vm.annotations.Polyglot
 
 /** Base implementation of a regular (non-mutable) JS map which is backed by a Java map. */
-public sealed class BaseJsMap<K: Any, V> (
+public sealed class BaseJsMap<K : Any, V>(
   protected var backingMap: Map<K, V>,
   threadsafe: Boolean = false,
   multi: Boolean = false,
@@ -34,7 +34,7 @@ public sealed class BaseJsMap<K: Any, V> (
 ), Map<K, V> {
   internal companion object {
     // Wrap the provided key and value in a `MapLike.Entry`.
-    internal fun <K: Any, V> entry(k: K, v: V): MapLike.Entry<K, V> = object : MapLike.Entry<K, V> {
+    internal fun <K : Any, V> entry(k: K, v: V): MapLike.Entry<K, V> = object : MapLike.Entry<K, V> {
       override val key: K = k
       override val value: V = v
     }
@@ -99,7 +99,7 @@ public sealed class BaseJsMap<K: Any, V> (
   @Polyglot override fun entries(): JsIterator<MapLike.Entry<K, V>> = JsIteratorFactory.forIterator(
     backingMap.entries.stream().map {
       entry(it.key, it.value)
-    }.iterator()
+    }.iterator(),
   )
 
   /** @inheritDoc */

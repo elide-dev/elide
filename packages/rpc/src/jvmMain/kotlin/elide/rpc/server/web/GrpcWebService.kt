@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import kotlinx.coroutines.Deferred
  * On server startup, the `GrpcWebConfigurator` observes the creation of the [io.grpc.ServerBuilder] bean. At this time,
  * service definitions/bindings are captured and registered with [elide.rpc.server.RpcRuntime].
  */
-internal interface GrpcWebService: GrpcWebTransport {
+internal interface GrpcWebService : GrpcWebTransport {
   /**
    * Given a prepared and unfulfilled gRPC Web [call], and a prepared [interceptor] for a one-shot dispatch, fulfill the
    * call using the backing gRPC server managed by this service; provide a deferred return value which evaluates to the

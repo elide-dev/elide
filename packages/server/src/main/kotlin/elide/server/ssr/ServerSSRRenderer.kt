@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -44,7 +44,7 @@ import elide.vm.annotations.Polyglot
 
 /** Renderer class which executes JavaScript via SSR and provides the resulting response to Micronaut. */
 @Suppress("MemberVisibilityCanBePrivate", "unused", "SpreadOperator")
-public class ServerSSRRenderer (
+public class ServerSSRRenderer(
   private val body: BODY,
   private val handler: ElideController,
   private val request: HttpRequest<*>,
@@ -79,7 +79,7 @@ public class ServerSSRRenderer (
       if (props != null && serialized != null) {
         val subBuffer = StringBuilder()
         subBuffer.appendHTML().script(
-          type = "application/json"
+          type = "application/json",
         ) {
           attributes["id"] = ssrId
           unsafe {
@@ -91,7 +91,7 @@ public class ServerSSRRenderer (
       buf.toString()
     } else {
       StringBuilder("<!doctype html>").append(
-        op.invoke(JavaScript.Inputs.EMPTY, null)
+        op.invoke(JavaScript.Inputs.EMPTY, null),
       ).toString()
     }
   }
@@ -120,7 +120,7 @@ public class ServerSSRRenderer (
         val vm = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
           error("Failed to resolve JavaScript runtime provider")
         }.acquireVM(
-          GraalVMGuest.JAVASCRIPT  // @TODO(sgammon): don't hard-code this
+          GraalVMGuest.JAVASCRIPT,  // @TODO(sgammon): don't hard-code this
         )
 
         buffer.apply {
@@ -148,7 +148,7 @@ public class ServerSSRRenderer (
     val byteStream = ByteArrayOutputStream()
     byteStream.bufferedWriter(StandardCharsets.UTF_8).use {
       it.write(
-        renderSuspendAsync().await()
+        renderSuspendAsync().await(),
       )
     }
     return byteStream
@@ -165,7 +165,7 @@ public class ServerSSRRenderer (
     response: MutableHttpResponse<ByteArrayOutputStream>,
   ): MutableHttpResponse<ByteArrayOutputStream> {
     return response.body(
-      render()
+      render(),
     )
   }
 }

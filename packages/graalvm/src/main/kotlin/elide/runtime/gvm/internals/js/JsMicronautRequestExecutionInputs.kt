@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import elide.runtime.gvm.MicronautRequestExecutionInputs
 import elide.runtime.intrinsics.js.FetchRequest
 
 /** Implementation of JS execution inputs (a [FetchRequest]), based on a Micronaut [HttpRequest]. */
-internal class JsMicronautRequestExecutionInputs private constructor (
+internal class JsMicronautRequestExecutionInputs private constructor(
   private val request: HttpRequest<Any>,
   state: Any?,
 ) :

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -101,9 +101,9 @@ public object Streams {
    *
    */
   public object StreamStubImpl : StreamStub {
-    override val stdin  : InputStream = ByteArrayInputStream(ByteArray(0))
-    override val stdout : PrintStream = PrintStream(OutputStream.nullOutputStream())
-    override val stderr : PrintStream = PrintStream(OutputStream.nullOutputStream())
+    override val stdin: InputStream = ByteArrayInputStream(ByteArray(0))
+    override val stdout: PrintStream = PrintStream(OutputStream.nullOutputStream())
+    override val stderr: PrintStream = PrintStream(OutputStream.nullOutputStream())
   }
 
   /**

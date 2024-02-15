@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,24 +24,27 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class VirtualIOPolicy : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): VirtualIOPolicy {
+    __init(_i, _bb)
+    return this
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsVirtualIOPolicy(_bb: ByteBuffer): VirtualIOPolicy = getRootAsVirtualIOPolicy(_bb, VirtualIOPolicy())
+    fun getRootAsVirtualIOPolicy(_bb: ByteBuffer, obj: VirtualIOPolicy): VirtualIOPolicy {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : VirtualIOPolicy {
-        __init(_i, _bb)
-        return this
+
+    fun startVirtualIOPolicy(builder: FlatBufferBuilder) = builder.startTable(0)
+    fun endVirtualIOPolicy(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsVirtualIOPolicy(_bb: ByteBuffer): VirtualIOPolicy = getRootAsVirtualIOPolicy(_bb, VirtualIOPolicy())
-        fun getRootAsVirtualIOPolicy(_bb: ByteBuffer, obj: VirtualIOPolicy): VirtualIOPolicy {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun startVirtualIOPolicy(builder: FlatBufferBuilder) = builder.startTable(0)
-        fun endVirtualIOPolicy(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
-    }
+  }
 }

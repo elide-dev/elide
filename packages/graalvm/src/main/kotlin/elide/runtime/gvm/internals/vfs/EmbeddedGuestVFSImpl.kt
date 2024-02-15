@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -89,7 +89,7 @@ import elide.util.UUID
  */
 @Requires(property = "elide.gvm.vfs.enabled", notEquals = "false")
 @Requires(property = "elide.gvm.vfs.mode", notEquals = "HOST")
-internal class EmbeddedGuestVFSImpl private constructor (
+internal class EmbeddedGuestVFSImpl private constructor(
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
   private val tree: FilesystemInfo,
@@ -139,7 +139,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     config: EffectiveGuestVFSConfig,
     fsConfig: Configuration,
     tree: FilesystemInfo,
-  ) : this (
+  ) : this(
     config,
     buildFs(name, fsConfig),
     tree,
@@ -155,7 +155,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
    */
   internal constructor(
     config: EffectiveGuestVFSConfig,
-  ) : this (
+  ) : this(
     "elide-${UUID.random()}",
     config,
     config.buildFs().build(),
@@ -178,7 +178,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
    *   resources which should be fetched from the host app class-path.
    * @param files Files to load as file-system bundles.
    */
-  @Suppress("unused") internal data class Builder (
+  @Suppress("unused") internal data class Builder(
     override var readOnly: Boolean = true,
     override var caseSensitive: Boolean = true,
     override var enableSymlinks: Boolean = false,
@@ -589,6 +589,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         when (input.second) {
           BundleFormat.ELIDE_INTERNAL,
           BundleFormat.TARBALL -> TarArchiveInputStream(input.first) to input.second
+
           BundleFormat.TARBALL_XZ -> TarArchiveInputStream(XZCompressorInputStream(input.first)) to input.second
           BundleFormat.TARBALL_GZIP -> TarArchiveInputStream(GZIPInputStream(input.first)) to input.second
         }
@@ -635,12 +636,15 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** @return Bundle pair loaded from the provided single-file [target]. */
     @JvmStatic internal fun loadWithFileTarget(target: URI): Pair<FilesystemInfo, FileSystem> {
-      return FilesystemInfo.getDefaultInstance() to FileSystems.newFileSystem(target, mapOf(
-        "create" to "true",
-        "encoding" to "UTF-8",
-        "enablePosixFileAttributes" to "true",
-        "compressionMethod" to "STORED",
-      ))
+      return FilesystemInfo.getDefaultInstance() to FileSystems.newFileSystem(
+        target,
+        mapOf(
+          "create" to "true",
+          "encoding" to "UTF-8",
+          "enablePosixFileAttributes" to "true",
+          "compressionMethod" to "STORED",
+        ),
+      )
     }
 
     /** @return Bundle pair loaded from the provided [URI]. */
@@ -679,6 +683,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
             )
             filename to target
           }
+
           else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}' (URL: $path)")
         }
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -45,7 +45,7 @@ import elide.runtime.core.PolyglotEngineBuilder
  * Configure an option given its [key] and a boolean [value]. The value will be converted to `"true"` or `"false"`.
  */
 @DelicateElideApi public fun PolyglotEngineBuilder.setOption(key: String, value: Boolean) {
-  option(key, if(value) "true" else "false")
+  option(key, if (value) "true" else "false")
 }
 
 /**
@@ -55,5 +55,5 @@ import elide.runtime.core.PolyglotEngineBuilder
 @DelicateElideApi
 @JvmName("setBooleanOptions")
 public fun PolyglotEngineBuilder.setOptions(vararg options: Pair<String, Boolean>) {
-  options(options.associate { (key, value) -> key to if(value) "true" else "false" })
+  options(options.associate { (key, value) -> key to if (value) "true" else "false" })
 }

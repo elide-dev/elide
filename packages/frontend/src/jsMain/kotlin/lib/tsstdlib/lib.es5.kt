@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,6 +20,7 @@
   "FunctionName",
   "DEPRECATION",
 )
+
 package lib.tsstdlib
 
 import kotlin.js.Date
@@ -27,7 +28,16 @@ import kotlin.js.Date
 public external interface DateConstructor {
   public var prototype: Date
   public fun parse(s: String): Number
-  public fun UTC(year: Number, month: Number, date: Number = definedExternally, hours: Number = definedExternally, minutes: Number = definedExternally, seconds: Number = definedExternally, ms: Number = definedExternally): Number
+  public fun UTC(
+    year: Number,
+    month: Number,
+    date: Number = definedExternally,
+    hours: Number = definedExternally,
+    minutes: Number = definedExternally,
+    seconds: Number = definedExternally,
+    ms: Number = definedExternally
+  ): Number
+
   public fun now(): Number
 }
 
@@ -55,5 +65,8 @@ public external interface ErrorConstructor {
 }
 
 public external interface PromiseLike<T> {
-  public fun then(onfulfilled: ((value: T) -> Any?)? = definedExternally, onrejected: ((reason: Any) -> Any?)? = definedExternally): PromiseLike<dynamic /* TResult1 | TResult2 */>
+  public fun then(
+    onfulfilled: ((value: T) -> Any?)? = definedExternally,
+    onrejected: ((reason: Any) -> Any?)? = definedExternally
+  ): PromiseLike<dynamic /* TResult1 | TResult2 */>
 }

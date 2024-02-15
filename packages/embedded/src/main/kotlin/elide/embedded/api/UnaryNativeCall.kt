@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -32,13 +32,13 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  *
  */
-public class UnaryNativeCall private constructor (private val call: DecodedNativeCall) {
+public class UnaryNativeCall private constructor(private val call: DecodedNativeCall) {
   /**
    *
    */
   public class UnaryNativeRequestBuilder(
     private val builder: UnaryInvocationRequest.Builder = UnaryInvocationRequest.newBuilder(),
-  ): UnaryInvocationRequestOrBuilder by builder {
+  ) : UnaryInvocationRequestOrBuilder by builder {
     /**
      *
      */
@@ -118,11 +118,12 @@ public class UnaryNativeCall private constructor (private val call: DecodedNativ
     val request: UnaryInvocationRequest get() = invocation.request
 
     /** Response structure builder. */
-    val responseBuilder: UnaryInvocationResponse.Builder get() = responseData.get() ?: run {
-      val builder = UnaryInvocationResponse.newBuilder()
-      responseData.compareAndSet(null, builder)
-      builder
-    }
+    val responseBuilder: UnaryInvocationResponse.Builder
+      get() = responseData.get() ?: run {
+        val builder = UnaryInvocationResponse.newBuilder()
+        responseData.compareAndSet(null, builder)
+        builder
+      }
 
     /**
      *
@@ -140,12 +141,13 @@ public class UnaryNativeCall private constructor (private val call: DecodedNativ
   }
 
   /** Indicate the type of entrypoint this request is meant for. */
-  public val entrypointType: EntrypointType? get() = when (call.request.requestCase) {
-    UnaryInvocationRequest.RequestCase.FETCH -> EntrypointType.HTTP
-    UnaryInvocationRequest.RequestCase.SCHEDULED -> EntrypointType.SCHEDULED
-    UnaryInvocationRequest.RequestCase.QUEUE -> EntrypointType.QUEUE
-    else -> null
-  }
+  public val entrypointType: EntrypointType?
+    get() = when (call.request.requestCase) {
+      UnaryInvocationRequest.RequestCase.FETCH -> EntrypointType.HTTP
+      UnaryInvocationRequest.RequestCase.SCHEDULED -> EntrypointType.SCHEDULED
+      UnaryInvocationRequest.RequestCase.QUEUE -> EntrypointType.QUEUE
+      else -> null
+    }
 
   /** Call ID accessor. */
   public val callId: InFlightCallID get() = call.callId
@@ -200,10 +202,12 @@ public class UnaryNativeCall private constructor (private val call: DecodedNativ
     /**
      *
      */
-    @JvmStatic public fun create(callId: Long, mode: ProtocolMode): UnaryNativeCall = UnaryNativeCall(DecodedNativeCall(
-      id = callId,
-      mode = mode,
-    ))
+    @JvmStatic public fun create(callId: Long, mode: ProtocolMode): UnaryNativeCall = UnaryNativeCall(
+      DecodedNativeCall(
+        id = callId,
+        mode = mode,
+      ),
+    )
 
     /**
      *
@@ -213,14 +217,18 @@ public class UnaryNativeCall private constructor (private val call: DecodedNativ
       mode: ProtocolMode,
       builder: UnaryNativeRequestBuilder.() -> Unit = {},
     ): UnaryNativeCall {
-      return UnaryNativeCall(DecodedNativeCall(
-        id = callId,
-        mode = mode,
-        loaded = AtomicBoolean(true),
-        payload = AtomicReference(UnaryInvocation.newBuilder().apply {
-          request = UnaryNativeRequestBuilder().apply(builder).build()
-        }.build()),
-      ))
+      return UnaryNativeCall(
+        DecodedNativeCall(
+          id = callId,
+          mode = mode,
+          loaded = AtomicBoolean(true),
+          payload = AtomicReference(
+            UnaryInvocation.newBuilder().apply {
+              request = UnaryNativeRequestBuilder().apply(builder).build()
+            }.build(),
+          ),
+        ),
+      )
     }
 
     /**
@@ -233,7 +241,7 @@ public class UnaryNativeCall private constructor (private val call: DecodedNativ
         bytes = byteview,
       ).also {
         it.load()
-      }
+      },
     )
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -36,19 +36,19 @@ import elide.testing.annotations.TestCase
     }
     assertNotNull(
       manifest,
-      "loaded asset manifest should not be `null`"
+      "loaded asset manifest should not be `null`",
     )
     assertTrue(
       manifest.isInitialized,
-      "manifest proto should be initialized after loading"
+      "manifest proto should be initialized after loading",
     )
     assertTrue(
       manifest.hasSettings(),
-      "manifest should have settings data present"
+      "manifest should have settings data present",
     )
     assertTrue(
       manifest.hasGenerated(),
-      "manifest should have a generated-at timestamp"
+      "manifest should have a generated-at timestamp",
     )
   }
 
@@ -66,7 +66,7 @@ import elide.testing.annotations.TestCase
       )
     }
     assertThat(manifest).isEqualTo(
-      reparsed
+      reparsed,
     )
   }
 
@@ -84,7 +84,7 @@ import elide.testing.annotations.TestCase
       )
     }
     assertThat(manifest).isEqualTo(
-      reparsed
+      reparsed,
     )
   }
 
@@ -120,19 +120,19 @@ import elide.testing.annotations.TestCase
     }
     assertNotNull(
       manifest,
-      "loaded asset manifest should not be `null`"
+      "loaded asset manifest should not be `null`",
     )
     assertTrue(
       manifest.isInitialized,
-      "manifest proto should be initialized after loading"
+      "manifest proto should be initialized after loading",
     )
     assertTrue(
       manifest.hasSettings(),
-      "manifest should have settings data present"
+      "manifest should have settings data present",
     )
     assertTrue(
       manifest.hasGenerated(),
-      "manifest should have a generated-at timestamp"
+      "manifest should have a generated-at timestamp",
     )
   }
 
@@ -142,7 +142,7 @@ import elide.testing.annotations.TestCase
         ServerAssetManifestProvider().deserializeLoadManifest(
           ManifestFormat.TEXT to ByteArrayInputStream(ByteArray(0)),
         )
-      }
+      },
     )
   }
 
@@ -155,14 +155,14 @@ import elide.testing.annotations.TestCase
         provider.deserializeLoadManifest(
           ManifestFormat.BINARY to baos,
         )
-      }
+      },
     )
     assertNull(
       assertDoesNotThrow {
         provider.deserializeLoadManifest(
           ManifestFormat.JSON to baos,
         )
-      }
+      },
     )
   }
 
@@ -175,13 +175,13 @@ import elide.testing.annotations.TestCase
           ManifestFormat.BINARY to "/manifest/some-bad-path.pb",
           ManifestFormat.JSON to "/manifest/some-bad-path.pb.json",
           ManifestFormat.BINARY to path,
-          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt"
-        )
+          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt",
+        ),
       )
     }
     assertNotNull(
       manifest,
-      "should be able to find present manifest"
+      "should be able to find present manifest",
     )
   }
 
@@ -194,13 +194,13 @@ import elide.testing.annotations.TestCase
           ManifestFormat.BINARY to "/manifest/some-bad-path.pb",
           ManifestFormat.JSON to "/manifest/some-bad-path.pb.json",
           ManifestFormat.BINARY to path,
-          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt"
-        )
+          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt",
+        ),
       )
     }
     assertNull(
       manifest,
-      "should not be able to find missing manifest"
+      "should not be able to find missing manifest",
     )
   }
 
@@ -220,7 +220,7 @@ import elide.testing.annotations.TestCase
     }
     assertNotNull(
       manifest,
-      "should be able to find present manifest"
+      "should be able to find present manifest",
     )
     val manifest2 = assertDoesNotThrow {
       provider.findLoadManifest(
@@ -228,7 +228,7 @@ import elide.testing.annotations.TestCase
       )
     }
     assertThat(manifest).isEqualTo(
-      manifest2
+      manifest2,
     )
   }
 
@@ -242,7 +242,7 @@ import elide.testing.annotations.TestCase
     }
     assertNull(
       manifest,
-      "not finding a manifest should result in `null`"
+      "not finding a manifest should result in `null`",
     )
   }
 

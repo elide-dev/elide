@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,7 +31,7 @@ import elide.runtime.Logging
  * }
  * ```
  */
-@Singleton public open class UncaughtExceptionHandler: Thread.UncaughtExceptionHandler {
+@Singleton public open class UncaughtExceptionHandler : Thread.UncaughtExceptionHandler {
   // Root logger.
   private val logging: Logger = Logging.root()
 
@@ -39,7 +39,7 @@ import elide.runtime.Logging
     // not yet implemented
     logging.error(
       "Encountered critical uncaught error (thread: '${thread.name}'): '${err.message ?: "NO_MESSAGE"}'",
-      err
+      err,
     )
   }
 }

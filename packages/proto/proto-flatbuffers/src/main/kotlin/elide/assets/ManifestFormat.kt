@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,12 +17,12 @@ package elide.assets
 
 @Suppress("unused")
 class ManifestFormat private constructor() {
-    companion object {
-        const val MANIFESTFORMATUNSPECIFIED: Int = 0
-        const val BINARY: Int = 1
-        const val JSON: Int = 2
-        const val TEXT: Int = 3
-        val names : Array<String> = arrayOf("MANIFEST_FORMAT_UNSPECIFIED", "BINARY", "JSON", "TEXT")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val MANIFESTFORMATUNSPECIFIED: Int = 0
+    const val BINARY: Int = 1
+    const val JSON: Int = 2
+    const val TEXT: Int = 3
+    val names: Array<String> = arrayOf("MANIFEST_FORMAT_UNSPECIFIED", "BINARY", "JSON", "TEXT")
+    fun name(e: Int): String = names[e]
+  }
 }

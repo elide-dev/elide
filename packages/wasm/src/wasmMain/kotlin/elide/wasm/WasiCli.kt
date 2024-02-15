@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,15 +21,15 @@ import elide.wasm.internal.environGet
  */
 interface WasiCli {
 
-    /**
-     * The command line arguments.
-     */
-    val args: List<String>
+  /**
+   * The command line arguments.
+   */
+  val args: List<String>
 
-    /**
-     * The environment variables.
-     */
-    val envVars: List<Pair<String, String>>
+  /**
+   * The environment variables.
+   */
+  val envVars: List<Pair<String, String>>
 
 }
 
@@ -38,9 +38,9 @@ interface WasiCli {
  */
 object DefaultWasiCli : WasiCli {
 
-    override val args: List<String>
-        get() = argsGet()
+  override val args: List<String>
+    get() = argsGet()
 
-    override val envVars: List<Pair<String, String>>
-        get() = environGet().map { Pair(it.key, it.value) }
+  override val envVars: List<Pair<String, String>>
+    get() = environGet().map { Pair(it.key, it.value) }
 }

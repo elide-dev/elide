@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -167,7 +167,7 @@ import elide.http.api.HttpHeaders.HeaderValue
    * @param name The name of the HTTP header.
    * @param standard Whether this header is known to be standard; internal use only.
    */
-  public class HeaderName private constructor (
+  public class HeaderName private constructor(
     public val name: CaseInsensitiveHttpString,
     private val standard: Boolean = false,
   ) : CharSequence, Comparable<HeaderName> {
@@ -352,11 +352,11 @@ import elide.http.api.HttpHeaders.HeaderValue
       override val allValues: List<HttpString> get() = values.toList()
 
       internal fun add(value: String): MultiValue = MultiValue(
-        Array(values.size + 1) { i -> if (i == values.size) value else values[i] }
+        Array(values.size + 1) { i -> if (i == values.size) value else values[i] },
       )
 
       internal fun remove(value: String): MultiValue = MultiValue(
-        values.filter { it != value }.toTypedArray()
+        values.filter { it != value }.toTypedArray(),
       )
     }
   }

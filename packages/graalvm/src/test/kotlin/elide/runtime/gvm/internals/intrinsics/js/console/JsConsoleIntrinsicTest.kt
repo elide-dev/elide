@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -33,7 +33,7 @@ import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
- /** Tests for intrinsic JS console implementation, which pipes to logging. */
+/** Tests for intrinsic JS console implementation, which pipes to logging. */
 @TestCase internal class JsConsoleIntrinsicTest : AbstractJsIntrinsicTest<ConsoleIntrinsic>() {
   // Logger facade to use for testing.
   private val loggerFacade: AtomicReference<Logger> = AtomicReference(null)
@@ -49,13 +49,15 @@ import elide.testing.annotations.TestCase
   @BeforeEach
   fun mockLogger() {
     loggerBuffer.get().clear()
-    loggerFacade.set(object : Logger {
-      override fun isEnabled(level: LogLevel): Boolean = true
+    loggerFacade.set(
+      object : Logger {
+        override fun isEnabled(level: LogLevel): Boolean = true
 
-      override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
-        loggerBuffer.get().add(level to message)
-      }
-    })
+        override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
+          loggerBuffer.get().add(level to message)
+        }
+      },
+    )
     console.setInterceptor(loggerFacade.get())
   }
 
@@ -156,19 +158,21 @@ import elide.testing.annotations.TestCase
     checkTestLogs(LogLevel.ERROR)
   }
 
-  @CsvSource(value = [
-    // Guest Logging: Direct
-    "DEBUG,direct",
-    "INFO,direct",
-    "WARN,direct",
-    "ERROR,direct",
+  @CsvSource(
+    value = [
+      // Guest Logging: Direct
+      "DEBUG,direct",
+      "INFO,direct",
+      "WARN,direct",
+      "ERROR,direct",
 
-    // Guest Logging: Facade
-    "DEBUG,facade",
-    "INFO,facade",
-    "WARN,facade",
-    "ERROR,facade",
-  ])
+      // Guest Logging: Facade
+      "DEBUG,facade",
+      "INFO,facade",
+      "WARN,facade",
+      "ERROR,facade",
+    ],
+  )
   @Suppress("UNUSED_PARAMETER")
   @ParameterizedTest fun testConsole(level: LogLevel, mode: String) = dual {
     // host-side test

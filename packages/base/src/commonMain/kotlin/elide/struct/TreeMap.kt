@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import elide.struct.codec.PresortedMapCodec
  *
  */
 @Serializable(with = PresortedMapCodec::class)
-public class TreeMap<Key, Value> internal constructor (
+public class TreeMap<Key, Value> internal constructor(
   pairs: Iterable<Pair<Key, Value>>,
   presorted: Boolean,
 ) : AbstractTreeMap<Key, Value>(pairs, presorted), SortedMap<Key, Value> where Key : Comparable<Key> {
@@ -31,24 +31,24 @@ public class TreeMap<Key, Value> internal constructor (
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> empty(): TreeMap<Key, Value> = TreeMap()
+    @JvmStatic public fun <Key : Comparable<Key>, Value> empty(): TreeMap<Key, Value> = TreeMap()
 
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> of(pairs: Iterable<Pair<Key, Value>>): TreeMap<Key, Value> =
+    @JvmStatic public fun <Key : Comparable<Key>, Value> of(pairs: Iterable<Pair<Key, Value>>): TreeMap<Key, Value> =
       TreeMap(pairs)
 
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> of(vararg pairs: Pair<Key, Value>): TreeMap<Key, Value> =
+    @JvmStatic public fun <Key : Comparable<Key>, Value> of(vararg pairs: Pair<Key, Value>): TreeMap<Key, Value> =
       TreeMap(pairs.toList())
 
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> copyOf(map: Map<Key, Value>): TreeMap<Key, Value> =
+    @JvmStatic public fun <Key : Comparable<Key>, Value> copyOf(map: Map<Key, Value>): TreeMap<Key, Value> =
       TreeMap(map.toList())
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,17 +29,19 @@ import elide.embedded.api.InstanceConfigurationFactory
 ) : ConfigurationManager {
   // Merge and build configurations from all available configuration factories, starting with defaults.
   private fun mergeAndBuild(): InstanceConfiguration {
-    return InstanceConfiguration.createFrom(factories.filter {
-      it !== defaults
-    }.fold(defaults.defaults.toBuilder()) { acc, factory ->
-      factory.provide()?.host?.let { stanza ->
-        acc.mergeFrom(stanza)
-      }
-    }.build())
+    return InstanceConfiguration.createFrom(
+      factories.filter {
+        it !== defaults
+      }.fold(defaults.defaults.toBuilder()) { acc, factory ->
+        factory.provide()?.host?.let { stanza ->
+          acc.mergeFrom(stanza)
+        }
+      }.build(),
+    )
   }
 
   @Singleton override fun provide(): ActiveConfiguration = mergeAndBuild().let {
-    object: ActiveConfiguration {
+    object : ActiveConfiguration {
       override val host: HostConfiguration get() = it.host
     }
   }

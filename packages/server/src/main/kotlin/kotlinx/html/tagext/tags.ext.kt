@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,11 +23,11 @@ import kotlinx.html.*
  */
 @HtmlTagMarker
 public suspend inline fun HTML.body(
-  classes : String? = null,
-  crossinline block : suspend BODY.() -> Unit
-) : Unit = BODY(
+  classes: String? = null,
+  crossinline block: suspend BODY.() -> Unit
+): Unit = BODY(
   attributesMapOf("class", classes),
-  consumer
+  consumer,
 ).visitSuspend(block)
 
 
@@ -38,7 +38,7 @@ public suspend inline fun HTML.body(
  */
 @HtmlTagMarker
 public suspend inline fun HTML.head(
-  crossinline block : suspend HEAD.() -> Unit
-) : Unit = HEAD(emptyMap, consumer).visitSuspend(
-  block
+  crossinline block: suspend HEAD.() -> Unit
+): Unit = HEAD(emptyMap, consumer).visitSuspend(
+  block,
 )

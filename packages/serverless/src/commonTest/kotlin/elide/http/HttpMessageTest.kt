@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,28 +27,32 @@ import elide.http.api.MutableHttpPayload
 
 class HttpMessageTest {
   @Test fun testImmutableInterface() {
-    assertFalse(object: HttpMessage {
-      override val type: HttpMessageType
-        get() = error("not implemented")
-      override val version: HttpVersion
-        get() = error("not implemented")
-      override val headers: HttpHeaders
-        get() = error("not implemented")
-      override val body: HttpPayload
-        get() = error("not implemented")
-    }.mutable)
+    assertFalse(
+      object : HttpMessage {
+        override val type: HttpMessageType
+          get() = error("not implemented")
+        override val version: HttpVersion
+          get() = error("not implemented")
+        override val headers: HttpHeaders
+          get() = error("not implemented")
+        override val body: HttpPayload
+          get() = error("not implemented")
+      }.mutable,
+    )
   }
 
   @Test fun testMutableInterface() {
-    assertTrue(object: MutableHttpMessage {
-      override val type: HttpMessageType
-        get() = error("not implemented")
-      override val version: HttpVersion
-        get() = error("not implemented")
-      override val headers: MutableHttpHeaders
-        get() = error("not implemented")
-      override val body: MutableHttpPayload
-        get() = error("not implemented")
-    }.mutable)
+    assertTrue(
+      object : MutableHttpMessage {
+        override val type: HttpMessageType
+          get() = error("not implemented")
+        override val version: HttpVersion
+          get() = error("not implemented")
+        override val headers: MutableHttpHeaders
+          get() = error("not implemented")
+        override val body: MutableHttpPayload
+          get() = error("not implemented")
+      }.mutable,
+    )
   }
 }

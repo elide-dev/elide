@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,46 +24,52 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class TokenValue : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): TokenValue {
+    __init(_i, _bb)
+    return this
+  }
+
+  val _innerValue_: elide.data.DataContainer? get() = _innerValue_(elide.data.DataContainer())
+  fun _innerValue_(obj: elide.data.DataContainer): elide.data.DataContainer? {
+    val o = __offset(4)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : TokenValue {
-        __init(_i, _bb)
-        return this
+  }
+
+  val encoding: Int
+    get() {
+      val o = __offset(6)
+      return if (o != 0) bb.getInt(o + bb_pos) else 0
     }
-    val _innerValue_ : elide.data.DataContainer? get() = _innerValue_(elide.data.DataContainer())
-    fun _innerValue_(obj: elide.data.DataContainer) : elide.data.DataContainer? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsTokenValue(_bb: ByteBuffer): TokenValue = getRootAsTokenValue(_bb, TokenValue())
+    fun getRootAsTokenValue(_bb: ByteBuffer, obj: TokenValue): TokenValue {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val encoding : Int
-        get() {
-            val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsTokenValue(_bb: ByteBuffer): TokenValue = getRootAsTokenValue(_bb, TokenValue())
-        fun getRootAsTokenValue(_bb: ByteBuffer, obj: TokenValue): TokenValue {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createTokenValue(builder: FlatBufferBuilder, _innerValue_Offset: Int, encoding: Int) : Int {
-            builder.startTable(2)
-            addEncoding(builder, encoding)
-            add_InnerValue_(builder, _innerValue_Offset)
-            return endTokenValue(builder)
-        }
-        fun startTokenValue(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun add_InnerValue_(builder: FlatBufferBuilder, _innerValue_: Int) = builder.addOffset(0, _innerValue_, 0)
-        fun addEncoding(builder: FlatBufferBuilder, encoding: Int) = builder.addInt(1, encoding, 0)
-        fun endTokenValue(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun createTokenValue(builder: FlatBufferBuilder, _innerValue_Offset: Int, encoding: Int): Int {
+      builder.startTable(2)
+      addEncoding(builder, encoding)
+      add_InnerValue_(builder, _innerValue_Offset)
+      return endTokenValue(builder)
     }
+
+    fun startTokenValue(builder: FlatBufferBuilder) = builder.startTable(2)
+    fun add_InnerValue_(builder: FlatBufferBuilder, _innerValue_: Int) = builder.addOffset(0, _innerValue_, 0)
+    fun addEncoding(builder: FlatBufferBuilder, encoding: Int) = builder.addInt(1, encoding, 0)
+    fun endTokenValue(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
+    }
+  }
 }

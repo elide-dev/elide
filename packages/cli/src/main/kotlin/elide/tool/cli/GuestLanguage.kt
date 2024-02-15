@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,7 +14,7 @@
 package elide.tool.cli
 
 /** Specifies languages supported for REPL access. */
-enum class GuestLanguage (
+enum class GuestLanguage(
   internal val id: String,
   override val engine: String = id,
   internal val formalName: String,
@@ -27,7 +27,7 @@ enum class GuestLanguage (
   internal val secondary: Boolean = dependsOn.isNotEmpty(),
 ) : elide.runtime.gvm.GuestLanguage {
   /** Interactive JavaScript VM. */
-  JS (
+  JS(
     id = ENGINE_JS,
     formalName = "JavaScript",
     experimental = false,
@@ -36,7 +36,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM. */
-  LLVM (
+  LLVM(
     id = ENGINE_LLVM,
     formalName = "LLVM",
     experimental = true,
@@ -44,7 +44,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive Python VM. */
-  PYTHON (
+  PYTHON(
     id = ENGINE_PYTHON,
     formalName = "Python",
     experimental = true,
@@ -54,7 +54,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive Python VM. */
-  RUBY (
+  RUBY(
     id = ENGINE_RUBY,
     formalName = "Ruby",
     experimental = true,
@@ -63,7 +63,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM. */
-  JVM (
+  JVM(
     id = "jvm",
     engine = ENGINE_JVM,
     formalName = "JVM",
@@ -74,7 +74,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive nested Java. */
-  JAVA (
+  JAVA(
     id = "java",
     formalName = "JVM",
     experimental = true,
@@ -84,7 +84,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM with Kotlin support. */
-  KOTLIN (
+  KOTLIN(
     id = "kt",
     formalName = "Kotlin",
     experimental = true,
@@ -94,7 +94,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM with Groovy support. */
-  GROOVY (
+  GROOVY(
     id = "groovy",
     engine = ENGINE_JVM,
     formalName = "Groovy",
@@ -105,7 +105,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM with Scala support. */
-  SCALA (
+  SCALA(
     id = "scala",
     engine = ENGINE_JVM,
     formalName = "Scala",
@@ -116,7 +116,7 @@ enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM. */
-  WASM (
+  WASM(
     id = ENGINE_WASM,
     engine = "wasm",
     formalName = "WASM",

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,30 +27,38 @@ import elide.testing.annotations.Test
 class DataProtoTests : AbstractDataContainerTests<DataContainer>() {
   override fun allocateContainer(): DataContainer = DataContainer.newBuilder().build()
 
-  override fun allocateContainer(data: String): DataContainer = allocateContainer(data.toByteArray(
-    StandardCharsets.UTF_8,
-  ))
+  override fun allocateContainer(data: String): DataContainer = allocateContainer(
+    data.toByteArray(
+      StandardCharsets.UTF_8,
+    ),
+  )
 
   override fun allocateContainer(data: ByteArray): DataContainer = dataContainer {
     raw = data.toByteString()
-    integrity.add(dataFingerprint {
-      hash = HashAlgorithm.SHA256
-      fingerprint = MessageDigest.getInstance("SHA-256").let { digest ->
-        digest.digest(data).toByteString()
-      }
-    })
+    integrity.add(
+      dataFingerprint {
+        hash = HashAlgorithm.SHA256
+        fingerprint = MessageDigest.getInstance("SHA-256").let { digest ->
+          digest.digest(data).toByteString()
+        }
+      },
+    )
   }
 
   @Test override fun testDataContainer() {
-    assertNotNull(dataContainer {
-      raw = "hello world".toByteStringUtf8()
-      integrity.add(dataFingerprint {
-        hash = HashAlgorithm.SHA256
-        fingerprint = MessageDigest.getInstance("SHA-256").let { digest ->
-          digest.digest("hello world".toByteArray(StandardCharsets.UTF_8)).toByteString()
-        }
-      })
-    })
+    assertNotNull(
+      dataContainer {
+        raw = "hello world".toByteStringUtf8()
+        integrity.add(
+          dataFingerprint {
+            hash = HashAlgorithm.SHA256
+            fingerprint = MessageDigest.getInstance("SHA-256").let { digest ->
+              digest.digest("hello world".toByteArray(StandardCharsets.UTF_8)).toByteString()
+            }
+          },
+        )
+      },
+    )
   }
 
   @Test override fun testDataContainerJson() {

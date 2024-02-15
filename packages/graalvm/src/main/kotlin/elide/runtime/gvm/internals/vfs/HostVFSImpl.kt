@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -43,7 +43,7 @@ import elide.runtime.gvm.cfg.GuestIOConfiguration
  */
 @Requires(property = "elide.gvm.vfs.enabled", value = "true")
 @Requires(property = "elide.gvm.vfs.mode", value = "HOST")
-internal class HostVFSImpl private constructor (
+internal class HostVFSImpl private constructor(
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
   private var realCwd: AtomicReference<String> = AtomicReference(System.getProperty("user.dir")),
@@ -55,7 +55,7 @@ internal class HostVFSImpl private constructor (
    */
   private constructor (
     config: EffectiveGuestVFSConfig,
-  ) : this (
+  ) : this(
     config,
     FileSystems.getDefault(),
   )
@@ -65,7 +65,7 @@ internal class HostVFSImpl private constructor (
    *
    * Coming soon.
    */
-  @Suppress("unused") internal data class Builder (
+  @Suppress("unused") internal data class Builder(
     override var readOnly: Boolean = GuestVFSPolicy.DEFAULT_READ_ONLY,
     override var root: String = ROOT_SYSTEM_DEFAULT,
     override var policy: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS,
@@ -118,22 +118,24 @@ internal class HostVFSImpl private constructor (
           if (target.canWrite()) {
             target.mkdirs()
           } else throw IOException(
-            "Cannot initialize host VFS with non-writable path"
+            "Cannot initialize host VFS with non-writable path",
           )
         }
         it
       }
 
-      return HostVFSImpl(EffectiveGuestVFSConfig(
-        readOnly = readOnly,
-        root = root,
-        policy = policy,
-        workingDirectory = workingDirectory,
-        caseSensitive = caseSensitive,
-        supportsSymbolicLinks = enableSymlinks,
-        bundle = emptyList(),
-        scope = resolvedHostScope,
-      ))
+      return HostVFSImpl(
+        EffectiveGuestVFSConfig(
+          readOnly = readOnly,
+          root = root,
+          policy = policy,
+          workingDirectory = workingDirectory,
+          caseSensitive = caseSensitive,
+          supportsSymbolicLinks = enableSymlinks,
+          bundle = emptyList(),
+          scope = resolvedHostScope,
+        ),
+      )
     }
   }
 
@@ -200,9 +202,11 @@ internal class HostVFSImpl private constructor (
         val subject = path.toList()
         val base = Path.of(trim).toList()
 
-        Path.of(path.asSequence().drop(
-          subject.zip(base).takeWhile { (a, b) -> a == b }.size
-        ).joinToString(File.separator))
+        Path.of(
+          path.asSequence().drop(
+            subject.zip(base).takeWhile { (a, b) -> a == b }.size,
+          ).joinToString(File.separator),
+        )
       }
 
       path.isAbsolute -> resolve(Path.of(path.toString().drop(1)))

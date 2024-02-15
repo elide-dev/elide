@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import elide.runtime.intrinsics.js.*
 import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
-internal class FetchRequestIntrinsic internal constructor (
+internal class FetchRequestIntrinsic internal constructor(
   targetUrl: URLIntrinsic.URLValue,
   targetMethod: String = FetchRequest.Defaults.DEFAULT_METHOD,
   requestHeaders: FetchHeaders = FetchHeadersIntrinsic.empty(),
@@ -37,11 +37,13 @@ internal class FetchRequestIntrinsic internal constructor (
       return FetchRequestIntrinsic(
         targetUrl = URLIntrinsic.URLValue.fromURL(request.uri),
         targetMethod = request.method.name,
-        requestHeaders = FetchHeaders.fromPairs(request.headers.asMap().entries.flatMap {
-          it.value.map { value ->
-            it.key to value
-          }
-        }),
+        requestHeaders = FetchHeaders.fromPairs(
+          request.headers.asMap().entries.flatMap {
+            it.value.map { value ->
+              it.key to value
+            }
+          },
+        ),
         bodyData = request.getBody(InputStream::class.java).orElse(null),
       )
     }
@@ -57,7 +59,7 @@ internal class FetchRequestIntrinsic internal constructor (
   constructor (url: URL) : this(targetUrl = URLIntrinsic.URLValue.fromString(url.toString()))
 
   /** Construct a new `Request` from another request (i.e. make a mutable or non-mutable copy). */
-  @Polyglot constructor (request: FetchRequest) : this (
+  @Polyglot constructor (request: FetchRequest) : this(
     targetUrl = URLIntrinsic.URLValue.fromString(request.url),
     targetMethod = request.method,
     requestHeaders = request.headers,
@@ -95,11 +97,12 @@ internal class FetchRequestIntrinsic internal constructor (
   // -- Interface: Immutable HTTP Request -- //
 
   /** @inheritDoc */
-  @get:Polyglot override val body: ReadableStream? get() {
-    if (bodyData == null) return null
-    if (!bodyConsumed.get()) bodyConsumed.set(true)
-    return ReadableStream.wrap(bodyData)
-  }
+  @get:Polyglot override val body: ReadableStream?
+    get() {
+      if (bodyData == null) return null
+      if (!bodyConsumed.get()) bodyConsumed.set(true)
+      return ReadableStream.wrap(bodyData)
+    }
 
   /** @inheritDoc */
   @get:Polyglot override val bodyUsed: Boolean get() = bodyConsumed.get()

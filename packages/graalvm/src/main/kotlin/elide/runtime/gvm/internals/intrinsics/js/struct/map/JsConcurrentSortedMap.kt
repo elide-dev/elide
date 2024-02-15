@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.js.MapLike.Entry
 
 /** Implements a mutable, sorted, and thread-safe map for use with JavaScript; backed by a [ConcurrentSkipListMap]. */
 @Suppress("unused")
-internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: ConcurrentMap<K, V>) :
+internal class JsConcurrentSortedMap<K : Comparable<K>, V>(backingMap: ConcurrentMap<K, V>) :
   BaseMutableJsMap<K, V>(backingMap, sorted = true, threadsafe = true),
   ConcurrentMap<K, V>,
   SortedMap<K, V> {
@@ -38,7 +38,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
     private val EMPTY_MAP = JsConcurrentSortedMap<Comparable<Any>, Any?>(mapImpl())
 
     // Internal function to create a backing-map implementation.
-    @JvmStatic private fun <K: Any, V> mapImpl(): ConcurrentMap<K, V> = ConcurrentSkipListMap()
+    @JvmStatic private fun <K : Any, V> mapImpl(): ConcurrentMap<K, V> = ConcurrentSkipListMap()
 
     /**
      * Return a sorted concurrent [JsConcurrentSortedMap] instance, which wraps the provided [map].
@@ -46,10 +46,12 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @param map Existing map instance to wrap.
      * @return Wrapped JS map instance.
      */
-    @JvmStatic override fun <K: Comparable<K>, V> of(map: MutableMap<K, V>): JsConcurrentSortedMap<K, V> =
-      JsConcurrentSortedMap(mapImpl<K, V>().apply {
-        putAll(map)
-      })
+    @JvmStatic override fun <K : Comparable<K>, V> of(map: MutableMap<K, V>): JsConcurrentSortedMap<K, V> =
+      JsConcurrentSortedMap(
+        mapImpl<K, V>().apply {
+          putAll(map)
+        },
+      )
 
     /**
      * Return a sorted concurrent [JsConcurrentSortedMap] instance, which is a copy of the provided [map].
@@ -57,10 +59,12 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @param map Existing map instance to wrap.
      * @return Copied JS map instance.
      */
-    @JvmStatic override fun <K: Comparable<K>, V> copyOf(map: Map<K, V>): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
-        putAll(map)
-      })
+    @JvmStatic override fun <K : Comparable<K>, V> copyOf(map: Map<K, V>): JsConcurrentSortedMap<K, V> {
+      return JsConcurrentSortedMap(
+        mapImpl<K, V>().apply {
+          putAll(map)
+        },
+      )
     }
 
     /**
@@ -70,14 +74,16 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Comparable<K>, V> fromPairs(
+    @JvmStatic override fun <K : Comparable<K>, V> fromPairs(
       pairs: Collection<Pair<K, V>>
     ): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
-        pairs.forEach {
-          put(it.first, it.second)
-        }
-      })
+      return JsConcurrentSortedMap(
+        mapImpl<K, V>().apply {
+          pairs.forEach {
+            put(it.first, it.second)
+          }
+        },
+      )
     }
 
     /**
@@ -87,14 +93,15 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Comparable<K>, V> fromEntries(
+    @JvmStatic override fun <K : Comparable<K>, V> fromEntries(
       entries: Collection<Map.Entry<K, V>>
-    ): JsConcurrentSortedMap<K, V>
-      = JsConcurrentSortedMap(mapImpl<K, V>().apply {
+    ): JsConcurrentSortedMap<K, V> = JsConcurrentSortedMap(
+      mapImpl<K, V>().apply {
         entries.forEach {
           put(it.key, it.value)
         }
-      })
+      },
+    )
 
     /**
      * Return a sorted concurrent [JsConcurrentSortedMap] instance, created from the provided sized collection of
@@ -103,14 +110,16 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Comparable<K>, V> from(
+    @JvmStatic override fun <K : Comparable<K>, V> from(
       entries: Collection<Entry<K, V>>
     ): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
-        entries.forEach {
-          put(it.key, it.value)
-        }
-      })
+      return JsConcurrentSortedMap(
+        mapImpl<K, V>().apply {
+          entries.forEach {
+            put(it.key, it.value)
+          }
+        },
+      )
     }
 
     /**
@@ -123,14 +132,16 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Comparable<K>, V> unboundedEntries(
+    @JvmStatic override fun <K : Comparable<K>, V> unboundedEntries(
       entries: Iterable<Map.Entry<K, V>>
     ): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
-        entries.forEach {
-          put(it.key, it.value)
-        }
-      })
+      return JsConcurrentSortedMap(
+        mapImpl<K, V>().apply {
+          entries.forEach {
+            put(it.key, it.value)
+          }
+        },
+      )
     }
 
     /**
@@ -146,11 +157,13 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
     @JvmStatic override fun <K : Comparable<K>, V> unboundedPairs(
       pairs: Iterable<Pair<K, V>>
     ): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
-        pairs.forEach {
-          put(it.first, it.second)
-        }
-      })
+      return JsConcurrentSortedMap(
+        mapImpl<K, V>().apply {
+          pairs.forEach {
+            put(it.first, it.second)
+          }
+        },
+      )
     }
 
     /**
@@ -163,14 +176,16 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Comparable<K>, V> unbounded(
+    @JvmStatic override fun <K : Comparable<K>, V> unbounded(
       entries: Iterable<Entry<K, V>>
     ): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
-        entries.forEach {
-          put(it.key, it.value)
-        }
-      })
+      return JsConcurrentSortedMap(
+        mapImpl<K, V>().apply {
+          entries.forEach {
+            put(it.key, it.value)
+          }
+        },
+      )
     }
 
     /**
@@ -179,7 +194,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> (backingMap: Concurren
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic override fun <K: Comparable<K>, V> empty(): JsConcurrentSortedMap<K, V> =
+    @JvmStatic override fun <K : Comparable<K>, V> empty(): JsConcurrentSortedMap<K, V> =
       EMPTY_MAP as JsConcurrentSortedMap<K, V>
   }
 

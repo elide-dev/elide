@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -25,7 +25,7 @@ import kotlin.test.assertNotNull
 
 /** Corner case tests for the [ReflectiveMessageDeserializer]. */
 @MicronautTest
-class ReflectiveMessageDeserializerTest: GrpcWebBaseTest() {
+class ReflectiveMessageDeserializerTest : GrpcWebBaseTest() {
   fun emptyStub() {
     // this space left intentionally blank
     System.out.println("hello from an empty method")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -38,12 +38,14 @@ sealed interface TestResult {
     DROP;
 
     /** Whether this status should count as a passing effective status. */
-    val ok: Boolean get() = when (this) {
-      SKIP,
-      DROP,
-      PASS -> true
-      FAIL -> false
-    }
+    val ok: Boolean
+      get() = when (this) {
+        SKIP,
+        DROP,
+        PASS -> true
+
+        FAIL -> false
+      }
   }
 
   /** Result of the test. */
@@ -89,7 +91,7 @@ sealed interface TestResult {
     override val test: Testable<*>,
     override val info: TestInfo,
     override val messages: Collection<String>,
-  ): TestResult {
+  ) : TestResult {
     companion object {
       @JvmStatic fun fromInfo(
         result: Result,
@@ -135,18 +137,20 @@ sealed interface TestResult {
       )
     }
 
-    override val effectiveResult: Result get() = when (result) {
-      SKIP,
-      DROP,
-      PASS -> PASS
-      FAIL -> FAIL
-    }
+    override val effectiveResult: Result
+      get() = when (result) {
+        SKIP,
+        DROP,
+        PASS -> PASS
+
+        FAIL -> FAIL
+      }
   }
 
   /**
    * TBD.
    */
-  @JvmInline value class Success private constructor (private val record: TestResultInfo): TestResult by record {
+  @JvmInline value class Success private constructor(private val record: TestResultInfo) : TestResult by record {
     override val result: Result get() = PASS
 
     internal companion object {
@@ -157,7 +161,7 @@ sealed interface TestResult {
   /**
    * TBD.
    */
-  @JvmInline value class Failure private constructor (private val record: TestResultInfo): TestResult by record {
+  @JvmInline value class Failure private constructor(private val record: TestResultInfo) : TestResult by record {
     override val result: Result get() = FAIL
 
     internal companion object {
@@ -168,7 +172,7 @@ sealed interface TestResult {
   /**
    * TBD.
    */
-  @JvmInline value class Skipped private constructor (private val record: TestResultInfo): TestResult by record {
+  @JvmInline value class Skipped private constructor(private val record: TestResultInfo) : TestResult by record {
     override val result: Result get() = SKIP
 
     internal companion object {
@@ -179,7 +183,7 @@ sealed interface TestResult {
   /**
    * TBD.
    */
-  @JvmInline value class Dropped private constructor (private val record: TestResultInfo): TestResult by record {
+  @JvmInline value class Dropped private constructor(private val record: TestResultInfo) : TestResult by record {
     override val result: Result get() = DROP
 
     internal companion object {
@@ -202,50 +206,58 @@ sealed interface TestResult {
       output: StringBuilder? = null,
       errOutput: StringBuilder? = null,
     ): TestResult = when (result) {
-      PASS -> Success.of(TestResultInfo.fromInfo(
-        result,
-        test,
-        start,
-        testInfo,
-        end,
-        messages,
-        output,
-        errOutput,
-      ))
+      PASS -> Success.of(
+        TestResultInfo.fromInfo(
+          result,
+          test,
+          start,
+          testInfo,
+          end,
+          messages,
+          output,
+          errOutput,
+        ),
+      )
 
-      FAIL -> Failure.of(TestResultInfo.fromError(
-        result,
-        test,
-        start,
-        testInfo,
-        end,
-        err,
-        messages,
-        output,
-        errOutput,
-      ))
+      FAIL -> Failure.of(
+        TestResultInfo.fromError(
+          result,
+          test,
+          start,
+          testInfo,
+          end,
+          err,
+          messages,
+          output,
+          errOutput,
+        ),
+      )
 
-      SKIP -> Skipped.of(TestResultInfo.fromInfo(
-        result,
-        test,
-        start,
-        testInfo,
-        end,
-        messages,
-        output,
-        errOutput,
-      ))
+      SKIP -> Skipped.of(
+        TestResultInfo.fromInfo(
+          result,
+          test,
+          start,
+          testInfo,
+          end,
+          messages,
+          output,
+          errOutput,
+        ),
+      )
 
-      DROP -> Dropped.of(TestResultInfo.fromInfo(
-        result,
-        test,
-        start,
-        testInfo,
-        end,
-        messages,
-        output,
-        errOutput,
-      ))
+      DROP -> Dropped.of(
+        TestResultInfo.fromInfo(
+          result,
+          test,
+          start,
+          testInfo,
+          end,
+          messages,
+          output,
+          errOutput,
+        ),
+      )
     }
 
     /**

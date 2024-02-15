@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,26 +24,26 @@ import elide.proto.api.Record
  */
 public interface DataContainer<Concrete, Builder, Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings> :
   Record<DataContainer<Concrete, Builder, Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings>, Builder>
-  where Fingerprint : DataFingerprint<Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings>,
-        FingerprintBuilder : DataFingerprint.IBuilder<Fingerprint, HashAlgorithms, Encodings,  FingerprintBuilder>,
-        Builder : DataContainer.IBuilder<Concrete, Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings, Builder>,
-        HashAlgorithms: Enum<HashAlgorithms>,
-        Encodings : Enum<Encodings> {
+        where Fingerprint : DataFingerprint<Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings>,
+              FingerprintBuilder : DataFingerprint.IBuilder<Fingerprint, HashAlgorithms, Encodings, FingerprintBuilder>,
+              Builder : DataContainer.IBuilder<Concrete, Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings, Builder>,
+              HashAlgorithms : Enum<HashAlgorithms>,
+              Encodings : Enum<Encodings> {
   /**
    * TBD.
    */
   public interface IBuilder<
-    Container,
-    Fingerprint,
-    FingerprintBuilder,
-    HashAlgorithms,
-    Encodings,
-    B: IBuilder<Container, Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings, B>
-  > : Record.IBuilder<Container>
-    where Encodings: Enum<Encodings>,
-          Fingerprint : DataFingerprint<Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings>,
-          FingerprintBuilder : DataFingerprint.IBuilder<Fingerprint, HashAlgorithms, Encodings, FingerprintBuilder>,
-          HashAlgorithms: Enum<HashAlgorithms> {
+          Container,
+          Fingerprint,
+          FingerprintBuilder,
+          HashAlgorithms,
+          Encodings,
+          B : IBuilder<Container, Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings, B>
+          > : Record.IBuilder<Container>
+          where Encodings : Enum<Encodings>,
+                Fingerprint : DataFingerprint<Fingerprint, FingerprintBuilder, HashAlgorithms, Encodings>,
+                FingerprintBuilder : DataFingerprint.IBuilder<Fingerprint, HashAlgorithms, Encodings, FingerprintBuilder>,
+                HashAlgorithms : Enum<HashAlgorithms> {
     /**
      * TBD.
      */
@@ -84,18 +84,18 @@ public interface DataContainer<Concrete, Builder, Fingerprint, FingerprintBuilde
    * TBD.
    */
   public interface Factory<
-    Container,
-    Builder,
-    Fingerprint,
-    FingerprintBuilder,
-    HashAlgorithm,
-    Encoding,
-  > : Record.Factory<Container, Builder>
-    where Encoding : Enum<Encoding>,
-          HashAlgorithm : Enum<HashAlgorithm>,
-          Fingerprint : DataFingerprint<Fingerprint, FingerprintBuilder, HashAlgorithm, Encoding>,
-          FingerprintBuilder : DataFingerprint.IBuilder<Fingerprint, HashAlgorithm, Encoding, FingerprintBuilder>,
-          Builder : IBuilder<Container, Fingerprint, FingerprintBuilder, HashAlgorithm, Encoding, Builder> {
+          Container,
+          Builder,
+          Fingerprint,
+          FingerprintBuilder,
+          HashAlgorithm,
+          Encoding,
+          > : Record.Factory<Container, Builder>
+          where Encoding : Enum<Encoding>,
+                HashAlgorithm : Enum<HashAlgorithm>,
+                Fingerprint : DataFingerprint<Fingerprint, FingerprintBuilder, HashAlgorithm, Encoding>,
+                FingerprintBuilder : DataFingerprint.IBuilder<Fingerprint, HashAlgorithm, Encoding, FingerprintBuilder>,
+                Builder : IBuilder<Container, Fingerprint, FingerprintBuilder, HashAlgorithm, Encoding, Builder> {
     /**
      * TBD.
      */

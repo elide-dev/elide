@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,7 +20,6 @@ import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.runMosaic
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Color.Companion.Black
 import com.jakewharton.mosaic.ui.Color.Companion.BrightBlack
@@ -40,7 +39,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 import elide.tool.cli.output.TestState.*
-import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.testing.TestInfo
 import elide.tool.testing.TestResult
 
@@ -81,10 +79,14 @@ suspend fun testRenderer(
           // Flip a coin biased 60% to pass to produce the final state of the test.
           tests[index] = when (result.effectiveResult.ok) {
             true -> {
-              tests[index].copy(state = Pass, assertions = if (result.messages.isNotEmpty()) {
-                result.messages
-              } else emptyList())
+              tests[index].copy(
+                state = Pass,
+                assertions = if (result.messages.isNotEmpty()) {
+                  result.messages
+                } else emptyList(),
+              )
             }
+
             else -> {
               val test = tests[index]
               val failures = buildList {
@@ -131,7 +133,7 @@ fun runJestSample() = runMosaicBlocking {
       "tests/posts.kt",
       "tests/post.kt",
       "tests/comments.kt",
-    )
+    ),
   )
   val totalTests = paths.size
 
@@ -195,7 +197,7 @@ fun TestRow(test: Test) {
       modifier = Modifier
         .background(bg)
         .padding(horizontal = 1),
-      color = Black
+      color = Black,
     )
 
     if (test.path.contains("/")) {

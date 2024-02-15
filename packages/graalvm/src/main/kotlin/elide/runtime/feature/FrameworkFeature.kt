@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -55,7 +55,7 @@ public interface FrameworkFeature : Feature {
       return clazz.getDeclaredMethod(methodName, *params)
     } catch (e: NoSuchMethodException) {
       throw RuntimeException(
-        "Failed to find method " + methodName + " for class " + clazz.name, e
+        "Failed to find method " + methodName + " for class " + clazz.name, e,
       )
     }
   }
@@ -70,7 +70,7 @@ public interface FrameworkFeature : Feature {
       RuntimeReflection.registerForReflectiveInstantiation(clazz)
     } else {
       logging().warning(
-        "Failed to find $className on the classpath for reflective instantiation."
+        "Failed to find $className on the classpath for reflective instantiation.",
       )
     }
   }
@@ -85,7 +85,7 @@ public interface FrameworkFeature : Feature {
       RuntimeReflection.register(*clazz.declaredConstructors)
     } else {
       logging().warning(
-        "Failed to find $name on the classpath for reflection."
+        "Failed to find $name on the classpath for reflection.",
       )
     }
   }
@@ -102,7 +102,7 @@ public interface FrameworkFeature : Feature {
       RuntimeReflection.register(*clazz.declaredMethods)
     } else {
       logging().warning(
-        "Failed to find $name on the classpath for reflection."
+        "Failed to find $name on the classpath for reflection.",
       )
     }
   }
@@ -125,7 +125,7 @@ public interface FrameworkFeature : Feature {
       }
     } else {
       logging().warning(
-        "Failed to find $className on the classpath for reflection."
+        "Failed to find $className on the classpath for reflection.",
       )
     }
   }
@@ -149,7 +149,7 @@ public interface FrameworkFeature : Feature {
     } else {
       logging().warning(
         "Failed to find " + className
-          + " on the classpath for unsafe fields access registration."
+                + " on the classpath for unsafe fields access registration.",
       )
     }
   }

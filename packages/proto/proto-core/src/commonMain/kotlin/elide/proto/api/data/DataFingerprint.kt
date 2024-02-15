@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,16 +24,16 @@ import elide.proto.api.Record
  */
 public interface DataFingerprint<Concrete, Builder, Algorithm, Encoding> :
   Record<DataFingerprint<Concrete, Builder, Algorithm, Encoding>, Builder>
-  where Builder : DataFingerprint.IBuilder<Concrete, Algorithm, Encoding, Builder>,
-        Algorithm : Enum<Algorithm>,
-        Encoding : Enum<Encoding> {
+        where Builder : DataFingerprint.IBuilder<Concrete, Algorithm, Encoding, Builder>,
+              Algorithm : Enum<Algorithm>,
+              Encoding : Enum<Encoding> {
   /**
    * TBD.
    */
-  public interface IBuilder<Concrete, Algorithm, Encoding, B: IBuilder<Concrete, Algorithm, Encoding, B>> :
+  public interface IBuilder<Concrete, Algorithm, Encoding, B : IBuilder<Concrete, Algorithm, Encoding, B>> :
     Record.IBuilder<Concrete>
-    where Encoding: Enum<Encoding>,
-          Algorithm : Enum<Algorithm> {
+          where Encoding : Enum<Encoding>,
+                Algorithm : Enum<Algorithm> {
     /**
      * TBD.
      */
@@ -84,8 +84,8 @@ public interface DataFingerprint<Concrete, Builder, Algorithm, Encoding> :
    * TBD.
    */
   public interface Factory<Concrete, Builder, Algorithm, Encoding> : Record.Factory<Concrete, Builder>
-    where Algorithm : Enum<Algorithm>,
-          Encoding : Enum<Encoding> {
+          where Algorithm : Enum<Algorithm>,
+                Encoding : Enum<Encoding> {
     /**
      * TBD.
      */

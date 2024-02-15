@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,20 +21,25 @@ import elide.http.api.Mimetype
 
 class HttpPayloadTest {
   @Test fun testPayloadInterface() {
-    assertFalse(object: HttpPayload {
-      override val present: Boolean get() = false
-      override val mutable: Boolean get() = false
-      override val size: ULong get() = 0u
-      override val contentType: Mimetype? get() = null
-      override val bytes: HttpBytes get() = HttpBytes.EMPTY
-    }.present)
+    assertFalse(
+      object : HttpPayload {
+        override val present: Boolean get() = false
+        override val mutable: Boolean get() = false
+        override val size: ULong get() = 0u
+        override val contentType: Mimetype? get() = null
+        override val bytes: HttpBytes get() = HttpBytes.EMPTY
+      }.present,
+    )
 
-    assertEquals(Mimetype("application/octet-stream"), object: HttpPayload {
-      override val present: Boolean get() = false
-      override val mutable: Boolean get() = false
-      override val size: ULong get() = 0u
-      override val contentType: Mimetype? get() = null
-      override val bytes: HttpBytes get() = HttpBytes.EMPTY
-    }.contentTypeOrDefault())
+    assertEquals(
+      Mimetype("application/octet-stream"),
+      object : HttpPayload {
+        override val present: Boolean get() = false
+        override val mutable: Boolean get() = false
+        override val size: ULong get() = 0u
+        override val contentType: Mimetype? get() = null
+        override val bytes: HttpBytes get() = HttpBytes.EMPTY
+      }.contentTypeOrDefault(),
+    )
   }
 }

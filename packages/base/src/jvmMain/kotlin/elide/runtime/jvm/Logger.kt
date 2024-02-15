@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.runtime.jvm
 import elide.runtime.LogLevel
 
 /** JVM implementation of a cross-platform Elide [elide.runtime.Logger] which wraps an [org.slf4j.Logger]. */
-public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger {
+public class Logger(private val logger: org.slf4j.Logger) : elide.runtime.Logger {
   // Format a list of values for emission as part of a log message.
   private fun formatLogLine(message: List<Any>): String {
     val builder = StringBuilder()
@@ -29,17 +29,17 @@ public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger
     return builder.toString()
   }
 
-    override fun isEnabled(level: LogLevel): Boolean = if (System.getProperty("elide.test", "false") == "true") {
+  override fun isEnabled(level: LogLevel): Boolean = if (System.getProperty("elide.test", "false") == "true") {
     true
   } else {
     level.isEnabled(logger)
   }
 
-    override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
+  override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
     val enabled = levelChecked || isEnabled(level)
     if (enabled) {
       level.resolve(logger).invoke(
-        formatLogLine(message)
+        formatLogLine(message),
       )
     }
   }

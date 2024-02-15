@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import elide.struct.api.SortedMap
 /**
  *
  */
-public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") protected constructor (
+public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") protected constructor(
   pairs: Iterable<Pair<Key, Value>>,
   presorted: Boolean = false,
 ) : SortedMap<Key, Value> where Key : Comparable<Key> {
@@ -51,7 +51,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
   /**
    *
    */
-  internal class TreeNode<Key: Comparable<Key>, Value>(
+  internal class TreeNode<Key : Comparable<Key>, Value>(
     /**
      *
      */
@@ -83,14 +83,17 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
     @Volatile @JvmField var color: NodeColor = RED,
   ) {
     internal companion object {
-      fun <Key: Comparable<Key>, Value> of(parent: TreeNode<Key, Value>, pair: Pair<Key, Value>): TreeNode<Key, Value> =
+      fun <Key : Comparable<Key>, Value> of(
+        parent: TreeNode<Key, Value>,
+        pair: Pair<Key, Value>
+      ): TreeNode<Key, Value> =
         TreeNode(
           pair.first,
           pair.second,
           parent = parent,
         )
 
-      fun <Key: Comparable<Key>, Value> root(pair: Pair<Key, Value>): TreeNode<Key, Value> =
+      fun <Key : Comparable<Key>, Value> root(pair: Pair<Key, Value>): TreeNode<Key, Value> =
         TreeNode(pair.first, pair.second)
     }
 
@@ -130,7 +133,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
   /**
    *
    */
-  @JvmInline public value class Entry<Key, Value> private constructor (
+  @JvmInline public value class Entry<Key, Value> private constructor(
     private val node: TreeNode<Key, Value>
   ) : Map.Entry<Key, Value>, Comparable<Key> where Key : Comparable<Key> {
     override val key: Key get() = node.key
@@ -142,14 +145,14 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
       /**
        *
        */
-      @JvmStatic internal fun <Key: Comparable<Key>, Value> of(node: TreeNode<Key, Value>): Entry<Key, Value> = Entry(
-        node
+      @JvmStatic internal fun <Key : Comparable<Key>, Value> of(node: TreeNode<Key, Value>): Entry<Key, Value> = Entry(
+        node,
       )
 
       /**
        *
        */
-      @JvmStatic internal fun <Key: Comparable<Key>, Value> mutable(
+      @JvmStatic internal fun <Key : Comparable<Key>, Value> mutable(
         node: TreeNode<Key, Value>
       ): MutableEntry<Key, Value> = MutableEntry(node)
     }
@@ -158,7 +161,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
   /**
    *
    */
-  @JvmInline public value class MutableEntry<Key, Value> internal constructor (
+  @JvmInline public value class MutableEntry<Key, Value> internal constructor(
     private val node: TreeNode<Key, Value>
   ) : MutableMap.MutableEntry<Key, Value>, Comparable<Key> where Key : Comparable<Key> {
     override val key: Key get() = node.key
@@ -224,16 +227,20 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
               innerSize++
               return node to value
             }
+
             else -> left
           }
+
           comparison > 0 -> when (val right = current.right) {
             null -> TreeNode.of(current, key to value).let { node ->
               current.setRight(node)
               innerSize++
               return node to value
             }
+
             else -> right
           }
+
           else -> current.value.let { oldValue ->
             current.value = value
             return current to oldValue
@@ -421,6 +428,7 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
         child?.parent = null
         root = child
       }
+
       else -> when {
         // if the node has one child, replace it with the child and return
         node.left == null || node.right == null -> {
@@ -483,48 +491,51 @@ public abstract class AbstractTreeMap<Key, Value> @Suppress("UNUSED_PARAMETER") 
   override fun isEmpty(): Boolean = root == null
 
   override val entries: MutableSet<
-    MutableMap.MutableEntry<Key, Value>
-  > get() = mutableSetOf<MutableMap.MutableEntry<Key, Value>>().apply {
-    val stack = mutableListOf<TreeNode<Key, Value>>()
-    var node = root
-    while (node != null || stack.isNotEmpty()) {
-      while (node != null) {
-        stack.add(node)
-        node = node.left
+          MutableMap.MutableEntry<Key, Value>,
+          >
+    get() = mutableSetOf<MutableMap.MutableEntry<Key, Value>>().apply {
+      val stack = mutableListOf<TreeNode<Key, Value>>()
+      var node = root
+      while (node != null || stack.isNotEmpty()) {
+        while (node != null) {
+          stack.add(node)
+          node = node.left
+        }
+        node = stack.removeAt(stack.lastIndex)
+        add(Entry.mutable(node))
+        node = node.right
       }
-      node = stack.removeAt(stack.lastIndex)
-      add(Entry.mutable(node))
-      node = node.right
     }
-  }
 
-  override val keys: MutableSet<Key> get() = mutableSetOf<Key>().apply {
-    val stack = mutableListOf<TreeNode<Key, Value>>()
-    var node = root
-    while (node != null || stack.isNotEmpty()) {
-      while (node != null) {
-        stack.add(node)
-        node = node.left
+  override val keys: MutableSet<Key>
+    get() = mutableSetOf<Key>().apply {
+      val stack = mutableListOf<TreeNode<Key, Value>>()
+      var node = root
+      while (node != null || stack.isNotEmpty()) {
+        while (node != null) {
+          stack.add(node)
+          node = node.left
+        }
+        node = stack.removeAt(stack.lastIndex)
+        add(node.key)
+        node = node.right
       }
-      node = stack.removeAt(stack.lastIndex)
-      add(node.key)
-      node = node.right
     }
-  }
 
-  override val values: MutableCollection<Value> get() = mutableSetOf<Value>().apply {
-    val stack = mutableListOf<TreeNode<Key, Value>>()
-    var node = root
-    while (node != null || stack.isNotEmpty()) {
-      while (node != null) {
-        stack.add(node)
-        node = node.left
+  override val values: MutableCollection<Value>
+    get() = mutableSetOf<Value>().apply {
+      val stack = mutableListOf<TreeNode<Key, Value>>()
+      var node = root
+      while (node != null || stack.isNotEmpty()) {
+        while (node != null) {
+          stack.add(node)
+          node = node.left
+        }
+        node = stack.removeAt(stack.lastIndex)
+        add(node.value)
+        node = node.right
       }
-      node = stack.removeAt(stack.lastIndex)
-      add(node.value)
-      node = node.right
     }
-  }
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true

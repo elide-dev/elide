@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -38,7 +38,7 @@ internal class ProtocolBuffers : FrameworkFeature {
       for (method in protoClass.methods) {
         val hasAccessorPrefix = METHOD_ACCESSOR_PREFIXES.stream().anyMatch { prefix: String? ->
           method.name.startsWith(
-            prefix!!
+            prefix!!,
           )
         }
         if (hasAccessorPrefix) {
@@ -75,28 +75,34 @@ internal class ProtocolBuffers : FrameworkFeature {
 
       // Finds every class whose `internalGetFieldAccessorTable()` is reached and registers it.
       // `internalGetFieldAccessorTable()` is used downstream to access the class reflectively.
-      access.registerMethodOverrideReachabilityHandler({ _: Feature.DuringAnalysisAccess, method: Executable ->
-        registerFieldAccessors(method.declaringClass)
-        registerFieldAccessors(getBuilderClass(method.declaringClass))
-      }, internalAccessorMethod)
+      access.registerMethodOverrideReachabilityHandler(
+        { _: Feature.DuringAnalysisAccess, method: Executable ->
+          registerFieldAccessors(method.declaringClass)
+          registerFieldAccessors(getBuilderClass(method.declaringClass))
+        },
+        internalAccessorMethod,
+      )
     }
 
     val protoEnumClass = access.findClassByName(PROTO_ENUM_CLASS)
     if (protoEnumClass != null) {
       // Finds every reachable proto enum class and registers specific methods for reflection.
-      access.registerSubtypeReachabilityHandler({ duringAccess: Feature.DuringAnalysisAccess, subtypeClass: Class<*> ->
-        if (PROTO_ENUM_CLASS != subtypeClass.name) {
-          var method = getMethodOrFail(
-            subtypeClass,
-            "valueOf",
-            duringAccess.findClassByName(ENUM_VAL_DESCRIPTOR_CLASS)
-          )
-          RuntimeReflection.register(method)
-          method =
-            getMethodOrFail(subtypeClass, "getValueDescriptor")
-          RuntimeReflection.register(method)
-        }
-      }, protoEnumClass)
+      access.registerSubtypeReachabilityHandler(
+        { duringAccess: Feature.DuringAnalysisAccess, subtypeClass: Class<*> ->
+          if (PROTO_ENUM_CLASS != subtypeClass.name) {
+            var method = getMethodOrFail(
+              subtypeClass,
+              "valueOf",
+              duringAccess.findClassByName(ENUM_VAL_DESCRIPTOR_CLASS),
+            )
+            RuntimeReflection.register(method)
+            method =
+              getMethodOrFail(subtypeClass, "getValueDescriptor")
+            RuntimeReflection.register(method)
+          }
+        },
+        protoEnumClass,
+      )
     }
   }
 

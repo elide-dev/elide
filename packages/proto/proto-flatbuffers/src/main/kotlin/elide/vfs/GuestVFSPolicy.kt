@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,39 +24,44 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class GuestVFSPolicy : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): GuestVFSPolicy {
+    __init(_i, _bb)
+    return this
+  }
+
+  val policy: elide.vfs.GuestVFSPolicy_.PolicySetting? get() = policy(elide.vfs.GuestVFSPolicy_.PolicySetting())
+  fun policy(obj: elide.vfs.GuestVFSPolicy_.PolicySetting): elide.vfs.GuestVFSPolicy_.PolicySetting? {
+    val o = __offset(4)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : GuestVFSPolicy {
-        __init(_i, _bb)
-        return this
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsGuestVFSPolicy(_bb: ByteBuffer): GuestVFSPolicy = getRootAsGuestVFSPolicy(_bb, GuestVFSPolicy())
+    fun getRootAsGuestVFSPolicy(_bb: ByteBuffer, obj: GuestVFSPolicy): GuestVFSPolicy {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val policy : elide.vfs.GuestVFSPolicy_.PolicySetting? get() = policy(elide.vfs.GuestVFSPolicy_.PolicySetting())
-    fun policy(obj: elide.vfs.GuestVFSPolicy_.PolicySetting) : elide.vfs.GuestVFSPolicy_.PolicySetting? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+
+    fun createGuestVFSPolicy(builder: FlatBufferBuilder, policyOffset: Int): Int {
+      builder.startTable(1)
+      addPolicy(builder, policyOffset)
+      return endGuestVFSPolicy(builder)
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsGuestVFSPolicy(_bb: ByteBuffer): GuestVFSPolicy = getRootAsGuestVFSPolicy(_bb, GuestVFSPolicy())
-        fun getRootAsGuestVFSPolicy(_bb: ByteBuffer, obj: GuestVFSPolicy): GuestVFSPolicy {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createGuestVFSPolicy(builder: FlatBufferBuilder, policyOffset: Int) : Int {
-            builder.startTable(1)
-            addPolicy(builder, policyOffset)
-            return endGuestVFSPolicy(builder)
-        }
-        fun startGuestVFSPolicy(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPolicy(builder: FlatBufferBuilder, policy: Int) = builder.addOffset(0, policy, 0)
-        fun endGuestVFSPolicy(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun startGuestVFSPolicy(builder: FlatBufferBuilder) = builder.startTable(1)
+    fun addPolicy(builder: FlatBufferBuilder, policy: Int) = builder.addOffset(0, policy, 0)
+    fun endGuestVFSPolicy(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
+  }
 }

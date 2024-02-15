@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -57,7 +57,7 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  internal sealed class AbstractURLSearchParams constructor (backingMap: URLParamsMap) : BaseJsMultiMap<String, String>(
+  internal sealed class AbstractURLSearchParams constructor(backingMap: URLParamsMap) : BaseJsMultiMap<String, String>(
     backingMap,
     mutable = false,
     sorted = true,
@@ -70,9 +70,9 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  internal sealed class AbstractMutableURLSearchParams constructor (
+  internal sealed class AbstractMutableURLSearchParams constructor(
     backingMap: URLParamsMap = URLParamsMap.empty()
-  ): BaseMutableJsMultiMap<String, String>(
+  ) : BaseMutableJsMultiMap<String, String>(
     backingMap,
     threadsafe = true,
     sorted = true,
@@ -84,7 +84,7 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  public class URLSearchParams private constructor (backingMap: URLParamsMap) :
+  public class URLSearchParams private constructor(backingMap: URLParamsMap) :
     AbstractURLSearchParams(backingMap),
     IURLSearchParams {
     /**
@@ -95,13 +95,15 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
     /**
      * TBD.
      */
-    @Polyglot constructor(other: Any?) : this(when (other) {
-      is GuestValue -> TODO("")
-      is String -> TODO("")
-      is AbstractURLSearchParams -> other.asMap()
-      is AbstractMutableURLSearchParams -> other.asMap()
-      else -> URLParamsMap.empty()
-    })
+    @Polyglot constructor(other: Any?) : this(
+      when (other) {
+        is GuestValue -> TODO("")
+        is String -> TODO("")
+        is AbstractURLSearchParams -> other.asMap()
+        is AbstractMutableURLSearchParams -> other.asMap()
+        else -> URLParamsMap.empty()
+      },
+    )
 
     @Polyglot override fun toString(): String = "URLSearchParams(immutable, count=$size)"
   }
@@ -109,7 +111,7 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  public class MutableURLSearchParams private constructor (backingMap: URLParamsMap) :
+  public class MutableURLSearchParams private constructor(backingMap: URLParamsMap) :
     AbstractMutableURLSearchParams(backingMap),
     IMutableSearchParams {
     /**
@@ -120,13 +122,15 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
     /**
      * TBD.
      */
-    @Polyglot constructor(other: Any?) : this(when (other) {
-      is GuestValue -> TODO("")
-      is String -> TODO("")
-      is AbstractURLSearchParams -> other.asMap()
-      is AbstractMutableURLSearchParams -> other.asMap()
-      else -> URLParamsMap.empty()
-    })
+    @Polyglot constructor(other: Any?) : this(
+      when (other) {
+        is GuestValue -> TODO("")
+        is String -> TODO("")
+        is AbstractURLSearchParams -> other.asMap()
+        is AbstractMutableURLSearchParams -> other.asMap()
+        else -> URLParamsMap.empty()
+      },
+    )
 
     /**
      * TBD.

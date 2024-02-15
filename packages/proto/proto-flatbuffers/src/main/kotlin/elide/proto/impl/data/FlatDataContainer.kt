@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,23 +21,23 @@ import elide.data.DataContainer
 import elide.proto.api.data.DataContainer as IDataContainer
 
 /** TBD. */
-public class FlatDataContainer private constructor (private val container: DataContainer) : IDataContainer<
-  FlatDataContainer,
-  FlatDataContainer.Builder,
-  FlatDataFingerprint,
-  FlatDataFingerprint.Builder,
-  FlatHashAlgorithm,
-  FlatEncoding
-> {
+public class FlatDataContainer private constructor(private val container: DataContainer) : IDataContainer<
+        FlatDataContainer,
+        FlatDataContainer.Builder,
+        FlatDataFingerprint,
+        FlatDataFingerprint.Builder,
+        FlatHashAlgorithm,
+        FlatEncoding,
+        > {
   /** TBD. */
   public class Builder : IDataContainer.IBuilder<
-    FlatDataContainer,
-    FlatDataFingerprint,
-    FlatDataFingerprint.Builder,
-    FlatHashAlgorithm,
-    FlatEncoding,
-    Builder,
-  > {
+          FlatDataContainer,
+          FlatDataFingerprint,
+          FlatDataFingerprint.Builder,
+          FlatHashAlgorithm,
+          FlatEncoding,
+          Builder,
+          > {
     override var data: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
@@ -69,13 +69,13 @@ public class FlatDataContainer private constructor (private val container: DataC
 
   /** Factory for protocol buffer-backed data containers. */
   public companion object Factory : IDataContainer.Factory<
-    FlatDataContainer,
-    Builder,
-    FlatDataFingerprint,
-    FlatDataFingerprint.Builder,
-    FlatHashAlgorithm,
-    FlatEncoding,
-  > {
+          FlatDataContainer,
+          Builder,
+          FlatDataFingerprint,
+          FlatDataFingerprint.Builder,
+          FlatHashAlgorithm,
+          FlatEncoding,
+          > {
     override fun empty(): FlatDataContainer {
       TODO("Not yet implemented")
     }

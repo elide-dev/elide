@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,25 +16,25 @@ package elide.wasm
 import kotlin.test.*
 
 class WasiClocksTests {
-    @Test fun testWallClockNow() {
-        val dateTime = Wasi.wallClock.now()
-        assertTrue(dateTime.seconds > (2023 - 1970) * 365 * 24 * 60 * 60)
-    }
+  @Test fun testWallClockNow() {
+    val dateTime = Wasi.wallClock.now()
+    assertTrue(dateTime.seconds > (2023 - 1970) * 365 * 24 * 60 * 60)
+  }
 
-    @Test fun testWallClockResolution() {
-        val dateTime = Wasi.wallClock.resolution()
-        assertEquals(0L, dateTime.seconds)
-        assertTrue(dateTime.nanoseconds > 0)
-    }
+  @Test fun testWallClockResolution() {
+    val dateTime = Wasi.wallClock.resolution()
+    assertEquals(0L, dateTime.seconds)
+    assertTrue(dateTime.nanoseconds > 0)
+  }
 
-    @Test fun testMonotonicClockNow() {
-        val instant1 = Wasi.monotonicClock.now()
-        val instant2 = Wasi.monotonicClock.now()
-        assertTrue(instant2 >= instant1)
-    }
+  @Test fun testMonotonicClockNow() {
+    val instant1 = Wasi.monotonicClock.now()
+    val instant2 = Wasi.monotonicClock.now()
+    assertTrue(instant2 >= instant1)
+  }
 
-    @Test fun testMonotonicClockResolution() {
-        val instant = Wasi.monotonicClock.resolution()
-        assertTrue(instant > 0)
-    }
+  @Test fun testMonotonicClockResolution() {
+    val instant = Wasi.monotonicClock.resolution()
+    assertTrue(instant > 0)
+  }
 }

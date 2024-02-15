@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -63,7 +63,7 @@ import elide.embedded.err.InitializationError
  * Calls are submitted to endpoints (TCP, Unix socket, etc.), and routed to the appropriate application. Methods are
  * provided in the Host Control API for resolving an application ID.
  */
-public class ElideEmbedded private constructor () {
+public class ElideEmbedded private constructor() {
   public companion object {
     @JvmStatic public fun main(args: Array<String>) {
       ElideEmbedded().entry(args)
@@ -186,7 +186,7 @@ public class ElideEmbedded private constructor () {
    *   codes during initialization, see the [InitializationError] enum.
    */
   public fun configure(version: String, config: InstanceConfiguration? = null): Int {
-    assert (version == Constants.API_VERSION) { "Unsupported API version: $version" }
+    assert(version == Constants.API_VERSION) { "Unsupported API version: $version" }
     activeApiVersion.value = version
     activeInstanceConfig.value = config ?: InstanceConfiguration.createFrom(HostConfiguration.getDefaultInstance())
     return 0

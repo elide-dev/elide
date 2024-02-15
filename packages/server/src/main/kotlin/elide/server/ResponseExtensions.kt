@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -124,9 +124,9 @@ public fun staticFile(file: String, contentType: String): HttpResponse<*> {
   val target = HtmlRenderer::class.java.getResourceAsStream("/static/$cleanedPath")
   return if (target != null) {
     HttpResponse.ok(
-      target.bufferedReader(StandardCharsets.UTF_8).readText()
+      target.bufferedReader(StandardCharsets.UTF_8).readText(),
     ).contentType(
-      contentType
+      contentType,
     )
   } else {
     HttpResponse.notFound<Any>()
@@ -288,7 +288,7 @@ public class AssetHandler(
         } else {
           error("Failed to resolve pair of type and data")
         }
-      }
+      },
     )
   }
 }
@@ -304,9 +304,9 @@ public suspend fun PageController.html(block: suspend HTML.() -> Unit): RawRespo
     HtmlRenderer(
       builder = block,
       handler = this,
-    ).render().toByteArray()
+    ).render().toByteArray(),
   ).characterEncoding(
-    StandardCharsets.UTF_8
+    StandardCharsets.UTF_8,
   ).contentType(
     "text/html;charset=utf-8",
   )
@@ -325,7 +325,7 @@ public class HtmlRenderer(
       it.appendHTML(
         prettyPrint = prettyhtml,
       ).htmlSuspend(
-        block = builder
+        block = builder,
       )
     }
     return baos
@@ -340,11 +340,11 @@ public class HtmlRenderer(
  */
 public fun css(block: CssBuilder.() -> Unit): FinalizedAssetResponse {
   return HttpResponse.ok(
-    CssContent(block).render().second
+    CssContent(block).render().second,
   ).characterEncoding(
-    StandardCharsets.UTF_8
+    StandardCharsets.UTF_8,
   ).contentType(
-    "text/css;chartset=utf-8"
+    "text/css;chartset=utf-8",
   )
 }
 
@@ -360,12 +360,12 @@ internal class CssContent(
 
 @HtmlTagMarker
 public suspend inline fun <T, C : TagConsumer<T>> C.htmlSuspend(
-  namespace : String? = null,
-  crossinline block : suspend HTML.() -> Unit
-) : T = HTML(
+  namespace: String? = null,
+  crossinline block: suspend HTML.() -> Unit
+): T = HTML(
   emptyMap,
   this,
-  namespace
+  namespace,
 ).visitAndFinalizeSuspend(
   this,
   block,

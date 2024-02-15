@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -98,7 +98,7 @@ public abstract class PageController : BaseController() {
   /**
    * TBD.
    */
-  public class ServerRenderAgent (
+  public class ServerRenderAgent(
     public val dom: HTML,
     private val controller: PageController,
     private val request: HttpRequest<*>,
@@ -109,7 +109,7 @@ public abstract class PageController : BaseController() {
       }
     }
 
-    public suspend inline fun body(classes : String? = null, crossinline block: suspend BODY.() -> Unit) {
+    public suspend inline fun body(classes: String? = null, crossinline block: suspend BODY.() -> Unit) {
       dom.body(classes) {
         block.invoke(this)
       }

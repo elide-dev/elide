@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -33,18 +33,18 @@ import kotlin.test.assertNotNull
   @Test fun testAcquire() {
     assertNotNull(
       AppExecutor.DefaultExecutor.acquire(),
-      "should be able to acquire default executor statically"
+      "should be able to acquire default executor statically",
     )
   }
 
   @Test fun testExecutorService() {
     assertNotNull(
       AppExecutor.DefaultExecutor.acquire().service(),
-      "should be able to acquire default executor as `ExecutorService`"
+      "should be able to acquire default executor as `ExecutorService`",
     )
     assertNotNull(
       AppExecutor.DefaultExecutor.acquire().executor(),
-      "should be able to acquire default executor as `Executor`"
+      "should be able to acquire default executor as `Executor`",
     )
   }
 
@@ -59,7 +59,7 @@ import kotlin.test.assertNotNull
     assertEquals(
       5,
       result,
-      "should be able to run task on `async` scheduler and retrieve result"
+      "should be able to run task on `async` scheduler and retrieve result",
     )
   }
 
@@ -74,7 +74,7 @@ import kotlin.test.assertNotNull
     assertEquals(
       5,
       result,
-      "should be able to run task on `io` scheduler and retrieve result"
+      "should be able to run task on `io` scheduler and retrieve result",
     )
   }
 }

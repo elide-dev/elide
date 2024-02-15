@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,22 +17,22 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class WasiRandomTests {
-    @Test fun testSeededGenerator() {
-        val generator = Wasi.seededRandom()
-        assertTrue(generator.nextFloat() != generator.nextFloat())
-        assertTrue(generator.nextDouble() != generator.nextDouble())
-        assertTrue(generator.nextInt() != generator.nextInt())
-        assertTrue(generator.nextLong() != generator.nextLong())
-    }
+  @Test fun testSeededGenerator() {
+    val generator = Wasi.seededRandom()
+    assertTrue(generator.nextFloat() != generator.nextFloat())
+    assertTrue(generator.nextDouble() != generator.nextDouble())
+    assertTrue(generator.nextInt() != generator.nextInt())
+    assertTrue(generator.nextLong() != generator.nextLong())
+  }
 
-    @Test fun testSecureGenerator() {
-        val generator = Wasi.secureRandom()
-        assertTrue(generator.nextFloat() != generator.nextFloat())
-        assertTrue(generator.nextDouble() != generator.nextDouble())
-        assertTrue(generator.nextInt() != generator.nextInt())
-        assertTrue(generator.nextLong() != generator.nextLong())
-        for (i in 0..Int.SIZE_BITS) {
-            assertTrue(generator.nextBits(i).countLeadingZeroBits() >= (Int.SIZE_BITS - i))
-        }
+  @Test fun testSecureGenerator() {
+    val generator = Wasi.secureRandom()
+    assertTrue(generator.nextFloat() != generator.nextFloat())
+    assertTrue(generator.nextDouble() != generator.nextDouble())
+    assertTrue(generator.nextInt() != generator.nextInt())
+    assertTrue(generator.nextLong() != generator.nextLong())
+    for (i in 0..Int.SIZE_BITS) {
+      assertTrue(generator.nextBits(i).countLeadingZeroBits() >= (Int.SIZE_BITS - i))
     }
+  }
 }

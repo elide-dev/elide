@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -63,8 +63,15 @@ public external interface Collator {
 
   public companion object {
     @nativeInvoke
-    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: CollatorOptions = definedExternally): Collator
-    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: CollatorOptions = definedExternally): Array<String>
+    public operator fun invoke(
+      locales: Any /* String | Array<String> */ = definedExternally,
+      options: CollatorOptions = definedExternally
+    ): Collator
+
+    public fun supportedLocalesOf(
+      locales: Any /* String | Array<String> */,
+      options: CollatorOptions = definedExternally
+    ): Array<String>
   }
 }
 
@@ -130,8 +137,15 @@ public external interface NumberFormat {
 
   public companion object {
     @nativeInvoke
-    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: NumberFormatOptions = definedExternally): NumberFormat
-    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: NumberFormatOptions = definedExternally): Array<String>
+    public operator fun invoke(
+      locales: Any /* String | Array<String> */ = definedExternally,
+      options: NumberFormatOptions = definedExternally
+    ): NumberFormat
+
+    public fun supportedLocalesOf(
+      locales: Any /* String | Array<String> */,
+      options: NumberFormatOptions = definedExternally
+    ): Array<String>
   }
 }
 
@@ -223,7 +237,14 @@ public external interface DateTimeFormat {
 
   public companion object {
     @nativeInvoke
-    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: DateTimeFormatOptions = definedExternally): DateTimeFormat
-    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: DateTimeFormatOptions = definedExternally): Array<String>
+    public operator fun invoke(
+      locales: Any /* String | Array<String> */ = definedExternally,
+      options: DateTimeFormatOptions = definedExternally
+    ): DateTimeFormat
+
+    public fun supportedLocalesOf(
+      locales: Any /* String | Array<String> */,
+      options: DateTimeFormatOptions = definedExternally
+    ): Array<String>
   }
 }

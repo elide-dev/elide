@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import elide.core.api.Symbolic.SealedResolver
 import elide.data.Encoding
 
 /** TBD. */
-public enum class KxEncoding (override val symbol: Int) : Symbolic<Int> {
+public enum class KxEncoding(override val symbol: Int) : Symbolic<Int> {
   /** Hex encoding. */
   HEX(symbol = Encoding.HEX.ordinal),
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -52,15 +52,15 @@ public abstract class AbstractElideProtobufProtocol : ElideProtocol {
   /** Protocol Buffers-backed implementation of basic model features. */
   public class ProtoModelStrategy : ModelAdapterStrategy {
     override fun model() = object : DataModelStrategy<
-      HashAlgorithm,
-      Encoding,
-      ProtoDataContainer,
-      ProtoDataContainer.Builder,
-      ProtoDataFingerprint,
-      ProtoDataFingerprint.Builder,
-      ProtoTimestamp,
-      ProtoTimestamp.TimestampBuilder,
-    > {
+            HashAlgorithm,
+            Encoding,
+            ProtoDataContainer,
+            ProtoDataContainer.Builder,
+            ProtoDataFingerprint,
+            ProtoDataFingerprint.Builder,
+            ProtoTimestamp,
+            ProtoTimestamp.TimestampBuilder,
+            > {
       // Return a protocol buffer-based data fingerprint factory.
       override fun fingerprints() = ProtoDataFingerprint.Factory
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -91,7 +91,7 @@ public object JavaScript {
     /**
      * TBD.
      */
-    @JvmStatic public fun <S: Any> requestState(
+    @JvmStatic public fun <S : Any> requestState(
       state: RequestState,
       props: S? = null,
     ): RequestExecutionInputs<HttpRequest<Any>> {

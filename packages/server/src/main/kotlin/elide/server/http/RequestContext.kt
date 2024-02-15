@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ public object RequestContext {
    *
    * @param name Name associated with this key.
    */
-  public data class Key (
+  public data class Key(
     public val name: String,
   ) {
     /** Keys where request context may be accessed. */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -74,7 +74,7 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "SGVsbG8sIHdvcmxkIQ==",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 encode"
+      "should get a return value for guest base64 encode",
     )
   }
 
@@ -91,7 +91,7 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "Hello, world!",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 decode"
+      "should get a return value for guest base64 decode",
     )
   }
 
@@ -108,7 +108,7 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "SGVsbG8sIHdvcmxkIQ==",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 encode (`btoa`)"
+      "should get a return value for guest base64 encode (`btoa`)",
     )
   }
 
@@ -125,20 +125,22 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "Hello, world!",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 decode (`atob`)"
+      "should get a return value for guest base64 decode (`atob`)",
     )
   }
 
-  @CsvSource(value = [
-    "Hello world!,SGVsbG8gd29ybGQh,SGVsbG8gd29ybGQh",
-    "12346789,MTIzNDY3ODk=,MTIzNDY3ODk",
-    "f,Zg==,Zg",
-    "fo,Zm8=,Zm8",
-    "foo,Zm9v,Zm9v",
-    "foob,Zm9vYg==,Zm9vYg",
-    "fooba,Zm9vYmE=,Zm9vYmE",
-    "foobar,Zm9vYmFy,Zm9vYmFy",
-  ])
+  @CsvSource(
+    value = [
+      "Hello world!,SGVsbG8gd29ybGQh,SGVsbG8gd29ybGQh",
+      "12346789,MTIzNDY3ODk=,MTIzNDY3ODk",
+      "f,Zg==,Zg",
+      "fo,Zm8=,Zm8",
+      "foo,Zm9v,Zm9v",
+      "foob,Zm9vYg==,Zm9vYg",
+      "fooba,Zm9vYmE=,Zm9vYmE",
+      "foobar,Zm9vYmFy,Zm9vYmFy",
+    ],
+  )
   @ParameterizedTest(name = "[{index}]") fun testCodec(source: String, expected: String, websafeExpected: String) {
     // first, encode and decode directly
     val encoded = base64.encode(source)
@@ -193,7 +195,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         encoded,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 encode"
+        "should get a return value for guest base64 encode",
       )
     }
 
@@ -211,7 +213,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         websafeExpected,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 encode"
+        "should get a return value for guest base64 encode",
       )
     }
 
@@ -229,7 +231,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 decode"
+        "should get a return value for guest base64 decode",
       )
     }
 
@@ -247,7 +249,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 decode (websafe)"
+        "should get a return value for guest base64 decode (websafe)",
       )
     }
 
@@ -265,7 +267,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 round-trip"
+        "should get a return value for guest base64 round-trip",
       )
     }
 
@@ -283,7 +285,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 round-trip (`atob`/`btoa`)"
+        "should get a return value for guest base64 round-trip (`atob`/`btoa`)",
       )
     }
   }

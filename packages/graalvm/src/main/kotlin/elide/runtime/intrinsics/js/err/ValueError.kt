@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -44,7 +44,7 @@ public abstract class ValueError : AbstractJSException, Error() {
    * Public factory for [ValueError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJSException.ErrorFactory<ValueError> {
+  public companion object Factory : AbstractJSException.ErrorFactory<ValueError> {
     override fun create(error: Throwable): ValueError {
       return object : ValueError() {
         override val message: String get() = error.message ?: "An error occurred"
@@ -54,11 +54,12 @@ public abstract class ValueError : AbstractJSException, Error() {
     override fun create(message: String, cause: Throwable?): ValueError {
       return object : ValueError() {
         override val message: String get() = message
-        override val cause: Error? get() = if (cause != null) {
-          create(cause)
-        } else {
-          null
-        }
+        override val cause: Error?
+          get() = if (cause != null) {
+            create(cause)
+          } else {
+            null
+          }
       }
     }
   }

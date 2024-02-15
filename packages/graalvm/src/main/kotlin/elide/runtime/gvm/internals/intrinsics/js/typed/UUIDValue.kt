@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,7 +31,7 @@ import java.util.UUID as JavaUUID
  * If a string happens to be available (for instance, when a UUID is constructed from a string), it is cached after
  * parsing occurs.
  */
-@JvmInline public value class UUIDValue private constructor (private val value: ValidUUID): UUID {
+@JvmInline public value class UUIDValue private constructor(private val value: ValidUUID) : UUID {
   /** Internal representation of a UUID string and structured value. */
   internal data class ValidUUID(
     /** Structural (parsed and validated) UUID. */
@@ -55,29 +55,33 @@ import java.util.UUID as JavaUUID
    * Internal factory implementation which handles the generation and parsing of UUIDs; these are always returned as an
    * instance of [UUIDValue].
    */
-  public companion object: UUID.Factory {
+  public companion object : UUID.Factory {
     // Length of a V4 UUID.
     internal const val UUID_LENGTH: Int = 36
 
     override fun random(): UUIDValue = of(
-      JavaUUID.randomUUID()
+      JavaUUID.randomUUID(),
     )
 
     @Throws(ValueError::class)
-    override fun of(value: String): UUIDValue = UUIDValue(ValidUUID(
-      cachedString = value,
-      uuid = try {
-        JavaUUID.fromString(value)
-      } catch (iae: IllegalArgumentException) {
-        throw ValueError.create("Not a valid UUID string: '$value'", iae)
-      },
-    ))
+    override fun of(value: String): UUIDValue = UUIDValue(
+      ValidUUID(
+        cachedString = value,
+        uuid = try {
+          JavaUUID.fromString(value)
+        } catch (iae: IllegalArgumentException) {
+          throw ValueError.create("Not a valid UUID string: '$value'", iae)
+        },
+      ),
+    )
 
     override fun of(value: UUIDValue): UUIDValue = UUIDValue(value.value)
 
-    override fun of(value: JavaUUID): UUIDValue = UUIDValue(ValidUUID(
-      uuid = value,
-    ))
+    override fun of(value: JavaUUID): UUIDValue = UUIDValue(
+      ValidUUID(
+        uuid = value,
+      ),
+    )
   }
 
   @get:Polyglot override val length: Int get() = UUID_LENGTH

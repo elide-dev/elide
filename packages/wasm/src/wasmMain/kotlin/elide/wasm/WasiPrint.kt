@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,7 +27,7 @@ interface WasiPrint {
   fun println(message: Any)
 }
 
-object OutputWasiPrint: WasiPrint {
+object OutputWasiPrint : WasiPrint {
   override fun print(message: Any) {
     fdWrite(StandardDescriptor.STDOUT, listOf(message.toString().encodeToByteArray()))
   }
@@ -37,7 +37,7 @@ object OutputWasiPrint: WasiPrint {
   }
 }
 
-object ErrorWasiPrint: WasiPrint {
+object ErrorWasiPrint : WasiPrint {
   override fun print(message: Any) {
     fdWrite(StandardDescriptor.STDERR, listOf(message.toString().encodeToByteArray()))
   }

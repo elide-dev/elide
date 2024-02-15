@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
 /** Implements a JS-compatible map structure which is mutable and accepts multiple values per key. */
-internal abstract class BaseMutableJsMultiMap<K: Any, V> (
+internal abstract class BaseMutableJsMultiMap<K : Any, V>(
   map: MutableMap<K, MutableList<V>>,
   threadsafe: Boolean,
   sorted: Boolean,
@@ -67,20 +67,21 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> (
   override fun isEmpty(): Boolean = backingMap.isEmpty()
 
   /** @inheritDoc */
-  override val entries: MutableSet<MutableMap.MutableEntry<K, V>> get() = backingMap.entries.flatMap {
-    it.value.map { inner ->
-      object: MutableMap.MutableEntry<K, V> {
-        override var key: K = it.key
-        override var value: V = inner
+  override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
+    get() = backingMap.entries.flatMap {
+      it.value.map { inner ->
+        object : MutableMap.MutableEntry<K, V> {
+          override var key: K = it.key
+          override var value: V = inner
 
-        override fun setValue(newValue: V): V {
-          val old = value
-          value = newValue
-          return old
+          override fun setValue(newValue: V): V {
+            val old = value
+            value = newValue
+            return old
+          }
         }
       }
-    }
-  }.toMutableSet()
+    }.toMutableSet()
 
   /** @inheritDoc */
   override val keys: MutableSet<K> get() = asMutable().keys
@@ -104,7 +105,7 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> (
   @Polyglot override fun values(): JsIterator<V> = JsIteratorFactory.forIterator(
     backingMap.values.stream().flatMap { inner ->
       inner.stream()
-    }.iterator()
+    }.iterator(),
   )
 
   /** @inheritDoc */
@@ -113,7 +114,7 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> (
       it.value.stream().map { inner ->
         BaseJsMap.entry(it.key, inner)
       }
-    }.iterator()
+    }.iterator(),
   )
 
   /** @inheritDoc */

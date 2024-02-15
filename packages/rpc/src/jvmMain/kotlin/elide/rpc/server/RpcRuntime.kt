@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -42,7 +42,7 @@ import elide.runtime.Logging
  *
  * @param healthManager Service health manager, which keeps track of each service's health state.
  */
-@Context @Singleton internal class RpcRuntime @Inject constructor (
+@Context @Singleton internal class RpcRuntime @Inject constructor(
   private val healthManager: ServiceHealthManager,
 ) {
   // Private logger.
@@ -87,15 +87,15 @@ import elide.runtime.Logging
 
     // add reflection service and indicate it is up
     builder.addService(
-      ProtoReflectionService.newInstance()
+      ProtoReflectionService.newInstance(),
     )
     healthManager.notifyServing(
-      ServerReflectionGrpc.getServiceDescriptor()
+      ServerReflectionGrpc.getServiceDescriptor(),
     )
 
     // indicate health service as up
     builder.addService(
-      healthManager.service
+      healthManager.service,
     )
     return builder
   }
@@ -108,7 +108,7 @@ import elide.runtime.Logging
   // Prepare a stub with settings that integrate execution, compression, etc., with Elide settings.
   internal fun prepareStub(stub: AbstractStub<*>, interceptors: List<ClientInterceptor>): AbstractStub<*> {
     return stub.withInterceptors(
-      *interceptors.toTypedArray()
+      *interceptors.toTypedArray(),
     )
   }
 
@@ -135,12 +135,12 @@ import elide.runtime.Logging
 
     // set up an internal channel to the new server
     internalChannel = InProcessChannelBuilder.forName(
-      serverName
+      serverName,
     ).build()
 
     initialized.compareAndExchange(
       false,
-      true
+      true,
     )
   }
 

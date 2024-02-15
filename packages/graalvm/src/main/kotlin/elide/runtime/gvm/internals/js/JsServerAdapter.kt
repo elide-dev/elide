@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,13 +21,13 @@ import elide.runtime.gvm.internals.AbstractVMAdapter
 
 /** Implements an adapter to [JsRuntime] for server-side use. */
 internal class JsServerAdapter : AbstractVMAdapter<
-  HttpResponse<Publisher<InputStream>>,
-  JsInvocationBindings,
-  JsExecutableScript,
-  JsMicronautRequestExecutionInputs,
->() {
+        HttpResponse<Publisher<InputStream>>,
+        JsInvocationBindings,
+        JsExecutableScript,
+        JsMicronautRequestExecutionInputs,
+        >() {
   /** JavaScript server execution wrapper (for an in-flight VM execution). */
-  inner class JsServerExecution (
+  inner class JsServerExecution(
     op: CompletableFuture<HttpResponse<Publisher<InputStream>>>,
   ) : VMStreamingExecution(op) {
     override val done: Boolean get() = op.isDone

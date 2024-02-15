@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -54,7 +54,7 @@ abstract class AbstractEmbeddedTest : CallBuilder {
   /**
    *
    */
-  class ConfiguredEmbeddedTestContext (
+  class ConfiguredEmbeddedTestContext(
     val instance: ElideEmbedded,
     val config: InstanceConfiguration,
     val capabilities: EnumSet<Capability> = EnumSet.of(BASELINE),
@@ -107,9 +107,9 @@ abstract class AbstractEmbeddedTest : CallBuilder {
           headers = httpHeaders {
             header.add(
               httpHeader {
-              name = "User-Agent"
-              value = "ElideEmbeddedTest"
-            }
+                name = "User-Agent"
+                value = "ElideEmbeddedTest"
+              },
             )
           }
         }
@@ -137,12 +137,16 @@ abstract class AbstractEmbeddedTest : CallBuilder {
     inline fun queue(crossinline op: QueueInvocationRequestKt.Dsl.() -> Unit): ConfiguredEmbeddedTestContext = apply {
       val queue = createQueued {
         batch = queueMessageBatch {
-          messages.add(queueMessage {
-            id = UUID.random()
-          })
-          messages.add(queueMessage {
-            id = UUID.random()
-          })
+          messages.add(
+            queueMessage {
+              id = UUID.random()
+            },
+          )
+          messages.add(
+            queueMessage {
+              id = UUID.random()
+            },
+          )
         }
         op()
       }
@@ -191,7 +195,9 @@ abstract class AbstractEmbeddedTest : CallBuilder {
           instance.teardown()
         }
         when (val exc = err.get()) {
-          null -> { /* nothing to do */ }
+          null -> { /* nothing to do */
+          }
+
           else -> throw exc  // rethrow inner
         }
       }
@@ -264,9 +270,11 @@ abstract class AbstractEmbeddedTest : CallBuilder {
     inline fun embedded(): ConfiguredEmbeddedTestContext {
       return ConfiguredEmbeddedTestContext(
         ElideEmbedded.create(),
-        InstanceConfiguration.createFrom(hostConfiguration {
-          // no defaults at this time
-        })
+        InstanceConfiguration.createFrom(
+          hostConfiguration {
+            // no defaults at this time
+          },
+        ),
       )
     }
 
@@ -276,9 +284,11 @@ abstract class AbstractEmbeddedTest : CallBuilder {
     inline fun withConfig(builder: HostConfigurationKt.Dsl.() -> Unit): ConfiguredEmbeddedTestContext {
       return ConfiguredEmbeddedTestContext(
         ElideEmbedded.create(),
-        InstanceConfiguration.createFrom(hostConfiguration {
-          apply(builder)
-        })
+        InstanceConfiguration.createFrom(
+          hostConfiguration {
+            apply(builder)
+          },
+        ),
       )
     }
   }

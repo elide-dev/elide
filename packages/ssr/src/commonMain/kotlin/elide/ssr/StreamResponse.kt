@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import elide.vm.annotations.Polyglot
 /**
  * TBD.
  */
-public sealed class StreamResponse @Polyglot constructor (
+public sealed class StreamResponse @Polyglot constructor(
   override val status: Int = 200,
   override val headers: Map<String, String> = emptyMap(),
   override val content: String = "",
@@ -41,12 +41,13 @@ public sealed class StreamResponse @Polyglot constructor (
     ): StreamResponse {
       return Success(
         RenderedStream(
-        status = status,
-        html = content,
-        headers = headers,
-        criticalCss = criticalCss,
-        styleChunks = styleChunks,
-      ))
+          status = status,
+          html = content,
+          headers = headers,
+          criticalCss = criticalCss,
+          styleChunks = styleChunks,
+        ),
+      )
     }
 
     /**

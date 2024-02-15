@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,25 +23,25 @@ import elide.proto.api.data.DataFingerprint as IDataFingerprint
 
 /** TBD. */
 @Suppress("unused", "UNUSED_PARAMETER")
-public class KxDataContainer private constructor (private val container: DataContainer) : IDataContainer<
-  KxDataContainer,
-  KxDataContainer.Builder,
-  KxDataFingerprint,
-  KxDataFingerprint.Builder,
-  KxHashAlgorithm,
-  KxEncoding,
-> {
+public class KxDataContainer private constructor(private val container: DataContainer) : IDataContainer<
+        KxDataContainer,
+        KxDataContainer.Builder,
+        KxDataFingerprint,
+        KxDataFingerprint.Builder,
+        KxHashAlgorithm,
+        KxEncoding,
+        > {
   /**
    * TBD.
    */
   public class Builder : IDataContainer.IBuilder<
-    KxDataContainer,
-    KxDataFingerprint,
-    KxDataFingerprint.Builder,
-    KxHashAlgorithm,
-    KxEncoding,
-    Builder,
-  > {
+          KxDataContainer,
+          KxDataFingerprint,
+          KxDataFingerprint.Builder,
+          KxHashAlgorithm,
+          KxEncoding,
+          Builder,
+          > {
     override var data: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
@@ -73,13 +73,13 @@ public class KxDataContainer private constructor (private val container: DataCon
 
   /** */
   public companion object Factory : IDataContainer.Factory<
-    KxDataContainer,
-    Builder,
-    KxDataFingerprint,
-    KxDataFingerprint.Builder,
-    KxHashAlgorithm,
-    KxEncoding,
-  > {
+          KxDataContainer,
+          Builder,
+          KxDataFingerprint,
+          KxDataFingerprint.Builder,
+          KxHashAlgorithm,
+          KxEncoding,
+          > {
     override fun empty(): KxDataContainer {
       TODO("Not yet implemented")
     }

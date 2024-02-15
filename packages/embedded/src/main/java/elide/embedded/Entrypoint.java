@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
 
 /**
  * Elide Embedded Entrypoint
@@ -67,7 +68,6 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param args
    */
   public static void main(String[] args) {
@@ -75,18 +75,17 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param mode
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_initialize",
-    documentation = {
-      "Initialize the Elide Embedded runtime.",
-      "This function must be called before any other Elide Embedded function, in order to setup initial resources.",
-      "This function is not thread-safe and must be called from a single thread, ideally at host system boot."
-    }
+          name = "elide_embedded_initialize",
+          documentation = {
+                  "Initialize the Elide Embedded runtime.",
+                  "This function must be called before any other Elide Embedded function, in order to setup initial resources.",
+                  "This function is not thread-safe and must be called from a single thread, ideally at host system boot."
+          }
   )
   public static int initialize(IsolateThread thread, ProtocolMode mode) {
     assert !initialized.get() : "Elide Embedded is already initialized";
@@ -104,18 +103,17 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param capability
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_capability",
-    documentation = {
-      "Declare a capability for the Elide Embedded runtime.",
-      "Called to declare support for a given capability from host software. Must be called after initialization.",
-      "Cannot be called after configuration, or after an instance is running."
-    }
+          name = "elide_embedded_capability",
+          documentation = {
+                  "Declare a capability for the Elide Embedded runtime.",
+                  "Called to declare support for a given capability from host software. Must be called after initialization.",
+                  "Cannot be called after configuration, or after an instance is running."
+          }
   )
   public static int capability(IsolateThread thread, Capability capability) {
     assert initialized.get() : "Elide Embedded not initialized; please initialize before declaring capabilities";
@@ -129,18 +127,17 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param arg
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_arg",
-    documentation = {
-      "Declare an argument for the Elide Embedded runtime.",
-      "Called to declare an entry argument for the Elide Embedded runtime. Must be called after initialization.",
-      "Cannot be called after configuration, or after an instance is running."
-    }
+          name = "elide_embedded_arg",
+          documentation = {
+                  "Declare an argument for the Elide Embedded runtime.",
+                  "Called to declare an entry argument for the Elide Embedded runtime. Must be called after initialization.",
+                  "Cannot be called after configuration, or after an instance is running."
+          }
   )
   public static int arg(IsolateThread thread, CCharPointer arg) {
     assert initialized.get() : "Elide Embedded not initialized; please initialize before declaring arguments";
@@ -156,18 +153,17 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param config
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_configure",
-    documentation = {
-      "Configure the Elide Embedded runtime.",
-      "Called to configure the Elide Embedded runtime with a given binary configuration payload; must be called after",
-      "initialization. Can only be called once per instance, and cannot be called after the instance is running."
-    }
+          name = "elide_embedded_configure",
+          documentation = {
+                  "Configure the Elide Embedded runtime.",
+                  "Called to configure the Elide Embedded runtime with a given binary configuration payload; must be called after",
+                  "initialization. Can only be called once per instance, and cannot be called after the instance is running."
+          }
   )
   public static int configure(IsolateThread thread, CCharPointer version, InstanceConfiguration config) {
     assert initialized.get() : "Elide Embedded not initialized; please initialize before configuring";
@@ -178,7 +174,7 @@ public class Entrypoint {
       final String apiVersion = CTypeConversion.toJavaString(version);
       protocolVersion.set(apiVersion);
       return instance.configure(apiVersion, elide.embedded.api.InstanceConfiguration.loadNative(
-        NativeBytes.inflateConfig(thread, protocolVersion.get(), protocolMode.get(), config)
+              NativeBytes.inflateConfig(thread, protocolVersion.get(), protocolMode.get(), config)
       ));
     } catch (Exception e) {
       return 1;
@@ -186,16 +182,15 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_start",
-    documentation = {
-      "Start the Elide Embedded runtime.",
-      "Finishes the initialization and configuration process, and starts the underlying runtime.",
-    }
+          name = "elide_embedded_start",
+          documentation = {
+                  "Start the Elide Embedded runtime.",
+                  "Finishes the initialization and configuration process, and starts the underlying runtime.",
+          }
   )
   public static int start(IsolateThread thread) {
     assert initialized.get() : "Elide Embedded not initialized; please initialize before starting";
@@ -215,7 +210,6 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param call
    * @param inflight
@@ -223,8 +217,8 @@ public class Entrypoint {
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_call_enter",
-    documentation = {}
+          name = "elide_embedded_call_enter",
+          documentation = {}
   )
   public static int enter(IsolateThread thread, SerializedInvocation call, InFlightCall inflight, CallbackPointer cbk) {
     assert configured.get() : "Elide Embedded not configured; please configure before dispatching";
@@ -243,14 +237,13 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param inflight
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_call_cancel",
-    documentation = {}
+          name = "elide_embedded_call_cancel",
+          documentation = {}
   )
   public static int cancel(IsolateThread thread, InFlightCall inflight) {
     assert configured.get() : "Elide Embedded not configured; please configure before dispatching";
@@ -265,14 +258,13 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param inflight
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_call_poll",
-    documentation = {}
+          name = "elide_embedded_call_poll",
+          documentation = {}
   )
   public static int poll(IsolateThread thread, InFlightCall inflight) {
     assert configured.get() : "Elide Embedded not configured; please configure before dispatching";
@@ -287,15 +279,14 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @param call
    * @param inflight
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_call_exit",
-    documentation = {}
+          name = "elide_embedded_call_exit",
+          documentation = {}
   )
   public static int exit(IsolateThread thread, SerializedInvocation call, InFlightCall inflight) {
     final ElideEmbedded instance = getActiveRuntime();
@@ -313,13 +304,12 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_stop",
-    documentation = {}
+          name = "elide_embedded_stop",
+          documentation = {}
   )
   public static int stop(IsolateThread thread) {
     assert running.get() : "Elide Embedded not running; can't stop a server which isn't running";
@@ -332,13 +322,12 @@ public class Entrypoint {
   }
 
   /**
-   *
    * @param thread
    * @return
    */
   @CEntryPoint(
-    name = "elide_embedded_teardown",
-    documentation = {}
+          name = "elide_embedded_teardown",
+          documentation = {}
   )
   public static int teardown(IsolateThread thread) {
     final ElideEmbedded instance = getActiveRuntime();
@@ -363,11 +352,11 @@ public class Entrypoint {
    * ## Native: Entry Function (`v1alpha1`)
    */
   public final CEntryPointLiteral<EntryPointer> entryFunctionV1alpha1 = CEntryPointLiteral.create(
-    Entrypoint.class,
-    "enter",
-    IsolateThread.class,
-    SerializedInvocation.class,
-    CallbackPointer.class
+          Entrypoint.class,
+          "enter",
+          IsolateThread.class,
+          SerializedInvocation.class,
+          CallbackPointer.class
   );
 
   // Safely obtain the active runtime.
@@ -410,8 +399,8 @@ public class Entrypoint {
      * @return Exit code; always `1` or greater.
      */
     @Uninterruptible(
-      reason = "Called from uninterruptible code.",
-      mayBeInlined = true
+            reason = "Called from uninterruptible code.",
+            mayBeInlined = true
     )
     static int notify(Object err) {
       System.err.println("ERR! Uncaught exception in native code: " + err.toString());

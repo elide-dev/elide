@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,9 +23,9 @@ import elide.core.encoding.Encoding
  * platform supported by Elide/Kotlin, including native platforms.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate") public expect object Hex : Codec<HexData> {
-    override fun encoding(): Encoding
+  override fun encoding(): Encoding
 
-    override fun encode(data: ByteArray): HexData
+  override fun encode(data: ByteArray): HexData
 
-    override fun decodeBytes(data: ByteArray): ByteArray
+  override fun decodeBytes(data: ByteArray): ByteArray
 }

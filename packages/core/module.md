@@ -15,21 +15,25 @@ including Kotlin `stdlib` and KotlinX.
 The `elide-core` package is provided via [Maven Central][0], and also via Elide's own [GitHub Packages][1] repository.
 
 **Via Gradle (Catalog):**
+
 ```kotlin
 implementation(framework.elide.core)
 ```
 
 **Via Gradle (Kotlin DSL):**
+
 ```kotlin
 implementation("dev.elide:elide-core")
 ```
 
 **Via Gradle (Groovy DSL):**
+
 ```kotlin
 implementation "dev.elide:elide-core"
 ```
 
 **Via Maven:**
+
 ```xml
 <dependency>
   <groupId>dev.elide</groupId>
@@ -70,5 +74,7 @@ Pure-Kotlin hex encoding via `elide.core.encoding`.
 Platform-specific defaults.
 
 [0]: https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-core
+
 [1]: https://github.com/orgs/elide-dev/packages?ecosystem=maven&q=core&tab=packages&ecosystem=maven&q=elide-core
+
 [2]: https://kotlinlang.org/docs/multiplatform.html

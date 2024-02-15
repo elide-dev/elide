@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,15 +12,15 @@
  */
 
 module elide.test {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires io.micronaut.http;
+  requires java.base;
+  requires kotlin.stdlib;
+  requires io.micronaut.http;
 
-    requires com.google.common;
+  requires com.google.common;
 
-    requires org.junit.jupiter.api;
+  requires org.junit.jupiter.api;
 
-    requires elide.core;
-    requires elide.base;
-    requires io.micronaut.test.micronaut_test_junit5;
+  requires elide.core;
+  requires elide.base;
+  requires io.micronaut.test.micronaut_test_junit5;
 }

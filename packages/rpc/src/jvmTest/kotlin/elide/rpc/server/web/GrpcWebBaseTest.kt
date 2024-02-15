@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -74,8 +74,8 @@ import elide.runtime.Logging
         if (contentType == GrpcWebContentType.TEXT) {
           stream.writeBytes(
             Base64.getEncoder().encode(
-              prefix.plus(rawMessageBytes)
-            )
+              prefix.plus(rawMessageBytes),
+            ),
           )
         } else {
           stream.writeBytes(prefix)
@@ -90,10 +90,10 @@ import elide.runtime.Logging
     // build our initial request
     return HttpRequest.POST(
       "/_/rpc/$service/$method",
-      serialized
+      serialized,
     ).header(
       GrpcWeb.Headers.sentinel,
-      "1"
+      "1",
     ).header(
       HttpHeaders.ACCEPT,
       contentType.toString(),
@@ -153,7 +153,7 @@ import elide.runtime.Logging
   }
 
   // Decode the protobuf described by `defaultInstance` from the provided `response`, using `format`.
-  protected fun <T: Message> decodeResponse(
+  protected fun <T : Message> decodeResponse(
     response: HttpResponse<RawRpcPayload>,
     format: GrpcWebContentType,
     defaultInstance: T
@@ -161,7 +161,7 @@ import elide.runtime.Logging
     // check basic valid response state
     assertNotNull(
       response,
-      "should never get `null` response from gRPC Web Controller"
+      "should never get `null` response from gRPC Web Controller",
     )
     validGrpcWebResponse(
       format,
@@ -174,11 +174,11 @@ import elide.runtime.Logging
     val deframer = ResponseDeframer()
     val decodedMessage: Message = if (deframer.processInput(stream, format)) {
       defaultInstance.parserForType.parseFrom(
-        deframer.toByteArray()
+        deframer.toByteArray(),
       )
     } else {
       throw IllegalArgumentException(
-        "Data stream for gRPC Web dispatch was malformed"
+        "Data stream for gRPC Web dispatch was malformed",
       )
     }
     @Suppress("UNCHECKED_CAST")
@@ -192,31 +192,31 @@ import elide.runtime.Logging
     assertEquals(
       200,
       response.status.code,
-      "response code from valid response should be HTTP 200, even for relayed error"
+      "response code from valid response should be HTTP 200, even for relayed error",
     )
     assertTrue(
       response.body.isPresent,
-      "response body from valid response should not be empty, even for relayed error"
+      "response body from valid response should not be empty, even for relayed error",
     )
     assertTrue(
       response.contentType.isPresent,
-      "response should have a content type set, even for relayed error"
+      "response should have a content type set, even for relayed error",
     )
     assertEquals(
       format.contentType(),
       response.contentType.get().toString(),
-      "response should have a content-type of expected value matching request"
+      "response should have a content-type of expected value matching request",
     )
 
     // should be able to decode data frames from the message, or, at least an empty one
     val bodyData = response.body.orElseThrow()
     assertNotNull(
       bodyData,
-      "body response data should not be `null`"
+      "body response data should not be `null`",
     )
     assertTrue(
       bodyData.size >= 5,
-      "expected at least 5 bytes for gRPC Web prefix value, even with empty data frame"
+      "expected at least 5 bytes for gRPC Web prefix value, even with empty data frame",
     )
     val deframer = ResponseDeframer()
     assertTrue(
@@ -224,15 +224,15 @@ import elide.runtime.Logging
         ByteArrayInputStream(bodyData),
         format,
       ),
-      "processing response data should indicate a well-formed stream for a valid gRPC Web response"
+      "processing response data should indicate a well-formed stream for a valid gRPC Web response",
     )
     assertNotNull(
       deframer.status,
-      "should have decoded gRPC status from gRPC web response trailer (status trailer is required)"
+      "should have decoded gRPC status from gRPC web response trailer (status trailer is required)",
     )
     assertTrue(
       deframer.trailers.keys().isNotEmpty(),
-      "trailers should be decoded properly from gRPC web response"
+      "trailers should be decoded properly from gRPC web response",
     )
     return deframer.status!! to deframer.trailers
   }
@@ -244,16 +244,16 @@ import elide.runtime.Logging
     )
     assertNotNull(
       status,
-      "should not get `null` for decoded status"
+      "should not get `null` for decoded status",
     )
     assertNotNull(
       trailers,
-      "should not get `null` for decoded trailers"
+      "should not get `null` for decoded trailers",
     )
     assertEquals(
       Status.Code.OK,
       status.code,
-      "well-formed request which is expected to succeed should get OK status"
+      "well-formed request which is expected to succeed should get OK status",
     )
     return trailers
   }
@@ -269,16 +269,16 @@ import elide.runtime.Logging
     )
     assertNotNull(
       status,
-      "should not get `null` for decoded status"
+      "should not get `null` for decoded status",
     )
     assertNotNull(
       trailers,
-      "should not get `null` for decoded trailers"
+      "should not get `null` for decoded trailers",
     )
     assertEquals(
       expectedStatus.code,
       status.code,
-      "expected error status of provided type, but got different status"
+      "expected error status of provided type, but got different status",
     )
     return trailers
   }

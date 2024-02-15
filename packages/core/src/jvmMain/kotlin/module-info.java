@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,11 +12,11 @@
  */
 
 module elide.core {
-    requires java.base;
-    requires kotlin.stdlib;
+  requires java.base;
+  requires kotlin.stdlib;
 
-    exports elide.core.api;
-    exports elide.core.annotations;
-    exports elide.core.encoding.base64;
-    exports elide.core.encoding.hex;
+  exports elide.core.api;
+  exports elide.core.annotations;
+  exports elide.core.encoding.base64;
+  exports elide.core.encoding.hex;
 }

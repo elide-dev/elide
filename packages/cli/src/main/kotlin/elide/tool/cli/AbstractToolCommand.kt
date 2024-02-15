@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@ package elide.tool.cli
 
 import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.runMosaic
-import java.lang.Runnable
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -27,7 +26,7 @@ import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
 
 /** Abstract base for all Elide Tool commands, including the root command. */
-abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi where Context: CommandContext {
+abstract class AbstractToolCommand<Context> : Callable<Int>, Runnable, CommandApi where Context : CommandContext {
   companion object {
     /** Status of colorized / formatted output support. */
     internal val pretty: AtomicBoolean = AtomicBoolean(true)
@@ -129,15 +128,17 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
     }
     runBlocking {
       op.invoke(commandCtx, state).let { result ->
-        exit.set(when (result) {
-           is CommandResult.Success -> 0
-           is CommandResult.Error -> result.exitCode
-         }.also {
-          logging.trace {
-            "Command implementation returned exit code: $it"
-          }
-          commandResult.set(result)
-        })
+        exit.set(
+          when (result) {
+            is CommandResult.Success -> 0
+            is CommandResult.Error -> result.exitCode
+          }.also {
+            logging.trace {
+              "Command implementation returned exit code: $it"
+            }
+            commandResult.set(result)
+          },
+        )
       }
     }
 

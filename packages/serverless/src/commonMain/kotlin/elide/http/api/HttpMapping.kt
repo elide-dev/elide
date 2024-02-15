@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,4 +24,4 @@ package elide.http.api
  * @see HttpHeaders for an example of a mutable HTTP mapping.
  * @see MutableHttpMapping for the mutable form of this interface.
  */
-public interface HttpMapping<Key, Value> : Map<Key, Value> where Key: HttpText
+public interface HttpMapping<Key, Value> : Map<Key, Value> where Key : HttpText

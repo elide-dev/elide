@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -101,19 +101,26 @@ import elide.runtime.plugins.jvm.interop.guestClass
       exception isMetaInstanceOf stoppedException -> StoppedException()
 
       exception isMetaInstanceOf userException -> UserException(
-        /* message = */ exception.exceptionMessage(),
-        /* causeExceptionClass = */ exception.exceptionCause(),
-        /* stackElements = */ emptyArray(),
+        /* message = */
+        exception.exceptionMessage(),
+        /* causeExceptionClass = */
+        exception.exceptionCause(),
+        /* stackElements = */
+        emptyArray(),
       )
 
       exception isMetaInstanceOf classInstallException -> ClassInstallException(
-        /* message = */ exception.exceptionMessage(),
-        /* installed = */ exception.invokeMember("installed")?.asBooleanArray(),
+        /* message = */
+        exception.exceptionMessage(),
+        /* installed = */
+        exception.invokeMember("installed")?.asBooleanArray(),
       )
 
       exception isMetaInstanceOf resolutionException -> ResolutionException(
-        /* id = */ exception.invokeMember("id").asInt(),
-        /* stackElements = */ emptyArray(),
+        /* id = */
+        exception.invokeMember("id").asInt(),
+        /* stackElements = */
+        emptyArray(),
       )
 
       else -> guestException
@@ -169,6 +176,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
     }
 
     /** Returns a property [guestClass] delegate for the given [name], prefixed with the [JSHELL_SPI_PACKAGE] name. */
+    @Suppress("unused")
     private fun PolyglotContext.spiClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
       return guestClass("$JSHELL_SPI_PACKAGE.$name")
     }

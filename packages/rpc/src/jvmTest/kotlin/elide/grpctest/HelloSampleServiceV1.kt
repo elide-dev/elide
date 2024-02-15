@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.grpctest
 import io.micronaut.grpc.annotation.GrpcService
 
 /** Sample service implementation in pure Kotlin. */
-@GrpcService class HelloSampleServiceV1: HelloServiceGrpcKt.HelloServiceCoroutineImplBase() {
+@GrpcService class HelloSampleServiceV1 : HelloServiceGrpcKt.HelloServiceCoroutineImplBase() {
   override suspend fun renderMessage(request: Nopackage.HelloRequest): Nopackage.HelloResponse {
     return helloResponse {
       message = "Hello, ${request.name.ifBlank { "Elide" }}!"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
 /** Test-side implementation of a health service. */
-@GrpcService class TestHealthService: HealthGrpc.HealthImplBase() {
+@GrpcService class TestHealthService : HealthGrpc.HealthImplBase() {
   companion object {
     const val SERVING_SIGNAL = "service.ShouldBeServing"
     const val NOT_SERVING_SIGNAL = "service.ShouldNotBeServing"
@@ -44,7 +44,7 @@ import io.micronaut.grpc.annotation.GrpcService
       responseObserver.onNext(
         HealthCheckResponse.newBuilder()
           .setStatus(status)
-          .build()
+          .build(),
       )
       responseObserver.onCompleted()
     }

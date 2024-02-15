@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -71,7 +71,7 @@ internal class MessageDeframer {
         if (input.size < expectedNumBytes) {
           logging.warning {
             "Input stream did not provide enough bytes for decoding as gRPC-Web. " +
-            "Expected: $expectedNumBytes, but found ${input.size}."
+                    "Expected: $expectedNumBytes, but found ${input.size}."
           }
           malformed = true
           false  // terminate

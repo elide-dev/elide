@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -34,9 +34,9 @@ public fun HEAD.stylesheet(
     "href",
     asset.href,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (media?.isNotBlank() == true) {
     this.media = media
@@ -49,11 +49,11 @@ public fun HEAD.stylesheet(uri: String, media: String? = null, attrs: Map<String
     "rel",
     "stylesheet",
     "href",
-    uri
+    uri,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (media?.isNotBlank() == true) {
     this.media = media
@@ -75,9 +75,9 @@ public fun HEAD.script(
     "src",
     asset.href,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true
@@ -96,11 +96,11 @@ public fun HEAD.script(
     "type",
     type,
     "src",
-    uri
+    uri,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true
@@ -118,11 +118,11 @@ public fun BODY.script(
     "type",
     type,
     "src",
-    uri
+    uri,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true
@@ -142,9 +142,9 @@ public fun BODY.script(
     "src",
     asset.href,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true

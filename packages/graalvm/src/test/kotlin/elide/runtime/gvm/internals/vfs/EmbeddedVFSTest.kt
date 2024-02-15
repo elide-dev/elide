@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -141,7 +141,7 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "{\"hi\": \"hello\"}",
       exampleFileContents2.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
 
     // read the 2nd txt example path
@@ -153,7 +153,7 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "hello again",
       exampleFileContents3.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
   }
 
@@ -262,7 +262,7 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "{\"hi\": \"hello\"}",
       exampleFileContents2.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
 
     // read the 2nd txt example path
@@ -274,7 +274,7 @@ import elide.testing.annotations.TestCase
     assertEquals(
       "hello again",
       exampleFileContents3.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
   }
 

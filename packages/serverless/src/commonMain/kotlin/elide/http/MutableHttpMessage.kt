@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -38,5 +38,7 @@ public abstract class MutableHttpMessage(
 
   override var body: MutableHttpPayload
     get() = TODO("Not yet implemented")
-    set(value) { TODO("Not yet implemented") }
+    set(value) {
+      TODO("Not yet implemented")
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import tools.elide.call.HostConfigurationOrBuilder
 /**
  *
  */
-public class InstanceConfiguration private constructor (private val config: HostConfiguration) :
+public class InstanceConfiguration private constructor(private val config: HostConfiguration) :
   HostConfigurationOrBuilder by config {
   public companion object {
     /**
@@ -31,7 +31,7 @@ public class InstanceConfiguration private constructor (private val config: Host
      *
      */
     @JvmStatic public fun loadNative(native: NativeConfiguration): InstanceConfiguration = InstanceConfiguration(
-      native.applyTo(HostConfiguration.newBuilder()).build()
+      native.applyTo(HostConfiguration.newBuilder()).build(),
     )
   }
 

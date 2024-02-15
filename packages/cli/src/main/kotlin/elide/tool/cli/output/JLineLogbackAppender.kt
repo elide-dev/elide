@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import ch.qos.logback.core.Layout
 import org.jline.reader.LineReader
 
 /** Implements a Logback appender which proxies output to JLine. */
-internal class JLineLogbackAppender (
+internal class JLineLogbackAppender(
   ctx: Context,
   private val reader: LineReader,
 ) : AppenderBase<ILoggingEvent>() {

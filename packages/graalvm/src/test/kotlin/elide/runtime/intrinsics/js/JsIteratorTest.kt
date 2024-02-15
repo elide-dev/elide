@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -134,7 +134,7 @@ import elide.testing.annotations.TestCase
     remaining.add("two")
 
     val testIter = JsIterator.JsIteratorFactory.forIterator(
-      remaining.iterator()
+      remaining.iterator(),
     )
 
     executeGuest {
@@ -165,7 +165,7 @@ import elide.testing.annotations.TestCase
     remaining.add("two")
 
     val testIter = JsIterator.JsIteratorFactory.forIterator(
-      remaining.iterator()
+      remaining.iterator(),
     )
 
     executeGuest {

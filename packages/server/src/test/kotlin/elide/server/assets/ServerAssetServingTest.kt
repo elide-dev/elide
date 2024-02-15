@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -112,7 +112,7 @@ import elide.testing.annotations.TestCase
     )
     val conditionNotSatisified = execute(
       HttpRequest.GET<Any>(sampleStylesheet)
-        .header("If-None-Match", "some-value-that-isnt-the-etag")
+        .header("If-None-Match", "some-value-that-isnt-the-etag"),
     )
     assertAsset(
       AssetType.STYLESHEET,
@@ -120,7 +120,7 @@ import elide.testing.annotations.TestCase
     )
     val conditionSatisfied = execute(
       HttpRequest.GET<Any>(sampleStylesheet)
-        .header("If-None-Match", response.header("ETag")!!)
+        .header("If-None-Match", response.header("ETag")!!),
     )
     assertAsset(AssetType.STYLESHEET, conditionSatisfied, status = 304) {
       assertTrue(response.headers.contains("Content-Length"))
@@ -131,7 +131,7 @@ import elide.testing.annotations.TestCase
     assertNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"), "unknown-module")
-      }
+      },
     )
   }
 
@@ -139,7 +139,7 @@ import elide.testing.annotations.TestCase
     assertNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"))
-      }
+      },
     )
   }
 
@@ -147,7 +147,7 @@ import elide.testing.annotations.TestCase
     assertNotNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"), "styles.base")
-      }
+      },
     )
   }
 
@@ -155,7 +155,7 @@ import elide.testing.annotations.TestCase
     assertNotNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>(manager.linkForAsset("styles.base")))
-      }
+      },
     )
   }
 
@@ -201,7 +201,7 @@ import elide.testing.annotations.TestCase
     )
     val compressedResponse = execute(
       HttpRequest.GET<Any?>(sampleStylesheet)
-        .header("Accept-Encoding", encodingName)
+        .header("Accept-Encoding", encodingName),
     )
     assertAsset(
       AssetType.STYLESHEET,
@@ -218,7 +218,7 @@ import elide.testing.annotations.TestCase
     )
     val identityResponse = execute(
       HttpRequest.GET<Any?>(sampleStylesheet)
-        .header("Accept-Encoding", "some-encoding, some-other-unfamiliar-encoding, perhaps-another")
+        .header("Accept-Encoding", "some-encoding, some-other-unfamiliar-encoding, perhaps-another"),
     )
     assertAsset(
       AssetType.STYLESHEET,
@@ -230,7 +230,7 @@ import elide.testing.annotations.TestCase
     assertNotNull(
       assertDoesNotThrow {
         manager.findAssetByModuleId("styles.base")
-      }
+      },
     )
   }
 
@@ -238,7 +238,7 @@ import elide.testing.annotations.TestCase
     assertNull(
       assertDoesNotThrow {
         manager.findAssetByModuleId("some.unknown.module.here")
-      }
+      },
     )
   }
 
@@ -249,7 +249,7 @@ import elide.testing.annotations.TestCase
     val idx = List(
       bundle.assetList.filter {
         it.module == someScript.module
-      }.size
+      }.size,
     ) { idx ->
       idx
     }.first()
@@ -274,7 +274,7 @@ import elide.testing.annotations.TestCase
     val idx = List(
       bundle.assetList.filter {
         it.module == someStylesheet.module
-      }.size
+      }.size,
     ) { idx ->
       idx
     }.first()
@@ -305,7 +305,7 @@ import elide.testing.annotations.TestCase
       .addAsset(
         AssetContent.newBuilder()
           .setModule("module-text-id")
-          .setToken("abc123123123123123123")
+          .setToken("abc123123123123123123"),
       )
       .build()
 

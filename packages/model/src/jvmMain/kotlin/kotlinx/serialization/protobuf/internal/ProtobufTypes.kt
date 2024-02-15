@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,5 +21,6 @@ internal val SerialDescriptor.isPackable: Boolean
   get() = when (kind) {
     PrimitiveKind.STRING,
     !is PrimitiveKind -> false
+
     else -> true
   }

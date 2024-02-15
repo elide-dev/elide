@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -76,7 +76,6 @@ import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.env.EnvConfig.EnvVar
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.*
 import elide.runtime.plugins.env.environment
-import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
@@ -114,7 +113,7 @@ import elide.tool.project.ProjectManager
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
   ],
 )
-@Singleton internal class ToolShellCommand @Inject constructor (
+@Singleton internal class ToolShellCommand @Inject constructor(
   private val projectManager: ProjectManager,
   private val workdir: WorkdirManager,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
@@ -390,11 +389,14 @@ import elide.tool.project.ProjectManager
       val effectiveInjectedEnv = TreeMap<String, EnvVar>()
 
       // inject `NODE_ENV`
-      effectiveInjectedEnv["NODE_ENV"] = EnvVar.of("NODE_ENV", if (ElideCLITool.ELIDE_RELEASE_TYPE == "DEV") {
-        "development"
-      } else {
-        "production"
-      })
+      effectiveInjectedEnv["NODE_ENV"] = EnvVar.of(
+        "NODE_ENV",
+        if (ElideCLITool.ELIDE_RELEASE_TYPE == "DEV") {
+          "development"
+        } else {
+          "production"
+        },
+      )
 
       // apply project-level environment variables first (if applicable)
       project?.env?.vars?.forEach {
@@ -1067,9 +1069,10 @@ import elide.tool.project.ProjectManager
         // advice
         (advice?.length ?: 0) + pad,
 
-      // stacktrace
-      if (stacktrace) stacktraceLines.maxOf { it.length + pad + 2 } else 0,
-    ))
+        // stacktrace
+        if (stacktrace) stacktraceLines.maxOf { it.length + pad + 2 } else 0,
+      ),
+    )
 
     val textWidth = width - (pad / 2) + if (stacktrace) {
       "      ".length

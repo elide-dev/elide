@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -74,7 +74,7 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
   @Singleton @Context class PythonRuntimeVFSConfigurator : GuestVFSConfigurator(
     PYTHON,
-    { runtimeInfo.get() }
+    { runtimeInfo.get() },
   )
 
   /** Python-specific engine configuration. */

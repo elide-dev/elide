@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -63,7 +63,7 @@ public interface VMFacade {
    * @return Deferred task which evaluates to the return value [R] when execution finishes.
    */
   public suspend fun <R> executeAsync(script: ExecutableScript, returnType: Class<R>, args: ExecutionInputs?):
-    Deferred<R?>
+          Deferred<R?>
 
   /**
    * Blocking execution of the provided [script] within an embedded JavaScript VM, by way of GraalVM's runtime engine;

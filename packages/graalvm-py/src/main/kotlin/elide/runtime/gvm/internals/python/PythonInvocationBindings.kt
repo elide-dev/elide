@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -68,7 +68,7 @@ import org.graalvm.polyglot.Value as GuestValue
  * @param mapped Resolved values for each binding.
  * @param types Entrypoint types expressed in [mapped].
  */
-internal sealed class PythonInvocationBindings (
+internal sealed class PythonInvocationBindings(
   private val mapped: Map<EntrypointInfo, PythonEntrypoint>,
   private val modes: EnumSet<DispatchStyle>,
   private val types: EnumSet<PythonEntrypointType>,

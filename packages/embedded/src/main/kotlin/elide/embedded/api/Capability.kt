@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import elide.embedded.NativeApi.Capability.*
  * Native enum which maps "embedded capability" instances to their underlying C and JVM values; Embedded Capabilities
  * are used to mediate API features and access between native host systems and Elide.
  */
-public enum class Capability (override val symbol: NativeCapability): Symbolic<NativeCapability> {
+public enum class Capability(override val symbol: NativeCapability) : Symbolic<NativeCapability> {
   /**
    * ## Capability: Baseline
    *

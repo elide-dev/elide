@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("JSUnresolvedFunction", "JSUnresolvedVariable")
+@file:Suppress("JSUnresolvedFunction", "JSUnresolvedVariable", "MaxLineLength")
 @file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.intrinsics.js.url
@@ -205,35 +205,37 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    // Basic Cases: Normal
-    "equal,https://google.com,https://google.com,true,URLs should be equal",
-    "equal,https://github.com/elide-dev/v3,https://github.com/elide-dev/v3,true,URLs should be equal",
-    "equal,https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
-    "equal,https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi,true,URLs should be equal",
-    "equal,http://www.google.com/#hello,http://www.google.com/#hello,true,URLs should be equal",
-    "equal,//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
-    "equal,ftp://hello.local.dev/hello/test,ftp://hello.local.dev/hello/test,true,URLs should be equal",
-    "equal,file://here/is/a/file/path,file://here/is/a/file/path,true,URLs should be equal",
-    "equal,blob://some-blob-id,blob://some-blob-id,true,URLs should be equal",
-    "equal,blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool,true,URLs should be equal",
-    "equal,https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
+  @CsvSource(
+    value = [
+      // Basic Cases: Normal
+      "equal,https://google.com,https://google.com,true,URLs should be equal",
+      "equal,https://github.com/elide-dev/v3,https://github.com/elide-dev/v3,true,URLs should be equal",
+      "equal,https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
+      "equal,https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi,true,URLs should be equal",
+      "equal,http://www.google.com/#hello,http://www.google.com/#hello,true,URLs should be equal",
+      "equal,//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
+      "equal,ftp://hello.local.dev/hello/test,ftp://hello.local.dev/hello/test,true,URLs should be equal",
+      "equal,file://here/is/a/file/path,file://here/is/a/file/path,true,URLs should be equal",
+      "equal,blob://some-blob-id,blob://some-blob-id,true,URLs should be equal",
+      "equal,blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool,true,URLs should be equal",
+      "equal,https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
 
-    // Smart Cases: Positive
-    "equal-smart,https://google.com/,https://google.com,true,two URLs with the same effective path should be equal",
-    "equal-smart,https://google.com#,https://google.com,true,two URLs with the same effective fragment should be equal",
-    "equal-smart,https://google.com?,https://google.com,true,two URLs with the same effective query should be equal",
+      // Smart Cases: Positive
+      "equal-smart,https://google.com/,https://google.com,true,two URLs with the same effective path should be equal",
+      "equal-smart,https://google.com#,https://google.com,true,two URLs with the same effective fragment should be equal",
+      "equal-smart,https://google.com?,https://google.com,true,two URLs with the same effective query should be equal",
 
-    // Basic Cases: Negative
-    "not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal",
-    "not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal",
-    "not-equal,http://google.com,https://google.com,false,two URLs which differ in protocol should not be equal",
-    "not-equal,https://google.com,https://google.co.uk,false,two URLs which differ in host should not be equal",
-    "not-equal,https://google.com,https://google.com:444,false,two URLs which differ in port should not be equal",
-    "not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal",
-    "not-equal,https://github.com,https://google.com?hello=hi,false,two URLs which differ in query should not be equal",
-    "not-equal,https://github.com,https://google.com?hello,false,two URLs which differ in query should not be equal",
-  ])
+      // Basic Cases: Negative
+      "not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal",
+      "not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal",
+      "not-equal,http://google.com,https://google.com,false,two URLs which differ in protocol should not be equal",
+      "not-equal,https://google.com,https://google.co.uk,false,two URLs which differ in host should not be equal",
+      "not-equal,https://google.com,https://google.com:444,false,two URLs which differ in port should not be equal",
+      "not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal",
+      "not-equal,https://github.com,https://google.com?hello=hi,false,two URLs which differ in query should not be equal",
+      "not-equal,https://github.com,https://google.com?hello,false,two URLs which differ in query should not be equal",
+    ],
+  )
   @Suppress("AssertBetweenInconvertibleTypes")
   @ParameterizedTest(
     name = "[{index}:dual]: {0}: {4}",
@@ -242,14 +244,14 @@ import kotlin.test.assertFailsWith
       assertEquals(
         left,
         right,
-        "case($label): $msg ($left != $right)"
+        "case($label): $msg ($left != $right)",
       )
     }
     val shouldNotEqual: (URLValue, URLValue) -> Unit = { left, right ->
       assertNotEquals(
         left,
         right,
-        "case($label): $msg ($left == $right)"
+        "case($label): $msg ($left == $right)",
       )
     }
     val op = if (expectEquals) {
@@ -288,19 +290,21 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,https://google.com",
-    "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
-    "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi",
-    "http://www.google.com/#hello,http://www.google.com/#hello",
-    "//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev/test?abc=123&def=456",
-    "ftp://hello.local.dev/hello/test,ftp://hello.local.dev/hello/test",
-    "file://here/is/a/file/path,file://here/is/a/file/path",
-    "blob://some-blob-id,blob://some-blob-id",
-    "blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,https://google.com",
+      "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
+      "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi",
+      "http://www.google.com/#hello,http://www.google.com/#hello",
+      "//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev/test?abc=123&def=456",
+      "ftp://hello.local.dev/hello/test,ftp://hello.local.dev/hello/test",
+      "file://here/is/a/file/path,file://here/is/a/file/path",
+      "blob://some-blob-id,blob://some-blob-id",
+      "blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLStrings(testString: String, expected: String) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -319,19 +323,21 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,",
-    "https://github.com/elide-dev/v3,",
-    "https://dl.elide.dev/test?abc=123&def=456,",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,#hi",
-    "http://www.google.com/#hello,#hello",
-    "//dl.elide.dev/test?abc=123&def=456,",
-    "ftp://hello.local.dev/hello/test,",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,",
+      "https://github.com/elide-dev/v3,",
+      "https://dl.elide.dev/test?abc=123&def=456,",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,#hi",
+      "http://www.google.com/#hello,#hello",
+      "//dl.elide.dev/test?abc=123&def=456,",
+      "ftp://hello.local.dev/hello/test,",
+      "file://here/is/a/file/path,",
+      "blob://some-blob-id,",
+      "blob://some-blob-id?neat=cool,",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLHash(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -400,19 +406,21 @@ import kotlin.test.assertFailsWith
     }
   }
 
-  @CsvSource(value = [
-    "https://google.com,google.com",
-    "https://github.com/elide-dev/v3,github.com",
-    "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,dl.elide.dev:123",
-    "http://www.google.com/#hello,www.google.com",
-    "//dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-    "ftp://hello.local.dev/hello/test,hello.local.dev",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,google.com",
+      "https://github.com/elide-dev/v3,github.com",
+      "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,dl.elide.dev:123",
+      "http://www.google.com/#hello,www.google.com",
+      "//dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
+      "ftp://hello.local.dev/hello/test,hello.local.dev",
+      "file://here/is/a/file/path,",
+      "blob://some-blob-id,",
+      "blob://some-blob-id?neat=cool,",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLHost(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -483,19 +491,21 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,https:",
-    "https://github.com/elide-dev/v3,https:",
-    "https://dl.elide.dev/test?abc=123&def=456,https:",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,https:",
-    "http://www.google.com/#hello,http:",
-    "//dl.elide.dev/test?abc=123&def=456,",
-    "ftp://hello.local.dev/hello/test,ftp:",
-    "file://here/is/a/file/path,file:",
-    "blob://some-blob-id,blob:",
-    "blob://some-blob-id?neat=cool,blob:",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,https:",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,https:",
+      "https://github.com/elide-dev/v3,https:",
+      "https://dl.elide.dev/test?abc=123&def=456,https:",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,https:",
+      "http://www.google.com/#hello,http:",
+      "//dl.elide.dev/test?abc=123&def=456,",
+      "ftp://hello.local.dev/hello/test,ftp:",
+      "file://here/is/a/file/path,file:",
+      "blob://some-blob-id,blob:",
+      "blob://some-blob-id?neat=cool,blob:",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,https:",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLProtocol(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -547,19 +557,21 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,",
-    "https://github.com/elide-dev/v3,",
-    "https://dl.elide.dev/test?abc=123&def=456,",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,123",
-    "http://www.google.com/#hello,",
-    "//dl.elide.dev/test?abc=123&def=456,",
-    "ftp://hello.local.dev/hello/test,",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,",
+      "https://github.com/elide-dev/v3,",
+      "https://dl.elide.dev/test?abc=123&def=456,",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,123",
+      "http://www.google.com/#hello,",
+      "//dl.elide.dev/test?abc=123&def=456,",
+      "ftp://hello.local.dev/hello/test,",
+      "file://here/is/a/file/path,",
+      "blob://some-blob-id,",
+      "blob://some-blob-id?neat=cool,",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLPort(testString: String, expectedPort: String?) = dual {
     val expected = expectedPort?.toIntOrNull()
     val url = URLValue.fromString(testString)
@@ -605,19 +617,21 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,google.com",
-    "https://github.com/elide-dev/v3,github.com",
-    "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,dl.elide.dev",
-    "http://www.google.com/#hello,www.google.com",
-    "//dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-    "ftp://hello.local.dev/hello/test,hello.local.dev",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,google.com",
+      "https://github.com/elide-dev/v3,github.com",
+      "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,dl.elide.dev",
+      "http://www.google.com/#hello,www.google.com",
+      "//dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
+      "ftp://hello.local.dev/hello/test,hello.local.dev",
+      "file://here/is/a/file/path,",
+      "blob://some-blob-id,",
+      "blob://some-blob-id?neat=cool,",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLHostname(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -685,19 +699,21 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,https://google.com",
-    "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
-    "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi",
-    "http://www.google.com/#hello,http://www.google.com/#hello",
-    "//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev/test?abc=123&def=456",
-    "ftp://hello.local.dev/hello/test,ftp://hello.local.dev/hello/test",
-    "file://here/is/a/file/path,file://here/is/a/file/path",
-    "blob://some-blob-id,blob://some-blob-id",
-    "blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,https://google.com",
+      "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
+      "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi",
+      "http://www.google.com/#hello,http://www.google.com/#hello",
+      "//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev/test?abc=123&def=456",
+      "ftp://hello.local.dev/hello/test,ftp://hello.local.dev/hello/test",
+      "file://here/is/a/file/path,file://here/is/a/file/path",
+      "blob://some-blob-id,blob://some-blob-id",
+      "blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLHref(testString: String, expected: String) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -740,25 +756,27 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,",
-    "https://github.com/elide-dev/v3,",
-    "https://dl.elide.dev/test?abc=123&def=456,",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,",
-    "http://www.google.com/#hello,",
-    "//dl.elide.dev/test?abc=123&def=456,",
-    "ftp://hello.local.dev/hello/test,",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,pass",
+  @CsvSource(
+    value = [
+      "https://google.com,",
+      "https://github.com/elide-dev/v3,",
+      "https://dl.elide.dev/test?abc=123&def=456,",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,",
+      "http://www.google.com/#hello,",
+      "//dl.elide.dev/test?abc=123&def=456,",
+      "ftp://hello.local.dev/hello/test,",
+      "file://here/is/a/file/path,",
+      "blob://some-blob-id,",
+      "blob://some-blob-id?neat=cool,",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,pass",
 
-    // Corner cases
-    "https://:@dl.elide.dev/test?abc=123&def=456,",
-    "https://user:@dl.elide.dev/test?abc=123&def=456,",
-    "https://user@dl.elide.dev/test?abc=123&def=456,",
-    "https://:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
+      // Corner cases
+      "https://:@dl.elide.dev/test?abc=123&def=456,",
+      "https://user:@dl.elide.dev/test?abc=123&def=456,",
+      "https://user@dl.elide.dev/test?abc=123&def=456,",
+      "https://:pass@dl.elide.dev/test?abc=123&def=456,",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLUserPassword(testString: String, expected: String?) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -771,25 +789,27 @@ import kotlin.test.assertFailsWith
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,",
-    "https://github.com/elide-dev/v3,",
-    "https://dl.elide.dev/test?abc=123&def=456,",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,",
-    "http://www.google.com/#hello,",
-    "//dl.elide.dev/test?abc=123&def=456,",
-    "ftp://hello.local.dev/hello/test,",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,user",
+  @CsvSource(
+    value = [
+      "https://google.com,",
+      "https://github.com/elide-dev/v3,",
+      "https://dl.elide.dev/test?abc=123&def=456,",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,",
+      "http://www.google.com/#hello,",
+      "//dl.elide.dev/test?abc=123&def=456,",
+      "ftp://hello.local.dev/hello/test,",
+      "file://here/is/a/file/path,",
+      "blob://some-blob-id,",
+      "blob://some-blob-id?neat=cool,",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,user",
 
-    // Corner cases
-    "https://:@dl.elide.dev/test?abc=123&def=456,",
-    "https://user:@dl.elide.dev/test?abc=123&def=456,user",
-    "https://user@dl.elide.dev/test?abc=123&def=456,user",
-    "https://:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
+      // Corner cases
+      "https://:@dl.elide.dev/test?abc=123&def=456,",
+      "https://user:@dl.elide.dev/test?abc=123&def=456,user",
+      "https://user@dl.elide.dev/test?abc=123&def=456,user",
+      "https://:pass@dl.elide.dev/test?abc=123&def=456,",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLUsername(testString: String, expected: String?) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -902,19 +922,21 @@ import kotlin.test.assertFailsWith
     }
   }
 
-  @CsvSource(value = [
-    "https://google.com,/",
-    "https://github.com/elide-dev/v3,/elide-dev/v3",
-    "https://dl.elide.dev/test?abc=123&def=456,/test",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,/test",
-    "http://www.google.com/#hello,/",
-    "//dl.elide.dev/test?abc=123&def=456,/test",
-    "ftp://hello.local.dev/hello/test,/hello/test",
-    "file://here/is/a/file/path,/here/is/a/file/path",
-    "blob://some-blob-id,some-blob-id",
-    "blob://some-blob-id?neat=cool,some-blob-id",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,/test",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,/",
+      "https://github.com/elide-dev/v3,/elide-dev/v3",
+      "https://dl.elide.dev/test?abc=123&def=456,/test",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,/test",
+      "http://www.google.com/#hello,/",
+      "//dl.elide.dev/test?abc=123&def=456,/test",
+      "ftp://hello.local.dev/hello/test,/hello/test",
+      "file://here/is/a/file/path,/here/is/a/file/path",
+      "blob://some-blob-id,some-blob-id",
+      "blob://some-blob-id?neat=cool,some-blob-id",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,/test",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLPathname(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -959,19 +981,21 @@ import kotlin.test.assertFailsWith
     }
   }
 
-  @CsvSource(value = [
-    "https://google.com,",
-    "https://github.com/elide-dev/v3,",
-    "https://dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,?abc=123&def=456",
-    "http://www.google.com/#hello,",
-    "//dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
-    "ftp://hello.local.dev/hello/test,",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,?neat=cool",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
-  ])
+  @CsvSource(
+    value = [
+      "https://google.com,",
+      "https://github.com/elide-dev/v3,",
+      "https://dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
+      "https://dl.elide.dev:123/test?abc=123&def=456#hi,?abc=123&def=456",
+      "http://www.google.com/#hello,",
+      "//dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
+      "ftp://hello.local.dev/hello/test,",
+      "file://here/is/a/file/path,",
+      "blob://some-blob-id,",
+      "blob://some-blob-id?neat=cool,?neat=cool",
+      "https://user:pass@dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
+    ],
+  )
   @ParameterizedTest(name = "[{index}:dual]") fun testURLQuery(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")

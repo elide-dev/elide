@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -35,7 +35,7 @@ import elide.server.assets.AssetManager
   override fun doFilter(request: HttpRequest<*>, chain: ServerFilterChain): Publisher<MutableHttpResponse<*>> {
     request.setAttribute(
       RequestContext.Key.ASSET_MANAGER.name,
-      assetManager
+      assetManager,
     )
     return chain.proceed(request)
   }

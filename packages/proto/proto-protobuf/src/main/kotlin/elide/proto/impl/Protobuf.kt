@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -90,7 +90,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
    *
    * @see Protobuf for static protocol buffer utilities.
    */
-  class ProtoBuilderContext private constructor () {
+  class ProtoBuilderContext private constructor() {
     /**
      * ### `ifPresent`
      *
@@ -103,7 +103,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
      * @param value Value which can be `null`, and which will be checked for null-ness.
      * @param op Inline operation to dispatch if `value` is non-`null`.
      */
-    inline fun <C: Any> ifPresent(value: C?, crossinline op: (value: C) -> Unit) {
+    inline fun <C : Any> ifPresent(value: C?, crossinline op: (value: C) -> Unit) {
       if (value != null) {
         op.invoke(value)
       }
@@ -121,7 +121,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
      * @param value Optional value which can be empty, and which will be checked for presence.
      * @param op Inline operation to dispatch if [value] is present.
      */
-    inline fun <C: Any> ifPresent(value: Optional<C>, crossinline op: (value: C) -> Unit) {
+    inline fun <C : Any> ifPresent(value: Optional<C>, crossinline op: (value: C) -> Unit) {
       if (value.isPresent) {
         op.invoke(value.get())
       }
@@ -139,7 +139,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
      * @param value Collection to check for emptiness.
      * @param op Inline operation to dispatch if [value] is non-empty.
      */
-    inline fun <C: Collection<*>> ifNotEmpty(value: C?, crossinline op: (value: C) -> Unit) {
+    inline fun <C : Collection<*>> ifNotEmpty(value: C?, crossinline op: (value: C) -> Unit) {
       if (!value.isNullOrEmpty()) {
         op.invoke(value)
       }
@@ -175,9 +175,9 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
      * @param value [Model] instance to convert to a message.
      */
     @Suppress("UNCHECKED_CAST")
-    fun <M: Message, Model: ProtoConvertible<M>> toMessage(type: KClass<Model>, value: Model?): M {
+    fun <M : Message, Model : ProtoConvertible<M>> toMessage(type: KClass<Model>, value: Model?): M {
       return value?.toMessage() ?: ((type.companionObjectInstance as? ProtoModel<M>)?.defaultMessageInstance() ?: error(
-        "Model value is `null` and no default instance was resolvable"
+        "Model value is `null` and no default instance was resolvable",
       ))
     }
 
@@ -219,7 +219,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
           Timestamp.newBuilder()
             .setSeconds(value.epochSeconds)
             .setNanos(value.nanosecondsOfSecond)
-            .build()
+            .build(),
         )
       }
     }
@@ -270,7 +270,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
    * @param op Operation to execute to build the message.
    * @return Build message of type [M].
    */
-  inline fun <In, M: Message, B: Message.Builder> buildFrom(
+  inline fun <In, M : Message, B : Message.Builder> buildFrom(
     instance: In,
     builder: (B.() -> Unit) -> M,
     crossinline op: context(ProtoBuilderContext) B.(In) -> Unit,
@@ -299,7 +299,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
    * @param op Operation to execute to build the message.
    * @return Build message of type [M].
    */
-  inline fun <In: ProtoSchemaConvertible, M: Message, B: Message.Builder> buildFrom(
+  inline fun <In : ProtoSchemaConvertible, M : Message, B : Message.Builder> buildFrom(
     instance: In,
     builder: (B.() -> Unit) -> M,
     crossinline op: context(ProtoBuilderContext) B.(In) -> Unit,
@@ -327,7 +327,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
    * @param op Operation to dispatch to build the entity.
    * @return Built message of type [M].
    */
-  inline fun <M: Message, Model: ProtoConvertible<M>, B> Model.buildFrom(
+  inline fun <M : Message, Model : ProtoConvertible<M>, B> Model.buildFrom(
     builder: (B.() -> Unit) -> M,
     crossinline op: context(ProtoBuilderContext) B.(Model) -> Unit,
   ): M {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,61 +24,68 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class AppManifest : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): AppManifest {
+    __init(_i, _bb)
+    return this
+  }
+
+  val app: elide.meta.AppInfo? get() = app(elide.meta.AppInfo())
+  fun app(obj: elide.meta.AppInfo): elide.meta.AppInfo? {
+    val o = __offset(4)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : AppManifest {
-        __init(_i, _bb)
-        return this
+  }
+
+  val build: elide.meta.BuildInfo? get() = build(elide.meta.BuildInfo())
+  fun build(obj: elide.meta.BuildInfo): elide.meta.BuildInfo? {
+    val o = __offset(6)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    val app : elide.meta.AppInfo? get() = app(elide.meta.AppInfo())
-    fun app(obj: elide.meta.AppInfo) : elide.meta.AppInfo? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+  }
+
+  val guest: elide.meta.GuestVM? get() = guest(elide.meta.GuestVM())
+  fun guest(obj: elide.meta.GuestVM): elide.meta.GuestVM? {
+    val o = __offset(8)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    val build : elide.meta.BuildInfo? get() = build(elide.meta.BuildInfo())
-    fun build(obj: elide.meta.BuildInfo) : elide.meta.BuildInfo? {
-        val o = __offset(6)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsAppManifest(_bb: ByteBuffer): AppManifest = getRootAsAppManifest(_bb, AppManifest())
+    fun getRootAsAppManifest(_bb: ByteBuffer, obj: AppManifest): AppManifest {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val guest : elide.meta.GuestVM? get() = guest(elide.meta.GuestVM())
-    fun guest(obj: elide.meta.GuestVM) : elide.meta.GuestVM? {
-        val o = __offset(8)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+
+    fun createAppManifest(builder: FlatBufferBuilder, appOffset: Int, buildOffset: Int, guestOffset: Int): Int {
+      builder.startTable(3)
+      addGuest(builder, guestOffset)
+      addBuild(builder, buildOffset)
+      addApp(builder, appOffset)
+      return endAppManifest(builder)
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsAppManifest(_bb: ByteBuffer): AppManifest = getRootAsAppManifest(_bb, AppManifest())
-        fun getRootAsAppManifest(_bb: ByteBuffer, obj: AppManifest): AppManifest {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createAppManifest(builder: FlatBufferBuilder, appOffset: Int, buildOffset: Int, guestOffset: Int) : Int {
-            builder.startTable(3)
-            addGuest(builder, guestOffset)
-            addBuild(builder, buildOffset)
-            addApp(builder, appOffset)
-            return endAppManifest(builder)
-        }
-        fun startAppManifest(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addApp(builder: FlatBufferBuilder, app: Int) = builder.addOffset(0, app, 0)
-        fun addBuild(builder: FlatBufferBuilder, build: Int) = builder.addOffset(1, build, 0)
-        fun addGuest(builder: FlatBufferBuilder, guest: Int) = builder.addOffset(2, guest, 0)
-        fun endAppManifest(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun startAppManifest(builder: FlatBufferBuilder) = builder.startTable(3)
+    fun addApp(builder: FlatBufferBuilder, app: Int) = builder.addOffset(0, app, 0)
+    fun addBuild(builder: FlatBufferBuilder, build: Int) = builder.addOffset(1, build, 0)
+    fun addGuest(builder: FlatBufferBuilder, guest: Int) = builder.addOffset(2, guest, 0)
+    fun endAppManifest(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,10 +17,10 @@ package elide.page.Context_.Fonts_
 
 @Suppress("unused")
 class FontReferenceType private constructor() {
-    companion object {
-        const val INTERNAL: Int = 0
-        const val GOOGLEFONTS: Int = 1
-        val names : Array<String> = arrayOf("INTERNAL", "GOOGLE_FONTS")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val INTERNAL: Int = 0
+    const val GOOGLEFONTS: Int = 1
+    val names: Array<String> = arrayOf("INTERNAL", "GOOGLE_FONTS")
+    fun name(e: Int): String = names[e]
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,5 +18,6 @@ package elide.proto;
  */
 public final class ProtoAPI {
   public static final String VERSION = "v1";
+
   private ProtoAPI() { /* Not allowed. */ }
 }

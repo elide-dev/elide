@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -100,17 +100,20 @@ import elide.util.UUID
       stream.write("export default {sample: \"Hello, ESM!\"};".toByteArray())
     }
     fs.writeStream(configPath).use { stream ->
-      stream.write("""
+      stream.write(
+        """
         {
           "name": "testing",
           "version": "1.0.0",
           "main": "test.mjs",
           "module": true
         }
-      """.trimIndent().toByteArray())
+      """.trimIndent().toByteArray(),
+      )
     }
     fs.writeStream(pkgPath).use { stream ->
-      stream.write("""
+      stream.write(
+        """
         {
           "name": "esmtest",
           "version": "1.0.0",
@@ -119,7 +122,8 @@ import elide.util.UUID
             "testing": "1.0.0"
           }
         }
-      """.trimIndent().toByteArray())
+      """.trimIndent().toByteArray(),
+      )
     }
 
     // read the file back to make sure it's there
@@ -153,17 +157,20 @@ import elide.util.UUID
       stream.write("export default {sample: \"Hello, ESM direct!\"};".toByteArray())
     }
     fs.writeStream(configPath).use { stream ->
-      stream.write("""
+      stream.write(
+        """
         {
           "name": "testing",
           "version": "1.0.0",
           "main": "test.mjs",
           "module": true
         }
-      """.trimIndent().toByteArray())
+      """.trimIndent().toByteArray(),
+      )
     }
     fs.writeStream(pkgPath).use { stream ->
-      stream.write("""
+      stream.write(
+        """
         {
           "name": "esmtest",
           "version": "1.0.0",
@@ -172,7 +179,8 @@ import elide.util.UUID
             "testing": "1.0.0"
           }
         }
-      """.trimIndent().toByteArray())
+      """.trimIndent().toByteArray(),
+      )
     }
 
     // read the file back to make sure it's there

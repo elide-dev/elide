@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,17 +17,29 @@ package elide.page.Context_
 
 @Suppress("unused")
 class ReferrerPolicy private constructor() {
-    companion object {
-        const val DEFAULTREFERRERPOLICY: Int = 0
-        const val NOREFERRER: Int = 1
-        const val NOREFERRERWHENDOWNGRADE: Int = 2
-        const val ORIGIN: Int = 3
-        const val ORIGINWHENCROSSORIGIN: Int = 4
-        const val SAME: Int = 5
-        const val STRICTORIGIN: Int = 7
-        const val STRICTORIGINWHENCROSSORIGIN: Int = 8
-        const val UNSAFEURL: Int = 9
-        val names : Array<String> = arrayOf("DEFAULT_REFERRER_POLICY", "NO_REFERRER", "NO_REFERRER_WHEN_DOWNGRADE", "ORIGIN", "ORIGIN_WHEN_CROSS_ORIGIN", "SAME", "", "STRICT_ORIGIN", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN", "UNSAFE_URL")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val DEFAULTREFERRERPOLICY: Int = 0
+    const val NOREFERRER: Int = 1
+    const val NOREFERRERWHENDOWNGRADE: Int = 2
+    const val ORIGIN: Int = 3
+    const val ORIGINWHENCROSSORIGIN: Int = 4
+    const val SAME: Int = 5
+    const val STRICTORIGIN: Int = 7
+    const val STRICTORIGINWHENCROSSORIGIN: Int = 8
+    const val UNSAFEURL: Int = 9
+    val names: Array<String> = arrayOf(
+      "DEFAULT_REFERRER_POLICY",
+      "NO_REFERRER",
+      "NO_REFERRER_WHEN_DOWNGRADE",
+      "ORIGIN",
+      "ORIGIN_WHEN_CROSS_ORIGIN",
+      "SAME",
+      "",
+      "STRICT_ORIGIN",
+      "STRICT_ORIGIN_WHEN_CROSS_ORIGIN",
+      "UNSAFE_URL",
+    )
+
+    fun name(e: Int): String = names[e]
+  }
 }

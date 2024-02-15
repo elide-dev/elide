@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -71,7 +71,7 @@ import elide.testing.annotations.TestCase
         override fun findManifest(candidates: List<Pair<ManifestFormat, String>>): Pair<ManifestFormat, InputStream> {
           return ManifestFormat.BINARY to ByteArrayInputStream(ByteArray(0))
         }
-      }
+      },
     )
   }
 
@@ -79,7 +79,7 @@ import elide.testing.annotations.TestCase
     val (sample, indexer) = createIndexer()
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        sample
+        sample,
       )
     }
     assertNotNull(indexes, "should not get `null` from `buildAssetIndexes`")
@@ -99,7 +99,7 @@ import elide.testing.annotations.TestCase
           dataFingerprint {
             this.hash = HashAlgorithm.SHA256
             this.fingerprint = ByteString.copyFrom(MessageDigest.getInstance("SHA-256").digest(data))
-          }
+          },
         )
       }
     }
@@ -143,14 +143,14 @@ import elide.testing.annotations.TestCase
         .setModule("test2")
         .setDependencies(
           AssetDependencies.newBuilder()
-            .addDirect("test1")
+            .addDirect("test1"),
         )
-        .build()
+        .build(),
     )
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        bundle.build()
+        bundle.build(),
       )
     }
     assertNotNull(indexes)
@@ -167,17 +167,17 @@ import elide.testing.annotations.TestCase
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
-      depGraph.hasEdgeConnecting("test2", "test1")
+      depGraph.hasEdgeConnecting("test2", "test1"),
     )
     assertTrue(
-      depGraph.adjacentNodes("test2").contains("test1")
+      depGraph.adjacentNodes("test2").contains("test1"),
     )
     assertTrue(
-      depGraph.outEdges("test2").isNotEmpty()
+      depGraph.outEdges("test2").isNotEmpty(),
     )
     assertTrue(
       depGraph.outEdges("test2").contains(
@@ -185,8 +185,8 @@ import elide.testing.annotations.TestCase
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
       depGraph.inEdges("test1").contains(
@@ -194,8 +194,8 @@ import elide.testing.annotations.TestCase
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
   }
 
@@ -211,14 +211,14 @@ import elide.testing.annotations.TestCase
         .setModule("test2")
         .setDependencies(
           AssetDependencies.newBuilder()
-            .addDirect("test1")
+            .addDirect("test1"),
         )
-        .build()
+        .build(),
     )
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        bundle.build()
+        bundle.build(),
       )
     }
     assertNotNull(indexes)
@@ -235,17 +235,17 @@ import elide.testing.annotations.TestCase
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
-      depGraph.hasEdgeConnecting("test2", "test1")
+      depGraph.hasEdgeConnecting("test2", "test1"),
     )
     assertTrue(
-      depGraph.adjacentNodes("test2").contains("test1")
+      depGraph.adjacentNodes("test2").contains("test1"),
     )
     assertTrue(
-      depGraph.outEdges("test2").isNotEmpty()
+      depGraph.outEdges("test2").isNotEmpty(),
     )
     assertTrue(
       depGraph.outEdges("test2").contains(
@@ -253,8 +253,8 @@ import elide.testing.annotations.TestCase
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
       depGraph.inEdges("test1").contains(
@@ -262,8 +262,8 @@ import elide.testing.annotations.TestCase
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
   }
 
@@ -274,7 +274,7 @@ import elide.testing.annotations.TestCase
         override fun isEnabled(): Boolean = true
         override val etags: Boolean get() = true
         override val preferWeakEtags: Boolean get() = false
-      }
+      },
     )
     assertDoesNotThrow {
       indexer.initialize()
@@ -293,10 +293,11 @@ import elide.testing.annotations.TestCase
       config = object : AssetConfig {
         override fun isEnabled(): Boolean = true
         override val etags: Boolean get() = true
-        override val preferWeakEtags: Boolean get() {
-          return true
-        }
-      }
+        override val preferWeakEtags: Boolean
+          get() {
+            return true
+          }
+      },
     )
     assertDoesNotThrow {
       indexer.initialize()
@@ -356,9 +357,9 @@ import elide.testing.annotations.TestCase
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     val response = assertDoesNotThrow {
       runBlocking {
@@ -374,7 +375,7 @@ import elide.testing.annotations.TestCase
 
   @Test @Ignore fun testRenderConditionalStrongETagMismatch() {
     // standard config
-    val cfg =object : AssetConfig {
+    val cfg = object : AssetConfig {
       override fun isEnabled(): Boolean = true
       override val etags: Boolean get() = true
       override val preferWeakEtags: Boolean get() = false
@@ -421,9 +422,9 @@ import elide.testing.annotations.TestCase
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     assertThrows<ItMismatched> {
       runBlocking {
@@ -482,9 +483,9 @@ import elide.testing.annotations.TestCase
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     val response = assertDoesNotThrow {
       runBlocking {
@@ -547,9 +548,9 @@ import elide.testing.annotations.TestCase
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     assertThrows<ItMismatched> {
       runBlocking {
@@ -610,9 +611,9 @@ import elide.testing.annotations.TestCase
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     assertThrows<ItMismatched> {
       runBlocking {
@@ -630,7 +631,7 @@ import elide.testing.annotations.TestCase
         override fun isEnabled(): Boolean = true
         override val etags: Boolean get() = true
         override val preferWeakEtags: Boolean get() = true
-      }
+      },
     )
     assertDoesNotThrow {
       indexerWithWeakEtags.initialize()
@@ -688,9 +689,9 @@ import elide.testing.annotations.TestCase
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     val response = assertDoesNotThrow {
       runBlocking {
@@ -711,7 +712,7 @@ import elide.testing.annotations.TestCase
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        bundle.build()
+        bundle.build(),
       )
     }
     assertNotNull(indexes)
@@ -794,7 +795,7 @@ import elide.testing.annotations.TestCase
             throw IllegalStateException("FAIL")
           }
         }
-      }
+      },
     )
     assertNotNull(indexer)
     assertDoesNotThrow {
@@ -816,7 +817,7 @@ import elide.testing.annotations.TestCase
         override fun findManifest(candidates: List<Pair<ManifestFormat, String>>): Pair<ManifestFormat, InputStream>? {
           return null
         }
-      }
+      },
     )
 
     assertDoesNotThrow {
@@ -857,11 +858,11 @@ import elide.testing.annotations.TestCase
     }
     assertNotNull(
       resolved,
-      "should be able to resolve known-good script by tag"
+      "should be able to resolve known-good script by tag",
     )
     assertTrue(
       resolved is ServerAsset.Script,
-      "resolved asset should be the right sub-type"
+      "resolved asset should be the right sub-type",
     )
   }
 
@@ -879,11 +880,11 @@ import elide.testing.annotations.TestCase
     }
     assertNotNull(
       resolved,
-      "should be able to resolve known-good stylesheet by tag"
+      "should be able to resolve known-good stylesheet by tag",
     )
     assertTrue(
       resolved is ServerAsset.Stylesheet,
-      "resolved asset should be the right sub-type"
+      "resolved asset should be the right sub-type",
     )
   }
 
@@ -901,11 +902,11 @@ import elide.testing.annotations.TestCase
     }
     assertNotNull(
       resolved,
-      "should be able to resolve known-good text asset by tag"
+      "should be able to resolve known-good text asset by tag",
     )
     assertTrue(
       resolved is ServerAsset.Text,
-      "resolved asset should be the right sub-type"
+      "resolved asset should be the right sub-type",
     )
   }
 
@@ -923,7 +924,7 @@ import elide.testing.annotations.TestCase
     }
     assertNull(
       resolved,
-      "should NOT be able to resolve known-bad asset by tag"
+      "should NOT be able to resolve known-bad asset by tag",
     )
   }
 
@@ -996,7 +997,7 @@ import elide.testing.annotations.TestCase
         .addDirect("should-be-there")
         .addDirect("should-also-be-there")
         .addTransitive("should-not-be-there")
-        .build()
+        .build(),
     )
     val depGraph = builder.build()
     assertTrue(depGraph.nodes().isNotEmpty())

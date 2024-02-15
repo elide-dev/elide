@@ -103,7 +103,8 @@ consumed from Kotlin accessors generated from that catalog. Dependencies are mon
 and by [Renovate](https://github.com/renovatebot/renovate) (see
 [_Dependency Dashboard_](https://github.com/elide-dev/v3/issues/8) for more information).
 
-License checks are handled by [Licensebat](https://licensebat.com/). Additional OWASP security checks are performed by Snyk and OWASP's own tools.
+License checks are handled by [Licensebat](https://licensebat.com/). Additional OWASP security checks are performed by
+Snyk and OWASP's own tools.
 
 ### Interactive upgrades
 
@@ -111,43 +112,78 @@ Run `update-jsdeps` or `update-jdeps` to run an interactive upgrade for NPM or M
 
 ### Dependency locking
 
-Elide extensively locks and verifies dependencies. Gradle is configured to [verify dependency hashes and signatures][21], so please make sure to update these
+Elide extensively locks and verifies dependencies. Gradle is configured
+to [verify dependency hashes and signatures][21], so please make sure to update these
 files if dependencies change, and to verify your update is legitimate to the best of your abilities.
 
 After dependency changes, locks can be updated with `make relock-deps`.
 
 [1]: ./base
+
 [2]: ./frontend
+
 [3]: ./graalvm
+
 [4]: ./graalvm-js
+
 [5]: ./graalvm-react
+
 [6]: ./model
+
 [7]: ./rpc
+
 [8]: ./core
+
 [9]: ./server
+
 [10]: ./test
+
 [11]: https://v3.docs.elide.dev/kotlin/html/packages/base/index.html
+
 [12]: https://v3.docs.elide.dev/kotlin/html/packages/frontend/index.html
+
 [13]: https://v3.docs.elide.dev/kotlin/html/packages/graalvm/index.html
+
 [14]: https://v3.docs.elide.dev/kotlin/html/packages/graalvm-js/index.html
+
 [15]: https://v3.docs.elide.dev/kotlin/html/packages/graalvm-react/index.html
+
 [16]: https://v3.docs.elide.dev/kotlin/html/packages/model/index.html
+
 [17]: https://v3.docs.elide.dev/kotlin/html/packages/rpc-js/index.html
+
 [18]: https://v3.docs.elide.dev/kotlin/html/packages/core/index.html
+
 [19]: https://v3.docs.elide.dev/kotlin/html/packages/server/index.html
+
 [20]: https://v3.docs.elide.dev/kotlin/html/packages/test/index.html
+
 [21]: https://docs.gradle.org/7.4.2/userguide/dependency_verification.html#sub:enabling-verification
+
 [22]: ./ssr
+
 [23]: https://v3.docs.elide.dev/kotlin/html/packages/ssr/index.html
+
 [24]: ./uuid
+
 [25]: https://v3.docs.elide.dev/kotlin/html/packages/uuid/index.html
+
 [26]: ./cli
+
 [27]: https://v3.docs.elide.dev/kotlin/html/packages/cli/index.html
+
 [28]: ./bom
+
 [29]: https://v3.docs.elide.dev/kotlin/html/packages/bom/index.html
+
 [30]: ./platform
+
 [31]: https://v3.docs.elide.dev/kotlin/html/packages/platform/index.html
+
 [32]: ./graalvm-py
+
 [33]: https://v3.docs.elide.dev/kotlin/html/packages/graalvm-py/index.html
+
 [34]: ./ssg
+
 [35]: https://v3.docs.elide.dev/kotlin/html/packages/ssg/index.html

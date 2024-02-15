@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import elide.runtime.intrinsics.js.ReadableStream
 /**
  * TBD.
  */
-internal class JvmMicronautRequestExecutionInputs private constructor (
+internal class JvmMicronautRequestExecutionInputs private constructor(
   private val request: HttpRequest<Any>,
   state: Any?,
 ) : FetchRequest, MicronautRequestExecutionInputs<Any>, JvmServerRequestExecutionInputs<HttpRequest<Any>>(state) {

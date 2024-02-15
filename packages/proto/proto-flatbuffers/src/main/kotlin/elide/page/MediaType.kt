@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,13 +17,13 @@ package elide.page
 
 @Suppress("unused")
 class MediaType private constructor() {
-    companion object {
-        const val IMAGE: Int = 0
-        const val VIDEO: Int = 1
-        const val AUDIO: Int = 2
-        const val LINK: Int = 3
-        const val DOCUMENT: Int = 4
-        val names : Array<String> = arrayOf("IMAGE", "VIDEO", "AUDIO", "LINK", "DOCUMENT")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val IMAGE: Int = 0
+    const val VIDEO: Int = 1
+    const val AUDIO: Int = 2
+    const val LINK: Int = 3
+    const val DOCUMENT: Int = 4
+    val names: Array<String> = arrayOf("IMAGE", "VIDEO", "AUDIO", "LINK", "DOCUMENT")
+    fun name(e: Int): String = names[e]
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,10 +16,11 @@ package elide.wasm
 import kotlin.test.*
 
 class WasiCliTests {
-    @Test fun testArgs() {
-        assertEquals(listOf("argument1", "argument2"), Wasi.args)
-    }
-    @Test fun testEnvVars() {
-        assertEquals(listOf(Pair("PATH", "/usr/local/bin:/usr/bin"), Pair("HOME", "/home/seb")), Wasi.envVars)
-    }
+  @Test fun testArgs() {
+    assertEquals(listOf("argument1", "argument2"), Wasi.args)
+  }
+
+  @Test fun testEnvVars() {
+    assertEquals(listOf(Pair("PATH", "/usr/local/bin:/usr/bin"), Pair("HOME", "/home/seb")), Wasi.envVars)
+  }
 }

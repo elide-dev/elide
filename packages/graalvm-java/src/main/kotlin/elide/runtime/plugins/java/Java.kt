@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 
 package elide.runtime.plugins.java
 
-import org.graalvm.polyglot.Source
 import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
@@ -34,7 +33,9 @@ import elide.runtime.plugins.jvm.Jvm
  *
  * @see [GuestJavaEvaluator]
  */
-@Suppress("unused") @DelicateElideApi public class Java private constructor(private val config: JavaConfig) {
+@Suppress("unused")
+@DelicateElideApi
+public class Java private constructor(private val config: JavaConfig) {
   /** Configure a new [context] and attach a [GuestJavaEvaluator] to allow running snippets. */
   private fun initializeContext(context: PolyglotContext) {
     // create an evaluator and bind it to the context

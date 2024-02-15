@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -98,9 +98,9 @@ public interface AppExecutor {
   @Context
   @Singleton
   @Suppress("unused")
-  public class DefaultExecutor @Inject constructor (
+  public class DefaultExecutor @Inject constructor(
     uncaughtHandler: Thread.UncaughtExceptionHandler
-  ): AppExecutor {
+  ) : AppExecutor {
     public companion object {
       /** Uncaught exception handler (global). */
       private val errHandler = UncaughtExceptionHandler()
@@ -136,9 +136,9 @@ public interface AppExecutor {
       MoreExecutors.getExitingScheduledExecutorService(
         ScheduledThreadPoolExecutor(
           DefaultSettings.poolSize,
-          threadFactory
-        )
-      )
+          threadFactory,
+        ),
+      ),
     )
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.tool.engine
 import io.netty.channel.unix.Unix
 import io.netty.util.internal.PlatformDependent
 import org.graalvm.nativeimage.ImageInfo
-import java.io.*
+import java.io.File
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
@@ -81,11 +81,14 @@ object NativeEngine {
     static: String = name,
   ): NativeLib {
     val arch = PlatformDependent.normalizedArch()
-    return nativeLib(group = group, staticName = static, extension = when (os) {
-     DARWIN -> "jnilib"
-     LINUX -> "so"
-     else -> null
-   }) {
+    return nativeLib(
+      group = group, staticName = static,
+      extension = when (os) {
+        DARWIN -> "jnilib"
+        LINUX -> "so"
+        else -> null
+      },
+    ) {
       // `netty_` ...
       append("netty_")
 
@@ -154,15 +157,19 @@ object NativeEngine {
     loader,
     "transport",
     workdir,
-    linux = { listOf(
-      nettyNative("transport", "transport_native_epoll", os),
-      nettyNative("transport", "quiche_linux", os),
-    ) },
-    darwin = { listOf(
-      nettyNative("transport", "resolver_dns_native_macos", os),
-      nettyNative("transport", "quiche_osx", os),
-      nettyNative("transport", "transport_native_kqueue", os),
-    ) },
+    linux = {
+      listOf(
+        nettyNative("transport", "transport_native_epoll", os),
+        nettyNative("transport", "quiche_linux", os),
+      )
+    },
+    darwin = {
+      listOf(
+        nettyNative("transport", "resolver_dns_native_macos", os),
+        nettyNative("transport", "quiche_osx", os),
+        nettyNative("transport", "transport_native_kqueue", os),
+      )
+    },
   )
 
   // Load native OpenSSL libraries.
@@ -189,36 +196,42 @@ object NativeEngine {
     try {
       when (platform.os) {
         // on linux, we prefer `epoll` unless `io_uring` is requested
-        LINUX -> {{
-          // load libraries
-          loadNatives()
+        LINUX -> {
+          {
+            // load libraries
+            loadNatives()
 
-          // check and return availability of epoll
-          when {
-            io.netty.incubator.channel.uring.IOUring.isAvailable() ->
-              io.netty.incubator.channel.uring.IOUring.ensureAvailability().let { true }
+            // check and return availability of epoll
+            when {
+              io.netty.incubator.channel.uring.IOUring.isAvailable() ->
+                io.netty.incubator.channel.uring.IOUring.ensureAvailability().let { true }
 
-            io.netty.channel.epoll.Epoll.isAvailable() ->
-              io.netty.channel.epoll.Epoll.ensureAvailability().let { true }
+              io.netty.channel.epoll.Epoll.isAvailable() ->
+                io.netty.channel.epoll.Epoll.ensureAvailability().let { true }
 
-            else -> false
+              else -> false
+            }
           }
-        }}
+        }
 
         // on darwin, we prefer `kqueue`
-        DARWIN -> {{
-          // force `Unix` classes to load first
-          @Suppress("DEPRECATION") assert(!Unix.isAvailable())
+        DARWIN -> {
+          {
+            // force `Unix` classes to load first
+            @Suppress("DEPRECATION") assert(!Unix.isAvailable())
 
-          // then force-load libraries
-          loadNatives()
+            // then force-load libraries
+            loadNatives()
 
-          // then check and load KQueue and return
-          io.netty.channel.kqueue.KQueue.ensureAvailability().let { true }
-        }}
+            // then check and load KQueue and return
+            io.netty.channel.kqueue.KQueue.ensureAvailability().let { true }
+          }
+        }
 
         // no native transport available
-        else -> {{ false }}
+        else -> {
+          { false }
+        }
       }.invoke()
     } catch (err: Throwable) {
       errHolder.set(err)

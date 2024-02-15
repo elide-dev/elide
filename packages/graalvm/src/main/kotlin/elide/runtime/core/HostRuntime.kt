@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,7 +27,7 @@ package elide.runtime.core
 
 /**
  * Execute a [block] and return its result if this runtime's is running the provided [version], otherwise return
- * `null`. If this runtime's version can't be detected, `null` will be returned. 
+ * `null`. If this runtime's version can't be detected, `null` will be returned.
  */
 @DelicateElideApi public inline fun <R> HostRuntime.on(version: Version, block: () -> R): R? {
   return if (this.version == version) block() else null

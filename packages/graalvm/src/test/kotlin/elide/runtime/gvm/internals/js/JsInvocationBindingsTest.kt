@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -293,11 +293,11 @@ import elide.testing.annotations.TestCase
     assertTrue(bindings is JsInvocationBindings.JsCompound, "resolved binding should be JS compound")
     assertTrue(
       bindings.supported().contains(GVMInvocationBindings.DispatchStyle.RENDER),
-      "compound binding should declare support for `RENDER` entrypoint"
+      "compound binding should declare support for `RENDER` entrypoint",
     )
     assertTrue(
       bindings.supported().contains(GVMInvocationBindings.DispatchStyle.SERVER),
-      "compound binding should declare support for `SERVER` entrypoint"
+      "compound binding should declare support for `SERVER` entrypoint",
     )
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -36,7 +36,7 @@ import elide.rpc.server.web.GrpcWebCall.Text
  * @param httpRequest Original HTTP request which produced this gRPC Web call.
  * @param httpResponse HTTP response that will ultimately be filled and returned if the request succeeds.
  */
-internal sealed class GrpcWebCall private constructor (
+internal sealed class GrpcWebCall private constructor(
   val contentType: GrpcWebContentType,
   val config: GrpcWebConfig,
   val service: ServerServiceDefinition,
@@ -62,7 +62,7 @@ internal sealed class GrpcWebCall private constructor (
     channel: ManagedChannel,
     httpRequest: HttpRequest<RawRpcPayload>,
     principal: Principal?,
-  ): GrpcWebCall(
+  ) : GrpcWebCall(
     contentType = GrpcWebContentType.TEXT,
     config = config,
     service = service,
@@ -85,7 +85,7 @@ internal sealed class GrpcWebCall private constructor (
     channel: ManagedChannel,
     httpRequest: HttpRequest<RawRpcPayload>,
     principal: Principal?,
-  ): GrpcWebCall(
+  ) : GrpcWebCall(
     contentType = GrpcWebContentType.BINARY,
     config = config,
     service = service,
@@ -142,7 +142,7 @@ internal sealed class GrpcWebCall private constructor (
   @Synchronized internal fun notifyResponse(response: GrpcWebCallResponse): GrpcWebCall {
     if (finished()) {
       throw IllegalStateException(
-        "Cannot provide more than one response to a given `GrpcWebCall` structure"
+        "Cannot provide more than one response to a given `GrpcWebCall` structure",
       )
     }
     this.response = response

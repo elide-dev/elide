@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -40,15 +40,15 @@ import elide.http.api.MutableHttpHeaders as HttpHeadersAPI
  * after creation in an arbitrary manner. The underlying structure should preserve insertion order for values associated
  * with a given key, and should produce sorted keys when iterated or exported.
  */
-public class MutableHttpHeaders private constructor (
+public class MutableHttpHeaders private constructor(
   private val headers: MutableSortedMap<HeaderName, HeaderValue> = mutableSortedMapOf(),
 ) : HttpHeadersAPI, MutableMap<HeaderName, HeaderValue> by headers {
   /** [HttpHeadersAPI.Factory] methods. */
-  public companion object: HttpHeadersAPI.Factory {
+  public companion object : HttpHeadersAPI.Factory {
     @JvmStatic override fun create(): MutableHttpHeaders = MutableHttpHeaders()
     @JvmStatic override fun of(vararg pairs: Pair<String, String>): MutableHttpHeaders = of(pairs.asSequence())
     @JvmStatic override fun of(collection: Collection<Pair<String, String>>): MutableHttpHeaders = of(
-      collection.asSequence()
+      collection.asSequence(),
     )
 
     @JvmStatic override fun of(pairs: Sequence<Pair<String, String>>): MutableHttpHeaders {

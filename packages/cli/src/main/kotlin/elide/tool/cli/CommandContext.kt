@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -127,8 +127,10 @@ sealed interface CommandContext : CoroutineScope {
    * @param out String builder to emit.
    */
   suspend fun output(out: suspend StringBuilder.() -> Unit) {
-    output(StringBuilder().apply {
-      out.invoke(this)
-    })
+    output(
+      StringBuilder().apply {
+        out.invoke(this)
+      },
+    )
   }
 }

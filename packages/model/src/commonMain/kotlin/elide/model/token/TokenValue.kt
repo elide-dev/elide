@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,6 +19,6 @@ package elide.model.token
  * Holds a raw sensitive token value, usually wrapped in a [Token] payload; the string representation of this object is
  * never printed literally, but is instead masked.
  */
-public expect class TokenValue (value: String) {
+public expect class TokenValue(value: String) {
   public val value: String
 }

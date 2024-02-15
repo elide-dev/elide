@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -68,7 +68,7 @@ sealed interface CommandResult {
    *   ([DEFAULT_ERROR_EXIT_CODE]).
    * @param message Message to communicate for this error; if none is provided, defaults to [DEFAULT_ERROR_MESSAGE].
    */
-  data class Error internal constructor (override val exitCode: Int, val message: String) : CommandResult {
+  data class Error internal constructor(override val exitCode: Int, val message: String) : CommandResult {
     override val ok: Boolean get() = false
 
     internal companion object {

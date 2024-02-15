@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -26,12 +26,26 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.Boolean
+import kotlin.Comparable
+import kotlin.Int
+import kotlin.Long
+import kotlin.Pair
+import kotlin.String
+import kotlin.Suppress
+import kotlin.Throwable
+import kotlin.Unit
+import kotlin.apply
+import kotlin.let
+import kotlin.printStackTrace
 import kotlin.system.exitProcess
+import kotlin.to
 import elide.runtime.Logger
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.err.ErrorHandler.Action.*
 import elide.tool.err.ErrorHandler.ErrorActionStrategy.*
+import elide.tool.err.ErrorHandler.ErrorActionStrategy.Suppress
 import elide.tool.err.ErrorHandler.ErrorStackFrame.Companion.toFrame
 import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.err.ErrorHandler.ErrorUtils.walkFrames
@@ -130,7 +144,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    * @param columnNumber Source line column number where this error took place, as applicable.
    * @param isNativeMethod Indicates whether this frame is describing a native method (if not, it is a JVM method).
    */
-  @JvmRecord @Serializable data class ErrorStackFrame private constructor (
+  @JvmRecord @Serializable data class ErrorStackFrame private constructor(
     val moduleName: String? = null,
     val moduleVersion: String? = null,
     val classLoaderName: String? = null,
@@ -310,7 +324,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    * @param err Error pair carried by this event.
    */
   @JvmInline
-  private value class ErrorEventImpl private constructor (private val err: Pair<Throwable, ErrorContext>): ErrorEvent {
+  private value class ErrorEventImpl private constructor(private val err: Pair<Throwable, ErrorContext>) : ErrorEvent {
     companion object {
       /**
        * Wrap the provided [err] and [context].
@@ -432,9 +446,17 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
      * - [Action.SUPPRESS]: No action is taken; logs are emitted (modulo logging settings).
      */
     operator fun invoke(): Unit = when (action) {
-      DEFAULT, SUPPRESS -> { { /* no action taken */ } }
-      RETHROW -> { { throw throwable } }
-      CRASH -> { { exitProcess(exitCode) } }
+      DEFAULT, SUPPRESS -> {
+        { /* no action taken */ }
+      }
+
+      RETHROW -> {
+        { throw throwable }
+      }
+
+      CRASH -> {
+        { exitProcess(exitCode) }
+      }
     }.let { action ->
       if (loggable) logger.error(throwable)
       action.invoke()
@@ -450,11 +472,11 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
      * @param event Error event which caused this crash advisory.
      * @param exitCode Exit code to report.
      */
-    @JvmRecord data class Crash (
+    @JvmRecord data class Crash(
       override val logger: Logger,
       override val event: ErrorEvent,
       override val exitCode: Int = 1,
-    ): ErrorActionStrategy {
+    ) : ErrorActionStrategy {
       override val action: Action get() = CRASH
     }
 
@@ -468,11 +490,11 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
      * @param event Error event which caused this re-throw.
      * @param throwable Throwable which should override the original error, if desired; defaults to `null`.
      */
-    @JvmRecord data class Rethrow (
+    @JvmRecord data class Rethrow(
       override val logger: Logger,
       override val event: ErrorEvent,
       override val throwable: Throwable = event.error,
-    ): ErrorActionStrategy {
+    ) : ErrorActionStrategy {
       override val action: Action get() = RETHROW
     }
 
@@ -486,11 +508,11 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
      * @param logger Logger used/to use for this error.
      * @param event Error event which caused this re-throw.
      */
-    @JvmRecord data class Suppress (
+    @JvmRecord data class Suppress(
       override val warning: String?,
       override val logger: Logger,
       override val event: ErrorEvent,
-    ): ErrorActionStrategy {
+    ) : ErrorActionStrategy {
       override val action: Action get() = SUPPRESS
     }
 
@@ -504,11 +526,11 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
      * @param logger Logger used/to use for this error.
      * @param event Error event which caused this re-throw.
      */
-    @JvmRecord data class Default (
+    @JvmRecord data class Default(
       override val warning: String?,
       override val logger: Logger,
       override val event: ErrorEvent,
-    ): ErrorActionStrategy {
+    ) : ErrorActionStrategy {
       override val action: Action get() = DEFAULT
     }
   }
@@ -581,7 +603,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
      * @return Execution context for the error handler.
      */
     @JvmStatic fun create(handler: ErrorHandler, event: ErrorEvent): ErrorHandlerContext {
-      return object: ErrorHandlerContext {
+      return object : ErrorHandlerContext {
         override val event: ErrorEvent get() = event
 
         override fun suppress(warning: String?): ErrorActionStrategy.Suppress = Suppress(
@@ -628,7 +650,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
     error,
     context = ErrorContext.DEFAULT.copy(
       thread = thread,
-    )
+    ),
   ).invoke()  // take action unconditionally; thread caller won't invoke this
 
   /**

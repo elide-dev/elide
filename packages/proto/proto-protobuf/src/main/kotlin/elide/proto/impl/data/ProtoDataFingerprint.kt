@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -25,16 +25,16 @@ import tools.elide.data.DataFingerprint.Builder as ProtoBuilder
 import elide.proto.api.data.DataFingerprint as IDataFingerprint
 
 /** Implements a universal data fingerprint, backed by a protocol buffer record. */
-public class ProtoDataFingerprint private constructor (private val fingerprint: DataFingerprint) :
+public class ProtoDataFingerprint private constructor(private val fingerprint: DataFingerprint) :
   IDataFingerprint<ProtoDataFingerprint, ProtoDataFingerprint.Builder, HashAlgorithm, Encoding>,
   DataFingerprintOrBuilder by fingerprint {
   /** TBD. */
-  public class Builder private constructor (private val builder: ProtoBuilder) : IDataFingerprint.IBuilder<
-    ProtoDataFingerprint,
-    HashAlgorithm,
-    Encoding,
-    Builder,
-  > {
+  public class Builder private constructor(private val builder: ProtoBuilder) : IDataFingerprint.IBuilder<
+          ProtoDataFingerprint,
+          HashAlgorithm,
+          Encoding,
+          Builder,
+          > {
     override var fingerprint: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
@@ -74,11 +74,11 @@ public class ProtoDataFingerprint private constructor (private val fingerprint: 
 
   /** Factory for protocol buffer-backed data containers. */
   public companion object Factory : IDataFingerprint.Factory<
-    ProtoDataFingerprint,
-    Builder,
-    HashAlgorithm,
-    Encoding,
-  > {
+          ProtoDataFingerprint,
+          Builder,
+          HashAlgorithm,
+          Encoding,
+          > {
     override fun empty(): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }

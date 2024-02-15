@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -126,12 +126,12 @@ public interface Application {
   @Bean public class AppStartupListener : ApplicationEventListener<ServerStartupEvent> {
     override fun onApplicationEvent(event: ServerStartupEvent): Unit = runBlocking {
       Initialization.trigger(
-        Initialization.CallbackStage.INIT
+        Initialization.CallbackStage.INIT,
       )
 
       if (RuntimeFlag.warmup) {
         Initialization.trigger(
-          Initialization.CallbackStage.WARMUP
+          Initialization.CallbackStage.WARMUP,
         )
       }
     }

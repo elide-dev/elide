@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -33,7 +33,7 @@ public sealed interface AbstractJSException {
    * @param T type of JavaScript error implemented by this factory. Must implement [AbstractJSException].
    * @see AbstractJSException for the regular object interface implemented for each JS exception type.
    */
-  public interface ErrorFactory<T: AbstractJSException> {
+  public interface ErrorFactory<T : AbstractJSException> {
     /**
      * ## Interface: Create from [Throwable]
      *

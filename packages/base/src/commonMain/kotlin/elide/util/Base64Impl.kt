@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -146,7 +146,7 @@ public object Base64Kt {
     private val newline: ByteArray?,
     private val linemax: Int,
     private val doPadding: Boolean,
-    ) {
+  ) {
     public companion object {
       /** Default encoder instance. */
       public val DEFAULT: Encoder = defaultEncoder
@@ -186,8 +186,8 @@ public object Base64Kt {
       var dp0 = dp
       while (sp0 < sl) {
         val bits: Int = src[sp0++].toInt() and 0xff shl 16 or (
-          src[sp0++].toInt() and 0xff shl 8) or
-          (src[sp0++].toInt() and 0xff)
+                src[sp0++].toInt() and 0xff shl 8) or
+                (src[sp0++].toInt() and 0xff)
         dst[dp0++] = toBase64[bits ushr 18 and 0x3f].code.toByte()
         dst[dp0++] = toBase64[bits ushr 12 and 0x3f].code.toByte()
         dst[dp0++] = toBase64[bits ushr 6 and 0x3f].code.toByte()
@@ -330,9 +330,9 @@ public object Base64Kt {
             // xx=y  shiftto==6 last is not =
             require(
               !(
-                shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
-                shiftto == 18
-              ),
+                      shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
+                              shiftto == 18
+                      ),
             ) { "Input byte array has wrong 4-byte ending unit" }
             break
           }
@@ -353,10 +353,12 @@ public object Base64Kt {
         6 -> {
           dst[dp++] = (bits shr 16).toByte()
         }
+
         0 -> {
           dst[dp++] = (bits shr 16).toByte()
           dst[dp++] = (bits shr 8).toByte()
         }
+
         else -> require(shiftto != 12) {
           // dangling single "x", incorrectly encoded.
           "Last unit does not have enough valid bits"

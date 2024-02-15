@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ package elide.util
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64: Encoder {
+@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64 : Encoder {
   actual override fun encoding(): Encoding = Encoding.BASE64
 
   // -- Base64: Encoding -- //

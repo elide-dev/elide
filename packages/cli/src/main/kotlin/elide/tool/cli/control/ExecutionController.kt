@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -57,7 +57,7 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
   @Throws(
     ClassInstallException::class,
     NotImplementedException::class,
-    EngineTerminationException::class
+    EngineTerminationException::class,
   )
   override fun load(classBytecodes: Array<ClassBytecodes>) {
     try {
@@ -70,7 +70,7 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
   @Throws(
     ClassInstallException::class,
     NotImplementedException::class,
-    EngineTerminationException::class
+    EngineTerminationException::class,
   )
   override fun redefine(classBytecodes: Array<ClassBytecodes>) {
     try {
@@ -177,7 +177,7 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
 
   protected fun toGuest(classBytecodes: Array<ClassBytecodes>): Value {
     val values: Value = requireNotNull(
-      this.tClassBytecodes.get()
+      this.tClassBytecodes.get(),
     ).getMember("array").newInstance(classBytecodes.size)
     for (i in classBytecodes.indices) {
       val bytecodes = classBytecodes[i].bytecodes()

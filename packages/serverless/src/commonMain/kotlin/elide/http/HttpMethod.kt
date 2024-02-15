@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ public sealed interface HttpMethod : HttpMethodAPI {
   /**
    * ## Standard HTTP method.
    */
-  @JvmInline public value class Standard(public val method: StandardHttpMethod): HttpMethodAPI by method {
+  @JvmInline public value class Standard(public val method: StandardHttpMethod) : HttpMethodAPI by method {
     override val name: String get() = method.name
   }
 
@@ -36,5 +36,5 @@ public sealed interface HttpMethod : HttpMethodAPI {
     override val body: Boolean = false,
     override val idempotent: Boolean = false,
     override val write: Boolean = false,
-  ): HttpMethod
+  ) : HttpMethod
 }

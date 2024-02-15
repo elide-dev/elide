@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,16 +22,16 @@ private val EMPTY_SORTED_SET: SortedSet<Nothing> = TreeSet(emptyList())
  *
  */
 @Suppress("UNCHECKED_CAST")
-public fun <V: Comparable<V>> sortedSetOf(): SortedSet<V> = EMPTY_SORTED_SET as SortedSet<V>
+public fun <V : Comparable<V>> sortedSetOf(): SortedSet<V> = EMPTY_SORTED_SET as SortedSet<V>
 
 /**
  *
  */
-public fun <V: Comparable<V>> sortedSetOf(vararg values: V): SortedSet<V> =
+public fun <V : Comparable<V>> sortedSetOf(vararg values: V): SortedSet<V> =
   TreeSet(values.toList())
 
 /**
  *
  */
-public fun <V: Comparable<V>> mutableSortedSetOf(vararg values: V): MutableSortedSet<V> =
+public fun <V : Comparable<V>> mutableSortedSetOf(vararg values: V): MutableSortedSet<V> =
   MutableTreeSet(values.toList())

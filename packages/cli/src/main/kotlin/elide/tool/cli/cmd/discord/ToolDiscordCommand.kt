@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -60,9 +60,11 @@ import elide.tool.cli.ToolState
         os.contains("windows") -> {
           Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler $REDIRECT_TARGET")
         }
+
         os.contains("mac") || os.contains("darwin") -> {
           Runtime.getRuntime().exec("open $REDIRECT_TARGET")
         }
+
         else -> printLink.invoke()
       }
     } else printLink.invoke()

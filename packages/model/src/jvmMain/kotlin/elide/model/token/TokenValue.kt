@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
 import elide.annotations.data.Sensitive
 
 /** Wraps a secure token value in an inline class on each platform. */
-@Sensitive @Serializable public actual data class TokenValue actual constructor (
+@Sensitive @Serializable public actual data class TokenValue actual constructor(
   /** Sensitive inner value for this token. */
   @Contextual public actual val value: String,
 )

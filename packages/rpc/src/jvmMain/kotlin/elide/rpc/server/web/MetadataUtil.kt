@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -52,13 +52,13 @@ public object MetadataUtil {
    */
   @JvmStatic public fun packTrailer(stream: ByteArrayOutputStream, name: String, value: ByteArray) {
     stream.writeBytes(
-      "${name.lowercase().trim()}:".toByteArray(StandardCharsets.UTF_8)
+      "${name.lowercase().trim()}:".toByteArray(StandardCharsets.UTF_8),
     )
     stream.writeBytes(
-      value
+      value,
     )
     stream.writeBytes(
-      "\r\n".toByteArray(StandardCharsets.UTF_8)
+      "\r\n".toByteArray(StandardCharsets.UTF_8),
     )
   }
 
@@ -85,7 +85,7 @@ public object MetadataUtil {
       } else {
         val k = Metadata.Key.of(
           name,
-          Metadata.ASCII_STRING_MARSHALLER
+          Metadata.ASCII_STRING_MARSHALLER,
         )
         val values = trailers.getAll(k)
         k to (values?.map { it.toByteArray(StandardCharsets.UTF_8) } ?: emptyList())
@@ -95,7 +95,7 @@ public object MetadataUtil {
         packTrailer(
           stream,
           metadataKey.name(),
-          rawValue
+          rawValue,
         )
       }
     }
@@ -112,12 +112,12 @@ public object MetadataUtil {
     val metadata = Metadata()
     headers.filter {
       (
-        INCLUDED.contains(it.key) ||
-          (
-            it.key.lowercase().startsWith(GRPC_HEADER_PREFIX) &&
-            !EXCLUDED.contains(it.key)
-          )
-      )
+              INCLUDED.contains(it.key) ||
+                      (
+                              it.key.lowercase().startsWith(GRPC_HEADER_PREFIX) &&
+                                      !EXCLUDED.contains(it.key)
+                              )
+              )
     }.forEach { entry ->
       val (key, values) = entry
       values.forEach { value ->
@@ -125,17 +125,17 @@ public object MetadataUtil {
           metadata.put(
             Metadata.Key.of(
               key,
-              Metadata.BINARY_BYTE_MARSHALLER
+              Metadata.BINARY_BYTE_MARSHALLER,
             ),
-            value.toByteArray(StandardCharsets.UTF_8)
+            value.toByteArray(StandardCharsets.UTF_8),
           )
         } else {
           metadata.put(
             Metadata.Key.of(
               key,
-              Metadata.ASCII_STRING_MARSHALLER
+              Metadata.ASCII_STRING_MARSHALLER,
             ),
-            value
+            value,
           )
         }
       }
@@ -156,17 +156,19 @@ public object MetadataUtil {
         return@forEach  // skip excluded headers
       } else {
         val isBinaryHeader = key.endsWith(BINARY_HEADER_SUFFIX)
-        metadata.getAll(if (isBinaryHeader) {
-          Metadata.Key.of(
-            key,
-            Metadata.BINARY_BYTE_MARSHALLER
-          )
-        } else {
-          Metadata.Key.of(
-            key,
-            Metadata.ASCII_STRING_MARSHALLER
-          )
-        })!!.forEach {  value ->
+        metadata.getAll(
+          if (isBinaryHeader) {
+            Metadata.Key.of(
+              key,
+              Metadata.BINARY_BYTE_MARSHALLER,
+            )
+          } else {
+            Metadata.Key.of(
+              key,
+              Metadata.ASCII_STRING_MARSHALLER,
+            )
+          },
+        )!!.forEach { value ->
           if (value is String) {
             target[key] = value
           } else if (value is ByteArray) {

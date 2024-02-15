@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -30,9 +30,9 @@ import elide.runtime.Logging
  * Outgoing headers to the backing server are affixed by this interceptor, and trailers/headers are captured on the
  * response side of the cycle.
  */
-internal class GrpcWebClientInterceptor (
+internal class GrpcWebClientInterceptor(
   internal val latch: CountDownLatch,
-): ClientInterceptor {
+) : ClientInterceptor {
   // Private logger.
   private val logging: Logger = Logging.of(GrpcWebClientInterceptor::class)
 
@@ -96,7 +96,7 @@ internal class GrpcWebClientInterceptor (
    * Listener which is installed by this interceptor to (1) emit request headers in merged form, and (2) capture headers
    * and trailers from the response.
    */
-  inner class MetadataResponseListener<T>(listener: Listener<T>): SimpleForwardingClientCallListener<T>(listener) {
+  inner class MetadataResponseListener<T>(listener: Listener<T>) : SimpleForwardingClientCallListener<T>(listener) {
     override fun onHeaders(headers: Metadata) {
       headersReceived(headers)
       super.onHeaders(headers)
@@ -108,18 +108,20 @@ internal class GrpcWebClientInterceptor (
     }
   }
 
-  override fun <Req: Any, Resp: Any> interceptCall(
+  override fun <Req : Any, Resp : Any> interceptCall(
     method: MethodDescriptor<Req, Resp>,
     callOptions: CallOptions,
     next: Channel
   ): ClientCall<Req, Resp> {
-    return object: SimpleForwardingClientCall<Req, Resp>(next.newCall(
-      method, callOptions
-    )) {
+    return object : SimpleForwardingClientCall<Req, Resp>(
+      next.newCall(
+        method, callOptions,
+      ),
+    ) {
       override fun start(responseListener: Listener<Resp>, headers: Metadata) {
         super.start(
           MetadataResponseListener(responseListener),
-          affixHeaders(headers)
+          affixHeaders(headers),
         )
       }
     }

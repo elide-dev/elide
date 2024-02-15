@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,7 +19,6 @@ import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 
@@ -54,13 +53,13 @@ version = rootProject.version as String
 // - `elide.targetArch`: `amd64`, `arm64`
 
 val quickbuild = (
-  project.properties["elide.release"] != "true" ||
-  project.properties["elide.buildMode"] == "dev"
-)
+        project.properties["elide.release"] != "true" ||
+                project.properties["elide.buildMode"] == "dev"
+        )
 val isRelease = !quickbuild && (
-  project.properties["elide.release"] == "true" ||
-  project.properties["elide.buildMode"] == "release"
-)
+        project.properties["elide.release"] == "true" ||
+                project.properties["elide.buildMode"] == "release"
+        )
 
 val oracleGvm = true
 val enableEdge = true
@@ -128,19 +127,23 @@ val jvmCompileArgs = listOfNotNull(
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
-).plus(if (enableJpms) listOf(
-  "--add-reads=elide.embedded=ALL-UNNAMED",
-  "--add-reads=elide.graalvm=ALL-UNNAMED",
-  "--add-reads=elide.protocol.protobuf=ALL-UNNAMED",
-  "--add-exports=java.base/jdk.internal.module=elide.embedded",
-  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.embedded",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.embedded",
-) else emptyList()).plus(if (enableEmbeddedBuilder) listOf(
-  "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
-) else emptyList())
+).plus(
+  if (enableJpms) listOf(
+    "--add-reads=elide.embedded=ALL-UNNAMED",
+    "--add-reads=elide.graalvm=ALL-UNNAMED",
+    "--add-reads=elide.protocol.protobuf=ALL-UNNAMED",
+    "--add-exports=java.base/jdk.internal.module=elide.embedded",
+    "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.embedded",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.embedded",
+  ) else emptyList(),
+).plus(
+  if (enableEmbeddedBuilder) listOf(
+    "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+    "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
+  ) else emptyList(),
+)
 
 val nativeCompileJvmArgs = jvmCompileArgs.map {
   "-J$it"
@@ -223,10 +226,12 @@ val commonNativeArgs = listOfNotNull(
   ).joinToString(","),
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
   if (enablePgoSampling) "--pgo-sampling" else null,
-).asSequence().plus(if (enableEdge) listOf(
-  "-H:+UnlockExperimentalVMOptions",
-) else emptyList()).plus(
-  if (oracleGvm) commonGvmArgs else emptyList()
+).asSequence().plus(
+  if (enableEdge) listOf(
+    "-H:+UnlockExperimentalVMOptions",
+  ) else emptyList(),
+).plus(
+  if (oracleGvm) commonGvmArgs else emptyList(),
 ).toList()
 
 val dashboardFlags: List<String> = listOf(
@@ -245,8 +250,11 @@ val debugFlags: List<String> = listOfNotNull(
 )
 
 val experimentalFlags = listOf(
-  "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
-  "-H:+UseStringInlining",  // String inlining optimization is not supported when just-in-time compilation is used
+  // `-H:+SupportContinuations` is in use, but is not supported together with Truffle JIT compilation
+  "-H:+SupportContinuations",
+
+  // String inlining optimization is not supported when just-in-time compilation is used
+  "-H:+UseStringInlining",
 
   // Not enabled for regular builds yet
   "-H:±UseExperimentalReachabilityAnalysis",
@@ -303,21 +311,27 @@ val releaseFlags: List<String> = listOf(
   "-O3",
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
-).asSequence().plus(releaseCFlags.flatMap {
-  listOf(
-    "-H:NativeLinkerOption=$it",
-    "--native-compiler-options=$it",
-  )
-}).plus(if (enablePgo) listOf(
-  "--pgo=${profiles.joinToString(",")}",
-  "-H:CodeSectionLayoutOptimization=ClusterByEdges",
-) else emptyList()).plus(listOf(
-  if (enableSbom) listOf(
-    if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
+).asSequence().plus(
+  releaseCFlags.flatMap {
+    listOf(
+      "-H:NativeLinkerOption=$it",
+      "--native-compiler-options=$it",
+    )
+  },
+).plus(
+  if (enablePgo) listOf(
+    "--pgo=${profiles.joinToString(",")}",
+    "-H:CodeSectionLayoutOptimization=ClusterByEdges",
   ) else emptyList(),
-  if (enableDashboard) dashboardFlags else emptyList(),
-  if (oracleGvm) gvmReleaseFlags else emptyList(),
-).flatten()).toList()
+).plus(
+  listOf(
+    if (enableSbom) listOf(
+      if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export",
+    ) else emptyList(),
+    if (enableDashboard) dashboardFlags else emptyList(),
+    if (oracleGvm) gvmReleaseFlags else emptyList(),
+  ).flatten(),
+).toList()
 
 val jvmDefs = mapOf(
   "user.country" to "US",
@@ -601,31 +615,43 @@ val defaultPlatformArgs = listOf(
   "--libc=glibc",
 )
 
-val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
-  "--gc=serial",
-  "-Delide.vm.engine.preinitialize=true",
-  "-H:InitialCollectionPolicy=Adaptive",
-  "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
-) else emptyList())).plus(if (oracleGvm && enableAuxCache) listOf(
-  "-H:-AuxiliaryEngineCache",
-) else emptyList())
+val windowsOnlyArgs = defaultPlatformArgs.plus(
+  listOf(
+    "-march=native",
+    "--gc=serial",
+    "-Delide.vm.engine.preinitialize=true",
+    "-H:InitialCollectionPolicy=Adaptive",
+    "-R:MaximumHeapSizePercent=80",
+  ).plus(
+    if (project.properties["elide.ci"] == "true") listOf(
+      "-J-Xmx12g",
+    ) else emptyList(),
+  ),
+).plus(
+  if (oracleGvm && enableAuxCache) listOf(
+    "-H:-AuxiliaryEngineCache",
+  ) else emptyList(),
+)
 
-val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
-  "--gc=serial",
-  "-Delide.vm.engine.preinitialize=true",
-  "-H:InitialCollectionPolicy=Adaptive",
-  "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
-) else listOf(
-  "-J-Xmx24g",
-))).plus(if (oracleGvm && enableAuxCache) listOf(
-  "-H:+AuxiliaryEngineCache",
-) else emptyList())
+val darwinOnlyArgs = defaultPlatformArgs.plus(
+  listOf(
+    "-march=native",
+    "--gc=serial",
+    "-Delide.vm.engine.preinitialize=true",
+    "-H:InitialCollectionPolicy=Adaptive",
+    "-R:MaximumHeapSizePercent=80",
+  ).plus(
+    if (project.properties["elide.ci"] == "true") listOf(
+      "-J-Xmx12g",
+    ) else listOf(
+      "-J-Xmx24g",
+    ),
+  ),
+).plus(
+  if (oracleGvm && enableAuxCache) listOf(
+    "-H:+AuxiliaryEngineCache",
+  ) else emptyList(),
+)
 
 val windowsReleaseArgs = windowsOnlyArgs
 
@@ -669,14 +695,18 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
-  ).plus(if (oracleGvm && enableAuxCache) listOf(
-    "-H:+AuxiliaryEngineCache",
-  ) else emptyList())
-).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
-) else listOf(
-  "-J-Xmx24g",
-))
+  ).plus(
+    if (oracleGvm && enableAuxCache) listOf(
+      "-H:+AuxiliaryEngineCache",
+    ) else emptyList(),
+  ),
+).plus(
+  if (project.properties["elide.ci"] == "true") listOf(
+    "-J-Xmx12g",
+  ) else listOf(
+    "-J-Xmx24g",
+  ),
+)
 
 val linuxGvmReleaseFlags = listOf(
   "-H:+ObjectInlining",
@@ -798,12 +828,14 @@ micronaut {
 
   processing {
     incremental = true
-    annotations.addAll(listOf(
-      "elide.embedded",
-      "elide.embedded.*",
-      "elide.embedded.annotations",
-      "elide.embedded.annotations.*",
-    ))
+    annotations.addAll(
+      listOf(
+        "elide.embedded",
+        "elide.embedded.*",
+        "elide.embedded.annotations",
+        "elide.embedded.annotations.*",
+      ),
+    )
   }
 
   aot {
@@ -1010,9 +1042,11 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = true
-      buildArgs.addAll(nativeImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs).plus(
-        nativeCompileJvmArgs
-      ))
+      buildArgs.addAll(
+        nativeImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs).plus(
+          nativeCompileJvmArgs,
+        ),
+      )
     }
 
     named("optimized") {
@@ -1028,12 +1062,16 @@ graalvmNative {
       imageName = "elide-embedded.test"
       fallback = false
       quickBuild = true
-      buildArgs.addAll(nativeImageArgs(test = true, debug = false, release = false, platform = targetOs).plus(
-        nativeCompileJvmArgs
-      ).plus(listOf(
-        "-DtestDiscovery",
-        "-J-DtestDiscoveryMode",
-      )))
+      buildArgs.addAll(
+        nativeImageArgs(test = true, debug = false, release = false, platform = targetOs).plus(
+          nativeCompileJvmArgs,
+        ).plus(
+          listOf(
+            "-DtestDiscovery",
+            "-J-DtestDiscoveryMode",
+          ),
+        ),
+      )
     }
 
     create("entry") {
@@ -1048,14 +1086,15 @@ graalvmNative {
   }
 }
 
+val nativeRelease = !quickbuild && (properties["elide.release"] == "true" || properties["buildMode"] == "release")
+
 fun nativeImageArgs(
   platform: String = "generic",
   target: String = "glibc",
   debug: Boolean = quickbuild,
   test: Boolean = false,
-  release: Boolean = (!quickbuild && !test && (properties["elide.release"] == "true" || properties["buildMode"] == "release")),
-): List<String> =
-  commonNativeArgs.asSequence().plus(
+  release: Boolean = nativeRelease && !test,
+): List<String> = commonNativeArgs.asSequence().plus(
     jvmCompileArgs,
   ).plus(
     jvmCompileArgs.map { "-J$it" },
@@ -1096,9 +1135,11 @@ fun nativeImageArgs(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
   ).plus(
     if (debug && !release) debugFlags else if (release) releaseFlags else emptyList(),
-  ).plus(if (enableStrictHeap && !test) listOf(
-    "--strict-image-heap",
-  ) else emptyList()).toList()
+  ).plus(
+    if (enableStrictHeap && !test) listOf(
+      "--strict-image-heap",
+    ) else emptyList(),
+  ).toList()
 
 tasks {
   test {
@@ -1115,10 +1156,12 @@ tasks {
     mustRunAfter(compileKotlin)
 
     if (enableJpms) {
-      options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-        // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
-        listOf("--patch-module", "$module=${compileKotlin.get().destinationDirectory.asFile.get().path}")
-      })
+      options.compilerArgumentProviders.add(
+        CommandLineArgumentProvider {
+          // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
+          listOf("--patch-module", "$module=${compileKotlin.get().destinationDirectory.asFile.get().path}")
+        },
+      )
     }
   }
 }

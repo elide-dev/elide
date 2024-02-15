@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,10 +19,10 @@
   "COMPATIBILITY_WARNING",
 )
 
-import elide.internal.conventions.publishing.publish
+import kotlinx.benchmark.gradle.*
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
-import kotlinx.benchmark.gradle.*
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
@@ -39,7 +39,6 @@ plugins {
 
   id("elide.internal.conventions")
 }
-
 
 group = "dev.elide"
 version = rootProject.version as String
@@ -87,7 +86,7 @@ java {
 sourceSets {
   val main by getting {
     java.srcDirs(
-      layout.projectDirectory.dir("src/main/java9")
+      layout.projectDirectory.dir("src/main/java9"),
     )
   }
   val benchmarks by creating {
@@ -118,18 +117,22 @@ graalvmNative {
   binaries {
     create("shared") {
       sharedLibrary = true
-      buildArgs(initializeAtBuildTime.map {
-        "--initialize-at-build-time=$it"
-      }.plus(sharedLibArgs))
+      buildArgs(
+        initializeAtBuildTime.map {
+          "--initialize-at-build-time=$it"
+        }.plus(sharedLibArgs),
+      )
     }
 
     named("test") {
       fallback = false
       sharedLibrary = false
       quickBuild = true
-      buildArgs(initializeAtBuildTime.plus(initializeAtBuildTimeTest).map {
-        "--initialize-at-build-time=$it"
-      }.plus(sharedLibArgs))
+      buildArgs(
+        initializeAtBuildTime.plus(initializeAtBuildTimeTest).map {
+          "--initialize-at-build-time=$it"
+        }.plus(sharedLibArgs),
+      )
     }
   }
 }
@@ -154,12 +157,14 @@ micronaut {
   version = libs.versions.micronaut.lib.get()
   processing {
     incremental = true
-    annotations.addAll(listOf(
-      "elide.runtime.*",
-      "elide.runtime.gvm.*",
-      "elide.runtime.gvm.internals.*",
-      "elide.runtime.gvm.intrinsics.*",
-    ))
+    annotations.addAll(
+      listOf(
+        "elide.runtime.*",
+        "elide.runtime.gvm.*",
+        "elide.runtime.gvm.internals.*",
+        "elide.runtime.gvm.intrinsics.*",
+      ),
+    )
   }
 }
 
@@ -172,7 +177,7 @@ val benchmarksImplementation: Configuration by configurations.getting {
 val benchmarksRuntimeOnly: Configuration by configurations.getting {
   extendsFrom(
     configurations.runtimeOnly.get(),
-    configurations.testRuntimeOnly.get()
+    configurations.testRuntimeOnly.get(),
   )
 }
 
@@ -321,14 +326,16 @@ tasks {
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
-    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-      listOf(
-        "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
-        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
-      )
-    })
+    options.compilerArgumentProviders.add(
+      CommandLineArgumentProvider {
+        listOf(
+          "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+          "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
+          "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+          "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+        )
+      },
+    )
   }
 
   /**

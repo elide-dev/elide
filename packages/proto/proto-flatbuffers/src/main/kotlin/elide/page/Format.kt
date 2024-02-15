@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,11 +17,11 @@ package elide.page
 
 @Suppress("unused")
 class Format private constructor() {
-    companion object {
-        const val GENERIC: Int = 0
-        const val OPENGRAPH: Int = 1
-        const val JSONLD: Int = 2
-        val names : Array<String> = arrayOf("GENERIC", "OPENGRAPH", "JSON_LD")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val GENERIC: Int = 0
+    const val OPENGRAPH: Int = 1
+    const val JSONLD: Int = 2
+    val names: Array<String> = arrayOf("GENERIC", "OPENGRAPH", "JSON_LD")
+    fun name(e: Int): String = names[e]
+  }
 }

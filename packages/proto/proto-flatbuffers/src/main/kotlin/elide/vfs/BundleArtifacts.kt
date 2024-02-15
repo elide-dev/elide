@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,24 +24,27 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class BundleArtifacts : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): BundleArtifacts {
+    __init(_i, _bb)
+    return this
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsBundleArtifacts(_bb: ByteBuffer): BundleArtifacts = getRootAsBundleArtifacts(_bb, BundleArtifacts())
+    fun getRootAsBundleArtifacts(_bb: ByteBuffer, obj: BundleArtifacts): BundleArtifacts {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : BundleArtifacts {
-        __init(_i, _bb)
-        return this
+
+    fun startBundleArtifacts(builder: FlatBufferBuilder) = builder.startTable(0)
+    fun endBundleArtifacts(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsBundleArtifacts(_bb: ByteBuffer): BundleArtifacts = getRootAsBundleArtifacts(_bb, BundleArtifacts())
-        fun getRootAsBundleArtifacts(_bb: ByteBuffer, obj: BundleArtifacts): BundleArtifacts {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun startBundleArtifacts(builder: FlatBufferBuilder) = builder.startTable(0)
-        fun endBundleArtifacts(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
-    }
+  }
 }

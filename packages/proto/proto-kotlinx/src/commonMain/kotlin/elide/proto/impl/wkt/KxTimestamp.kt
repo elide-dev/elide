@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,10 +21,10 @@ import kotlin.jvm.JvmStatic
 import elide.proto.api.wkt.Timestamp as ITimestamp
 
 
-@JvmInline public value class KxTimestamp private constructor (private val timestamp: Pair<Long, Int>) :
+@JvmInline public value class KxTimestamp private constructor(private val timestamp: Pair<Long, Int>) :
   ITimestamp<KxTimestamp, KxTimestamp.TimestampBuilder> {
   /** Builder for pure-Kotlin timestamps. */
-  public class TimestampBuilder (
+  public class TimestampBuilder(
     override var seconds: Long,
     override var nanos: Int,
   ) : ITimestamp.IBuilder<KxTimestamp> {
@@ -44,7 +44,7 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
   public companion object Factory : ITimestamp.Factory<KxTimestamp, TimestampBuilder> {
     /** Default singleton (empty) instance. */
     @JvmStatic private val DEFAULT_INSTANCE: KxTimestamp = KxTimestamp(
-      0L to 0
+      0L to 0,
     )
 
     override fun empty(): KxTimestamp = TimestampBuilder.newBuilder().build()

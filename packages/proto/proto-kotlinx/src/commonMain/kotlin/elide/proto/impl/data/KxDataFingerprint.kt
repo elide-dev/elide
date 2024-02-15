@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,19 +21,19 @@ import elide.data.DataFingerprint
 import elide.proto.api.data.DataFingerprint as IDataFingerprint
 
 /** TBD. */
-public class KxDataFingerprint private constructor (private val fingerprint: DataFingerprint) : IDataFingerprint<
-  KxDataFingerprint,
-  KxDataFingerprint.Builder,
-  KxHashAlgorithm,
-  KxEncoding,
-> {
+public class KxDataFingerprint private constructor(private val fingerprint: DataFingerprint) : IDataFingerprint<
+        KxDataFingerprint,
+        KxDataFingerprint.Builder,
+        KxHashAlgorithm,
+        KxEncoding,
+        > {
   /** TBD. */
   public class Builder : IDataFingerprint.IBuilder<
-    KxDataFingerprint,
-    KxHashAlgorithm,
-    KxEncoding,
-    Builder,
-  > {
+          KxDataFingerprint,
+          KxHashAlgorithm,
+          KxEncoding,
+          Builder,
+          > {
     override var fingerprint: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
@@ -73,11 +73,11 @@ public class KxDataFingerprint private constructor (private val fingerprint: Dat
 
   /** TBD. */
   public companion object Factory : IDataFingerprint.Factory<
-    KxDataFingerprint,
-    Builder,
-    KxHashAlgorithm,
-    KxEncoding,
-  > {
+          KxDataFingerprint,
+          Builder,
+          KxHashAlgorithm,
+          KxEncoding,
+          > {
     override fun empty(): KxDataFingerprint {
       TODO("Not yet implemented")
     }

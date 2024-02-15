@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,39 +24,44 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class LocalAuthToken : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): LocalAuthToken {
+    __init(_i, _bb)
+    return this
+  }
+
+  val authToken: elide.cli.LocalAuthToken_.Anonymous1? get() = authToken(elide.cli.LocalAuthToken_.Anonymous1())
+  fun authToken(obj: elide.cli.LocalAuthToken_.Anonymous1): elide.cli.LocalAuthToken_.Anonymous1? {
+    val o = __offset(4)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : LocalAuthToken {
-        __init(_i, _bb)
-        return this
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsLocalAuthToken(_bb: ByteBuffer): LocalAuthToken = getRootAsLocalAuthToken(_bb, LocalAuthToken())
+    fun getRootAsLocalAuthToken(_bb: ByteBuffer, obj: LocalAuthToken): LocalAuthToken {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val authToken : elide.cli.LocalAuthToken_.Anonymous1? get() = authToken(elide.cli.LocalAuthToken_.Anonymous1())
-    fun authToken(obj: elide.cli.LocalAuthToken_.Anonymous1) : elide.cli.LocalAuthToken_.Anonymous1? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+
+    fun createLocalAuthToken(builder: FlatBufferBuilder, authTokenOffset: Int): Int {
+      builder.startTable(1)
+      addAuthToken(builder, authTokenOffset)
+      return endLocalAuthToken(builder)
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsLocalAuthToken(_bb: ByteBuffer): LocalAuthToken = getRootAsLocalAuthToken(_bb, LocalAuthToken())
-        fun getRootAsLocalAuthToken(_bb: ByteBuffer, obj: LocalAuthToken): LocalAuthToken {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createLocalAuthToken(builder: FlatBufferBuilder, authTokenOffset: Int) : Int {
-            builder.startTable(1)
-            addAuthToken(builder, authTokenOffset)
-            return endLocalAuthToken(builder)
-        }
-        fun startLocalAuthToken(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addAuthToken(builder: FlatBufferBuilder, authToken: Int) = builder.addOffset(0, authToken, 0)
-        fun endLocalAuthToken(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun startLocalAuthToken(builder: FlatBufferBuilder) = builder.startTable(1)
+    fun addAuthToken(builder: FlatBufferBuilder, authToken: Int) = builder.addOffset(0, authToken, 0)
+    fun endLocalAuthToken(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
+  }
 }

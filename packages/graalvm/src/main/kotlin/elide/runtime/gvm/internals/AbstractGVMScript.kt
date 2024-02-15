@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -32,7 +32,7 @@ import org.graalvm.polyglot.Context as VMContext
  * Implements an [GuestScript] type  for use with GraalVM types, such as [GraalVMGuest] (enumerating a supported
  * language) and related framework types like [ExecutableScript].
  */
-public abstract class AbstractGVMScript protected constructor (
+public abstract class AbstractGVMScript protected constructor(
   private val language: GraalVMGuest,
   private val source: ExecutableScript.ScriptSource,
   protected val spec: String,
@@ -48,7 +48,7 @@ public abstract class AbstractGVMScript protected constructor (
 
   /** Atomic internal state for this script. */
   private val currentState: AtomicReference<ExecutableScript.State> = AtomicReference(
-    ExecutableScript.State.UNINITIALIZED
+    ExecutableScript.State.UNINITIALIZED,
   )
 
   /** Whether the script has been populated (via [sourceContent]). */
@@ -91,7 +91,7 @@ public abstract class AbstractGVMScript protected constructor (
       "Cannot evaluate script before it is initialized"
     }
     val content = sourceContent.get() ?: error(
-      "Failed to resolve source content for script '$this'"
+      "Failed to resolve source content for script '$this'",
     )
     val script = try {
       context.eval(content)
@@ -126,17 +126,24 @@ public abstract class AbstractGVMScript protected constructor (
       val scriptType = type()
       when {
         // if we're dealing with a literal code block, we can extract it directly from `spec`.
-        source.isLiteral -> sourceContent.set(Source.newBuilder(language.symbol, spec, LITERAL_SOURCE_NAME)
-          .mimeType(scriptType.asMimeType())
-          .encoding(scriptType.charset())
-          .cached(true)  // @TODO(sgammon): needs attention for HMR
-          .interactive(false)
-          .buildLiteral())
+        source.isLiteral -> sourceContent.set(
+          Source.newBuilder(language.symbol, spec, LITERAL_SOURCE_NAME)
+            .mimeType(scriptType.asMimeType())
+            .encoding(scriptType.charset())
+            .cached(true)  // @TODO(sgammon): needs attention for HMR
+            .interactive(false)
+            .buildLiteral(),
+        )
 
         source.isEmbedded -> AbstractGVMScript::class.java.getResourceAsStream("/" + source.path).use { stream ->
-          sourceContent.set(sourceFromStream(stream ?: error(
-            "Failed to locate embedded script resource: '/${source.path}'"
-          ), type()))
+          sourceContent.set(
+            sourceFromStream(
+              stream ?: error(
+                "Failed to locate embedded script resource: '/${source.path}'",
+              ),
+              type(),
+            ),
+          )
         }
 
         source.isFile -> File(source.path).apply {
@@ -168,7 +175,7 @@ public abstract class AbstractGVMScript protected constructor (
     return when (state()) {
       // if the script is uninitialized, we can't evaluate it
       ExecutableScript.State.UNINITIALIZED -> error(
-        "Cannot evaluate script that has not yet been initialized ($this)"
+        "Cannot evaluate script that has not yet been initialized ($this)",
       )
 
       // if the script has been parsed but has not yet been evaluated, we can evaluate it to produce a hot
@@ -182,10 +189,11 @@ public abstract class AbstractGVMScript protected constructor (
         null -> {
           logging.warn(
             "Script reference not available when expected for thread '${Thread.currentThread().name}'. " +
-              "This likely indicates a thread confinement failure for the VM executor."
+                    "This likely indicates a thread confinement failure for the VM executor.",
           )
           evaluateScriptForThread(context)
         }
+
         else -> value
       }
     }

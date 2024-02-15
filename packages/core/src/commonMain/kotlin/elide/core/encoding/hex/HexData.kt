@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,10 +18,10 @@ import elide.core.encoding.EncodedData
 import elide.core.encoding.Encoding
 
 /** Carrier value-class for hex-encoded data. */
-@JvmInline public value class HexData (private val encoded: String) : EncodedData {
-    override val encoding: Encoding get() = Encoding.HEX
+@JvmInline public value class HexData(private val encoded: String) : EncodedData {
+  override val encoding: Encoding get() = Encoding.HEX
 
-    override val string: String get() = encoded
+  override val string: String get() = encoded
 
-    override val data: ByteArray get() = encoded.encodeToByteArray()
+  override val data: ByteArray get() = encoded.encodeToByteArray()
 }

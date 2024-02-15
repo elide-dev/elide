@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,22 +23,26 @@ import elide.proto.api.Record
 import elide.proto.api.wkt.Timestamp as ITimestamp
 
 /** Flatbuffers-backed model timestamp. */
-@JvmInline value class FlatTimestamp private constructor (
+@JvmInline value class FlatTimestamp private constructor(
   private val timestamp: Timestamp
 ) : ITimestamp<FlatTimestamp, FlatTimestamp.TimestampBuilder> {
   /** Thin builder for a [FlatTimestamp]. */
-  public class TimestampBuilder private constructor (
+  public class TimestampBuilder private constructor(
     private var _seconds: Long = 0L,
     private var _nanos: Int = 0,
     private var bufferBuilder: FlatBufferBuilder? = null,
   ) : ITimestamp.IBuilder<FlatTimestamp> {
     override var seconds: Long
       get() = _seconds
-      set(value) { _seconds = value }
+      set(value) {
+        _seconds = value
+      }
 
     override var nanos: Int
       get() = _nanos
-      set(value) { _nanos = value }
+      set(value) {
+        _nanos = value
+      }
 
     /** Set the Flatbuffers builder to use. */
     public fun setBuffer(bufferBuilder: FlatBufferBuilder): TimestampBuilder {
@@ -59,7 +63,7 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
       buf.finish(ts)
 
       return FlatTimestamp(
-        Timestamp.getRootAsTimestamp(buf.dataBuffer())
+        Timestamp.getRootAsTimestamp(buf.dataBuffer()),
       )
     }
 

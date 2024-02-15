@@ -29,7 +29,9 @@
     }
   },
   "scripts": [
-    { "path": "environment.rb" }
+    {
+      "path": "environment.rb"
+    }
   ],
   "bundles": [
     {

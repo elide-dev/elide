@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,7 +29,7 @@ import elide.runtime.intrinsics.js.MapLike as JsMapLike
 
 /** Test for JavaScript `Map` and `MapLike` intrinsic behaviors. */
 @Suppress("UNCHECKED_CAST")
-internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapLike: AbstractJsMap<String, Any?> {
+internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapLike : AbstractJsMap<String, Any?> {
   // Build a generic map for testing, from test data.
   private fun allocateGeneric(): MapLike = spawnGeneric(testDataForGenericMap())
 
@@ -56,7 +56,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
 
   /** @return Generic-test map of the implementation type under test (from a collection of entries). */
   protected abstract fun spawnFromEntries(entries: Collection<Map.Entry<String, Any?>>): MapLike
-  
+
   /** @return Generic-test map of the implementation type under test (from a collection of JS map-like entries). */
   protected abstract fun spawnFromJsEntries(entries: Collection<JsMapLike.Entry<String, Any?>>): MapLike
 
@@ -128,12 +128,14 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from map entries. */
   @Test fun testCreateFromMapEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnFromEntries(testData.map {
-      object: Map.Entry<String, Any?> {
-        override val key: String get() = it.first
-        override val value: Any? get() = it.second
-      }
-    })
+    val subject = spawnFromEntries(
+      testData.map {
+        object : Map.Entry<String, Any?> {
+          override val key: String get() = it.first
+          override val value: Any? get() = it.second
+        }
+      },
+    )
     assertNotNull(subject, "should be able to spawn a map from a collection of entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -143,9 +145,11 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from JS map entries. */
   @Test fun testCreateFromJSMapEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnFromJsEntries(testData.map {
-      BaseJsMap.entry(it.first, it.second)
-    })
+    val subject = spawnFromJsEntries(
+      testData.map {
+        BaseJsMap.entry(it.first, it.second)
+      },
+    )
     assertNotNull(subject, "should be able to spawn a map from a collection of JS entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -165,12 +169,14 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from iterable of entries. */
   @Test fun testCreateFromIterableEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnUnboundedEntries(testData.map {
-      object: Map.Entry<String, Any?> {
-        override val key: String get() = it.first
-        override val value: Any? get() = it.second
-      }
-    }.asIterable())
+    val subject = spawnUnboundedEntries(
+      testData.map {
+        object : Map.Entry<String, Any?> {
+          override val key: String get() = it.first
+          override val value: Any? get() = it.second
+        }
+      }.asIterable(),
+    )
     assertNotNull(subject, "should be able to spawn a map from iterable of entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -180,9 +186,11 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from iterable of JS entries. */
   @Test fun testCreateFromIterableJsEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnUnboundedJsEntries(testData.map {
-      BaseJsMap.entry(it.first, it.second)
-    }.asIterable())
+    val subject = spawnUnboundedJsEntries(
+      testData.map {
+        BaseJsMap.entry(it.first, it.second)
+      }.asIterable(),
+    )
     assertNotNull(subject, "should be able to spawn a map from iterable of JS entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -374,10 +382,12 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
 
   // Build test data for mutable map testing.
   private fun testDataForMutableMap(): Collection<Pair<String, Any?>> {
-    return testDataForGenericMap().plus(listOf(
-      "newkey" to "newvalue",
-      "another" to 1,
-    ))
+    return testDataForGenericMap().plus(
+      listOf(
+        "newkey" to "newvalue",
+        "another" to 1,
+      ),
+    )
   }
 
   /** Test: Generic mutable (`put`, etc). */
@@ -739,7 +749,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     },
     test("$prefix should be able to cast as `SortedMap`") {
       assertNotNull(
-        factory() as? SortedMap<String, Any?>
+        factory() as? SortedMap<String, Any?>,
       )
     },
 
@@ -856,15 +866,17 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       )
     } else {
       emptyList()
-    }
+    },
   )
 
   // Build test data for multi-map testing.
   private fun testDataForMultiMap(): Collection<Pair<String, Any?>> {
-    return testDataForMutableMap().plus(listOf(
-      "hello" to "again",
-      "nullvalue" to "another",
-    ))
+    return testDataForMutableMap().plus(
+      listOf(
+        "hello" to "again",
+        "nullvalue" to "another",
+      ),
+    )
   }
 
   /** Test: Multi-map behaviors. */

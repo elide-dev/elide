@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -170,15 +170,15 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
     /** Whether the auxiliary cache is actually enabled. */
     private val useAuxCache = (
-      ENABLE_AUX_CACHE &&
-      isNativeImage &&
-      System.getProperty("elide.test") != "true" &&
-      System.getProperty("ELIDE_TEST") != "true" &&
-      System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
-      !ImageInfo.isSharedLibrary() &&
-      !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
-      !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
-    )
+            ENABLE_AUX_CACHE &&
+                    isNativeImage &&
+                    System.getProperty("elide.test") != "true" &&
+                    System.getProperty("ELIDE_TEST") != "true" &&
+                    System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
+                    !ImageInfo.isSharedLibrary() &&
+                    !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
+                    !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
+            )
 
     /**
      * Creates a new [GraalVMEngine] using the provided [configuration]. This method triggers the [EngineCreated] event

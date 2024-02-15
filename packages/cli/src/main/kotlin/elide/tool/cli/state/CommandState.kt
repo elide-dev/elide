@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicReference
  * across implementations. State which is carried in the [CommandState.CommandInfo] record is parsed at the first
  * opportunity of all command executions.
  */
-@JvmInline value class CommandState private constructor (
+@JvmInline value class CommandState private constructor(
   private val commandInfo: CommandInfo
 ) {
   /**
@@ -46,9 +46,11 @@ import java.util.concurrent.atomic.AtomicReference
     private val initialized = AtomicBoolean(false)
 
     /** @return Root command state. */
-    @JvmStatic fun of(options: CommandOptions): CommandState = CommandState(CommandInfo(
-      options = options,
-    ))
+    @JvmStatic fun of(options: CommandOptions): CommandState = CommandState(
+      CommandInfo(
+        options = options,
+      ),
+    )
 
     /** @return Statically-available command state. */
     @JvmStatic fun resolve(): CommandState? = singleton.get()

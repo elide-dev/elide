@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,7 +27,7 @@ import elide.proto.api.Record
  */
 public interface Timestamp<Concrete, Builder> :
   Comparable<Timestamp<*, *>>,
-  Record<Timestamp<Concrete, Builder>, Builder> where Builder: Timestamp.IBuilder<Concrete> {
+  Record<Timestamp<Concrete, Builder>, Builder> where Builder : Timestamp.IBuilder<Concrete> {
   /**
    * TBD.
    */
@@ -51,7 +51,7 @@ public interface Timestamp<Concrete, Builder> :
   /**
    * TBD.
    */
-  public interface Factory<Concrete, B: IBuilder<Concrete>> : Record.Factory<Concrete, B> {
+  public interface Factory<Concrete, B : IBuilder<Concrete>> : Record.Factory<Concrete, B> {
     override fun create(op: B.() -> Unit): Concrete = builder().let { b ->
       op.invoke(b)
       b.build()
@@ -123,23 +123,29 @@ public interface Timestamp<Concrete, Builder> :
     /**
      * TBD.
      */
-    public fun fromNow(durationRelative: Duration): Concrete = at(Clock.System.now().plus(
-      durationRelative
-    ))
+    public fun fromNow(durationRelative: Duration): Concrete = at(
+      Clock.System.now().plus(
+        durationRelative,
+      ),
+    )
 
     /**
      * TBD.
      */
-    public fun secondsFromNow(secondsRelative: Long): Concrete = at(Clock.System.now().plus(
-      secondsRelative.seconds
-    ))
+    public fun secondsFromNow(secondsRelative: Long): Concrete = at(
+      Clock.System.now().plus(
+        secondsRelative.seconds,
+      ),
+    )
 
     /**
      *
      */
-    public fun millisFromNow(millisRelative: Long): Concrete = at(Clock.System.now().plus(
-      millisRelative.milliseconds
-    ))
+    public fun millisFromNow(millisRelative: Long): Concrete = at(
+      Clock.System.now().plus(
+        millisRelative.milliseconds,
+      ),
+    )
   }
 
   /**

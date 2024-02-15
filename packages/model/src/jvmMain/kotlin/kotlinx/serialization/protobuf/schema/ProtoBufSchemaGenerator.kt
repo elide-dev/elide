@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -56,67 +56,70 @@ import kotlinx.serialization.protobuf.ProtoBuf
 @ExperimentalSerializationApi
 public object ProtoBufSchemaGenerator {
 
-    /**
-     * Generate text of protocol buffers schema version 2 for the given [rootDescriptor].
-     * The resulting schema will contain all types referred by [rootDescriptor].
-     *
-     * [packageName] define common protobuf package for all messages and enum in the schema, it may contain `'a'`..`'z'`
-     * letters in upper and lower case, decimal digits, `'.'` or `'_'` chars, but must be started only by a letter and
-     * not finished by a dot.
-     *
-     * [options] define values for protobuf options. Option value (map value) is an any string, option name (map key)
-     * should be the same format as [packageName].
-     *
-     * The method throws [IllegalArgumentException] if any of the restrictions imposed by [ProtoBufSchemaGenerator] is violated.
-     */
-    @ExperimentalSerializationApi
-    public fun generateSchemaText(
-        rootDescriptor: SerialDescriptor,
-        packageName: String? = null,
-        options: Map<String, String> = emptyMap()
-    ): String = generateSchemaText(listOf(rootDescriptor), packageName, options)
+  /**
+   * Generate text of protocol buffers schema version 2 for the given [rootDescriptor].
+   * The resulting schema will contain all types referred by [rootDescriptor].
+   *
+   * [packageName] define common protobuf package for all messages and enum in the schema, it may contain `'a'`..`'z'`
+   * letters in upper and lower case, decimal digits, `'.'` or `'_'` chars, but must be started only by a letter and
+   * not finished by a dot.
+   *
+   * [options] define values for protobuf options. Option value (map value) is an any string, option name (map key)
+   * should be the same format as [packageName].
+   *
+   * The method throws [IllegalArgumentException] if any of the restrictions imposed by [ProtoBufSchemaGenerator] is violated.
+   */
+  @ExperimentalSerializationApi
+  public fun generateSchemaText(
+    rootDescriptor: SerialDescriptor,
+    packageName: String? = null,
+    options: Map<String, String> = emptyMap()
+  ): String = generateSchemaText(listOf(rootDescriptor), packageName, options)
 
-    /**
-     * Generate text of protocol buffers schema version 2 for the given serializable [descriptors].
-     * [packageName] define common protobuf package for all messages and enum in the schema, it may contain `'a'`..`'z'`
-     * letters in upper and lower case, decimal digits, `'.'` or `'_'` chars, but started only from a letter and
-     * not finished by dot.
-     *
-     * [options] define values for protobuf options. Option value (map value) is an any string, option name (map key)
-     * should be the same format as [packageName].
-     *
-     * The method throws [IllegalArgumentException] if any of the restrictions imposed by [ProtoBufSchemaGenerator] is violated.
-     */
-    @ExperimentalSerializationApi
-    public fun generateSchemaText(
-        descriptors: List<SerialDescriptor>,
-        packageName: String? = null,
-        options: Map<String, String> = emptyMap()
-    ): String = generateSchemaText(descriptors, ProtoBufGeneratorOptions.DEFAULTS.copy(
-        packageName = packageName,
-        packageOptions = options,
-    ))
+  /**
+   * Generate text of protocol buffers schema version 2 for the given serializable [descriptors].
+   * [packageName] define common protobuf package for all messages and enum in the schema, it may contain `'a'`..`'z'`
+   * letters in upper and lower case, decimal digits, `'.'` or `'_'` chars, but started only from a letter and
+   * not finished by dot.
+   *
+   * [options] define values for protobuf options. Option value (map value) is an any string, option name (map key)
+   * should be the same format as [packageName].
+   *
+   * The method throws [IllegalArgumentException] if any of the restrictions imposed by [ProtoBufSchemaGenerator] is violated.
+   */
+  @ExperimentalSerializationApi
+  public fun generateSchemaText(
+    descriptors: List<SerialDescriptor>,
+    packageName: String? = null,
+    options: Map<String, String> = emptyMap()
+  ): String = generateSchemaText(
+    descriptors,
+    ProtoBufGeneratorOptions.DEFAULTS.copy(
+      packageName = packageName,
+      packageOptions = options,
+    ),
+  )
 
-    /**
-     * Generate text of protocol buffers schema for the given serializable [descriptors], and applying any provided
-     * [options] (where the dialect version and other parameters may be specified).
-     *
-     * [descriptors] is the set of serializable descriptors that should be included in the returned schema.
-     *
-     * [options] define any explicit options to pass to the schema generator, including the dialect version of protocol
-     * buffers and any options to apply to protobuf packages.
-     *
-     * The method throws [IllegalArgumentException] if any of the restrictions imposed by the implementation generator
-     * are violated.
-     */
-    @ExperimentalSerializationApi
-    public fun generateSchemaText(
-      descriptors: List<SerialDescriptor>,
-      options: ProtoBufGeneratorOptions = ProtoBufGeneratorOptions.DEFAULTS,
-    ): String {
-        return ProtoBufSchemaGeneratorImpl(options).generateSchemaText(
-            descriptors,
-            options,
-        )
-    }
+  /**
+   * Generate text of protocol buffers schema for the given serializable [descriptors], and applying any provided
+   * [options] (where the dialect version and other parameters may be specified).
+   *
+   * [descriptors] is the set of serializable descriptors that should be included in the returned schema.
+   *
+   * [options] define any explicit options to pass to the schema generator, including the dialect version of protocol
+   * buffers and any options to apply to protobuf packages.
+   *
+   * The method throws [IllegalArgumentException] if any of the restrictions imposed by the implementation generator
+   * are violated.
+   */
+  @ExperimentalSerializationApi
+  public fun generateSchemaText(
+    descriptors: List<SerialDescriptor>,
+    options: ProtoBufGeneratorOptions = ProtoBufGeneratorOptions.DEFAULTS,
+  ): String {
+    return ProtoBufSchemaGeneratorImpl(options).generateSchemaText(
+      descriptors,
+      options,
+    )
+  }
 }

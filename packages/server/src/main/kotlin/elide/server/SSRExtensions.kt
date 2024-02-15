@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -81,11 +81,11 @@ public suspend fun BODY.injectSSR(
       "class",
       classes.joinToString(" "),
       "data-serving-mode",
-      "ssr"
+      "ssr",
     ).plus(
-      attrs
+      attrs,
     ),
-    consumer
+    consumer,
   ).visitSuspend {
     val content = rendered.await()
 
@@ -157,21 +157,23 @@ public suspend fun ssr(
     if (path.isBlank()) {
       HttpResponse.notFound()
     } else {
-      response.body(publish {
-        val outputStream = ByteArrayOutputStream()
-        outputStream.bufferedWriter(StandardCharsets.UTF_8).apply {
-          if (wrap) append("<!doctype html>")
-          appendHTML(prettyPrint = false).htmlSuspend(
-            block = block
-          )
-          flush()
-        }
+      response.body(
+        publish {
+          val outputStream = ByteArrayOutputStream()
+          outputStream.bufferedWriter(StandardCharsets.UTF_8).apply {
+            if (wrap) append("<!doctype html>")
+            appendHTML(prettyPrint = false).htmlSuspend(
+              block = block,
+            )
+            flush()
+          }
 
-        send(outputStream.toByteArray())
-      }).characterEncoding(
-        StandardCharsets.UTF_8
+          send(outputStream.toByteArray())
+        },
+      ).characterEncoding(
+        StandardCharsets.UTF_8,
       ).contentType(
-        "text/html;charset=utf-8"
+        "text/html;charset=utf-8",
       )
     }
   }

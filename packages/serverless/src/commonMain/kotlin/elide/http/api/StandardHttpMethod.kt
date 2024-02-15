@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -34,7 +34,7 @@ import elide.annotations.API
  * @param idempotent Whether this operation is expected to perform idempotent work; if `true`, the operation is
  *   considered safe for certain use cases.
  */
-@API @Serializable public enum class StandardHttpMethod (
+@API @Serializable public enum class StandardHttpMethod(
   override val write: Boolean = false,
   override val body: Boolean = false,
   override val idempotent: Boolean = !write,

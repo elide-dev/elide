@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -44,10 +44,10 @@ sealed interface ProjectConfig {
   }
 
   /** Project configuration modeled from a `package.json` file. */
-  @JvmRecord @Serializable data class PackageJsonProjectConfig private constructor (
+  @JvmRecord @Serializable data class PackageJsonProjectConfig private constructor(
     override val path: String,
     private val config: NodePackage,
-  ): ProjectConfig {
+  ) : ProjectConfig {
     override val name: String? get() = config.name
     override val version: String? get() = config.version
 

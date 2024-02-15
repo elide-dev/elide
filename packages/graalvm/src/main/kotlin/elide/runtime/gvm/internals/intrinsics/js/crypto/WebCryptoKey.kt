@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,7 +31,7 @@ internal class WebCryptoKey : AbstractJsIntrinsic() {
   }
 
   /** Internal container structure for a crypto key. */
-  internal class CryptoKeyContainer internal constructor (private val wrapped: CryptoKeyImpl): CryptoKey by wrapped
+  internal class CryptoKeyContainer internal constructor(private val wrapped: CryptoKeyImpl) : CryptoKey by wrapped
 
   /** [CryptoKey] factory facade. */
   internal class CryptoKeyFactory : CryptoKey.Constructors
@@ -46,5 +46,5 @@ internal class WebCryptoKey : AbstractJsIntrinsic() {
    * Describes implementations of crypto keys, as part of the Web Crypto API. These are accessed through a proxied
    * [CryptoKeyContainer] object, and via the [CryptoKey] interface within a guest VM.
    */
-  internal sealed class CryptoKeyImpl: CryptoKey
+  internal sealed class CryptoKeyImpl : CryptoKey
 }

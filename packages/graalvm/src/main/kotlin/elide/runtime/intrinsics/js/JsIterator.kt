@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,17 +31,18 @@ import elide.vm.annotations.Polyglot
  */
 public interface JsIterator<T> : Iterator<JsIteratorResult<T>>, ProxyIterator, ProxyIterable {
   /** Represents an inner iterator value. */
-  public class JsIteratorResult<T> private constructor (
+  public class JsIteratorResult<T> private constructor(
     private val held: T?,
     @Polyglot public val done: Boolean,
     private val err: Throwable? = null,
   ) {
     /** Fetch the held value or throw the held error. */
-    @get:Polyglot public val value: T? get() = if (err != null) {
-      throw err
-    } else {
-      held
-    }
+    @get:Polyglot public val value: T?
+      get() = if (err != null) {
+        throw err
+      } else {
+        held
+      }
 
     internal companion object {
       /** @return Paired [value] and [done] flag. */
@@ -61,7 +62,7 @@ public interface JsIterator<T> : Iterator<JsIteratorResult<T>>, ProxyIterator, P
    * @see ProxyIterator for the interface provided by Truffle to mimic iterators.
    * @see ProxyIterable for the interface provided by Truffle to mimic iterable objects.
    */
-  public class JsIteratorImpl<T> (private val iter: Iterator<T>) : JsIterator<T> {
+  public class JsIteratorImpl<T>(private val iter: Iterator<T>) : JsIterator<T> {
     @Polyglot override fun hasNext(): Boolean = iter.hasNext()
 
     @Polyglot override fun next(): JsIteratorResult<T> = try {
@@ -104,7 +105,7 @@ public interface JsIterator<T> : Iterator<JsIteratorResult<T>>, ProxyIterator, P
    *
    * @return The final iterator result.
    */
-  @Polyglot public fun <T, E: Error> `throw`(err: E): JsIteratorResult<T> = JsIteratorResult.ofErr(
+  @Polyglot public fun <T, E : Error> `throw`(err: E): JsIteratorResult<T> = JsIteratorResult.ofErr(
     err,
   )
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import kotlinx.browser.window
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64: Encoder {
+@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64 : Encoder {
   private val isBrowser: Boolean = js("this[\"window\"] !== undefined") == true
 
   /** Array of Base64-allowable characters in web-safe mode.  */
@@ -28,7 +28,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
     listOf(
       ('A'..'Z'),
       ('a'..'z'),
-      ('0'..'9')
+      ('0'..'9'),
     ).map { range ->
       range.toSet()
     }.reduce { a, b ->
@@ -44,9 +44,13 @@ import kotlin.io.encoding.ExperimentalEncodingApi
       ('0'..'9'),
     ).map { range ->
       range.toSet()
-    }.plus(listOf(setOf(
-      '+', '/', '='
-    ))).reduce { a, b ->
+    }.plus(
+      listOf(
+        setOf(
+          '+', '/', '=',
+        ),
+      ),
+    ).reduce { a, b ->
       a + b
     }.toCharArray()
   }
@@ -68,11 +72,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param string String to encode with Base64.
    * @return Base64-encoded string.
    */
-  actual override fun encode(string: String): ByteArray = browserOrServer({
-    window.btoa(string).encodeToByteArray()
-  }, {
-    Base64Kt.encoder.encode(string.encodeToByteArray())
-  })
+  actual override fun encode(string: String): ByteArray = browserOrServer(
+    {
+      window.btoa(string).encodeToByteArray()
+    },
+    {
+      Base64Kt.encoder.encode(string.encodeToByteArray())
+    },
+  )
 
   /**
    * Encode the provided [string] into a Base64-encoded string, which includes padding if necessary.
@@ -80,11 +87,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param string String to encode with Base64.
    * @return Base64-encoded string.
    */
-  actual override fun encodeToString(string: String): String = browserOrServer({
-    window.btoa(string)
-  }, {
-    Base64Kt.encoder.encode(string.encodeToByteArray()).decodeToString()
-  })
+  actual override fun encodeToString(string: String): String = browserOrServer(
+    {
+      window.btoa(string)
+    },
+    {
+      Base64Kt.encoder.encode(string.encodeToByteArray()).decodeToString()
+    },
+  )
 
   /**
    * Encode the provided [data] into a Base64-encoded set of bytes, which includes padding if necessary.
@@ -92,11 +102,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param data Raw bytes to encode with Base64.
    * @return Base64-encoded bytes.
    */
-  actual override fun encode(data: ByteArray): ByteArray = browserOrServer({
-    window.btoa(data.decodeToString()).encodeToByteArray()
-  }, {
-    Base64Kt.encoder.encode(data)
-  })
+  actual override fun encode(data: ByteArray): ByteArray = browserOrServer(
+    {
+      window.btoa(data.decodeToString()).encodeToByteArray()
+    },
+    {
+      Base64Kt.encoder.encode(data)
+    },
+  )
 
   /**
    * Encode the provided [data] into a Base64-encoded string, which includes padding if necessary.
@@ -104,11 +117,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param data Raw bytes to encode into a Base64 string.
    * @return Base64-encoded string.
    */
-  actual override fun encodeToString(data: ByteArray): String = browserOrServer({
-    window.btoa(data.decodeToString())
-  }, {
-    Base64Kt.encoder.encode(data).decodeToString()
-  })
+  actual override fun encodeToString(data: ByteArray): String = browserOrServer(
+    {
+      window.btoa(data.decodeToString())
+    },
+    {
+      Base64Kt.encoder.encode(data).decodeToString()
+    },
+  )
 
   // -- Base64: Encoding (Web-safe) -- //
 
@@ -119,9 +135,11 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param string String to encode with web-safe Base64.
    * @return Base64-encoded string, using only web-safe characters.
    */
-  public actual fun encodeWebSafe(string: String): String = browserOrServer({
-    kotlin.io.encoding.Base64.UrlSafe.encode(string.encodeToByteArray())
-  })
+  public actual fun encodeWebSafe(string: String): String = browserOrServer(
+    {
+      kotlin.io.encoding.Base64.UrlSafe.encode(string.encodeToByteArray())
+    },
+  )
 
   /**
    * Encode the provided [data] into a Base64-encoded set of bytes, omitting characters which are unsafe for use on the
@@ -130,9 +148,11 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param data Raw bytes to encode with web-safe Base64.
    * @return Base64-encoded bytes, using only web-safe characters.
    */
-  public actual fun encodeWebSafe(data: ByteArray): ByteArray = browserOrServer({
-    kotlin.io.encoding.Base64.UrlSafe.encodeToByteArray(data)
-  })
+  public actual fun encodeWebSafe(data: ByteArray): ByteArray = browserOrServer(
+    {
+      kotlin.io.encoding.Base64.UrlSafe.encodeToByteArray(data)
+    },
+  )
 
   // -- Base64: Decoding -- //
 
@@ -142,11 +162,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param data Data to decode from Base64.
    * @return Raw bytes of decoded data.
    */
-  actual override fun decode(data: ByteArray): ByteArray = browserOrServer({
-    window.atob(data.decodeToString()).encodeToByteArray()
-  }, {
-    kotlin.io.encoding.Base64.decode(data)
-  })
+  actual override fun decode(data: ByteArray): ByteArray = browserOrServer(
+    {
+      window.atob(data.decodeToString()).encodeToByteArray()
+    },
+    {
+      kotlin.io.encoding.Base64.decode(data)
+    },
+  )
 
   /**
    * Decode the provided [string] from Base64, returning a raw set of bytes resulting from the decoding operation.
@@ -154,11 +177,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param string String to decode from Base64.
    * @return Raw bytes of decoded data.
    */
-  actual override fun decode(string: String): ByteArray = browserOrServer({
-    window.atob(string).encodeToByteArray()
-  }, {
-    kotlin.io.encoding.Base64.decode(string)
-  })
+  actual override fun decode(string: String): ByteArray = browserOrServer(
+    {
+      window.atob(string).encodeToByteArray()
+    },
+    {
+      kotlin.io.encoding.Base64.decode(string)
+    },
+  )
 
   /**
    * Decode the provided [data] from Base64, returning a regular string value, encoded as UTF-8.
@@ -166,11 +192,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param data Data to decode from Base64.
    * @return Decoded string value.
    */
-  actual override fun decodeToString(data: ByteArray): String = browserOrServer({
-    window.atob(data.decodeToString())
-  }, {
-    kotlin.io.encoding.Base64.decode(data).decodeToString()
-  })
+  actual override fun decodeToString(data: ByteArray): String = browserOrServer(
+    {
+      window.atob(data.decodeToString())
+    },
+    {
+      kotlin.io.encoding.Base64.decode(data).decodeToString()
+    },
+  )
 
   /**
    * Decode the provided [string] from Base64, returning a regular string value, encoded as UTF-8.
@@ -178,9 +207,12 @@ import kotlin.io.encoding.ExperimentalEncodingApi
    * @param string String to decode from Base64.
    * @return Decoded string value.
    */
-  actual override fun decodeToString(string: String): String = browserOrServer({
-    window.atob(string)
-  }, {
-    kotlin.io.encoding.Base64.decode(string).decodeToString()
-  })
+  actual override fun decodeToString(string: String): String = browserOrServer(
+    {
+      window.atob(string)
+    },
+    {
+      kotlin.io.encoding.Base64.decode(string).decodeToString()
+    },
+  )
 }

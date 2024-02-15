@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ class GrpcWebClientInterceptorTest {
   @Test fun testCreateNewInterceptor() {
     assertNotNull(
       GrpcWebClientInterceptor(CountDownLatch(0)),
-      "should be able to construct a client interceptor from scratch"
+      "should be able to construct a client interceptor from scratch",
     )
   }
 
@@ -33,15 +33,15 @@ class GrpcWebClientInterceptorTest {
     assertEquals(
       Status.INTERNAL,
       interceptor.terminalStatus.get(),
-      "default response status should be `INTERNAL`"
+      "default response status should be `INTERNAL`",
     )
     assertNotNull(
       interceptor.headers,
-      "default set of intercepted response headers should not be `null`"
+      "default set of intercepted response headers should not be `null`",
     )
     assertNotNull(
       interceptor.trailers,
-      "default set of intercepted response trailers should not be `null`"
+      "default set of intercepted response trailers should not be `null`",
     )
   }
 
@@ -50,21 +50,21 @@ class GrpcWebClientInterceptorTest {
     assertEquals(
       Status.INTERNAL,
       interceptor.terminalStatus.get(),
-      "default response status should be `INTERNAL`"
+      "default response status should be `INTERNAL`",
     )
     assertNotNull(
       interceptor.headers,
-      "default set of intercepted response headers should not be `null`"
+      "default set of intercepted response headers should not be `null`",
     )
     assertNotNull(
       interceptor.trailers,
-      "default set of intercepted response trailers should not be `null`"
+      "default set of intercepted response trailers should not be `null`",
     )
     interceptor.terminalStatus.set(Status.OK)
     assertEquals(
       Status.OK,
       interceptor.terminalStatus.get(),
-      "status on interceptor should be mutable via atomic reference"
+      "status on interceptor should be mutable via atomic reference",
     )
   }
 }

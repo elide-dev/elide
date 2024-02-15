@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -44,10 +44,10 @@ public typealias HttpStatusCode = UInt
  * @param preserved The original HTTP string value.
  * @param normalized The normalized (lowercase) HTTP string value.
  */
-public class CaseInsensitiveHttpString private constructor (
+public class CaseInsensitiveHttpString private constructor(
   private val preserved: HttpString,
   private val normalized: HttpString = preserved.trim().lowercase(),
-): CharSequence by normalized {
+) : CharSequence by normalized {
   /** Static methods for creating case-insensitive HTTP strings. */
   public companion object {
     /**

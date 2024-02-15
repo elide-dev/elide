@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,12 +17,12 @@ package elide.meta
 
 @Suppress("unused")
 class EndpointType private constructor() {
-    companion object {
-        const val ENDPOINTTYPEUNSPECIFIED: Int = 0
-        const val PAGE: Int = 1
-        const val ASSET: Int = 2
-        const val API: Int = 3
-        val names : Array<String> = arrayOf("ENDPOINT_TYPE_UNSPECIFIED", "PAGE", "ASSET", "API")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val ENDPOINTTYPEUNSPECIFIED: Int = 0
+    const val PAGE: Int = 1
+    const val ASSET: Int = 2
+    const val API: Int = 3
+    val names: Array<String> = arrayOf("ENDPOINT_TYPE_UNSPECIFIED", "PAGE", "ASSET", "API")
+    fun name(e: Int): String = names[e]
+  }
 }

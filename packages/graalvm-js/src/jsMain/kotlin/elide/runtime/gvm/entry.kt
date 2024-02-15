@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,10 +16,12 @@ package elide.runtime.gvm
 /**
  * TBD.
  */
-public fun <R: Any> entrypoint(op: () -> R): R {
-  js("""
+public fun <R : Any> entrypoint(op: () -> R): R {
+  js(
+    """
     var streams = require("web-streams-polyfill/ponyfill");
     globalThis.ReadableStream = streams.ReadableStream;
-  """)
+  """,
+  )
   return op.invoke()
 }

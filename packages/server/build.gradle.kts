@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,7 +12,6 @@
  */
 
 import org.apache.tools.ant.taskdefs.condition.Os
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -20,7 +19,7 @@ import elide.internal.conventions.publishing.publish
 plugins {
   kotlin("jvm")
   kotlin("plugin.serialization")
-  
+
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
 
@@ -64,12 +63,14 @@ micronaut {
 
   processing {
     incremental = true
-    annotations.addAll(listOf(
-      "elide.server",
-      "elide.server.*",
-      "elide.server.annotations",
-      "elide.server.annotations.*",
-    ))
+    annotations.addAll(
+      listOf(
+        "elide.server",
+        "elide.server.*",
+        "elide.server.annotations",
+        "elide.server.annotations.*",
+      ),
+    )
   }
 }
 
@@ -249,12 +250,14 @@ val initializeAtRuntime = listOf(
   "--initialize-at-run-time=$it"
 }
 
-val initializeAtBuildTimeTest = initializeAtBuildTime.plus(listOf(
-  "org.junit.platform.launcher.core.LauncherConfig",
-  "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
-).map {
-  "--initialize-at-build-time=$it"
-})
+val initializeAtBuildTimeTest = initializeAtBuildTime.plus(
+  listOf(
+    "org.junit.platform.launcher.core.LauncherConfig",
+    "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
+  ).map {
+    "--initialize-at-build-time=$it"
+  },
+)
 
 val initializeAtRuntimeTest = emptyList<String>().map {
   "--initialize-at-run-time=$it"

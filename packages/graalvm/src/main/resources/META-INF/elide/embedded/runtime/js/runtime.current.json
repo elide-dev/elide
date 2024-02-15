@@ -2,7 +2,9 @@
   "engine": "v4",
   "language": "JAVASCRIPT",
   "vfs": [
-    { "name": "js.modules.tar.gz" }
+    {
+      "name": "js.modules.tar.gz"
+    }
   ],
   "artifacts": [],
   "image": {
@@ -10,11 +12,19 @@
     "universal": "js.runtime.tar.gz"
   },
   "scripts": [
-    { "path": "polyfills.js" },
-    { "path": "facade.js" }
+    {
+      "path": "polyfills.js"
+    },
+    {
+      "path": "facade.js"
+    }
   ],
   "bundles": [
-    { "path": "js.runtime.tar.gz" },
-    { "path": "js.modules.tar.gz" }
+    {
+      "path": "js.runtime.tar.gz"
+    },
+    {
+      "path": "js.modules.tar.gz"
+    }
   ]
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -50,7 +50,7 @@ import elide.runtime.intrinsics.js.MapLike
  * @param multi Whether the map implementation allows multiple values per key.
  * @param threadsafe Whether the map implementation is thread-safe.
  */
-public sealed class AbstractJsMap<K: Any, V> (
+public sealed class AbstractJsMap<K : Any, V>(
   internal val sorted: Boolean,
   internal val mutable: Boolean,
   internal val multi: Boolean,
@@ -108,7 +108,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param map Existing map instance to wrap.
      * @return Wrapped JS map instance.
      */
-    fun <K: Any, V> of(map: MutableMap<K, V>): MapImpl
+    fun <K : Any, V> of(map: MutableMap<K, V>): MapImpl
 
     /**
      * Return a JavaScript map instance, which is a copy of the provided [map].
@@ -116,7 +116,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param map Existing map instance to wrap.
      * @return Copied JS map instance.
      */
-    fun <K: Any, V> copyOf(map: Map<K, V>): MapImpl
+    fun <K : Any, V> copyOf(map: Map<K, V>): MapImpl
 
     /**
      * Return a JavaScript map instance, created from the provided set of [pairs], each an instance of [Pair] of type
@@ -125,7 +125,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Any, V> fromPairs(pairs: Collection<Pair<K, V>>): MapImpl
+    fun <K : Any, V> fromPairs(pairs: Collection<Pair<K, V>>): MapImpl
 
     /**
      * Return a JavaScript map instance, created from the provided sized collection of [entries], each an instance of a
@@ -134,7 +134,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Any, V> fromEntries(entries: Collection<Map.Entry<K, V>>): MapImpl
+    fun <K : Any, V> fromEntries(entries: Collection<Map.Entry<K, V>>): MapImpl
 
     /**
      * Return a JavaScript map instance, created from the provided sized collection of [entries], each an instance of a
@@ -143,7 +143,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Any, V> from(entries: Collection<MapLike.Entry<K, V>>): MapImpl
+    fun <K : Any, V> from(entries: Collection<MapLike.Entry<K, V>>): MapImpl
 
     /**
      * Return a JavaScript map instance, created from the provided set of [entries], each an instance of a normal Java
@@ -155,7 +155,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>): MapImpl
+    fun <K : Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>): MapImpl
 
     /**
      * Return a JavaScript map instance, created from the provided set of [pairs], each an instance of [Pair] of type
@@ -167,7 +167,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Any, V> unboundedPairs(pairs: Iterable<Pair<K, V>>): MapImpl
+    fun <K : Any, V> unboundedPairs(pairs: Iterable<Pair<K, V>>): MapImpl
 
     /**
      * Return a JavaScript map instance, created from the provided set of [entries], each an instance of a JS
@@ -179,14 +179,14 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>): MapImpl
+    fun <K : Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>): MapImpl
 
     /**
      * Return an empty and immutable JS map instance.
      *
      * @return Empty JS map instance.
      */
-    fun <K: Any, V> empty(): MapImpl
+    fun <K : Any, V> empty(): MapImpl
   }
 
   /** Sorted map factory. */
@@ -197,7 +197,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param map Existing map instance to wrap.
      * @return Wrapped JS map instance.
      */
-    fun <K: Comparable<K>, V> of(map: MutableMap<K, V>): MapImpl
+    fun <K : Comparable<K>, V> of(map: MutableMap<K, V>): MapImpl
 
     /**
      * Return a sorted JavaScript map instance, which is a copy of the provided [map].
@@ -205,7 +205,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param map Existing map instance to wrap.
      * @return Copied JS map instance.
      */
-    fun <K: Comparable<K>, V> copyOf(map: Map<K, V>): MapImpl
+    fun <K : Comparable<K>, V> copyOf(map: Map<K, V>): MapImpl
 
     /**
      * Return a sorted JavaScript map instance, created from the provided set of [pairs], each an instance of [Pair] of
@@ -214,7 +214,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Comparable<K>, V> fromPairs(pairs: Collection<Pair<K, V>>): MapImpl
+    fun <K : Comparable<K>, V> fromPairs(pairs: Collection<Pair<K, V>>): MapImpl
 
     /**
      * Return a sorted JavaScript map instance, created from the provided sized collection of [entries], each an
@@ -223,7 +223,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Comparable<K>, V> fromEntries(entries: Collection<Map.Entry<K, V>>): MapImpl
+    fun <K : Comparable<K>, V> fromEntries(entries: Collection<Map.Entry<K, V>>): MapImpl
 
     /**
      * Return a sorted JavaScript map instance, created from the provided sized collection of [entries], each an
@@ -232,7 +232,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Comparable<K>, V> from(entries: Collection<MapLike.Entry<K, V>>): MapImpl
+    fun <K : Comparable<K>, V> from(entries: Collection<MapLike.Entry<K, V>>): MapImpl
 
     /**
      * Return a sorted JavaScript map instance, created from the provided set of [entries], each an instance of a normal
@@ -244,7 +244,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Comparable<K>, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>): MapImpl
+    fun <K : Comparable<K>, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>): MapImpl
 
     /**
      * Return a sorted JavaScript map instance, created from the provided set of [pairs], each an instance of [Pair] of
@@ -256,7 +256,7 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Comparable<K>, V> unboundedPairs(pairs: Iterable<Pair<K, V>>): MapImpl
+    fun <K : Comparable<K>, V> unboundedPairs(pairs: Iterable<Pair<K, V>>): MapImpl
 
     /**
      * Return a sorted JavaScript map instance, created from the provided set of [entries], each an instance of a JS
@@ -268,13 +268,13 @@ public sealed class AbstractJsMap<K: Any, V> (
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    fun <K: Comparable<K>, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>): MapImpl
+    fun <K : Comparable<K>, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>): MapImpl
 
     /**
      * Return an empty, immutable, and "sorted" JS map instance.
      *
      * @return Empty JS map instance.
      */
-    fun <K: Comparable<K>, V> empty(): MapImpl
+    fun <K : Comparable<K>, V> empty(): MapImpl
   }
 }

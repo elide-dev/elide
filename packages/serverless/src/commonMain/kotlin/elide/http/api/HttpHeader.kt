@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ import elide.http.api.HttpHeaders.HeaderName
  * to easily access a specific header, and are used by the underlying engine to access typing and parsing information
  * for standard headers.
  */
-public sealed interface HttpHeader<Value: Any> : Comparable<HttpHeader<*>> {
+public sealed interface HttpHeader<Value : Any> : Comparable<HttpHeader<*>> {
   override fun compareTo(other: HttpHeader<*>): Int = name.compareTo(other.name)
 
   /**
@@ -112,7 +112,8 @@ public sealed interface HttpHeader<Value: Any> : Comparable<HttpHeader<*>> {
     public val SET_COOKIE: HttpHeader<String> = HeaderTypes.str("Set-Cookie")
 
     /** All standard HTTP headers. */
-    internal val all: Collection<HttpHeader<*>> = listOf(  // please keep this list sorted
+    internal val all: Collection<HttpHeader<*>> = listOf(
+      // please keep this list sorted
       ACCEPT,
       ACCEPT_CHARSET,
       ACCEPT_ENCODING,

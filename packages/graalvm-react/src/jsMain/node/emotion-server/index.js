@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  */
 
 function createExtractCriticalToChunks(cache) {
-  return function (html) {
+  return function(html) {
     const RGX = new RegExp(`${cache.key}-([a-zA-Z0-9-_]+)`, "gm");
 
     const o = { html, styles: [] };
@@ -40,7 +40,7 @@ function createExtractCriticalToChunks(cache) {
           o.styles.push({
             key: `${cache.key}-global`,
             ids: [id],
-            css: cache.inserted[id],
+            css: cache.inserted[id]
           });
         }
       }
@@ -57,7 +57,7 @@ function generateStyleTag(cssKey, ids, styles, nonceString) {
 }
 
 function createConstructStyleTagsFromChunks(cache, nonceString) {
-  return function (criticalData) {
+  return function(criticalData) {
     let styleTagsString = "";
 
     criticalData.styles.forEach((item) => {
@@ -84,6 +84,6 @@ export function createEmotionServer(cache) {
     constructStyleTagsFromChunks: createConstructStyleTagsFromChunks(
       cache,
       nonceString
-    ),
+    )
   };
 }

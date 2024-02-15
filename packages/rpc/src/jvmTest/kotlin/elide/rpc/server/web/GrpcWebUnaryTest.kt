@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,7 +29,7 @@ import elide.grpctest.Nopackage.HelloResponse
 
 /** Tests for well-formed requests to the [HealthGrpc] service via the gRPC-Web gateway layer. */
 @MicronautTest
-class GrpcWebUnaryTest: GrpcWebBaseTest() {
+class GrpcWebUnaryTest : GrpcWebBaseTest() {
   private val enabledConfig = object : GrpcWebConfig {
     override fun isEnabled(): Boolean = true
   }
@@ -37,7 +37,7 @@ class GrpcWebUnaryTest: GrpcWebBaseTest() {
   @Test fun testAcquireController() {
     assertNotNull(
       controller(),
-      "should be able to acquire a test gRPC Web controller"
+      "should be able to acquire a test gRPC Web controller",
     )
   }
 
@@ -60,7 +60,7 @@ class GrpcWebUnaryTest: GrpcWebBaseTest() {
     }
     assertNotNull(
       response,
-      "should never get `null` response from gRPC Web Controller"
+      "should never get `null` response from gRPC Web Controller",
     )
     validSuccessResponse(
       format,
@@ -75,12 +75,12 @@ class GrpcWebUnaryTest: GrpcWebBaseTest() {
     )
     assertNotNull(
       decoded,
-      "should be able to decode valid protocol buffer response from gRPC Web health check"
+      "should be able to decode valid protocol buffer response from gRPC Web health check",
     )
     assertEquals(
       HealthCheckResponse.ServingStatus.SERVING,
       decoded.status,
-      "known-good service should report as `SERVING`"
+      "known-good service should report as `SERVING`",
     )
   }
 
@@ -103,7 +103,7 @@ class GrpcWebUnaryTest: GrpcWebBaseTest() {
     }
     assertNotNull(
       response,
-      "should never get `null` response from gRPC Web Controller"
+      "should never get `null` response from gRPC Web Controller",
     )
     validSuccessResponse(
       format,
@@ -118,12 +118,12 @@ class GrpcWebUnaryTest: GrpcWebBaseTest() {
     )
     assertNotNull(
       decoded,
-      "should be able to decode valid protocol buffer response from gRPC Web health check"
+      "should be able to decode valid protocol buffer response from gRPC Web health check",
     )
     assertEquals(
       "Hello, Sam!",
       decoded.message,
-      "known-good service should report as `SERVING`"
+      "known-good service should report as `SERVING`",
     )
   }
 }

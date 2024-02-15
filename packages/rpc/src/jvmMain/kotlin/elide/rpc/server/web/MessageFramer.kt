@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -35,7 +35,7 @@ internal object MessageFramer {
       (len shr 24 and 0xff).toByte(),
       (len shr 16 and 0xff).toByte(),
       (len shr 8 and 0xff).toByte(),
-      (len shr 0 and 0xff).toByte()
+      (len shr 0 and 0xff).toByte(),
     )
   }
 }

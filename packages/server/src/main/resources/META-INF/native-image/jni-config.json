@@ -8,7 +8,9 @@
       },
       {
         "name": "loadClass",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -17,11 +19,15 @@
     "methods": [
       {
         "name": "lastIndexOf",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       },
       {
         "name": "substring",
-        "parameterTypes": ["int"]
+        "parameterTypes": [
+          "int"
+        ]
       }
     ]
   },
@@ -30,11 +36,16 @@
     "methods": [
       {
         "name": "getProperty",
-        "parameterTypes": ["java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       },
       {
         "name": "setProperty",
-        "parameterTypes": ["java.lang.String", "java.lang.String"]
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -46,7 +57,9 @@
     "methods": [
       {
         "name": "getClassName",
-        "parameterTypes": ["java.lang.Class"]
+        "parameterTypes": [
+          "java.lang.Class"
+        ]
       }
     ]
   },

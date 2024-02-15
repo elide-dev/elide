@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import elide.testing.annotations.TestCase
 
 /** Test injection of a file-system implementation when `vfs.mode=GUEST`. */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestCase internal class EmbeddedVFSConfigTest: TestPropertyProvider {
+@TestCase internal class EmbeddedVFSConfigTest : TestPropertyProvider {
   override fun getProperties(): MutableMap<String, String> = mutableMapOf(
     "elide.gvm.vfs.enabled" to "true",
     "elide.gvm.vfs.mode" to "GUEST",

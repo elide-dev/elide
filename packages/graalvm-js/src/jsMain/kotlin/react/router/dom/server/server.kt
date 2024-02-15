@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -33,7 +33,7 @@ public external interface StaticRouterProps : PropsWithChildren {
 /**
  *
  */
-public external val StaticRouter : react.FC<StaticRouterProps>
+public external val StaticRouter: react.FC<StaticRouterProps>
 
 /**
  *
@@ -50,4 +50,4 @@ public external interface StaticRouterProviderProps : Props {
  *
  */
 @JsName("unstable_StaticRouterProvider")
-public external val StaticRouterProvider : react.FC<StaticRouterProviderProps>
+public external val StaticRouterProvider: react.FC<StaticRouterProviderProps>

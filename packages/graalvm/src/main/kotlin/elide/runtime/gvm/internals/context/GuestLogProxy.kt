@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import elide.runtime.Logging
 /**
  * TBD.
  */
-internal class GuestLogProxy private constructor (private val logger: Logger): Handler() {
+internal class GuestLogProxy private constructor(private val logger: Logger) : Handler() {
   companion object {
     /**
      * Return a log proxy for the provided [name].
@@ -41,7 +41,7 @@ internal class GuestLogProxy private constructor (private val logger: Logger): H
     @JvmStatic fun wrapping(logger: Logger): GuestLogProxy = GuestLogProxy(logger)
   }
 
-  private constructor (name: String): this(Logging.named(name))
+  private constructor (name: String) : this(Logging.named(name))
 
   override fun publish(record: LogRecord?) {
     if (record == null) return

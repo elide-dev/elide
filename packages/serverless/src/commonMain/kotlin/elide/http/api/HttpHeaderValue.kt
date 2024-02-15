@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ import elide.core.encoding.Encoding
  *
  * @see HttpHeader for the corresponding header names.
  */
-public sealed interface HttpHeaderValue<Value: Any> {
+public sealed interface HttpHeaderValue<Value : Any> {
   /** The value of this header. */
   public val value: Value
 
@@ -96,7 +96,8 @@ public sealed interface HttpHeaderValue<Value: Any> {
     public val SPANISH: Language = ContentLanguage.SPANISH
 
     /** All known token values. */
-    public val all: Collection<HttpHeaderValue<String>> = listOf(  // keep sorted
+    public val all: Collection<HttpHeaderValue<String>> = listOf(
+      // keep sorted
       BROTLI,
       DEFLATE,
       GZIP,
@@ -132,7 +133,8 @@ public sealed interface HttpHeaderValue<Value: Any> {
     public val TEXT: Mimetype = HeaderValueTypes.mime("text/plain")
 
     /** All known MIME types. */
-    public val all: Collection<Mimetype> = listOf(  // keep sorted
+    public val all: Collection<Mimetype> = listOf(
+      // keep sorted
       HTML,
       JSON,
       TEXT,
@@ -155,7 +157,8 @@ public sealed interface HttpHeaderValue<Value: Any> {
     public val SPANISH: Language = HeaderValueTypes.lang("es")
 
     /** All known language values. */
-    public val all: Collection<Language> = listOf(  // keep sorted
+    public val all: Collection<Language> = listOf(
+      // keep sorted
       ENGLISH,
       FRENCH,
       GERMAN,

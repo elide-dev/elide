@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,6 +27,7 @@ import org.graalvm.nativeimage.c.type.CTypeConversion;
 import org.graalvm.nativeimage.c.type.WordPointer;
 
 import java.nio.ByteBuffer;
+
 
 /**
  * Utilities for dealing with native byte arrays.
@@ -101,8 +102,6 @@ class NativeBytes {
   }
 
   /**
-   *
-   *
    * @param thread
    * @param call
    * @param walk
@@ -115,8 +114,6 @@ class NativeBytes {
   }
 
   /**
-   *
-   *
    * @param thread
    * @param call
    * @return
@@ -126,8 +123,6 @@ class NativeBytes {
   }
 
   /**
-   *
-   *
    * @param thread
    * @param config
    * @param version
@@ -135,29 +130,27 @@ class NativeBytes {
    * @return
    */
   public static NativeConfiguration inflateConfig(
-      IsolateThread thread,
-      InstanceConfiguration config,
-      String version,
-      ProtocolMode mode,
-      boolean walk
+          IsolateThread thread,
+          InstanceConfiguration config,
+          String version,
+          ProtocolMode mode,
+          boolean walk
   ) {
     ByteBuffer buffer = inflate(thread, config, walk);
     return NativeConfiguration.of(version, elide.embedded.api.ProtocolMode.resolve(mode), buffer);
   }
 
   /**
-   *
-   *
    * @param thread
    * @param version
    * @param config
    * @return
    */
   public static NativeConfiguration inflateConfig(
-      IsolateThread thread,
-      String version,
-      ProtocolMode mode,
-      InstanceConfiguration config
+          IsolateThread thread,
+          String version,
+          ProtocolMode mode,
+          InstanceConfiguration config
   ) {
     return inflateConfig(thread, config, version, mode, DEFAULT_WALK_BYTEARRAY);
   }

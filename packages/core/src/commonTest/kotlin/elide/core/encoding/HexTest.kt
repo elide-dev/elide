@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -28,7 +28,7 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 
@@ -38,7 +38,7 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 
@@ -48,7 +48,7 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 
@@ -58,13 +58,13 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
     val hex2 = value.toHex().string
     assertEquals(
       "616263313233313233",
       hex2,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 }

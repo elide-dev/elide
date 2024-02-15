@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import java.util.UUID as JavaUUID
  * Describes the concept of a [StringLike] typed UUID, which is held in an optimized internal representation. UUIDs
  * behave as native strings just like URLs.
  */
-public interface UUID: StringLike {
+public interface UUID : StringLike {
   /**
    * ## UUID Types
    *

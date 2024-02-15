@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import elide.struct.codec.PresortedMutableMapCodec
  *
  */
 @Serializable(with = PresortedMutableMapCodec::class)
-public class MutableTreeMap<Key, Value> internal constructor (
+public class MutableTreeMap<Key, Value> internal constructor(
   pairs: Iterable<Pair<Key, Value>>,
   presorted: Boolean,
 ) : AbstractTreeMap<Key, Value>(pairs, presorted), MutableSortedMap<Key, Value> where Key : Comparable<Key> {
@@ -30,25 +30,25 @@ public class MutableTreeMap<Key, Value> internal constructor (
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> create(): MutableTreeMap<Key, Value> = MutableTreeMap()
+    @JvmStatic public fun <Key : Comparable<Key>, Value> create(): MutableTreeMap<Key, Value> = MutableTreeMap()
 
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> of(
+    @JvmStatic public fun <Key : Comparable<Key>, Value> of(
       pairs: Iterable<Pair<Key, Value>>
     ): MutableTreeMap<Key, Value> = MutableTreeMap(pairs.toList())
 
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> of(vararg pairs: Pair<Key, Value>): MutableTreeMap<Key, Value> =
+    @JvmStatic public fun <Key : Comparable<Key>, Value> of(vararg pairs: Pair<Key, Value>): MutableTreeMap<Key, Value> =
       MutableTreeMap(pairs.toList())
 
     /**
      *
      */
-    @JvmStatic public fun <Key: Comparable<Key>, Value> copyOf(map: Map<Key, Value>): MutableTreeMap<Key, Value> =
+    @JvmStatic public fun <Key : Comparable<Key>, Value> copyOf(map: Map<Key, Value>): MutableTreeMap<Key, Value> =
       MutableTreeMap(map.toList())
   }
 

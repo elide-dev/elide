@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,10 +24,10 @@ import elide.tool.testing.TestEvent.Type.*
 /**
  * TBD.
  */
-abstract class CommandTestRunner<Test, Context, Cmd>: TestCase<Test, Context>
-        where Context: TestContext,
-              Test: Testable<Context>,
-              Cmd: CommandContext {
+abstract class CommandTestRunner<Test, Context, Cmd> : TestCase<Test, Context>
+        where Context : TestContext,
+              Test : Testable<Context>,
+              Cmd : CommandContext {
   // Spawn a test event.
   private fun testEvent(
     ctx: Context,
@@ -35,7 +35,7 @@ abstract class CommandTestRunner<Test, Context, Cmd>: TestCase<Test, Context>
     type: Type,
     result: TestResult? = null,
   ): TestEvent<Test, Context> {
-    return object: TestEvent<Test, Context> {
+    return object : TestEvent<Test, Context> {
       override val type: Type get() = type
       override val test: Test get() = test
       override val context: Context get() = ctx
@@ -70,19 +70,21 @@ abstract class CommandTestRunner<Test, Context, Cmd>: TestCase<Test, Context>
       } finally {
         val end = Clock.System.now()
 
-        result.set(if (success.get()) TestResult.success(
-          test = case,
-          testInfo = case.testInfo(),
-          start = start,
-          end = end,
-        ) else TestResult.failure(
-          test = case,
-          testInfo = case.testInfo(),
-          start = start,
-          end = end,
-          err = err.get(),
-          errOutput = StringBuilder(err.get()?.buildStacktrace()),
-        ))
+        result.set(
+          if (success.get()) TestResult.success(
+            test = case,
+            testInfo = case.testInfo(),
+            start = start,
+            end = end,
+          ) else TestResult.failure(
+            test = case,
+            testInfo = case.testInfo(),
+            start = start,
+            end = end,
+            err = err.get(),
+            errOutput = StringBuilder(err.get()?.buildStacktrace()),
+          ),
+        )
 
         // the test has finished
         listener.onTestEvent(testEvent(it, case, RESULT, result.get()))

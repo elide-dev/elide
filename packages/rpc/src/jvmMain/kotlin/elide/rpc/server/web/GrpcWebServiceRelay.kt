@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -97,8 +97,8 @@ import elide.runtime.Logging
     }
 
     return (
-      targetPackage to serviceDescriptor.name
-    )
+            targetPackage to serviceDescriptor.name
+            )
   }
 
   // Load the gRPC stub wrapper class from the classpath, and resolve the expected method from the class.
@@ -110,7 +110,7 @@ import elide.runtime.Logging
         val path = pathSplit.slice(0 until i).joinToString(".")
         if (bannedPackages.contains(path)) {
           throw IllegalStateException(
-            "Reflection-based gRPC service binding is not allowed for package or class '$path'"
+            "Reflection-based gRPC service binding is not allowed for package or class '$path'",
           )
         }
       }
@@ -122,12 +122,12 @@ import elide.runtime.Logging
     } catch (err: Throwable) {
       logging.error(
         "Failed to load class for gRPC relay at name '$className'",
-        err
+        err,
       )
       throw Status.INTERNAL.withCause(
-        err
+        err,
       ).withDescription(
-        "Service or method not found"
+        "Service or method not found",
       ).asRuntimeException()
     }
   }
@@ -141,12 +141,12 @@ import elide.runtime.Logging
     } catch (err: Throwable) {
       logging.error(
         "Failed to resolve method at name '$methodName' from class '${klass.name}' for gRPC web dispatch",
-        err
+        err,
       )
       throw Status.INTERNAL.withCause(
-        err
+        err,
       ).withDescription(
-        "Service or method not found"
+        "Service or method not found",
       ).asRuntimeException()
     }
   }
@@ -166,7 +166,7 @@ import elide.runtime.Logging
     return if (payload is Message) {
       payload.toByteArray()
     } else throw IllegalArgumentException(
-      "No support for decoding non-message responses at this time. Instead, got instance of '${payload.javaClass.name}'"
+      "No support for decoding non-message responses at this time. Instead, got instance of '${payload.javaClass.name}'",
     )
   }
 
@@ -211,11 +211,11 @@ import elide.runtime.Logging
     val incomingMessage: Message = if (deframer.processInput(stream, call.contentType)) {
       deserializer.deserialize(
         grpcMethod,
-        deframer.toByteArray()
+        deframer.toByteArray(),
       )
     } else {
       throw IllegalArgumentException(
-        "Data stream for gRPC Web dispatch was malformed"
+        "Data stream for gRPC Web dispatch was malformed",
       )
     }
 
@@ -233,7 +233,7 @@ import elide.runtime.Logging
       )
       if (!observer.await(call.config.timeout.seconds)) {
         throw Status.DEADLINE_EXCEEDED.withDescription(
-          "CALL_TIMEOUT"
+          "CALL_TIMEOUT",
         ).asRuntimeException()
       }
     } catch (sre: StatusRuntimeException) {
@@ -251,7 +251,7 @@ import elide.runtime.Logging
     return if (observer.failed.get()) {
       logging.debug(
         "Encountered remote error from backing gRPC Web method '${call.method.methodDescriptor.fullMethodName}'",
-        err
+        err,
       )
 
       // try to synthesize the error into a gRPC status
@@ -265,12 +265,12 @@ import elide.runtime.Logging
           headers = errorHeaders,
           trailers = errorTrailers,
           cause = err.get(),
-        )
+        ),
       )
     } else {
       logging.debug {
         "Received total of ${responses.size} responses from backing gRPC Web method " +
-          "'${call.method.methodDescriptor.fullMethodName}'. Relaying to client"
+                "'${call.method.methodDescriptor.fullMethodName}'. Relaying to client"
       }
       call.notifyResponse(
         GrpcWebCallResponse.UnaryResponse(
@@ -278,7 +278,7 @@ import elide.runtime.Logging
           payload = serializeResponses(responses),
           headers = interceptor.headers,
           trailers = interceptor.trailers,
-        )
+        ),
       )
     }
   }
@@ -290,7 +290,7 @@ import elide.runtime.Logging
       fulfillSingleCall(
         call,
         interceptor,
-      )
+      ),
     ).asDeferred()
   }
 
@@ -301,9 +301,9 @@ import elide.runtime.Logging
    * Once the call completes, the provided [latch] is notified, which lets dependent callers begin interrogating this
    * object to determine the outcome of the call.
    */
-  private inner class GrpcCallObserver constructor (
+  private inner class GrpcCallObserver constructor(
     private val latch: CountDownLatch,
-  ): StreamObserver<Any> {
+  ) : StreamObserver<Any> {
     /** Set of values returned via [onNext]. */
     val values = LinkedList<Any>()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,11 +17,11 @@ package elide.page.Context_
 
 @Suppress("unused")
 class FramingPolicy private constructor() {
-    companion object {
-        const val DEFAULTFRAMINGPOLICY: Int = 0
-        const val SAMEORIGIN: Int = 1
-        const val DENY: Int = 2
-        val names : Array<String> = arrayOf("DEFAULT_FRAMING_POLICY", "SAMEORIGIN", "DENY")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val DEFAULTFRAMINGPOLICY: Int = 0
+    const val SAMEORIGIN: Int = 1
+    const val DENY: Int = 2
+    val names: Array<String> = arrayOf("DEFAULT_FRAMING_POLICY", "SAMEORIGIN", "DENY")
+    fun name(e: Int): String = names[e]
+  }
 }

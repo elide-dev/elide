@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,11 +22,11 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  *
  */
-public class NativeConfiguration private constructor (private val config: DecodedNativeConfiguration) {
+public class NativeConfiguration private constructor(private val config: DecodedNativeConfiguration) {
   /**
    *
    */
-  @JvmRecord private data class DecodedNativeConfiguration (
+  @JvmRecord private data class DecodedNativeConfiguration(
     val version: String,
     val mode: ProtocolMode,
     private val bytes: ByteBuffer = ByteBuffer.allocate(0),
@@ -71,21 +71,25 @@ public class NativeConfiguration private constructor (private val config: Decode
     /**
      *
      */
-    @JvmStatic public fun create(): NativeConfiguration = NativeConfiguration(DecodedNativeConfiguration(
-      version = DEFAULT_API_VERSION,
-      mode = DEFAULT_PROTOCOL_MODE,
-    ))
+    @JvmStatic public fun create(): NativeConfiguration = NativeConfiguration(
+      DecodedNativeConfiguration(
+        version = DEFAULT_API_VERSION,
+        mode = DEFAULT_PROTOCOL_MODE,
+      ),
+    )
 
     /**
      *
      */
     @JvmStatic public fun of(version: String, mode: ProtocolMode, byteview: ByteBuffer): NativeConfiguration =
-      NativeConfiguration(DecodedNativeConfiguration(
-        version = version,
-        mode = mode,
-        bytes = byteview,
-      ).also {
-        it.load()
-      })
+      NativeConfiguration(
+        DecodedNativeConfiguration(
+          version = version,
+          mode = mode,
+          bytes = byteview,
+        ).also {
+          it.load()
+        },
+      )
   }
 }

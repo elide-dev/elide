@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,22 +22,22 @@ private val EMPTY_SORTED_MAP: SortedMap<Nothing, Nothing> = TreeMap(emptyList())
  *
  */
 @Suppress("UNCHECKED_CAST")
-public fun <K: Comparable<K>, V> sortedMapOf(): SortedMap<K, V> = EMPTY_SORTED_MAP as SortedMap<K, V>
+public fun <K : Comparable<K>, V> sortedMapOf(): SortedMap<K, V> = EMPTY_SORTED_MAP as SortedMap<K, V>
 
 /**
  *
  */
-public fun <K: Comparable<K>, V> sortedMapOf(pairs: Collection<Pair<K, V>>): SortedMap<K, V> =
+public fun <K : Comparable<K>, V> sortedMapOf(pairs: Collection<Pair<K, V>>): SortedMap<K, V> =
   TreeMap(pairs)
 
 /**
  *
  */
-public fun <K: Comparable<K>, V> sortedMapOf(vararg pairs: Pair<K, V>): SortedMap<K, V> =
+public fun <K : Comparable<K>, V> sortedMapOf(vararg pairs: Pair<K, V>): SortedMap<K, V> =
   TreeMap(pairs.toList())
 
 /**
  *
  */
-public fun <K: Comparable<K>, V> mutableSortedMapOf(vararg pairs: Pair<K, V>): MutableSortedMap<K, V> =
+public fun <K : Comparable<K>, V> mutableSortedMapOf(vararg pairs: Pair<K, V>): MutableSortedMap<K, V> =
   MutableTreeMap(pairs.toList())

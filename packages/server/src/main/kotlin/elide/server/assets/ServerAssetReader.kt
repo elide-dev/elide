@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -149,8 +149,8 @@ public class ServerAssetReader @Inject internal constructor(
           subj.hash to subj.fingerprint
         } else {
           null
-        }
-      ) { selectedVariant.data.raw }
+        },
+      ) { selectedVariant.data.raw },
     ).asDeferred()
   }
 
@@ -161,7 +161,7 @@ public class ServerAssetReader @Inject internal constructor(
       unextensioned = unextensioned.dropLast(unextensioned.length - unextensioned.lastIndexOf("."))
     }
     return assetIndex.resolveByTag(
-      unextensioned.removePrefix((assetConfig.prefix ?: AssetConfig.DEFAULT_ASSET_PREFIX)).removePrefix("/")
+      unextensioned.removePrefix((assetConfig.prefix ?: AssetConfig.DEFAULT_ASSET_PREFIX)).removePrefix("/"),
     )
   }
 }

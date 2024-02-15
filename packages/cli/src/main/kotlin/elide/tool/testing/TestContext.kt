@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,13 +14,12 @@
 package elide.tool.testing
 
 import java.util.concurrent.atomic.AtomicReference
-import elide.tool.testing.TestContext.TestStage.DONE
 import elide.tool.testing.TestContext.TestStage.EXECUTING
 
 /**
  * TBD.
  */
-interface TestContext: AutoCloseable {
+interface TestContext : AutoCloseable {
   /** Static utilities for test contexts. */
   object Utils {
     /** Enforce that [stage] is present in the [allowed] stages. */
@@ -58,7 +57,7 @@ interface TestContext: AutoCloseable {
         op.invoke()
         throw AssertionFailure(
           "assertThrows",
-          failureMessage ?: "expected to catch type '${X::class.java.name}', but nothing was thrown"
+          failureMessage ?: "expected to catch type '${X::class.java.name}', but nothing was thrown",
         )
       } catch (err: Throwable) {
         if (err !is X) throw AssertionFailure(

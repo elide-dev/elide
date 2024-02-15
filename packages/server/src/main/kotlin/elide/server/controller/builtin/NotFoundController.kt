@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -35,10 +35,13 @@ import elide.server.html
 /** Default built-in controller which handles `404 Not Found` events. */
 @Eager @Controller public class NotFoundController : BuiltinController() {
   /** @inheritDoc */
-  @Get("/error/notfound", produces = [
-    MediaType.TEXT_HTML,
-    MediaType.APPLICATION_JSON,
-  ])
+  @Get(
+    "/error/notfound",
+    produces = [
+      MediaType.TEXT_HTML,
+      MediaType.APPLICATION_JSON,
+    ],
+  )
   @Error(status = HttpStatus.NOT_FOUND, global = true)
   override suspend fun handle(request: HttpRequest<out Any>): RawResponse {
     val accept = (request.accept() ?: listOf(MediaType.TEXT_HTML)).map { it.toString() }
@@ -69,7 +72,7 @@ import elide.server.html
 
   private fun servePlaintext(): RawResponse {
     return HttpResponse.notFound<RawPayload>().contentType(MediaType.TEXT_PLAIN).body(
-      "Not found.".toByteArray(StandardCharsets.UTF_8)
+      "Not found.".toByteArray(StandardCharsets.UTF_8),
     )
   }
 }

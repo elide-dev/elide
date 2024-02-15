@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ package elide.runtime.gvm.internals
 internal data class VMConditionalMultiProperty(
   private val main: VMConditionalProperty,
   private val properties: List<VMRuntimeProperty>,
-): VMProperty {
+) : VMProperty {
   /** @return Main value for this conditional multi-property set. */
   override fun value(): String = main.value()
 
@@ -34,9 +34,9 @@ internal data class VMConditionalMultiProperty(
   /** @return Full list of properties that should apply for this set, including the root property. */
   internal fun explode(): List<VMProperty> {
     return listOf(
-      main
+      main,
     ).plus(
-      properties
+      properties,
     )
   }
 }

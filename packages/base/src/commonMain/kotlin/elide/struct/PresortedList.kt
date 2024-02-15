@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,11 +21,11 @@ import elide.struct.codec.PresortedListCodec
  *
  */
 @Serializable(with = PresortedListCodec::class)
-public class PresortedList<Value> internal constructor (
+public class PresortedList<Value> internal constructor(
   values: Collection<Value>,
   presorted: Boolean,
   private val comparator: Comparator<Value>? = null,
-) : SortedList<Value> where Value: Comparable<Value> {
+) : SortedList<Value> where Value : Comparable<Value> {
   //
   public constructor () : this(emptyList())
 
@@ -37,7 +37,7 @@ public class PresortedList<Value> internal constructor (
 
   //
   public constructor (values: Collection<Value>, comparator: Comparator<Value>?) :
-    this(values, false, comparator)
+          this(values, false, comparator)
 
   //
   private val sorted: List<Value> = when {

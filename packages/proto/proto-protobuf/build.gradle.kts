@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,10 +13,10 @@
 
 @file:Suppress("UnstableApiUsage")
 
-import elide.internal.conventions.kotlin.KotlinTarget
-import elide.internal.conventions.publishing.publish
 import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.proto
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
@@ -100,23 +100,27 @@ tasks {
   }
 
   compileJava {
-    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-      listOf(
-        "--add-exports=elide.protocol.core/elide.proto=elide.protocol.protobuf",
-        "--add-exports=elide.protocol.core/elide.proto.internal.annotations=elide.protocol.protobuf",
-        "--add-reads=elide.protocol.protobuf=ALL-UNNAMED",
-        "-nowarn",
-        "-XDenableSunApiLintControl",
-        "-Xlint:-deprecation",
-      )
-    })
+    options.compilerArgumentProviders.add(
+      CommandLineArgumentProvider {
+        listOf(
+          "--add-exports=elide.protocol.core/elide.proto=elide.protocol.protobuf",
+          "--add-exports=elide.protocol.core/elide.proto.internal.annotations=elide.protocol.protobuf",
+          "--add-reads=elide.protocol.protobuf=ALL-UNNAMED",
+          "-nowarn",
+          "-XDenableSunApiLintControl",
+          "-Xlint:-deprecation",
+        )
+      },
+    )
   }
 
   compileKotlin {
     kotlinOptions {
-      freeCompilerArgs = freeCompilerArgs.plus(listOf(
-        "-nowarn",
-      ))
+      freeCompilerArgs = freeCompilerArgs.plus(
+        listOf(
+          "-nowarn",
+        ),
+      )
     }
   }
 }

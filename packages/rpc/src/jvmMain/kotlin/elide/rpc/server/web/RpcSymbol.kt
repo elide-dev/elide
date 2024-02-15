@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ package elide.rpc.server.web
  * The [TRAILER] value is used to encode gRPC responses over regular HTTP/1.1-style responses, if needed. The [DATA]
  * symbol is used to demarcate a data frame inside a gRPC Web request or response.
  */
-public enum class RpcSymbol (public val value: Byte) {
+public enum class RpcSymbol(public val value: Byte) {
   /** Symbol indicating a data frame. */
   DATA((0x00).toByte()),
 

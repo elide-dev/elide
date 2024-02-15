@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,44 +24,49 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class FileTypeSpec : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): FileTypeSpec {
+    __init(_i, _bb)
+    return this
+  }
+
+  val known: Int
+    get() {
+      val o = __offset(4)
+      return if (o != 0) bb.getInt(o + bb_pos) else 0
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : FileTypeSpec {
-        __init(_i, _bb)
-        return this
+  val mime: String?
+    get() {
+      val o = __offset(6)
+      return if (o != 0) __string(o + bb_pos) else null
     }
-    val known : Int
-        get() {
-            val o = __offset(4)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    val mime : String?
-        get() {
-            val o = __offset(6)
-            return if (o != 0) __string(o + bb_pos) else null
-        }
-    val mimeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun mimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsFileTypeSpec(_bb: ByteBuffer): FileTypeSpec = getRootAsFileTypeSpec(_bb, FileTypeSpec())
-        fun getRootAsFileTypeSpec(_bb: ByteBuffer, obj: FileTypeSpec): FileTypeSpec {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createFileTypeSpec(builder: FlatBufferBuilder, known: Int, mimeOffset: Int) : Int {
-            builder.startTable(2)
-            addMime(builder, mimeOffset)
-            addKnown(builder, known)
-            return endFileTypeSpec(builder)
-        }
-        fun startFileTypeSpec(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addKnown(builder: FlatBufferBuilder, known: Int) = builder.addInt(0, known, 0)
-        fun addMime(builder: FlatBufferBuilder, mime: Int) = builder.addOffset(1, mime, 0)
-        fun endFileTypeSpec(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+  val mimeAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+  fun mimeInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsFileTypeSpec(_bb: ByteBuffer): FileTypeSpec = getRootAsFileTypeSpec(_bb, FileTypeSpec())
+    fun getRootAsFileTypeSpec(_bb: ByteBuffer, obj: FileTypeSpec): FileTypeSpec {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
+
+    fun createFileTypeSpec(builder: FlatBufferBuilder, known: Int, mimeOffset: Int): Int {
+      builder.startTable(2)
+      addMime(builder, mimeOffset)
+      addKnown(builder, known)
+      return endFileTypeSpec(builder)
+    }
+
+    fun startFileTypeSpec(builder: FlatBufferBuilder) = builder.startTable(2)
+    fun addKnown(builder: FlatBufferBuilder, known: Int) = builder.addInt(0, known, 0)
+    fun addMime(builder: FlatBufferBuilder, mime: Int) = builder.addOffset(1, mime, 0)
+    fun endFileTypeSpec(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
+    }
+  }
 }

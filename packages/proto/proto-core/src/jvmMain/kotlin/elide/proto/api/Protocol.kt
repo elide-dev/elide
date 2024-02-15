@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -46,9 +46,11 @@ public object Protocol : ServiceLoader.Provider<ElideProtocol> {
   public fun acquire(impl: ImplementationLibrary? = null): ElideProtocol {
     if (!initialized.get()) {
       // gather installed protocol implementations (one is required at invocation time)
-      allProtocols.addAll(ServiceLoader.load(ElideProtocol::class.java)
-        .stream()
-        .collect(Collectors.toList()))
+      allProtocols.addAll(
+        ServiceLoader.load(ElideProtocol::class.java)
+          .stream()
+          .collect(Collectors.toList()),
+      )
 
       // throw if not available
       if (allProtocols.isEmpty()) error("No installed protocol implementations found.")

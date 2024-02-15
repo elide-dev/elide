@@ -14,8 +14,8 @@ import elide.runtime.plugins.js.JavaScript
 
 @OptIn(DelicateElideApi::class) @Singleton internal class EmbeddedRuntimeImpl(
   private val hostConfig: InstanceConfiguration,
-  ) : EmbeddedRuntime {
-    /** Concurrency-safe flag for configuration state. */
+) : EmbeddedRuntime {
+  /** Concurrency-safe flag for configuration state. */
   private val configured = atomic(false)
 
   /** Concurrency-safe flag for initialization state. */
@@ -39,7 +39,7 @@ import elide.runtime.plugins.js.JavaScript
     // enable support for requested guest languages
     for (language in hostConfig.engine.languageList) when (language) {
       JAVASCRIPT -> install(JavaScript) {
-      // nothing to configure
+        // nothing to configure
       }
 
       JVM, WASM, LLVM, PYTHON, RUBY -> error("Guest language is not yet supported: $language")
@@ -78,4 +78,4 @@ import elide.runtime.plugins.js.JavaScript
     // create a new dispatcher for every call
     return EmbeddedDispatcherImpl()
   }
-  }
+}

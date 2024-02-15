@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -57,7 +57,7 @@ import elide.core.encoding.Encoding
   "LoopWithTooManyJumpStatements",
   "ComplexMethod",
   "LongMethod",
-  "NestedBlockDepth"
+  "NestedBlockDepth",
 )
 public actual object Base64 : Codec<Base64Data> {
   /**
@@ -69,7 +69,7 @@ public actual object Base64 : Codec<Base64Data> {
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/',
   )
 
   /**
@@ -81,7 +81,7 @@ public actual object Base64 : Codec<Base64Data> {
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
   )
 
   /**
@@ -145,7 +145,7 @@ public actual object Base64 : Codec<Base64Data> {
     private val doPadding: Boolean
   ) {
     // Empty constructor.
-    public actual constructor(): this(null, -1, true)
+    public actual constructor() : this(null, -1, true)
 
     public actual companion object {
       /** Default encoder instance. */
@@ -288,7 +288,7 @@ public actual object Base64 : Codec<Base64Data> {
       if (len == 0) return 0
       if (len < 2) {
         throw IllegalArgumentException(
-          "Input byte[] should at least have 2 bytes for base64 bytes"
+          "Input byte[] should at least have 2 bytes for base64 bytes",
         )
       }
       if (src[sl - 1].toInt().toChar() == '=') {
@@ -335,7 +335,7 @@ public actual object Base64 : Codec<Base64Data> {
             // xx=y  shiftto==6 last is not =
             require(
               !(shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
-                      shiftto == 18)
+                      shiftto == 18),
             ) { "Input byte array has wrong 4-byte ending unit" }
             break
           }
@@ -356,10 +356,12 @@ public actual object Base64 : Codec<Base64Data> {
         6 -> {
           dst[dp++] = (bits shr 16).toByte()
         }
+
         0 -> {
           dst[dp++] = (bits shr 16).toByte()
           dst[dp++] = (bits shr 8).toByte()
         }
+
         else -> require(shiftto != 12) {
           // dangling single "x", incorrectly encoded.
           "Last unit does not have enough valid bits"
@@ -369,7 +371,7 @@ public actual object Base64 : Codec<Base64Data> {
       // if MIME, ignore all non-base64 character
       while (sp < sl) {
         throw IllegalArgumentException(
-          "Input byte array has incorrect ending byte at $sp"
+          "Input byte array has incorrect ending byte at $sp",
         )
       }
       return dp

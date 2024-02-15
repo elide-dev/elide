@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -49,45 +49,51 @@ class GrpcWebConfiguratorTest {
     assertEquals(
       HealthCheckResponse.ServingStatus.SERVING,
       healthManager.currentStatus(HealthGrpc.getServiceDescriptor()),
-      "health service should show as serving immediately upon startup"
+      "health service should show as serving immediately upon startup",
     )
   }
 
   @Test fun testOnServerBuilderCreated() {
     val builder = ServerBuilder.forPort(443)
-    builder.addService(ServerServiceDefinition.builder("exampleService")
-      .build())
+    builder.addService(
+      ServerServiceDefinition.builder("exampleService")
+        .build(),
+    )
 
     // build a fake bean event
-    val event = BeanCreatedEvent(beanContext, object: BeanDefinition<ServerBuilder<*>> {
-      override fun isEnabled(context: BeanContext, resolutionContext: BeanResolutionContext?): Boolean {
-        return true
-      }
+    val event = BeanCreatedEvent(
+      beanContext,
+      object : BeanDefinition<ServerBuilder<*>> {
+        override fun isEnabled(context: BeanContext, resolutionContext: BeanResolutionContext?): Boolean {
+          return true
+        }
 
-      override fun getBeanType(): Class<ServerBuilder<*>> {
-        return ServerBuilder::class.java
-      }
-    }, BeanIdentifier.of("abc123"), builder)
+        override fun getBeanType(): Class<ServerBuilder<*>> {
+          return ServerBuilder::class.java
+        }
+      },
+      BeanIdentifier.of("abc123"), builder,
+    )
 
     // run the `onCreated` event
     configurator.onCreated(
-      event
+      event,
     )
 
     // services should now be registered with the runtime
     val resolvedSample = rpcRuntime.resolveService(
-      "exampleService"
+      "exampleService",
     )
     assertNotNull(
       resolvedSample,
-      "should be able to resolve `exampleService` after registration through bean creation observer"
+      "should be able to resolve `exampleService` after registration through bean creation observer",
     )
     val resolvedNonExistent = rpcRuntime.resolveService(
-      "idonotexist"
+      "idonotexist",
     )
     assertNull(
       resolvedNonExistent,
-      "resolving a service which does not exist should yield `null`"
+      "resolving a service which does not exist should yield `null`",
     )
   }
 }

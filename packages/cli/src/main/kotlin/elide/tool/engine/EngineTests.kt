@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,7 +27,7 @@ import elide.tool.testing.SelfTest
 import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 
 
-abstract class LanguageCondition (private val language: String): Condition {
+abstract class LanguageCondition(private val language: String) : Condition {
   companion object {
     private val ENGINE = Engine.create()
   }
@@ -37,12 +37,12 @@ abstract class LanguageCondition (private val language: String): Condition {
   }
 }
 
-class JsEngineCondition: LanguageCondition("js")
-class PythonEngineCondition: LanguageCondition("python")
-class RubyEngineCondition: LanguageCondition("ruby")
-class JvmEngineCondition: LanguageCondition("java")
-class LlvmEngineCondition: LanguageCondition("llvm")
-class WasmEngineCondition: LanguageCondition("wasm")
+class JsEngineCondition : LanguageCondition("js")
+class PythonEngineCondition : LanguageCondition("python")
+class RubyEngineCondition : LanguageCondition("ruby")
+class JvmEngineCondition : LanguageCondition("java")
+class LlvmEngineCondition : LanguageCondition("llvm")
+class WasmEngineCondition : LanguageCondition("wasm")
 
 /** Basic engine tests. */
 @Bean @EmbeddedTest class EngineTest : SelfTest() {
@@ -68,16 +68,18 @@ class WasmEngineCondition: LanguageCondition("wasm")
     it.use { ctx ->
       try {
         ctx.enter()
-        val result = ctx.eval(Source.create(
-          "js",
-          // language=javascript
-          """
+        val result = ctx.eval(
+          Source.create(
+            "js",
+            // language=javascript
+            """
           function hello() {
               return "hi";
           }
           hello();
-          """.trimIndent()
-        ))
+          """.trimIndent(),
+          ),
+        )
 
         assertNotNull(result, "should get result from pure js execution")
         assertFalse(result.isNull, "should not get `null` guest value for expected \"hi\"")
@@ -109,15 +111,17 @@ class WasmEngineCondition: LanguageCondition("wasm")
     it.use { ctx ->
       try {
         ctx.enter()
-        val result = ctx.eval(Source.create(
-          "python",
-          // language=python
-          """
+        val result = ctx.eval(
+          Source.create(
+            "python",
+            // language=python
+            """
           def hello():
             return "hi"
           hello()
-          """.trimIndent()
-        ))
+          """.trimIndent(),
+          ),
+        )
 
         assertNotNull(result, "should get result from pure python execution")
         assertFalse(result.isNull, "should not get `null` guest value for expected \"hi\"")
@@ -139,16 +143,18 @@ class WasmEngineCondition: LanguageCondition("wasm")
     it.use { ctx ->
       try {
         ctx.enter()
-        val result = ctx.eval(Source.create(
-          "ruby",
-          // language=ruby
-          """
+        val result = ctx.eval(
+          Source.create(
+            "ruby",
+            // language=ruby
+            """
           def hello
             "hi"
           end
           hello
-          """.trimIndent()
-        ))
+          """.trimIndent(),
+          ),
+        )
 
         assertNotNull(result, "should get result from pure ruby execution")
         assertFalse(result.isNull, "should not get `null` guest value for expected \"hi\"")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -25,10 +25,12 @@ import elide.tool.testing.SelfTest
 @Requires(notOs = [Requires.Family.WINDOWS])
 @Bean @EmbeddedTest class NativeTransportTest : SelfTest() {
   override suspend fun SelfTestContext.test() {
-    assertTrue(listOf(
-      Epoll.isAvailable(),
-      KQueue.isAvailable(),
-    ).any())
+    assertTrue(
+      listOf(
+        Epoll.isAvailable(),
+        KQueue.isAvailable(),
+      ).any(),
+    )
   }
 }
 
@@ -36,9 +38,11 @@ import elide.tool.testing.SelfTest
 @Requires(notOs = [Requires.Family.WINDOWS])
 @Bean @EmbeddedTest class NativeCryptoTest : SelfTest() {
   override suspend fun SelfTestContext.test() {
-    assertTrue(listOf(
-      OpenSsl.isAvailable()
-    ).any())
+    assertTrue(
+      listOf(
+        OpenSsl.isAvailable(),
+      ).any(),
+    )
   }
 }
 

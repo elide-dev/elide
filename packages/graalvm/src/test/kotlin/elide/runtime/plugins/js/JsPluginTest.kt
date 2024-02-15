@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -39,7 +39,7 @@ internal class JsPluginTest {
    */
   private fun useResourceBundle(vararg bundles: String): PolyglotEngineConfiguration.() -> Unit = {
     install(Vfs) {
-      for(bundle in bundles) include(resource(bundle))
+      for (bundle in bundles) include(resource(bundle))
     }
   }
 
@@ -71,7 +71,7 @@ internal class JsPluginTest {
       function getValue() { return a; }
 
       getValue()
-      """
+      """,
     )
 
     assertEquals(
@@ -82,13 +82,13 @@ internal class JsPluginTest {
   }
 
   @Test fun testEmbeddedCjs() = withJsPlugin(
-    configureEngine = useResourceBundle("hello-world/hello.tar.gz")
+    configureEngine = useResourceBundle("hello-world/hello.tar.gz"),
   ) {
     val requireResult = javascript(
       """
       const hello = require("hello")
       hello("Elide")
-      """
+      """,
     )
 
     assertEquals(
@@ -99,7 +99,7 @@ internal class JsPluginTest {
   }
 
   @Test fun testEmbeddedEsm() = withJsPlugin(
-    configureEngine = useResourceBundle("hello-world/hello.tar.gz")
+    configureEngine = useResourceBundle("hello-world/hello.tar.gz"),
   ) {
     val importResult = javascript(
       """

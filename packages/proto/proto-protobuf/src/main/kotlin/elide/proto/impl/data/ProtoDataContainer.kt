@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,23 +24,23 @@ import elide.core.encoding.hex.HexData
 import elide.proto.api.data.DataContainer as IDataContainer
 
 /** TBD. */
-public class ProtoDataContainer private constructor (private val container: DataContainer) : IDataContainer<
-  ProtoDataContainer,
-  ProtoDataContainer.Builder,
-  ProtoDataFingerprint,
-  ProtoDataFingerprint.Builder,
-  HashAlgorithm,
-  Encoding,
->, DataContainerOrBuilder by container {
+public class ProtoDataContainer private constructor(private val container: DataContainer) : IDataContainer<
+        ProtoDataContainer,
+        ProtoDataContainer.Builder,
+        ProtoDataFingerprint,
+        ProtoDataFingerprint.Builder,
+        HashAlgorithm,
+        Encoding,
+        >, DataContainerOrBuilder by container {
   /** TBD. */
   public class Builder : IDataContainer.IBuilder<
-    ProtoDataContainer,
-    ProtoDataFingerprint,
-    ProtoDataFingerprint.Builder,
-    HashAlgorithm,
-    Encoding,
-    Builder,
-  > {
+          ProtoDataContainer,
+          ProtoDataFingerprint,
+          ProtoDataFingerprint.Builder,
+          HashAlgorithm,
+          Encoding,
+          Builder,
+          > {
     override var data: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
@@ -72,16 +72,16 @@ public class ProtoDataContainer private constructor (private val container: Data
 
   /** Factory for protocol buffer-backed data containers. */
   public companion object Factory : IDataContainer.Factory<
-    ProtoDataContainer,
-    Builder,
-    ProtoDataFingerprint,
-    ProtoDataFingerprint.Builder,
-    HashAlgorithm,
-    Encoding,
-  > {
+          ProtoDataContainer,
+          Builder,
+          ProtoDataFingerprint,
+          ProtoDataFingerprint.Builder,
+          HashAlgorithm,
+          Encoding,
+          > {
     /** Default singleton (empty) instance. */
     @JvmStatic private val DEFAULT_INSTANCE: ProtoDataContainer = ProtoDataContainer(
-      DataContainer.getDefaultInstance()
+      DataContainer.getDefaultInstance(),
     )
 
     override fun empty(): ProtoDataContainer {

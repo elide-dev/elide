@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -41,7 +41,7 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
  * @param args Command-line arguments which were active when this error was produced, as applicable.
  * @param error Information about the error itself -- the stacktrace, exception type, and so on.
  */
-@Serializable @JvmRecord data class PersistedError @OptIn(DelicateElideApi::class) private constructor (
+@Serializable @JvmRecord data class PersistedError @OptIn(DelicateElideApi::class) private constructor(
   val version: Int = 1,
   val id: String,
   val timestamp: Instant,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ package elide.util
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-public actual object Base64: Encoder {
+public actual object Base64 : Encoder {
   actual override fun encoding(): Encoding {
     return Encoding.BASE64
   }
@@ -33,7 +33,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encode(string: String): ByteArray {
     return Base64Kt.Encoder.DEFAULT.encode(
-      string.encodeToByteArray()
+      string.encodeToByteArray(),
     )
   }
 
@@ -45,7 +45,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encode(data: ByteArray): ByteArray {
     return Base64Kt.Encoder.DEFAULT.encode(
-      data
+      data,
     )
   }
 
@@ -57,7 +57,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encodeToString(data: ByteArray): String {
     return encode(
-      data
+      data,
     ).decodeToString()
   }
 
@@ -69,7 +69,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encodeToString(string: String): String {
     return encode(
-      string
+      string,
     ).decodeToString()
   }
 
@@ -107,7 +107,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decode(data: ByteArray): ByteArray {
     return Base64Kt.Decoder.DEFAULT.decode(
-      data
+      data,
     )
   }
 
@@ -119,7 +119,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decode(string: String): ByteArray {
     return Base64Kt.Decoder.DEFAULT.decode(
-      string.encodeToByteArray()
+      string.encodeToByteArray(),
     )
   }
 
@@ -131,7 +131,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decodeToString(data: ByteArray): String {
     return Base64Kt.Decoder.DEFAULT.decode(
-      data
+      data,
     ).decodeToString()
   }
 
@@ -143,7 +143,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decodeToString(string: String): String {
     return decodeToString(
-      string.encodeToByteArray()
+      string.encodeToByteArray(),
     )
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,16 +24,17 @@ import elide.struct.PresortedList
 /**
  *
  */
-public class PresortedListCodec<V: Comparable<V>>(private val dataSerializer: KSerializer<V>)
-  : KSerializer<PresortedList<V>> {
+public class PresortedListCodec<V : Comparable<V>>(private val dataSerializer: KSerializer<V>) :
+  KSerializer<PresortedList<V>> {
   // Delegate list serializer.
   private val delegateSerializer = ListSerializer(dataSerializer)
 
   @OptIn(ExperimentalSerializationApi::class)
-  override val descriptor: SerialDescriptor get() = SerialDescriptor(
-    "PresortedList",
-    delegateSerializer.descriptor,
-  )
+  override val descriptor: SerialDescriptor
+    get() = SerialDescriptor(
+      "PresortedList",
+      delegateSerializer.descriptor,
+    )
 
   override fun deserialize(decoder: Decoder): PresortedList<V> {
     return PresortedList(delegateSerializer.deserialize(decoder))

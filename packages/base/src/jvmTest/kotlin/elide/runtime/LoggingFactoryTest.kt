@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,25 +21,25 @@ class LoggingFactoryTest {
   @Test fun testAcquireRootLogger() {
     assertNotNull(
       Logging.root(),
-      "should be able to acquire root logger on JVM"
+      "should be able to acquire root logger on JVM",
     )
   }
 
   @Test fun testAcquireNamedLogger() {
     assertNotNull(
       Logging.named("some.logger"),
-      "should be able to acquire a logger with an arbitrary name on JVM"
+      "should be able to acquire a logger with an arbitrary name on JVM",
     )
   }
 
   @Test fun testAcquireLoggerForClass() {
     assertNotNull(
       Logging.of(LoggingFactoryTest::class),
-      "should be able to acquire a logger for a Kotlin class"
+      "should be able to acquire a logger for a Kotlin class",
     )
     assertNotNull(
       Logging.of(LoggingFactoryTest::class.java),
-      "should be able to acquire a logger for a Java class"
+      "should be able to acquire a logger for a Java class",
     )
   }
 }

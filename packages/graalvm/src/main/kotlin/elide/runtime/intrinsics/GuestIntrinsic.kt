@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -45,7 +45,7 @@ public interface GuestIntrinsic {
       /** @return Mutable intrinsic bindings backed by a map. */
       @JvmStatic public fun wrap(target: MutableMap<Symbol, Any>): MutableIntrinsicBindings {
         val bindingSet = TreeSet<String>()
-        return object: MutableIntrinsicBindings, MutableMap<Symbol, Any> by target {
+        return object : MutableIntrinsicBindings, MutableMap<Symbol, Any> by target {
           // Check the uniqueness of an intrinsic binding name.
           private fun checkName(key: Symbol) {
             check(key.symbol !in bindingSet) {
@@ -55,7 +55,7 @@ public interface GuestIntrinsic {
 
           // Throw a consistent error for removals, which are not allowed.
           private fun notAllowed(): Nothing = error(
-            "Operation not allowed on intrinsic binding proxy."
+            "Operation not allowed on intrinsic binding proxy.",
           )
 
           /** Removing intrinsics is not allowed; this method always throws. */
@@ -67,7 +67,7 @@ public interface GuestIntrinsic {
           override fun put(key: Symbol, value: Any): Any? {
             checkName(key)
             bindingSet.add(key.symbol)
-            return target.put(key ,value)
+            return target.put(key, value)
           }
 
           override fun putAll(from: Map<out Symbol, Any>) {
@@ -78,24 +78,22 @@ public interface GuestIntrinsic {
             }
           }
 
-          override fun compute(key: Symbol, remappingFunction: BiFunction<in Symbol, in Any?, out Any?>)
-            = notAllowed()
+          override fun compute(key: Symbol, remappingFunction: BiFunction<in Symbol, in Any?, out Any?>) = notAllowed()
 
-          override fun computeIfAbsent(key: Symbol, mappingFunction: Function<in Symbol, out Any>)
-            = notAllowed()
+          override fun computeIfAbsent(key: Symbol, mappingFunction: Function<in Symbol, out Any>) = notAllowed()
 
-          override fun computeIfPresent(key: Symbol, remappingFunction: BiFunction<in Symbol, in Any, out Any?>)
-            = notAllowed()
+          override fun computeIfPresent(key: Symbol, remappingFunction: BiFunction<in Symbol, in Any, out Any?>) =
+            notAllowed()
 
-          override fun getMember(key: String): Any = target[JsSymbol(key)] ?:
-            throw IllegalArgumentException("Intrinsic '$key' could not be resolved: not bound.")
+          override fun getMember(key: String): Any = target[JsSymbol(key)]
+            ?: throw IllegalArgumentException("Intrinsic '$key' could not be resolved: not bound.")
 
           override fun getMemberKeys(): Any = bindingSet.toTypedArray()
 
           override fun hasMember(key: String): Boolean = bindingSet.contains(key)
 
           override fun putMember(key: String, value: Value?) = error(
-            "Cannot assign to `Intrinsics` members at runtime"
+            "Cannot assign to `Intrinsics` members at runtime",
           )
         }
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ package elide.runtime.core
 @DelicateElideApi public sealed interface EngineLifecycleEvent<@Suppress("unused") T> {
   /**
    * Lifecycle event triggered when a [PolyglotEngine] is being created, providing a [PolyglotEngineBuilder] that can
-   * be customized before the engine is built. This event is typically received only once. 
+   * be customized before the engine is built. This event is typically received only once.
    */
   public data object EngineCreated : EngineLifecycleEvent<PolyglotEngineBuilder>
 
@@ -33,7 +33,7 @@ package elide.runtime.core
    * received only once, after [EngineCreated].
    */
   public data object EngineInitialized : EngineLifecycleEvent<PolyglotEngine>
-  
+
   /**
    * Lifecycle event triggered when a [PolyglotContext] is being created, providing a [PolyglotContextBuilder] that can
    * be customized before the context is built. This event is typically received whenever [PolyglotEngine.acquire] is

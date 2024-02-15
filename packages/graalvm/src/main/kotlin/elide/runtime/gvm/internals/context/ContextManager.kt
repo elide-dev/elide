@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -34,7 +34,7 @@ public interface ContextManager<Context, Builder> : ContextFactory<Context, Buil
   /**
    * TBD.
    */
-  public interface VMInvocation<T: ExecutionInputs>
+  public interface VMInvocation<T : ExecutionInputs>
 
   /**
    * TBD.
@@ -50,7 +50,7 @@ public interface ContextManager<Context, Builder> : ContextFactory<Context, Buil
    * TBD.
    */
   public suspend fun <R> acquireSuspendAsync(operation: Context.() -> R): Deferred<R> = executeAsync(
-    operation
+    operation,
   ).asDeferred()
 
   /**
@@ -62,6 +62,6 @@ public interface ContextManager<Context, Builder> : ContextFactory<Context, Buil
    *
    */
   public fun <R> executeBlocking(timeout: Duration = DEFAULT_TIMEOUT, operation: Context.() -> R): R = executeAsync(
-    operation
+    operation,
   ).get()
 }

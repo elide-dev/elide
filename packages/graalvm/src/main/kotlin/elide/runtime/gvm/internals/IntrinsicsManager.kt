@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,11 +20,11 @@ import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Resolves intrinsics for use with guest VMs. */
 @Suppress("MnInjectionPoints")
-@Context @Singleton public class IntrinsicsManager (resolvers: List<IntrinsicsResolver>) {
+@Context @Singleton public class IntrinsicsManager(resolvers: List<IntrinsicsResolver>) {
   private val compound = CompoundIntrinsicsResolver.of(resolvers)
 
   /** Resolver stub. */
-  internal inner class GlobalResolver: IntrinsicsResolver by compound
+  internal inner class GlobalResolver : IntrinsicsResolver by compound
 
   /** @return Global resolver stub. */
   public fun resolver(): IntrinsicsResolver = GlobalResolver()

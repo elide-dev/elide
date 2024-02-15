@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,10 +17,10 @@ package elide.meta
 
 @Suppress("unused")
 class GuestLanguage private constructor() {
-    companion object {
-        const val NOGUESTENABLED: Int = 0
-        const val JAVASCRIPT: Int = 1
-        val names : Array<String> = arrayOf("NO_GUEST_ENABLED", "JAVASCRIPT")
-        fun name(e: Int) : String = names[e]
-    }
+  companion object {
+    const val NOGUESTENABLED: Int = 0
+    const val JAVASCRIPT: Int = 1
+    val names: Array<String> = arrayOf("NO_GUEST_ENABLED", "JAVASCRIPT")
+    fun name(e: Int): String = names[e]
+  }
 }

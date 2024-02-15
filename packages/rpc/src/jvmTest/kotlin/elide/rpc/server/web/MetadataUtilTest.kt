@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,62 +31,68 @@ class MetadataUtilTest {
     val metadata = MetadataUtil.metadataFromHeaders(headers)
     assertNotNull(
       metadata,
-      "converted metadata from headers should not be `null`"
+      "converted metadata from headers should not be `null`",
     )
     val found = metadata.get(
       Metadata.Key.of(
         "some-header",
-        Metadata.ASCII_STRING_MARSHALLER
-      )
+        Metadata.ASCII_STRING_MARSHALLER,
+      ),
     )
     assertNull(
       found,
-      "should not find non-grpc header in converted headers from metadata"
+      "should not find non-grpc header in converted headers from metadata",
     )
     val found2 = metadata.get(
       Metadata.Key.of(
         "x-grpc-some-header",
-        Metadata.ASCII_STRING_MARSHALLER
-      )
+        Metadata.ASCII_STRING_MARSHALLER,
+      ),
     )
     assertNotNull(
       found2,
-      "grpc-related header should be copied into grpc metadata"
+      "grpc-related header should be copied into grpc metadata",
     )
     assertEquals(
       "123",
       found2,
-      "grpc header values should be preserved"
+      "grpc header values should be preserved",
     )
     assertNull(
-      metadata.get(Metadata.Key.of(
-        "content-type",
-        Metadata.ASCII_STRING_MARSHALLER
-      )),
-      "excluded headers should not get copied into metadata"
+      metadata.get(
+        Metadata.Key.of(
+          "content-type",
+          Metadata.ASCII_STRING_MARSHALLER,
+        ),
+      ),
+      "excluded headers should not get copied into metadata",
     )
     assertNull(
-      metadata.get(Metadata.Key.of(
-        "grpc-encoding",
-        Metadata.ASCII_STRING_MARSHALLER
-      )),
-      "excluded headers should not get copied into metadata, even if prefixed"
+      metadata.get(
+        Metadata.Key.of(
+          "grpc-encoding",
+          Metadata.ASCII_STRING_MARSHALLER,
+        ),
+      ),
+      "excluded headers should not get copied into metadata, even if prefixed",
     )
     assertNull(
-      metadata.get(Metadata.Key.of(
-        "x-grpc-encoding",
-        Metadata.ASCII_STRING_MARSHALLER
-      )),
-      "excluded headers should not get copied into metadata, even if prefixed"
+      metadata.get(
+        Metadata.Key.of(
+          "x-grpc-encoding",
+          Metadata.ASCII_STRING_MARSHALLER,
+        ),
+      ),
+      "excluded headers should not get copied into metadata, even if prefixed",
     )
     assertNotNull(
       metadata.get(
         Metadata.Key.of(
           "x-grpc-something-bin",
-          Metadata.BINARY_BYTE_MARSHALLER
-        )
+          Metadata.BINARY_BYTE_MARSHALLER,
+        ),
       ),
-      "grpc binary header should be handled correctly by metadata copy"
+      "grpc binary header should be handled correctly by metadata copy",
     )
   }
 
@@ -95,43 +101,43 @@ class MetadataUtilTest {
     metadata.put(
       Metadata.Key.of(
         "some-header",
-        Metadata.ASCII_STRING_MARSHALLER
+        Metadata.ASCII_STRING_MARSHALLER,
       ),
-      "123"
+      "123",
     )
     metadata.put(
       Metadata.Key.of(
         "some-binary-header${Metadata.BINARY_HEADER_SUFFIX}",
-        Metadata.BINARY_BYTE_MARSHALLER
+        Metadata.BINARY_BYTE_MARSHALLER,
       ),
-      "123".toByteArray(StandardCharsets.UTF_8)
+      "123".toByteArray(StandardCharsets.UTF_8),
     )
     val excludedHeader = "content-type"
     metadata.put(
       Metadata.Key.of(
         excludedHeader,
-        Metadata.ASCII_STRING_MARSHALLER
+        Metadata.ASCII_STRING_MARSHALLER,
       ),
-      "application/grpc"
+      "application/grpc",
     )
     val headers = HttpResponse.ok<String>().headers
     MetadataUtil.fillHeadersFromMetadata(
       metadata,
-      headers
+      headers,
     )
     assertEquals(
       "123",
       headers["some-header"],
-      "all headers should be preserved for gRPC response (unless excluded)"
+      "all headers should be preserved for gRPC response (unless excluded)",
     )
     assertEquals(
       "123",
       headers["some-binary-header${Metadata.BINARY_HEADER_SUFFIX}"],
-      "binary headers should be properly suffixed"
+      "binary headers should be properly suffixed",
     )
     assertFalse(
       headers.contains(excludedHeader),
-      "excluded headers should not be present in converted HTTP headers"
+      "excluded headers should not be present in converted HTTP headers",
     )
   }
 }

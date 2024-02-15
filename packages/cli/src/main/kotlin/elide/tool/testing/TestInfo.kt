@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.tool.testing
 /**
  * TBD.
  */
-@JvmInline value class TestInfo private constructor (private val info: TestInfoRecord) {
+@JvmInline value class TestInfo private constructor(private val info: TestInfoRecord) {
   /**
    * TBD.
    */
@@ -32,8 +32,10 @@ package elide.tool.testing
      * TBD.
      */
     @Suppress("UNUSED_PARAMETER")
-    @JvmStatic fun <C: TestContext, T: Testable<C>> of(name: String, case: T) = TestInfo(TestInfoRecord(
-      name = name,
-    ))
+    @JvmStatic fun <C : TestContext, T : Testable<C>> of(name: String, case: T) = TestInfo(
+      TestInfoRecord(
+        name = name,
+      ),
+    )
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -47,7 +47,7 @@ public interface FetchHeaders : MultiMapLike<String, String> {
    * constructors include JavaScript-spec constructors as well as regular host-side `wrap` or `create` constructors. In
    * all cases, these constructors are expected to return a copy of the provided data, as applicable.
    */
-  public interface Factory<Impl> where Impl: FetchHeaders {
+  public interface Factory<Impl> where Impl : FetchHeaders {
     /**
      * Create an empty set of immutable fetch headers.
      *

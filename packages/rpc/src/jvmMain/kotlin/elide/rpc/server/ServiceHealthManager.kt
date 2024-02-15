@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -61,16 +61,16 @@ import jakarta.inject.Singleton
     if (status == null) {
       currentStatus.remove(service)
       healthMonitor.clearStatus(
-        service
+        service,
       )
     } else {
       if (status == ServingStatus.SERVICE_UNKNOWN) throw IllegalArgumentException(
-        "Cannot set service status to `SERVICE_UNKNOWN`: it is output-only"
+        "Cannot set service status to `SERVICE_UNKNOWN`: it is output-only",
       )
       currentStatus[service] = status
       healthMonitor.setStatus(
         service,
-        status
+        status,
       )
     }
   }
@@ -85,7 +85,7 @@ import jakarta.inject.Singleton
   public fun notifyPending(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.UNKNOWN
+      ServingStatus.UNKNOWN,
     )
   }
 
@@ -99,7 +99,7 @@ import jakarta.inject.Singleton
   public fun notifyServing(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.SERVING
+      ServingStatus.SERVING,
     )
   }
 
@@ -113,7 +113,7 @@ import jakarta.inject.Singleton
   public fun notifyNotServing(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.NOT_SERVING
+      ServingStatus.NOT_SERVING,
     )
   }
 
@@ -127,7 +127,7 @@ import jakarta.inject.Singleton
   public fun notifyUnknown(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.UNKNOWN
+      ServingStatus.UNKNOWN,
     )
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -25,7 +25,7 @@ import elide.runtime.gvm.GuestLanguage
  * Defines an abstract GraalVM feature which registers intrinsics and implementation types for a given language or
  * execution engine.
  */
-@VMFeature internal abstract class EngineFeature (private val guestLanguage: GuestLanguage) : FrameworkFeature {
+@VMFeature internal abstract class EngineFeature(private val guestLanguage: GuestLanguage) : FrameworkFeature {
   /**
    * @return Main engine implementation class, executable script class, and bindings class.
    */
@@ -74,10 +74,10 @@ import elide.runtime.gvm.GuestLanguage
   }
 
   override fun isInConfiguration(access: IsInConfigurationAccess): Boolean {
-    return  (
-      // the engine implementation must be in the classpath
-      access.findClassByName(engineTypes().first) != null
-    )
+    return (
+            // the engine implementation must be in the classpath
+            access.findClassByName(engineTypes().first) != null
+            )
   }
 
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ import elide.embedded.api.NativeConfiguration
  * Designed to be mounted manually as an eager singleton, before application initialization, by a build-time
  * configurator class. Provides native configuration to the application, as proposed by an embedded runtime host.
  */
-public class NativeConfigLoader private constructor (
+public class NativeConfigLoader private constructor(
   private val config: Provider<NativeConfiguration>,
 ) : InstanceConfigurationFactory {
   /** Methods to create a native configuration loader in static contexts. */

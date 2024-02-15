@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,17 +12,17 @@
  */
 
 module elide.ssr {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires kotlinx.serialization.core;
-    requires io.micronaut.core;
-    requires io.micronaut.http;
+  requires java.base;
+  requires kotlin.stdlib;
+  requires kotlinx.serialization.core;
+  requires io.micronaut.core;
+  requires io.micronaut.http;
 
-    requires elide.base;
-    requires org.graalvm.polyglot;
+  requires elide.base;
+  requires org.graalvm.polyglot;
 
-    exports elide.ssr;
-    exports elide.ssr.annotations;
-    exports elide.ssr.type;
-    exports elide.vm.annotations;
+  exports elide.ssr;
+  exports elide.ssr.annotations;
+  exports elide.ssr.type;
+  exports elide.vm.annotations;
 }

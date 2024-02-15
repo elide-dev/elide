@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package elide.frontend.ssr
 import org.w3c.fetch.Request
 
 /** Context access utility for SSR-shared state. */
-public class SSRContext<State: Any> private constructor (
+public class SSRContext<State : Any> private constructor(
   private val data: State? = null,
   private val req: Request? = null,
 ) {
@@ -63,17 +63,20 @@ public class SSRContext<State: Any> private constructor (
   }
 
   /** @return Active request, if any. */
-  public val request: Request? get() {
-    return req
-  }
+  public val request: Request?
+    get() {
+      return req
+    }
 
   /** @return State container managed by this context. */
-  public val state: State? get() {
-    return data
-  }
+  public val state: State?
+    get() {
+      return data
+    }
 
   /** @return Active SSR request context. */
-  public val context: dynamic get() {
-    return data
-  }
+  public val context: dynamic
+    get() {
+      return data
+    }
 }

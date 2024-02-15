@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,50 +24,58 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class CommandLineConfig : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): CommandLineConfig {
+    __init(_i, _bb)
+    return this
+  }
+
+  val defaults: elide.cli.ElideToolOptions? get() = defaults(elide.cli.ElideToolOptions())
+  fun defaults(obj: elide.cli.ElideToolOptions): elide.cli.ElideToolOptions? {
+    val o = __offset(4)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : CommandLineConfig {
-        __init(_i, _bb)
-        return this
+  }
+
+  val settings: elide.cli.ElideToolOptions? get() = settings(elide.cli.ElideToolOptions())
+  fun settings(obj: elide.cli.ElideToolOptions): elide.cli.ElideToolOptions? {
+    val o = __offset(6)
+    return if (o != 0) {
+      obj.__assign(__indirect(o + bb_pos), bb)
+    } else {
+      null
     }
-    val defaults : elide.cli.ElideToolOptions? get() = defaults(elide.cli.ElideToolOptions())
-    fun defaults(obj: elide.cli.ElideToolOptions) : elide.cli.ElideToolOptions? {
-        val o = __offset(4)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+  }
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsCommandLineConfig(_bb: ByteBuffer): CommandLineConfig =
+      getRootAsCommandLineConfig(_bb, CommandLineConfig())
+
+    fun getRootAsCommandLineConfig(_bb: ByteBuffer, obj: CommandLineConfig): CommandLineConfig {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val settings : elide.cli.ElideToolOptions? get() = settings(elide.cli.ElideToolOptions())
-    fun settings(obj: elide.cli.ElideToolOptions) : elide.cli.ElideToolOptions? {
-        val o = __offset(6)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
+
+    fun createCommandLineConfig(builder: FlatBufferBuilder, defaultsOffset: Int, settingsOffset: Int): Int {
+      builder.startTable(2)
+      addSettings(builder, settingsOffset)
+      addDefaults(builder, defaultsOffset)
+      return endCommandLineConfig(builder)
     }
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsCommandLineConfig(_bb: ByteBuffer): CommandLineConfig = getRootAsCommandLineConfig(_bb, CommandLineConfig())
-        fun getRootAsCommandLineConfig(_bb: ByteBuffer, obj: CommandLineConfig): CommandLineConfig {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createCommandLineConfig(builder: FlatBufferBuilder, defaultsOffset: Int, settingsOffset: Int) : Int {
-            builder.startTable(2)
-            addSettings(builder, settingsOffset)
-            addDefaults(builder, defaultsOffset)
-            return endCommandLineConfig(builder)
-        }
-        fun startCommandLineConfig(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addDefaults(builder: FlatBufferBuilder, defaults: Int) = builder.addOffset(0, defaults, 0)
-        fun addSettings(builder: FlatBufferBuilder, settings: Int) = builder.addOffset(1, settings, 0)
-        fun endCommandLineConfig(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun startCommandLineConfig(builder: FlatBufferBuilder) = builder.startTable(2)
+    fun addDefaults(builder: FlatBufferBuilder, defaults: Int) = builder.addOffset(0, defaults, 0)
+    fun addSettings(builder: FlatBufferBuilder, settings: Int) = builder.addOffset(1, settings, 0)
+    fun endCommandLineConfig(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,7 +21,7 @@ import elide.runtime.gvm.internals.GraalVMGuest
 @VMFeature internal class JavaScriptFeature : EngineFeature(GraalVMGuest.JAVASCRIPT) {
   private companion object {
     private val packages: List<String> = listOf(
-        "struct.map",
+      "struct.map",
     ).map {
       "elide.runtime.intrinsics.js.$it"
     }
@@ -62,11 +62,13 @@ import elide.runtime.gvm.internals.GraalVMGuest
     "elide.runtime.gvm.internals.js.JsInvocationBindings",
   )
 
-  override fun implementationTypes(): List<String> = super.implementationTypes().plus(listOf(
-    "elide.runtime.intrinsics.js.JsIterator",
-    "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorResult",
-    "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorImpl",
-  ))
+  override fun implementationTypes(): List<String> = super.implementationTypes().plus(
+    listOf(
+      "elide.runtime.intrinsics.js.JsIterator",
+      "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorResult",
+      "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorImpl",
+    ),
+  )
 
   override fun registeredPackages(): List<String> = packages
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -56,7 +56,7 @@ public interface HttpStatus {
    * Describes the broad type of a given HTTP status code, based on the numeric range of the status code. Ranges are
    * defined for each type, along with error states and whether the error is the server's fault.
    */
-  public enum class Type (
+  public enum class Type(
     public val range: IntRange,
     public val description: String,
     public val err: Boolean = false,

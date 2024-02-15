@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,37 +24,55 @@ import java.nio.ByteOrder
 @Suppress("unused")
 class SafeStyleSheetProto : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
-        __reset(_i, _bb)
+  fun __init(_i: Int, _bb: ByteBuffer) {
+    __reset(_i, _bb)
+  }
+
+  fun __assign(_i: Int, _bb: ByteBuffer): SafeStyleSheetProto {
+    __init(_i, _bb)
+    return this
+  }
+
+  val privateDoNotAccessOrElseSafeStyleSheetWrappedValue: String?
+    get() {
+      val o = __offset(4)
+      return if (o != 0) __string(o + bb_pos) else null
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : SafeStyleSheetProto {
-        __init(_i, _bb)
-        return this
+  val privateDoNotAccessOrElseSafeStyleSheetWrappedValueAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+  fun privateDoNotAccessOrElseSafeStyleSheetWrappedValueInByteBuffer(_bb: ByteBuffer): ByteBuffer =
+    __vector_in_bytebuffer(_bb, 4, 1)
+
+  companion object {
+    fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
+    fun getRootAsSafeStyleSheetProto(_bb: ByteBuffer): SafeStyleSheetProto =
+      getRootAsSafeStyleSheetProto(_bb, SafeStyleSheetProto())
+
+    fun getRootAsSafeStyleSheetProto(_bb: ByteBuffer, obj: SafeStyleSheetProto): SafeStyleSheetProto {
+      _bb.order(ByteOrder.LITTLE_ENDIAN)
+      return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
     }
-    val privateDoNotAccessOrElseSafeStyleSheetWrappedValue : String?
-        get() {
-            val o = __offset(4)
-            return if (o != 0) __string(o + bb_pos) else null
-        }
-    val privateDoNotAccessOrElseSafeStyleSheetWrappedValueAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun privateDoNotAccessOrElseSafeStyleSheetWrappedValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsSafeStyleSheetProto(_bb: ByteBuffer): SafeStyleSheetProto = getRootAsSafeStyleSheetProto(_bb, SafeStyleSheetProto())
-        fun getRootAsSafeStyleSheetProto(_bb: ByteBuffer, obj: SafeStyleSheetProto): SafeStyleSheetProto {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
-        }
-        fun createSafeStyleSheetProto(builder: FlatBufferBuilder, privateDoNotAccessOrElseSafeStyleSheetWrappedValueOffset: Int) : Int {
-            builder.startTable(1)
-            addPrivateDoNotAccessOrElseSafeStyleSheetWrappedValue(builder, privateDoNotAccessOrElseSafeStyleSheetWrappedValueOffset)
-            return endSafeStyleSheetProto(builder)
-        }
-        fun startSafeStyleSheetProto(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPrivateDoNotAccessOrElseSafeStyleSheetWrappedValue(builder: FlatBufferBuilder, privateDoNotAccessOrElseSafeStyleSheetWrappedValue: Int) = builder.addOffset(0, privateDoNotAccessOrElseSafeStyleSheetWrappedValue, 0)
-        fun endSafeStyleSheetProto(builder: FlatBufferBuilder) : Int {
-            val o = builder.endTable()
-            return o
-        }
+
+    fun createSafeStyleSheetProto(
+      builder: FlatBufferBuilder,
+      privateDoNotAccessOrElseSafeStyleSheetWrappedValueOffset: Int
+    ): Int {
+      builder.startTable(1)
+      addPrivateDoNotAccessOrElseSafeStyleSheetWrappedValue(
+        builder,
+        privateDoNotAccessOrElseSafeStyleSheetWrappedValueOffset,
+      )
+      return endSafeStyleSheetProto(builder)
     }
+
+    fun startSafeStyleSheetProto(builder: FlatBufferBuilder) = builder.startTable(1)
+    fun addPrivateDoNotAccessOrElseSafeStyleSheetWrappedValue(
+      builder: FlatBufferBuilder,
+      privateDoNotAccessOrElseSafeStyleSheetWrappedValue: Int
+    ) = builder.addOffset(0, privateDoNotAccessOrElseSafeStyleSheetWrappedValue, 0)
+
+    fun endSafeStyleSheetProto(builder: FlatBufferBuilder): Int {
+      val o = builder.endTable()
+      return o
+    }
+  }
 }

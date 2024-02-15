@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -33,7 +33,7 @@ import elide.struct.sortedMapOf
  * @see HttpHeadersAPI for the API definition of this class.
  * @see HttpHeadersAPI.Factory for the factory methods to create instances of this class.
  */
-public class HttpHeaders private constructor (
+public class HttpHeaders private constructor(
   private val headers: SortedMap<HeaderName, HeaderValue> = sortedMapOf(),
 ) : HttpHeadersAPI, Map<HeaderName, HeaderValue> by headers {
   /** [HttpHeadersAPI.Factory] methods. */
@@ -73,7 +73,7 @@ public class HttpHeaders private constructor (
      * @return An immutable container of HTTP headers from the list of key-value pairs.
      */
     public fun mutable(collection: Collection<Pair<String, String>>): MutableHttpHeaders = mutable(
-      collection.asSequence()
+      collection.asSequence(),
     )
 
     /**
@@ -104,7 +104,7 @@ public class HttpHeaders private constructor (
     @JvmStatic override fun of(collection: Collection<Pair<String, String>>): HttpHeaders = of(collection.asSequence())
 
     @JvmStatic override fun of(map: Map<String, String>): HttpHeaders = sortedMapOf(
-      map.entries.map { HeaderName.of(it.key) to HeaderValue.single(it.value) }
+      map.entries.map { HeaderName.of(it.key) to HeaderValue.single(it.value) },
     ).let {
       HttpHeaders(it)
     }
@@ -121,7 +121,7 @@ public class HttpHeaders private constructor (
       }.entries.asSequence().map {
         // convert each `HeaderName` and `LinkedHashSet` of string values into a `HeaderName` and single `HeaderValue`
         it.key to HeaderValue.of(it.value)
-      }.toList()
+      }.toList(),
     ).let {
       HttpHeaders(it)
     }

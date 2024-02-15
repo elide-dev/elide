@@ -19,21 +19,25 @@ of the box, such as:
 The `elide-server` package is provided via [Maven Central][0], and also via Elide's own [GitHub Packages][1] repository.
 
 **Via Gradle (Catalog):**
+
 ```kotlin
 implementation(framework.elide.server)
 ```
 
 **Via Gradle (Kotlin DSL):**
+
 ```kotlin
 implementation("dev.elide:elide-server")
 ```
 
 **Via Gradle (Groovy DSL):**
+
 ```kotlin
 implementation "dev.elide:elide-server"
 ```
 
 **Via Maven:**
+
 ```xml
 <dependency>
   <groupId>dev.elide</groupId>
@@ -69,6 +73,7 @@ object App {
 ```
 
 This particular sample is embedded within the Elide codebase, and can be run with:
+
 ```
 ./gradlew -PbuildSamples=true :samples:server:helloworld:run
 ```
@@ -110,8 +115,13 @@ Server-specific JVM annotations, for use with Jakarta-compliant DI containers.
 # Package kotlinx.html.tagext
 
 [0]: https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-server
+
 [1]: https://github.com/elide-dev/elide/packages/1933415
+
 [2]: https://github.com/elide-dev/elide/tree/main/samples
+
 [3]: https://github.com/elide-dev/elide/blob/8129124d52f8b25f5baa6fe7231683afb09f4584/samples/server/helloworld/src/main/kotlin/helloworld/App.kt#L14-L32
+
 [4]: https://docs.micronaut.io/latest/guide/#httpServer
+
 [5]: https://github.com/elide-dev/buildtools

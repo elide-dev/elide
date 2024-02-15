@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -52,15 +52,15 @@ public abstract class AbstractElideKotlinXProtocol : ElideProtocol {
   /** Implements a model adapter strategy based on KotlinX Serialization. */
   public class KotlinXModelStrategy : ModelAdapterStrategy {
     override fun model() = object : DataModelStrategy<
-      KxHashAlgorithm,
-      KxEncoding,
-      KxDataContainer,
-      KxDataContainer.Builder,
-      KxDataFingerprint,
-      KxDataFingerprint.Builder,
-      KxTimestamp,
-      KxTimestamp.TimestampBuilder,
-    > {
+            KxHashAlgorithm,
+            KxEncoding,
+            KxDataContainer,
+            KxDataContainer.Builder,
+            KxDataFingerprint,
+            KxDataFingerprint.Builder,
+            KxTimestamp,
+            KxTimestamp.TimestampBuilder,
+            > {
       // Return a KotlinX-based data fingerprint factory.
       override fun fingerprints() = KxDataFingerprint.Factory
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -87,7 +87,7 @@ import elide.runtime.gvm.ExecutableScript.State
    * Specifies the type of code contained in a guest VM script, typically in the form of a MIME type; e.g.
    * `text/javascript`. Alternative symbols are provided as calculated properties from the underlying [spec]/
    */
-  @JvmInline public value class ScriptType private constructor (internal val spec: String) {
+  @JvmInline public value class ScriptType private constructor(internal val spec: String) {
     internal companion object {
       /** Prefix used when [spec] is a MIME type. */
       private const val MIME_TYPE_PREFIX = "mime"
@@ -114,7 +114,7 @@ import elide.runtime.gvm.ExecutableScript.State
    * Specifies the source code [target] for a guest VM script. This may be a file, a literal string, an embedded asset,
    * or any other source permitted by the interface defined herein.
    */
-  @JvmInline public value class ScriptSource private constructor (internal val target: String) {
+  @JvmInline public value class ScriptSource private constructor(internal val target: String) {
     internal companion object {
       /** Prefix used when [target] is a file. */
       private const val PROTOCOL_FILE = "file"
@@ -145,24 +145,27 @@ import elide.runtime.gvm.ExecutableScript.State
     }
 
     /** @return Filename for this script source. */
-    internal val filename: String get() = if (target == PROTOCOL_LITERAL) {
-      "literal"
-    } else target.split("/").last()
+    internal val filename: String
+      get() = if (target == PROTOCOL_LITERAL) {
+        "literal"
+      } else target.split("/").last()
 
     /** @return Path value for this script resource, as applicable (or an empty string). */
-    internal val path: String get() = if (target == PROTOCOL_LITERAL) {
-      ""
-    } else when {
-      isEmbedded -> target.drop(PROTOCOL_EMBEDDED.length + 3)
-      isResource -> target.drop(PROTOCOL_CLASSPATH.length + 3)
-      isFile -> target.drop(PROTOCOL_FILE.length + 3)
-      else -> target
-    }
+    internal val path: String
+      get() = if (target == PROTOCOL_LITERAL) {
+        ""
+      } else when {
+        isEmbedded -> target.drop(PROTOCOL_EMBEDDED.length + 3)
+        isResource -> target.drop(PROTOCOL_CLASSPATH.length + 3)
+        isFile -> target.drop(PROTOCOL_FILE.length + 3)
+        else -> target
+      }
 
     /** @return Extension for this script resource, if present. */
-    internal val extension: String? get() = filename.substringAfterLast(".").ifBlank {
-      null
-    }
+    internal val extension: String?
+      get() = filename.substringAfterLast(".").ifBlank {
+        null
+      }
 
     /** @return Indication that this script is a literal value. */
     internal val isLiteral: Boolean get() = target == PROTOCOL_LITERAL
@@ -184,7 +187,7 @@ import elide.runtime.gvm.ExecutableScript.State
    * asset, or any other source permitted by the interface defined herein. This source map is expected to correspond
    * with an associated [ScriptSource].
    */
-  @JvmInline public value class SourceMap (private val target: String) {
+  @JvmInline public value class SourceMap(private val target: String) {
 
   }
 

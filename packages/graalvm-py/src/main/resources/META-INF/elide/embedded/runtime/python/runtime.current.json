@@ -29,7 +29,9 @@
     }
   },
   "scripts": [
-    { "path": "environment.py" }
+    {
+      "path": "environment.py"
+    }
   ],
   "bundles": [
     {

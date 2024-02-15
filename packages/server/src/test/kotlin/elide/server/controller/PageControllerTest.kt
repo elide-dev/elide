@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -56,7 +56,7 @@ import elide.server.assets.AssetType
       assertDoesNotThrow {
         sample.asset("styles.base")
       },
-      "acquiring a known-good asset reference should not produce `null` or throw"
+      "acquiring a known-good asset reference should not produce `null` or throw",
     )
   }
 
@@ -111,21 +111,21 @@ import elide.server.assets.AssetType
         preload = true,
       ),
       ref,
-      "should be able to customize an asset reference with a handler"
+      "should be able to customize an asset reference with a handler",
     )
   }
 
   @Test fun testCanAcquireAssetManager() {
     assertNotNull(
       sample.assets(),
-      "`PageController` inheritors should be able to acquire the asset runtime"
+      "`PageController` inheritors should be able to acquire the asset runtime",
     )
   }
 
   @Test fun testCanAcquireAppContext() {
     assertNotNull(
       sample.context(),
-      "`PageController` inheritors should be able to acquire the app context"
+      "`PageController` inheritors should be able to acquire the app context",
     )
   }
 
@@ -135,7 +135,7 @@ import elide.server.assets.AssetType
         runBlocking {
           sample.indexPage()
         }
-      }
+      },
     )
   }
 
@@ -145,7 +145,7 @@ import elide.server.assets.AssetType
         runBlocking {
           sample.styles()
         }
-      }
+      },
     )
   }
 
@@ -155,7 +155,7 @@ import elide.server.assets.AssetType
         runBlocking {
           sample.assetStyle(HttpRequest.GET("/styles/base.css"))
         }
-      }
+      },
     )
   }
 
@@ -165,7 +165,7 @@ import elide.server.assets.AssetType
         runBlocking {
           sample.assetStyleExplicit(HttpRequest.GET("/styles/base.other.css"))
         }
-      }
+      },
     )
   }
 
@@ -175,7 +175,7 @@ import elide.server.assets.AssetType
         runBlocking {
           sample.assetGeneric(HttpRequest.GET("/styles/base.another.css"))
         }
-      }
+      },
     )
   }
 
@@ -185,7 +185,7 @@ import elide.server.assets.AssetType
         runBlocking {
           sample.assetScript(HttpRequest.GET("/scripts/ui.js"))
         }
-      }
+      },
     )
   }
 
@@ -195,7 +195,7 @@ import elide.server.assets.AssetType
         runBlocking {
           sample.assetScriptExplicit(HttpRequest.GET("/scripts/ui.other.js"))
         }
-      }
+      },
     )
   }
 
@@ -206,7 +206,7 @@ import elide.server.assets.AssetType
           sample.somethingText()
         }
       },
-      "text/plain"
+      "text/plain",
     )
   }
 
@@ -217,11 +217,11 @@ import elide.server.assets.AssetType
       }
     }
     assertNotNull(
-      response
+      response,
     )
     assertEquals(
       404,
-      response.status.code
+      response.status.code,
     )
   }
 }

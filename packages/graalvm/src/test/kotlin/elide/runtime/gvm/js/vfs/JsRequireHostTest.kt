@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -95,13 +95,15 @@ import elide.util.UUID
       stream.write("module.exports = {sample: 'Hello, CJS!'};".toByteArray())
     }
     fs.writeStream(configPath).use { stream ->
-      stream.write("""
+      stream.write(
+        """
         {
           "name": "testing",
           "version": "1.0.0",
           "main": "./test.js"
         }
-      """.trimIndent().toByteArray())
+      """.trimIndent().toByteArray(),
+      )
     }
 
     // read the file back to make sure it's there

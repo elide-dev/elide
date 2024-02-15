@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -35,7 +35,7 @@ import org.graalvm.polyglot.Context as VMContext
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
 /** TBD. */
-@Singleton internal class NativeContextManagerImpl @Inject constructor (config: GuestVMConfiguration) :
+@Singleton internal class NativeContextManagerImpl @Inject constructor(config: GuestVMConfiguration) :
   ContextManager<VMContext, VMContext.Builder> {
   private companion object {
     // Whether to enable Isolates.
@@ -49,15 +49,15 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
     // Whether the auxiliary cache is effectively enabled.
     private val auxCache = (
-      enableAuxiliaryCache &&
-      isNativeImage &&
-      System.getProperty("elide.test") != "true" &&
-      System.getProperty("ELIDE_TEST") != "true" &&
-      System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
-      !ImageInfo.isSharedLibrary() &&
-      !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
-      !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
-    )
+            enableAuxiliaryCache &&
+                    isNativeImage &&
+                    System.getProperty("elide.test") != "true" &&
+                    System.getProperty("ELIDE_TEST") != "true" &&
+                    System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
+                    !ImageInfo.isSharedLibrary() &&
+                    !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
+                    !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
+            )
 
     // Static options which are supplied to the engine.
     private val staticEngineOptions = listOfNotNull(
@@ -84,8 +84,9 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       if (!auxCache) null else StaticProperty.of("engine.PreinitializeContexts", "js"),
       if (!auxCache) null else StaticProperty.active("engine.CachePreinitializeContext"),
       if (!auxCache) null else StaticProperty.of("engine.CacheCompile", "hot"),
-      if (!auxCache) null else StaticProperty.of("engine.Cache",
-        Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString()
+      if (!auxCache) null else StaticProperty.of(
+        "engine.Cache",
+        Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString(),
       ),
 
       // enable debug features if so instructed
@@ -119,7 +120,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     }
 
     override fun write(b: Int): Unit = error(
-      "Cannot write to stubbed stream from inside a guest VM."
+      "Cannot write to stubbed stream from inside a guest VM.",
     )
   }
 
@@ -131,7 +132,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     }
 
     override fun read(): Int = error(
-      "Cannot read from stubbed stream from inside a guest VM."
+      "Cannot read from stubbed stream from inside a guest VM.",
     )
   }
 
@@ -234,14 +235,14 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
             builder.option(property.symbol, property.value())
           }
         }
-      }.build()
+      }.build(),
     )
   }
 
   // Allocate a new thread-confined VM execution context.
   private fun allocateContext(builder: ((VMContext.Builder) -> Unit)? = null): VMContext {
     val fresh = contextFactory.get().invoke(
-      engine()
+      engine(),
     )
 
     // apply properties installed via `configureVM`

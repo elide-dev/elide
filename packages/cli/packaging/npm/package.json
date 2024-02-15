@@ -4,7 +4,17 @@
   "description": "Elide polyglot application runtime",
   "homepage": "https://elide.dev",
   "license": "MIT",
-  "keywords": ["runtime", "js", "ts", "polyglot", "server", "framework", "kotlin", "javascript", "typescript"],
+  "keywords": [
+    "runtime",
+    "js",
+    "ts",
+    "polyglot",
+    "server",
+    "framework",
+    "kotlin",
+    "javascript",
+    "typescript"
+  ],
   "repository": "github:elide-dev/v3",
   "config": {
     "elideVersion": "1.0.0-alpha7"

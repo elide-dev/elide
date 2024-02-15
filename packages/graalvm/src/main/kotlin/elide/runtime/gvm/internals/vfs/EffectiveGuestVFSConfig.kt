@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,7 +31,7 @@ import java.nio.file.Path
  * @param root Root directory to apply for this virtual filesystem.
  * @param workingDirectory Current-working-directory to apply for this virtual filesystem.
  */
-public data class EffectiveGuestVFSConfig internal constructor (
+public data class EffectiveGuestVFSConfig internal constructor(
   val readOnly: Boolean = DEFAULT_READ_ONLY,
   val caseSensitive: Boolean = DEFAULT_CASE_SENSITIVE,
   val supportsSymbolicLinks: Boolean = DEFAULT_SUPPORT_SYMBOLIC_LINKS,

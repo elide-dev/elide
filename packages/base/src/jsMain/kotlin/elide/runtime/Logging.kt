@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,12 +27,12 @@ import elide.runtime.js.resolve
 
     /** @return Logger created, or resolved, for the [target] Kotlin class. */
     public fun of(target: KClass<*>): elide.runtime.js.Logger = named(
-      target.simpleName ?: ""
+      target.simpleName ?: "",
     )
 
     /** @return Logger resolved at the root name. */
     public fun root(): elide.runtime.js.Logger = named(
-      ""
+      "",
     )
 
     /** @return Logger created for the specified [name]. */

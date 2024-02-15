@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -114,7 +114,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 @Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
 @Requires(property = "elide.gvm.js.enabled", value = "true", defaultValue = "true")
 @GuestRuntime(engine = "js")
-internal class JsRuntime @Inject constructor (
+internal class JsRuntime @Inject constructor(
 ) : AbstractVMEngine<JsRuntimeConfig, JsExecutableScript, JsInvocationBindings>(JAVASCRIPT) {
   companion object {
     private const val DEFAULT_STREAM_ENCODING: String = "UTF-8"
@@ -128,7 +128,7 @@ internal class JsRuntime @Inject constructor (
     private const val WASI_STD: String = "wasi_snapshot_preview1"
 
     // Hard-coded JS VM options.
-    val baseOptions : List<VMProperty> = listOf(
+    val baseOptions: List<VMProperty> = listOf(
       StaticProperty.active("js.async-stack-traces"),
       StaticProperty.active("js.atomics"),
       StaticProperty.active("js.bind-member-functions"),
@@ -169,7 +169,7 @@ internal class JsRuntime @Inject constructor (
     )
 
     // Hard-coded WASM VM options.
-    val wasmOptions : List<VMProperty> = listOf(
+    val wasmOptions: List<VMProperty> = listOf(
       StaticProperty.active("wasm.Memory64"),
       StaticProperty.active("wasm.MultiValue"),
       StaticProperty.active("wasm.UseUnsafeMemory"),
@@ -221,24 +221,26 @@ internal class JsRuntime @Inject constructor (
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
   @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFSConfigurator(
     GraalVMGuest.JAVASCRIPT,
-    { runtimeInfo.get() }
+    { runtimeInfo.get() },
   )
 
   // Resolve the expected configuration symbol for the given ECMA standard level.
-  private val JsLanguageLevel.symbol: String get() = when (this) {
-    JsLanguageLevel.ES5,
-    JsLanguageLevel.ES6,
-    JsLanguageLevel.ES2017,
-    JsLanguageLevel.ES2018,
-    JsLanguageLevel.ES2019,
-    JsLanguageLevel.ES2020,
-    JsLanguageLevel.ES2021,
-    JsLanguageLevel.ES2022 -> this.name.drop(2)
-    JsLanguageLevel.STABLE -> JS_LANGUAGE_LEVEL_STABLE
-    JsLanguageLevel.LATEST -> JS_LANGUAGE_LEVEL_LATEST
-    JsLanguageLevel.UNRECOGNIZED,
-    JsLanguageLevel.JS_LANGUAGE_LEVEL_DEFAULT -> DEFAULT_JS_LANGUAGE_LEVEL
-  }
+  private val JsLanguageLevel.symbol: String
+    get() = when (this) {
+      JsLanguageLevel.ES5,
+      JsLanguageLevel.ES6,
+      JsLanguageLevel.ES2017,
+      JsLanguageLevel.ES2018,
+      JsLanguageLevel.ES2019,
+      JsLanguageLevel.ES2020,
+      JsLanguageLevel.ES2021,
+      JsLanguageLevel.ES2022 -> this.name.drop(2)
+
+      JsLanguageLevel.STABLE -> JS_LANGUAGE_LEVEL_STABLE
+      JsLanguageLevel.LATEST -> JS_LANGUAGE_LEVEL_LATEST
+      JsLanguageLevel.UNRECOGNIZED,
+      JsLanguageLevel.JS_LANGUAGE_LEVEL_DEFAULT -> DEFAULT_JS_LANGUAGE_LEVEL
+    }
 
   // JS runtime logger.
   private val logger: Logger by lazy {
@@ -251,71 +253,76 @@ internal class JsRuntime @Inject constructor (
   override fun resolveConfig(): JsRuntimeConfig = jsConfig
 
   /** @inheritDoc */
-  override fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty> = baseOptions.plus(listOf(
-    // `vm.locale`: maps to `js.locale` and controls various locale settings in the JS VM
-    VMRuntimeProperty.ofConfigurable("vm.locale", "js.locale", DEFAULT_JS_LOCALE) {
-      (config.locale ?: guestConfig.locale)?.toString() ?: DEFAULT_JS_LOCALE
-    },
+  override fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty> = baseOptions.plus(
+    listOf(
+      // `vm.locale`: maps to `js.locale` and controls various locale settings in the JS VM
+      VMRuntimeProperty.ofConfigurable("vm.locale", "js.locale", DEFAULT_JS_LOCALE) {
+        (config.locale ?: guestConfig.locale)?.toString() ?: DEFAULT_JS_LOCALE
+      },
 
-    // `vm.charset`: maps to `js.charset` and controls encoding of raw data exchanged with JS VM
-    VMRuntimeProperty.ofConfigurable("vm.charset", "js.charset", DEFAULT_STREAM_ENCODING) {
-      (config.charset ?: guestConfig.charset)?.name() ?: DEFAULT_STREAM_ENCODING
-    },
+      // `vm.charset`: maps to `js.charset` and controls encoding of raw data exchanged with JS VM
+      VMRuntimeProperty.ofConfigurable("vm.charset", "js.charset", DEFAULT_STREAM_ENCODING) {
+        (config.charset ?: guestConfig.charset)?.name() ?: DEFAULT_STREAM_ENCODING
+      },
 
-    // `vm.ecma-version`: maps to `js.ecmascript-version` and controls the JS language level
-    VMRuntimeProperty.ofConfigurable("vm.js.ecma", "js.ecmascript-version") {
-      config.language?.symbol ?: JsRuntimeConfig.DEFAULT_JS_LANGUAGE_LEVEL.symbol
-    },
+      // `vm.ecma-version`: maps to `js.ecmascript-version` and controls the JS language level
+      VMRuntimeProperty.ofConfigurable("vm.js.ecma", "js.ecmascript-version") {
+        config.language?.symbol ?: JsRuntimeConfig.DEFAULT_JS_LANGUAGE_LEVEL.symbol
+      },
 
-    // Shell: Enable JS shell features if running interactively.
-    VMRuntimeProperty.ofConfigurable("vm.interactive", "js.shell") {
-      (System.getProperty("vm.interactive")?.toBoolean() ?: false).toString()
-    },
+      // Shell: Enable JS shell features if running interactively.
+      VMRuntimeProperty.ofConfigurable("vm.interactive", "js.shell") {
+        (System.getProperty("vm.interactive")?.toBoolean() ?: false).toString()
+      },
 
-    // `vm.js.esm`: maps to `js.esm-eval-*` to enable/disable ESM import support.
-    VMRuntimeProperty.ofBoolean("vm.js.esm", "js.esm-eval-returns-exports") {
-      config.esm.isEnabled
-    },
+      // `vm.js.esm`: maps to `js.esm-eval-*` to enable/disable ESM import support.
+      VMRuntimeProperty.ofBoolean("vm.js.esm", "js.esm-eval-returns-exports") {
+        config.esm.isEnabled
+      },
 
-    // `vm.js.esm.bare-specifiers`: enables bare-specifier ESM imports.
-    VMRuntimeProperty.ofBoolean("vm.js.esm.bare-specifiers", "js.esm-bare-specifier-relative-lookup") {
-      config.esm.isEnabled
-    },
+      // `vm.js.esm.bare-specifiers`: enables bare-specifier ESM imports.
+      VMRuntimeProperty.ofBoolean("vm.js.esm.bare-specifiers", "js.esm-bare-specifier-relative-lookup") {
+        config.esm.isEnabled
+      },
 
-    // `vm.js.npm`: maps to `js.commonjs-require` to enable/disable commonjs require support.
-    VMRuntimeProperty.ofBoolean("vm.js.npm", "js.commonjs-require") {
-      config.npm.isEnabled
-    },
+      // `vm.js.npm`: maps to `js.commonjs-require` to enable/disable commonjs require support.
+      VMRuntimeProperty.ofBoolean("vm.js.npm", "js.commonjs-require") {
+        config.npm.isEnabled
+      },
 
-    // static: configure module replacements.
-    StaticProperty.of("js.commonjs-core-modules-replacements", if (config.npm.isEnabled) {
-      coreModules.entries.joinToString(",") {
-        "${it.key}:${it.value}"
-      }
-    } else {
-      ""  // disabled if NPM support is turned off
-    }),
+      // static: configure module replacements.
+      StaticProperty.of(
+        "js.commonjs-core-modules-replacements",
+        if (config.npm.isEnabled) {
+          coreModules.entries.joinToString(",") {
+            "${it.key}:${it.value}"
+          }
+        } else {
+          ""  // disabled if NPM support is turned off
+        },
+      ),
 
-    // `vm.js.nodeModules`: maps to `js.commonjs-require` to enable/disable NPM require support.
-    VMRuntimeProperty.ofConfigurable("vm.js.nodeModules", "js.commonjs-require-cwd") {
-      config.npm.modules ?: JsRuntimeConfig.DEFAULT_NPM_MODULES
-    },
+      // `vm.js.nodeModules`: maps to `js.commonjs-require` to enable/disable NPM require support.
+      VMRuntimeProperty.ofConfigurable("vm.js.nodeModules", "js.commonjs-require-cwd") {
+        config.npm.modules ?: JsRuntimeConfig.DEFAULT_NPM_MODULES
+      },
 
-    // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM.
-    VMRuntimeProperty.ofBoolean("vm.js.wasm", "js.webassembly") {
-      config.wasm ?: false
-    },
+      // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM.
+      VMRuntimeProperty.ofBoolean("vm.js.wasm", "js.webassembly") {
+        config.wasm ?: false
+      },
 
-    // `vm.js.v8-compat`: maps to `js.v8-compat` and controls compatibility shims for V8
-    VMRuntimeProperty.ofBoolean("vm.js.v8-compat", "js.v8-compat") {
-      config.v8 ?: false
-    },
-  )).plus(
+      // `vm.js.v8-compat`: maps to `js.v8-compat` and controls compatibility shims for V8
+      VMRuntimeProperty.ofBoolean("vm.js.v8-compat", "js.v8-compat") {
+        config.v8 ?: false
+      },
+    ),
+  ).plus(
     if (config.wasm == true) {
       wasmOptions
     } else {
       emptyList()
-    }
+    },
   ).stream()
 
   /** @inheritDoc */
@@ -360,7 +367,7 @@ internal class JsRuntime @Inject constructor (
       }.bind(
         script,
         bindings,
-        inputs
+        inputs,
       ).execute().let { _ ->
         TODO("not yet implemented")
       }

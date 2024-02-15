@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -77,12 +77,12 @@ import elide.vm.annotations.Polyglot
 
     // invocation with a mocked `Request`
     request.isHostObject && request.asHostObject<Any>() is FetchRequest -> fetch(
-      request.asHostObject() as FetchRequest
+      request.asHostObject() as FetchRequest,
     )
 
     // invocation with a mocked `Request`
     request.isHostObject && request.asHostObject<Any>() is URL -> fetch(
-      request.asHostObject() as URL
+      request.asHostObject() as URL,
     )
 
     else -> error("Unsupported invocation of `fetch`")
@@ -90,7 +90,7 @@ import elide.vm.annotations.Polyglot
 
   /** @inheritDoc */
   override fun fetch(url: String): JsPromise<FetchResponse> = fetch(
-    FetchRequestIntrinsic(url)
+    FetchRequestIntrinsic(url),
   )
 
   /** @inheritDoc */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -38,9 +38,9 @@ import elide.runtime.gvm.internals.vfs.AbstractBaseVFS.VFSFactory
  * @param VFS Concrete virtual file system type under implementation.
  * @param config Effective guest VFS configuration to apply.
  */
-internal abstract class AbstractBaseVFS<VFS> protected constructor (
+internal abstract class AbstractBaseVFS<VFS> protected constructor(
   internal val config: EffectiveGuestVFSConfig,
-) : GuestVFS where VFS: AbstractBaseVFS<VFS> {
+) : GuestVFS where VFS : AbstractBaseVFS<VFS> {
   internal companion object {
     /** Root system default value. */
     const val ROOT_SYSTEM_DEFAULT = "/"
@@ -58,7 +58,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @param VFS Concrete virtual file system type under implementation.
    */
-  interface VFSBuilder<VFS> where VFS: AbstractBaseVFS<VFS> {
+  interface VFSBuilder<VFS> where VFS : AbstractBaseVFS<VFS> {
     /**
      * ### Read-only status
      *
@@ -221,7 +221,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @see newBuilder to create an empty VFS implementation builder, or to clone an existing builder.
    */
-  interface VFSBuilderFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
+  interface VFSBuilderFactory<VFS, Builder> where VFS : AbstractBaseVFS<VFS>, Builder : VFSBuilder<VFS> {
     /**
      * Create a new VFS implementation builder, of type [VFS].
      *
@@ -243,7 +243,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * Specifies the expected API surface of a VFS implementation's companion object, which should be equipped to create
    * and resolve VFS implementations using the [VFSBuilder] and [VFSBuilderFactory].
    */
-  interface VFSFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
+  interface VFSFactory<VFS, Builder> where VFS : AbstractBaseVFS<VFS>, Builder : VFSBuilder<VFS> {
     /**
      * Create a [VFS] implementation with no backing data, and configured with defaults.
      *
@@ -360,12 +360,14 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
     domain: AccessDomain,
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,
-  ): AccessResponse = checkPolicy(AccessRequest(
-    type = setOf(type),
-    domain = domain,
-    scope = scope,
-    path = path,
-  ))
+  ): AccessResponse = checkPolicy(
+    AccessRequest(
+      type = setOf(type),
+      domain = domain,
+      scope = scope,
+      path = path,
+    ),
+  )
 
   /**
    * Subclass API: Policy check (multiple [type]s).
@@ -385,12 +387,14 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
     domain: AccessDomain,
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,
-  ): AccessResponse = checkPolicy(AccessRequest(
-    type = type,
-    domain = domain,
-    scope = scope,
-    path = path,
-  ))
+  ): AccessResponse = checkPolicy(
+    AccessRequest(
+      type = type,
+      domain = domain,
+      scope = scope,
+      path = path,
+    ),
+  )
 
   /**
    * Subclass API: Policy check.

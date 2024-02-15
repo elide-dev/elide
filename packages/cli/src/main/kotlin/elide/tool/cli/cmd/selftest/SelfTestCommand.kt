@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ package elide.tool.cli.cmd.selftest
 import io.micronaut.context.BeanContext
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import java.util.LinkedList
+import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -52,7 +52,7 @@ import elide.tool.testing.TestResult.Result.*
   usageHelpAutoWidth = true,
 )
 @Singleton
-internal class SelfTestCommand @Inject constructor (
+internal class SelfTestCommand @Inject constructor(
   private val beanContext: BeanContext
 ) : AbstractSubcommand<ToolState, CommandContext>() {
   /** Test runner for self-tests. */
@@ -70,11 +70,12 @@ internal class SelfTestCommand @Inject constructor (
     private val testResult: AtomicReference<TestResult> = AtomicReference(null)
 
     override val stage: TestStage get() = currentStage.get()
-    override val result: AtomicReference<TestResult> get() = testResult.also {
-      require(stage == DONE) {
-        "Cannot use test result until it has completed running"
+    override val result: AtomicReference<TestResult>
+      get() = testResult.also {
+        require(stage == DONE) {
+          "Cannot use test result until it has completed running"
+        }
       }
-    }
 
     override fun notify(stage: TestStage) {
       currentStage.set(stage)
@@ -91,7 +92,7 @@ internal class SelfTestCommand @Inject constructor (
   }
 
   /** Handles events from tests and turns them into output. */
-  @Suppress("UNUSED") private inner class TestOutput (
+  @Suppress("UNUSED") private inner class TestOutput(
     private val context: CommandContext,
   ) : TestEventListener<SelfTest, SelfTestContext>, AutoCloseable {
     private fun labelForTest(test: SelfTest): String {

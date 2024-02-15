@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2023-2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,20 +21,24 @@ import kotlinx.datetime.toJavaInstant
 import elide.proto.api.wkt.Timestamp as ITimestamp
 
 /** Implements a universal model timestamp, backed by a well-known-type Protocol Buffers [Timestamp]. */
-public class ProtoTimestamp private constructor (private val timestamp: Timestamp) :
+public class ProtoTimestamp private constructor(private val timestamp: Timestamp) :
   ITimestamp<ProtoTimestamp, ProtoTimestamp.TimestampBuilder> {
   /** Builder interface for proto-based timestamps. */
   interface Builder : ITimestamp.IBuilder<ProtoTimestamp>
 
   /** Implementation of timestamp builder context backed by a proto-timestamp builder. */
-  public class TimestampBuilder (private val builder: Timestamp.Builder) : Builder {
+  public class TimestampBuilder(private val builder: Timestamp.Builder) : Builder {
     override var seconds: Long
       get() = builder.seconds
-      set(value) { builder.seconds = value }
+      set(value) {
+        builder.seconds = value
+      }
 
     override var nanos: Int
       get() = builder.nanos
-      set(value) { builder.nanos = value }
+      set(value) {
+        builder.nanos = value
+      }
 
     override fun build(): ProtoTimestamp = ProtoTimestamp(builder.build())
 
@@ -52,7 +56,7 @@ public class ProtoTimestamp private constructor (private val timestamp: Timestam
   public companion object Factory : ITimestamp.Factory<ProtoTimestamp, TimestampBuilder> {
     /** Default singleton (empty) instance. */
     @JvmStatic private val DEFAULT_INSTANCE: ProtoTimestamp = ProtoTimestamp(
-      Timestamp.getDefaultInstance()
+      Timestamp.getDefaultInstance(),
     )
 
     /** @return Kotlin [Instant] from a regular Protocol Buffers [Timestamp]. */

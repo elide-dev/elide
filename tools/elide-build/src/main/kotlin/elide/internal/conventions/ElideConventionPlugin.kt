@@ -16,7 +16,7 @@ package elide.internal.conventions
 import com.adarshr.gradle.testlogger.TestLoggerPlugin
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.github.benmanes.gradle.versions.VersionsPlugin
-//import dev.zacsweers.redacted.gradle.RedactedGradleSubplugin
+import dev.zacsweers.redacted.gradle.RedactedGradleSubplugin
 import io.gitlab.arturbosch.detekt.DetektPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -39,6 +39,7 @@ import elide.internal.conventions.jvm.*
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
 import elide.internal.conventions.kotlin.KotlinTarget.WASM
 import elide.internal.conventions.kotlin.configureKotlinBuild
+import elide.internal.conventions.linting.*
 import elide.internal.conventions.native.configureNativeBuild
 import elide.internal.conventions.native.publishNativeLibrary
 import elide.internal.conventions.project.configureProject
@@ -46,11 +47,11 @@ import elide.internal.conventions.publishing.configurePublishing
 import elide.internal.conventions.publishing.configurePublishingRepositories
 import elide.internal.conventions.publishing.configureSigning
 import elide.internal.conventions.publishing.configureSigstore
-//import elide.internal.conventions.redacted.configureRedactedPlugin
+import elide.internal.conventions.tests.*
 import elide.internal.conventions.tests.configureJacoco
-import elide.internal.conventions.tests.configureKoverCI
 import elide.internal.conventions.tests.configureTestExecution
 import elide.internal.conventions.tests.configureTestLogger
+import elide.internal.conventions.redacted.configureRedactedPlugin
 
 public abstract class ElideConventionPlugin : Plugin<Project> {
   @get:Inject protected abstract val javaToolchainService: JavaToolchainService
@@ -71,9 +72,6 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     plugins.apply(DistributionPlugin::class.java)
     plugins.apply(SigningPlugin::class.java)
 
-    // other plugins
-    // plugins.apply(RedactedGradleSubplugin::class.java) @TODO(sgammon): broken on kotlin v2
-
     // testing
     plugins.apply(TestLoggerPlugin::class.java)
   }
@@ -82,24 +80,48 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
   internal fun applyElideConventions(project: Project, config: ElideBuildExtension.() -> Unit) = with(project) {
     // resolve extension
     val conventions = ElideBuildExtension(project).apply(config)
+    project.extensions.add("elide", conventions)
 
     // apply baseline conventions
     configureProject()
     configureDependencyResolution(conventions)
     configureDependencyLocking(conventions)
 
-    // configure the redacted compiler plugin
-    // configureRedactedPlugin() @TODO(sgammon): broken on kotlin v2
+    // configure custom attribute schema and defaults
+    configureAttributeSchema(conventions)
 
+    // install transforms
+    configureTransforms(conventions)
+
+    // configure pinned critical dependencies
+    configurePinnedDependencies(conventions)
+
+    // apply dependency security rules (verification, locking)
+    configureDependencySecurity(conventions)
+
+    if (conventions.kotlin.requested && conventions.kotlin.redacted) {
+      // other plugins
+      plugins.apply(RedactedGradleSubplugin::class.java)
+
+      // configure the redacted compiler plugin
+      configureRedactedPlugin()
+    }
+
+    // -- Conventions: Archives ---------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.archives) {
       if (reproducibleTasks) reproducibleArchiveTasks()
       if (excludeDuplicates) excludeDuplicateArchives()
     }
 
+    // -- Conventions: Containers -------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.docker) {
       if (useGoogleCredentials) useGoogleCredentialsForDocker()
     }
 
+    // -- Conventions: Kotlin -----------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.kotlin) {
       // instead of defining JVM as the default value for the 'target' property, we need to declare it as nullable,
       // otherwise the default value's singleton breaks and appears as 'null' (no idea why).
@@ -129,38 +151,51 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
         conventions.kotlin.wasmSourceSets = true
       }
 
+      // configure kotlin build
       configureKotlinBuild(
         target = kotlinTarget,
-        configureKapt = kapt,
-        configureKsp = ksp,
-        configureAllOpen = allOpen,
-        configureAtomicFu = atomicFu,
-        configureNoArgs = noArgs,
-        explicitApi = explicitApi,
-        splitJvmTargets = splitJvmTargets,
-        nonJvmSourceSet = nonJvmSourceSet,
-        jvmSourceSet = jvmSourceSet,
+        conventions = conventions.kotlin,
         configureJavaModules = conventions.java.configureModularity,
-        customKotlinCompilerArgs = customKotlinCompilerArgs,
-        wasmSourceSets = conventions.kotlin.wasmSourceSets,
-        kotlinVersionOverride = kotlinVersionOverride,
         jvmModuleName = conventions.java.moduleName,
       )
+
+      // kotlin linting tools
+      if (conventions.checks.detekt) plugins.apply(DetektConventionsPlugin::class.java)
+      if (conventions.checks.sonar) plugins.apply(SonarConventionsPlugin::class.java)
+      plugins.apply(SpotlessConventionsPlugin::class.java)
     }
 
+    // -- Conventions: Java -------------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.java) {
       configureJava()
 
       if (includeJavadoc) includeJavadocJar()
       if (includeSources) includeSourceJar()
       if (configureModularity && !conventions.kotlin.requested) configureJavaModularity(conventions.java.moduleName)
+
+      // java linting tools
+      if (conventions.java.requested) {
+        // pmd enablement
+        if (conventions.checks.pmd) project.pluginManager.apply(PmdConventionsPlugin::class.java)
+
+        // checkstyle enablement
+        if (conventions.checks.checkstyle) project.pluginManager.apply(CheckstyleConventionsPlugin::class.java)
+
+        // spotless enablement; added by kotlin, so doesn't need to be re-added unless kotlin is omitted.
+        if (!conventions.kotlin.requested) project.pluginManager.apply(SpotlessConventionsPlugin::class.java)
+      }
     }
 
+    // -- Conventions: JVM --------------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.jvm) {
       if (alignVersions) alignJvmVersion()
       if (forceJvm17) alignJvmVersion(overrideVersion = Versions.JVM_DEFAULT)
     }
 
+    // -- Conventions: Native -----------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.native) {
       if (publish) publishNativeLibrary()
 
@@ -172,6 +207,8 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       )
     }
 
+    // -- Conventions: Publishing -------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.publishing) {
       configurePublishing(id, name, description)
 
@@ -180,25 +217,15 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       if (enableSigstore) configureSigstore()
     }
 
+    // -- Conventions: Testing ----------------------------------------------------------------------------------------
+    //
     maybeApplyConvention(conventions.testing) {
       configureTestExecution()
       configureTestLogger()
 
-      if (kover) configureKoverCI()
-      if (jacoco) configureJacoco()
+      if (conventions.kotlin.requested && kover) configureKover()
+      if (conventions.jvm.requested && jacoco) configureJacoco()
     }
-
-    // configure custom attribute schema and defaults
-    configureAttributeSchema(conventions)
-
-    // install transforms
-    configureTransforms(conventions)
-
-    // configure pinned critical dependencies
-    configurePinnedDependencies(conventions)
-
-    // finally: apply dependency security rules (verification, locking)
-    configureDependencySecurity(conventions)
   }
 
   private inline fun <T : Convention> maybeApplyConvention(convention: T, block: T.() -> Unit) {

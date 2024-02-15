@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$(base != null &amp;&amp; (base.parentFile == null || base.absolutePath == "/")) || files.isEmpty()</ID>
+    <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _logger: Logger</ID>
+    <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _settings: ToolState.OutputSettings = _state.output</ID>
+    <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _state: State</ID>
+    <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.ToolExecutionContextImpl$private val _state: T</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine()</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun beginInteractiveSession( languages: EnumSet&lt;GuestLanguage>, primaryLanguage: GuestLanguage, engine: PolyglotEngine, ctx: PolyglotContext, )</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun displayFormattedError( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, )</ID>
+    <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
+    <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
+    <ID>MagicNumber:ElideTool.kt$ElideTool$30</ID>
+    <ID>MagicNumber:Mosaic.kt$.7f</ID>
+    <ID>MagicNumber:Mosaic.kt$1234</ID>
+    <ID>MagicNumber:Mosaic.kt$1_000</ID>
+    <ID>MagicNumber:Mosaic.kt$20</ID>
+    <ID>MagicNumber:Mosaic.kt$250</ID>
+    <ID>MagicNumber:Mosaic.kt$2_500L</ID>
+    <ID>MagicNumber:Mosaic.kt$4</ID>
+    <ID>MagicNumber:Mosaic.kt$40</ID>
+    <ID>MagicNumber:Mosaic.kt$4_000L</ID>
+    <ID>MagicNumber:Mosaic.kt$50</ID>
+    <ID>MagicNumber:Mosaic.kt$500L</ID>
+    <ID>MagicNumber:NativeUtil.kt$NativeUtil$8192</ID>
+    <ID>MagicNumber:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$15</ID>
+    <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$1000L</ID>
+    <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$120</ID>
+    <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$40</ID>
+    <ID>MatchingDeclarationName:SanityTests.kt$SanitySelfTest : SelfTest</ID>
+    <ID>MaxLineLength:ToolShellCommand.kt$ToolShellCommand$" or: elide @|bold,fg(cyan) run|shell|serve|start|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]"</ID>
+    <ID>MaxLineLength:ToolShellCommand.kt$ToolShellCommand$logging.trace("Entered VM for script execution (language: ${primaryLanguage.id}). Consuming script from: '$label'")</ID>
+    <ID>NestedBlockDepth:SelfTestCommand.kt$SelfTestCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
+    <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
+    <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: SortedSet&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
+    <ID>SpreadOperator:ElideTool.kt$ElideTool.Companion$(*args)</ID>
+    <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$ioe: IOException</ID>
+    <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
+    <ID>SwallowedException:NativeEngine.kt$NativeEngine$err: Throwable</ID>
+    <ID>SwallowedException:NativeUtil.kt$NativeUtil$thr: Throwable</ID>
+    <ID>SwallowedException:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
+    <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$eof: EndOfFileException</ID>
+    <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$err: IOException</ID>
+    <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$exc: NoSuchElementException</ID>
+    <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$ioe: Exception</ID>
+    <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$userInterrupt: UserInterruptException</ID>
+    <ID>ThrowsCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
+    <ID>ThrowsCount:ToolShellCommand.kt$ToolShellCommand$private fun readExecutableScript(languages: EnumSet&lt;GuestLanguage>, language: GuestLanguage, script: File): Source</ID>
+    <ID>TooGenericExceptionCaught:AbstractSubcommand.kt$AbstractSubcommand$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:AbstractToolCommand.kt$AbstractToolCommand$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:CommandTestRunner.kt$CommandTestRunner$thr: Throwable</ID>
+    <ID>TooGenericExceptionCaught:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
+    <ID>TooGenericExceptionCaught:NativeEngine.kt$NativeEngine$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:NativeUtil.kt$NativeUtil$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:NativeUtil.kt$NativeUtil$ex: Throwable</ID>
+    <ID>TooGenericExceptionCaught:NativeUtil.kt$NativeUtil$thr: Throwable</ID>
+    <ID>TooGenericExceptionCaught:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:SelfUpdateCommand.kt$SelfUpdateCommand$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:TestContext.kt$TestContext.Companion$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:ToolShellCommand.kt$ToolShellCommand$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ToolShellCommand.kt$ToolShellCommand$exc: Exception</ID>
+    <ID>TooGenericExceptionCaught:ToolShellCommand.kt$ToolShellCommand$ioe: Exception</ID>
+    <ID>TooGenericExceptionThrown:NativeUtil.kt$NativeUtil$throw RuntimeException("An error occurred while getting the resources for $path", iox)</ID>
+    <ID>TooManyFunctions:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
+    <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
+    <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
+    <ID>UnusedPrivateProperty:RuntimeWorkdirManager.kt$RuntimeWorkdirManager.Companion$private const val tempDir = "temp"</ID>
+    <ID>VariableNaming:AbstractScriptEngineFactory.kt$AbstractScriptEngineFactory.PolyglotContext$private val `in`: PolyglotReader</ID>
+    <ID>VariableNaming:ToolShellCommand.kt$ToolShellCommand.InspectorConfig$/** Specifies whether the inspector should suspend for internal (facade) sources. */ @Option( names = ["--inspect:internal"], description = ["Specifies whether the inspector should suspend for internal (facade) sources"], defaultValue = "false", hidden = false, ) internal var `internal`: Boolean = false</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -33,9 +33,7 @@ elide {
   }
 
   kotlin {
-    target = (KotlinTarget.JVM + KotlinTarget.JsNode).let {
-      if(buildWasm) it + KotlinTarget.WASM else it
-    }
+    target = KotlinTarget.All
   }
 
   jvm {

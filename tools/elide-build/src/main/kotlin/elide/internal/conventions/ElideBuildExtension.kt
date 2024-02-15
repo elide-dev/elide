@@ -81,6 +81,18 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to configure the Kotlin atomic field updater plugin with predefined settings. */
     public var atomicFu: Boolean = false
 
+    /** Whether to include the Redacted plugin. */
+    public var redacted: Boolean = false
+
+    /** Whether to include the experimental JS objects plugin. */
+    public var jsObjects: Boolean = false
+
+    /** Whether to include the SAM-with-receiver plugin. */
+    public var samWithReceiver: Boolean = false
+
+    /** Whether to include the power-assert plugin. */
+    public var powerAssert: Boolean = false
+
     /** Whether to configure the Kotlin NoArgs plugin with predefined settings. */
     public var noArgs: Boolean = false
 
@@ -119,6 +131,27 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Override the generated JPMS module name. */
     public var moduleName: String? = null
+  }
+
+  /** Configuration for linters and checks. */
+  public class Checks(project: Project) : Convention(project) {
+    /** Whether to enable Detekt support. */
+    public var detekt: Boolean = true
+
+    /** Whether to enable Sonar support. */
+    public var sonar: Boolean = true
+
+    /** Whether to enable Checkstyle. */
+    public var checkstyle: Boolean = true
+
+    /** Whether to enable PMD. */
+    public var pmd: Boolean = true
+
+    /** Whether to ignore linting failures. */
+    public var ignoreFailures: Boolean = false
+
+    /** Whether to enable linting baselines. */
+    public var enableBaselines: Boolean = true
   }
 
   /** Configuration for the JVM platform */
@@ -200,6 +233,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   internal val publishing = Publishing(project)
   internal val kotlin = Kotlin(project)
   internal val java = Java(project)
+  internal val checks = Checks(project)
   internal val jvm = Jvm(project)
   internal val testing = Testing(project)
   internal val docker = Docker(project)
@@ -234,4 +268,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
   /** Configure GraalVM native compilations. */
   public fun native(block: Native.() -> Unit = { }): Unit = configure(native, block)
+
+  /** Configure check tasks. */
+  public fun checks(block: Checks.() -> Unit = { }): Unit = configure(checks, block)
 }

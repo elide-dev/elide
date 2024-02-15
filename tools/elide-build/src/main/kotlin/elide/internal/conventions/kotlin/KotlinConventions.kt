@@ -30,56 +30,39 @@ import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.Constants.Elide
 import elide.internal.conventions.Constants.Kotlin
 import elide.internal.conventions.Constants.Versions
+import elide.internal.conventions.ElideBuildExtension
 import elide.internal.conventions.jvm.configureJavadoc
 import elide.internal.conventions.jvm.includeSourceJar
 import elide.internal.conventions.kotlin.KotlinTarget.*
 import elide.internal.conventions.publishing.publishJavadocJar
 
+// When operating with a JVM target range, this is the minimum JVM target version.
 private const val DEFAULT_JVM_MINIMUM = 8
+
+// When operating with a JVM target range, this is the maximum JVM target version.
 private const val DEFAULT_JVM_TARGET = 21
 
 /**
  * Configure a Kotlin project targeting a specific platform. Options passed to this convention are applied to every
  * Kotlin source set.
  *
- * @param explicitApi Whether to enable Explicit API mode for all source sets.
- * @param configureKapt Whether to configure KAPT if present, according to internal conventions.
- * @param configureKsp Whether to configure KSP if present, according to internal conventions.
- * @param configureAllOpen Whether to configure the AllOpen plugin with annotations used often in Elide packages.
- * @param configureAtomicFu Whether to configure the AtomicFu plugin with annotations used often in Elide packages.
- * @param configureNoArgs Whether to configure the NoArgs plugin with annotations used often in Elide packages.
+ * @param target Module targeting.
+ * @param conventions Conventions to apply when configuring Kotlin.
  * @param configureJavaModules Whether to enable processing of `module-info.java` files for JPMS support.
  * @param configureMultiReleaseJar Whether to create a multi-release JAR; must pass [configureJavaModules] as `true`.
  * @param javaTargetRange The range of Java versions to target for multi-release JARs; calculated from target & minimum.
- * @param customKotlinCompilerArgs Custom Kotlin compiler args to apply.
- * @param wasmSourceSets Whether to spawn WASM source sets for use as commons.
- * @param kotlinVersionOverride Override the API and language version of Kotlin for this module only.
- * @param splitJvmTargets Whether to split and carry default source sets for non-JVM targets; defaults to `false`.
- * @param nonJvmSourceSet The name of the non-JVM source set; defaults to `default`.
- * @param jvmSourceSet The name of the JVM source set; defaults to `jvm`. Only used if [splitJvmTargets] is `true`.
  */
 internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
-  explicitApi: Boolean = false,
-  configureKapt: Boolean = false,
-  configureKsp: Boolean = false,
-  configureAllOpen: Boolean = false,
-  configureAtomicFu: Boolean = false,
-  configureNoArgs: Boolean = false,
+  conventions: ElideBuildExtension.Kotlin,
   configureJavaModules: Boolean = false,
   javaMinimum: Int = DEFAULT_JVM_MINIMUM,
   javaTarget: Int = DEFAULT_JVM_TARGET,
   configureMultiReleaseJar: Boolean = false,
   javaTargetRange: IntRange = javaMinimum..javaTarget,
-  customKotlinCompilerArgs: List<String> = emptyList(),
-  wasmSourceSets: Boolean = false,
-  kotlinVersionOverride: String? = null,
-  splitJvmTargets: Boolean = false,
-  nonJvmSourceSet: String = "default",
-  jvmSourceSet: String = "jvm",
   jvmModuleName: String? = null,
 ) {
-  val kotlinVersion = kotlinVersionOverride ?: findProperty(Versions.KOTLIN)?.toString()
+  val kotlinVersion = conventions.kotlinVersionOverride ?: findProperty(Versions.KOTLIN)?.toString()
   val useStrictMode = findProperty(Kotlin.STRICT_MODE).toString().toBoolean()
 
   // Maven Central requires a javadoc JAR artifact
@@ -89,7 +72,7 @@ internal fun Project.configureKotlinBuild(
   // configure Dokka to depend on code generation tasks
   configureDokka()
 
-  if (configureAtomicFu) {
+  if (conventions.atomicFu) {
     apply(plugin = "kotlinx-atomicfu")
 
     the<AtomicFUPluginExtension>().apply {
@@ -105,9 +88,9 @@ internal fun Project.configureKotlinBuild(
     configureKotlinMultiplatform(
       target,
       configureJavaModules,
-      splitJvmTargets,
-      nonJvmSourceSet,
-      jvmSourceSet,
+      conventions.splitJvmTargets,
+      conventions.nonJvmSourceSet,
+      conventions.jvmSourceSet,
       jvmModuleName,
       javaMinimum,
       javaTarget,
@@ -122,7 +105,7 @@ internal fun Project.configureKotlinBuild(
     configureKotlinJvm(
       target,
       configureJavaModules,
-      splitJvmTargets,
+      conventions.splitJvmTargets,
       jvmModuleName,
       javaMinimum,
       javaTarget,
@@ -134,7 +117,7 @@ internal fun Project.configureKotlinBuild(
   // base Kotlin options
   extensions.getByType(KotlinProjectExtension::class.java).apply {
     sourceSets.apply {
-      if (wasmSourceSets) {
+      if (conventions.wasmSourceSets) {
         val wasmMain = create("wasmMain") {
           findByName("commonMain")?.let { dependsOn(it) }
         }
@@ -157,7 +140,7 @@ internal fun Project.configureKotlinBuild(
     }
     sourceSets.all {
       languageSettings {
-        if (explicitApi) explicitApi()
+        if (conventions.explicitApi) explicitApi()
         progressiveMode = false
         optIn("kotlin.ExperimentalUnsignedTypes")
       }
@@ -177,15 +160,15 @@ internal fun Project.configureKotlinBuild(
       }
 
       freeCompilerArgs.set(freeCompilerArgs.get().plus(when (target) {
-       JVM -> if (configureKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
+       JVM -> if (conventions.kapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
        JsBrowser, JsNode -> Elide.JsCompilerArgs
        is Multiplatform, Native, NativeEmbedded, WASM, WASI -> Elide.KmpCompilerArgs
-     }).plus(customKotlinCompilerArgs).toList())
+     }).plus(conventions.customKotlinCompilerArgs).toList())
     }
   }
 
   // configure kapt extension
-  if (configureKapt) extensions.getByType(KaptExtension::class.java).apply {
+  if (conventions.kapt) extensions.getByType(KaptExtension::class.java).apply {
     useBuildCache = true
     strictMode = true
     correctErrorTypes = true
@@ -194,19 +177,28 @@ internal fun Project.configureKotlinBuild(
   }
 
   // configure KSP extension
-  if (configureKsp) extensions.getByType(KspExtension::class.java).apply {
+  if (conventions.ksp) extensions.getByType(KspExtension::class.java).apply {
     allowSourcesFromOtherPlugins = true
   }
 
   // configure AllOpen plugin
-  if (configureAllOpen) extensions.getByType(AllOpenExtension::class.java).apply {
+  if (conventions.allOpen) extensions.getByType(AllOpenExtension::class.java).apply {
     annotation("io.micronaut.aop.Around")
   }
 
   // configure NoArgs plugin
-  if (configureNoArgs) extensions.getByType(NoArgExtension::class.java).apply {
+  if (conventions.noArgs) extensions.getByType(NoArgExtension::class.java).apply {
     annotation("elide.annotations.Model")
   }
+
+  // configure `js-plain-objects` plugin
+  if (conventions.jsObjects) TODO("not yet implemented")
+
+  // configure `power-assert` plugin
+  if (conventions.powerAssert) TODO("not yet implemented")
+
+  // configure `sam-with-receiver` plugin
+  if (conventions.samWithReceiver) TODO("not yet implemented")
 }
 
 /** Configure Dokka tasks to depend on KAPT or KSP generation tasks. */

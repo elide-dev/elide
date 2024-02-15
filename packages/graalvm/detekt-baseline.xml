@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:AbstractVMEngine.kt$AbstractVMEngine.GuestVFSConfigurator$private fun resolveOsArch(): Pair&lt;String, String></ID>
+    <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
+    <ID>EmptyFunctionBlock:EmbeddedVFSTest.kt$EmbeddedVFSTest${ }</ID>
+    <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$&lt;no name provided> : Iterator</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:JsIterator.kt$JsIterator&lt;T> : IteratorProxyIteratorProxyIterable</ID>
+    <ID>LargeClass:AbstractJsMapTest.kt$AbstractJsMapTest&lt;MapLike> : AbstractJsTest</ID>
+    <ID>LargeClass:URLIntrinsicTest.kt$URLIntrinsicTest : AbstractJsIntrinsicTest</ID>
+    <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$@Suppress("ReplaceGetOrSet") protected open fun testMapGeneric(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
+    <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$protected open fun testMapMutable(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
+    <ID>MagicNumber:AbstractVMEngine.kt$AbstractVMEngine$90</ID>
+    <ID>MagicNumber:DebugConfig.kt$DebugConfig.DebugAdapterConfig$4711</ID>
+    <ID>MagicNumber:DebugConfig.kt$DebugConfig.InspectorConfig$4200</ID>
+    <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptSource$3</ID>
+    <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptType$5</ID>
+    <ID>MagicNumber:FetchResponse.kt$FetchResponse$200</ID>
+    <ID>MagicNumber:FetchResponse.kt$FetchResponse$299</ID>
+    <ID>MagicNumber:GraalVMRuntime.kt$GraalVMRuntime.Companion$3</ID>
+    <ID>MagicNumber:HttpServerConfig.kt$HttpServerConfig$8080</ID>
+    <ID>MagicNumber:JsProxy.kt$JsProxy.PropertyProxy$3</ID>
+    <ID>MagicNumber:NettyRequestHandler.kt$NettyRequestHandler$404</ID>
+    <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.Companion$65535</ID>
+    <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL$3</ID>
+    <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL.Companion$31</ID>
+    <ID>MagicNumber:VMStaticProperty.kt$VMStaticProperty.Companion$3</ID>
+    <ID>MatchingDeclarationName:DebugPlugin.kt$Debug</ID>
+    <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
+    <ID>MatchingDeclarationName:Types.kt$GuestHandlerFunction</ID>
+    <ID>MatchingDeclarationName:VfsPlugin.kt$Vfs</ID>
+    <ID>MaxLineLength:JsConcurrentMap.kt$JsConcurrentMap.Factory$*</ID>
+    <ID>MaxLineLength:JsMutableMultiMap.kt$JsMutableMultiMap.Factory$@JvmStatic override</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal"</ID>
+    <ID>NestedClassesVisibility:AbstractVMAdapter.kt$AbstractVMAdapter$PromiseLike&lt;Output> : FutureCompletionStage</ID>
+    <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$MutableURLSearchParams : AbstractMutableURLSearchParamsIMutableSearchParams</ID>
+    <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
+    <ID>NewLineAtEndOfFile:HybridVfsTest.kt$elide.runtime.gvm.internals.vfs.HybridVfsTest.kt</ID>
+    <ID>NewLineAtEndOfFile:JsCoreModulesTest.kt$elide.runtime.plugins.js.JsCoreModulesTest.kt</ID>
+    <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
+    <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
+    <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
+    <ID>ReturnCount:Version.kt$Version$public override operator fun compareTo(other: Version): Int</ID>
+    <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
+    <ID>SpreadOperator:AbstractVMEngine.kt$AbstractVMEngine$( *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray() )</ID>
+    <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(*supportedFeatures())</ID>
+    <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(views.first(), *(views.drop(1).toTypedArray()))</ID>
+    <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredConstructors)</ID>
+    <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredFields)</ID>
+    <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
+    <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
+    <ID>SpreadOperator:NativeContextManagerImpl.kt$NativeContextManagerImpl$(*(config.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray())</ID>
+    <ID>SwallowedException:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$err: Throwable</ID>
+    <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
+    <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>
+    <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$e: java.net.URISyntaxException</ID>
+    <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$syntaxErr: java.net.URISyntaxException</ID>
+    <ID>SwallowedException:WebCryptoIntrinsicTest.kt$WebCryptoIntrinsicTest$err: Throwable</ID>
+    <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt$AbstractDualTest.TestResultContext$throw AssertionError("Expected failure, but test passed.")</ID>
+    <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt$AbstractDualTest.TestResultContext$throw exc.get()!!</ID>
+    <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
+    <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
+    <ID>TooGenericExceptionCaught:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:AbstractVMEngine.kt$AbstractVMEngine$exc: Throwable</ID>
+    <ID>TooGenericExceptionCaught:AbstractVMEngine.kt$AbstractVMEngine.Companion$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:JsRuntime.kt$JsRuntime$err: Throwable</ID>
+    <ID>TooGenericExceptionThrown:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$throw Exception("Failed to resolve language resources with key $manifestKey for language $languageId", cause)</ID>
+    <ID>TooGenericExceptionThrown:FrameworkFeature.kt$FrameworkFeature$throw RuntimeException( "Failed to find method " + methodName + " for class " + clazz.name, e )</ID>
+    <ID>TooGenericExceptionThrown:FrameworkFeature.kt$FrameworkFeature$throw RuntimeException("Failed to load classes under package name.", e)</ID>
+    <ID>TooManyFunctions:AbstractDelegateVFS.kt$AbstractDelegateVFS&lt;VFS> : GuestVFSAbstractBaseVFS</ID>
+    <ID>TooManyFunctions:BaseMutableJsMultiMap.kt$BaseMutableJsMultiMap&lt;K: Any, V> : BaseJsMultiMapMutableMapMutableMultiMapLike</ID>
+    <ID>TooManyFunctions:CompoundVFSImpl.kt$CompoundVFSImpl : AbstractBaseVFS</ID>
+    <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
+    <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
+    <ID>UnusedPrivateProperty:JsRuntime.kt$JsRuntime.Companion$// Root where we can find runtime-related files. private const val EMBEDDED_ROOT = "/META-INF/elide/embedded/runtime/js"</ID>
+    <ID>UnusedPrivateProperty:NativeContextManagerImpl.kt$NativeContextManagerImpl$// Thread-local VM execution context. private val workerContext: VMThreadLocal = VMThreadLocal()</ID>
+  </CurrentIssues>
+</SmellBaseline>

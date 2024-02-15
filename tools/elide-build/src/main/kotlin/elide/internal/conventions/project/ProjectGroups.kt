@@ -14,90 +14,6 @@
 package elide.internal.conventions.project
 
 public object Projects {
-  /** Sample code modules. */
-  public val samples: List<String> = listOf(
-    ":samples:server:hellocss",
-    ":samples:server:helloworld",
-    ":samples:fullstack:basic:server",
-    ":samples:fullstack:react:server",
-    ":samples:fullstack:ssr:server",
-    ":samples:fullstack:react-ssr:server",
-  )
-
-  /** Kotlin MPP modules. */
-  public val multiplatformModules: List<String> = listOf(
-    "base",
-    "core",
-    "model",
-    "rpc",
-    "ssr",
-    "test",
-    "runtime",
-    "proto:proto-core",
-  )
-
-  /** Projects which have no Kotlin in them. */
-  public val nonKotlinProjects: List<String> = listOf(
-    "embedded",
-    "nfi",
-  )
-
-  /** Server-side only modules. */
-  public val serverModules: List<String> = listOf(
-    "graalvm",
-    "graalvm",
-    "graalvm-js",
-    "graalvm-jvm",
-    "graalvm-kt",
-    "graalvm-llvm",
-    "graalvm-py",
-    "graalvm-rb",
-    "graalvm-react",
-    "proto:proto-capnp",
-    "proto:proto-flatbuffers",
-    "proto:proto-kotlinx",
-    "proto:proto-protobuf",
-    "server",
-  )
-
-  /** Packages which are not in use at this time. */
-  public val disabledPackages: List<String> = listOf(
-    ":packages:ssg",
-  )
-
-  /** Browser-side only modules. */
-  public val frontendModules: List<String> = listOf(
-    "frontend",
-    "graalvm-js",
-    "graalvm-react",
-  )
-
-  /** Modules which should not be exported for documentation. */
-  public val noDocModules: Set<String> = sortedSetOf(
-    "cli",
-    "frontend",
-    "graalvm",
-    "graalvm-js",
-    "graalvm-jvm",
-    "graalvm-kt",
-    "graalvm-llvm",
-    "graalvm-py",
-    "graalvm-rb",
-    "graalvm-react",
-    "graalvm-wasm",
-    "proto-capnp",
-    "proto-core",
-    "proto-flatbuffers",
-    "proto-kotlinx",
-    "proto-protobuf",
-    "app",
-    "ui",
-    "processor",
-    "runtime",
-    "rpc",
-    "model",
-  )
-
   /** Modules which should not be reported on for testing. */
   public val noTestModules: List<String> = listOf(
     "bom",
@@ -108,7 +24,6 @@ public object Projects {
     "bundler",
     "samples",
     "site",
-    "ssg",
     "docs",
     "model",
     "benchmarks",
@@ -141,7 +56,6 @@ public object Projects {
     "rpc",
     "server",
     "serverless",
-    "ssg",
     "ssr",
     "test",
     "runtime",
@@ -150,9 +64,7 @@ public object Projects {
       // Tools
       "processor",
     ).map { ":tools:$it" },
-  ).filter {
-    !disabledPackages.contains(it)
-  }
+  )
 
   /** All subproject modules which are published. */
   public val publishedSubprojects: List<String> = emptyList()

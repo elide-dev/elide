@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>UnusedPrivateProperty:PythonInvocationBindings.kt$PythonInvocationBindings$private val mapped: Map&lt;EntrypointInfo, PythonEntrypoint></ID>
+    <ID>UnusedPrivateProperty:PythonInvocationBindings.kt$PythonInvocationBindings$private val modes: EnumSet&lt;DispatchStyle></ID>
+    <ID>UnusedPrivateProperty:PythonInvocationBindings.kt$PythonInvocationBindings$private val types: EnumSet&lt;PythonEntrypointType></ID>
+    <ID>UnusedPrivateProperty:PythonInvocationBindings.kt$PythonInvocationBindings.PythonEntrypoint$private val path: List&lt;String></ID>
+    <ID>UnusedPrivateProperty:PythonMicronautRequestExecutionInputs.kt$PythonMicronautRequestExecutionInputs$private val request: HttpRequest&lt;Any></ID>
+    <ID>UnusedPrivateProperty:PythonServerRequestExecutionInputs.kt$PythonServerRequestExecutionInputs$private val state: Any? = null</ID>
+  </CurrentIssues>
+</SmellBaseline>

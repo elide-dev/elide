@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>UnusedPrivateProperty:JvmInvocationBindings.kt$JvmInvocationBindings$private val mapped: Map&lt;EntrypointInfo, JvmEntrypoint></ID>
+    <ID>UnusedPrivateProperty:JvmInvocationBindings.kt$JvmInvocationBindings$private val modes: EnumSet&lt;DispatchStyle></ID>
+    <ID>UnusedPrivateProperty:JvmInvocationBindings.kt$JvmInvocationBindings$private val types: EnumSet&lt;JvmEntrypointType></ID>
+    <ID>UnusedPrivateProperty:JvmInvocationBindings.kt$JvmInvocationBindings.JvmEntrypoint$private val path: List&lt;String></ID>
+    <ID>UnusedPrivateProperty:JvmMicronautRequestExecutionInputs.kt$JvmMicronautRequestExecutionInputs$private val request: HttpRequest&lt;Any></ID>
+    <ID>UnusedPrivateProperty:JvmServerRequestExecutionInputs.kt$JvmServerRequestExecutionInputs$private val state: Any? = null</ID>
+  </CurrentIssues>
+</SmellBaseline>

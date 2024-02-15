@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>LargeClass:ServerAssetIndexTest.kt$ServerAssetIndexTest</ID>
+    <ID>RethrowCaughtException:api.ext.kt$throw err</ID>
+    <ID>SwallowedException:Application.kt$Application.Initialization$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:Application.kt$Application.Initialization$e: Exception</ID>
+  </CurrentIssues>
+</SmellBaseline>

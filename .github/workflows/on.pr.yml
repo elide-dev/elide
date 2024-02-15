@@ -244,19 +244,19 @@ jobs:
       security-events: "write"
 
   ##
-  ## Job: Checks with Sonar
+  ## Job: Checks with Detekt
   ##
-  check-sonar:
+  check-detekt:
     name: "Checks"
-    uses: ./.github/workflows/checks.sonar.yml
+    uses: ./.github/workflows/checks.detekt.yml
     needs: [triage, preflight-checks, pr-build, pr-test]
     if: fromJson(needs.triage.outputs.srcs)
     secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
     permissions:
       contents: "read"
+      security-events: "write"
 
   ##
   ## Job: Checks with Qodana

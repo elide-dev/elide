@@ -17,6 +17,8 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
@@ -184,6 +186,23 @@ apiValidation {
     )
 }
 
+idea {
+  project {
+    jdkName = (properties["elide.jvm"] as? String) ?: javaLanguageVersion
+    languageLevel = IdeaLanguageLevel(javaLanguageVersion)
+    vcs = "Git"
+  }
+}
+
+nexusPublishing {
+  this@nexusPublishing.repositories {
+    sonatype {
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    }
+  }
+}
+
 spotless {
   isEnforceCheck = false
 
@@ -260,7 +279,17 @@ koverReport {
   }
 }
 
-sonarqube {
+detekt {
+  parallel = true
+  ignoreFailures = true
+  config.from(rootProject.files("config/detekt/detekt.yml"))
+  baseline = rootProject.file("config/detekt/baseline.xml")
+  buildUponDefaultConfig = true
+  enableCompilerPlugin = true
+  basePath = projectDir.absolutePath
+}
+
+sonar {
   properties {
     property("sonar.projectKey", "elide-dev_v3")
     property("sonar.organization", "elide-dev")
@@ -269,7 +298,16 @@ sonarqube {
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
     property("sonar.sourceEncoding", "UTF-8")
-    property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/merged/xml/report.xml"))
+    property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
+
+    listOf(
+      "sonar.java.checkstyle.reportPaths" to "",
+      "sonar.java.pmd.reportPaths" to "",
+      "sonar.kotlin.detekt.reportPaths" to "build/reports/detekt/detekt.xml",
+      "sonar.kotlin.ktlint.reportPaths" to "",
+    ).filter { it.second.isNotBlank() }.forEach {
+      property(it.first, it.second)
+    }
   }
 }
 
@@ -277,7 +315,7 @@ val dokkaVersion: Provider<String> = libs.versions.dokka
 val mermaidDokka: Provider<String> = libs.versions.mermaidDokka
 
 dependencies {
-  // Kover: Merged Coverage Reporting
+  // Kover: Coverage Reporting
   kover(projects.packages.base)
   kover(projects.packages.cli)
   kover(projects.packages.core)
@@ -317,222 +355,226 @@ dependencies {
 }
 
 rewrite {
-  activeRecipe(
-    "org.openrewrite.java.OrderImports",
-  )
-}
-
-tasks.register("resolveAndLockAll") {
-  doFirst {
-    require(gradle.startParameter.isWriteDependencyLocks)
-  }
-  doLast {
-    configurations.filter {
-      // Add any custom filtering on the configurations to be resolved
-      it.isCanBeResolved &&
-        !it.name.lowercase().let { name ->
-          name.contains("sources") || name.contains("documentation")
-        }
-    }.forEach { it.resolve() }
-  }
-}
-
-tasks.register("reports") {
-  description = "Build all reports."
-
-  dependsOn(
-    ":dependencyReport",
-    ":htmlDependencyReport",
-  )
-}
-
-tasks.register("preMerge") {
-  description = "Runs all the tests/verification tasks"
-
-  dependsOn(
-    ":reports",
-    ":detekt",
-    ":check",
-  )
-}
-
-if (buildDocs == "true") {
-  tasks.named("dokkaHtmlMultiModule", DokkaMultiModuleTask::class).configure {
-    moduleName = "Elide"
-    includes.from(layout.projectDirectory.dir("docs/docs.md").asFile)
-    outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
-  }
+  activeRecipe("org.openrewrite.java.OrderImports")
 }
 
 tasks {
+  val detektMergeSarif: TaskProvider<ReportMergeTask> = register("detektMergeSarif", ReportMergeTask::class.java) {
+    output.set(project.rootProject.layout.buildDirectory.file("reports/detekt/detekt.sarif"))
+  }
+  val detektMergeXml: TaskProvider<ReportMergeTask> = register("detektMergeXml", ReportMergeTask::class.java) {
+    output.set(project.rootProject.layout.buildDirectory.file("reports/detekt/detekt.xml"))
+  }
+
+  withType(Detekt::class) detekt@{
+    finalizedBy(detektMergeSarif, detektMergeXml)
+    reports.sarif.required = true
+    reports.xml.required = true
+  }
+
+  val resolveAndLockAll by registering {
+    doFirst {
+      require(gradle.startParameter.isWriteDependencyLocks)
+    }
+    doLast {
+      configurations.filter {
+        // Add any custom filtering on the configurations to be resolved
+        it.isCanBeResolved &&
+                !it.name.lowercase().let { name ->
+                  name.contains("sources") || name.contains("documentation")
+                }
+      }.forEach { it.resolve() }
+    }
+  }
+
   htmlDependencyReport {
     reports.html.outputLocation = layout.projectDirectory.dir("docs/reports").asFile
   }
-}
 
-if (enableKnit == "true") {
-  the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://docs.elide.dev/"
-  the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "docs/apidocs"
-  the<kotlinx.knit.KnitPluginExtension>().files =
-    fileTree(project.rootDir) {
-      include("README.md")
-      include("docs/guide/**/*.md")
-      include("docs/guide/**/*.kt")
-      include("samples/**/*.md")
-      include("samples/**/*.kt")
-      include("samples/**/*.kts")
-      exclude("**/build/**")
-      exclude("**/.gradle/**")
-      exclude("**/node_modules/**")
-    }
+  val reports by registering {
+    description = "Build all reports."
 
-  // Build API docs via Dokka before running Knit.
-  tasks.named("knitPrepare").configure {
-    dependsOn("docs")
-  }
-}
-
-val jvmName = project.properties["elide.jvm"] as? String
-
-idea {
-  project {
-    jdkName = jvmName ?: javaLanguageVersion
-    languageLevel = IdeaLanguageLevel(javaLanguageVersion)
-    vcs = "Git"
-  }
-}
-
-nexusPublishing {
-  this@nexusPublishing.repositories {
-    sonatype {
-      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-    }
-  }
-}
-
-val docs by tasks.registering {
-  if (buildDocs == "true") {
     dependsOn(
-      listOf(
-        "dokkaHtml",
-        "dokkaHtmlMultiModule",
-        "htmlDependencyReport",
-      ),
+      dependencyReport,
+      htmlDependencyReport,
     )
   }
-}
 
-val publishBom by tasks.registering {
-  description = "Publish BOM, Version Catalog, and platform artifacts to Elide repositories and Maven Central"
-  group = "Publishing"
+  if (buildDocs == "true") {
+    val dokkaHtmlMultiModule by getting(DokkaMultiModuleTask::class) {
+      moduleName = "Elide"
+      includes.from(layout.projectDirectory.dir("docs/docs.md").asFile)
+      outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
+    }
+  }
 
-  dependsOn(
-    ":packages:bom:publishAllElidePublications",
-    ":packages:platform:publishAllElidePublications",
-  )
-}
+  if (enableKnit == "true") {
+    the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://docs.elide.dev/"
+    the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "docs/apidocs"
+    the<kotlinx.knit.KnitPluginExtension>().files =
+      fileTree(project.rootDir) {
+        include("README.md")
+        include("docs/guide/**/*.md")
+        include("docs/guide/**/*.kt")
+        include("samples/**/*.md")
+        include("samples/**/*.kt")
+        include("samples/**/*.kts")
+        exclude("**/build/**")
+        exclude("**/.gradle/**")
+        exclude("**/node_modules/**")
+      }
 
-val publishElide by tasks.registering {
-  description = "Publish Elide library publications to Elide repositories and Maven Central"
-  group = "Publishing"
+    // Build API docs via Dokka before running Knit.
+    named("knitPrepare").configure {
+      dependsOn("docs")
+    }
+  }
 
-  dependsOn(
-    Projects.publishedModules.map {
-      project(it).tasks.named("publishAllElidePublications")
-    },
-  )
-}
-
-val publishSubstrate by tasks.registering {
-  description = "Publish Elide Substrate and Kotlin compiler plugins to Elide repositories and Maven Central"
-  group = "Publishing"
-
-  dependsOn(
-    Projects.publishedSubprojects.map {
-      gradle.includedBuild(it.substringBefore(":")).task(
+  val docs by registering {
+    if (buildDocs == "true") {
+      dependsOn(
         listOf(
-          "",
-          it.substringAfter(":"),
-          "publishAllElidePublications",
-        ).joinToString(":"),
+          dokkaHtml,
+          dokkaHtmlMultiModule,
+          htmlDependencyReport,
+        ),
       )
-    },
-  )
-}
-
-val publishAll by tasks.registering {
-  description = "Publish all publications to Elide repositories and Maven Central"
-  group = "Publishing"
-
-  dependsOn(publishElide, publishSubstrate, publishBom)
-}
-
-val copyCoverageReports by tasks.registering(Copy::class) {
-  description = "Copy coverage reports to the root project for Qodana"
-  group = "Verification"
-
-  dependsOn(
-    tasks.koverBinaryReport,
-    tasks.koverXmlReport,
-  )
-
-  from(layout.buildDirectory.dir("reports/kover")) {
-    include("report.bin", "report.xml", "verify.err")
-    rename {
-      it.replace("report.", "elide.")
     }
   }
-  into(layout.projectDirectory.dir(".qodana/code-coverage"))
-}
 
-val quicktest: TaskProvider<Task> by tasks.registering {
-  description = "Run all quick tests"
-  group = "Verification"
-  dependsOn(
-    ":packages:core:jvmTest",
-    ":packages:base:jvmTest",
-    ":packages:graalvm:test",
-    ":packages:serverless:test",
-    ":packages:embedded:test",
-  )
-}
+  val publishBom by registering {
+    description = "Publish BOM, Version Catalog, and platform artifacts to Elide repositories and Maven Central"
+    group = "Publishing"
 
-val precheck: TaskProvider<Task> by tasks.registering {
-  description = "Run all pre-check tasks"
-  group = "Verification"
+    dependsOn(
+      ":packages:bom:publishAllElidePublications",
+      ":packages:platform:publishAllElidePublications",
+    )
+  }
 
-  dependsOn(quicktest)
-}
+  val publishElide by registering {
+    description = "Publish Elide library publications to Elide repositories and Maven Central"
+    group = "Publishing"
 
-afterEvaluate {
-  precheck.configure {
-    listOfNotNull(
-      tasks.findByName("koverVerify"),
-      tasks.findByName("apiCheck"),
-    ).forEach {
-      dependsOn(it)
+    dependsOn(
+      Projects.publishedModules.map {
+        project(it).tasks.named("publishAllElidePublications")
+      },
+    )
+  }
+
+  val publishSubstrate by registering {
+    description = "Publish Elide Substrate and Kotlin compiler plugins to Elide repositories and Maven Central"
+    group = "Publishing"
+
+    dependsOn(
+      Projects.publishedSubprojects.map {
+        gradle.includedBuild(it.substringBefore(":")).task(
+          listOf(
+            "",
+            it.substringAfter(":"),
+            "publishAllElidePublications",
+          ).joinToString(":"),
+        )
+      },
+    )
+  }
+
+  val publishAll by registering {
+    description = "Publish all publications to Elide repositories and Maven Central"
+    group = "Publishing"
+
+    dependsOn(publishElide, publishSubstrate, publishBom)
+  }
+
+  val copyCoverageReports by registering(Copy::class) {
+    description = "Copy coverage reports to the root project for Qodana"
+    group = "Verification"
+
+    dependsOn(
+      koverBinaryReport,
+      koverXmlReport,
+    )
+
+    from(layout.buildDirectory.dir("reports/kover")) {
+      include("report.bin", "report.xml", "verify.err")
+      rename {
+        it.replace("report.", "elide.")
+      }
+    }
+    into(layout.projectDirectory.dir(".qodana/code-coverage"))
+  }
+
+  val quicktest: TaskProvider<Task> by registering {
+    description = "Run all quick tests"
+    group = "Verification"
+    dependsOn(
+      ":packages:core:jvmTest",
+      ":packages:base:jvmTest",
+      ":packages:graalvm:test",
+      ":packages:serverless:test",
+      ":packages:embedded:test",
+    )
+  }
+
+  val precheck: TaskProvider<Task> by registering {
+    description = "Run all pre-check tasks"
+    group = "Verification"
+
+    dependsOn(quicktest)
+  }
+
+  val preMerge by registering {
+    description = "Runs all the tests/verification tasks"
+
+    dependsOn(
+      reports,
+      detekt,
+      check,
+    )
+  }
+
+  afterEvaluate {
+    precheck.configure {
+      listOfNotNull(
+        koverVerify,
+        findByName("apiCheck"),
+      ).forEach {
+        dependsOn(it)
+      }
     }
   }
-}
 
-val format: TaskProvider<Task> by tasks.registering {
-  description = "Run all formatting tasks"
-  group = "Verification"
+  val format: TaskProvider<Task> by registering {
+    description = "Run all formatting tasks"
+    group = "Verification"
 
-  val spotlessApply: Task by tasks
-  dependsOn(spotlessApply)
-}
+    val spotlessApply: Task by tasks
+    dependsOn(spotlessApply)
+  }
 
-tasks.check.configure {
-  dependsOn(
-    quicktest,
-    precheck,
-  )
-}
+  check.configure {
+    dependsOn(
+      spotlessCheck,
+      koverVerify,
+      quicktest,
+      precheck,
+      detekt,
+    )
+  }
 
-tasks.koverVerify.configure {
-  finalizedBy(copyCoverageReports)
+  sonar.configure {
+    dependsOn(
+      detekt,
+      koverBinaryReport,
+      koverXmlReport,
+      koverVerify,
+    )
+  }
+
+  koverVerify.configure {
+    finalizedBy(copyCoverageReports)
+  }
 }
 
 // @TODO: replace where needed with convention plugin logic
@@ -542,30 +584,6 @@ tasks.koverVerify.configure {
 //
 //  apply {
 //    if (!Projects.nonKotlinProjects.contains(name)) {
-//      plugin("io.gitlab.arturbosch.detekt")
-//      plugin("org.sonarqube")
-//      pluginManager.apply("com.diffplug.spotless")
-//
-//      configure<SpotlessExtension> {
-//        isEnforceCheck = false
-//
-//        if (pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
-//          pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
-//          pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")
-//        ) {
-//          kotlin {
-//            licenseHeaderFile(rootProject.layout.projectDirectory.file(".github/license-header.txt"))
-//            ktlint(libs.versions.ktlint.get()).apply {
-//              setEditorConfigPath(rootProject.layout.projectDirectory.file(".editorconfig"))
-//            }
-//          }
-//        }
-//        kotlinGradle {
-//          target("*.gradle.kts")
-//          ktlint(libs.versions.ktlint.get())
-//        }
-//      }
-//
 //      if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
 //        plugin("org.jetbrains.dokka")
 //
@@ -597,130 +615,12 @@ tasks.koverVerify.configure {
 //      }
 //    }
 //  }
-//
-//  sonarqube {
-//    properties {
-//      if (!Projects.noTestModules.contains(name)) {
-//        when {
-//          // pure Java/Kotlin coverage
-//          Projects.serverModules.contains(name) -> {
-//            property("sonar.sources", "src/main/kotlin")
-//            property("sonar.tests", "src/test/kotlin")
-//            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/main"))
-//            property(
-//              "sonar.coverage.jacoco.xmlReportPaths",
-//              listOf(
-//                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"),
-//                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"),
-//                layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"),
-//                layout.buildDirectory.file("reports/kover/xml/coverage.xml"),
-//                layout.buildDirectory.file("reports/kover/xml/report.xml"),
-//              ),
-//            )
-//          }
-//
-//          // KotlinJS coverage via Kover
-//          Projects.frontendModules.contains(name) -> {
-//            property("sonar.sources", "src/main/kotlin")
-//            property("sonar.tests", "src/test/kotlin")
-//            property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/xml/report.xml"))
-//          }
-//
-//          // Kotlin MPP coverage via Kover
-//          Projects.multiplatformModules.contains(name) -> {
-//            property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
-//            property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
-//            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/jvm/main"))
-//            property(
-//              "sonar.coverage.jacoco.xmlReportPaths",
-//              listOf(
-//                layout.buildDirectory.file("reports/kover/xml/report.xml"),
-//              ),
-//            )
-//          }
-//        }
-//      }
-//    }
-//  }
-//
-//  if (!Projects.nonKotlinProjects.contains(name)) {
-//    detekt {
-//      parallel = true
-//      ignoreFailures = true
-//      config.from(rootProject.files("config/detekt/detekt.yml"))
-//    }
-//
-//    val detektMerge by tasks.registering(ReportMergeTask::class) {
-//      output = rootProject.layout.buildDirectory.file("reports/detekt/elide.sarif")
-//    }
-//
-//    plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
-//      tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
-//        finalizedBy(detektMerge)
-//        reports.sarif.required = true
-//        detektMerge.configure {
-//          input.from(this@detekt.sarifReportFile) // or .sarifReportFile
-//        }
-//      }
-//    }
-//
-//    afterEvaluate {
-//      if (tasks.findByName("check") != null) {
-//        tasks.getByName("check") {
-//          setDependsOn(
-//            dependsOn.filterNot {
-//              it is TaskProvider<*> && it.name == "detekt"
-//            },
-//          )
-//        }
-//
-//        tasks.getByName("build") {
-//          setDependsOn(
-//            dependsOn.filterNot {
-//              it is TaskProvider<*> && it.name == "check"
-//            },
-//          )
-//        }
-//      }
-//    }
-//  }
-//
-//  if (project.findProperty("elide.lockDeps") == "true") {
-//    dependencyLocking {
-//      lockAllConfigurations()
-//      lockMode = LockMode.LENIENT
-//    }
-//  }
 //}
 
 // @TODO: replace where needed with convention plugin logic
 //
 //tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
 //  projects = project.allprojects
-//}
-
-// @TODO: replace where needed with convention plugin logic
-//
-//if (tasks.findByName("resolveAllDependencies") == null) {
-//  tasks.register("resolveAllDependencies") {
-//    val npmInstall = tasks.findByName("kotlinNpmInstall")
-//    if (npmInstall != null) {
-//      dependsOn(npmInstall)
-//    }
-//    doLast {
-//      allprojects {
-//        configurations.forEach { c ->
-//          if (c.isCanBeResolved) {
-//            println("Downloading dependencies for '$path' - ${c.name}")
-//            val result = c.incoming.artifactView { lenient(true) }.artifacts
-//            result.failures.forEach {
-//              println("- Ignoring Error: ${it.message}")
-//            }
-//          }
-//        }
-//      }
-//    }
-//  }
 //}
 
 // @TODO: replace where needed with convention plugin logic

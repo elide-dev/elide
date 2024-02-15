@@ -43,6 +43,12 @@ elide {
   java {
     configureModularity = false
   }
+
+  checks {
+    ktlint = false
+    diktat = false
+    spotless = false
+  }
 }
 
 group = "dev.elide.tools"

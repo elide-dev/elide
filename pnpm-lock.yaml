@@ -44,8 +44,8 @@ importers:
         version: 3.3.2
     devDependencies:
       '@commitlint/cli':
-        specifier: 18.5.0
-        version: 18.5.0(@types/node@20.11.17)(typescript@5.3.3)
+        specifier: 18.6.1
+        version: 18.6.1(@types/node@20.11.17)(typescript@5.3.3)
       '@commitlint/config-conventional':
         specifier: 18.5.0
         version: 18.5.0
@@ -187,8 +187,8 @@ packages:
       js-tokens: 4.0.0
     dev: true
 
-  /@commitlint/cli@18.5.0(@types/node@20.11.17)(typescript@5.3.3):
-    resolution: {integrity: sha512-g/N0mJBrHcTdiccUpJknS6/ru45eIEAZyhEy9sL2ILjzK2IVNrpzlAPtxEr8bZCZLGwPBUrQ5UCIIu4uebhImw==, tarball: https://registry.npmjs.org/@commitlint/cli/-/cli-18.5.0.tgz}
+  /@commitlint/cli@18.6.1(@types/node@20.11.17)(typescript@5.3.3):
+    resolution: {integrity: sha512-5IDE0a+lWGdkOvKH892HHAZgbAjcj1mT5QrfA/SVbLJV/BbBMGyKN0W5mhgjekPJJwEQdVNvhl9PwUacY58Usw==, tarball: https://registry.npmjs.org/@commitlint/cli/-/cli-18.6.1.tgz}
     engines: {node: '>=v18'}
     hasBin: true
     dependencies:
@@ -1277,7 +1277,7 @@ packages:
     engines: {node: '>=v18'}
     hasBin: true
     dependencies:
-      '@commitlint/cli': 18.5.0(@types/node@20.11.17)(typescript@5.3.3)
+      '@commitlint/cli': 18.6.1(@types/node@20.11.17)(typescript@5.3.3)
       '@commitlint/types': 18.6.1
     transitivePeerDependencies:
       - '@types/node'

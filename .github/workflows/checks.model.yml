@@ -109,7 +109,7 @@ jobs:
         with:
           persist-credentials: false
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
+        uses: bufbuild/buf-setup-action@88db93f5d74ffa329bb43e42aa95cd822697d214 # v1.29.0
         with:
           github_token: ${{ github.token }}
       - name: "Check: Buf Breaking"

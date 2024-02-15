@@ -86,6 +86,7 @@ val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val nodeVersion: String by properties
 val enableKnit: String? by properties
+val enableOwasp: String? by properties
 
 val buildSamples: String by properties
 val buildDocs: String by properties
@@ -112,8 +113,9 @@ buildscript {
     }
   }
   dependencies {
-    classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
-    classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${libs.versions.atomicfu.get()}")
+    classpath(libs.kotlinx.knit)
+    classpath(libs.plugin.kotlinx.atomicfu)
+    classpath(libs.owasp)
 
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
@@ -124,48 +126,6 @@ buildscript {
       resolutionStrategy.activateDependencyLocking()
     }
   }
-}
-
-apiValidation {
-  nonPublicMarkers +=
-    listOf(
-      "elide.annotations.Internal",
-    )
-
-  ignoredProjects +=
-    listOf(
-      "bom",
-      "cli",
-      "embedded",
-      "proto",
-      "processor",
-      "reports",
-    ).plus(
-      if (buildSamples == "true") {
-        listOf(
-          "samples",
-          "basic",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
-      if (project.properties["buildDocs"] == "true") {
-        listOf(
-          "docs",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
-      if (project.properties["buildDocsSite"] == "true") {
-        listOf(
-          "site",
-        )
-      } else {
-        emptyList()
-      },
-    )
 }
 
 idea {
@@ -347,7 +307,50 @@ rewrite {
   activeRecipe("org.openrewrite.java.OrderImports")
 }
 
+apiValidation {
+  nonPublicMarkers +=
+    listOf(
+      "elide.annotations.Internal",
+    )
+
+  ignoredProjects +=
+    listOf(
+      "bom",
+      "cli",
+      "embedded",
+      "proto",
+      "processor",
+      "reports",
+    ).plus(
+      if (buildSamples == "true") {
+        listOf(
+          "samples",
+          "basic",
+        )
+      } else {
+        emptyList()
+      },
+    ).plus(
+      if (project.properties["buildDocs"] == "true") {
+        listOf(
+          "docs",
+        )
+      } else {
+        emptyList()
+      },
+    ).plus(
+      if (project.properties["buildDocsSite"] == "true") {
+        listOf(
+          "site",
+        )
+      } else {
+        emptyList()
+      },
+    )
+}
+
 if (enableKnit == "true") apply(plugin = "kotlinx-knit")
+if (enableOwasp == "true") apply(plugin = "org.owasp.dependencycheck")
 
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   rootProject.the<NodeJsRootExtension>().apply {

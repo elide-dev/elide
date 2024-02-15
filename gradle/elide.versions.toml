@@ -92,7 +92,6 @@ kotest = "5.5.4"
 kotest-plugin = "0.8.18"
 kotlin-compile-testing = "1.5.0"
 kotlin-dataframe = "0.11.0"
-kotlin-knit = "0.5.0"
 kotlin-language = "2.0"
 kotlin-sdk = "2.0.0-Beta4"
 kotlinx-abiValidator = "0.14.0"
@@ -102,6 +101,7 @@ kotlinx-coroutines = "1.8.0-RC2-wasm0"
 kotlinx-datetime = "0.5.0-wasm0"
 kotlinx-html = "0.11.0"
 kotlinx-io = "0.3.1"
+kotlinx-knit = "0.5.0"
 kotlinx-metadata-jvm = "0.5.0"
 kotlinx-serialization = "1.6.2"
 kotlinx-wrappers-bom = "1.0.0-pre.625"
@@ -277,7 +277,7 @@ kotlin-plugin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kot
 kotlin-plugin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin-sdk" }
 kotlinx-plugin-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
 kotlinx-plugin-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
-kotlinx-plugin-knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin-knit" }
+kotlinx-plugin-knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlinx-knit" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
@@ -528,6 +528,7 @@ kotlinx-html-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-jvm",
 kotlinx-html-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-wasm", version.ref = "kotlinx-html" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring", version.ref = "kotlinx-io" }
+kotlinx-knit = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
 kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx-metadata-jvm" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-js", version.ref = "kotlinx-serialization" }

@@ -10,13 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.proto;
 
-/**
- * Defines a static constant with the current version of the Proto API.
- */
+/** Defines a static constant with the current version of the Proto API. */
 public final class ProtoAPI {
   public static final String VERSION = "v1";
-  private ProtoAPI() { /* Not allowed. */ }
+
+  private ProtoAPI() {
+    /* Not allowed. */
+  }
 }

@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides the API for the Elide Protocol.
- */
+/** Provides the API for the Elide Protocol. */
 package elide.proto.api;

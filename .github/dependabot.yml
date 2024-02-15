@@ -5,7 +5,7 @@ updates:
     directory: "/"
     target-branch: "main"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     assignees:
       - "sgammon"
 

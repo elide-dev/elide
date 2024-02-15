@@ -22,7 +22,6 @@ jobs:
     name: "Protocol: Push"
     runs-on: ubuntu-latest
     if: inputs.push
-    needs: ["buf-lint", "buf-breaking"]
     defaults:
       run:
         shell: bash

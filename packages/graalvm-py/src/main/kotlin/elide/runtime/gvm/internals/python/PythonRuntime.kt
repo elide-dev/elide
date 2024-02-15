@@ -28,13 +28,13 @@ import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.GraalVMGuest.PYTHON
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
+import elide.runtime.gvm.internals.python.PythonExecutableScript as PythonScript
+import elide.runtime.gvm.internals.python.PythonInvocationBindings as PythonBindings
+import elide.runtime.gvm.python.cfg.PythonRuntimeConfig as PythonConfig
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Context.Builder as VMBuilder
 import org.graalvm.polyglot.Engine as VMEngine
 import org.graalvm.polyglot.Value as GuestValue
-import elide.runtime.gvm.internals.python.PythonExecutableScript as PythonScript
-import elide.runtime.gvm.internals.python.PythonInvocationBindings as PythonBindings
-import elide.runtime.gvm.python.cfg.PythonRuntimeConfig as PythonConfig
 
 /**
  * TBD.
@@ -103,11 +103,7 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
     // nothing at this time
   }
 
-  override fun resolve(
-    context: VMContext,
-    script: PythonScript,
-    mode: DispatchStyle?
-  ): PythonBindings {
+  override fun resolve(context: VMContext, script: PythonScript, mode: DispatchStyle?): PythonBindings {
     TODO("Not yet implemented")
   }
 

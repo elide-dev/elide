@@ -38,7 +38,7 @@ import elide.runtime.plugins.llvm.LLVM
     // run embedded initialization code
     initializeEmbeddedScripts(context, resources)
   }
-  
+
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.enableOptions(
       "ruby.embedded",
@@ -56,7 +56,7 @@ import elide.runtime.plugins.llvm.LLVM
       "ruby.shared-objects",
       "ruby.experimental-engine-caching",
     )
-    
+
     builder.disableOptions(
       "ruby.virtual-thread-fibers",
       "ruby.cexts",
@@ -64,7 +64,7 @@ import elide.runtime.plugins.llvm.LLVM
 
     builder.option("log.level", "OFF")
   }
-  
+
   public companion object Plugin : AbstractLanguagePlugin<RubyConfig, Ruby>() {
     private const val RUBY_LANGUAGE_ID = "ruby"
     private const val RUBY_PLUGIN_ID = "Ruby"

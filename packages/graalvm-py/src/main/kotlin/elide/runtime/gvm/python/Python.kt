@@ -16,5 +16,4 @@ package elide.runtime.gvm.python
 /**
  * TBD.
  */
-public object Python {
-}
+public object Python

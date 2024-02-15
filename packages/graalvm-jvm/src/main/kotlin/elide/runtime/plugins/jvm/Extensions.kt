@@ -50,4 +50,3 @@ import elide.runtime.core.PolyglotContext
   check(exitCode.isNumber && exitCode.fitsInInt()) { "Expected return value to be Int, found $exitCode" }
   return exitCode.asInt()
 }
-

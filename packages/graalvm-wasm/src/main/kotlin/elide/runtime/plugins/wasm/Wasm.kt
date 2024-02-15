@@ -33,18 +33,18 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     // run embedded initialization code
     initializeEmbeddedScripts(context, resources)
   }
-  
+
   private fun configureContext(builder: PolyglotContextBuilder) {
     // nothing to configure
   }
-  
+
   public companion object Plugin : AbstractLanguagePlugin<WasmConfig, Wasm>() {
     private const val WASM_LANGUAGE_ID = "wasm"
     private const val WASM_PLUGIN_ID = "WASM"
-    
+
     override val languageId: String = WASM_LANGUAGE_ID
     override val key: Key<Wasm> = Key(WASM_PLUGIN_ID)
-    
+
     override fun install(scope: InstallationScope, configuration: WasmConfig.() -> Unit): Wasm {
       // apply the configuration and create the plugin instance
       val config = WasmConfig().apply(configuration)

@@ -23,7 +23,7 @@ internal class RubyPluginTest {
   @Test fun testExecution() {
     val engine = PolyglotEngine { install(Ruby) }
     val context = engine.acquire()
-    
+
     val result = context.ruby("""
     def getValue()
       return 42
@@ -31,7 +31,7 @@ internal class RubyPluginTest {
     
     getValue()
     """.trimIndent())
-    
+
     assertEquals(
       expected = 42,
       actual = result.asInt(),

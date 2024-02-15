@@ -19,7 +19,7 @@ import elide.runtime.intrinsics.js.FetchRequest
 /**
  * TBD.
  */
-internal abstract class RubyServerRequestExecutionInputs<Request: Any> (
+internal abstract class RubyServerRequestExecutionInputs<Request : Any>(
   private val state: Any? = null,
 ) : RequestExecutionInputs<Request>, FetchRequest {
   // nothing yet

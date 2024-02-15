@@ -24,7 +24,7 @@ import elide.runtime.core.PolyglotEngine
   @Test fun testExecution() {
     val engine = PolyglotEngine { install(Python) }
     val context = engine.acquire()
-    
+
     val result = context.python("""
     a = 42
     def getValue():
@@ -32,7 +32,7 @@ import elide.runtime.core.PolyglotEngine
     
     getValue()
     """.trimIndent())
-    
+
     assertEquals(
       expected = 42,
       actual = result.asInt(),

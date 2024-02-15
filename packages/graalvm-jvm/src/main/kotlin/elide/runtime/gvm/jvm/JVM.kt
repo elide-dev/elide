@@ -14,5 +14,4 @@
 package elide.runtime.gvm.jvm
 
 /** Public utility and entrypoint functions for use of JVM facilities provided by Elide (via Espresso). */
-public object JVM {
-}
+public object JVM

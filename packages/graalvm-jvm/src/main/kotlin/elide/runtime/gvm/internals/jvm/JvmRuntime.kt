@@ -14,7 +14,6 @@
 package elide.runtime.gvm.internals.jvm
 
 import io.micronaut.context.annotation.Requires
-import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
@@ -33,6 +32,7 @@ import elide.runtime.gvm.internals.GraalVMGuest.JVM
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.jvm.cfg.JvmRuntimeConfig
+import org.graalvm.polyglot.Context as VMContext
 
 /**
  * TBD.
@@ -100,11 +100,7 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
     // nothing at this time
   }
 
-  override fun resolve(
-    context: VMContext,
-    script: JvmExecutableScript,
-    mode: DispatchStyle?
-  ): JvmInvocationBindings {
+  override fun resolve(context: VMContext, script: JvmExecutableScript, mode: DispatchStyle?): JvmInvocationBindings {
     TODO("Not yet implemented")
   }
 

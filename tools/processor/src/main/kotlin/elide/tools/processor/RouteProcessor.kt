@@ -62,7 +62,7 @@ public class RouteProcessor(
   }
 
   // Page annotation to scan for (handler-level).
-  private val pageAnnoName = object: KSName {
+  private val pageAnnoName = object : KSName {
     override fun asString(): String = "${getQualifier()}.${getShortName()}"
     override fun getQualifier(): String = defaultPageAnnotation
       .split(".").dropLast(1).joinToString(".")
@@ -71,7 +71,7 @@ public class RouteProcessor(
   }
 
   // Micronaut `GET` annotation.
-  private val micronautGet = object: KSName {
+  private val micronautGet = object : KSName {
     override fun asString(): String = "${getQualifier()}.${getShortName()}"
     override fun getQualifier(): String = "io.micronaut.http.annotation"
     override fun getShortName(): String = "Get"
@@ -111,12 +111,7 @@ public class RouteProcessor(
    * @param url URL base for this route.
    * @return Generated/calculated tag value.
    */
-  private fun tagForRoute(
-    name: String?,
-    page: KSClassDeclaration,
-    entry: KSFunctionDeclaration,
-    url: String,
-  ): String {
+  private fun tagForRoute(name: String?, page: KSClassDeclaration, entry: KSFunctionDeclaration, url: String,): String {
     val preimage = StringBuilder().apply {
       if (name != null) {
         append(name)
@@ -143,19 +138,19 @@ public class RouteProcessor(
     // if the endpoint produces JSON, it is considered to be of type `API`.
     produces.find {
       it.contains("application/json") ||
-      it.contains("proto")
+        it.contains("proto")
     } != null -> EndpointType.API
 
     // if the endpoint produces CSS, JavaScript, a font file, or an image file, then it is considered to be of type
     // `ASSET`.
     (
       route.endsWith(".css") ||
-      route.endsWith(".js")
-    ) || produces.find {
+        route.endsWith(".js")
+      ) || produces.find {
       it.contains("text/css") ||
-      it.contains("application/javascript") ||
-      it.contains("font/") ||
-      it.contains("image/")
+        it.contains("application/javascript") ||
+        it.contains("font/") ||
+        it.contains("image/")
     } != null -> EndpointType.ASSET
 
     // if there is nothing declared for `produces` or `consumes`, or `text/html` is in `produces`, the endpoint is then
@@ -323,14 +318,14 @@ public class RouteProcessor(
       // must be public
       it.isPublic() &&
 
-      // must have at least one eligible annotation
-      eligibleEntrypointAnnotations.any { anno ->
-        it.annotations.mapNotNull { candidate ->
-          candidate.annotationType.resolve().declaration.qualifiedName?.asString()
-        }.contains(
-          anno.asString()
-        )
-      }
+        // must have at least one eligible annotation
+        eligibleEntrypointAnnotations.any { anno ->
+          it.annotations.mapNotNull { candidate ->
+            candidate.annotationType.resolve().declaration.qualifiedName?.asString()
+          }.contains(
+            anno.asString()
+          )
+        }
     }.map { fn ->
       fn to fn.annotations.filter { sub ->
         eligibleEntrypointAnnotations.any { subject ->
@@ -364,7 +359,7 @@ public class RouteProcessor(
     )
     if (pageAnno == null) {
       logger.warn("Page annotation is not present in classpath; no pages will be generated.")
-      return emptyList()  // page annotation is not on the classpath
+      return emptyList() // page annotation is not on the classpath
     }
 
     // locate annotated pages
@@ -373,7 +368,7 @@ public class RouteProcessor(
       if (cls != null) {
         val anno = cls.annotations.find { subjectAnno ->
           subjectAnno.shortName.getShortName() == pageAnnoName.getShortName() &&
-          subjectAnno.annotationType.resolve().declaration.qualifiedName?.asString() == pageAnnoName.asString()
+            subjectAnno.annotationType.resolve().declaration.qualifiedName?.asString() == pageAnnoName.asString()
         }
         if (anno != null) {
           // this class is eligible for processing. scan for methods.

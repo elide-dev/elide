@@ -14,5 +14,4 @@
 package elide.runtime.gvm.internals.python
 
 /** Tests for the HTTP serving layer in Python, surfaced via Flask-style APIs. */
-class PythonServerAdapterTest {
-}
+class PythonServerAdapterTest

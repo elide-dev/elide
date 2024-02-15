@@ -101,19 +101,26 @@ import elide.runtime.plugins.jvm.interop.guestClass
       exception isMetaInstanceOf stoppedException -> StoppedException()
 
       exception isMetaInstanceOf userException -> UserException(
-        /* message = */ exception.exceptionMessage(),
-        /* causeExceptionClass = */ exception.exceptionCause(),
-        /* stackElements = */ emptyArray(),
+        /* message = */
+        exception.exceptionMessage(),
+        /* causeExceptionClass = */
+        exception.exceptionCause(),
+        /* stackElements = */
+        emptyArray(),
       )
 
       exception isMetaInstanceOf classInstallException -> ClassInstallException(
-        /* message = */ exception.exceptionMessage(),
-        /* installed = */ exception.invokeMember("installed")?.asBooleanArray(),
+        /* message = */
+        exception.exceptionMessage(),
+        /* installed = */
+        exception.invokeMember("installed")?.asBooleanArray(),
       )
 
       exception isMetaInstanceOf resolutionException -> ResolutionException(
-        /* id = */ exception.invokeMember("id").asInt(),
-        /* stackElements = */ emptyArray(),
+        /* id = */
+        exception.invokeMember("id").asInt(),
+        /* stackElements = */
+        emptyArray(),
       )
 
       else -> guestException

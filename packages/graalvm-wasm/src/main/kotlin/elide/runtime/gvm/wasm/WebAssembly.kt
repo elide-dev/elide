@@ -16,5 +16,4 @@ package elide.runtime.gvm.wasm
 /**
  * TBD.
  */
-public object WebAssembly {
-}
+public object WebAssembly

@@ -16,5 +16,4 @@ package elide.runtime.gvm.internals.jvm
 /**
  * TBD.
  */
-public class JvmServerAdapter {
-}
+public class JvmServerAdapter

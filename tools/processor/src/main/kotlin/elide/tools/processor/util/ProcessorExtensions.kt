@@ -17,29 +17,27 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSValueArgument
 
-
 // Return a predicate which finds an annotation parameter by name and type.
-private inline fun <reified T: Any> matchParameterPredicate(name: String): (KSValueArgument) -> Boolean {
+private inline fun <reified T : Any> matchParameterPredicate(name: String): (KSValueArgument) -> Boolean {
   return {
     // match by name
     it.name?.getShortName() == name &&
 
-    // then by value and value class
-    when (val inner = it.value) {
-      null -> true
-      else -> when (inner) {
-        is T -> true
-        else -> false
+      // then by value and value class
+      when (val inner = it.value) {
+        null -> true
+        else -> when (inner) {
+          is T -> true
+          else -> false
+        }
       }
-    }
   }
 }
-
 
 /**
  *
  */
-internal inline fun <reified T: Any> SymbolProcessor.annotationArgument(
+internal inline fun <reified T : Any> SymbolProcessor.annotationArgument(
   name: String,
   anno: KSAnnotation,
   defaultValue: T? = null,
@@ -63,7 +61,7 @@ internal inline fun <reified T: Any> SymbolProcessor.annotationArgument(
 /**
  *
  */
-internal inline fun <reified T: Any> SymbolProcessor.annotationArgumentWithDefault(
+internal inline fun <reified T : Any> SymbolProcessor.annotationArgumentWithDefault(
   name: String,
   anno: KSAnnotation,
 ): T {

@@ -56,7 +56,7 @@ import elide.runtime.plugins.llvm.LLVM
       "python.WithCachedSources",
       "python.WithTRegex",
     )
-    
+
     builder.setOptions(
       "llvm.OSR" to "BYTECODE",
       "python.PosixModuleBackend" to "java",

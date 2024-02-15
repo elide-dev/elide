@@ -16,5 +16,4 @@ package elide.runtime.gvm.ruby
 /**
  * TBD.
  */
-public object Ruby {
-}
+public object Ruby

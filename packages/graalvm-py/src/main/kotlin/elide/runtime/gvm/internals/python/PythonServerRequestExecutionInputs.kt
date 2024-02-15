@@ -19,7 +19,7 @@ import elide.runtime.intrinsics.js.FetchRequest
 /**
  * TBD.
  */
-internal abstract class PythonServerRequestExecutionInputs<Request: Any> (
+internal abstract class PythonServerRequestExecutionInputs<Request : Any>(
   private val state: Any? = null,
 ) : RequestExecutionInputs<Request>, FetchRequest {
   // nothing yet

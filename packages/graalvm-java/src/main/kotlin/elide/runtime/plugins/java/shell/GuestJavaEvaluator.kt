@@ -53,8 +53,10 @@ import elide.runtime.core.PolyglotValue
   /** A cached [JShell] instance configured with the [GuestExecutionProvider], using the [context] for execution. */
   private val shell: JShell by lazy {
     JShell.builder().executionEngine(
-      /* executionControlProvider = */ GuestExecutionProvider(context),
-      /* executionControlParameters = */ mapOf(),
+      /* executionControlProvider = */
+      GuestExecutionProvider(context),
+      /* executionControlParameters = */
+      mapOf(),
     ).build()
   }
 

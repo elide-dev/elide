@@ -33,18 +33,18 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     // run embedded initialization code
     initializeEmbeddedScripts(context, resources)
   }
-  
+
   private fun configureContext(builder: PolyglotContextBuilder) {
     // nothing to configure
   }
-  
+
   public companion object Plugin : AbstractLanguagePlugin<LLVMConfig, LLVM>() {
     private const val LLVM_LANGUAGE_ID = "llvm"
     private const val LLVM_PLUGIN_ID = "LLVM"
-    
+
     override val languageId: String = LLVM_LANGUAGE_ID
     override val key: Key<LLVM> = Key(LLVM_PLUGIN_ID)
-    
+
     override fun install(scope: InstallationScope, configuration: LLVMConfig.() -> Unit): LLVM {
       configureLanguageSupport(scope)
 

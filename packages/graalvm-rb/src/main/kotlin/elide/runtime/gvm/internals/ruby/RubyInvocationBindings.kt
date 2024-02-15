@@ -20,5 +20,5 @@ import elide.runtime.gvm.internals.GVMInvocationBindings
  */
 internal sealed class RubyInvocationBindings :
   GVMInvocationBindings<RubyInvocationBindings, RubyExecutableScript>() {
-    //
+  //
 }

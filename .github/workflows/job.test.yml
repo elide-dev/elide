@@ -114,6 +114,9 @@ name: Tests
       GRADLE_CONFIGURATION_KEY:
         required: false
         description: "Gradle cache key"
+      SONAR_TOKEN:
+        required: true
+        description: "Sonar token"
 
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -185,6 +188,7 @@ jobs:
         with:
           key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
+            build/reports/kover/**/*.*
             packages/*/test-results/
             packages/proto/*/test-results/
             tools/elide-build/test-results/
@@ -233,12 +237,14 @@ jobs:
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
           cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
-          gradle-home-cache-includes: binaryen
+          gradle-home-cache-includes:
+            binaryen
             caches
             jdks
             native
@@ -254,6 +260,92 @@ jobs:
             koverBinaryReport
             koverVerify
             copyCoverageReports
+            sonar
+            -x wasmJsTest
+            -x wasmWasiTest
+            -x wasmWasiNodeTest
+            -x detekt
+            --scan
+            --build-cache
+            --configuration-cache
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -x apiCheck
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+      - name: "Analysis: Sonar"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        continue-on-error: true
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
+        with:
+          cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          gradle-home-cache-includes: binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+          arguments: |
+            detekt
+            koverXmlReport
+            koverBinaryReport
+            koverVerify
+            sonar
+            -x wasmJsTest
+            -x wasmWasiTest
+            -x wasmWasiNodeTest
+            -x detekt
+            --scan
+            --build-cache
+            --configuration-cache
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -x apiCheck
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+      - name: "Analysis: Sonar"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        continue-on-error: true
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
+        with:
+          cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          gradle-home-cache-includes:
+            binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+          arguments: |
+            detekt
+            koverXmlReport
+            koverBinaryReport
+            koverVerify
+            sonar
             -x wasmJsTest
             -x wasmWasiTest
             -x wasmWasiNodeTest
@@ -326,6 +418,7 @@ jobs:
         with:
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
           path: |
+            build/reports/kover/**/*.*
             packages/*/test-results/
             packages/proto/*/test-results/
             tools/elide-build/test-results/

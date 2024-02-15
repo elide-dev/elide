@@ -41,6 +41,10 @@ elide {
     forceJvm17 = true
   }
 
+  checks {
+    sonar = false
+  }
+
   // disable module-info processing (not present)
   java {
     configureModularity = false

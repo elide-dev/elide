@@ -32,6 +32,10 @@ elide {
     atomicFu = true
     explicitApi = true
   }
+
+  checks {
+    detekt = true
+  }
 }
 
 kotlin {

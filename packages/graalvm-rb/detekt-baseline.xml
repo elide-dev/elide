@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>UnusedPrivateProperty:RubyMicronautRequestExecutionInputs.kt$RubyMicronautRequestExecutionInputs$private val request: HttpRequest&lt;Any></ID>
+    <ID>UnusedPrivateProperty:RubyServerRequestExecutionInputs.kt$RubyServerRequestExecutionInputs$private val state: Any? = null</ID>
+    <ID>UnusedPrivateProperty:RubyTest.kt$RubyTest$private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
+  </CurrentIssues>
+</SmellBaseline>

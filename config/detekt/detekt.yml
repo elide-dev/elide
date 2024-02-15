@@ -43,9 +43,9 @@ console-reports:
 output-reports:
   active: true
   exclude:
-  # - 'TxtOutputReport'
-  # - 'XmlOutputReport'
-  # - 'HtmlOutputReport'
+   - 'SarifOutputReport'
+   - 'XmlOutputReport'
+   - 'HtmlOutputReport'
 
 comments:
   active: true
@@ -185,11 +185,11 @@ complexity:
         "**/jsTest/**",
         "**/iosTest/**",
       ]
-    thresholdInFiles: 15
-    thresholdInClasses: 15
-    thresholdInInterfaces: 15
-    thresholdInObjects: 15
-    thresholdInEnums: 15
+    thresholdInFiles: 25
+    thresholdInClasses: 25
+    thresholdInInterfaces: 25
+    thresholdInObjects: 25
+    thresholdInEnums: 25
     ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false

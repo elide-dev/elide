@@ -17,6 +17,7 @@ import com.adarshr.gradle.testlogger.TestLoggerExtension
 import com.adarshr.gradle.testlogger.TestLoggerPlugin
 import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.gradle.api.Project
+import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlinx.kover.gradle.plugin.dsl.KoverReportExtension
@@ -31,12 +32,23 @@ internal fun Project.configureTestExecution() {
 }
 
 /** Configure Kover test reports in CI. */
-internal fun Project.configureKoverCI() {
+internal fun Project.configureKover() {
   extensions.getByType(KoverReportExtension::class.java).apply {
     defaults {
       //  generate an XML report when running the `check` task in CI
       xml { onCheck = isCI }
     }
+  }
+
+  // copy report to standard path for gradle, so that tooling can find it
+  val koverXmlReport = tasks.named("koverXmlReport")
+  val copyCoverageReport = tasks.register("copyCoverageReport", Copy::class.java) {
+    dependsOn(koverXmlReport)
+    from(project.layout.buildDirectory.file("reports/kover/report.xml"))
+    into(project.layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"))
+  }
+  koverXmlReport.configure {
+    finalizedBy(copyCoverageReport)
   }
 }
 

@@ -91,6 +91,9 @@ public object Constants {
     /** Constant: pinned version of Groovy. */
     const val GROOVY = "4.0.18"
 
+    /** Constant: pinned version of `ktlint`. */
+    const val KTLINT = "1.1.1"
+
     /** Constant: pinned version of OpenTelemetry. */
     const val OPENTELEMETRY = "1.32.0"
 

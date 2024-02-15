@@ -1,4 +1,4 @@
-name: Sonar
+name: Detekt
 
 "on":
   workflow_dispatch:
@@ -19,9 +19,6 @@ name: Sonar
         default: "elide-framework"
 
     secrets:
-      SONAR_TOKEN:
-        description: "Sonar token"
-        required: true
       BUILDLESS_APIKEY:
         description: "Buildless API key"
         required: false
@@ -34,7 +31,7 @@ permissions:
 
 jobs:
   sonar:
-    name: "Sonar"
+    name: "Detekt"
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -79,21 +76,6 @@ jobs:
             tools/elide-build/build/klib
             tools/elide-build/build/generated
             tools/elide-build/build/generated-sources
-      - name: "Setup: Cache Restore (Test)"
-        id: cache-restore-test
-        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
-        with:
-          key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
-          path: |
-            packages/*/test-results/
-            packages/proto/*/test-results/
-            tools/elide-build/test-results/
-            packages/*/reports/
-            packages/proto/*/reports/
-            tools/elide-build/reports/
-          restore-keys: |
-            elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-tests-
       - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
@@ -108,22 +90,7 @@ jobs:
           merge-multiple: true
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-      - name: "Build: Verify Coverage"
-        uses: gradle/actions/setup-gradle@v3.1.0
-        continue-on-error: true
-        env:
-          CI: true
-          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-        with:
-          cache-read-only: true
-          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          arguments: |
-            koverVerify
-            koverBinaryReport
-            koverXmlReport
-            -x nativeCompile
-            -x nativeOptimizedCompile
-      - name: "Analysis: Sonar"
+      - name: "Analysis: Detekt"
         uses: gradle/actions/setup-gradle@v3.1.0
         continue-on-error: true
         env:
@@ -134,6 +101,10 @@ jobs:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
-            sonar
+            detekt
             -x nativeCompile
             -x nativeOptimizedCompile
+      - name: "Report: SARIF Upload"
+        uses: github/codeql-action/upload-sarif@e675ced7a7522a761fc9c8eb26682c8b27c42b2b # v3.24.1
+        with:
+          sarif_file: build/reports/detekt/detekt.sarif

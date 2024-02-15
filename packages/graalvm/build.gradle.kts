@@ -72,6 +72,10 @@ elide {
     target = NativeTarget.LIB
     useAgent = false
   }
+
+  checks {
+    spotless = false
+  }
 }
 
 allOpen {

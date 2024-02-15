@@ -773,6 +773,10 @@ elide {
   jvm {
     alignVersions = false
   }
+
+  checks {
+    spotless = false
+  }
 }
 
 kotlin {

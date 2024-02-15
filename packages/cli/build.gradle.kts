@@ -71,6 +71,10 @@ elide {
   java {
     configureModularity = false
   }
+
+  checks {
+    spotless = false
+  }
 }
 
 // Flags affecting this build script:

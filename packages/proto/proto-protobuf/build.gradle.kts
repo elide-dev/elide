@@ -47,6 +47,10 @@ elide {
   java {
     includeJavadoc = false
   }
+
+  checks {
+    spotless = false
+  }
 }
 
 sourceSets {

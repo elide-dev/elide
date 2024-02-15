@@ -32,8 +32,25 @@ jobs:
       statuses: "write"
       security-events: "write"
     with:
-      tests: true
       provenance: true
+
+  ##
+  ## Job: Multi-platform Test
+  ##
+  test:
+    name: "Build"
+    uses: ./.github/workflows/job.test.yml
+    secrets: inherit
+    permissions:
+      actions: "read"
+      contents: "write"
+      id-token: "write"
+      checks: "write"
+      packages: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+      security-events: "write"
 
   ##
   ## Job: Checks for Models

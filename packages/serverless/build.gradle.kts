@@ -17,7 +17,6 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.kotlin.*
 import elide.internal.conventions.publishing.publish
 
@@ -32,15 +31,6 @@ plugins {
   id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")
   idea
-}
-
-apply(plugin = "kotlinx-atomicfu")
-
-the<AtomicFUPluginExtension>().apply {
-  dependenciesVersion = null
-  transformJvm = true
-  transformJs = true
-  jvmVariant = "VH"
 }
 
 idea {
@@ -86,6 +76,7 @@ elide {
 
   kotlin {
     target = KotlinTarget.Embedded
+    atomicFu = true
     explicitApi = true
   }
 

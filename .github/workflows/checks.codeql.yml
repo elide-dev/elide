@@ -1,0 +1,130 @@
+name: "CodeQL"
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Artifact Name
+      artifact:
+        description: "Artifact"
+        required: false
+        type: string
+        default: "elide-framework"
+
+  workflow_call:
+    inputs:
+      artifact:
+        description: "Artifact"
+        required: false
+        type: string
+        default: "elide-framework"
+
+    secrets:
+      BUILDLESS_APIKEY:
+        description: "Buildless API key"
+        required: false
+      GRADLE_CONFIGURATION_KEY:
+        description: "Gradle cache key"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+      - name: "Setup: Cache Restore (Build)"
+        id: cache-restore-build
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+          path: |
+            .gradle/
+            build/
+            .codebase/
+            packages/*/build/bin
+            packages/*/build/classes
+            packages/*/build/kotlin
+            packages/*/build/klib
+            packages/*/build/generated
+            packages/*/build/generated-sources
+            packages/proto/*/build/bin
+            packages/proto/*/build/classes
+            packages/proto/*/build/kotlin
+            packages/proto/*/build/klib
+            packages/proto/*/build/generated
+            packages/proto/*/build/generated-sources
+            tools/elide-build/build/bin
+            tools/elide-build/build/classes
+            tools/elide-build/build/kotlin
+            tools/elide-build/build/klib
+            tools/elide-build/build/generated
+            tools/elide-build/build/generated-sources
+      - name: "Setup: Cache Restore (Test)"
+        id: cache-restore-test
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+          path: |
+            packages/*/test-results/
+            packages/proto/*/test-results/
+            tools/elide-build/test-results/
+            packages/*/reports/
+            packages/proto/*/reports/
+            tools/elide-build/reports/
+          restore-keys: |
+            elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v1-tests-
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Initialize CodeQL"
+        uses: github/codeql-action/init@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
+        with:
+          config-file: ./.github/codeql/codeql-config.yml
+          fail-on-severity: "error"
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
+      - name: "Analysis: Build"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        continue-on-error: true
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+        with:
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          arguments: |
+            compileKotlin
+            -x test
+            -x check
+            -x nativeCompile
+            -x nativeOptimizedCompile
+      - name: "Analysis: CodeQL"
+        uses: github/codeql-action/analyze@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
+        continue-on-error: true

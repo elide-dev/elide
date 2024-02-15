@@ -1,0 +1,357 @@
+name: Framework
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Enable Native Targets
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+
+      ## Input: Enable Release Targets
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+
+      ## Input: Publish Libraries
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+
+      ## Input: Deploy Samples
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+
+      ## Input: Enable Container Targets
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+
+      ## Input: Enable Provenance
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: true
+
+      ## Input: Enable macOS
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+
+      ## Input: Enable Windows
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+
+      ## Input: Runner
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-latest
+
+  workflow_call:
+    inputs:
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+      containers:
+        description: "Containers"
+        type: boolean
+        default: false
+      publish:
+        description: "Publish"
+        type: boolean
+        default: false
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: true
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+      runner:
+        description: "Runner to use"
+        type: string
+        default: ubuntu-latest
+      runner_large:
+        description: "Runner (Large)"
+        type: string
+        default: ubuntu-latest-8-cores
+      runner_large_macos:
+        description: "Runner (Large, macOS)"
+        type: string
+        default: macos-13-xl
+      runner_large_windows:
+        description: "Runner (Large, Windows)"
+        type: string
+        default: windows-latest-8-cores
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      BUILDBOT_GHCR_TOKEN:
+        required: false
+        description: "GHCR Token"
+      CODECOV_TOKEN:
+        required: false
+        description: "Codecov token"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+
+env:
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Job: Library Build
+  ##
+  gradle:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [Ubuntu]
+        mode: ["Strict"]
+        machine:
+          - ${{ inputs.runner }}
+        provenance: [true]
+
+        # macOS build is disabled until it can be made dynamic.
+        #
+        #  include:
+        #    - os: macOS
+        #      mode: Strict
+        #      machine: macos-13
+        #      provenance: false
+
+    name: "Build (${{ matrix.os }})"
+    runs-on: ${{ matrix.machine }}
+    continue-on-error: ${{ matrix.mode != 'Strict' }}
+
+    permissions:
+      contents: "write"
+      actions: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      packages: "read"
+      security-events: "write"
+
+    defaults:
+      run:
+        shell: bash
+
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+          path: |
+            .gradle/
+            build/
+            .codebase/
+            packages/*/build/bin
+            packages/*/build/classes
+            packages/*/build/kotlin
+            packages/*/build/klib
+            packages/*/build/generated
+            packages/*/build/generated-sources
+            packages/proto/*/build/bin
+            packages/proto/*/build/classes
+            packages/proto/*/build/kotlin
+            packages/proto/*/build/klib
+            packages/proto/*/build/generated
+            packages/proto/*/build/generated-sources
+            tools/elide-build/build/bin
+            tools/elide-build/build/classes
+            tools/elide-build/build/kotlin
+            tools/elide-build/build/klib
+            tools/elide-build/build/generated
+            tools/elide-build/build/generated-sources
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Buildless"
+        if: contains(matrix.machine, 'macos') == false
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - name: "Setup: Node"
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: "8.15.2"
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "🛠️ Build"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        id: gradlebuild
+        continue-on-error: ${{ matrix.mode == 'labs' }}
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+        with:
+          cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: generate-and-submit
+          gradle-home-cache-cleanup: true
+          gradle-home-cache-includes: binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+          arguments: |
+            assemble
+            compileKotlin
+            -x check
+            -x test
+            -x jvmTest
+            -x jsTest
+            -x jsBrowserTest
+            -x nativeTest
+            -x nativeCompile
+            -x nativeOptimizedCompile
+            -x shadowJar
+            -x buildLayers
+            -x optimizedBuildLayers
+            -x optimizedJitJarAll
+            -x optimizedDistTar
+            -x optimizedDistZip
+            --scan
+            --configuration-cache
+            --build-cache
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            --stacktrace
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
+      - name: "Artifact: Build Outputs"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: elide-framework
+          path: |
+            build/libs/**/*.*
+            packages/*/build/libs/*.*
+            packages/proto/*/build/libs/*.*
+            tools/elide-build/build/**/*.*
+      - name: "Artifact: Reports"
+        if: failure()
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: build-reports-${{ matrix.os }}-latest-gvm-latest
+          path: |
+            build/reports/**/*.*
+      - name: "Artifact: Provenance Subject"
+        id: hash
+        if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}
+        run: |
+          echo "hashes=$(sha256sum ./packages/*/build/libs/* | base64 -w0)" >> "$GITHUB_OUTPUT"
+      - name: "Artifact: Caches"
+        uses: actions/cache/save@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+          path: |
+            .gradle/
+            build/
+            .codebase/
+            packages/*/build/bin
+            packages/*/build/classes
+            packages/*/build/kotlin
+            packages/*/build/klib
+            packages/*/build/generated
+            packages/*/build/generated-sources
+            packages/proto/*/build/bin
+            packages/proto/*/build/classes
+            packages/proto/*/build/kotlin
+            packages/proto/*/build/klib
+            packages/proto/*/build/generated
+            packages/proto/*/build/generated-sources
+            tools/elide-build/build/bin
+            tools/elide-build/build/classes
+            tools/elide-build/build/kotlin
+            tools/elide-build/build/klib
+            tools/elide-build/build/generated
+            tools/elide-build/build/generated-sources
+
+  ## Report: Provenance
+  provenance:
+    name: Provenance
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
+    if: inputs.provenance
+    needs: [gradle]
+    permissions:
+      actions: "read"
+      id-token: "write"
+      contents: "write"
+    with:
+      base64-subjects: "${{ needs.gradle.outputs.hashes }}"
+      upload-assets: ${{ github.ref == 'refs/heads/stable' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'release/') || startsWith(github.ref, 'refs/tags/v') }}

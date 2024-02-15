@@ -1,0 +1,118 @@
+name: Publish Library
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Publish Snapshot
+      snapshot:
+        description: "Snapshot"
+        type: boolean
+        default: true
+
+      ## Input: Publish to OSSRH
+      ossrh:
+        description: "OSSRH"
+        type: boolean
+        default: false
+
+  workflow_call:
+    inputs:
+      snapshot:
+        description: "Snapshot"
+        type: boolean
+        default: true
+      ossrh:
+        description: "OSSRH"
+        type: boolean
+        default: false
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      BUILDBOT_GHCR_TOKEN:
+        required: false
+        description: "GHCR Token"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+
+env:
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Publish: Library Snapshot
+  ##
+
+  publish-snapshot:
+    name: "Publish: Snapshot"
+    if: inputs.snapshot
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:publish-snapshot') ||
+    #        contains(github.event.head_commit.message, 'ci:publish-snapshot')
+    #      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+      packages: "write"
+
+    uses: ./.github/workflows/publish.maven.yml
+    secrets: inherit
+    with:
+      environment: snapshots
+      gcp: true
+      snapshot: true
+      packages: true
+      processor: true
+      substrate: true
+      conventions: true
+      url: https://console.cloud.google.com/storage/browser/elide-snapshots/repository/v3
+
+  ##
+  ## Publish: Library OSSRH
+  ##
+
+  publish-ossrh:
+    name: "Publish: OSSRH"
+    needs: [publish-snapshot]
+    if: inputs.ossrh
+    #    if: |
+    #      (
+    #        contains(github.event.pull_request.labels.*.name, 'ci:publish') ||
+    #        contains(github.event.head_commit.message, 'ci:publish')
+    #      ) && (
+    #        false
+    #      ) && (
+    #        startsWith(github.ref, 'refs/tags/v')
+    #      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+      packages: "write"
+
+    uses: ./.github/workflows/publish.maven.yml
+    secrets: inherit
+    with:
+      environment: central
+      snapshot: false
+      auth: true
+      repo: https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/

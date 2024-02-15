@@ -1,6 +1,6 @@
 version: "1.0"
 linter: jetbrains/qodana-jvm:latest
-projectJDK: "21"
+projectJDK: "graalvm-21"
 disableSanityInspections: true
 fixesStrategy: none
 
@@ -28,6 +28,9 @@ include:
 bootstrap: |
   set -eu
   pnpm install
+  curl https://download.oracle.com/graalvm/21/latest/graalvm-jdk-21_linux-x64_bin.tar.gz > graalvm.tar.gz
+  mkdir graalvm && tar -xzf graalvm.tar.gz --strip-components=1 -C ./graalvm
+  mv graalvm /root/.jdks/graalvm-21
 
 failureConditions:
   severityThresholds:

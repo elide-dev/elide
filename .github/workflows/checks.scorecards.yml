@@ -2,17 +2,12 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: Scorecard supply-chain security
-on:
-  # For Branch-Protection check. Only the default branch is supported. See
-  # https://github.com/ossf/scorecard/blob/main/docs/checks.md#branch-protection
-  branch_protection_rule:
-  # To guarantee Maintained check is occasionally updated. See
-  # https://github.com/ossf/scorecard/blob/main/docs/checks.md#maintained
-  schedule:
-    - cron: '20 7 * * 2'
-  push:
-    branches: ["v3"]
+name: Scorecard
+
+"on":
+  branch_protection_rule: {}
+  workflow_dispatch: {}
+  workflow_call: {}
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -30,17 +25,15 @@ jobs:
       actions: read
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
-      - name: "Checkout code"
+      - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           persist-credentials: false
-
-      - name: "Run analysis"
+      - name: "Analysis: Scorecard"
         uses: ossf/scorecard-action@0864cf19026789058feabb7e87baa5f140aac736 # v2.3.1
         with:
           results_file: results.sarif
@@ -59,18 +52,16 @@ jobs:
           #   - `publish_results` will always be set to `false`, regardless
           #     of the value entered here.
           publish_results: true
-
       # Upload the results as artifacts (optional). Commenting out will disable uploads of run results in SARIF
       # format to the repository Actions tab.
-      - name: "Upload artifact"
+      - name: "Artifact: Scorecard Analysis"
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           name: SARIF file
           path: results.sarif
           retention-days: 5
-
       # Upload the results to GitHub's code scanning dashboard.
-      - name: "Upload to code-scanning"
+      - name: "Artifact: Scorecard SARIF"
         uses: github/codeql-action/upload-sarif@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
         with:
           sarif_file: results.sarif

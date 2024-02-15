@@ -1,18 +1,8 @@
 name: Site
 
-on:
-  push:
-    branches:
-      - stable
-      - v3
-      - site/*
-  pull_request:
-    types: [labeled, opened, reopened, synchronize]
-    branches:
-      - stable
-      - v3
-      - site/*
-      - release/*
+"on":
+  workflow_dispatch: {}
+  workflow_call: {}
 
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -36,13 +26,15 @@ jobs:
       pull-requests: "write"
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
       - name: "Setup: Docker Buildx"
@@ -50,9 +42,8 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
-          components: "native-image,js,wasm"
-          distribution: 'graalvm'
-          java-version: 20
+          distribution: "graalvm"
+          java-version: 21
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -79,22 +70,21 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 18
-          cache: "yarn"
+          node-version: 20
       - name: "Setup: Yarn"
         run: yarn
       - name: "Build: Reference Docs"
         env:
           CI: true
         run: |
-          make docs reports CI=yes JVM=19
+          make docs reports CI=yes JVM=21
       - name: "Build: Site"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         env:
           CI: true
-          GRADLE_CACHE_PUSH: true
         with:
-          cache-read-only: false
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
             :site:docs:app:build
             :site:docs:app:dockerBuild
@@ -107,7 +97,7 @@ jobs:
             -PbuildSamples=false
             -PbuildDocs=true
             -PbuildDocsSite=true
-            -Pversions.java.language=19
+            -Pversions.java.language=21
             -x test
             -x check
             -x apiCheck
@@ -157,7 +147,7 @@ jobs:
           --health-retries 4
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
@@ -172,7 +162,7 @@ jobs:
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
           components: "native-image,js,wasm"
-          distribution: 'graalvm'
+          distribution: "graalvm"
           java-version: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
@@ -200,8 +190,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 18
-          cache: "yarn"
+          node-version: 20
       - name: "Setup: Yarn"
         run: yarn
       - name: "Setup: Site Manifest"
@@ -238,10 +227,10 @@ jobs:
             -PbuildSamples=false \
             -PbuildDocs=true \
             -PbuildDocsSite=true \
-            -Pversions.java.language=19 \
+            -Pversions.java.language=21 \
             --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/artifacts/app.manifest.pb http://localhost:8080 $PWD/site/docs/app/build/ssg-site.zip"
       - name: "Build: Assemble Site"
-        run: make site CI=yes JVM=19;
+        run: make site CI=yes JVM=21;
       - name: "Build: Compress Site"
         run: |
           rm -fv site.tar.gz;
@@ -252,7 +241,7 @@ jobs:
           name: site-tarball-phase2
           path: ./site.tar.gz
       - name: "Upload: Site Artifact"
-        uses: actions/upload-pages-artifact@a753861a5debcf57bf8b404356158c8e1e33150c # v2.0.0
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: build/site
 
@@ -286,11 +275,11 @@ jobs:
       pages: "write"
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
 
       - name: "Deploy Site: GitHub Pages"
         id: site-deploy
-        uses: actions/deploy-pages@13b55b33dd8996121833dbc1db458c793a334630 # v3.0.1
+        uses: actions/deploy-pages@decdde0ac072f6dcbe43649d82d9c635fff5b4e4 # v4.0.4

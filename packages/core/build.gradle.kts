@@ -11,8 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
-import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.kotlin.*
 
 plugins {
@@ -30,18 +28,10 @@ elide {
   }
 
   kotlin {
+    atomicFu = true
     target = KotlinTarget.All
     explicitApi = true
   }
-}
-
-apply(plugin = "kotlinx-atomicfu")
-
-the<AtomicFUPluginExtension>().apply {
-  dependenciesVersion = null
-  transformJvm = true
-  transformJs = true
-  jvmVariant = "VH"
 }
 
 dependencies {

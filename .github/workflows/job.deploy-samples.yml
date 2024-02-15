@@ -1,0 +1,80 @@
+name: Framework
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Runner
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-latest
+
+  workflow_call:
+    inputs:
+      runner:
+        description: "Runner to use"
+        type: string
+        default: ubuntu-latest
+      runner_large:
+        description: "Runner (Large)"
+        type: string
+        default: ubuntu-latest-8-cores
+      runner_large_macos:
+        description: "Runner (Large, macOS)"
+        type: string
+        default: macos-13-xl
+      runner_large_windows:
+        description: "Runner (Large, Windows)"
+        type: string
+        default: windows-latest-8-cores
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+
+env:
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Deploy: Samples
+  ##
+  deploy-samples:
+    name: "Deploy"
+    #    if: |
+    #      (
+    #        contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
+    #        contains(github.event.head_commit.message, 'ci:deploy-samples') ||
+    #        contains(github.event.head_commit.message, 'ci:deploy')
+    #      )
+
+    strategy:
+      matrix:
+        category: [fullstack]
+        app: [react-ssr]
+        variant: [native]
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+      packages: "read"
+
+    uses: ./.github/workflows/job.deploy.yml
+    secrets: inherit
+    with:
+      path: "samples/${{ matrix.category }}/${{ matrix.app }}"
+      image: "us-docker.pkg.dev/elide-fw/samples/${{ matrix.category }}/${{ matrix.app }}/${{ matrix.variant }}:opt-latest"
+      environment: samples
+      url: https://${{ matrix.app }}.samples.elide.dev

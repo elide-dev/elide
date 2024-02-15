@@ -14,7 +14,7 @@
 /** Declares common build script versions. */
 object Versions {
   /** Kotlin version. */
-  const val kotlin = "2.0.0-Beta3"
+  const val kotlin = "2.0.0-Beta4"
 
   /** Micronaut version. */
   const val micronaut = "4.3.0"
@@ -23,7 +23,7 @@ object Versions {
   const val antJUnit = "1.10.12"
 
   /** Static Netty version. */
-  const val netty = "4.1.106.Final"
+  const val netty = "4.1.107.Final"
 
   /** Protocol Buffers version. */
   const val protobuf = "3.21.11"

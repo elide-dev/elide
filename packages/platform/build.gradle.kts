@@ -18,8 +18,6 @@ import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   id("java-platform")
-  id("org.jetbrains.kotlinx.kover")
-
   id("elide.internal.conventions")
 }
 

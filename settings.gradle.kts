@@ -38,6 +38,8 @@ pluginManagement {
       url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
       content {
         includeGroup("dev.elide")
+        includeGroup("com.google.devtools.ksp")
+        includeGroup("org.jetbrains.reflekt")
       }
     }
     gradlePluginPortal()
@@ -76,6 +78,8 @@ dependencyResolutionManagement {
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
+        includeGroup("org.jetbrains.reflekt")
+        includeGroup("com.google.devtools.ksp")
       }
     }
     maven {
@@ -254,21 +258,23 @@ gradleEnterprise {
 }
 
 val cachePush: String? by settings
-
-buildCache {
-  local {
-    isEnabled = true
-  }
-}
+val isCI: Boolean = System.getenv("CI") != "true"
 
 buildless {
   localCache {
-    enabled = System.getenv("CI") != "true"
+    enabled = true
+    directory.dir(".codebase/build-cache")
   }
 
   remoteCache {
     // allow disabling pushing to the remote cache
     push.set(cachePush?.toBooleanStrictOrNull() ?: true)
+  }
+}
+
+buildCache {
+  local {
+    removeUnusedEntriesAfterDays = 14
   }
 }
 

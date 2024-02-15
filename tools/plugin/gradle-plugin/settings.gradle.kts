@@ -23,6 +23,8 @@ pluginManagement {
             content {
                 includeGroup("dev.elide")
                 includeGroup("org.capnproto")
+                includeGroup("com.google.devtools.ksp")
+                includeGroup("org.jetbrains.reflekt")
             }
         }
         maven {
@@ -64,6 +66,8 @@ dependencyResolutionManagement {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots")
             content {
                 includeGroup("dev.elide")
+                includeGroup("com.google.devtools.ksp")
+                includeGroup("org.jetbrains.reflekt")
             }
         }
         maven {

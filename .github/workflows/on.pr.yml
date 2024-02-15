@@ -1,0 +1,274 @@
+name: PR
+
+"on":
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "pr-${{ github.event.pull_request.number }}"
+  cancel-in-progress: true
+
+jobs:
+  ##
+  ## Job: Change Triage
+  ##
+  triage:
+    name: "Triage"
+    runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+    permissions:
+      contents: "read"
+    outputs:
+      changes: ${{ steps.extract_branch.outputs.changes }}
+      branch: ${{ steps.extract_branch.outputs.branch }}
+      base: ${{ steps.filter.outputs.base }}
+      devcontainer: ${{ steps.filter.outputs.base }}
+      model: ${{ steps.filter.outputs.model }}
+      packages: ${{ steps.filter.outputs.packages }}
+      tools: ${{ steps.filter.outputs.tools }}
+      images: ${{ steps.filter.outputs.tools }}
+      srcs: ${{ steps.filter.outputs.srcs }}
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "Triage: Branch Label"
+        id: extract_branch
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      - name: "Triage: PR Labels"
+        uses: actions/labeler@8558fd74291d67161a8a78ce36a881fa63b766a9 # v5.0.0
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: "Triage: PR Changes"
+        id: filter
+        uses: dorny/paths-filter@0bc4621a3135347011ad047f9ecf449bf72ce2bd # v3.0.0
+        with:
+          filters: |
+            base: &base
+              - ".version"
+              - ".release"
+              - ".github/workflows/*.*"
+            devcontainer: &ci
+              - *base
+              - ".devcontainer/*.*"
+              - ".devcontainer/**/*.*"
+            model: &model
+              - *base
+              - "proto/**/*.*"
+            packages: &packages
+              - *base
+              - *model
+              - "packages"
+              - "packages/*"
+              - "packages/**/*.*"
+            tools: &tools
+              - *base
+              - "tools"
+              - "tools/*"
+              - "tools/**/*.*"
+            images: &images
+              - *base
+              - "tools/images/*"
+              - "tools/images/*.*"
+              - "tools/images/**/*.*"
+            srcs: &srcs
+              - *base
+              - *model
+              - *packages
+              - *tools
+
+  ##
+  ## Job: Pre-flight Checks
+  ##
+  preflight-checks:
+    name: "Pre-flight Checks"
+    runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      packages: "read"
+      pull-requests: "write"
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Buildless"
+        uses: buildless/setup@v1.0.2
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          path: "**/*.*"
+          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          restore-keys: |
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+      - name: "Check: Library ABI"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        id: abicheck
+        continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
+        env:
+          CI: true
+          GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        with:
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          arguments: |
+            apiCheck
+            --dependency-verification=lenient
+            --no-daemon
+            --stacktrace
+            --warning-mode=none
+            -Pelide.ci=true
+            -PbuildDocs=false
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+
+  ##
+  ## Job: Multi-platform Build
+  ##
+  pr-build:
+    name: "Build"
+    uses: ./.github/workflows/job.build.yml
+    secrets: inherit
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
+    permissions:
+      actions: "read"
+      contents: "write"
+      id-token: "write"
+      checks: "write"
+      packages: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+      security-events: "write"
+    with:
+      provenance: false
+
+  ##
+  ## Job: Multi-platform Build
+  ##
+  pr-test:
+    name: "Build"
+    uses: ./.github/workflows/job.test.yml
+    secrets: inherit
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      packages: "read"
+      pull-requests: "write"
+    with:
+      native: false
+
+  ##
+  ## Job: Checks for Vulnerabilities/Licensing
+  ##
+  check-dependencies:
+    name: "Checks"
+    uses: ./.github/workflows/checks.dependency-review.yml
+    needs: [triage, preflight-checks]
+    permissions:
+      contents: "read"
+
+  ##
+  ## Job: Checks for Models
+  ##
+  check-model:
+    name: "Checks"
+    uses: ./.github/workflows/checks.model.yml
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model)
+    secrets:
+      BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+    permissions:
+      contents: "read"
+    with:
+      ignore_breaking: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
+
+  ##
+  ## Job: Check for Wrapper
+  ##
+  check-wrapper:
+    name: "Checks"
+    uses: ./.github/workflows/checks.gradle-wrapper.yml
+    needs: [triage, preflight-checks]
+    permissions:
+      contents: "read"
+
+  ##
+  ## Job: Checks with CodeQL
+  ##
+  check-codeql:
+    name: "Checks"
+    uses: ./.github/workflows/checks.codeql.yml
+    needs: [triage, preflight-checks, pr-build]
+    if: fromJson(needs.triage.outputs.packages)
+    secrets:
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+    permissions:
+      actions: "read"
+      contents: "read"
+      security-events: "write"
+
+  ##
+  ## Job: Checks with Sonar
+  ##
+  check-sonar:
+    name: "Checks"
+    uses: ./.github/workflows/checks.sonar.yml
+    needs: [triage, preflight-checks, pr-build, pr-test]
+    if: fromJson(needs.triage.outputs.srcs)
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+    permissions:
+      contents: "read"
+
+  ##
+  ## Job: Checks with Qodana
+  ##
+  check-qodana:
+    name: "Checks"
+    uses: ./.github/workflows/checks.qodana.yml
+    needs: [triage, preflight-checks, pr-build, pr-test]
+    if: false # disabled
+    secrets:
+      QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+    permissions:
+      contents: "read"

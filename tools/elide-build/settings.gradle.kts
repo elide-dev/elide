@@ -19,6 +19,16 @@ pluginManagement {
   repositories {
     maven("https://gradle.pkg.st")
     maven("https://maven.pkg.st")
+
+    maven {
+      name = "elide-snapshots"
+      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      content {
+        includeGroup("dev.elide")
+        includeGroup("com.google.devtools.ksp")
+        includeGroup("org.jetbrains.reflekt")
+      }
+    }
   }
 }
 
@@ -36,6 +46,8 @@ dependencyResolutionManagement {
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
+        includeGroup("com.google.devtools.ksp")
+        includeGroup("org.jetbrains.reflekt")
       }
     }
     google()

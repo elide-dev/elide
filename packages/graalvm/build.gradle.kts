@@ -19,7 +19,6 @@
   "COMPATIBILITY_WARNING",
 )
 
-
 import elide.internal.conventions.publishing.publish
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
@@ -37,9 +36,13 @@ plugins {
 
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
-  
+
   id("elide.internal.conventions")
 }
+
+
+group = "dev.elide"
+version = rootProject.version as String
 
 val enableJpms = false
 val ktCompilerArgs = emptyList<String>()
@@ -74,10 +77,6 @@ elide {
 allOpen {
   annotation("org.openjdk.jmh.annotations.State")
 }
-
-
-group = "dev.elide"
-version = rootProject.version as String
 
 java {
   sourceCompatibility = JavaVersion.VERSION_21
@@ -253,19 +252,31 @@ dependencies {
   implementation(libs.capnproto.runtime)
   implementation(libs.capnproto.runtime.rpc)
 
-  api(libs.graalvm.polyglot)
-  api(libs.graalvm.polyglot.tools.coverage)
-  api(libs.graalvm.polyglot.tools.dap)
-  api(libs.graalvm.polyglot.tools.inspect)
-  api(libs.graalvm.polyglot.tools.insight)
-  api(libs.graalvm.polyglot.tools.heap)
-  api(libs.graalvm.polyglot.tools.profiler)
+  api("org.graalvm.polyglot:polyglot:${libs.versions.graalvm.pin.get()}") {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
+
   api(libs.graalvm.regex)
-  api(libs.graalvm.polyglot.js)
+  api(libs.graalvm.polyglot.js) {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
+
   compileOnly(libs.graalvm.svm)
 
-  testImplementation(libs.bundles.graalvm.polyglot)
-  testImplementation(libs.bundles.graalvm.tools)
+  testImplementation(libs.bundles.graalvm.tools) {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
+  testImplementation(libs.bundles.graalvm.polyglot) {
+    exclude(group = "org.graalvm.sdk", module = "collections")
+    exclude(group = "org.graalvm.sdk", module = "nativeimage")
+    exclude(group = "org.graalvm.sdk", module = "word")
+  }
 
   // Testing
   testImplementation(projects.packages.test)

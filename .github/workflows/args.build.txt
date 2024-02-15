@@ -1,0 +1,27 @@
+assemble
+compileKotlin
+-x check
+-x test
+-x jvmTest
+-x jsTest
+-x jsBrowserTest
+-x nativeTest
+-x nativeCompile
+-x nativeOptimizedCompile
+-x shadowJar
+-x buildLayers
+-x optimizedBuildLayers
+-x optimizedJitJarAll
+-x optimizedDistTar
+-x optimizedDistZip
+--scan
+--configuration-cache
+--build-cache
+--no-daemon
+--warning-mode=none
+--dependency-verification=lenient
+--stacktrace
+-Pelide.ci=true
+-PbuildSamples=false
+-PbuildDocsSite=false
+-PbuildDocs=false

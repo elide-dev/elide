@@ -260,7 +260,7 @@ not need some of these components:
 
 | Status                                                          | **Java**    | **Kotlin**    | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
 |-----------------------------------------------------------------|-------------|---------------|-------------|---------------|-----------|--------------------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 21`   | `2.0.0-Beta3` | `23.1.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 21`   | `2.0.0-Beta4` | `23.1.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.20`      | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`      | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`      | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |

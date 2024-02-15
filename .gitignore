@@ -24,6 +24,8 @@ app-musl
 tmpdocs/
 test-results-native/
 .codebase/cache
+.codebase/build-cache
+.codebase/shared-indexes
 .kotlin/
 .qodana/
 .pnp*

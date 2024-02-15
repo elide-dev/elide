@@ -280,7 +280,7 @@ tasks.compileKotlin.configure {
         languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
         incremental = true
     }
 }
@@ -291,7 +291,7 @@ tasks.compileTestKotlin.configure {
         languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
         incremental = true
     }
 }
@@ -302,7 +302,7 @@ tasks.withType<KotlinCompile>().configureEach {
         languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
         incremental = true
     }
 }

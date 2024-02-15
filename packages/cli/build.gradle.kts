@@ -207,7 +207,7 @@ val ktCompilerArgs = listOf(
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
   // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  //  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-Beta3",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-Beta4",
 )
 
 java {
@@ -239,7 +239,7 @@ kapt {
 kotlin {
   target.compilations.all {
     kotlinOptions {
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
 
       // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)

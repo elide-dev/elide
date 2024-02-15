@@ -23,6 +23,8 @@ pluginManagement {
             url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
             content {
                 includeGroup("dev.elide")
+                includeGroup("com.google.devtools.ksp")
+                includeGroup("org.jetbrains.reflekt")
             }
         }
     }
@@ -46,6 +48,8 @@ dependencyResolutionManagement {
             url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
             content {
                 includeGroup("dev.elide")
+                includeGroup("com.google.devtools.ksp")
+                includeGroup("org.jetbrains.reflekt")
             }
         }
         maven {

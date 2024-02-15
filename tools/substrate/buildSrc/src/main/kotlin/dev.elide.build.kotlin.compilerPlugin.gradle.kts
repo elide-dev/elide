@@ -50,7 +50,7 @@ tasks.withType<KotlinCompile>().configureEach {
     languageVersion = ElideSubstrate.KOTLIN_VERSION
     jvmTarget = "17"
     javaParameters = true
-    allWarningsAsErrors = false
+    allWarningsAsErrors = true
     incremental = true
     freeCompilerArgs = freeCompilerArgs.plus(listOf(
       "-Xallow-unstable-dependencies",

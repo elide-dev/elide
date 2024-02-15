@@ -1,0 +1,49 @@
+name: Model
+
+"on":
+  workflow_dispatch: {}
+  workflow_call:
+    secrets:
+      BUF_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "deploy"
+  cancel-in-progress: false
+
+jobs:
+  ##
+  ## Job: Buf Push
+  ##
+  buf-push:
+    name: "Protocol: Push"
+    runs-on: ubuntu-latest
+    if: inputs.push
+    needs: ["buf-lint", "buf-breaking"]
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      contents: "read"
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "Setup: Buf"
+        uses: bufbuild/buf-setup-action@382440cdb8ec7bc25a68d7b4711163d95f7cc3aa # v1.28.1
+        with:
+          github_token: ${{ github.token }}
+      - name: "Push: BSR"
+        uses: bufbuild/buf-push-action@a654ff18effe4641ebea4a4ce242c49800728459 # v1.2.0
+        with:
+          buf_token: ${{ secrets.BUF_TOKEN }}
+          input: proto

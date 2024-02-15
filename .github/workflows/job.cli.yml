@@ -1,0 +1,410 @@
+name: CLI
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Enable Native Targets
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+
+      ## Input: Enable Release Targets
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+
+      ## Input: Enable macOS
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+
+      ## Input: Enable Windows
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+
+      ## Input: Runner
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-latest
+
+  workflow_call:
+    inputs:
+      native:
+        description: "Native"
+        type: boolean
+        default: false
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+      macos:
+        description: "Enable macOS"
+        type: boolean
+        default: false
+      windows:
+        description: "Enable Windows"
+        type: boolean
+        default: false
+      runner:
+        description: "Runner to use"
+        type: string
+        default: ubuntu-latest
+      runner_large:
+        description: "Runner (Large)"
+        type: string
+        default: ubuntu-latest-8-cores
+      runner_large_macos:
+        description: "Runner (Large, macOS)"
+        type: string
+        default: macos-13-xl
+      runner_large_windows:
+        description: "Runner (Large, Windows)"
+        type: string
+        default: windows-latest-8-cores
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+
+env:
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Job: CLI (Native Debug)
+  ##
+  cli-build-debug:
+    name: "CLI: Native (Debug, ${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: true
+    if: inputs.native
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        startsWith(github.ref, 'release/') ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
+    #        contains(github.event.head_commit.message, 'ci:build-cli')
+    #      )
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["Linux"]
+        arch: ["amd64"]
+        runner: ["${{ inputs.runner_large }}"]
+        labs: [false]
+        tag: [linux-amd64]
+        include:
+          - os: Linux
+            runner: ${{ inputs.runner_large }}
+            arch: amd64
+            labs: false
+            tag: linux-amd64
+          - os: macOS
+            runner: ${{ inputs.runner_large_macos }}
+            arch: amd64
+            labs: false
+            tag: darwin-amd64
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+          path: |
+            .gradle/
+            build/
+            .codebase/
+            packages/*/build/bin
+            packages/*/build/classes
+            packages/*/build/kotlin
+            packages/*/build/klib
+            packages/*/build/generated
+            packages/*/build/generated-sources
+            packages/proto/*/build/bin
+            packages/proto/*/build/classes
+            packages/proto/*/build/kotlin
+            packages/proto/*/build/klib
+            packages/proto/*/build/generated
+            packages/proto/*/build/generated-sources
+            tools/elide-build/build/bin
+            tools/elide-build/build/classes
+            tools/elide-build/build/kotlin
+            tools/elide-build/build/klib
+            tools/elide-build/build/generated
+            tools/elide-build/build/generated-sources
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Buildless"
+        if: contains(matrix.runner, 'macos') == false
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - name: "Setup: MSVC"
+        if: contains(matrix.runner, 'windows')
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+        with:
+          arch: ${{ matrix.arch }}
+          cache: "gradle"
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: "8.15.2"
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Node"
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
+      - name: "Build: CLI (Native/Debug)"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+        with:
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          arguments: |
+            :packages:cli:nativeCompile
+            -Prelease=false
+            -PbuildMode=dev
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
+      - name: "Post-process: Compress (xz)"
+        if: success() && !contains(matrix.runner, 'windows')
+        run: |
+          pushd packages/cli/build/native/nativeCompile;
+          xz -9kv elide.debug;
+          popd;
+          echo "Binary compressed.";
+      - name: "Artifacts: Debug Binary (Unix)"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        if: success() && !contains(matrix.runner, 'windows')
+        with:
+          name: cli-debug-${{ matrix.tag }}
+          path: |
+            ./packages/cli/build/native/nativeCompile/elide.debug.xz
+      - name: "Artifacts: Debug Binary (Windows)"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        if: success() && contains(matrix.runner, 'windows')
+        with:
+          name: cli-debug-${{ matrix.tag }}
+          path: |
+            ./packages/cli/build/native/nativeCompile/elide.debug
+      - name: "Artifacts: Dashboard Dump"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        if: success()
+        with:
+          name: cli-debug-report-${{ matrix.tag }}
+          path: |
+            ./packages/cli/build/native/nativeCompile/elide-tool.bgv
+
+  ##
+  ## Job: CLI (Native Release)
+  ##
+  cli-build-release:
+    name: "CLI: Native (Release, ${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: true
+    if: inputs.native && inputs.release
+    #    if: |
+    #      (
+    #        github.ref == 'refs/heads/stable' ||
+    #        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
+    #        contains(github.event.head_commit.message, 'ci:build-cli')
+    #      )
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["Linux"]
+        arch: ["amd64"]
+        runner:
+          - ${{ inputs.runner_large }}
+        labs: [false]
+        tag: [linux-amd64]
+        include:
+          - os: Linux
+            runner: ${{ inputs.runner_large }}
+            arch: amd64
+            labs: false
+            tag: linux-amd64
+          - os: macOS
+            runner: ${{ inputs.runner_large_macos }}
+            arch: amd64
+            labs: false
+            tag: darwin-amd64
+          - os: Windows
+            runner: ${{ inputs.runner_large_windows }}
+            arch: amd64
+            tag: windows-amd64
+            labs: true
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
+          path: |
+            .gradle/
+            build/
+            .codebase/
+            packages/*/build/bin
+            packages/*/build/classes
+            packages/*/build/kotlin
+            packages/*/build/klib
+            packages/*/build/generated
+            packages/*/build/generated-sources
+            packages/proto/*/build/bin
+            packages/proto/*/build/classes
+            packages/proto/*/build/kotlin
+            packages/proto/*/build/klib
+            packages/proto/*/build/generated
+            packages/proto/*/build/generated-sources
+            tools/elide-build/build/bin
+            tools/elide-build/build/classes
+            tools/elide-build/build/kotlin
+            tools/elide-build/build/klib
+            tools/elide-build/build/generated
+            tools/elide-build/build/generated-sources
+      - name: "Setup: Buildless"
+        if: contains(matrix.runner, 'macos') == false
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: google-github-actions/auth@a6e2e39c0a0331da29f7fd2c2a20a427e8d3ad1f # v2.1.1
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: MSVC"
+        if: contains(matrix.runner, 'windows')
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+        with:
+          arch: ${{ matrix.arch }}
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Node"
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: "8.15.2"
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Yarn"
+        run: pnpm install -g yarn@1.22.19
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
+        continue-on-error: true
+        with:
+          merge-multiple: true
+      - name: "Build: CLI (Native/Release)"
+        uses: gradle/actions/setup-gradle@v3.1.0
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+        with:
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          arguments: |
+            :packages:cli:nativeOptimizedCompile
+            :packages:cli:dist
+            -Prelease=true
+            -PbuildMode=release
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
+      - name: "Artifacts: Release Binary"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        if: success()
+        with:
+          name: cli-release-${{ matrix.tag }}
+          path: |
+            ./packages/cli/build/distributions/*

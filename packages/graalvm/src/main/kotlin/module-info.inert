@@ -13,6 +13,7 @@
 
 module elide.graalvm {
   requires java.base;
+  requires jdk.zipfs;
   requires jakarta.inject;
   requires jakarta.annotation;
   requires kotlin.stdlib;

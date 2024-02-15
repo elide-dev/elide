@@ -1,11 +1,11 @@
 [versions]
 elide = "1.0.0-alpha8"
-kotlin-sdk = "2.0.0-Beta3"
+kotlin-sdk = "2.0.0-Beta4"
 kotlin-language = "2.0"
 jacoco = "0.8.11"
 confundus = "1.0.0"
 jna = "5.8.0"
-ksp = "2.0.0-Beta3-1.0.17"
+ksp = "2.0.0-Beta4-1.0.18-rc2"
 koin = "3.4.3"
 koin-ksp = "1.2.2"
 graalvm = "23.1.2"
@@ -13,6 +13,7 @@ graalvm-pin = "23.1.2"
 graalvm-svm-driver = "23.1.2"
 graalvm-metadata = "0.3.6"
 graalvm-plugin = "0.10.0"
+mrjar = "0.1.1"
 node = "20.2.0"
 react = "18.2.0"
 protobuf = "3.21.11"
@@ -24,7 +25,7 @@ snakeyaml = "2.2"
 konform = "0.4.0"
 arrow = "1.2.0"
 inquirer = "0.1.0"
-sigstore = "0.5.0"
+sigstore = "0.7.0"
 junixsocket = "2.8.3"
 nexusPublishing = "1.3.0"
 testcontainers = "1.17.6"
@@ -32,7 +33,7 @@ dependencyAnalysis = "1.29.0"
 errorprone = "2.24.1"
 jline = "3.25.1"
 spdx = "0.6.0"
-netty = "4.1.106.Final"
+netty = "4.1.107.Final"
 capnproto = "0.1.18-elide"
 netty-iouring = "0.0.24.Final"
 netty-tcnative = "2.0.62.Final"
@@ -62,10 +63,10 @@ mermaidDokka = "0.4.6"
 ktlint = "1.1.1"
 lettuce = "6.2.5.RELEASE"
 ktlintGradle = "11.6.0"
-qodanaGradle = "0.1.13"
-pluginPublish = "0.21.0"
+qodanaGradle = "2023.3.1"
+pluginPublish = "1.2.1"
 pluginProtobuf = "0.9.4"
-versionCheck = "0.48.0"
+versionCheck = "0.51.0"
 versionCatalogUpdate = "0.8.4"
 sonar = "4.4.1.3373"
 mordant = "2.2.0"
@@ -91,12 +92,12 @@ javax-annotations = "1.3.2"
 jsoup = "1.17.2"
 junit-jupiter = "5.10.2"
 logback = "1.4.14"
-docker-plugin = "9.3.2"
-node-plugin = "5.0.0"
-gauth-plugin = "2.2.0"
+docker-plugin = "9.4.0"
+node-plugin = "7.0.2"
+gauth-plugin = "2.2.1"
 kotest = "5.5.4"
 kotest-plugin = "0.8.18"
-testLoggerPlugin = "3.2.0"
+testLoggerPlugin = "4.0.0"
 elide-uuid = "2.0.0-Beta3-0.20.0-rc1"
 guava = "33.0.0-jre"
 gax = "2.31.1"
@@ -137,9 +138,9 @@ kotlinx-wrappers-tanstack-react-virtual = "3.0.0-pre.625"
 kotlinx-wrappers-tanstack-table-core = "8.6.0-pre.625"
 kotlinx-wrappers-tanstack-virtual-core = "3.0.0-pre.625"
 kotlinx-abiValidator = "0.14.0"
-npm-esbuild = "0.18.17"
+npm-esbuild = "0.20.0"
 npm-joda = "3.2.0"
-npm-typescript = "^4.9.5"
+npm-typescript = "5.3.3"
 npm-mui = "5.13.6"
 npm-google-protobuf = "3.21.2"
 npm-preact-core = "10.16.0"
@@ -181,7 +182,7 @@ gcloud-sdk = "26.1.2"
 gcloud-native = "0.14.1"
 jib = "3.4.0"
 jimfs = "1.3.0"
-commons-codec = "1.13"
+commons-codec = "1.16.1"
 commons-compress = "1.24.0"
 commons-csv = "1.10.0"
 commons-pool = "2.11.1"
@@ -198,7 +199,7 @@ kover = "0.7.5"
 kover-plugin = "0.7.5"
 jmh-plugin = "0.7.2"
 jmh-lib = "1.37"
-doctor-plugin = "0.8.1"
+doctor-plugin = "0.9.1"
 jansi = "2.4.1"
 hibernate = "5.6.11.Final"
 hikari = "4.0.3"
@@ -210,7 +211,7 @@ jackson = "2.16.1"
 jsr310 = "2.9.8"
 spotless = "6.25.0"
 micronaut-xml = "3.1.0"
-buildconfig-plugin = "4.2.0"  # TODO(sgammon): 5.x breakage in `conventions:GradleProject.kt`
+buildconfig-plugin = "5.3.5"
 kotlin-compile-testing = "1.5.0"
 auto-common = "1.2.2"
 auto-service = "1.1.1"
@@ -219,14 +220,14 @@ auto-value = "1.10.1"
 pluginBuf = "0.8.5"
 lmaxDisruptor = "3.4.4"
 lmaxDisruptorProxy = "2.0.7"
-gr8 = "0.9"
+gr8 = "0.10"
 proguard = "7.4.2"
 openrewrite-plugin = "6.8.2"
 openrewrite-lib = "8.1.13"
 openrewrite-bom = "2.6.4"
 parallelGzip = "1.0.5"
-wrapperUpgrade = "0.11.3"
-gradleCommonCustomUserData = "1.11.1"
+wrapperUpgrade = "0.11.4"
+gradleCommonCustomUserData = "1.12.1"
 gradleChecksum = "1.4.0"
 gradleTestRetry = "1.5.8"
 lombok = "8.4"
@@ -234,7 +235,7 @@ jetbrains-annotations = "24.1.0"
 buildTimeTracker = "4.3.0"
 cyclonedx = "1.8.2"
 redacted-plugin = "1.7.1"
-jprofiler = "14.0-PRE1"
+jprofiler = "14.0.1"
 semver = "3.1.0"
 magicProgress = "0.3.2"
 consoleui = "0.0.13"
@@ -246,7 +247,6 @@ powerAssert = "0.13.0"
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-sdk" }
@@ -302,6 +302,8 @@ cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
 redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted-plugin" }
 jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }
 powerAssert = { id = "com.bnorm.power.kotlin-power-assert", version.ref = "powerAssert" }
+mrjar = { id = "me.champeau.mrjar", version.ref = "mrjar" }
+reflekt = { id = "org.jetbrains.reflekt", version.ref = "kotlin-sdk" }
 
 [libraries]
 androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "androidx-compose" }
@@ -344,6 +346,7 @@ kotlinx-atomicfu-linux-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu
 kotlinx-atomicfu-macos-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-macosx64", version.ref = "atomicfu" }
 kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx-metadata-jvm" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
+kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring", version.ref = "kotlinx-io" }
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx-benchmark" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -703,6 +706,7 @@ plugin-openrewrite = { group = "org.openrewrite", name = "plugin", version.ref =
 plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
 plugin-sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }
 plugin-redacted = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin-gradle", version.ref = "redacted-plugin" }
+plugin-reflekt = { group = "org.jetbrains.reflekt", name = "reflekt-plugin", version.ref = "kotlin-sdk" }
 ## Elide Internal
 elide-uuid = { group = "dev.elide", name = "elide-uuid-core", version.ref = "elide-uuid" }
 elide-uuid-kotlinx = { group = "dev.elide", name = "elide-uuid-kotlinx", version.ref = "elide-uuid" }

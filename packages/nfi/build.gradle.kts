@@ -11,25 +11,32 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
-import elide.internal.cpp.cpp
-
 plugins {
   id("elide.internal.conventions")
-  id("elide.internal.cpp")
-  `cpp-library`
+}
+
+elide {
+  // Nothing to set.
 }
 
 group = "dev.elide.embedded"
 
-elide {
-  cpp {
-    headersOnly = true
+val publicHeaders: Configuration by configurations.creating {
+  isCanBeConsumed = true
+  isCanBeResolved = false
+
+  attributes {
+    attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
+    attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.C_PLUS_PLUS_API))
+    attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EMBEDDED))
   }
 }
 
-library {
-  source.from(file("src"))
-  privateHeaders.from(file("src"))
-  publicHeaders.from(file("include"))
+val publicHeadersZip: TaskProvider<Zip> by tasks.registering(Zip::class) {
+  archiveBaseName = "elide-headers"
+  from(layout.projectDirectory.dir("include"))
+}
+
+artifacts {
+  add("publicHeaders", publicHeadersZip)
 }

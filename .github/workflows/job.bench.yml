@@ -1,11 +1,8 @@
 name: Benchmark
 
-on:
-  push:
-    branches:
-      - stable
-  pull_request:
-    types: [opened, reopened, synchronize]
+"on":
+  workflow_dispatch: {}
+  workflow_call: {}
 
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -23,12 +20,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        java: [20]
+        java: [21]
         engine: [graalvm]
         experimental: [false]
         include:
           - os: macos
-            java: 20
+            java: 21
             engine: graalvm
             experimental: false
 
@@ -56,19 +53,31 @@ jobs:
         shell: bash
 
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        with:
+          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          path: "**/*.*"
+          restore-keys: |
+            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v1-build-
+            elide-framework-v1-
+            elide-framework-
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         if: ${{ matrix.engine == 'graalvm' }}
         with:
-          components: "native-image,js,wasm"
-          distribution: 'graalvm'
+          distribution: "graalvm"
           java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Zulu"
@@ -80,19 +89,18 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 18
-          cache: "yarn"
+          node-version: 20
       - name: "Setup: Yarn"
         run: yarn
       - name: "Run Benchmarks"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         id: gradlebench
         continue-on-error: ${{ matrix.experimental }}
         env:
           CI: true
-          GRADLE_CACHE_PUSH: false
         with:
           cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
             :benchmarks:core:benchmark
             :benchmarks:graalvm:benchmark

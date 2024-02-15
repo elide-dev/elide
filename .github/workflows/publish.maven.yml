@@ -4,7 +4,7 @@ concurrency:
   group: "publish"
   cancel-in-progress: false
 
-on:
+"on":
   ## Publish flows can be invoked from other workflows.
   workflow_call:
     inputs:
@@ -151,13 +151,15 @@ jobs:
       PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
     steps:
-      - name: Harden Runner
+      - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           egress-policy: audit
-
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - id: "auth"
         name: "Setup: Authorize Service Account"
         if: ${{ inputs.gcp }}
@@ -176,9 +178,8 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
         with:
-          components: "native-image,js,wasm"
-          distribution: 'graalvm'
-          java-version: 20
+          distribution: "graalvm"
+          java-version: 21
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Signing Keys"
         run: |
@@ -190,7 +191,7 @@ jobs:
           echo "APP_VERSION=$(cat .version)" >> $GITHUB_ENV;
           echo "Releasing version $APP_VERSION"
       - name: "Publish: Conventions"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         if: ${{ inputs.conventions }}
         with:
           arguments: |
@@ -207,7 +208,7 @@ jobs:
             -x test
             :conventions:publish
       - name: "Publish: Substrate"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         if: ${{ inputs.substrate }}
         with:
           arguments: |
@@ -224,7 +225,7 @@ jobs:
             -x test
             :substrate:publish
       - name: "Publish: Processor"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         if: ${{ inputs.processor }}
         with:
           arguments: |
@@ -241,7 +242,7 @@ jobs:
             -x test
             :tools:processor:publish
       - name: "Publish: Packages"
-        uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
+        uses: gradle/actions/setup-gradle@v3.1.0
         if: ${{ inputs.packages }}
         with:
           arguments: |

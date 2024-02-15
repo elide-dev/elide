@@ -18,8 +18,6 @@ import elide.internal.conventions.Constants.Elide
 
 plugins {
   id("version-catalog")
-
-  id("org.jetbrains.kotlinx.kover")
   id("elide.internal.conventions")
 }
 

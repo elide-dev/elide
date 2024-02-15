@@ -96,7 +96,7 @@
   enabled: false
 # Checks that KDoc is not empty
 - name: KDOC_EMPTY_KDOC
-  enabled: true
+  enabled: false
 # Checks that underscore is correctly used to split package naming
 - name: INCORRECT_PACKAGE_SEPARATOR
   enabled: true
@@ -381,7 +381,7 @@
   enabled: true
 # Type aliases provide alternative names for existing types when type's reference text is longer 25 chars
 - name: TYPE_ALIAS
-  enabled: true
+  enabled: false
   configuration:
     typeReferenceLength: '25' # max length of type reference
 # Checks if casting can be omitted

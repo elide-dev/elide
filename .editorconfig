@@ -16,13 +16,6 @@ ij_smart_tabs = false
 ij_visual_guides = 120
 ij_wrap_on_typing = false
 
-# Don't enforce in submodules
-[packages/uuid/*/**.*]
-ktlint_standard_indent = disabled
-
-[runtime/**/*.*]
-ktlint_standard_indent = disabled
-
 [*.css]
 ij_visual_guides = none
 ij_css_align_closing_brace_with_properties = false
@@ -1046,25 +1039,8 @@ ij_jspx_keep_indents_on_empty_lines = false
 [{*.kts}]
 max_line_length = 140
 ij_visual_guides = 140
-ktlint_experimental = disabled
-ktlint_standard_annotations = disabled
-ktlint_standard_property-naming = disabled
 
 [{*.kt,*.kts}]
-ktlint_code_style = intellij_idea
-ktlint_experimental = disabled
-ktlint_standard_property-naming = disabled
-ktlint_standard_annotations = disabled
-ktlint_standard_indent = disabled
-ktlint_standard_argument-list-wrapping = disabled
-ktlint_standard_multiline-if-else = disabled
-ktlint_standard_no-wildcard-imports = disabled
-ktlint_standard_wrapping = enabled
-ktlint_standard_trailing-comma-on-call-site = disabled
-ktlint_standard_trailing-comma-on-declaration-site = disabled
-ktlint_standard_no-multi-spaces = disabled
-ktlint_no-wildcard-imports = disabled
-ktlint_argument-list-wrapping = disabled
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false

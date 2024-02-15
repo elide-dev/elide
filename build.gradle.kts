@@ -189,9 +189,13 @@ spotless {
   isEnforceCheck = false
 
   kotlinGradle {
-    ktlint(libs.versions.ktlint.get()).apply {
-      setEditorConfigPath(rootProject.layout.projectDirectory.file(".editorconfig"))
-    }
+    target("*.gradle.kts")
+    diktat(libs.versions.diktat.get()).configFile(
+      project.rootProject.layout.projectDirectory.file("config/diktat/diktat.yml")
+    )
+    ktlint(libs.versions.ktlint.get()).editorConfigOverride(mapOf(
+      "ktlint_standard_no-wildcard-imports" to "disabled",
+    ))
   }
 }
 
@@ -287,6 +291,7 @@ sonar {
       "sonar.java.pmd.reportPaths" to "",
       "sonar.kotlin.detekt.reportPaths" to "build/reports/detekt/detekt.xml",
       "sonar.kotlin.ktlint.reportPaths" to "",
+      "sonar.kotlin.diktat.reportPaths" to "",
     ).filter { it.second.isNotBlank() }.forEach {
       property(it.first, it.second)
     }

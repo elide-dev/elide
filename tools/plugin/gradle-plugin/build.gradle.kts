@@ -96,19 +96,6 @@ subprojects {
         }
     }
 
-//    ktlint {
-//        debug.set(false)
-//        verbose.set(true)
-//        android.set(false)
-//        outputToConsole.set(true)
-//        ignoreFailures.set(true)
-//        enableExperimentalRules.set(true)
-//        filter {
-//            exclude("**/generated/**")
-//            include("**/kotlin/**")
-//        }
-//    }
-
     detekt {
         config.from(rootProject.files("config/detekt/detekt.yml"))
     }
@@ -152,9 +139,6 @@ fun String.isNonStable() = "^[0-9,.v-]+(-r)?$".toRegex().matches(this).not()
 
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"
-
-//    dependsOn("ktlintFormat")
-//    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:ktlintFormat"))
 }
 
 tasks.register("preMerge") {

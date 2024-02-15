@@ -14,13 +14,14 @@
 package elide.internal.conventions.linting
 
 import com.diffplug.gradle.spotless.SpotlessExtension
-import com.diffplug.gradle.spotless.SpotlessPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import elide.internal.conventions.Constants
 import elide.internal.conventions.Constants.Versions
+import elide.internal.conventions.ElideBuildExtension
 
-private fun SpotlessExtension.configureSpotlessForProject(project: Project) {
-  isEnforceCheck = false
+private fun SpotlessExtension.configureSpotlessForProject(conventions: ElideBuildExtension, project: Project) {
+  isEnforceCheck = conventions.checks.enforceCheck
 
   if (project.pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
     project.pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
@@ -28,14 +29,22 @@ private fun SpotlessExtension.configureSpotlessForProject(project: Project) {
   ) {
     kotlin {
       licenseHeaderFile(project.rootProject.layout.projectDirectory.file(".github/license-header.txt"))
-      ktlint(Versions.KTLINT).apply {
-        setEditorConfigPath(project.rootProject.layout.projectDirectory.file(".editorconfig"))
+      if (conventions.checks.ktlint) {
+        ktlint(Versions.KTLINT).editorConfigOverride(Constants.Linting.ktlintOverrides)
+      }
+      if (conventions.checks.diktat) {
+        diktat(Versions.DIKTAT).configFile("${project.rootDir}/config/diktat/diktat.yml")
       }
     }
   }
   kotlinGradle {
     target("*.gradle.kts")
-    ktlint(Versions.KTLINT)
+    if (conventions.checks.ktlint) {
+      ktlint(Versions.KTLINT).editorConfigOverride(Constants.Linting.ktlintOverridesKts)
+    }
+    if (conventions.checks.diktat) {
+      diktat(Versions.DIKTAT).configFile("${project.rootDir}/config/diktat/diktat.yml")
+    }
   }
 }
 
@@ -45,10 +54,10 @@ public class SpotlessConventionsPlugin : Plugin<Project> {
   }
 
   override fun apply(target: Project) {
-    target.pluginManager.apply(SpotlessPlugin::class.java)
     target.pluginManager.withPlugin(SPOTLESS_PLUGIN) {
+      val conventions = target.extensions.getByType(ElideBuildExtension::class.java)
       target.extensions.getByType(SpotlessExtension::class.java).run {
-        configureSpotlessForProject(target)
+        configureSpotlessForProject(conventions, target)
       }
     }
   }

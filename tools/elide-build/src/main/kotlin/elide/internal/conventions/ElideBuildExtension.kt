@@ -134,6 +134,12 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to enable Sonar support. */
     public var sonar: Boolean = true
 
+    /** Whether to enable Diktat support. */
+    public var diktat: Boolean = false
+
+    /** Whether to enable ktlint support. */
+    public var ktlint: Boolean = true
+
     /** Whether to enable Spotless support. */
     public var spotless: Boolean = true
 
@@ -142,6 +148,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Whether to enable PMD. */
     public var pmd: Boolean = true
+
+    /** Whether to enforce formatting/linting on `check`. */
+    public var enforceCheck: Boolean = false
 
     /** Whether to ignore linting failures. */
     public var ignoreFailures: Boolean = false

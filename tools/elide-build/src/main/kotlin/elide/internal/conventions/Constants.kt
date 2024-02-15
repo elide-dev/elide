@@ -163,9 +163,13 @@ public object Constants {
       ktlintDisable("no-wildcard-imports"),
       ktlintDisable("if-else-wrapping"),
       ktlintDisable("value-argument-comment"),
+      ktlintDisable("value-argument-comment"),
+      ktlintDisable("type-argument-comment"),
       ktlintDisable("multiline-expression-wrapping"),
       ktlintDisable("trailing-comma-on-call-site"),
       ktlintDisable("trailing-comma-on-declaration-site"),
+      ktlintDisable("paren-spacing"),
+      ktlintDisable("property-naming"),
     )
 
     /** Ktlint overrides to apply to Gradle scripts. */

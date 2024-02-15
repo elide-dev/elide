@@ -1,374 +1,534 @@
 [versions]
-elide = "1.0.0-alpha8"
-kotlin-sdk = "2.0.0-Beta4"
-kotlin-language = "2.0"
-jacoco = "0.8.11"
-confundus = "1.0.0"
-jna = "5.8.0"
-ksp = "2.0.0-Beta4-1.0.18-rc2"
-koin = "3.4.3"
-koin-ksp = "1.2.2"
-graalvm = "23.1.2"
-graalvm-pin = "23.1.2"
-graalvm-svm-driver = "23.1.2"
-graalvm-metadata = "0.3.6"
-graalvm-plugin = "0.10.0"
-mrjar = "0.1.1"
-node = "20.2.0"
-react = "18.2.0"
-protobuf = "3.21.11"
-protobufJavalite = "3.0.0"
-grpc-java = "1.61.1"
-grpc-kotlin = "1.4.1"
-grpc-web = "1.4.2"
-snakeyaml = "2.2"
-konform = "0.4.0"
-arrow = "1.2.0"
-inquirer = "0.1.0"
-sigstore = "0.7.0"
-junixsocket = "2.8.3"
-nexusPublishing = "1.3.0"
-testcontainers = "1.17.6"
-dependencyAnalysis = "1.29.0"
-errorprone = "2.24.1"
-jline = "3.25.1"
-spdx = "0.6.0"
-netty = "4.1.107.Final"
-capnproto = "0.1.18-elide"
-netty-iouring = "0.0.24.Final"
-netty-tcnative = "2.0.62.Final"
-dekorate = "3.1.1"
-micronaut-lib = "4.3.0"
-micronaut-aot = "2.2.0"
-micronaut-plugin = "4.3.2"
-compose = "1.5.7.1"
 androidx-compose = "1.5.9-dev-k2.0.0-Beta3-7c5ec6895a0"
-github-api = "1.318"
-wasmtime = "0.18.0"
-kotlinx-coroutines = "1.8.0-RC2-wasm0"
-kotlinx-collections = "0.4-wasm1"
-kotlinx-datetime = "0.5.0-wasm0"
-kotlinx-serialization = "1.6.2"
-atomicfu = "0.23.2"
-kotlinx-html = "0.11.0"
-kotlinx-metadata-jvm = "0.5.0"
-kotlinx-io = "0.3.1"
-kotlinx-benchmark = "0.4.10"
-detekt = "1.23.5"
-buf = "1.28.1"
-okio = "3.7.0"
-okhttp = "4.12.0"
-ktoml = "0.5.1"
-dokka = "1.9.10"
-ktlint = "1.1.1"
-diktat = "2.0.0"
-mermaidDokka = "0.4.6"
-lettuce = "6.2.5.RELEASE"
-qodanaGradle = "2023.3.1"
-pluginPublish = "1.2.1"
-pluginProtobuf = "0.9.4"
-versionCheck = "0.51.0"
-versionCatalogUpdate = "0.8.4"
-sonar = "4.4.1.3373"
-mordant = "2.2.0"
-mockito-bom = "5.10.0"
-mockito-junit = "5.10.0"
-hamcrest-core = "2.2"
-hamcrest-junit = "2.0.0.0"
-faker = "1.15.0"
+arrow = "1.2.0"
 asciidata = "1.4.0"
-truth = "1.4.0"
-soy = "2022-03-07" # next: "2022-07-20"
+atomicfu = "0.23.2"
+auto-common = "1.2.2"
+auto-factory = "1.0.1"
+auto-service = "1.1.1"
+auto-value = "1.10.1"
+bouncycastle = "1.77"
+brotli4j = "1.16.0"
+buf = "1.28.1"
+buildTimeTracker = "4.3.0"
+buildconfig-plugin = "5.3.5"
+capnproto = "0.1.18-elide"
+clikt = "4.2.2"
 closure = "v20221004"
 closure-stylesheets = "1.5.0"
-clikt = "4.2.2"
-picocli = "4.7.5"
-picocli-jansi-graalvm = "1.2.0"
-slf4j = "2.0.11"
-jakarta = "2.0.1"
-jakarta-persistence = "3.1.0"
-jakarta-annotation-api = "2.1.1"
-javax-persistence = "2.2"
-javax-annotations = "1.3.2"
-jsoup = "1.17.2"
-junit-jupiter = "5.10.2"
-logback = "1.4.14"
+commons-codec = "1.16.1"
+commons-compress = "1.24.0"
+commons-csv = "1.10.0"
+commons-pool = "2.11.1"
+compose = "1.5.7.1"
+confundus = "1.0.0"
+conscrypt = "2.5.2"
+consoleui = "0.0.13"
+cyclonedx = "1.8.2"
+dekorate = "3.1.1"
+dependencyAnalysis = "1.29.0"
+detekt = "1.23.5"
+diktat = "2.0.0"
 docker-plugin = "9.4.0"
-node-plugin = "7.0.2"
-gauth-plugin = "2.2.1"
-kotest = "5.5.4"
-kotest-plugin = "0.8.18"
-testLoggerPlugin = "4.0.0"
+doctor-plugin = "0.9.1"
+dokka = "1.9.10"
+elide = "1.0.0-alpha8"
 elide-uuid = "2.0.0-Beta3-0.20.0-rc1"
-guava = "33.0.0-jre"
-gax = "2.31.1"
-mosaic = "0.10.0"
+errorprone = "2.24.1"
+faker = "1.15.0"
 flatbuffers = "2.0.3"
 flatbuffers-java = "22.12.06"
 flatbuffers-plugin = "1.0.7"
-kotlinxWrappers = "pre.625"
+gauth-plugin = "2.2.1"
+gax = "2.31.1"
+gcloud-native = "0.14.1"
+gcloud-sdk = "26.1.2"
+github-api = "1.318"
+google-api-common = "2.16.0"
+google-html-types = "1.0.8"
+gr8 = "0.10"
+graalvm = "23.1.2"
+graalvm-metadata = "0.3.6"
+graalvm-pin = "23.1.2"
+graalvm-plugin = "0.10.0"
+graalvm-svm-driver = "23.1.2"
+gradleChecksum = "1.4.0"
+gradleCommonCustomUserData = "1.12.1"
+gradleTestRetry = "1.5.8"
+grpc-java = "1.61.1"
+grpc-kotlin = "1.4.1"
+grpc-web = "1.4.2"
+guava = "33.0.0-jre"
+hamcrest-core = "2.2"
+hamcrest-junit = "2.0.0.0"
+hibernate = "5.6.11.Final"
+hikari = "4.0.3"
+inquirer = "0.1.0"
+jackson = "2.16.1"
+jacoco = "0.8.11"
+jakarta = "2.0.1"
+jakarta-annotation-api = "2.1.1"
+jakarta-persistence = "3.1.0"
+jansi = "2.4.1"
+javax-annotations = "1.3.2"
+javax-persistence = "2.2"
+jdoctor = "0.1.2"
+jetbrains-annotations = "24.1.0"
+jib = "3.4.0"
+jimfs = "1.3.0"
+jline = "3.25.1"
+jmh-lib = "1.37"
+jmh-plugin = "0.7.2"
+jna = "5.8.0"
+jprofiler = "14.0.1"
+jsoup = "1.17.2"
+jsr310 = "2.9.8"
+junit-jupiter = "5.10.2"
+junixsocket = "2.8.3"
+koin = "3.4.3"
+koin-ksp = "1.2.2"
+konform = "0.4.0"
+kotest = "5.5.4"
+kotest-plugin = "0.8.18"
+kotlin-compile-testing = "1.5.0"
+kotlin-dataframe = "0.11.0"
+kotlin-knit = "0.5.0"
+kotlin-language = "2.0"
+kotlin-sdk = "2.0.0-Beta4"
+kotlinx-abiValidator = "0.14.0"
+kotlinx-benchmark = "0.4.10"
+kotlinx-collections = "0.4-wasm1"
+kotlinx-coroutines = "1.8.0-RC2-wasm0"
+kotlinx-datetime = "0.5.0-wasm0"
+kotlinx-html = "0.11.0"
+kotlinx-io = "0.3.1"
+kotlinx-metadata-jvm = "0.5.0"
+kotlinx-serialization = "1.6.2"
 kotlinx-wrappers-bom = "1.0.0-pre.625"
 kotlinx-wrappers-browser = "1.0.0-pre.625"
 kotlinx-wrappers-cesium = "1.101.0-pre.625"
 kotlinx-wrappers-css = "1.0.0-pre.625"
 kotlinx-wrappers-csstype = "3.1.1-pre.625"
-kotlinx-wrappers-node = "18.16.12-pre.625"
-kotlinx-wrappers-js = "1.0.0-pre.625"
-kotlinx-wrappers-react = "18.2.0-pre.625"
-kotlinx-wrappers-react-beautiful-dnd = "13.1.1-pre.625"
-kotlinx-wrappers-react-router-dom = "6.16.0-pre.625"
 kotlinx-wrappers-emotion = "11.11.1-pre.625"
-kotlinx-wrappers-redux = "4.1.2-pre.625"
-kotlinx-wrappers-react-redux = "7.2.6-pre.625"
-kotlinx-wrappers-react-popper = "2.3.0-pre.625"
-kotlinx-wrappers-react-select = "5.7.0-pre.625"
-kotlinx-wrappers-remix-run-router = "1.9.0-pre.625"
-kotlinx-wrappers-ringUi = "4.1.5-pre.625"
+kotlinx-wrappers-history = "5.3.0-pre.506"
+kotlinx-wrappers-js = "1.0.0-pre.625"
 kotlinx-wrappers-mui = "5.14.7-pre.625"
 kotlinx-wrappers-mui-icons = "5.14.7-pre.625"
+kotlinx-wrappers-node = "18.16.12-pre.625"
+kotlinx-wrappers-popper = "2.11.6-pre.625"
+kotlinx-wrappers-react = "18.2.0-pre.625"
+kotlinx-wrappers-react-beautiful-dnd = "13.1.1-pre.625"
+kotlinx-wrappers-react-popper = "2.3.0-pre.625"
+kotlinx-wrappers-react-redux = "7.2.6-pre.625"
+kotlinx-wrappers-react-router-dom = "6.16.0-pre.625"
+kotlinx-wrappers-react-select = "5.7.0-pre.625"
+kotlinx-wrappers-redux = "4.1.2-pre.625"
+kotlinx-wrappers-remix-run-router = "1.9.0-pre.625"
+kotlinx-wrappers-ringUi = "4.1.5-pre.625"
 kotlinx-wrappers-styled = "5.3.11-pre.625"
 kotlinx-wrappers-styled-next = "1.2.1-pre.625"
-kotlinx-wrappers-popper = "2.11.6-pre.625"
-kotlinx-wrappers-history = "5.3.0-pre.506"
-kotlinx-wrappers-web = "1.0.0-pre.625"
-kotlinx-wrappers-typescript = "4.9.5-pre.625"
 kotlinx-wrappers-tanstack-query-core = "4.22.0-pre.625"
 kotlinx-wrappers-tanstack-react-query = "4.22.0-pre.625"
 kotlinx-wrappers-tanstack-react-table = "8.6.0-pre.625"
 kotlinx-wrappers-tanstack-react-virtual = "3.0.0-pre.625"
 kotlinx-wrappers-tanstack-table-core = "8.6.0-pre.625"
 kotlinx-wrappers-tanstack-virtual-core = "3.0.0-pre.625"
-kotlinx-abiValidator = "0.14.0"
-npm-esbuild = "0.20.0"
-npm-joda = "3.2.0"
-npm-typescript = "5.3.3"
-npm-mui = "5.13.6"
-npm-google-protobuf = "3.21.2"
-npm-preact-core = "10.16.0"
-npm-preact-compat = "17.1.2"
-npm-preact-renderToString = "6.2.0"
-npm-prepack = "0.2.54"
+kotlinx-wrappers-typescript = "4.9.5-pre.625"
+kotlinx-wrappers-web = "1.0.0-pre.625"
+kotlinxWrappers = "pre.625"
+kover = "0.7.5"
+kover-plugin = "0.7.5"
+ksp = "2.0.0-Beta4-1.0.18-rc2"
+ktlint = "1.1.1"
+ktoml = "0.5.1"
+larray = "0.2.1"
+lettuce = "6.2.5.RELEASE"
+lmaxDisruptor = "3.4.4"
+lmaxDisruptorProxy = "2.0.7"
+logback = "1.4.14"
+lombok = "8.4"
+lz4 = "1.3.0"
+magicProgress = "0.3.2"
+mermaidDokka = "0.4.6"
+micronaut-aot = "2.2.0"
+micronaut-lib = "4.3.0"
+micronaut-liquibase = "5.4.1"
+micronaut-plugin = "4.3.2"
+micronaut-xml = "3.1.0"
+mockito-bom = "5.10.0"
+mockito-junit = "5.10.0"
+mordant = "2.2.0"
+mosaic = "0.10.0"
+mrjar = "0.1.1"
+msgpack = "0.9.4"
+netty = "4.1.107.Final"
+netty-iouring = "0.0.24.Final"
+netty-tcnative = "2.0.62.Final"
+nexusPublishing = "1.3.0"
+node = "20.2.0"
+node-plugin = "7.0.2"
 npm-buffer = "6.0.3"
-npm-stream = "4.4.2"
-npm-webstreams = "3.2.1"
-npm-types-protobuf = "3.15.6"
-npm-grpcweb = "1.4.2"
 npm-emotion-core = "^11.11.2"
 npm-emotion-server = "11.11.0"
+npm-esbuild = "0.20.0"
+npm-google-protobuf = "3.21.2"
+npm-grpcweb = "1.4.2"
+npm-joda = "3.2.0"
 npm-lit = "2.8.0"
-npm-litHtml = "2.8.0"
-npm-litElement = "3.3.3"
-npm-lit-localize = "0.11.4"
-npm-lit-localizeTools = "0.6.9"
 npm-lit-labs-analyzer = "0.9.0"
 npm-lit-labs-context = "0.3.3"
 npm-lit-labs-motion = "1.0.4"
 npm-lit-labs-react = "2.0.0"
 npm-lit-labs-ssr = "3.1.5"
 npm-lit-labs-ssrClient = "1.1.3"
-npm-lit-labs-virtualizer = "2.0.5"
 npm-lit-labs-task = "3.0.0"
-sqlite = "3.45.1.0"
-snappy = "1.1.10.3"
-msgpack = "0.9.4"
-larray = "0.2.1"
-google-api-common = "2.16.0"
-google-html-types = "1.0.8"
-reactivestreams = "1.0.4"
-kotlin-dataframe = "0.11.0"
-kotlin-knit = "0.5.0"
-lz4 = "1.3.0"
-shadow-plugin = "8.1.1"
-gcloud-sdk = "26.1.2"
-gcloud-native = "0.14.1"
-jib = "3.4.0"
-jimfs = "1.3.0"
-commons-codec = "1.16.1"
-commons-compress = "1.24.0"
-commons-csv = "1.10.0"
-commons-pool = "2.11.1"
-xz = "1.9"
-zstd = "1.5.5-11"
-brotli4j = "1.16.0"
+npm-lit-labs-virtualizer = "2.0.5"
+npm-lit-localize = "0.11.4"
+npm-lit-localizeTools = "0.6.9"
+npm-litElement = "3.3.3"
+npm-litHtml = "2.8.0"
+npm-mui = "5.13.6"
+npm-preact-compat = "17.1.2"
+npm-preact-core = "10.16.0"
+npm-preact-renderToString = "6.2.0"
+npm-prepack = "0.2.54"
+npm-stream = "4.4.2"
+npm-types-protobuf = "3.15.6"
+npm-typescript = "5.3.3"
+npm-webstreams = "3.2.1"
+okhttp = "4.12.0"
+okio = "3.7.0"
+openrewrite-bom = "2.6.4"
+openrewrite-lib = "8.1.13"
+openrewrite-plugin = "6.8.2"
+owasp = "9.0.9"
+parallelGzip = "1.0.5"
+picocli = "4.7.5"
+picocli-jansi-graalvm = "1.2.0"
+pluginBuf = "0.8.5"
+pluginProtobuf = "0.9.4"
+pluginPublish = "1.2.1"
+postgres = "42.5.1"
+powerAssert = "0.13.0"
+proguard = "7.4.2"
 projectreactor = "2023.0.2"
 projectreactor-core = "3.6.0"
 projectreactor-netty = "1.1.13"
-bouncycastle = "1.77"
-tink = "1.12.0"
-conscrypt = "2.5.2"
-kover = "0.7.5"
-kover-plugin = "0.7.5"
-jmh-plugin = "0.7.2"
-jmh-lib = "1.37"
-doctor-plugin = "0.9.1"
-jansi = "2.4.1"
-hibernate = "5.6.11.Final"
-hikari = "4.0.3"
-postgres = "42.5.1"
-swagger = "2.2.15"
-micronaut-liquibase = "5.4.1"
-sqlcommenter = "2.1.1-elide"
-jackson = "2.16.1"
-jsr310 = "2.9.8"
-spotless = "6.25.0"
-micronaut-xml = "3.1.0"
-buildconfig-plugin = "5.3.5"
-kotlin-compile-testing = "1.5.0"
-auto-common = "1.2.2"
-auto-service = "1.1.1"
-auto-factory = "1.0.1"
-auto-value = "1.10.1"
-pluginBuf = "0.8.5"
-lmaxDisruptor = "3.4.4"
-lmaxDisruptorProxy = "2.0.7"
-gr8 = "0.10"
-proguard = "7.4.2"
-openrewrite-plugin = "6.8.2"
-openrewrite-lib = "8.1.13"
-openrewrite-bom = "2.6.4"
-parallelGzip = "1.0.5"
-wrapperUpgrade = "0.11.4"
-gradleCommonCustomUserData = "1.12.1"
-gradleChecksum = "1.4.0"
-gradleTestRetry = "1.5.8"
-lombok = "8.4"
-jetbrains-annotations = "24.1.0"
-buildTimeTracker = "4.3.0"
-cyclonedx = "1.8.2"
+protobuf = "3.21.11"
+protobufJavalite = "3.0.0"
+qodanaGradle = "2023.3.1"
+react = "18.2.0"
+reactivestreams = "1.0.4"
 redacted-plugin = "1.7.1"
-jprofiler = "14.0.1"
 semver = "3.1.0"
-magicProgress = "0.3.2"
-consoleui = "0.0.13"
-jdoctor = "0.1.2"
+shadow-plugin = "8.1.1"
+sigstore = "0.7.0"
+slf4j = "2.0.11"
+snakeyaml = "2.2"
+snappy = "1.1.10.3"
+sonar = "4.4.1.3373"
+soy = "2022-03-07" # next: "2022-07-20"
+spdx = "0.6.0"
+spotless = "6.25.0"
+sqlcommenter = "2.1.1-elide"
+sqlite = "3.45.1.0"
 strikt = "0.34.1"
-powerAssert = "0.13.0"
+swagger = "2.2.15"
+testLoggerPlugin = "4.0.0"
+testcontainers = "1.17.6"
+tink = "1.12.0"
+truth = "1.4.0"
+versionCatalogUpdate = "0.8.4"
+versionCheck = "0.51.0"
+wasmtime = "0.18.0"
+wrapperUpgrade = "0.11.4"
+xz = "1.9"
+zstd = "1.5.5-11"
 
 [plugins]
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
-qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-sdk" }
-kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin-sdk" }
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-sdk" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-sdk" }
-kotlin-plugin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin-sdk" }
-kotlin-plugin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin-sdk" }
-kotlin-plugin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-sdk" }
-kotlin-plugin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin-dataframe" }
-kotlin-plugin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin-sdk" }
-kotlinx-plugin-knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin-knit" }
-kotlinx-plugin-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
-kotlinx-plugin-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-sonar = { id = "org.sonarqube", version.ref = "sonar" }
-dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
-lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover-plugin" }
-protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
-pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
-versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck" }
 artifactRegistry = { id = "com.google.cloud.artifactregistry.gradle-plugin", version.ref = "gauth-plugin" }
-testLogger = { id = "com.adarshr.test-logger", version.ref = "testLoggerPlugin" }
-micronaut-library = { id = "io.micronaut.library", version.ref = "micronaut-plugin" }
-micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-plugin" }
-micronaut-docker = { id = "io.micronaut.docker", version.ref = "micronaut-plugin" }
-micronaut-graalvm = { id = "io.micronaut.graalvm", version.ref = "micronaut-plugin" }
-micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-plugin" }
-micronaut-crac = { id = "io.micronaut.crac", version.ref = "micronaut-plugin" }
-micronaut-test-resources = { id = "io.micronaut.test-resources", version.ref = "micronaut-plugin" }
-nexusPublishing = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexusPublishing" }
-node = { id = "com.github.node-gradle.node", version.ref = "node-plugin" }
+buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
+buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig-plugin" }
+buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "buildTimeTracker" }
+cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
+dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker-plugin" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-plugin" }
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers-plugin" }
+gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
+graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
+gradle-checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
+gradle-commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version.ref = "gradleCommonCustomUserData" }
+gradle-testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
+gradle-wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrapperUpgrade" }
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }
-buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig-plugin" }
-flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers-plugin" }
-buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
-gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
-openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite-plugin" }
-gradle-wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrapperUpgrade" }
-gradle-commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version.ref = "gradleCommonCustomUserData" }
-gradle-checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
-gradle-testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
-sigstore = { id = "dev.sigstore.sign", version.ref = "sigstore" }
-versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
-buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "buildTimeTracker" }
-spdx-sbom = { id = "org.spdx.sbom", version.ref = "spdx" }
-cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
-redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted-plugin" }
 jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }
-powerAssert = { id = "com.bnorm.power.kotlin-power-assert", version.ref = "powerAssert" }
+kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin-sdk" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-sdk" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-sdk" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-sdk" }
+kotlin-plugin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-sdk" }
+kotlin-plugin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin-sdk" }
+kotlin-plugin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin-dataframe" }
+kotlin-plugin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin-sdk" }
+kotlin-plugin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin-sdk" }
+kotlinx-plugin-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
+kotlinx-plugin-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
+kotlinx-plugin-knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin-knit" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover-plugin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
+micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-plugin" }
+micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-plugin" }
+micronaut-crac = { id = "io.micronaut.crac", version.ref = "micronaut-plugin" }
+micronaut-docker = { id = "io.micronaut.docker", version.ref = "micronaut-plugin" }
+micronaut-graalvm = { id = "io.micronaut.graalvm", version.ref = "micronaut-plugin" }
+micronaut-library = { id = "io.micronaut.library", version.ref = "micronaut-plugin" }
+micronaut-test-resources = { id = "io.micronaut.test-resources", version.ref = "micronaut-plugin" }
 mrjar = { id = "me.champeau.mrjar", version.ref = "mrjar" }
+nexusPublishing = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexusPublishing" }
+node = { id = "com.github.node-gradle.node", version.ref = "node-plugin" }
+openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite-plugin" }
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
+powerAssert = { id = "com.bnorm.power.kotlin-power-assert", version.ref = "powerAssert" }
+protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
+redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted-plugin" }
 reflekt = { id = "org.jetbrains.reflekt", version.ref = "kotlin-sdk" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-plugin" }
+sigstore = { id = "dev.sigstore.sign", version.ref = "sigstore" }
+sonar = { id = "org.sonarqube", version.ref = "sonar" }
+spdx-sbom = { id = "org.spdx.sbom", version.ref = "spdx" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+testLogger = { id = "com.adarshr.test-logger", version.ref = "testLoggerPlugin" }
+versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
+versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck" }
 
 [libraries]
 androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "androidx-compose" }
-jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
-junit = "junit:junit:4.13.2"
+arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
+arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
+arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
+arrow-optics-core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
+arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
+autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.1.0" }
+bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
+bouncycastle-pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
+bouncycastle-tls = { group = "org.bouncycastle", name = "bctls-jdk18on", version.ref = "bouncycastle" }
+bouncycastle-util = { group = "org.bouncycastle", name = "bcutil-jdk18on", version.ref = "bouncycastle" }
+brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
+brotli-native-linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli-native-linux-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli-native-linux-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-aarch64", version.ref = "brotli4j" }
+brotli-native-osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli-native-osx-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli-native-osx-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-aarch64", version.ref = "brotli4j" }
+brotli-native-windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+brotli-native-windows-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+capnproto-compiler = { group = "org.capnproto", name = "compiler", version.ref = "capnproto" }
+capnproto-runtime = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
+capnproto-runtime-rpc = { group = "org.capnproto", name = "runtime-rpc", version.ref = "capnproto" }
+clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
+closure-compiler = { group = "com.google.javascript", name = "closure-compiler", version.ref = "closure" }
+closure-stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure-stylesheets" }
+closure-templates = { group = "com.google.template", name = "soy", version.ref = "soy" }
+commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
+commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }
+commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons-csv" }
+commons-pool = { group = "org.apache.commons", name = "commons-pool2", version.ref = "commons-pool" }
+confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
+conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }
+conscrypt-jvm = { group = "org.conscrypt", name = "conscrypt-openjdk", version.ref = "conscrypt" }
+consoleUi = { group = "de.codeshelf.consoleui", name = "consoleui", version.ref = "consoleui" }
+dekorate-kubernetes = { group = "io.dekorate", name = "kubernetes-annotations", version.ref = "dekorate" }
+errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorprone" }
+flatbuffers-java-core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers-java" }
+flatbuffers-java-grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }
+flatbuffers-parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
+gax-java = { group = "com.google.api", name = "gax", version.ref = "gax" }
+gax-java-grpc = { group = "com.google.api", name = "gax", version.ref = "gax" }
+github-api = { group = "org.kohsuke", name = "github-api", version.ref = "github-api" }
+google-api-common = { group = "com.google.api", name = "api-common", version.ref = "google-api-common" }
+google-auto-common = { group = "com.google.auto", name = "auto-common", version.ref = "auto-common" }
+google-auto-factory = { group = "com.google.auto.factory", name = "auto-factory", version.ref = "auto-factory" }
+google-auto-factory-annotations = { group = "com.google.auto.factory", name = "auto-factory-annotations", version.ref = "auto-factory" }
+google-auto-service = { group = "com.google.auto.service", name = "auto-service", version.ref = "auto-service" }
+google-auto-service-annotations = { group = "com.google.auto.service", name = "auto-service-annotations", version.ref = "auto-service" }
+google-auto-value = { group = "com.google.auto.value", name = "auto-value", version.ref = "auto-value" }
+google-auto-value-annotations = { group = "com.google.auto.value", name = "auto-value-annotations", version.ref = "auto-value" }
+google-cloud-bom = { group = "com.google.cloud", name = "libraries-bom", version.ref = "gcloud-sdk" }
+google-cloud-nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud-native" }
+google-common-html-types-proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google-html-types" }
+google-common-html-types-types = { group = "com.google.common.html.types", name = "types", version.ref = "google-html-types" }
+graalvm-espresso-hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm" }
+graalvm-espresso-language = { group = "org.graalvm.espresso", name = "espresso-language", version.ref = "graalvm" }
+graalvm-espresso-polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm" }
+graalvm-js-benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm" }
+graalvm-js-isolate = { group = "org.graalvm.js", name = "js-isolate", version.ref = "graalvm" }
+graalvm-js-language = { group = "org.graalvm.js", name = "js-language", version.ref = "graalvm" }
+graalvm-js-scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm" }
+graalvm-launcher-common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm" }
+graalvm-launcher-js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm" }
+graalvm-llvm-api = { group = "org.graalvm.llvm", name = "llvm-api", version.ref = "graalvm" }
+graalvm-llvm-language = { group = "org.graalvm.llvm", name = "llvm-language", version.ref = "graalvm" }
+graalvm-llvm-language-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-enterprise", version.ref = "graalvm" }
+graalvm-llvm-language-managed = { group = "org.graalvm.llvm", name = "llvm-language-managed", version.ref = "graalvm" }
+graalvm-llvm-language-managed-resources = { group = "org.graalvm.llvm", name = "llvm-language-managed-resources", version.ref = "graalvm" }
+graalvm-llvm-language-native = { group = "org.graalvm.llvm", name = "llvm-language-native", version.ref = "graalvm" }
+graalvm-llvm-language-native-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-native-enterprise", version.ref = "graalvm" }
+graalvm-llvm-language-native-resources = { group = "org.graalvm.llvm", name = "llvm-language-native-resources", version.ref = "graalvm" }
+graalvm-llvm-language-nfi = { group = "org.graalvm.llvm", name = "llvm-language-nfi", version.ref = "graalvm" }
+graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm" }
+graalvm-polyglot-java = { group = "org.graalvm.polyglot", name = "java", version.ref = "graalvm" }
+graalvm-polyglot-js = { group = "org.graalvm.polyglot", name = "js", version.ref = "graalvm" }
+graalvm-polyglot-js-isolate = { group = "org.graalvm.polyglot", name = "js-isolate", version.ref = "graalvm" }
+graalvm-polyglot-llvm = { group = "org.graalvm.polyglot", name = "llvm", version.ref = "graalvm" }
+graalvm-polyglot-python = { group = "org.graalvm.polyglot", name = "python", version.ref = "graalvm" }
+graalvm-polyglot-ruby = { group = "org.graalvm.polyglot", name = "ruby", version.ref = "graalvm" }
+graalvm-polyglot-tools = { group = "org.graalvm.polyglot", name = "tools", version.ref = "graalvm" }
+graalvm-polyglot-tools-coverage = { group = "org.graalvm.polyglot", name = "coverage", version.ref = "graalvm" }
+graalvm-polyglot-tools-dap = { group = "org.graalvm.polyglot", name = "dap", version.ref = "graalvm" }
+graalvm-polyglot-tools-heap = { group = "org.graalvm.polyglot", name = "heap", version.ref = "graalvm" }
+graalvm-polyglot-tools-insight = { group = "org.graalvm.polyglot", name = "insight", version.ref = "graalvm" }
+graalvm-polyglot-tools-inspect = { group = "org.graalvm.polyglot", name = "inspect", version.ref = "graalvm" }
+graalvm-polyglot-tools-lsp = { group = "org.graalvm.polyglot", name = "lsp", version.ref = "graalvm" }
+graalvm-polyglot-tools-profiler = { group = "org.graalvm.polyglot", name = "profiler", version.ref = "graalvm" }
+graalvm-polyglot-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
+graalvm-python-language = { group = "org.graalvm.python", name = "python-language", version.ref = "graalvm" }
+graalvm-python-language-enterprise = { group = "org.graalvm.python", name = "python-language-enterprise", version.ref = "graalvm" }
+graalvm-python-launcher = { group = "org.graalvm.python", name = "python-launcher", version.ref = "graalvm" }
+graalvm-python-resources = { group = "org.graalvm.python", name = "python-resources", version.ref = "graalvm" }
+graalvm-regex = { group = "org.graalvm.regex", name = "regex", version.ref = "graalvm" }
+graalvm-ruby-annotations = { group = "org.graalvm.ruby", name = "ruby-annotations", version.ref = "graalvm" }
+graalvm-ruby-language = { group = "org.graalvm.ruby", name = "ruby-language", version.ref = "graalvm" }
+graalvm-ruby-resources = { group = "org.graalvm.ruby", name = "ruby-resources", version.ref = "graalvm" }
+graalvm-ruby-shared = { group = "org.graalvm.ruby", name = "ruby-shared", version.ref = "graalvm" }
+graalvm-shadowed-antlr4 = { group = "org.graalvm.shadowed", name = "antlr4", version.ref = "graalvm" }
+graalvm-shadowed-icu4j = { group = "org.graalvm.shadowed", name = "icu4j", version.ref = "graalvm" }
+graalvm-shadowed-jline = { group = "org.graalvm.shadowed", name = "jline", version.ref = "graalvm" }
+graalvm-shadowed-json = { group = "org.graalvm.shadowed", name = "json", version.ref = "graalvm" }
+graalvm-svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm" }
+graalvm-svm-driver = { group = "org.graalvm.nativeimage", name = "svm_driver", version.ref = "graalvm-svm-driver" }
+graalvm-svm-nativeImage-base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm" }
+graalvm-tools-chromeinspector = { group = "org.graalvm.tools", name = "chromeinspector", version.ref = "graalvm" }
+graalvm-tools-coverage = { group = "org.graalvm.tools", name = "coverage", version.ref = "graalvm" }
+graalvm-tools-dap = { group = "org.graalvm.tools", name = "dap", version.ref = "graalvm" }
+graalvm-tools-lsp-api = { group = "org.graalvm.tools", name = "lsp_api", version.ref = "graalvm" }
+graalvm-tools-lsp-impl = { group = "org.graalvm.tools", name = "lsp", version.ref = "graalvm" }
+graalvm-tools-profiler = { group = "org.graalvm.tools", name = "profiler", version.ref = "graalvm" }
+graalvm-truffle-api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm" }
+graalvm-truffle-enterprise = { group = "org.graalvm.truffle", name = "truffle-enterprise", version.ref = "graalvm" }
+graalvm-truffle-nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm" }
+graalvm-truffle-nfi-libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm" }
+graalvm-truffle-nfi-native-darwin-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-aarch64", version.ref = "graalvm" }
+graalvm-truffle-nfi-native-darwin-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-amd64", version.ref = "graalvm" }
+graalvm-truffle-nfi-native-linux-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-aarch64", version.ref = "graalvm" }
+graalvm-truffle-nfi-native-linux-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-amd64", version.ref = "graalvm" }
+graalvm-truffle-nfi-panama = { group = "org.graalvm.truffle", name = "truffle-nfi-panama", version.ref = "graalvm" }
+graalvm-truffle-processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm" }
+graalvm-wasm-language = { group = "org.graalvm.wasm", name = "wasm-language", version.ref = "graalvm" }
+grpc-api = { group = "io.grpc", name = "grpc-api", version.ref = "grpc-java" }
+grpc-auth = { group = "io.grpc", name = "grpc-auth", version.ref = "grpc-java" }
+grpc-bom = { group = "io.grpc", name = "grpc-bom", version.ref = "grpc-java" }
+grpc-core = { group = "io.grpc", name = "grpc-core", version.ref = "grpc-java" }
+grpc-inprocess = { group = "io.grpc", name = "grpc-inprocess", version.ref = "grpc-java" }
+grpc-kotlin-stub = { group = "io.grpc", name = "grpc-kotlin-stub", version.ref = "grpc-kotlin" }
+grpc-netty = { group = "io.grpc", name = "grpc-netty", version.ref = "grpc-java" }
+grpc-protobuf = { group = "io.grpc", name = "grpc-protobuf", version.ref = "grpc-java" }
+grpc-services = { group = "io.grpc", name = "grpc-services", version.ref = "grpc-java" }
+grpc-stub = { group = "io.grpc", name = "grpc-stub", version.ref = "grpc-java" }
+grpc-testing = { group = "io.grpc", name = "grpc-testing", version.ref = "grpc-java" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+hibernate-core = { group = "org.hibernate", name = "hibernate-core", version.ref = "hibernate" }
+hibernate-graalvm = { group = "org.hibernate", name = "hibernate-graalvm", version.ref = "hibernate" }
+hibernate-hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", version.ref = "hibernate" }
+hibernate-java8 = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
+hibernate-search = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
+hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
+inquirer = { group = "com.github.kotlin-inquirer", name = "kotlin-inquirer", version.ref = "inquirer" }
+jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
+jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
+jackson-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }
+jackson-module-blackbird = { group = "com.fasterxml.jackson.module", name = "jackson-module-blackbird", version.ref = "jackson" }
+jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+jakarta-annotation-api = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakarta-annotation-api" }
+jakarta-inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
+jakarta-persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta-persistence" }
 jansi = { group = "org.fusesource.jansi", name = "jansi", version.ref = "jansi" }
+javax-annotations = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax-annotations" }
+javax-persistence = { group = "javax.persistence", name = "javax.persistence-api", version.ref = "javax-persistence" }
+jdoctor = { group = "me.champeau.jdoctor", name = "jdoctor-core", version.ref = "jdoctor" }
+jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
+jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
+jline-all = { module = "org.jline:jline", version.ref = "jline" }
+jline-builtins = { module = "org.jline:jline-builtins", version.ref = "jline" }
+jline-console = { module = "org.jline:jline-console", version.ref = "jline" }
+jline-graal = { module = "org.jline:jline-graal", version.ref = "jline" }
+jline-reader = { module = "org.jline:jline-reader", version.ref = "jline" }
+jline-style = { module = "org.jline:jline-style", version.ref = "jline" }
+jline-terminal-core = { module = "org.jline:jline-terminal", version.ref = "jline" }
+jline-terminal-ffm = { module = "org.jline:jline-terminal-ffm", version.ref = "jline" }
+jline-terminal-jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
+jline-terminal-jna = { module = "org.jline:jline-terminal-jna", version.ref = "jline" }
+jline-terminal-jni = { module = "org.jline:jline-terminal-jni", version.ref = "jline" }
+jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
+junit = "junit:junit:4.13.2"
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit-jupiter" }
-protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
-protobuf-util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
-protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
-errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorprone" }
-flatbuffers-parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
-flatbuffers-java-core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers-java" }
-flatbuffers-java-grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }
-capnproto-compiler = { group = "org.capnproto", name = "compiler", version.ref = "capnproto" }
-capnproto-runtime = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
-capnproto-runtime-rpc = { group = "org.capnproto", name = "runtime-rpc", version.ref = "capnproto" }
-mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
-inquirer = { group = "com.github.kotlin-inquirer", name = "kotlin-inquirer", version.ref = "inquirer" }
 junixsocket-common = { group = "com.kohlschutter.junixsocket", name = "junixsocket-common", version.ref = "junixsocket" }
 junixsocket-core = { group = "com.kohlschutter.junixsocket", name = "junixsocket-core", version.ref = "junixsocket" }
 junixsocket-darwin = { group = "com.kohlschutter.junixsocket", name = "junixsocket-darwin", version.ref = "junixsocket" }
 junixsocket-native = { group = "com.kohlschutter.junixsocket", name = "junixsocket-native", version.ref = "junixsocket" }
 junixsocket-server = { group = "com.kohlschutter.junixsocket", name = "junixsocket-server", version.ref = "junixsocket" }
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-ksp" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-ksp" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
+koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+konform = { group = "io.konform", name = "konform", version.ref = "konform" }
 kotlin-compiler-embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin-sdk" }
+kotlin-compiler-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
+kotlin-compiler-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
+kotlin-main-kts = { group = "org.jetbrains.kotlin", name = "kotlin-main-kts", version.ref = "kotlin-sdk" }
 kotlin-scripting-common = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-common", version.ref = "kotlin-sdk" }
 kotlin-scripting-dependencies = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-dependencies", version.ref = "kotlin-sdk" }
 kotlin-scripting-dependencies-maven = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-dependencies-maven", version.ref = "kotlin-sdk" }
 kotlin-scripting-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin-sdk" }
-kotlin-scripting-jvm-host = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm-host", version.ref = "kotlin-sdk" }
 kotlin-scripting-jvm-engine = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jsr223", version.ref = "kotlin-sdk" }
-kotlin-main-kts = { group = "org.jetbrains.kotlin", name = "kotlin-main-kts", version.ref = "kotlin-sdk" }
-kotlin-compiler-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
-kotlin-compiler-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
+kotlin-scripting-jvm-host = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm-host", version.ref = "kotlin-sdk" }
 kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "atomicfu" }
 kotlinx-atomicfu-linux-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-linuxx64", version.ref = "atomicfu" }
 kotlinx-atomicfu-macos-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-macosx64", version.ref = "atomicfu" }
-kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx-metadata-jvm" }
-kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
-kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring", version.ref = "kotlinx-io" }
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx-benchmark" }
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections" }
+kotlinx-collections-immutable-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable-jvm", version.ref = "kotlinx-collections" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-js", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-wasm", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-jdk9 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk9", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-rx2 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-rx2", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-rx3 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-rx3", version.ref = "kotlinx-coroutines" }
-kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections" }
-kotlinx-collections-immutable-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable-jvm", version.ref = "kotlinx-collections" }
+kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-html = { group = "org.jetbrains.kotlinx", name = "kotlinx-html", version.ref = "kotlinx-html" }
 kotlinx-html-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-js", version.ref = "kotlinx-html" }
 kotlinx-html-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-jvm", version.ref = "kotlinx-html" }
 kotlinx-html-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-wasm", version.ref = "kotlinx-html" }
+kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
+kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring", version.ref = "kotlinx-io" }
+kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx-metadata-jvm" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-js", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-jvm", version.ref = "kotlinx-serialization" }
@@ -377,426 +537,268 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-serialization-json-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-js", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-jvm", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-wasm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-properties = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-properties-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-properties-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-wasm", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-js", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-jvm", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-wasm", version.ref = "kotlinx-serialization" }
-kotlinx-serialization-properties = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties", version.ref = "kotlinx-serialization" }
-kotlinx-serialization-properties-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "kotlinx-serialization" }
-kotlinx-serialization-properties-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-wasm", version.ref = "kotlinx-serialization" }
-ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
-ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
-konform = { group = "io.konform", name = "konform", version.ref = "konform" }
-ktoml = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
-autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.1.0" }
-hibernate-core = { group = "org.hibernate", name = "hibernate-core", version.ref = "hibernate" }
-hibernate-hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", version.ref = "hibernate" }
-hibernate-graalvm = { group = "org.hibernate", name = "hibernate-graalvm", version.ref = "hibernate" }
-hibernate-java8 = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
-hibernate-search = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
-hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }
-truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
-truth-proto = { group = "com.google.truth.extensions", name = "truth-proto-extension", version.ref = "truth" }
-truth-java8 = { group = "com.google.truth.extensions", name = "truth-java8-extension", version.ref = "truth" }
-truth-re2j = { group = "com.google.truth.extensions", name = "truth-re2j-extension", version.ref = "truth" }
-closure-templates = { group = "com.google.template", name = "soy", version.ref = "soy" }
-closure-compiler = { group = "com.google.javascript", name = "closure-compiler", version.ref = "closure" }
-closure-stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure-stylesheets" }
-picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
-picocli-codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
-picocli-jline3 = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
-picocli-jansi-graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli-jansi-graalvm" }
-slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
-slf4j-jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
-slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
-slf4j-log4j-bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
-slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-logging", version.ref = "slf4j" }
-jakarta-annotation-api = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakarta-annotation-api" }
-jakarta-inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
-jakarta-persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta-persistence" }
-logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
-logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
-guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
-graalvm-shadowed-json = { group = "org.graalvm.shadowed", name = "json", version.ref = "graalvm" }
-graalvm-shadowed-jline = { group = "org.graalvm.shadowed", name = "jline", version.ref = "graalvm" }
-graalvm-shadowed-icu4j = { group = "org.graalvm.shadowed", name = "icu4j", version.ref = "graalvm" }
-graalvm-shadowed-antlr4 = { group = "org.graalvm.shadowed", name = "antlr4", version.ref = "graalvm" }
-graalvm-truffle-api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm" }
-graalvm-truffle-enterprise = { group = "org.graalvm.truffle", name = "truffle-enterprise", version.ref = "graalvm" }
-graalvm-truffle-processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm" }
-graalvm-truffle-nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm" }
-graalvm-truffle-nfi-panama = { group = "org.graalvm.truffle", name = "truffle-nfi-panama", version.ref = "graalvm" }
-graalvm-truffle-nfi-libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-linux-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-amd64", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-linux-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-aarch64", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-darwin-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-amd64", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-darwin-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-aarch64", version.ref = "graalvm" }
-graalvm-llvm-api = { group = "org.graalvm.llvm", name = "llvm-api", version.ref = "graalvm" }
-graalvm-llvm-language = { group = "org.graalvm.llvm", name = "llvm-language", version.ref = "graalvm" }
-graalvm-llvm-language-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-enterprise", version.ref = "graalvm" }
-graalvm-llvm-language-nfi = { group = "org.graalvm.llvm", name = "llvm-language-nfi", version.ref = "graalvm" }
-graalvm-llvm-language-native = { group = "org.graalvm.llvm", name = "llvm-language-native", version.ref = "graalvm" }
-graalvm-llvm-language-native-resources = { group = "org.graalvm.llvm", name = "llvm-language-native-resources", version.ref = "graalvm" }
-graalvm-llvm-language-native-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-native-enterprise", version.ref = "graalvm" }
-graalvm-llvm-language-managed = { group = "org.graalvm.llvm", name = "llvm-language-managed", version.ref = "graalvm" }
-graalvm-llvm-language-managed-resources = { group = "org.graalvm.llvm", name = "llvm-language-managed-resources", version.ref = "graalvm" }
-graalvm-regex = { group = "org.graalvm.regex", name = "regex", version.ref = "graalvm" }
-graalvm-js-benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm" }
-graalvm-js-scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm" }
-graalvm-js-isolate = { group = "org.graalvm.js", name = "js-isolate", version.ref = "graalvm" }
-graalvm-js-language = { group = "org.graalvm.js", name = "js-language", version.ref = "graalvm" }
-graalvm-espresso-polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm" }
-graalvm-espresso-hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm" }
-graalvm-espresso-language = { group = "org.graalvm.espresso", name = "espresso-language", version.ref = "graalvm" }
-graalvm-launcher-common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm" }
-graalvm-launcher-js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm" }
-graalvm-tools-lsp-api = { group = "org.graalvm.tools", name = "lsp_api", version.ref = "graalvm" }
-graalvm-tools-lsp-impl = { group = "org.graalvm.tools", name = "lsp", version.ref = "graalvm" }
-graalvm-tools-profiler = { group = "org.graalvm.tools", name = "profiler", version.ref = "graalvm" }
-graalvm-tools-dap = { group = "org.graalvm.tools", name = "dap", version.ref = "graalvm" }
-graalvm-tools-coverage = { group = "org.graalvm.tools", name = "coverage", version.ref = "graalvm" }
-graalvm-tools-chromeinspector = { group = "org.graalvm.tools", name = "chromeinspector", version.ref = "graalvm" }
-graalvm-svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm" }
-graalvm-svm-driver = { group = "org.graalvm.nativeimage", name = "svm_driver", version.ref = "graalvm-svm-driver" }
-graalvm-svm-nativeImage-base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm" }
-graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm" }
-graalvm-polyglot-js = { group = "org.graalvm.polyglot", name = "js", version.ref = "graalvm" }
-graalvm-polyglot-js-isolate = { group = "org.graalvm.polyglot", name = "js-isolate", version.ref = "graalvm" }
-graalvm-polyglot-ruby = { group = "org.graalvm.polyglot", name = "ruby", version.ref = "graalvm" }
-graalvm-polyglot-python = { group = "org.graalvm.polyglot", name = "python", version.ref = "graalvm" }
-graalvm-polyglot-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
-graalvm-polyglot-llvm = { group = "org.graalvm.polyglot", name = "llvm", version.ref = "graalvm" }
-graalvm-polyglot-java = { group = "org.graalvm.polyglot", name = "java", version.ref = "graalvm" }
-graalvm-polyglot-tools = { group = "org.graalvm.polyglot", name = "tools", version.ref = "graalvm" }
-graalvm-polyglot-tools-coverage = { group = "org.graalvm.polyglot", name = "coverage", version.ref = "graalvm" }
-graalvm-polyglot-tools-dap = { group = "org.graalvm.polyglot", name = "dap", version.ref = "graalvm" }
-graalvm-polyglot-tools-insight = { group = "org.graalvm.polyglot", name = "insight", version.ref = "graalvm" }
-graalvm-polyglot-tools-inspect = { group = "org.graalvm.polyglot", name = "inspect", version.ref = "graalvm" }
-graalvm-polyglot-tools-heap = { group = "org.graalvm.polyglot", name = "heap", version.ref = "graalvm" }
-graalvm-polyglot-tools-profiler = { group = "org.graalvm.polyglot", name = "profiler", version.ref = "graalvm" }
-graalvm-polyglot-tools-lsp = { group = "org.graalvm.polyglot", name = "lsp", version.ref = "graalvm" }
-graalvm-python-launcher = { group = "org.graalvm.python", name = "python-launcher", version.ref = "graalvm" }
-graalvm-python-language = { group = "org.graalvm.python", name = "python-language", version.ref = "graalvm" }
-graalvm-python-language-enterprise = { group = "org.graalvm.python", name = "python-language-enterprise", version.ref = "graalvm" }
-graalvm-python-resources = { group = "org.graalvm.python", name = "python-resources", version.ref = "graalvm" }
-graalvm-wasm-language = { group = "org.graalvm.wasm", name = "wasm-language", version.ref = "graalvm" }
-graalvm-ruby-language = { group = "org.graalvm.ruby", name = "ruby-language", version.ref = "graalvm" }
-graalvm-ruby-resources = { group = "org.graalvm.ruby", name = "ruby-resources", version.ref = "graalvm" }
-graalvm-ruby-annotations = { group = "org.graalvm.ruby", name = "ruby-annotations", version.ref = "graalvm" }
-graalvm-ruby-shared = { group = "org.graalvm.ruby", name = "ruby-shared", version.ref = "graalvm" }
-opentelemetry-exporter-logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
-opentelemetry-exporter-googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
 kotlinx-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlinx-wrappers-bom" }
+kotlinx-wrappers-browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx-wrappers-browser" }
 kotlinx-wrappers-cesium = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-cesium", version.ref = "kotlinx-wrappers-cesium" }
 kotlinx-wrappers-css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx-wrappers-css" }
 kotlinx-wrappers-cssType = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-csstype", version.ref = "kotlinx-wrappers-css" }
-kotlinx-wrappers-browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx-wrappers-browser" }
-kotlinx-wrappers-node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx-wrappers-node" }
-kotlinx-wrappers-react = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react", version.ref = "kotlinx-wrappers-react" }
-kotlinx-wrappers-react-dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-dom", version.ref = "kotlinx-wrappers-react" }
-kotlinx-wrappers-react-beautiful-dnd = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-beautiful-dnd", version.ref = "kotlinx-wrappers-react-beautiful-dnd" }
-kotlinx-wrappers-react-router-dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-router-dom", version.ref = "kotlinx-wrappers-react-router-dom" }
 kotlinx-wrappers-emotion = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-emotion", version.ref = "kotlinx-wrappers-emotion" }
-kotlinx-wrappers-redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-redux", version.ref = "kotlinx-wrappers-redux" }
-kotlinx-wrappers-react-popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-popper", version.ref = "kotlinx-wrappers-react-popper" }
-kotlinx-wrappers-react-select = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-select", version.ref = "kotlinx-wrappers-react-select" }
-kotlinx-wrappers-remix-run-router = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-remix-run-router", version.ref = "kotlinx-wrappers-remix-run-router" }
-kotlinx-wrappers-ringUi = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-ring-ui", version.ref = "kotlinx-wrappers-ringUi" }
-kotlinx-wrappers-react-redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-redux", version.ref = "kotlinx-wrappers-react-redux" }
+kotlinx-wrappers-history = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-history", version.ref = "kotlinx-wrappers-history" }
+kotlinx-wrappers-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js", version.ref = "kotlinx-wrappers-js" }
 kotlinx-wrappers-mui = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui", version.ref = "kotlinx-wrappers-mui" }
 kotlinx-wrappers-mui-icons = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui-icons", version.ref = "kotlinx-wrappers-mui-icons" }
-kotlinx-wrappers-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js", version.ref = "kotlinx-wrappers-js" }
+kotlinx-wrappers-node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx-wrappers-node" }
+kotlinx-wrappers-popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-popper", version.ref = "kotlinx-wrappers-popper" }
+kotlinx-wrappers-react = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react", version.ref = "kotlinx-wrappers-react" }
+kotlinx-wrappers-react-beautiful-dnd = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-beautiful-dnd", version.ref = "kotlinx-wrappers-react-beautiful-dnd" }
+kotlinx-wrappers-react-dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-dom", version.ref = "kotlinx-wrappers-react" }
+kotlinx-wrappers-react-popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-popper", version.ref = "kotlinx-wrappers-react-popper" }
+kotlinx-wrappers-react-redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-redux", version.ref = "kotlinx-wrappers-react-redux" }
+kotlinx-wrappers-react-router-dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-router-dom", version.ref = "kotlinx-wrappers-react-router-dom" }
+kotlinx-wrappers-react-select = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-select", version.ref = "kotlinx-wrappers-react-select" }
+kotlinx-wrappers-redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-redux", version.ref = "kotlinx-wrappers-redux" }
+kotlinx-wrappers-remix-run-router = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-remix-run-router", version.ref = "kotlinx-wrappers-remix-run-router" }
+kotlinx-wrappers-ringUi = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-ring-ui", version.ref = "kotlinx-wrappers-ringUi" }
 kotlinx-wrappers-styled = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-styled", version.ref = "kotlinx-wrappers-styled" }
 kotlinx-wrappers-styledNext = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-styled-next", version.ref = "kotlinx-wrappers-styled-next" }
-kotlinx-wrappers-popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-popper", version.ref = "kotlinx-wrappers-popper" }
-kotlinx-wrappers-history = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-history", version.ref = "kotlinx-wrappers-history" }
-kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-web", version.ref = "kotlinx-wrappers-web" }
-kotlinx-wrappers-typescript = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-typescript", version.ref = "kotlinx-wrappers-typescript" }
 kotlinx-wrappers-tanstack-query-core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-query-core", version.ref = "kotlinx-wrappers-tanstack-query-core" }
 kotlinx-wrappers-tanstack-react-query = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-query", version.ref = "kotlinx-wrappers-tanstack-react-query" }
 kotlinx-wrappers-tanstack-react-table = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-table", version.ref = "kotlinx-wrappers-tanstack-react-table" }
 kotlinx-wrappers-tanstack-react-virtual = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-virtual", version.ref = "kotlinx-wrappers-tanstack-react-virtual" }
 kotlinx-wrappers-tanstack-table-core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-table-core", version.ref = "kotlinx-wrappers-tanstack-table-core" }
 kotlinx-wrappers-tanstack-virtual-core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-virtual-core", version.ref = "kotlinx-wrappers-tanstack-virtual-core" }
-grpc-api = { group = "io.grpc", name = "grpc-api", version.ref = "grpc-java" }
-grpc-auth = { group = "io.grpc", name = "grpc-auth", version.ref = "grpc-java" }
-grpc-bom = { group = "io.grpc", name = "grpc-bom", version.ref = "grpc-java" }
-grpc-core = { group = "io.grpc", name = "grpc-core", version.ref = "grpc-java" }
-grpc-stub = { group = "io.grpc", name = "grpc-stub", version.ref = "grpc-java" }
-grpc-inprocess = { group = "io.grpc", name = "grpc-inprocess", version.ref = "grpc-java" }
-grpc-services = { group = "io.grpc", name = "grpc-services", version.ref = "grpc-java" }
-grpc-testing = { group = "io.grpc", name = "grpc-testing", version.ref = "grpc-java" }
-grpc-netty = { group = "io.grpc", name = "grpc-netty", version.ref = "grpc-java" }
-grpc-protobuf = { group = "io.grpc", name = "grpc-protobuf", version.ref = "grpc-java" }
-grpc-kotlin-stub = { group = "io.grpc", name = "grpc-kotlin-stub", version.ref = "grpc-kotlin" }
-snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
+kotlinx-wrappers-typescript = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-typescript", version.ref = "kotlinx-wrappers-typescript" }
+kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-web", version.ref = "kotlinx-wrappers-web" }
+ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
+ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+ktoml = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
+larray-buffer = {  group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
+larray-core = {  group = "org.xerial.larray", name = "larray", version.ref = "larray" }
+larray-mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref = "larray" }
+lettuce-core = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce" }
+lmax-disruptor-core = { group = "com.lmax", name = "disruptor", version.ref = "lmaxDisruptor" }
+lmax-disruptor-proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
+logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
+lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
+magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
+mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
+msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 netty-bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
-netty-transport-native-unixCommon = { group = "io.netty", name = "netty-transport-native-unix-common", version.ref = "netty" }
+netty-codec-http = { group = "io.netty", name = "netty-codec-http" }
+netty-codec-http2 = { group = "io.netty", name = "netty-codec-http2" }
+netty-resolver-dns-native-macos = { group = "io.netty", name = "netty-resolver-dns-native-macos", version.ref = "netty" }
+netty-tcnative = { group = "io.netty", name = "netty-tcnative", version.ref = "netty-tcnative" }
+netty-tcnative-boringssl-static = { group = "io.netty", name = "netty-tcnative-boringssl-static", version.ref = "netty-tcnative" }
 netty-transport-native-epoll = { group = "io.netty", name = "netty-transport-native-epoll", version.ref = "netty" }
 netty-transport-native-iouring = { group = "io.netty.incubator", name = "netty-incubator-transport-native-io_uring", version.ref = "netty-iouring" }
 netty-transport-native-kqueue = { group = "io.netty", name = "netty-transport-native-kqueue", version.ref = "netty" }
 netty-transport-native-unix = { group = "io.netty", name = "netty-transport-native-unix-common", version.ref = "netty" }
-netty-tcnative = { group = "io.netty", name = "netty-tcnative", version.ref = "netty-tcnative" }
-netty-tcnative-boringssl-static = { group = "io.netty", name = "netty-tcnative-boringssl-static", version.ref = "netty-tcnative" }
-netty-resolver-dns-native-macos = { group = "io.netty", name = "netty-resolver-dns-native-macos", version.ref = "netty" }
-netty-codec-http = { group = "io.netty", name = "netty-codec-http" }
-netty-codec-http2 = { group = "io.netty", name = "netty-codec-http2" }
-jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
-gax-java = { group = "com.google.api", name = "gax", version.ref = "gax" }
-gax-java-grpc = { group = "com.google.api", name = "gax", version.ref = "gax" }
-google-api-common = { group = "com.google.api", name = "api-common", version.ref = "google-api-common" }
-google-auto-service = { group = "com.google.auto.service", name = "auto-service", version.ref = "auto-service" }
-google-auto-service-annotations = { group = "com.google.auto.service", name = "auto-service-annotations", version.ref = "auto-service" }
-google-auto-factory = { group = "com.google.auto.factory", name = "auto-factory", version.ref = "auto-factory" }
-google-auto-factory-annotations = { group = "com.google.auto.factory", name = "auto-factory-annotations", version.ref = "auto-factory" }
-google-auto-value-annotations = { group = "com.google.auto.value", name = "auto-value-annotations", version.ref = "auto-value" }
-google-auto-value = { group = "com.google.auto.value", name = "auto-value", version.ref = "auto-value" }
-google-auto-common = { group = "com.google.auto", name = "auto-common", version.ref = "auto-common" }
-reactivestreams = { group = "org.reactivestreams", name = "reactive-streams", version.ref = "reactivestreams" }
-google-cloud-bom = { group = "com.google.cloud", name = "libraries-bom", version.ref = "gcloud-sdk" }
-google-cloud-nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud-native" }
+netty-transport-native-unixCommon = { group = "io.netty", name = "netty-transport-native-unix-common", version.ref = "netty" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+opentelemetry-exporter-googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
+opentelemetry-exporter-logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
+owasp = { group = "org.owasp", name = "dependency-check-gradle", version.ref = "owasp" }
 parallelGzip = { group = "org.anarres", name = "parallelgzip", version.ref = "parallelGzip" }
-brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
-brotli-native-osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
-brotli-native-osx-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
-brotli-native-osx-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-aarch64", version.ref = "brotli4j" }
-brotli-native-linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
-brotli-native-linux-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
-brotli-native-linux-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-aarch64", version.ref = "brotli4j" }
-brotli-native-windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
-brotli-native-windows-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
-commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
-commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }
-commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons-csv" }
-commons-pool = { group = "org.apache.commons", name = "commons-pool2", version.ref = "commons-pool" }
+picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
+picocli-codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
+picocli-jansi-graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli-jansi-graalvm" }
+picocli-jline3 = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
+postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }
 projectreactor-bom = { group = "io.projectreactor", name = "reactor-bom", version.ref = "projectreactor" }
+protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
+protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+protobuf-util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
+reactivestreams = { group = "org.reactivestreams", name = "reactive-streams", version.ref = "reactivestreams" }
 reactor-core = { group = "io.projectreactor", name = "reactor-core", version.ref = "projectreactor-core" }
 reactor-netty = { group = "io.projectreactor.netty", name = "reactor-netty", version.ref = "projectreactor-netty" }
 reactor-netty-core = { group = "io.projectreactor.netty", name = "reactor-netty-core", version.ref = "projectreactor-netty" }
 reactor-netty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "projectreactor-netty" }
-bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
-bouncycastle-tls = { group = "org.bouncycastle", name = "bctls-jdk18on", version.ref = "bouncycastle" }
-bouncycastle-pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
-bouncycastle-util = { group = "org.bouncycastle", name = "bcutil-jdk18on", version.ref = "bouncycastle" }
-tink = { group = "com.google.crypto.tink", name = "tink", version.ref = "tink" }
-tink-gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref = "tink" }
-tink-aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
-conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }
-conscrypt-jvm = { group = "org.conscrypt", name = "conscrypt-openjdk", version.ref = "conscrypt" }
-google-common-html-types-proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google-html-types" }
-google-common-html-types-types = { group = "com.google.common.html.types", name = "types", version.ref = "google-html-types" }
-swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swagger" }
-swagger-model = { group = "io.swagger.core.v3", name = "swagger-models", version.ref = "swagger" }
-javax-annotations = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax-annotations" }
-javax-persistence = { group = "javax.persistence", name = "javax.persistence-api", version.ref = "javax-persistence" }
-lettuce-core = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce" }
-sqlcommenter-hibernate = { group = "com.google.cloud", name = "sqlcommenter-hibernate", version.ref = "sqlcommenter" }
-dekorate-kubernetes = { group = "io.dekorate", name = "kubernetes-annotations", version.ref = "dekorate" }
-jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
-jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
-jackson-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }
-jackson-module-blackbird = { group = "com.fasterxml.jackson.module", name = "jackson-module-blackbird", version.ref = "jackson" }
-jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
-testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
-testcontainers-core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
-testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
-testcontainers-postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
-testcontainers-gcloud = { group = "org.testcontainers", name = "gcloud", version.ref = "testcontainers" }
-koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-ksp" }
-koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
-koin-ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-ksp" }
-koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
-koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
-arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
-arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
-arrow-optics-core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
-arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
-arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
-lmax-disruptor-core = { group = "com.lmax", name = "disruptor", version.ref = "lmaxDisruptor" }
-lmax-disruptor-proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
-jline-all = { module = "org.jline:jline", version.ref = "jline" }
-jline-builtins = { module = "org.jline:jline-builtins", version.ref = "jline" }
-jline-graal = { module = "org.jline:jline-graal", version.ref = "jline" }
-jline-console = { module = "org.jline:jline-console", version.ref = "jline" }
-jline-terminal-core = { module = "org.jline:jline-terminal", version.ref = "jline" }
-jline-terminal-jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
-jline-terminal-jni = { module = "org.jline:jline-terminal-jni", version.ref = "jline" }
-jline-terminal-jna = { module = "org.jline:jline-terminal-jna", version.ref = "jline" }
-jline-terminal-ffm = { module = "org.jline:jline-terminal-ffm", version.ref = "jline" }
-jline-reader = { module = "org.jline:jline-reader", version.ref = "jline" }
-jline-style = { module = "org.jline:jline-style", version.ref = "jline" }
-sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
-snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
-larray-core = {  group = "org.xerial.larray", name = "larray", version.ref = "larray" }
-larray-buffer = {  group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
-larray-mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref = "larray" }
-msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
-jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
-confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
-xz = { group = "org.tukaani", name = "xz", version.ref = "xz" }
-zstd = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstd" }
-github-api = { group = "org.kohsuke", name = "github-api", version.ref = "github-api" }
 semver = { group = "com.vdurmont", name = "semver4j", version.ref = "semver" }
-magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
-consoleUi = { group = "de.codeshelf.consoleui", name = "consoleui", version.ref = "consoleui" }
-jdoctor = { group = "me.champeau.jdoctor", name = "jdoctor-core", version.ref = "jdoctor" }
+slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-logging", version.ref = "slf4j" }
+slf4j-jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
+slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
+slf4j-log4j-bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
+snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
+snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
+sqlcommenter-hibernate = { group = "com.google.cloud", name = "sqlcommenter-hibernate", version.ref = "sqlcommenter" }
+sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 strikt-bom = { group = "io.strikt", name = "strikt-bom", version.ref = "strikt" }
 strikt-jackson = { group = "io.strikt", name = "strikt-jackson", version.ref = "strikt" }
 strikt-jvm = { group = "io.strikt", name = "strikt-jvm", version.ref = "strikt" }
-clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
+swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swagger" }
+swagger-model = { group = "io.swagger.core.v3", name = "swagger-models", version.ref = "swagger" }
+testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
+testcontainers-core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
+testcontainers-gcloud = { group = "org.testcontainers", name = "gcloud", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
+testcontainers-postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
+tink = { group = "com.google.crypto.tink", name = "tink", version.ref = "tink" }
+tink-aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
+tink-gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref = "tink" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+truth-java8 = { group = "com.google.truth.extensions", name = "truth-java8-extension", version.ref = "truth" }
+truth-proto = { group = "com.google.truth.extensions", name = "truth-proto-extension", version.ref = "truth" }
+truth-re2j = { group = "com.google.truth.extensions", name = "truth-re2j-extension", version.ref = "truth" }
+wasmtime = { group = "io.github.kawamuray.wasmtime", name = "wasmtime-java", version.ref = "wasmtime" }
+xz = { group = "org.tukaani", name = "xz", version.ref = "xz" }
+zstd = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstd" }
 ## Build Classpath
-openrewrite-kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite-lib" }
-openrewrite-test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite-lib" }
-openrewrite-properties = { group = "org.openrewrite", name = "rewrite-properties", version.ref = "openrewrite-lib" }
-openrewrite-protobuf = { group = "org.openrewrite", name = "rewrite-protobuf", version.ref = "openrewrite-lib" }
-openrewrite-json = { group = "org.openrewrite", name = "rewrite-json", version.ref = "openrewrite-lib" }
-openrewrite-yaml = { group = "org.openrewrite", name = "rewrite-yaml", version.ref = "openrewrite-lib" }
 openrewrite-gradle = { group = "org.openrewrite", name = "rewrite-gradle", version.ref = "openrewrite-lib" }
 openrewrite-java-test = { group = "org.openrewrite", name = "rewrite-java-test", version.ref = "openrewrite-lib" }
+openrewrite-json = { group = "org.openrewrite", name = "rewrite-json", version.ref = "openrewrite-lib" }
+openrewrite-kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite-lib" }
 openrewrite-plan-checkstyle = { group = "org.openrewrite.plan", name = "rewrite-checkstyle", version.ref = "openrewrite-lib" }
+openrewrite-properties = { group = "org.openrewrite", name = "rewrite-properties", version.ref = "openrewrite-lib" }
+openrewrite-protobuf = { group = "org.openrewrite", name = "rewrite-protobuf", version.ref = "openrewrite-lib" }
 openrewrite-recipe-bom = { group = "org.openrewrite.recipe", name = "rewrite-recipe-bom", version.ref = "openrewrite-bom" }
-openrewrite-recipe-javaDependencies = { group = "org.openrewrite.recipe", name = "rewrite-java-dependencies" }
-openrewrite-recipe-micronaut = { group = "org.openrewrite.recipe", name = "rewrite-micronaut" }
 openrewrite-recipe-githubActions = { group = "org.openrewrite.recipe", name = "rewrite-github-actions" }
-openrewrite-recipe-recommendations = { group = "org.openrewrite.recipe", name = "rewrite-recommendations" }
 openrewrite-recipe-hibernate = { group = "org.openrewrite.recipe", name = "rewrite-hibernate" }
+openrewrite-recipe-javaDependencies = { group = "org.openrewrite.recipe", name = "rewrite-java-dependencies" }
 openrewrite-recipe-javaSecurity = { group = "org.openrewrite.recipe", name = "rewrite-java-security" }
-openrewrite-recipe-staticAnalysis = { group = "org.openrewrite.recipe", name = "rewrite-static-analysis" }
-openrewrite-recipe-sql = { group = "org.openrewrite.recipe", name = "rewrite-sql" }
+openrewrite-recipe-micronaut = { group = "org.openrewrite.recipe", name = "rewrite-micronaut" }
+openrewrite-recipe-recommendations = { group = "org.openrewrite.recipe", name = "rewrite-recommendations" }
 openrewrite-recipe-sandbox = { group = "org.openrewrite.recipe", name = "rewrite-sandbox" }
-wasmtime = { group = "io.github.kawamuray.wasmtime", name = "wasmtime-java", version.ref = "wasmtime" }
+openrewrite-recipe-sql = { group = "org.openrewrite.recipe", name = "rewrite-sql" }
+openrewrite-recipe-staticAnalysis = { group = "org.openrewrite.recipe", name = "rewrite-static-analysis" }
+openrewrite-test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite-lib" }
+openrewrite-yaml = { group = "org.openrewrite", name = "rewrite-yaml", version.ref = "openrewrite-lib" }
 ## Testing Libraries
-testing-mockito-bom = { group = "org.mockito", name = "mockito-bom", version.ref = "mockito-bom" }
-testing-mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito-junit" }
+testing-faker = { group = "io.github.serpro69", name = "kotlin-faker", version.ref = "faker" }
 testing-hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest-core" }
 testing-hamcrest-junit = { group = "org.hamcrest", name = "hamcrest-junit", version.ref = "hamcrest-junit" }
-testing-faker = { group = "io.github.serpro69", name = "kotlin-faker", version.ref = "faker" }
+testing-mockito-bom = { group = "org.mockito", name = "mockito-bom", version.ref = "mockito-bom" }
+testing-mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito-junit" }
 ## Plugin Aliases
-plugin-nexusPublishing = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexusPublishing" }
-plugin-mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
-plugin-flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers-plugin" }
-plugin-buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin", version.ref = "buildconfig-plugin" }
-plugin-versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }
-plugin-testLogger = { group = "com.adarshr", name = "gradle-test-logger-plugin", version.ref = "testLoggerPlugin" }
-plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
-plugin-docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut-plugin" }
-plugin-micronaut = { group = "io.micronaut.gradle", name = "micronaut-gradle-plugin", version.ref = "micronaut-plugin" }
-plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover-plugin" }
-plugin-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
-plugin-shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow-plugin" }
-plugin-sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }
-plugin-ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 plugin-buf = { group = "com.parmet", name = "buf-gradle-plugin", version.ref = "pluginBuf" }
-plugin-protobuf = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "pluginProtobuf" }
+plugin-buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin", version.ref = "buildconfig-plugin" }
+plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+plugin-docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut-plugin" }
+plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+plugin-flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers-plugin" }
+plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-plugin" }
+plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
 plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-sdk" }
 plugin-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin-sdk" }
 plugin-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin-sdk" }
 plugin-kotlin-samWithReceiver = { group = "org.jetbrains.kotlin", name = "kotlin-sam-with-receiver", version.ref = "kotlin-sdk" }
+plugin-kotlinx-abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
 plugin-kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }
 plugin-kotlinx-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin-sdk" }
-plugin-kotlinx-abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
-plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-plugin" }
-plugin-proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
+plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover-plugin" }
+plugin-ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
+plugin-micronaut = { group = "io.micronaut.gradle", name = "micronaut-gradle-plugin", version.ref = "micronaut-plugin" }
+plugin-mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
+plugin-nexusPublishing = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexusPublishing" }
 plugin-openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite-plugin" }
-plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
-plugin-sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }
+plugin-proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
+plugin-protobuf = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "pluginProtobuf" }
 plugin-redacted = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin-gradle", version.ref = "redacted-plugin" }
 plugin-reflekt = { group = "org.jetbrains.reflekt", name = "reflekt-plugin", version.ref = "kotlin-sdk" }
+plugin-shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow-plugin" }
+plugin-sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }
+plugin-sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }
+plugin-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+plugin-testLogger = { group = "com.adarshr", name = "gradle-test-logger-plugin", version.ref = "testLoggerPlugin" }
+plugin-versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }
 ## Elide Internal
-elide-uuid = { group = "dev.elide", name = "elide-uuid-core", version.ref = "elide-uuid" }
-elide-uuid-kotlinx = { group = "dev.elide", name = "elide-uuid-kotlinx", version.ref = "elide-uuid" }
 elide-base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
-elide-core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
-elide-test = { group = "dev.elide", name = "elide-test", version.ref = "elide" }
-elide-ssg = { group = "dev.elide", name = "elide-ssg", version.ref = "elide" }
-elide-proto = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
-elide-proto-protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
-elide-proto-flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }
-elide-proto-kotlinx = { group = "dev.elide", name = "elide-proto-kotlinx", version.ref = "elide" }
-elide-platform = { group = "dev.elide.tools", name = "elide-platform", version.ref = "elide" }
 elide-bom = { group = "dev.elide", name = "elide-bom", version.ref = "elide" }
 elide-bom-catalog = { group = "dev.elide", name = "elide-bom-catalog", version.ref = "elide" }
+elide-core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide-frontend = { group = "dev.elide", name = "elide-frontend", version.ref = "elide" }
 elide-graalvm = { group = "dev.elide", name = "elide-graalvm", version.ref = "elide" }
 elide-graalvm-js = { group = "dev.elide", name = "elide-graalvm-js", version.ref = "elide" }
 elide-graalvm-react = { group = "dev.elide", name = "elide-graalvm-react", version.ref = "elide" }
+elide-kotlin-plugin-redakt = { group = "dev.elide.tools.kotlin.plugin", name = "redakt-plugin", version.ref = "elide" }
 elide-model = { group = "dev.elide", name = "elide-model", version.ref = "elide" }
+elide-platform = { group = "dev.elide.tools", name = "elide-platform", version.ref = "elide" }
+elide-proto = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
+elide-proto-flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }
+elide-proto-kotlinx = { group = "dev.elide", name = "elide-proto-kotlinx", version.ref = "elide" }
+elide-proto-protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
 elide-rpc = { group = "dev.elide", name = "elide-rpc", version.ref = "elide" }
 elide-server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
-elide-tools-processor = { group = "dev.elide.tools", name = "elide-processor", version.ref = "elide" }
+elide-ssg = { group = "dev.elide", name = "elide-ssg", version.ref = "elide" }
+elide-test = { group = "dev.elide", name = "elide-test", version.ref = "elide" }
+elide-tools-compilerUtil = { group = "dev.elide.tools", name = "compiler-util", version.ref = "elide" }
 elide-tools-conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
+elide-tools-processor = { group = "dev.elide.tools", name = "elide-processor", version.ref = "elide" }
 elide-tools-substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }
 elide-tools-substrate-bom = { group = "dev.elide.tools", name = "elide-substrate-bom", version.ref = "elide" }
-elide-tools-compilerUtil = { group = "dev.elide.tools", name = "compiler-util", version.ref = "elide" }
-elide-kotlin-plugin-redakt = { group = "dev.elide.tools.kotlin.plugin", name = "redakt-plugin", version.ref = "elide" }
+elide-uuid = { group = "dev.elide", name = "elide-uuid-core", version.ref = "elide-uuid" }
+elide-uuid-kotlinx = { group = "dev.elide", name = "elide-uuid-kotlinx", version.ref = "elide-uuid" }
 
 [bundles]
 arrow = [
   "arrow-core",
+  "arrow-fx",
   "arrow-optics-core",
-  "arrow-fx"
 ]
 
 kotlinx-coroutines-jvm = [
   "kotlinx-coroutines-core",
   "kotlinx-coroutines-jdk8",
   "kotlinx-coroutines-jdk9",
-  "kotlinx-coroutines-slf4j"
+  "kotlinx-coroutines-slf4j",
 ]
 
 kotlinx-serialization = [
   "kotlinx-serialization-core",
   "kotlinx-serialization-json",
+  "kotlinx-serialization-properties",
   "kotlinx-serialization-protobuf",
-  "kotlinx-serialization-properties"
 ]
 
 kotlinx-atomicfu = [
   "kotlinx-atomicfu",
   "kotlinx-atomicfu-linux-x64",
-  "kotlinx-atomicfu-macos-x64"
+  "kotlinx-atomicfu-macos-x64",
 ]
 
 kotlinx = [
-  "kotlinx-coroutines-core",
-  "kotlinx-serialization-json",
-  "kotlinx-serialization-protobuf",
-  "kotlinx-serialization-properties",
   "kotlinx-atomicfu",
   "kotlinx-collections-immutable",
+  "kotlinx-coroutines-core",
   "kotlinx-datetime",
+  "kotlinx-serialization-json",
+  "kotlinx-serialization-properties",
+  "kotlinx-serialization-protobuf",
 ]
 
 koin = [
-  "koin-core",
   "koin-annotations",
+  "koin-core",
 ]
 
 graalvm-polyglot = [
   "graalvm-polyglot",
-  "graalvm-polyglot-js",
-  "graalvm-polyglot-ruby",
-  "graalvm-polyglot-python",
-  "graalvm-polyglot-wasm",
-  "graalvm-polyglot-llvm",
   "graalvm-polyglot-java",
+  "graalvm-polyglot-js",
+  "graalvm-polyglot-llvm",
+  "graalvm-polyglot-python",
+  "graalvm-polyglot-ruby",
+  "graalvm-polyglot-wasm",
 ]
 
 graalvm-tools = [
   "graalvm-polyglot-tools",
   "graalvm-polyglot-tools-coverage",
   "graalvm-polyglot-tools-dap",
+  "graalvm-polyglot-tools-heap",
   "graalvm-polyglot-tools-insight",
   "graalvm-polyglot-tools-inspect",
-  "graalvm-polyglot-tools-heap",
-  "graalvm-polyglot-tools-profiler",
   "graalvm-polyglot-tools-lsp",
+  "graalvm-polyglot-tools-profiler",
 ]
 
 graalvm-regex = [
@@ -810,9 +812,9 @@ graalvm-nfi = [
 
 graalvm-llvm = [
   "graalvm-llvm-api",
-  "graalvm-llvm-language-nfi",
   "graalvm-llvm-language",
   "graalvm-llvm-language-native",
+  "graalvm-llvm-language-nfi",
 ]
 
 graalvm-espresso = [
@@ -820,14 +822,14 @@ graalvm-espresso = [
 ]
 
 graalvm-python = [
-  "graalvm-python-resources",
   "graalvm-polyglot-python",
+  "graalvm-python-resources",
 ]
 
 graalvm-ruby = [
+  "graalvm-ruby-annotations",
   "graalvm-ruby-language",
   "graalvm-ruby-resources",
-  "graalvm-ruby-annotations",
 ]
 
 graalvm-js = [

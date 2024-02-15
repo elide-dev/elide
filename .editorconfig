@@ -1046,10 +1046,14 @@ ij_jspx_keep_indents_on_empty_lines = false
 [{*.kts}]
 max_line_length = 140
 ij_visual_guides = 140
+ktlint_experimental = disabled
+ktlint_standard_annotations = disabled
+ktlint_standard_property-naming = disabled
 
 [{*.kt,*.kts}]
 ktlint_code_style = intellij_idea
 ktlint_experimental = disabled
+ktlint_standard_property-naming = disabled
 ktlint_standard_annotations = disabled
 ktlint_standard_indent = disabled
 ktlint_standard_argument-list-wrapping = disabled

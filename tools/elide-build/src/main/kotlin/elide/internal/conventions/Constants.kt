@@ -170,6 +170,7 @@ public object Constants {
       ktlintDisable("trailing-comma-on-declaration-site"),
       ktlintDisable("paren-spacing"),
       ktlintDisable("property-naming"),
+      ktlintDisable("filename"),
     )
 
     /** Ktlint overrides to apply to Gradle scripts. */

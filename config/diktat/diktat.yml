@@ -84,7 +84,7 @@
   enabled: false
 # Checks that accessible internal elements (protected, public, internal) in a class are documented
 - name: MISSING_KDOC_CLASS_ELEMENTS
-  enabled: true
+  enabled: false
 # Checks that accessible method parameters are documented in KDoc
 - name: KDOC_WITHOUT_PARAM_TAG
   enabled: true
@@ -140,10 +140,10 @@
   enabled: false
 # Checks that copyright exists on top of file and is properly formatted (as a block comment)
 - name: HEADER_MISSING_OR_WRONG_COPYRIGHT
-  enabled: true
+  enabled: false
   configuration:
-    isCopyrightMandatory: false
-    copyrightText: 'Copyright (c) Your Company Name Here. 2010-;@currYear;'
+    isCopyrightMandatory: true
+    copyrightText: 'Copyright (c) 2023-;@currYear; Elide Technologies, Inc.'
 # Checks that header kdoc is located before package directive
 - name: HEADER_NOT_BEFORE_PACKAGE
   enabled: true
@@ -161,10 +161,10 @@
   enabled: true
 # Orders imports alphabetically
 - name: FILE_UNORDERED_IMPORTS
-  enabled: true
+  enabled: false
   configuration:
     # use logical imports grouping with sorting inside of a group
-    useRecommendedImportsOrder: true
+    useRecommendedImportsOrder: false
 # Checks that general order of code parts is right
 - name: FILE_INCORRECT_BLOCKS_ORDER
   enabled: true
@@ -176,7 +176,7 @@
   enabled: false
   configuration:
     allowedWildcards: "import elide.internal.conventions.kotlin.*" # Allowed wildcards for imports (e.g. "import com.saveourtool.diktat.*, import org.jetbrains.kotlin.*")
-    useRecommendedImportsOrder: true
+    useRecommendedImportsOrder: false
 # Checks unused imports
 - name: UNUSED_IMPORT
   enabled: true
@@ -298,7 +298,7 @@
   enabled: true
 # Checks that annotation is on a single line
 - name: ANNOTATION_NEW_LINE
-  enabled: true
+  enabled: false
 # Checks that method annotated with `Preview` annotation is private and has Preview suffix
 - name: PREVIEW_ANNOTATION
   enabled: true
@@ -357,7 +357,7 @@
   enabled: true
 # Checks year in the copyright
 - name: WRONG_COPYRIGHT_YEAR
-  enabled: true
+  enabled: false
 # Inspection that checks if local variables are declared close to the first usage site
 - name: LOCAL_VARIABLE_EARLY_DECLARATION
   enabled: true
@@ -374,7 +374,7 @@
 - name: COMMENT_WHITE_SPACE
   enabled: true
   configuration:
-    maxSpacesBeforeComment: 2
+    maxSpacesBeforeComment: 1
     maxSpacesInComment: 1
 # Inspection that checks if all comment's are inside if-else code blocks. Exception is general if comment
 - name: IF_ELSE_COMMENTS
@@ -389,7 +389,7 @@
   enabled: true
 # Checks that variables of generic types have explicit type declaration
 - name: GENERIC_VARIABLE_WRONG_DECLARATION
-  enabled: true
+  enabled: false
 # Inspection that checks if string template has redundant curly braces
 - name: STRING_TEMPLATE_CURLY_BRACES
   enabled: true
@@ -413,7 +413,7 @@
 - name: TOO_LONG_FUNCTION
   enabled: true
   configuration:
-    maxFunctionLength: '30' # max length of function
+    maxFunctionLength: '100' # max length of function
     isIncludeHeader: 'false' # count function's header
 # Warns if there are nested functions
 - name: AVOID_NESTED_FUNCTIONS
@@ -425,7 +425,7 @@
 - name: TOO_MANY_PARAMETERS
   enabled: true
   configuration:
-    maxParameterListSize: '5' # max parameters size
+    maxParameterListSize: '10' # max parameters size
 # Checks that function doesn't have too many nested blocks
 - name: NESTED_BLOCK
   enabled: true
@@ -448,7 +448,7 @@
 - name: TOO_MANY_LINES_IN_LAMBDA
   enabled: true
   configuration:
-    maxLambdaLength: 10 # max length of lambda without parameters
+    maxLambdaLength: 15 # max length of lambda without parameters
 # Checks that using unnecessary, custom label
 - name: CUSTOM_LABEL
   enabled: true
@@ -529,7 +529,7 @@
   enabled: true
 # If file contains class, then it can't contain extension functions for the same class
 - name: EXTENSION_FUNCTION_WITH_CLASS
-  enabled: true
+  enabled: false
 # Check if kts script contains other functions except run code
 - name: RUN_IN_SCRIPT
   enabled: true

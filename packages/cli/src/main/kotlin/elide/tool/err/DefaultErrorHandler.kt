@@ -16,8 +16,9 @@ package elide.tool.err
 import io.micronaut.context.annotation.Replaces
 import java.util.concurrent.atomic.AtomicReference
 import jakarta.inject.Provider
-import elide.annotations.*
+import elide.annotations.Context
 import elide.annotations.Factory
+import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.server.runtime.jvm.UncaughtExceptionHandler

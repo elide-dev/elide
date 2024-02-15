@@ -13,11 +13,13 @@
 
 package elide.runtime.plugins.java
 
-import org.graalvm.polyglot.Source
-import elide.runtime.core.*
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
+import elide.runtime.core.GuestLanguageEvaluator
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.java.shell.GuestJavaEvaluator
 import elide.runtime.plugins.jvm.Jvm

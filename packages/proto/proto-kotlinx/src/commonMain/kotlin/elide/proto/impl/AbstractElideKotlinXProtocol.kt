@@ -17,9 +17,7 @@ package elide.proto.impl
 
 import kotlin.reflect.KClass
 import elide.proto.ElideProtocol
-import elide.proto.ElideProtocol.Dialect
-import elide.proto.ElideProtocol.ImplementationLibrary
-import elide.proto.ElideProtocol.ModelAdapterStrategy
+import elide.proto.ElideProtocol.*
 import elide.proto.api.data.DataModelStrategy
 import elide.proto.impl.data.KxDataContainer
 import elide.proto.impl.data.KxDataFingerprint

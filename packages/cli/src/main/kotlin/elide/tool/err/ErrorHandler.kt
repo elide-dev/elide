@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("DataClassPrivateConstructor")
+@file:kotlin.Suppress("DataClassPrivateConstructor")
 
 package elide.tool.err
 
@@ -32,6 +32,7 @@ import elide.tool.cli.GuestLanguage
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.err.ErrorHandler.Action.*
 import elide.tool.err.ErrorHandler.ErrorActionStrategy.*
+import elide.tool.err.ErrorHandler.ErrorActionStrategy.Suppress
 import elide.tool.err.ErrorHandler.ErrorStackFrame.Companion.toFrame
 import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.err.ErrorHandler.ErrorUtils.walkFrames
@@ -221,7 +222,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
        * @receiver Error event to generate coordinates for.
        * @return Coordinates for the error.
        */
-      @Suppress("DEPRECATION")  // need to preserve ability to build on JDK17 and JDK21
+      @kotlin.Suppress("DEPRECATION")  // need to preserve ability to build on JDK17 and JDK21
       @JvmStatic fun ErrorEvent.coordinates(): ErrorCoordinates {
         val firstFrame = frames?.firstOrNull()
 
@@ -243,7 +244,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    * Describes the interface provided by an error event; this includes a unique ID ([uuid]), a [timestamp], any
    * available [context] for the error, and the [error] itself.
    */
-  @Suppress("unused") sealed interface ErrorEvent : Comparable<ErrorEvent> {
+  @kotlin.Suppress("unused") sealed interface ErrorEvent : Comparable<ErrorEvent> {
     /** Return the UUID assigned to this error. */
     val uuid: Uuid
 

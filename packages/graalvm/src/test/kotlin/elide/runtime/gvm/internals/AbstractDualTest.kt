@@ -18,12 +18,6 @@ package elide.runtime.gvm.internals
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.graalvm.polyglot.Context
-import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotEngine
-import elide.runtime.core.PolyglotEngineConfiguration
-import elide.vm.annotations.Polyglot
-import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.Assertions
@@ -33,6 +27,12 @@ import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
+import kotlinx.coroutines.test.runTest
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotEngine
+import elide.runtime.core.PolyglotEngineConfiguration
+import elide.vm.annotations.Polyglot
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
 abstract class AbstractDualTest {

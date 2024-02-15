@@ -13,10 +13,10 @@
 
 package elide.proto.test
 
+import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
-import kotlin.test.Test
 import elide.proto.ElideProtocol
 
 /** Tests for the protocol facade for each implementation. */

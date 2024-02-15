@@ -15,7 +15,6 @@ package elide.runtime.gvm.internals.python
 
 import io.micronaut.context.annotation.Requires
 import org.graalvm.polyglot.Source
-import java.net.URI
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
@@ -23,19 +22,19 @@ import elide.annotations.Context
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.gvm.ExecutionInputs
-import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.GuestRuntime
-import elide.runtime.gvm.internals.*
+import elide.runtime.gvm.internals.AbstractVMEngine
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.GraalVMGuest.PYTHON
-import elide.runtime.gvm.internals.VMStaticProperty.Companion
+import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.internals.VMStaticProperty
+import org.graalvm.polyglot.Context as VMContext
+import org.graalvm.polyglot.Context.Builder as VMBuilder
+import org.graalvm.polyglot.Engine as VMEngine
+import org.graalvm.polyglot.Value as GuestValue
 import elide.runtime.gvm.internals.python.PythonExecutableScript as PythonScript
 import elide.runtime.gvm.internals.python.PythonInvocationBindings as PythonBindings
 import elide.runtime.gvm.python.cfg.PythonRuntimeConfig as PythonConfig
-import org.graalvm.polyglot.Engine as VMEngine
-import org.graalvm.polyglot.Context as VMContext
-import org.graalvm.polyglot.Context.Builder as VMBuilder
-import org.graalvm.polyglot.Value as GuestValue
 
 /**
  * TBD.

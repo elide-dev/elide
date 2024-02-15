@@ -23,7 +23,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler
 import tools.elide.call.HostConfiguration
 import tools.elide.call.v1alpha1.UnaryInvocationResponse
 import java.security.Security
-import java.util.SortedSet
+import java.util.*
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers

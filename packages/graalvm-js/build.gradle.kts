@@ -13,7 +13,10 @@
 
 
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
-import elide.internal.conventions.kotlin.*
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.dependencies
+import elide.internal.conventions.kotlin.js
+import elide.internal.conventions.kotlin.jsTest
 
 plugins {
   kotlin("multiplatform")

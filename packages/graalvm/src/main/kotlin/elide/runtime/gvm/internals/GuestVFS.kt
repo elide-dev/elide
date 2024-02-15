@@ -16,7 +16,6 @@ package elide.runtime.gvm.internals
 import org.graalvm.polyglot.io.FileSystem
 import java.io.Closeable
 import java.net.URI
-import elide.runtime.gvm.internals.AbstractVMEngine.RuntimeInfo
 import elide.runtime.gvm.internals.AbstractVMEngine.RuntimeVFS
 
 /**

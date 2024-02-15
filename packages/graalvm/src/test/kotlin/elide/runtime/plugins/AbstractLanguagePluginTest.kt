@@ -14,7 +14,6 @@
 package elide.runtime.plugins
 
 import org.junit.jupiter.api.Test
-import kotlin.test.Ignore
 import kotlin.test.assertContentEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EnginePlugin.InstallationScope

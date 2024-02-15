@@ -13,12 +13,12 @@
 
 package elide.runtime.gvm.ruby
 
-import elide.runtime.gvm.RubyTest
-import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.gvm.RubyTest
+import elide.testing.annotations.Test
+import elide.testing.annotations.TestCase
 
 /** Basic Ruby runtime utility tests. */
 @OptIn(DelicateElideApi::class)

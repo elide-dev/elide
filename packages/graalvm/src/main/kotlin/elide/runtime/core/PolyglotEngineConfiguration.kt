@@ -13,7 +13,6 @@
 
 package elide.runtime.core
 
-import java.util.concurrent.ConcurrentSkipListMap
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
 
 /**

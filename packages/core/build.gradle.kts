@@ -11,7 +11,10 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import elide.internal.conventions.kotlin.*
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.common
+import elide.internal.conventions.kotlin.dependencies
+import elide.internal.conventions.kotlin.jvm
 
 plugins {
   id("elide.internal.conventions")

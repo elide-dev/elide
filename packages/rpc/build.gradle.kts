@@ -12,10 +12,10 @@
  */
 
 
-import elide.internal.conventions.kotlin.*
 import com.google.protobuf.gradle.id
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
+import elide.internal.conventions.kotlin.*
 
 plugins {
   java

@@ -13,8 +13,6 @@
 
 package elide.http
 
-import elide.http.api.HttpHeaders as HttpHeadersAPI
-import elide.http.api.MutableHttpHeaders as MutableHttpHeadersAPI
 import kotlin.jvm.JvmStatic
 import elide.http.api.HttpHeaders.HeaderName
 import elide.http.api.HttpHeaders.HeaderValue
@@ -22,6 +20,8 @@ import elide.http.api.HttpString
 import elide.struct.MutableTreeMap
 import elide.struct.api.SortedMap
 import elide.struct.sortedMapOf
+import elide.http.api.HttpHeaders as HttpHeadersAPI
+import elide.http.api.MutableHttpHeaders as MutableHttpHeadersAPI
 
 /**
  * # HTTP Headers

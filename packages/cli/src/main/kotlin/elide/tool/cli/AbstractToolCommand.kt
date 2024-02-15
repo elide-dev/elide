@@ -15,7 +15,6 @@ package elide.tool.cli
 
 import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.runMosaic
-import java.lang.Runnable
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger

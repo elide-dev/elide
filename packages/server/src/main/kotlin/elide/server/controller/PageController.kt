@@ -24,11 +24,14 @@ import kotlinx.html.HEAD
 import kotlinx.html.HTML
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
-import elide.server.*
+import elide.server.AssetModuleId
+import elide.server.DEFAULT_SSR_DOM_ID
 import elide.server.annotations.Page
 import elide.server.assets.AssetManager
 import elide.server.assets.AssetPointer
 import elide.server.assets.AssetReference
+import elide.server.injectSSR
+import elide.server.ssr
 
 /**
  * Defines the built-in concept of a `Page`-type handler, which is capable of performing SSR, serving static assets, and

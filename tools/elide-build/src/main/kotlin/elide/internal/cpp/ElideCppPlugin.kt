@@ -18,7 +18,6 @@ import org.gradle.api.Project
 import org.gradle.language.cpp.CppLibrary
 import org.gradle.nativeplatform.test.cpp.CppTestSuite
 import org.gradle.nativeplatform.test.cpp.plugins.CppUnitTestPlugin
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import elide.internal.conventions.ElideBuildExtension
 import elide.internal.conventions.ElideConventionPlugin
 

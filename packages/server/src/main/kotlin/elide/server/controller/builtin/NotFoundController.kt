@@ -20,7 +20,6 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
 import io.micronaut.http.annotation.Get
-import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 import kotlinx.html.h1
 import kotlinx.html.p

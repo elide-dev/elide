@@ -15,7 +15,6 @@ package elide.tool.testing
 
 import io.micronaut.context.annotation.Bean
 import elide.tool.annotations.EmbeddedTest
-import elide.tool.testing.SelfTest
 
 /** Basic sanity self-test. */
 @Bean @EmbeddedTest class SanitySelfTest : SelfTest() {

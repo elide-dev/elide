@@ -15,7 +15,6 @@
 
 package elide.util
 
-import org.w3c.dom.Window
 import kotlinx.browser.window
 import kotlin.io.encoding.ExperimentalEncodingApi
 

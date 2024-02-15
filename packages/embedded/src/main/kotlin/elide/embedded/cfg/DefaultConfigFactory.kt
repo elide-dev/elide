@@ -17,7 +17,6 @@ import com.google.protobuf.Value
 import tools.elide.app.appConfigurationSuite
 import tools.elide.app.configurationValue
 import tools.elide.call.HostConfiguration
-import tools.elide.call.VMConfigurationKt
 import tools.elide.meta.GuestPolicy
 import tools.elide.meta.guestPolicy
 import tools.elide.std.LogLevel.INFO

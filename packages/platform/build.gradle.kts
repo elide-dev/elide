@@ -14,7 +14,6 @@
 
 import elide.internal.conventions.analysis.skipAnalysis
 import elide.internal.conventions.publishing.publish
-import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   id("java-platform")

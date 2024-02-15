@@ -13,11 +13,7 @@
 
 package elide.embedded
 
-import java.io.ByteArrayInputStream
-import java.io.Closeable
-import java.io.InputStream
-import java.io.OutputStream
-import java.io.PrintStream
+import java.io.*
 import java.util.concurrent.atomic.AtomicReference
 
 /**

@@ -1,7 +1,7 @@
 package dev.elide.buildtools.gradle.plugin.cfg
 
 import org.gradle.api.file.CopySpec
-import java.util.SortedSet
+import java.util.*
 
 /** Configured and resolved information for an embedded server-side asset. */
 internal data class AssetInfo(

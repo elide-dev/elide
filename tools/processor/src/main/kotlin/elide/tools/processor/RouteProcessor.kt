@@ -15,21 +15,19 @@ package elide.tools.processor
 
 import com.google.auto.service.AutoService
 import com.google.devtools.ksp.KspExperimental
-import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
-import com.google.devtools.ksp.symbol.impl.hasAnnotation
 import com.google.protobuf.Timestamp
-import elide.runtime.Runtime
-import elide.tools.processor.util.annotationArgument
-import elide.tools.processor.util.annotationArgumentWithDefault
-import elide.util.Hex
-import kotlinx.datetime.Clock
 import tools.elide.meta.*
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.datetime.Clock
+import elide.runtime.Runtime
+import elide.tools.processor.util.annotationArgument
+import elide.tools.processor.util.annotationArgumentWithDefault
+import elide.util.Hex
 
 /**
  * # Route Processor

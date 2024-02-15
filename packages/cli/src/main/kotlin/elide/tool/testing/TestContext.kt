@@ -14,7 +14,6 @@
 package elide.tool.testing
 
 import java.util.concurrent.atomic.AtomicReference
-import elide.tool.testing.TestContext.TestStage.DONE
 import elide.tool.testing.TestContext.TestStage.EXECUTING
 
 /**

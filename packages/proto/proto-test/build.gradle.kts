@@ -12,9 +12,9 @@
  */
 
 
-import elide.internal.conventions.publishing.publish
 import elide.internal.conventions.kotlin.KotlinTarget
-import elide.internal.conventions.kotlin.*
+import elide.internal.conventions.kotlin.common
+import elide.internal.conventions.kotlin.dependencies
 
 plugins {
   kotlin("multiplatform")

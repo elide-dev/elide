@@ -14,9 +14,9 @@
 
 @file:Suppress("UnstableApiUsage")
 
-import elide.internal.conventions.publishing.publish
-import elide.internal.conventions.kotlin.KotlinTarget
 import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")

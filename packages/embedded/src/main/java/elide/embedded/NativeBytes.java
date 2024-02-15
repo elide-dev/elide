@@ -13,15 +13,9 @@
 
 package elide.embedded;
 
-import elide.embedded.NativeApi.ConfigByteConsumer;
-import elide.embedded.NativeApi.ConfigTipSupplier;
-import elide.embedded.NativeApi.InstanceConfiguration;
-import elide.embedded.NativeApi.SerializedInvocation;
-import elide.embedded.NativeApi.PayloadByteConsumer;
-import elide.embedded.NativeApi.PayloadTipSupplier;
-import elide.embedded.NativeApi.ProtocolMode;
-import elide.embedded.api.UnaryNativeCall;
+import elide.embedded.NativeApi.*;
 import elide.embedded.api.NativeConfiguration;
+import elide.embedded.api.UnaryNativeCall;
 import org.graalvm.nativeimage.IsolateThread;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
 import org.graalvm.nativeimage.c.type.WordPointer;

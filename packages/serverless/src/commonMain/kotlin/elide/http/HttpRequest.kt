@@ -13,7 +13,6 @@
 
 package elide.http
 
-import kotlin.jvm.JvmStatic
 import elide.http.api.HttpMapping
 import elide.http.api.HttpMethod
 import elide.http.api.HttpRequest

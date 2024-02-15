@@ -15,16 +15,7 @@ package elide.embedded.api
 
 import com.google.protobuf.InvalidProtocolBufferException
 import tools.elide.app.EntrypointType
-import tools.elide.call.v1alpha1.FetchRequest
-import tools.elide.call.v1alpha1.FetchResponse
-import tools.elide.call.v1alpha1.QueueInvocationRequest
-import tools.elide.call.v1alpha1.QueueInvocationResponse
-import tools.elide.call.v1alpha1.ScheduledInvocationRequest
-import tools.elide.call.v1alpha1.ScheduledInvocationResponse
-import tools.elide.call.v1alpha1.UnaryInvocation
-import tools.elide.call.v1alpha1.UnaryInvocationRequest
-import tools.elide.call.v1alpha1.UnaryInvocationRequestOrBuilder
-import tools.elide.call.v1alpha1.UnaryInvocationResponse
+import tools.elide.call.v1alpha1.*
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference

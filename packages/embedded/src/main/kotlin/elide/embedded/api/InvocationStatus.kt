@@ -15,8 +15,8 @@ package elide.embedded.api
 
 import elide.core.api.Symbolic
 import elide.embedded.NativeApi
-import elide.embedded.NativeApi.InvocationStatus as NativeInvocationStatus
 import elide.embedded.NativeApi.InvocationStatus.*
+import elide.embedded.NativeApi.InvocationStatus as NativeInvocationStatus
 
 /**
  *

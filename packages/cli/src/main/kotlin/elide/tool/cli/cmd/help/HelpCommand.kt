@@ -17,12 +17,7 @@ import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.awt.Desktop
 import java.net.URI
-import java.net.URL
 import elide.tool.cli.*
-import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.ToolState
-import elide.tool.cli.cmd.discord.ToolDiscordCommand
-import elide.tool.cli.cmd.discord.ToolDiscordCommand.Companion
 
 /** Find help or file a bug or PR against Elide. */
 @Command(

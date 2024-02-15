@@ -18,7 +18,6 @@ package kotlinx.serialization.protobuf.schema
 import com.google.protobuf.DescriptorProtos.FileOptions.OptimizeMode
 import java.util.*
 import kotlinx.serialization.protobuf.schema.ProtoOption.*
-import kotlinx.serialization.protobuf.schema.ProtoOption.Target
 
 /**
  * # Proto Options

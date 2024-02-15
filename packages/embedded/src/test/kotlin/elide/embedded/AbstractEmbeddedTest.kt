@@ -23,16 +23,19 @@ import tools.elide.http.HttpMethod.GET
 import tools.elide.http.httpHeader
 import tools.elide.http.httpHeaders
 import tools.elide.http.httpRequest
-import java.util.EnumSet
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import elide.embedded.api.*
+import elide.embedded.api.Capability
 import elide.embedded.api.Capability.BASELINE
+import elide.embedded.api.InFlightCallInfo
+import elide.embedded.api.InstanceConfiguration
 import elide.embedded.api.ProtocolMode.PROTOBUF
+import elide.embedded.api.UnaryNativeCall
 import elide.util.UUID
 
 /** Shared test utilities for embedded runtime testing. */

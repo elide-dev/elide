@@ -15,7 +15,6 @@ package elide.http
 
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
-import elide.http.api.HttpMessageType
 import elide.http.api.HttpVersion
 import elide.http.api.HttpVersion.HTTP_2
 import elide.http.api.HttpMessage as HttpMessageAPI

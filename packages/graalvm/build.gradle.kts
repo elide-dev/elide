@@ -19,10 +19,11 @@
   "COMPATIBILITY_WARNING",
 )
 
-import elide.internal.conventions.publishing.publish
+import kotlinx.benchmark.gradle.JvmBenchmarkTarget
+import kotlinx.benchmark.gradle.benchmark
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
-import kotlinx.benchmark.gradle.*
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")

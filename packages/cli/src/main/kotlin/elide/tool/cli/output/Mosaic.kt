@@ -20,7 +20,6 @@ import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.runMosaic
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Color.Companion.Black
 import com.jakewharton.mosaic.ui.Color.Companion.BrightBlack
@@ -40,7 +39,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 import elide.tool.cli.output.TestState.*
-import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.testing.TestInfo
 import elide.tool.testing.TestResult
 

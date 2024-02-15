@@ -47,11 +47,11 @@ import elide.internal.conventions.publishing.configurePublishing
 import elide.internal.conventions.publishing.configurePublishingRepositories
 import elide.internal.conventions.publishing.configureSigning
 import elide.internal.conventions.publishing.configureSigstore
-import elide.internal.conventions.tests.*
+import elide.internal.conventions.redacted.configureRedactedPlugin
 import elide.internal.conventions.tests.configureJacoco
+import elide.internal.conventions.tests.configureKover
 import elide.internal.conventions.tests.configureTestExecution
 import elide.internal.conventions.tests.configureTestLogger
-import elide.internal.conventions.redacted.configureRedactedPlugin
 
 public abstract class ElideConventionPlugin : Plugin<Project> {
   @get:Inject protected abstract val javaToolchainService: JavaToolchainService

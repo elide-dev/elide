@@ -17,7 +17,6 @@ package elide.server
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono

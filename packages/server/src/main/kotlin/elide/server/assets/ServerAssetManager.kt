@@ -18,11 +18,8 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.ByteArrayInputStream
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import jakarta.inject.Inject
 import kotlinx.coroutines.Deferred

@@ -76,7 +76,6 @@ import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.env.EnvConfig.EnvVar
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.*
 import elide.runtime.plugins.env.environment
-import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*

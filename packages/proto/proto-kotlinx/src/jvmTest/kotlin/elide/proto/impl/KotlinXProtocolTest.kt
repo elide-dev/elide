@@ -15,7 +15,7 @@ package elide.proto.impl
 
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import elide.proto.ElideProtocol.Dialect.*
+import elide.proto.ElideProtocol.Dialect.JSON
 import elide.proto.ElideProtocol.ImplementationLibrary.KOTLINX
 import elide.proto.api.Protocol
 import elide.proto.test.AbstractProtocolFacadeTest

@@ -13,10 +13,10 @@
 
 @file:Suppress("UnstableApiUsage")
 
-import elide.internal.conventions.kotlin.KotlinTarget
-import elide.internal.conventions.publishing.publish
 import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.proto
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")

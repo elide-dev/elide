@@ -15,7 +15,6 @@ package elide.tool.cli
 
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
-import lukfor.progress.TaskService
 import lukfor.progress.TaskServiceBuilder
 import lukfor.progress.executors.ITaskExecutor
 import lukfor.progress.tasks.ITaskRunnable
@@ -30,14 +29,12 @@ import java.io.Closeable
 import java.io.InputStream
 import java.io.PrintStream
 import java.util.*
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import elide.annotations.Inject
 import elide.runtime.Logger
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine

@@ -14,8 +14,8 @@
 package elide.embedded.api
 
 import elide.core.api.Symbolic
+import elide.embedded.NativeApi.Capability.ELIDE_BASELINE
 import elide.embedded.NativeApi.Capability as NativeCapability
-import elide.embedded.NativeApi.Capability.*
 
 /**
  * # Embedded Capability

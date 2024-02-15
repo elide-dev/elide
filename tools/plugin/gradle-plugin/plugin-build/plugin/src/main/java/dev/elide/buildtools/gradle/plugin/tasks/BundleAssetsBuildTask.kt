@@ -13,8 +13,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.options.Option
 import org.gradle.language.jvm.tasks.ProcessResources
-import java.util.TreeMap
-import java.util.TreeSet
+import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.stream.Collectors
 

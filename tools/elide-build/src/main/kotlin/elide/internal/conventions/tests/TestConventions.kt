@@ -14,7 +14,6 @@
 package elide.internal.conventions.tests
 
 import com.adarshr.gradle.testlogger.TestLoggerExtension
-import com.adarshr.gradle.testlogger.TestLoggerPlugin
 import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy

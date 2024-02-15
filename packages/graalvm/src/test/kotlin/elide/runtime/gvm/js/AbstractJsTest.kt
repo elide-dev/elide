@@ -15,7 +15,6 @@
 
 package elide.runtime.gvm.js
 
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.io.FileSystem
@@ -24,7 +23,6 @@ import org.intellij.lang.annotations.Language
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import kotlinx.coroutines.withContext
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext

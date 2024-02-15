@@ -137,9 +137,7 @@ public interface Timestamp<Concrete, Builder> :
     /**
      *
      */
-    public fun millisFromNow(millisRelative: Long): Concrete = at(Clock.System.now().plus(
-      millisRelative.milliseconds
-    ))
+    public fun millisFromNow(millisRelative: Long): Concrete = at(Clock.System.now().plus(millisRelative.milliseconds))
   }
 
   /**

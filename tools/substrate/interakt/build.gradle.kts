@@ -11,8 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import GradleProject.projectConstants
 import ElideSubstrate.elideTarget
+import GradleProject.projectConstants
 
 plugins {
   `maven-publish`

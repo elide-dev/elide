@@ -12,7 +12,10 @@
  */
 
 
-import elide.internal.conventions.kotlin.*
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.dependencies
+import elide.internal.conventions.kotlin.js
+import elide.internal.conventions.kotlin.jvm
 
 plugins {
   kotlin("multiplatform")

@@ -15,8 +15,8 @@ package elide.runtime.intrinsics.server.http.internal
 
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
-import elide.runtime.intrinsics.server.http.HttpRequest
 import elide.runtime.intrinsics.server.http.HttpContext
+import elide.runtime.intrinsics.server.http.HttpRequest
 import elide.runtime.intrinsics.server.http.HttpResponse
 
 /**

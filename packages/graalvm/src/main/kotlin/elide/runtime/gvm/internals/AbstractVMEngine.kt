@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
 import java.util.stream.Collectors
 import java.util.stream.Stream
+import java.util.zip.GZIPInputStream
 import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -44,14 +45,13 @@ import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.GuestVFS.VFSConfigurator
 import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.gvm.internals.context.GuestLogProxy
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import elide.runtime.gvm.internals.js.JsInvocationBindings
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.ssr.ServerResponse
 import elide.util.RuntimeFlag
-import java.util.zip.GZIPInputStream
-import elide.runtime.gvm.internals.context.GuestLogProxy
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 

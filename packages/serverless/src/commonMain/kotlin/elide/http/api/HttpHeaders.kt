@@ -18,8 +18,9 @@ package elide.http.api
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import elide.annotations.API
-import elide.http.api.HttpHeaders.HeaderName
-import elide.http.api.HttpHeaders.HeaderValue
+import elide.http.api.HttpHeaders.*
+import elide.http.api.HttpHeaders.HeaderName.Companion.asHeaderName
+import elide.http.api.HttpHeaders.HeaderName.Companion.of
 
 /**
  * # HTTP Headers

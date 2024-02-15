@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import http from 'k6/http';
+import http from "k6/http";
 
 export default function () {
   http.get('http://localhost:3000/hello');

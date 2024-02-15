@@ -14,11 +14,9 @@
 package elide.runtime.plugins.debug
 
 import elide.runtime.core.*
-import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
-import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.extensions.setOption
 
 /**

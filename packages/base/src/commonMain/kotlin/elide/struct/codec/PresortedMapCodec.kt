@@ -18,7 +18,6 @@ import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import elide.struct.AbstractTreeMap
 import elide.struct.TreeMap
 
 /**

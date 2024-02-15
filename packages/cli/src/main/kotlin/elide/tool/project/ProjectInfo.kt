@@ -15,7 +15,7 @@
 
 package elide.tool.project
 
-import java.util.SortedMap
+import java.util.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.runtime.plugins.env.EnvConfig.EnvVar

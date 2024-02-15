@@ -13,7 +13,6 @@
 
 package elide.runtime.gvm.internals
 
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference

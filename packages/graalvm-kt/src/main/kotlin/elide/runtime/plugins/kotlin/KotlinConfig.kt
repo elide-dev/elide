@@ -14,7 +14,6 @@
 package elide.runtime.plugins.kotlin
 
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
 
 /** Configuration for the [Kotlin] plugin. */

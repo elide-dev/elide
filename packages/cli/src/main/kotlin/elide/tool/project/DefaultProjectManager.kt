@@ -16,7 +16,7 @@ package elide.tool.project
 import java.io.File
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.util.SortedMap
+import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.stream.Collectors
 import kotlinx.coroutines.Deferred

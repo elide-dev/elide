@@ -14,9 +14,6 @@
 package elide.embedded
 
 import tools.elide.call.v1alpha1.*
-import java.nio.ByteBuffer
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 import elide.embedded.api.InFlightCallID
 import elide.embedded.api.InFlightCallInfo
 import elide.embedded.api.PackedCall

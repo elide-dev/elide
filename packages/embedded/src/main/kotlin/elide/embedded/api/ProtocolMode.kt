@@ -14,8 +14,9 @@
 package elide.embedded.api
 
 import elide.core.api.Symbolic
+import elide.embedded.NativeApi.ProtocolMode.ELIDE_CAPNPROTO
+import elide.embedded.NativeApi.ProtocolMode.ELIDE_PROTOBUF
 import elide.embedded.NativeApi.ProtocolMode as NativeProtocolMode
-import elide.embedded.NativeApi.ProtocolMode.*
 
 /**
  * # Protocol Mode

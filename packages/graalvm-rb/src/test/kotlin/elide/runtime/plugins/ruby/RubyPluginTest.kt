@@ -14,7 +14,6 @@
 package elide.runtime.plugins.ruby
 
 import org.junit.jupiter.api.Test
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine

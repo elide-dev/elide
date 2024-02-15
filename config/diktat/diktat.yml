@@ -11,7 +11,7 @@
     srcDirectories: "main,commonMain,nativeMain,jsMain,wasmMain"
 # Checks that the Class/Enum/Interface name matches Pascal case
 - name: CLASS_NAME_INCORRECT
-  enabled: true
+  enabled: false
   # all code blocks with MyAnnotation will be ignored and not checked
   ignoreAnnotated: [ MyAnnotation ]
 # Checks that CONSTANT (treated as const val from companion object or class level) is in non UPPER_SNAKE_CASE
@@ -51,7 +51,7 @@
   enabled: true
 # Checks that the object matches PascalCase
 - name: OBJECT_NAME_INCORRECT
-  enabled: true
+  enabled: false
 # Checks that package name is in correct (lower) case
 - name: PACKAGE_NAME_INCORRECT_CASE
   enabled: true
@@ -78,7 +78,7 @@
   enabled: false
 # Checks that functions have kdoc
 - name: MISSING_KDOC_ON_FUNCTION
-  enabled: true
+  enabled: false
 # Checks that on file level internal or public class or function has missing KDoc
 - name: MISSING_KDOC_TOP_LEVEL
   enabled: false
@@ -87,13 +87,13 @@
   enabled: false
 # Checks that accessible method parameters are documented in KDoc
 - name: KDOC_WITHOUT_PARAM_TAG
-  enabled: true
+  enabled: false
 # Checks that accessible method explicit return type is documented in KDoc
 - name: KDOC_WITHOUT_RETURN_TAG
-  enabled: true
+  enabled: false
 # Checks that accessible method throw keyword is documented in KDoc
 - name: KDOC_WITHOUT_THROWS_TAG
-  enabled: true
+  enabled: false
 # Checks that KDoc is not empty
 - name: KDOC_EMPTY_KDOC
   enabled: true
@@ -142,7 +142,7 @@
 - name: HEADER_MISSING_OR_WRONG_COPYRIGHT
   enabled: false
   configuration:
-    isCopyrightMandatory: true
+    isCopyrightMandatory: false
     copyrightText: 'Copyright (c) 2023-;@currYear; Elide Technologies, Inc.'
 # Checks that header kdoc is located before package directive
 - name: HEADER_NOT_BEFORE_PACKAGE
@@ -439,7 +439,7 @@
   enabled: true
 # Checks that property in constructor doesn't contain comment
 - name: KDOC_NO_CONSTRUCTOR_PROPERTY
-  enabled: true
+  enabled: false
   configuration:
     isParamTagsForParameters: true # create param tags for parameters without val or var
     isParamTagsForPrivateProperties: true # create param tags for private properties

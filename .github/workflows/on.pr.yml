@@ -257,18 +257,3 @@ jobs:
     permissions:
       contents: "read"
       security-events: "write"
-
-  ##
-  ## Job: Checks with Qodana
-  ##
-  check-qodana:
-    name: "Checks"
-    uses: ./.github/workflows/checks.qodana.yml
-    needs: [triage, preflight-checks, pr-build, pr-test]
-    if: false # disabled
-    secrets:
-      QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-    permissions:
-      contents: "read"

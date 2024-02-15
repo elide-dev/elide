@@ -32,7 +32,7 @@
     "tools/plugin/gradle-plugin"
   ],
   "dependencies": {
-    "browserslist": "4.22.3",
+    "browserslist": "4.23.0",
     "cssnano": "6.0.3",
     "google-protobuf": "3.21.2",
     "jszip": "3.10.1",

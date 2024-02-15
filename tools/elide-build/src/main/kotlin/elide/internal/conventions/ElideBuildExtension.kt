@@ -135,7 +135,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var sonar: Boolean = true
 
     /** Whether to enable Diktat support. */
-    public var diktat: Boolean = true
+    public var diktat: Boolean = false
 
     /** Whether to enable ktlint support. */
     public var ktlint: Boolean = true

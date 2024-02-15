@@ -141,6 +141,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to enable Sonar support. */
     public var sonar: Boolean = true
 
+    /** Whether to enable Spotless support. */
+    public var spotless: Boolean = true
+
     /** Whether to enable Checkstyle. */
     public var checkstyle: Boolean = true
 

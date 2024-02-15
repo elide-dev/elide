@@ -261,11 +261,6 @@ val cachePush: String? by settings
 val isCI: Boolean = System.getenv("CI") != "true"
 
 buildless {
-  localCache {
-    enabled = true
-    directory.dir(".codebase/build-cache")
-  }
-
   remoteCache {
     // allow disabling pushing to the remote cache
     push.set(cachePush?.toBooleanStrictOrNull() ?: true)
@@ -274,7 +269,9 @@ buildless {
 
 buildCache {
   local {
+    isEnabled = true
     removeUnusedEntriesAfterDays = 14
+    directory = layout.rootDirectory.dir(".codebase/build-cache")
   }
 }
 

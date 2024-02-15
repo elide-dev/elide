@@ -46,6 +46,16 @@ elide {
     configureModularity = false
     includeSources = false
   }
+
+  checks {
+    javaFormat = false
+  }
+}
+
+spotless {
+  java {
+    targetExclude("**/jvmTest/**")
+  }
 }
 
 protobuf {

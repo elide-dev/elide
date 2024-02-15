@@ -50,6 +50,7 @@ elide {
 
   checks {
     spotless = false
+    javaFormat = false
   }
 }
 

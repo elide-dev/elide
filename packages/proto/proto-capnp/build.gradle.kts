@@ -49,6 +49,11 @@ elide {
     configureModularity = false
     includeJavadoc = false
   }
+
+  checks {
+    spotless = false
+    javaFormat = false
+  }
 }
 
 configurations {

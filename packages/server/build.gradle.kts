@@ -53,6 +53,10 @@ elide {
     target = NativeTarget.LIB
     useAgent = false
   }
+
+  checks {
+    spotless = false
+  }
 }
 
 group = "dev.elide"

@@ -123,7 +123,7 @@ jobs:
           path: ./benchmark_reports
           key: ${{ runner.os }}-${{ matrix.engine }}-${{ matrix.java }}-benchmark
       - name: "Upload Benchmark Report"
-        uses: benchmark-action/github-action-benchmark@70405016b032d44f409e4b1b451c40215cbe2393 # v1.18.0
+        uses: benchmark-action/github-action-benchmark@cc9ac13ce81036c9b67fcfe2cb95ca366684b9ea # v1.19.3
         continue-on-error: true
         with:
           name: "Elide: Server (${{ matrix.os }}, ${{ matrix.engine }}, JDK ${{ matrix.java }})"

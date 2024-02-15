@@ -67,8 +67,10 @@ import elide.runtime.plugins.jvm.interop.guestClass
     // resolve the arguments for the script constructor and invoke it, obtaining a new instance of the script class;
     // during construction, the script itself is executed by the compiled class, and the result can be used later
     val scriptInstance = scriptClass.invokeMember("getConstructors").getArrayElement(0).invokeMember(
-      /* identifier = */ "newInstance",
-      /* ...arguments = */ collectConstructorArguments(refinedConfiguration),
+      /* identifier = */
+      "newInstance",
+      /* ...arguments = */
+      collectConstructorArguments(refinedConfiguration),
     )
 
     // unlike default implementations, we don't store the actual compiled script class (since it's on the guest side),
@@ -122,7 +124,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
       loader.defineClass(name.removeSuffix(".class"), guestBytecode)
     }
 
-    // load the compiled script class, 
+    // load the compiled script class,
     return loader.loadClass(script.scriptClassFQName)
   }
 

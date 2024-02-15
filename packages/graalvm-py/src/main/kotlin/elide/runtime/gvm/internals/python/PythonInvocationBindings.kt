@@ -13,9 +13,9 @@
 
 package elide.runtime.gvm.internals.python
 
+import java.util.*
 import elide.runtime.gvm.InvocationBindings
 import elide.runtime.gvm.internals.GVMInvocationBindings
-import java.util.*
 import org.graalvm.polyglot.Value as GuestValue
 
 /**

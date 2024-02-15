@@ -15,21 +15,19 @@ package elide.tools.processor
 
 import com.google.auto.service.AutoService
 import com.google.devtools.ksp.KspExperimental
-import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
-import com.google.devtools.ksp.symbol.impl.hasAnnotation
 import com.google.protobuf.Timestamp
-import elide.runtime.Runtime
-import elide.tools.processor.util.annotationArgument
-import elide.tools.processor.util.annotationArgumentWithDefault
-import elide.util.Hex
-import kotlinx.datetime.Clock
 import tools.elide.meta.*
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.datetime.Clock
+import elide.runtime.Runtime
+import elide.tools.processor.util.annotationArgument
+import elide.tools.processor.util.annotationArgumentWithDefault
+import elide.util.Hex
 
 /**
  * # Route Processor
@@ -64,7 +62,7 @@ public class RouteProcessor(
   }
 
   // Page annotation to scan for (handler-level).
-  private val pageAnnoName = object: KSName {
+  private val pageAnnoName = object : KSName {
     override fun asString(): String = "${getQualifier()}.${getShortName()}"
     override fun getQualifier(): String = defaultPageAnnotation
       .split(".").dropLast(1).joinToString(".")
@@ -73,7 +71,7 @@ public class RouteProcessor(
   }
 
   // Micronaut `GET` annotation.
-  private val micronautGet = object: KSName {
+  private val micronautGet = object : KSName {
     override fun asString(): String = "${getQualifier()}.${getShortName()}"
     override fun getQualifier(): String = "io.micronaut.http.annotation"
     override fun getShortName(): String = "Get"
@@ -113,12 +111,7 @@ public class RouteProcessor(
    * @param url URL base for this route.
    * @return Generated/calculated tag value.
    */
-  private fun tagForRoute(
-    name: String?,
-    page: KSClassDeclaration,
-    entry: KSFunctionDeclaration,
-    url: String,
-  ): String {
+  private fun tagForRoute(name: String?, page: KSClassDeclaration, entry: KSFunctionDeclaration, url: String,): String {
     val preimage = StringBuilder().apply {
       if (name != null) {
         append(name)
@@ -237,7 +230,8 @@ public class RouteProcessor(
     }
 
     // generate route tag
-    return endpointTag to check.invoke(endpoint {
+    return endpointTag to check.invoke(
+      endpoint {
       base = route
       type = endpointType
       tail = tailUrl
@@ -253,7 +247,8 @@ public class RouteProcessor(
       options = endpointOptions {
         precompilable = precompiled
       }
-    })
+    }
+    )
   }
 
   /**
@@ -386,10 +381,12 @@ public class RouteProcessor(
     }.flatten()
 
     // use discovered routes and `buildInfo` to build an `AppManifest`.
-    manifest.set(appManifest(
+    manifest.set(
+      appManifest(
       fragments.toMap(),
       buildInfo(),
-    ))
+    )
+    )
     return emptyList()
   }
 

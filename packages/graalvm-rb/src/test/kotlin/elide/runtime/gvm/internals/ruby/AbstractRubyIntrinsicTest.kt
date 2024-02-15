@@ -123,4 +123,3 @@ abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsic
     }
   }
 }
-

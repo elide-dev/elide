@@ -16,5 +16,4 @@ package elide.runtime.gvm.internals.python
 /**
  * TBD.
  */
-public class PythonServerAdapter {
-}
+public class PythonServerAdapter

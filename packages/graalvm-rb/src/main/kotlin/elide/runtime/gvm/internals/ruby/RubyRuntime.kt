@@ -15,7 +15,6 @@ package elide.runtime.gvm.internals.ruby
 
 import io.micronaut.context.annotation.Requires
 import org.graalvm.polyglot.Source
-import java.net.URI
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
@@ -23,7 +22,6 @@ import elide.annotations.Context
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.gvm.ExecutionInputs
-import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
@@ -31,9 +29,9 @@ import elide.runtime.gvm.internals.GraalVMGuest.RUBY
 import elide.runtime.gvm.internals.ruby.RubyExecutableScript as RubyScript
 import elide.runtime.gvm.internals.ruby.RubyInvocationBindings as RubyBindings
 import elide.runtime.gvm.ruby.cfg.RubyRuntimeConfig as RubyConfig
-import org.graalvm.polyglot.Engine as VMEngine
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Context.Builder as VMBuilder
+import org.graalvm.polyglot.Engine as VMEngine
 import org.graalvm.polyglot.Value as GuestValue
 
 /**
@@ -71,7 +69,8 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
   }
 
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
+  @Singleton @Context
+  class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
     RUBY,
     { runtimeInfo.get() },
   )
@@ -104,11 +103,7 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
     // nothing at this time
   }
 
-  override fun resolve(
-    context: VMContext,
-    script: RubyScript,
-    mode: DispatchStyle?
-  ): RubyBindings {
+  override fun resolve(context: VMContext, script: RubyScript, mode: DispatchStyle?): RubyBindings {
     TODO("Not yet implemented")
   }
 

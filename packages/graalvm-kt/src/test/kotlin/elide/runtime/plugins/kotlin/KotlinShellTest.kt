@@ -15,7 +15,9 @@ import elide.runtime.core.PolyglotEngine
 import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.testing.annotations.Test
 
-@OptIn(DelicateElideApi::class) @Disabled class KotlinShellTest {
+@OptIn(DelicateElideApi::class)
+@Disabled
+class KotlinShellTest {
   /** Temporary classpath root used for guest JARs. */
   @TempDir lateinit var tempClasspathRoot: File
 

@@ -16,5 +16,4 @@ package elide.runtime.gvm.llvm
 /**
  * TBD.
  */
-public object LLVM {
-}
+public object LLVM

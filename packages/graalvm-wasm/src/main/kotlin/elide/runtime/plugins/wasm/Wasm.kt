@@ -22,7 +22,9 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
-@Suppress("unused") @DelicateElideApi public class Wasm private constructor(
+@Suppress("unused")
+@DelicateElideApi
+public class Wasm private constructor(
   private val config: WasmConfig,
   private val resources: LanguagePluginManifest,
 ) {

@@ -22,7 +22,9 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
-@Suppress("unused") @DelicateElideApi public class LLVM private constructor(
+@Suppress("unused")
+@DelicateElideApi
+public class LLVM private constructor(
   private val config: LLVMConfig,
   private val resources: LanguagePluginManifest,
 ) {

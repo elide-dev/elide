@@ -27,7 +27,8 @@ import elide.runtime.plugins.jvm.interop.loadGuestClass
  *
  * @see GuestScriptEvaluator
  */
-@DelicateElideApi @JvmInline internal value class GuestClassLoader(private val delegate: PolyglotValue) {
+@DelicateElideApi @JvmInline
+internal value class GuestClassLoader(private val delegate: PolyglotValue) {
   /** Create a new instance by resolving the guest class from a [context]. */
   constructor(context: PolyglotContext) : this(context.loadGuestClass(DYNAMIC_LOADER_CLASS).newInstance())
 

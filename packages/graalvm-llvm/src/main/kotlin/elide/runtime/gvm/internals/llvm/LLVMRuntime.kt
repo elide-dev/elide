@@ -16,6 +16,4 @@ package elide.runtime.gvm.internals.llvm
 /**
  * TBD.
  */
-internal class LLVMRuntime {
-
-}
+internal class LLVMRuntime

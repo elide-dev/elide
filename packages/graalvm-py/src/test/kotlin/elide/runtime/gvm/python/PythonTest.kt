@@ -14,17 +14,20 @@
 package elide.runtime.gvm.python
 
 import kotlin.test.Ignore
-import elide.runtime.gvm.PythonTest
-import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.gvm.PythonTest
+import elide.testing.annotations.Test
+import elide.testing.annotations.TestCase
 
 /** Basic Python runtime utility tests. */
 @OptIn(DelicateElideApi::class)
-@TestCase @Ignore class PythonTest : PythonTest() {
-  @Ignore @Test fun testPythonGuestCodeBasic() = executeGuest {
+@TestCase
+@Ignore
+class PythonTest : PythonTest() {
+  @Ignore @Test
+  fun testPythonGuestCodeBasic() = executeGuest {
     // language=python
     """
       def say_hello():
@@ -33,7 +36,8 @@ import elide.runtime.core.DelicateElideApi
     """.trimIndent()
   }.doesNotFail()
 
-  @Ignore @Test fun testPythonGuestCodeReturnValue() = executeGuest {
+  @Ignore @Test
+  fun testPythonGuestCodeReturnValue() = executeGuest {
     // language=python
     """
       def say_hello():

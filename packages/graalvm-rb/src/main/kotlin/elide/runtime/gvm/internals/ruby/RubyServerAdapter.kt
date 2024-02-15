@@ -16,5 +16,4 @@ package elide.runtime.gvm.internals.ruby
 /**
  * TBD.
  */
-public class RubyServerAdapter {
-}
+public class RubyServerAdapter

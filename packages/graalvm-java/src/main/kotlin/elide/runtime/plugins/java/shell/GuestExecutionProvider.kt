@@ -169,12 +169,15 @@ import elide.runtime.plugins.jvm.interop.guestClass
     private const val PROVIDER_NAME = "elide"
 
     /** Returns a property [guestClass] delegate for the given [name], prefixed with the [JSHELL_PACKAGE] name. */
-    private fun PolyglotContext.jshellClass(name: String): ReadOnlyProperty<Any, PolyglotValue> = guestClass("$JSHELL_PACKAGE.$name")
+    private fun PolyglotContext.jshellClass(name: String): ReadOnlyProperty<Any, PolyglotValue> =
+      guestClass("$JSHELL_PACKAGE.$name")
 
     /** Returns a property [guestClass] delegate for the given [name], prefixed with the [JSHELL_SPI_PACKAGE] name. */
-    private fun PolyglotContext.spiClass(name: String): ReadOnlyProperty<Any, PolyglotValue> = guestClass("$JSHELL_SPI_PACKAGE.$name")
+    private fun PolyglotContext.spiClass(name: String): ReadOnlyProperty<Any, PolyglotValue> =
+      guestClass("$JSHELL_SPI_PACKAGE.$name")
 
     /** Returns a property [guestClass] delegate for the given [name] in the jdk.jshell.spi.ExecutionControl class. */
-    private fun PolyglotContext.executionControlClass(name: String): ReadOnlyProperty<Any, PolyglotValue> = guestClass("$JSHELL_SPI_PACKAGE.ExecutionControl\$$name")
+    private fun PolyglotContext.executionControlClass(name: String): ReadOnlyProperty<Any, PolyglotValue> =
+      guestClass("$JSHELL_SPI_PACKAGE.ExecutionControl\$$name")
   }
 }

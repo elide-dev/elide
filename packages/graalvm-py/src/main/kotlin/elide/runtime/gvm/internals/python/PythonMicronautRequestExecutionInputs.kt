@@ -26,8 +26,8 @@ internal class PythonMicronautRequestExecutionInputs private constructor(
   private val request: HttpRequest<Any>,
   state: Any?,
 ) : FetchRequest,
- MicronautRequestExecutionInputs<Any>,
- PythonServerRequestExecutionInputs<HttpRequest<Any>>(state) {
+  MicronautRequestExecutionInputs<Any>,
+  PythonServerRequestExecutionInputs<HttpRequest<Any>>(state) {
   override val body: ReadableStream
     get() = TODO("Not yet implemented")
   override val bodyUsed: Boolean

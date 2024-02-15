@@ -38,14 +38,14 @@ import org.graalvm.polyglot.Context as VMContext
  * TBD.
  */
 @Requires(
-property = "elide.gvm.enabled",
- value = "true",
- defaultValue = "true"
+  property = "elide.gvm.enabled",
+  value = "true",
+  defaultValue = "true"
 )
 @Requires(
-property = "elide.gvm.jvm.enabled",
- value = "true",
- defaultValue = "true"
+  property = "elide.gvm.jvm.enabled",
+  value = "true",
+  defaultValue = "true"
 )
 @GuestRuntime(engine = JvmRuntime.ENGINE_JVM)
 internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScript, JvmInvocationBindings>(JVM) {

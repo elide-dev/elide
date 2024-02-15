@@ -45,7 +45,7 @@ import elide.runtime.core.PolyglotContext
 
   // treat void/null return values as a 0 exit code
   if (exitCode == null || exitCode.isNull) {
-      return 0
+    return 0
   }
 
   // unwrap explicit exit code

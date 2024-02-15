@@ -26,4 +26,5 @@ import elide.runtime.core.evaluate
  * @param name Name to provide for this source fragment.
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.ruby(source: String, name: String? = null): PolyglotValue = evaluate(Ruby, source, name = name)
+@DelicateElideApi public fun PolyglotContext.ruby(source: String, name: String? = null): PolyglotValue =
+  evaluate(Ruby, source, name = name)

@@ -26,8 +26,8 @@ internal class RubyMicronautRequestExecutionInputs private constructor(
   private val request: HttpRequest<Any>,
   state: Any?,
 ) : FetchRequest,
- MicronautRequestExecutionInputs<Any>,
- RubyServerRequestExecutionInputs<HttpRequest<Any>>(state) {
+  MicronautRequestExecutionInputs<Any>,
+  RubyServerRequestExecutionInputs<HttpRequest<Any>>(state) {
   override val body: ReadableStream
     get() = TODO("Not yet implemented")
   override val bodyUsed: Boolean

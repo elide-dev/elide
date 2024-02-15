@@ -40,14 +40,14 @@ import org.graalvm.polyglot.Value as GuestValue
  * TBD.
  */
 @Requires(
-property = "elide.gvm.enabled",
- value = "true",
- defaultValue = "true"
+  property = "elide.gvm.enabled",
+  value = "true",
+  defaultValue = "true"
 )
 @Requires(
-property = "elide.gvm.ruby.enabled",
- value = "true",
- defaultValue = "true"
+  property = "elide.gvm.ruby.enabled",
+  value = "true",
+  defaultValue = "true"
 )
 @GuestRuntime(engine = RubyRuntime.ENGINE_RUBY)
 internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindings>(RUBY) {

@@ -40,14 +40,14 @@ import org.graalvm.polyglot.Value as GuestValue
  * TBD.
  */
 @Requires(
-property = "elide.gvm.enabled",
- value = "true",
- defaultValue = "true"
+  property = "elide.gvm.enabled",
+  value = "true",
+  defaultValue = "true"
 )
 @Requires(
-property = "elide.gvm.python.enabled",
- value = "true",
- defaultValue = "true"
+  property = "elide.gvm.python.enabled",
+  value = "true",
+  defaultValue = "true"
 )
 @GuestRuntime(engine = PythonRuntime.ENGINE_PYTHON)
 internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, PythonBindings>(PYTHON) {

@@ -27,9 +27,9 @@ internal class PythonExecutableScript(
   source: ExecutableScript.ScriptSource,
   spec: String,
 ) : AbstractGVMScript(
-PYTHON,
- source,
- spec
+  PYTHON,
+  source,
+  spec
 ) {
   override fun invocation(): EnumSet<InvocationMode> {
     TODO("Not yet implemented")

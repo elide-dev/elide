@@ -65,7 +65,7 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 
           // reuse entry if already extracted
           if (output.exists()) {
-              return@map output.absolutePathString()
+            return@map output.absolutePathString()
           }
           output.createParentDirectories()
           output.createFile()
@@ -93,10 +93,10 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 
       // apply the JVM plugin and register the custom classpath entries
       scope.configuration.getOrInstall(Jvm)
-.config
-.apply {
-        classpath(resolveOrExtractGuestClasspath(config, resources))
-      }
+        .config
+        .apply {
+          classpath(resolveOrExtractGuestClasspath(config, resources))
+        }
 
       // apply the configuration and register events
       val instance = Kotlin(config)

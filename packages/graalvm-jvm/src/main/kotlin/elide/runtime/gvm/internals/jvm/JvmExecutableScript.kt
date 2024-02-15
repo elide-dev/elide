@@ -27,9 +27,9 @@ internal class JvmExecutableScript(
   source: ExecutableScript.ScriptSource,
   spec: String,
 ) : AbstractGVMScript(
-JVM,
- source,
- spec
+  JVM,
+  source,
+  spec
 ) {
   override fun invocation(): EnumSet<InvocationMode> {
     TODO("Not yet implemented")

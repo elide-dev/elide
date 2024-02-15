@@ -116,7 +116,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
     // install compiler output into the class loader, map class names and ignore metadata
     for ((name, bytecode) in module.compilerOutputFiles) {
       if (name.startsWith("META-INF")) {
-          continue
+        continue
       }
 
       // move the bytecode over to the guest side

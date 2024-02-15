@@ -81,10 +81,10 @@ import elide.runtime.core.PolyglotValue
 
   /** Construct the next [ReplCodeLine] for the current REPL [replState], using a text [snippet] as content. */
   private fun nextLine(snippet: String): ReplCodeLine = ReplCodeLine(
-      no = replState.getNextLineNo(),
-      generation = replState.currentGeneration,
-      code = snippet,
-    )
+    no = replState.getNextLineNo(),
+    generation = replState.currentGeneration,
+    code = snippet,
+  )
 
   override fun accepts(source: Source): Boolean = source.hasCharacters()
 

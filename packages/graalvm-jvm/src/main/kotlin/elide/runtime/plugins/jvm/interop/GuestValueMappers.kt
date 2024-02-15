@@ -20,13 +20,15 @@ import elide.runtime.core.PolyglotValue
 @DelicateElideApi public fun PolyglotValue.asStringOrNull(): String? = takeUnless { isNull || !isString }?.asString()
 
 /** Returns this value as a [Boolean], or `null` if the value is `null` or not a [Boolean]. */
-@DelicateElideApi public fun PolyglotValue.asBooleanOrNull(): Boolean? = takeUnless { isNull || !isBoolean }?.asBoolean()
+@DelicateElideApi public fun PolyglotValue.asBooleanOrNull(): Boolean? = takeUnless { isNull || !isBoolean }
+  ?.asBoolean()
 
 /** Returns this value as a [Byte], or `null` if the value is `null` or not a number. */
 @DelicateElideApi public fun PolyglotValue.asByteOrNull(): Byte? = takeUnless { isNull || !isNumber }?.asByte()
 
 /** Returns this value as a [Char], or `null` if the value is `null` or not a number. */
-@DelicateElideApi public fun PolyglotValue.asCharOrNull(): Char? = takeUnless { isNull || !isNumber }?.asInt()?.toChar()
+@DelicateElideApi public fun PolyglotValue.asCharOrNull(): Char? = takeUnless { isNull || !isNumber }
+  ?.asInt()?.toChar()
 
 /** Returns this value as a [Short], or `null` if the value is `null` or not a number. */
 @DelicateElideApi public fun PolyglotValue.asShortOrNull(): Short? = takeUnless { isNull || !isNumber }?.asShort()

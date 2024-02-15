@@ -27,9 +27,9 @@ internal class RubyExecutableScript(
   source: ExecutableScript.ScriptSource,
   spec: String,
 ) : AbstractGVMScript(
-RUBY,
- source,
- spec
+  RUBY,
+  source,
+  spec
 ) {
   override fun invocation(): EnumSet<InvocationMode> {
     TODO("Not yet implemented")

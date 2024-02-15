@@ -16,7 +16,7 @@ LTS release.
 **Current version support matrix:**
 
 | Version         | Supported                                   |
-|-----------------|---------------------------------------------|
+| --------------- | ------------------------------------------- |
 | `v3-alpha4-*`   | :white_check_mark:                          |
 | `v3-alpha3-*`   | :white_check_mark: (Immediate past release) |
 | `v2` and before | :x: No support (ancient)                    |

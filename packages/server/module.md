@@ -19,21 +19,25 @@ of the box, such as:
 The `elide-server` package is provided via [Maven Central][0], and also via Elide's own [GitHub Packages][1] repository.
 
 **Via Gradle (Catalog):**
+
 ```kotlin
 implementation(framework.elide.server)
 ```
 
 **Via Gradle (Kotlin DSL):**
+
 ```kotlin
 implementation("dev.elide:elide-server")
 ```
 
 **Via Gradle (Groovy DSL):**
+
 ```kotlin
 implementation "dev.elide:elide-server"
 ```
 
 **Via Maven:**
+
 ```xml
 <dependency>
   <groupId>dev.elide</groupId>
@@ -69,6 +73,7 @@ object App {
 ```
 
 This particular sample is embedded within the Elide codebase, and can be run with:
+
 ```
 ./gradlew -PbuildSamples=true :samples:server:helloworld:run
 ```

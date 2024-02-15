@@ -12,9 +12,7 @@
   },
   "customizations": {
     "codespaces": {
-      "openFiles": [
-        ".devcontainer/README.md"
-      ]
+      "openFiles": [".devcontainer/README.md"]
     },
     "vscode": {
       "settings": {

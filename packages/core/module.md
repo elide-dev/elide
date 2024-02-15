@@ -4,7 +4,7 @@
 
 ## Universal applicability
 
-At this level, utilities are truly universal, with support for some encodings, annotations, and other *pure-Kotlin*
+At this level, utilities are truly universal, with support for some encodings, annotations, and other _pure-Kotlin_
 logic. This is the lowest level of Elide, and it is the most portable.
 
 Because of this strict support guarantee, `elide-core` only depends on dependencies directly from the Kotlin team,
@@ -15,21 +15,25 @@ including Kotlin `stdlib` and KotlinX.
 The `elide-core` package is provided via [Maven Central][0], and also via Elide's own [GitHub Packages][1] repository.
 
 **Via Gradle (Catalog):**
+
 ```kotlin
 implementation(framework.elide.core)
 ```
 
 **Via Gradle (Kotlin DSL):**
+
 ```kotlin
 implementation("dev.elide:elide-core")
 ```
 
 **Via Gradle (Groovy DSL):**
+
 ```kotlin
 implementation "dev.elide:elide-core"
 ```
 
 **Via Maven:**
+
 ```xml
 <dependency>
   <groupId>dev.elide</groupId>

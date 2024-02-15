@@ -19,9 +19,7 @@ interface EmotionCriticalToChunks {
 }
 
 interface EmotionServer {
-  constructStyleTagsFromChunks: (
-    criticalData: EmotionCriticalToChunks
-  ) => string;
+  constructStyleTagsFromChunks: (criticalData: EmotionCriticalToChunks) => string;
   extractCriticalToChunks: (html: string) => EmotionCriticalToChunks;
 }
 

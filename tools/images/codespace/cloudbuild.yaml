@@ -1,13 +1,6 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: [
-      "run",
-      "--rm",
-      "--privileged",
-      "tonistiigi/binfmt",
-      "--install",
-      "all"
-    ]
+    args: ["run", "--rm", "--privileged", "tonistiigi/binfmt", "--install", "all"]
   - name: "gcr.io/cloud-builders/docker"
     dir: "tools/images/codespace"
     args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/codespace", "."]

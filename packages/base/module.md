@@ -9,21 +9,25 @@ The `elide-base` package is provided via [Maven Central][0], and also via Elide'
 Base only depends on KotlinX and `elide-core`.
 
 **Via Gradle (Catalog):**
+
 ```kotlin
 implementation(framework.elide.base)
 ```
 
 **Via Gradle (Kotlin DSL):**
+
 ```kotlin
 implementation("dev.elide:elide-base")
 ```
 
 **Via Gradle (Groovy DSL):**
+
 ```kotlin
 implementation "dev.elide:elide-base"
 ```
 
 **Via Maven:**
+
 ```xml
 <dependency>
   <groupId>dev.elide</groupId>

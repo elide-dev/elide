@@ -11,14 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-const {
-  Readable,
-  Writable,
-  Transform,
-  Duplex,
-  pipeline,
-  finished,
-} = require("readable-stream");
+const { Readable, Writable, Transform, Duplex, pipeline, finished } = require("readable-stream");
 
 module.exports.Readable = Readable;
 module.exports.Writable = Writable;

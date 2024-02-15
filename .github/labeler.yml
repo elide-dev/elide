@@ -25,12 +25,7 @@
 "module:base":
   - any: ["packages/base/**/*"]
 "module:graalvm":
-  - any:
-      [
-        "packages/graalvm/**/*",
-        "packages/graalvm-js/**/*",
-        "packages/graalvm-react/**/*",
-      ]
+  - any: ["packages/graalvm/**/*", "packages/graalvm-js/**/*", "packages/graalvm-react/**/*"]
 "module:model":
   - any: ["packages/model/**/*"]
 "module:rpc":

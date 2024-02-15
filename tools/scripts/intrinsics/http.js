@@ -18,22 +18,22 @@ function getMessage() {
 }
 
 // add middleware
-console.log("🚧Configuring middleware")
+console.log("🚧Configuring middleware");
 router.handle(null, null, (request, response, context) => {
   // inject the response message into the context to be accessed by other handlers
-  context.message = getMessage()
+  context.message = getMessage();
 
   // pass the request to the next handler
-  return true
-})
+  return true;
+});
 
 router.handle(null, null, (request, response, context) => {
   // print the message as the request passes through this handler
-  console.log(`📢Responding with message template: "${context.message}"`)
+  console.log(`📢Responding with message template: "${context.message}"`);
 
   // pass the request to the next handler
-  return true
-})
+  return true;
+});
 
 // define route handlers
 console.log("🚧Configuring route handlers");

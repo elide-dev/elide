@@ -134,6 +134,12 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to enable Sonar support. */
     public var sonar: Boolean = true
 
+    /** Whether to enable formatting with Prettier, where supported. */
+    public var prettier: Boolean = true
+
+    /** Whether to enable formatting with Google Java Format. */
+    public var javaFormat: Boolean = true
+
     /** Whether to enable Diktat support. */
     public var diktat: Boolean = true
 
@@ -145,6 +151,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Whether to enable Checkstyle. */
     public var checkstyle: Boolean = true
+
+    /** Whether to enable experimental checks. */
+    public var experimental: Boolean = false
 
     /** Whether to enable PMD. */
     public var pmd: Boolean = true
@@ -167,6 +176,21 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to force all JVM-targeting tasks to use JVM 17. Defaults to `false`. */
     public var forceJvm17: Boolean = false
   }
+
+  /** Configuration for the C/C++ platform */
+  public class Cpp(project: Project) : Convention(project)
+
+  /** Configuration for Python */
+  public class Python(project: Project) : Convention(project)
+
+  /** Configuration for JavaScript */
+  public class Javascript(project: Project) : Convention(project)
+
+  /** Configuration for TypeScript */
+  public class Typescript(project: Project) : Convention(project)
+
+  /** Configuration for Node.JS */
+  public class NodeJS(project: Project) : Convention(project)
 
   /** Configuration for testing tasks */
   public class Testing(project: Project) : Convention(project) {
@@ -238,6 +262,11 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   internal val publishing = Publishing(project)
   internal val kotlin = Kotlin(project)
   internal val java = Java(project)
+  internal val cpp = Java(project)
+  internal val python = Python(project)
+  internal val javascript = Javascript(project)
+  internal val typescript = Typescript(project)
+  internal val node = NodeJS(project)
   internal val checks = Checks(project)
   internal val jvm = Jvm(project)
   internal val testing = Testing(project)

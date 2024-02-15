@@ -20,23 +20,92 @@ import elide.internal.conventions.Constants
 import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.ElideBuildExtension
 
-private fun SpotlessExtension.configureSpotlessForProject(conventions: ElideBuildExtension, project: Project) {
-  isEnforceCheck = conventions.checks.enforceCheck
+// Branch to ratchet against.
+private const val ratchetBase = "origin/main"
 
-  if (project.pluginManager.hasPlugin("org.jetbrains.kotlin.multiplatform") ||
-    project.pluginManager.hasPlugin("org.jetbrains.kotlin.js") ||
-    project.pluginManager.hasPlugin("org.jetbrains.kotlin.jvm")
-  ) {
-    kotlin {
-      licenseHeaderFile(project.rootProject.layout.projectDirectory.file(".github/license-header.txt"))
-      if (conventions.checks.ktlint) {
-        ktlint(Versions.KTLINT).editorConfigOverride(Constants.Linting.ktlintOverrides)
-      }
-      if (conventions.checks.diktat) {
-        diktat(Versions.DIKTAT).configFile("${project.rootDir}/config/diktat/diktat.yml")
-      }
+private fun SpotlessExtension.configureSpotlessForProject(conventions: ElideBuildExtension, project: Project) {
+  ratchetFrom(ratchetBase)
+  isEnforceCheck = conventions.checks.enforceCheck
+  val licenseHeader = project.rootProject.layout.projectDirectory.file(".github/license-header.txt")
+  val diktatConfig = "${project.rootDir}/config/diktat/diktat.yml"
+
+  // ---- Linting: Protobuf
+  //
+  if (conventions.checks.experimental) protobuf {
+    // Use Buf to lint Protobuf files.
+    buf(Versions.BUF)
+  }
+
+  // ---- Linting: Java
+  //
+  if (conventions.java.requested) java {
+    // Setup license header.
+    licenseHeaderFile(licenseHeader)
+
+    // Enforce import order.
+    importOrder()
+
+    // Remove unused imports.
+    removeUnusedImports()
+
+    // Use Google's Java formatter.
+    if (conventions.checks.javaFormat) googleJavaFormat()
+
+    // Preserve annotation formatting.
+    if (conventions.checks.javaFormat) formatAnnotations()
+  }
+
+  // ---- Linting: Kotlin
+  //
+  if (conventions.kotlin.requested) kotlin {
+    // Setup license header.
+    licenseHeaderFile(licenseHeader)
+
+    // enable ktlint.
+    if (conventions.checks.ktlint) ktlint(Versions.KTLINT).editorConfigOverride(Constants.Linting.ktlintOverrides)
+
+    // enable diktat.
+    if (conventions.checks.diktat) diktat(Versions.DIKTAT).configFile(diktatConfig)
+  }
+
+  // ---- Linting: Python
+  //
+  if (conventions.python.requested) python {
+    black()
+  }
+
+  // ---- Linting: JavaScript/TypeScript
+  //
+  if (conventions.javascript.requested || conventions.node.requested || conventions.typescript.requested) {
+    javascript {
+      if (conventions.checks.prettier) prettier()
+    }
+
+    typescript {
+      if (conventions.checks.prettier) prettier()
     }
   }
+
+  // ---- Linting: C++/Headers
+  //
+  if (conventions.cpp.requested) cpp {
+    clangFormat()
+  }
+
+  // ---- Linting: General
+  //
+  if (conventions.checks.prettier && conventions.checks.experimental) {
+    json {
+      prettier()
+    }
+
+    yaml {
+      prettier()
+    }
+  }
+
+  // ---- Linting: Kotlin/Gradle
+  //
   kotlinGradle {
     target("*.gradle.kts")
     if (conventions.checks.ktlint) {

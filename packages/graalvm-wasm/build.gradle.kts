@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -29,7 +28,7 @@ plugins {
 
 elide {
   publishing {
-     id = "graalvm-wasm"
+    id = "graalvm-wasm"
     name = "Elide WASM for GraalWasm"
     description = "Integration package with GraalVM WASM and Elide."
 
@@ -37,7 +36,7 @@ elide {
       from(components["kotlin"])
     }
   }
-  
+
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true

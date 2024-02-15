@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -37,7 +36,7 @@ elide {
       from(components["kotlin"])
     }
   }
-  
+
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
@@ -72,7 +71,7 @@ tasks {
   }
 
   test {
-    enabled = false  // @TODO(sgammon): temporary while broken
+    enabled = false // @TODO(sgammon): temporary while broken
 
     maxHeapSize = "2G"
     maxParallelForks = 4

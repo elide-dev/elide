@@ -11,8 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
- import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   kotlin("multiplatform")
@@ -25,7 +24,7 @@ elide {
     name = "Elide WASM"
     description = "Integration with WASM/WASI for Elide."
   }
-  
+
   kotlin {
     target = KotlinTarget.WASI
   }

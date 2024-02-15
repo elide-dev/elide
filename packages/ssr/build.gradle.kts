@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import elide.internal.conventions.kotlin.*
 
 plugins {
@@ -26,7 +25,7 @@ elide {
     name = "Elide SSR"
     description = "Package for server-side rendering (SSR) capabilities with the Elide Framework."
   }
-  
+
   kotlin {
     target = KotlinTarget.Embedded
     explicitApi = true

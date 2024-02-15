@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -37,7 +36,7 @@ elide {
       from(components["kotlin"])
     }
   }
-  
+
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
@@ -57,7 +56,7 @@ elide {
 dependencies {
   api(libs.graalvm.python.language)
   api(libs.graalvm.python.resources)
-  
+
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
   implementation(projects.packages.graalvmLlvm)

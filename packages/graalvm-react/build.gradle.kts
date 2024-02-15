@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.kotlin.dependencies
 import elide.internal.conventions.kotlin.js
@@ -33,7 +32,7 @@ elide {
 
   kotlin {
     target = KotlinTarget.JsNode.let {
-      if(buildWasm) it + KotlinTarget.WASM else it
+      if (buildWasm) it + KotlinTarget.WASM else it
     }
   }
 }

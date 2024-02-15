@@ -191,11 +191,13 @@ spotless {
   kotlinGradle {
     target("*.gradle.kts")
     diktat(libs.versions.diktat.get()).configFile(
-      project.rootProject.layout.projectDirectory.file("config/diktat/diktat.yml")
+      project.rootProject.layout.projectDirectory.file("config/diktat/diktat.yml"),
     )
-    ktlint(libs.versions.ktlint.get()).editorConfigOverride(mapOf(
-      "ktlint_standard_no-wildcard-imports" to "disabled",
-    ))
+    ktlint(libs.versions.ktlint.get()).editorConfigOverride(
+      mapOf(
+        "ktlint_standard_no-wildcard-imports" to "disabled",
+      ),
+    )
   }
 }
 
@@ -399,9 +401,9 @@ tasks {
       configurations.filter {
         // Add any custom filtering on the configurations to be resolved
         it.isCanBeResolved &&
-                !it.name.lowercase().let { name ->
-                  name.contains("sources") || name.contains("documentation")
-                }
+          !it.name.lowercase().let { name ->
+            name.contains("sources") || name.contains("documentation")
+          }
       }.forEach { it.resolve() }
     }
   }
@@ -598,7 +600,7 @@ tasks {
 
 // @TODO: replace where needed with convention plugin logic
 //
-//subprojects {
+// subprojects {
 //  val name = this.name
 //
 //  apply {
@@ -634,13 +636,13 @@ tasks {
 //      }
 //    }
 //  }
-//}
+// }
 
 // @TODO: replace where needed with convention plugin logic
 //
-//tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
+// tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
 //  projects = project.allprojects
-//}
+// }
 
 // @TODO: replace where needed with convention plugin logic
 //

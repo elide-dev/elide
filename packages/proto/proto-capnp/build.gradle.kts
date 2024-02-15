@@ -13,9 +13,8 @@
 
 @file:Suppress("UnstableApiUsage")
 
-
- import elide.internal.conventions.kotlin.KotlinTarget
- import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
@@ -27,12 +26,12 @@ elide {
     id = "proto-capnp"
     name = "Elide Protocol: Cap'n'Proto"
     description = "Elide protocol implementation for Cap'n'Proto."
-    
+
     publish("maven") {
       from(components["kotlin"])
     }
   }
-  
+
   kotlin {
     target = KotlinTarget.JVM
   }

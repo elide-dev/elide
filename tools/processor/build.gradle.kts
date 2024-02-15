@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import elide.internal.conventions.publishing.publish
 
 plugins {
@@ -38,7 +37,7 @@ elide {
 
   kotlin {
     explicitApi = true
-    kotlinVersionOverride = "1.9"  // @TODO: ksp processors don't work with 2.0 yet
+    kotlinVersionOverride = "1.9" // @TODO: ksp processors don't work with 2.0 yet
   }
 
   java {

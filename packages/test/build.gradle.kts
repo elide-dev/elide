@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.kotlin.dependencies
 import elide.internal.conventions.kotlin.js
@@ -28,7 +27,7 @@ elide {
     name = "Elide Test"
     description = "Universal testing utilities in every language supported by Kotlin and Elide."
   }
-  
+
   kotlin {
     target = KotlinTarget.All
     explicitApi = true

@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -24,7 +23,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  
+
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
 

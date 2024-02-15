@@ -23,6 +23,8 @@ import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
+import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
@@ -122,26 +124,6 @@ buildscript {
       resolutionStrategy.activateDependencyLocking()
     }
   }
-}
-
-if (enableKnit == "true") apply(plugin = "kotlinx-knit")
-
-rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
-  rootProject.the<NodeJsRootExtension>().download = true
-  rootProject.the<NodeJsRootExtension>().version = nodeVersion
-  if (nodeVersion.contains("canary")) {
-    rootProject.the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
-  }
-}
-rootProject.plugins.withType(YarnPlugin::class.java) {
-  rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING
-  rootProject.the<YarnRootExtension>().reportNewYarnLock = false
-  rootProject.the<YarnRootExtension>().yarnLockAutoReplace = false
-  rootProject.the<YarnRootExtension>().lockFileDirectory = project.rootDir
-  rootProject.the<YarnRootExtension>().lockFileName = "gradle-yarn.lock"
-}
-tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask::class.java).configureEach {
-  args.add("--ignore-engines")
 }
 
 apiValidation {
@@ -356,6 +338,38 @@ dependencies {
 
 rewrite {
   activeRecipe("org.openrewrite.java.OrderImports")
+}
+
+if (enableKnit == "true") apply(plugin = "kotlinx-knit")
+
+rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
+  rootProject.the<NodeJsRootExtension>().apply {
+    download = true
+  }
+
+  rootProject.the<NodeJsRootExtension>().version = nodeVersion
+  if (nodeVersion.contains("canary")) {
+    rootProject.the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
+  }
+}
+rootProject.plugins.withType(YarnPlugin::class.java) {
+  rootProject.the<YarnRootExtension>().apply {
+    yarnLockMismatchReport = YarnLockMismatchReport.WARNING
+    reportNewYarnLock = false
+    yarnLockAutoReplace = false
+    lockFileDirectory = project.rootDir
+    lockFileName = "gradle-yarn.lock"
+  }
+}
+tasks.withType(KotlinNpmInstallTask::class.java).configureEach {
+  packageJsonFiles.addFirst(project.layout.projectDirectory.file("package.json"))
+  args.add("--ignore-engines")
+  outputs.upToDateWhen {
+    project.rootProject.layout.projectDirectory.dir("node_modules").asFile.exists()
+  }
+}
+tasks.withType(KotlinPackageJsonTask::class.java).configureEach {
+  packageJson = project.rootProject.file("package.json")
 }
 
 tasks {

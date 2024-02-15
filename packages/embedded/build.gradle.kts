@@ -1103,7 +1103,6 @@ fun nativeImageArgs(
 tasks {
   test {
     useJUnitPlatform()
-    outputs.upToDateWhen { false }
     jvmArgs(jvmRuntimeArgs.plus(jvmDefs.map { "-D${it.key}=${it.value}" }))
   }
 

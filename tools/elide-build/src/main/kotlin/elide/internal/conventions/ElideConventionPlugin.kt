@@ -162,7 +162,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       // kotlin linting tools
       if (conventions.checks.detekt) plugins.apply(DetektConventionsPlugin::class.java)
       if (conventions.checks.sonar) plugins.apply(SonarConventionsPlugin::class.java)
-      plugins.apply(SpotlessConventionsPlugin::class.java)
+      if (conventions.checks.spotless) plugins.apply(SpotlessConventionsPlugin::class.java)
     }
 
     // -- Conventions: Java -------------------------------------------------------------------------------------------

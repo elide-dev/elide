@@ -11,6 +11,6 @@
     "@mdx-js/esbuild": "3.0.1",
     "@mdx-js/loader": "3.0.1",
     "@types/react": "18.2.55",
-    "webpack": "5.90.1"
+    "webpack": "5.90.2"
   }
 }

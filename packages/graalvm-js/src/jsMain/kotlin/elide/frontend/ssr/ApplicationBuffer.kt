@@ -66,9 +66,9 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
 
   private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
     reader.read().then { value ->
-      val chunk = value.unsafeCast<ReadableStreamReadValueResult<ByteArray?>>()
+      val chunk: dynamic = value.unsafeCast<ReadableStreamReadValueResult<ByteArray?>>()
 
-      val rawContent = chunk.value
+      val rawContent: ByteArray? = chunk.value as? ByteArray
       var resolved = false
       if (rawContent != null && rawContent.isNotEmpty()) {
         resolved = true  // we're handling a content chunk
@@ -80,7 +80,8 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
         })
       }
 
-      if (chunk.done) {
+      val done = chunk.done as? Boolean ?: false
+      if (done) {
         resolved = true  // we're done with the stream
         fin = true
         finishStream(200, emitter)

@@ -210,6 +210,7 @@ jobs:
             .gradle/
             build/
             .codebase/
+            ~/.konan
             packages/*/build/bin
             packages/*/build/classes
             packages/*/build/kotlin
@@ -337,6 +338,7 @@ jobs:
             .gradle/
             build/
             .codebase/
+            ~/.konan
             packages/*/build/bin
             packages/*/build/classes
             packages/*/build/kotlin

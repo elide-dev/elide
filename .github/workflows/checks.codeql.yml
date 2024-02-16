@@ -38,6 +38,10 @@ jobs:
       actions: read
       contents: read
       security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript-typescript']
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
@@ -105,6 +109,7 @@ jobs:
         with:
           config-file: ./.github/codeql/codeql-config.yml
           fail-on-severity: "error"
+          languages: ${{ matrix.language }}
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2
         continue-on-error: true

@@ -60,10 +60,12 @@ val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class)
       project.path.contains(it) || project.name.contains(it)
     }
   }.map {
-    dependsOn(
+    listOfNotNull(
       it.tasks.findByName("test"),
       it.tasks.findByName("jvmTest"),
-    )
+    ).let { tasks ->
+      dependsOn(tasks)
+    }
     val path = file(it.layout.buildDirectory.dir("test-results"))
     if (path.exists()) {
       java.util.Optional.of(path)

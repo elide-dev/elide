@@ -1,6 +1,7 @@
 name: "CodeQL"
 
-languages: javascript-typescript
+languages:
+  - javascript-typescript
 
 queries:
   - uses: security-and-quality

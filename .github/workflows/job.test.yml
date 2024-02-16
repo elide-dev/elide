@@ -255,7 +255,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
-          cache-read-only: false
+          cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
           gradle-home-cache-includes: binaryen
@@ -296,7 +296,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
-          cache-read-only: false
+          cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
           gradle-home-cache-includes: binaryen
@@ -334,7 +334,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
-          cache-read-only: false
+          cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
           gradle-home-cache-includes: binaryen

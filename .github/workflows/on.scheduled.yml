@@ -179,7 +179,7 @@ jobs:
         env:
           CI: true
         with:
-          cache-read-only: false
+          cache-read-only: true
           arguments: |
             build
             -x check

@@ -151,14 +151,13 @@ jobs:
             elide-framework-
       - name: "Check: Library ABI"
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-        id: abicheck
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
         env:
           CI: true
           GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
-          cache-read-only: true
+          cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
             projects

@@ -51,10 +51,7 @@ elide {
   }
 
   checks {
-    pmd = false
-    checkstyle = false
-    spotless = false
-    javaFormat = false
+    disableAllChecks()
   }
 }
 

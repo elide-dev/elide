@@ -492,10 +492,10 @@ tasks {
 
   // --- Tasks: Detekt
   //
-  val detektMergeSarif: TaskProvider<ReportMergeTask> = register("detektMergeSarif", ReportMergeTask::class.java) {
+  val detektMergeSarif: TaskProvider<ReportMergeTask> by registering(ReportMergeTask::class) {
     output.set(layout.buildDirectory.file("reports/detekt/detekt.sarif"))
   }
-  val detektMergeXml: TaskProvider<ReportMergeTask> = register("detektMergeXml", ReportMergeTask::class.java) {
+  val detektMergeXml: TaskProvider<ReportMergeTask> by registering(ReportMergeTask::class) {
     output.set(layout.buildDirectory.file("reports/detekt/detekt.xml"))
   }
   withType(Detekt::class) detekt@{
@@ -709,6 +709,7 @@ tasks {
       preMerge,
       precheck,
       detekt,
+      reports,
       withType(KotlinApiCompareTask::class),
     )
   }

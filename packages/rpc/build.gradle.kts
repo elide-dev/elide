@@ -48,6 +48,8 @@ elide {
   }
 
   checks {
+    pmd = false
+    checkstyle = false
     javaFormat = false
   }
 }

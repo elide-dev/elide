@@ -1,1 +1,3 @@
-{}
+{
+  "plugins": ["@prettier/plugin-xml", "prettier-plugin-toml", "prettier-plugin-sh", "prettier-plugin-properties"]
+}

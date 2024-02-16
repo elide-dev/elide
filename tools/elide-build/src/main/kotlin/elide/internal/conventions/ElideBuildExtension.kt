@@ -172,6 +172,21 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Whether to enable linting baselines. */
     public var enableBaselines: Boolean = true
+
+    /** Disable all checks. */
+    public fun disableAllChecks() {
+      detekt = false
+      sonar = false
+      prettier = false
+      eslint = false
+      javaFormat = false
+      diktat = false
+      ktlint = false
+      spotless = false
+      checkstyle = false
+      experimental = false
+      pmd = false
+    }
   }
 
   /** Configuration for the JVM platform */

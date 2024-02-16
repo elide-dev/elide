@@ -72,6 +72,7 @@ dependencyResolutionManagement {
       name = "pkgst-maven"
       url = uri("https://maven.pkg.st")
     }
+
     maven {
       name = "elide-snapshots"
       url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")

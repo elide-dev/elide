@@ -18,7 +18,6 @@
 )
 
 plugins {
-  `project-report`
   `test-report-aggregation`
   `jacoco-report-aggregation`
 
@@ -61,6 +60,10 @@ val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class)
       project.path.contains(it) || project.name.contains(it)
     }
   }.map {
+    dependsOn(
+      it.tasks.findByName("test"),
+      it.tasks.findByName("jvmTest"),
+    )
     val path = file(it.layout.buildDirectory.dir("test-results"))
     if (path.exists()) {
       java.util.Optional.of(path)

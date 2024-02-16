@@ -29,3 +29,14 @@ proxy-config.json
 resource-config.json
 serialization-config.json
 packages/*/src/test/resources
+creative/logo/
+creative/
+gradle/*.xml
+gradlew
+gradle-wrapper.jar
+*.jar
+.husky
+.codebase
+.kotlin
+.qodana
+detekt-baseline.xml

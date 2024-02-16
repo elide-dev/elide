@@ -29,3 +29,4 @@ test-results-native/
 .kotlin/
 .qodana/
 .pnp*
+packages/graalvm/test.mjs

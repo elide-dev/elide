@@ -76,7 +76,18 @@ jobs:
   check-scorecard:
     name: "Checks"
     uses: ./.github/workflows/checks.scorecards.yml
-    permissions: read-all
+    permissions:
+      checks: read
+      deployments: read
+      discussions: read
+      id-token: write
+      issues: read
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: write
+      statuses: read
 
   ##
   ## Job: Check for Wrapper

@@ -11,7 +11,7 @@
 <hr />
 
 <p align="center">
-  <a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img src="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml/badge.svg" /></a>
+  <a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img src="https://github.com/elide-dev/elide/actions/workflows/on.push.yml/badge.svg" /></a>
   <a href="https://codecov.io/gh/elide-dev/elide"><img src="https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3" /></a>
   <a href="https://elide.dev/discord"><img src="https://img.shields.io/discord/1119121740161884252?b1" /></a>
   <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>

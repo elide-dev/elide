@@ -123,7 +123,6 @@ jobs:
         uses: github/codeql-action/init@379614612a29c9e28f31f39a59013eb8012a51f0 # v3.24.3
         with:
           config-file: ./.github/codeql/codeql-config.yml
-          fail-on-severity: "error"
           languages: ${{ matrix.language }}
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@eaceaf801fd36c7dee90939fad912460b18a1ffe # v4.1.2

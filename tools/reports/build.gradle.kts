@@ -131,7 +131,3 @@ val reports: TaskProvider<Task> by tasks.registering {
 
   dependsOn("testAggregateTestReport", mergeJUnitReports)
 }
-
-tasks.check.configure {
-  finalizedBy(reports)
-}

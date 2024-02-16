@@ -669,7 +669,6 @@ tasks {
     group = "Verification"
 
     dependsOn(
-      reports,
       detekt,
     )
   }

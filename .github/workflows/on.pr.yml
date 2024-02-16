@@ -213,6 +213,20 @@ jobs:
       contents: "read"
 
   ##
+  ## Job: API Check
+  ##
+  check-api:
+    name: "Checks"
+    uses: ./.github/workflows/checks.apicheck.yml
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.srcs)
+    secrets:
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+    permissions:
+      contents: "read"
+
+  ##
   ## Job: Checks for Models
   ##
   check-model:

@@ -266,7 +266,6 @@ jobs:
             -x detekt
             --scan
             --build-cache
-            --configuration-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
@@ -308,7 +307,6 @@ jobs:
             -x detekt
             --scan
             --build-cache
-            --configuration-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
@@ -350,7 +348,6 @@ jobs:
             -x detekt
             --scan
             --build-cache
-            --configuration-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient

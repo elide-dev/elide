@@ -284,7 +284,6 @@ jobs:
             -x optimizedDistTar
             -x optimizedDistZip
             --scan
-            --configuration-cache
             --build-cache
             --no-daemon
             --warning-mode=none

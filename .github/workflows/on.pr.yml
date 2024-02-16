@@ -182,11 +182,7 @@ jobs:
       security-events: "write"
     with:
       provenance: false
-      native: |
-        (
-          contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
-          contains(github.event.head_commit.message, 'ci:test-native')
-        )
+      native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:test-native') || contains(github.event.head_commit.message, 'ci:test-native') }}
 
   ##
   ## Job: Multi-platform Build

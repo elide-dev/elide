@@ -385,9 +385,6 @@ dependencies {
   runtimeOnly(projects.packages.proto.protoKotlinx)
 
   runtimeOnly(mn.micronaut.graal)
-  implementation("org.eclipse.jetty.npn:npn-api:8.1.2.v20120308")
-  implementation("org.eclipse.jetty.alpn:alpn-api:1.1.3.v20160715")
-
   implementation(libs.netty.tcnative)
 
   val arch = when (System.getProperty("os.arch")) {

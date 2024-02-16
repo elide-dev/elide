@@ -117,6 +117,7 @@ buildscript {
       }
     }
   }
+
   dependencies {
     classpath(libs.kotlinx.knit)
     classpath(libs.plugin.kotlinx.atomicfu)
@@ -250,8 +251,8 @@ sonar {
     property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
 
     listOf(
-      "sonar.java.checkstyle.reportPaths" to "",
-      "sonar.java.pmd.reportPaths" to "",
+      "sonar.java.checkstyle.reportPaths" to "build/reports/checkstyle/main.xml",
+      "sonar.java.pmd.reportPaths" to "build/reports/pmd/main.xml",
       "sonar.kotlin.detekt.reportPaths" to "build/reports/detekt/detekt.xml",
       "sonar.kotlin.ktlint.reportPaths" to "",
       "sonar.kotlin.diktat.reportPaths" to "",

@@ -30,6 +30,9 @@
       reason: Not applicable; this version of Jackson is only used at build time.
     ]]></notes>
 
+    <cve>CVE-2020-25649</cve>
+    <cve>CVE-2020-36518</cve>
+    <cve>CVE-2021-46877</cve>
     <cve>CVE-2022-42003</cve>
     <cve>CVE-2022-42004</cve>
     <cve>CVE-2023-35116</cve>
@@ -105,5 +108,38 @@
 
     <cve>CVE-2023-33201</cve>
     <cve>CVE-2023-33202</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+      reason: Shadowed as part of the GraalVM SDK. Not used directly, and even then only at build time.
+    ]]></notes>
+
+    <cve>CVE-2011-4599</cve>
+    <cve>CVE-2014-7923</cve>
+    <cve>CVE-2014-7926</cve>
+    <cve>CVE-2014-7940</cve>
+    <cve>CVE-2014-8146</cve>
+    <cve>CVE-2014-8147</cve>
+    <cve>CVE-2014-9654</cve>
+    <cve>CVE-2014-9911</cve>
+    <cve>CVE-2015-5922</cve>
+    <cve>CVE-2016-6293</cve>
+    <cve>CVE-2016-7415</cve>
+    <cve>CVE-2017-14952</cve>
+    <cve>CVE-2017-15396</cve>
+    <cve>CVE-2017-15422</cve>
+    <cve>CVE-2017-17484</cve>
+    <cve>CVE-2017-7867</cve>
+    <cve>CVE-2017-7868</cve>
+    <cve>CVE-2020-10531</cve>
+    <cve>CVE-2020-21913</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+      reason: Only used at build time.
+    ]]></notes>
+
+    <cve>CVE-2022-45688</cve>
+    <cve>CVE-2023-5072</cve>
   </suppress>
 </suppressions>

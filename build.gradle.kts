@@ -29,9 +29,10 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
-import org.owasp.dependencycheck.reporting.ReportGenerator
+import org.owasp.dependencycheck.reporting.ReportGenerator.Format.*
 import java.util.Properties
 import kotlinx.kover.gradle.plugin.dsl.*
+import kotlinx.validation.KotlinApiCompareTask
 import elide.internal.conventions.project.Projects
 
 plugins {
@@ -50,6 +51,7 @@ plugins {
   alias(libs.plugins.nexusPublishing)
   alias(libs.plugins.openrewrite)
   alias(libs.plugins.shadow)
+  alias(libs.plugins.snyk)
   alias(libs.plugins.sonar)
   alias(libs.plugins.spdx.sbom)
   alias(libs.plugins.spotless)
@@ -62,30 +64,29 @@ group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
 val versionFile: File = layout.projectDirectory.file(".version").asFile
-version =
-  if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
-    versionFile.readText().trim().replace("\n", "").ifBlank {
-      throw IllegalStateException("Failed to load `.version`")
-    }
-  } else {
-    "1.0-SNAPSHOT"
+version = if (hasProperty("elide.stamp") && properties["elide.stamp"] == "true") {
+  versionFile.readText().trim().replace("\n", "").ifBlank {
+    throw IllegalStateException("Failed to load `.version`")
   }
+} else "1.0-SNAPSHOT"
 
-val props = Properties()
-props.load(
-  file(
-    if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
-      "gradle-ci.properties"
-    } else {
-      "local.properties"
-    },
-  ).inputStream(),
-)
+// Load property sources.
+val props = Properties().apply {
+  load(
+    file(
+      if (hasProperty("elide.ci") && properties["elide.ci"] == "true") {
+        "gradle-ci.properties"
+      } else {
+        "local.properties"
+      },
+    ).inputStream(),
+  )
+}
 
-val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
+val isCI = hasProperty("elide.ci") && properties["elide.ci"] == "true"
 
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
+val javaLanguageVersion = properties["versions.java.language"] as String
+val kotlinLanguageVersion = properties["versions.kotlin.language"] as String
 val nodeVersion: String by properties
 val enableKnit: String? by properties
 val enableOwasp: String? by properties
@@ -119,11 +120,11 @@ buildscript {
     classpath(libs.plugin.kotlinx.atomicfu)
     classpath(libs.owasp)
 
-    if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
-      classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
+    if (hasProperty("elide.pluginMode") && properties["elide.pluginMode"] == "repository") {
+      classpath("dev.elide.buildtools:plugin:${properties["elide.pluginVersion"] as String}")
     }
   }
-  if (project.findProperty("elide.lockDeps") == "true") {
+  if (findProperty("elide.lockDeps") == "true") {
     configurations.classpath {
       resolutionStrategy.activateDependencyLocking()
     }
@@ -399,11 +400,11 @@ plugins.withType(YarnPlugin::class.java) {
   }
 }
 
-// --- Dependency Check -----------------------------------------------------------------------------------------------
+// --- OWASP Dependency Check -----------------------------------------------------------------------------------------
 //
 configure<DependencyCheckExtension> {
   // Top-level settings
-  format = ReportGenerator.Format.ALL.toString()
+  format = listOf(HTML).joinToString(",") { it.toString() }
   scanBuildEnv = true
   scanDependencies = true
   autoUpdate = true
@@ -418,7 +419,8 @@ configure<DependencyCheckExtension> {
   nvd.validForHours = 12
 
   // Analyzer settings
-  suppressionFile = "config/owasp/suppressions.xml"
+  suppressionFile = "config/owasp/owasp-suppressions.xml"
+  scanConfigurations = listOf("compileClasspath", "runtimeClasspath", "classpath")
 
   analyzers.ossIndex.enabled = true
   analyzers.archiveEnabled = true
@@ -428,6 +430,18 @@ configure<DependencyCheckExtension> {
   analyzers.jarEnabled = true
   analyzers.opensslEnabled = true
   analyzers.experimentalEnabled = false
+}
+
+// --- Snyk -----------------------------------------------------------------------------------------------------------
+//
+snyk {
+  setArguments("--all-sub-projects")
+  setSeverity("low")
+  setAutoDownload(true)
+  setAutoUpdate(true)
+  System.getenv("SNYK_API_KEY")?.ifBlank { null }?.let {
+    setApi(it)
+  }
 }
 
 // --- Knit -----------------------------------------------------------------------------------------------------------
@@ -690,10 +704,7 @@ tasks {
       preMerge,
       precheck,
       detekt,
+      withType(KotlinApiCompareTask::class),
     )
-
-    afterEvaluate {
-      dependsOn(named("apiCheck"))
-    }
   }
 }

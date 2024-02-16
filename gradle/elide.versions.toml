@@ -226,6 +226,7 @@ sigstore = "0.7.0"
 slf4j = "2.0.11"
 snakeyaml = "2.2"
 snappy = "1.1.10.3"
+snyk = "0.5.1"
 sonar = "4.4.1.3373"
 soy = "2022-03-07" # next: "2022-07-20"
 spdx = "0.6.0"
@@ -300,6 +301,7 @@ redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted-plugin" }
 reflekt = { id = "org.jetbrains.reflekt", version.ref = "kotlin-sdk" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-plugin" }
 sigstore = { id = "dev.sigstore.sign", version.ref = "sigstore" }
+snyk = { id = "io.snyk.gradle.plugin.snykplugin", version.ref = "snyk" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
 spdx-sbom = { id = "org.spdx.sbom", version.ref = "spdx" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

@@ -68,7 +68,9 @@ version = if (hasProperty("elide.stamp") && properties["elide.stamp"] == "true")
   versionFile.readText().trim().replace("\n", "").ifBlank {
     throw IllegalStateException("Failed to load `.version`")
   }
-} else "1.0-SNAPSHOT"
+} else {
+  "1.0-SNAPSHOT"
+}
 
 // Load property sources.
 val props = Properties().apply {

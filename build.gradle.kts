@@ -357,7 +357,9 @@ apiValidation {
     ).plus(
       if (properties["buildDocs"] == "true") {
         listOf(
+          "architecture",
           "docs",
+          "guide",
         )
       } else {
         emptyList()
@@ -539,6 +541,10 @@ tasks {
   }
 
   if (buildDocs == "true") {
+    subprojects {
+      plugins.apply("org.jetbrains.dokka")
+    }
+
     val dokkaHtmlMultiModule by getting(DokkaMultiModuleTask::class) {
       moduleName = "Elide"
       includes.from(layout.projectDirectory.dir("docs/docs.md").asFile)

@@ -422,13 +422,17 @@ configure<DependencyCheckExtension> {
   suppressionFile = "config/owasp/owasp-suppressions.xml"
   scanConfigurations = listOf("compileClasspath", "runtimeClasspath", "classpath")
 
-  analyzers.ossIndex.enabled = true
   analyzers.archiveEnabled = true
+  analyzers.assemblyEnabled = false
+  analyzers.bundleAuditEnabled = false
   analyzers.centralEnabled = true
-  analyzers.knownExploitedEnabled = true
-  analyzers.nodeEnabled = true
   analyzers.jarEnabled = true
+  analyzers.knownExploitedEnabled = true
+  analyzers.msbuildEnabled = false
+  analyzers.nodeEnabled = false
   analyzers.opensslEnabled = true
+
+  analyzers.ossIndex.enabled = true
   analyzers.experimentalEnabled = false
 }
 

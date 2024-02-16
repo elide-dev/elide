@@ -9,9 +9,11 @@ paths:
   - packages
 
 paths-ignore:
-  - node_modules
+  - .codebase
   - build
-  - samples
-  - tools/plugin
+  - docs
+  - node_modules
   - packages/embedded
   - packages/nfi
+  - samples
+  - tools/plugin

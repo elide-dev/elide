@@ -32,3 +32,5 @@ test-results-native/
 packages/graalvm/test.mjs
 *.pyc
 *.pyo
+.codebase/
+docs/reports/

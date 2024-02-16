@@ -128,6 +128,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
   /** Configuration for linters and checks. */
   public class Checks(project: Project) : Convention(project) {
+    // on by default
+    override var requested: Boolean = true
+
     /** Whether to enable Detekt support. */
     public var detekt: Boolean = true
 
@@ -191,6 +194,12 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
   /** Configuration for Node.JS */
   public class NodeJS(project: Project) : Convention(project)
+
+  /** Configuration for doc-gen */
+  public class Docs(project: Project) : Convention(project) {
+    // on by default
+    override var requested: Boolean = true
+  }
 
   /** Configuration for testing tasks */
   public class Testing(project: Project) : Convention(project) {
@@ -263,6 +272,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   internal val kotlin = Kotlin(project)
   internal val java = Java(project)
   internal val cpp = Java(project)
+  internal val docs = Java(project)
   internal val python = Python(project)
   internal val javascript = Javascript(project)
   internal val typescript = Typescript(project)

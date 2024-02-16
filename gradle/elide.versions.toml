@@ -685,6 +685,7 @@ plugin-buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin",
 plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 plugin-docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut-plugin" }
 plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+plugin-dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref = "dokka" }
 plugin-flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers-plugin" }
 plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-plugin" }
 plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }

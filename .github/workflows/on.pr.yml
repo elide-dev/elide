@@ -287,7 +287,7 @@ jobs:
   check-detekt:
     name: "Checks"
     uses: ./.github/workflows/checks.detekt.yml
-    needs: [triage, preflight-checks, pr-build, pr-test]
+    needs: [triage, preflight-checks, pr-build]
     if: fromJson(needs.triage.outputs.srcs)
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}

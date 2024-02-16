@@ -75,6 +75,7 @@ jobs:
             build/
             .codebase/
             ~/.konan
+            .kotlin/
             packages/*/build/bin
             packages/*/build/classes
             packages/*/build/kotlin

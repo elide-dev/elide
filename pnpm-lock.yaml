@@ -40,8 +40,8 @@ importers:
         specifier: 5.3.3
         version: 5.3.3
       web-streams-polyfill:
-        specifier: 3.3.2
-        version: 3.3.2
+        specifier: 3.3.3
+        version: 3.3.3
     devDependencies:
       '@commitlint/cli':
         specifier: 18.6.1
@@ -118,8 +118,8 @@ importers:
         specifier: 4.5.2
         version: 4.5.2
       web-streams-polyfill:
-        specifier: 3.3.2
-        version: 3.3.2
+        specifier: 3.3.3
+        version: 3.3.3
 
   packages/graalvm-js: {}
 
@@ -5069,8 +5069,8 @@ packages:
       graceful-fs: 4.2.11
     dev: true
 
-  /web-streams-polyfill@3.3.2:
-    resolution: {integrity: sha512-3pRGuxRF5gpuZc0W+EpwQRmCD7gRqcDOMt688KmdlDAgAyaB1XlN0zq2njfDNm44XVdIouE7pZ6GzbdyH47uIQ==, tarball: https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-3.3.2.tgz}
+  /web-streams-polyfill@3.3.3:
+    resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==, tarball: https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-3.3.3.tgz}
     engines: {node: '>= 8'}
     dev: false
 

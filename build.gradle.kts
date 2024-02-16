@@ -402,12 +402,32 @@ plugins.withType(YarnPlugin::class.java) {
 // --- Dependency Check -----------------------------------------------------------------------------------------------
 //
 configure<DependencyCheckExtension> {
+  // Top-level settings
   format = ReportGenerator.Format.ALL.toString()
   scanBuildEnv = true
+  scanDependencies = true
+  autoUpdate = true
 
+  // Caching
   cache.central = true
+  cache.ossIndex = true
+  cache.nodeAudit = true
+
+  // NVD Settings
   nvd.apiKey = System.getenv("NVD_API_KEY")
   nvd.validForHours = 12
+
+  // Analyzer settings
+  suppressionFile = "config/owasp/suppressions.xml"
+
+  analyzers.ossIndex.enabled = true
+  analyzers.archiveEnabled = true
+  analyzers.centralEnabled = true
+  analyzers.knownExploitedEnabled = true
+  analyzers.nodeEnabled = true
+  analyzers.jarEnabled = true
+  analyzers.opensslEnabled = true
+  analyzers.experimentalEnabled = false
 }
 
 // --- Knit -----------------------------------------------------------------------------------------------------------

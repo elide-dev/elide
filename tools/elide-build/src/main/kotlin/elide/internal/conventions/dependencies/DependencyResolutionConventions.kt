@@ -115,6 +115,12 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
         because("pin netty")
       }
 
+      // process dependency pins: bouncycastle
+      if (requested.group == "org.bouncycastle") {
+        useVersion(Versions.BOUNCYCASTLE)
+        because("pin bouncycastle")
+      }
+
       // process dependency pins: guava
       if (requested.group == "com.google.guava" && requested.name.contains("guava")) {
         useVersion(Versions.GUAVA)

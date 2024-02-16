@@ -16,6 +16,9 @@ object Versions {
   /** Kotlin version. */
   const val kotlin = "2.0.0-Beta4"
 
+  /** BouncyCastle version. */
+  const val bouncycastle = "1.77"
+
   /** Micronaut version. */
   const val micronaut = "4.3.0"
 

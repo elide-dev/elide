@@ -98,10 +98,8 @@ jobs:
     runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
     permissions:
       contents: "read"
-      id-token: "write"
-      checks: "write"
+      checks: "read"
       packages: "read"
-      pull-requests: "write"
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
@@ -162,14 +160,12 @@ jobs:
     needs: [triage, preflight-checks]
     if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
     permissions:
-      actions: "read"
       contents: "write"
+      actions: "read"
       id-token: "write"
       checks: "write"
-      packages: "write"
       pull-requests: "write"
-      deployments: "write"
-      statuses: "write"
+      packages: "read"
       security-events: "write"
     with:
       provenance: false

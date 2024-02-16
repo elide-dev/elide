@@ -23,13 +23,11 @@ jobs:
     secrets: inherit
     permissions:
       actions: "read"
+      checks: "write"
       contents: "write"
       id-token: "write"
-      checks: "write"
-      packages: "write"
+      packages: "read"
       pull-requests: "write"
-      deployments: "write"
-      statuses: "write"
       security-events: "write"
     with:
       provenance: true
@@ -42,15 +40,11 @@ jobs:
     uses: ./.github/workflows/job.test.yml
     secrets: inherit
     permissions:
-      actions: "read"
-      contents: "write"
-      id-token: "write"
       checks: "write"
-      packages: "write"
+      contents: "read"
+      id-token: "write"
+      packages: "read"
       pull-requests: "write"
-      deployments: "write"
-      statuses: "write"
-      security-events: "write"
 
   ##
   ## Job: Checks for Models
@@ -62,6 +56,20 @@ jobs:
       BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
     permissions:
       contents: "read"
+
+  ##
+  ## Job: Checks with Scorecard
+  ##
+  check-scorecard:
+    name: "Checks"
+    uses: ./.github/workflows/checks.scorecards.yml
+    permissions:
+      actions: read
+      contents: read
+      # Needed to publish results and get a badge (see publish_results below).
+      id-token: write
+      # Needed to upload the results to code-scanning dashboard.
+      security-events: write
 
   ##
   ## Job: Check for Wrapper

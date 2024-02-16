@@ -303,12 +303,14 @@ jobs:
             packages/proto/*/build/libs/*.*
             tools/elide-build/build/**/*.*
       - name: "Artifact: Reports"
-        if: failure()
+        if: failure() || success()
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           name: build-reports-${{ matrix.os }}-latest-gvm-latest
           path: |
             build/reports/**/*.*
+            packages/*/build/reports/**/*.*
+            packages/proto/*/build/reports/**/*.*
       - name: "Artifact: Provenance Subject"
         id: hash
         if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}

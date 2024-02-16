@@ -115,6 +115,7 @@ kotlinx-wrappers-emotion = "11.11.1-pre.697"
 kotlinx-wrappers-history = "5.3.0-pre.506"
 kotlinx-wrappers-js = "1.0.0-pre.697"
 kotlinx-wrappers-mui = "5.15.9-pre.697"
+kotlinx-wrappers-mui-base = "5.0.0-beta.36-pre.697"
 kotlinx-wrappers-mui-icons = "5.15.9-pre.697"
 kotlinx-wrappers-node = "20.11.5-pre.697"
 kotlinx-wrappers-popper = "2.11.8-pre.697"
@@ -560,7 +561,8 @@ kotlinx-wrappers-cssType = { group = "org.jetbrains.kotlin-wrappers", name = "ko
 kotlinx-wrappers-emotion = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-emotion", version.ref = "kotlinx-wrappers-emotion" }
 kotlinx-wrappers-history = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-history", version.ref = "kotlinx-wrappers-history" }
 kotlinx-wrappers-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js", version.ref = "kotlinx-wrappers-js" }
-kotlinx-wrappers-mui = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui", version.ref = "kotlinx-wrappers-mui" }
+kotlinx-wrappers-mui = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui-material", version.ref = "kotlinx-wrappers-mui" }
+kotlinx-wrappers-mui-base = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui-base", version.ref = "kotlinx-wrappers-mui-base" }
 kotlinx-wrappers-mui-icons = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui-icons", version.ref = "kotlinx-wrappers-mui-icons" }
 kotlinx-wrappers-node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx-wrappers-node" }
 kotlinx-wrappers-popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-popper", version.ref = "kotlinx-wrappers-popper" }

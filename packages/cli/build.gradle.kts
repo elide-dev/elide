@@ -1465,7 +1465,7 @@ fun Jar.applyJarSettings() {
       "Specification-Version" to "0.1",
       "Implementation-Title" to "Elide VM Specification",
       "Implementation-Version" to "0.1",
-      "Implementation-Vendor" to "Elide Ventures, LLC",
+      "Implementation-Vendor" to "Elide Technologies, Inc",
       "Application-Name" to "Elide",
       "Codebase" to "https://github.com/elide-dev/elide",
     )

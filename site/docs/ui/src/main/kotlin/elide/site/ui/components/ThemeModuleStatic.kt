@@ -2,7 +2,7 @@ package elide.site.ui.components
 
 import elide.site.ui.theme.Themes
 import js.core.Object
-import js.core.jso
+import js.objects.jso
 import mui.material.CssBaseline
 import mui.material.PaletteMode
 import mui.material.styles.ThemeProvider

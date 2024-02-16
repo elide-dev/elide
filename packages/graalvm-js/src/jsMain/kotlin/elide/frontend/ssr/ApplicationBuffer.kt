@@ -13,7 +13,7 @@
 
 package elide.frontend.ssr
 
-import js.core.jso
+import js.objects.jso
 import react.ReactElement
 import web.streams.ReadableStreamDefaultReader
 import web.streams.ReadableStreamReadValueResult

@@ -3,7 +3,7 @@
 package elide.site.ui.theme
 
 import web.cssom.Color
-import js.core.jso
+import js.objects.jso
 import mui.material.PaletteMode
 import mui.material.styles.Theme
 import mui.material.PaletteMode.Companion.dark as darkMode

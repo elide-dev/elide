@@ -12,7 +12,7 @@ import elide.site.ui.initializeSite
 import emotion.cache.createCache
 import emotion.react.CacheProvider
 import emotion.utils.EmotionCache
-import js.core.jso
+import js.objects.jso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import react.Props

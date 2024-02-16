@@ -1,7 +1,7 @@
 @file:OptIn(ExperimentalJsExport::class)
 
 import elide.runtime.gvm.entrypoint
-import js.core.jso
+import js.objects.jso
 import elide.frontend.ssr.RenderCallback
 import org.w3c.fetch.Request
 import kotlin.js.Promise

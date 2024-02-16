@@ -16,7 +16,7 @@ package elide.embedded.api
 import elide.annotations.API
 
 /**
- * #
+ * # Instance Configuration: Factory
  */
 @API @FunctionalInterface public fun interface InstanceConfigurationFactory {
   /**

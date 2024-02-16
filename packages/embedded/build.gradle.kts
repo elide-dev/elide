@@ -16,6 +16,8 @@
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -25,18 +27,19 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
-  kotlin("plugin.serialization")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.allopen")
+  kotlin("plugin.atomicfu")
   kotlin("plugin.noarg")
+  kotlin("plugin.serialization")
 
-  alias(libs.plugins.micronaut.application)
+  alias(libs.plugins.buildConfig)
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.gradle.checksum)
+  alias(libs.plugins.kover)
   alias(libs.plugins.micronaut.aot)
+  alias(libs.plugins.micronaut.application)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.shadow)
-  alias(libs.plugins.kover)
-  alias(libs.plugins.buildConfig)
-  alias(libs.plugins.gradle.checksum)
 
   id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")

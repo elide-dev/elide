@@ -203,16 +203,6 @@ jobs:
       native: false
 
   ##
-  ## Job: Checks for Vulnerabilities/Licensing
-  ##
-  check-dependencies:
-    name: "Checks"
-    uses: ./.github/workflows/checks.dependency-review.yml
-    needs: [triage, preflight-checks]
-    permissions:
-      contents: "read"
-
-  ##
   ## Job: API Check
   ##
   check-api:
@@ -262,6 +252,16 @@ jobs:
     name: "Checks"
     uses: ./.github/workflows/checks.gradle-wrapper.yml
     needs: [triage, preflight-checks]
+    permissions:
+      contents: "read"
+
+  ##
+  ## Job: Checks for Vulnerabilities/Licensing
+  ##
+  check-dependencies:
+    name: "Checks"
+    uses: ./.github/workflows/checks.dependency-review.yml
+    needs: [triage, preflight-checks, pr-build]
     permissions:
       contents: "read"
 

@@ -232,7 +232,7 @@ snakeyaml = "2.2"
 snappy = "1.1.10.3"
 snyk = "0.5.1"
 sonar = "4.4.1.3373"
-soy = "2022-03-07" # next: "2022-07-20"
+soy = "2022-03-07"                                                # next: "2022-07-20"
 spdx = "0.6.0"
 spotless = "6.25.0"
 sqlcommenter = "2.1.1-elide"
@@ -589,9 +589,9 @@ kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ktoml = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
-larray-buffer = {  group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
-larray-core = {  group = "org.xerial.larray", name = "larray", version.ref = "larray" }
-larray-mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref = "larray" }
+larray-buffer = { group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
+larray-core = { group = "org.xerial.larray", name = "larray", version.ref = "larray" }
+larray-mmap = { group = "org.xerial.larray", name = "larray-mmap", version.ref = "larray" }
 lettuce-core = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce" }
 lmax-disruptor-core = { group = "com.lmax", name = "disruptor", version.ref = "lmaxDisruptor" }
 lmax-disruptor-proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
@@ -750,11 +750,7 @@ elide-uuid = { group = "dev.elide", name = "elide-uuid-core", version.ref = "eli
 elide-uuid-kotlinx = { group = "dev.elide", name = "elide-uuid-kotlinx", version.ref = "elide-uuid" }
 
 [bundles]
-arrow = [
-  "arrow-core",
-  "arrow-fx",
-  "arrow-optics-core",
-]
+arrow = ["arrow-core", "arrow-fx", "arrow-optics-core"]
 
 kotlinx-coroutines-jvm = [
   "kotlinx-coroutines-core",
@@ -770,11 +766,7 @@ kotlinx-serialization = [
   "kotlinx-serialization-protobuf",
 ]
 
-kotlinx-atomicfu = [
-  "kotlinx-atomicfu",
-  "kotlinx-atomicfu-linux-x64",
-  "kotlinx-atomicfu-macos-x64",
-]
+kotlinx-atomicfu = ["kotlinx-atomicfu", "kotlinx-atomicfu-linux-x64", "kotlinx-atomicfu-macos-x64"]
 
 kotlinx = [
   "kotlinx-atomicfu",
@@ -786,10 +778,7 @@ kotlinx = [
   "kotlinx-serialization-protobuf",
 ]
 
-koin = [
-  "koin-annotations",
-  "koin-core",
-]
+koin = ["koin-annotations", "koin-core"]
 
 graalvm-polyglot = [
   "graalvm-polyglot",
@@ -812,14 +801,9 @@ graalvm-tools = [
   "graalvm-polyglot-tools-profiler",
 ]
 
-graalvm-regex = [
-  "graalvm-regex",
-]
+graalvm-regex = ["graalvm-regex"]
 
-graalvm-nfi = [
-  "graalvm-truffle-nfi",
-  "graalvm-truffle-nfi-panama",
-]
+graalvm-nfi = ["graalvm-truffle-nfi", "graalvm-truffle-nfi-panama"]
 
 graalvm-llvm = [
   "graalvm-llvm-api",
@@ -828,24 +812,10 @@ graalvm-llvm = [
   "graalvm-llvm-language-nfi",
 ]
 
-graalvm-espresso = [
-  "graalvm-espresso-hotswap",
-]
+graalvm-espresso = ["graalvm-espresso-hotswap"]
 
-graalvm-python = [
-  "graalvm-polyglot-python",
-  "graalvm-python-resources",
-]
+graalvm-python = ["graalvm-polyglot-python", "graalvm-python-resources"]
 
-graalvm-ruby = [
-  "graalvm-ruby-annotations",
-  "graalvm-ruby-language",
-  "graalvm-ruby-resources",
-]
+graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ruby-resources"]
 
-graalvm-js = [
-  "graalvm-js-isolate",
-  "graalvm-js-language",
-  "graalvm-polyglot-js",
-  "graalvm-polyglot-js-isolate",
-]
+graalvm-js = ["graalvm-js-isolate", "graalvm-js-language", "graalvm-polyglot-js", "graalvm-polyglot-js-isolate"]

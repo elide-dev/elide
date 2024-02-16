@@ -13,10 +13,10 @@
 package elide.proto;
 
 /** Defines a static constant with the current version of the Proto API. */
-public final class ProtoAPI {
+public final class ProtoApi {
   public static final String VERSION = "v1";
 
-  private ProtoAPI() {
+  private ProtoApi() {
     /* Not allowed. */
   }
 }

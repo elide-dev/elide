@@ -10,15 +10,14 @@
   ~ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
   ~ License for the specific language governing permissions and limitations under the License.
   -->
-
 <configuration debug="${elide.logging.debug:-false}">
   <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
   <variable name="APPENDER" value="${elide.logging.appender:-stderr}" />
   <variable name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-warn}" />
-  <serializeModel file="src/main/resources/logback.scmo"/>
+  <serializeModel file="src/main/resources/logback.scmo" />
 
   <contextName>embedded</contextName>
-  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
 
   <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
     <withJansi>true</withJansi>

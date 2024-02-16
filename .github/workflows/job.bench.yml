@@ -93,7 +93,7 @@ jobs:
       - name: "Setup: Yarn"
         run: yarn
       - name: "Run Benchmarks"
-        uses: gradle/actions/setup-gradle@v3.1.0
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
         id: gradlebench
         continue-on-error: ${{ matrix.experimental }}
         env:

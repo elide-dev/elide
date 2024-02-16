@@ -78,11 +78,13 @@ private fun SpotlessExtension.configureSpotlessForProject(conventions: ElideBuil
   //
   if (conventions.javascript.requested || conventions.node.requested || conventions.typescript.requested) {
     javascript {
-      if (conventions.checks.prettier) prettier()
+      if (conventions.checks.prettier) prettier(Versions.PRETTIER)
+      if (conventions.checks.eslint) eslint(Versions.ESLINT)
     }
 
     typescript {
-      if (conventions.checks.prettier) prettier()
+      if (conventions.checks.prettier) prettier(Versions.PRETTIER)
+      if (conventions.checks.eslint) eslint(Versions.ESLINT)
     }
   }
 
@@ -96,11 +98,11 @@ private fun SpotlessExtension.configureSpotlessForProject(conventions: ElideBuil
   //
   if (conventions.checks.prettier && conventions.checks.experimental) {
     json {
-      prettier()
+      prettier(Versions.PRETTIER)
     }
 
     yaml {
-      prettier()
+      prettier(Versions.PRETTIER)
     }
   }
 

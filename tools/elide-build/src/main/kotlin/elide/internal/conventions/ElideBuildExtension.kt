@@ -140,6 +140,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether to enable formatting with Prettier, where supported. */
     public var prettier: Boolean = true
 
+    /** Whether to enable checks with ESLint, where supported. */
+    public var eslint: Boolean = true
+
     /** Whether to enable formatting with Google Java Format. */
     public var javaFormat: Boolean = true
 

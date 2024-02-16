@@ -119,6 +119,12 @@ public object Constants {
     /** Version to pin for ktlint. */
     const val KTLINT = "1.1.1"
 
+    /** Version to pin for eslint. */
+    const val ESLINT = "8.56.0"
+
+    /** Version to pin for Prettier. */
+    const val PRETTIER = "3.2.5"
+
     /** Pinned Protobuf version. */
     const val PROTOBUF = "3.21.11"
 

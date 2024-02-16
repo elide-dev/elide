@@ -76,13 +76,7 @@ jobs:
   check-scorecard:
     name: "Checks"
     uses: ./.github/workflows/checks.scorecards.yml
-    permissions:
-      actions: read
-      contents: read
-      # Needed to publish results and get a badge (see publish_results below).
-      id-token: write
-      # Needed to upload the results to code-scanning dashboard.
-      security-events: write
+    permissions: read-all
 
   ##
   ## Job: Check for Wrapper

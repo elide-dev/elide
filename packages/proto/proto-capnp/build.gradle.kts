@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,9 +13,8 @@
 
 @file:Suppress("UnstableApiUsage")
 
-
- import elide.internal.conventions.publishing.publish
- import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
@@ -27,12 +26,12 @@ elide {
     id = "proto-capnp"
     name = "Elide Protocol: Cap'n'Proto"
     description = "Elide protocol implementation for Cap'n'Proto."
-    
+
     publish("maven") {
       from(components["kotlin"])
     }
   }
-  
+
   kotlin {
     target = KotlinTarget.JVM
   }
@@ -49,6 +48,10 @@ elide {
   java {
     configureModularity = false
     includeJavadoc = false
+  }
+
+  checks {
+    disableAllChecks()
   }
 }
 

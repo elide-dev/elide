@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,9 +18,7 @@ import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import elide.struct.AbstractTreeMap
 import elide.struct.MutableTreeMap
-import elide.struct.TreeMap
 
 /**
  *

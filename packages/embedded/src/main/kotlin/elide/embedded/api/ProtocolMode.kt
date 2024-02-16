@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,8 +14,9 @@
 package elide.embedded.api
 
 import elide.core.api.Symbolic
+import elide.embedded.NativeApi.ProtocolMode.ELIDE_CAPNPROTO
+import elide.embedded.NativeApi.ProtocolMode.ELIDE_PROTOBUF
 import elide.embedded.NativeApi.ProtocolMode as NativeProtocolMode
-import elide.embedded.NativeApi.ProtocolMode.*
 
 /**
  * # Protocol Mode

@@ -1,4 +1,25 @@
+#
+# Copyright (c) 2024 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
 name: PR
+
+# Labels to control this PR flow:
+#
+# - ci:api-check-bypass - Bypass API check failures.
+# - ci:buf-breaking-ignore - Ignore breaking changes in the model.
+# - ci:fmt-ignore - Ignore formatting failures.
+# - ci:test-native - Run native tests.
+# - ci:build-native - Run native builds.
 
 "on":
   pull_request:
@@ -54,7 +75,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: "Triage: PR Changes"
         id: filter
-        uses: dorny/paths-filter@0bc4621a3135347011ad047f9ecf449bf72ce2bd # v3.0.0
+        uses: dorny/paths-filter@ebc4d7e9ebcb0b1eb21480bb8f43113e996ac77a # v3.0.1
         with:
           filters: |
             base: &base
@@ -98,10 +119,8 @@ jobs:
     runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
     permissions:
       contents: "read"
-      id-token: "write"
-      checks: "write"
+      checks: "read"
       packages: "read"
-      pull-requests: "write"
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
@@ -115,7 +134,7 @@ jobs:
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        uses: graalvm/setup-graalvm@d72e3dbf5f44eb0b78c4f8ec61a262d8bf9b94af # v1.1.7
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -132,25 +151,16 @@ jobs:
             elide-framework-
       - name: "Check: Library ABI"
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-        id: abicheck
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
         env:
           CI: true
           GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
-          cache-read-only: true
+          cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
-            apiCheck
-            --dependency-verification=lenient
-            --no-daemon
-            --stacktrace
-            --warning-mode=none
-            -Pelide.ci=true
-            -PbuildDocs=false
-            -PbuildSamples=false
-            -PbuildDocsSite=false
+            projects
 
   ##
   ## Job: Multi-platform Build
@@ -162,17 +172,16 @@ jobs:
     needs: [triage, preflight-checks]
     if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
     permissions:
-      actions: "read"
       contents: "write"
+      actions: "read"
       id-token: "write"
       checks: "write"
-      packages: "write"
       pull-requests: "write"
-      deployments: "write"
-      statuses: "write"
+      packages: "read"
       security-events: "write"
     with:
       provenance: false
+      native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:build-native') || contains(github.event.head_commit.message, 'ci:build-native') }}
 
   ##
   ## Job: Multi-platform Build
@@ -190,15 +199,19 @@ jobs:
       packages: "read"
       pull-requests: "write"
     with:
-      native: false
+      native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:test-native') || contains(github.event.head_commit.message, 'ci:test-native') }}
 
   ##
-  ## Job: Checks for Vulnerabilities/Licensing
+  ## Job: API Check
   ##
-  check-dependencies:
+  check-api:
     name: "Checks"
-    uses: ./.github/workflows/checks.dependency-review.yml
+    uses: ./.github/workflows/checks.apicheck.yml
     needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.srcs)
+    secrets:
+      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
     permissions:
       contents: "read"
 
@@ -218,12 +231,36 @@ jobs:
       ignore_breaking: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
 
   ##
+  ## Job: Checks for Formatting/Style
+  ##
+  check-format:
+    name: "Checks"
+    uses: ./.github/workflows/checks.formatting.yml
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model)
+    secrets: inherit
+    permissions:
+      contents: "read"
+    with:
+      ignore_failures: ${{ contains(github.event.pull_request.labels.*.name, 'ci:fmt-ignore') }}
+
+  ##
   ## Job: Check for Wrapper
   ##
   check-wrapper:
     name: "Checks"
     uses: ./.github/workflows/checks.gradle-wrapper.yml
     needs: [triage, preflight-checks]
+    permissions:
+      contents: "read"
+
+  ##
+  ## Job: Checks for Vulnerabilities/Licensing
+  ##
+  check-dependencies:
+    name: "Checks"
+    uses: ./.github/workflows/checks.dependency-review.yml
+    needs: [triage, preflight-checks, pr-build]
     permissions:
       contents: "read"
 
@@ -249,7 +286,7 @@ jobs:
   check-detekt:
     name: "Checks"
     uses: ./.github/workflows/checks.detekt.yml
-    needs: [triage, preflight-checks, pr-build, pr-test]
+    needs: [triage, preflight-checks, pr-build]
     if: fromJson(needs.triage.outputs.srcs)
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,7 +17,6 @@ package elide.server
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono

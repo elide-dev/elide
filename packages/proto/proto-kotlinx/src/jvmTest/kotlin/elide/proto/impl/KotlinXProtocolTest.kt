@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package elide.proto.impl
 
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import elide.proto.ElideProtocol.Dialect.*
+import elide.proto.ElideProtocol.Dialect.JSON
 import elide.proto.ElideProtocol.ImplementationLibrary.KOTLINX
 import elide.proto.api.Protocol
 import elide.proto.test.AbstractProtocolFacadeTest

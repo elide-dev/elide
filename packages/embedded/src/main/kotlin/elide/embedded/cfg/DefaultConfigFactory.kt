@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,7 +17,6 @@ import com.google.protobuf.Value
 import tools.elide.app.appConfigurationSuite
 import tools.elide.app.configurationValue
 import tools.elide.call.HostConfiguration
-import tools.elide.call.VMConfigurationKt
 import tools.elide.meta.GuestPolicy
 import tools.elide.meta.guestPolicy
 import tools.elide.std.LogLevel.INFO

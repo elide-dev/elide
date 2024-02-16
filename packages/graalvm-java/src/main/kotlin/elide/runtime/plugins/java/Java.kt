@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,11 +13,13 @@
 
 package elide.runtime.plugins.java
 
-import org.graalvm.polyglot.Source
-import elide.runtime.core.*
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
+import elide.runtime.core.GuestLanguageEvaluator
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.java.shell.GuestJavaEvaluator
 import elide.runtime.plugins.jvm.Jvm
@@ -42,9 +44,8 @@ import elide.runtime.plugins.jvm.Jvm
   }
 
   public companion object Plugin : AbstractLanguagePlugin<JavaConfig, Java>() {
-    private const val JAVA_PLUGIN_ID = "Java"
     private const val JAVA_LANGUAGE_ID = "java"
-
+    private const val JAVA_PLUGIN_ID = "Java"
     override val key: Key<Java> = Key(JAVA_PLUGIN_ID)
     override val languageId: String = JAVA_LANGUAGE_ID
 

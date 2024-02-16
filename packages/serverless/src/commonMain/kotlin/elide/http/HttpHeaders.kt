@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,8 +13,6 @@
 
 package elide.http
 
-import elide.http.api.HttpHeaders as HttpHeadersAPI
-import elide.http.api.MutableHttpHeaders as MutableHttpHeadersAPI
 import kotlin.jvm.JvmStatic
 import elide.http.api.HttpHeaders.HeaderName
 import elide.http.api.HttpHeaders.HeaderValue
@@ -22,6 +20,8 @@ import elide.http.api.HttpString
 import elide.struct.MutableTreeMap
 import elide.struct.api.SortedMap
 import elide.struct.sortedMapOf
+import elide.http.api.HttpHeaders as HttpHeadersAPI
+import elide.http.api.MutableHttpHeaders as MutableHttpHeadersAPI
 
 /**
  * # HTTP Headers

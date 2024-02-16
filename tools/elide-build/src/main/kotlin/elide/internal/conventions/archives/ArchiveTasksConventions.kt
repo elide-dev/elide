@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,9 +16,9 @@ package elide.internal.conventions.archives
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.tasks.bundling.AbstractArchiveTask
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Tar
 import org.gradle.api.tasks.bundling.Zip
-import org.gradle.api.tasks.bundling.Jar
 
 /** Adjusts [Zip] and [Jar] tasks to improve build caching and hermeticity. */
 internal fun Project.reproducibleArchiveTasks() {

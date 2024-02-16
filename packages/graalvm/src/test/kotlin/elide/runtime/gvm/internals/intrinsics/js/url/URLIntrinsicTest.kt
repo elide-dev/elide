@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,6 +16,12 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.url
 
+import org.graalvm.polyglot.Value.asValue
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import java.net.URI
+import kotlin.test.assertFailsWith
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue
@@ -24,12 +30,6 @@ import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.graalvm.polyglot.Value.asValue
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import java.net.URI
-import kotlin.test.assertFailsWith
 
 /** Tests for the intrinsic `URL` implementation provided by Elide. */
 @Suppress("HttpUrlsUsage")

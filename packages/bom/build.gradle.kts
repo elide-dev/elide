@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,9 +12,9 @@
  */
 
 
+import elide.internal.conventions.Constants.Elide
 import elide.internal.conventions.analysis.skipAnalysis
 import elide.internal.conventions.publishing.publish
-import elide.internal.conventions.Constants.Elide
 
 plugins {
   id("version-catalog")

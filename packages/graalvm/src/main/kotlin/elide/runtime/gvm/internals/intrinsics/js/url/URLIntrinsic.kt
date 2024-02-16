@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,6 +13,11 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.url
 
+import org.graalvm.polyglot.proxy.ProxyInstantiable
+import java.io.Serializable
+import java.net.URI
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
@@ -27,11 +32,6 @@ import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.vm.annotations.Polyglot
-import org.graalvm.polyglot.proxy.ProxyInstantiable
-import java.io.Serializable
-import java.net.URI
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
 import org.graalvm.polyglot.Value as GuestValue
 import java.net.URI as NativeURL
 

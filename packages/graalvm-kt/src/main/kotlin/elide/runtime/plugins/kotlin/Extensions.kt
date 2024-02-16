@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -27,13 +27,11 @@ import elide.runtime.core.evaluate
  * @param source The Kotlin snippet to be evaluated.
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.kotlin(source: String, name: String? = null): PolyglotValue {
-  return evaluate(
-    Source.newBuilder(Kotlin.languageId, source, name ?: "snippet.kts")
-      .interactive(true)
-      .build(),
-  )
-}
+@DelicateElideApi public fun PolyglotContext.kotlin(source: String, name: String? = null): PolyglotValue = evaluate(
+  Source.newBuilder(Kotlin.languageId, source, name ?: "snippet.kts")
+    .interactive(true)
+    .build(),
+)
 
 /**
  * Execute the given [source] code as a Kotlin Script, returning the result. This is equivalent to calling
@@ -42,9 +40,8 @@ import elide.runtime.core.evaluate
  * @param source The source code of the Kotlin Script.
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.kotlinScript(source: String, name: String? = null): PolyglotValue {
-  return evaluate(Source.newBuilder(Kotlin.languageId, source, name ?: "snippet.kts").build())
-}
+@DelicateElideApi public fun PolyglotContext.kotlinScript(source: String, name: String? = null): PolyglotValue =
+  evaluate(Source.newBuilder(Kotlin.languageId, source, name ?: "snippet.kts").build())
 
 /**
  * Execute the given source [file] as a Kotlin Script, returning the result. This is equivalent to calling
@@ -53,6 +50,5 @@ import elide.runtime.core.evaluate
  * @param file A basic Kotlin Script source file (.kts)
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.kotlinScript(file: File): PolyglotValue {
-  return evaluate(Source.newBuilder(Kotlin.languageId, file).build())
-}
+@DelicateElideApi public fun PolyglotContext.kotlinScript(file: File): PolyglotValue =
+  evaluate(Source.newBuilder(Kotlin.languageId, file).build())

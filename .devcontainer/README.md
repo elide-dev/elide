@@ -15,11 +15,13 @@ This GitHub Codespace comes pre-installed with the latest version of [Elide](htt
 ### Basic commands
 
 **To see runtime info:**
+
 ```
 elide info
 ```
 
 **To verify working installation:**
+
 ```
 elide selftest
 ```
@@ -27,31 +29,37 @@ elide selftest
 ### JavaScript
 
 **To run a JavaScript terminal:**
+
 ```
 elide shell
 ```
 
 **Encode some JSON:**
+
 ```javascript
-JSON.stringify({x: 5})
+JSON.stringify({ x: 5 });
 ```
 
 **To see `.env` environment:**
+
 ```python
 JSON.stringify(process.env)
 ```
 
 **Generate a UUID:**
+
 ```javascript
-crypto.randomUUID()+""
+crypto.randomUUID() + "";
 ```
 
 **Parse a URL and print the host:**
+
 ```javascript
-new URL("https://google.com").host
+new URL("https://google.com").host;
 ```
 
 **To run a JavaScript server:**
+
 ```
 elide serve tools/scripts/server.js
 ```
@@ -59,6 +67,7 @@ elide serve tools/scripts/server.js
 ### Python
 
 **To run a Python terminal:**
+
 ```
 elide shell --python
 ```

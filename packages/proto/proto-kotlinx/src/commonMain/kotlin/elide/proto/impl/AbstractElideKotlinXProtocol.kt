@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,9 +17,7 @@ package elide.proto.impl
 
 import kotlin.reflect.KClass
 import elide.proto.ElideProtocol
-import elide.proto.ElideProtocol.Dialect
-import elide.proto.ElideProtocol.ImplementationLibrary
-import elide.proto.ElideProtocol.ModelAdapterStrategy
+import elide.proto.ElideProtocol.*
 import elide.proto.api.data.DataModelStrategy
 import elide.proto.impl.data.KxDataContainer
 import elide.proto.impl.data.KxDataFingerprint

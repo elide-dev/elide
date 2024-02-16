@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,27 +12,27 @@
  */
 
 // access the built-in HTTP server engine
-const app = Elide.http
+const app = Elide.http;
 
 // register basic handler
 app.router.handle("GET", "/", (request, response) => {
   // respond using the captured path variables
-  response.send(200, `Hello, Elide!`)
-})
+  response.send(200, `Hello, Elide!`);
+});
 
 // register a route handler
 app.router.handle("GET", "/hello/:name", (request, response, context) => {
   // respond using the captured path variables
-  response.send(200, `Hello, ${context.params.name}`)
-})
+  response.send(200, `Hello, ${context.params.name}`);
+});
 
 // configure the server binding options
-app.config.port = 3000
+app.config.port = 3000;
 
 // receive a callback when the server starts
 app.config.onBind(() => {
-  console.log(`Server listening at "http://localhost:${app.config.port}"! 🚀`)
-})
+  console.log(`Server listening at "http://localhost:${app.config.port}"! 🚀`);
+});
 
 // start the server
-app.start()
+app.start();

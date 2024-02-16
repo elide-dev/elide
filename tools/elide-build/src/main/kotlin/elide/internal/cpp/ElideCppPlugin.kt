@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,6 @@ import org.gradle.api.Project
 import org.gradle.language.cpp.CppLibrary
 import org.gradle.nativeplatform.test.cpp.CppTestSuite
 import org.gradle.nativeplatform.test.cpp.plugins.CppUnitTestPlugin
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import elide.internal.conventions.ElideBuildExtension
 import elide.internal.conventions.ElideConventionPlugin
 

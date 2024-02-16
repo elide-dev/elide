@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -37,9 +37,7 @@ import elide.runtime.plugins.jvm.interop.loadGuestClass
   }
 
   /** Load a class from the guest context by [name]. */
-  fun loadClass(name: String): PolyglotValue {
-    return delegate.invokeMember("loadClass", name)
-  }
+  fun loadClass(name: String): PolyglotValue = delegate.invokeMember("loadClass", name)
 
   private companion object {
     /** Fully qualified class name used to resolve the dynamic loader class in a guest context. */

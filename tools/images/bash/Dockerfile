@@ -10,22 +10,22 @@ LABEL org.opencontainers.image.base.digest=sha256:ce2fe9474ca168eebfd35b0c7682db
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/bash/Dockerfile
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-      bash \
-      ca-certificates \
-      curl \
-      uuid-runtime \
-    && rm -rf /var/lib/apt/lists/* \
-    && groupadd elide \
-    && useradd dev -g elide -m -s /bin/bash \
-    && ln -s /home/dev/elide/elide /bin/elide
+  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    bash \
+    ca-certificates \
+    curl \
+    uuid-runtime \
+  && rm -rf /var/lib/apt/lists/* \
+  && groupadd elide \
+  && useradd dev -g elide -m -s /bin/bash \
+  && ln -s /home/dev/elide/elide /bin/elide
 
 USER dev
 
 RUN echo "Installing Elide..." \
-    && curl -sSL elide.sh | bash -s - \
-    && which elide \
-    && elide --help \
-    && elide selftest \
-    && elide info \
-    && echo "Elide/Bash container image ready."
+  && curl -sSL elide.sh | bash -s - \
+  && which elide \
+  && elide --help \
+  && elide selftest \
+  && elide info \
+  && echo "Elide/Bash container image ready."

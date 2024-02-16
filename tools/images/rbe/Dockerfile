@@ -71,8 +71,11 @@ RUN echo "Building Elide builder image..." \
   && npm install -g "yarn@$YARN_VERSION" "pnpm" \
   && export ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js espresso" \
-  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
-  && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; fi \
+  && if [ "$ARCH" = "x86_64" ]; then
+    ARCH="amd64"
+    COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"
+  fi \
+  && if [ "$ARCH" = "arm64" ]; then ARCH="aarch64"; fi \
   && echo "Installing GraalVM modules..." \
   && $GRAALVM_HOME/bin/gu install $COMPONENTS \
   && echo "Installing Gradle..." \

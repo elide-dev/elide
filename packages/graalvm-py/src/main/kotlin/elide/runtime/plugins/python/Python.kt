@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -56,7 +56,7 @@ import elide.runtime.plugins.llvm.LLVM
       "python.WithCachedSources",
       "python.WithTRegex",
     )
-    
+
     builder.setOptions(
       "llvm.OSR" to "BYTECODE",
       "python.PosixModuleBackend" to "java",
@@ -69,7 +69,6 @@ import elide.runtime.plugins.llvm.LLVM
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
-
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 

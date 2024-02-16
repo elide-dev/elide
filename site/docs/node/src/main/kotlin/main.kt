@@ -2,7 +2,7 @@
 @file:Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 
 import elide.frontend.ssr.*
-import js.core.jso
+import js.objects.jso
 import elide.site.ui.ElideSite as App
 import elide.site.ui.components.ThemeModuleServer
 import react.Fragment

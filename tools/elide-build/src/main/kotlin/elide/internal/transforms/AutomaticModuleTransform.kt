@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 
 package elide.internal.transforms
 
-import org.gradle.api.Project
 import org.gradle.api.artifacts.transform.InputArtifact
 import org.gradle.api.artifacts.transform.TransformAction
 import org.gradle.api.artifacts.transform.TransformOutputs
@@ -30,12 +29,10 @@ import org.gradle.work.ChangeType.*
 import org.gradle.work.InputChanges
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 import kotlin.io.path.Path
-import elide.internal.conventions.ElideBuildExtension
 import elide.internal.conventions.ModularContext
 import elide.internal.conventions.ModuleConfiguration
 import elide.internal.conventions.jvm.defaultModuleTransforms

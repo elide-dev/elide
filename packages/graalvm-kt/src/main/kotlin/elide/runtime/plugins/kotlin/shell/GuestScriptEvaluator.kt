@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -67,8 +67,10 @@ import elide.runtime.plugins.jvm.interop.guestClass
     // resolve the arguments for the script constructor and invoke it, obtaining a new instance of the script class;
     // during construction, the script itself is executed by the compiled class, and the result can be used later
     val scriptInstance = scriptClass.invokeMember("getConstructors").getArrayElement(0).invokeMember(
-      /* identifier = */ "newInstance",
-      /* ...arguments = */ collectConstructorArguments(refinedConfiguration),
+      /* identifier = */
+      "newInstance",
+      /* ...arguments = */
+      collectConstructorArguments(refinedConfiguration),
     )
 
     // unlike default implementations, we don't store the actual compiled script class (since it's on the guest side),
@@ -113,7 +115,9 @@ import elide.runtime.plugins.jvm.interop.guestClass
 
     // install compiler output into the class loader, map class names and ignore metadata
     for ((name, bytecode) in module.compilerOutputFiles) {
-      if (name.startsWith("META-INF")) continue
+      if (name.startsWith("META-INF")) {
+        continue
+      }
 
       // move the bytecode over to the guest side
       val guestBytecode = guestByteArrayClass.newInstance(bytecode.size)
@@ -122,7 +126,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
       loader.defineClass(name.removeSuffix(".class"), guestBytecode)
     }
 
-    // load the compiled script class, 
+    // load the compiled script class,
     return loader.loadClass(script.scriptClassFQName)
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -37,9 +37,7 @@ import elide.runtime.plugins.AbstractLanguageConfig
   public var multithreading: Boolean = true
 
   /** Returns a string representation of the classpath to be used by the guest Espresso JVM. */
-  internal fun collectClasspath(): String {
-    return classpathEntries.joinToString(CLASSPATH_ENTRY_SEPARATOR)
-  }
+  internal fun collectClasspath(): String = classpathEntries.joinToString(CLASSPATH_ENTRY_SEPARATOR)
 
   /** Add new entries to the guest classpath used by the engine. */
   public fun classpath(vararg paths: String) {

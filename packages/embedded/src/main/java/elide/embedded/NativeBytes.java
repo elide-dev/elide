@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,15 +13,9 @@
 
 package elide.embedded;
 
-import elide.embedded.NativeApi.ConfigByteConsumer;
-import elide.embedded.NativeApi.ConfigTipSupplier;
-import elide.embedded.NativeApi.InstanceConfiguration;
-import elide.embedded.NativeApi.SerializedInvocation;
-import elide.embedded.NativeApi.PayloadByteConsumer;
-import elide.embedded.NativeApi.PayloadTipSupplier;
-import elide.embedded.NativeApi.ProtocolMode;
-import elide.embedded.api.UnaryNativeCall;
+import elide.embedded.NativeApi.*;
 import elide.embedded.api.NativeConfiguration;
+import elide.embedded.api.UnaryNativeCall;
 import org.graalvm.nativeimage.IsolateThread;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
 import org.graalvm.nativeimage.c.type.WordPointer;

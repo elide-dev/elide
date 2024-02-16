@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,12 +17,7 @@ import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.awt.Desktop
 import java.net.URI
-import java.net.URL
 import elide.tool.cli.*
-import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.ToolState
-import elide.tool.cli.cmd.discord.ToolDiscordCommand
-import elide.tool.cli.cmd.discord.ToolDiscordCommand.Companion
 
 /** Find help or file a bug or PR against Elide. */
 @Command(

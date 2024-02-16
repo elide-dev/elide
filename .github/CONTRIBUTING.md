@@ -45,11 +45,13 @@ update-jsdeps                  Interactively update Yarn dependencies.
 ```
 
 You can build from the `Makefile`:
+
 ```
 $ make build
 ```
 
 And run the tests, as long as you are building with GraalVM:
+
 ```
 $ make test
 ```
@@ -58,18 +60,18 @@ $ make test
 
 We use [GitHub Issues][1] and Pull Requests to conduct the code review process. Here are some guidelines about how we approach this:
 
-1) **File as a draft to start.**
-We will wait to review your PR until it is out of draft (unless you request early feedback). Feel free to push and force-push here as needed.
+1. **File as a draft to start.**
+   We will wait to review your PR until it is out of draft (unless you request early feedback). Feel free to push and force-push here as needed.
 
-2) **Add tests for your change.**
-Ideally, your change should have close to 100% test coverage. In some cases, we accept changes with no coverage (for urgent hotfixes, etc).
+2. **Add tests for your change.**
+   Ideally, your change should have close to 100% test coverage. In some cases, we accept changes with no coverage (for urgent hotfixes, etc).
 
-3) **When ready, request review.**
-GitHub is configured to require certain workflows to pass, and to require review from code owners. You will need at least one passing review in order
-to merge your change.
+3. **When ready, request review.**
+   GitHub is configured to require certain workflows to pass, and to require review from code owners. You will need at least one passing review in order
+   to merge your change.
 
-4) **Team merges change.**
-Once your change passes all tests and checks, and has been reviewed, a member of the Elide team can add it to the merge queue.
+4. **Team merges change.**
+   Once your change passes all tests and checks, and has been reviewed, a member of the Elide team can add it to the merge queue.
 
 ## PR Feedback Tools
 
@@ -117,6 +119,7 @@ Once you are satisfied with your work and want to submit it for review, mark it 
 ## Build environment
 
 The following tools are required for local development:
+
 - [Gradle 8.4](https://gradle.org/releases/) or newer, using the Gradle wrapper will automatically download the correct distribution the first time a task is executed.
 - The latest [GraalVM JDK](https://www.graalvm.org/downloads/) distribution, the `native-image` component is required to build the native CLI distribution.
 

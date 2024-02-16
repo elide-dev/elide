@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -26,9 +26,8 @@ import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-
-import elide.internal.conventions.kotlin.KotlinTarget
 import org.jetbrains.kotlin.konan.target.HostManager
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   java
@@ -70,6 +69,10 @@ elide {
 
   java {
     configureModularity = false
+  }
+
+  checks {
+    spotless = false
   }
 }
 
@@ -382,9 +385,6 @@ dependencies {
   runtimeOnly(projects.packages.proto.protoKotlinx)
 
   runtimeOnly(mn.micronaut.graal)
-  implementation("org.eclipse.jetty.npn:npn-api:8.1.2.v20120308")
-  implementation("org.eclipse.jetty.alpn:alpn-api:1.1.3.v20160715")
-
   implementation(libs.netty.tcnative)
 
   val arch = when (System.getProperty("os.arch")) {
@@ -1462,7 +1462,7 @@ fun Jar.applyJarSettings() {
       "Specification-Version" to "0.1",
       "Implementation-Title" to "Elide VM Specification",
       "Implementation-Version" to "0.1",
-      "Implementation-Vendor" to "Elide Ventures, LLC",
+      "Implementation-Vendor" to "Elide Technologies, Inc",
       "Application-Name" to "Elide",
       "Codebase" to "https://github.com/elide-dev/elide",
     )

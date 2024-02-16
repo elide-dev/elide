@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  *  with the License. You may obtain a copy of the License at
@@ -72,6 +72,7 @@ dependencyResolutionManagement {
       name = "pkgst-maven"
       url = uri("https://maven.pkg.st")
     }
+
     maven {
       name = "elide-snapshots"
       url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
@@ -261,11 +262,6 @@ val cachePush: String? by settings
 val isCI: Boolean = System.getenv("CI") != "true"
 
 buildless {
-  localCache {
-    enabled = true
-    directory.dir(".codebase/build-cache")
-  }
-
   remoteCache {
     // allow disabling pushing to the remote cache
     push.set(cachePush?.toBooleanStrictOrNull() ?: true)
@@ -274,7 +270,9 @@ buildless {
 
 buildCache {
   local {
+    isEnabled = true
     removeUnusedEntriesAfterDays = 14
+    directory = layout.rootDirectory.dir(".codebase/build-cache")
   }
 }
 

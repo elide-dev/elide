@@ -12,21 +12,25 @@ Elide's testing module uses [JUnit 5][2] via [Micronaut Test][3] when running on
 The `elide-test` package is provided via [Maven Central][0], and also via Elide's own [GitHub Packages][1] repository.
 
 **Via Gradle (Catalog):**
+
 ```kotlin
 implementation(framework.elide.test)
 ```
 
 **Via Gradle (Kotlin DSL):**
+
 ```kotlin
 implementation("dev.elide:elide-test")
 ```
 
 **Via Gradle (Groovy DSL):**
+
 ```kotlin
 implementation "dev.elide:elide-test"
 ```
 
 **Via Maven:**
+
 ```xml
 <dependency>
   <groupId>dev.elide</groupId>

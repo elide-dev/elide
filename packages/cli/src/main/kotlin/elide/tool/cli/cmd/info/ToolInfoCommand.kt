@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,14 +14,11 @@
 package elide.tool.cli.cmd.info
 
 import org.graalvm.nativeimage.ImageInfo
-import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Engine
 import picocli.CommandLine.Command
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.tool.cli.*
-import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.ToolState
 import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.engine.NativeEngine
 import elide.tool.io.RuntimeWorkdirManager

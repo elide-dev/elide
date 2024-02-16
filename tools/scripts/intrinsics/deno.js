@@ -26,31 +26,33 @@ function _deno_serve(options) {
   config.port = options.port || 8080;
 
   // register the callback if requested
-  if (options.onListen) config.onBind(() => options.onListen({
-    port: config.port,
-    hostname: options.hostname || "0.0.0.0"
-  }));
+  if (options.onListen)
+    config.onBind(() =>
+      options.onListen({
+        port: config.port,
+        hostname: options.hostname || "0.0.0.0",
+      }),
+    );
 
   // now wrap the handler (null for both 'method' and 'path' means match all requests)
   router.handle(null, null, (request, response, context) => {
     // in Deno, handlers return a response object rather than sending an existing one
     const denoResponse = options.handler(request);
-    
+
     // translate from the Deno Response object and send the response
     response.send(denoResponse.status, denoResponse.content);
   });
-  
+
   // start the server
-  server.start()
+  server.start();
 }
 
 const Deno = {
-  serve: _deno_serve
+  serve: _deno_serve,
 };
 
 // endregion
 // ------------------------------------------------------------------------------------------------
-
 
 // usage example
 Deno.serve({
@@ -59,5 +61,5 @@ Deno.serve({
   handler: (_req) => new Response("Hello from 'Deno'! 😉"),
   onListen({ port, hostname }) {
     console.log(`'Deno' server started at http://${hostname}:${port}`);
-  }
+  },
 });

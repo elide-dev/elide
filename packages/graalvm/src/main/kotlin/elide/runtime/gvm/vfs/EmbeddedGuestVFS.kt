@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,6 @@ package elide.runtime.gvm.vfs
 import java.io.File
 import java.net.URI
 import java.nio.file.Path
-import java.util.zip.ZipFile
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 

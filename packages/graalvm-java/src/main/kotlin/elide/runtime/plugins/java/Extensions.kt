@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,7 +12,6 @@
  */
 
 package elide.runtime.plugins.java
-
 
 import org.graalvm.polyglot.Source
 import elide.runtime.core.DelicateElideApi
@@ -27,10 +26,8 @@ import elide.runtime.core.evaluate
  * @param source The Java snippet to be evaluated.
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.java(source: String, name: String? = null): PolyglotValue {
-  return evaluate(
-    Source.newBuilder(Java.languageId, source, name ?: "snippet.java")
-      .interactive(true)
-      .build(),
-  )
-}
+@DelicateElideApi public fun PolyglotContext.java(source: String, name: String? = null): PolyglotValue = evaluate(
+  Source.newBuilder(Java.languageId, source, name ?: "snippet.java")
+    .interactive(true)
+    .build(),
+)

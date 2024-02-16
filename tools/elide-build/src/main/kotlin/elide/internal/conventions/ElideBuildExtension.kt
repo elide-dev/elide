@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,13 +16,6 @@
 package elide.internal.conventions
 
 import org.gradle.api.Project
-import org.gradle.api.artifacts.MinimalExternalModuleDependency
-import org.gradle.api.provider.Provider
-import java.util.SortedMap
-import java.util.SortedSet
-import java.util.concurrent.ConcurrentSkipListMap
-import java.util.concurrent.ConcurrentSkipListSet
-import java.util.concurrent.atomic.AtomicBoolean
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.native.NativeTarget.APP
@@ -135,23 +128,65 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
   /** Configuration for linters and checks. */
   public class Checks(project: Project) : Convention(project) {
+    // on by default
+    override var requested: Boolean = true
+
     /** Whether to enable Detekt support. */
     public var detekt: Boolean = true
 
     /** Whether to enable Sonar support. */
     public var sonar: Boolean = true
 
+    /** Whether to enable formatting with Prettier, where supported. */
+    public var prettier: Boolean = true
+
+    /** Whether to enable checks with ESLint, where supported. */
+    public var eslint: Boolean = true
+
+    /** Whether to enable formatting with Google Java Format. */
+    public var javaFormat: Boolean = true
+
+    /** Whether to enable Diktat support. */
+    public var diktat: Boolean = true
+
+    /** Whether to enable ktlint support. */
+    public var ktlint: Boolean = true
+
+    /** Whether to enable Spotless support. */
+    public var spotless: Boolean = true
+
     /** Whether to enable Checkstyle. */
     public var checkstyle: Boolean = true
 
+    /** Whether to enable experimental checks. */
+    public var experimental: Boolean = false
+
     /** Whether to enable PMD. */
     public var pmd: Boolean = true
+
+    /** Whether to enforce formatting/linting on `check`. */
+    public var enforceCheck: Boolean = false
 
     /** Whether to ignore linting failures. */
     public var ignoreFailures: Boolean = false
 
     /** Whether to enable linting baselines. */
     public var enableBaselines: Boolean = true
+
+    /** Disable all checks. */
+    public fun disableAllChecks() {
+      detekt = false
+      sonar = false
+      prettier = false
+      eslint = false
+      javaFormat = false
+      diktat = false
+      ktlint = false
+      spotless = false
+      checkstyle = false
+      experimental = false
+      pmd = false
+    }
   }
 
   /** Configuration for the JVM platform */
@@ -161,6 +196,27 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Whether to force all JVM-targeting tasks to use JVM 17. Defaults to `false`. */
     public var forceJvm17: Boolean = false
+  }
+
+  /** Configuration for the C/C++ platform */
+  public class Cpp(project: Project) : Convention(project)
+
+  /** Configuration for Python */
+  public class Python(project: Project) : Convention(project)
+
+  /** Configuration for JavaScript */
+  public class Javascript(project: Project) : Convention(project)
+
+  /** Configuration for TypeScript */
+  public class Typescript(project: Project) : Convention(project)
+
+  /** Configuration for Node.JS */
+  public class NodeJS(project: Project) : Convention(project)
+
+  /** Configuration for doc-gen */
+  public class Docs(project: Project) : Convention(project) {
+    // on by default
+    override var requested: Boolean = true
   }
 
   /** Configuration for testing tasks */
@@ -233,6 +289,12 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   internal val publishing = Publishing(project)
   internal val kotlin = Kotlin(project)
   internal val java = Java(project)
+  internal val cpp = Java(project)
+  internal val docs = Java(project)
+  internal val python = Python(project)
+  internal val javascript = Javascript(project)
+  internal val typescript = Typescript(project)
+  internal val node = NodeJS(project)
   internal val checks = Checks(project)
   internal val jvm = Jvm(project)
   internal val testing = Testing(project)

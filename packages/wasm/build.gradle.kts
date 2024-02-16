@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -11,8 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-
- import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   kotlin("multiplatform")
@@ -25,7 +24,7 @@ elide {
     name = "Elide WASM"
     description = "Integration with WASM/WASI for Elide."
   }
-  
+
   kotlin {
     target = KotlinTarget.WASI
   }

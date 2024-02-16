@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,6 @@ package kotlinx.serialization.protobuf.schema
 import com.google.protobuf.DescriptorProtos.FileOptions.OptimizeMode
 import java.util.*
 import kotlinx.serialization.protobuf.schema.ProtoOption.*
-import kotlinx.serialization.protobuf.schema.ProtoOption.Target
 
 /**
  * # Proto Options

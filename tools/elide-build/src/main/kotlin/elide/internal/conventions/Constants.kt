@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,6 +14,10 @@
 package elide.internal.conventions
 
 import org.gradle.api.Project
+import elide.internal.conventions.linting.KtlintConventions.RuleCategory.CODE
+import elide.internal.conventions.linting.KtlintConventions.ktRuleset
+import elide.internal.conventions.linting.KtlintConventions.ktlintDisable
+import elide.internal.conventions.linting.KtlintConventions.ktlintRule
 
 /** Convention values used across all extensions. */
 public object Constants {
@@ -79,20 +83,20 @@ public object Constants {
     /** Property: defines the Kotlin language version used in the project. */
     const val KOTLIN = "versions.kotlin.language"
 
-    /** Property: defines the version of the Kotlin SDK. */
-    const val KOTLIN_SDK = "versions.kotlin.sdk"
-
     /** Constant: default Kotlin SDK version if no other version is defined. */
     const val KOTLIN_SDK_PIN = "2.0.0-Beta4"
 
     /** Constant: pinned version of AtomicFU. */
     const val ATOMICFU = "0.23.2"
 
+    /** Constant: pinned version of BouncyCastle. */
+    const val BOUNCYCASTLE = "1.77"
+
     /** Constant: pinned version of Groovy. */
     const val GROOVY = "4.0.18"
 
-    /** Constant: pinned version of `ktlint`. */
-    const val KTLINT = "1.1.1"
+    /** Constant: pinned version of Buf. */
+    const val BUF = "1.28.1"
 
     /** Constant: pinned version of OpenTelemetry. */
     const val OPENTELEMETRY = "1.32.0"
@@ -108,6 +112,18 @@ public object Constants {
 
     /** GraalVM metadata repository version. */
     const val GRAALVM_METADATA = "0.3.6"
+
+    /** Version to pin for Diktat. */
+    const val DIKTAT = "2.0.0"
+
+    /** Version to pin for ktlint. */
+    const val KTLINT = "1.1.1"
+
+    /** Version to pin for eslint. */
+    const val ESLINT = "8.56.0"
+
+    /** Version to pin for Prettier. */
+    const val PRETTIER = "3.2.5"
 
     /** Pinned Protobuf version. */
     const val PROTOBUF = "3.21.11"
@@ -138,20 +154,39 @@ public object Constants {
   internal object Kotlin {
     /** Property: whether to treat all warnings as errors. */
     const val STRICT_MODE = "strictMode"
-
-    /** Enumerates the target platforms for JavaScript projects. */
-    enum class JavaScriptTarget {
-      BROWSER,
-      NODE_JS,
-    }
   }
 
+  /** Build properties and other top-level constants. */
   internal object Build {
     /** Property: whether to build and bundle documentation from project sources, defaults to "true". */
     const val BUILD_DOCS = "buildDocs"
 
     /** Property: Whether to enable dependency locking. */
     const val LOCK_DEPS = "elide.lockDeps"
+  }
+
+  /** Linting settings and parameters. */
+  @Suppress("unused", "SameParameterValue") internal object Linting {
+    /** Ktlint overrides to apply globally. */
+    val ktlintOverrides: Map<String, String> = ktRuleset(
+      ktlintRule(CODE, "style", "intellij_idea"),
+      ktlintDisable("annotation"),
+      ktlintDisable("wrapping"),
+      ktlintDisable("no-wildcard-imports"),
+      ktlintDisable("if-else-wrapping"),
+      ktlintDisable("value-argument-comment"),
+      ktlintDisable("value-argument-comment"),
+      ktlintDisable("type-argument-comment"),
+      ktlintDisable("multiline-expression-wrapping"),
+      ktlintDisable("trailing-comma-on-call-site"),
+      ktlintDisable("trailing-comma-on-declaration-site"),
+      ktlintDisable("paren-spacing"),
+      ktlintDisable("property-naming"),
+      ktlintDisable("filename"),
+    )
+
+    /** Ktlint overrides to apply to Gradle scripts. */
+    val ktlintOverridesKts: Map<String, String> = ktlintOverrides.plus(mapOf())
   }
 
   /** Static library configuration values. */

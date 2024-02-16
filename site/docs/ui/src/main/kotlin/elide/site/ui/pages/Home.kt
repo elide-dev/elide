@@ -19,7 +19,7 @@ import elide.site.ui.components.CodeSample
 import elide.site.ui.components.SyntaxLanguage
 import elide.site.ui.components.ThemeContext
 import elide.site.ui.components.ThemePackage
-import js.core.jso
+import js.objects.jso
 import lib.reactSyntaxHighlighter.SyntaxThemeTomorrowNight
 import mui.icons.material.GitHub
 import mui.material.Box

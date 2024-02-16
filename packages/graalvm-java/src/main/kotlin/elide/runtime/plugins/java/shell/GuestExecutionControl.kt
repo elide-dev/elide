@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -65,13 +65,17 @@ import elide.runtime.plugins.jvm.interop.asStringOrNull
     tryInvoke("redefine", provider.mapBytecodes(cbcs))
   }
 
-  override fun invoke(className: String?, methodName: String?): String? {
-    return tryInvoke("invoke", className, methodName).asStringOrNull()
-  }
+  override fun invoke(className: String?, methodName: String?): String? = tryInvoke(
+    "invoke",
+    className,
+    methodName
+  ).asStringOrNull()
 
-  override fun varValue(className: String?, varName: String?): String? {
-    return tryInvoke("varValue", className, varName).asStringOrNull()
-  }
+  override fun varValue(className: String?, varName: String?): String? = tryInvoke(
+    "varValue",
+    className,
+    varName
+  ).asStringOrNull()
 
   override fun addToClasspath(path: String?) {
     tryInvoke("addToClasspath", path)

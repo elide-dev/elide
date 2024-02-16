@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,12 +31,6 @@ import elide.runtime.plugins.ruby.ruby
 /** Abstract base for all non-intrinsic Ruby guest execution tests. */
 @OptIn(DelicateElideApi::class)
 abstract class RubyTest : AbstractDualTest() {
-  companion object {
-    init {
-      System.setProperty("elide.ruby.vm.enableStreams", "true")
-    }
-  }
-
   private val initialized: AtomicBoolean = AtomicBoolean(false)
 
   // Guest context manager.
@@ -110,6 +104,11 @@ abstract class RubyTest : AbstractDualTest() {
           op = guestOperation,
         )
       }
+    }
+  }
+  companion object {
+    init {
+      System.setProperty("elide.ruby.vm.enableStreams", "true")
     }
   }
 }

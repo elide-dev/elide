@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@ package elide.http
 
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
-import elide.http.api.HttpMessageType
 import elide.http.api.HttpVersion
 import elide.http.api.HttpVersion.HTTP_2
 import elide.http.api.HttpMessage as HttpMessageAPI

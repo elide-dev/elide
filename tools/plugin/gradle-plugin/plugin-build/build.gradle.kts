@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  *  with the License. You may obtain a copy of the License at
@@ -53,19 +53,6 @@ allprojects {
         plugin("io.gitlab.arturbosch.detekt")
         plugin("org.jetbrains.kotlinx.kover")
     }
-
-//    ktlint {
-//        debug = false
-//        verbose = true
-//        android = false
-//        outputToConsole = true
-//        ignoreFailures = false
-//        enableExperimentalRules = true
-//        filter {
-//            exclude("**/generated/**")
-//            include("**/kotlin/**")
-//        }
-//    }
 
     detekt {
         config.from(rootProject.files("../config/detekt/detekt.yml"))

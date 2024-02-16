@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,22 +18,18 @@ import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.NetworkBuilder
 import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
 import com.google.protobuf.ByteString
-import elide.server.AssetModuleId
-import elide.server.TestUtil
-import elide.server.cfg.AssetConfig
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.AssetBundle.*
 import tools.elide.assets.ManifestFormat
-import tools.elide.std.HashAlgorithm
 import tools.elide.data.CompressedData
 import tools.elide.data.compressedData
 import tools.elide.data.dataContainer
 import tools.elide.data.dataFingerprint
+import tools.elide.std.HashAlgorithm
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
@@ -42,6 +38,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
 import kotlin.test.*
+import elide.server.AssetModuleId
+import elide.server.TestUtil
+import elide.server.cfg.AssetConfig
 import elide.testing.annotations.TestCase
 
 /** Tests for [ServerAssetIndex]. */

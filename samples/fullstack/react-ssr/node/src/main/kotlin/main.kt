@@ -7,7 +7,7 @@ import react.Fragment
 import react.Props
 import react.create
 import react.dom.server.rawRenderToString
-import js.core.jso
+import js.objects.jso
 
 /** Props shared with the server. */
 external interface HelloProps : Props {

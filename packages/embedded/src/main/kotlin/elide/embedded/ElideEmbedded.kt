@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler
 import tools.elide.call.HostConfiguration
 import tools.elide.call.v1alpha1.UnaryInvocationResponse
 import java.security.Security
-import java.util.SortedSet
+import java.util.*
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers

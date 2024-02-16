@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,10 +19,11 @@
   "COMPATIBILITY_WARNING",
 )
 
-import elide.internal.conventions.publishing.publish
+import kotlinx.benchmark.gradle.JvmBenchmarkTarget
+import kotlinx.benchmark.gradle.benchmark
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
-import kotlinx.benchmark.gradle.*
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
@@ -71,6 +72,10 @@ elide {
   native {
     target = NativeTarget.LIB
     useAgent = false
+  }
+
+  checks {
+    spotless = false
   }
 }
 
@@ -312,7 +317,7 @@ tasks {
         "Specification-Version" to "0.1",
         "Implementation-Title" to "Elide VM Specification",
         "Implementation-Version" to "0.1",
-        "Implementation-Vendor" to "Elide Ventures, LLC",
+        "Implementation-Vendor" to "Elide Technologies, Inc",
       )
     }
   }

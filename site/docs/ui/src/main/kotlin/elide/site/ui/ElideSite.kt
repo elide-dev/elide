@@ -8,7 +8,7 @@ import web.cssom.array
 import elide.site.ui.components.*
 import elide.site.ui.theme.Area
 import elide.site.ui.theme.Sizes
-import js.core.jso
+import js.objects.jso
 import mui.system.Box
 import mui.system.sx
 import react.router.useLocation

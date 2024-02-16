@@ -1,3 +1,16 @@
+#
+# Copyright (c) 2024 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
 name: Tests
 
 "on":
@@ -164,6 +177,8 @@ jobs:
             .gradle/
             build/
             .codebase/
+            ~/.konan
+            .kotlin/
             packages/*/build/bin
             packages/*/build/classes
             packages/*/build/kotlin
@@ -199,7 +214,7 @@ jobs:
             elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-framework-v1-tests-
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        uses: graalvm/setup-graalvm@d72e3dbf5f44eb0b78c4f8ec61a262d8bf9b94af # v1.1.7
         with:
           distribution: "graalvm"
           java-version: "21"
@@ -240,11 +255,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
-          cache-read-only: false
+          cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
-          gradle-home-cache-includes:
-            binaryen
+          gradle-home-cache-includes: binaryen
             caches
             jdks
             native
@@ -259,15 +273,12 @@ jobs:
             koverXmlReport
             koverBinaryReport
             koverVerify
-            copyCoverageReports
-            sonar
             -x wasmJsTest
             -x wasmWasiTest
             -x wasmWasiNodeTest
             -x detekt
             --scan
             --build-cache
-            --configuration-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
@@ -285,7 +296,45 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
-          cache-read-only: false
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          gradle-home-cache-includes: binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+          arguments: |
+            detekt
+            sonar
+            -x wasmJsTest
+            -x wasmWasiTest
+            -x wasmWasiNodeTest
+            -x detekt
+            --scan
+            --build-cache
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -x apiCheck
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+      - name: "Analysis: Sonar"
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        continue-on-error: true
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
+        with:
+          cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
           gradle-home-cache-includes: binaryen
@@ -309,50 +358,6 @@ jobs:
             -x detekt
             --scan
             --build-cache
-            --configuration-cache
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -x apiCheck
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -PbuildDocs=false
-            -PbuildDocsSite=false
-      - name: "Analysis: Sonar"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-        continue-on-error: true
-        env:
-          CI: true
-          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          TEST_EXCEPTIONS: true
-        with:
-          cache-read-only: false
-          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          dependency-graph: disabled
-          gradle-home-cache-includes:
-            binaryen
-            caches
-            jdks
-            native
-            native-build-tools
-            nodejs
-            notifications
-            wrapper
-            yarn
-          arguments: |
-            detekt
-            koverXmlReport
-            koverBinaryReport
-            koverVerify
-            sonar
-            -x wasmJsTest
-            -x wasmWasiTest
-            -x wasmWasiNodeTest
-            -x detekt
-            --scan
-            --build-cache
-            --configuration-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
@@ -433,12 +438,6 @@ jobs:
     name: "Tests: Native"
     runs-on: ${{ inputs.runner_large || 'ubuntu-latest-8-cores' }}
     if: inputs.native
-    #      (
-    #        github.ref == 'refs/heads/stable' ||
-    #        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
-    #        contains(github.event.head_commit.message, 'ci:test-native')
-    #      )
-
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
@@ -464,6 +463,8 @@ jobs:
             .gradle/
             build/
             .codebase/
+            ~/.konan
+            .kotlin/
             packages/*/build/bin
             packages/*/build/classes
             packages/*/build/kotlin
@@ -498,7 +499,7 @@ jobs:
             elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-framework-v1-tests-
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        uses: graalvm/setup-graalvm@d72e3dbf5f44eb0b78c4f8ec61a262d8bf9b94af # v1.1.7
         with:
           distribution: "graalvm"
           java-version: "21"

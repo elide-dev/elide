@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -47,11 +47,11 @@ import elide.internal.conventions.publishing.configurePublishing
 import elide.internal.conventions.publishing.configurePublishingRepositories
 import elide.internal.conventions.publishing.configureSigning
 import elide.internal.conventions.publishing.configureSigstore
-import elide.internal.conventions.tests.*
+import elide.internal.conventions.redacted.configureRedactedPlugin
 import elide.internal.conventions.tests.configureJacoco
+import elide.internal.conventions.tests.configureKover
 import elide.internal.conventions.tests.configureTestExecution
 import elide.internal.conventions.tests.configureTestLogger
-import elide.internal.conventions.redacted.configureRedactedPlugin
 
 public abstract class ElideConventionPlugin : Plugin<Project> {
   @get:Inject protected abstract val javaToolchainService: JavaToolchainService
@@ -162,7 +162,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       // kotlin linting tools
       if (conventions.checks.detekt) plugins.apply(DetektConventionsPlugin::class.java)
       if (conventions.checks.sonar) plugins.apply(SonarConventionsPlugin::class.java)
-      plugins.apply(SpotlessConventionsPlugin::class.java)
+      if (conventions.checks.spotless) plugins.apply(SpotlessConventionsPlugin::class.java)
     }
 
     // -- Conventions: Java -------------------------------------------------------------------------------------------

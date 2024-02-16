@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -61,9 +61,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
   private val stoppedException by context.executionControlClass("StoppedException")
   private val userException by context.executionControlClass("UserException")
 
-  override fun name(): String {
-    return PROVIDER_NAME
-  }
+  override fun name(): String = PROVIDER_NAME
 
   override fun generate(env: ExecutionEnv, parameters: MutableMap<String, String>): ExecutionControl {
     // delegate to a LocalExecutionControl instance instantiated in the guest context
@@ -101,19 +99,26 @@ import elide.runtime.plugins.jvm.interop.guestClass
       exception isMetaInstanceOf stoppedException -> StoppedException()
 
       exception isMetaInstanceOf userException -> UserException(
-        /* message = */ exception.exceptionMessage(),
-        /* causeExceptionClass = */ exception.exceptionCause(),
-        /* stackElements = */ emptyArray(),
+        /* message = */
+        exception.exceptionMessage(),
+        /* causeExceptionClass = */
+        exception.exceptionCause(),
+        /* stackElements = */
+        emptyArray(),
       )
 
       exception isMetaInstanceOf classInstallException -> ClassInstallException(
-        /* message = */ exception.exceptionMessage(),
-        /* installed = */ exception.invokeMember("installed")?.asBooleanArray(),
+        /* message = */
+        exception.exceptionMessage(),
+        /* installed = */
+        exception.invokeMember("installed")?.asBooleanArray(),
       )
 
       exception isMetaInstanceOf resolutionException -> ResolutionException(
-        /* id = */ exception.invokeMember("id").asInt(),
-        /* stackElements = */ emptyArray(),
+        /* id = */
+        exception.invokeMember("id").asInt(),
+        /* stackElements = */
+        emptyArray(),
       )
 
       else -> guestException
@@ -148,6 +153,12 @@ import elide.runtime.plugins.jvm.interop.guestClass
   }
 
   private companion object {
+    /** Package name prefix used by the [jshellClass] extension. */
+    private const val JSHELL_PACKAGE = "jdk.jshell"
+
+    /** Package name prefix used by the [spiClass] extension. */
+    private const val JSHELL_SPI_PACKAGE = "jdk.jshell.spi"
+
     /**
      * The name read by the service loader when considering this provider.
      *
@@ -157,25 +168,16 @@ import elide.runtime.plugins.jvm.interop.guestClass
      */
     private const val PROVIDER_NAME = "elide"
 
-    /** Package name prefix used by the [jshellClass] extension. */
-    private const val JSHELL_PACKAGE = "jdk.jshell"
-
-    /** Package name prefix used by the [spiClass] extension. */
-    private const val JSHELL_SPI_PACKAGE = "jdk.jshell.spi"
-
     /** Returns a property [guestClass] delegate for the given [name], prefixed with the [JSHELL_PACKAGE] name. */
-    private fun PolyglotContext.jshellClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
-      return guestClass("$JSHELL_PACKAGE.$name")
-    }
+    private fun PolyglotContext.jshellClass(name: String): ReadOnlyProperty<Any, PolyglotValue> =
+      guestClass("$JSHELL_PACKAGE.$name")
 
     /** Returns a property [guestClass] delegate for the given [name], prefixed with the [JSHELL_SPI_PACKAGE] name. */
-    private fun PolyglotContext.spiClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
-      return guestClass("$JSHELL_SPI_PACKAGE.$name")
-    }
+    private fun PolyglotContext.spiClass(name: String): ReadOnlyProperty<Any, PolyglotValue> =
+      guestClass("$JSHELL_SPI_PACKAGE.$name")
 
     /** Returns a property [guestClass] delegate for the given [name] in the jdk.jshell.spi.ExecutionControl class. */
-    private fun PolyglotContext.executionControlClass(name: String): ReadOnlyProperty<Any, PolyglotValue> {
-      return guestClass("$JSHELL_SPI_PACKAGE.ExecutionControl\$$name")
-    }
+    private fun PolyglotContext.executionControlClass(name: String): ReadOnlyProperty<Any, PolyglotValue> =
+      guestClass("$JSHELL_SPI_PACKAGE.ExecutionControl\$$name")
   }
 }

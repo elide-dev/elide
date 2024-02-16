@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -11,18 +11,18 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
-app.get('/hello', (req, res) => {
+app.get("/hello", (req, res) => {
   res.send("Hello!");
-})
+});
 
-app.get('/hello/:name', (req, res) => {
+app.get("/hello/:name", (req, res) => {
   const name = req.params.name;
   console.log(`said hello to name: ${req.params.name}`);
-})
+});
 
 app.listen(port, () => {
-  console.info(`Listening on port ${port}`)
-})
+  console.info(`Listening on port ${port}`);
+});

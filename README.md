@@ -11,7 +11,7 @@
 <hr />
 
 <p align="center">
-  <a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img src="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml/badge.svg" /></a>
+  <a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img src="https://github.com/elide-dev/elide/actions/workflows/on.push.yml/badge.svg" /></a>
   <a href="https://codecov.io/gh/elide-dev/elide"><img src="https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3" /></a>
   <a href="https://elide.dev/discord"><img src="https://img.shields.io/discord/1119121740161884252?b1" /></a>
   <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>
@@ -59,6 +59,7 @@ docker run --platform linux/amd64 --rm -it ghcr.io/elide-dev/elide --help
 brew tap elide-dev/elide
 brew install elide
 ```
+
 ```
 elide --help
 ```
@@ -79,6 +80,7 @@ With Elide, you can write your app in **any combination of JavaScript, Python, R
 from multiple dependency ecosystems (e.g. NPM and Maven Central) all without leaving the warm embrace of your running app.
 
 That means fast polyglot code with:
+
 - No network border, no IPC border
 - No serialization requirement
 
@@ -104,24 +106,24 @@ Let's see an example, the following JavaScript application configures a built-in
 
 ```javascript
 // access the built-in HTTP server engine
-const app = Elide.http
+const app = Elide.http;
 
 // register a route handler
 app.router.handle("GET", "/hello/:name", (request, response, context) => {
   // respond using the captured path variables
-  response.send(200, `Hello, ${context.params.name}`)
-})
+  response.send(200, `Hello, ${context.params.name}`);
+});
 
 // configure the server binding options
-app.config.port = 3000
+app.config.port = 3000;
 
 // receive a callback when the server starts
 app.config.onBind(() => {
-  console.log(`Server listening at "http://localhost:${app.config.port}"! 🚀`)
-})
+  console.log(`Server listening at "http://localhost:${app.config.port}"! 🚀`);
+});
 
 // start the server
-app.start()
+app.start();
 ```
 
 The server can be started with:
@@ -259,7 +261,7 @@ Following this guide is recommended but optional. Depending on the style of deve
 not need some of these components:
 
 | Status                                                          | **Java**    | **Kotlin**    | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
-|-----------------------------------------------------------------|-------------|---------------|-------------|---------------|-----------|--------------------|
+| --------------------------------------------------------------- | ----------- | ------------- | ----------- | ------------- | --------- | ------------------ |
 | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 21`   | `2.0.0-Beta4` | `23.1.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.20`      | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`      | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
@@ -268,6 +270,7 @@ not need some of these components:
 | ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --            | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
+
 ## Reports
 
 ### Licensing

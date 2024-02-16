@@ -54,9 +54,13 @@ RUN echo "Building Elide builder image..." \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js" \
-  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; FORMAL_ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
-  && if [ "$ARCH" = "arm64" ] ; then FORMAL_ARCH="arm64"; fi \
-  && if [ "$ARCH" = "aarch64" ] ; then FORMAL_ARCH="arm64"; fi \
+  && if [ "$ARCH" = "x86_64" ]; then
+    ARCH="amd64"
+    FORMAL_ARCH="amd64"
+    COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"
+  fi \
+  && if [ "$ARCH" = "arm64" ]; then FORMAL_ARCH="arm64"; fi \
+  && if [ "$ARCH" = "aarch64" ]; then FORMAL_ARCH="arm64"; fi \
   && cd ~ \
   && echo "Installing NodeJS (v$NODE_VERSION / Yarn $YARN_VERSION)..." \
   && curl -sL "https://deb.nodesource.com/setup_$NODE_VERSION.x" | bash - \

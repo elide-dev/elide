@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -46,8 +46,7 @@ import elide.runtime.plugins.jvm.Jvm
  * The class will be resolved from the context bindings as specified by the
  * [GraalVM documentation](https://www.graalvm.org/latest/reference-manual/java-on-truffle/interoperability).
  */
-@DelicateElideApi public fun PolyglotContext.loadGuestClass(name: String): PolyglotValue {
-  return bindings(Jvm).getMember(name)?.takeUnless { it.isNull } ?: error(
+@DelicateElideApi public fun PolyglotContext.loadGuestClass(name: String): PolyglotValue =
+  bindings(Jvm).getMember(name)?.takeUnless { it.isNull } ?: error(
     "Failed to resolve guest class <$name>",
   )
-}

@@ -25,7 +25,7 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
-import java.util.EnumSet
+import java.util.*
 
 /** Installs dependencies within Elide plugin projects. */
 @Suppress("unused")

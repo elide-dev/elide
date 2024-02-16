@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,10 +13,10 @@
 
 package elide.frontend.ssr
 
-import js.core.jso
+import js.objects.jso
 import react.ReactElement
-import web.streams.ReadableStreamReadValueResult
 import web.streams.ReadableStreamDefaultReader
+import web.streams.ReadableStreamReadValueResult
 import kotlin.js.Promise
 import react.dom.server.rawRenderToString as renderSSRString
 import react.dom.server.renderToReadableStream as renderSSRStreaming
@@ -66,9 +66,9 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
 
   private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
     reader.read().then { value ->
-      val chunk = value.unsafeCast<ReadableStreamReadValueResult<ByteArray?>>()
+      val chunk: dynamic = value.unsafeCast<ReadableStreamReadValueResult<ByteArray?>>()
 
-      val rawContent = chunk.value
+      val rawContent: ByteArray? = chunk.value as? ByteArray
       var resolved = false
       if (rawContent != null && rawContent.isNotEmpty()) {
         resolved = true  // we're handling a content chunk
@@ -80,7 +80,8 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
         })
       }
 
-      if (chunk.done) {
+      val done = chunk.done as? Boolean ?: false
+      if (done) {
         resolved = true  // we're done with the stream
         fin = true
         finishStream(200, emitter)

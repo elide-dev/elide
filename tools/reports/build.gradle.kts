@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,6 @@
 )
 
 plugins {
-  `project-report`
   `test-report-aggregation`
   `jacoco-report-aggregation`
 
@@ -61,6 +60,12 @@ val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class)
       project.path.contains(it) || project.name.contains(it)
     }
   }.map {
+    listOfNotNull(
+      it.tasks.findByName("test"),
+      it.tasks.findByName("jvmTest"),
+    ).let { tasks ->
+      dependsOn(tasks)
+    }
     val path = file(it.layout.buildDirectory.dir("test-results"))
     if (path.exists()) {
       java.util.Optional.of(path)
@@ -130,8 +135,4 @@ val reports: TaskProvider<Task> by tasks.registering {
   group = "reporting"
 
   dependsOn("testAggregateTestReport", mergeJUnitReports)
-}
-
-tasks.check.configure {
-  finalizedBy(reports)
 }

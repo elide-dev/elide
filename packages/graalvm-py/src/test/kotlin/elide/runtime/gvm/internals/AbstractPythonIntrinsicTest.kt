@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 
 package elide.runtime.gvm.internals
 
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -30,23 +29,6 @@ import elide.vm.annotations.Polyglot
 /** Specializes the [AbstractIntrinsicTest] base with support for Python guest testing. */
 @OptIn(DelicateElideApi::class)
 abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T>() {
-  /** Assertion capture interface. */
-  @FunctionalInterface internal interface PythonAssertion : TestAssertion, Function<Any?, TestContext> {
-    /** Invoke a null-check-based assertion. */
-    @Polyglot override fun apply(value: Any?): TestContext
-  }
-
-  /** Default top-level assertion implementation. */
-  internal class CaptureAssertion : PythonAssertion {
-    private val heldValue: AtomicReference<Any?> = AtomicReference(null)
-    override val value: Any? get() = heldValue.get()
-
-    @Polyglot override fun apply(value: Any?): TestContext {
-      heldValue.set(value)
-      return TestResultContext(this)
-    }
-  }
-
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.install(Python)
   }
@@ -120,6 +102,23 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
           guestOperation,
         )
       }
+    }
+  }
+
+/** Assertion capture interface. */
+  @FunctionalInterface internal interface PythonAssertion : TestAssertion, Function<Any?, TestContext> {
+    /** Invoke a null-check-based assertion. */
+    @Polyglot override fun apply(value: Any?): TestContext
+  }
+
+  /** Default top-level assertion implementation. */
+  internal class CaptureAssertion : PythonAssertion {
+    private val heldValue: AtomicReference<Any?> = AtomicReference(null)
+    override val value: Any? get() = heldValue.get()
+
+    @Polyglot override fun apply(value: Any?): TestContext {
+      heldValue.set(value)
+      return TestResultContext(this)
     }
   }
 }

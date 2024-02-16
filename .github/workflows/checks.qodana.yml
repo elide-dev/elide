@@ -1,3 +1,16 @@
+#
+# Copyright (c) 2024 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
 name: Qodana
 
 "on":
@@ -60,6 +73,8 @@ jobs:
             .gradle/
             build/
             .codebase/
+            ~/.konan
+            .kotlin/
             packages/*/build/bin
             packages/*/build/classes
             packages/*/build/kotlin
@@ -79,7 +94,7 @@ jobs:
             tools/elide-build/build/generated
             tools/elide-build/build/generated-sources
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@2a93b69fdf86ac5a078a98c1a707744632e1da94 # v1.1.5
+        uses: graalvm/setup-graalvm@d72e3dbf5f44eb0b78c4f8ec61a262d8bf9b94af # v1.1.7
         with:
           distribution: "graalvm"
           java-version: 21
@@ -111,6 +126,6 @@ jobs:
         with:
           args: --baseline,qodana.sarif.json
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@e675ced7a7522a761fc9c8eb26682c8b27c42b2b # v3.24.1
+        uses: github/codeql-action/upload-sarif@379614612a29c9e28f31f39a59013eb8012a51f0 # v3.24.3
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

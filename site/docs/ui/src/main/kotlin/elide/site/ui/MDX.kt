@@ -5,7 +5,7 @@ package elide.site.ui
 import web.cssom.ClassName
 import elide.site.ui.components.CodeSample
 import elide.site.ui.components.SyntaxLanguage
-import js.core.jso
+import js.objects.jso
 import mui.icons.material.InfoOutlined
 import mui.material.Box
 import mui.material.Link

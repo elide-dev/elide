@@ -28,8 +28,11 @@ RUN apt-get update \
   && cd /tmp/gvm \
   && export ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js espresso" \
-  && if [ "$ARCH" = "x86_64" ] ; then ARCH="x64"; COMPONENTS="native-image js espresso wasm"; fi \
-  && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; fi \
+  && if [ "$ARCH" = "x86_64" ]; then
+    ARCH="x64"
+    COMPONENTS="native-image js espresso wasm"
+  fi \
+  && if [ "$ARCH" = "arm64" ]; then ARCH="aarch64"; fi \
   && export GRAAL_DOWNLOAD_URL="https://download.oracle.com/graalvm/$JAVA_VERSION/latest/graalvm-jdk-${JAVA_VERSION}_linux-${ARCH}_bin.tar.gz" \
   && echo "GraalVM Download URL: $GRAAL_DOWNLOAD_URL" \
   && curl --progress-bar -SL "$GRAAL_DOWNLOAD_URL" > ./graalvm.tar.gz \

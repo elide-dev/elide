@@ -3,11 +3,11 @@ package dev.elide.buildtools.gradle.plugin.cfg
 import com.google.protobuf.ByteString
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.AssetBundleKt.assetContent
-import tools.elide.std.HashAlgorithm
 import tools.elide.data.CompressionMode
 import tools.elide.data.compressedData
 import tools.elide.data.dataContainer
 import tools.elide.data.dataFingerprint
+import tools.elide.std.HashAlgorithm
 import java.io.File
 import java.util.concurrent.ConcurrentLinkedQueue
 

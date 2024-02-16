@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2024 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
+package elide.internal.conventions.docs
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.jetbrains.dokka.gradle.DokkaPlugin
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import java.io.File
+import elide.internal.conventions.Constants
+import elide.internal.conventions.ElideBuildExtension
+
+private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension, target: Project) {
+  if (conventions.docs.requested) {
+    val docAsset: (String) -> File = {
+      target.rootProject.layout.projectDirectory.file("docs/$it").asFile
+    }
+    val creativeAsset: (String) -> File = {
+      target.rootProject.layout.projectDirectory.file("creative/$it").asFile
+    }
+
+    pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+      footerMessage = "© 2023 Elide Technologies, Inc."
+      separateInheritedMembers = false
+      templatesDir = target.rootProject.layout.projectDirectory.dir("docs/templates").asFile
+      customAssets = listOf(
+        creativeAsset("logo/logo-wide-1200-w-r2.png"),
+        creativeAsset("logo/gray-elide-symbol-lg.png"),
+      )
+      customStyleSheets = listOf(docAsset(
+        "styles/logo-styles.css",
+      ))
+    }
+  }
+}
+
+public class DokkaConventionsPlugin : Plugin<Project> {
+  private companion object {
+    const val DOKKA_PLUGIN_ID = "org.jetbrains.dokka"
+  }
+
+  override fun apply(target: Project): Unit = target.extensions.getByType(ElideBuildExtension::class.java).let {
+    if (it.kotlin.requested && target.findProperty(Constants.Build.BUILD_DOCS) == "true") {
+      target.pluginManager.apply(DokkaPlugin::class.java)
+      target.pluginManager.withPlugin(DOKKA_PLUGIN_ID) {
+        target.tasks.withType(DokkaTask::class.java).configureEach {
+          configureDokkaForProject(it, target)
+        }
+      }
+    }
+  }
+}

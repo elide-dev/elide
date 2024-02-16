@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,7 +17,6 @@
 package elide.runtime.gvm.js.vfs
 
 import java.nio.charset.StandardCharsets
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl

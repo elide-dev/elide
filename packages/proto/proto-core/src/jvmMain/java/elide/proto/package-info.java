@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,6 +12,7 @@
  */
 
 /**
- * Package base for the Elide Protocol, including the API and any installed implementation packages or extensions.
+ * Package base for the Elide Protocol, including the API and any installed implementation packages
+ * or extensions.
  */
 package elide.proto;

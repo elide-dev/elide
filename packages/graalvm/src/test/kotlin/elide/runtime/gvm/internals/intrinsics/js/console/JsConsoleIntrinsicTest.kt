@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.time.Instant
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.LogLevel
@@ -33,7 +32,7 @@ import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
- /** Tests for intrinsic JS console implementation, which pipes to logging. */
+/** Tests for intrinsic JS console implementation, which pipes to logging. */
 @TestCase internal class JsConsoleIntrinsicTest : AbstractJsIntrinsicTest<ConsoleIntrinsic>() {
   // Logger facade to use for testing.
   private val loggerFacade: AtomicReference<Logger> = AtomicReference(null)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -113,6 +113,12 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
       if (requested.group == "io.netty" && !nettyExemptions.any { requested.name.contains(it) }) {
         useVersion(Versions.NETTY)
         because("pin netty")
+      }
+
+      // process dependency pins: bouncycastle
+      if (requested.group == "org.bouncycastle") {
+        useVersion(Versions.BOUNCYCASTLE)
+        because("pin bouncycastle")
       }
 
       // process dependency pins: guava

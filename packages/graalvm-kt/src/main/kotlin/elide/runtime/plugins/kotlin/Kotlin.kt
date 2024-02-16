@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -44,10 +44,8 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 
   public companion object Plugin : AbstractLanguagePlugin<KotlinConfig, Kotlin>() {
     private const val GUEST_CLASSPATH_KEY = "classpath"
-
     private const val KOTLIN_LANGUAGE_ID = "kt"
     private const val KOTLIN_PLUGIN_ID = "Kotlin"
-
     override val languageId: String = KOTLIN_LANGUAGE_ID
     override val key: Key<Kotlin> = Key(KOTLIN_PLUGIN_ID)
 
@@ -66,7 +64,9 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
           val output = root.resolve(entry)
 
           // reuse entry if already extracted
-          if (output.exists()) return@map output.absolutePathString()
+          if (output.exists()) {
+            return@map output.absolutePathString()
+          }
           output.createParentDirectories()
           output.createFile()
 
@@ -92,9 +92,11 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
       val resources = resolveEmbeddedManifest(scope)
 
       // apply the JVM plugin and register the custom classpath entries
-      scope.configuration.getOrInstall(Jvm).config.apply {
-        classpath(resolveOrExtractGuestClasspath(config, resources))
-      }
+      scope.configuration.getOrInstall(Jvm)
+        .config
+        .apply {
+          classpath(resolveOrExtractGuestClasspath(config, resources))
+        }
 
       // apply the configuration and register events
       val instance = Kotlin(config)

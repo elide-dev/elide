@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,17 +20,12 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.net.URI
 import java.nio.channels.SeekableByteChannel
 import java.nio.charset.Charset
 import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.exists
-import kotlin.io.path.relativeToOrSelf
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging

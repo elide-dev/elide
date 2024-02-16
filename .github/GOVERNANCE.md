@@ -1,8 +1,8 @@
 # Elide Project Governance
 
 **The Elide project is an open source software framework and runtime.** It is supported in part by [Elide][1] the
-company, which is known formally as _Elide Ventures, LLC_, a registered Delaware Limited Liability Company. Elide is
-also supported by contributions from independent engineers all over the world.
+company, which is known formally as _Elide Technologies, Inc._, a registered Delaware Limited Liability Company. Elide
+is also supported by contributions from independent engineers all over the world.
 
 Elide is a community project, and we welcome new contributors. We are committed to fostering a welcoming environment.
 We expect contributors to follow the [Contributor Covenant Code of Conduct][2] when discussing the project in any forum.

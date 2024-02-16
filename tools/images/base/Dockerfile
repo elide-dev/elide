@@ -21,5 +21,5 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 ENV LANG=en_US.UTF-8 \
-    LANGUAGE=en_US \
-    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin
+  LANGUAGE=en_US \
+  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin

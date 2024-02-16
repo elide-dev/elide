@@ -12,7 +12,7 @@ import elide.site.pages.Home
 import elide.site.ui.theme.Area
 import elide.site.ui.theme.Themes
 import js.core.Object
-import js.core.jso
+import js.objects.jso
 import kotlinx.browser.window
 import mui.icons.material.Brightness4
 import mui.icons.material.Brightness7

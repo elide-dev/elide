@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -76,7 +76,6 @@ import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.env.EnvConfig.EnvVar
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.*
 import elide.runtime.plugins.env.environment
-import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*

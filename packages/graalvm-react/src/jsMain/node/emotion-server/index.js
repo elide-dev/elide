@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,8 +29,7 @@ function createExtractCriticalToChunks(cache) {
 
     Object.keys(cache.inserted).forEach((id) => {
       if (
-        (ids[id] !== undefined ||
-          cache.registered[`${cache.key}-${id}`] === undefined) &&
+        (ids[id] !== undefined || cache.registered[`${cache.key}-${id}`] === undefined) &&
         cache.inserted[id] !== true
       ) {
         if (cache.registered[`${cache.key}-${id}`]) {
@@ -61,12 +60,7 @@ function createConstructStyleTagsFromChunks(cache, nonceString) {
     let styleTagsString = "";
 
     criticalData.styles.forEach((item) => {
-      styleTagsString += generateStyleTag(
-        item.key,
-        item.ids.join(" "),
-        item.css,
-        nonceString
-      );
+      styleTagsString += generateStyleTag(item.key, item.ids.join(" "), item.css, nonceString);
     });
 
     return styleTagsString;
@@ -77,13 +71,9 @@ export function createEmotionServer(cache) {
   if (cache.compat !== true) {
     cache.compat = true;
   }
-  const nonceString =
-    cache.nonce !== undefined ? ` nonce="${cache.nonce}"` : "";
+  const nonceString = cache.nonce !== undefined ? ` nonce="${cache.nonce}"` : "";
   return {
     extractCriticalToChunks: createExtractCriticalToChunks(cache),
-    constructStyleTagsFromChunks: createConstructStyleTagsFromChunks(
-      cache,
-      nonceString
-    ),
+    constructStyleTagsFromChunks: createConstructStyleTagsFromChunks(cache, nonceString),
   };
 }

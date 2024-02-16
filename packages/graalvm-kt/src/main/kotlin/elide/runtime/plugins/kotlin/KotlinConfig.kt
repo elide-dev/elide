@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,7 +14,6 @@
 package elide.runtime.plugins.kotlin
 
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
 
 /** Configuration for the [Kotlin] plugin. */
@@ -31,8 +30,6 @@ import elide.runtime.plugins.AbstractLanguageConfig
 
   private companion object {
     /** Resolve a platform-specific temporary directory used to extract guest classpath entries. */
-    private fun defaultClasspathRoot(): String {
-      return "${System.getProperty("java.io.tmpdir")}/elide-runtime-kt/classpath"
-    }
+    private fun defaultClasspathRoot(): String = "${System.getProperty("java.io.tmpdir")}/elide-runtime-kt/classpath"
   }
 }

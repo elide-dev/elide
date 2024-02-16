@@ -5,7 +5,7 @@
 This directory contains the main framework source code for each distinct package, with each shown below:
 
 | **Package**                       | Artifact                        | Platforms            | Summary                                                   |
-|-----------------------------------|---------------------------------|----------------------|-----------------------------------------------------------|
+| --------------------------------- | ------------------------------- | -------------------- | --------------------------------------------------------- |
 | [`core`][8] ([docs][18])          | `dev.elide:elide-core`          | Multiplatform        | Core, pure-Kotlin utilities                               |
 | [`uuid`][24] ([docs][25])         | `dev.elide:elide-uuid`          | Multiplatform        | Cross-platform UUID bindings                              |
 | [`base`][1] ([docs][11])          | `dev.elide:elide-base`          | Multiplatform        | Base library (annotations, x-plat code)                   |

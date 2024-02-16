@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Ventures, LLC.
+ * Copyright (c) 2024 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,10 @@ import elide.embedded.NativeApi.*;
 import elide.embedded.api.Constants;
 import elide.embedded.api.InFlightCallInfo;
 import elide.embedded.api.UnaryNativeCall;
-import org.graalvm.nativeimage.*;
+import org.graalvm.nativeimage.IsolateThread;
+import org.graalvm.nativeimage.Isolates;
+import org.graalvm.nativeimage.ObjectHandle;
+import org.graalvm.nativeimage.ObjectHandles;
 import org.graalvm.nativeimage.c.CContext;
 import org.graalvm.nativeimage.c.function.CEntryPoint;
 import org.graalvm.nativeimage.c.function.CEntryPointLiteral;

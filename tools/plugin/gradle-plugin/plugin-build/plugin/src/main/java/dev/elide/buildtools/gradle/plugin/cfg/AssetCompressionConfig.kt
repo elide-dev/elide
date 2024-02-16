@@ -1,7 +1,7 @@
 package dev.elide.buildtools.gradle.plugin.cfg
 
 import tools.elide.data.CompressionMode
-import java.util.EnumSet
+import java.util.*
 
 /** Describes asset compression settings. */
 internal data class AssetCompressionConfig(

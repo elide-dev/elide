@@ -1,5 +1,13 @@
 name: PR
 
+# Labels to control this PR flow:
+#
+# - ci:api-check-bypass - Bypass API check failures.
+# - ci:buf-breaking-ignore - Ignore breaking changes in the model.
+# - ci:fmt-ignore - Ignore formatting failures.
+# - ci:test-native - Run native tests.
+# - ci:build-native - Run native builds.
+
 "on":
   pull_request:
     types: [opened, reopened, synchronize]
@@ -140,15 +148,7 @@ jobs:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
-            apiCheck
-            --dependency-verification=lenient
-            --no-daemon
-            --stacktrace
-            --warning-mode=none
-            -Pelide.ci=true
-            -PbuildDocs=false
-            -PbuildSamples=false
-            -PbuildDocsSite=false
+            projects
 
   ##
   ## Job: Multi-platform Build
@@ -169,6 +169,11 @@ jobs:
       security-events: "write"
     with:
       provenance: false
+      native: |
+          (
+            contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
+            contains(github.event.head_commit.message, 'ci:test-native')
+          )
 
   ##
   ## Job: Multi-platform Build
@@ -212,6 +217,20 @@ jobs:
       contents: "read"
     with:
       ignore_breaking: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
+
+  ##
+  ## Job: Checks for Formatting/Style
+  ##
+  check-format:
+    name: "Checks"
+    uses: ./.github/workflows/checks.formatting.yml
+    needs: [triage, preflight-checks]
+    if: fromJson(needs.triage.outputs.model)
+    secrets: inherit
+    permissions:
+      contents: "read"
+    with:
+      ignore_failures: ${{ contains(github.event.pull_request.labels.*.name, 'ci:fmt-ignore') }}
 
   ##
   ## Job: Check for Wrapper

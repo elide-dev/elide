@@ -258,8 +258,6 @@ jobs:
             koverXmlReport
             koverBinaryReport
             koverVerify
-            copyCoverageReports
-            sonar
             -x wasmJsTest
             -x wasmWasiTest
             -x wasmWasiNodeTest
@@ -297,9 +295,6 @@ jobs:
             yarn
           arguments: |
             detekt
-            koverXmlReport
-            koverBinaryReport
-            koverVerify
             sonar
             -x wasmJsTest
             -x wasmWasiTest
@@ -428,12 +423,6 @@ jobs:
     name: "Tests: Native"
     runs-on: ${{ inputs.runner_large || 'ubuntu-latest-8-cores' }}
     if: inputs.native
-    #      (
-    #        github.ref == 'refs/heads/stable' ||
-    #        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
-    #        contains(github.event.head_commit.message, 'ci:test-native')
-    #      )
-
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0

@@ -28,30 +28,32 @@ import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
+import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
+import org.owasp.dependencycheck.reporting.ReportGenerator
 import java.util.Properties
 import kotlinx.kover.gradle.plugin.dsl.*
 import elide.internal.conventions.project.Projects
 
 plugins {
   idea
-  id("project-report")
+  `project-report`
   alias(libs.plugins.kotlin.multiplatform) apply false
 
-  alias(libs.plugins.shadow)
-  alias(libs.plugins.kotlinx.plugin.abiValidator)
-  alias(libs.plugins.sonar)
-  alias(libs.plugins.dokka)
-  alias(libs.plugins.kover)
-  alias(libs.plugins.detekt)
-  alias(libs.plugins.nexusPublishing)
-  alias(libs.plugins.gradle.testretry)
-  alias(libs.plugins.dependencyAnalysis)
-  alias(libs.plugins.versionCatalogUpdate)
-  alias(libs.plugins.gradle.checksum)
-  alias(libs.plugins.spdx.sbom)
   alias(libs.plugins.cyclonedx)
+  alias(libs.plugins.dependencyAnalysis)
+  alias(libs.plugins.detekt)
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.gradle.checksum)
+  alias(libs.plugins.gradle.testretry)
+  alias(libs.plugins.kotlinx.plugin.abiValidator)
+  alias(libs.plugins.kover)
+  alias(libs.plugins.nexusPublishing)
   alias(libs.plugins.openrewrite)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.sonar)
+  alias(libs.plugins.spdx.sbom)
   alias(libs.plugins.spotless)
+  alias(libs.plugins.versionCatalogUpdate)
 
   id("elide.internal.conventions")
 }
@@ -59,7 +61,7 @@ plugins {
 group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
-val versionFile: File = rootProject.layout.projectDirectory.file(".version").asFile
+val versionFile: File = layout.projectDirectory.file(".version").asFile
 version =
   if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
     versionFile.readText().trim().replace("\n", "").ifBlank {
@@ -128,6 +130,54 @@ buildscript {
   }
 }
 
+dependencies {
+  // Kover: Coverage Reporting
+  kover(projects.packages.base)
+  kover(projects.packages.cli)
+  kover(projects.packages.core)
+  kover(projects.packages.embedded)
+  kover(projects.packages.graalvm)
+  kover(projects.packages.graalvmJava)
+  kover(projects.packages.graalvmJs)
+  kover(projects.packages.graalvmJvm)
+  kover(projects.packages.graalvmKt)
+  kover(projects.packages.graalvmLlvm)
+  kover(projects.packages.graalvmPy)
+  kover(projects.packages.graalvmRb)
+  kover(projects.packages.http)
+  kover(projects.packages.model)
+  kover(projects.packages.proto.protoCore)
+  kover(projects.packages.proto.protoKotlinx)
+  kover(projects.packages.proto.protoProtobuf)
+  kover(projects.packages.rpc)
+  kover(projects.packages.runtime)
+  kover(projects.packages.server)
+  kover(projects.packages.serverless)
+  kover(projects.packages.ssr)
+  kover(projects.packages.test)
+  kover(projects.packages.wasm)
+  kover(projects.tools.processor)
+
+  // OpenRewrite: Recipes
+  rewrite(platform(libs.openrewrite.recipe.bom))
+
+  if (buildDocs == "true") {
+    val dokkaPlugin by configurations
+    val dokkaVersion: Provider<String> = libs.versions.dokka
+    val mermaidDokka: Provider<String> = libs.versions.mermaidDokka
+    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:${dokkaVersion.get()}")
+    dokkaPlugin("org.jetbrains.dokka:templating-plugin:${dokkaVersion.get()}")
+    dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${dokkaVersion.get()}")
+    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:${mermaidDokka.get()}")
+  }
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// EXTENSIONS
+// --------------------------------------------------------------------------------------------------------------------
+
+// --- IntelliJ IDEA --------------------------------------------------------------------------------------------------
+//
 idea {
   project {
     jdkName = (properties["elide.jvm"] as? String) ?: javaLanguageVersion
@@ -136,6 +186,8 @@ idea {
   }
 }
 
+// --- Sonatype -------------------------------------------------------------------------------------------------------
+//
 nexusPublishing {
   this@nexusPublishing.repositories {
     sonatype {
@@ -145,13 +197,33 @@ nexusPublishing {
   }
 }
 
+// --- OpenRewrite ----------------------------------------------------------------------------------------------------
+//
+rewrite {
+  activeRecipe("org.openrewrite.java.OrderImports")
+}
+
+// --- Detekt ---------------------------------------------------------------------------------------------------------
+//
+detekt {
+  parallel = true
+  ignoreFailures = true
+  config.from(files("config/detekt/detekt.yml"))
+  baseline = file("config/detekt/baseline.xml")
+  buildUponDefaultConfig = true
+  enableCompilerPlugin = true
+  basePath = projectDir.absolutePath
+}
+
+// --- Spotless -------------------------------------------------------------------------------------------------------
+//
 spotless {
   isEnforceCheck = false
 
   kotlinGradle {
     target("*.gradle.kts")
     diktat(libs.versions.diktat.get()).configFile(
-      project.rootProject.layout.projectDirectory.file("config/diktat/diktat.yml"),
+      layout.projectDirectory.file("config/diktat/diktat.yml"),
     )
     ktlint(libs.versions.ktlint.get()).editorConfigOverride(
       mapOf(
@@ -161,6 +233,33 @@ spotless {
   }
 }
 
+// --- Sonar ----------------------------------------------------------------------------------------------------------
+//
+sonar {
+  properties {
+    property("sonar.projectKey", "elide-dev_v3")
+    property("sonar.organization", "elide-dev")
+    property("sonar.host.url", "https://sonarcloud.io")
+    property("sonar.dynamicAnalysis", "reuseReports")
+    property("sonar.junit.reportsPath", "build/reports/")
+    property("sonar.java.coveragePlugin", "jacoco")
+    property("sonar.sourceEncoding", "UTF-8")
+    property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
+
+    listOf(
+      "sonar.java.checkstyle.reportPaths" to "",
+      "sonar.java.pmd.reportPaths" to "",
+      "sonar.kotlin.detekt.reportPaths" to "build/reports/detekt/detekt.xml",
+      "sonar.kotlin.ktlint.reportPaths" to "",
+      "sonar.kotlin.diktat.reportPaths" to "",
+    ).filter { it.second.isNotBlank() }.forEach {
+      property(it.first, it.second)
+    }
+  }
+}
+
+// --- Kover ----------------------------------------------------------------------------------------------------------
+//
 koverReport {
   defaults {
     filters {
@@ -227,86 +326,8 @@ koverReport {
   }
 }
 
-detekt {
-  parallel = true
-  ignoreFailures = true
-  config.from(rootProject.files("config/detekt/detekt.yml"))
-  baseline = rootProject.file("config/detekt/baseline.xml")
-  buildUponDefaultConfig = true
-  enableCompilerPlugin = true
-  basePath = projectDir.absolutePath
-}
-
-sonar {
-  properties {
-    property("sonar.projectKey", "elide-dev_v3")
-    property("sonar.organization", "elide-dev")
-    property("sonar.host.url", "https://sonarcloud.io")
-    property("sonar.dynamicAnalysis", "reuseReports")
-    property("sonar.junit.reportsPath", "build/reports/")
-    property("sonar.java.coveragePlugin", "jacoco")
-    property("sonar.sourceEncoding", "UTF-8")
-    property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
-
-    listOf(
-      "sonar.java.checkstyle.reportPaths" to "",
-      "sonar.java.pmd.reportPaths" to "",
-      "sonar.kotlin.detekt.reportPaths" to "build/reports/detekt/detekt.xml",
-      "sonar.kotlin.ktlint.reportPaths" to "",
-      "sonar.kotlin.diktat.reportPaths" to "",
-    ).filter { it.second.isNotBlank() }.forEach {
-      property(it.first, it.second)
-    }
-  }
-}
-
-val dokkaVersion: Provider<String> = libs.versions.dokka
-val mermaidDokka: Provider<String> = libs.versions.mermaidDokka
-
-dependencies {
-  // Kover: Coverage Reporting
-  kover(projects.packages.base)
-  kover(projects.packages.cli)
-  kover(projects.packages.core)
-  kover(projects.packages.embedded)
-  kover(projects.packages.graalvm)
-  kover(projects.packages.graalvmJava)
-  kover(projects.packages.graalvmJs)
-  kover(projects.packages.graalvmJvm)
-  kover(projects.packages.graalvmKt)
-  kover(projects.packages.graalvmLlvm)
-  kover(projects.packages.graalvmPy)
-  kover(projects.packages.graalvmRb)
-  kover(projects.packages.http)
-  kover(projects.packages.model)
-  kover(projects.packages.proto.protoCore)
-  kover(projects.packages.proto.protoKotlinx)
-  kover(projects.packages.proto.protoProtobuf)
-  kover(projects.packages.rpc)
-  kover(projects.packages.runtime)
-  kover(projects.packages.server)
-  kover(projects.packages.serverless)
-  kover(projects.packages.ssr)
-  kover(projects.packages.test)
-  kover(projects.packages.wasm)
-  kover(projects.tools.processor)
-
-  // OpenRewrite: Recipes
-  rewrite(platform(libs.openrewrite.recipe.bom))
-
-  if (buildDocs == "true") {
-    val dokkaPlugin by configurations
-    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:${dokkaVersion.get()}")
-    dokkaPlugin("org.jetbrains.dokka:templating-plugin:${dokkaVersion.get()}")
-    dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${dokkaVersion.get()}")
-    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:${mermaidDokka.get()}")
-  }
-}
-
-rewrite {
-  activeRecipe("org.openrewrite.java.OrderImports")
-}
-
+// --- API Pinning ----------------------------------------------------------------------------------------------------
+//
 apiValidation {
   nonPublicMarkers +=
     listOf(
@@ -331,7 +352,7 @@ apiValidation {
         emptyList()
       },
     ).plus(
-      if (project.properties["buildDocs"] == "true") {
+      if (properties["buildDocs"] == "true") {
         listOf(
           "docs",
         )
@@ -339,7 +360,7 @@ apiValidation {
         emptyList()
       },
     ).plus(
-      if (project.properties["buildDocsSite"] == "true") {
+      if (properties["buildDocsSite"] == "true") {
         listOf(
           "site",
         )
@@ -349,53 +370,102 @@ apiValidation {
     )
 }
 
+// Conditional plugins to apply.
 if (enableKnit == "true") apply(plugin = "kotlinx-knit")
 if (enableOwasp == "true") apply(plugin = "org.owasp.dependencycheck")
 
-rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
-  rootProject.the<NodeJsRootExtension>().apply {
+// --- Node JS --------------------------------------------------------------------------------------------------------
+//
+plugins.withType(NodeJsRootPlugin::class.java) {
+  val nodejs = the<NodeJsRootExtension>()
+  nodejs.apply {
     download = true
   }
 
-  rootProject.the<NodeJsRootExtension>().version = nodeVersion
+  the<NodeJsRootExtension>().version = nodeVersion
   if (nodeVersion.contains("canary")) {
-    rootProject.the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
+    the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
   }
 }
-rootProject.plugins.withType(YarnPlugin::class.java) {
-  rootProject.the<YarnRootExtension>().apply {
+
+plugins.withType(YarnPlugin::class.java) {
+  val yarn = the<YarnRootExtension>()
+  yarn.apply {
     yarnLockMismatchReport = YarnLockMismatchReport.WARNING
     reportNewYarnLock = false
     yarnLockAutoReplace = false
-    lockFileDirectory = project.rootDir
+    lockFileDirectory = rootDir
     lockFileName = "gradle-yarn.lock"
   }
 }
-tasks.withType(KotlinNpmInstallTask::class.java).configureEach {
-  packageJsonFiles.addFirst(project.layout.projectDirectory.file("package.json"))
-  args.add("--ignore-engines")
-  outputs.upToDateWhen {
-    project.rootProject.layout.projectDirectory.dir("node_modules").asFile.exists()
+
+// --- Dependency Check -----------------------------------------------------------------------------------------------
+//
+configure<DependencyCheckExtension> {
+  format = ReportGenerator.Format.ALL.toString()
+  scanBuildEnv = true
+
+  cache.central = true
+  nvd.apiKey = System.getenv("NVD_API_KEY")
+  nvd.validForHours = 12
+}
+
+// --- Knit -----------------------------------------------------------------------------------------------------------
+//
+if (enableKnit == "true") {
+  val knit = the<kotlinx.knit.KnitPluginExtension>()
+  knit.apply {
+    siteRoot = "https://docs.elide.dev/"
+    moduleDocs = "docs/apidocs"
+    files = fileTree(getRootDir()) {
+      include("README.md")
+      include("docs/guide/**/*.md")
+      include("docs/guide/**/*.kt")
+      include("samples/**/*.md")
+      include("samples/**/*.kt")
+      include("samples/**/*.kts")
+      exclude("**/build/**")
+      exclude("**/.gradle/**")
+      exclude("**/node_modules/**")
+    }
   }
 }
-tasks.withType(KotlinPackageJsonTask::class.java).configureEach {
-  packageJson = project.rootProject.file("package.json")
-}
+
+// --------------------------------------------------------------------------------------------------------------------
+// TASKS
+// --------------------------------------------------------------------------------------------------------------------
 
 tasks {
-  val detektMergeSarif: TaskProvider<ReportMergeTask> = register("detektMergeSarif", ReportMergeTask::class.java) {
-    output.set(project.rootProject.layout.buildDirectory.file("reports/detekt/detekt.sarif"))
-  }
-  val detektMergeXml: TaskProvider<ReportMergeTask> = register("detektMergeXml", ReportMergeTask::class.java) {
-    output.set(project.rootProject.layout.buildDirectory.file("reports/detekt/detekt.xml"))
+  // --- Tasks: Kotlin/NPM
+  //
+  withType(KotlinNpmInstallTask::class.java).configureEach {
+    packageJsonFiles.addFirst(layout.projectDirectory.file("package.json"))
+    args.add("--ignore-engines")
+    outputs.upToDateWhen {
+      layout.projectDirectory.dir("node_modules").asFile.exists()
+    }
   }
 
+  withType(KotlinPackageJsonTask::class.java).configureEach {
+    packageJson = file("package.json")
+  }
+
+  // --- Tasks: Detekt
+  //
+  val detektMergeSarif: TaskProvider<ReportMergeTask> = register("detektMergeSarif", ReportMergeTask::class.java) {
+    output.set(layout.buildDirectory.file("reports/detekt/detekt.sarif"))
+  }
+  val detektMergeXml: TaskProvider<ReportMergeTask> = register("detektMergeXml", ReportMergeTask::class.java) {
+    output.set(layout.buildDirectory.file("reports/detekt/detekt.xml"))
+  }
   withType(Detekt::class) detekt@{
     finalizedBy(detektMergeSarif, detektMergeXml)
     reports.sarif.required = true
     reports.xml.required = true
   }
 
+  // --- Task: Resolve and Lock All Configurations
+  //
   val resolveAndLockAll by registering {
     doFirst {
       require(gradle.startParameter.isWriteDependencyLocks)
@@ -411,10 +481,14 @@ tasks {
     }
   }
 
+  // --- Task: HTML Dependency Report
+  //
   htmlDependencyReport {
     reports.html.outputLocation = layout.projectDirectory.dir("docs/reports").asFile
   }
 
+  // --- Task: Reports
+  //
   val reports by registering {
     description = "Build all reports."
 
@@ -432,28 +506,16 @@ tasks {
     }
   }
 
+  // --- Task: Knit
+  //
   if (enableKnit == "true") {
-    the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://docs.elide.dev/"
-    the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "docs/apidocs"
-    the<kotlinx.knit.KnitPluginExtension>().files =
-      fileTree(project.rootDir) {
-        include("README.md")
-        include("docs/guide/**/*.md")
-        include("docs/guide/**/*.kt")
-        include("samples/**/*.md")
-        include("samples/**/*.kt")
-        include("samples/**/*.kts")
-        exclude("**/build/**")
-        exclude("**/.gradle/**")
-        exclude("**/node_modules/**")
-      }
-
-    // Build API docs via Dokka before running Knit.
     named("knitPrepare").configure {
       dependsOn("docs")
     }
   }
 
+  // --- Task: Docs
+  //
   val docs by registering {
     if (buildDocs == "true") {
       dependsOn(
@@ -466,6 +528,8 @@ tasks {
     }
   }
 
+  // --- Task: Publish BOM
+  //
   val publishBom by registering {
     description = "Publish BOM, Version Catalog, and platform artifacts to Elide repositories and Maven Central"
     group = "Publishing"
@@ -476,6 +540,8 @@ tasks {
     )
   }
 
+  // --- Task: Publish Framework
+  //
   val publishElide by registering {
     description = "Publish Elide library publications to Elide repositories and Maven Central"
     group = "Publishing"
@@ -487,6 +553,8 @@ tasks {
     )
   }
 
+  // --- Task: Publish Substrate
+  //
   val publishSubstrate by registering {
     description = "Publish Elide Substrate and Kotlin compiler plugins to Elide repositories and Maven Central"
     group = "Publishing"
@@ -504,6 +572,8 @@ tasks {
     )
   }
 
+  // --- Task: Publish All Targets
+  //
   val publishAll by registering {
     description = "Publish all publications to Elide repositories and Maven Central"
     group = "Publishing"
@@ -511,10 +581,9 @@ tasks {
     dependsOn(publishElide, publishSubstrate, publishBom)
   }
 
+  // --- Task: Copy Coverage Reports
+  //
   val copyCoverageReports by registering(Copy::class) {
-    description = "Copy coverage reports to the root project for Qodana"
-    group = "Verification"
-
     dependsOn(
       koverBinaryReport,
       koverXmlReport,
@@ -529,9 +598,12 @@ tasks {
     into(layout.projectDirectory.dir(".qodana/code-coverage"))
   }
 
+  // --- Task: Quick-test
+  //
   val quicktest: TaskProvider<Task> by registering {
     description = "Run all quick tests"
     group = "Verification"
+
     dependsOn(
       ":packages:core:jvmTest",
       ":packages:base:jvmTest",
@@ -541,6 +613,8 @@ tasks {
     )
   }
 
+  // --- Task: Pre-check
+  //
   val precheck: TaskProvider<Task> by registering {
     description = "Run all pre-check tasks"
     group = "Verification"
@@ -548,27 +622,20 @@ tasks {
     dependsOn(quicktest)
   }
 
+  // --- Task: Pre-Merge
+  //
   val preMerge by registering {
     description = "Runs all the tests/verification tasks"
+    group = "Verification"
 
     dependsOn(
       reports,
       detekt,
-      check,
     )
   }
 
-  afterEvaluate {
-    precheck.configure {
-      listOfNotNull(
-        koverVerify,
-        findByName("apiCheck"),
-      ).forEach {
-        dependsOn(it)
-      }
-    }
-  }
-
+  // --- Task: Format
+  //
   val format: TaskProvider<Task> by registering {
     description = "Run all formatting tasks"
     group = "Verification"
@@ -577,16 +644,8 @@ tasks {
     dependsOn(spotlessApply)
   }
 
-  check.configure {
-    dependsOn(
-      spotlessCheck,
-      koverVerify,
-      quicktest,
-      precheck,
-      detekt,
-    )
-  }
-
+  // --- Task: Sonar
+  //
   sonar.configure {
     dependsOn(
       detekt,
@@ -596,89 +655,25 @@ tasks {
     )
   }
 
+  // --- Tasks: Kover Verification
+  //
   koverVerify.configure {
     finalizedBy(copyCoverageReports)
   }
-}
 
-// @TODO: replace where needed with convention plugin logic
-//
-// subprojects {
-//  val name = this.name
-//
-//  apply {
-//    if (!Projects.nonKotlinProjects.contains(name)) {
-//      if (buildDocs == "true" && !Projects.noDocModules.contains(name)) {
-//        plugin("org.jetbrains.dokka")
-//
-//        val docAsset: (String) -> File = {
-//          layout.projectDirectory.file("docs/$it").asFile
-//        }
-//        val creativeAsset: (String) -> File = {
-//          layout.projectDirectory.file("creative/$it").asFile
-//        }
-//
-//        tasks.withType<DokkaTask>().configureEach {
-//          pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-//            footerMessage = "© 2022 Elide Ventures, LLC"
-//            separateInheritedMembers = false
-//            templatesDir = layout.projectDirectory.dir("docs/templates").asFile
-//            customAssets =
-//              listOf(
-//                creativeAsset("logo/logo-wide-1200-w-r2.png"),
-//                creativeAsset("logo/gray-elide-symbol-lg.png"),
-//              )
-//            customStyleSheets =
-//              listOf(
-//                docAsset(
-//                  "styles/logo-styles.css",
-//                ),
-//              )
-//          }
-//        }
-//      }
-//    }
-//  }
-// }
+  // --- Tasks: Check
+  //
+  check.configure {
+    dependsOn(
+      spotlessCheck,
+      koverVerify,
+      preMerge,
+      precheck,
+      detekt,
+    )
 
-// @TODO: replace where needed with convention plugin logic
-//
-// tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
-//  projects = project.allprojects
-// }
-
-// @TODO: replace where needed with convention plugin logic
-//
-/*tasks.register("samples") {
-  description = "Build and test all built-in code samples, in the `samples` path and with Knit."
-
-  //dependsOn(
-    //"buildSamples",
-    //"testSamples",
-    //"nativeTestSamples",
-  //)
-}
-
-tasks.register("buildSamples") {
-  description = "Assemble all sample code."
-
-  Projects.samples.forEach {
-    dependsOn("$it:assemble")
+    afterEvaluate {
+      dependsOn(named("apiCheck"))
+    }
   }
 }
-
-tasks.register("testSamples") {
-  description = "Run all tests for sample code."
-
-  Projects.samples.forEach {
-    dependsOn("$it:test")
-  }
-}
-
-tasks.register("nativeTestSamples") {
-  description = "Run native (GraalVM) tests for sample code."
-
-  Projects.samples.forEach {
-    dependsOn("$it:nativeTest")
-  }
-}*/

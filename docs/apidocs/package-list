@@ -1,14 +1,11 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-$dokka.location:elide.core.encoding.base64/Base64/decodeBytes/#kotlin.ByteArray/PointingToDeclaration/core/elide.core.encoding.base64/-base64/[native]decode-bytes.html
-$dokka.location:elide.core.encoding.base64/Base64/encode/#kotlin.ByteArray/PointingToDeclaration/core/elide.core.encoding.base64/-base64/[native]encode.html
-$dokka.location:elide.runtime/Logging.Companion///PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/index.html
-$dokka.location:elide.runtime/Logging.Companion/acquire/#/PointingToDeclaration/base/elide.runtime/-logging/[js]-companion/acquire.html
-$dokka.location:elide.runtime/Logging.Companion/named/#kotlin.String/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/named.html
+$dokka.location:elide.runtime/Logging.Companion///PointingToDeclaration/base/elide.runtime/-logging/[wasm]-companion/index.html
+$dokka.location:elide.runtime/Logging.Companion/acquire/#/PointingToDeclaration/base/elide.runtime/-logging/[wasm]-companion/acquire.html
+$dokka.location:elide.runtime/Logging.Companion/named/#kotlin.String/PointingToDeclaration/base/elide.runtime/-logging/[wasm]-companion/named.html
 $dokka.location:elide.runtime/Logging.Companion/of/#java.lang.Class[*]/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/of.html
-$dokka.location:elide.runtime/Logging.Companion/of/#kotlin.reflect.KClass[*]/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/of.html
-$dokka.location:elide.runtime/Logging.Companion/root/#/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/root.html
-$dokka.location:elide.util/Base64/encoding/#/PointingToDeclaration/base/elide.util/-base64/[native]encoding.html
+$dokka.location:elide.runtime/Logging.Companion/of/#kotlin.reflect.KClass[*]/PointingToDeclaration/base/elide.runtime/-logging/[wasm]-companion/of.html
+$dokka.location:elide.runtime/Logging.Companion/root/#/PointingToDeclaration/base/elide.runtime/-logging/[wasm]-companion/root.html
 module:base
 elide
 elide.annotations
@@ -18,7 +15,27 @@ elide.annotations.data
 elide.runtime
 elide.runtime.js
 elide.runtime.jvm
+elide.runtime.wasm
+elide.struct
+elide.struct.api
+elide.struct.codec
 elide.util
+module:cli
+elide.tool.annotations
+elide.tool.cli
+elide.tool.cli.control
+elide.tool.cli.options
+elide.tool.cli.output
+elide.tool.cli.state
+elide.tool.control
+elide.tool.engine
+elide.tool.err
+elide.tool.io
+elide.tool.project
+elide.tool.project.struct
+elide.tool.project.struct.nodepkg
+elide.tool.testing
+elide.tool.transport
 module:core
 elide.core
 elide.core.annotations
@@ -28,6 +45,99 @@ elide.core.encoding
 elide.core.encoding.base64
 elide.core.encoding.hex
 elide.core.platform
+module:embedded
+elide.embedded
+elide.embedded.api
+elide.embedded.cfg
+elide.embedded.env
+elide.embedded.err
+elide.embedded.feature
+module:frontend
+lib.protobuf
+lib.tsstdlib
+lib.tsstdlib.intl
+lib.uuid
+module:graalvm
+elide.runtime.core
+elide.runtime.core.extensions
+elide.runtime.core.internals.graalvm
+elide.runtime.feature
+elide.runtime.gvm
+elide.runtime.gvm.api
+elide.runtime.gvm.cfg
+elide.runtime.gvm.internals
+elide.runtime.gvm.internals.context
+elide.runtime.gvm.internals.intrinsics.js
+elide.runtime.gvm.internals.intrinsics.js.struct.map
+elide.runtime.gvm.internals.intrinsics.js.typed
+elide.runtime.gvm.internals.vfs
+elide.runtime.gvm.js
+elide.runtime.gvm.vfs
+elide.runtime.intrinsics
+elide.runtime.intrinsics.js
+elide.runtime.intrinsics.js.err
+elide.runtime.intrinsics.js.express
+elide.runtime.intrinsics.js.typed
+elide.runtime.intrinsics.server.http
+elide.runtime.plugins
+elide.runtime.plugins.debug
+elide.runtime.plugins.env
+elide.runtime.plugins.js
+elide.runtime.plugins.vfs
+module:graalvm-java
+elide.runtime.plugins.java
+module:graalvm-js
+elide.frontend.ssr
+elide.runtime.gvm
+elide.runtime.js
+emotion.cache
+emotion.server
+preact.ssr
+react.dom.server
+react.router.dom.server
+remix.run.router
+webstreams.polyfill
+module:graalvm-jvm
+elide.runtime.gvm.internals.jvm
+elide.runtime.gvm.jvm
+elide.runtime.gvm.jvm.cfg
+elide.runtime.plugins.jvm
+elide.runtime.plugins.jvm.interop
+module:graalvm-kt
+elide.runtime.plugins.kotlin
+module:graalvm-llvm
+elide.runtime.gvm.llvm
+elide.runtime.plugins.llvm
+module:graalvm-py
+elide.runtime.gvm.internals.python
+elide.runtime.gvm.python
+elide.runtime.gvm.python.cfg
+elide.runtime.plugins.python
+module:graalvm-rb
+elide.runtime.gvm.internals.ruby
+elide.runtime.gvm.ruby
+elide.runtime.gvm.ruby.cfg
+elide.runtime.plugins.ruby
+module:graalvm-react
+elide.js.ssr
+emotion.server.worker
+mui.material
+module:graalvm-wasm
+elide.runtime.gvm.wasm
+elide.runtime.plugins.wasm
+module:model
+elide.model
+elide.model.annotations
+elide.model.token
+elide.model.util
+kotlinx.serialization.protobuf
+kotlinx.serialization.protobuf.schema
+module:rpc
+elide.rpc.server
+elide.rpc.server.web
+grpcweb
+module:runtime
+dev.elide
 module:server
 elide.server
 elide.server.annotations
@@ -41,6 +151,11 @@ elide.server.runtime.jvm
 elide.server.ssr
 kotlinx.html
 kotlinx.html.tagext
+module:serverless
+elide.http
+elide.http.api
+elide.net
+elide.net.api
 module:ssr
 elide.ssr
 elide.ssr.annotations
@@ -51,3 +166,28 @@ elide.server
 elide.server.runtime
 elide.testing
 elide.testing.annotations
+module:processor
+elide.tools.processor
+module:proto-capnp
+tools.elide.assets
+tools.elide.crypto
+tools.elide.data
+tools.elide.std
+module:proto-core
+elide.proto
+elide.proto.api
+elide.proto.api.data
+elide.proto.api.wkt
+elide.proto.internal.annotations
+module:proto-kotlinx
+elide.proto.impl
+elide.proto.impl.data
+elide.proto.impl.wkt
+module:proto-protobuf
+elide.proto.impl
+elide.proto.impl.data
+elide.proto.impl.wkt
+elide.util.proto.adapters
+module:proto-test
+elide.proto.test
+elide.proto.test.data

@@ -1,18 +1,9 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
- *
- * Licensed under the MIT license (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- *   https://opensource.org/license/mit/
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under the License.
+ * Copyright 2014-2023 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 :root {
-  --dokka-logo-image-url: url('../creative/logo/gray-elide-symbol-lg.png');
-  --dokka-logo-height: 48px;
-  --dokka-logo-width: 50px;
+    --dokka-logo-image-url: url('../images/logo-icon.svg');
+    --dokka-logo-height: 50px;
+    --dokka-logo-width: 50px;
 }

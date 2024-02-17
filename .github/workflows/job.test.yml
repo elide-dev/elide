@@ -273,16 +273,16 @@ jobs:
             koverXmlReport
             koverBinaryReport
             koverVerify
-            -x wasmJsTest
-            -x wasmWasiTest
-            -x wasmWasiNodeTest
-            -x detekt
+            detekt
             --scan
             --build-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
             -x apiCheck
+            -x wasmJsTest
+            -x wasmWasiTest
+            -x wasmWasiNodeTest
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
@@ -309,18 +309,16 @@ jobs:
             wrapper
             yarn
           arguments: |
-            detekt
             sonar
-            -x wasmJsTest
-            -x wasmWasiTest
-            -x wasmWasiNodeTest
-            -x detekt
             --scan
             --build-cache
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
             -x apiCheck
+            -x wasmJsTest
+            -x wasmWasiTest
+            -x wasmWasiNodeTest
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false

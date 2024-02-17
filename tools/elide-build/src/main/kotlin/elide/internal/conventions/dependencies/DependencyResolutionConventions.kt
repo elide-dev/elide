@@ -19,6 +19,19 @@ import org.gradle.kotlin.dsl.exclude
 import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.ElideBuildExtension
 
+// Determine whether enterprise features are enabled.
+private val isEnterprise: Project.() -> Boolean = {
+  findProperty("elide.graalvm.variant") == "ENTERPRISE"
+}
+
+// Truffle Enterprise artifacts which must be omitted when building against GraalVM CE.
+private val nonEnterpriseExclusions = listOf(
+  "org.graalvm.truffle" to "truffle-enterprise",
+  "org.graalvm.llvm" to "llvm-language-enterprise",
+  "org.graalvm.llvm" to "llvm-language-native-enterprise",
+  "org.graalvm.python" to "python-language-enterprise",
+)
+
 // Configurations which are exempt from locking checks.
 private val lockingExemptConfigurations = sortedSetOf(
   "nativeMainImplementationDependenciesMetadata",
@@ -31,13 +44,6 @@ private val nettyExemptions = sortedSetOf(
   "kqueue",
   "tcnative",
   "boringssl",
-)
-
-// GraalVM Java modules which are included in the distribution, so should be omitted from the classpath.
-private val gvmDistModules = sortedSetOf(
-  "org.graalvm.sdk:collections",
-  "org.graalvm.sdk:nativeimage",
-  "org.graalvm.sdk:word",
 )
 
 // Configurations from which to omit distributed GraalVM modules.
@@ -116,7 +122,7 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
       }
 
       // process dependency pins: bouncycastle
-      if (requested.group == "org.bouncycastle") {
+      if (requested.group == "org.bouncycastle" && requested.name == "bcprov-jdk18on") {
         useVersion(Versions.BOUNCYCASTLE)
         because("pin bouncycastle")
       }
@@ -146,12 +152,9 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
       }
     }
 
-    if (gvmConfigurations.contains(this@all.name) && isGraalVm) {
-      gvmDistModules.forEach {
-        exclude(
-          group = it.substringBefore(':'),
-          module = it.substringAfter(':'),
-        )
+    if (isGraalVm && !isEnterprise.invoke(this@configureDependencyResolution)) nonEnterpriseExclusions.forEach {
+      if (gvmConfigurations.contains(this@all.name)) {
+        exclude(group = it.first, module = it.second)
       }
     }
   }

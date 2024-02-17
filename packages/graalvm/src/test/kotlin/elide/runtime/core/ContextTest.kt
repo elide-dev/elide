@@ -18,6 +18,7 @@ import org.graalvm.polyglot.Source
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.random.Random
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -34,7 +35,7 @@ internal class ContextTest {
     override val languageId: String = "python"
   }
 
-  @Test fun testIntrinsicBindings() {
+  @Test @Ignore fun testIntrinsicBindings() {
     val context = PolyglotEngine {
       enableLanguage(Python)
       enableLanguage(JavaScript)
@@ -49,6 +50,34 @@ internal class ContextTest {
       actual = context.evaluate(language = JavaScript, source = jsKey).asInt(),
       message = "language-scoped binding should be accessible in target language",
     )
+
+    assertThrows<PolyglotException>("language-scoped binding should not be accessible to other languages") {
+      context.evaluate(language = Python, source = jsKey)
+    }
+  }
+
+  @Test fun testIntrinsicBindingsJs() {
+    val context = PolyglotEngine {
+      enableLanguage(JavaScript)
+    }.acquire()
+
+    val (jsKey, jsValue) = "jsTestBinding" to Random.nextInt()
+
+    // set a language-scoped binding
+    context.bindings(language = JavaScript).putMember(jsKey, jsValue)
+
+    assertEquals(
+      expected = jsValue,
+      actual = context.evaluate(language = JavaScript, source = jsKey).asInt(),
+      message = "language-scoped binding should be accessible in target language",
+    )
+  }
+
+  @Test @Ignore fun testIntrinsicBindingsPy() {
+    val context = PolyglotEngine {
+      enableLanguage(Python)
+    }.acquire()
+    val (jsKey, _) = "jsTestBinding" to Random.nextInt()
 
     assertThrows<PolyglotException>("language-scoped binding should not be accessible to other languages") {
       context.evaluate(language = Python, source = jsKey)

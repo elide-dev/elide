@@ -142,40 +142,39 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("js.import-assertions"),
       StaticProperty.active("js.intl-402"),
       StaticProperty.active("js.json-modules"),
+      StaticProperty.active("js.nashorn-compat"),  // @TODO(sgammon): disable after oracle/graaljs/issues/119
       StaticProperty.active("js.performance"),
+      StaticProperty.active("js.shadow-realm"),
       StaticProperty.active("js.shared-array-buffer"),
       StaticProperty.active("js.strict"),
       StaticProperty.active("js.temporal"),
       StaticProperty.active("js.top-level-await"),
-      StaticProperty.active("js.shadow-realm"),
-      // @TODO(sgammon): disable once https://github.com/oracle/graaljs/issues/119 is resolved.
-      StaticProperty.active("js.nashorn-compat"),
-      StaticProperty.inactive("js.operator-overloading"),
       StaticProperty.inactive("js.annex-b"),
       StaticProperty.inactive("js.console"),
       StaticProperty.inactive("js.graal-builtin"),
       StaticProperty.inactive("js.interop-complete-promises"),
       StaticProperty.inactive("js.java-package-globals"),
       StaticProperty.inactive("js.load"),
-      StaticProperty.inactive("js.print"),
+      StaticProperty.inactive("js.operator-overloading"),
       StaticProperty.inactive("js.polyglot-builtin"),
       StaticProperty.inactive("js.polyglot-evalfile"),
+      StaticProperty.inactive("js.print"),
       StaticProperty.inactive("js.regex-static-result"),
       StaticProperty.inactive("js.scripting"),
       StaticProperty.inactive("js.syntax-extensions"),
-      StaticProperty.of("js.unhandled-rejections", UNHANDLED_REJECTIONS),
       StaticProperty.of("js.debug-property-name", DEBUG_GLOBAL),
       StaticProperty.of("js.function-constructor-cache-size", FUNCTION_CONSTRUCTOR_CACHE_SIZE),
+      StaticProperty.of("js.unhandled-rejections", UNHANDLED_REJECTIONS),
     )
 
     // Hard-coded WASM VM options.
     val wasmOptions : List<VMProperty> = listOf(
-      StaticProperty.active("wasm.Memory64"),
-      StaticProperty.active("wasm.MultiValue"),
-      StaticProperty.active("wasm.UseUnsafeMemory"),
-//      StaticProperty.active("wasm.MultiMemory"),
       StaticProperty.active("wasm.BulkMemoryAndRefTypes"),
-//      StaticProperty.active("wasm.Threads"),
+      StaticProperty.active("wasm.Memory64"),
+      StaticProperty.active("wasm.MultiMemory"),
+      StaticProperty.active("wasm.MultiValue"),
+      StaticProperty.active("wasm.Threads"),
+      StaticProperty.active("wasm.UseUnsafeMemory"),
       StaticProperty.of("wasm.Builtins", WASI_STD),
     )
 
@@ -311,11 +310,7 @@ internal class JsRuntime @Inject constructor (
       config.v8 ?: false
     },
   )).plus(
-    if (config.wasm == true) {
-      wasmOptions
-    } else {
-      emptyList()
-    }
+    if (config.wasm == true && engine.languages.containsKey("wasm")) wasmOptions else emptyList()
   ).stream()
 
   /** @inheritDoc */

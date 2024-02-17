@@ -155,12 +155,14 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       override fun close() = Unit
     }
 
+    /** Whether to enable Enterprise features. */
+    private const val ENABLE_ENTERPRISE = false
 
     /** Whether to enable VM isolates. */
-    private const val ENABLE_ISOLATES = false
+    private const val ENABLE_ISOLATES = ENABLE_ENTERPRISE
 
     /** Whether to enable the auxiliary cache. */
-    private const val ENABLE_AUX_CACHE = true
+    private const val ENABLE_AUX_CACHE = false
 
     /** Whether the runtime is built as a native image. */
     private val isNativeImage = ImageInfo.inImageCode()
@@ -207,12 +209,12 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
           "engine.Compilation",
           "engine.MultiTier",
           "engine.Splitting",
-          "engine.InlineAcrossTruffleBoundary",
           "engine.OSR",
         )
 
-        // TODO(@darvld): swap for throughput in server mode
-        option("engine.Mode", "latency")
+        configuration.hostRuntime.on(GVM_23.andLower()) {
+          enableOptions("engine.InlineAcrossTruffleBoundary")
+        }
 
         configuration.hostRuntime.on(GVM_23.andLower()) {
           enableOptions(
@@ -242,12 +244,16 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
         // if we're running in a native image, enabled the code compile cache
         if (useAuxCache) {
-          enableOption("engine.CachePreinitializeContext")
           option("engine.PreinitializeContexts", "js")
           option("engine.CacheCompile", "hot")
+          if (ENABLE_ENTERPRISE) {
+            enableOption("engine.CachePreinitializeContext")
+          }
+
+          val pid = ProcessHandle.current().pid()
           option(
             "engine.Cache",
-            Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString(),
+            Path("/", "tmp", "elide-$pid.vmcache").toAbsolutePath().toString(),
           )
         }
       }

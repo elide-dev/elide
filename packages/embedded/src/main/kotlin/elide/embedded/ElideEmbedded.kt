@@ -63,7 +63,7 @@ import elide.embedded.err.InitializationError
  * Calls are submitted to endpoints (TCP, Unix socket, etc.), and routed to the appropriate application. Methods are
  * provided in the Host Control API for resolving an application ID.
  */
-public class ElideEmbedded private constructor () {
+@Suppress("UNUSED_PARAMETER") public class ElideEmbedded private constructor () {
   public companion object {
     @JvmStatic public fun main(args: Array<String>) {
       ElideEmbedded().entry(args)

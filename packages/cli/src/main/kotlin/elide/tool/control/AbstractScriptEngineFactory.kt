@@ -452,8 +452,8 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
           object : MutableEntry<String, Any> {
             override val key: String get() = s
             override val value: Any get() = get(s)!!
-            override fun setValue(value: Any): Any {
-              return put(s, value)!!
+            override fun setValue(newValue: Any): Any {
+              return put(s, newValue)!!
             }
           },
         )
@@ -461,14 +461,14 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
       return values
     }
 
-    override fun put(name: String, value: Any): Any? {
-      val previous = get(name)
-      languageBindings.putMember(name, value)
+    override fun put(key: String, value: Any): Any? {
+      val previous = get(key)
+      languageBindings.putMember(key, value)
       return previous
     }
 
-    override fun putAll(toMerge: Map<out String, Any>) {
-      for ((key, value) in toMerge) {
+    override fun putAll(from: Map<out String, Any>) {
+      for ((key, value) in from) {
         put(key, value)
       }
     }

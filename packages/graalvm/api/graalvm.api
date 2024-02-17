@@ -2460,6 +2460,7 @@ public final class elide/runtime/plugins/js/ExtensionsKt {
 public final class elide/runtime/plugins/js/JavaScript {
 	public static final field Plugin Lelide/runtime/plugins/js/JavaScript$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lelide/runtime/plugins/env/Environment;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun getWasmSupported$graalvm ()Z
 }
 
 public final class elide/runtime/plugins/js/JavaScript$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {

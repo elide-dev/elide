@@ -257,31 +257,9 @@ dependencies {
   implementation(libs.capnproto.runtime)
   implementation(libs.capnproto.runtime.rpc)
 
-  api("org.graalvm.polyglot:polyglot:${libs.versions.graalvm.pin.get()}") {
-    exclude(group = "org.graalvm.sdk", module = "collections")
-    exclude(group = "org.graalvm.sdk", module = "nativeimage")
-    exclude(group = "org.graalvm.sdk", module = "word")
-  }
-
-  api(libs.graalvm.regex)
-  api(libs.graalvm.polyglot.js) {
-    exclude(group = "org.graalvm.sdk", module = "collections")
-    exclude(group = "org.graalvm.sdk", module = "nativeimage")
-    exclude(group = "org.graalvm.sdk", module = "word")
-  }
-
+  api(libs.graalvm.polyglot)
+  api(libs.graalvm.polyglot.js)
   compileOnly(libs.graalvm.svm)
-
-  testImplementation(libs.bundles.graalvm.tools) {
-    exclude(group = "org.graalvm.sdk", module = "collections")
-    exclude(group = "org.graalvm.sdk", module = "nativeimage")
-    exclude(group = "org.graalvm.sdk", module = "word")
-  }
-  testImplementation(libs.bundles.graalvm.polyglot) {
-    exclude(group = "org.graalvm.sdk", module = "collections")
-    exclude(group = "org.graalvm.sdk", module = "nativeimage")
-    exclude(group = "org.graalvm.sdk", module = "word")
-  }
 
   // Testing
   testImplementation(projects.packages.test)

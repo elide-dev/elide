@@ -94,20 +94,20 @@ val isRelease = !quickbuild && (
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val oracleGvm = true
+val oracleGvm = false
 val enableEdge = true
 val enableWasm = true
-val enablePython = true
-val enableRuby = true
-val enableTools = true
+val enablePython = false
+val enableRuby = false
+val enableTools = false
 val enableMosaic = true
 val enableProguard = false
 val enableLlvm = false
-val enableEspresso = true
+val enableEspresso = false
 val enableExperimental = false
 val enableEmbeddedResources = false
-val enableResourceFilter = true
-val enableAuxCache = true
+val enableResourceFilter = false
+val enableAuxCache = false
 val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableDashboard = false
@@ -122,7 +122,6 @@ val enableSbomStrict = false
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 val globalExclusions = emptyList<Pair<String, String>>()
-
 val moduleExclusions = listOf(
   "io.micronaut" to "micronaut-core-processor",
 )
@@ -147,6 +146,7 @@ buildscript {
 }
 
 // @TODO(sgammon): mosaic is broken on kotlin v2
+
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val nativesRootTemplate: (String) -> String = { version ->
@@ -219,19 +219,6 @@ java {
   if (enableJpms) modularity.inferModulePath = true
 }
 
-//ktlint {
-//  debug = false
-//  verbose = false
-//  android = false
-//  outputToConsole = false
-//  ignoreFailures = true
-//  enableExperimentalRules = true
-//
-//  filter {
-//    exclude("elide/tool/cli/ToolTypealiases.kt")
-//  }
-//}
-
 kapt {
   useBuildCache = true
   includeCompileClasspath = false
@@ -242,7 +229,7 @@ kapt {
 kotlin {
   target.compilations.all {
     kotlinOptions {
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
 
       // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)
@@ -290,6 +277,10 @@ val classpathExtras: Configuration by configurations.creating {
 
 dependencies {
   implementation(platform(libs.netty.bom))
+
+  // Fix: Missing Types
+  implementation(libs.jetty.npn)
+  implementation(libs.jetty.alpn)
 
   kapt(mn.micronaut.inject.java)
   kapt(libs.picocli.codegen)
@@ -351,6 +342,7 @@ dependencies {
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
   implementation(libs.jline.terminal.jansi)
+  implementation(libs.jline.terminal.jna)
   implementation(libs.jline.builtins)
   implementation(libs.jline.graal) {
     exclude(group = "org.slf4j", module = "slf4j-jdk14")
@@ -443,17 +435,7 @@ dependencies {
 
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
-  api(libs.bundles.graalvm.tools)
-  api(libs.graalvm.regex)
-  compileOnly(libs.graalvm.svm)
-
-  if (enableEspresso) {
-    api(libs.bundles.graalvm.espresso)
-  }
-
-  api(libs.graalvm.truffle.nfi)
-  api(libs.graalvm.truffle.nfi.libffi)
-//  api(libs.graalvm.truffle.nfi.panama)
+  api(libs.graalvm.truffle.api)
   runtimeOnly(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))
@@ -646,9 +628,11 @@ tasks.withType(Test::class).configureEach {
  * Build: CLI Native Image
  */
 
-val commonGvmArgs = listOf(
-  "-H:+UseCompressedReferences",
+val commonGvmArgs = listOfNotNull(
+  if (!oracleGvm) null else "-H:+UseCompressedReferences",
 ).plus(if (enableBuildReport) listOf("-H:+BuildReport") else emptyList())
+
+val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
 
 val commonNativeArgs = listOfNotNull(
   "--no-fallback",
@@ -665,7 +649,6 @@ val commonNativeArgs = listOfNotNull(
   "-H:+AddAllCharsets",
   "-H:DeadlockWatchdogInterval=15",
   "-H:CLibraryPath=$nativesPath",
-  "--trace-object-instantiation=java.nio.DirectByteBuffer",
   if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
   if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
   if (enableEspresso) "-J-Despresso.finalization.UnsafeOverride=true" else null,
@@ -686,6 +669,8 @@ val commonNativeArgs = listOfNotNull(
   if (oracleGvm) commonGvmArgs else emptyList()
 ).plus(if (enableStrictHeap) listOf(
   "--strict-image-heap",
+) else emptyList()).plus(if (nativeImageBuildDebug) listOf(
+  "--debug-attach",
 ) else emptyList()).toList()
 
 val dashboardFlags: List<String> = listOf(
@@ -772,7 +757,7 @@ val releaseFlags: List<String> = listOf(
   "--pgo=${profiles.joinToString(",")}",
   "-H:CodeSectionLayoutOptimization=ClusterByEdges",
 ) else emptyList()).plus(listOf(
-  if (enableSbom) listOf(
+  if (oracleGvm && enableSbom) listOf(
     if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
   ) else emptyList(),
   if (enableDashboard) dashboardFlags else emptyList(),
@@ -870,37 +855,12 @@ val initializeAtBuildTime = listOf(
   "com.google.common.collect.MapMakerInternalMap${'$'}1",
   "com.google.common.base.Equivalence${'$'}Equals",
 
-  // SLF4J + Logback
-  "ch.qos.logback",
-  "org.slf4j.MarkerFactory",
-  "org.slf4j.simple.SimpleLogger",
-  "org.slf4j.impl.StaticLoggerBinder",
-
-  // Encodings, Parsers, Cryptography
-  "com.sun.tools.doclint",
-  "org.codehaus.stax2.typed.Base64Variants",
-  "org.bouncycastle.util.Properties",
-  "org.bouncycastle.util.Strings",
-  "org.bouncycastle.crypto.macs.HMac",
-  "org.bouncycastle.crypto.prng.drbg.Utils",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG",
-  "org.bouncycastle.jcajce.provider.drbg.EntropyDaemon",
-  "org.xml.sax.helpers.LocatorImpl",
-  "org.xml.sax.helpers.AttributesImpl",
-  "jdk.jshell.Snippet${'$'}SubKind",
-  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
-
   // Databasing
   "org.sqlite.util.ProcessRunner",
 
-  // Micronaut
-  "io.micronaut.http.util.HttpTypeInformationProvider",
-  "io.micronaut.inject.provider.ProviderTypeInformationProvider",
-  "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
-  "io.micronaut.inject.beans.visitor.MapperAnnotationMapper",
-  "io.micronaut.inject.beans.visitor.JsonCreatorAnnotationMapper",
-  "io.micronaut.inject.beans.visitor.IntrospectedToBeanPropertiesTransformer",
-  "io.micronaut.inject.beans.visitor.persistence.JakartaMappedSuperClassIntrospectionMapper",
+  // Logging
+  "ch.qos.logback",
+  "org.slf4j.MarkerFactory",
 
   // --- Netty ------
 
@@ -1100,10 +1060,13 @@ val defaultPlatformArgs = listOf(
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
-  "-Delide.vm.engine.preinitialize=true",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
+).plus(if (oracleGvm) listOf(
+  "-Delide.vm.engine.preinitialize=true",
+) else listOf(
+  "-Delide.vm.engine.preinitialize=false",
+)).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else emptyList())).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:-AuxiliaryEngineCache",
@@ -1112,10 +1075,13 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
-  "-Delide.vm.engine.preinitialize=true",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
+).plus(if (oracleGvm) listOf(
+  "-Delide.vm.engine.preinitialize=true",
+) else listOf(
+  "-Delide.vm.engine.preinitialize=false",
+)).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
   "-J-Xmx24g",
@@ -1162,11 +1128,11 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=false",
   ) else listOf(
     "--gc=serial",
-    "-Delide.vm.engine.preinitialize=true",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
   ).plus(if (oracleGvm && enableAuxCache) listOf(
     "-H:+AuxiliaryEngineCache",
+    "-Delide.vm.engine.preinitialize=true",
   ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
@@ -1190,8 +1156,6 @@ val muslArgs = listOf(
 )
 
 val testOnlyArgs: List<String> = emptyList()
-
-val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
 
 fun nativeCliImageArgs(
   platform: String = "generic",

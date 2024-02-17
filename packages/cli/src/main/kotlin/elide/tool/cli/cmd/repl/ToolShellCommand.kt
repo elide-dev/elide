@@ -1442,6 +1442,7 @@ import elide.tool.project.ProjectManager
   }
 
   // Resolve the primary interactive language for the provided `file`.
+  @Suppress("UNUSED_VARIABLE")
   private fun primaryFromFile(file: File): GuestLanguage? {
     return when (val engine = scriptEngineManager.getEngineByExtension(file.extension)) {
       null -> null
@@ -1546,40 +1547,40 @@ import elide.tool.project.ProjectManager
           jsSettings.apply(this)
         }
 
-        PYTHON -> install(elide.runtime.plugins.python.Python) {
-          logging.debug("Configuring Python VM")
-          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-        }
+//        PYTHON -> install(elide.runtime.plugins.python.Python) {
+//          logging.debug("Configuring Python VM")
+//          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+//        }
 
-        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
-          logging.debug("Configuring Ruby VM")
-          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-        }
+//        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
+//          logging.debug("Configuring Ruby VM")
+//          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+//        }
 
-        // Secondary Engines: JVM
-        JVM -> {
-          install(elide.runtime.plugins.jvm.Jvm) {
-            logging.debug("Configuring JVM")
-            multithreading = false
-          }
-
-          install(elide.runtime.plugins.java.Java) {
-            logging.debug("Configuring Java")
-          }
-        }
-
-        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
-
-        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
-          val classpathDir = workdir.cacheDirectory()
-            .resolve("elide-kotlin-runtime")
-            .absolutePath
-
-          logging.debug("Configuring Kotlin with classpath root $classpathDir")
-          guestClasspathRoot = classpathDir
-        }
-
-        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+//        // Secondary Engines: JVM
+//        JVM -> {
+//          install(elide.runtime.plugins.jvm.Jvm) {
+//            logging.debug("Configuring JVM")
+//            multithreading = false
+//          }
+//
+//          install(elide.runtime.plugins.java.Java) {
+//            logging.debug("Configuring Java")
+//          }
+//        }
+//
+//        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
+//
+//        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
+//          val classpathDir = workdir.cacheDirectory()
+//            .resolve("elide-kotlin-runtime")
+//            .absolutePath
+//
+//          logging.debug("Configuring Kotlin with classpath root $classpathDir")
+//          guestClasspathRoot = classpathDir
+//        }
+//
+//        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
         else -> {}
       }
     }

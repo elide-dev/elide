@@ -835,4 +835,6 @@ graalvm-python = ["graalvm-polyglot-python", "graalvm-python-resources"]
 
 graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ruby-resources"]
 
-graalvm-js = ["graalvm-js-isolate", "graalvm-js-language", "graalvm-polyglot-js", "graalvm-polyglot-js-isolate"]
+graalvm-js = ["graalvm-js-language", "graalvm-polyglot-js"]
+
+graalvm-js-isolate = ["graalvm-js-isolate", "graalvm-polyglot-js-isolate"]

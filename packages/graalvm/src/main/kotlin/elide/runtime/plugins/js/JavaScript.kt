@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.js
 
+import org.graalvm.polyglot.Engine
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
@@ -37,7 +38,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   private val resources: LanguagePluginManifest,
   private val environment: Environment? = null,
 ) {
-
   private fun initializeContext(context: PolyglotContext) {
     // if applicable, install the env plugin bindings
     environment?.install(context, JavaScript)
@@ -64,61 +64,55 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.import-assertions",
       "js.intl-402",
       "js.json-modules",
+      "js.nashorn-compat", // @TODO(sgammon): disable once https://github.com/oracle/graaljs/issues/119 is resolved.
       "js.performance",
+      "js.shadow-realm",
       "js.shared-array-buffer",
       "js.strict",
       "js.temporal",
       "js.top-level-await",
-      "js.shadow-realm",
-      // @TODO(sgammon): disable once https://github.com/oracle/graaljs/issues/119 is resolved.
-      "js.nashorn-compat",
     )
 
     disableOptions(
-      "js.operator-overloading",
       "js.annex-b",
       "js.console",
       "js.graal-builtin",
       "js.interop-complete-promises",
       "js.java-package-globals",
       "js.load",
-      "js.print",
+      "js.operator-overloading",
       "js.polyglot-builtin",
       "js.polyglot-evalfile",
+      "js.print",
       "js.regexp-static-result",
       "js.scripting",
       "js.syntax-extensions",
     )
 
     setOptions(
-      "js.unhandled-rejections" to UNHANDLED_REJECTIONS,
-      "js.debug-property-name" to DEBUG_GLOBAL,
-      "js.function-constructor-cache-size" to FUNCTION_CONSTRUCTOR_CACHE_SIZE,
-    )
-
-    setOptions(
-      "js.locale" to config.locale.toString(),
       "js.charset" to config.charset.name(),
-      "js.ecmascript-version" to config.language.symbol(),
       "js.commonjs-require-cwd" to config.npmConfig.modulesPath,
+      "js.debug-property-name" to DEBUG_GLOBAL,
+      "js.ecmascript-version" to config.language.symbol(),
+      "js.function-constructor-cache-size" to FUNCTION_CONSTRUCTOR_CACHE_SIZE,
+      "js.locale" to config.locale.toString(),
+      "js.unhandled-rejections" to UNHANDLED_REJECTIONS,
     )
 
     setOptions(
-      "js.shell" to config.interactive,
-      "js.esm-eval-returns-exports" to config.esm,
-      "js.esm-bare-specifier-relative-lookup" to config.esm,
       "js.commonjs-require" to config.npmConfig.enabled,
+      "js.esm-bare-specifier-relative-lookup" to config.esm,
+      "js.esm-eval-returns-exports" to config.esm,
+      "js.shell" to config.interactive,
       "js.v8-compat" to config.v8,
     )
 
-    if (config.wasm) {
-      enableOptions(
-        "wasm.Memory64",
-        "wasm.MultiValue",
-        "wasm.UseUnsafeMemory",
-        "wasm.BulkMemoryAndRefTypes",
-      )
-
+    if (config.wasm && wasmSupported) enableOptions(
+      "wasm.BulkMemoryAndRefTypes",
+      "wasm.Memory64",
+      "wasm.MultiValue",
+      "wasm.UseUnsafeMemory",
+    ).also {
       option("wasm.Builtins", WASI_STD)
     }
 
@@ -146,6 +140,10 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     override val languageId: String = JS_LANGUAGE_ID
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
+
+    @JvmStatic internal val wasmSupported by lazy {
+      Engine.create().languages.containsKey("wasm")
+    }
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
       configureLanguageSupport(scope)

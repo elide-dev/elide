@@ -117,7 +117,7 @@ val jvmCompileArgs = listOfNotNull(
   "--add-modules=jdk.incubator.vector",
   "-Delide.embedded.headerPath=$nativeHeaderPath",
   "--enable-native-access=" + listOfNotNull(
-    "ALL-UNNAMED",
+//    "ALL-UNNAMED",
     "org.graalvm.polyglot",
     "org.graalvm.js",
     if (enableRuby) "org.graalvm.ruby" else null,
@@ -210,6 +210,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
+  "-H:DeadlockWatchdogInterval=15",
   "-H:TempDirectory=${layout.buildDirectory.dir("native/tmp").get().asFile.path}",
   "--trace-class-initialization=io.netty.channel.DefaultFileRegion,io.netty.util.AbstractReferenceCounted",
   if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
@@ -442,6 +443,12 @@ val initializeAtBuildTime = listOf(
   "org.slf4j.helpers.NOPLoggerFactory",
   "org.slf4j.helpers.NOP_FallbackServiceProvider",
 
+  // JANSI
+  "org.fusesource.jansi.AnsiConsole",
+  "org.fusesource.jansi.internal.OSInfo",
+  "org.fusesource.jansi.io.AnsiOutputStream",
+  "org.fusesource.jansi.internal.CLibrary",
+
   // Encodings, Parsers, Cryptography
   "com.sun.tools.doclint",
   "org.codehaus.stax2.typed.Base64Variants",
@@ -625,7 +632,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx24g",
+  "-J-Xmx32g",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:+AuxiliaryEngineCache",
 ) else emptyList())
@@ -895,55 +902,47 @@ dependencies {
 
   // Dependencies: GraalVM
   modules(libs.graalvm.polyglot)
-  modules(libs.graalvm.polyglot.tools.coverage)
-  modules(libs.graalvm.polyglot.tools.dap)
-  modules(libs.graalvm.polyglot.tools.inspect)
-  modules(libs.graalvm.polyglot.tools.insight)
-  modules(libs.graalvm.polyglot.tools.heap)
-  modules(libs.graalvm.polyglot.tools.profiler)
-  modules(libs.graalvm.regex)
 
   // GraalVM: JavaScript + WASM
   modules(libs.graalvm.polyglot.js)
   modules(libs.graalvm.polyglot.wasm)
   modules(libs.graalvm.js.language)
-  modules(libs.graalvm.js.isolate)
 
-  // GraalVM: Python
-  modules(libs.graalvm.polyglot.python)
-  modules(libs.graalvm.python.language)
-  modules(libs.graalvm.python.resources)
+  if (oracleGvm) {
+    modules(libs.graalvm.js.isolate)
+  }
 
-  // GraalVM: Ruby
-  modules(libs.graalvm.polyglot.ruby)
-  modules(libs.graalvm.ruby.language)
-  modules(libs.graalvm.ruby.resources)
+  if (enableExperimental) {
+    // GraalVM: Python
+    modules(libs.graalvm.polyglot.python)
+    modules(libs.graalvm.python.language)
+    modules(libs.graalvm.python.resources)
 
-  // GraalVM: Espresso
-  modules(libs.graalvm.polyglot.java)
-  modules(libs.graalvm.espresso.polyglot)
-  modules(libs.graalvm.espresso.language)
-  modules(libs.graalvm.espresso.hotswap)
+    // GraalVM: Ruby
+    modules(libs.graalvm.polyglot.ruby)
+    modules(libs.graalvm.ruby.language)
+    modules(libs.graalvm.ruby.resources)
 
-  // GraalVM: LLVM
-  modules(libs.graalvm.polyglot.llvm)
-  modules(libs.graalvm.llvm.api)
-  modules(libs.graalvm.llvm.language)
-  modules(libs.graalvm.llvm.language.enterprise)
-  modules(libs.graalvm.llvm.language.nfi)
-  modules(libs.graalvm.llvm.language.native)
-  modules(libs.graalvm.llvm.language.native.resources)
-  modules(libs.graalvm.llvm.language.managed)
-  modules(libs.graalvm.llvm.language.managed.resources)
+    // GraalVM: Espresso
+    modules(libs.graalvm.polyglot.java)
+    modules(libs.graalvm.espresso.polyglot)
+    modules(libs.graalvm.espresso.language)
+    modules(libs.graalvm.espresso.hotswap)
+
+    // GraalVM: LLVM
+    modules(libs.graalvm.polyglot.llvm)
+    modules(libs.graalvm.llvm.api)
+    modules(libs.graalvm.llvm.language)
+    modules(libs.graalvm.llvm.language.enterprise)
+    modules(libs.graalvm.llvm.language.nfi)
+    modules(libs.graalvm.llvm.language.native)
+    modules(libs.graalvm.llvm.language.native.resources)
+    modules(libs.graalvm.llvm.language.managed)
+    modules(libs.graalvm.llvm.language.managed.resources)
+  }
 
   // GraalVM: Truffle
   modules(libs.graalvm.truffle.api)
-  modules(libs.graalvm.truffle.processor)
-  modules(libs.graalvm.truffle.nfi)
-  modules(libs.graalvm.truffle.nfi.panama)
-  modules(libs.graalvm.truffle.nfi.libffi)
-  modules(libs.graalvm.truffle.nfi.native.linux.amd64)
-  modules(libs.graalvm.truffle.nfi.native.darwin.aarch64)
 
   // General
   implementation(libs.snakeyaml)
@@ -953,7 +952,6 @@ dependencies {
   implementation(libs.jline.terminal.jansi)
   implementation(libs.jline.terminal.jni)
   implementation(libs.jline.terminal.jna)
-  implementation(libs.jline.terminal.ffm)
 
   // GraalVM: SVM
   compileOnly(libs.graalvm.svm)
@@ -968,6 +966,7 @@ dependencies {
   runtimeOnly(mn.logback.classic)
 
   // Crypto
+  implementation(libs.bouncycastle)
   runtimeOnly(libs.bouncycastle.tls)
   runtimeOnly(libs.bouncycastle.pkix)
   runtimeOnly(libs.bouncycastle.util)

@@ -1,295 +1,212 @@
-/*
- * Copyright (c) 2024 Elide Technologies, Inc.
- *
- * Licensed under the MIT license (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- *   https://opensource.org/license/mit/
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under the License.
- */
-
-@file:Suppress("FunctionOnlyReturningConstant")
-
 package elide.embedded
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.runtime.Micronaut
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.graalvm.nativeimage.ImageInfo
-import org.slf4j.bridge.SLF4JBridgeHandler
-import tools.elide.call.HostConfiguration
-import tools.elide.call.v1alpha1.UnaryInvocationResponse
-import java.security.Security
-import java.util.*
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.invoke
-import kotlinx.coroutines.runBlocking
-import kotlin.system.exitProcess
-import elide.annotations.Eager
-import elide.embedded.api.*
-import elide.embedded.err.InitializationError
+import kotlinx.coroutines.*
+import elide.embedded.internal.MicronautRuntimeContext
+import elide.runtime.Logging
 
 /**
- * # Elide: Embedded
+ * An entrypoint for the Elide Embedded Runtime, providing lifecycle managment for a single runtime instance.
  *
- * Entrypoint for embedded use of the Elide runtime; in this mode, a host runtime is created and managed as a thin layer
- * underneath one or more applications. Each application is configured independently and managed via cooperation between
- * two APIs: the Host Control API and Host Call API.
+ * Using a singleton [ElideEmbedded] instance is the recommended usage, as this will prevent unnecessary resource
+ * allocation. A single instance can dispatch multiple concurrent calls for separate guest applications.
  *
- * &nbsp;
+ * ## Lifecycle
  *
- * ## API Interfaces
+ * Before any operations can be performed, the runtime must be [initialized][initialize], specifying the
+ * [configuration][EmbeddedConfiguration] to be used, which defines the format and version of the protocol used for
+ * serialized invocations and other data structures exchanged with the host application.
  *
- * This engine provides API interfaces to facilitate control of running applications, and to invoke user code. See below
- * for a description of provided APIs.
+ * It is not allowed to initialize the runtime more than once, [initialize] calls will return `false` after the first
+ * succesful invocation.
  *
- * &nbsp;
+ * ### Registration
  *
- * ### Host Control API
+ * Guest applications must be [registered][createApp] with the runtime prior to call dispatch. A single application
+ * must not be registered more than once. It is possible to register new applications after [starting][start] the
+ * runtime.
  *
- * The Host Control API facilitates management of running Elide apps on an embedded instance. Instance lifecycle and
- * deployment of container apps is up to the hosting application.
+ * Registration causes the runtime to allocate the necessary resources for the guest application. The entrypoint and
+ * configuration for the app are also evaluated at this stage in preparation for dispatch.
  *
- * &nbsp;
+ * ### Starting
  *
- * ### Host Call API
+ * Once the runtime has been initialized and the initial guest applications are registered, the runtime can be
+ * [started][start], which will enable the use of [dispatch] for handling incoming calls.
  *
- * The Host Call API provides remote invocation facilities for applications hosted by an embedded instance of Elide.
- * Calls are submitted to endpoints (TCP, Unix socket, etc.), and routed to the appropriate application. Methods are
- * provided in the Host Control API for resolving an application ID.
+ * ### Stopping
+ *
+ * The runtime can be [stopped][stop] at any time after starting, rejecting any new [dispatch] calls, but allowing
+ * ongoing requests to complete execution. Once all pending calls have been processed, the runtime will shut down,
+ * releasing guest-related resources.
  */
-@Suppress("UNUSED_PARAMETER") public class ElideEmbedded private constructor () {
-  public companion object {
-    @JvmStatic public fun main(args: Array<String>) {
-      ElideEmbedded().entry(args)
-      exitProcess(0)
-    }
+public class ElideEmbedded {
+  /** Logger used by the embedded runtime. */
+  private val logging = Logging.of(ElideEmbedded::class)
 
-    /** Static initialization, during entrypoint boot. */
-    @JvmStatic private fun initializeStatic() {
-      listOf(
-        "elide.js.vm.enableStreams" to "true",
-        "io.netty.allocator.maxOrder" to "3",
-        "io.netty.serviceThreadPrefix" to "elide-svc",
-        "io.netty.native.deleteLibAfterLoading" to "true",  // reversed bc of bug (actually does not delete)
-        "io.netty.buffer.bytebuf.checkAccessible" to "false",
-        org.fusesource.jansi.AnsiConsole.JANSI_MODE to org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE,
-        org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL to "false",
-      ).forEach {
-        System.setProperty(it.first, it.second)
-      }
+  /** Shared context for dependency injection and runtime lifecycle management. */
+  private val context = atomic<EmbeddedRuntimeContext?>(null)
 
-      Security.insertProviderAt(BouncyCastleProvider(), 0)
-      SLF4JBridgeHandler.removeHandlersForRootLogger()
-      SLF4JBridgeHandler.install()
-    }
+  /** Active configuration for the runtime. */
+  private val configuration = atomic<EmbeddedConfiguration?>(null)
 
-    /** @return Empty un-initialized instance. */
-    @JvmStatic public fun create(): ElideEmbedded = ElideEmbedded()
+  /** A coroutine scope used to launch listeners, allowing Java and native code to use coroutines. */
+  private val scope = atomic<CoroutineScope?>(null)
+
+  /** Use the value of this atomic reference or throw an exception if the value has not been initialized yet. */
+  private fun <T> AtomicRef<T?>.getOrFail(): T {
+    return value ?: error("Uninitialized")
   }
 
-  // Active API version.
-  private val activeApiVersion: AtomicRef<String> = atomic(Constants.API_VERSION)
+  /**
+   * Initialize the runtime and configure it, enabling registration of guest applications and preparing for a [start]
+   * call. The [config] defines the format and version of the invocation protocol.
+   *
+   * Multiple [initialize] calls are not supported, instead all invocations following the first one will return `false`
+   * to indicate failure without throwing an exception.
+   *
+   * @param config Configuration for the runtime, including the dispatch protocol settings.
+   * @return Whether the runtime was successfully initialized.
+   */
+  public fun initialize(config: EmbeddedConfiguration): Boolean {
+    // runtime config serves as initialization flag
+    if (!configuration.compareAndSet(null, config)) return false
+    logging.info("Initializing runtime")
 
-  // Active protocol mode.
-  private val activeProtocolMode: AtomicRef<ProtocolMode> = atomic(ProtocolMode.PROTOBUF)
+    // select the context implementation manually (since DI becomes available only after init)
+    // currently, only a Micronaut-based context is implemented
+    context.value = MicronautRuntimeContext.create(config)
 
-  // Active instance configuration.
-  private val activeInstanceConfig: AtomicRef<InstanceConfiguration?> = atomic(null)
-
-  // Active application context.
-  private val activeApplicationContext: AtomicRef<ApplicationContext?> = atomic(null)
-
-  // Active embedded implementation.
-  private val activeImpl: AtomicRef<EmbeddedRuntime?> = atomic(null)
-
-  // Active instance configuration.
-  private val declaredCapabilities: SortedSet<Capability> = sortedSetOf(Capability.BASELINE)
+    logging.debug("Initialized runtime with configuration $config and context ${context.value}")
+    return true
+  }
 
   /**
-   * ## Code Entrypoint
-   *
-   * This entrypoint immediately takes over for [main], and is used as the entrypoint for JVM-based testing, etc.
-   *
-   * This method will not exit the VM.
-   *
-   * @param args Command-line arguments.
+   * Start the runtime, enabling [dispatch] calls and application lifecycle operations. Multiple [start] calls are not
+   * supported and will have no effect.
    */
-  public fun entry(args: Array<String>): Int {
-    initialize(ProtocolMode.PROTOBUF)
-    capability(Capability.BASELINE)
-    configure(Constants.API_VERSION, null)
+  public fun start(): Boolean {
+    if (scope.value != null) return false
+    logging.debug("Starting runtime")
 
+    // prepare the adapter scope for app lifecycle operations
+    scope.value = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    return true
+  }
+
+  /**
+   * Stop the runtime, rejecting any new [dispatch] calls. Calling [start] after stopping the runtime is not allowed
+   * and will have no effect.
+   */
+  public fun stop() {
+    logging.debug("Stopping runtime")
+
+    // shut down the registry, stop all running apps, and cancel all observers
+    context.getOrFail().appRegistry.cancel()
+    scope.getOrFail().cancel()
+
+    logging.debug("App registry and observers scope closed, shutting down")
+  }
+
+  /**
+   * Dispatch an incoming call with the runtime. This operation is currently under construction.
+   */
+  public fun dispatch() {
+    logging.debug("Dispatching call")
+    // nothing yet
+  }
+
+  /**
+   * Crate and register a guest application with the runtime using the provided [id] and initial [config]. The returned
+   * reference can be used to manage the app's lifecycle and observe its state.
+   */
+  public fun createApp(id: String, config: EmbeddedAppConfiguration): EmbeddedApp {
+    logging.debug("Registering application with id '$id'")
+    val app = context.getOrFail().appRegistry.register(EmbeddedAppId(id), config)
+    logging.debug("Registered application with id '$id'")
+
+    return app
+  }
+
+  /**
+   * Start an embedded [app]. An observable version of this method providing callback capabilities is also available
+   * This method is intended for the Java/Native interoperability layer, which has no direct support for coroutines.
+   *
+   * Note that the application will not start immediately, instead startup will be scheduled if possible. The function
+   * will return normally regardless of whether the app was started or not.
+   */
+  public fun startApp(app: EmbeddedApp) {
+    logging.debug("Starting app '${app.id}'")
     try {
-      start(args.toList())
-    } catch (ixe: InterruptedException) {
-      println("Interrupted: ${ixe.message}")
-      Thread.interrupted()
-      stop()
-    } catch (e: Exception) {
-      println("Error: ${e.message}")
-    } finally {
-      teardown()
+      app.start()
+      logging.debug("Started app '${app.id}'")
+    } catch (cause: Throwable) {
+      logging.error("Failed to start app '${app.id}': $cause")
     }
-    return 0
   }
 
   /**
-   * ## Native: Initialization
+   * Start an embedded [app], invoking a callback once the operation completes, with an indication of success. This
+   * method is intended for the Java/Native interoperability layer, which has no direct support for coroutines.
    *
-   * Initialize native integration between a host application and embedded Elide. The provided thread is expected to be
-   * an initialized GraalVM isolate thread, which should be held for the lifetime of the outer host application.
-   *
-   * ### API Versioning
-   *
-   * At the time of this writing, the expected API version is `v1alpha`; this is the only version of the API.
-   *
-   * @param protocol Describes the protocol operating mode that will be used to dispatch calls.
-   * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
-   *   codes during initialization, see the [InitializationError] enum.
+   * Note that the application will not start immediately, instead startup will be scheduled if possible. The callback
+   * will be called with `true` as an argument as long as no exceptions are thrown, regardless of whether the app was
+   * started or not.
    */
-  public fun initialize(protocol: ProtocolMode): Int {
-    initializeStatic()
-    activeProtocolMode.value = protocol
-    return 0
-  }
+  public fun startApp(app: EmbeddedApp, onComplete: (success: Boolean) -> Unit) {
+    logging.debug("Starting app '${app.id}'")
+    scope.getOrFail().launch {
+      try {
+        app.start().join()
 
-  /**
-   * ## Native: Capabilities
-   *
-   * Initialize individual native capabilities by declaring support for them in the host application; if Elide likewise
-   * supports the capability at this version and in this operating context, the capability will be enabled, and a return
-   * code of `0` is provided.
-   *
-   * Any other return code indicates an [InitializationError] of some kind.
-   *
-   * @param capability Capability to initialize.
-   * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
-   *   codes during initialization, see the [InitializationError] enum.
-   */
-  public fun capability(capability: Capability): Int {
-    declaredCapabilities.add(capability)
-    return 0
-  }
-
-  /**
-   * ## Native: Configuration
-   *
-   * TBD.
-   *
-   * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
-   *   codes during initialization, see the [InitializationError] enum.
-   */
-  public fun configure(version: String, config: InstanceConfiguration? = null): Int {
-    assert (version == Constants.API_VERSION) { "Unsupported API version: $version" }
-    activeApiVersion.value = version
-    activeInstanceConfig.value = config ?: InstanceConfiguration.createFrom(HostConfiguration.getDefaultInstance())
-    return 0
-  }
-
-  /**
-   * ## Native: Start
-   *
-   * TBD.
-   *
-   * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
-   *   codes during initialization, see the [InitializationError] enum.
-   */
-  @Suppress("SpreadOperator")
-  public fun start(args: List<String>? = null): Int {
-    require(activeApiVersion.value.isNotBlank()) { "API version must be set before starting the instance" }
-    val configuration = requireNotNull(activeInstanceConfig.value) { "Configuration must be set before starting" }
-    require(activeApplicationContext.value == null && activeImpl.value == null) { "Instance is already running" }
-
-    try {
-      val applicationContext = Micronaut.build(*(args?.toTypedArray() ?: emptyArray<String>())).apply {
-        banner(false)
-        bootstrapEnvironment(true)
-        deduceEnvironment(false)
-        eagerInitSingletons(true)
-        eagerInitAnnotated(Eager::class.java)
-        enableDefaultPropertySources(false)
-        singletons(configuration)
-        environments("embedded", if (ImageInfo.inImageCode()) "native" else "jvm")
-      }.build()
-
-      // mount
-      applicationContext.start()
-      val impl = applicationContext.getBean(EmbeddedRuntime::class.java)
-      activeApplicationContext.value = applicationContext
-      activeImpl.value = impl
-      impl.notify(declaredCapabilities)
-    } catch (err: Throwable) {
-      println("Error in `start` (${err::class.java.simpleName}): ${err.message}")
-      throw err
-    }
-    return 0
-  }
-
-  /**
-   * ## Native: Entry Dispatch
-   */
-  public fun enterDispatch(call: UnaryNativeCall, ticket: InFlightCallInfo): Int = ticket.use {
-    requireNotNull(activeImpl.value) { "Instance is already running" }.let {
-      runBlocking {
-        Dispatchers.Default.invoke {
-          it.dispatcher().handle(call)
-        }
-        0
+        logging.debug("Started app '${app.id}'")
+        onComplete(true)
+      } catch (cause: Throwable) {
+        logging.error("Failed to start app '${app.id}': $cause")
+        onComplete(false)
       }
     }
   }
 
   /**
-   * ## Native: Call Cancellation
-   */
-  public fun dispatchCancel(handle: InFlightCallInfo): Int {
-    return 0
-  }
-
-  /**
-   * ## Native: Call Polling
-   */
-  public fun dispatchPoll(handle: InFlightCallInfo): Int {
-    return 0
-  }
-
-  /**
-   * ## Native: Gather Response
-   */
-  public fun response(call: UnaryNativeCall, ticket: InFlightCallInfo): UnaryInvocationResponse {
-    return UnaryInvocationResponse.getDefaultInstance()  // not yet implemented
-  }
-
-  /**
-   * ## Native: Exit Dispatch
-   */
-  public fun exitDispatch(call: UnaryNativeCall, ticket: InFlightCallInfo): Int {
-    return 0
-  }
-
-  /**
-   * ## Native: Stop
+   * Stop an embedded [app]. An observable version of this method providing callback capabilities is also available
+   * This method is intended for the Java/Native interoperability layer, which has no direct support for coroutines.
    *
-   * TBD.
-   *
-   * @return Integer indicating success or error; `0` for success, non-zero for an error. For a guide of available error
-   *   codes during initialization, see the [InitializationError] enum.
+   * Note that the application will not stop immediately, instead shutdown will be scheduled if possible. The function
+   * will return normally regardless of whether the app was stopped or not.
    */
-  public fun stop(): Int {
-    // nothing
-    return 0
+  public fun stopApp(app: EmbeddedApp) {
+    logging.debug("Stopping app '${app.id}'")
+    try {
+      app.stop()
+      logging.debug("Stopped app '${app.id}'")
+    } catch (cause: Throwable) {
+      logging.error("Failed to stop app '${app.id}': $cause")
+    }
   }
 
   /**
-   * ## Native: Exit Dispatch
+   * Stop an embedded [app], invoking a callback once the operation completes, with an indication of success. This
+   * method is intended for the Java/Native interoperability layer, which has no direct support for coroutines.
+   *
+   * Note that the application will not stop immediately, instead shutdown will be scheduled if possible. The callback
+   * will be called with `true` as an argument as long as no exceptions are thrown, regardless of whether the app was
+   * stopped or not.
    */
-  public fun teardown(): Int {
-    return 0
+  public fun stopApp(app: EmbeddedApp, onComplete: (success: Boolean) -> Unit) {
+    logging.debug("Stopping app '${app.id}'")
+    scope.getOrFail().launch {
+      try {
+        app.stop().join()
+
+        logging.debug("Stopped app '${app.id}'")
+        onComplete(true)
+      } catch (cause: Throwable) {
+        logging.error("Failed to stop app '${app.id}': $cause")
+        onComplete(false)
+      }
+    }
   }
 }

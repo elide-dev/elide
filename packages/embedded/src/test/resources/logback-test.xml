@@ -8,8 +8,11 @@
   <!-- Runtime -->
   <logger name="elide.embedded.interop.ElideEmbeddedNative" level="debug"/>
   <logger name="elide.embedded.ElideEmbedded" level="debug"/>
-  
-  <root level="info">
+
+  <!-- Micronaut -->
+  <logger name="io.micronaut" level="warn"/>
+
+  <root level="debug">
     <appender-ref ref="STDOUT"/>
   </root>
 </configuration>

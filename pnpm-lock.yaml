@@ -141,7 +141,7 @@ importers:
         version: 3.0.1(preact@10.19.4)
       '@mdx-js/react':
         specifier: 3.0.1
-        version: 3.0.1(@types/react@18.2.55)(react@18.2.0)
+        version: 3.0.1(@types/react@18.2.59)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -153,8 +153,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1(webpack@5.90.2)
       '@types/react':
-        specifier: 18.2.55
-        version: 18.2.55
+        specifier: 18.2.59
+        version: 18.2.59
       webpack:
         specifier: 5.90.2
         version: 5.90.2(esbuild@0.20.0)
@@ -711,14 +711,14 @@ packages:
       preact: 10.19.4
     dev: false
 
-  /@mdx-js/react@3.0.1(@types/react@18.2.55)(react@18.2.0):
+  /@mdx-js/react@3.0.1(@types/react@18.2.59)(react@18.2.0):
     resolution: {integrity: sha512-9ZrPIU4MGf6et1m1ov3zKf+q9+deetI51zprKB1D/z3NOb+rUxxtEl3mCjW5wTGh6VhRdwPueh1oRzi6ezkA8A==, tarball: https://registry.npmjs.org/@mdx-js/react/-/react-3.0.1.tgz}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.11
-      '@types/react': 18.2.55
+      '@types/react': 18.2.59
       react: 18.2.0
     dev: false
 
@@ -851,8 +851,8 @@ packages:
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==, tarball: https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.11.tgz}
 
-  /@types/react@18.2.55:
-    resolution: {integrity: sha512-Y2Tz5P4yz23brwm2d7jNon39qoAtMMmalOQv6+fEFt1mT+FcM3D841wDpoUvFXhaYenuROCy3FZYqdTjM7qVyA==, tarball: https://registry.npmjs.org/@types/react/-/react-18.2.55.tgz}
+  /@types/react@18.2.59:
+    resolution: {integrity: sha512-DE+F6BYEC8VtajY85Qr7mmhTd/79rJKIHCg99MU9SWPB4xvLb6D1za2vYflgZfmPqQVEr6UqJTnLXEwzpVPuOg==, tarball: https://registry.npmjs.org/@types/react/-/react-18.2.59.tgz}
     dependencies:
       '@types/prop-types': 15.7.11
       '@types/scheduler': 0.16.8

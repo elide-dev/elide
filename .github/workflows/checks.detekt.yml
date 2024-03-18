@@ -92,7 +92,7 @@ jobs:
             tools/elide-build/build/generated
             tools/elide-build/build/generated-sources
       - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@d72e3dbf5f44eb0b78c4f8ec61a262d8bf9b94af # v1.1.7
+        uses: graalvm/setup-graalvm@6c070772210314221f80d186f2d2d36bb39af41d # v1.2.0
         with:
           distribution: "graalvm"
           java-version: 21

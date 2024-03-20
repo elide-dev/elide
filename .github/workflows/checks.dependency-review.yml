@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: "Check: Dependency Review"
-        uses: actions/dependency-review-action@80f10bf419f34980065523f5efca7ebed17576aa # v4.1.0
+        uses: actions/dependency-review-action@0fa40c3c10055986a88de3baa0d6ec17c5a894b3 # v4.2.3
         continue-on-error: true
         if: github.event_name == 'pull_request'
         with:

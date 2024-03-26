@@ -11,6 +11,7 @@ import elide.embedded.EmbeddedRuntimeContext
  * An [EmbeddedRuntimeContext] implementation backed by Micronaut's DI container.
  */
 internal class MicronautRuntimeContext private constructor(
+  override val configuration: EmbeddedConfiguration,
   private val beanContext: BeanContext,
 ) : EmbeddedRuntimeContext {
   override val appRegistry: EmbeddedAppRegistry by lazy { beanContext.getBean(EmbeddedAppRegistry::class.java) }
@@ -43,7 +44,7 @@ internal class MicronautRuntimeContext private constructor(
         .singletons(config)
         .start()
 
-      return MicronautRuntimeContext(appContext)
+      return MicronautRuntimeContext(config, appContext)
     }
   }
 }

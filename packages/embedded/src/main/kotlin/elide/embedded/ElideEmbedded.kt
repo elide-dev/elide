@@ -48,11 +48,11 @@ public class ElideEmbedded {
   /** Shared context for dependency injection and runtime lifecycle management. */
   private val context = atomic<EmbeddedRuntimeContext?>(null)
 
-  /** Active configuration for the runtime. */
-  private val configuration = atomic<EmbeddedConfiguration?>(null)
-
   /** A coroutine scope used to launch listeners, allowing Java and native code to use coroutines. */
   private val scope = atomic<CoroutineScope?>(null)
+
+  /** Thread-safe flag to avoid duplicate initialization. */
+  private val initialized = atomic(false)
 
   /** Use the value of this atomic reference or throw an exception if the value has not been initialized yet. */
   private fun <T> AtomicRef<T?>.getOrFail(): T {
@@ -71,7 +71,7 @@ public class ElideEmbedded {
    */
   public fun initialize(config: EmbeddedConfiguration): Boolean {
     // runtime config serves as initialization flag
-    if (!configuration.compareAndSet(null, config)) return false
+    if (!initialized.compareAndSet(expect = false, update = true)) return false
     logging.info("Initializing runtime")
 
     // select the context implementation manually (since DI becomes available only after init)

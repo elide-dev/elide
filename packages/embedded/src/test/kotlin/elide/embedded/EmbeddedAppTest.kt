@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
-import elide.embedded.EmbeddedAppConfiguration.DispatchMode.FETCH
+import elide.embedded.EmbeddedAppConfiguration.EmbeddedDispatchMode.FETCH
+import elide.embedded.EmbeddedGuestLanguage.JAVA_SCRIPT
 import elide.embedded.internal.EmbeddedAppImpl
 
 class EmbeddedAppTest {
@@ -13,7 +14,7 @@ class EmbeddedAppTest {
       id = EmbeddedAppId("test-app"),
       config = EmbeddedAppConfiguration(
         entrypoint = "index.js",
-        language = "js",
+        language = JAVA_SCRIPT,
         dispatchMode = FETCH,
       ),
       context = backgroundScope.coroutineContext,

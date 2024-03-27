@@ -1,6 +1,7 @@
 package elide.embedded
 
 import java.nio.file.Path
+import elide.embedded.EmbeddedGuestLanguage
 
 /**
  * Describes the configuration used by the [ElideEmbedded] runtime during initialization.
@@ -29,5 +30,11 @@ public data class EmbeddedConfiguration(
    * Specifies the root directory in which the guest applications are placed. During dispatch, guest entrypoints will
    * be resolved relative to this path, according to their application ID.
    */
-  val guestRoot: Path
+  val guestRoot: Path,
+
+  /**
+   * Defines the set of languages allowed for guest applications. The runtime must validate that the requested
+   * languages are supported during initialization, and must verify applications at the time of registration.
+   */
+  val guestLanguages: Set<EmbeddedGuestLanguage>,
 )

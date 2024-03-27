@@ -17,6 +17,7 @@ class EmbeddedRuntimeTest {
       protocolVersion = EmbeddedProtocolVersion.V1_0,
       protocolFormat = EmbeddedProtocolFormat.PROTOBUF,
       guestRoot = testGuestRoot,
+      guestLanguages = emptySet(),
     )
 
     assertTrue(runtime.initialize(config), "expected initialization to succeed")

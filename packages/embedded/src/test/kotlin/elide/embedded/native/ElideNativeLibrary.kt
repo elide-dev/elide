@@ -76,7 +76,7 @@ internal object ElideNativeLibrary : NativeLibrary() {
     val LAYOUT: StructLayout = structLayout(
       ValueLayout.ADDRESS.withName(FIELD_ID),
       ValueLayout.ADDRESS.withName(FIELD_ENTRYPOINT),
-      ValueLayout.ADDRESS.withName(FIELD_LANGUAGE),
+      ValueLayout.JAVA_INT.withName(FIELD_LANGUAGE),
       ValueLayout.JAVA_INT.withName(FIELD_MODE),
     )
 

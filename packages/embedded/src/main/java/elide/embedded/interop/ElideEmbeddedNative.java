@@ -167,7 +167,7 @@ final class ElideEmbeddedNative {
 
       // map configuration options
       var entrypoint = CTypeConversion.toJavaString(config.getEntrypoint());
-      var lang = CTypeConversion.toJavaString(config.getLanguage());
+      var lang = NativeAppLanguage.fromNativeValue(config.getLanguage());
       var mode = NativeAppMode.fromNativeValue(config.getMode());
 
       // launch the app and wrap the instance in a native pointer, then write the pointer value

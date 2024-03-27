@@ -14,12 +14,17 @@ val nativeTest = findProperty("elide.embedded.tests.native")?.toString()?.toBool
 
 kotlin {
   explicitApi()
+
+  // suppress delicate usage warnings for Elide core runtime APIs
+  // and opt-in for the new context receivers syntax
+  compilerOptions.optIn.add("elide.runtime.core.DelicateElideApi")
   compilerOptions.freeCompilerArgs.add("-Xcontext-receivers")
 }
 
 dependencies {
   // elide
   implementation(projects.packages.base)
+  implementation(projects.packages.graalvm)
 
   // micronaut
   implementation(mn.micronaut.core)
@@ -55,7 +60,7 @@ buildConfig {
 
     // set the path to the shared library built by the 'nativeCompile' task
     // this value is used during tests to load the binary for use with Panama
-    if (nativeTest) buildConfigField<String>(
+    buildConfigField<String>(
       name = "ELIDE_EMBEDDED_PATH",
       value = layout.buildDirectory.file("native/nativeCompile/libelide.so").map { it.asFile.absolutePath },
     )
@@ -74,9 +79,14 @@ graalvmNative {
       // SLF4J + Logback (used by static loggers)
       "ch.qos.logback",
       "org.slf4j.LoggerFactory",
+      // referenced by `elide.runtime.feature.js.JavaScriptFeature`
+      "elide.runtime.gvm.internals.GraalVMGuest",
+      // required by `io.micronaut.core.util.KotlinUtils`
+      "kotlin.coroutines.intrinsics.CoroutineSingletons"
     ).map { "--initialize-at-build-time=$it" }
 
     buildArgs.addAll(initializeAtBuildTime.toList())
+    buildArgs.add("--trace-class-initialization=kotlin.coroutines.intrinsics.CoroutineSingletons")
   }
 }
 

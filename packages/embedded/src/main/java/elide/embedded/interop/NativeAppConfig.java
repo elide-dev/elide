@@ -21,7 +21,7 @@ interface NativeAppConfig extends PointerBase {
    */
   @CField("id")
   CCharPointer getId();
-  
+
   /**
    * Returns the value of the 'entrypoint' struct field, which is a C string.
    */
@@ -29,10 +29,10 @@ interface NativeAppConfig extends PointerBase {
   CCharPointer getEntrypoint();
 
   /**
-   * Returns the value of the 'language' struct field, which is a C string.
+   * Returns the value of the 'language' struct field, which can be mapped to the {@link NativeAppLanguage} enum.
    */
   @CField("language")
-  CCharPointer getLanguage();
+  int getLanguage();
 
   /**
    * Returns the value of the 'mode' struct field, which can be mapped to the {@link NativeAppMode} enum.

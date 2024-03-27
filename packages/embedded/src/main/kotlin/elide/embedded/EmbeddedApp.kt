@@ -3,7 +3,6 @@ package elide.embedded
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
-import elide.embedded.EmbeddedAppConfiguration.DispatchMode.FETCH
 
 /** A unique string-based identifier for a guest [EmbeddedApp]. */
 @JvmInline public value class EmbeddedAppId(public val value: String)
@@ -26,19 +25,19 @@ public data class EmbeddedAppConfiguration(
    * A language code indicating the language of the application, used to select the dispatch engine and configure
    * app bindings.
    */
-  val language: String,
+  val language: EmbeddedGuestLanguage,
 
   /**
    * Specifies the mode in which requests will be handled by the application. The selected value can greatly affect the
    * behavior of the dispatcher (e.g. certain modes require specific symbols to be exported by guest code).
    */
-  val dispatchMode: DispatchMode,
+  val dispatchMode: EmbeddedDispatchMode,
 ) {
   /**
    * Describes the mode in which the runtime will dispatch requests with a guest application. Some modes require the
    * guest code to export specific symbols to be used as entrypoint, such as [FETCH].
    */
-  public enum class DispatchMode {
+  public enum class EmbeddedDispatchMode {
     /**
      * Signals the runtime to use a JavaScript fetch-like API for dispatch, in which a function named `fetch` is
      * exported by the entrypoint script, and called with the request as an argument, using the return value as a

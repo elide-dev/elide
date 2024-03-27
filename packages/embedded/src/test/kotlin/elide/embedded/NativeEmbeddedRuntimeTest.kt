@@ -53,15 +53,15 @@ class NativeEmbeddedRuntimeTest {
   /** Allocate and initialize an runtime configuration struct with the specified values. */
   context(Arena) private fun prepareAppConfig(
     id: String = "test-app",
-    language: String = "js",
     entrypoint: String = "index.js",
+    language: Int = 0,
     mode: Int = 0,
   ): MemorySegment {
     val appConfig = allocate(EmbeddedAppNativeConfig.LAYOUT)
 
     EmbeddedAppNativeConfig.id.set(appConfig, allocateUtf8String(id))
-    EmbeddedAppNativeConfig.language.set(appConfig, allocateUtf8String(language))
     EmbeddedAppNativeConfig.entrypoint.set(appConfig, allocateUtf8String(entrypoint))
+    EmbeddedAppNativeConfig.language.set(appConfig, language)
     EmbeddedAppNativeConfig.mode.set(appConfig, mode)
 
     return appConfig

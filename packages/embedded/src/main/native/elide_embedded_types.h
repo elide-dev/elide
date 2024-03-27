@@ -31,6 +31,15 @@ enum elide_app_mode_t {
   FETCH,
 };
 
+/* Defines the programming language used by a guest application. */
+enum elide_app_lang_t {
+  /* Use JavaScript as guest language. */
+  JS,
+
+  /* Use Python as guest language. */
+  PYTHON,
+};
+
 /* Configuration struct for the embedded runtime. */
 typedef struct elide_config_t {
   /* Dispatch protocol version. */
@@ -43,13 +52,18 @@ typedef struct elide_config_t {
   char *guest_root;
 } elide_config_t;
 
+/* Configuration struct for an embedded application. */
 typedef struct elide_app_config_t {
+  /* Unique identifier for the application. */
   char *id;
 
+  /* Path string, relative to the application root, of the application entrypoint. */
   char *entrypoint;
 
-  char *language;
+  /* Language of the guest application. */
+  enum elide_app_lang_t language;
 
+  /* Dispatch style for the application (e.g. 'fetch'). */
   enum elide_app_mode_t mode;
 } elide_app_config_t;
 

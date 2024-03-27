@@ -4,10 +4,13 @@ import org.graalvm.nativeimage.ObjectHandle
 import org.graalvm.nativeimage.ObjectHandles
 import kotlin.io.path.Path
 import elide.embedded.EmbeddedAppConfiguration
-import elide.embedded.EmbeddedAppConfiguration.DispatchMode
+import elide.embedded.EmbeddedAppConfiguration.EmbeddedDispatchMode
+import elide.embedded.EmbeddedGuestLanguage
 import elide.embedded.EmbeddedConfiguration
 import elide.embedded.EmbeddedProtocolFormat
 import elide.embedded.EmbeddedProtocolVersion
+import elide.embedded.interop.NativeAppLanguage.JS
+import elide.embedded.interop.NativeAppLanguage.PYTHON
 import elide.embedded.interop.NativeAppMode.FETCH
 import elide.embedded.interop.NativeProtocolFormat.CAPNPROTO
 import elide.embedded.interop.NativeProtocolFormat.PROTOBUF
@@ -32,9 +35,15 @@ internal object NativeInterop {
     CAPNPROTO -> EmbeddedProtocolFormat.CAPNPROTO
   }
 
-  /** Convert the provided C [mode] enum to its JVM counterpart, [DispatchMode]. */
-  @JvmStatic fun mapAppMode(mode: NativeAppMode): DispatchMode = when (mode) {
-    FETCH -> DispatchMode.FETCH
+  /** Convert the provided C [mode] enum to its JVM counterpart, [EmbeddedDispatchMode]. */
+  @JvmStatic fun mapAppMode(mode: NativeAppMode): EmbeddedDispatchMode = when (mode) {
+    FETCH -> EmbeddedDispatchMode.FETCH
+  }
+
+  /** Convert the provided C [lang] enum to its JVM form, [EmbeddedGuestLanguage]. */
+  @JvmStatic fun mapAppLanguage(lang: NativeAppLanguage): EmbeddedGuestLanguage = when (lang) {
+    JS -> EmbeddedGuestLanguage.JAVA_SCRIPT
+    PYTHON -> EmbeddedGuestLanguage.PYTHON
   }
 
   /**
@@ -50,21 +59,22 @@ internal object NativeInterop {
       protocolVersion = mapVersion(version),
       protocolFormat = mapFormat(format),
       guestRoot = Path(guestRootPath),
+      guestLanguages = emptySet(),
     )
   }
 
   /**
-   * Shorthand for constructing a new [EmbeddedAppConfiguration] instance using C values. The [mode] enum will be
-   * automatically converted to its JVM equivalent.
+   * Shorthand for constructing a new [EmbeddedAppConfiguration] instance using C values. The [mode] and [language]
+   * enums will be automatically converted to their JVM equivalents.
    */
   @JvmStatic fun createAppConfig(
     entrypoint: String,
-    language: String,
+    language: NativeAppLanguage,
     mode: NativeAppMode,
   ): EmbeddedAppConfiguration {
     return EmbeddedAppConfiguration(
       entrypoint = entrypoint,
-      language = language,
+      language = mapAppLanguage(language),
       dispatchMode = mapAppMode(mode),
     )
   }

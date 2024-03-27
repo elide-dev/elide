@@ -1,6 +1,8 @@
 package elide.embedded
 
 import java.nio.file.Path
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.GuestLanguage
 
 /**
  * Describes the configuration used by the [ElideEmbedded] runtime during initialization.
@@ -8,7 +10,7 @@ import java.nio.file.Path
  * This configuration defines the data exchange format used for serialized invocations and other dispatch-related
  * structures, and can be used to alter the runtime startup process using feature flags.
  */
-public data class EmbeddedConfiguration(
+public data class EmbeddedConfiguration @OptIn(DelicateElideApi::class) constructor(
   /**
    * Defines the version of the dispatch protocol used by the runtime.
    *
@@ -29,5 +31,11 @@ public data class EmbeddedConfiguration(
    * Specifies the root directory in which the guest applications are placed. During dispatch, guest entrypoints will
    * be resolved relative to this path, according to their application ID.
    */
-  val guestRoot: Path
+  val guestRoot: Path,
+
+  /**
+   * Defines the set of languages allowed for guest applications. The runtime must validate that the requested
+   * languages are supported during initialization, and must verify applications at the time of registration.
+   */
+  val guestLanguages: Set<GuestLanguage>,
 )

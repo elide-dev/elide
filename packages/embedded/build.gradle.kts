@@ -14,12 +14,17 @@ val nativeTest = findProperty("elide.embedded.tests.native")?.toString()?.toBool
 
 kotlin {
   explicitApi()
+
+  // suppress delicate usage warnings for Elide core runtime APIs
+  // and opt-in for the new context receivers syntax
+  compilerOptions.optIn.add("elide.runtime.core.DelicateElideApi")
   compilerOptions.freeCompilerArgs.add("-Xcontext-receivers")
 }
 
 dependencies {
   // elide
   implementation(projects.packages.base)
+  implementation(projects.packages.graalvm)
 
   // micronaut
   implementation(mn.micronaut.core)

@@ -15,8 +15,8 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG GRAAL_EDITION=ce
 ARG GRAAL_VERSION=20.0.2
-ARG JAVA_VERSION=20
-ARG JAVA_VM_VERSION=graalvm-jdk-20.0.2+9.1
+ARG JAVA_VERSION=22
+ARG JAVA_VM_VERSION=graalvm-jdk-22+36.1
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -79,23 +79,21 @@ RUN apt-get update \
   && cd ~ \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
-  && export COMPONENTS="native-image js" \
-  && if [ "$ARCH" = "x86_64" ]; then
-    ARCH="x64"
-    FORMAL_ARCH="amd64"
-    BAZELISK_ARCH="x86_64"
-    COMPONENTS="native-image js python ruby wasm llvm llvm-toolchain native-image-llvm-backend"
-  fi \
-  && if [ "$ARCH" = "aarch64" ]; then
-    ARCH="aarch64"
-    FORMAL_ARCH="arm64"
-    BAZELISK_ARCH="arm64"
-  fi \
-  && if [ "$ARCH" = "arm64" ]; then
-    ARCH="aarch64"
-    FORMAL_ARCH="arm64"
-    BAZELISK_ARCH="arm64"
-  fi \
+  && if [ "$ARCH" = "x86_64" ]; then \
+    ARCH="x64" \
+    FORMAL_ARCH="amd64" \
+    BAZELISK_ARCH="x86_64" \
+  ;fi \
+  && if [ "$ARCH" = "aarch64" ]; then \
+    ARCH="aarch64" \
+    FORMAL_ARCH="arm64" \
+    BAZELISK_ARCH="arm64" \
+  ;fi \
+  && if [ "$ARCH" = "arm64" ]; then \
+    ARCH="aarch64" \
+    FORMAL_ARCH="arm64" \
+    BAZELISK_ARCH="arm64" \
+  ;fi \
   && mkdir -p /tmp/gvm \
   && cd /tmp/gvm \
   && export GRAAL_DOWNLOAD_URL="https://download.oracle.com/graalvm/$JAVA_VERSION/latest/graalvm-jdk-${JAVA_VERSION}_linux-${ARCH}_bin.tar.gz" \
@@ -159,8 +157,6 @@ RUN apt-get update \
   && chmod +x llvm.sh \
   && sudo ./llvm.sh 15 \
   && rm -fv llvm.sh \
-  && echo "Installing GraalVM modules..." \
-  && $GRAALVM_HOME/bin/gu install $COMPONENTS \
   && rm -rf /var/lib/apt/lists/*
 
 RUN echo "Preparing dev root..." \

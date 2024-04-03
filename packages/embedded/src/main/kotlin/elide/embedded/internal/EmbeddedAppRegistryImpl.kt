@@ -3,27 +3,32 @@ package elide.embedded.internal
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.*
 import elide.annotations.Singleton
-import elide.embedded.EmbeddedApp
-import elide.embedded.EmbeddedAppConfiguration
-import elide.embedded.EmbeddedAppId
-import elide.embedded.EmbeddedAppRegistry
+import elide.embedded.*
 
 /**
  * An [EmbeddedAppRegistry] using structured concurrency to create a tree of guest apps which will safely stop once the
  * registry is [cancelled][cancel].
  */
-@Singleton internal class EmbeddedAppRegistryImpl : EmbeddedAppRegistry {
+@Singleton internal class EmbeddedAppRegistryImpl(private val config: EmbeddedConfiguration) : EmbeddedAppRegistry {
   /** A [CoroutineScope] in which application state transitions are executed. */
   private val context = Dispatchers.IO + SupervisorJob()
 
   /** A concurrency-safe map holding the app records for the registry. */
   private val records = ConcurrentHashMap<EmbeddedAppId, EmbeddedAppImpl>()
 
+  private fun validateAppConfiguration(appConfig: EmbeddedAppConfiguration) {
+    check(appConfig.language in config.guestLanguages) {
+      "The requested language (${appConfig.language}) is not enabled. Enabled languages: ${config.guestLanguages}"
+    }
+  }
+
   override fun register(id: EmbeddedAppId, config: EmbeddedAppConfiguration): EmbeddedApp {
     check(context.isActive) { "Registry is closed, cannot register new applications." }
 
     val app = records.compute(id) { _, existing ->
       check(existing == null) { "An application with ID '$id' is already registered" }
+
+      validateAppConfiguration(config)
       EmbeddedAppImpl.launch(id, config, context)
     }
 

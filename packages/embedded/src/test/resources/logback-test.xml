@@ -9,6 +9,8 @@
   <logger name="elide.embedded.interop.ElideEmbeddedNative" level="debug"/>
   <logger name="elide.embedded.ElideEmbedded" level="debug"/>
 
+  <logger name="elide.runtime" level="warn"/>
+
   <!-- Micronaut -->
   <logger name="io.micronaut" level="warn"/>
 

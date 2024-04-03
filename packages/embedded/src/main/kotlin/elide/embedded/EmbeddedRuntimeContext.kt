@@ -7,4 +7,7 @@ public interface EmbeddedRuntimeContext {
 
   /** The [EmbeddedAppRegistry] used by the runtime. */
   public val appRegistry: EmbeddedAppRegistry
+
+  /** The call dispatcher used by the runtime. */
+  public val dispatcher: EmbeddedCallDispatcher
 }

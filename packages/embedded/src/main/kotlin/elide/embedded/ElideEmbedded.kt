@@ -1,10 +1,20 @@
 package elide.embedded
 
-import kotlinx.atomicfu.AtomicRef
+import java.util.concurrent.CompletionStage
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.*
+import kotlinx.atomicfu.getAndUpdate
+import kotlinx.coroutines.future.asCompletableFuture
+import elide.embedded.ElideEmbedded.State.*
+import elide.embedded.ElideEmbedded.State.Uninitialized.context
+import elide.embedded.http.EmbeddedResponse
 import elide.embedded.internal.MicronautRuntimeContext
 import elide.runtime.Logging
+
+/**
+ * A [CompletionStage] returned by runtime and application lifecycle operations, meant to be used by Java code to
+ * observe the progress of coroutine-based features.
+ */
+public typealias LifecycleStage = CompletionStage<Unit>
 
 /**
  * An entrypoint for the Elide Embedded Runtime, providing lifecycle managment for a single runtime instance.
@@ -42,21 +52,39 @@ import elide.runtime.Logging
  * releasing guest-related resources.
  */
 public class ElideEmbedded {
+  /** Represents a stage in the runtime lifecycle. */
+  private sealed interface State {
+    /** The context associated with the runtime in the current state. */
+    val context: EmbeddedRuntimeContext
+
+    /**
+     * Represents an uninitialized state for the runtime. The [context] is not available in this state and accessing
+     * it will throw an exception.
+     */
+    data object Uninitialized : State {
+      override val context: EmbeddedRuntimeContext
+        get() = error("Context unavailable: runtime is not initialized")
+    }
+
+    /** Represents an initialized and configured state, before the runtime is started. */
+    @JvmInline value class Initialized(override val context: EmbeddedRuntimeContext) : State
+
+    /** Represents a started runtime state, capable of running guest applications and dispatching calls. */
+    @JvmInline value class Running(override val context: EmbeddedRuntimeContext) : State
+
+    /** Represents a shut down runtime, unable to run applications, dispatch calls, or start again. */
+    @JvmInline value class Stopped(override val context: EmbeddedRuntimeContext) : State
+  }
+
   /** Logger used by the embedded runtime. */
   private val logging = Logging.of(ElideEmbedded::class)
 
-  /** Shared context for dependency injection and runtime lifecycle management. */
-  private val context = atomic<EmbeddedRuntimeContext?>(null)
+  /** Current state of the runtime. */
+  private val state = atomic<State>(Uninitialized)
 
-  /** A coroutine scope used to launch listeners, allowing Java and native code to use coroutines. */
-  private val scope = atomic<CoroutineScope?>(null)
-
-  /** Thread-safe flag to avoid duplicate initialization. */
-  private val initialized = atomic(false)
-
-  /** Use the value of this atomic reference or throw an exception if the value has not been initialized yet. */
-  private fun <T> AtomicRef<T?>.getOrFail(): T {
-    return value ?: error("Uninitialized")
+  /** Use the [EmbeddedRuntimeContext] for the current [state]. */
+  private inline fun <R> useContext(block: EmbeddedRuntimeContext.() -> R): R {
+    return block(state.value.context)
   }
 
   /**
@@ -64,21 +92,25 @@ public class ElideEmbedded {
    * call. The [config] defines the format and version of the invocation protocol.
    *
    * Multiple [initialize] calls are not supported, instead all invocations following the first one will return `false`
-   * to indicate failure without throwing an exception.
+   * to indicate failure without throwing an exception. There is no guarantee that this condition will be met for
+   * concurrent initialization calls, runtime lifecycle methods should never be called concurrently.
    *
    * @param config Configuration for the runtime, including the dispatch protocol settings.
    * @return Whether the runtime was successfully initialized.
    */
   public fun initialize(config: EmbeddedConfiguration): Boolean {
-    // runtime config serves as initialization flag
-    if (!initialized.compareAndSet(expect = false, update = true)) return false
-    logging.info("Initializing runtime")
+    val previous = state.getAndUpdate { current ->
+      if (current !is Uninitialized) return@getAndUpdate current
+      logging.info("Initializing runtime")
 
-    // select the context implementation manually (since DI becomes available only after init)
-    // currently, only a Micronaut-based context is implemented
-    context.value = MicronautRuntimeContext.create(config)
+      // select the context implementation manually (since DI becomes available only after init)
+      // currently, only a Micronaut-based context is implemented
+      Initialized(MicronautRuntimeContext.create(config))
+    }
 
-    logging.debug("Initialized runtime with configuration $config and context ${context.value}")
+    if (previous !is Uninitialized) return false
+    logging.debug("Initialized runtime with configuration $config")
+
     return true
   }
 
@@ -87,35 +119,57 @@ public class ElideEmbedded {
    * supported and will have no effect.
    */
   public fun start(): Boolean {
-    if (scope.value != null) return false
-    logging.debug("Starting runtime")
+    val previous = state.getAndUpdate { current ->
+      when (current) {
+        // preserve current running state
+        is Running -> current
 
-    // prepare the adapter scope for app lifecycle operations
-    scope.value = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        // start required
+        is Initialized -> {
+          logging.debug("Starting runtime")
+          Running(current.context)
+        }
 
-    return true
+        // illegal state
+        is Stopped -> error("Runtime has been stopped and cannot be restarted")
+        is Uninitialized -> error("Runtime must be initialized before starting")
+      }
+    }
+
+    return previous !is Running
   }
 
   /**
    * Stop the runtime, rejecting any new [dispatch] calls. Calling [start] after stopping the runtime is not allowed
    * and will have no effect.
    */
-  public fun stop() {
-    logging.debug("Stopping runtime")
+  public fun stop(): Boolean {
+    val previous = state.getAndUpdate { current ->
+      when (current) {
+        // preserve current stopped state
+        is Stopped -> current
 
-    // shut down the registry, stop all running apps, and cancel all observers
-    context.getOrFail().appRegistry.cancel()
-    scope.getOrFail().cancel()
+        // shutdown required
+        is Running -> {
+          logging.debug("Stopping runtime")
+          current.context.appRegistry.cancel()
 
-    logging.debug("App registry and observers scope closed, shutting down")
+          logging.debug("App registry closed, shutting down")
+          Stopped(current.context)
+        }
+
+        is Uninitialized, is Initialized -> error("Runtime must be running before being stopped")
+      }
+    }
+
+    return previous !is Stopped
   }
 
   /**
    * Dispatch an incoming call with the runtime. This operation is currently under construction.
    */
-  public fun dispatch() {
-    logging.debug("Dispatching call")
-    // nothing yet
+  public fun dispatch(call: EmbeddedCall, app: EmbeddedApp): CompletionStage<EmbeddedResponse> {
+    return useContext { dispatcher.dispatch(call, app).asCompletableFuture() }
   }
 
   /**
@@ -123,27 +177,9 @@ public class ElideEmbedded {
    * reference can be used to manage the app's lifecycle and observe its state.
    */
   public fun createApp(id: String, config: EmbeddedAppConfiguration): EmbeddedApp {
-    logging.debug("Registering application with id '$id'")
-    val app = context.getOrFail().appRegistry.register(EmbeddedAppId(id), config)
-    logging.debug("Registered application with id '$id'")
-
-    return app
-  }
-
-  /**
-   * Start an embedded [app]. An observable version of this method providing callback capabilities is also available
-   * This method is intended for the Java/Native interoperability layer, which has no direct support for coroutines.
-   *
-   * Note that the application will not start immediately, instead startup will be scheduled if possible. The function
-   * will return normally regardless of whether the app was started or not.
-   */
-  public fun startApp(app: EmbeddedApp) {
-    logging.debug("Starting app '${app.id}'")
-    try {
-      app.start()
-      logging.debug("Started app '${app.id}'")
-    } catch (cause: Throwable) {
-      logging.error("Failed to start app '${app.id}': $cause")
+    return useContext {
+      logging.debug("Registering application with id '$id'")
+      appRegistry.register(EmbeddedAppId(id), config)
     }
   }
 
@@ -155,19 +191,11 @@ public class ElideEmbedded {
    * will be called with `true` as an argument as long as no exceptions are thrown, regardless of whether the app was
    * started or not.
    */
-  public fun startApp(app: EmbeddedApp, onComplete: (success: Boolean) -> Unit) {
-    logging.debug("Starting app '${app.id}'")
-    scope.getOrFail().launch {
-      try {
-        app.start().join()
+  public fun startApp(app: EmbeddedApp): LifecycleStage {
+    check(state.value is Running) { "Runtime must be started before launching an application" }
 
-        logging.debug("Started app '${app.id}'")
-        onComplete(true)
-      } catch (cause: Throwable) {
-        logging.error("Failed to start app '${app.id}': $cause")
-        onComplete(false)
-      }
-    }
+    logging.debug("Starting app '${app.id}'")
+    return app.start().asCompletableFuture()
   }
 
   /**
@@ -177,36 +205,10 @@ public class ElideEmbedded {
    * Note that the application will not stop immediately, instead shutdown will be scheduled if possible. The function
    * will return normally regardless of whether the app was stopped or not.
    */
-  public fun stopApp(app: EmbeddedApp) {
-    logging.debug("Stopping app '${app.id}'")
-    try {
-      app.stop()
-      logging.debug("Stopped app '${app.id}'")
-    } catch (cause: Throwable) {
-      logging.error("Failed to stop app '${app.id}': $cause")
-    }
-  }
+  public fun stopApp(app: EmbeddedApp): LifecycleStage {
+    check(state.value is Running) { "Runtime is not running, unable to directly stop application" }
 
-  /**
-   * Stop an embedded [app], invoking a callback once the operation completes, with an indication of success. This
-   * method is intended for the Java/Native interoperability layer, which has no direct support for coroutines.
-   *
-   * Note that the application will not stop immediately, instead shutdown will be scheduled if possible. The callback
-   * will be called with `true` as an argument as long as no exceptions are thrown, regardless of whether the app was
-   * stopped or not.
-   */
-  public fun stopApp(app: EmbeddedApp, onComplete: (success: Boolean) -> Unit) {
     logging.debug("Stopping app '${app.id}'")
-    scope.getOrFail().launch {
-      try {
-        app.stop().join()
-
-        logging.debug("Stopped app '${app.id}'")
-        onComplete(true)
-      } catch (cause: Throwable) {
-        logging.error("Failed to stop app '${app.id}': $cause")
-        onComplete(false)
-      }
-    }
+    return app.stop().asCompletableFuture()
   }
 }

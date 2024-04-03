@@ -1,6 +1,7 @@
 package elide.embedded
 
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Deferred
+import elide.embedded.http.EmbeddedResponse
 
 /**
  * A dispatcher for incoming [EmbeddedCall]s, which schedules execution in the scope of a guest application using the
@@ -8,8 +9,8 @@ import kotlinx.coroutines.Job
  */
 public fun interface EmbeddedCallDispatcher {
   /**
-   * Dispatch an incoming [call] through a guest [app], returning an observable [Job] which tracks the execution
-   * progress. Alternatively, using [EmbeddedCall.await] will provide the result of the operation.
+   * Dispatch an incoming [call] through a guest [app], returning a deferred value which tracks the execution
+   * progress.
    */
-  public fun dispatch(call: EmbeddedCall, app: EmbeddedApp): Job
+  public fun dispatch(call: EmbeddedCall, app: EmbeddedApp): Deferred<EmbeddedResponse>
 }

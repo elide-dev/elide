@@ -139,7 +139,7 @@ final class ElideEmbeddedNative {
     if (instance == null) return NativeResultCodes.uninitialized();
 
     try {
-      instance.dispatch();
+      // instance.dispatch();
       return NativeResultCodes.ok();
     } catch (Throwable cause) {
       logging.error("Unexpected error in native entrypoint", cause);
@@ -200,8 +200,11 @@ final class ElideEmbeddedNative {
       EmbeddedApp app = NativeInterop.unwrapHandle(handle);
 
       // schedule the app startup, and pass the wrapped native callback if available
-      if (callback.isNull()) instance.startApp(app);
-      else instance.startApp(app, new NativeAppCallbackHolder(callback));
+      var completion = instance.startApp(app);
+      if (callback.isNonNull()) {
+        var wrapper = new NativeAppCallbackHolder(callback);
+        completion.handle((success, failure) -> wrapper.invoke(failure == null));
+      }
 
       return NativeResultCodes.ok();
     } catch (Throwable cause) {
@@ -229,8 +232,11 @@ final class ElideEmbeddedNative {
       EmbeddedApp app = NativeInterop.unwrapHandle(handle);
 
       // schedule the app startup, and pass the wrapped native callback if available
-      if (callback.isNull()) instance.stopApp(app);
-      else instance.stopApp(app, new NativeAppCallbackHolder(callback));
+      var completion = instance.stopApp(app);
+      if (callback.isNonNull()) {
+        var wrapper = new NativeAppCallbackHolder(callback);
+        completion.handle((success, failure) -> wrapper.invoke(failure == null));
+      }
 
       return NativeResultCodes.ok();
     } catch (Throwable cause) {

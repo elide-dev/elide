@@ -3,8 +3,9 @@ package elide.embedded.internal
 import io.micronaut.context.BeanContext
 import io.micronaut.runtime.Micronaut
 import org.graalvm.nativeimage.ImageInfo
-import elide.embedded.EmbeddedConfiguration
 import elide.embedded.EmbeddedAppRegistry
+import elide.embedded.EmbeddedCallDispatcher
+import elide.embedded.EmbeddedConfiguration
 import elide.embedded.EmbeddedRuntimeContext
 
 /**
@@ -14,7 +15,12 @@ internal class MicronautRuntimeContext private constructor(
   override val configuration: EmbeddedConfiguration,
   private val beanContext: BeanContext,
 ) : EmbeddedRuntimeContext {
-  override val appRegistry: EmbeddedAppRegistry by lazy { beanContext.getBean(EmbeddedAppRegistry::class.java) }
+  override val appRegistry: EmbeddedAppRegistry by lazyBean()
+  override val dispatcher: EmbeddedCallDispatcher by lazyBean()
+
+  private inline fun <reified T> lazyBean(): Lazy<T> {
+    return lazy { beanContext.getBean(T::class.java) }
+  }
 
   internal companion object {
     /** Environment for the embedded runtime. */

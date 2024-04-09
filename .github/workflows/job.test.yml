@@ -358,7 +358,7 @@ jobs:
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
       - name: "Report: Codecov (Main)"
-        uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
+        uses: codecov/codecov-action@84508663e988701840491b86de86b666e8a86bed # v4.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/reports/kover/merged/xml/report.xml
@@ -367,7 +367,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Report: Codecov (Plugin)"
-        uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
+        uses: codecov/codecov-action@84508663e988701840491b86de86b666e8a86bed # v4.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./tools/plugin/gradle-plugin/plugin-build/plugin/build/reports/kover/xml/report.xml

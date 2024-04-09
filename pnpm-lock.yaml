@@ -28,8 +28,8 @@ importers:
         specifier: 8.4.35
         version: 8.4.35
       preact:
-        specifier: 10.19.4
-        version: 10.19.4
+        specifier: 10.20.2
+        version: 10.20.2
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -4114,6 +4114,10 @@ packages:
 
   /preact@10.19.4:
     resolution: {integrity: sha512-dwaX5jAh0Ga8uENBX1hSOujmKWgx9RtL80KaKUFLc6jb4vCEAc3EeZ0rnQO/FO4VgjfPMfoLFWnNG8bHuZ9VLw==, tarball: https://registry.npmjs.org/preact/-/preact-10.19.4.tgz}
+    dev: false
+
+  /preact@10.20.2:
+    resolution: {integrity: sha512-S1d1ernz3KQ+Y2awUxKakpfOg2CEmJmwOP+6igPx6dgr6pgDvenqYviyokWso2rhHvGtTlWWnJDa7RaPbQerTg==, tarball: https://registry.npmjs.org/preact/-/preact-10.20.2.tgz}
     dev: false
 
   /prelude-ls@1.2.1:

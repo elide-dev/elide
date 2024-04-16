@@ -74,6 +74,7 @@ gradleCommonCustomUserData = "1.12.1"
 gradleTestRetry = "1.5.8"
 grpc-java = "1.61.1"
 grpc-kotlin = "1.4.1"
+kotlinpoet = "1.16.0"
 grpc-web = "1.4.2"
 guava = "33.0.0-jre"
 hamcrest-core = "2.2"
@@ -527,6 +528,7 @@ kotlin-scripting-dependencies-maven = { group = "org.jetbrains.kotlin", name = "
 kotlin-scripting-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin-sdk" }
 kotlin-scripting-jvm-engine = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jsr223", version.ref = "kotlin-sdk" }
 kotlin-scripting-jvm-host = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm-host", version.ref = "kotlin-sdk" }
+kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "atomicfu" }
 kotlinx-atomicfu-linux-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-linuxx64", version.ref = "atomicfu" }
 kotlinx-atomicfu-macos-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-macosx64", version.ref = "atomicfu" }

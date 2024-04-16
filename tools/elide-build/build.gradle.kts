@@ -106,6 +106,7 @@ dependencies {
   implementation(libs.plugin.sigstore)
   implementation(libs.plugin.redacted) // @TODO(sgammon): broken on kotlin 2.0
   implementation(libs.plugin.ksp)
+  implementation(libs.kotlinpoet)
 
   // embedded Kotlin plugins
   implementation(embeddedKotlin("allopen"))

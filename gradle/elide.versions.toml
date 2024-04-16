@@ -16,7 +16,7 @@
 #
 
 [versions]
-androidx-compose = "1.5.9-dev-k2.0.0-Beta3-7c5ec6895a0"
+androidx-compose = "1.5.13-dev-k2.0.0-RC1-50f08dfa4b4"
 arrow = "1.2.0"
 asciidata = "1.4.0"
 atomicfu = "0.23.2"

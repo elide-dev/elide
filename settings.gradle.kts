@@ -72,7 +72,13 @@ dependencyResolutionManagement {
       name = "pkgst-maven"
       url = uri("https://maven.pkg.st")
     }
-
+    maven {
+      name = "jpms-modules"
+      url = uri("https://jpms.pkg.st/repository")
+      content {
+        includeGroup("dev.javamodules")
+      }
+    }
     maven {
       name = "elide-snapshots"
       url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
@@ -135,6 +141,9 @@ dependencyResolutionManagement {
   versionCatalogs {
     create("libs") {
       from(files("./gradle/elide.versions.toml"))
+    }
+    create("attic") {
+      from("dev.javamodules:jpms-catalog:1.0.9")
     }
   }
 }

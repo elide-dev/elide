@@ -61,7 +61,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.esm-eval-returns-exports",
       "js.foreign-hash-properties",
       "js.foreign-object-prototype",
-      "js.import-assertions",
       "js.intl-402",
       "js.json-modules",
       "js.nashorn-compat", // @TODO(sgammon): disable once https://github.com/oracle/graaljs/issues/119 is resolved.

@@ -14,13 +14,13 @@
 /** Declares common build script versions. */
 object Versions {
   /** Kotlin version. */
-  const val kotlin = "2.0.0-Beta4"
+  const val kotlin = "2.0.0-RC1"
 
   /** BouncyCastle version. */
-  const val bouncycastle = "1.77"
+  const val bouncycastle = "1.78"
 
   /** Micronaut version. */
-  const val micronaut = "4.3.0"
+  const val micronaut = "4.3.6"
 
   /** Ant/JUnit version. */
   const val antJUnit = "1.10.12"

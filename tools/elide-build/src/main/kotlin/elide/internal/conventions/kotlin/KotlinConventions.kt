@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.noarg.gradle.NoArgExtension
 import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.Constants.Elide
@@ -146,6 +147,11 @@ internal fun Project.configureKotlinBuild(
       }
     }
   }
+
+  tasks.withType(KotlinJvmCompile::class.java).configureEach {
+    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
+  }
+
   // Kotlin compilation tasks
   tasks.withType(KotlinCompilationTask::class.java).configureEach {
     compilerOptions {

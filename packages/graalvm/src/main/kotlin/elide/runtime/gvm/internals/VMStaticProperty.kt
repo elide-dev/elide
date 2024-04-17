@@ -31,6 +31,8 @@ public data class VMStaticProperty internal constructor (
     private const val DISABLED_FALSE = "false"
 
     private val svmVersionMap = sortedMapOf(
+      "22+36-jvmci-b02" to "24.0.0",
+      "36" to "24.0.0",
       "35" to "23.1.0",
       "13.1" to "23.1.2",
     )
@@ -43,7 +45,14 @@ public data class VMStaticProperty internal constructor (
           vmVersion.contains("jvmci") -> if (vmVersion.contains("lts")) {
             parseSemanticVersion(vmVersion.split("-")[3])
           } else {
-            parseSemanticVersion(vmVersion.split("-")[2])
+            val subject = vmVersion.split("-")[2]
+            if (subject.contains(".")) {
+              parseSemanticVersion(subject)
+            } else parseSemanticVersion(
+              requireNotNull(svmVersionMap[vmVersion]) {
+                "SVM version not registered (full): $vmVersion"
+              }
+            )
           }
 
           // in a native image, we'll need to translate the SVM release to a known SDK release

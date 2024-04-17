@@ -52,24 +52,30 @@ import elide.runtime.plugins.llvm.LLVM
       "python.WithTRegex",
     )
 
-    if (ENABLE_LLVM) builder.enableOptions(
-      "llvm.AOTCacheStore",
-      "llvm.AOTCacheLoad",
-      "llvm.C++Interop",
-      "llvm.lazyParsing",
-    )
+    if (ENABLE_LLVM) {
+      builder.enableOptions(
+        "llvm.AOTCacheStore",
+        "llvm.AOTCacheLoad",
+        "llvm.C++Interop",
+        "llvm.lazyParsing",
+      )
+    }
 
-    if (ENABLE_EXPERIMENTAL) builder.enableOptions(
-      "python.WithCachedSources",
-    )
+    if (ENABLE_EXPERIMENTAL) {
+      builder.enableOptions(
+        "python.WithCachedSources",
+      )
+    }
 
     builder.setOptions(
       "python.PosixModuleBackend" to "java",
     )
 
-    if (ENABLE_LLVM) builder.setOptions(
-      "llvm.OSR" to "BYTECODE",
-    )
+    if (ENABLE_LLVM) {
+      builder.setOptions(
+        "llvm.OSR" to "BYTECODE",
+      )
+    }
   }
 
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {

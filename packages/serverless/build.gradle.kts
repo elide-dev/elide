@@ -156,7 +156,7 @@ dependencies {
 
 afterEvaluate {
   listOf("wasmJsBrowserTest").forEach { name ->
-    tasks.named{ it == name }.configureEach {
+    tasks.named { it == name }.configureEach {
       enabled = false
     }
   }

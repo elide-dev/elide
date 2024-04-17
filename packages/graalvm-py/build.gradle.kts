@@ -51,6 +51,16 @@ elide {
     target = NativeTarget.LIB
     useAgent = false
   }
+
+  checks {
+    // Needs suppressions for inlined files from GVM (`JNIFeature.kt` and `BouncyCastleFeature.kt`)
+    diktat = false
+    detekt = false
+  }
+}
+
+detekt {
+  ignoreFailures = true
 }
 
 dependencies {

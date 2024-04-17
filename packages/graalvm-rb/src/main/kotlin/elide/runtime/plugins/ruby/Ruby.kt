@@ -65,9 +65,9 @@ import elide.runtime.plugins.llvm.LLVM
   }
 
   public companion object Plugin : AbstractLanguagePlugin<RubyConfig, Ruby>() {
+    private const val ENABLE_LLVM = false
     private const val RUBY_LANGUAGE_ID = "ruby"
     private const val RUBY_PLUGIN_ID = "Ruby"
-    private const val ENABLE_LLVM = false
     override val languageId: String = RUBY_LANGUAGE_ID
     override val key: Key<Ruby> = Key(RUBY_PLUGIN_ID)
 
@@ -75,7 +75,9 @@ import elide.runtime.plugins.llvm.LLVM
       configureLanguageSupport(scope)
 
       // apply the llvm plugin first
-      if (ENABLE_LLVM) scope.configuration.getOrInstall(LLVM)
+      if (ENABLE_LLVM) {
+        scope.configuration.getOrInstall(LLVM)
+      }
 
       // apply the configuration and create the plugin instance
       val config = RubyConfig().apply(configuration)

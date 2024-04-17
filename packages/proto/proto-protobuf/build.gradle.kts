@@ -15,6 +15,7 @@
 
 import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.proto
+import io.gitlab.arturbosch.detekt.Detekt
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 
@@ -51,6 +52,10 @@ elide {
   checks {
     disableAllChecks()
   }
+}
+
+tasks.withType(Detekt::class.java) {
+  jvmTarget = "17"  // @TODO pull from property state
 }
 
 sourceSets {

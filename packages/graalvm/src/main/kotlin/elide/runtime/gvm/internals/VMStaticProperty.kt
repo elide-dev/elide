@@ -31,6 +31,7 @@ public data class VMStaticProperty internal constructor (
     private const val DISABLED_FALSE = "false"
 
     private val svmVersionMap = sortedMapOf(
+      "22.0.1+8-jvmci-b01" to "24.0.1",
       "22+36-jvmci-b02" to "24.0.0",
       "36" to "24.0.0",
       "35" to "23.1.0",

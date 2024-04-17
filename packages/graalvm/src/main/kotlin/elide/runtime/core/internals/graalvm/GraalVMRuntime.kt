@@ -49,6 +49,9 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
      * versions and the values are the corresponding GraalVM release.
      */
     private val SubstrateVersionMap = sortedMapOf(
+      "22.0.1" to "24.0.1",
+      "22.0.0" to "24.0.0",
+      "36" to "24.0.1",
       "35" to "23.1.0",
       "13.1" to "23.1.2",
     )
@@ -67,6 +70,12 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
 
     /** Version constant for GraalVM 23.1 */
     public val GVM_23_1: Version = Version(23, 1)
+
+    /** Version constant for GraalVM 24.0 */
+    public val GVM_24: Version = Version(24)
+
+    /** Version constant for GraalVM 24.0.1 */
+    public val GVM_24_0_1: Version = Version(24, 0, 1)
 
     /**
      * Detect the current runtime version and return it as a comparable [Version] object. When running from a
@@ -88,8 +97,10 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
         // check for LTS version tag, for example:
         // `21.0.2+13-LTS-jvmci-23.1-b30`
         val index = if (tag.contains("lts")) 3 else 2
-        source.split("-").getOrNull(index)?.let { jvm ->
-          return Version.parse(jvm)
+        return source.split("-").getOrNull(index)?.let { jvm ->
+          if (!jvm.contains(".")) null else Version.parse(jvm)
+        } ?: source.split("+").getOrNull(0)?.let { jvm ->
+          Version.parse(SubstrateVersionMap[jvm] ?: error("JVM version not mapped: $jvm"))
         }
       }
       // unknown version

@@ -68,3 +68,14 @@ public final class elide/runtime/plugins/python/PythonConfig : elide/runtime/plu
 	public fun <init> ()V
 }
 
+public final class elide/runtime/plugins/python/features/BouncyCastleFeature : org/graalvm/nativeimage/hosted/Feature {
+	public fun <init> ()V
+	public fun afterRegistration (Lorg/graalvm/nativeimage/hosted/Feature$AfterRegistrationAccess;)V
+	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
+}
+
+public final class elide/runtime/plugins/python/features/JNIFeature : org/graalvm/nativeimage/hosted/Feature {
+	public fun <init> ()V
+	public fun afterRegistration (Lorg/graalvm/nativeimage/hosted/Feature$AfterRegistrationAccess;)V
+}
+

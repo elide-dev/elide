@@ -94,12 +94,12 @@ val isRelease = !quickbuild && (
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val oracleGvm = false
+val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
-val enablePython = false
-val enableRuby = false
-val enableTools = false
+val enablePython = true
+val enableRuby = true
+val enableTools = true
 val enableMosaic = true
 val enableProguard = false
 val enableLlvm = false
@@ -107,17 +107,16 @@ val enableEspresso = false
 val enableExperimental = false
 val enableEmbeddedResources = false
 val enableResourceFilter = false
-val enableAuxCache = false
+val enableAuxCache = true
 val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableDashboard = false
-val enableBuildReport = false
-val enableStrictHeap = false
+val enableBuildReport = true
 val enableG1 = oracleGvm && HostManager.hostIsLinux
 val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
-val enableSbom = true
+val enableSbom = false
 val enableSbomStrict = false
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
@@ -145,8 +144,6 @@ buildscript {
   }
 }
 
-// @TODO(sgammon): mosaic is broken on kotlin v2
-
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val nativesRootTemplate: (String) -> String = { version ->
@@ -158,15 +155,7 @@ val jvmCompileArgs = listOfNotNull(
   "--add-modules=jdk.incubator.vector",
   "--enable-native-access=" + listOfNotNull(
     "ALL-UNNAMED",
-    "org.graalvm.polyglot",
-    "org.graalvm.js",
-    if (enableRuby) "org.graalvm.ruby" else null,
-    if (enablePython) "org.graalvm.py" else null,
-    if (enableEspresso) "org.graalvm.espresso" else null,
   ).joinToString(","),
-  "--add-exports=org.graalvm.truffle/com.oracle.truffle.object=ALL-UNNAMED",
-  "--add-exports=org.graalvm.truffle.runtime/com.oracle.truffle.runtime=ALL-UNNAMED",
-  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -174,8 +163,6 @@ val jvmCompileArgs = listOfNotNull(
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
-  "--add-exports=java.base/jdk.internal.module=elide.cli",
-  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
 ) else emptyList()).plus(if (enableEmbeddedBuilder) listOf(
   "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
@@ -210,7 +197,7 @@ val ktCompilerArgs = listOf(
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
   // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-RC1",
+  // "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-RC1",
 )
 
 java {
@@ -297,6 +284,8 @@ dependencies {
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
+  compileOnly(libs.graalvm.svm)
+  compileOnly(libs.graalvm.truffle.runtime.svm)
 
   // include a dependency in the implementation configuration only if enabled,
   // otherwise add it as compile-only
@@ -308,8 +297,8 @@ dependencies {
   runtimeIf(enableEspresso, projects.packages.graalvmJava)
   runtimeIf(enableEspresso, projects.packages.graalvmKt)
   runtimeIf(enableLlvm, projects.packages.graalvmLlvm)
-  runtimeIf(enablePython, projects.packages.graalvmPy)
   runtimeIf(enableRuby, projects.packages.graalvmRb)
+  runtimeIf(enablePython, projects.packages.graalvmPy)
   runtimeIf(enableWasm, projects.packages.graalvmWasm)
 
   api(libs.picocli)
@@ -642,6 +631,9 @@ val commonNativeArgs = listOfNotNull(
   "--enable-all-security-services",
   "--install-exit-handlers",
   "--configure-reflection-metadata",
+  "--macro:truffle-svm",
+  "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
+  "-J-Dgraalvm.locatorDisabled=false",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
@@ -667,9 +659,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+UnlockExperimentalVMOptions",
 ) else emptyList()).plus(
   if (oracleGvm) commonGvmArgs else emptyList()
-).plus(if (enableStrictHeap) listOf(
-  "--strict-image-heap",
-) else emptyList()).plus(if (nativeImageBuildDebug) listOf(
+).plus(if (nativeImageBuildDebug) listOf(
   "--debug-attach",
 ) else emptyList()).toList()
 
@@ -720,10 +710,6 @@ val experimentalFlags = listOf(
 val releaseCFlags: List<String> = listOf(
   "-O3",
   "-v",
-).plus(
-  if (!enableRuby) listOf(
-    "-flto",
-  ) else emptyList(),
 )
 
 // PGO profiles to specify in release mode.
@@ -738,8 +724,6 @@ val gvmReleaseFlags: List<String> = listOf(
   "-H:+VectorizeSIMD",
   "-H:+LSRAOptimization",
   "-H:+MLProfileInference",
-  "-H:+BouncyCastleIntrinsics",
-  "-R:+BouncyCastleIntrinsics",
   "-H:+VectorPolynomialIntrinsics",
 )
 
@@ -776,73 +760,6 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
-  // Kotlin Core
-  "kotlin._Assertions",
-  "kotlin.KotlinVersion",
-  "kotlin.SafePublicationLazyImpl",
-  "kotlin.LazyThreadSafetyMode",
-  "kotlin.LazyKt__LazyJVMKt${'$'}WhenMappings",
-
-  // Kotlin Standard Library
-  "kotlin.coroutines.ContinuationInterceptor",
-  "kotlin.sequences",
-  "kotlin.text.Charsets",
-  "kotlin.time",
-  "kotlin.time.DurationJvmKt",
-  "kotlin.time.Duration",
-  "kotlin.time.DurationUnit",
-
-  // Kotlin Reflect / JVM Internals
-  "kotlin.jvm.internal.CallableReference",
-  "kotlin.jvm.internal.Reflection",
-  "kotlin.jvm.internal.PropertyReference",
-  "kotlin.jvm.internal.PropertyReference1",
-  "kotlin.jvm.internal.PropertyReference1Impl",
-  "kotlin.reflect.jvm.internal.CachesKt",
-  "kotlin.reflect.jvm.internal.CacheByClassKt",
-  "kotlin.reflect.jvm.internal.KClassImpl",
-  "kotlin.reflect.jvm.internal.KClassImpl${'$'}Data",
-  "kotlin.reflect.jvm.internal.KProperty1Impl",
-  "kotlin.reflect.jvm.internal.KDeclarationContainerImpl",
-  "kotlin.reflect.jvm.internal.KDeclarationContainerImpl${'$'}Data",
-  "kotlin.reflect.jvm.internal.RuntimeTypeMapper",
-  "kotlin.reflect.jvm.internal.impl.builtins.CompanionObjectMapping",
-  "kotlin.reflect.jvm.internal.impl.builtins.PrimitiveType",
-  "kotlin.reflect.jvm.internal.impl.builtins.StandardNames",
-  "kotlin.reflect.jvm.internal.impl.builtins.StandardNames${'$'}FqNames",
-  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}Function",
-  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}KFunction",
-  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}SuspendFunction",
-  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}KSuspendFunction",
-  "kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap",
-  "kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap${'$'}PlatformMutabilityMapping",
-  "kotlin.reflect.jvm.internal.impl.descriptors.runtime.structure.ReflectClassUtilKt",
-  "kotlin.reflect.jvm.internal.impl.name.FqName",
-  "kotlin.reflect.jvm.internal.impl.name.FqNameUnsafe",
-  "kotlin.reflect.jvm.internal.impl.name.SpecialNames",
-  "kotlin.reflect.jvm.internal.impl.name.StandardClassIds",
-  "kotlin.reflect.jvm.internal.impl.name.StandardClassIdsKt",
-  "kotlin.reflect.jvm.internal.impl.resolve.jvm.JvmPrimitiveType",
-
-  // KotlinX Modules
-  "kotlinx.datetime",
-  "kotlinx.io",
-  "kotlinx.coroutines",
-  "kotlinx.serialization",
-  "kotlinx.serialization.internal",
-
-  // KotlinX Serialization + KotlinX JSON
-  "kotlinx.serialization.internal.StringSerializer",
-  "kotlinx.serialization.modules.SerializersModuleKt",
-  "kotlinx.serialization.json.Json",
-  "kotlinx.serialization.json.Json${'$'}Default",
-  "kotlinx.serialization.json.JsonElementKt",
-  "kotlinx.serialization.json.internal.CharArrayPoolBatchSize",
-  "kotlinx.serialization.json.internal.StreamingJsonDecoder${'$'}WhenMappings",
-  "kotlinx.serialization.json.internal.WriteMode",
-  "kotlinx.serialization.json.internal.ArrayPoolsKt",
-  "kotlinx.serialization.json.internal.ByteArrayPool8k",
-
   // Google Commons + Protobuf
   "com.google.protobuf",
   "com.google.common.html.types.Html",
@@ -860,157 +777,22 @@ val initializeAtBuildTime = listOf(
 
   // Logging
   "ch.qos.logback",
+  "ch.qos.logback.classic.Logger",
   "org.slf4j.MarkerFactory",
+  "org.slf4j.helpers.SubstituteServiceProvider",
+  "org.slf4j.helpers.SubstituteLoggerFactory",
+  "org.slf4j.helpers.NOP_FallbackServiceProvider",
+  "org.slf4j.helpers.NOPLoggerFactory",
+  "org.slf4j.helpers.BasicMarkerFactory",
+  "org.slf4j.helpers.BasicMarker",
+
+  // --- Mordant -----
+
+  "com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls",
 
   // --- Netty ------
 
-  "io.netty.channel.unix.Unix",
-  "io.netty.util.internal.CleanerJava9",
-  "io.netty.util.CharsetUtil",
-  "io.netty.util.internal.SystemPropertyUtil",
-  "io.netty.channel.kqueue.KQueue",
-  "io.netty.channel.kqueue.Native",
-  // "io.netty.incubator.channel.uring.IOUring",
-  // "io.netty.incubator.channel.uring.IOUringSubmissionQueue",
-  // "io.netty.incubator.channel.uring.Native",
-  // "io.netty.incubator.channel.uring.LinuxSocket",
-  "io.netty.util.internal.SocketUtils",
-  "io.netty.channel.unix.FileDescriptor",
-  "io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider",
-  "io.netty.channel.kqueue.KQueueEventArray",
-  "io.netty.channel.kqueue.Native",
-  "io.netty.util.NetUtil",
-  "io.netty.util.AbstractReferenceCounted",
-  "io.netty.util.internal.logging.LocationAwareSlf4JLogger",
-  "io.netty.util.NetUtilInitializations",
-  "io.netty.channel.DefaultFileRegion",
-  "io.netty.util.internal.logging.Slf4JLoggerFactory${'$'}NopInstanceHolder",
-  "io.netty.channel.kqueue.BsdSocket",
-  "io.netty.channel.unix.Socket",
-  "io.netty.util.internal.PlatformDependent0",
-  "io.netty.util.internal.PlatformDependent",
-  "io.netty.util.internal.NativeLibraryLoader",
-  "io.netty.util.Recycler",
-  "io.netty.util.Recycler${'$'}DefaultHandle",
-  "io.netty.util.ResourceLeakDetector",
-  "io.netty.util.ResourceLeakDetectorFactory",
-  "io.netty.util.ResourceLeakDetectorFactory${'$'}DefaultResourceLeakDetectorFactory",
-  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueProducerFields",
-  "io.netty.util.internal.StringUtil",
-  "io.netty.util.internal.PlatformDependent${'$'}Mpsc",
-  "io.netty.util.internal.InternalThreadLocalMap",
-  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueConsumerFields",
-  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueuePad3",
-  "io.netty.util.internal.ThreadExecutorMap",
-  "io.netty.util.internal.shaded.org.jctools.queues.MpscChunkedArrayQueue",
-  "io.netty.util.internal.shaded.org.jctools.util.UnsafeAccess",
-  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueue",
-  "io.netty.util.internal.shaded.org.jctools.util.UnsafeRefArrayAccess",
-  "io.netty.util.internal.ObjectPool${'$'}RecyclerObjectPool${'$'}1",
-  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueuePad2",
-  "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueColdProducerFields",
-  "io.netty.util.internal.shaded.org.jctools.queues.MpscChunkedArrayQueueColdProducerFields",
-
-  // --- Elide ------
-
-  // Elide Runtime Core
-  "elide.runtime.core.HostPlatform${'$'}Architecture",
-  "elide.runtime.core.HostPlatform${'$'}OperatingSystem",
-  "elide.runtime.plugins.env.EnvConfig${'$'}EnvVariableSource",
-
-  // Elide VM Internals
-  "tools.elide",
-  "elide.runtime.gvm",
-  "elide.runtime.gvm.internals",
-  "elide.runtime.gvm.internals.context",
-  "elide.runtime.gvm.internals.intrinsics",
-  "elide.runtime.gvm.internals.vfs",
-  "elide.runtime.gvm.internals.AbstractGVMScript",
-  "elide.runtime.gvm.internals.AbstractVMAdapter",
-  "elide.runtime.gvm.internals.IntrinsicsManager",
-  "elide.runtime.gvm.internals.VMConditionalMultiProperty",
-  "elide.runtime.gvm.internals.VMConditionalProperty",
-  "elide.runtime.gvm.internals.VMRuntimeProperty",
-  "elide.runtime.gvm.internals.VMStaticProperty",
-  "elide.runtime.gvm.internals.GraalVMGuest",
-  "elide.runtime.gvm.internals.GraalVMGuest${'$'}JVM",
-  "elide.runtime.gvm.internals.GraalVMGuest${'$'}JAVASCRIPT",
-  "elide.runtime.gvm.internals.GraalVMGuest${'$'}PYTHON",
-  "elide.runtime.gvm.internals.GraalVMGuest${'$'}RUBY",
-  "elide.runtime.gvm.internals.GraalVMGuest${'$'}WASM",
-
-  // Elide VM Intrinsics: JavaScript
-  "elide.runtime.intrinsics",
-  "elide.runtime.intrinsics.js",
-  "elide.runtime.intrinsics.js.err",
-  "elide.runtime.intrinsics.js.express",
-  "elide.runtime.intrinsics.js.typed",
-  "elide.runtime.gvm.js",
-  "elide.runtime.gvm.internals.intrinsics.js",
-  "elide.runtime.gvm.internals.intrinsics.js.base64",
-  "elide.runtime.gvm.internals.intrinsics.js.console",
-  "elide.runtime.gvm.internals.intrinsics.js.crypto",
-  "elide.runtime.gvm.internals.intrinsics.js.express",
-  "elide.runtime.gvm.internals.intrinsics.js.fetch",
-  "elide.runtime.gvm.internals.intrinsics.js.stream",
-  "elide.runtime.gvm.internals.intrinsics.js.struct",
-  "elide.runtime.gvm.internals.intrinsics.js.typed",
-  "elide.runtime.gvm.internals.intrinsics.js.url",
-  "elide.runtime.gvm.internals.intrinsics.js.webstreams",
-
-  // Elide Tool Implementations
-  "elide.tool.cli.GuestLanguage",
-  "elide.tool.cli.cmd",
-  "elide.tool.cli.control",
-  "elide.tool.cli.err",
-  "elide.tool.cli.state",
-  "elide.tool.cli.Statics",
-  "elide.tool.err",
-  "elide.tool.io",
-  "elide.tool.testing",
-  "elide.tool.engine.NativeUtil",
-  "elide.tool.engine.NativeEngine${'$'}WhenMappings",
-  "elide.tool.engine.EngineCondition",
-  "elide.tool.engine.JsEngineCondition",
-  "elide.tool.engine.RubyEngineCondition",
-  "elide.tool.engine.WasmEngineCondition",
-  "elide.tool.engine.PythonEngineCondition",
-  "elide.tool.engine.JvmEngineCondition",
-  "elide.tool.engine.LlvmEngineCondition",
-
-  // Elide Packages: Framework
-  "elide.annotations",
-  "elide.base",
-  "elide.core",
-  "elide.core.crypto",
-  "elide.core.encoding",
-  "elide.core.encoding.base64",
-  "elide.core.encoding.hex",
-  "elide.core.platform",
-  "elide.util",
-  "elide.runtime.jvm",
-
-  // Elide Internals: Engine Implementations
-  "elide.runtime.gvm.internals.js",
-  "elide.runtime.gvm.internals.python",
-  "elide.runtime.gvm.internals.ruby",
-  "elide.runtime.gvm.internals.jvm",
-  "elide.runtime.gvm.internals.wasm",
-
-  // Elide Internals: VM Engines
-  "elide.runtime.gvm.internals.AbstractVMEngine",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}NativeImageInfo",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeNativeResources${'$'}${'$'}serializer",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeNativeResourceBundle${'$'}${'$'}serializer",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}NativeImageInfo${'$'}${'$'}serializer",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeNativeResourceSignature${'$'}${'$'}serializer",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeVFS${'$'}${'$'}serializer",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}UniversalImageInfo",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}UniversalImageInfo${'$'}${'$'}serializer",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeArtifact${'$'}${'$'}serializer",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeInfo",
-  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeInfo${'$'}${'$'}serializer",
+  "io.netty.util.concurrent.FastThreadLocal",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -1046,11 +828,6 @@ val initializeAtRuntime: List<String> = listOf(
 
 val initializeAtRuntimeTest: List<String> = emptyList()
 
-val rerunAtRuntime: List<String> = listOf(
-  "elide.tool.cli.ElideTool",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
-)
-
 val rerunAtRuntimeTest: List<String> = emptyList()
 
 val defaultPlatformArgs = listOf(
@@ -1075,6 +852,7 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
+  "--initialize-at-build-time=sun.awt.resources.awtosx,sun.awt.resources.awt",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
@@ -1084,7 +862,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx24g",
+  "-J-Xmx48g",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:+AuxiliaryEngineCache",
 ) else emptyList())
@@ -1173,8 +951,6 @@ fun nativeCliImageArgs(
   ).plus(
     initializeAtRuntime.map { "--initialize-at-run-time=$it" },
   ).plus(
-    rerunAtRuntime.map { "--rerun-class-initialization-at-runtime=$it" },
-  ).plus(
     when (platform) {
       "windows" -> if (release) windowsReleaseArgs else windowsOnlyArgs
       "darwin" -> if (release) darwinReleaseArgs else darwinOnlyArgs
@@ -1236,7 +1012,9 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
+      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs).plus(listOf(
+        "--exclude-config", "python-language-24.0.1.jar", "META-INF\\/native-image\\/.*.properties",
+      )))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
     }
 
@@ -1245,7 +1023,9 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
+      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs).plus(listOf(
+        "--exclude-config", "python-language-24.0.1.jar", "META-INF\\/native-image\\/.*.properties",
+      )))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
     }
 
@@ -1479,9 +1259,19 @@ tasks {
   named("run", JavaExec::class).configure {
     systemProperty("micronaut.environments", "dev")
     systemProperty("picocli.ansi", "tty")
+
     jvmDefs.map {
       systemProperty(it.key, it.value)
     }
+
+    systemProperty(
+      "org.graalvm.language.ruby.home",
+      layout.buildDirectory.dir("native/nativeCompile/resources/ruby/ruby-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "org.graalvm.language.python.home",
+      layout.buildDirectory.dir("native/nativeCompile/resources/python/python-home").get().asFile.path.toString(),
+    )
 
     jvmArgs(jvmModuleArgs)
 

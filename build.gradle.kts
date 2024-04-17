@@ -122,6 +122,8 @@ buildscript {
     classpath(libs.kotlinx.knit)
     classpath(libs.plugin.kotlinx.atomicfu)
     classpath(libs.kotlinpoet)
+    classpath(libs.jgit)
+    classpath(libs.guava)
     classpath(libs.owasp)
 
     if (hasProperty("elide.pluginMode") && properties["elide.pluginMode"] == "repository") {

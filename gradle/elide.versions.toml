@@ -64,7 +64,7 @@ github-api = "1.321"
 google-api-common = "2.16.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
-graalvm = "24.0.0"
+graalvm = "24.0.1"
 graalvm-metadata = "0.3.6"
 graalvm-pin = "23.1.2"
 graalvm-plugin = "0.10.1"
@@ -94,6 +94,7 @@ jdoctor = "0.1.2"
 jetbrains-annotations = "24.1.0"
 jetty-alpn = "1.1.3.v20160715"
 jetty-npn = "8.1.2.v20120308"
+jgit = "5.13.3.202401111512-r"
 jib = "3.4.0"
 jimfs = "1.3.0"
 jline = "3.25.1"
@@ -453,6 +454,7 @@ graalvm-truffle-nfi-native-linux-aarch64 = { group = "org.graalvm.truffle", name
 graalvm-truffle-nfi-native-linux-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-amd64", version.ref = "graalvm" }
 graalvm-truffle-nfi-panama = { group = "org.graalvm.truffle", name = "truffle-nfi-panama", version.ref = "graalvm" }
 graalvm-truffle-processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm" }
+graalvm-truffle-runtime-svm = { group = "org.graalvm.nativeimage", name = "truffle-runtime-svm", version.ref = "graalvm" }
 graalvm-wasm-language = { group = "org.graalvm.wasm", name = "wasm-language", version.ref = "graalvm" }
 grpc-api = { group = "io.grpc", name = "grpc-api", version.ref = "grpc-java" }
 grpc-auth = { group = "io.grpc", name = "grpc-auth", version.ref = "grpc-java" }
@@ -488,6 +490,7 @@ jdoctor = { group = "me.champeau.jdoctor", name = "jdoctor-core", version.ref = 
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
 jetty-alpn = { group = "org.eclipse.jetty.alpn", name = "alpn-api", version.ref = "jetty-alpn" }
 jetty-npn = { group = "org.eclipse.jetty.npn", name = "npn-api", version.ref = "jetty-npn" }
+jgit = { group = "org.eclipse.jgit", name = "org.eclipse.jgit", version.ref = "jgit" }
 jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 jline-all = { module = "org.jline:jline", version.ref = "jline" }
 jline-builtins = { module = "org.jline:jline-builtins", version.ref = "jline" }
@@ -835,7 +838,7 @@ graalvm-espresso = ["graalvm-espresso-hotswap"]
 
 graalvm-python = ["graalvm-polyglot-python", "graalvm-python-resources"]
 
-graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ruby-resources"]
+graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ruby-resources", "graalvm-ruby-shared"]
 
 graalvm-js = ["graalvm-js-language", "graalvm-polyglot-js"]
 

@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.vfs
 
+import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.polyglot.io.IOAccess
 import java.net.URI
@@ -48,23 +49,40 @@ import elide.runtime.gvm.internals.vfs.HybridVfs
   /** Pre-configured VFS, created when the engine is initialized. */
   private lateinit var fileSystem: FileSystem
 
+  private val vfsUnsupported = Engine.create().languages.keys.let {
+    it.contains("python") || it.contains("ruby")
+  }
+
   internal fun onEngineCreated(@Suppress("unused_parameter") builder: PolyglotEngineBuilder) {
     // select the VFS implementation depending on the configuration
     // if no host access is requested, use an embedded in-memory vfs
-    fileSystem = if (!config.useHost) {
+    (if (!config.useHost) {
       logging.debug("No host access requested, using in-memory vfs")
       acquireEmbeddedVfs(config.writable, config.registeredBundles)
     } else {
-      // if the configuration requires host access, we use a hybrid vfs
-      logging.debug("Host access requested, using hybrid vfs")
-      HybridVfs.acquire(config.writable, config.registeredBundles)
+      if (vfsUnsupported) {
+        // @TODO when python is active, host VFS must be enabled directly, without embedded support
+        logging.warn("Python/Ruby do not support embedded or hybrid VFS yet; falling back to host I/O")
+        null
+      } else {
+        // if the configuration requires host access, we use a hybrid vfs
+        logging.debug("Host access requested, using hybrid vfs")
+        HybridVfs.acquire(config.writable, config.registeredBundles)
+      }
+    })?.let {
+      fileSystem = it
     }
   }
 
   /** Configure a context builder to use a custom [fileSystem]. */
   internal fun configureContext(builder: PolyglotContextBuilder) {
     // use the configured VFS for each context
-    builder.allowIO(IOAccess.newBuilder().fileSystem(fileSystem).build())
+    builder.allowIO(if (vfsUnsupported) IOAccess.newBuilder()
+        .allowHostFileAccess(true)
+        .allowHostSocketAccess(true)
+        .build() else IOAccess.newBuilder()
+          .fileSystem(fileSystem)
+          .build())
   }
 
   /** Identifier for the [Vfs] plugin, which configures contexts with a custom file system. */

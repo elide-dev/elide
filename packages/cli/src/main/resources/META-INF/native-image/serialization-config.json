@@ -7,6 +7,9 @@
       "name":"ch.qos.logback.classic.model.ConfigurationModel"
     },
     {
+      "name":"ch.qos.logback.classic.model.ContextNameModel"
+    },
+    {
       "name":"ch.qos.logback.classic.model.LoggerContextListenerModel"
     },
     {
@@ -44,6 +47,9 @@
     },
     {
       "name":"ch.qos.logback.core.model.SiftModel"
+    },
+    {
+      "name":"ch.qos.logback.core.model.StatusListenerModel"
     },
     {
       "name":"io.micronaut.context.exceptions.BeanContextException"

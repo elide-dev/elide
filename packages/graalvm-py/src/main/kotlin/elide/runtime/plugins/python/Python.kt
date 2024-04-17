@@ -46,29 +46,37 @@ import elide.runtime.plugins.llvm.LLVM
     )
 
     builder.enableOptions(
+      "python.UsePanama",
+      "python.NativeModules",
+      "python.LazyStrings",
+      "python.WithTRegex",
+    )
+
+    if (ENABLE_LLVM) builder.enableOptions(
       "llvm.AOTCacheStore",
       "llvm.AOTCacheLoad",
       "llvm.C++Interop",
       "llvm.lazyParsing",
-      "python.UsePanama",
-      "python.NativeModules",
-      "python.LazyStrings",
+    )
+
+    if (ENABLE_EXPERIMENTAL) builder.enableOptions(
       "python.WithCachedSources",
-      "python.WithTRegex",
     )
 
     builder.setOptions(
-      "llvm.OSR" to "BYTECODE",
       "python.PosixModuleBackend" to "java",
-      "python.CoreHome" to "/python/python-home/lib/graalpy23.1",
-      "python.StdLibHome" to "/python/python-home/lib/python3.10",
-      "python.PythonHome" to "/python/python-home",
+    )
+
+    if (ENABLE_LLVM) builder.setOptions(
+      "llvm.OSR" to "BYTECODE",
     )
   }
 
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
+    private const val ENABLE_LLVM = false
+    private const val ENABLE_EXPERIMENTAL = false
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
@@ -76,7 +84,7 @@ import elide.runtime.plugins.llvm.LLVM
       configureLanguageSupport(scope)
 
       // apply the llvm plugin first
-      scope.configuration.getOrInstall(LLVM)
+      if (ENABLE_LLVM) scope.configuration.getOrInstall(LLVM)
 
       // apply the configuration and create the plugin instance
       val config = PythonConfig().apply(configuration)

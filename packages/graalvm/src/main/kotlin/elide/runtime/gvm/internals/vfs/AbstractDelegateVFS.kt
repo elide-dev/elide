@@ -13,6 +13,7 @@
 
 package elide.runtime.gvm.internals.vfs
 
+import java.io.FileNotFoundException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.*
 import java.nio.file.attribute.FileAttribute
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.LogLevel
 import elide.runtime.gvm.cfg.GuestIOConfiguration
@@ -67,11 +69,24 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     }
   }
 
+  // Whether to suppress file-not-found exceptions.
+  private val suppressNotFound: AtomicBoolean = AtomicBoolean(false)
+
   // Debug log messages for the current VFS implementation.
   private fun debugLog(message: () -> String) {
     if (logging.isEnabled(LogLevel.DEBUG)) {
       logging.debug("VFS: ${message()}")
     }
+  }
+
+  /**
+   * Trigger suppression of file-not-found exceptions for the current VFS instance; this is done by a child class when
+   * it recognizes such exceptions and applies other logic.
+   *
+   * This method should be called early in the VFS setup flow, and not again.
+   */
+  internal fun suppressNotFoundErr() {
+    suppressNotFound.set(true)
   }
 
   /**
@@ -174,8 +189,15 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
         *attrs
       )
     } catch (thr: Throwable) {
+      when (thr) {
+        is FileNotFoundException, is NoSuchFileException -> {
+          if (suppressNotFound.get()) {
+            throw thr
+          }
+        }
+      }
       val stacktrace = thr.printStackTrace()
-      logging.error("Error while reading embedded VFS file: $path\n$stacktrace")
+      logging.error("Error while reading file (fs = $backing): $path\n$stacktrace")
       throw thr
     }
   }

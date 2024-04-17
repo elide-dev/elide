@@ -13,6 +13,7 @@
 
 package elide.runtime.core
 
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
 
 /**
@@ -45,7 +46,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
   }
   
   /** The access granted to guest code over host resources, such as environment variables and the file system. */
-  public var hostAccess: HostAccess = ALLOW_NONE
+  public var hostAccess: HostAccess = ALLOW_ALL
 
   /** Information about the platform hosting the runtime. */
   public val hostPlatform: HostPlatform = HostPlatform.resolve()

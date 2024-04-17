@@ -55,6 +55,8 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/python/runtime.json\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/ruby/environment.rb\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/ruby/runtime.json.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/facade.js\\E"
@@ -68,6 +70,10 @@
     "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/js/runtime.json\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/v4/embedded/runtime/ruby/runtime.json\\E"
+  }, {
+    "pattern":"\\QMETA-INF/graalvm/org.graalvm.polyglot/version\\E"
+  }, {
+    "pattern":"\\QMETA-INF/graalvm/org.graalvm.truffle/version\\E"
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
@@ -91,6 +97,14 @@
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib\\E"
   }, {
+    "pattern":"\\QMETA-INF/resources/engine/libtruffleattach/darwin/aarch64/sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/nfi-native/libnfi/darwin/aarch64/sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/ruby/ruby-home/common/sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/ruby/ruby-home/darwin/aarch64/sha256\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/**/.*"
   }, {
     "pattern":"\\QMETA-INF/services/*.*"
@@ -102,6 +116,8 @@
     "pattern":"\\QMETA-INF/services/com.oracle.graal.python.builtins.PythonBuiltins\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleRuntimeAccess\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.impl.TruffleLocator\\E"
   }, {
@@ -127,7 +143,11 @@
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.FloodControlHandler\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.LoopNodeFactory\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.TruffleTypes\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.jfr.EventFactory$Provider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/elide.runtime.gvm.VMEngineImpl\\E"
   }, {
@@ -174,6 +194,10 @@
     "pattern":"\\QMETA-INF/services/kotlin.test.AsserterContributor\\E"
   }, {
     "pattern":"\\QMETA-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.graalvm.home.HomeFinder\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.graalvm.polyglot.impl.AbstractPolyglotImpl\\E"
   }, {
     "pattern":"\\QMETA-INF/services/org.junit.platform.engine.TestEngine\\E"
   }, {
@@ -608,6 +632,8 @@
     "pattern":"\\Qtruffleruby/core/complexifier.rb\\E"
   }, {
     "pattern":"\\Qtruffleruby/core/configuration.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/data.rb\\E"
   }, {
     "pattern":"\\Qtruffleruby/core/dir.rb\\E"
   }, {

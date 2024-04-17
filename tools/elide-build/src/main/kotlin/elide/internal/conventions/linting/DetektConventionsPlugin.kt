@@ -54,6 +54,7 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
       reports.xml.required = true
       reports.sarif.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.sarif"))
       reports.xml.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.xml"))
+      jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
 
       detektMergeSarif.configure {
         input.from(this@detekt.sarifReportFile)

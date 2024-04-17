@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import io.gitlab.arturbosch.detekt.Detekt
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -61,6 +62,10 @@ elide {
 
 detekt {
   ignoreFailures = true
+}
+
+tasks.withType(Detekt::class.java) {
+  jvmTarget = "17"  // @TODO pull from property state
 }
 
 dependencies {

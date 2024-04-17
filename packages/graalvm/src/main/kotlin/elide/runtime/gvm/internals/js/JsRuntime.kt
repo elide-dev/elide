@@ -139,6 +139,7 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("js.esm-eval-returns-exports"),
       StaticProperty.active("js.foreign-hash-properties"),
       StaticProperty.active("js.foreign-object-prototype"),
+      StaticProperty.active("js.import-attributes"),
       StaticProperty.active("js.intl-402"),
       StaticProperty.active("js.json-modules"),
       StaticProperty.active("js.nashorn-compat"),  // @TODO(sgammon): disable after oracle/graaljs/issues/119

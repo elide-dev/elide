@@ -303,6 +303,8 @@ public final class elide/runtime/core/internals/graalvm/GraalVMRuntime : elide/r
 public final class elide/runtime/core/internals/graalvm/GraalVMRuntime$Companion {
 	public final fun getGVM_23 ()Lelide/runtime/core/Version;
 	public final fun getGVM_23_1 ()Lelide/runtime/core/Version;
+	public final fun getGVM_24 ()Lelide/runtime/core/Version;
+	public final fun getGVM_24_0_1 ()Lelide/runtime/core/Version;
 }
 
 public final class elide/runtime/core/internals/graalvm/GraalVMRuntimeKt {

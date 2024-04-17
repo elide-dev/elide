@@ -3,40 +3,7 @@
   "language": "LLVM",
   "vfs": [],
   "artifacts": [],
-  "image": {
-    "type": "native",
-    "darwin": {
-      "arm64": {
-        "bundle": "llvm-darwin-aarch64.tar.xz",
-        "sha256": "79b5bff4b405952402a5a4920705fda4f334f2abc99e5f45f38abc37b9a551fe",
-        "signature": {
-          "bundle": "llvm-darwin-aarch64.sigstore.json.gz",
-          "sha256": "b76655516966d9e83b807dc1e7ef10d52bc3badf567ca343b54b91116843cc28",
-          "stamp": "MEQCIG44OiB4qPRfxe8dUquTYkmIV9Bx1OJJ9KBTK68MlEqYAiATpTl8fKDqPMNGEyEBX8tVdYofliY+CwOrYkTq2QrMDA=="
-        }
-      }
-    },
-    "linux": {
-      "amd64": {
-        "bundle": "llvm-linux-amd64.tar.xz",
-        "sha256": "7b74d9db99e3524b2881cd4dfff66e82da2cb623edff5f66036cd956f4c8615a",
-        "signature": {
-          "bundle": "llvm-linux-amd64.sigstore.json.gz",
-          "sha256": "01516fc12f7c18af760494d822cc7a2f15b90570de8c4ed8b33f1fcac65d8dcf",
-          "stamp": "MEUCIQCh/EVPGREqaoj4tloSc8AK4mkQbp7i6pcUJb6yYnMBDwIgdsw2QA15igTdu7sv+mc1jmz935ZqcNlY8Jj2uMhGZeQ="
-        }
-      }
-    }
-  },
+  "image": {},
   "scripts": [],
-  "bundles": [
-    {
-      "path": "llvm-darwin-aarch64.tar.xz",
-      "platform": "darwin_aarch64"
-    },
-    {
-      "path": "llvm-linux-amd64.tar.xz",
-      "platform": "linux_amd64"
-    }
-  ]
+  "bundles": []
 }

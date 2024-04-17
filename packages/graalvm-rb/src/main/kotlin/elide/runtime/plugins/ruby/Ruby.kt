@@ -42,7 +42,6 @@ import elide.runtime.plugins.llvm.LLVM
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.enableOptions(
       "ruby.embedded",
-      "ruby.no-home-provided",
       "ruby.platform-native-interrupt",
       "ruby.platform-native",
       "ruby.polyglot-stdio",
@@ -68,6 +67,7 @@ import elide.runtime.plugins.llvm.LLVM
   public companion object Plugin : AbstractLanguagePlugin<RubyConfig, Ruby>() {
     private const val RUBY_LANGUAGE_ID = "ruby"
     private const val RUBY_PLUGIN_ID = "Ruby"
+    private const val ENABLE_LLVM = false
     override val languageId: String = RUBY_LANGUAGE_ID
     override val key: Key<Ruby> = Key(RUBY_PLUGIN_ID)
 
@@ -75,7 +75,7 @@ import elide.runtime.plugins.llvm.LLVM
       configureLanguageSupport(scope)
 
       // apply the llvm plugin first
-      scope.configuration.getOrInstall(LLVM)
+      if (ENABLE_LLVM) scope.configuration.getOrInstall(LLVM)
 
       // apply the configuration and create the plugin instance
       val config = RubyConfig().apply(configuration)

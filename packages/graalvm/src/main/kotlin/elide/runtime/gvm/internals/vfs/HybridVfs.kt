@@ -123,6 +123,9 @@ internal class HybridVfs private constructor(
         .setReadOnly(true)
         .build()
 
+      // suppress nfe for the inner class; it needs to fall-back
+      inMemory.suppressNotFoundErr()
+
       // use the host fs as backing layer
       val host = HostVFSImpl.Builder.newBuilder()
         .setReadOnly(!writable)

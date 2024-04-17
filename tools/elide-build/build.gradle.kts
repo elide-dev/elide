@@ -107,6 +107,8 @@ dependencies {
   implementation(libs.plugin.redacted) // @TODO(sgammon): broken on kotlin 2.0
   implementation(libs.plugin.ksp)
   implementation(libs.kotlinpoet)
+  implementation(libs.jgit)
+  implementation(libs.guava)
 
   // embedded Kotlin plugins
   implementation(embeddedKotlin("allopen"))

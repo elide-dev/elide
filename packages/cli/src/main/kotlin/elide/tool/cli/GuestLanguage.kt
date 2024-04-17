@@ -50,7 +50,6 @@ enum class GuestLanguage (
     experimental = true,
     unimplemented = true,
     extensions = listOf("py"),
-    dependsOn = listOf(LLVM),
   ),
 
   /** Interactive Python VM. */

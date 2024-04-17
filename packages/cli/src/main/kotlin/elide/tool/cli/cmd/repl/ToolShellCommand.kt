@@ -1492,7 +1492,7 @@ import elide.tool.project.ProjectManager
       accessControl.allowAll -> HostAccess.ALLOW_ALL
       accessControl.allowIo -> HostAccess.ALLOW_IO
       accessControl.allowEnv -> HostAccess.ALLOW_ENV
-      else -> HostAccess.ALLOW_NONE
+      else -> HostAccess.ALLOW_ALL
     }
 
     // configure environment variables
@@ -1547,15 +1547,15 @@ import elide.tool.project.ProjectManager
           jsSettings.apply(this)
         }
 
-//        PYTHON -> install(elide.runtime.plugins.python.Python) {
-//          logging.debug("Configuring Python VM")
-//          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-//        }
+        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
+          logging.debug("Configuring Ruby VM")
+          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+        }
 
-//        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
-//          logging.debug("Configuring Ruby VM")
-//          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-//        }
+        PYTHON -> install(elide.runtime.plugins.python.Python) {
+          logging.debug("Configuring Python VM")
+          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+        }
 
 //        // Secondary Engines: JVM
 //        JVM -> {

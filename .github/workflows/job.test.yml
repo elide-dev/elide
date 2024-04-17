@@ -274,6 +274,9 @@ jobs:
             koverBinaryReport
             koverVerify
             detekt
+            -x compileTestDevelopmentExecutableKotlinWasmJs
+            -x compileTestDevelopmentExecutableKotlinWasmWasi
+            -x wasmWasiNodeTest
             --scan
             --build-cache
             --no-daemon

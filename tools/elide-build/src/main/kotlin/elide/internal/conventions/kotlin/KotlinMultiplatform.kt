@@ -25,6 +25,17 @@ import elide.internal.conventions.jvm.configureJavaModularity
 import elide.internal.conventions.kotlin.KotlinTarget.*
 
 /**
+ * A property used as a switch to forcibly disable the Kotlin/WASM compilation, bypassing per-project settings and
+ * extension configuration. If set to `true`, the `wasm` target will never be configured.
+ */
+private const val WASM_DISABLE_SWITCH = "elide.build.kotlin.wasm.disable"
+
+/** Returns whether the Kotlin/WASM target is forcibly disabled for this project. */
+private fun Project.isWasmDisabled(): Boolean {
+  return project.findProperty(WASM_DISABLE_SWITCH)?.toString()?.toBooleanStrictOrNull() ?: false
+}
+
+/**
  * Configure a Kotlin JVM project.
  */
 internal fun Project.configureKotlinJvm(
@@ -121,7 +132,7 @@ internal fun Project.configureKotlinMultiplatform(
       }
     }
 
-    if (WASM in target || WASI in target) {
+    if (!isWasmDisabled() && WASM in target || WASI in target) {
       if (WASM in target) wasmJs {
         nodejs()
         browser()

@@ -107,6 +107,7 @@ internal object Java9Modularity {
           listOf(
             "${project.projectDir}/src/jvmMain/kotlin/module-info.java",
             "${project.projectDir}/src/jvmMain/java/module-info.java",
+            "${project.projectDir}/src/jvmMain/jpms/module-info.java",
           ).map {
             file(it)
           }.singleOrNull {

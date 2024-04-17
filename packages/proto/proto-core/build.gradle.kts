@@ -68,7 +68,7 @@ dependencies {
 
 afterEvaluate {
   // @TODO(sgammon): breakage while fetching `joda-core` dependency
-  tasks.named("wasmJsBrowserTest").configure {
+  tasks.named { it == "wasmJsBrowserTest" }.configureEach {
     enabled = false
   }
 }

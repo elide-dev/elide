@@ -155,7 +155,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       configureKotlinBuild(
         target = kotlinTarget,
         conventions = conventions.kotlin,
-        configureJavaModules = conventions.java.configureModularity,
+        configureJavaModules = !project.isJpmsDisabled() && conventions.java.configureModularity,
         jvmModuleName = conventions.java.moduleName,
       )
 
@@ -172,7 +172,10 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
 
       if (includeJavadoc) includeJavadocJar()
       if (includeSources) includeSourceJar()
-      if (configureModularity && !conventions.kotlin.requested) configureJavaModularity(conventions.java.moduleName)
+
+      if (!project.isJpmsDisabled() && configureModularity && !conventions.kotlin.requested) {
+        configureJavaModularity(conventions.java.moduleName)
+      }
 
       // java linting tools
       if (conventions.java.requested) {
@@ -232,5 +235,17 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     // only apply if requested
     if (!convention.requested) return
     convention.apply(block)
+  }
+
+  private fun Project.isJpmsDisabled(): Boolean {
+    return project.findProperty(JPMS_DISABLE_SWITCH)?.toString()?.toBooleanStrictOrNull() ?: false
+  }
+
+  private companion object {
+    /**
+     * A property used as a switch to forcibly disable processing of all JPMS declarations, bypassing per-project
+     * settings and extension configuration.
+     */
+    private const val JPMS_DISABLE_SWITCH = "elide.build.jpms.disable"
   }
 }

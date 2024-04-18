@@ -83,7 +83,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20
+          node-version: 21
       - name: "Setup: Yarn"
         run: yarn
       - name: "Build: Reference Docs"
@@ -203,7 +203,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20
+          node-version: 21
       - name: "Setup: Yarn"
         run: yarn
       - name: "Setup: Site Manifest"

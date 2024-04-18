@@ -5,14 +5,18 @@
 *.owl linguist-language=Web-Ontology-Language
 *.BUILD -linguist-detectable
 *.bzl linguist-language=Starlark linguist-detectable
+*.lockfile linguist-generated
+pnpm-lock.yaml linguist-generated
+gradle/verification* linguist-generated
 **/package-info.java -linguist-detectable linguist-generated
 samples/** -linguist-detectable
+tools/tsc/src/main/resources/META-INF/elide/embedded/tools/tsc/entry.mjs linguist-generated
 packages/graalvm/src/test/resources/embedded/** -linguist-detectable linguist-generated
 packages/graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated
 packages/graalvm-react/src/main/node/** -linguist-detectable linguist-generated
 packages/graalvm-react/src/main/node/*.js -linguist-detectable linguist-generated
-docs linguist-documentation
-docs/* linguist-documentation
+docs linguist-documentation -linguist-detectable linguist-generated
+docs/* linguist-documentation -linguist-detectable linguist-generated
 tools/plugin/gradle-plugin/plugin-build/plugin/src/model/java -linguist-detectable linguist-generated
 tools/plugin/gradle-plugin/plugin-build/plugin/src/model/kotlin -linguist-detectable linguist-generated
 tools/plugin/gradle-plugin/plugin-build/plugin/src/main/proto -linguist-detectable linguist-generated

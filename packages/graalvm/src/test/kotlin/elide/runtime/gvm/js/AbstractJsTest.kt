@@ -247,6 +247,10 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   // Configure a context and then return a guest test execution bound to it.
   protected fun withHostFs(fs: FileSystem, op: PolyglotContext.() -> String): GuestTestExecution {
     return GuestTestExecution(withCustomContext {
+      option(
+        "js.commonjs-require-cwd",
+        "."
+      )
       allowIO(IOAccess.newBuilder()
         .fileSystem(fs)
         .build())

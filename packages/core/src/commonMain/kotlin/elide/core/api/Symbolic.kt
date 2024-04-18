@@ -29,7 +29,9 @@ public interface Symbolic<T> {
    * Thrown when a symbol could not be resolved, usually via the [SealedResolver.unresolved] method; this method is
    * typically used from the resolver implementation only.
    */
-  public class Unresolved internal constructor (internal val requested: Any) : IllegalStateException()
+  public class Unresolved internal constructor (internal val requested: Any) : IllegalStateException(
+    "The symbol '$requested' could not be resolved to a concrete type"
+  )
 
   /** Return the raw symbol represented by this type. */
   public val symbol: T

@@ -195,6 +195,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     maybeApplyConvention(conventions.jvm) {
       if (alignVersions) alignJvmVersion()
       if (forceJvm17) alignJvmVersion(overrideVersion = Versions.JVM_DEFAULT)
+      else if (target != null) alignJvmVersion(overrideVersion = target!!.target)
     }
 
     // -- Conventions: Native -----------------------------------------------------------------------------------------

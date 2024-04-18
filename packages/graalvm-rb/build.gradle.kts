@@ -58,7 +58,6 @@ dependencies {
   implementation(libs.bundles.graalvm.ruby)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
-  implementation(projects.packages.graalvmLlvm)
 
   // Testing
   testImplementation(projects.packages.test)

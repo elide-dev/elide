@@ -34,3 +34,4 @@ packages/graalvm/test.mjs
 *.pyo
 .codebase/
 docs/reports/
+target

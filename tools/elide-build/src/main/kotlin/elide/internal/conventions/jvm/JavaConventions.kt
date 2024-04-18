@@ -26,6 +26,7 @@ import org.gradle.kotlin.dsl.exclude
 import org.gradle.kotlin.dsl.registerTransform
 import org.gradle.testing.base.TestingExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.Companion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -227,9 +228,10 @@ internal fun Project.alignJvmVersion(overrideVersion: String? = null) {
     }
     withType(KotlinCompile::class.java).configureEach {
       incremental = true
-      kotlinOptions {
-        jvmTarget = targetJvmVersion
-        javaParameters = true
+
+      compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(targetJvmVersion))
+        javaParameters.set(true)
       }
     }
     withType(KotlinCompilationTask::class.java).configureEach {

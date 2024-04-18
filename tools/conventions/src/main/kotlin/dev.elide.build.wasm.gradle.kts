@@ -41,7 +41,6 @@ kotlin {
   }
   wasmWasi {
     nodejs()
-    applyBinaryen()
   }
 }
 

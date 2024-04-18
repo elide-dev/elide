@@ -1,0 +1,33 @@
+[package]
+name = "umbrella"
+version = "0.1.0"
+edition = '2021'
+workspace = "../.."
+publish = false
+
+[lib]
+name = "umbrella"
+crate-type = ["cdylib"]
+
+[features]
+default = ["jvm", "python", "js", "ruby", "wasm"]
+jvm = ["j4rs"]
+python = ["ruff", "uv"]
+ruby = []
+wasm = []
+js = ["oxc"]
+
+[lints.rust]
+unsafe_code = "warn"
+
+[dependencies]
+deno_npm = "0.17.0"
+jni = "0.21.1"
+protobuf = "3.4.0"
+pubgrub = "0.2.1"
+j4rs = { version = "0.18.0", optional = true }
+j4rs_derive = "0.1.1"
+oxc = { path = "../../third_party/oxc-project/oxc/crates/oxc", optional = true }
+ruff = { path = "../../third_party/astral/ruff/crates/ruff", optional = true }
+uv = { path = "../../third_party/astral/uv/crates/uv", optional = true }
+serde = { version = "1.0.198", features = ["derive"] }

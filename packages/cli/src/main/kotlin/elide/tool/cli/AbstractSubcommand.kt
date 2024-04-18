@@ -279,7 +279,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     override suspend fun pretty(operation: OutputCallable, fallback: OutputCallable) {
       if (_settings.pretty) {
-        operation.invoke(_state, this)
+        operation.invoke(this)
       }
     }
 

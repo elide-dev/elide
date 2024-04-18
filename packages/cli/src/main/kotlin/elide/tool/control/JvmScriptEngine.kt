@@ -19,4 +19,3 @@ import elide.runtime.gvm.internals.GraalVMGuest.JVM
  * TBD.
  */
 class JvmScriptEngine : AbstractScriptEngineFactory(JVM)
-

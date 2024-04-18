@@ -28,9 +28,12 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import tools.elide.std.HashAlgorithm
 import tools.elide.vfs.TreeEntry
+import java.io.BufferedInputStream
+import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.net.URI
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
@@ -467,9 +470,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
             next
           } else {
             // generate file builder
+            val filebuf = BufferedInputStream(tarball)
             val fileBuilder = fileForEntry(entry, tarball.bytesRead)
-            val filedata = ByteArray(entry.size.toInt())
-            tarball.read(filedata)
+            val filedata = if (!tarball.canReadEntryData(entry)) {
+              throw IOException("Failed to read entry data for '${entry.name}'")
+            } else filebuf.readBytes()
 
             // add file
             writeFileToMemoryFS(
@@ -526,8 +531,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
             offset += entry.size
 
             // read the file into the buffer
-            val filedata = ByteArray(entry.size.toInt())
-            tarball.read(filedata)
+            val filebuf = BufferedInputStream(tarball)
+            val filedata = if (!tarball.canReadEntryData(entry)) {
+              throw IOException("Failed to read entry data for '${entry.name}'")
+            } else {
+              filebuf.readBytes()
+            }
 
             writeFileToMemoryFS(
               entry,

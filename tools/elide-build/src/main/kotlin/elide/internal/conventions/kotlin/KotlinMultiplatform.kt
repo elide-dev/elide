@@ -115,11 +115,8 @@ internal fun Project.configureKotlinMultiplatform(
       useEsModules()
 
       compilations.all {
-        kotlinOptions {
-          sourceMap = true
-          moduleKind = "umd"
-          metaInfo = true
-        }
+        kotlinOptions.sourceMap = true
+        kotlinOptions.moduleKind = "umd"
       }
 
       if (JsNode in target) nodejs {
@@ -139,7 +136,6 @@ internal fun Project.configureKotlinMultiplatform(
       }
       wasmWasi {
         nodejs()
-        applyBinaryen()
       }
     }
 

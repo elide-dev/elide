@@ -113,6 +113,7 @@ elide.runtime.gvm.internals.python
 elide.runtime.gvm.python
 elide.runtime.gvm.python.cfg
 elide.runtime.plugins.python
+elide.runtime.plugins.python.features
 module:graalvm-rb
 elide.runtime.gvm.internals.ruby
 elide.runtime.gvm.ruby

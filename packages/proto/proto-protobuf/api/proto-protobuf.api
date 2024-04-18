@@ -19821,6 +19821,482 @@ public final class tools/elide/db/Db {
 	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
 }
 
+public final class tools/elide/deps/Dependencies : com/google/protobuf/GeneratedMessageV3, tools/elide/deps/DependenciesOrBuilder {
+	public static final field SUITE_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/deps/Dependencies;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/deps/Dependencies;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public fun getSuite (I)Ltools/elide/deps/DependencySuite;
+	public fun getSuiteCount ()I
+	public fun getSuiteList ()Ljava/util/List;
+	public fun getSuiteOrBuilder (I)Ltools/elide/deps/DependencySuiteOrBuilder;
+	public fun getSuiteOrBuilderList ()Ljava/util/List;
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/deps/Dependencies$Builder;
+	public static fun newBuilder (Ltools/elide/deps/Dependencies;)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/deps/Dependencies$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/deps/Dependencies;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom ([B)Ltools/elide/deps/Dependencies;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependencies;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/deps/Dependencies$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/deps/Dependencies$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/deps/DependenciesOrBuilder {
+	public fun addAllSuite (Ljava/lang/Iterable;)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/deps/Dependencies$Builder;
+	public fun addSuite (ILtools/elide/deps/DependencySuite$Builder;)Ltools/elide/deps/Dependencies$Builder;
+	public fun addSuite (ILtools/elide/deps/DependencySuite;)Ltools/elide/deps/Dependencies$Builder;
+	public fun addSuite (Ltools/elide/deps/DependencySuite$Builder;)Ltools/elide/deps/Dependencies$Builder;
+	public fun addSuite (Ltools/elide/deps/DependencySuite;)Ltools/elide/deps/Dependencies$Builder;
+	public fun addSuiteBuilder ()Ltools/elide/deps/DependencySuite$Builder;
+	public fun addSuiteBuilder (I)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/deps/Dependencies;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/deps/Dependencies;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/deps/Dependencies$Builder;
+	public fun clearSuite ()Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/deps/Dependencies;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getSuite (I)Ltools/elide/deps/DependencySuite;
+	public fun getSuiteBuilder (I)Ltools/elide/deps/DependencySuite$Builder;
+	public fun getSuiteBuilderList ()Ljava/util/List;
+	public fun getSuiteCount ()I
+	public fun getSuiteList ()Ljava/util/List;
+	public fun getSuiteOrBuilder (I)Ltools/elide/deps/DependencySuiteOrBuilder;
+	public fun getSuiteOrBuilderList ()Ljava/util/List;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/deps/Dependencies$Builder;
+	public fun mergeFrom (Ltools/elide/deps/Dependencies;)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/deps/Dependencies$Builder;
+	public fun removeSuite (I)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/deps/Dependencies$Builder;
+	public fun setSuite (ILtools/elide/deps/DependencySuite$Builder;)Ltools/elide/deps/Dependencies$Builder;
+	public fun setSuite (ILtools/elide/deps/DependencySuite;)Ltools/elide/deps/Dependencies$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/deps/Dependencies$Builder;
+}
+
+public final class tools/elide/deps/DependenciesKt {
+	public static final field INSTANCE Ltools/elide/deps/DependenciesKt;
+}
+
+public final class tools/elide/deps/DependenciesKt$Dsl {
+	public static final field Companion Ltools/elide/deps/DependenciesKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/deps/Dependencies$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/deps/Dependencies;
+	public final synthetic fun addAllSuite (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun addSuite (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/deps/DependencySuite;)V
+	public final synthetic fun clearSuite (Lcom/google/protobuf/kotlin/DslList;)V
+	public final synthetic fun getSuite ()Lcom/google/protobuf/kotlin/DslList;
+	public final synthetic fun plusAssignAllSuite (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun plusAssignSuite (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/deps/DependencySuite;)V
+	public final synthetic fun setSuite (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/deps/DependencySuite;)V
+}
+
+public final class tools/elide/deps/DependenciesKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/deps/Dependencies$Builder;)Ltools/elide/deps/DependenciesKt$Dsl;
+}
+
+public final class tools/elide/deps/DependenciesKt$Dsl$SuiteProxy : com/google/protobuf/kotlin/DslProxy {
+}
+
+public final class tools/elide/deps/DependenciesKtKt {
+	public static final fun -initializedependencies (Lkotlin/jvm/functions/Function1;)Ltools/elide/deps/Dependencies;
+	public static final synthetic fun copy (Ltools/elide/deps/Dependencies;Lkotlin/jvm/functions/Function1;)Ltools/elide/deps/Dependencies;
+}
+
+public abstract interface class tools/elide/deps/DependenciesOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getSuite (I)Ltools/elide/deps/DependencySuite;
+	public abstract fun getSuiteCount ()I
+	public abstract fun getSuiteList ()Ljava/util/List;
+	public abstract fun getSuiteOrBuilder (I)Ltools/elide/deps/DependencySuiteOrBuilder;
+	public abstract fun getSuiteOrBuilderList ()Ljava/util/List;
+}
+
+public final class tools/elide/deps/Dependency : com/google/protobuf/GeneratedMessageV3, tools/elide/deps/DependencyOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/deps/Dependency;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/deps/Dependency;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/deps/Dependency$Builder;
+	public static fun newBuilder (Ltools/elide/deps/Dependency;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/deps/Dependency$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/deps/Dependency;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependency;
+	public static fun parseFrom ([B)Ltools/elide/deps/Dependency;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependency;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/deps/Dependency$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/deps/Dependency$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/deps/DependencyOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/deps/Dependency;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/deps/Dependency;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/deps/Dependency;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/deps/Dependency$Builder;
+	public fun mergeFrom (Ltools/elide/deps/Dependency;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/deps/Dependency$Builder;
+}
+
+public final class tools/elide/deps/DependencyKt {
+	public static final field INSTANCE Ltools/elide/deps/DependencyKt;
+}
+
+public final class tools/elide/deps/DependencyKt$Dsl {
+	public static final field Companion Ltools/elide/deps/DependencyKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/deps/Dependency$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/deps/Dependency;
+}
+
+public final class tools/elide/deps/DependencyKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/deps/Dependency$Builder;)Ltools/elide/deps/DependencyKt$Dsl;
+}
+
+public final class tools/elide/deps/DependencyKtKt {
+	public static final fun -initializedependency (Lkotlin/jvm/functions/Function1;)Ltools/elide/deps/Dependency;
+	public static final synthetic fun copy (Ltools/elide/deps/Dependency;Lkotlin/jvm/functions/Function1;)Ltools/elide/deps/Dependency;
+}
+
+public abstract interface class tools/elide/deps/DependencyOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/deps/DependencyOuterClass {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
+public final class tools/elide/deps/DependencyScope : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
+	public static final field DEPENDENCY_SCOPE_DEFAULT Ltools/elide/deps/DependencyScope;
+	public static final field DEPENDENCY_SCOPE_DEFAULT_VALUE I
+	public static final field UNRECOGNIZED Ltools/elide/deps/DependencyScope;
+	public static fun forNumber (I)Ltools/elide/deps/DependencyScope;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
+	public final fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
+	public final fun getNumber ()I
+	public final fun getValueDescriptor ()Lcom/google/protobuf/Descriptors$EnumValueDescriptor;
+	public static fun internalGetValueMap ()Lcom/google/protobuf/Internal$EnumLiteMap;
+	public static fun valueOf (I)Ltools/elide/deps/DependencyScope;
+	public static fun valueOf (Lcom/google/protobuf/Descriptors$EnumValueDescriptor;)Ltools/elide/deps/DependencyScope;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/deps/DependencyScope;
+	public static fun values ()[Ltools/elide/deps/DependencyScope;
+}
+
+public final class tools/elide/deps/DependencySuite : com/google/protobuf/GeneratedMessageV3, tools/elide/deps/DependencySuiteOrBuilder {
+	public static final field DEPENDENCY_FIELD_NUMBER I
+	public static final field SCOPE_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/deps/DependencySuite;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/deps/DependencySuite;
+	public fun getDependency (I)Ltools/elide/deps/Dependency;
+	public fun getDependencyCount ()I
+	public fun getDependencyList ()Ljava/util/List;
+	public fun getDependencyOrBuilder (I)Ltools/elide/deps/DependencyOrBuilder;
+	public fun getDependencyOrBuilderList ()Ljava/util/List;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getScope ()Ltools/elide/deps/DependencyScope;
+	public fun getScopeValue ()I
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/deps/DependencySuite$Builder;
+	public static fun newBuilder (Ltools/elide/deps/DependencySuite;)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/deps/DependencySuite$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/deps/DependencySuite;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom ([B)Ltools/elide/deps/DependencySuite;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/DependencySuite;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/deps/DependencySuite$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/deps/DependencySuite$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/deps/DependencySuiteOrBuilder {
+	public fun addAllDependency (Ljava/lang/Iterable;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun addDependency (ILtools/elide/deps/Dependency$Builder;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun addDependency (ILtools/elide/deps/Dependency;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun addDependency (Ltools/elide/deps/Dependency$Builder;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun addDependency (Ltools/elide/deps/Dependency;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun addDependencyBuilder ()Ltools/elide/deps/Dependency$Builder;
+	public fun addDependencyBuilder (I)Ltools/elide/deps/Dependency$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/deps/DependencySuite;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/deps/DependencySuite;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/deps/DependencySuite$Builder;
+	public fun clearDependency ()Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun clearScope ()Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/deps/DependencySuite;
+	public fun getDependency (I)Ltools/elide/deps/Dependency;
+	public fun getDependencyBuilder (I)Ltools/elide/deps/Dependency$Builder;
+	public fun getDependencyBuilderList ()Ljava/util/List;
+	public fun getDependencyCount ()I
+	public fun getDependencyList ()Ljava/util/List;
+	public fun getDependencyOrBuilder (I)Ltools/elide/deps/DependencyOrBuilder;
+	public fun getDependencyOrBuilderList ()Ljava/util/List;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getScope ()Ltools/elide/deps/DependencyScope;
+	public fun getScopeValue ()I
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun mergeFrom (Ltools/elide/deps/DependencySuite;)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun removeDependency (I)Ltools/elide/deps/DependencySuite$Builder;
+	public fun setDependency (ILtools/elide/deps/Dependency$Builder;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun setDependency (ILtools/elide/deps/Dependency;)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun setScope (Ltools/elide/deps/DependencyScope;)Ltools/elide/deps/DependencySuite$Builder;
+	public fun setScopeValue (I)Ltools/elide/deps/DependencySuite$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/deps/DependencySuite$Builder;
+}
+
+public final class tools/elide/deps/DependencySuiteKt {
+	public static final field INSTANCE Ltools/elide/deps/DependencySuiteKt;
+}
+
+public final class tools/elide/deps/DependencySuiteKt$Dsl {
+	public static final field Companion Ltools/elide/deps/DependencySuiteKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/deps/DependencySuite$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/deps/DependencySuite;
+	public final synthetic fun addAllDependency (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun addDependency (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/deps/Dependency;)V
+	public final synthetic fun clearDependency (Lcom/google/protobuf/kotlin/DslList;)V
+	public final fun clearScope ()V
+	public final synthetic fun getDependency ()Lcom/google/protobuf/kotlin/DslList;
+	public final fun getScope ()Ltools/elide/deps/DependencyScope;
+	public final synthetic fun plusAssignAllDependency (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun plusAssignDependency (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/deps/Dependency;)V
+	public final synthetic fun setDependency (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/deps/Dependency;)V
+	public final fun setScope (Ltools/elide/deps/DependencyScope;)V
+}
+
+public final class tools/elide/deps/DependencySuiteKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/deps/DependencySuite$Builder;)Ltools/elide/deps/DependencySuiteKt$Dsl;
+}
+
+public final class tools/elide/deps/DependencySuiteKt$Dsl$DependencyProxy : com/google/protobuf/kotlin/DslProxy {
+}
+
+public final class tools/elide/deps/DependencySuiteKtKt {
+	public static final fun -initializedependencySuite (Lkotlin/jvm/functions/Function1;)Ltools/elide/deps/DependencySuite;
+	public static final synthetic fun copy (Ltools/elide/deps/DependencySuite;Lkotlin/jvm/functions/Function1;)Ltools/elide/deps/DependencySuite;
+}
+
+public abstract interface class tools/elide/deps/DependencySuiteOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getDependency (I)Ltools/elide/deps/Dependency;
+	public abstract fun getDependencyCount ()I
+	public abstract fun getDependencyList ()Ljava/util/List;
+	public abstract fun getDependencyOrBuilder (I)Ltools/elide/deps/DependencyOrBuilder;
+	public abstract fun getDependencyOrBuilderList ()Ljava/util/List;
+	public abstract fun getScope ()Ltools/elide/deps/DependencyScope;
+	public abstract fun getScopeValue ()I
+}
+
+public final class tools/elide/deps/Deps {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
+public final class tools/elide/deps/Scope {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
 public final class tools/elide/http/ConnectionInfo : com/google/protobuf/GeneratedMessageV3, tools/elide/http/ConnectionInfoOrBuilder {
 	public static final field LOCAL_ADDRESS_FIELD_NUMBER I
 	public static final field LOCAL_PORT_FIELD_NUMBER I

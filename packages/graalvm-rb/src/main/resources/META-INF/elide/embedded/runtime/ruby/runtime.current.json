@@ -3,7 +3,6 @@
   "language": "RUBY",
   "vfs": [],
   "artifacts": [],
-  "image": {},
   "scripts": [
     { "path": "environment.rb" }
   ],

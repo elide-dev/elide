@@ -58,7 +58,9 @@ dependencies {
   implementation(projects.packages.graalvm)
   implementation(libs.graalvm.espresso.hotswap)
   implementation(libs.graalvm.espresso.language)
-  compileOnly(libs.graalvm.espresso.polyglot)
+  implementation(libs.graalvm.truffle.nfi.libffi)
+  implementation(libs.graalvm.truffle.nfi.panama)
+  implementation(libs.graalvm.espresso.polyglot)
 
   // Testing
   testImplementation(projects.packages.test)

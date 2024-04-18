@@ -13,4 +13,4 @@
 
 elide.tool.control.RubyScriptEngine
 elide.tool.control.PythonScriptEngine
-elide.tool.control.JvmScriptEngine
+#elide.tool.control.JvmScriptEngine

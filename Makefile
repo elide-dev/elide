@@ -14,10 +14,10 @@
 #
 
 VERSION ?= $(shell cat .version)
-STRICT ?= yes
-WASM ?= yes
-RELOCK ?= no
-SITE ?= no
+export STRICT ?= yes
+export WASM ?= no
+export RELOCK ?= no
+export SITE ?= no
 DEFAULT_REPOSITORY ?= gcs://elide-snapshots/repository/v3
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
@@ -46,6 +46,8 @@ PUSH ?= no
 # PUSH ?= no
 
 GRADLE ?= ./gradlew
+RUSTUP ?= $(shell which rustup)
+CARGO ?= $(shell which cargo)
 YARN ?= $(shell which yarn)
 RM ?= $(shell which rm)
 FIND ?= $(shell which find)
@@ -60,6 +62,7 @@ ZSTD ?= $(shell which zstd)
 BZIP2 ?= $(shell which bzip2)
 GZIP ?= $(shell which gzip)
 GPG2 ?= $(shell which gpg)
+PNPM ?= $(shell which pnpm)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
@@ -106,7 +109,7 @@ endif
 ifeq ($(WASM),yes)
 BUILD_ARGS += -PbuildWasm=true
 else
-BUILD_ARGS += -PbuildWasm=false
+BUILD_ARGS += -PbuildWasm=false -x compileTestDevelopmentExecutableKotlinWasmWasi -x compileTestDevelopmentExecutableKotlinWasmJs -x wasmWasiNodeTest
 endif
 
 ifeq ($(RELOCK),yes)
@@ -191,19 +194,19 @@ endif
 
 GRADLE_OMIT ?= $(OMIT_NATIVE)
 _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
-
+DEPS ?= node_modules/ third-party umbrella
 
 # ---- Targets ---- #
 
 all: build test docs
 
-build:  ## Build the main library, and code-samples if SAMPLES=yes.
+build: $(DEPS)  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
-	$(CMD) $(GRADLE) build $(CLI_TASKS) -x test -x check $(GRADLE_OMIT) $(_ARGS)
+	$(CMD) $(GRADLE) build $(CLI_TASKS) $(GRADLE_OMIT) $(_ARGS)
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
-	$(CMD)$(GRADLE) test $(_ARGS)
+	$(CMD)$(GRADLE) test check $(_ARGS)
 	$(CMD)$(GRADLE) :packages:cli:optimizedRun --args="selftest"
 
 publish-substrate:
@@ -327,6 +330,17 @@ ifeq ($(RELEASE),yes)
 endif
 	$(CMD)$(MAKE) cli-install-local
 
+umbrella:  ## Build the native umbrella tooling library.
+	$(info Building tools/umbrella...)
+	$(CMD)$(CARGO) build --release --all-targets && $(CARGO) build --all-targets
+
+third-party: third_party/lib  ## Build all third-party embedded projects.
+
+third_party/lib:
+	@echo "Building third-party projects..."
+	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party all
+	@echo ""
+
 cli-release-artifacts:
 	$(CMD)echo "Building release artifacts..." \
 		&& cd $(CLI_DISTPATH) \
@@ -381,8 +395,10 @@ cli-install-local:
 clean: clean-docs clean-site  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
-	$(CMD)$(GRADLE) clean cleanTest $(_ARGS)
 	$(CMD)$(FIND) . -name .DS_Store -delete
+	$(CMD)$(MAKE) -C third_party clean
+	$(CMD)$(CARGO) clean
+	$(CMD)$(GRADLE) clean cleanTest $(_ARGS)
 
 clean-docs:  ## Clean documentation targets.
 	@echo "Cleaning docs..."
@@ -396,17 +412,17 @@ docs: $(DOCS) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc  ## Generate 
 
 model:  ## Build proto model targets.
 	@echo "Building proto model..."
-	$(RULE)$(BUF) lint
+	$(CMD)$(BUF) lint
 	@echo "- Building binary model..."
-	$(RULE)$(BUF) build -o proto/buf.pb.bin
+	$(CMD)$(BUF) build -o proto/buf.pb.bin
 	@echo "- Building JSON model..."
-	$(RULE)$(BUF) build -o proto/buf.pb.json.gz
+	$(CMD)$(BUF) build -o proto/buf.pb.json.gz
 	@echo "Model build complete."
 
 model-update:  ## Update the proto model and re-build it.
 	@echo "Updating proto model..."
-	$(RULE)cd proto && $(BUF) mod update
-	$(RULE)$(MAKE) model
+	$(CMD)cd proto && $(BUF) mod update
+	$(CMD)$(MAKE) model
 
 $(TARGET)/docs:
 	@echo "Generating docs..."
@@ -603,6 +619,10 @@ image-native:  ## Build native Ubuntu base image.
 image-native-alpine:  ## Build native Alpine base image.
 	@echo "Building image 'native-alpine'..."
 	$(CMD)$(MAKE) -C tools/images/native-alpine PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+node_modules/:
+	$(info Installing NPM dependencies...)
+	$(CMD)$(PNPM) install --strict-peer-dependencies --frozen-lockfile
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
 	@echo "Cleaning caches..."

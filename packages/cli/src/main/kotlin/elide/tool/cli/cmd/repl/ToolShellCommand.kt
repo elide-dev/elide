@@ -20,6 +20,7 @@ package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
+import com.google.common.collect.Sets
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
@@ -43,6 +44,7 @@ import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.*
+import picocli.CommandLine.Model.CommandSpec
 import java.io.*
 import java.net.URI
 import java.nio.charset.StandardCharsets
@@ -93,13 +95,17 @@ import elide.tool.project.ProjectManager
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "run",
-  aliases = ["shell", "r", "s", "serve"],
   description = ["%nRun a polyglot script, server, or interactive shell"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
   abbreviateSynopsis = true,
   usageHelpAutoWidth = true,
   synopsisHeading = "",
+  aliases = [
+    "r",
+    "serve",
+    "repl",
+  ],
   customSynopsis = [
     "",
     " Usage:  elide @|bold,fg(cyan) run|shell|serve|start|@ [OPTIONS] FILE",
@@ -124,9 +130,27 @@ import elide.tool.project.ProjectManager
     private const val CONFIG_PATH_USR = "~/.elide"
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
+    // Whether to enable JVM language plugins.
+    private const val ENABLE_JVM = false
+
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
     }
+
+    // Maps language aliases to the engine they should invoke.
+    private val languageAliasToEngineId: SortedMap<String, String> = sortedMapOf(
+      "py" to "python",
+      "python" to "python",
+      "node" to "js",
+      "deno" to "js",
+      "js" to "js",
+      "javascript" to "js",
+      "ruby" to "ruby",
+      "jvm" to "jvm",
+      "java" to "jvm",
+      "kotlin" to "jvm",
+      "kt" to "jvm",
+    )
   }
 
   /** [SystemRegistryImpl] that filters for special REPL commands. */
@@ -155,7 +179,7 @@ import elide.tool.project.ProjectManager
       names = ["--js", "--javascript", "-js"],
       description = ["Equivalent to passing '--language=JS'."],
     )
-    internal var javascript: Boolean = true
+    internal var javascript: Boolean = false
 
     /** Flag for JVM support. */
     @Option(
@@ -207,12 +231,12 @@ import elide.tool.project.ProjectManager
 
         // otherwise, use provided flags
         else -> EnumSet.noneOf(GuestLanguage::class.java).apply {
-          if (javascript) add(JS)
-          if (jvm) add(JVM)
-          if (kotlin) add(KOTLIN)
-          if (ruby) add(RUBY)
-          if (python) add(PYTHON)
-          if (wasm) add(WASM)
+          add(JS)
+          add(RUBY)
+          add(PYTHON)
+          add(WASM)
+          if (ENABLE_JVM) add(JVM)
+          if (ENABLE_JVM) add(KOTLIN)
         }.let { flags ->
           // if we have no languages enabled, use JS, which is the default.
           if (flags.isEmpty()) EnumSet.of(JS) else flags
@@ -220,9 +244,74 @@ import elide.tool.project.ProjectManager
       }
     }
 
+    private fun maybeMatchLanguagesByAlias(
+      first: String?,
+      second: String?,
+      langs: EnumSet<GuestLanguage>,
+    ): GuestLanguage? {
+      val maybeResolvedFirst = first?.ifBlank { null }?.let {
+        languageAliasToEngineId[it.trim().lowercase()]
+      }
+      val maybeResolvedSecond = second?.ifBlank { null }?.let {
+        languageAliasToEngineId[it.trim().lowercase()]
+      }
+      return langs.firstOrNull {
+        it.id == maybeResolvedFirst || it.id == maybeResolvedSecond
+      }
+    }
+
     // Resolve the primary interactive language.
-    internal fun primary(project: ProjectInfo? = null): GuestLanguage =
-      langs.first { it.id != GraalVMGuest.JAVASCRIPT.symbol } ?: JS
+    internal fun primary(
+      spec: CommandSpec,
+      langs: EnumSet<GuestLanguage>,
+      project: ProjectInfo?,
+      languageHint: GuestLanguage?,
+    ): GuestLanguage {
+      // languages by flags
+      val explicitlySelectedLanguagesByBoolean = listOf(
+        JS to javascript,
+        RUBY to ruby,
+        PYTHON to python,
+        JVM to jvm,
+        KOTLIN to kotlin,
+        WASM to wasm,
+      ).filter {
+        langs.contains(it.first)  // is it supported?
+      }.filter {
+        it.second  // was it requested?
+      }.map {
+        it.first
+      }.toSet()
+
+      // languages by name
+      val explicitlySelectedLanguagesBySet = Sets.intersection(language ?: emptySet(), langs)
+
+      // language by alias
+      val candidateArgs = spec.commandLine().parseResult.originalArgs()
+      val candidateByName = languageHint ?: maybeMatchLanguagesByAlias(
+        candidateArgs.firstOrNull(),
+        candidateArgs.getOrNull(1),
+        langs,
+      )
+
+      val selected = (
+        // `elide python` et al take maximum precedence
+        candidateByName ?:
+
+        // then languages specified via the `--languages` flag ("named")
+        explicitlySelectedLanguagesBySet.firstOrNull() ?:
+
+        // then languages specified via boolean flags like `--python`
+        explicitlySelectedLanguagesByBoolean.firstOrNull()
+      )
+      return when {
+        // if there is an explicitly selected language, and it is supported, use it
+        selected != null && langs.contains(selected) -> selected
+
+        // otherwise, we default to javascript
+        else -> JS
+      }
+    }
 
     // Resolve the specified language.
     internal fun resolve(project: ProjectInfo? = null): EnumSet<GuestLanguage> = langs
@@ -385,7 +474,10 @@ import elide.tool.project.ProjectManager
 
     /** Apply these settings to created execution contexts. */
     @Suppress("KotlinConstantConditions")
-    internal fun apply(project: ProjectInfo?, config: PolyglotEngineConfiguration) = config.environment {
+    internal fun apply(
+      project: ProjectInfo?,
+      config: PolyglotEngineConfiguration,
+    ) = config.environment {
       val effectiveInjectedEnv = TreeMap<String, EnvVar>()
 
       // inject `NODE_ENV`
@@ -612,7 +704,7 @@ import elide.tool.project.ProjectManager
   @ArgGroup(
     exclusive = false,
     heading = "%nLanguage Selection:%n",
-  ) internal var language: LanguageSelector? = null
+  ) internal var language: LanguageSelector = LanguageSelector()
 
   /** Settings specific to JavaScript. */
   @ArgGroup(
@@ -668,6 +760,12 @@ import elide.tool.project.ProjectManager
   )
   internal var runnable: String? = null
 
+  // Language hint passed in from outer tools, like when the user calls `elide python`.
+  internal var languageHint: GuestLanguage? = null
+
+  // Action hint passed in from outer tools, like when the user calls `elide serve`.
+  internal var actionHint: String? = null
+
   // Executed when a guest statement is entered.
   private fun onStatementEnter(event: ExecutionEvent) {
     if (verbose) {
@@ -685,7 +783,7 @@ import elide.tool.project.ProjectManager
     }
   }
 
-  private fun printHighlightedResult(txt: String) {
+  private fun printHighlighted(txt: String) {
     val highlighter = langSyntax.get()
     val lineReader = lineReader.get()
 
@@ -698,6 +796,10 @@ import elide.tool.project.ProjectManager
     }
   }
 
+  private fun onUserInteractiveSource(code: String, source: Source) {
+    printHighlighted(code)
+  }
+
   // Execute a single chunk of code, or literal statement.
   @Suppress("SameParameterValue") private fun executeOneChunk(
     languages: EnumSet<GuestLanguage>,
@@ -708,14 +810,8 @@ import elide.tool.project.ProjectManager
     interactive: Boolean = false,
     literal: Boolean = false,
   ): Value {
-    // fix: python fails in interactive mode without special characters
-    val actullyInteractive = if (primaryLanguage.engine == "python") {
-      false
-    } else interactive
-
-    // build a source code chunk from the line @TODO(sgammon): resolve source from all languages
     val chunk = Source.newBuilder(primaryLanguage.engine, code, origin)
-      .interactive(actullyInteractive)
+      .interactive(false)
       .internal(false)
 
     val source = if (literal) {
@@ -723,6 +819,12 @@ import elide.tool.project.ProjectManager
     } else {
       chunk.build()
     }
+
+    // if we are executing interactively, we need to "print above" with the user's code
+    if (interactive) onUserInteractiveSource(
+      code,
+      source,
+    )
 
     logging.trace("Code chunk built. Evaluating")
     val result = try {
@@ -861,6 +963,7 @@ import elide.tool.project.ProjectManager
       .option(LineReader.Option.CASE_INSENSITIVE_SEARCH, true)
       .option(LineReader.Option.USE_FORWARD_SLASH, true)
       .option(LineReader.Option.INSERT_TAB, false)
+      .option(LineReader.Option.ERASE_LINE_ON_FINISH, true)
       .build()
 
     lineReader.set(reader)
@@ -879,10 +982,7 @@ import elide.tool.project.ProjectManager
       return null
     }
     val jnanorcDir = rootPath.resolve("nanorc")
-    val jnanorcFile = Paths.get(
-      userHome,
-      "jnanorc",
-    ).toFile()
+    val jnanorcFile = Paths.get(userHome, "jnanorc").toFile()
 
     logging.debug("Checking nanorc root at path '${jnanorcFile.toPath()}'")
     var jnanocDirReady = false
@@ -1202,7 +1302,7 @@ import elide.tool.project.ProjectManager
   }
 
   private fun showValue(value: Value) {
-    printHighlightedResult(value.toString())
+    printHighlighted(value.toString())
   }
 
   // Wrap an interactive REPL session in exit protection.
@@ -1367,12 +1467,18 @@ import elide.tool.project.ProjectManager
 
   private val commandSpecifiesServer: Boolean by lazy {
     Statics.args.get().let {
-      it.contains("serve") || it.contains("start") || it.contains("node")
+      it.contains("serve") || it.contains("start")
     }
   }
 
   // Detect whether we are running in `serve` mode (with alias `start`).
-  private fun serveMode(): Boolean = commandSpecifiesServer || executeServe
+  private fun serveMode(): Boolean = (
+    commandSpecifiesServer ||
+    executeServe ||
+    actionHint?.lowercase()?.trim().let {
+      it != null && it == "serve" || it == "start"
+    }
+  )
 
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(label: String, language: GuestLanguage, ctx: PolyglotContext, source: Source) {
@@ -1405,7 +1511,7 @@ import elide.tool.project.ProjectManager
       source,
     ) else try {
       // enter VM context
-      logging.trace("Entered VM for script execution (language: ${primaryLanguage.id}). Consuming script from: '$label'")
+      logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")
 
       // parse the source
       val parsed = try {
@@ -1462,20 +1568,30 @@ import elide.tool.project.ProjectManager
     // if we have a file input, the extension for the file takes next precedence
     fileInput != null && fileInput.exists() -> {
       val ext = fileInput.extension
-      languages.find { it.extensions.contains(ext) } ?: primaryFromFile(fileInput) ?: JS
+      languages.find { it.extensions.contains(ext) } ?: JS
     }
 
     // if there is only one language, that's the result
     languages.size == 1 -> languages.first()
 
     // an explicit flag from a user takes top precedence
-    languageSelector != null -> languageSelector.primary(project)
+    languageSelector != null -> languageSelector.primary(commandSpec, languages, project, languageHint)
 
     // we have to have at least one language
     languages.size == 0 -> error("Cannot start VM with no enabled guest languages")
 
     // otherwise, if JS is included in the set of languages, that is the default.
     else -> if (languages.contains(JS)) JS else languages.first()
+  }
+
+  private fun ignoreNotInstalled(block: () -> Unit) {
+    try {
+      block()
+    } catch (exc: LinkageError) {
+      logging.debug("Failed to link runtime plugin: ${exc.message}")
+    } catch (exc: ClassNotFoundException) {
+      logging.debug("Failed to install runtime plugin: ${exc.message}")
+    }
   }
 
   override fun PolyglotEngineConfiguration.configureEngine() {
@@ -1500,6 +1616,11 @@ import elide.tool.project.ProjectManager
 
     // configure VFS with user-specified bundles
     vfs {
+      if (language.python || language.ruby) {
+        // ruby and python do not support VFS features yet
+        vfsUnsupported = true
+      }
+
       // resolve the file-system bundles to use
       val userBundles = filesystems.mapNotNull { checkFsBundle(it) }
       if (userBundles.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
@@ -1547,18 +1668,22 @@ import elide.tool.project.ProjectManager
           jsSettings.apply(this)
         }
 
-        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
-          logging.debug("Configuring Ruby VM")
-          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+        RUBY -> ignoreNotInstalled {
+          install(elide.runtime.plugins.ruby.Ruby) {
+            logging.debug("Configuring Ruby VM")
+            installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+          }
         }
 
-        PYTHON -> install(elide.runtime.plugins.python.Python) {
-          logging.debug("Configuring Python VM")
-          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+        PYTHON -> ignoreNotInstalled {
+          install(elide.runtime.plugins.python.Python) {
+            logging.debug("Configuring Python VM")
+            installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+          }
         }
 
-//        // Secondary Engines: JVM
-//        JVM -> {
+        // Secondary Engines: JVM
+//        JVM -> ignoreNotInstalled {
 //          install(elide.runtime.plugins.jvm.Jvm) {
 //            logging.debug("Configuring JVM")
 //            multithreading = false
@@ -1568,9 +1693,9 @@ import elide.tool.project.ProjectManager
 //            logging.debug("Configuring Java")
 //          }
 //        }
-//
-//        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
-//
+
+        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
+
 //        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
 //          val classpathDir = workdir.cacheDirectory()
 //            .resolve("elide-kotlin-runtime")
@@ -1579,8 +1704,9 @@ import elide.tool.project.ProjectManager
 //          logging.debug("Configuring Kotlin with classpath root $classpathDir")
 //          guestClasspathRoot = classpathDir
 //        }
-//
-//        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+
+        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+
         else -> {}
       }
     }
@@ -1604,8 +1730,7 @@ import elide.tool.project.ProjectManager
 
     // resolve the language to use
     val project = projectConfigJob.await()
-    val selector = language ?: LanguageSelector()
-    val langs = selector.resolve(project)
+    val langs = language.resolve(project)
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     supported.find { langs.contains(it.first) }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
     logging.debug("Initializing language contexts (${langs.joinToString(", ") { it.id }})")

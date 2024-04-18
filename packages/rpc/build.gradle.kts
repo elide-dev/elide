@@ -204,12 +204,8 @@ tasks.withType(JavaCompile::class.java) {
 }
 
 tasks.named("compileKotlinJs", Kotlin2JsCompile::class.java) {
-  kotlinOptions {
-    freeCompilerArgs = freeCompilerArgs.plus(
-      listOf(
-        "-nowarn",
-      )
-    )
+  compilerOptions {
+    freeCompilerArgs.add("-nowarn")
   }
 }
 

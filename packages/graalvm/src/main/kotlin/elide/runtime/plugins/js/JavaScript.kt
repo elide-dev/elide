@@ -174,7 +174,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       ES2019,
       ES2020,
       ES2021,
-      ES2022 -> this.name.drop(2)
+      ES2022,
+      ES2023 -> this.name.drop(2)
 
       STABLE -> "stable"
       LATEST -> "latest"

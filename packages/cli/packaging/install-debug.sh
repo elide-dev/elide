@@ -41,6 +41,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.12 2024-04-17  Sam Gammon  Cleanups for alpha8 release
 #   0.11 2023-08-01  Sam Gammon  Archive support fixes, fix for uuid package
 #   0.10 2023-08-01  Sam Gammon  Version bump for launch
 #   0.9  2023-08-01  Sam Gammon  Version bump for release
@@ -56,8 +57,8 @@
 set -e
 set +x
 
-TOOL_REVISION="1.0.0-alpha7"
-INSTALLER_VERSION="v0.11"
+TOOL_REVISION="1.0.0-alpha8"
+INSTALLER_VERSION="v0.12"
 
 TOOL="cli"
 VERSION="v1"

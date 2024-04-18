@@ -122,10 +122,8 @@ tasks {
   }
 
   compileKotlin {
-    kotlinOptions {
-      freeCompilerArgs = freeCompilerArgs.plus(listOf(
-        "-nowarn",
-      ))
+    compilerOptions {
+      freeCompilerArgs.add("-nowarn")
     }
   }
 }

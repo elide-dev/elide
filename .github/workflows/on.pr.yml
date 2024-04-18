@@ -125,7 +125,29 @@ jobs:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            agent.less.build:443
+            api.github.com:443
+            cli.less.build:443
+            d3ob9fqp587by1.cloudfront.net:443
+            dl.less.build:443
+            download.oracle.com:443
+            edge.pkg.st:443
+            elide-snapshots.storage-download.googleapis.com:443
+            github.com:443
+            global.less.build:443
+            gradle.pkg.st:443
+            jpms.pkg.st:443
+            keys.openpgp.org:443
+            keyserver.ubuntu.com:443
+            local.less.build:443
+            maven.pkg.jetbrains.space:443
+            maven.pkg.st:443
+            objects.githubusercontent.com:443
+            pgp.mit.edu:443
+            services.gradle.org:443
       - name: "Setup: Checkout"
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:

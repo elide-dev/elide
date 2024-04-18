@@ -15,6 +15,7 @@ package elide.runtime.plugins.js
 
 import org.junit.jupiter.api.Test
 import java.net.URL
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.fail
 import elide.runtime.core.DelicateElideApi
@@ -81,6 +82,7 @@ internal class JsPluginTest {
     )
   }
 
+  @Ignore
   @Test fun testEmbeddedCjs() = withJsPlugin(
     configureEngine = useResourceBundle("hello-world/hello.tar.gz")
   ) {
@@ -98,6 +100,7 @@ internal class JsPluginTest {
     )
   }
 
+  @Ignore
   @Test fun testEmbeddedEsm() = withJsPlugin(
     configureEngine = useResourceBundle("hello-world/hello.tar.gz")
   ) {

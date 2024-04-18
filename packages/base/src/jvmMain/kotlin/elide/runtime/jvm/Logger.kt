@@ -17,25 +17,36 @@ import elide.runtime.LogLevel
 
 /** JVM implementation of a cross-platform Elide [elide.runtime.Logger] which wraps an [org.slf4j.Logger]. */
 public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger {
-  // Format a list of values for emission as part of a log message.
-  private fun formatLogLine(message: List<Any>): String {
-    val builder = StringBuilder()
-    val portions = message.size
-    message.forEachIndexed { index, value ->
-      builder.append(value)
-      if (index < portions - 1)
-        builder.append(" ")
+  private fun StringBuilder.formatValue(value: Any): Any = when (value) {
+    // formatting for errors (print stacktrace and message)
+    is Throwable -> value.stackTraceToString().let { stacktrace ->
+      append(value.javaClass.name)
+      append(": ")
+      append(value.message)
+      append("\n")
+      append(stacktrace)
     }
-    return builder.toString()
+
+    // any other type
+    else -> append(value)
   }
 
-    override fun isEnabled(level: LogLevel): Boolean = if (System.getProperty("elide.test", "false") == "true") {
+  // Format a list of values for emission as part of a log message.
+  private fun formatLogLine(message: List<Any>): String = StringBuilder().apply {
+    val portions = message.size
+    message.forEachIndexed { index, value ->
+      formatValue(value)
+      if (index < portions - 1) append(" ")
+    }
+  }.toString()
+
+  override fun isEnabled(level: LogLevel): Boolean = if (System.getProperty("elide.test", "false") == "true") {
     true
   } else {
     level.isEnabled(logger)
   }
 
-    override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
+  override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
     val enabled = levelChecked || isEnabled(level)
     if (enabled) {
       level.resolve(logger).invoke(

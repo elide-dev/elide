@@ -109,7 +109,7 @@ jobs:
           restore-keys: |
             elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-framework-v1-tests-
-      - name: "Setup: GraalVM (Java 22)"
+      - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"

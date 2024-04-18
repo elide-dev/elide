@@ -230,12 +230,19 @@ jobs:
             tools/elide-build/build/klib
             tools/elide-build/build/generated
             tools/elide-build/build/generated-sources
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          set-java-home: 'false'
       - name: "Setup: Buildless"
         if: contains(matrix.machine, 'macos') == false
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2

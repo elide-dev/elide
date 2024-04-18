@@ -714,8 +714,13 @@ val releaseCFlags: List<String> = listOf(
 
 // PGO profiles to specify in release mode.
 val profiles: List<String> = listOf(
-  "cli.iprof",
-  "serve.iprof",
+  "js-repl.iprof",
+  "js-serve.iprof",
+  "py-repl.iprof",
+  "python.iprof",
+  "ruby-repl.iprof",
+  "ruby.iprof",
+  "selftest.iprof"
 )
 
 // GVM release flags

@@ -54,7 +54,7 @@
     "@typescript-eslint/parser": "7.7.0",
     "commitlint": "19.2.2",
     "esbuild": "0.20.2",
-    "eslint": "8.56.0",
+    "eslint": "8.57.0",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
     "postcss-cli": "11.0.0",

@@ -199,11 +199,11 @@ jobs:
             elide-framework-
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - name: "Setup: GraalVM (Java 22)"
+      - name: "Setup: GraalVM (Java 21)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"
-          java-version: "22"
+          java-version: "21"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
@@ -321,12 +321,19 @@ jobs:
             elide-framework-
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      - name: "Setup: GraalVM (Java 21)"
+        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
+        with:
+          distribution: "graalvm"
+          java-version: "21"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          set-java-home: 'false'
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
       - name: "Setup: Docker"

@@ -15,7 +15,6 @@ package elide.runtime.plugins.js
 
 import org.junit.jupiter.api.Test
 import java.net.URL
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.fail
 import elide.runtime.core.DelicateElideApi
@@ -45,6 +44,16 @@ internal class JsPluginTest {
   }
 
   /**
+   * Generate a configuration function updating the NPM module resolution path for the JavaSript plugin. This method
+   * is intended to be used for convenience in [withJsPlugin]'s `configurePlugin` argument.
+   */
+  private fun useModulePath(root: String): JavaScriptConfig.() -> Unit = {
+    npm {
+      modulesPath = root
+    }
+  }
+
+  /**
    * Run a block of code after configuring a [PolyglotEngine] with the [JavaScript] plugin.
    *
    * @param configureEngine Configuration block to run *before* installing the [JavaScript] plugin.
@@ -60,9 +69,8 @@ internal class JsPluginTest {
       configureEngine()
       install(JavaScript, configurePlugin)
     }
-    val context = engine.acquire()
 
-    use(context)
+    use(engine.acquire())
   }
 
   @Test fun testExecution() = withJsPlugin {
@@ -82,9 +90,9 @@ internal class JsPluginTest {
     )
   }
 
-  @Ignore
   @Test fun testEmbeddedCjs() = withJsPlugin(
-    configureEngine = useResourceBundle("hello-world/hello.tar.gz")
+    configureEngine = useResourceBundle("hello-world/hello.tar.gz"),
+    configurePlugin = useModulePath("/app"),
   ) {
     val requireResult = javascript(
       """
@@ -100,9 +108,9 @@ internal class JsPluginTest {
     )
   }
 
-  @Ignore
   @Test fun testEmbeddedEsm() = withJsPlugin(
-    configureEngine = useResourceBundle("hello-world/hello.tar.gz")
+    configureEngine = useResourceBundle("hello-world/hello.tar.gz"),
+    configurePlugin = useModulePath("/app"),
   ) {
     val importResult = javascript(
       """

@@ -208,7 +208,7 @@ jobs:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
+          set-java-home: "false"
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
         with:
@@ -391,7 +391,7 @@ jobs:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
+          set-java-home: "false"
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:

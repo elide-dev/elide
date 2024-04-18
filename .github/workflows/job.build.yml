@@ -242,7 +242,7 @@ jobs:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
+          set-java-home: "false"
       - name: "Setup: Buildless"
         if: contains(matrix.machine, 'macos') == false
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2

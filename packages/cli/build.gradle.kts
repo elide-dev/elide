@@ -109,17 +109,17 @@ val enableLlvm = false
 val enableEspresso = false
 val enableExperimental = false
 val enableEmbeddedResources = false
-val enableResourceFilter = false
-val enableAuxCache = true
+val enableResourceFilter = true
+val enableAuxCache = false
 val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableDashboard = false
 val enableBuildReport = true
 val enableG1 = oracleGvm && HostManager.hostIsLinux
-val enablePgo = false
+val enablePgo = true
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
-val enableSbom = false
+val enableSbom = true
 val enableSbomStrict = false
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
@@ -288,10 +288,10 @@ dependencies {
   runtimeIf(enableEspresso, projects.packages.graalvmJvm)
   runtimeIf(enableEspresso, projects.packages.graalvmJava)
   runtimeIf(enableEspresso, projects.packages.graalvmKt)
-  runtimeIf(enableLlvm, projects.packages.graalvmLlvm)
   runtimeIf(enableRuby, projects.packages.graalvmRb)
   runtimeIf(enablePython, projects.packages.graalvmPy)
   runtimeIf(enableWasm, projects.packages.graalvmWasm)
+  if (enableLlvm) runtimeIf(enableLlvm, projects.packages.graalvmLlvm)
 
   api(libs.picocli)
   api(libs.slf4j)
@@ -641,9 +641,9 @@ val commonNativeArgs = listOfNotNull(
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
     "js",
-    if (enableExperimental && enableRuby) "ruby" else null,
-    if (enableExperimental && enablePython) "python" else null,
-    if (enableExperimental && enableEspresso) "java" else null,
+    if (enableRuby) "ruby" else null,
+    if (enablePython) "python" else null,
+    if (enableEspresso) "java" else null,
   ).joinToString(","),
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
   if (enablePgoSampling) "--pgo-sampling" else null,
@@ -696,12 +696,16 @@ val experimentalFlags = listOf(
 
   // Significant slowdowns
   "-H:+RunMainInNewThread",
+
+  // Unclear stability
+  "-H:+LSRAOptimization",
+  "-H:+VectorPolynomialIntrinsics",
 )
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
   "-O3",
-  "-v",
+  "-flto",
 )
 
 // PGO profiles to specify in release mode.
@@ -716,13 +720,7 @@ val profiles: List<String> = listOf(
 )
 
 // GVM release flags
-val gvmReleaseFlags: List<String> = listOf(
-  "-H:+AOTInline",
-  "-H:+VectorizeSIMD",
-  "-H:+LSRAOptimization",
-  "-H:+MLProfileInference",
-  "-H:+VectorPolynomialIntrinsics",
-)
+val gvmReleaseFlags: List<String> = listOf()
 
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
@@ -736,7 +734,6 @@ val releaseFlags: List<String> = listOf(
   )
 }).plus(if (enablePgo) listOf(
   "--pgo=${profiles.joinToString(",")}",
-  "-H:CodeSectionLayoutOptimization=ClusterByEdges",
 ) else emptyList()).plus(listOf(
   if (oracleGvm && enableSbom) listOf(
     if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
@@ -850,7 +847,6 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
   "--initialize-at-build-time=sun.awt.resources.awtosx,sun.awt.resources.awt",
-  "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
@@ -1303,6 +1299,16 @@ tasks {
 
     systemProperty("micronaut.environments", "dev")
     systemProperty("java.library.path", libPath)
+
+    systemProperty(
+      "org.graalvm.language.ruby.home",
+      layout.buildDirectory.dir("native/nativeCompile/resources/ruby/ruby-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "org.graalvm.language.python.home",
+      layout.buildDirectory.dir("native/nativeCompile/resources/python/python-home").get().asFile.path.toString(),
+    )
+
     jvmDefs.map {
       systemProperty(it.key, it.value)
     }

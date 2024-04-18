@@ -26,7 +26,6 @@ import elide.runtime.core.extensions.setOptions
 import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
-import elide.runtime.plugins.llvm.LLVM
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
@@ -52,15 +51,6 @@ import elide.runtime.plugins.llvm.LLVM
       "python.WithTRegex",
     )
 
-    if (ENABLE_LLVM) {
-      builder.enableOptions(
-        "llvm.AOTCacheStore",
-        "llvm.AOTCacheLoad",
-        "llvm.C++Interop",
-        "llvm.lazyParsing",
-      )
-    }
-
     if (ENABLE_EXPERIMENTAL) {
       builder.enableOptions(
         "python.WithCachedSources",
@@ -70,27 +60,17 @@ import elide.runtime.plugins.llvm.LLVM
     builder.setOptions(
       "python.PosixModuleBackend" to "java",
     )
-
-    if (ENABLE_LLVM) {
-      builder.setOptions(
-        "llvm.OSR" to "BYTECODE",
-      )
-    }
   }
 
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
-    private const val ENABLE_LLVM = false
     private const val ENABLE_EXPERIMENTAL = false
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: PythonConfig.() -> Unit): Python {
       configureLanguageSupport(scope)
-
-      // apply the llvm plugin first
-      if (ENABLE_LLVM) scope.configuration.getOrInstall(LLVM)
 
       // apply the configuration and create the plugin instance
       val config = PythonConfig().apply(configuration)

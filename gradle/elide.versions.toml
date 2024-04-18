@@ -806,7 +806,6 @@ graalvm-polyglot = [
   "graalvm-polyglot",
   "graalvm-polyglot-java",
   "graalvm-polyglot-js",
-  "graalvm-polyglot-llvm",
   "graalvm-polyglot-python",
   "graalvm-polyglot-ruby",
   "graalvm-polyglot-wasm",
@@ -816,10 +815,7 @@ graalvm-tools = [
   "graalvm-polyglot-tools",
   "graalvm-polyglot-tools-coverage",
   "graalvm-polyglot-tools-dap",
-  "graalvm-polyglot-tools-heap",
-  "graalvm-polyglot-tools-insight",
   "graalvm-polyglot-tools-inspect",
-  "graalvm-polyglot-tools-lsp",
   "graalvm-polyglot-tools-profiler",
 ]
 
@@ -836,9 +832,9 @@ graalvm-llvm = [
 
 graalvm-espresso = ["graalvm-espresso-hotswap"]
 
-graalvm-python = ["graalvm-polyglot-python", "graalvm-python-resources"]
+graalvm-python = ["graalvm-polyglot-python"]
 
-graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ruby-resources", "graalvm-ruby-shared"]
+graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ruby-shared"]
 
 graalvm-js = ["graalvm-js-language", "graalvm-polyglot-js"]
 

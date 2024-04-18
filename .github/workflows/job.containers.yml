@@ -333,7 +333,7 @@ jobs:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: 'false'
+          set-java-home: "false"
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
       - name: "Setup: Docker"

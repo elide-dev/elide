@@ -65,7 +65,7 @@ detekt {
 }
 
 tasks.withType(Detekt::class.java) {
-  jvmTarget = "17"  // @TODO pull from property state
+  jvmTarget = "17" // @TODO pull from property state
 }
 
 dependencies {

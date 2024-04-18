@@ -21,7 +21,7 @@ import org.graalvm.polyglot.Context as VMContext
  * Type structure of a tool output callable, which runs within the sum context of [OutputController] and
  * [ToolContext].
  */
-internal typealias OutputCallable = context(ToolState, OutputController) () -> Unit
+internal typealias OutputCallable = OutputController.() -> Unit
 
 /**
  * Type structure of a guest VM callable function, which runs in the sum context of the [ToolContext] and the

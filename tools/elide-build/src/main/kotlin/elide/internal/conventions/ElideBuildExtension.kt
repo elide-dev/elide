@@ -16,6 +16,7 @@
 package elide.internal.conventions
 
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.native.NativeTarget.APP
@@ -196,6 +197,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Whether to force all JVM-targeting tasks to use JVM 17. Defaults to `false`. */
     public var forceJvm17: Boolean = false
+
+    /** Force a JVM target for this project. */
+    public var target: JvmTarget? = null
   }
 
   /** Configuration for the C/C++ platform */

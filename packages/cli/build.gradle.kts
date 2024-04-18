@@ -24,6 +24,7 @@ import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_22
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -56,7 +57,7 @@ plugins {
 elide {
   kotlin {
     target = KotlinTarget.JVM
-    kotlinVersionOverride = "1.9"  // @TODO(sgammon) compose breaks at kotlin v2.0
+    kotlinVersionOverride = "2.0"
   }
 
   docker {
@@ -64,11 +65,13 @@ elide {
   }
 
   jvm {
-    alignVersions = false
+    target = JVM_22
   }
 
   java {
     configureModularity = false
+    includeJavadoc = false
+    includeSources = false
   }
 
   checks {
@@ -156,19 +159,12 @@ val jvmCompileArgs = listOfNotNull(
   "--enable-native-access=" + listOfNotNull(
     "ALL-UNNAMED",
   ).joinToString(","),
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
 ) else emptyList()).plus(if (enableEmbeddedBuilder) listOf(
   "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
 ) else emptyList())
 
 val jvmRuntimeArgs = emptyList<String>()
@@ -215,13 +211,9 @@ kapt {
 
 kotlin {
   target.compilations.all {
-    kotlinOptions {
+    compilerOptions {
       allWarningsAsErrors = false
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-
-      // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)
-      apiVersion = "1.9"
-      languageVersion = "1.9"
+      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }
 }
@@ -1218,6 +1210,13 @@ fun Jar.applyJarSettings() {
   }
 }
 
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(22))
+    vendor.set(JvmVendorSpec.GRAAL_VM)
+  }
+}
+
 /**
  * Build: CLI Docker Images
  */
@@ -1283,15 +1282,13 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-    if (enableEdge) {
-      javaToolchains {
-        javaLauncher.set(
-          launcherFor {
-            languageVersion = JavaLanguageVersion.of(21)
-            vendor = JvmVendorSpec.GRAAL_VM
-          },
-        )
-      }
+    javaToolchains {
+      javaLauncher.set(
+        launcherFor {
+          languageVersion = JavaLanguageVersion.of(22)
+          vendor = JvmVendorSpec.GRAAL_VM
+        },
+      )
     }
   }
 
@@ -1315,22 +1312,20 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-    if (enableEdge) {
-      javaToolchains {
-        javaLauncher.set(
-          launcherFor {
-            languageVersion = JavaLanguageVersion.of(21)
-            vendor = JvmVendorSpec.GRAAL_VM
-          },
-        )
-      }
+    javaToolchains {
+      javaLauncher.set(
+        launcherFor {
+          languageVersion = JavaLanguageVersion.of(22)
+          vendor = JvmVendorSpec.GRAAL_VM
+        },
+      )
     }
   }
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
-    kotlinOptions {
+    compilerOptions {
       allWarningsAsErrors = false
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }
 
@@ -1354,13 +1349,8 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions {
-    freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-    allWarningsAsErrors = false  // module path breaks @TODO: fix
-
-    // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)
-    apiVersion = "1.9"
-    languageVersion = "1.9"
+  compilerOptions {
+    freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
   }
 }
 
@@ -1413,8 +1403,8 @@ if (enableJpms) {
 
 afterEvaluate {
   tasks.withType(KotlinJvmCompile::class.java).configureEach {
-    kotlinOptions {
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+    compilerOptions {
+      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
       allWarningsAsErrors = false
     }
   }

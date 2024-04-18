@@ -97,9 +97,2405 @@
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib\\E"
   }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/libbz2support.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/libhpy-native.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/liblzmasupport.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/libposix.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/libpython-native.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/libpythonjni.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/libzsupport.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_cpython_sre.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_cpython_struct.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_cpython_unicodedata.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_ctypes_test.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_sqlite3.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_testbuffer.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_testcapi.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/_testmultiphase.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/lib/graalpy24.0/modules/pyexpat.graalpy240-310-native-aarch64-darwin.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/native.files\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/native.sha256\\E"
+  }, {
     "pattern":"\\QMETA-INF/resources/engine/libtruffleattach/darwin/aarch64/sha256\\E"
   }, {
+    "pattern":"\\QMETA-INF/resources/include.files\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include.sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/Python.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/abstract.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/boolobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/bytearrayobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/bytesobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cellobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/ceval.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/classobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/code.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/codecs.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/compile.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/complexobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/context.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/abstract.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/bytearrayobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/bytesobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/ceval.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/code.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/compile.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/dictobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/fileobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/fileutils.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/frameobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/import.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/initconfig.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/listobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/methodobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/object.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/objimpl.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pyctype.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pydebug.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pyerrors.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pyfpe.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pyframe.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pylifecycle.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pymem.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pystate.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pythonrun.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/pytime.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/sysmodule.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/traceback.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/tupleobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/cpython/unicodeobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/datetime.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/descrobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/dictobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/dynamic_annotations.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/eval.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/exports.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/fileobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/fileutils.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/floatobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/frameobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/funcobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/genericaliasobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/genobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/autogen_hpyfunc_declare.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/autogen_hpyslot.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/cpy_types.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/cpython/autogen_api_impl.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/cpython/autogen_ctx.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/cpython/autogen_hpyfunc_trampolines.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/cpython/hpyfunc_trampolines.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/cpython/misc.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/forbid_python_h/Python.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/hpydef.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/hpyexports.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/hpyfunc.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/hpymodule.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/hpytype.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/inline_helpers.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/macros.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/argparse.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/buildvalue.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/ctx_funcs.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/ctx_module.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/ctx_type.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/format.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/helpers.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/runtime/structseq.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/universal/autogen_ctx.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/universal/autogen_hpyfunc_trampolines.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/universal/autogen_trampolines.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/universal/hpyfunc_trampolines.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/universal/misc_trampolines.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/hpy/version.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/import.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_ast_state.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_atomic.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_blocks_output_buffer.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_condvar.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_dtoa.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_gc.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_gil.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_interp.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_long.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_moduleobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_object.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_pyerrors.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_pymem.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_pystate.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_runtime.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_tuple.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_ucnhash.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/internal/pycore_warnings.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/iterobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/listobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/longintrepr.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/longobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/memoryobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/methodobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/modsupport.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/moduleobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/namespaceobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/object.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/objimpl.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/osmodule.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/patchlevel.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pycapsule.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pyconfig.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pyerrors.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pyexpat.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pyframe.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pyhash.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pylifecycle.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pymacro.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pymath.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pymem.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pyport.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pystate.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pystrcmp.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pystrhex.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pystrtod.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pythonrun.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/pythread.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/setobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/sliceobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/structmember.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/structseq.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/sysmodule.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/traceback.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/tracemalloc.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/tupleobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/typeslots.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/unicodeobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/warnings.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include/weakrefobject.h\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy.files\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy.sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/__graalpython__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/_sre.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/_struct.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/_sysconfig.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/_weakref.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/builtins.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/function.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/java.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/_sysconfigdata.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/autopatch_capi.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/ginstall.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/graalpy_virtualenv.egg-info/PKG-INFO\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/graalpy_virtualenv.egg-info/SOURCES.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/graalpy_virtualenv.egg-info/entry_points.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/graalpy_virtualenv/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/graalpy_virtualenv/graalpy.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy.egg-info/PKG-INFO\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy.egg-info/SOURCES.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy.egg-info/dependency_links.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy.egg-info/entry_points.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy.egg-info/top_level.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/debug/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/debug/leakdetector.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/debug/pytest.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/abitag.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/argparse.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/buildvalue.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_bytes.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_call.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_capsule.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_contextvar.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_err.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_eval.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_listbuilder.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_long.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_module.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_object.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_tracker.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_tuple.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_tuplebuilder.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/ctx_type.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/format.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/helpers.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/src/runtime/structseq.c\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/devel/version.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/trace/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/hpy/universal.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/standalone/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/standalone/resources/Py2BinLauncher.java\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/modules/standalone/resources/native-image-resources.json\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/Cython/Cython-0.29.32.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/Cython/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/Cython/wheel-Cython-0.29.30.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/MarkupSafe/MarkupSafe.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/MarkupSafe/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/PyDriller/PyDriller.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/PyDriller/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/README.md\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/asv/asv-0.5.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/asv/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/atomicwrites/atomicwrites.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/atomicwrites/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/bcrypt/bcrypt-4.0.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/bcrypt/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/catboost/catboost-1.2.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/catboost/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cffi/cffi-1.15.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cffi/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/charset_normalizer/charset_normalizer-2.0.12.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/charset_normalizer/charset_normalizer-2.1.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/charset_normalizer/charset_normalizer-3.1.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/charset_normalizer/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cloudpickle/cloudpickle-2.2.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cloudpickle/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cmake/cmake.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cmake/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cppy/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cramjam/cramjam-2.7.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cramjam/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cryptography/cryptography-3.4.7.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cryptography/cryptography-41.0.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/cryptography/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/dill/dill.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/dill/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/grpcio/grpcio-1.56.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/grpcio/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/h2o/h2o.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/h2o/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/h5py/h5py-2.10.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/h5py/h5py-3.10.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/h5py/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/hypothesis/hypothesis-6.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/hypothesis/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/jaxlib/jaxlib-0.4.13.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/jaxlib/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/joblib/joblib.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/joblib/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/jsonschema/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/jupyter_events/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/jupyterlab_server/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/keras/keras-2.14.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/keras/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/lazy-object-proxy/lazy-object-proxy.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/lazy-object-proxy/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/libcst/libcst-1.0.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/libcst/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/lightfm/lightfm-1.15.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/lightfm/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/llvmlite/llvmlite.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/llvmlite/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/lxml/lxml-4.9.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/lxml/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/matplotlib/matplotlib-3.5.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/matplotlib/matplotlib-3.6.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/matplotlib/matplotlib-3.7.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/matplotlib/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/meson-python/meson-python.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/meson-python/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/meson/meson-1.0.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/meson/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.16.4.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.19.5.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.21.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.21.4.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.21.6.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.22.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.22.4.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.23.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.23.4.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/numpy/numpy-1.23.5.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/onnxruntime/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/onnxruntime/onnxruntime-1.14.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/orjson/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/orjson/orjson-3.9.7.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/packaging/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/packaging/packaging.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pandas/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pandas/pandas-1.4.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pandas/pandas-1.5.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pip/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pip/pip-22.2.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pip/pip-23.0.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/protobuf/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/protobuf/protobuf-3.21.9.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/psycopg2/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/psycopg2/psycopg2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/py4j/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/py4j/py4j.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyOpenSSL/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pybind11/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pybind11/pybind11-2.10.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pybind11/pybind11-2.10.4.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pydantic-core/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pydantic-core/pydantic-core-2.10.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pygame/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pygame/pygame-2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pymongo/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pymongo/pymongo.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyparsing/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyparsing/pyparsing-2.4.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyparsing/pyparsing-3.0.8.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyperf/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyperf/pyperf-2.3.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyperf/pyperf-2.3.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyperf/pyperf-2.5.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyperformance/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyperformance/pyperformance-1.0.5.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyspark/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyspark/pyspark-3.4.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytest/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytest/pytest-4.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytest/pytest-5.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytest/pytest-6.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytest/pytest-7.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pythran/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pythran/pythran-0.12.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pythran/pythran-0.13.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytype/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytype/pytype.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytz/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pytz/pytz-2022.2.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyzmq/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/pyzmq/pyzmq.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/rapidfuzz/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/rapidfuzz/rapidfuzz.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/ray/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/ray/ray-2.3.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/readme-renderer/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/rpds_py/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/rpds_py/rpds_py-0.10.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/safetensors/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/safetensors/safetensors-0.3.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scikit-learn/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scikit-learn/scikit-learn-1.1.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scipy/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scipy/scipy-1.10.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scipy/scipy-1.4.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scipy/scipy-1.7.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scipy/scipy-1.8.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/scipy/scipy-1.9.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/setuptools/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/setuptools/setuptools-60.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/setuptools/setuptools-63.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/setuptools/setuptools-65.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tensorflow-io-gcs-filesystem/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tensorflow-io-gcs-filesystem/tensorflow-io-gcs-filesystem-0.34.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tensorflow-io/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tensorflow-io/tensorflow-io-0.34.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tensorflow/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tensorflow/tensorflow-2.14.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tensorflow/tensorflow-2.15.0.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tokenizers/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tokenizers/tokenizers-0.13.3.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/torch/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/torch/torch-1.13.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/torchvision/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/torchvision/torchvision-1.14.1.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/tox/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/transformers/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/urllib3/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/urllib3/urllib3-2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/wheel/metadata.toml\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/wheel/wheel-0.35.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/wheel/wheel-0.37.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/wheel/wheel-0.38.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/wheel/wheel-0.40.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/wheel/wheel-0.41.2.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/patches/wheel/wheel-pre-0.35.patch\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/pip_hook.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/sulong_support.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy/unicodedata.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython.files\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython.sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/__future__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/__hello__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/__phello__.foo.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_aix_support.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_bootsubprocess.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_collections_abc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_compat_pickle.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_compression.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_dummy_thread.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_markupbase.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_md5.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_osx_support.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_py_abc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_pydecimal.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_pyio.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_sha1.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_sha256.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_sha512.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_sitebuiltins.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_strptime.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_threading_local.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/_weakrefset.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/abc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/aifc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/antigravity.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/argparse.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ast.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asynchat.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/base_events.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/base_futures.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/base_subprocess.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/base_tasks.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/constants.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/coroutines.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/events.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/exceptions.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/format_helpers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/futures.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/locks.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/log.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/mixins.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/proactor_events.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/protocols.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/queues.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/runners.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/selector_events.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/sslproto.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/staggered.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/streams.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/subprocess.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/tasks.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/threads.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/transports.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/trsock.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/unix_events.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/windows_events.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncio/windows_utils.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/asyncore.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/base64.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/bdb.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/binhex.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/bisect.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/bz2.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/cProfile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/calendar.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/cgi.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/cgitb.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/chunk.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/cmd.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/code.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/codecs.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/codeop.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/collections/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/collections/abc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/colorsys.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/compileall.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/concurrent/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/concurrent/futures/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/concurrent/futures/_base.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/concurrent/futures/process.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/concurrent/futures/thread.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/configparser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/contextlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/contextvars.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/copy.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/copyreg.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/crypt.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/csv.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/_aix.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/_endian.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/macholib/README.ctypes\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/macholib/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/macholib/dyld.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/macholib/dylib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/macholib/fetch_macholib.bat\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/macholib/fetch_macholib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/macholib/framework.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ctypes/wintypes.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/curses/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/curses/ascii.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/curses/has_key.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/curses/panel.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/curses/textpad.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/dataclasses.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/datetime.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/dbm/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/dbm/dumb.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/dbm/gnu.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/dbm/ndbm.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/decimal.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/difflib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/dis.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/README\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/_msvccompiler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/archive_util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/bcppcompiler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/ccompiler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/cmd.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/bdist.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/bdist_dumb.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/bdist_msi.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/bdist_rpm.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/build.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/build_clib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/build_ext.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/build_py.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/build_scripts.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/check.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/clean.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/command_template\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/config.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/install.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/install_data.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/install_egg_info.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/install_headers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/install_lib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/install_scripts.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/register.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/sdist.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/command/upload.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/config.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/core.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/cygwinccompiler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/debug.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/dep_util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/dir_util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/dist.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/errors.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/extension.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/fancy_getopt.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/file_util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/filelist.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/log.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/msvc9compiler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/msvccompiler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/spawn.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/sysconfig.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/text_file.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/unixccompiler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/version.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/distutils/versionpredicate.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/doctest.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/_encoded_words.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/_header_value_parser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/_parseaddr.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/_policybase.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/architecture.rst\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/base64mime.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/charset.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/contentmanager.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/encoders.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/errors.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/feedparser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/generator.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/header.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/headerregistry.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/iterators.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/message.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/application.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/audio.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/base.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/image.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/message.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/multipart.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/nonmultipart.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/mime/text.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/parser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/policy.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/quoprimime.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/email/utils.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/aliases.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/ascii.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/base64_codec.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/big5.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/big5hkscs.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/bz2_codec.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/charmap.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp037.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1006.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1026.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1125.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1140.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1250.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1251.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1252.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1253.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1254.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1255.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1256.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1257.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp1258.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp273.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp424.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp437.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp500.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp720.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp737.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp775.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp850.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp852.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp855.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp856.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp857.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp858.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp860.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp861.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp862.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp863.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp864.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp865.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp866.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp869.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp874.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp875.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp932.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp949.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/cp950.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/euc_jis_2004.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/euc_jisx0213.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/euc_jp.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/euc_kr.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/gb18030.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/gb2312.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/gbk.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/hex_codec.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/hp_roman8.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/hz.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/idna.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso2022_jp.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso2022_jp_1.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso2022_jp_2.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso2022_jp_2004.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso2022_jp_3.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso2022_jp_ext.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso2022_kr.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_1.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_10.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_11.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_13.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_14.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_15.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_16.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_2.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_3.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_4.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_5.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_6.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_7.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_8.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/iso8859_9.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/johab.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/koi8_r.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/koi8_t.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/koi8_u.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/kz1048.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/latin_1.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_arabic.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_croatian.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_cyrillic.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_farsi.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_greek.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_iceland.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_latin2.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_roman.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_romanian.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mac_turkish.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/mbcs.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/oem.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/palmos.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/ptcp154.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/punycode.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/quopri_codec.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/raw_unicode_escape.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/rot_13.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/shift_jis.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/shift_jis_2004.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/shift_jisx0213.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/tis_620.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/undefined.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/unicode_escape.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_16.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_16_be.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_16_le.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_32.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_32_be.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_32_le.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_7.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_8.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/utf_8_sig.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/uu_codec.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/encodings/zlib_codec.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ensurepip/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ensurepip/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ensurepip/_bundled/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ensurepip/_bundled/pip-23.0.1-py3-none-any.whl\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ensurepip/_bundled/setuptools-65.5.0-py3-none-any.whl\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ensurepip/_uninstall.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/enum.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/filecmp.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/fileinput.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/fnmatch.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/fractions.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ftplib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/functools.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/genericpath.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/getopt.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/getpass.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/gettext.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/glob.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/graphlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/gzip.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/hashlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/heapq.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/hmac.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/html/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/html/entities.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/html/parser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/http/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/http/client.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/http/cookiejar.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/http/cookies.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/http/server.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/CREDITS.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/ChangeLog\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/HISTORY.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/README.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/folder.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle.ico\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle_16.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle_16.png\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle_256.png\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle_32.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle_32.png\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle_48.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/idle_48.png\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/minusnode.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/openfolder.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/plusnode.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/python.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/Icons/tk.gif\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/NEWS.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/NEWS2x.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/README.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/TODO.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/autocomplete.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/autocomplete_w.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/autoexpand.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/browser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/calltip.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/calltip_w.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/codecontext.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/colorizer.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/config-extensions.def\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/config-highlight.def\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/config-keys.def\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/config-main.def\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/config.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/config_key.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/configdialog.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/debugger.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/debugger_r.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/debugobj.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/debugobj_r.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/delegator.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/dynoption.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/editor.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/extend.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/filelist.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/format.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/grep.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/help.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/help.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/help_about.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/history.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/hyperparser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/idle.bat\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/idle.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/idle.pyw\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/iomenu.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/macosx.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/mainmenu.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/multicall.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/outwin.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/parenmatch.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/pathbrowser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/percolator.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/pyparse.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/pyshell.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/query.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/redirector.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/replace.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/rpc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/run.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/runscript.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/scrolledlist.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/search.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/searchbase.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/searchengine.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/sidebar.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/squeezer.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/stackviewer.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/statusbar.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/textview.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/tooltip.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/tree.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/undo.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/window.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/zoomheight.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/idlelib/zzdummy.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/imaplib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/imghdr.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/imp.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/_abc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/_adapters.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/_bootstrap.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/_bootstrap_external.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/_common.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/abc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/machinery.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/metadata/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/metadata/_adapters.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/metadata/_collections.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/metadata/_functools.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/metadata/_itertools.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/metadata/_meta.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/metadata/_text.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/readers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/resources.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/importlib/util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/inspect.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/io.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ipaddress.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/json/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/json/decoder.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/json/encoder.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/json/scanner.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/json/tool.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/keyword.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/Grammar.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/Grammar3.8.2.dev.0.pickle\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/PatternGrammar.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/PatternGrammar3.8.2.dev.0.pickle\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/btm_matcher.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/btm_utils.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixer_base.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixer_util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_apply.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_asserts.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_basestring.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_buffer.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_dict.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_except.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_exec.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_execfile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_exitfunc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_filter.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_funcattrs.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_future.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_getcwdu.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_has_key.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_idioms.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_import.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_imports.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_imports2.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_input.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_intern.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_isinstance.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_itertools.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_itertools_imports.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_long.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_map.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_metaclass.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_methodattrs.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_ne.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_next.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_nonzero.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_numliterals.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_operator.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_paren.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_print.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_raise.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_raw_input.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_reduce.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_reload.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_renames.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_repr.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_set_literal.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_standarderror.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_sys_exc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_throw.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_tuple_params.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_types.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_unicode.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_urllib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_ws_comma.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_xrange.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_xreadlines.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/fixes/fix_zip.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/main.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/patcomp.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/conv.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/driver.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/grammar.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/literals.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/parse.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/pgen.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/token.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pgen2/tokenize.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pygram.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/pytree.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lib2to3/refactor.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/linecache.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/locale.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/logging/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/logging/config.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/logging/handlers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/lzma.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/mailbox.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/mailcap.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/mimetypes.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/modulefinder.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/msilib/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/msilib/schema.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/msilib/sequence.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/msilib/text.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/connection.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/context.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/dummy/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/dummy/connection.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/forkserver.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/heap.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/managers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/pool.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/popen_fork.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/popen_forkserver.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/popen_spawn_posix.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/popen_spawn_win32.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/popen_truffleprocess.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/process.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/queues.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/reduction.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/resource_sharer.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/resource_tracker.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/shared_memory.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/sharedctypes.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/spawn.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/synchronize.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/multiprocessing/util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/netrc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/nntplib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ntpath.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/nturl2path.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/numbers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/opcode.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/operator.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/optparse.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/os.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pathlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pdb.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pickle.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pickletools.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pipes.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pkgutil.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/platform.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/plistlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/poplib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/posixpath.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pprint.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/profile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pstats.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pty.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/py_compile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pydoc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pydoc_data/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pydoc_data/_pydoc.css\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/pydoc_data/topics.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/queue.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/quopri.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/random.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/re.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/reprlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/rlcompleter.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/runpy.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sched.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/secrets.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/selectors.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/shelve.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/shlex.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/shutil.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/signal.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/site-packages/README.txt\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/site.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/smtpd.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/smtplib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sndhdr.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/socket.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/socketserver.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sqlite3/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sqlite3/dbapi2.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sqlite3/dump.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sre_compile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sre_constants.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sre_parse.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/ssl.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/stat.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/statistics.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/string.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/stringprep.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/struct.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/subprocess.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sunau.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/symtable.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/sysconfig.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tabnanny.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tarfile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/telnetlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tempfile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/bytecode_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/hashlib_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/import_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/interpreters.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/logging_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/os_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/script_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/socket_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/testresult.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/threading_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/test/support/warnings_helper.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/textwrap.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/this.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/threading.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/timeit.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/colorchooser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/commondialog.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/constants.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/dialog.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/dnd.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/filedialog.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/font.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/messagebox.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/scrolledtext.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/simpledialog.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/tix.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tkinter/ttk.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/token.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tokenize.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/trace.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/traceback.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tracemalloc.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/tty.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtle.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/bytedesign.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/chaos.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/clock.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/colormixer.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/forest.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/fractalcurves.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/lindenmayer.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/minimal_hanoi.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/nim.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/paint.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/peace.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/penrose.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/planet_and_moon.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/rosette.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/round_dance.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/sorting_animate.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/tree.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/turtle.cfg\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/two_canvases.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/turtledemo/yinyang.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/types.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/typing.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/_log.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/async_case.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/case.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/loader.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/main.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/mock.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/result.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/runner.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/signals.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/suite.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/unittest/util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/urllib/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/urllib/error.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/urllib/parse.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/urllib/request.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/urllib/response.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/urllib/robotparser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/uu.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/uuid.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/__main__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/scripts/common/Activate.ps1\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/scripts/common/activate\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/scripts/nt/activate.bat\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/scripts/nt/deactivate.bat\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/scripts/posix/activate.csh\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/venv/scripts/posix/activate.fish\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/warnings.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/wave.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/weakref.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/webbrowser.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/wsgiref/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/wsgiref/handlers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/wsgiref/headers.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/wsgiref/simple_server.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/wsgiref/util.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/wsgiref/validate.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xdrlib.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/NodeFilter.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/domreg.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/expatbuilder.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/minicompat.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/minidom.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/pulldom.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/dom/xmlbuilder.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/etree/ElementInclude.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/etree/ElementPath.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/etree/ElementTree.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/etree/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/etree/cElementTree.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/parsers/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/parsers/expat.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/sax/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/sax/_exceptions.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/sax/expatreader.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/sax/handler.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/sax/saxutils.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xml/sax/xmlreader.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xmlrpc/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xmlrpc/client.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/xmlrpc/server.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/zipapp.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/zipfile.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/zipimport.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/zoneinfo/__init__.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/zoneinfo/_common.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/zoneinfo/_tzpath.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython/zoneinfo/_zoneinfo.py\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/native-image.properties\\E"
+  }, {
     "pattern":"\\QMETA-INF/resources/nfi-native/libnfi/darwin/aarch64/sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/ni.files\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/ni.sha256\\E"
   }, {
     "pattern":"\\QMETA-INF/resources/ruby/ruby-home/common/sha256\\E"
   }, {
@@ -567,6 +2963,8 @@
   }, {
     "pattern":"\\Qcom/oracle/truffle/nfi/backend/panama/PanamaNFILanguage.class\\E"
   }, {
+    "pattern":"\\Qcom/sun/jna/darwin-aarch64/libjnidispatch.jnilib\\E"
+  }, {
     "pattern":"\\Qelide.yml/application-dev.conf\\E"
   }, {
     "pattern":"\\Qelide.yml/application-dev.json\\E"
@@ -966,6 +3364,10 @@
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/nfc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/nfkc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
   }, {
@@ -1508,6 +3910,9 @@
     "locales":["en", "en-US", "und"]
   }, {
     "name":"sun.text.resources.cldr.FormatData",
+    "locales":["en", "en-US", "und"]
+  }, {
+    "name":"sun.util.resources.cldr.CalendarData",
     "locales":["und"]
   }, {
     "name":"sun.util.resources.cldr.TimeZoneNames",

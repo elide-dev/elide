@@ -74,6 +74,12 @@ enum EmbeddedScriptLanguage {
 
   // The language is Scala; language support for JVM with Scala compiler.
   SCALA = 7;
+
+  // The language is TypeScript; language support for JavaScript with the TS compiler.
+  TS = 8;
+
+  // The language is TypeScript; language support for JavaScript with the TS compiler.
+  TYPESCRIPT = 8;
 }
 
 
@@ -109,6 +115,9 @@ message EmbeddedScriptMetadata {
 
       // The language level is ES2022.
       ES2022 = 8;
+
+      // The language level is ES2023.
+      ES2023 = 9;
 
       // Stable language features.
       STABLE = 98;
@@ -156,6 +165,15 @@ message EmbeddedScriptMetadata {
 
       // Java 20.
       JAVA_20 = 20;
+
+      // Java 21.
+      JAVA_21 = 21;
+
+      // Java 22.
+      JAVA_22 = 22;
+
+      // Java 23.
+      JAVA_23 = 23;
 
       // Latest stable (LTS) release.
       STABLE = 98;

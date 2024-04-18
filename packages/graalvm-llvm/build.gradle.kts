@@ -57,8 +57,6 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
   implementation(projects.packages.graalvmJvm)
-  compileOnly(libs.graalvm.espresso.polyglot)
-  compileOnly(libs.graalvm.espresso.hotswap)
 
   // Testing
   testImplementation(projects.packages.test)

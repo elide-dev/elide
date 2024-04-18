@@ -47,14 +47,14 @@ import elide.vm.annotations.Polyglot
       @Polyglot override fun getHashValue(key: Value): Any? = effectiveEnvironment[key.asString()]
       @Polyglot override fun getHashEntriesIterator(): Any = effectiveEnvironment.entries
       @Polyglot override fun putHashEntry(key: Value, value: Value) {
-        throw UnsupportedOperationException("Elide forbids writes to `process.env` after VM boot")
+        throw UnsupportedOperationException("Elide forbids writes to process environment after VM boot")
       }
 
       @Polyglot override fun getMember(key: String): Any? = effectiveEnvironment[key]
       @Polyglot override fun getMemberKeys(): Any = effectiveEnvironment.keys.toTypedArray()
       @Polyglot override fun hasMember(key: String): Boolean = effectiveEnvironment.contains(key)
       @Polyglot override fun putMember(key: String, value: Value?) {
-        throw UnsupportedOperationException("Elide forbids writes to `process.env` after VM boot")
+        throw UnsupportedOperationException("Elide forbids writes to process environment after VM boot")
       }
 
       @Polyglot override fun getIterator(): Any {

@@ -17,13 +17,13 @@
   <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>
   <br />
   <a href="https://www.graalvm.org/"><img src="https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle" /></a>
-  <a href="https://openjdk.org/projects/jdk/21/"><img src="https://img.shields.io/badge/Java-21-blue.svg?logo=oracle" /></a>
+  <a href="https://openjdk.org/projects/jdk/22/"><img src="https://img.shields.io/badge/Java-22-blue.svg?logo=oracle" /></a>
   <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.0.0-blue.svg?logo=kotlin" /></a>
-  <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/ECMA-2022-blue.svg?logo=javascript" /></a>
+  <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/ECMA-2023-blue.svg?logo=javascript" /></a>
 </p>
 
 <p align="center">
-Latest version: <code>1.0.0-alpha7</code>
+Latest version: <code>1.0.0-alpha8</code>
 </p>
 
 <hr />
@@ -151,7 +151,7 @@ Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering 
 
 ```properties
 // gradle.properties
-elideVersion = 1.0.0-alpha7
+elideVersion = 1.0.0-alpha8
 ```
 
 ```kotlin
@@ -261,15 +261,48 @@ Following this guide is recommended but optional. Depending on the style of deve
 not need some of these components:
 
 | Status                                                          | **Java**    | **Kotlin**    | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
-| --------------------------------------------------------------- | ----------- | ------------- | ----------- | ------------- | --------- | ------------------ |
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 21`   | `2.0.0-Beta4` | `23.1.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
+|-----------------------------------------------------------------|-------------|---------------|-------------|---------------|-----------|--------------------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 22`   | `2.0.0-RC1`   | `24.x.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 21`   | `2.0.0-Beta4` | `23.1.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.20`      | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`      | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`      | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`      | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
 | ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --            | --          | --            | --        | --                 |
 
-If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
+## Language support
+
+The following version matrix describes language support for Elide, including **JavaScript**, **Python**, **Ruby**,
+**WASM**, and experimental languages (LLVM, JVM) and future languages which _could_ be supported based on the architecture:
+
+| **Language**    | **Status**                                                      | **Version** | **Elide release** | **Sandboxing**      | **Server**    | **Coverage**  | **VFS**      | **Debugger** |
+|-----------------|-----------------------------------------------------------------|-------------|-------------------|---------------------|---------------|---------------|--------------|--------------|
+| **JavaScript**  | ![Status](https://img.shields.io/badge/-tested-success)         | `ECMA 2023` | `alpha4+`         | ✅ Full support      | ✅             | ✅             | ✅            | ✅            |
+| **WebAssembly** | ![Status](https://img.shields.io/badge/-tested-success)         | `WASI P2`   | `alpha4+`         | ✅ (With JS)         | ✅ (With JS)   | ✅             | ✅            | ✅            |
+| **Python**      | ![Status](https://img.shields.io/badge/-tested-success)         | `3.10.x`    | `alpha7+`         | Not supported       | Not supported | ✅             | ⚠️           | ✅            |
+| **Ruby**        | ![Status](https://img.shields.io/badge/-tested-success)         | `3.2`       | `alpha8+`         | Not supported       | Not supported | ✅             | ⚠️           | ✅            |
+| **Java**        | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 22`   | `edge`            | ✅ Partial support   | Not supported | Experimental  | Experimental | ✅            |
+| **Kotlin**      | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 22`   | `edge`            | ✅ Partial support   | Not supported | Experimental  | Experimental | ✅            |
+| **LLVM**        | ![Status](https://img.shields.io/badge/-experimental-important) | `12.0.1`    | `edge`            | ⚠️ Requires license | Not supported | Not supported | N/A          | ✅            |
+| **TypeScript**  | ![Status](https://img.shields.io/badge/-future-purple)          | `5.x.x`     | Future release    | N/A                 | N/A           | N/A           | N/A          | N/A          |
+| **CUDA**        | ![Status](https://img.shields.io/badge/-future-purple)          | N/A         | Future release    | N/A                 | N/A           | N/A           | N/A          | N/A          |
+| **PHP**         | ![Status](https://img.shields.io/badge/-future-purple)          | `7.x`       | Future release    | N/A                 | N/A           | N/A           | N/A          | N/A          |
+| **.NET**        | ![Status](https://img.shields.io/badge/-future-purple)          | `ECMA 335`  | Future release    | N/A                 | N/A           | N/A           | N/A          | N/A          |
+| **Groovy**      | ![Status](https://img.shields.io/badge/-future-purple)          | `4.0.x`     | Future release    | N/A                 | N/A           | N/A           | N/A          | N/A          |
+| **Scala**       | ![Status](https://img.shields.io/badge/-future-purple)          | `3.4.x`     | Future release    | N/A                 | N/A           | N/A           | N/A          | N/A          |
+
+## Performance
+
+For officialy supported languages, rough benchmarks are shown below, for **server performance**, **language performance**, and **startup time**:
+
+| **Language**   | **Server**                        | **Language**          | **Startup** |
+|----------------|-----------------------------------|-----------------------|-------------|
+| **JavaScript** | `~660K RPS` (**75x** vs. Node 20) | (Unavailable)         | `~0.5s`     |
+| **Python**     | (Unavailable)                     | Up to `~3.0x CPython` | `~0.5s`     |
+| **Ruby**       | (Unavailable)                     | Up to `~22.4x CRuby`  | `~1.5s`     |
+
+> [!NOTE]
+> Newer languages don't have clear benchmarks yet; more are coming soon.
 
 ## Reports
 

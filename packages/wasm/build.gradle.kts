@@ -11,6 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
@@ -31,11 +34,7 @@ elide {
 }
 
 kotlin {
-  targets.all {
-    compilations.all {
-      kotlinOptions {
-        options.optIn.add("kotlin.wasm.unsafe.UnsafeWasmMemoryApi")
-      }
-    }
+  compilerOptions {
+    optIn.add("kotlin.wasm.unsafe.UnsafeWasmMemoryApi")
   }
 }

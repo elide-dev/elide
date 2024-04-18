@@ -24,7 +24,7 @@ import elide.runtime.core.evaluate
  * [PolyglotContext.evaluate] and selecting [JavaScript] as source language.
  *
  * @param source The JavaScript source code to be executed.
- * @param esm Whether to treat the [source] as an ESM module. If false, the code is evaluted as CommonJS source.
+ * @param esm Whether to treat the [source] as an ESM module. If false, the code is evaluated as CommonJS source.
  * @param name Name to provide for this script.
  * @return The result of the invocation. If [esm] is `true`, an object is returned, with exported values as members.
  */
@@ -39,5 +39,9 @@ import elide.runtime.core.evaluate
     /* name = */ name ?: (if (esm) "source.mjs" else "source.js"),
    ).build()
 
-  return evaluate(src)
+  return try {
+    evaluate(src)
+  } catch (thr: Throwable) {
+    throw thr
+  }
 }

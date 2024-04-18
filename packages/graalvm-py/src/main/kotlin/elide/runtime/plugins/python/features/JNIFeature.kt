@@ -19,7 +19,14 @@ import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.Feature.AfterRegistrationAccess
 import org.graalvm.nativeimage.hosted.RuntimeJNIAccess
 
+/**
+ * # Python Feature: JNI Support
+ *
+ * Maps JNI context and other functions for Python on Elide, via GraalPython.
+ */
+@Suppress("LargeClass", "LongMethod", "TooGenericExceptionThrown")
 public class JNIFeature : Feature {
+  // @TODO(sgammon): Remove once https://github.com/oracle/graal/issues/8795 is fixed
   public override fun afterRegistration(access: AfterRegistrationAccess) {
     try {
       // {{start jni upcall config}}

@@ -5,6 +5,7 @@ docs
 kotlin-js-store
 .idea
 .gradle
+.github/workflows
 proto
 proto/buf.pb.json
 buildSrc

@@ -24,6 +24,7 @@ import elide.runtime.core.DelicateElideApi
   ES2020,
   ES2021,
   ES2022,
+  ES2023,
   STABLE,
   LATEST,
 }

@@ -22,7 +22,14 @@ import org.graalvm.nativeimage.hosted.RuntimeReflection
 import org.graalvm.nativeimage.impl.RuntimeClassInitializationSupport
 import java.security.Security
 
+/**
+ * # Python Feature: BouncyCastle
+ *
+ * Registers intrinsics and reflection configurations for BouncyCastle use via Python on Elide.
+ */
+@Suppress("LargeClass", "LongMethod", "TooGenericExceptionThrown")
 public class BouncyCastleFeature : Feature {
+  // @TODO(sgammon): Remove once https://github.com/oracle/graal/issues/8795 is fixed
   override fun afterRegistration(access: AfterRegistrationAccess) {
     val support = ImageSingletons.lookup(
       RuntimeClassInitializationSupport::class.java,

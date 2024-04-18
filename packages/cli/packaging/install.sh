@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 set +x
-TOOL_REVISION="1.0.0-alpha7"
-INSTALLER_VERSION="v0.11"
+TOOL_REVISION="1.0.0-alpha8"
+INSTALLER_VERSION="v0.12"
 TOOL="cli"
 VERSION="v1"
 RELEASE="snapshot"

@@ -198,10 +198,13 @@ internal class JsRuntime @Inject constructor (
 
     // Core modules which patch Node.js builtins.
     private val coreModules: Map<String, String> = mapOf(
-      "buffer" to "/__runtime__/buffer/buffer.cjs",
-      "util" to "/__runtime__/util/util.cjs",
-      "fs" to "/__runtime__/fs/fs.cjs",
-      "express" to "/__runtime__/express/express.cjs",
+      "assert" to "/__runtime__/assert",
+      "buffer" to "/__runtime__/buffer",
+      "util" to "/__runtime__/util",
+      "fs" to "/__runtime__/fs",
+      "path" to "/__runtime__/path",
+      "process" to "/__runtime__/process",
+      "express" to "/__runtime__/express",
     )
 
     init {
@@ -232,7 +235,8 @@ internal class JsRuntime @Inject constructor (
     JsLanguageLevel.ES2019,
     JsLanguageLevel.ES2020,
     JsLanguageLevel.ES2021,
-    JsLanguageLevel.ES2022 -> this.name.drop(2)
+    JsLanguageLevel.ES2022,
+    JsLanguageLevel.ES2023 -> this.name.drop(2)
     JsLanguageLevel.STABLE -> JS_LANGUAGE_LEVEL_STABLE
     JsLanguageLevel.LATEST -> JS_LANGUAGE_LEVEL_LATEST
     JsLanguageLevel.UNRECOGNIZED,

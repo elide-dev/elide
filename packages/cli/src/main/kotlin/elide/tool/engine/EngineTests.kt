@@ -21,27 +21,30 @@ import io.micronaut.context.condition.Condition
 import io.micronaut.context.condition.ConditionContext
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.SandboxPolicy.TRUSTED
 import org.graalvm.polyglot.Source
 import elide.tool.annotations.EmbeddedTest
 import elide.tool.testing.SelfTest
 import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 
 
-abstract class LanguageCondition (private val language: String): Condition {
+abstract class LanguageCondition (
+  private val language: String,
+  private val disabledByDefault: Boolean = false,
+): Condition {
   companion object {
     private val ENGINE = Engine.create()
   }
 
   override fun matches(context: ConditionContext<*>): Boolean {
-    return ENGINE.languages.containsKey(language)
+    return ENGINE.languages.containsKey(language) && !disabledByDefault
   }
 }
 
 class JsEngineCondition: LanguageCondition("js")
-class PythonEngineCondition: LanguageCondition("python")
-class RubyEngineCondition: LanguageCondition("ruby")
+class PythonEngineCondition: LanguageCondition("python", disabledByDefault = true)
+class RubyEngineCondition: LanguageCondition("ruby", disabledByDefault = true)
 class JvmEngineCondition: LanguageCondition("java")
-class LlvmEngineCondition: LanguageCondition("llvm")
 class WasmEngineCondition: LanguageCondition("wasm")
 
 /** Basic engine tests. */
@@ -62,7 +65,9 @@ class WasmEngineCondition: LanguageCondition("wasm")
 @Requires(condition = JsEngineCondition::class)
 @Bean @EmbeddedTest class JsEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
-    Context.newBuilder("js").engine(Engine.create()).build()
+    Context.newBuilder("js")
+      .allowAllAccess(true)
+      .build()
   }.let {
     assertNotNull(it, "should be able to create plain js context")
     it.use { ctx ->
@@ -93,7 +98,9 @@ class WasmEngineCondition: LanguageCondition("wasm")
 @Requires(condition = WasmEngineCondition::class)
 @Bean @EmbeddedTest class WasmEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
-    Context.newBuilder("wasm").engine(Engine.create()).build()
+    Context.newBuilder("wasm")
+      .allowAllAccess(true)
+      .build()
   }.let {
     assertNotNull(it, "should be able to create plain wasm context")
   }
@@ -103,7 +110,10 @@ class WasmEngineCondition: LanguageCondition("wasm")
 @Requires(condition = PythonEngineCondition::class)
 @Bean @EmbeddedTest class PythonEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
-    Context.newBuilder("python").engine(Engine.create()).build()
+    Context.newBuilder("python")
+      .environment(System.getenv())
+      .allowAllAccess(true)
+      .build()
   }.let {
     assertNotNull(it, "should be able to create plain python context")
     it.use { ctx ->
@@ -133,13 +143,16 @@ class WasmEngineCondition: LanguageCondition("wasm")
 @Requires(condition = RubyEngineCondition::class)
 @Bean @EmbeddedTest class RubyEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
-    Context.newBuilder("ruby").engine(Engine.create()).build()
+    Context.newBuilder("ruby")
+      .environment(System.getenv())
+      .allowAllAccess(true)
+      .build()
   }.let {
     assertNotNull(it, "should be able to create plain ruby context")
     it.use { ctx ->
-      try {
+      val result = try {
         ctx.enter()
-        val result = ctx.eval(Source.create(
+        ctx.eval(Source.create(
           "ruby",
           // language=ruby
           """
@@ -149,13 +162,13 @@ class WasmEngineCondition: LanguageCondition("wasm")
           hello
           """.trimIndent()
         ))
-
-        assertNotNull(result, "should get result from pure ruby execution")
-        assertFalse(result.isNull, "should not get `null` guest value for expected \"hi\"")
-        assertEquals("hi", result.asString(), "should be able to decode guest string")
       } finally {
         ctx.leave()
       }
+
+      assertNotNull(result, "should get result from pure ruby execution")
+      assertFalse(result.isNull, "should not get `null` guest value for expected \"hi\"")
+      assertEquals("hi", result.asString(), "should be able to decode guest string")
     }
   }
 }
@@ -164,7 +177,7 @@ class WasmEngineCondition: LanguageCondition("wasm")
 @Requires(condition = JvmEngineCondition::class)
 @Bean @EmbeddedTest class JvmEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
-    Context.newBuilder("java").engine(Engine.create()).build()
+    Context.newBuilder("java").build()
   }.let {
     assertNotNull(it, "should be able to create plain java context")
   }

@@ -30,10 +30,14 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
   }
 
   private val languageId: String = engine.engine
-  private val language = polyglotEngine.languages[languageId]
+  private val language by lazy {
+    requireNotNull(polyglotEngine.languages[languageId]) {
+      "Failed to resolve language implementation with ID $languageId"
+    }
+  }
 
   override fun getEngineName(): String {
-    return language!!.implementationName
+    return language.implementationName
   }
 
   override fun getEngineVersion(): String {
@@ -45,19 +49,19 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
   }
 
   override fun getMimeTypes(): MutableList<String>? {
-    return language!!.mimeTypes.toMutableList()
+    return language.mimeTypes.toMutableList()
   }
 
   override fun getNames(): MutableList<String>? {
-    return mutableListOf(language!!.name, languageId, language.implementationName)
+    return mutableListOf(language.name, languageId, language.implementationName)
   }
 
   override fun getLanguageName(): String {
-    return language!!.name
+    return language.name
   }
 
   override fun getLanguageVersion(): String {
-    return language!!.version
+    return language.version
   }
 
   override fun getParameter(key: String): Any? {

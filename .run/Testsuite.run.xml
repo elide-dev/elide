@@ -4,21 +4,14 @@
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="" />
+      <option name="scriptParameters" value="-x compileTestDevelopmentExecutableKotlinWasmJs -x compileTestDevelopmentExecutableKotlinWasmWasi -x wasmWasiNodeTest" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
           <option value="allTests" />
-          <option value=":packages:base:allTests" />
-          <option value=":packages:core:allTests" />
-          <option value=":packages:graalvm:test" />
-          <option value=":packages:embedded:test" />
-          <option value=":packages:rpc:allTests" />
-          <option value=":packages:model:allTests" />
-          <option value=":packages:server:test" />
-          <option value="--rerun" />
+          <option value="test" />
         </list>
       </option>
       <option name="vmOptions" />

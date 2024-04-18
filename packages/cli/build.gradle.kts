@@ -24,6 +24,7 @@ import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -56,7 +57,7 @@ plugins {
 elide {
   kotlin {
     target = KotlinTarget.JVM
-    kotlinVersionOverride = "1.9"  // @TODO(sgammon) compose breaks at kotlin v2.0
+    kotlinVersionOverride = "2.0"
   }
 
   docker {
@@ -64,11 +65,13 @@ elide {
   }
 
   jvm {
-    alignVersions = false
+    target = JVM_21
   }
 
   java {
     configureModularity = false
+    includeJavadoc = false
+    includeSources = false
   }
 
   checks {
@@ -102,8 +105,8 @@ val enableRuby = true
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
-val enableLlvm = false
-val enableEspresso = false
+val enableLlvm = true
+val enableEspresso = true
 val enableExperimental = false
 val enableEmbeddedResources = false
 val enableResourceFilter = false
@@ -113,10 +116,10 @@ val enableEmbeddedBuilder = false
 val enableDashboard = false
 val enableBuildReport = true
 val enableG1 = oracleGvm && HostManager.hostIsLinux
-val enablePgo = false
+val enablePgo = true
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
-val enableSbom = false
+val enableSbom = true
 val enableSbomStrict = false
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
@@ -156,19 +159,12 @@ val jvmCompileArgs = listOfNotNull(
   "--enable-native-access=" + listOfNotNull(
     "ALL-UNNAMED",
   ).joinToString(","),
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
 ) else emptyList()).plus(if (enableEmbeddedBuilder) listOf(
   "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
 ) else emptyList())
 
 val jvmRuntimeArgs = emptyList<String>()
@@ -215,13 +211,9 @@ kapt {
 
 kotlin {
   target.compilations.all {
-    kotlinOptions {
+    compilerOptions {
       allWarningsAsErrors = false
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-
-      // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)
-      apiVersion = "1.9"
-      languageVersion = "1.9"
+      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }
 }
@@ -274,6 +266,7 @@ dependencies {
   classpathExtras(mn.micronaut.core.processor)
 
   api(projects.packages.base)
+  implementation(projects.packages.cliBridge)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.tink)
@@ -296,10 +289,10 @@ dependencies {
   runtimeIf(enableEspresso, projects.packages.graalvmJvm)
   runtimeIf(enableEspresso, projects.packages.graalvmJava)
   runtimeIf(enableEspresso, projects.packages.graalvmKt)
-  runtimeIf(enableLlvm, projects.packages.graalvmLlvm)
   runtimeIf(enableRuby, projects.packages.graalvmRb)
   runtimeIf(enablePython, projects.packages.graalvmPy)
   runtimeIf(enableWasm, projects.packages.graalvmWasm)
+  if (enableLlvm) runtimeIf(enableLlvm, projects.packages.graalvmLlvm)
 
   api(libs.picocli)
   api(libs.slf4j)
@@ -565,6 +558,10 @@ tasks {
       signOptDistTar,
     )
   }
+
+  installDist {
+    duplicatesStrategy = EXCLUDE
+  }
 }
 
 /**
@@ -632,6 +629,9 @@ val commonNativeArgs = listOfNotNull(
   "--install-exit-handlers",
   "--configure-reflection-metadata",
   "--macro:truffle-svm",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
   "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
   "-J-Dgraalvm.locatorDisabled=false",
   "-H:CStandard=C11",
@@ -649,9 +649,9 @@ val commonNativeArgs = listOfNotNull(
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
     "js",
-    if (enableExperimental && enableRuby) "ruby" else null,
-    if (enableExperimental && enablePython) "python" else null,
-    if (enableExperimental && enableEspresso) "java" else null,
+    if (enableRuby) "ruby" else null,
+    if (enablePython) "python" else null,
+    if (enableEspresso) "java" else null,
   ).joinToString(","),
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
   if (enablePgoSampling) "--pgo-sampling" else null,
@@ -704,34 +704,38 @@ val experimentalFlags = listOf(
 
   // Significant slowdowns
   "-H:+RunMainInNewThread",
+
+  // Unclear stability
+  "-H:+LSRAOptimization",
+  "-H:+VectorPolynomialIntrinsics",
 )
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
   "-O3",
-  "-v",
+  "-flto",
 )
 
 // PGO profiles to specify in release mode.
 val profiles: List<String> = listOf(
-  "cli.iprof",
-  "serve.iprof",
+  "js-repl.iprof",
+  "js-serve.iprof",
+  "py-repl.iprof",
+  "python.iprof",
+  "ruby-repl.iprof",
+  "ruby.iprof",
+  "selftest.iprof"
 )
 
 // GVM release flags
-val gvmReleaseFlags: List<String> = listOf(
-  "-H:+AOTInline",
-  "-H:+VectorizeSIMD",
-  "-H:+LSRAOptimization",
-  "-H:+MLProfileInference",
-  "-H:+VectorPolynomialIntrinsics",
-)
+val gvmReleaseFlags: List<String> = listOf()
 
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
   "-O3",
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
+  "-H:-ParseRuntimeOptions",
 ).asSequence().plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -739,7 +743,6 @@ val releaseFlags: List<String> = listOf(
   )
 }).plus(if (enablePgo) listOf(
   "--pgo=${profiles.joinToString(",")}",
-  "-H:CodeSectionLayoutOptimization=ClusterByEdges",
 ) else emptyList()).plus(listOf(
   if (oracleGvm && enableSbom) listOf(
     if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
@@ -853,7 +856,6 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
   "--initialize-at-build-time=sun.awt.resources.awtosx,sun.awt.resources.awt",
-  "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
@@ -1213,6 +1215,13 @@ fun Jar.applyJarSettings() {
   }
 }
 
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(22))
+    vendor.set(JvmVendorSpec.GRAAL_VM)
+  }
+}
+
 /**
  * Build: CLI Docker Images
  */
@@ -1256,21 +1265,39 @@ tasks {
     if (enableJpms) modularity.inferModulePath = true
   }
 
-  named("run", JavaExec::class).configure {
-    systemProperty("micronaut.environments", "dev")
-    systemProperty("picocli.ansi", "tty")
+  val nativesType = if (isRelease) "release" else "debug"
+  val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
 
+  named("run", JavaExec::class).configure {
+    systemProperty(
+      "micronaut.environments",
+      "dev",
+    )
+    systemProperty(
+      "picocli.ansi",
+      "tty",
+    )
     jvmDefs.map {
       systemProperty(it.key, it.value)
     }
-
     systemProperty(
       "org.graalvm.language.ruby.home",
-      layout.buildDirectory.dir("native/nativeCompile/resources/ruby/ruby-home").get().asFile.path.toString(),
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),
     )
     systemProperty(
       "org.graalvm.language.python.home",
-      layout.buildDirectory.dir("native/nativeCompile/resources/python/python-home").get().asFile.path.toString(),
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "java.library.path",
+      listOf(
+        rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
+        nativesPath,
+      ).plus(
+        System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
+          it.isNotEmpty()
+        }
+      ).joinToString(File.pathSeparator)
     )
 
     jvmArgs(jvmModuleArgs)
@@ -1278,29 +1305,41 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-    if (enableEdge) {
-      javaToolchains {
-        javaLauncher.set(
-          launcherFor {
-            languageVersion = JavaLanguageVersion.of(21)
-            vendor = JvmVendorSpec.GRAAL_VM
-          },
-        )
-      }
+    javaToolchains {
+      javaLauncher.set(
+        launcherFor {
+          languageVersion = JavaLanguageVersion.of(22)
+          vendor = JvmVendorSpec.GRAAL_VM
+        },
+      )
     }
   }
 
   optimizedRun {
-    val separator = when (HostManager.hostIsMingw) {
-      true -> ";"
-      false -> ":"
-    }
-    val libPath = System.getProperty("java.library.path", "").split(separator).toMutableList().apply {
-      add(0, nativesPath)
-    }.joinToString(separator)
+    systemProperty(
+      "micronaut.environments",
+      "dev",
+    )
+    systemProperty(
+      "org.graalvm.language.ruby.home",
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "org.graalvm.language.python.home",
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "java.library.path",
+      listOf(
+        rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
+        nativesPath,
+      ).plus(
+        System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
+          it.isNotEmpty()
+        }
+      ).joinToString(File.pathSeparator)
+    )
 
-    systemProperty("micronaut.environments", "dev")
-    systemProperty("java.library.path", libPath)
     jvmDefs.map {
       systemProperty(it.key, it.value)
     }
@@ -1310,22 +1349,20 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-    if (enableEdge) {
-      javaToolchains {
-        javaLauncher.set(
-          launcherFor {
-            languageVersion = JavaLanguageVersion.of(21)
-            vendor = JvmVendorSpec.GRAAL_VM
-          },
-        )
-      }
+    javaToolchains {
+      javaLauncher.set(
+        launcherFor {
+          languageVersion = JavaLanguageVersion.of(22)
+          vendor = JvmVendorSpec.GRAAL_VM
+        },
+      )
     }
   }
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
-    kotlinOptions {
+    compilerOptions {
       allWarningsAsErrors = false
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }
 
@@ -1349,13 +1386,8 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions {
-    freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-    allWarningsAsErrors = false  // module path breaks @TODO: fix
-
-    // @TODO(sgammon): v2.0 support in this package (currently breaks mosaic)
-    apiVersion = "1.9"
-    languageVersion = "1.9"
+  compilerOptions {
+    freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
   }
 }
 
@@ -1408,8 +1440,8 @@ if (enableJpms) {
 
 afterEvaluate {
   tasks.withType(KotlinJvmCompile::class.java).configureEach {
-    kotlinOptions {
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+    compilerOptions {
+      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
       allWarningsAsErrors = false
     }
   }

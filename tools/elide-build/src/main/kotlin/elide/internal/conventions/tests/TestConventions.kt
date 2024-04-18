@@ -88,6 +88,7 @@ internal fun Project.configureTestLogger() {
     showSkipped = true
     showFailedStandardStreams = true
     showFullStackTraces = true
+    showSimpleNames = true
 
     slowThreshold = Constants.Tests.SLOW_TEST_THRESHOLD
   }

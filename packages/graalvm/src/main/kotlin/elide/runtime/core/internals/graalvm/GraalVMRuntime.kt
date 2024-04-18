@@ -49,8 +49,11 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
      * versions and the values are the corresponding GraalVM release.
      */
     private val SubstrateVersionMap = sortedMapOf(
+      "23" to "24.1.0",
+      "23.0.0" to "24.1.0",
       "22.0.1" to "24.0.1",
       "22.0.0" to "24.0.0",
+      "8.1" to "24.1.0",
       "36" to "24.0.1",
       "35" to "23.1.0",
       "13.1" to "23.1.2",
@@ -76,6 +79,9 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
 
     /** Version constant for GraalVM 24.0.1 */
     public val GVM_24_0_1: Version = Version(24, 0, 1)
+
+    /** Version constant for GraalVM 24.0.1 */
+    public val GVM_24_1_0: Version = Version(24, 1, 0)
 
     /**
      * Detect the current runtime version and return it as a comparable [Version] object. When running from a

@@ -1,6 +1,6 @@
 {
   "name": "@elide-dev/elide",
-  "version": "1.0.0-alpha7",
+  "version": "1.0.0-alpha8",
   "description": "Elide polyglot application runtime",
   "homepage": "https://elide.dev",
   "license": "MIT",
@@ -15,16 +15,16 @@
     "javascript",
     "typescript"
   ],
-  "repository": "github:elide-dev/v3",
+  "repository": "github:elide-dev/elide",
   "config": {
-    "elideVersion": "1.0.0-alpha7"
+    "elideVersion": "1.0.0-alpha8"
   },
   "author": {
     "name": "Sam Gammon",
     "url": "https://github.com/sgammon"
   },
   "bugs": {
-    "url": "https://github.com/elide-dev/v3/issues"
+    "url": "https://github.com/elide-dev/elide/issues"
   },
   "os": [
     "darwin",

@@ -49,9 +49,7 @@ import elide.runtime.gvm.internals.vfs.HybridVfs
   /** Pre-configured VFS, created when the engine is initialized. */
   private lateinit var fileSystem: FileSystem
 
-  private val vfsUnsupported = Engine.create().languages.keys.let {
-    it.contains("python") || it.contains("ruby")
-  }
+  private val vfsUnsupported = config.vfsUnsupported
 
   internal fun onEngineCreated(@Suppress("unused_parameter") builder: PolyglotEngineBuilder) {
     // select the VFS implementation depending on the configuration

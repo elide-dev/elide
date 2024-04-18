@@ -15,6 +15,7 @@ package elide.runtime.plugins.vfs
 
 import java.net.URI
 import java.net.URL
+import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
@@ -30,6 +31,9 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
 
   /** Whether the file system is writable. If false, write operations will throw an exception. */
   public var writable: Boolean = false
+
+  /** Whether VFS-incompatible languages are present in the engine. */
+  public var vfsUnsupported: Boolean = false
 
   /**
    * Whether to use the host's file system instead of an embedded VFS. If true, bundles registered using [include] will

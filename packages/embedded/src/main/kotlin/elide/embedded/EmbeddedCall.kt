@@ -4,7 +4,7 @@ import elide.embedded.http.EmbeddedRequest
 import elide.embedded.internal.EmbeddedCallImpl
 
 /** A unique incremental identifier for an [EmbeddedCall]. */
-@JvmInline public value class EmbeddedCallId(public val value: Long)
+@JvmInline public value class EmbeddedCallId(public val value: String)
 
 /**
  * Represents an incoming call being dispatched through the embedded runtime. Calls provide a unique [id] and a

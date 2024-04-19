@@ -23,7 +23,6 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
-import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 

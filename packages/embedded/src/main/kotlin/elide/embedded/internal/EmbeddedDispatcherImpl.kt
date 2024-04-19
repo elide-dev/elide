@@ -99,7 +99,6 @@ import elide.runtime.plugins.js.JavaScript
   override fun dispatch(call: EmbeddedCall, app: EmbeddedApp): Deferred<EmbeddedResponse> {
     val result = CompletableDeferred<EmbeddedResponse>()
 
-    // TODO(@darvld): refactor completion handler
     app.dispatch {
       // use the thread-local context
       val context = useContext()
@@ -108,7 +107,10 @@ import elide.runtime.plugins.js.JavaScript
       when (val entrypoint = useEntrypoint(app, context)) {
         is FetchEntrypoint -> result.complete(entrypoint(call.request))
       }
-    }.invokeOnCompletion { failure -> failure?.let(result::completeExceptionally) }
+    }.invokeOnCompletion { failure ->
+      // notify listeners about the failure to avoid losing the exception
+      failure?.let(result::completeExceptionally)
+    }
 
     return result
   }

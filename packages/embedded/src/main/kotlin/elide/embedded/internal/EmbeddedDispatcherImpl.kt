@@ -10,12 +10,10 @@ import elide.embedded.*
 import elide.embedded.EmbeddedAppConfiguration.EmbeddedDispatchMode.FETCH
 import elide.embedded.EmbeddedGuestLanguage.JAVA_SCRIPT
 import elide.embedded.EmbeddedGuestLanguage.PYTHON
-import elide.embedded.http.EmbeddedRequest
 import elide.embedded.http.EmbeddedResponse
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
-import elide.runtime.core.PolyglotValue
 import elide.runtime.plugins.js.JavaScript
 
 /**
@@ -25,35 +23,6 @@ import elide.runtime.plugins.js.JavaScript
 @Singleton internal class EmbeddedDispatcherImpl(
   private val config: EmbeddedConfiguration,
 ) : EmbeddedCallDispatcher {
-  /**
-   * Represents an abstract guest entrypoint resolved from an evaluated source, usually an executable [PolyglotValue].
-   * Implementations of this interface provide the specific methods to interact with the entrypoint.
-   */
-  private sealed interface AppEntrypoint
-
-  /**
-   * A [fetch-style][FETCH] entrypoint, using an executable [PolyglotValue] (the 'fetch' function) exported from the
-   * entrypoint module. The function must accept a request object as an argument and return a response.
-   *
-   * Basic validation is performed on the wrapped [value] to ensure it is executable, no further validation is
-   * possible since the signature of the function is not available to the host.
-   */
-  @JvmInline private value class FetchEntrypoint(val value: PolyglotValue) : AppEntrypoint {
-    init {
-      // basic validation, the signature is opaque
-      require(value.canExecute()) { "Entrypoint must be executable" }
-    }
-
-    operator fun invoke(request: EmbeddedRequest): EmbeddedResponse {
-      val result = value.execute(request)
-
-      return runCatching { result.asHostObject<EmbeddedResponse>() }.getOrElse {
-        if (it !is UnsupportedOperationException) throw it
-        error("Unexpected response type returned by guest entrypoint, expected <EmbeddedResponse>, found $result")
-      }
-    }
-  }
-
   /** Engine used to acquire the [local context][localContext] instances for dispatch. */
   private val engine: PolyglotEngine by lazy(::prepareEngine)
 
@@ -119,14 +88,10 @@ import elide.runtime.plugins.js.JavaScript
       // the source for the context to evaluate, the source also depends on the app language
       val entry = config.guestRoot.resolve(app.id.value).resolve(app.config.entrypoint)
       val source = Source.newBuilder(languageCode(app.config.language), entry.toFile()).build()
-
-      // TODO(@darvld): refactor entrypoint resolution and extract it from the dispatcher
       val module = context.evaluate(source)
+
       when (app.config.dispatchMode) {
-        FETCH -> {
-          check(module.hasMember("fetch")) { "No 'fetch' function exported from entrypoint module" }
-          FetchEntrypoint(module.getMember("fetch"))
-        }
+        FETCH -> FetchEntrypoint.resolve(module)
       }
     }
   }

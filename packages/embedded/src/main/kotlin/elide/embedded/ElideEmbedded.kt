@@ -87,6 +87,15 @@ public class ElideEmbedded {
     return block(state.value.context)
   }
 
+  private inline fun updateState(require: (State) -> Boolean, update: (State) -> State): Boolean {
+    val original = state.getAndUpdate { current ->
+      if (require(current)) update(current)
+      else current
+    }
+
+    return require(original)
+  }
+
   /**
    * Initialize the runtime and configure it, enabling registration of guest applications and preparing for a [start]
    * call. The [config] defines the format and version of the invocation protocol.
@@ -99,19 +108,13 @@ public class ElideEmbedded {
    * @return Whether the runtime was successfully initialized.
    */
   public fun initialize(config: EmbeddedConfiguration): Boolean {
-    val previous = state.getAndUpdate { current ->
-      if (current !is Uninitialized) return@getAndUpdate current
+    return updateState(require = { it is Uninitialized }) {
       logging.info("Initializing runtime")
 
       // select the context implementation manually (since DI becomes available only after init)
       // currently, only a Micronaut-based context is implemented
       Initialized(MicronautRuntimeContext.create(config))
     }
-
-    if (previous !is Uninitialized) return false
-    logging.debug("Initialized runtime with configuration $config")
-
-    return true
   }
 
   /**
@@ -119,11 +122,8 @@ public class ElideEmbedded {
    * supported and will have no effect.
    */
   public fun start(): Boolean {
-    val previous = state.getAndUpdate { current ->
+    return updateState(require = { it !is Running }) { current ->
       when (current) {
-        // preserve current running state
-        is Running -> current
-
         // start required
         is Initialized -> {
           logging.debug("Starting runtime")
@@ -133,10 +133,9 @@ public class ElideEmbedded {
         // illegal state
         is Stopped -> error("Runtime has been stopped and cannot be restarted")
         is Uninitialized -> error("Runtime must be initialized before starting")
+        else -> error("Fatal error, runtime should not be in $current state")
       }
     }
-
-    return previous !is Running
   }
 
   /**
@@ -144,11 +143,8 @@ public class ElideEmbedded {
    * and will have no effect.
    */
   public fun stop(): Boolean {
-    val previous = state.getAndUpdate { current ->
+    return updateState(require = { it !is Stopped }) { current ->
       when (current) {
-        // preserve current stopped state
-        is Stopped -> current
-
         // shutdown required
         is Running -> {
           logging.debug("Stopping runtime")
@@ -159,10 +155,9 @@ public class ElideEmbedded {
         }
 
         is Uninitialized, is Initialized -> error("Runtime must be running before being stopped")
+        else -> error("Fatal error, runtime should not be in $current state")
       }
     }
-
-    return previous !is Stopped
   }
 
   /**

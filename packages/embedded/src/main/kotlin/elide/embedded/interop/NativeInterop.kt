@@ -59,7 +59,8 @@ internal object NativeInterop {
       protocolVersion = mapVersion(version),
       protocolFormat = mapFormat(format),
       guestRoot = Path(guestRootPath),
-      guestLanguages = emptySet(),
+      // TODO(@darvld): support configuration of supported guest languages
+      guestLanguages = setOf(EmbeddedGuestLanguage.JAVA_SCRIPT),
     )
   }
 

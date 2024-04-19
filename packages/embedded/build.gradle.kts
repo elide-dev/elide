@@ -25,6 +25,7 @@ dependencies {
   // elide
   implementation(projects.packages.base)
   implementation(projects.packages.graalvm)
+  implementation(projects.packages.proto.protoProtobuf)
 
   // micronaut
   implementation(mn.micronaut.core)

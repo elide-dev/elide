@@ -3,6 +3,14 @@ package elide.embedded
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.io.TempDir
+import tools.elide.call.callMetadata
+import tools.elide.call.v1alpha1.fetchRequest
+import tools.elide.call.v1alpha1.unaryInvocationRequest
+import tools.elide.http.HttpMethod
+import tools.elide.http.httpHeader
+import tools.elide.http.httpHeaders
+import tools.elide.http.httpRequest
+import java.nio.ByteBuffer
 import java.nio.file.Path
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.test.runTest
@@ -12,7 +20,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
 import elide.embedded.EmbeddedAppConfiguration.EmbeddedDispatchMode
-import elide.embedded.internal.ImmediateRequest
 import elide.runtime.Logging
 
 class EmbeddedRuntimeTest {
@@ -78,14 +85,30 @@ class EmbeddedRuntimeTest {
 
     runtime.startApp(app).await()
 
-    val request = ImmediateRequest(
-      uri = "https://example.com/hello",
-      method = "GET",
-      headers = mapOf("accept" to listOf("*/*")),
-    )
+    // allocate stub request
+    val requestMessage = unaryInvocationRequest {
+      fetch = fetchRequest {
+        metadata = callMetadata {
+          appId = "test-app"
+          requestId = "test-request"
+        }
 
-    val call = EmbeddedCall(EmbeddedCallId(0), request)
-    val result = runtime.dispatch(call, app).await()
+        request = httpRequest {
+          standard = HttpMethod.GET
+          path = "/hello/world"
+          query = "from=me"
+          headers = httpHeaders {
+            httpHeader {
+              name = "user-agent"
+              value = "junit"
+            }
+          }
+        }
+      }
+    }
+
+    val requestBytes = ByteBuffer.wrap(requestMessage.toByteArray())
+    val result = runtime.dispatch(requestBytes, app).await()
 
     logging.info("Response: ${result.statusCode} ${result.statusMessage}")
   }

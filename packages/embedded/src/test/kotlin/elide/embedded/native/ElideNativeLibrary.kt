@@ -150,5 +150,9 @@ internal object ElideNativeLibrary : NativeLibrary() {
     name = "elide_embedded_dispatch",
     returns = ValueLayout.JAVA_INT,
     /*thread=*/ValueLayout.ADDRESS,
+    /*app=*/ValueLayout.ADDRESS,
+    /*request=*/ValueLayout.ADDRESS,
+    /*requestSize=*/ValueLayout.JAVA_INT,
+    /*callback=*/ValueLayout.ADDRESS,
   )
 }

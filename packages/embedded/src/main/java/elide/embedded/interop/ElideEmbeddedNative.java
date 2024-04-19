@@ -11,6 +11,8 @@ import org.graalvm.nativeimage.c.function.CEntryPoint;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
 import org.graalvm.word.Pointer;
 
+import kotlin.Unit;
+import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -134,12 +136,31 @@ final class ElideEmbeddedNative {
    * @return An int result code, {@code 0} on success, or one of the well-known {@link NativeResultCodes} on failure.
    */
   @CEntryPoint(name = "elide_embedded_dispatch", documentation = {"Dispatch a call with the embedded runtime"})
-  public static int dispatch(IsolateThread ignoredThread) {
+  public static int dispatch(IsolateThread ignoredThread,
+                             ObjectHandle appHandle,
+                             Pointer serializedCall,
+                             int serializedCallSize,
+                             NativeAppCallback callback) {
     var instance = runtime.get();
     if (instance == null) return NativeResultCodes.uninitialized();
 
     try {
-      // instance.dispatch();
+      EmbeddedApp app = NativeInterop.unwrapHandle(appHandle);
+      ByteBuffer callBytes = CTypeConversion.asByteBuffer(serializedCall, serializedCallSize);
+
+      var completion = instance.dispatch(callBytes, app);
+      if (callback.isNonNull()) {
+        var wrapper = new NativeAppCallbackHolder(callback);
+        completion.handle((success, failure) -> {
+          if (success != null) {
+            logging.info("Response: %s %s".formatted(success.getStatusCode(), success.getStatusMessage()));
+          }
+
+          wrapper.invoke(failure == null);
+          return Unit.INSTANCE;
+        });
+      }
+
       return NativeResultCodes.ok();
     } catch (Throwable cause) {
       logging.error("Unexpected error in native entrypoint", cause);

@@ -10,4 +10,7 @@ public interface EmbeddedRuntimeContext {
 
   /** The call dispatcher used by the runtime. */
   public val dispatcher: EmbeddedCallDispatcher
+
+  /** The embedded call codec used by the runtime. */
+  public val codec: EmbeddedCallCodec
 }

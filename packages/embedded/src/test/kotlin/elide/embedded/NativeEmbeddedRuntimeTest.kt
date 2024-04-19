@@ -3,11 +3,22 @@ package elide.embedded
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.io.TempDir
+import tools.elide.call.callMetadata
+import tools.elide.call.v1alpha1.UnaryInvocationRequest
+import tools.elide.call.v1alpha1.fetchRequest
+import tools.elide.call.v1alpha1.unaryInvocationRequest
+import tools.elide.http.HttpMethod
+import tools.elide.http.httpHeader
+import tools.elide.http.httpHeaders
+import tools.elide.http.httpRequest
 import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
+import java.lang.foreign.ValueLayout
 import java.nio.file.Path
 import kotlinx.coroutines.test.runTest
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.createParentDirectories
+import kotlin.io.path.writeText
 import kotlin.test.assertEquals
 import elide.embedded.native.*
 import elide.embedded.native.ElideNativeLibrary.EmbeddedAppNativeConfig
@@ -133,6 +144,80 @@ class NativeEmbeddedRuntimeTest {
       // stop the app
       assertNativeSuccessSuspending("expected startup to succeed") { callback ->
         ElideNativeLibrary.stopApp(thread, appHandle.pointerValue(), callback)
+      }
+    }
+  }
+
+  @Test fun `should handle dispatch`() = runTest {
+    withArena {
+      // initialize a gvm native isolate
+      val thread = prepareIsolate()
+
+      // initialize and configure the runtime
+      assertNativeSuccess("expected init call to succeed") {
+        ElideNativeLibrary.initialize(thread, prepareRuntimeConfig())
+      }
+
+      assertNativeSuccess("expected start call to succeed") {
+        ElideNativeLibrary.start(thread)
+      }
+
+      // prepare the app config struct
+      val appConfig = prepareAppConfig()
+
+      val entrypoint = testGuestRoot.resolve("test-app").resolve("index.js")
+      entrypoint.createParentDirectories()
+      entrypoint.writeText(
+        """
+        function fetch(request) {
+          const response = new Response();
+
+          // response.statusCode = 418;
+          // response.statusMessage = "I'm a teapot 🫖";
+
+          return response;
+        }
+
+        module.exports = { fetch }
+        """.trimIndent(),
+      )
+
+      // allocate the app handle and create the app
+      val appHandle = allocatePointer()
+      ElideNativeLibrary.createApp(thread, appConfig, appHandle)
+
+      // start the app
+      assertNativeSuccessSuspending("expected startup to succeed") { callback ->
+        ElideNativeLibrary.startApp(thread, appHandle.pointerValue(), callback)
+      }
+
+      // allocate stub request
+      val requestMessage = unaryInvocationRequest {
+        fetch = fetchRequest {
+          metadata = callMetadata {
+            appId = "test-app"
+            requestId = "test-request"
+          }
+
+          request = httpRequest {
+            standard = HttpMethod.GET
+            path = "/hello/world"
+            query = "from=me"
+            headers = httpHeaders {
+              httpHeader {
+                name = "user-agent"
+                value = "junit"
+              }
+            }
+          }
+        }
+      }
+
+      val messageBytes = requestMessage.toByteArray()
+      val messagePointer = allocateArray(ValueLayout.JAVA_BYTE, *messageBytes)
+
+      assertNativeSuccessSuspending("expected dispatch call to succeed") { callback ->
+        ElideNativeLibrary.dispatch(thread, appHandle.pointerValue(), messagePointer, messageBytes.size, callback)
       }
     }
   }

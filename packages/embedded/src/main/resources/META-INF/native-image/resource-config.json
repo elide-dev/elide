@@ -1,0 +1,2185 @@
+{
+  "resources":{
+  "includes":[{
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.modules.tar.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.runtime.tar.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/js/polyfills.js\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/js/runtime.json.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/graalvm/com.oracle.truffle.enterprise/version\\E"
+  }, {
+    "pattern":"\\QMETA-INF/graalvm/org.graalvm.polyglot/version\\E"
+  }, {
+    "pattern":"\\QMETA-INF/graalvm/org.graalvm.truffle/version\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.env.PropertySourceLoader\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.core.convert.TypeConverterRegistrar\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/engine/libtruffleattach/linux/amd64/sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/ch.qos.logback.classic.spi.Configurator\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleRuntimeAccess\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.impl.TruffleLocator\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.object.LayoutFactory\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.js.runtime.Evaluator\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.EngineCacheSupport\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.FloodControlHandler\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.LoopNodeFactory\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.TruffleTypes\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.jfr.EventFactory$Provider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.context.ApplicationContextConfigurer\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.context.env.PropertySourceLoader\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.core.convert.TypeConverterRegistrar\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.core.optim.StaticOptimizations$Loader\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.inject.BeanConfiguration\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.inject.BeanDefinitionReference\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.lang.System$LoggerFinder\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.nio.channels.spi.SelectorProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.xml.parsers.SAXParserFactory\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/kotlin.test.AsserterContributor\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/kotlinx.coroutines.CoroutineExceptionHandler\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.graalvm.home.HomeFinder\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.graalvm.polyglot.impl.AbstractPolyglotImpl\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.engine.TestEngine\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.LauncherSessionListener\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.PostDiscoveryFilter\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.TestExecutionListener\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.slf4j.spi.SLF4JServiceProvider\\E"
+  }, {
+    "pattern":"\\Qapplication-embedded.json\\E"
+  }, {
+    "pattern":"\\Qapplication-embedded.properties\\E"
+  }, {
+    "pattern":"\\Qapplication-jvm.json\\E"
+  }, {
+    "pattern":"\\Qapplication-jvm.properties\\E"
+  }, {
+    "pattern":"\\Qapplication.json\\E"
+  }, {
+    "pattern":"\\Qapplication.properties\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/classic/pattern/ClassicConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/classic/pattern/ExtendedThrowableProxyConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/classic/pattern/MDCConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/classic/pattern/PropertyConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/classic/pattern/ThrowableHandlingConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/classic/pattern/ThrowableProxyConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/model/AppenderRefModel.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/model/Model.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/model/processor/ModelHandlerBase.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/model/processor/ModelHandlerException.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/pattern/Converter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/pattern/DynamicConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/pattern/FormattingConverter.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/pattern/parser/Node.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/pattern/parser/Parser.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/spi/ContextAwareBase.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/spi/ScanException.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/status/OnConsoleStatusListener.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/status/OnPrintStreamStatusListenerBase.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/status/StatusListener.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/status/StatusManager.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/util/DynamicClassLoadingException.class\\E"
+  }, {
+    "pattern":"\\Qch/qos/logback/core/util/IncompatibleClassException.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/DatabindContext.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/DeserializationContext.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/JsonNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/JsonSerializable$Base.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/SerializerProvider.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/deser/DefaultDeserializationContext$Impl.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/deser/DefaultDeserializationContext.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/node/BaseJsonNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/node/BinaryNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/node/BooleanNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/node/NullNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/node/NumericNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/node/TextNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/node/ValueNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/ser/DefaultSerializerProvider$Impl.class\\E"
+  }, {
+    "pattern":"\\Qcom/fasterxml/jackson/databind/ser/DefaultSerializerProvider.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/CharMatcher$BitSetMatcher.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/CharMatcher$FastMatcher.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/CharMatcher$ForPredicate.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/CharMatcher$Is.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/CharMatcher$IsNot.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/CharMatcher$NamedFastMatcher.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/CharMatcher.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/Converter$ReverseConverter.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/Converter.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/Optional.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/base/Present.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/AbstractMapEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/AbstractNavigableMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/BiMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ComparatorOrdering.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/FluentIterable$1.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/FluentIterable.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableAsList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableBiMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableBiMapFauxverideShim.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableCollection.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableList$ReverseImmutableList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableMapEntry$NonTerminalImmutableBiMapEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableMapEntry$NonTerminalImmutableMapEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableMapEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableMapEntrySet$RegularEntrySet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableMapEntrySet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableSet$CachingAsList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableSet$JdkBackedSetBuilderImpl.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableSet$RegularSetBuilderImpl.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableSet$SetBuilderImpl.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableSet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableSortedAsList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/ImmutableSortedMap$1EntrySet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$1.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$2.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$AbstractListWrapper.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$Partition.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$RandomAccessListWrapper.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$RandomAccessPartition.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$TransformingRandomAccessList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Lists$TransformingSequentialList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/MapMakerInternalMap$AbstractStrongKeyEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/MapMakerInternalMap$EntrySet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/MapMakerInternalMap$KeySet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/MapMakerInternalMap$SafeToArraySet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/MapMakerInternalMap$StrongKeyWeakValueEntry$LinkedStrongKeyWeakValueEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/MapMakerInternalMap$StrongKeyWeakValueEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/MapMakerInternalMap$Values.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Maps$AbstractFilteredMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Maps$FilteredEntryBiMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Maps$FilteredEntryMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Maps$FilteredEntryNavigableMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Maps$FilteredEntrySortedMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Maps$FilteredKeyMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Maps$ViewCachingAbstractMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Ordering.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/RegularImmutableAsList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/RegularImmutableBiMap$Inverse.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/Sets$ImprovedAbstractSet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/SingletonImmutableList.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/StandardTable$ColumnKeySet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/collect/StandardTable$TableSet.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/jimfs/AttributeProvider.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/jimfs/DowngradedDirectoryStream.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/jimfs/DowngradedSeekableByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/jimfs/JimfsFileChannel.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/common/jimfs/JimfsSecureDirectoryStream.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/AbstractMessage$Builder.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/AbstractMessageLite$Builder.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/ByteString$ArraysByteArrayCopier.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/ByteString$SystemByteArrayCopier.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/GeneratedMessageV3$Builder.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/InvalidProtocolBufferException.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/Utf8$Processor.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/Utf8$SafeProcessor.class\\E"
+  }, {
+    "pattern":"\\Qcom/google/protobuf/Utf8$UnsafeProcessor.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ErrorManager$StringBuilderErrorManager.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ErrorManager$ThrowErrorManager.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ErrorManager.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/TokenType.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/AccessNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/BaseNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/BinaryNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/ClassNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/Expression.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/Flags.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/FromNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/FunctionNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/IdentNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/IndexNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/LexicalContext.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/LexicalContextExpression.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/LexicalContextNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/LiteralNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/NameSpaceImportNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/NamedExportsNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/NamedImportsNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/Node.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/OptionalExpression.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/ParameterNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/Scope.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/Statement.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/Symbol.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/TemplateLiteralNode$TaggedTemplateLiteralNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/TemplateLiteralNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/TernaryNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/UnaryNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/js/parser/ir/VarNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/Assumption.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/CallTarget.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/LanguageAccessor$UnionTruffleOptionDescriptors.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/RootCallTarget.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/TruffleFile.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/TruffleOptionDescriptors.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/TruffleStackTrace.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/exception/AbstractTruffleException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/frame/Frame.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/frame/FrameSlotKind.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/frame/MaterializedFrame.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/frame/VirtualFrame.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/AllocationReporter.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$Allocation.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$Execution.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$LoadNearestSection.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$LoadSource.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$NearestExecution.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$NearestSourceSection.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$Source.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding$SourceSectionLoaded.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/EventBinding.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/InstrumentableNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/InstrumentationHandler$VisitorBuilder.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/Instrumenter.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/SourceSectionFilter$Builder.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/instrumentation/TruffleInstrument.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/ArityException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/InteropException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/InteropLibrary.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/InteropLibraryGen$CachedDispatch.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/InteropLibraryGen$CachedDispatchFirst.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/InvalidArrayIndexException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/InvalidBufferOffsetException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/StopIterationException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/UnknownIdentifierException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/UnknownKeyException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/UnsupportedMessageException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/interop/UnsupportedTypeException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/library/DynamicDispatchLibrary.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/library/DynamicDispatchLibraryGen$CachedDispatch.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/library/DynamicDispatchLibraryGen$CachedDispatchFirst.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/library/GenerateLibrary.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/library/Library.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/library/LibraryExport.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/library/LibraryFactory$ProxyExports.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/BlockNode$ElementExecutor.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/ControlFlowException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/DirectCallNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/EncapsulatingNodeReference.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/ExecutableNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/Node.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/NodeInterface.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/RootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/SlowPathException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/nodes/UnexpectedResultException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/object/DynamicObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/object/DynamicObjectLibrary.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/object/DynamicObjectLibraryGen$CachedDispatch.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/object/DynamicObjectLibraryGen$CachedDispatchFirst.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/object/FinalLocationException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/object/IncompatibleLocationException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/object/Shape.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/source/Source$LiteralBuilder.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/source/Source$SourceBuilder.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/source/SourceSection.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/source/SourceSectionLoaded.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/source/SourceSectionUnloaded$Indexed.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/source/SourceSectionUnloaded$Lines.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/source/SourceSectionUnloaded.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/strings/AbstractTruffleString.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/strings/JCodingsDisabled.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/strings/JCodingsImpl.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/strings/MutableTruffleString.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/api/strings/TruffleString.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/compiler/TruffleCompilationSupport.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/host/HostClassLoader$FolderLoader.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/host/HostClassLoader$JarLoader.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/host/HostClassLoader$Loader.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/host/HostException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/host/HostMethodDesc$SingleMethod$SyntheticArrayCloneMethod.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/host/HostMethodDesc$SingleMethod.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/host/HostMethodDesc.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ArrayPrototypeBuiltins$BasicArrayOperation.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ArrayPrototypeBuiltins$JSArrayFillNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ArrayPrototypeBuiltins$JSArrayOperation.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ArrayPrototypeBuiltins$JSArrayOperationWithToInt.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$CallBigIntNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$CallBooleanNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$CallDateNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$CallNumberNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$CallStringNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$CallSymbolNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructBigIntNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructBooleanNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructDateNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructDisplayNamesNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructListFormatNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructLocaleNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructNumberNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructPluralRulesNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructRelativeTimeFormatNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructSegmenterNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructStringNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructSymbolNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructWebAssemblyGlobalNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructWebAssemblyInstanceNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructWebAssemblyMemoryNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructWebAssemblyModuleNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructWebAssemblyTableNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltins$ConstructWithNewTargetNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltinsFactory$ConstructArrayNodeGen$ConstructWithForeignArg0Data.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/ConstructorBuiltinsFactory$ConstructArrayNodeGen$ConstructWithLengthData.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/builtins/TypedArrayPrototypeBuiltins$JSArrayBufferViewFillNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/lang/JavaScriptLanguage.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/JavaScriptBaseNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/JavaScriptNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/ConstantVariableWriteNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/FrameSlotNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/IsJSDynamicObjectNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/IteratorToArrayNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/JSConstantNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/JSTargetableNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/JSTargetableWriteNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/PrivateFieldAddNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/PropertyCacheNode$AbstractShapeCheckNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/PropertyCacheNode$InstanceofCheckNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/PropertyCacheNode$ReceiverCheckNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/PropertyNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/ReadElementNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/ReadElementNodeFactory$ReadElementTypeCacheDispatchNodeGen$OtherData.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/TemporalDeadZoneCheckNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/WriteElementNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/WriteElementNodeFactory$WriteElementTypeCacheDispatchNodeGen$OtherData.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/access/WritePropertyNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/array/ArrayCreateNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/cast/JSToPropertyKeyNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/cast/ToArrayIndexNodeGen$NonArrayIndex0Data.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/cast/ToArrayIndexNodeGen$NonArrayIndex1Data.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/AbstractBlockNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/AbstractIfNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/ContinueTargetNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/DirectBreakTargetNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/IfNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/LabelNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/SequenceNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/StatementNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/control/YieldException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/AbstractBodyNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/AbstractFunctionRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/ConstructorRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/FunctionRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSBuiltinNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$AbstractCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$AnyFunctionDataCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$BoundFunctionDataCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$DirectJSFunctionCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$ForeignCallNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$ForeignExecuteNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$ForeignInstantiateNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$ForeignInvokeNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$GenericFallbackCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$JSFunctionCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionCallNode$UnboundFunctionDataCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/function/JSFunctionExpressionNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/promise/ImportCallNode$1ImportModuleDynamicallyRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/promise/ImportCallNode$1TopLevelAwaitImportModuleDynamicallyRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/unary/JSUnaryNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/nodes/unary/TypeOfNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/GraalJSTranslator$EnvironmentCloseable.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/BlockEnvironment.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/Environment$AbstractArgumentsVarRef.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/Environment$AbstractFrameVarRef.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/Environment$ArgumentsVarRef.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/Environment$FrameSlotVarRef.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/Environment$MappedArgumentVarRef.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/Environment$VarRef.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/Environment.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/parser/env/FunctionEnvironment.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/BigInt.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/JSRealm.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/JavaScriptRealmBoundaryRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/JavaScriptRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/SafeInteger.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/Symbol.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/DynamicArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/ScriptArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/SparseArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractContiguousDoubleArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractContiguousIntArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractContiguousJSObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractContiguousObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractDoubleArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractIntArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractJSObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/AbstractWritableArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ContiguousDoubleArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ContiguousIntArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ContiguousJSObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ContiguousObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/HolesIntArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/HolesObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ZeroBasedDoubleArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ZeroBasedIntArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ZeroBasedJSObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/array/dyn/ZeroBasedObjectArray.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSArrayBase.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSArrayBufferObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSArrayBufferViewBase.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSArrayObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSDateObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSErrorObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSFunctionObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSObjectFactory$BoundProto.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSObjectFactory$UnboundProto.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSObjectFactory.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSRegExpObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/JSTypedArrayObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/wasm/JSWebAssemblyGlobalObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/wasm/JSWebAssemblyMemoryObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/builtins/wasm/JSWebAssemblyTableObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/JSClassObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/JSDynamicObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/JSModuleRecord.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/JSNonProxyObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/JSObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/JSOrdinaryObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/PropertyDescriptor.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/js/runtime/objects/ScriptOrModule.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/DynamicObjectLibraryImpl$KeyCacheEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/DynamicObjectLibraryImpl$KeyCacheNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/DynamicObjectLibraryImpl$SpecificKey$ExistingKey.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/DynamicObjectLibraryImpl$SpecificKey$ExistingKeyIdentity.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/DynamicObjectLibraryImpl$SpecificKey$MissingKey.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/DynamicObjectLibraryImpl$SpecificKey$MissingKeyIdentity.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/DynamicObjectLibraryImpl$SpecificKey.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/ShapeImpl.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/StrongKeyWeakValueEntry.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/Transition.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/TransitionMap.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/object/WeakKey.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/DefaultPolyglotHostService.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/DefaultTopScope.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/FileSystems$NIOFileSystem$RelativizeDirectoryStream.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/InstrumentCache.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/InternalResourceCache.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/LanguageCache.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/OptionValuesImpl.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/PolyglotLanguage.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/PolyglotLanguageContext.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/PolyglotThreadLocalActions$AbstractTLHandshake.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/PolyglotThreadLocalActions$AsyncEvent.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/PolyglotThreadLocalActions$RecurringFuture.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/polyglot/PolyglotThreadLocalActions$SyncEvent.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/RegexBodyNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/RegexLanguage.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/automaton/BasicState.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/nfa/NFAState.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/nodes/dfa/DFAAbstractStateNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/nodes/dfa/DFAFindInnerLiteralStateNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/nodes/dfa/DFAStateNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/nodes/dfa/TRegexLazyFindStartRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/nodes/dfa/TRegexTraceFinderRootNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/parser/ast/CharacterClass.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/parser/ast/Group.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/parser/ast/MatchFound.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/parser/ast/QuantifiableTerm.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/parser/ast/RegexASTNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/parser/ast/Term.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/util/json/JsonInt.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/util/json/JsonNull.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/util/json/JsonObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/regex/tregex/util/json/JsonValue.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/EngineCacheSupport$Disabled.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/EngineCacheSupport.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/OptimizedAssumption$LazyReason.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/OptimizedDirectCallNode.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/hotspot/libgraal/DestroyedIsolateException.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/hotspot/libgraal/LibGraalHotSpotTruffleCompiler$Handle.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/hotspot/libgraal/LibGraalObject.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/runtime/hotspot/libgraal/LibGraalTruffleCompilationSupport.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/sandbox/enterprise/a.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/sandbox/enterprise/h.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/sandbox/enterprise/j.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/sandbox/enterprise/k.class\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/truffle/sandbox/enterprise/l.class\\E"
+  }, {
+    "pattern":"\\Qelide/embedded/ElideEmbedded$State$Initialized.class\\E"
+  }, {
+    "pattern":"\\Qelide/embedded/ElideEmbedded$State.class\\E"
+  }, {
+    "pattern":"\\Qelide/embedded/internal/EmbeddedDispatcherImpl$FetchEntrypoint.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/core/GuestLanguage.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/core/GuestLanguageEvaluator.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/core/GuestLanguageParser.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/core/HostRuntime.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/core/PolyglotContext.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/gvm/internals/vfs/AccessDomain.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/gvm/internals/vfs/AccessResponse.class\\E"
+  }, {
+    "pattern":"\\Qelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/AbstractBeanResolutionContext$AbstractSegment.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/AbstractBeanResolutionContext$ConstructorArgumentSegment.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/AbstractBeanResolutionContext$ConstructorSegment.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/AbstractInitializableBeanDefinition$BeanAnnotationMetadata.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/BeanDefinitionDelegate.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/BeanRegistration.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/BeanResolutionContext$Segment.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/BeanResolutionContext.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/DefaultBeanContext$BeanKey.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/DefaultConstructorInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/DefaultFieldConstructorInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/DefaultFieldInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/DefaultMethodConstructorInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/DefaultMethodInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/ExpressionsAwareArgument.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/LifeCycle.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/Qualifier.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/RuntimeBeanDefinition.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/bind/DefaultExecutableBeanContextBinder.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/env/ConfigurationPath.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/env/DefaultEnvironment.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/env/Environment.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/exceptions/BeanContextException.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/exceptions/BeanCreationException.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/exceptions/BeanInstantiationException.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/exceptions/DependencyInjectionException.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/exceptions/DisabledBeanException.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/exceptions/NoSuchBeanException.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/context/scope/CreatedBean.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/annotation/AnnotationMetadata.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/annotation/AnnotationMetadataDelegate.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/annotation/AnnotationMetadataProvider.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/annotation/AnnotationSource.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/annotation/AnnotationValue.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/beans/BeanInfo.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/convert/DefaultMutableConversionService$2.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/convert/TypeConverter.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/convert/format/FormattingTypeConverter.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/io/ResourceLoader.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/io/buffer/ByteBuffer.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/io/buffer/ReferenceCounted.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/io/file/DefaultFileSystemResourceLoader.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/io/file/FileSystemResourceLoader.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/naming/Named.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/order/Ordered.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/type/ArgumentCoercible.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/type/DefaultArgument.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/type/ReturnType.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/type/TypeInformation.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/util/clhm/ConcurrentLinkedHashMap$BoundedEntryWeigher.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/util/clhm/EntryWeigher.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/core/util/clhm/Weighers$EntryWeigherView.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/http/bind/binders/RequestArgumentBinder.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/http/body/MessageBodyHandler.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/http/body/MessageBodyReader.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/http/body/MessageBodyWriter.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/ArgumentInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/BeanContextConditional.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/BeanDefinition.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/BeanDefinitionReference.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/BeanType.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/CallableInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/ConstructorInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/DelegatingBeanDefinition.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/FieldInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/InjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/InstantiatableBeanDefinition.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/MethodInjectionPoint.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/QualifiedBeanType.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/annotation/AbstractEnvironmentAnnotationMetadata.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/annotation/DefaultAnnotationMetadata.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/annotation/EvaluatedAnnotationMetadata.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/annotation/EvaluatedAnnotationValue.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/annotation/MappingAnnotationMetadataDelegate.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/annotation/MutableAnnotationMetadata.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/qualifiers/FilteringQualifier.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/inject/qualifiers/PrimaryQualifier.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/json/bind/JsonBeanPropertyBinder$ArrayBuilder.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/json/bind/JsonBeanPropertyBinder$ObjectBuilder.class\\E"
+  }, {
+    "pattern":"\\Qio/micronaut/json/tree/JsonNode.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/BufferedReader.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/Closeable.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/File.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/FileInputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/FileNotFoundException.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/FileOutputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/FilterOutputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/IOException.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/InputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/InterruptedIOException.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/OutputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/PrintStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/PrintWriter.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/Reader.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/Serializable.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/UncheckedIOException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ArithmeticException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/AutoCloseable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Boolean.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/CharSequence.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Class.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ClassCastException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ClassLoader.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ClassNotFoundException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Cloneable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Comparable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Double.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Enum.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Error.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Exception.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/IllegalAccessException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/IllegalArgumentException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/IllegalStateException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/IndexOutOfBoundsException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/InstantiationException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Integer.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/InterruptedException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Iterable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/LinkageError.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Long.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/NoClassDefFoundError.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/NoSuchFieldException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/NoSuchMethodException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/NullPointerException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Number.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/NumberFormatException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Object.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/OutOfMemoryError.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ReflectiveOperationException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Runnable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/RuntimeException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/SecurityException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/StackOverflowError.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/String.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/StringBuilder.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Thread.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Throwable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/UnsupportedOperationException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/VirtualMachineError.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Void.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/annotation/Annotation.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/constant/Constable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/constant/ConstantDesc.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/invoke/TypeDescriptor$OfField.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/invoke/TypeDescriptor.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/module/FindException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ref/Reference.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ref/WeakReference.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/AccessibleObject.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/AnnotatedElement.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/Executable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/Field.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/GenericDeclaration.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/InvocationTargetException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/Method.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/Type.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/WildcardType.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/SocketException.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/SocketTimeoutException.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/URI.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/URISyntaxException.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/URL.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/URLClassLoader.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/UnknownHostException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/Buffer.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/ByteBuffer.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/FileChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/SeekableByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/spi/AbstractInterruptibleChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/charset/IllegalCharsetNameException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/charset/UnsupportedCharsetException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/ClosedWatchServiceException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/DirectoryStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/FileSystemException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/FileSystemNotFoundException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/NoSuchFileException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/Path.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/ProviderNotFoundException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/SecureDirectoryStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/attribute/BasicFileAttributes.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/attribute/DosFileAttributes.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/file/attribute/PosixFileAttributes.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/CodeSource.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/SecureClassLoader.class\\E"
+  }, {
+    "pattern":"\\Qjava/text/DecimalFormat.class\\E"
+  }, {
+    "pattern":"\\Qjava/text/Format.class\\E"
+  }, {
+    "pattern":"\\Qjava/text/NumberFormat.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/DateTimeException.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/Duration.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/LocalDate.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/LocalDateTime.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/LocalTime.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/ZoneId.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/ZonedDateTime.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/format/DateTimeParseException.class\\E"
+  }, {
+    "pattern":"\\Qjava/time/temporal/TemporalAccessor.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractCollection.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractList.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractSequentialList.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/ArrayDeque.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/ArrayList.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Collection.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Date.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Deque.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Dictionary.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/EnumMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/EnumSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Enumeration.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/HashMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/HashSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Hashtable.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Iterator.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/LinkedHashMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/LinkedHashSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/List.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Map$Entry.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Map.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/NavigableMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Optional.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Properties.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Queue.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/RandomAccess.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/SequencedCollection.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/SequencedMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/SequencedSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/ServiceConfigurationError.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/ServiceLoader.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Set.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/SortedMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/CancellationException.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/CompletionException.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ConcurrentHashMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ConcurrentLinkedQueue.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ConcurrentMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ExecutionException.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/Future.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ScheduledFuture.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/TimeoutException.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/function/Consumer.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/function/Function.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/stream/BaseStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/stream/Stream.class\\E"
+  }, {
+    "pattern":"\\Qjavax/naming/Context.class\\E"
+  }, {
+    "pattern":"\\Qjavax/naming/NamingException.class\\E"
+  }, {
+    "pattern":"\\Qjunit-platform.properties\\E"
+  }, {
+    "pattern":"\\Qkotlin/Pair.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/SynchronizedLazyImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/Unit.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/coroutines/AbstractCoroutineContextElement.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/coroutines/Continuation.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/coroutines/ContinuationInterceptor.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/coroutines/CoroutineContext$Element.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/coroutines/CoroutineContext.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/coroutines/jvm/internal/BaseContinuationImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/coroutines/jvm/internal/ContinuationImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/jvm/functions/Function1.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/jvm/internal/ClassBasedDeclarationContainer.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/jvm/internal/KTypeBase.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/jvm/internal/PropertyReference.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/KAnnotatedElement.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/KCallable.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/KClass.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/KClassifier.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/KDeclarationContainer.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/KProperty.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/KType.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/EmptyContainerForLocal.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/KClassImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/KClassifierImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/KDeclarationContainerImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/KTypeImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/KTypeParameterOwnerImpl.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/builtins/jvm/JavaToKotlinClassMap$PlatformMutabilityMapping.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/builtins/jvm/JavaToKotlinClassMap.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/descriptors/SourceElement.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/descriptors/runtime/components/ReflectKotlinClass.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/descriptors/runtime/structure/ReflectJavaElement.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/descriptors/runtime/structure/ReflectJavaMember.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/descriptors/runtime/structure/ReflectJavaMethod.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/load/java/structure/JavaElement.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/load/kotlin/header/KotlinClassHeader.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/name/ClassId.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/name/FqName.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/reflect/jvm/internal/impl/resolve/jvm/JvmPrimitiveType.class\\E"
+  }, {
+    "pattern":"\\Qkotlin/sequences/Sequence.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/AbstractCoroutine.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/AbstractTimeSource.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/ChildHandleNode.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/CompletedContinuation.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/CompletedExceptionally.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/CompletedWithCancellation.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/CompletionHandlerBase.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/CoroutineDispatcher.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/CoroutineName.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/DelayWithTimeoutDiagnostics.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/DispatchedCoroutine.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/DispatchedTask.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/EventLoopImplBase$DelayedTask.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/EventLoopImplBase$DelayedTaskQueue.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/Incomplete.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/IncompleteStateBox.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/Job.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/JobCancellingNode.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/JobNode.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/JobSupport$Finishing.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/JobSupport.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/MainCoroutineDispatcher.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/NonDisposableHandle.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/UndispatchedCoroutine.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/Waiter.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/channels/ChannelSegment.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/flow/StateFlowSlot.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/flow/internal/AbstractSharedFlow.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/flow/internal/AbstractSharedFlowSlot.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/ConcurrentLinkedListNode.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/DispatchedContinuation.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/FastServiceLoader.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/LockFreeLinkedListNode.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/LockFreeTaskQueueCore$Placeholder.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/MainDispatcherFactory.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/Removed.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/ResizableAtomicArray.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/ScopeCoroutine.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/Segment.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/Symbol.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/ThreadSafeHeap.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/internal/UndeliveredElementException.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/scheduling/CoroutineScheduler$Worker.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/scheduling/CoroutineScheduler.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/scheduling/Task.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/test/TestDispatchEvent.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/test/internal/TestMainDispatcher$NonConcurrentlyModifiable.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/coroutines/test/internal/TestMainDispatcher.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/serialization/descriptors/SerialDescriptor.class\\E"
+  }, {
+    "pattern":"\\Qkotlinx/serialization/json/Json.class\\E"
+  }, {
+    "pattern":"\\Qlogback-test.scmo\\E"
+  }, {
+    "pattern":"\\Qlogback-test.xml\\E"
+  }, {
+    "pattern":"\\Qlogback.scmo\\E"
+  }, {
+    "pattern":"\\Qnet/rubygrapefruit/platform/NativeException.class\\E"
+  }, {
+    "pattern":"\\Qnet/rubygrapefruit/platform/NativeIntegrationUnavailableException.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/options/OptionDescriptors.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/options/OptionValues.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/polyglot/AbstractValue.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/polyglot/Value.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/polyglot/impl/AbstractPolyglotImpl$AbstractDispatchClass.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/polyglot/impl/AbstractPolyglotImpl$AbstractPolyglotHostService.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/polyglot/io/ByteSequence.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/polyglot/proxy/ProxyArray.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/number/CompactNotation.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/number/Notation.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/number/ScientificNotation.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/number/SimpleNotation.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/text/DateFormat.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/text/SimpleDateFormat$PatternItem.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/text/SimpleDateFormat.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/text/UFormat.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/BuddhistCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/CECalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/Calendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/ChineseCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/CopticCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/DangiCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/EthiopicCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/GregorianCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/HebrewCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/IndianCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/IslamicCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/JapaneseCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/MeasureUnit.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/PersianCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/TaiwanCalendar.class\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/util/TimeUnit.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/api/GradleException.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/api/internal/tasks/testing/TestFailureSerializationException.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/api/internal/tasks/testing/filter/TestSelectionMatcher$FullQualifiedClassNameSelector.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/api/internal/tasks/testing/filter/TestSelectionMatcher$SimpleClassNameSelector.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/api/internal/tasks/testing/worker/TestWorker.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/classloader/CachingClassLoader.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/dispatch/BoundedDispatch.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/dispatch/Dispatch.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/exceptions/DefaultMultiCauseException.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/nativeintegration/console/ConsoleMetaData.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/nativeintegration/console/FallbackConsoleMetaData.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/MessageHub$Discard.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/RejectedMessageListener.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/StreamFailureHandler.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/protocol/ChannelMessage.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/protocol/InterHubMessage.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/protocol/RejectedMessage.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/protocol/Routable.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/internal/remote/internal/hub/protocol/StreamFailureMessage.class\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/process/internal/worker/child/ActionExecutionWorker.class\\E"
+  }, {
+    "pattern":"\\Qorg/junit/jupiter/api/extension/InvocationInterceptor$Invocation.class\\E"
+  }, {
+    "pattern":"\\Qorg/junit/jupiter/api/io/CleanupMode.class\\E"
+  }, {
+    "pattern":"\\Qorg/junit/jupiter/engine/execution/InvocationInterceptorChain$InterceptedInvocation.class\\E"
+  }, {
+    "pattern":"\\Qorg/junit/platform/launcher/Launcher.class\\E"
+  }, {
+    "pattern":"\\Qorg/junit/platform/launcher/core/DelegatingLauncher.class\\E"
+  }, {
+    "pattern":"\\Qorg/junit/platform/launcher/core/InterceptingLauncher.class\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/Logger.class\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/Marker.class\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/helpers/BasicMarker.class\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/helpers/NOPLogger.class\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/spi/SLF4JServiceProvider.class\\E"
+  }, {
+    "pattern":"\\Qtools/elide/vfs/File$Builder.class\\E"
+  }, {
+    "pattern":"\\Qworker/org/gradle/internal/classloader/ClassLoaderUtils$AbstractClassLoaderLookuper.class\\E"
+  }, {
+    "pattern":"\\Qworker/org/gradle/internal/classloader/ClassLoaderUtils$Java9PackagesFetcher.class\\E"
+  }, {
+    "pattern":"\\Qworker/org/gradle/internal/classloader/ClassLoaderUtils$LookupClassDefiner.class\\E"
+  }, {
+    "pattern":"\\Qworker/org/gradle/internal/classloader/ClassLoaderUtils$ReflectionClassDefiner.class\\E"
+  }, {
+    "pattern":"\\Qworker/org/gradle/internal/classloader/ClassLoaderUtils$ReflectionPackagesFetcher.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/BufferedReader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/Closeable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/File.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/FileInputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/FileNotFoundException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/FileOutputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/FilterOutputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/IOException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/InputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/InterruptedIOException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/OutputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/PrintStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/PrintWriter.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/Reader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/Serializable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/UncheckedIOException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ArithmeticException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/AutoCloseable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Boolean.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/CharSequence.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Class.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ClassCastException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ClassLoader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ClassNotFoundException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Cloneable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Comparable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Double.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Enum.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Error.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Exception.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/IllegalAccessException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/IllegalArgumentException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/IllegalStateException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/IndexOutOfBoundsException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/InstantiationException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Integer.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/InterruptedException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Iterable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/LinkageError.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Long.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/NoClassDefFoundError.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/NoSuchFieldException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/NoSuchMethodException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/NullPointerException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Number.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/NumberFormatException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Object.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/OutOfMemoryError.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ReflectiveOperationException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Runnable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/RuntimeException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/SecurityException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/StackOverflowError.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/String.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/StringBuilder.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Thread.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Throwable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/UnsupportedOperationException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/VirtualMachineError.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Void.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/annotation/Annotation.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/constant/Constable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/constant/ConstantDesc.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/invoke/TypeDescriptor$OfField.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/invoke/TypeDescriptor.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/module/FindException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ref/Reference.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ref/WeakReference.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/AccessibleObject.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/AnnotatedElement.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/Executable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/Field.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/GenericDeclaration.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/InvocationTargetException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/Method.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/Type.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/WildcardType.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/SocketException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/SocketTimeoutException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/URI.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/URISyntaxException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/URL.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/URLClassLoader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/UnknownHostException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/Buffer.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/ByteBuffer.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/FileChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/SeekableByteChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/spi/AbstractInterruptibleChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/charset/IllegalCharsetNameException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/charset/UnsupportedCharsetException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/ClosedWatchServiceException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/DirectoryStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/FileSystemException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/FileSystemNotFoundException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/NoSuchFileException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/Path.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/ProviderNotFoundException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/SecureDirectoryStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/attribute/BasicFileAttributes.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/attribute/DosFileAttributes.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/file/attribute/PosixFileAttributes.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/CodeSource.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/SecureClassLoader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/text/DecimalFormat.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/text/Format.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/text/NumberFormat.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/DateTimeException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/Duration.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/LocalDate.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/LocalDateTime.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/LocalTime.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/ZoneId.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/ZonedDateTime.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/format/DateTimeParseException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/time/temporal/TemporalAccessor.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractCollection.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractList.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractSequentialList.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractSet.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/ArrayDeque.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/ArrayList.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Collection.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Date.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Deque.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Dictionary.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/EnumMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/EnumSet.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Enumeration.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/HashMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/HashSet.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Hashtable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Iterator.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/LinkedHashMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/LinkedHashSet.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/List.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Map$Entry.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Map.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/NavigableMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Optional.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Properties.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Queue.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/RandomAccess.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/SequencedCollection.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/SequencedMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/SequencedSet.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/ServiceConfigurationError.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/ServiceLoader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Set.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/SortedMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/CancellationException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/CompletionException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ConcurrentHashMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ConcurrentLinkedQueue.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ConcurrentMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ExecutionException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/Future.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ScheduledFuture.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/TimeoutException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/function/Consumer.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/function/Function.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/stream/BaseStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/stream/Stream.class\\E"
+  }, {
+    "pattern":"java.naming:\\Qjavax/naming/Context.class\\E"
+  }, {
+    "pattern":"java.naming:\\Qjavax/naming/NamingException.class\\E"
+  }, {
+    "pattern":"jdk.jfr:\\Qjdk/jfr/internal/types/metadata.bin\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.compiler:\\Qcom/oracle/truffle/compiler/TruffleCompilationSupport.class\\E"
+  }]},
+  "bundles":[]
+}

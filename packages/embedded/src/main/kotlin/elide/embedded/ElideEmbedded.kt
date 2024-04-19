@@ -168,8 +168,10 @@ public class ElideEmbedded {
   /**
    * Dispatch an incoming call with the runtime. This operation is currently under construction.
    */
-  public fun dispatch(call: EmbeddedCall, app: EmbeddedApp): CompletionStage<EmbeddedResponse> {
-    return useContext { dispatcher.dispatch(call, app).asCompletableFuture() }
+  public fun dispatch(call: UnsafeCall, app: EmbeddedApp): CompletionStage<EmbeddedResponse> {
+    return useContext {
+      dispatcher.dispatch(codec.decode(call), app).asCompletableFuture()
+    }
   }
 
   /**

@@ -88,6 +88,7 @@ import elide.runtime.plugins.js.JavaScript
 
         bindings {
           // register interop bindings for request and response types
+          // TODO(@darvld): use constants for binding names
           put("Response", ImmediateResponse::class.java)
         }
       }
@@ -103,8 +104,8 @@ import elide.runtime.plugins.js.JavaScript
 
   /** Map between the [embedded] guest language enum and the language code string expected by a [Source] builder. */
   private fun languageCode(embedded: EmbeddedGuestLanguage): String = when (embedded) {
-    JAVA_SCRIPT -> "js"
-    PYTHON -> "python"
+    JAVA_SCRIPT -> JavaScript.languageId
+    PYTHON -> TODO("Not yet implemented")
   }
 
   /**
@@ -119,6 +120,7 @@ import elide.runtime.plugins.js.JavaScript
       val entry = config.guestRoot.resolve(app.id.value).resolve(app.config.entrypoint)
       val source = Source.newBuilder(languageCode(app.config.language), entry.toFile()).build()
 
+      // TODO(@darvld): refactor entrypoint resolution and extract it from the dispatcher
       val module = context.evaluate(source)
       when (app.config.dispatchMode) {
         FETCH -> {
@@ -132,16 +134,16 @@ import elide.runtime.plugins.js.JavaScript
   override fun dispatch(call: EmbeddedCall, app: EmbeddedApp): Deferred<EmbeddedResponse> {
     val result = CompletableDeferred<EmbeddedResponse>()
 
+    // TODO(@darvld): refactor completion handler
     app.dispatch {
       // use the thread-local context
       val context = useContext()
 
       // retrieve or evaluate the entrypoint and dispatch the call, map the inputs and outputs
-      // TODO(@darvld): map request and response objects to language bindings
       when (val entrypoint = useEntrypoint(app, context)) {
         is FetchEntrypoint -> result.complete(entrypoint(call.request))
       }
-    }.invokeOnCompletion { failure -> failure?.let { result.completeExceptionally(it) } }
+    }.invokeOnCompletion { failure -> failure?.let(result::completeExceptionally) }
 
     return result
   }

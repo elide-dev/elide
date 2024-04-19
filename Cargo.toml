@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "third_party/astral/ruff",
+    "third_party/astral/uv",
+    "third_party/oxc-project/oxc"
+]
+

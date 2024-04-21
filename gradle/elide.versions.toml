@@ -82,6 +82,7 @@ hamcrest-junit = "2.0.0.0"
 hibernate = "5.6.11.Final"
 hikari = "4.0.3"
 inquirer = "0.1.0"
+j4rs = "0.18.0"
 jackson = "2.17.0"
 jacoco = "0.8.11"
 jakarta = "2.0.1"
@@ -475,6 +476,7 @@ hibernate-java8 = { group = "org.hibernate", name = "hibernate-java8", version.r
 hibernate-search = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 inquirer = { group = "com.github.kotlin-inquirer", name = "kotlin-inquirer", version.ref = "inquirer" }
+j4rs = { group = "io.github.astonbitecode", name = "j4rs", version.ref = "j4rs" }
 jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
 jackson-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }

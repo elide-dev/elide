@@ -35,10 +35,12 @@ import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
+import elide.runtime.gvm.internals.ProcessManager
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
+import elide.tool.cli.cmd.lint.ToolLintCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.selftest.SelfTestCommand
 import elide.tool.cli.cmd.update.SelfUpdateCommand
@@ -61,6 +63,7 @@ import elide.tool.io.RuntimeWorkdirManager
     ToolInfoCommand::class,
     ToolShellCommand::class,
     ToolDiscordCommand::class,
+    ToolLintCommand::class,
     HelpCommand::class,
     SelfUpdateCommand::class,
     SelfTestCommand::class,
@@ -103,29 +106,26 @@ import elide.tool.io.RuntimeWorkdirManager
     }
 
     // Maybe install terminal support for Windows if it is needed.
-    private fun installWindowsTerminalSupport(op: () -> Int): Int {
-      return AnsiConsole.windowsInstall().use {
-        op.invoke()
-      }
+    private fun installWindowsTerminalSupport() {
+      AnsiConsole.windowsInstall()
     }
 
     // Install static classes/perform static initialization.
-    private fun installStatics(op: () -> Int): Int {
+    private fun installStatics(args: Array<String>, cwd: String?) {
+      ProcessManager.initializeStatic(args, cwd ?: "")
       Security.insertProviderAt(BouncyCastleProvider(), 0)
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
       initializeNatives()
-
       val runner = {
         if (!org.fusesource.jansi.AnsiConsole.isInstalled()) {
           initializeTerminal()
         }
-        op.invoke()
       }
 
-      return when {
+      when {
         // on windows, provide native terminal support fix
-        HostPlatform.resolve().os == OperatingSystem.WINDOWS -> installWindowsTerminalSupport(runner)
+        HostPlatform.resolve().os == OperatingSystem.WINDOWS -> installWindowsTerminalSupport()
 
         // otherwise, install terminal and begin execution
         else -> runner.invoke()
@@ -133,11 +133,10 @@ import elide.tool.io.RuntimeWorkdirManager
     }
 
     /** CLI entrypoint and [args]. */
-    @JvmStatic fun main(args: Array<String>): Unit = exitProcess(
-      installStatics {
-        exec(args)
-      },
-    )
+    @JvmStatic fun main(args: Array<String>) {
+      installStatics(args, System.getProperty("user.dir"))
+      exitProcess(exec(args))
+    }
 
     /** @return Tool version. */
     @JvmStatic fun version(): String = ELIDE_TOOL_VERSION
@@ -199,32 +198,10 @@ import elide.tool.io.RuntimeWorkdirManager
   )
   internal var timeout: Int = 30
 
-  /** Whether to activate pretty logging; on by default. */
-  @Option(
-    names = ["--self-test"],
-    negatable = true,
-    description = ["Run a binary self-test"],
-    defaultValue = "false",
-    hidden = true,
-  )
-  var selftest: Boolean = false
-
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
-    return if (!selftest) {
-      // proxy to the `shell` command for a naked run
-      val cmd = beanContext.getBean(ToolShellCommand::class.java)
-      cmd.call()
-      cmd.commandResult.get()
-    } else {
-      // run output samples
-      output {
-        append("Running rich output self-test")
-      }
-      startMosaicSession {
-        Counter()
-        runJestSample()
-      }
-      success()
-    }
+    // proxy to the `shell` command for a naked run
+    return beanContext.getBean(ToolShellCommand::class.java).apply {
+      call()
+    }.commandResult.get()
   }
 }

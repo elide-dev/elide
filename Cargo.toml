@@ -1,8 +1,4 @@
 [workspace]
-
-members = [
-    "third_party/astral/ruff",
-    "third_party/astral/uv",
-    "third_party/oxc-project/oxc"
-]
-
+resolver = "2"
+members = ["tools/umbrella"]
+exclude  = ["third_party"]

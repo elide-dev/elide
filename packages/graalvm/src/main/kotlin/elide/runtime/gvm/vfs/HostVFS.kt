@@ -36,6 +36,7 @@ public object HostVFS {
   /** @return Factory for producing a scoped Host I/O provider. */
   public fun scopedTo(path: String, writable: Boolean = false): GuestVFS = HostVFSImpl.Builder.newBuilder()
     .setScope(path)
+    .setWorkingDirectory("/")  // @TODO: OS-specific? configurable?
     .setReadOnly(!writable)
     .build()
 }

@@ -266,6 +266,7 @@ dependencies {
   classpathExtras(mn.micronaut.core.processor)
 
   api(projects.packages.base)
+  implementation(projects.packages.cliBridge)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.tink)
@@ -624,6 +625,9 @@ val commonNativeArgs = listOfNotNull(
   "--install-exit-handlers",
   "--configure-reflection-metadata",
   "--macro:truffle-svm",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
   "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
   "-J-Dgraalvm.locatorDisabled=false",
   "-H:CStandard=C11",
@@ -727,6 +731,7 @@ val releaseFlags: List<String> = listOf(
   "-O3",
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
+  "-H:-ParseRuntimeOptions",
 ).asSequence().plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -1256,21 +1261,39 @@ tasks {
     if (enableJpms) modularity.inferModulePath = true
   }
 
-  named("run", JavaExec::class).configure {
-    systemProperty("micronaut.environments", "dev")
-    systemProperty("picocli.ansi", "tty")
+  val nativesType = if (isRelease) "release" else "debug"
+  val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
 
+  named("run", JavaExec::class).configure {
+    systemProperty(
+      "micronaut.environments",
+      "dev",
+    )
+    systemProperty(
+      "picocli.ansi",
+      "tty",
+    )
     jvmDefs.map {
       systemProperty(it.key, it.value)
     }
-
     systemProperty(
       "org.graalvm.language.ruby.home",
-      layout.buildDirectory.dir("native/nativeCompile/resources/ruby/ruby-home").get().asFile.path.toString(),
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),
     )
     systemProperty(
       "org.graalvm.language.python.home",
-      layout.buildDirectory.dir("native/nativeCompile/resources/python/python-home").get().asFile.path.toString(),
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "java.library.path",
+      listOf(
+        rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
+        nativesPath,
+      ).plus(
+        System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
+          it.isNotEmpty()
+        }
+      ).joinToString(File.pathSeparator)
     )
 
     jvmArgs(jvmModuleArgs)
@@ -1289,24 +1312,28 @@ tasks {
   }
 
   optimizedRun {
-    val separator = when (HostManager.hostIsMingw) {
-      true -> ";"
-      false -> ":"
-    }
-    val libPath = System.getProperty("java.library.path", "").split(separator).toMutableList().apply {
-      add(0, nativesPath)
-    }.joinToString(separator)
-
-    systemProperty("micronaut.environments", "dev")
-    systemProperty("java.library.path", libPath)
-
+    systemProperty(
+      "micronaut.environments",
+      "dev",
+    )
     systemProperty(
       "org.graalvm.language.ruby.home",
-      layout.buildDirectory.dir("native/nativeCompile/resources/ruby/ruby-home").get().asFile.path.toString(),
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),
     )
     systemProperty(
       "org.graalvm.language.python.home",
-      layout.buildDirectory.dir("native/nativeCompile/resources/python/python-home").get().asFile.path.toString(),
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "java.library.path",
+      listOf(
+        rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
+        nativesPath,
+      ).plus(
+        System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
+          it.isNotEmpty()
+        }
+      ).joinToString(File.pathSeparator)
     )
 
     jvmDefs.map {

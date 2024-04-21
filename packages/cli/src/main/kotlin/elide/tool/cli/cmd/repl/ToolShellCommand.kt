@@ -20,6 +20,7 @@ package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
+import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
@@ -116,6 +117,7 @@ import elide.tool.project.ProjectManager
 @Singleton internal class ToolShellCommand @Inject constructor (
   private val projectManager: ProjectManager,
   private val workdir: WorkdirManager,
+  private val beanContext: BeanContext,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
     private const val TOOL_LOGGER_NAME: String = "tool"
@@ -385,7 +387,10 @@ import elide.tool.project.ProjectManager
 
     /** Apply these settings to created execution contexts. */
     @Suppress("KotlinConstantConditions")
-    internal fun apply(project: ProjectInfo?, config: PolyglotEngineConfiguration) = config.environment {
+    internal fun apply(
+      project: ProjectInfo?,
+      config: PolyglotEngineConfiguration,
+    ) = config.environment {
       val effectiveInjectedEnv = TreeMap<String, EnvVar>()
 
       // inject `NODE_ENV`
@@ -612,7 +617,7 @@ import elide.tool.project.ProjectManager
   @ArgGroup(
     exclusive = false,
     heading = "%nLanguage Selection:%n",
-  ) internal var language: LanguageSelector? = null
+  ) internal var language: LanguageSelector = LanguageSelector()
 
   /** Settings specific to JavaScript. */
   @ArgGroup(
@@ -685,7 +690,7 @@ import elide.tool.project.ProjectManager
     }
   }
 
-  private fun printHighlightedResult(txt: String) {
+  private fun printHighlighted(txt: String) {
     val highlighter = langSyntax.get()
     val lineReader = lineReader.get()
 
@@ -698,6 +703,10 @@ import elide.tool.project.ProjectManager
     }
   }
 
+  private fun onUserInteractiveSource(code: String, source: Source) {
+    printHighlighted(code)
+  }
+
   // Execute a single chunk of code, or literal statement.
   @Suppress("SameParameterValue") private fun executeOneChunk(
     languages: EnumSet<GuestLanguage>,
@@ -708,14 +717,8 @@ import elide.tool.project.ProjectManager
     interactive: Boolean = false,
     literal: Boolean = false,
   ): Value {
-    // fix: python fails in interactive mode without special characters
-    val actullyInteractive = if (primaryLanguage.engine == "python") {
-      false
-    } else interactive
-
-    // build a source code chunk from the line @TODO(sgammon): resolve source from all languages
     val chunk = Source.newBuilder(primaryLanguage.engine, code, origin)
-      .interactive(actullyInteractive)
+      .interactive(false)
       .internal(false)
 
     val source = if (literal) {
@@ -723,6 +726,12 @@ import elide.tool.project.ProjectManager
     } else {
       chunk.build()
     }
+
+    // if we are executing interactively, we need to "print above" with the user's code
+    if (interactive) onUserInteractiveSource(
+      code,
+      source,
+    )
 
     logging.trace("Code chunk built. Evaluating")
     val result = try {
@@ -855,12 +864,13 @@ import elide.tool.project.ProjectManager
       .variable(LineReader.HISTORY_FILE, Paths.get(root, "history"))
       .option(LineReader.Option.INSERT_BRACKET, true)
       .option(LineReader.Option.EMPTY_WORD_OPTIONS, false)
-      .option(LineReader.Option.AUTO_FRESH_LINE, true)
+      .option(LineReader.Option.AUTO_FRESH_LINE, false)
       .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
       .option(LineReader.Option.CASE_INSENSITIVE, true)
       .option(LineReader.Option.CASE_INSENSITIVE_SEARCH, true)
       .option(LineReader.Option.USE_FORWARD_SLASH, true)
       .option(LineReader.Option.INSERT_TAB, false)
+      .option(LineReader.Option.ERASE_LINE_ON_FINISH, false)
       .build()
 
     lineReader.set(reader)
@@ -879,10 +889,7 @@ import elide.tool.project.ProjectManager
       return null
     }
     val jnanorcDir = rootPath.resolve("nanorc")
-    val jnanorcFile = Paths.get(
-      userHome,
-      "jnanorc",
-    ).toFile()
+    val jnanorcFile = Paths.get(userHome, "jnanorc").toFile()
 
     logging.debug("Checking nanorc root at path '${jnanorcFile.toPath()}'")
     var jnanocDirReady = false
@@ -1202,7 +1209,7 @@ import elide.tool.project.ProjectManager
   }
 
   private fun showValue(value: Value) {
-    printHighlightedResult(value.toString())
+    printHighlighted(value.toString())
   }
 
   // Wrap an interactive REPL session in exit protection.
@@ -1367,7 +1374,7 @@ import elide.tool.project.ProjectManager
 
   private val commandSpecifiesServer: Boolean by lazy {
     Statics.args.get().let {
-      it.contains("serve") || it.contains("start") || it.contains("node")
+      it.contains("serve") || it.contains("start")
     }
   }
 
@@ -1405,7 +1412,7 @@ import elide.tool.project.ProjectManager
       source,
     ) else try {
       // enter VM context
-      logging.trace("Entered VM for script execution (language: ${primaryLanguage.id}). Consuming script from: '$label'")
+      logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")
 
       // parse the source
       val parsed = try {
@@ -1478,6 +1485,16 @@ import elide.tool.project.ProjectManager
     else -> if (languages.contains(JS)) JS else languages.first()
   }
 
+  private fun ignoreNotInstalled(block: () -> Unit) {
+    try {
+      block()
+    } catch (exc: LinkageError) {
+      logging.debug("Failed to link runtime plugin: ${exc.message}")
+    } catch (exc: ClassNotFoundException) {
+      logging.debug("Failed to install runtime plugin: ${exc.message}")
+    }
+  }
+
   override fun PolyglotEngineConfiguration.configureEngine() {
     // grab project configurations, if available
     val project = activeProject.get()
@@ -1500,6 +1517,11 @@ import elide.tool.project.ProjectManager
 
     // configure VFS with user-specified bundles
     vfs {
+      if (language.python || language.ruby) {
+        // ruby and python do not support VFS features yet
+        vfsUnsupported = true
+      }
+
       // resolve the file-system bundles to use
       val userBundles = filesystems.mapNotNull { checkFsBundle(it) }
       if (userBundles.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
@@ -1547,18 +1569,22 @@ import elide.tool.project.ProjectManager
           jsSettings.apply(this)
         }
 
-        RUBY -> install(elide.runtime.plugins.ruby.Ruby) {
-          logging.debug("Configuring Ruby VM")
-          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+        RUBY -> ignoreNotInstalled {
+          install(elide.runtime.plugins.ruby.Ruby) {
+            logging.debug("Configuring Ruby VM")
+            installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+          }
         }
 
-        PYTHON -> install(elide.runtime.plugins.python.Python) {
-          logging.debug("Configuring Python VM")
-          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+        PYTHON -> ignoreNotInstalled {
+          install(elide.runtime.plugins.python.Python) {
+            logging.debug("Configuring Python VM")
+            installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+          }
         }
 
-//        // Secondary Engines: JVM
-//        JVM -> {
+        // Secondary Engines: JVM
+//        JVM -> ignoreNotInstalled {
 //          install(elide.runtime.plugins.jvm.Jvm) {
 //            logging.debug("Configuring JVM")
 //            multithreading = false
@@ -1568,9 +1594,9 @@ import elide.tool.project.ProjectManager
 //            logging.debug("Configuring Java")
 //          }
 //        }
-//
-//        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
-//
+
+        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
+
 //        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
 //          val classpathDir = workdir.cacheDirectory()
 //            .resolve("elide-kotlin-runtime")
@@ -1579,8 +1605,9 @@ import elide.tool.project.ProjectManager
 //          logging.debug("Configuring Kotlin with classpath root $classpathDir")
 //          guestClasspathRoot = classpathDir
 //        }
-//
-//        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+
+        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+
         else -> {}
       }
     }

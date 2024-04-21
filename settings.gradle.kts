@@ -46,7 +46,11 @@ pluginManagement {
     google()
     mavenCentral()
   }
-  includeBuild("tools/plugin/gradle-plugin")
+
+  if (extra["buildPlugins"] == "true") {
+    includeBuild("third_party/apple/pkl")
+    includeBuild("tools/plugin/gradle-plugin")
+  }
 }
 
 plugins {
@@ -171,11 +175,13 @@ include(
   ":packages:base",
   ":packages:bom",
   ":packages:cli",
+  ":packages:cli-bridge",
   ":packages:core",
   ":packages:embedded",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",
+  ":packages:graalvm-ts",
   ":packages:graalvm-jvm",
   ":packages:graalvm-llvm",
   ":packages:graalvm-wasm",
@@ -199,7 +205,10 @@ include(
   ":packages:ssr",
   ":packages:test",
   ":packages:wasm",
+  ":tools:esbuild",
+  ":tools:tsc",
   ":tools:processor",
+  ":tools:umbrella",
   ":tools:reports",
   ":tools:wrappers",
 )
@@ -272,6 +281,8 @@ val isCI: Boolean = System.getenv("CI") != "true"
 
 buildless {
   remoteCache {
+    enabled = false
+
     // allow disabling pushing to the remote cache
     push.set(cachePush?.toBooleanStrictOrNull() ?: true)
   }

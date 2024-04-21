@@ -28,7 +28,7 @@ public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger
     }
 
     // any other type
-    else -> append(value)
+    else -> append(value.toString())
   }
 
   // Format a list of values for emission as part of a log message.

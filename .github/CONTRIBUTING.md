@@ -32,13 +32,17 @@ image-native-alpine            Build native Alpine base image.
 image-native                   Build native Ubuntu base image.
 image-runtime-jvm17            Build runtime GVM17 builder image.
 images                         Build all Docker images.
+model-update                   Update the proto model and re-build it.
+model                          Build proto model targets.
 publish                        Publish a new version of all Elide packages.
+release                        Perform a full release, including publishing to Maven Central and the Elide repository.
 relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
 reports                        Generate reports for tests, coverage, etc.
 serve-docs                     Serve documentation locally.
 serve-site                     Serve Elide site locally.
 site                           Generate the static Elide website.
 test                           Run the library testsuite, and code-sample tests if SAMPLES=yes.
+third-party                    Build all third-party embedded projects.
 update-deps                    Perform interactive dependency upgrades across Yarn and Gradle.
 update-jdeps                   Interactively update Gradle dependencies.
 update-jsdeps                  Interactively update Yarn dependencies.

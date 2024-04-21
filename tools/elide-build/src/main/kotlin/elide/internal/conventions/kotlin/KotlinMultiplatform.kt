@@ -136,7 +136,6 @@ internal fun Project.configureKotlinMultiplatform(
       }
       wasmWasi {
         nodejs()
-        applyBinaryen()
       }
     }
 

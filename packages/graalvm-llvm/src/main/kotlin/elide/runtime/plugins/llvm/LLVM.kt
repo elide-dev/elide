@@ -57,6 +57,8 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
       // apply the configuration and create the plugin instance
       val config = LLVMConfig().apply(configuration)
+      configureSharedBindings(scope, config)
+      
       val resources = resolveEmbeddedManifest(scope, lenient = true)
       val instance = LLVM(config, resources)
 

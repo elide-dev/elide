@@ -235,7 +235,8 @@ internal class JsRuntime @Inject constructor (
     JsLanguageLevel.ES2019,
     JsLanguageLevel.ES2020,
     JsLanguageLevel.ES2021,
-    JsLanguageLevel.ES2022 -> this.name.drop(2)
+    JsLanguageLevel.ES2022,
+    JsLanguageLevel.ES2023 -> this.name.drop(2)
     JsLanguageLevel.STABLE -> JS_LANGUAGE_LEVEL_STABLE
     JsLanguageLevel.LATEST -> JS_LANGUAGE_LEVEL_LATEST
     JsLanguageLevel.UNRECOGNIZED,

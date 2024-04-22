@@ -73,6 +73,8 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
       // apply the configuration and create the plugin instance
       val config = RubyConfig().apply(configuration)
+      configureSharedBindings(scope, config)
+      
       val resources = resolveEmbeddedManifest(scope)
       val instance = Ruby(config, resources)
 

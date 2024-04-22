@@ -93,6 +93,8 @@ import elide.runtime.plugins.vfs.Vfs
 
       // apply the configuration and create the plugin instance
       val config = PythonConfig().apply(configuration)
+      configureSharedBindings(scope, config)
+      
       val resources = resolveEmbeddedManifest(scope)
       val instance = Python(config, resources)
 

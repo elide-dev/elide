@@ -153,6 +153,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
       // apply the configuration and create the plugin instance
       val config = JavaScriptConfig().apply(configuration)
+      configureSharedBindings(scope, config)
+      
       val embedded = resolveEmbeddedManifest(scope)
       val instance = JavaScript(config, embedded, env)
 

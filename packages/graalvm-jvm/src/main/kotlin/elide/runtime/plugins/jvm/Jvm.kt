@@ -83,6 +83,8 @@ import elide.runtime.plugins.llvm.LLVM
       // apply the configuration and create the plugin instance
       scope.configuration.getOrInstall(LLVM)
       val config = JvmConfig().apply(configuration)
+      configureSharedBindings(scope, config)
+      
       val resources = resolveEmbeddedManifest(scope)
       val instance = Jvm(config)
 

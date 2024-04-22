@@ -26,6 +26,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
+import java.nio.file.Path
 import java.security.Security
 import java.util.*
 import kotlin.system.exitProcess
@@ -44,6 +45,7 @@ import elide.tool.cli.cmd.lint.ToolLintCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.selftest.SelfTestCommand
 import elide.tool.cli.cmd.update.SelfUpdateCommand
+import elide.tool.cli.options.LanguagePositionals
 import elide.tool.cli.output.Counter
 import elide.tool.cli.output.runJestSample
 import elide.tool.cli.state.CommandState
@@ -55,7 +57,7 @@ import elide.tool.io.RuntimeWorkdirManager
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
   name = ElideTool.TOOL_NAME,
-  description = ["Manage, configure, and spawn Elide applications"],
+  description = ["", "Manage, configure, and run polyglot applications with Elide"],
   mixinStandardHelpOptions = true,
   version = [ELIDE_TOOL_VERSION],
   scope = ScopeType.INHERIT,
@@ -76,6 +78,21 @@ import elide.tool.io.RuntimeWorkdirManager
     "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
     " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n%n"
   ),
+  synopsisHeading = "",
+  customSynopsis = [
+    "",
+    " Usage:  ",
+    "    or:  elide @|bold,fg(cyan) info|help|discord|bug...|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(yellow) srcfile.<js|py|rb|kt|java|wasm|...>|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] [FILE]",
+    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
+    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [FILE]",
+    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
+    "    or:  elide @|bold,fg(cyan) run|repl|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) run|repl|@ --js [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) run|repl|@ --language=[@|bold,fg(green) JS|@] [OPTIONS] [FILE]",
+    "    or:  elide @|bold,fg(cyan) run|repl|@ --languages=[@|bold,fg(green) JS|@,@|bold,fg(green) PYTHON|@,...] [OPTIONS] [FILE]",
+  ],
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
@@ -198,21 +215,38 @@ import elide.tool.io.RuntimeWorkdirManager
   )
   internal var timeout: Int = 30
 
+  /** Language and action selection aliases (as positionals). */
+  @ArgGroup(
+    exclusive = false,
+    multiplicity = "0..1",
+    heading = "%nLanguage/Action Sub-commands:%n",
+  ) lateinit var languageActionSelector: LanguagePositionals
+
   /** Source file shortcut alias. */
   @Parameters(
-    index = "0",
+    index = "1",
     description = ["Source file to run."],
     scope = ScopeType.INHERIT,
     arity = "0..1",
     paramLabel = "FILE",
   )
-  internal var srcfile: String? = null
+  internal var srcfile: Path? = null
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     // proxy to the `shell` command for a naked run
     return beanContext.getBean(ToolShellCommand::class.java).apply {
-      srcfile?.ifBlank { null }?.let {
-        runnable = it
+      if (languageActionSelector.language.isNotEmpty()) {
+        val langSelector = languageActionSelector.language.firstOrNull { !it.action }?.language
+        val actionSelector = languageActionSelector.language.firstOrNull { it.action }?.name
+        langSelector?.let {
+          languageHint = langSelector
+        }
+        actionSelector?.let {
+          actionHint = actionSelector
+        }
+      }
+      srcfile?.let {
+        runnable = it.toString()
       }
       call()
     }.commandResult.get()

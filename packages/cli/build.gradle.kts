@@ -105,12 +105,12 @@ val enableRuby = true
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
-val enableLlvm = false
-val enableEspresso = false
+val enableLlvm = true
+val enableEspresso = true
 val enableExperimental = false
 val enableEmbeddedResources = false
-val enableResourceFilter = true
-val enableAuxCache = false
+val enableResourceFilter = false
+val enableAuxCache = true
 val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableDashboard = false
@@ -557,6 +557,10 @@ tasks {
       signOptDistZip,
       signOptDistTar,
     )
+  }
+
+  installDist {
+    duplicatesStrategy = EXCLUDE
   }
 }
 

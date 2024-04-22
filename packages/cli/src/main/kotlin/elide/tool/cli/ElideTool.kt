@@ -198,9 +198,22 @@ import elide.tool.io.RuntimeWorkdirManager
   )
   internal var timeout: Int = 30
 
+  /** Source file shortcut alias. */
+  @Parameters(
+    index = "0",
+    description = ["Source file to run."],
+    scope = ScopeType.INHERIT,
+    arity = "0..1",
+    paramLabel = "FILE",
+  )
+  internal var srcfile: String? = null
+
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     // proxy to the `shell` command for a naked run
     return beanContext.getBean(ToolShellCommand::class.java).apply {
+      srcfile?.ifBlank { null }?.let {
+        runnable = it
+      }
       call()
     }.commandResult.get()
   }

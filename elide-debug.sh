@@ -37,7 +37,12 @@ fi
 STAGE_ZERO="$PWD/packages/cli/build/install/elide-jvm-$OS-$ARCH/bin/elide"
 
 # Unconditionally rebuild
-source "./elide-rebuild.sh"
+if [ ! -f "$STAGE_ZERO" ]; then
+    source "./elide-rebuild.sh"
+fi
+
+export JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
 
 # Run the stage 0 script with provided arguments.
 exec bash "$STAGE_ZERO" "$@"
+

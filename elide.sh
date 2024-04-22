@@ -36,8 +36,11 @@ fi
 # Location of the stage 0 binary.
 STAGE_ZERO="$PWD/packages/cli/build/install/elide-jvm-$OS-$ARCH/bin/elide"
 
-# Unconditionally rebuild
-source "./elide-rebuild.sh"
+# If the stage0 binary doesn't exist (at `$STAGE_ZERO`), then we build it; this happens via an external script which is
+# sourced in; this script will fail as needed if the user is missing Java or other dependencies.
+if [ ! -f "$STAGE_ZERO" ]; then
+    source "./elide-rebuild.sh"
+fi
 
 # Run the stage 0 script with provided arguments.
 exec bash "$STAGE_ZERO" "$@"

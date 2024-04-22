@@ -27,6 +27,7 @@ import kotlinx.serialization.json.decodeFromStream
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.EmbeddedResource
+import elide.runtime.plugins.bindings.Bindings
 import elide.runtime.plugins.vfs.Vfs
 import elide.runtime.plugins.vfs.include
 
@@ -91,6 +92,21 @@ import elide.runtime.plugins.vfs.include
    */
   protected fun configureLanguageSupport(scope: InstallationScope) {
     scope.configuration.enableLanguage(this)
+  }
+
+  /**
+   * Configure the shared intrinsics provided by the [Bindings] plugin, adding them to this plugin's [config].
+   *
+   * This method can be used by language plugins to opt into the shared bindings feature, which allows dinamic
+   * resolution of common language intrinsics at configuration time.
+   *
+   * If the [Bindings] plugin is not installed at the time of this call, no changes will be applied. This is a current
+   * limitation that will be lifted with future updates to the plugins API.
+   */
+  protected fun configureSharedBindings(scope: InstallationScope, config: AbstractLanguageConfig) {
+    scope.configuration.plugin(Bindings)?.let {
+      config.bindings { it.applyTo(this, scope) }
+    }
   }
 
   /**

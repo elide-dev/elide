@@ -80,6 +80,8 @@ import elide.runtime.plugins.AbstractLanguagePlugin
 
       // apply the configuration and create the plugin instance
       val config = JvmConfig().apply(configuration)
+      configureSharedBindings(scope, config)
+      
       val resources = resolveEmbeddedManifest(scope)
       val instance = Jvm(config)
 

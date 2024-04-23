@@ -61,6 +61,7 @@ suspend fun testRenderer(
   allTests: Flow<Pair<TestInfo, suspend () -> Deferred<TestResult>>>,
   workers: Int = 1,
 ) = runMosaicBlocking {
+  val start = System.currentTimeMillis()
   val candidates = ArrayDeque(allTests.toList(ArrayList()))
   val complete = mutableStateListOf<Test>()
   val tests = mutableStateListOf<Test>()
@@ -111,66 +112,7 @@ suspend fun testRenderer(
     Column {
       Log(complete)
       Status(tests)
-      Summary(totalTests, tests)
-    }
-  }
-}
-
-fun runJestSample() = runMosaicBlocking {
-  val paths = ArrayDeque(
-    listOf(
-      "tests/login.kt",
-      "tests/signup.kt",
-      "tests/forgot-password.kt",
-      "tests/reset-password.kt",
-      "tests/view-profile.kt",
-      "tests/edit-profile.kt",
-      "tests/delete-profile.kt",
-      "tests/posts.kt",
-      "tests/post.kt",
-      "tests/comments.kt",
-    )
-  )
-  val totalTests = paths.size
-
-  val complete = mutableStateListOf<Test>()
-  val tests = mutableStateListOf<Test>()
-
-  // TODO https://github.com/JakeWharton/mosaic/issues/3
-  repeat(4) { // Number of test workers.
-    launch(start = UNDISPATCHED) {
-      while (true) {
-        val path = paths.removeFirstOrNull() ?: break
-        val index = Snapshot.withMutableSnapshot {
-          val nextIndex = tests.size
-          tests += Test(path, Running)
-          nextIndex
-        }
-        delay(random.nextLong(2_500L, 4_000L))
-
-        // Flip a coin biased 60% to pass to produce the final state of the test.
-        tests[index] = when {
-          random.nextFloat() < .7f -> tests[index].copy(state = Pass)
-          else -> {
-            val test = tests[index]
-            val failures = buildList {
-              repeat(1 + random.nextLong(2).toInt()) {
-                add("Failure on line ${random.nextLong(50)} in ${test.path}")
-              }
-            }
-            test.copy(state = Fail, failures = failures)
-          }
-        }
-        complete += tests[index]
-      }
-    }
-  }
-
-  setContent {
-    Column {
-      Log(complete)
-      Status(tests)
-      Summary(totalTests, tests)
+      Summary(start, totalTests, tests)
     }
   }
 }
@@ -251,7 +193,7 @@ fun Status(tests: List<Test>) {
 }
 
 @Composable
-private fun Summary(totalTests: Int, tests: List<Test>) {
+private fun Summary(start: Long, totalTests: Int, tests: List<Test>) {
   val counts by derivedStateOf { tests.groupingBy { it.state }.eachCount() }
   val failed = counts[Fail] ?: 0
   val passed = counts[Pass] ?: 0
@@ -289,7 +231,8 @@ private fun Summary(totalTests: Int, tests: List<Test>) {
     Text("$totalTests total")
   }
 
-  Text("Time:  ${elapsed}s")
+  val fmtMs = "%dms".format(System.currentTimeMillis() - start)
+  Text("Time:  ${elapsed}s ($fmtMs)")
 
   if (running > 0) {
     TestProgress(totalTests, passed, failed, running)

@@ -44,9 +44,6 @@ import elide.tool.cli.cmd.lint.ToolLintCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.selftest.SelfTestCommand
 import elide.tool.cli.cmd.update.SelfUpdateCommand
-import elide.tool.cli.options.LanguagePositionals
-import elide.tool.cli.output.Counter
-import elide.tool.cli.output.runJestSample
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler

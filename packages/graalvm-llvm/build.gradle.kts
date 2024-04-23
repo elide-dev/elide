@@ -56,7 +56,6 @@ dependencies {
   api(libs.bundles.graalvm.llvm)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
-  implementation(projects.packages.graalvmJvm)
 
   // Testing
   testImplementation(projects.packages.test)

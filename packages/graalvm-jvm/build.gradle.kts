@@ -53,13 +53,13 @@ elide {
 }
 
 dependencies {
-  api(libs.graalvm.polyglot.java)
+  api(projects.packages.graalvmLlvm)
+  api(libs.graalvm.polyglot.java.community)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
   implementation(libs.graalvm.espresso.hotswap)
   implementation(libs.graalvm.espresso.language)
   implementation(libs.graalvm.truffle.nfi.libffi)
-  implementation(libs.graalvm.truffle.nfi.panama)
   implementation(libs.graalvm.espresso.polyglot)
 
   // Testing

@@ -64,11 +64,11 @@ github-api = "1.321"
 google-api-common = "2.16.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
-graalvm = "24.0.1"
+graalvm = "24.1.0-SNAPSHOT"
 graalvm-metadata = "0.3.6"
-graalvm-pin = "23.1.2"
+graalvm-pin = "24.1.0-SNAPSHOT"
 graalvm-plugin = "0.10.1"
-graalvm-svm-driver = "23.1.2"
+graalvm-svm-driver = "24.1.0-SNAPSHOT"
 gradleChecksum = "1.4.0"
 gradleCommonCustomUserData = "1.12.1"
 gradleTestRetry = "1.5.8"
@@ -409,20 +409,27 @@ graalvm-llvm-language-native-resources = { group = "org.graalvm.llvm", name = "l
 graalvm-llvm-language-nfi = { group = "org.graalvm.llvm", name = "llvm-language-nfi", version.ref = "graalvm" }
 graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm" }
 graalvm-polyglot-java = { group = "org.graalvm.polyglot", name = "java", version.ref = "graalvm" }
+graalvm-polyglot-java-community = { group = "org.graalvm.polyglot", name = "java-community", version.ref = "graalvm" }
 graalvm-polyglot-js = { group = "org.graalvm.polyglot", name = "js", version.ref = "graalvm" }
+graalvm-polyglot-js-community = { group = "org.graalvm.polyglot", name = "js-community", version.ref = "graalvm" }
 graalvm-polyglot-js-isolate = { group = "org.graalvm.polyglot", name = "js-isolate", version.ref = "graalvm" }
 graalvm-polyglot-llvm = { group = "org.graalvm.polyglot", name = "llvm", version.ref = "graalvm" }
+graalvm-polyglot-llvm-community = { group = "org.graalvm.polyglot", name = "llvm-community", version.ref = "graalvm" }
 graalvm-polyglot-python = { group = "org.graalvm.polyglot", name = "python", version.ref = "graalvm" }
+graalvm-polyglot-python-community = { group = "org.graalvm.polyglot", name = "python-community", version.ref = "graalvm" }
 graalvm-polyglot-ruby = { group = "org.graalvm.polyglot", name = "ruby", version.ref = "graalvm" }
+graalvm-polyglot-ruby-community = { group = "org.graalvm.polyglot", name = "ruby-community", version.ref = "graalvm" }
 graalvm-polyglot-tools = { group = "org.graalvm.polyglot", name = "tools", version.ref = "graalvm" }
 graalvm-polyglot-tools-coverage = { group = "org.graalvm.polyglot", name = "coverage", version.ref = "graalvm" }
-graalvm-polyglot-tools-dap = { group = "org.graalvm.polyglot", name = "dap", version.ref = "graalvm" }
-graalvm-polyglot-tools-heap = { group = "org.graalvm.polyglot", name = "heap", version.ref = "graalvm" }
-graalvm-polyglot-tools-insight = { group = "org.graalvm.polyglot", name = "insight", version.ref = "graalvm" }
-graalvm-polyglot-tools-inspect = { group = "org.graalvm.polyglot", name = "inspect", version.ref = "graalvm" }
-graalvm-polyglot-tools-lsp = { group = "org.graalvm.polyglot", name = "lsp", version.ref = "graalvm" }
-graalvm-polyglot-tools-profiler = { group = "org.graalvm.polyglot", name = "profiler", version.ref = "graalvm" }
+graalvm-polyglot-tools-dap = { group = "org.graalvm.polyglot", name = "dap-tool", version.ref = "graalvm" }
+graalvm-polyglot-tools-heap = { group = "org.graalvm.polyglot", name = "heap-tool", version.ref = "graalvm" }
+graalvm-polyglot-tools-insight = { group = "org.graalvm.polyglot", name = "insight-tool", version.ref = "graalvm" }
+graalvm-polyglot-tools-inspect = { group = "org.graalvm.polyglot", name = "inspect-tool", version.ref = "graalvm" }
+graalvm-polyglot-tools-lsp = { group = "org.graalvm.polyglot", name = "lsp-tool", version.ref = "graalvm" }
+graalvm-polyglot-tools-profiler = { group = "org.graalvm.polyglot", name = "profiler-tool", version.ref = "graalvm" }
 graalvm-polyglot-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
+graalvm-polyglot-wasm-community = { group = "org.graalvm.polyglot", name = "wasm-community", version.ref = "graalvm" }
+graalvm-python-embedding = { group = "org.graalvm.python", name = "python-embedding", version.ref = "graalvm" }
 graalvm-python-language = { group = "org.graalvm.python", name = "python-language", version.ref = "graalvm" }
 graalvm-python-language-enterprise = { group = "org.graalvm.python", name = "python-language-enterprise", version.ref = "graalvm" }
 graalvm-python-launcher = { group = "org.graalvm.python", name = "python-launcher", version.ref = "graalvm" }
@@ -439,12 +446,12 @@ graalvm-shadowed-json = { group = "org.graalvm.shadowed", name = "json", version
 graalvm-svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm" }
 graalvm-svm-driver = { group = "org.graalvm.nativeimage", name = "svm_driver", version.ref = "graalvm-svm-driver" }
 graalvm-svm-nativeImage-base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm" }
-graalvm-tools-chromeinspector = { group = "org.graalvm.tools", name = "chromeinspector", version.ref = "graalvm" }
-graalvm-tools-coverage = { group = "org.graalvm.tools", name = "coverage", version.ref = "graalvm" }
-graalvm-tools-dap = { group = "org.graalvm.tools", name = "dap", version.ref = "graalvm" }
+graalvm-tools-chromeinspector = { group = "org.graalvm.tools", name = "chromeinspector-tool", version.ref = "graalvm" }
+graalvm-tools-coverage = { group = "org.graalvm.tools", name = "coverage-tool", version.ref = "graalvm" }
+graalvm-tools-dap = { group = "org.graalvm.tools", name = "dap-tool", version.ref = "graalvm" }
 graalvm-tools-lsp-api = { group = "org.graalvm.tools", name = "lsp_api", version.ref = "graalvm" }
-graalvm-tools-lsp-impl = { group = "org.graalvm.tools", name = "lsp", version.ref = "graalvm" }
-graalvm-tools-profiler = { group = "org.graalvm.tools", name = "profiler", version.ref = "graalvm" }
+graalvm-tools-lsp-impl = { group = "org.graalvm.tools", name = "lsp-tool", version.ref = "graalvm" }
+graalvm-tools-profiler = { group = "org.graalvm.tools", name = "profiler-tool", version.ref = "graalvm" }
 graalvm-truffle-api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm" }
 graalvm-truffle-enterprise = { group = "org.graalvm.truffle", name = "truffle-enterprise", version.ref = "graalvm" }
 graalvm-truffle-nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm" }
@@ -806,11 +813,12 @@ koin = ["koin-annotations", "koin-core"]
 
 graalvm-polyglot = [
   "graalvm-polyglot",
-  "graalvm-polyglot-java",
-  "graalvm-polyglot-js",
-  "graalvm-polyglot-python",
-  "graalvm-polyglot-ruby",
-  "graalvm-polyglot-wasm",
+  "graalvm-polyglot-java-community",
+  "graalvm-polyglot-js-community",
+  "graalvm-polyglot-python-community",
+  "graalvm-polyglot-ruby-community",
+  "graalvm-polyglot-llvm-community",
+  "graalvm-polyglot-wasm-community",
 ]
 
 graalvm-tools = [
@@ -834,10 +842,10 @@ graalvm-llvm = [
 
 graalvm-espresso = ["graalvm-espresso-hotswap"]
 
-graalvm-python = ["graalvm-polyglot-python"]
+graalvm-python = ["graalvm-polyglot-python-community"]
 
 graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ruby-shared"]
 
-graalvm-js = ["graalvm-js-language", "graalvm-polyglot-js"]
+graalvm-js = ["graalvm-js-language", "graalvm-polyglot-js-community"]
 
 graalvm-js-isolate = ["graalvm-js-isolate", "graalvm-polyglot-js-isolate"]

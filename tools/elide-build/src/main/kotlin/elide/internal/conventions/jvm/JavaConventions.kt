@@ -112,18 +112,19 @@ internal fun Project.configurePinnedDependencies(conventions: ElideBuildExtensio
       // always prefer project modules
       preferProjectModules()
 
+      // @TODO: re-enable strict deps once gvm snapshot version is not in use
       if (
         !conventions.deps.locking &&
         !gradle.startParameter.isWriteDependencyLocks &&
         findProperty("elide.lockDeps")?.toString()?.toBoolean() != true
       ) {
         // require reproducible resolution
-        failOnNonReproducibleResolution()
+//        failOnNonReproducibleResolution()
       }
       if (conventions.deps.strict) {
         // fail eagerly on version conflict (includes transitive dependencies)
         failOnVersionConflict()
-        failOnChangingVersions()
+//        failOnChangingVersions()
       } else {
         // allow module caching
         cacheDynamicVersionsFor(7, "days")

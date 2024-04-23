@@ -47,7 +47,7 @@ import elide.runtime.plugins.js.JavaScriptVersion
     description = ["ECMA standard to use for JavaScript."],
     defaultValue = "ES2022",
   )
-  internal var ecma: JsLanguageLevel = JsLanguageLevel.ES2022
+  internal var ecma: JsLanguageLevel = JsLanguageLevel.ES2023
 
   /** Whether to activate NPM support. */
   @Option(

@@ -25,7 +25,7 @@ enum class GuestLanguage (
   internal val mimeTypes: List<String> = emptyList(),
   internal val dependsOn: List<GuestLanguage> = emptyList(),
   internal val secondary: Boolean = dependsOn.isNotEmpty(),
-) : elide.runtime.gvm.GuestLanguage {
+) : elide.runtime.gvm.GuestLanguage, elide.runtime.core.GuestLanguage {
   /** Interactive JavaScript VM. */
   JS (
     id = ENGINE_JS,
@@ -77,7 +77,6 @@ enum class GuestLanguage (
     id = "java",
     formalName = "JVM",
     experimental = true,
-    unimplemented = true,
     extensions = listOf("java"),
     mimeTypes = emptyList(),
   ),
@@ -86,6 +85,7 @@ enum class GuestLanguage (
   KOTLIN (
     id = "kt",
     formalName = "Kotlin",
+    engine = ENGINE_JVM,
     experimental = true,
     unimplemented = true,
     extensions = listOf("kt", "kts"),
@@ -117,7 +117,6 @@ enum class GuestLanguage (
   /** Interactive nested JVM. */
   WASM (
     id = ENGINE_WASM,
-    engine = "wasm",
     formalName = "WASM",
     experimental = true,
     suppressExperimentalWarning = true,
@@ -157,4 +156,6 @@ enum class GuestLanguage (
   override val symbol: String get() = id
 
   override val label: String get() = formalName
+
+  override val languageId: String get() = engine
 }

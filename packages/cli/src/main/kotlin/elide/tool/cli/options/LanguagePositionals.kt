@@ -48,5 +48,5 @@ import elide.tool.cli.GuestLanguage
     scope = INHERIT,
     paramLabel = "CMD_OR_LANGUAGE",
   )
-  var language: List<RunnerAlias> = emptyList()
+  internal lateinit var language: List<RunnerAlias>
 }

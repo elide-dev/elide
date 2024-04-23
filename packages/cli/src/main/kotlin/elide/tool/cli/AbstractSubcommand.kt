@@ -85,9 +85,6 @@ import org.graalvm.polyglot.Engine as VMEngine
         if (supported == null) {
           logging.debug("Language '${it.name}' not supported for CLI use: no support in Elide")
           null
-        } else if (!it.isInteractive) {
-          logging.debug("Language '${it.name}' not supported for CLI use: no REPL support")
-          null
         } else {
           logging.trace("Language '${it.name}' is supported")
           supported to it

@@ -333,7 +333,6 @@ dependencies {
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
   implementation(libs.jline.terminal.jansi)
-  implementation(libs.jline.terminal.jna)
   implementation(libs.jline.builtins)
   implementation(libs.jline.graal) {
     exclude(group = "org.slf4j", module = "slf4j-jdk14")
@@ -797,6 +796,7 @@ val initializeAtBuildTime = listOf(
 
   // --- Mordant -----
 
+  "com.github.ajalt.mordant.internal.MppImplKt",
   "com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls",
 
   // --- Netty ------
@@ -1466,5 +1466,14 @@ afterEvaluate {
     tasks.named(it).configure {
       doNotTrackState("too big for build cache")
     }
+  }
+}
+
+configurations.all {
+  listOf(
+    "net.java.dev.jna" to "jna",
+    libs.jline.terminal.jna.get().let { it.group to it.name },
+  ).forEach {
+    exclude(group = it.first, module = it.second)
   }
 }

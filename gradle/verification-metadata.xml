@@ -335,6 +335,7 @@
             <trusting group="com.glureau" name="html-mermaid-dokka-plugin" version="0.4.5"/>
             <trusting group="com.glureau" name="html-mermaid-dokka-plugin" version="0.4.6"/>
          </trusted-key>
+         <trusted-key id="905E244454501E0B0B47D4C8C612280A2897FDF0" group="io.github.astonbitecode" name="j4rs" version="0.18.0"/>
          <trusted-key id="90EE19787A7BCF6FD37A1E9180C08B1C29100955" group="com.jakewharton.mosaic"/>
          <trusted-key id="92C116894045B1900F9800249F019A04FAB052E7" group="com.google.javascript"/>
          <trusted-key id="939B0D42EB73EDA659AF78EC37D490C301D1B205" group="de.cketti.unicode"/>

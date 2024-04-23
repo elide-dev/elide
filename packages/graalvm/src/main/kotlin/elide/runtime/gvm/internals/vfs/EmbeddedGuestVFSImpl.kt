@@ -341,6 +341,22 @@ internal class EmbeddedGuestVFSImpl private constructor (
     }
 
     /**
+     * Set the [bundle] to use directly (pre-loaded from some data source).
+     *
+     * Note that setting this property force-unsets all other source options.
+     *
+     * @see bundle to set this value as a property.
+     * @param bundle [FilesystemInfo] and [FileSystem] pair to use as the bundle.
+     * @return This builder.
+     */
+    fun setBundle(bundle: Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>>): VFSBuilder<EmbeddedGuestVFSImpl> {
+      setBundle(
+        bundle.first to bundle.second
+      )
+      return this
+    }
+
+    /**
      * Set the [paths] to load the bundle file from; can be a regular file-path, or a `classpath:`-prefixed path to load
      * a resource from the host app classpath.
      *

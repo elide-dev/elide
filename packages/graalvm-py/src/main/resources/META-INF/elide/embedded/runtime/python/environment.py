@@ -52,6 +52,16 @@ class _Elide_ApplicationEnvironment(object):
     def __repr__(self):
         return "Environ(%s)" % ", ".join(self.all_keys())
 
+    def __dir__(self):
+        return (
+            ["get", "contains_key", "all_keys", "__getitem__", "__setitem__", "__repr__", "__contains__", "__dir__"]
+        )
+
+    def get(self, item, default=None):
+        if item in self:
+            return self[item]
+        return default
+
     @classmethod
     def __patch(cls, singleton):
         """Patch the OS environment component, if it has not been patched yet."""

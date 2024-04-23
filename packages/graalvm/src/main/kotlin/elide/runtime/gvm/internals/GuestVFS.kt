@@ -30,6 +30,48 @@ import elide.runtime.gvm.internals.AbstractVMEngine.RuntimeVFS
  */
 public interface GuestVFS : FileSystem, Closeable, AutoCloseable {
   /**
+   * ## Guest VFS: Write-ability
+   *
+   * Indicates whether this VFS implementation allows writes to the virtual file system.
+   */
+  public val writable: Boolean
+
+  /**
+   * ## Guest VFS: Delete-ability
+   *
+   * Indicates whether this VFS implementation allows deletion of files from the virtual file system.
+   */
+  public val deletable: Boolean
+
+  /**
+   * ## Guest VFS: Virtual-ness
+   *
+   * Indicates whether this VFS implementation is virtualized.
+   */
+  public val virtual: Boolean
+
+  /**
+   * ## Guest VFS: Host-ness
+   *
+   * Indicates whether this VFS implementation is backed by host I/O facilities.
+   */
+  public val host: Boolean
+
+  /**
+   * ## Guest VFS: Compound
+   *
+   * Indicates whether this VFS implementation is backed by multiple layers.
+   */
+  public val compound: Boolean
+
+  /**
+   * ## Guest VFS: Supports symlinks
+   *
+   * Indicates whether this VFS implementation supports symbolic links.
+   */
+  public val supportsSymlinks: Boolean
+
+  /**
    * ## Guest VFS: Host file access.
    *
    * Indicates whether this VFS implementation allows access to host-side I/O for regular files on-disk. Unless I/O for

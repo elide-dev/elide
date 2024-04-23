@@ -23,7 +23,9 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOption
+import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
+import elide.runtime.plugins.llvm.LLVM
 
 /**
  * Language plugin providing support for JVM bytecode.
@@ -79,6 +81,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin
       configureLanguageSupport(scope)
 
       // apply the configuration and create the plugin instance
+      scope.configuration.getOrInstall(LLVM)
       val config = JvmConfig().apply(configuration)
       val resources = resolveEmbeddedManifest(scope)
       val instance = Jvm(config)

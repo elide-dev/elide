@@ -648,6 +648,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
   "-H:DeadlockWatchdogInterval=15",
+  "-H:MaxRuntimeCompileMethods=10000",
   "-H:CLibraryPath=$nativesPath",
   if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
   if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
@@ -743,6 +744,7 @@ val releaseFlags: List<String> = listOf(
   "-O3",
   "-H:+RemoveUnusedSymbols",
   "-H:-ParseRuntimeOptions",
+  "-H:+LocalizationOptimizedMode",
 ).asSequence().plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",

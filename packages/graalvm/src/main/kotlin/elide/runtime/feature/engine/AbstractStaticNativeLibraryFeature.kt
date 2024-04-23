@@ -16,7 +16,6 @@ package elide.runtime.feature.engine
 import com.oracle.svm.core.jdk.NativeLibrarySupport
 import com.oracle.svm.core.jdk.PlatformNativeLibrarySupport
 import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl
-import com.oracle.svm.hosted.c.NativeLibraries
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import elide.runtime.feature.NativeLibraryFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo

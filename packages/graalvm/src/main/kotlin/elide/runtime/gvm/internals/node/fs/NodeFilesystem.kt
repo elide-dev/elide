@@ -31,11 +31,9 @@ import elide.runtime.intrinsics.js.node.fs.StringOrBuffer
 
 // Installs the Node `fs` and `fs/promises` modules into the intrinsic bindings.
 @Intrinsic internal class NodeFilesystemModule : AbstractNodeBuiltinModule() {
-  @Inject private lateinit var filesystem: GuestVFS
-
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = NodeFilesystem.createStd(filesystem)
-    bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = NodeFilesystem.createPromises(filesystem)
+//    bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = NodeFilesystem.createStd(filesystem)
+//    bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = NodeFilesystem.createPromises(filesystem)
   }
 }
 

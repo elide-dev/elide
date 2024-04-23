@@ -63,12 +63,12 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
       logging.debug("No host access requested, using in-memory vfs")
       acquireEmbeddedVfs(config.writable, config.registeredBundles, config.languages)
     } else {
-      // if the configuration requires host access, we use a hybrid vfs
-      logging.debug("Host access requested, using hybrid vfs")
-      HybridVfs.acquire(config.writable, config.registeredBundles)
-    }.let { baseVfs ->
       // python and ruby have their own virtual filesystem delegates
-      if (!config.languages.any { it.languageId == "ruby" || it.languageId == "python" }) baseVfs else {
+      if (!config.languages.any { it.languageId == "ruby" || it.languageId == "python" }) {
+        // if the configuration requires host access, we use a hybrid vfs
+        logging.debug("Host access requested, using hybrid vfs")
+        HybridVfs.acquire(config.writable, config.registeredBundles)
+      } else {
         acquireCompoundVfs(config.useHost, config.writable, config.registeredBundles, config.languages)
       }
     }.let {

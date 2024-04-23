@@ -3,36 +3,6 @@
   "language": "JVM",
   "vfs": [],
   "artifacts": [],
-  "image": {
-    "type": "native",
-    "darwin": {
-      "arm64": {
-        "bundle": "java-darwin-aarch64.tar.xz",
-        "sha256": "eba65a557167035524e6bf0c3518f27d47db82014f60496ca77da3a89147f2c1",
-        "signature": {
-          "bundle": "java-darwin-aarch64.sigstore.json.gz",
-          "sha256": "e02d5a57758141ad14da7454bae529c0c35b1d2c25ae3fc7758473373dc4fefc",
-          "stamp": "MEUCIDDuwVXn/oF+irOOevmc27eDEh4GutTvYtxVqPK7baU3AiEAyAGAbPhWvX85NZdWmKkSmNYAfVEjZEfDwfKBbKtgqNk="
-        }
-      }
-    },
-    "linux": {
-      "amd64": {
-        "bundle": "java-linux-amd64.tar.xz",
-        "sha256": "f6bfd897896bad60792388acc5d5558136ec43b799a99c0fea34312bfab5fdc7",
-        "signature": {
-          "bundle": "java-linux-amd64.sigstore.json.gz",
-          "sha256": "cdc0dac30530fdd81bf21c61d3c3593ea11d545eafb3f459b33acdd8bb3fc346",
-          "stamp": "MEYCIQD3v8D4jmEOS32SfLflCfnQsFB/oWIWdxSaUPZq3GTo1AIhALdUbQzoTw9qjnnVaFtAdo2jW/UMiyW6HtQfn4om0zem"
-        }
-      }
-    }
-  },
   "scripts": [],
-  "bundles": [
-    {
-      "path": "java-darwin-aarch64.tar.xz",
-      "platform": "darwin_aarch64"
-    }
-  ]
+  "bundles": []
 }

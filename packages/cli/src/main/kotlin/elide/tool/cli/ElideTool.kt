@@ -26,7 +26,6 @@ import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
-import java.nio.file.Path
 import java.security.Security
 import java.util.*
 import kotlin.system.exitProcess
@@ -216,37 +215,41 @@ import elide.tool.io.RuntimeWorkdirManager
   internal var timeout: Int = 30
 
   /** Language and action selection aliases (as positionals). */
-  @ArgGroup(
-    exclusive = false,
-    multiplicity = "0..1",
-    heading = "%nLanguage/Action Sub-commands:%n",
-  ) lateinit var languageActionSelector: LanguagePositionals
+//  @ArgGroup(
+//    exclusive = false,
+//    multiplicity = "0..1",
+//    heading = "%nLanguage/Action Sub-commands:%n",
+//  ) lateinit var languageActionSelector: LanguagePositionals
 
   /** Source file shortcut alias. */
   @Parameters(
-    index = "1",
+    index = "0",
     description = ["Source file to run."],
     scope = ScopeType.INHERIT,
     arity = "0..1",
     paramLabel = "FILE",
   )
-  internal var srcfile: Path? = null
+  internal var srcfile: String? = null
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     // proxy to the `shell` command for a naked run
     return beanContext.getBean(ToolShellCommand::class.java).apply {
-      if (languageActionSelector.language.isNotEmpty()) {
-        val langSelector = languageActionSelector.language.firstOrNull { !it.action }?.language
-        val actionSelector = languageActionSelector.language.firstOrNull { it.action }?.name
-        langSelector?.let {
-          languageHint = langSelector
-        }
-        actionSelector?.let {
-          actionHint = actionSelector
-        }
-      }
+//      if (languageActionSelector.language.isNotEmpty()) {
+//        val langSelector = languageActionSelector.language.firstOrNull { !it.action }?.language
+//        val actionSelector = languageActionSelector.language.firstOrNull { it.action }?.name
+//        langSelector?.let {
+//          languageHint = langSelector
+//        }
+//        actionSelector?.let {
+//          actionHint = actionSelector
+//        }
+//      }
       srcfile?.let {
-        runnable = it.toString()
+        if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
+          runnable = it
+        } else {
+          languageHint = it
+        }
       }
       call()
     }.commandResult.get()

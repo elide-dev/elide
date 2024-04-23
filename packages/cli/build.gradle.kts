@@ -733,12 +733,14 @@ val profiles: List<String> = listOf(
 )
 
 // GVM release flags
-val gvmReleaseFlags: List<String> = listOf()
+val gvmReleaseFlags: List<String> = listOf(
+  "-O3",
+  "-flto",
+)
 
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
   "-O3",
-  "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
   "-H:-ParseRuntimeOptions",
 ).asSequence().plus(releaseCFlags.flatMap {
@@ -813,26 +815,11 @@ val initializeAtRuntime: List<String> = listOf(
   "com.sun.tools.javac.file.Locations",
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",
-  "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
-  "io.netty.handler.codec.compression.BrotliOptions",
-  "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
-  "io.netty.handler.ssl.JdkNpnApplicationProtocolNegotiator",
-  "io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder",
-//  "org.truffleruby.aot.ParserCache",
-//  "org.truffleruby.core.encoding.Encodings",
-//  "org.truffleruby.core.format.FormatEncoding",
-//  "org.truffleruby.core.format.rbsprintf.RBSprintfSimpleTreeBuilder",
-//  "org.truffleruby.core.format.printf.PrintfSimpleTreeBuilder",
-//  "org.truffleruby.core.string.FrozenStrings",
-//  "org.truffleruby.parser.lexer.RubyLexer${'$'}Keyword${'$'}Maps",
   "kotlin.random.AbstractPlatformRandom",
   "kotlin.random.XorWowRandom",
   "kotlin.random.Random${'$'}Default",
   "kotlin.random.RandomKt",
   "kotlin.random.jdk8.PlatformThreadLocalRandom",
-  "kotlin.internal.jdk8.JDK8PlatformImplementations",
-  "kotlin.internal.jdk8.JDK8PlatformImplementations${'$'}ReflectSdkVersion",
-  "kotlin.jvm.internal.MutablePropertyReference1Impl",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()

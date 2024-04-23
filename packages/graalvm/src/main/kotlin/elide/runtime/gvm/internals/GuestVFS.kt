@@ -16,6 +16,8 @@ package elide.runtime.gvm.internals
 import org.graalvm.polyglot.io.FileSystem
 import java.io.Closeable
 import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Path
 import elide.runtime.gvm.internals.AbstractVMEngine.RuntimeVFS
 
 /**
@@ -70,6 +72,17 @@ public interface GuestVFS : FileSystem, Closeable, AutoCloseable {
    * Indicates whether this VFS implementation supports symbolic links.
    */
   public val supportsSymlinks: Boolean
+
+  /**
+   * ## Exists
+   *
+   * Determine whether the [path] provided exists in this VFS, considering lazy reads and other deferred activity; the
+   * default implementation simply delegates to `Files.exists`.
+   *
+   * @param path Path to check for existence
+   * @return Whether the path exists
+   */
+  public fun existsAny(path: Path): Boolean = Files.exists(path)
 
   /**
    * ## Guest VFS: Host file access.

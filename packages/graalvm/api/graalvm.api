@@ -1,3 +1,11 @@
+public final synthetic class elide/runtime/core/$PolyglotEngineConfiguration$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public abstract interface annotation class elide/runtime/core/DelicateElideApi : java/lang/annotation/Annotation {
 }
 
@@ -305,6 +313,7 @@ public final class elide/runtime/core/internals/graalvm/GraalVMRuntime$Companion
 	public final fun getGVM_23_1 ()Lelide/runtime/core/Version;
 	public final fun getGVM_24 ()Lelide/runtime/core/Version;
 	public final fun getGVM_24_0_1 ()Lelide/runtime/core/Version;
+	public final fun getGVM_24_1_0 ()Lelide/runtime/core/Version;
 }
 
 public final class elide/runtime/core/internals/graalvm/GraalVMRuntimeKt {
@@ -984,6 +993,12 @@ public class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/ru
 public abstract interface class elide/runtime/gvm/internals/GuestVFS : java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/io/FileSystem {
 	public abstract fun allowsHostFileAccess ()Z
 	public abstract fun allowsHostSocketAccess ()Z
+	public abstract fun getCompound ()Z
+	public abstract fun getDeletable ()Z
+	public abstract fun getHost ()Z
+	public abstract fun getSupportsSymlinks ()Z
+	public abstract fun getVirtual ()Z
+	public abstract fun getWritable ()Z
 }
 
 public abstract interface class elide/runtime/gvm/internals/GuestVFS$VFSConfigurator {
@@ -994,6 +1009,24 @@ public abstract interface class elide/runtime/gvm/internals/GuestVFS$VFSConfigur
 public final class elide/runtime/gvm/internals/IntrinsicsManager {
 	public fun <init> (Ljava/util/List;)V
 	public final fun resolver ()Lelide/runtime/intrinsics/IntrinsicsResolver;
+}
+
+public abstract interface class elide/runtime/gvm/internals/LanguageVFS : elide/runtime/gvm/internals/GuestVFS {
+	public abstract fun accepts (Ljava/nio/file/Path;)Z
+	public abstract fun getLanguageId ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/gvm/internals/ProcessManager {
+	public static final field Companion Lelide/runtime/gvm/internals/ProcessManager$Companion;
+	public static fun acquire ()Lelide/runtime/gvm/internals/ProcessManager;
+	public abstract fun arguments ()[Ljava/lang/String;
+	public static fun initializeStatic ([Ljava/lang/String;Ljava/lang/String;)V
+	public abstract fun workingDirectory ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/ProcessManager$Companion {
+	public final fun acquire ()Lelide/runtime/gvm/internals/ProcessManager;
+	public final fun initializeStatic ([Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public abstract interface class elide/runtime/gvm/internals/VMProperty : java/lang/Comparable {
@@ -1451,6 +1484,130 @@ public final synthetic class elide/runtime/gvm/internals/js/$JsRuntime$JsRuntime
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public final class elide/runtime/gvm/internals/node/NodeStdlib {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/node/NodeStdlib;
+	public final fun getPath ()Lelide/runtime/intrinsics/js/node/PathAPI;
+	public final fun getProcess ()Lelide/runtime/intrinsics/js/node/ProcessAPI;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final class elide/runtime/gvm/internals/node/path/PathBuf : elide/runtime/intrinsics/js/node/path/Path {
+	public static final field Companion Lelide/runtime/gvm/internals/node/path/PathBuf$Companion;
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/node/path/PathStyle;Lkotlinx/io/files/Path;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun charAt (I)C
+	public fun compareTo (Lelide/runtime/intrinsics/js/node/path/Path;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun copy ()Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun from (Lelide/runtime/intrinsics/js/node/path/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static fun from (Ljava/io/File;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static fun from (Ljava/lang/String;Lelide/runtime/gvm/internals/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static final fun from$default (Ljava/lang/String;Lelide/runtime/gvm/internals/node/path/PathStyle;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun get (I)C
+	public fun getBase ()Ljava/lang/String;
+	public fun getDir ()Ljava/lang/String;
+	public fun getExt ()Ljava/lang/String;
+	public fun getLength ()I
+	public fun getName ()Ljava/lang/String;
+	public fun getRoot ()Ljava/lang/String;
+	public fun getStyle ()Lelide/runtime/gvm/internals/node/path/PathStyle;
+	public fun hashCode ()I
+	public fun isAbsolute ()Z
+	public fun join (Ljava/lang/Iterable;)Ljava/lang/String;
+	public fun join (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+	public fun join ([Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public final fun length ()I
+	public fun split ()Lkotlin/sequences/Sequence;
+	public fun subSequence (II)Ljava/lang/CharSequence;
+	public fun toJavaPath ()Ljava/nio/file/Path;
+	public fun toKotlinPath ()Lkotlinx/io/files/Path;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/node/path/PathBuf$Companion : elide/runtime/intrinsics/js/node/path/PathFactory {
+	public fun from (Lelide/runtime/intrinsics/js/node/path/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/io/File;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/lang/String;Lelide/runtime/gvm/internals/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+}
+
+public final class elide/runtime/gvm/internals/node/path/PathStyle : java/lang/Enum {
+	public static final field POSIX Lelide/runtime/gvm/internals/node/path/PathStyle;
+	public static final field WIN32 Lelide/runtime/gvm/internals/node/path/PathStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/node/path/PathStyle;
+	public static fun values ()[Lelide/runtime/gvm/internals/node/path/PathStyle;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$Provide0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1638,6 +1795,16 @@ public final class elide/runtime/gvm/vfs/HostVFS {
 	public final fun scopedTo (Ljava/nio/file/Path;Z)Lelide/runtime/gvm/internals/GuestVFS;
 	public static synthetic fun scopedTo$default (Lelide/runtime/gvm/vfs/HostVFS;Ljava/lang/String;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/GuestVFS;
 	public static synthetic fun scopedTo$default (Lelide/runtime/gvm/vfs/HostVFS;Ljava/nio/file/Path;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/GuestVFS;
+}
+
+public final class elide/runtime/gvm/vfs/LanguageVFS {
+	public static final field INSTANCE Lelide/runtime/gvm/vfs/LanguageVFS;
+	public final fun delegate (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Lelide/runtime/gvm/internals/LanguageVFS;
+}
+
+public abstract interface class elide/runtime/gvm/vfs/LanguageVFS$LanguageVFSInfo {
+	public abstract fun getFsProvider ()Lkotlin/jvm/functions/Function0;
+	public abstract fun getRouter ()Lkotlin/jvm/functions/Function1;
 }
 
 public final class elide/runtime/intrinsics/ElideBindings {
@@ -2075,6 +2242,202 @@ public abstract interface class elide/runtime/intrinsics/js/express/ExpressRespo
 	public abstract fun send (Lorg/graalvm/polyglot/Value;)V
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/AbortSignal {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/FilesystemAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun readFile (Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
+	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
+	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
+	public abstract fun readFile (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/FilesystemPromiseAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun readFile (Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun readFile (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/PathAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun basename (Lelide/runtime/intrinsics/js/node/path/Path;Ljava/lang/String;)Ljava/lang/String;
+	public fun basename (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun basename (Lkotlinx/io/files/Path;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun basename$default (Lelide/runtime/intrinsics/js/node/PathAPI;Lelide/runtime/intrinsics/js/node/path/Path;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun basename$default (Lelide/runtime/intrinsics/js/node/PathAPI;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun basename$default (Lelide/runtime/intrinsics/js/node/PathAPI;Lkotlinx/io/files/Path;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun dirname (Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun dirname (Ljava/lang/String;)Ljava/lang/String;
+	public fun dirname (Lkotlinx/io/files/Path;)Ljava/lang/String;
+	public abstract fun extname (Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun extname (Ljava/lang/String;)Ljava/lang/String;
+	public fun extname (Lkotlinx/io/files/Path;)Ljava/lang/String;
+	public abstract fun format (Ljava/lang/Object;)Ljava/lang/String;
+	public abstract fun getDelimiter ()Ljava/lang/String;
+	public abstract fun getPosix ()Lelide/runtime/intrinsics/js/node/PathAPI;
+	public abstract fun getSep ()Ljava/lang/String;
+	public abstract fun getWin32 ()Lelide/runtime/intrinsics/js/node/PathAPI;
+	public abstract fun isAbsolute (Lelide/runtime/intrinsics/js/node/path/Path;)Z
+	public fun isAbsolute (Ljava/lang/String;)Z
+	public fun isAbsolute (Lkotlinx/io/files/Path;)Z
+	public abstract fun join (Lelide/runtime/intrinsics/js/node/path/Path;[Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun join (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+	public fun join (Lkotlinx/io/files/Path;[Lkotlinx/io/files/Path;)Ljava/lang/String;
+	public abstract fun normalize (Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun normalize (Ljava/lang/String;)Ljava/lang/String;
+	public fun normalize (Lkotlinx/io/files/Path;)Ljava/lang/String;
+	public fun parse (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun parse (Ljava/lang/String;Lelide/runtime/gvm/internals/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun relative (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun relative (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun relative (Lkotlinx/io/files/Path;Lkotlinx/io/files/Path;)Ljava/lang/String;
+	public abstract fun resolve (Lelide/runtime/intrinsics/js/node/path/Path;[Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun resolve (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+	public fun resolve (Lkotlinx/io/files/Path;[Lkotlinx/io/files/Path;)Ljava/lang/String;
+	public abstract fun toNamespacedPath (Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun toNamespacedPath (Ljava/lang/String;)Ljava/lang/String;
+	public fun toNamespacedPath (Lkotlinx/io/files/Path;)Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ProcessAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun exit ()V
+	public abstract fun exit (I)V
+	public abstract fun getArch ()Ljava/lang/String;
+	public abstract fun getArgv ()[Ljava/lang/String;
+	public abstract fun getCwd ()Ljava/lang/String;
+	public abstract fun getEnv ()Lelide/runtime/intrinsics/js/node/process/ProcessEnvironmentAPI;
+	public abstract fun getPid ()J
+	public abstract fun getPlatform ()Ljava/lang/String;
+	public abstract fun nextTick (Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/fs/FileHandle {
+}
+
+public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun copy (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEncoding ()Ljava/lang/Object;
+	public final fun getFlag ()Ljava/lang/String;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions$Companion {
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/path/Path : elide/runtime/intrinsics/js/StringLike, java/lang/Comparable {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/path/Path$Companion;
+	public abstract fun copy ()Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun getBase ()Ljava/lang/String;
+	public abstract fun getDir ()Ljava/lang/String;
+	public abstract fun getExt ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getRoot ()Ljava/lang/String;
+	public abstract fun getStyle ()Lelide/runtime/gvm/internals/node/path/PathStyle;
+	public abstract fun isAbsolute ()Z
+	public abstract fun join (Ljava/lang/Iterable;)Ljava/lang/String;
+	public abstract fun join (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun join ([Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public abstract fun split ()Lkotlin/sequences/Sequence;
+	public abstract fun toJavaPath ()Ljava/nio/file/Path;
+	public abstract fun toKotlinPath ()Lkotlinx/io/files/Path;
+}
+
+public final class elide/runtime/intrinsics/js/node/path/Path$Companion : elide/runtime/intrinsics/js/node/path/PathFactory {
+	public fun from (Lelide/runtime/intrinsics/js/node/path/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/io/File;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/lang/String;Lelide/runtime/gvm/internals/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/path/PathFactory {
+	public abstract fun from (Lelide/runtime/intrinsics/js/node/path/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun from (Ljava/io/File;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun from (Ljava/lang/String;Lelide/runtime/gvm/internals/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/path/PathFactory;Ljava/lang/String;Lelide/runtime/gvm/internals/node/path/PathStyle;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/path/Path;
+}
+
+public final class elide/runtime/intrinsics/js/node/process/ProcessArch : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field ARM Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public static final field ARM64 Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public static final field Companion Lelide/runtime/intrinsics/js/node/process/ProcessArch$Companion;
+	public static final field X64 Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public static final field X86 Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static final fun host ()Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public static fun values ()[Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+}
+
+public final class elide/runtime/intrinsics/js/node/process/ProcessArch$Companion : elide/core/api/Symbolic$SealedResolver {
+	public final fun host ()Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public synthetic fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolveSymbol (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessArch;
+	public synthetic fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
+	public fun unresolved (Ljava/lang/String;)Lelide/core/api/Symbolic$Unresolved;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/process/ProcessEnvironmentAPI : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
+	public abstract fun all ()Ljava/util/Map;
+}
+
+public final class elide/runtime/intrinsics/js/node/process/ProcessPlatform : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/process/ProcessPlatform$Companion;
+	public static final field LINUX Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public static final field MACOS Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public static final field WINDOWS Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static final fun host ()Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public static fun values ()[Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+}
+
+public final class elide/runtime/intrinsics/js/node/process/ProcessPlatform$Companion : elide/core/api/Symbolic$SealedResolver {
+	public final fun host ()Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public synthetic fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolveSymbol (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
+	public synthetic fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
+	public fun unresolved (Ljava/lang/String;)Lelide/core/api/Symbolic$Unresolved;
+}
+
 public abstract interface class elide/runtime/intrinsics/js/typed/UUID : elide/runtime/intrinsics/js/StringLike {
 	public abstract fun getAsString ()Ljava/lang/String;
 }
@@ -2184,6 +2547,7 @@ public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runti
 	protected static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$Companion;
 	public fun <init> ()V
 	protected final fun configureLanguageSupport (Lelide/runtime/core/EnginePlugin$InstallationScope;)V
+	protected final fun configureSharedBindings (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguageConfig;)V
 	protected fun getManifestKey ()Ljava/lang/String;
 	protected final fun initializeEmbeddedScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	protected final fun installEmbeddedBundles (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
@@ -2262,6 +2626,36 @@ public synthetic class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePlug
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/plugins/bindings/Bindings {
+	public static final field Plugin Lelide/runtime/plugins/bindings/Bindings$Plugin;
+	public synthetic fun <init> (Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun applyTo (Ljava/util/Map;Lelide/runtime/core/EnginePlugin$InstallationScope;)V
+}
+
+public final class elide/runtime/plugins/bindings/Bindings$Plugin : elide/runtime/core/EnginePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/bindings/Bindings;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/bindings/BindingsConfig {
+	public final fun getResolver ()Lelide/runtime/plugins/bindings/BindingsResolver;
+	public final fun setResolver (Lelide/runtime/plugins/bindings/BindingsResolver;)V
+}
+
+public abstract interface class elide/runtime/plugins/bindings/BindingsInstaller {
+	public abstract fun install (Ljava/util/Map;Lelide/runtime/core/EnginePlugin$InstallationScope;)V
+}
+
+public abstract interface class elide/runtime/plugins/bindings/BindingsResolver {
+	public abstract fun resolveBindings ()Lkotlin/sequences/Sequence;
+}
+
+public final class elide/runtime/plugins/bindings/BindingsResolver$Empty : elide/runtime/plugins/bindings/BindingsResolver {
+	public static final field INSTANCE Lelide/runtime/plugins/bindings/BindingsResolver$Empty;
+	public fun resolveBindings ()Lkotlin/sequences/Sequence;
 }
 
 public final class elide/runtime/plugins/debug/Debug {
@@ -2520,6 +2914,7 @@ public final class elide/runtime/plugins/js/JavaScriptVersion : java/lang/Enum {
 	public static final field ES2020 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES2021 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES2022 Lelide/runtime/plugins/js/JavaScriptVersion;
+	public static final field ES2023 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES5 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES6 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field LATEST Lelide/runtime/plugins/js/JavaScriptVersion;
@@ -2533,17 +2928,21 @@ public final class elide/runtime/plugins/vfs/Vfs {
 	public static final field Plugin Lelide/runtime/plugins/vfs/Vfs$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/vfs/VfsConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getConfig ()Lelide/runtime/plugins/vfs/VfsConfig;
+	public static final fun registerLanguageVfs (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class elide/runtime/plugins/vfs/Vfs$Plugin : elide/runtime/core/EnginePlugin {
 	public fun getKey-wLvarY0 ()Ljava/lang/String;
 	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/vfs/Vfs;
 	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public final fun registerLanguageVfs (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class elide/runtime/plugins/vfs/VfsConfig {
+	public final fun getLanguages ()Ljava/util/Set;
 	public final fun getWritable ()Z
 	public final fun include (Ljava/net/URI;)V
+	public final fun setLanguages (Ljava/util/Set;)V
 	public final fun setWritable (Z)V
 }
 

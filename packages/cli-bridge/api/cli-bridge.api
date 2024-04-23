@@ -1,0 +1,5 @@
+public class dev/elide/cli/bridge/CliNativeBridge {
+	public fun <init> ()V
+	public static fun hello ()V
+}
+

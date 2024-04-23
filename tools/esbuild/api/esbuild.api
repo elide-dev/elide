@@ -1,0 +1,6 @@
+public final class dev/elide/runtime/tooling/esbuild/ESBuild {
+	public static final field INSTANCE Ldev/elide/runtime/tooling/esbuild/ESBuild;
+	public static final fun main ([Ljava/lang/String;)V
+	public final fun run ([Ljava/lang/String;)V
+}
+

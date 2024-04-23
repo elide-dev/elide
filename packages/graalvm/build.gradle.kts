@@ -19,6 +19,7 @@
   "COMPATIBILITY_WARNING",
 )
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import kotlinx.benchmark.gradle.benchmark
 import elide.internal.conventions.kotlin.KotlinTarget
@@ -47,6 +48,12 @@ version = rootProject.version as String
 
 val enableJpms = false
 val ktCompilerArgs = emptyList<String>()
+val javacArgs = listOf(
+  "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+)
 
 elide {
   publishing {
@@ -166,6 +173,12 @@ micronaut {
       "elide.runtime.gvm.intrinsics.*",
     ))
   }
+}
+
+val benchmarksCompileClasspath: Configuration by configurations.getting {
+  extendsFrom(
+    configurations.compileClasspath.get(),
+  )
 }
 
 val benchmarksImplementation: Configuration by configurations.getting {
@@ -305,12 +318,7 @@ tasks {
     if (enableJpms) modularity.inferModulePath = true
 
     options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-      listOf(
-        "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
-        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-        "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
-      )
+      javacArgs
     })
   }
 

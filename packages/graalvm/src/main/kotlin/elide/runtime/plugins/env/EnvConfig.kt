@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentSkipListMap
 import java.util.function.Supplier
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.HOST
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
 
 /**
@@ -115,7 +116,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE
       public val defaultValue: String? = null,
       override val name: String,
     ) : EnvVar {
-      override val source: EnvVariableSource get() = INLINE
+      override val source: EnvVariableSource get() = HOST
       override val value: String? get() = System.getenv(name) ?: defaultValue
     }
 

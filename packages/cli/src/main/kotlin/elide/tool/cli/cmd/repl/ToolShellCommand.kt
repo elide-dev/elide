@@ -477,15 +477,19 @@ import elide.tool.project.ProjectManager
     internal fun apply(
       project: ProjectInfo?,
       config: PolyglotEngineConfiguration,
+      host: Boolean = false,
+      dotenv: Boolean = true,
     ) = config.environment {
-      val effectiveInjectedEnv = TreeMap<String, EnvVar>()
-
       // inject `NODE_ENV`
-      effectiveInjectedEnv["NODE_ENV"] = EnvVar.of("NODE_ENV", if (ElideCLITool.ELIDE_RELEASE_TYPE == "DEV") {
+      environment("NODE_ENV", if (ElideCLITool.ELIDE_RELEASE_TYPE == "DEV") {
         "development"
       } else {
         "production"
       })
+
+      if (host) System.getenv().entries.forEach {
+        mapToHostEnv(it.key)
+      }
 
       // apply project-level environment variables first (if applicable)
       project?.env?.vars?.forEach {
@@ -493,36 +497,14 @@ import elide.tool.project.ProjectManager
           if (it.value.source == DOTENV && !dotenv) {
             return@forEach  // skip .env vars if so instructed
           }
-          effectiveInjectedEnv[it.key] = requireNotNull(it.value)
+          environment(it.key, it.value.value)
         }
       }
 
       // apply manually-installed environment variables
       envVars.forEach {
         if (it.value.isNotBlank() && it.value.isNotBlank()) {
-          effectiveInjectedEnv[it.key] = EnvVar.of(it.key, it.value)
-        }
-      }
-
-      effectiveInjectedEnv.forEach {
-        when (it.value.source) {
-          INLINE -> environment(it.key, it.value.value)
-
-          HOST -> (it.value as EnvVar.HostMappedVar).let { hostMappedVar ->
-            mapToHostEnv(
-              hostMappedVar.mapped,
-              hostMappedVar.name,
-              defaultValue = hostMappedVar.defaultValue,
-            )
-          }
-
-          DOTENV -> (it.value as EnvVar.DotEnvVar).let { dotEnvVar ->
-            fromDotenv(
-              dotEnvVar.file,
-              it.key,
-              it.value.value,
-            )
-          }
+          environment(it.key, it.value)
         }
       }
     }
@@ -1616,7 +1598,12 @@ import elide.tool.project.ProjectManager
     }
 
     // configure environment variables
-    appEnvironment.apply(project, this)
+    appEnvironment.apply(
+      project,
+      this,
+      host = accessControl.allowEnv,
+      dotenv = appEnvironment.dotenv,
+    )
 
     // configure VFS with user-specified bundles
     vfs {

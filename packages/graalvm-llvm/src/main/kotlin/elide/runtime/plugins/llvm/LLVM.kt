@@ -36,6 +36,14 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
   private fun configureContext(builder: PolyglotContextBuilder) {
     // nothing to configure
+    val libpath = requireNotNull(System.getProperty("java.library.path")) { "Failed to resolve native libpath" }
+
+    builder.option("llvm.libraryPath", libpath)
+//    llvm.C++Interop
+//    llvm.libraries
+//    llvm.AOTCacheStore
+//    llvm.AOTCacheLoad
+//    llvm.loadC++Libraries
   }
 
   public companion object Plugin : AbstractLanguagePlugin<LLVMConfig, LLVM>() {

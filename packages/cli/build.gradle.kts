@@ -283,6 +283,12 @@ dependencies {
   compileOnly(libs.graalvm.svm)
   compileOnly(libs.graalvm.truffle.runtime.svm)
 
+  // GraalVM: Tooling
+  implementation(libs.graalvm.tools.dap)
+  implementation(libs.graalvm.tools.chromeinspector)
+  implementation(libs.graalvm.tools.profiler)
+  implementation(libs.graalvm.tools.coverage)
+
   // include a dependency in the implementation configuration only if enabled,
   // otherwise add it as compile-only
   fun runtimeIf(enabled: Boolean, spec: Any) {

@@ -573,7 +573,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       return this
     }
 
-    override fun build(): EmbeddedGuestVFSImpl {
+    private val built by lazy {
       val config = EffectiveGuestVFSConfig.fromBuilder(this)
       val fsConfig = config.buildFs()
       val registry = ConcurrentSkipListMap<String, VfsObjectInfo>()
@@ -581,7 +581,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         null -> Triple(null, null, null)
         else -> bundle
       }
-      return if (tree == null || bundle == null) create(config) else EmbeddedGuestVFSImpl(
+      if (tree == null || bundle == null) create(config) else EmbeddedGuestVFSImpl(
         config,
         bundle,
         tree,
@@ -590,6 +590,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
         registry,
       )
     }
+
+    override fun build(): EmbeddedGuestVFSImpl = built
   }
 
   /** Factory to create new embedded VFS implementations. */
@@ -1099,7 +1101,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param ioConfig Guest I/O configuration to use for creating the VFS.
      * @return Embedded VFS implementation built according to the provided [config].
      */
-    @Bean @Singleton internal fun spawn(
+    @Singleton internal fun spawn(
       ioConfig: GuestIOConfiguration,
       configurators: List<GuestVFS.VFSConfigurator>,
     ): EmbeddedGuestVFSImpl {

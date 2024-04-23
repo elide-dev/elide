@@ -40,6 +40,8 @@ import java.nio.file.FileSystems
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
+import java.util.concurrent.ConcurrentMap
+import java.util.concurrent.ConcurrentSkipListMap
 import java.util.zip.GZIPInputStream
 import kotlin.io.path.exists
 import kotlin.io.path.toPath
@@ -89,6 +91,7 @@ import elide.util.UUID
  * @param config Effective VFS configuration which should be applied to this instance.
  * @param backing Backing file-system implementation which should receive allowable I/O calls.
  * @param tree Tree of resolved file-system metadata.
+ * @param deferred Whether to defer reads/copies into the VFS; defaults to `true`.
  */
 @Requires(property = "elide.gvm.vfs.enabled", notEquals = "false")
 @Requires(property = "elide.gvm.vfs.mode", notEquals = "HOST")
@@ -96,6 +99,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
   private val tree: FilesystemInfo,
+  private val deferred: Boolean = Settings.ENABLE_DEFERRED_READS,
+  private val knownPathMap: ConcurrentMap<String, VfsObjectInfo> = ConcurrentSkipListMap(),
 ) : AbstractDelegateVFS<EmbeddedGuestVFSImpl>(config, backing) {
   /** Static settings for the embedded VFS implementation. */
   private object Settings {
@@ -104,6 +109,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** Hash algorithm to use (symbolic) for file digests. */
     val fileDigest: HashAlgorithm = HashAlgorithm.SHA256
+
+    /** Whether to defer reads until needed, or copy files into the VFS eagerly. */
+    const val ENABLE_DEFERRED_READS = true
   }
 
   /** Enumerates supported embedded VFS bundle formats. */
@@ -125,6 +133,23 @@ internal class EmbeddedGuestVFSImpl private constructor (
   override val logging: Logger by lazy {
     Logging.of(EmbeddedGuestVFSImpl::class)
   }
+
+  // Baseline VFS metadata.
+  sealed interface VfsObjectInfo {
+    val path: String
+  }
+
+  // VFS metadata for a file.
+  @JvmRecord data class VfsFileInfo(
+    override val path: String,
+    val info: tools.elide.vfs.File,
+  ) : VfsObjectInfo
+
+  // VFS metadata for a directory.
+  @JvmRecord data class VfsDirectory(
+    override val path: String,
+    val info: tools.elide.vfs.Directory,
+  ) : VfsObjectInfo
 
   /**
    * Private constructor.
@@ -170,6 +195,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
    *
    * Builders can be filled out property-wise, or via builder methods.
    *
+   * @param deferred Whether to defer reading of files into the VFS until they are requested.
    * @param readOnly Whether the file-system should be considered read-only (regardless of backing read-only status).
    * @param caseSensitive Whether the file-system should be considered case-sensitive.
    * @param enableSymlinks Whether to enable support for symbolic links.
@@ -182,6 +208,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
    * @param files Files to load as file-system bundles.
    */
   @Suppress("unused") internal data class Builder (
+    override var deferred: Boolean = true,
     override var readOnly: Boolean = true,
     override var caseSensitive: Boolean = true,
     override var enableSymlinks: Boolean = false,
@@ -197,7 +224,6 @@ internal class EmbeddedGuestVFSImpl private constructor (
     /** Factory for embedded VFS implementations. */
     companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
       override fun newBuilder(): Builder = Builder()
-
       override fun newBuilder(builder: Builder): Builder = builder.copy()
     }
 
@@ -332,7 +358,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
     override fun build(): EmbeddedGuestVFSImpl {
       val config = EffectiveGuestVFSConfig.fromBuilder(this)
       val fsConfig = config.buildFs()
-      val (tree, bundle) = when (val bundle = resolveBundles(this, fsConfig)) {
+      val registry = ConcurrentSkipListMap<String, VfsObjectInfo>()
+      val (tree, bundle) = when (val bundle = resolveBundles(this, fsConfig, deferred, registry)) {
         null -> null to null
         else -> bundle
       }
@@ -340,6 +367,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
         config,
         bundle,
         tree,
+        deferred,
+        registry,
       )
     }
   }
@@ -438,14 +467,46 @@ internal class EmbeddedGuestVFSImpl private constructor (
       )
     }
 
+    @JvmStatic private fun registerVfsObject(
+      registry: ConcurrentMap<String, VfsObjectInfo>,
+      name: String,
+      info: VfsObjectInfo,
+    ) {
+      if (name in registry)
+        error("Cannot register duplicate path with VFS, at '$name'")
+      registry[name] = info
+    }
+
+    @JvmStatic private fun registerVfsDir(
+      name: String,
+      dir: tools.elide.vfs.Directory,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
+    ) = registerVfsObject(registry, name, VfsDirectory(
+      name,
+      dir,
+    ))
+
+    @JvmStatic private fun registerVfsFile(
+      name: String,
+      file: tools.elide.vfs.File,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
+    ) = registerVfsObject(registry, name, VfsFileInfo(
+      name,
+      file,
+    ))
+
     /** @return [FilesystemInfo] metadata generated from a regular tarball. */
     @JvmStatic private fun metadataForTarballDirectory(
       folder: ArchiveEntry,
       tarball: ArchiveInputStream,
       memoryFS: FileSystem,
       prefix: String,
-    ): Pair<tools.elide.vfs.Directory.Builder, ArchiveEntry> {
+      deferred: Boolean,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
+      base: Long = 0L,
+    ): Triple<tools.elide.vfs.Directory.Builder, ArchiveEntry, Long> {
       // generate a builder for the directory
+      var offset = base
       val builder = DirectoryRecord.newBuilder()
       builder.name = if (folder.name.endsWith("/")) {
         folder.name.dropLast(1)
@@ -454,9 +515,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
       }.split("/").last()
 
       // create the directory within the in-memory FS
-      val folderPath = memoryFS.getPath(folder.name)
-      if (!folderPath.exists()) {
-        memoryFS.provider().createDirectory(folderPath)
+      if (!deferred) {
+        val folderPath = memoryFS.getPath(folder.name)
+        if (!folderPath.exists()) {
+          memoryFS.provider().createDirectory(folderPath)
+        }
       }
 
       var entry = tarball.nextEntry
@@ -465,27 +528,33 @@ internal class EmbeddedGuestVFSImpl private constructor (
           // we're still inside this directory
           entry = if (entry.isDirectory) {
             // recurse into subdirectory
-            val (subdir, next) = metadataForTarballDirectory(entry, tarball, memoryFS, entry.name)
+            val (subdir, next) = metadataForTarballDirectory(entry, tarball, memoryFS, entry.name, deferred, registry)
             builder.addChildren(TreeEntry.newBuilder().setDirectory(subdir))
             next
           } else {
             // generate file builder
-            val filebuf = BufferedInputStream(tarball)
             val fileBuilder = fileForEntry(entry, tarball.bytesRead)
-            val filedata = if (!tarball.canReadEntryData(entry)) {
-              throw IOException("Failed to read entry data for '${entry.name}'")
-            } else filebuf.readBytes()
+            offset += entry.size
 
-            // add file
-            writeFileToMemoryFS(
-              entry,
-              memoryFS,
-              filedata,
-              fileBuilder,
-            )
+            if (!deferred) {
+              val filebuf = BufferedInputStream(tarball)
+              val filedata = if (!tarball.canReadEntryData(entry)) {
+                throw IOException("Failed to read entry data for '${entry.name}'")
+              } else filebuf.readBytes()
+
+              // add file
+              writeFileToMemoryFS(
+                entry,
+                memoryFS,
+                filedata,
+                fileBuilder,
+              )
+            }
 
             // index via builder and grab next entry
-            builder.addChildren(TreeEntry.newBuilder().setFile(fileBuilder))
+            val built = fileBuilder.build()
+            registerVfsFile(entry.name, built, registry)
+            builder.addChildren(TreeEntry.newBuilder().setFile(built))
             tarball.nextEntry
           }
         } else {
@@ -493,13 +562,15 @@ internal class EmbeddedGuestVFSImpl private constructor (
           break
         }
       }
-      return builder to entry
+      return Triple(builder, entry, offset)
     }
 
     /** @return [FilesystemInfo] metadata generated from a regular tarball. */
     @JvmStatic private fun metadataForTarball(
       inputs: Iterable<ArchiveInputStream>,
       memoryFS: FileSystem,
+      deferred: Boolean,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
     ): FilesystemInfo {
       val fs = FilesystemInfo.newBuilder()
       val root = FileTreeEntry.newBuilder()
@@ -517,33 +588,43 @@ internal class EmbeddedGuestVFSImpl private constructor (
           val fsEntry = FileTreeEntry.newBuilder()
           if (entry.isDirectory) {
             // recursively drives the stream until a non-matching entry, which is returned as `next`.
-            val (dir, next) = metadataForTarballDirectory(
+            val (dir, next, addlOffset) = metadataForTarballDirectory(
               entry,
               tarball,
               memoryFS,
               entry.name,
+              deferred,
+              registry,
+              offset,
             )
-            fsEntry.setDirectory(dir)
+
+            val built = dir.build()
+            offset += addlOffset
+            registerVfsDir(entry.name, built, registry)
+
+            fsEntry.setDirectory(built)
             rootDir.addChildren(fsEntry)
             entry = next
           } else {
             val file = fileForEntry(entry, offset)
             offset += entry.size
 
-            // read the file into the buffer
-            val filebuf = BufferedInputStream(tarball)
-            val filedata = if (!tarball.canReadEntryData(entry)) {
-              throw IOException("Failed to read entry data for '${entry.name}'")
-            } else {
-              filebuf.readBytes()
-            }
+            if (!deferred) {
+              // read the file into the buffer
+              val filebuf = BufferedInputStream(tarball)
+              val filedata = if (!tarball.canReadEntryData(entry)) {
+                throw IOException("Failed to read entry data for '${entry.name}'")
+              } else {
+                filebuf.readBytes()
+              }
 
-            writeFileToMemoryFS(
-              entry,
-              memoryFS,
-              filedata,
-              file,
-            )
+              writeFileToMemoryFS(
+                entry,
+                memoryFS,
+                filedata,
+                file,
+              )
+            }
 
             val lastmod = entry.lastModifiedDate
             if (lastmod != null) {
@@ -554,7 +635,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
                   .setNanos(instant.nano),
               )
             }
-            fsEntry.setFile(file)
+            val built = file.build()
+            registerVfsFile(entry.name, built, registry)
+            fsEntry.setFile(built)
             rootDir.addChildren(fsEntry)
 
             // grab next entry
@@ -586,6 +669,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
     @JvmStatic private fun loadBundlesToMemoryFS(
       streams: List<Pair<InputStream, BundleFormat>>,
       fsConfig: Configuration.Builder,
+      deferred: Boolean,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
     ): Pair<FilesystemInfo, FileSystem> {
       // build a new empty in-memory FS
       val inMemoryFS = Jimfs.newFileSystem(
@@ -606,7 +691,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
           loadMetadataFromElideBundle(input.first)
           TODO("not yet implemented")
         } else {
-          metadataForTarball(listOf(input.first), inMemoryFS)
+          metadataForTarball(listOf(input.first), inMemoryFS, deferred, registry)
         }
       }.reduce { left, right ->
         left.toBuilder().mergeFrom(right).build()
@@ -620,6 +705,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
       image: Pair<String, InputStream>?,
       streams: List<Pair<String, InputStream>>,
       fsConfig: Configuration.Builder,
+      deferred: Boolean,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
     ): Pair<FilesystemInfo, FileSystem> {
       // resolve the format from the filename, then pass along
       return loadBundlesToMemoryFS(
@@ -639,6 +726,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
           }
         },
         fsConfig,
+        deferred,
+        registry,
       )
     }
 
@@ -657,6 +746,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
       paths: List<URI>,
       files: List<File>,
       fsConfig: Configuration.Builder,
+      deferred: Boolean,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
     ): Pair<FilesystemInfo, FileSystem>? {
       // if we got no paths, we have no bundles
       if (paths.isEmpty() && files.isEmpty()) return null
@@ -691,18 +782,21 @@ internal class EmbeddedGuestVFSImpl private constructor (
           else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}' (URL: $path)")
         }
       }
-      return loadBundles(null, fileSources.plus(sources), fsConfig)
+      return loadBundles(null, fileSources.plus(sources), fsConfig, deferred, registry)
     }
 
     /** @return Resolve bundle input data from the provided [builder]. */
     @JvmStatic internal fun resolveBundles(
       builder: Builder,
       fsConfig: Configuration.Builder,
+      deferred: Boolean,
+      registry: ConcurrentMap<String, VfsObjectInfo>,
     ): Pair<FilesystemInfo, FileSystem>? {
       return when {
         builder.bundle != null -> builder.bundle
         builder.zip != null -> loadWithFileTarget(builder.zip!!)
-        builder.files.isNotEmpty() || builder.paths.isNotEmpty() -> loadBundles(builder.paths, builder.files, fsConfig)
+        builder.files.isNotEmpty() || builder.paths.isNotEmpty() ->
+          loadBundles(builder.paths, builder.files, fsConfig, deferred, registry)
         else -> null
       }
     }
@@ -775,7 +869,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
       // resolve the filesystem tree and data-bag based on the settings provided to the builder
       val fsConfig = config.buildFs()
-      val (tree, fs) = when (val bundle = resolveBundles(builder, fsConfig)) {
+      val vfsIndex: ConcurrentMap<String, VfsObjectInfo> = ConcurrentSkipListMap()
+      val (tree, fs) = when (val bundle = resolveBundles(builder, fsConfig, true, vfsIndex)) {
         null -> null to null
         else -> bundle
       }
@@ -793,6 +888,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   override fun allowsHostFileAccess(): Boolean = false
-
   override fun allowsHostSocketAccess(): Boolean = false
+  override val compound: Boolean get() = false
+  override val host: Boolean get() = false
+  override val virtual: Boolean get() = false
+  override val deletable: Boolean get() = writable
+  override val writable: Boolean get() = !config.readOnly
+  override val supportsSymlinks: Boolean get() = config.supportsSymbolicLinks
 }

@@ -1603,12 +1603,16 @@ import elide.tool.project.ProjectManager
     if (debug) debugger.apply(this)
     inspector.apply(this)
 
+    val requiresIo = language.resolve(project).let {
+      it.contains(PYTHON) || it.contains(RUBY)
+    }
+
     // configure host access rules
     hostAccess = when {
       accessControl.allowAll -> HostAccess.ALLOW_ALL
       accessControl.allowIo -> HostAccess.ALLOW_IO
-      accessControl.allowEnv -> HostAccess.ALLOW_ENV
-      else -> HostAccess.ALLOW_ALL
+      accessControl.allowEnv -> if (requiresIo) HostAccess.ALLOW_ALL else HostAccess.ALLOW_ENV
+      else -> if (requiresIo) HostAccess.ALLOW_IO else HostAccess.ALLOW_NONE
     }
 
     // configure environment variables
@@ -1616,10 +1620,7 @@ import elide.tool.project.ProjectManager
 
     // configure VFS with user-specified bundles
     vfs {
-      if (language.python || language.ruby) {
-        // ruby and python do not support VFS features yet
-        vfsUnsupported = true
-      }
+      languages.addAll(language.resolve(project))
 
       // resolve the file-system bundles to use
       val userBundles = filesystems.mapNotNull { checkFsBundle(it) }

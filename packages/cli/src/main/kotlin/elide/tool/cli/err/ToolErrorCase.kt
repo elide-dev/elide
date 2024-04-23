@@ -25,12 +25,12 @@ internal sealed interface ToolErrorCase<T> : ToolError where T: Enum<T> {
   override val id: String get() = self.name
 
   /** @return Throwable generated from this case which can be interpreted by the tool to formulate an exit code. */
-  fun raise(target: Throwable? = null, doThrow: Boolean = false): Throwable {
-    val exc = (target ?: AbstractToolError.forCase(this))
+  fun raise(target: Throwable? = null, doThrow: Boolean = false, message: String? = null): Throwable {
+    val exc = (target ?: AbstractToolError.forCase(this, additionalMessage = message))
     if (doThrow) throw exc
     return exc
   }
 
   /** @return Exception to throw for this error case (without throwing). */
-  fun asError() = raise(doThrow = false)
+  fun asError(msg: String? = null) = raise(doThrow = false, message = msg)
 }

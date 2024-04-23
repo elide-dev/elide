@@ -15,6 +15,7 @@ package elide.runtime.core
 
 import elide.annotations.Singleton
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
 
 /**
  * This class acts as the root of the engine configuration DSL, allowing plugins to be
@@ -46,7 +47,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
   }
   
   /** The access granted to guest code over host resources, such as environment variables and the file system. */
-  public var hostAccess: HostAccess = ALLOW_ALL
+  public var hostAccess: HostAccess = ALLOW_NONE
 
   /** Information about the platform hosting the runtime. */
   public val hostPlatform: HostPlatform = HostPlatform.resolve()

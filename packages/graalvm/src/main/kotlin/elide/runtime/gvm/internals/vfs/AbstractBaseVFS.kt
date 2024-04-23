@@ -60,6 +60,18 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    */
   interface VFSBuilder<VFS> where VFS: AbstractBaseVFS<VFS> {
     /**
+     * ### Deferred mode
+     *
+     * Whether to defer reads and copies into the VFS until files are requested; in this operating mode, the VFS
+     * contents are indexed for later use, and then consumed on-demand.
+     *
+     * This setting can be set as a property, or as a builder method.
+     *
+     * @see setDeferred for the builder-method equivalent.
+     */
+    var deferred: Boolean
+
+    /**
      * ### Read-only status
      *
      * Whether the backing file-system should be considered read-only. In this mode, all writes are rejected without
@@ -132,6 +144,18 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @see setPolicy for the builder-method equivalent.
      */
     var policy: GuestVFSPolicy
+
+    /**
+     * Set the [deferred] status of the file-system managed by this VFS implementation.
+     *
+     * @see deferred to set this value as a property.
+     * @param deferred Whether the file-system should be considered read-only.
+     * @return This builder.
+     */
+    fun setDeferred(deferred: Boolean): VFSBuilder<VFS> {
+      this.deferred = deferred
+      return this
+    }
 
     /**
      * Set the [readOnly] status of the file-system managed by this VFS implementation.
@@ -301,7 +325,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @param scope Whether this path is known to be a file, or directory, or it is not known.
    * @return Response from the policy check, indicating whether the request is allowed.
    */
-  @Suppress("UNUSED_PARAMETER") protected fun enforce(
+  protected fun enforce(
     type: EnumSet<AccessType>,
     domain: AccessDomain,
     path: Path,
@@ -355,7 +379,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @param scope Whether this path is known to be a file, or directory, or it is not known.
    * @return Response from the policy check, indicating whether the request is allowed.
    */
-  internal fun checkPolicy(
+  fun checkPolicy(
     type: AccessType,
     domain: AccessDomain,
     path: Path,
@@ -402,7 +426,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @param request Materialized I/O policy check request.
    * @return Response from the policy check, indicating whether the request is allowed.
    */
-  protected abstract fun checkPolicy(request: AccessRequest): AccessResponse
+  abstract fun checkPolicy(request: AccessRequest): AccessResponse
 
   /**
    * Subclass API: Parse a path.

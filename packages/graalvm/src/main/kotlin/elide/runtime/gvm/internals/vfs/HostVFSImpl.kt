@@ -61,6 +61,7 @@ internal class HostVFSImpl private constructor (
    * Coming soon.
    */
   @Suppress("unused") internal data class Builder (
+    override var deferred: Boolean = false,  // no-op
     override var readOnly: Boolean = GuestVFSPolicy.DEFAULT_READ_ONLY,
     override var root: String = ROOT_SYSTEM_DEFAULT,
     override var policy: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS,
@@ -317,4 +318,11 @@ internal class HostVFSImpl private constructor (
       super.setCurrentWorkingDirectory(it)
     }
   }
+
+  override val host: Boolean get() = true
+  override val compound: Boolean get() = false
+  override val virtual: Boolean get() = false
+  override val supportsSymlinks: Boolean get() = config.supportsSymbolicLinks
+  override val writable: Boolean get() = !config.readOnly
+  override val deletable: Boolean get() = writable
 }

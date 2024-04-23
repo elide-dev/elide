@@ -15,8 +15,9 @@ package elide.runtime.plugins.vfs
 
 import java.net.URI
 import java.net.URL
-import elide.annotations.Singleton
+import java.util.concurrent.ConcurrentSkipListSet
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
@@ -33,7 +34,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
   public var writable: Boolean = false
 
   /** Whether VFS-incompatible languages are present in the engine. */
-  public var vfsUnsupported: Boolean = false
+  public var languages: MutableSet<GuestLanguage> = ConcurrentSkipListSet()
 
   /**
    * Whether to use the host's file system instead of an embedded VFS. If true, bundles registered using [include] will

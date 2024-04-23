@@ -84,13 +84,13 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.0.0-Beta4"
+    const val KOTLIN_SDK_PIN = "2.0.0-RC1"
 
     /** Constant: pinned version of AtomicFU. */
     const val ATOMICFU = "0.23.2"
 
     /** Constant: pinned version of BouncyCastle. */
-    const val BOUNCYCASTLE = "1.77"
+    const val BOUNCYCASTLE = "1.78"
 
     /** Constant: pinned version of Groovy. */
     const val GROOVY = "4.0.18"
@@ -132,10 +132,10 @@ public object Constants {
     const val JUPITER = "5.10.2"
 
     /** Static Netty version. */
-    const val NETTY = "4.1.101.Final"
+    const val NETTY = "4.1.109.Final"
 
     /** Guava version. */
-    const val GUAVA = "33.0.0-jre"
+    const val GUAVA = "33.1.0-jre"
 
     /** gRPC version. */
     const val GRPC = "1.61.1"

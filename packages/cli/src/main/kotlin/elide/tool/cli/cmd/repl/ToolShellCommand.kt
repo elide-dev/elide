@@ -130,15 +130,17 @@ import elide.tool.project.ProjectManager
     private const val CONFIG_PATH_USR = "~/.elide"
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
-    // Whether to enable JVM language plugins.
+    // Whether to enable extended language plugins.
     private const val ENABLE_JVM = false
+    private const val ENABLE_RUBY = true
+    private const val ENABLE_PYTHON = true
 
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
     }
 
     // Maps language aliases to the engine they should invoke.
-    private val languageAliasToEngineId: SortedMap<String, String> = sortedMapOf(
+    internal val languageAliasToEngineId: SortedMap<String, String> = sortedMapOf(
       "py" to "python",
       "python" to "python",
       "node" to "js",
@@ -225,22 +227,13 @@ import elide.tool.project.ProjectManager
 
     // Calculated and cached suite of supported languages loaded into the VM space.
     private val langs: EnumSet<GuestLanguage> by lazy {
-      when {
-        // if we're provided an explicit list, use that
-        language != null -> language!!
-
-        // otherwise, use provided flags
-        else -> EnumSet.noneOf(GuestLanguage::class.java).apply {
-          add(JS)
-          add(RUBY)
-          add(PYTHON)
-          add(WASM)
-          if (ENABLE_JVM) add(JVM)
-          if (ENABLE_JVM) add(KOTLIN)
-        }.let { flags ->
-          // if we have no languages enabled, use JS, which is the default.
-          if (flags.isEmpty()) EnumSet.of(JS) else flags
-        }
+      EnumSet.noneOf(GuestLanguage::class.java).apply {
+        add(JS)
+        add(WASM)
+        if (ENABLE_PYTHON) add(PYTHON)
+        if (ENABLE_RUBY) add(RUBY)
+        if (ENABLE_JVM) add(JVM)
+        if (ENABLE_JVM) add(KOTLIN)
       }
     }
 
@@ -265,7 +258,7 @@ import elide.tool.project.ProjectManager
       spec: CommandSpec,
       langs: EnumSet<GuestLanguage>,
       project: ProjectInfo?,
-      languageHint: GuestLanguage?,
+      languageHint: String?,
     ): GuestLanguage {
       // languages by flags
       val explicitlySelectedLanguagesByBoolean = listOf(
@@ -287,10 +280,11 @@ import elide.tool.project.ProjectManager
       val explicitlySelectedLanguagesBySet = Sets.intersection(language ?: emptySet(), langs)
 
       // language by alias
-      val candidateArgs = spec.commandLine().parseResult.originalArgs()
-      val candidateByName = languageHint ?: maybeMatchLanguagesByAlias(
-        candidateArgs.firstOrNull(),
-        candidateArgs.getOrNull(1),
+      val candidateArgs = spec.commandLine()?.parseResult?.originalArgs()
+      val languageHintMatch = langs.firstOrNull { it.id == languageHint }
+      val candidateByName = languageHintMatch ?: maybeMatchLanguagesByAlias(
+        candidateArgs?.firstOrNull(),
+        candidateArgs?.getOrNull(1),
         langs,
       )
 
@@ -743,7 +737,7 @@ import elide.tool.project.ProjectManager
   internal var runnable: String? = null
 
   // Language hint passed in from outer tools, like when the user calls `elide python`.
-  internal var languageHint: GuestLanguage? = null
+  internal var languageHint: String? = null
 
   // Action hint passed in from outer tools, like when the user calls `elide serve`.
   internal var actionHint: String? = null
@@ -1720,7 +1714,14 @@ import elide.tool.project.ProjectManager
     val project = projectConfigJob.await()
     val langs = language.resolve(project)
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
-    supported.find { langs.contains(it.first) }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
+    val supportedEnginesAndLangs = supported.flatMap { listOf(it.first.engine, it.first.id) }.toSortedSet()
+
+    // make sure each requested language is supported
+    langs.forEach {
+      if (!supportedEnginesAndLangs.contains(it.engine))
+        throw ShellError.LANGUAGE_NOT_SUPPORTED.asError("Language at ID '${it.id}' is not supported")
+    }
+
     logging.debug("Initializing language contexts (${langs.joinToString(", ") { it.id }})")
 
     if (!executeLiteral && !useStdin && runnable == null) {
@@ -1756,7 +1757,7 @@ import elide.tool.project.ProjectManager
       interactive.compareAndSet(false, true)
 
       // warn about experimental status, as applicable
-      if (experimentalLangs.isNotEmpty()) {
+      if (verbose && experimentalLangs.isNotEmpty()) {
         logging.warn(
           "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
                   "considered experimental.",

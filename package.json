@@ -44,7 +44,7 @@
     "web-streams-polyfill": "4.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.2.2",
+    "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
     "@mdx-js/esbuild": "3.0.1",
     "@prettier/plugin-xml": "3.4.1",

@@ -13,6 +13,8 @@
 
 package elide.runtime.plugins.python
 
+import org.graalvm.polyglot.io.FileSystem
+import java.nio.file.Path
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
@@ -23,8 +25,10 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
+import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
+import elide.runtime.plugins.vfs.Vfs
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
@@ -67,6 +71,22 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     private const val ENABLE_EXPERIMENTAL = false
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
+
+    init {
+      Vfs.registerLanguageVfs(PYTHON_LANGUAGE_ID) {
+        object: LanguageVFSInfo {
+          override val router: (Path) -> Boolean get() = { path ->
+            path.toString().startsWith("<frozen ")
+          }
+
+          override val fsProvider: () -> FileSystem get() = {
+            org.graalvm.python.embedding.utils.VirtualFileSystem
+              .newBuilder()
+              .build()
+          }
+        }
+      }
+    }
 
     override fun install(scope: InstallationScope, configuration: PythonConfig.() -> Unit): Python {
       configureLanguageSupport(scope)

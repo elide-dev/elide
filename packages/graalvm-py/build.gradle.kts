@@ -71,6 +71,8 @@ tasks.withType(Detekt::class.java) {
 dependencies {
   api(libs.graalvm.python.language)
   api(libs.graalvm.python.resources)
+  api(libs.graalvm.python.embedding)
+  api(libs.graalvm.polyglot.python.community)
 
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)

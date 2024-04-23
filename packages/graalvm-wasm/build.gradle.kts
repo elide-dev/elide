@@ -53,7 +53,7 @@ elide {
 }
 
 dependencies {
-  api(libs.graalvm.polyglot.wasm)
+  api(libs.graalvm.polyglot.wasm.community)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
 

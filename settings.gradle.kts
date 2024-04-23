@@ -71,6 +71,7 @@ val enableSubstrate: String by settings
 
 dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
+
   repositories {
     maven {
       name = "pkgst-maven"
@@ -105,6 +106,25 @@ dependencyResolutionManagement {
       url = uri("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
       content {
         includeGroup("org.jetbrains.dokka")
+      }
+    }
+    maven {
+      name = "gvm-dev"
+      url = uri("https://dl.less.build/repository/gvm-edge")
+      content {
+        includeGroupAndSubgroups("org.graalvm")
+        includeGroupByRegex("org.graalvm.*")
+
+        listOf(
+          "org.graalvm.ruby",
+          "org.graalvm.llvm",
+          "org.graalvm.python",
+          "org.graalvm.js",
+          "org.graalvm.polyglot",
+          "org.graalvm.tools",
+        ).forEach {
+          includeGroupAndSubgroups(it)
+        }
       }
     }
     maven {

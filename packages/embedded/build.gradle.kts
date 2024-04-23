@@ -65,7 +65,7 @@ val isRelease = !quickbuild && (
   project.properties["elide.buildMode"] == "release"
 )
 
-val oracleGvm = true
+val oracleGvm = false
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
@@ -74,7 +74,7 @@ val enableTools = true
 val enableMosaic = true
 val enableProguard = false
 val enableLlvm = true
-val enableEspresso = true
+val enableEspresso = false
 val enableExperimental = false
 val enableEmbeddedResources = true
 val enableResourceFilter = true
@@ -117,7 +117,7 @@ val jvmCompileArgs = listOfNotNull(
   "--add-modules=jdk.incubator.vector",
   "-Delide.embedded.headerPath=$nativeHeaderPath",
   "--enable-native-access=" + listOfNotNull(
-//    "ALL-UNNAMED",
+    "ALL-UNNAMED",
     "org.graalvm.polyglot",
     "org.graalvm.js",
     if (enableRuby) "org.graalvm.ruby" else null,
@@ -904,8 +904,8 @@ dependencies {
   modules(libs.graalvm.polyglot)
 
   // GraalVM: JavaScript + WASM
-  modules(libs.graalvm.polyglot.js)
-  modules(libs.graalvm.polyglot.wasm)
+  modules(libs.graalvm.polyglot.js.community)
+  modules(libs.graalvm.polyglot.wasm.community)
   modules(libs.graalvm.js.language)
 
   if (oracleGvm) {
@@ -914,29 +914,27 @@ dependencies {
 
   if (enableExperimental) {
     // GraalVM: Python
-    modules(libs.graalvm.polyglot.python)
+    modules(libs.graalvm.polyglot.python.community)
     modules(libs.graalvm.python.language)
     modules(libs.graalvm.python.resources)
 
     // GraalVM: Ruby
-    modules(libs.graalvm.polyglot.ruby)
+    modules(libs.graalvm.polyglot.ruby.community)
     modules(libs.graalvm.ruby.language)
     modules(libs.graalvm.ruby.resources)
 
     // GraalVM: Espresso
-    modules(libs.graalvm.polyglot.java)
+    modules(libs.graalvm.polyglot.java.community)
     modules(libs.graalvm.espresso.polyglot)
     modules(libs.graalvm.espresso.language)
     modules(libs.graalvm.espresso.hotswap)
 
     // GraalVM: LLVM
-    modules(libs.graalvm.polyglot.llvm)
+    modules(libs.graalvm.polyglot.llvm.community)
     modules(libs.graalvm.llvm.api)
     modules(libs.graalvm.llvm.language)
-    modules(libs.graalvm.llvm.language.enterprise)
     modules(libs.graalvm.llvm.language.nfi)
     modules(libs.graalvm.llvm.language.native)
-    modules(libs.graalvm.llvm.language.native.resources)
     modules(libs.graalvm.llvm.language.managed)
     modules(libs.graalvm.llvm.language.managed.resources)
   }

@@ -258,7 +258,7 @@ dependencies {
   implementation(libs.capnproto.runtime.rpc)
 
   api(libs.graalvm.polyglot)
-  api(libs.graalvm.polyglot.js)
+  api(libs.graalvm.polyglot.js.community)
   compileOnly(libs.graalvm.svm)
 
   // Testing

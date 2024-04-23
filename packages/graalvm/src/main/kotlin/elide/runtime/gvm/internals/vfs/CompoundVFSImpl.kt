@@ -60,8 +60,7 @@ internal class CompoundVFSImpl private constructor (
 
   private val languageVfsOverlays: Array<LanguageVFS> by lazy {
     arrayOf(primary, *overlays)
-      .filter { it is LanguageVFS }
-      .map { it as LanguageVFS }
+      .filterIsInstance<LanguageVFS>()
       .toTypedArray()
   }
 
@@ -83,23 +82,9 @@ internal class CompoundVFSImpl private constructor (
     }
   }
 
-  private inline fun <reified R> firstNonFailure(action: (GuestVFS) -> R): R? {
-    var first: Throwable? = null
-    inOrderCandidates.forEach {
-      try {
-        return action.invoke(it)
-      } catch (e: IOException) {
-        if (first == null) {
-          first = e
-        }
-      }
-    }
-    throw requireNotNull(first)
-  }
-
   private inline fun <reified R> firstWritable(path: Path? = null, action: (GuestVFS) -> R): R? {
     return inOrderCandidates.filter {
-      it.writable
+      it.writable && (path == null || Files.isWritable(it.parsePath(path.toString())))
     }.firstNotNullOfOrNull {
       try {
         action.invoke(it)
@@ -109,32 +94,33 @@ internal class CompoundVFSImpl private constructor (
     }
   }
 
-  private inline fun <reified R> firstWithPath(path: Path, action: (GuestVFS) -> R): R? {
+  private inline fun <reified R> firstWithPath(path: Path, action: (GuestVFS, Path) -> R): R? {
     val str = path.toString()
     val languageVfsHandler = languageVfsOverlays.firstOrNull { it.accepts(path) }
 
     // language resources should pre-empty
     if (languageVfsHandler != null) {
-      return action.invoke(languageVfsHandler)
+      return action.invoke(languageVfsHandler, path)
     }
     return inOrderCandidates.firstNotNullOfOrNull {
-      try {
+      val candidate = try {
         (it to it.parsePath(str))
       } catch (ioe: IOException) {
-        null
+        return@firstNotNullOfOrNull null
       }
-    }?.let { (target, path) ->
-      if (Files.exists(path)) {
-        action.invoke(target)
+      if (it.existsAny(candidate.second)) {
+        candidate
       } else {
         null
       }
+    }?.let { (target, path) ->
+      action.invoke(target, path)
     }
   }
 
-  private inline fun <reified R> firstForRead(path: Path, action: (GuestVFS) -> R): R? {
-    return firstWithPath(path) {
-      action.invoke(it)
+  private inline fun <reified R> firstForRead(path: Path, action: (GuestVFS, Path) -> R): R? {
+    return firstWithPath(path) { vfs, p ->
+      action.invoke(vfs, p)
     }
   }
 
@@ -167,12 +153,8 @@ internal class CompoundVFSImpl private constructor (
   override fun parsePath(path: String): Path = delegatePrimary { it.parsePath(path) }
   override fun getPath(vararg segments: String): Path = delegatePrimary { it.getPath(*segments) }
 
-  override fun toAbsolutePath(path: Path): Path = firstWithPath(path) {
-    try {
-      it.toAbsolutePath(path)
-    } catch (pme: ProviderMismatchException) {
-      it.toAbsolutePath(it.parsePath(path.toString()))
-    }
+  override fun toAbsolutePath(path: Path): Path = firstWithPath(path) { vfs, target ->
+    vfs.toAbsolutePath(target)
   } ?: path
 
   override fun toRealPath(path: Path, vararg linkOptions: LinkOption): Path =
@@ -217,20 +199,20 @@ internal class CompoundVFSImpl private constructor (
       )
     }
 
-    return firstForRead(path) {
-      it.newByteChannel(path, options, *attrs)
+    return firstForRead(path) { vfs, target ->
+      vfs.newByteChannel(target, options, *attrs)
     } ?: throw NoSuchFileException(path.toString())
   }
 
   override fun newDirectoryStream(dir: Path, filter: Filter<in Path>): DirectoryStream<Path> {
-    return firstForRead(dir) {
-      it.newDirectoryStream(dir, filter)
+    return firstForRead(dir) { vfs, target ->
+      vfs.newDirectoryStream(target, filter)
     } ?: throw NoSuchFileException(dir.toString())
   }
 
   override fun readAttributes(path: Path, attributes: String, vararg options: LinkOption): MutableMap<String, Any> {
-    return firstForRead(path) {
-      it.readAttributes(path, attributes, *options)
+    return firstForRead(path) { vfs, target ->
+      vfs.readAttributes(target, attributes, *options)
     } ?: throw NoSuchFileException(path.toString())
   }
 
@@ -241,25 +223,25 @@ internal class CompoundVFSImpl private constructor (
   }
 
   override fun copy(source: Path, target: Path, vararg options: CopyOption?) {
-    firstForRead(source) {
+    firstForRead(source) { _, srcpath ->
       val src = this
       firstForWrite(target) {
         require(src === this) {
           "Source and target must be from the same VFS"
         }
-        it.copy(source, target, *options)
+        it.copy(srcpath, target, *options)
       }
     }
   }
 
   override fun move(source: Path, target: Path, vararg options: CopyOption?) {
-    firstForRead(source) {
+    firstForRead(source) { _, srcpath ->
       val src = this
       firstForWrite(target) {
         require(src === this) {
           "Source and target must be from the same VFS"
         }
-        it.move(source, target, *options)
+        it.move(srcpath, target, *options)
       }
     }
   }
@@ -283,14 +265,14 @@ internal class CompoundVFSImpl private constructor (
   }
 
   override fun readSymbolicLink(link: Path): Path {
-    return firstForRead(link) {
-      readSymbolicLink(link)
+    return firstForRead(link) { vfs, target ->
+      vfs.readSymbolicLink(target)
     } ?: throw NoSuchFileException(link.toString())
   }
 
   override fun setCurrentWorkingDirectory(currentWorkingDirectory: Path) {
     firstForWrite(currentWorkingDirectory) {
-      setCurrentWorkingDirectory(currentWorkingDirectory)
+      it.setCurrentWorkingDirectory(currentWorkingDirectory)
     }
   }
 
@@ -308,8 +290,8 @@ internal class CompoundVFSImpl private constructor (
     firstWritable { tempDirectory  } ?: throw IOException("No writable VFS found")
 
   override fun isSameFile(path1: Path, path2: Path, vararg options: LinkOption): Boolean {
-    return firstForRead(path1) {
-      it.isSameFile(path1, path2, *options)
+    return firstForRead(path1) { vfs, _ ->
+      vfs.isSameFile(path1, path2, *options)
     } ?: throw NoSuchFileException(path1.toString())
   }
 

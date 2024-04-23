@@ -25,9 +25,12 @@ import io.micronaut.context.annotation.Requires
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import tools.elide.std.HashAlgorithm
 import tools.elide.vfs.TreeEntry
+import tools.elide.vfs.TreeEntry.EntryCase.DIRECTORY
+import tools.elide.vfs.TreeEntry.EntryCase.FILE
 import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.File
@@ -130,6 +133,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** Elide's internal bundle format. */
     ELIDE_INTERNAL,
+
+    /** Zip files */
+    ZIP,
   }
 
   // Logger.
@@ -157,18 +163,21 @@ internal class EmbeddedGuestVFSImpl private constructor (
     val info: tools.elide.vfs.Directory,
   ) : VfsObjectInfo
 
-  //
+  // Describes a bundle under access for VFS.
   @JvmRecord internal data class BundleInfo(
     /** Internal (local) ID for the bundle. */
     val id: Int,
 
     /** URI or symbolic location for the bundle. */
     val location: String,
+
+    /** Format for the bundle. */
+    val type: BundleFormat,
   ) {
     companion object {
       // Build a map of locally-identified bundles.
-      @JvmStatic fun buildFor(bundles: List<Pair<Int, String>>): Map<Int, BundleInfo> =
-        bundles.map { (id, uri) -> id to BundleInfo(id, uri) }.toMap()
+      @JvmStatic fun buildFor(bundles: List<Triple<Int, String, BundleFormat>>): Map<Int, BundleInfo> =
+        bundles.associate { (id, uri, type) -> id to BundleInfo(id, uri, type) }
     }
   }
 
@@ -212,36 +221,134 @@ internal class EmbeddedGuestVFSImpl private constructor (
   )
 
   // Paths which have been lazy-loaded in-memory.
-  private val hydratedPathMap: MutableSet<String> = ConcurrentSkipListSet()
+  private val hydratedPathMap: MutableSet<Path> = ConcurrentSkipListSet()
+
+  // Lazy-inflate a known-good VFS path and all children using the provided `fs` target.
+  private fun createDirectoryTree(fs: FileSystemProvider, path: Path) {
+    Files.createDirectories(path)
+  }
+
+  private fun lazyInflateBundleData(
+    path: Path,
+    fs: FileSystem,
+    info: VfsFileInfo,
+    bundle: BundleInfo,
+  ): Path {
+    val size = info.info.size
+    val bundlePath = bundle.location
+    val bundleType = bundle.type
+
+    if (!(bundlePath.startsWith("classpath:") || bundlePath.startsWith("/META-INF/"))) error(
+      "Unsupported bundle location '$bundlePath' for VFS file '${info.path}' in bundle '${bundle.location}'"
+    )
+
+    val bundleStreamData = requireNotNull(EmbeddedGuestVFSImpl::class.java.getResourceAsStream(bundlePath)) {
+      "Failed to resolve bundle data for deferred VFS file '${info.path}' in bundle '${bundle.location}'"
+    }
+    val bundleStream = when (bundleType) {
+      BundleFormat.ELIDE_INTERNAL,
+      BundleFormat.TARBALL -> TarArchiveInputStream(bundleStreamData)
+      BundleFormat.TARBALL_XZ -> TarArchiveInputStream(XZCompressorInputStream(bundleStreamData))
+      BundleFormat.TARBALL_GZIP -> TarArchiveInputStream(GZIPInputStream(bundleStreamData))
+      BundleFormat.ZIP -> ZipArchiveInputStream(bundleStreamData)
+    }
+
+    // @TODO(sgammon): somehow seek directly to entry instead of looping here
+    var entry: ArchiveEntry? = bundleStream.nextEntry
+    while (entry != null) {
+      if (entry.name == info.path) break
+      entry = bundleStream.nextEntry
+    }
+
+    requireNotNull(entry) { "Failed to resolve entry for VFS file '${info.path}' in bundle '${bundle.location}'" }
+    require(bundleStream.canReadEntryData(entry)) { "Bundle '${bundle.location}' cannot read entry '${info.path}'" }
+    require(entry.size == size) { "Size mismatch for VFS file '${info.path}' in bundle '${bundle.location}'" }
+
+    val filedata = BufferedInputStream(bundleStream, size.toInt()).use {
+      it.readBytes()
+    }
+    require(filedata.size == size.toInt()) {
+      "Size mismatch for VFS file '${info.path}' in bundle '${bundle.location}'"
+    }
+
+    writeFileToMemoryFS(
+      entry,
+      fs,
+      filedata,
+      info.info.toBuilder(),
+    )
+    return path
+  }
 
   // Lazy-inflate a known-good VFS path using the provided `fs` target.
-  private fun inflatePath(path: Path, fs: FileSystemProvider, info: VfsObjectInfo) {
-    when {
-      info is VfsDirectory -> {}
-      info is VfsFileInfo -> {}
+  private fun inflatePath(path: Path, fs: FileSystem, info: VfsObjectInfo) {
+    if (path in hydratedPathMap) return
+
+    val embeddedPath = fs.getPath(info.path)
+    when (info) {
+      // create the tree of parent directories, as needed
+      is VfsDirectory -> createDirectoryTree(fs.provider(), embeddedPath).also {
+        hydratedPathMap.add(path)
+      }
+
+      // otherwise, lazy-inflate the path in question
+      is VfsFileInfo -> lazyInflateBundleData(path, fs, info, requireNotNull(bundles[info.bundle])).let {
+        require(path == it) { "Write mismatch to lazy VFS target '$path'" }
+        require(fs.provider().exists(path)) { "Failed to lazy-inflate VFS target '$path'" }
+        hydratedPathMap.add(path)
+      }
     }
-    TODO("not yet implemented")
   }
 
   // Lazy-inflate a known-good VFS path and all children using the provided `fs` target.
-  private fun inflateTree(path: Path, fs: FileSystemProvider, info: VfsDirectory) {
-    TODO("not yet implemented")
+  private fun inflateTree(path: Path, fs: FileSystem, info: VfsDirectory) {
+    val embeddedPath = fs.getPath(info.path)
+    createDirectoryTree(fs.provider(), embeddedPath)
+
+    val children = info.info.childrenList
+    children.forEach {
+      when (it.entryCase) {
+        FILE -> inflatePath(
+          embeddedPath.resolve(it.file.name),
+          fs,
+          requireNotNull(knownPath(it.file.name)),
+        )
+
+        DIRECTORY -> inflateTree(
+          embeddedPath.resolve(it.directory.name),
+          fs,
+          requireNotNull(knownPath(it.file.name)) as VfsDirectory,
+        )
+
+        else -> error("Unsupported fs entry type '${it.entryCase}'")
+      }
+    }
+  }
+
+  private fun knownPath(path: String): VfsObjectInfo? {
+    val absoluted = if (path.startsWith("/")) path else "/$path"
+    return knownPathMap[absoluted]
   }
 
   private inline fun <reified R> embeddedForPathOrFallBack(
     path: Path,
     allow: () -> R,
-    op: (FileSystemProvider, VfsObjectInfo) -> R
+    op: (FileSystem, VfsObjectInfo) -> R
   ): R {
     val pathStr = path.toString()
-    val absoluted = if (pathStr.startsWith("/")) pathStr else "/$pathStr"
-    return knownPathMap[absoluted]?.let {
-      if (pathStr in hydratedPathMap) {
+    return knownPath(pathStr)?.let {
+      if (path in hydratedPathMap) {
         allow()  // allow the regular call (it's already inflated)
       } else {
-        op(backing.provider(), it)  // inflate and then fallback
+        op(backing, it)  // inflate and then fallback
       }
     } ?: allow()  // fallback to the regular call
+  }
+
+  // Entrypoint for path checks, which needs to be overridden to account for lazy files.
+  override fun existsAny(path: Path): Boolean {
+    val pathStr = path.toString()
+    return knownPath(pathStr) != null || super.existsAny(path)
   }
 
   // Lazy read access to indexed VFS entries.
@@ -254,7 +361,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       super.newByteChannel(path, options, *attrs)
     }) { fs, info ->
       inflatePath(path, fs, info)
-      fs.newByteChannel(path, options, *attrs)
+      fs.provider().newByteChannel(path, options, *attrs)
     }
   }
 
@@ -263,7 +370,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       super.readAttributes(path, attributes, *options)
     }) { fs, info ->
       inflatePath(path, fs, info)
-      fs.readAttributes(path, attributes, *options)
+      fs.provider().readAttributes(path, attributes, *options)
     }
   }
 
@@ -272,7 +379,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       super.readSymbolicLink(link)
     }) { fs, info ->
       inflatePath(link, fs, info)
-      fs.readSymbolicLink(link)
+      fs.provider().readSymbolicLink(link)
     }
   }
 
@@ -281,7 +388,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       super.newDirectoryStream(dir, filter)
     }) { fs, info ->
       inflateTree(dir, fs, info as VfsDirectory)
-      fs.newDirectoryStream(dir, filter)
+      fs.provider().newDirectoryStream(dir, filter)
     }
   }
 
@@ -701,7 +808,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** @return [FilesystemInfo] metadata generated from a regular tarball. */
     @JvmStatic private fun metadataForTarball(
-      inputs: Iterable<ArchiveInputStream>,
+      inputs: Sequence<ArchiveInputStream>,
       memoryFS: FileSystem,
       deferred: Boolean,
       registry: MutableMap<String, VfsObjectInfo>,
@@ -714,10 +821,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
       val inputset = inputs.iterator()
       var tarball: ArchiveInputStream? = inputset.next()
-      var bundle = -1
+      var bundle = 0
 
       while (tarball != null) {
-        bundle += 1
         var entry = tarball.nextEntry
         while (entry != null) {
           // provision a new generic tree entry, which carries either a file or directory but never both
@@ -784,7 +890,10 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
         // seek to next tarball input, if available
         tarball = if (inputset.hasNext()) {
-          inputset.next()
+          inputset.next().also {
+            offset = 0L
+            bundle += 1
+          }
         } else {
           null
         }
@@ -816,7 +925,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         fsConfig.build(),
       )
 
-      val fsInfo = streams.stream().map { input ->
+      val archiveStreams = streams.map { input ->
         Triple(
           input.first,
           when (input.third) {
@@ -824,25 +933,19 @@ internal class EmbeddedGuestVFSImpl private constructor (
             BundleFormat.TARBALL -> TarArchiveInputStream(input.second)
             BundleFormat.TARBALL_XZ -> TarArchiveInputStream(XZCompressorInputStream(input.second))
             BundleFormat.TARBALL_GZIP -> TarArchiveInputStream(GZIPInputStream(input.second))
+            BundleFormat.ZIP -> ZipArchiveInputStream(input.second)
           },
           input.third
         )
-      }.map { input ->
-        if (input.third == BundleFormat.ELIDE_INTERNAL) {
-          loadMetadataFromElideBundle(input.second)
-          TODO("not yet implemented")
-        } else {
-          metadataForTarball(listOf(input.second), inMemoryFS, deferred, registry)
-        }
-      }.reduce { left, right ->
-        left.toBuilder().mergeFrom(right).build()
-      }.orElse(
-        FilesystemInfo.getDefaultInstance(),
-      )
+      }
+
+      // build full suite of embedded metadata across all archives
+      val onlyStreams = archiveStreams.asSequence().map { it.second }
+      val fsInfo = metadataForTarball(onlyStreams, inMemoryFS, deferred, registry)
 
       // build bundle infos
       val bundleInfos = BundleInfo.buildFor(
-        streams.mapIndexed { index, (uri, _, _) -> index to uri }
+        archiveStreams.mapIndexed { index, (uri, _, type) -> Triple(index, uri, type) }
       )
 
       // read each input tarball and compose the resulting structures
@@ -894,7 +997,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
           "enablePosixFileAttributes" to "true",
           "compressionMethod" to "STORED",
         )),
-        mapOf(0 to BundleInfo(0, target.toString())),
+        mapOf(0 to BundleInfo(0, target.toString(), BundleFormat.ZIP)),
       )
     }
 

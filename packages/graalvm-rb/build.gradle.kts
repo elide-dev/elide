@@ -54,7 +54,7 @@ elide {
 }
 
 dependencies {
-  api(libs.graalvm.polyglot.ruby)
+  api(libs.graalvm.polyglot.ruby.community)
   implementation(libs.bundles.graalvm.ruby)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)

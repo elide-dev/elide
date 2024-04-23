@@ -95,9 +95,12 @@ val isRelease = !quickbuild && (
   project.properties["elide.buildMode"] == "release"
 )
 
+val nativesType = if (isRelease) "release" else "debug"
+val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
+
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val oracleGvm = true
+val oracleGvm = false
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
@@ -106,17 +109,17 @@ val enableTools = true
 val enableMosaic = true
 val enableProguard = false
 val enableLlvm = true
-val enableEspresso = true
+val enableEspresso = false
 val enableExperimental = false
 val enableEmbeddedResources = false
 val enableResourceFilter = false
-val enableAuxCache = true
+val enableAuxCache = false
 val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableDashboard = false
 val enableBuildReport = true
 val enableG1 = oracleGvm && HostManager.hostIsLinux
-val enablePgo = true
+val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enableSbom = true
@@ -711,10 +714,7 @@ val experimentalFlags = listOf(
 )
 
 // CFlags for release mode.
-val releaseCFlags: List<String> = listOf(
-  "-O3",
-  "-flto",
-)
+val releaseCFlags: List<String> = listOf()
 
 // PGO profiles to specify in release mode.
 val profiles: List<String> = listOf(
@@ -812,13 +812,13 @@ val initializeAtRuntime: List<String> = listOf(
   "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
   "io.netty.handler.ssl.JdkNpnApplicationProtocolNegotiator",
   "io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder",
-  "org.truffleruby.aot.ParserCache",
-  "org.truffleruby.core.encoding.Encodings",
-  "org.truffleruby.core.format.FormatEncoding",
-  "org.truffleruby.core.format.rbsprintf.RBSprintfSimpleTreeBuilder",
-  "org.truffleruby.core.format.printf.PrintfSimpleTreeBuilder",
-  "org.truffleruby.core.string.FrozenStrings",
-  "org.truffleruby.parser.lexer.RubyLexer${'$'}Keyword${'$'}Maps",
+//  "org.truffleruby.aot.ParserCache",
+//  "org.truffleruby.core.encoding.Encodings",
+//  "org.truffleruby.core.format.FormatEncoding",
+//  "org.truffleruby.core.format.rbsprintf.RBSprintfSimpleTreeBuilder",
+//  "org.truffleruby.core.format.printf.PrintfSimpleTreeBuilder",
+//  "org.truffleruby.core.string.FrozenStrings",
+//  "org.truffleruby.parser.lexer.RubyLexer${'$'}Keyword${'$'}Maps",
   "kotlin.random.AbstractPlatformRandom",
   "kotlin.random.XorWowRandom",
   "kotlin.random.Random${'$'}Default",
@@ -833,7 +833,7 @@ val initializeAtRuntimeTest: List<String> = emptyList()
 
 val rerunAtRuntimeTest: List<String> = emptyList()
 
-val defaultPlatformArgs = listOf(
+val defaultPlatformArgs: List<String> = listOf(
   "--libc=glibc",
 )
 
@@ -947,6 +947,14 @@ fun nativeCliImageArgs(
   commonNativeArgs.asSequence().plus(
     jvmCompileArgs,
   ).plus(
+    StringBuilder().apply {
+      append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+      append(File.pathSeparator)
+      append(System.getProperty("java.library.path", ""))
+    }.toString().let {
+      listOf("-Djava.library.path=$it")
+    }
+  ).plus(
     jvmCompileArgs.map { "-J$it" },
   ).plus(
     initializeAtBuildTime.map { "--initialize-at-build-time=$it" },
@@ -1015,7 +1023,7 @@ graalvmNative {
       quickBuild = quickbuild
       sharedLibrary = false
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs).plus(listOf(
-        "--exclude-config", "python-language-24.0.1.jar", "META-INF\\/native-image\\/.*.properties",
+        "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
       )))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
     }
@@ -1026,7 +1034,7 @@ graalvmNative {
       quickBuild = quickbuild
       sharedLibrary = false
       buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs).plus(listOf(
-        "--exclude-config", "python-language-24.0.1.jar", "META-INF\\/native-image\\/.*.properties",
+        "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
       )))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
     }
@@ -1215,12 +1223,12 @@ fun Jar.applyJarSettings() {
   }
 }
 
-java {
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of(22))
-    vendor.set(JvmVendorSpec.GRAAL_VM)
-  }
-}
+//java {
+//  toolchain {
+//    languageVersion.set(JavaLanguageVersion.of(22))
+//    vendor.set(JvmVendorSpec.GRAAL_VM)
+//  }
+//}
 
 /**
  * Build: CLI Docker Images
@@ -1265,9 +1273,6 @@ tasks {
     if (enableJpms) modularity.inferModulePath = true
   }
 
-  val nativesType = if (isRelease) "release" else "debug"
-  val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
-
   named("run", JavaExec::class).configure {
     systemProperty(
       "micronaut.environments",
@@ -1305,14 +1310,14 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-    javaToolchains {
-      javaLauncher.set(
-        launcherFor {
-          languageVersion = JavaLanguageVersion.of(22)
-          vendor = JvmVendorSpec.GRAAL_VM
-        },
-      )
-    }
+//    javaToolchains {
+//      javaLauncher.set(
+//        launcherFor {
+//          languageVersion = JavaLanguageVersion.of(22)
+//          vendor = JvmVendorSpec.GRAAL_VM
+//        },
+//      )
+//    }
   }
 
   optimizedRun {
@@ -1349,14 +1354,14 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-    javaToolchains {
-      javaLauncher.set(
-        launcherFor {
-          languageVersion = JavaLanguageVersion.of(22)
-          vendor = JvmVendorSpec.GRAAL_VM
-        },
-      )
-    }
+//    javaToolchains {
+//      javaLauncher.set(
+//        launcherFor {
+//          languageVersion = JavaLanguageVersion.of(22)
+//          vendor = JvmVendorSpec.GRAAL_VM
+//        },
+//      )
+//    }
   }
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {

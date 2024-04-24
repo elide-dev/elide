@@ -14,11 +14,11 @@
 
 package elide.runtime.intrinsics.js.node
 
-import elide.runtime.intrinsics.js.node.path.Path as NodePath
 import kotlinx.io.files.Path
 import elide.annotations.API
 import elide.runtime.gvm.internals.node.path.PathStyle
 import elide.vm.annotations.Polyglot
+import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
 /**
  * # Node API: `path`

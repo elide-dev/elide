@@ -14,8 +14,6 @@
 
 package elide.runtime.gvm.internals.node.process
 
-import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.proxy.ProxyObject
 import kotlin.collections.Map.Entry
 import kotlin.system.exitProcess
 import elide.annotations.Factory

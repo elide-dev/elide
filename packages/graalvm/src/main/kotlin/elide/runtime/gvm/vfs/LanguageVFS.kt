@@ -14,7 +14,6 @@ package elide.runtime.gvm.vfs
 
 import org.graalvm.polyglot.io.FileSystem
 import java.nio.file.Path
-import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.LanguageVFS
 
 /**

@@ -21,7 +21,6 @@ import io.micronaut.context.condition.Condition
 import io.micronaut.context.condition.ConditionContext
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
-import org.graalvm.polyglot.SandboxPolicy.TRUSTED
 import org.graalvm.polyglot.Source
 import elide.tool.annotations.EmbeddedTest
 import elide.tool.testing.SelfTest

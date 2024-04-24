@@ -14,7 +14,6 @@ package elide.runtime.plugins.env
 
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.function.Supplier
-import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.HOST
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.INLINE

@@ -38,7 +38,6 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
-import java.nio.file.spi.FileSystemProvider
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListMap

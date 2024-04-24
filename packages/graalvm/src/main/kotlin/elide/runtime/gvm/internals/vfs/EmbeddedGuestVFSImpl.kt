@@ -277,7 +277,15 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
   // Lazy-inflate a known-good VFS path using the provided `fs` target.
   private fun inflatePath(path: Path, fs: FileSystem, info: VfsObjectInfo) {
-    if (path in hydratedPathMap) return
+    if (path in hydratedPathMap) {
+      logging.debug {
+        "Skipping lazy-inflate for already-hydrated VFS path '$path'"
+      }
+      return
+    }
+    logging.debug {
+      "Lazy-inflating VFS path '$path' with info '$info'"
+    }
 
     val embeddedPath = fs.getPath(info.path)
     when (info) {
@@ -320,8 +328,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   private fun knownPath(path: String): VfsObjectInfo? {
+    if (!deferred) return null
     val absoluted = if (path.startsWith("/")) path else "/$path"
-    return knownPathMap[absoluted]
+    val known = knownPathMap[absoluted]
+    if (known == null) logging.debug { "Path '$path' is not known to VFS" }
+    else logging.debug { "Path '$path' is known to VFS as '$known'" }
+    return known
   }
 
   private inline fun <reified R> embeddedForPathOrFallBack(
@@ -603,7 +615,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         tree,
         deferred,
         infos,
-        registry,
+        pathRegistry,
       )
     }
 
@@ -1162,6 +1174,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         effectiveFS,
         tree ?: FilesystemInfo.getDefaultInstance(),
         bundles = bundles ?: emptyMap(),
+        knownPathMap = vfsIndex,
       )
     }
   }

@@ -48,10 +48,10 @@ elide {
     target = KotlinTarget.JVM
     explicitApi = true
   }
-}
 
-tasks.withType(Detekt::class.java) {
-  jvmTarget = "17" // @TODO pull from property state
+  docs {
+    enabled = false
+  }
 }
 
 dependencies {

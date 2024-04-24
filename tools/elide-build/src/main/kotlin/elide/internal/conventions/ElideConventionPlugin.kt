@@ -35,6 +35,7 @@ import elide.internal.conventions.archives.reproducibleArchiveTasks
 import elide.internal.conventions.dependencies.configureDependencyLocking
 import elide.internal.conventions.dependencies.configureDependencyResolution
 import elide.internal.conventions.docker.useGoogleCredentialsForDocker
+import elide.internal.conventions.docs.DokkaConventionsPlugin
 import elide.internal.conventions.jvm.*
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
 import elide.internal.conventions.kotlin.KotlinTarget.WASM
@@ -114,6 +115,12 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       if (excludeDuplicates) excludeDuplicateArchives()
     }
 
+    // -- Conventions: Docs -------------------------------------------------------------------------------------------
+    //
+    maybeApplyConvention(conventions.docs) {
+      if (conventions.docs.enabled) plugins.apply(DokkaConventionsPlugin::class.java)
+    }
+
     // -- Conventions: Containers -------------------------------------------------------------------------------------
     //
     maybeApplyConvention(conventions.docker) {
@@ -170,7 +177,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     maybeApplyConvention(conventions.java) {
       configureJava()
 
-      if (includeJavadoc) includeJavadocJar()
+      if (includeJavadoc && conventions.docs.enabled) includeJavadocJar()
       if (includeSources) includeSourceJar()
 
       if (!project.isJpmsDisabled() && configureModularity && !conventions.kotlin.requested) {

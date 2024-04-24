@@ -219,8 +219,15 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
   /** Configuration for doc-gen */
   public class Docs(project: Project) : Convention(project) {
+    private val docsByDefault = true
+
+    /** Whether to include this module in the main API docs. */
+    public var enabled: Boolean = docsByDefault
+
     // on by default
-    override var requested: Boolean = true
+    override var requested: Boolean
+      get() = enabled
+      set(value) { enabled = value }
   }
 
   /** Configuration for testing tasks */
@@ -294,7 +301,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   internal val kotlin = Kotlin(project)
   internal val java = Java(project)
   internal val cpp = Java(project)
-  internal val docs = Java(project)
+  internal val docs = Docs(project)
   internal val python = Python(project)
   internal val javascript = Javascript(project)
   internal val typescript = Typescript(project)
@@ -334,6 +341,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
   /** Configure GraalVM native compilations. */
   public fun native(block: Native.() -> Unit = { }): Unit = configure(native, block)
+
+  /** Configure docs tasks. */
+  public fun docs(block: Docs.() -> Unit = { }): Unit = configure(docs, block)
 
   /** Configure check tasks. */
   public fun checks(block: Checks.() -> Unit = { }): Unit = configure(checks, block)

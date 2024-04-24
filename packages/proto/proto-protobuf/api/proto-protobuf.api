@@ -20150,6 +20150,16 @@ public final class tools/elide/deps/Dependency$Builder : com/google/protobuf/Gen
 public final class tools/elide/deps/DependencyEcosystem : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
 	public static final field DEPENDENCY_ECOSYSTEM_UNRECOGNIZED Ltools/elide/deps/DependencyEcosystem;
 	public static final field DEPENDENCY_ECOSYSTEM_UNRECOGNIZED_VALUE I
+	public static final field JSR Ltools/elide/deps/DependencyEcosystem;
+	public static final field JSR_VALUE I
+	public static final field MAVEN Ltools/elide/deps/DependencyEcosystem;
+	public static final field MAVEN_VALUE I
+	public static final field NPM Ltools/elide/deps/DependencyEcosystem;
+	public static final field NPM_VALUE I
+	public static final field PYPI Ltools/elide/deps/DependencyEcosystem;
+	public static final field PYPI_VALUE I
+	public static final field RUBYGEMS Ltools/elide/deps/DependencyEcosystem;
+	public static final field RUBYGEMS_VALUE I
 	public static final field UNRECOGNIZED Ltools/elide/deps/DependencyEcosystem;
 	public static fun forNumber (I)Ltools/elide/deps/DependencyEcosystem;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
@@ -20234,8 +20244,12 @@ public final class tools/elide/deps/DependencyOuterClass {
 }
 
 public final class tools/elide/deps/DependencyScope : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
+	public static final field COMPILE_ONLY Ltools/elide/deps/DependencyScope;
+	public static final field COMPILE_ONLY_VALUE I
 	public static final field DEPENDENCY_SCOPE_DEFAULT Ltools/elide/deps/DependencyScope;
 	public static final field DEPENDENCY_SCOPE_DEFAULT_VALUE I
+	public static final field RUNTIME_ONLY Ltools/elide/deps/DependencyScope;
+	public static final field RUNTIME_ONLY_VALUE I
 	public static final field UNRECOGNIZED Ltools/elide/deps/DependencyScope;
 	public static fun forNumber (I)Ltools/elide/deps/DependencyScope;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;

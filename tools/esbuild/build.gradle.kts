@@ -14,7 +14,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.kotlin.dsl.elide
 import elide.internal.conventions.kotlin.KotlinTarget
-import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {

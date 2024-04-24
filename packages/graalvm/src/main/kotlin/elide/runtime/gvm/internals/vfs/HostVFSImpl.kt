@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.vfs
 
 import io.micronaut.context.annotation.Bean
@@ -63,9 +62,9 @@ internal class HostVFSImpl private constructor (
    * Coming soon.
    */
   @Suppress("unused") internal data class Builder (
-    override var deferred: Boolean = false,  // no-op
-    override var bundleMapping: MutableMap<Int, BundleInfo> = mutableMapOf(),  // no-op
-    override var registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),  // no-op
+    override var deferred: Boolean = false,
+    override var bundleMapping: MutableMap<Int, BundleInfo> = mutableMapOf(),
+    override var registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),
     override var readOnly: Boolean = GuestVFSPolicy.DEFAULT_READ_ONLY,
     override var root: String = ROOT_SYSTEM_DEFAULT,
     override var policy: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS,

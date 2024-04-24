@@ -770,7 +770,12 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
-  // Google Commons + Protobuf
+  // --- AWT -----
+
+  "sun.awt.resources.awt",
+
+  // --- Google -----
+
   "com.google.protobuf",
   "com.google.common.html.types.Html",
   "com.google.common.jimfs.Feature",
@@ -782,10 +787,12 @@ val initializeAtBuildTime = listOf(
   "com.google.common.collect.MapMakerInternalMap${'$'}1",
   "com.google.common.base.Equivalence${'$'}Equals",
 
-  // Databasing
+  // --- Database -----
+
   "org.sqlite.util.ProcessRunner",
 
-  // Logging
+  // --- Logging -----
+
   "ch.qos.logback",
   "ch.qos.logback.classic.Logger",
   "org.slf4j.MarkerFactory",

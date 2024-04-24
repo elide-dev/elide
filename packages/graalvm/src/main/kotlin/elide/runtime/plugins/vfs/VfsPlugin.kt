@@ -12,11 +12,10 @@
  */
 package elide.runtime.plugins.vfs
 
-import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.polyglot.io.IOAccess
 import java.net.URI
-import java.util.Collections
+import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import elide.runtime.Logging
 import elide.runtime.core.*

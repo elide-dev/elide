@@ -20,7 +20,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.*
-import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.Builder
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.EmbeddedVFSFactory.buildFs
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase

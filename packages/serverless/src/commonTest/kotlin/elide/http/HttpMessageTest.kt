@@ -16,11 +16,10 @@ package elide.http
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import elide.http.api.*
 import elide.http.api.HttpHeaders
 import elide.http.api.HttpMessage
-import elide.http.api.HttpMessageType
 import elide.http.api.HttpPayload
-import elide.http.api.HttpVersion
 import elide.http.api.MutableHttpHeaders
 import elide.http.api.MutableHttpMessage
 import elide.http.api.MutableHttpPayload

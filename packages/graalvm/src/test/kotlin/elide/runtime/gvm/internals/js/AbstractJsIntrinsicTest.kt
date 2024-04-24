@@ -25,7 +25,6 @@ import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.js.javascript
-import elide.runtime.plugins.vfs.Vfs
 import elide.runtime.plugins.vfs.vfs
 import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Value as GuestValue

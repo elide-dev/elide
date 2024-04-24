@@ -91,13 +91,3 @@ dependencies {
     api(libs.kotlinx.coroutines.core.js)
   }
 }
-
-tasks {
-  withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
-    dokkaSourceSets {
-      configureEach {
-        includes.from("module.md")
-      }
-    }
-  }
-}

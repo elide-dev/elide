@@ -38,4 +38,8 @@ elide {
     configureModularity = false
     includeSources = false
   }
+
+  docs {
+    enabled = false
+  }
 }

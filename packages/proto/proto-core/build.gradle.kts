@@ -43,6 +43,10 @@ elide {
   jvm {
     forceJvm17 = true
   }
+
+  docs {
+    enabled = false
+  }
 }
 
 dependencies {

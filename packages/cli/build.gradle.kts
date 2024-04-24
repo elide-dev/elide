@@ -77,6 +77,15 @@ elide {
   checks {
     spotless = false
   }
+
+  docs {
+    enabled = false
+  }
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 }
 
 // Flags affecting this build script:

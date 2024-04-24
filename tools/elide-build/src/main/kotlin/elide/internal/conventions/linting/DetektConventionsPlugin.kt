@@ -86,6 +86,7 @@ public class DetektConventionsPlugin : Plugin<Project> {
       if (target.pluginManager.hasPlugin(DETEKT_ID)) {
         target.tasks.withType(Detekt::class) {
           enabled = false
+          jvmTarget = "21"  // @TODO pull from property state
         }
       }
     }

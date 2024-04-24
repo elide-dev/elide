@@ -43,6 +43,10 @@ elide {
   java {
     configureModularity = false
   }
+
+  docs {
+    enabled = false
+  }
 }
 
 dependencies {

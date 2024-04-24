@@ -2281,7 +2281,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/PathAPI : elide
 	public fun isAbsolute (Ljava/lang/String;)Z
 	public fun isAbsolute (Lkotlinx/io/files/Path;)Z
 	public abstract fun join (Lelide/runtime/intrinsics/js/node/path/Path;[Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun join (Ljava/lang/Iterable;)Ljava/lang/String;
 	public fun join (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun join (Lkotlin/sequences/Sequence;)Ljava/lang/String;
 	public fun join (Lkotlinx/io/files/Path;[Lkotlinx/io/files/Path;)Ljava/lang/String;
 	public abstract fun normalize (Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
 	public fun normalize (Ljava/lang/String;)Ljava/lang/String;
@@ -2292,7 +2294,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/PathAPI : elide
 	public fun relative (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public fun relative (Lkotlinx/io/files/Path;Lkotlinx/io/files/Path;)Ljava/lang/String;
 	public abstract fun resolve (Lelide/runtime/intrinsics/js/node/path/Path;[Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
+	public fun resolve (Ljava/lang/Iterable;)Ljava/lang/String;
 	public fun resolve (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun resolve (Lkotlin/sequences/Sequence;)Ljava/lang/String;
 	public fun resolve (Lkotlinx/io/files/Path;[Lkotlinx/io/files/Path;)Ljava/lang/String;
 	public abstract fun toNamespacedPath (Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
 	public fun toNamespacedPath (Ljava/lang/String;)Ljava/lang/String;

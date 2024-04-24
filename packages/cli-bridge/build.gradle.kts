@@ -18,8 +18,6 @@
 
 import org.gradle.kotlin.dsl.elide
 import elide.internal.conventions.kotlin.KotlinTarget
-
-
 plugins {
   java
   `java-library`

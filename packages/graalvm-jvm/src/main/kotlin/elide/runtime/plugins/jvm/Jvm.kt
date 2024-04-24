@@ -84,7 +84,7 @@ import elide.runtime.plugins.llvm.LLVM
       scope.configuration.getOrInstall(LLVM)
       val config = JvmConfig().apply(configuration)
       configureSharedBindings(scope, config)
-      
+
       val resources = resolveEmbeddedManifest(scope)
       val instance = Jvm(config)
 

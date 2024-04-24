@@ -39,11 +39,11 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     val libpath = requireNotNull(System.getProperty("java.library.path")) { "Failed to resolve native libpath" }
 
     builder.option("llvm.libraryPath", libpath)
-//    llvm.C++Interop
-//    llvm.libraries
-//    llvm.AOTCacheStore
-//    llvm.AOTCacheLoad
-//    llvm.loadC++Libraries
+// llvm.C++Interop
+// llvm.libraries
+// llvm.AOTCacheStore
+// llvm.AOTCacheLoad
+// llvm.loadC++Libraries
   }
 
   public companion object Plugin : AbstractLanguagePlugin<LLVMConfig, LLVM>() {
@@ -58,7 +58,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       // apply the configuration and create the plugin instance
       val config = LLVMConfig().apply(configuration)
       configureSharedBindings(scope, config)
-      
+
       val resources = resolveEmbeddedManifest(scope, lenient = true)
       val instance = LLVM(config, resources)
 

@@ -288,7 +288,7 @@ dependencies {
 }
 
 // Configurations: Testing
-val testBase: Configuration by configurations.creating {}
+val testBase: Configuration by configurations.creating
 
 tasks {
   test {

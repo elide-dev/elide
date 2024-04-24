@@ -24,20 +24,6 @@ import java.util.function.Consumer
  *
  */
 public object ESBuild {
-  private fun readSourcefile(lang: String, srcfile: String, name: String): Source {
-    val bytes = ESBuild::class.java.getResourceAsStream(
-      "/META-INF/elide/embedded/tools/esbuild/$srcfile"
-    )?.readBytes()
-
-    requireNotNull(bytes) { "Failed to load $name" }
-
-    return if (lang == "wasm") {
-      Source.newBuilder(lang, ByteSequence.create(bytes), name).build()
-    } else {
-      Source.newBuilder(lang, bytes.inputStream().reader(StandardCharsets.UTF_8), name).build()
-    }
-  }
-
   private val callable: Value by lazy {
     val ctx = Context.newBuilder("js", "wasm")
       .allowAllAccess(true)
@@ -54,10 +40,10 @@ public object ESBuild {
       readSourcefile(it.second.second, it.first, it.second.first)
     }
 
-//    "esbuild.wasm" to ("esbuild.wasm" to "wasm"),
-//    "wasm_exec.js" to ("wasm_exec.js" to "js"),
-//    "wasm_exec_node.js" to ("wasm_exec_node.js" to "js"),
-//    "mod.min.js" to ("mod.js" to "js"),
+// "esbuild.wasm" to ("esbuild.wasm" to "wasm"),
+// "wasm_exec.js" to ("wasm_exec.js" to "js"),
+// "wasm_exec_node.js" to ("wasm_exec_node.js" to "js"),
+// "mod.min.js" to ("mod.js" to "js"),
 
     val entry = Source.newBuilder(
       "js",
@@ -70,7 +56,7 @@ public object ESBuild {
     ctx.enter()
     val evaluated = srcs.map { ctx.eval(it) }
     val esbuildWasm = evaluated[2]
-    //val wasmEntry = ctx.getBindings("wasm").getMember("esbuild.wasm")
+    // val wasmEntry = ctx.getBindings("wasm").getMember("esbuild.wasm")
     ctx.getBindings("js").putMember("ESBUILD", esbuildWasm)
     val symbols = ctx.eval(entry)
     ctx.leave()
@@ -79,13 +65,32 @@ public object ESBuild {
     val main: Value = symbols.getMember("main")
     main
   }
+  private fun readSourcefile(
+lang: String,
+ srcfile: String,
+ name: String
+): Source {
+    val bytes = ESBuild::class.java.getResourceAsStream(
+      "/META-INF/elide/embedded/tools/esbuild/$srcfile"
+    )?.readBytes()
+
+    requireNotNull(bytes) { "Failed to load $name" }
+
+    return if (lang == "wasm") {
+      Source.newBuilder(lang, ByteSequence.create(bytes), name).build()
+    } else {
+      Source.newBuilder(lang, bytes.inputStream().reader(StandardCharsets.UTF_8), name).build()
+    }
+  }
 
   /**
    *
    */
   public fun run(args: Array<String>) {
     val result = callable.execute(args)
-    val javaThen: Consumer<Any> = Consumer<Any> { value -> println("Resolved from JavaScript: $value") }
+    val javaThen: Consumer<Any> = Consumer<Any> {
+      // nothing at this time
+    }
     result.invokeMember("then", javaThen)
   }
 

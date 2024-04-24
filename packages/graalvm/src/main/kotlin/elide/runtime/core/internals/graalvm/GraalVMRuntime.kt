@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.core.internals.graalvm
 
 import org.graalvm.nativeimage.ImageInfo
@@ -83,6 +82,9 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
     /** Version constant for GraalVM 24.0.1 */
     public val GVM_24_1_0: Version = Version(24, 1, 0)
 
+    private const val positionalLts = 3
+    private const val positionalNonLts = 2
+
     /**
      * Detect the current runtime version and return it as a comparable [Version] object. When running from a
      * Native Image, the resolved version will be mapped to a known GraalVM version.
@@ -102,7 +104,7 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
       if (source.contains("jvmci")) {
         // check for LTS version tag, for example:
         // `21.0.2+13-LTS-jvmci-23.1-b30`
-        val index = if (tag.contains("lts")) 3 else 2
+        val index = if (tag.contains("lts")) positionalLts else positionalNonLts
         return source.split("-").getOrNull(index)?.let { jvm ->
           if (!jvm.contains(".")) null else Version.parse(jvm)
         } ?: source.split("+").getOrNull(0)?.let { jvm ->

@@ -7,9 +7,9 @@ LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base"
 LABEL org.opencontainers.image.description="Base image for Elide apps and tools"
 LABEL org.opencontainers.image.version=v3-alpha1
-LABEL org.opencontainers.image.url=https://github.com/elide-dev/v3
+LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=ubuntu:${UBUNTU_VERSION}
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/v3/blob/v3/tools/images/base/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/base/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \

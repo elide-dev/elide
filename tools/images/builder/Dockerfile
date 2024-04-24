@@ -16,9 +16,9 @@ LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Builder"
 LABEL org.opencontainers.image.description="Builder image for Elide apps and tools"
 LABEL org.opencontainers.image.version=v3-alpha1
-LABEL org.opencontainers.image.url=https://github.com/elide-dev/v3
+LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/v3/blob/v3/tools/images/builder/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/builder/Dockerfile
 
 RUN echo "Building Elide builder image..." \
   && set -eux \

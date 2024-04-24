@@ -3,17 +3,17 @@ ARG BASE_HASH="@sha256:ce2fe9474ca168eebfd35b0c7682db11045b0f10418ec46ae9b0c7610
 
 FROM ghcr.io/elide-dev/base${BASE_VERSION}${BASE_HASH}
 
-ARG GRAAL_VERSION=23.0.1
-ARG JAVA_VERSION=17
-ARG GRAAL_RELEASE="17.0.8+9.1"
+ARG GRAAL_VERSION=24.1.0
+ARG JAVA_VERSION=22
+ARG GRAAL_RELEASE="22.0.1+8.1"
 
 LABEL org.opencontainers.image.vendor=Elide
-LABEL org.opencontainers.image.title="Elide Tools: GraalVM (Java 17)"
-LABEL org.opencontainers.image.description="Java 17 tools for Elide/GraalVM"
+LABEL org.opencontainers.image.title="Elide Tools: GraalVM (Java 22)"
+LABEL org.opencontainers.image.description="Java 22 tools for Elide/GraalVM"
 LABEL org.opencontainers.image.version=v3-alpha1
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/gvm17/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/gvm22/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \

@@ -15,10 +15,13 @@ package elide.internal.conventions.docs
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.invoke
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.dokka.gradle.DokkaPlugin
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import java.io.File
 import elide.internal.conventions.Constants
 import elide.internal.conventions.ElideBuildExtension
@@ -47,6 +50,16 @@ private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension,
   }
 }
 
+private fun DokkaTaskPartial.configureDokkaPartial() {
+  if (project.layout.projectDirectory.file("module.md").asFile.exists()) {
+    dokkaSourceSets {
+      configureEach {
+        includes.from("module.md")
+      }
+    }
+  }
+}
+
 public class DokkaConventionsPlugin : Plugin<Project> {
   private companion object {
     const val DOKKA_PLUGIN_ID = "org.jetbrains.dokka"
@@ -58,6 +71,9 @@ public class DokkaConventionsPlugin : Plugin<Project> {
       target.pluginManager.withPlugin(DOKKA_PLUGIN_ID) {
         target.tasks.withType(DokkaTask::class.java).configureEach {
           configureDokkaForProject(it, target)
+        }
+        target.tasks.withType(DokkaTaskPartial::class.java).configureEach {
+          configureDokkaPartial()
         }
       }
     }

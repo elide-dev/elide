@@ -43,9 +43,10 @@ private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension,
         creativeAsset("logo/logo-wide-1200-w-r2.png"),
         creativeAsset("logo/gray-elide-symbol-lg.png"),
       )
-      customStyleSheets = listOf(docAsset(
-        "styles/logo-styles.css",
-      ))
+      customStyleSheets = listOf(
+        docAsset("styles/logo-styles.css"),
+        docAsset("styles/theme-styles.css"),
+      )
     }
   }
 }

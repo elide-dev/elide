@@ -48,25 +48,23 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
     output.set(project.rootProject.layout.buildDirectory.file(mergedReportXml))
   }
 
-  project.plugins.withType(DetektPlugin::class) {
-    project.tasks.withType(Detekt::class) detekt@{
-      finalizedBy(detektMergeSarif, detektMergeXml)
-      reports.sarif.required = true
-      reports.xml.required = true
-      reports.sarif.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.sarif"))
-      reports.xml.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.xml"))
-      jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
+  project.tasks.withType(Detekt::class) detekt@{
+    finalizedBy(detektMergeSarif, detektMergeXml)
+    reports.sarif.required = true
+    reports.xml.required = true
+    reports.sarif.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.sarif"))
+    reports.xml.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.xml"))
+    jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
 
-      detektMergeSarif.configure {
-        input.from(this@detekt.sarifReportFile)
-      }
-      detektMergeXml.configure {
-        input.from(this@detekt.xmlReportFile)
-      }
+    detektMergeSarif.configure {
+      input.from(this@detekt.sarifReportFile)
     }
-    project.tasks.withType(DetektCreateBaselineTask::class) detekt@{
-      jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
+    detektMergeXml.configure {
+      input.from(this@detekt.xmlReportFile)
     }
+  }
+  project.tasks.withType(DetektCreateBaselineTask::class) detekt@{
+    jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
   }
 }
 
@@ -82,6 +80,12 @@ public class DetektConventionsPlugin : Plugin<Project> {
       target.pluginManager.withPlugin(DETEKT_ID) {
         target.extensions.configure(DetektExtension::class.java) {
           configureDetektForProject(elide, target)
+        }
+      }
+    } else {
+      if (target.pluginManager.hasPlugin(DETEKT_ID)) {
+        target.tasks.withType(Detekt::class) {
+          enabled = false
         }
       }
     }

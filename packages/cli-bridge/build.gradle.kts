@@ -43,6 +43,10 @@ elide {
     target = KotlinTarget.JVM
     kotlinVersionOverride = "2.0"
   }
+
+  docs {
+    enabled = false
+  }
 }
 
 dependencies {

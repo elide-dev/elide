@@ -11,10 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.kotlin.dsl.elide
-import elide.internal.conventions.kotlin.KotlinTarget
-import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
@@ -48,10 +45,10 @@ elide {
       from(components["kotlin"])
     }
   }
-}
 
-tasks.withType(Detekt::class.java) {
-  jvmTarget = "17" // @TODO pull from property state
+  docs {
+    enabled = false
+  }
 }
 
 dependencies {

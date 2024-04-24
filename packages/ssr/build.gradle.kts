@@ -80,13 +80,3 @@ dependencies {
     api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:${libs.versions.kotlin.sdk.get()}")
   }
 }
-
-tasks {
-  withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
-    dokkaSourceSets {
-      configureEach {
-        includes.from("module.md")
-      }
-    }
-  }
-}

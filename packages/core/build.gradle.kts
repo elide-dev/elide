@@ -47,13 +47,3 @@ dependencies {
     api(libs.jetbrains.annotations)
   }
 }
-
-tasks {
-  withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
-    dokkaSourceSets {
-      configureEach {
-        includes.from("module.md")
-      }
-    }
-  }
-}

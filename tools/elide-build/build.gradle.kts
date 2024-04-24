@@ -104,10 +104,14 @@ dependencies {
   implementation(libs.plugin.detekt)
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.sigstore)
-  implementation(libs.plugin.redacted) // @TODO(sgammon): broken on kotlin 2.0
+  implementation(libs.plugin.redacted)
   implementation(libs.plugin.ksp)
   implementation(libs.kotlinpoet)
   implementation(libs.jgit)
+  implementation(libs.h2)
+  implementation(libs.json)
+  implementation(libs.okio)
+  implementation(libs.bouncycastle)
   implementation(libs.guava)
 
   // embedded Kotlin plugins

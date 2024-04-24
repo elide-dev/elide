@@ -9,8 +9,8 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://docs.elide.dev/" />
   <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <@page_metadata.display/>
-    <@template_cmd name="pathToRoot"><script>var pathToRoot = "${pathToRoot}";</script></@template_cmd>
+  <@page_metadata.display/>
+  <@template_cmd name="pathToRoot"><script>var pathToRoot = "${pathToRoot}";</script></@template_cmd>
   <script>document.documentElement.classList.replace("no-js","js");</script>
     <#-- This script doesn't need to be there but it is nice to have
     since app in dark mode doesn't 'blink' (class is added before it is rendered) -->
@@ -50,16 +50,24 @@
     "@type": "SoftwareSourceCode",
     "name": "Elide",
     "alternateName": "Elide Framework",
-    "runtimePlatform": "Java 17",
+    "runtimePlatform": "Java 21",
     "programmingLanguage": "Kotlin",
     "creativeWorkStatus": "Published",
     "codeRepository": "https://github.com/elide-dev/elide",
-    "author": {
-      "@type": "Person",
-      "givenName": "Sam",
-      "familyName": "Gammon",
-      "url": "https://github.com/sgammon"
-    },
+    "author": [
+      {
+        "@type": "Person",
+        "givenName": "Sam",
+        "familyName": "Gammon",
+        "url": "https://github.com/sgammon"
+      },
+      {
+        "@type": "Person",
+        "givenName": "Dario",
+        "familyName": "Valdespino",
+        "url": "https://github.com/darvld"
+      }
+    ],
     "publisher": {
       "@type": "Organization",
       "name": "Elide",

@@ -20,6 +20,8 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
@@ -485,7 +487,7 @@ tasks {
   // --- Tasks: Kotlin/NPM
   //
   withType(KotlinNpmInstallTask::class.java).configureEach {
-    packageJsonFiles.addFirst(layout.projectDirectory.file("package.json"))
+    (packageJsonFiles as MutableList<RegularFile>).addFirst(layout.projectDirectory.file("package.json"))
     args.add("--ignore-engines")
     outputs.upToDateWhen {
       layout.projectDirectory.dir("node_modules").asFile.exists()
@@ -545,14 +547,32 @@ tasks {
   }
 
   if (buildDocs == "true") {
-    subprojects {
-      plugins.apply("org.jetbrains.dokka")
+    val docAsset: (String) -> File = {
+      rootProject.layout.projectDirectory.file("docs/$it").asFile
+    }
+    val creativeAsset: (String) -> File = {
+      rootProject.layout.projectDirectory.file("creative/$it").asFile
     }
 
     val dokkaHtmlMultiModule by getting(DokkaMultiModuleTask::class) {
       moduleName = "Elide"
       includes.from(layout.projectDirectory.dir("docs/docs.md").asFile)
       outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
+
+      pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+        footerMessage = "© 2024 Elide Technologies, Inc."
+        separateInheritedMembers = false
+        mergeImplicitExpectActualDeclarations = true
+        templatesDir = rootProject.layout.projectDirectory.dir("docs/templates").asFile
+        customAssets = listOf(
+          creativeAsset("logo/logo-wide-1200-w-r2.png"),
+          creativeAsset("logo/gray-elide-symbol-lg.png"),
+        )
+        customStyleSheets = listOf(
+          docAsset("styles/logo-styles.css"),
+          docAsset("styles/theme-styles.css"),
+        )
+      }
     }
   }
 

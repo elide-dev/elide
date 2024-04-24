@@ -27,7 +27,7 @@ GRADLE ?= ./gradlew
 GRADLE_ARGS ?= -x test -x check
 LIBROOT ?= lib/
 
-JS_TOOLS ?= oxc typescript esbuild
+JS_TOOLS ?= oxc esbuild
 PY_TOOLS ?= ruff uv
 LANGS ?= pkl
 

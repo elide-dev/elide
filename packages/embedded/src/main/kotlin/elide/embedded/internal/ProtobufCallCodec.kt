@@ -1,6 +1,5 @@
 package elide.embedded.internal
 
-import dev.elide.uuid.uuid4
 import io.micronaut.context.annotation.Requires
 import tools.elide.call.v1alpha1.UnaryInvocationRequest
 import java.nio.ByteBuffer
@@ -18,18 +17,23 @@ internal class ProtobufCallCodec : EmbeddedCallCodec {
     require(decoded.hasFetch()) { "Only fetch invocations are currently supported" }
 
     val fetch = decoded.fetch
+    val callId = EmbeddedCallId(fetch.metadata.requestId)
 
-    val callId = EmbeddedCallId(uuid4().toString())
     val request = ImmediateRequest(
       uri = fetch.request.path,
       method = fetch.request.methodCase.name,
-      headers = emptyMap(),
+      headers = ImmediateHeaders().apply {
+        fetch.request.headers.headerList.forEach {
+          put(it.name, it.value)
+        }
+      },
     )
 
     return EmbeddedCall(callId, request)
   }
 
   override fun encode(response: EmbeddedResponse): UnsafeResponse {
-    TODO("Not yet implemented")
+    // TODO(@darvld): implement encoding
+    return response
   }
 }

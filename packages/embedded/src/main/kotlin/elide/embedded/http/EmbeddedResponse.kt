@@ -17,5 +17,5 @@ public interface EmbeddedResponse {
   @get:Polyglot @set:Polyglot public var statusMessage: String
 
   /** A mutable multi-map for the response headers. */
-  @get:Polyglot public val headers: MutableMap<String, MutableList<String>>
+  @get:Polyglot public val headers: MutableEmbeddedHeaders
 }

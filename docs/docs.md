@@ -1,5 +1,25 @@
 
-## Elide Framework: API Docs
+<center>
+<img src="https://static.elide.dev/assets/org-profile/creative/elide-banner-purple.png" alt="Elide" />
+<br />
+</center>
+
+<p align="center" class="nounderline">
+  <a href="https://elide.dev/discord"><img src="https://img.shields.io/discord/1119121740161884252?b1" /></a>
+  <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>
+  <a href="https://github.com/elide-dev/elide"><img src="https://img.shields.io/badge/Contributor%20Covenant-v1.4-ff69b4.svg" alt="Code of Conduct" /></a>
+  <img alt="GitHub License" src="https://img.shields.io/github/license/elide-dev/elide">
+  <br />
+  <a href="https://openjdk.org/projects/jdk/22/"><img src="https://img.shields.io/badge/-Java%2022-blue.svg?logo=oracle" /></a>
+  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin%202.0.0-blue.svg?logo=kotlin&logoColor=white" /></a>
+  <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/-ECMA2023-blue.svg?logo=javascript&logoColor=white" /></a>
+  <img alt="Python 3.10.x" src="https://img.shields.io/badge/Python%203.10.x-green?style=flat&logo=python&logoColor=white&color=blue">
+  <a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/-Ruby%203.2.x-blue.svg?logo=ruby&logoColor=white" /></a>
+</p>
+
+<br />
+
+## API Reference
 
 [Elide][0] is a **polyglot runtime and framework** for building really cool web apps which can mix languages. It's a
 **runtime** in the sense that you can run software with it, like with `node` or `python`, and it is a **framework**, in
@@ -8,7 +28,8 @@ the sense that it can be used on the JVM via [Maven Central][1].
 ### Where these docs fit in
 
 These docs are the API docs for using Elide _as a framework_. If you are looking for _Getting Started_ docs, or you're
-looking for docs describing Elide's use as a runtime, head to our [website][0] or the main [GitHub repo][2].
+looking for docs describing Elide's use as a runtime, head to the [website](https://elide.dev) or the main
+[GitHub repo](https://github.com/elide-dev/elide).
 
 ### Framework architecture
 
@@ -25,11 +46,6 @@ to add to your app.
 
 **Note:** In this case, _Native_ refers to [Kotlin Native](https://kotlinlang.org/docs/native-overview.html), not the
 GraalVM Native Image tool, which Elide also uses (when used as a runtime).
-
-### Unsupported modules
-
-Additional modules exist, but are either internal to the Elide framework or runtime, or aren't yet supported for public
-use. You can feel free to try and use them, but they may not work as expected and APIs may shift without warning.
 
 [0]: https://elide.dev
 [1]: https://search.maven.org/search?q=g:dev.elide

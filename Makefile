@@ -107,9 +107,9 @@ BUILD_ARGS += -PbuildDocsSite=false
 endif
 
 ifeq ($(WASM),yes)
-BUILD_ARGS += -PbuildWasm=true
+BUILD_ARGS += -PbuildWasm=true -Pelide.build.kotlin.wasm.disable=false
 else
-BUILD_ARGS += -PbuildWasm=false -x compileTestDevelopmentExecutableKotlinWasmWasi -x compileTestDevelopmentExecutableKotlinWasmJs -x wasmWasiNodeTest
+BUILD_ARGS += -PbuildWasm=false -Pelide.build.kotlin.wasm.disable=true
 endif
 
 ifeq ($(RELOCK),yes)
@@ -408,7 +408,7 @@ clean-site:  ## Clean site targets.
 	@echo "Cleaning site..."
 	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS)) $(SITE_BUILD)
 
-docs: $(DOCS) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc  ## Generate docs for all library modules.
+docs: $(DOCS) $(TARGET)/docs  ## Generate docs for all library modules.
 
 model:  ## Build proto model targets.
 	@echo "Building proto model..."
@@ -427,7 +427,7 @@ model-update:  ## Update the proto model and re-build it.
 $(TARGET)/docs:
 	@echo "Generating docs..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc
-	$(CMD)$(GRADLE) docs $(_ARGS)
+	$(CMD)$(GRADLE) docs dokkaHtmlMultiModule $(_ARGS) -PbuildDocs=true -PbuildDocsSite=false --no-configuration-cache -x htmlDependencyReport
 	@echo "Docs build complete."
 
 $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs

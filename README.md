@@ -12,14 +12,17 @@
 
 <p align="center">
   <a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img src="https://github.com/elide-dev/elide/actions/workflows/on.push.yml/badge.svg" /></a>
-  <a href="https://codecov.io/gh/elide-dev/elide"><img src="https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3" /></a>
+  <a href="https://codecov.io/gh/elide-dev/elide"><img src="https://codecov.io/gh/elide-dev/elide/branch/main/graph/badge.svg?token=FXxhJlpKG3" /></a>
   <a href="https://elide.dev/discord"><img src="https://img.shields.io/discord/1119121740161884252?b1" /></a>
   <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>
+  <a href="https://github.com/elide-dev/elide"><img src="https://img.shields.io/badge/Contributor%20Covenant-v1.4-ff69b4.svg" alt="Code of Conduct" /></a>
   <br />
-  <a href="https://www.graalvm.org/"><img src="https://img.shields.io/badge/GraalVM-23.x.x-blue.svg?logo=oracle" /></a>
-  <a href="https://openjdk.org/projects/jdk/22/"><img src="https://img.shields.io/badge/Java-22-blue.svg?logo=oracle" /></a>
-  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.0.0-blue.svg?logo=kotlin" /></a>
-  <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/ECMA-2023-blue.svg?logo=javascript" /></a>
+  <a href="https://www.graalvm.org/"><img src="https://img.shields.io/badge/-GraalVM%2024.1.x-blue.svg?logo=oracle" /></a>
+  <a href="https://openjdk.org/projects/jdk/22/"><img src="https://img.shields.io/badge/-Java%2022-blue.svg?logo=oracle" /></a>
+  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin%202.0.0-blue.svg?logo=kotlin&logoColor=white" /></a>
+  <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/-ECMA2023-blue.svg?logo=javascript&logoColor=white" /></a>
+  <img alt="Python 3.10.x" src="https://img.shields.io/badge/Python%203.10.x-green?style=flat&logo=python&logoColor=white&color=blue">
+  <a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/-Ruby%203.2.x-blue.svg?logo=ruby&logoColor=white" /></a>
 </p>
 
 <p align="center">

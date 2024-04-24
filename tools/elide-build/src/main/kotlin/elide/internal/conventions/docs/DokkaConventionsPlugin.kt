@@ -15,8 +15,7 @@ package elide.internal.conventions.docs
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.withType
+import org.gradle.kotlin.dsl.*
 import org.jetbrains.dokka.gradle.DokkaPlugin
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.base.DokkaBase
@@ -27,7 +26,7 @@ import elide.internal.conventions.Constants
 import elide.internal.conventions.ElideBuildExtension
 
 private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension, target: Project) {
-  if (conventions.docs.requested) {
+  if (conventions.docs.requested && conventions.docs.enabled) {
     val docAsset: (String) -> File = {
       target.rootProject.layout.projectDirectory.file("docs/$it").asFile
     }
@@ -36,8 +35,9 @@ private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension,
     }
 
     pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-      footerMessage = "© 2023 Elide Technologies, Inc."
+      footerMessage = "© 2024 Elide Technologies, Inc."
       separateInheritedMembers = false
+      mergeImplicitExpectActualDeclarations = true
       templatesDir = target.rootProject.layout.projectDirectory.dir("docs/templates").asFile
       customAssets = listOf(
         creativeAsset("logo/logo-wide-1200-w-r2.png"),
@@ -67,13 +67,15 @@ public class DokkaConventionsPlugin : Plugin<Project> {
 
   override fun apply(target: Project): Unit = target.extensions.getByType(ElideBuildExtension::class.java).let {
     if (it.kotlin.requested && target.findProperty(Constants.Build.BUILD_DOCS) == "true") {
-      target.pluginManager.apply(DokkaPlugin::class.java)
-      target.pluginManager.withPlugin(DOKKA_PLUGIN_ID) {
-        target.tasks.withType(DokkaTask::class.java).configureEach {
-          configureDokkaForProject(it, target)
-        }
-        target.tasks.withType(DokkaTaskPartial::class.java).configureEach {
-          configureDokkaPartial()
+      if (it.docs.requested && it.docs.enabled) {
+        target.pluginManager.apply(DokkaPlugin::class.java)
+        target.pluginManager.withPlugin(DOKKA_PLUGIN_ID) {
+          target.tasks.withType(DokkaTask::class.java).configureEach {
+            configureDokkaForProject(it, target)
+          }
+          target.tasks.withType(DokkaTaskPartial::class.java).configureEach {
+            configureDokkaPartial()
+          }
         }
       }
     }

@@ -22,13 +22,13 @@ import elide.runtime.gvm.internals.node.path.NodePaths.SYMBOL
 import elide.runtime.gvm.internals.node.path.PathStyle.POSIX
 import elide.runtime.gvm.internals.node.path.PathStyle.WIN32
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import kotlinx.io.files.Path as KotlinPath
 import elide.runtime.intrinsics.js.node.PathAPI
 import elide.runtime.intrinsics.js.node.path.Path
-import elide.runtime.intrinsics.js.node.path.Path as PathIntrinsic
 import elide.runtime.intrinsics.js.node.path.PathFactory
 import elide.vm.annotations.Polyglot
 import java.nio.file.Path as JavaPath
+import kotlinx.io.files.Path as KotlinPath
+import elide.runtime.intrinsics.js.node.path.Path as PathIntrinsic
 
 // Filename / extension separator.
 private const val filenameSep = "."
@@ -195,7 +195,13 @@ internal object NodePaths {
     @get:Polyglot override val win32: PathAPI get() = windowsPaths
 
     override fun join(sequence: Sequence<Path>): String =
-      sequence.map { it.toString() }.joinToString(sepFor(mode))
+      sepFor(mode).let { sep ->
+        sequence.flatMap {
+          it.toString().split(sep)
+        }.filterIndexed { index, segment ->
+          index == 0 || segment.isNotEmpty()  // filters out double slashing, except for root slash presence
+        }.joinToString(sep)
+      }
 
     override fun resolve(sequence: Sequence<Path>): String =
       PathBuf.from(sequence.map { it.toJavaPath() }.reduce(JavaPath::resolve)).toString()

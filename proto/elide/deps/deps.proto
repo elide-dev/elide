@@ -28,26 +28,26 @@ option go_package = "github.com/elide-tools/elide/deps;deps";
 import "elide/deps/dependency.proto";
 import "elide/deps/scope.proto";
 
-//
+// Specifies a suite of dependencies which relate to a software project.
 message DependencySuite {
-  //
+  // The scope of the dependency suite.
   DependencyScope scope = 1;
 
-  //
-  repeated Dependency dependency = 2;
+  // Whether this suite is for testing only.
+  bool test_only = 2;
 
-  //
-  bool test_only = 3;
+  // Whether this suite is for development only.
+  bool dev_only = 3;
 
-  //
-  bool dev_only = 4;
+  // Whether this suite is optional.
+  bool optional = 4;
 
-  //
-  bool optional = 5;
+  // The dependencies in the suite.
+  repeated Dependency dependency = 5;
 }
 
-//
+// Specifies a set of dependencies which relate to a software project, composed of multiple scoped suites.
 message Dependencies {
-  //
+  // Suites of dependencies attached to this set of dependencies.
   repeated DependencySuite suite = 1;
 }

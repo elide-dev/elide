@@ -27,32 +27,32 @@ option go_package = "github.com/elide-tools/elide/deps;deps";
 
 import "elide/deps/ecosystem.proto";
 
-//
+// Represents a dependency in a project's dependency graph.
 message Dependency {
-  //
+  // The ecosystem to which this dependency belongs.
   DependencyEcosystem ecosystem = 1;
 
-  //
+  // The group or organization ID of this dependency.
   string group = 2;
 
-  //
+  // The name or artifact ID of this dependency.
   string name = 3;
 
-  //
+  // The version requirement specified for this dependency.
   string version = 4;
 
-  //
+  // The classifier for this dependency.
   string classifier = 5;
 
-  //
+  // The string `purl` specification of this dependency.
   string spec = 6;
 
-  //
+  // Whether this dependency is a test-only dependency.
   bool test_only = 7;
 
-  //
+  // Whether this dependency is a development-only dependency.
   bool dev_only = 8;
 
-  //
+  // Whether this dependency is optional.
   bool optional = 9;
 }

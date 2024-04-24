@@ -25,8 +25,14 @@ option java_package = "tools.elide.deps";
 option csharp_namespace = "Elide.Deps";
 option go_package = "github.com/elide-tools/elide/deps;deps";
 
-//
+// Enumerates scopes which are recognized for dependency applicability.
 enum DependencyScope {
-  //
+  // Unrecognized, unspecified, or default dependency scope.
   DEPENDENCY_SCOPE_DEFAULT = 0;
+
+  // Dependency is applicable to the runtime environment.
+  RUNTIME_ONLY = 1;
+
+  // Dependency is applicable to the build environment.
+  COMPILE_ONLY = 2;
 }

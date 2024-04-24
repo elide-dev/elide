@@ -1,5 +1,6 @@
 package elide.embedded.internal
 
+import elide.embedded.http.EmbeddedHeaders
 import elide.embedded.http.EmbeddedRequest
 import elide.vm.annotations.Polyglot
 
@@ -10,5 +11,5 @@ import elide.vm.annotations.Polyglot
 internal data class ImmediateRequest(
   @Polyglot override val uri: String,
   @Polyglot override val method: String,
-  @Polyglot override val headers: Map<String, List<String>>
+  @Polyglot override val headers: EmbeddedHeaders
 ) : EmbeddedRequest

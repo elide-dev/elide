@@ -1,6 +1,7 @@
 package elide.embedded.internal
 
 import elide.embedded.http.EmbeddedResponse
+import elide.embedded.http.MutableEmbeddedHeaders
 import elide.vm.annotations.Polyglot
 
 /**
@@ -10,5 +11,5 @@ import elide.vm.annotations.Polyglot
 internal class ImmediateResponse : EmbeddedResponse {
   @Polyglot override var statusCode: Int = 200
   @Polyglot override var statusMessage: String = "OK"
-  @Polyglot override val headers: MutableMap<String, MutableList<String>> = mutableMapOf()
+  @Polyglot override val headers: MutableEmbeddedHeaders = ImmediateHeaders()
 }

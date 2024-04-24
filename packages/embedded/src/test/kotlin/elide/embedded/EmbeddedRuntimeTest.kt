@@ -74,7 +74,7 @@ class EmbeddedRuntimeTest {
 
         response.statusCode = 418;
         response.statusMessage = "I'm a teapot 🫖";
-        response.headers["server"] = ["chai"];
+        response.headers.put("server", "elide");
 
         return response;
       }

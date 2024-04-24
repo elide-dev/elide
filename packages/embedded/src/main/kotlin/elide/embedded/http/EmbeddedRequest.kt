@@ -17,5 +17,5 @@ public interface EmbeddedRequest {
   @get:Polyglot public val method: String
 
   /** A multi-map holding values for the request headers. */
-  @get:Polyglot public val headers: Map<String, List<String>>
+  @get:Polyglot public val headers: EmbeddedHeaders
 }

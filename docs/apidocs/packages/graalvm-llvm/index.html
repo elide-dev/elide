@@ -42,7 +42,7 @@
                             Elide
                     </a>            </div>
             <div class="library-version">
-<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;index.html&quot;}">1.0-SNAPSHOT</dokka-template-command>            </div>
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;index.html&quot;}">1.0.0-alpha8</dokka-template-command>            </div>
         </div>
         <div class="filter-section" id="filter-section">
                 <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:graalvm-llvm:dokkaHtmlPartial/main">jvm</button>
@@ -62,6 +62,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>graalvm-llvm</span></span></h1>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-llvm:dokkaHtmlPartial/main"><p class="paragraph"><code class="lang-kotlin">elide-graalvm-llvm</code> integrates Elide and <a href="https://github.com/oracle/graal/blob/master/sulong/README.md">Sulong</a>, GraalVM's LLVM interpreter.</p><h2 class="">How Elide uses Sulong</h2><p class="paragraph">Elide uses Sulong to support LLVM-implemented languages like GraalPython and TruffleRuby.</p><h2 class="">Installation</h2><p class="paragraph">This package is made available via Maven Central and Elide's package repository, but is not designed for end-user consumption. Language support is built-in to the Elide runtime.</p><p class="paragraph"><strong>Via Gradle (Catalog):</strong></p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">implementation(framework.elide.graalvm.llvm)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph"><strong>Via Gradle (Kotlin DSL):</strong></p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">implementation("dev.elide:elide-graalvm-llvm")</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph"><strong>Via Gradle (Groovy DSL):</strong></p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">implementation "dev.elide:elide-graalvm-llvm"</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph"><strong>Via Maven:</strong></p><div class="sample-container"><pre><code class="block lang-xml" theme="idea">&lt;dependency&gt;<br>  &lt;groupId&gt;dev.elide&lt;/groupId&gt;<br>  &lt;artifactId&gt;elide-graalvm-llvm&lt;/artifactId&gt;<br>&lt;/dependency&gt;</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
   <h2 class="">Packages</h2>
   <div class="table"><a data-name="-1577644822%2FPackages%2F404545441" anchor-label="elide.runtime.gvm.llvm" id="-1577644822%2FPackages%2F404545441" data-filterable-set=":packages:graalvm-llvm:dokkaHtmlPartial/main"></a>
@@ -97,7 +98,9 @@
             </div>
           </div>
         </div>
-        <div></div>
+        <div><span class="brief-comment"><a data-name="-695994904%2FPackages%2F404545441" anchor-label="elide.runtime.plugins.llvm" id="-695994904%2FPackages%2F404545441" data-filterable-set=":packages:graalvm-llvm:dokkaHtmlPartial/main"></a>
+            <p class="paragraph">Implements an Elide VM plug-in for execution of LLVM bitcode and related languages via Sulong.</p>
+          </span></div>
       </div>
     </div>
   </div>

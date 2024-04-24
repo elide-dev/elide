@@ -30,7 +30,7 @@ ARCH=$(uname -m | tr '[:upper:]' '[:lower:]')
 
 # Turn `arm64` into `aarch64`.
 if [ "$ARCH" = "arm64" ]; then
-    ARCH="aarch64"
+  ARCH="aarch64"
 fi
 
 # Location of the stage 0 binary.

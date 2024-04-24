@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@import "/apidocs/styles/theme-styles.css";
+
 :root {
   --dokka-logo-image-url: url('../creative/logo/gray-elide-symbol-lg.png');
   --dokka-logo-height: 48px;

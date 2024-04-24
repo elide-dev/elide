@@ -203,14 +203,6 @@ dependencies {
 }
 
 tasks {
-  withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
-    dokkaSourceSets {
-      configureEach {
-        includes.from("module.md")
-      }
-    }
-  }
-
   test {
     maxHeapSize = "2G"
     maxParallelForks = 4

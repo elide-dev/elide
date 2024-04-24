@@ -49,6 +49,10 @@ elide {
     diktat = false
     spotless = false
   }
+
+  docs {
+    enabled = false
+  }
 }
 
 group = "dev.elide.tools"

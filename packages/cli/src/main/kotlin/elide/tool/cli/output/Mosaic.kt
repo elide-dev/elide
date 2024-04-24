@@ -42,20 +42,6 @@ import elide.tool.cli.output.TestState.*
 import elide.tool.testing.TestInfo
 import elide.tool.testing.TestResult
 
-suspend fun MosaicScope.Counter() {
-  // TODO https://github.com/JakeWharton/mosaic/issues/3
-  var count by mutableStateOf(0)
-
-  setContent {
-    Text("The count is: $count")
-  }
-
-  for (i in 1..20) {
-    delay(250)
-    count = i
-  }
-}
-
 suspend fun testRenderer(
   totalTests: Int,
   allTests: Flow<Pair<TestInfo, suspend () -> Deferred<TestResult>>>,
@@ -278,6 +264,3 @@ enum class TestState {
   Pass,
   Fail,
 }
-
-// Use a random with a fixed seed for deterministic output.
-private val random = Random(1234)

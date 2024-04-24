@@ -5,7 +5,11 @@
     <ID>CyclomaticComplexMethod:AbstractVMEngine.kt$AbstractVMEngine.GuestVFSConfigurator$private fun resolveOsArch(): Pair&lt;String, String></ID>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
     <ID>EmptyFunctionBlock:EmbeddedVFSTest.kt$EmbeddedVFSTest${ }</ID>
+    <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
+    <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
+    <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this will need normalization for non-unix test runs</ID>
+    <ID>ForbiddenComment:NodeProcess.kt$NodeProcess$// @TODO: factor in vm policy here</ID>
     <ID>IteratorNotThrowingNoSuchElementException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$&lt;no name provided> : Iterator</ID>
     <ID>IteratorNotThrowingNoSuchElementException:JsIterator.kt$JsIterator&lt;T> : IteratorProxyIteratorProxyIterable</ID>
     <ID>LargeClass:AbstractJsMapTest.kt$AbstractJsMapTest&lt;MapLike> : AbstractJsTest</ID>
@@ -42,8 +46,6 @@
     <ID>NestedClassesVisibility:AbstractVMAdapter.kt$AbstractVMAdapter$PromiseLike&lt;Output> : FutureCompletionStage</ID>
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$MutableURLSearchParams : AbstractMutableURLSearchParamsIMutableSearchParams</ID>
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
-    <ID>NewLineAtEndOfFile:HybridVfsTest.kt$elide.runtime.gvm.internals.vfs.HybridVfsTest.kt</ID>
-    <ID>NewLineAtEndOfFile:JsCoreModulesTest.kt$elide.runtime.plugins.js.JsCoreModulesTest.kt</ID>
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
     <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>

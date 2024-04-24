@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("TopLevelPropertyNaming")
+
 package elide.runtime.gvm.internals.node.path
 
 import java.io.File
@@ -38,6 +40,7 @@ private const val win32PathSep = "\\"
 private const val unixPathDelim = ":"
 private const val win32DriveDelim = ":"
 private const val win32PathDelim = ";"
+private const val win32MinRoot = 4
 
 // Universal relative path references.
 private const val currentDir = "."
@@ -61,7 +64,7 @@ public enum class PathStyle {
 
   internal fun isAbsolute(path: KotlinPath): Boolean = when (this) {
     POSIX -> path.toString().startsWith(unixPathSep)
-    WIN32 -> path.toString().let { it.length > 4 && it[1] == win32DriveDelim[0] && it[2] == win32PathSep[0] }
+    WIN32 -> path.toString().let { it.length > win32MinRoot && it[1] == win32DriveDelim[0] && it[2] == win32PathSep[0] }
   }
 }
 
@@ -191,6 +194,12 @@ internal object NodePaths {
   abstract class BasePaths protected constructor (private val mode: PathStyle) : PathAPI {
     @get:Polyglot override val posix: PathAPI get() = posixPaths
     @get:Polyglot override val win32: PathAPI get() = windowsPaths
+
+    override fun join(sequence: Sequence<Path>): String =
+      sequence.map { it.toString() }.joinToString(sepFor(mode))
+
+    override fun resolve(sequence: Sequence<Path>): String =
+      PathBuf.from(sequence.map { it.toJavaPath() }.reduce(JavaPath::resolve)).toString()
 
     @Polyglot override fun basename(path: PathIntrinsic, ext: String?): String {
       return path.split().last().let {

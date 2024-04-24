@@ -23,7 +23,7 @@ import elide.tool.cli.GuestLanguage
  * TBD.
  */
 @Introspected @ReflectiveAccess open class LanguagePositionals : OptionsMixin {
-  @Suppress("EnumEntryName", "unused")
+  @Suppress("EnumEntryName", "unused", "EnumNaming")
   enum class RunnerAlias (val language: GuestLanguage? = null, val action: Boolean = false) {
     js(GuestLanguage.JS),
     node(GuestLanguage.JS),

@@ -589,6 +589,34 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.node.fs.$NodeFilesystemModule$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.fs.$NodeFilesystemModule$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.path.$NodePathsModule$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.path.$NodePathsModule$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.process.$NodeProcessModule$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.process.$NodeProcessModule$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.process.$NodeProcessModule$Provide0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.python.$PythonRuntime$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -997,6 +1025,15 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.cmd.lint.$ToolLintCommand$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.cmd.lint.ToolLintCommand",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$DebugConfig$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1156,6 +1193,10 @@
 },
 {
   "name":"elide.tool.cli.options.$EngineJavaScriptOptions$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.options.$LanguagePositionals$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -3940,6 +3981,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"org.bouncycastle.jcajce.provider.asymmetric.CompositeSignatures$Mappings",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"org.bouncycastle.jcajce.provider.asymmetric.DH$Mappings",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -4418,6 +4463,9 @@
 {
   "name":"org.graalvm.polyglot.management.Management",
   "fields":[{"name":"ACCESS"}]
+},
+{
+  "name":"org.graalvm.shadowed.org.jcodings.provider.JCodingsProviderImpl"
 },
 {
   "name":"org.graalvm.tools.insight.heap.instrument.HeapDumpInstrumentProvider"
@@ -5417,6 +5465,10 @@
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
+  "name":"org.truffleruby.core.exception.SyntaxErrorNodesFactory$PathNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
   "name":"org.truffleruby.core.exception.SystemCallErrorNodesFactory$AllocateNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
@@ -5745,6 +5797,10 @@
 },
 {
   "name":"org.truffleruby.core.kernel.KernelNodesFactory$SprintfNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
+  "name":"org.truffleruby.core.kernel.KernelNodesFactory$WarnBlockSupersedesDefaultValueArgumentNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
@@ -6780,6 +6836,10 @@
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
+  "name":"org.truffleruby.core.regexp.TruffleRegexpNodesFactory$IsLinearTimeNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
   "name":"org.truffleruby.core.regexp.TruffleRegexpNodesFactory$MatchStatsArrayNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
@@ -7812,6 +7872,10 @@
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
+  "name":"org.truffleruby.extra.ffi.PointerNodesFactory$PointerReadStringToNullNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
   "name":"org.truffleruby.extra.ffi.PointerNodesFactory$PointerSetAddressNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
@@ -7821,6 +7885,10 @@
 },
 {
   "name":"org.truffleruby.extra.ffi.PointerNodesFactory$PointerSetSizeNodeFactory",
+  "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
+  "name":"org.truffleruby.extra.ffi.PointerNodesFactory$PointerSizeNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {

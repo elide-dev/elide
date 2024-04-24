@@ -2531,6 +2531,8 @@
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.strings.provider.JCodingsProvider\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.js.runtime.Evaluator\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.llvm.runtime.config.ConfigurationFactory\\E"
@@ -2629,7 +2631,11 @@
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenCOLLECTIONS_ABC.bin\\E"
   }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenCONTEXTLIB.bin\\E"
+  }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenCOPYREG.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenDATETIME.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenENCODINGS.bin\\E"
   }, {
@@ -2895,6 +2901,8 @@
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenGRAALPY_UNICODEDATA.bin\\E"
   }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__INTEROP_BEHAVIOR.bin\\E"
+  }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__SRE.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__STRUCT.bin\\E"
@@ -2907,9 +2915,15 @@
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenHEAPQ.bin\\E"
   }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB_MACHINERY.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB_UTIL.bin\\E"
+  }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB__BOOTSTRAP.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB__BOOTSTRAP_EXTERNAL.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenINSPECT.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenIO.bin\\E"
   }, {
@@ -2929,7 +2943,17 @@
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenREPRLIB.bin\\E"
   }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenRE__CASEFIX.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenRE__COMPILER.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenRE__CONSTANTS.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenRE__PARSER.bin\\E"
+  }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenRLCOMPLETER.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenRUNPY.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenSITE.bin\\E"
   }, {
@@ -2942,6 +2966,8 @@
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenSTAT.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenTYPES.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenWARNINGS.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/FrozenZIPIMPORT.bin\\E"
   }, {
@@ -2956,6 +2982,14 @@
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen_WEAKREFSET.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__HELLO__.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO__.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___HAM.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___HAM_EGGS.bin\\E"
+  }, {
+    "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/truffle/llvm/nfi/SulongNFI.class\\E"
   }, {
@@ -3012,6 +3046,8 @@
     "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/ICUConfig.properties\\E"
   }, {
     "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt72b/uprops.icu\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/uprops.icu\\E"
   }, {
     "pattern":"\\Qtruffleruby/core/argf.rb\\E"
   }, {

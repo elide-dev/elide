@@ -61,7 +61,7 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
     // if no host access is requested, use an embedded in-memory vfs
     if (!config.useHost) {
       logging.debug("No host access requested, using in-memory vfs")
-      acquireEmbeddedVfs(config.writable, config.registeredBundles, config.languages)
+      acquireEmbeddedVfs(config.writable, config.deferred, config.registeredBundles)
     } else {
       // python and ruby have their own virtual filesystem delegates
       if (!config.languages.any { it.languageId == "ruby" || it.languageId == "python" }) {
@@ -69,7 +69,7 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
         logging.debug("Host access requested, using hybrid vfs")
         HybridVfs.acquire(config.writable, config.registeredBundles)
       } else {
-        acquireCompoundVfs(config.useHost, config.writable, config.registeredBundles, config.languages)
+        acquireCompoundVfs(config.useHost, config.writable, config.deferred, config.registeredBundles, config.languages)
       }
     }.let {
       fileSystem = it
@@ -112,13 +112,16 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
       return instance
     }
 
-    /** Build a new embedded [FileSystem], optionally [writable], using the specified [bundles] and [languages]. */
-    private fun acquireEmbeddedVfs(writable: Boolean, bundles: List<URI>, languages: Set<GuestLanguage>): FileSystem {
-      return EmbeddedGuestVFSImpl.Builder.newBuilder()
-        .setBundlePaths(bundles)
-        .setReadOnly(!writable)
-        .build()
-    }
+    /** Build a new embedded [FileSystem], optionally [writable], using the specified [bundles]. */
+    private fun acquireEmbeddedVfs(
+      writable: Boolean,
+      deferred: Boolean,
+      bundles: List<URI>,
+    ): FileSystem = EmbeddedGuestVFSImpl.Builder.newBuilder()
+      .setBundlePaths(bundles)
+      .setReadOnly(!writable)
+      .setDeferred(deferred)
+      .build()
 
     private fun resolveLanguageVfs(language: GuestLanguage): elide.runtime.gvm.internals.LanguageVFS? {
       return LanguageVFS.delegate(
@@ -131,6 +134,7 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
     private fun acquireCompoundVfs(
       hostPrimary: Boolean,
       writable: Boolean,
+      deferred: Boolean,
       bundles: List<URI>,
       languages: Set<GuestLanguage>
     ): FileSystem {
@@ -138,6 +142,7 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
       val embedded = EmbeddedGuestVFSImpl.Builder.newBuilder()
         .setBundlePaths(bundles)
         .setReadOnly(!writable)
+        .setDeferred(deferred)
         .build()
 
       // if the host is the primary, front with that; otherwise, use embedded. in either case, add the language vfs

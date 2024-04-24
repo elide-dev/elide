@@ -49,6 +49,9 @@ internal interface GuestIOConfiguration : Toggleable {
     /** Default working directory path. */
     const val DEFAULT_WORKING_DIRECTORY: String = AbstractBaseVFS.DEFAULT_CWD
 
+    /** Default root path. */
+    const val DEFAULT_DEFERRED_READS: Boolean = true
+
     /** Default policy to apply if none is specified. */
     val DEFAULT_POLICY = GuestVFSPolicy.DEFAULTS
 
@@ -71,6 +74,11 @@ internal interface GuestIOConfiguration : Toggleable {
    *   host app classpath), or [Mode.HOST] (full access to host machine I/O).
    */
   val mode: Mode get() = DEFAULT_MODE
+
+  /**
+   * @return Whether to defer reads until the guest VM requests them. Defaults to `true`.
+   */
+  val deferred: Boolean get() = DEFAULT_DEFERRED_READS
 
   /**
    * @return Whether to treat the file-system as case-sensitive. Defaults to `true`.

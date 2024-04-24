@@ -29,6 +29,7 @@ import java.nio.file.Path
  * @param bundle Bundle file to load the VFS file-system from, if applicable. If not present, the file-system will be
  *   empty at initialization time.
  * @param root Root directory to apply for this virtual filesystem.
+ * @param deferred Whether to defer reads for guest VM I/O operations.
  * @param workingDirectory Current-working-directory to apply for this virtual filesystem.
  */
 public data class EffectiveGuestVFSConfig internal constructor (
@@ -38,6 +39,7 @@ public data class EffectiveGuestVFSConfig internal constructor (
   val policy: GuestVFSPolicy = DEFAULT_POLICY,
   val bundle: List<URI> = emptyList(),
   val root: String = DEFAULT_ROOT,
+  val deferred: Boolean? = DEFAULT_DEFERRED,
   val workingDirectory: String = DEFAULT_CWD,
   val scope: Path? = null,
 ) {
@@ -47,6 +49,7 @@ public data class EffectiveGuestVFSConfig internal constructor (
     private const val DEFAULT_SUPPORT_SYMBOLIC_LINKS = false
     private const val DEFAULT_ROOT = "/"
     private const val DEFAULT_CWD = "/"
+    private const val DEFAULT_DEFERRED = true
     private val DEFAULT_POLICY: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS
 
     /** Default settings. */

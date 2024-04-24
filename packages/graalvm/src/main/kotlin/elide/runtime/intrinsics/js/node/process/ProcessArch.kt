@@ -66,9 +66,9 @@ public enum class ProcessArch (override val symbol: String) : Symbolic<String> {
      */
     @JvmStatic public fun host(): ProcessArch = when (System.getProperty("os.arch").lowercase()) {
       "x86" -> X86
-      "x86_64" -> X64
+      "x86_64", "amd64" -> X64
       "arm" -> ARM
-      "aarch64" -> ARM64
+      "aarch64", "arm64" -> ARM64
       else -> throw IllegalStateException("Unsupported architecture: ${System.getProperty("os.arch")}")
     }
 

@@ -13,6 +13,7 @@
 
 package elide.runtime.gvm.internals.vfs
 
+import org.apache.commons.compress.utils.BoundedSeekableByteChannelInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -296,9 +297,11 @@ internal class CompoundVFSImpl private constructor (
   }
 
   override fun readStream(path: Path, vararg options: OpenOption): InputStream {
-    return delegatePrimary {
-      it.readStream(path, *options)
-    }
+    return firstForRead(path) { vfs, target ->
+      vfs.newByteChannel(target, mutableSetOf(*options)).let {
+        BoundedSeekableByteChannelInputStream(it.position(), it.size(), it)
+      }
+    } ?: throw NoSuchFileException(path.toString())
   }
 
   override fun writeStream(path: Path, vararg options: OpenOption): OutputStream {

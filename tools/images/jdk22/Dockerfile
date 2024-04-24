@@ -3,11 +3,11 @@ ARG BASE_HASH="@sha256:ce2fe9474ca168eebfd35b0c7682db11045b0f10418ec46ae9b0c7610
 
 FROM ghcr.io/elide-dev/base${BASE_VERSION}${BASE_HASH}
 
-ARG JAVA_VERSION=zulu20
+ARG JAVA_VERSION=zulu22
 
 LABEL org.opencontainers.image.vendor=Elide
-LABEL org.opencontainers.image.title="Elide Tools: Zulu JDK (Java 20)"
-LABEL org.opencontainers.image.description="Java 20 tools for Elide."
+LABEL org.opencontainers.image.title="Elide Tools: Zulu JDK (Java 22)"
+LABEL org.opencontainers.image.description="Java 22 tools for Elide."
 LABEL org.opencontainers.image.version=v3-alpha1
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base

@@ -1,6 +1,4 @@
-import {
-  instantiate
-} from "./build/compileSync/wasm/test/testProductionExecutable/kotlin/wasm-wasm-test.uninstantiated.mjs";
+import { instantiate } from "./build/compileSync/wasm/test/testProductionExecutable/kotlin/wasm-wasm-test.uninstantiated.mjs";
 import { WASI } from "wasi";
 
 export const wasi = new WASI({

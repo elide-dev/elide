@@ -18,13 +18,17 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
 /** A wrapper around the [KotlinMultiplatformExtension], used to configure [dependencies] in a KMP project. */
-@JvmInline public value class DependenciesScope internal constructor(
-  internal val extension: KotlinMultiplatformExtension
+public class DependenciesScope internal constructor(
+  internal val extension: KotlinMultiplatformExtension,
+  internal val project: Project
 )
 
 /** Configure a Kotlin Multiplatform project's dependencies. */
 public fun Project.dependencies(block: DependenciesScope.() -> Unit) {
-  DependenciesScope(extensions.getByType(KotlinMultiplatformExtension::class.java)).apply(block)
+  DependenciesScope(
+    extensions.getByType(KotlinMultiplatformExtension::class.java),
+    this,
+  ).apply(block)
 }
 
 /** Configure dependencies for the `commonMain` source set. */
@@ -54,22 +58,30 @@ public fun DependenciesScope.js(block: KotlinDependencyHandler.() -> Unit) {
 
 /** Configure dependencies for the `wasmJsMain` source set. */
 public fun DependenciesScope.wasm(block: KotlinDependencyHandler.() -> Unit) {
-  sourceSetDependencies("wasmJsMain", block)
+  if (!project.isWasmDisabled()) {
+    sourceSetDependencies("wasmJsMain", block)
+  }
 }
 
 /** Configure dependencies for the `wasmJstest` source set. */
 public fun DependenciesScope.wasmTest(block: KotlinDependencyHandler.() -> Unit) {
-  sourceSetDependencies("wasmJsTest", block)
+  if (!project.isWasmDisabled()) {
+    sourceSetDependencies("wasmJsTest", block)
+  }
 }
 
 /** Configure dependencies for the `wasmWasiMain` source set. */
 public fun DependenciesScope.wasi(block: KotlinDependencyHandler.() -> Unit) {
-  sourceSetDependencies("wasmWasiMain", block)
+  if (!project.isWasmDisabled()) {
+    sourceSetDependencies("wasmWasiMain", block)
+  }
 }
 
 /** Configure dependencies for the `wasmWasiTest` source set. */
 public fun DependenciesScope.wasiTest(block: KotlinDependencyHandler.() -> Unit) {
-  sourceSetDependencies("wasmWasiTest", block)
+  if (!project.isWasmDisabled()) {
+    sourceSetDependencies("wasmWasiTest", block)
+  }
 }
 
 /** Configure dependencies for the `jsTest` source set. */

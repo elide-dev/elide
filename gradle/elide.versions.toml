@@ -34,7 +34,7 @@ clikt = "4.2.2"
 closure = "v20221004"
 closure-stylesheets = "1.5.0"
 commons-codec = "1.16.1"
-commons-compress = "1.24.0"
+commons-compress = "1.26.0"
 commons-csv = "1.10.0"
 commons-pool = "2.11.1"
 compose = "1.5.7.1"
@@ -77,6 +77,7 @@ grpc-kotlin = "1.4.1"
 kotlinpoet = "1.16.0"
 grpc-web = "1.4.2"
 guava = "33.1.0-jre"
+h2 = "2.2.224"
 hamcrest-core = "2.2"
 hamcrest-junit = "2.0.0.0"
 hibernate = "5.6.11.Final"
@@ -103,6 +104,7 @@ jmh-lib = "1.37"
 jmh-plugin = "0.7.2"
 jna = "5.8.0"
 jprofiler = "14.0.1"
+json = "20240303"
 jsoup = "1.17.2"
 jsr310 = "2.9.8"
 junit-jupiter = "5.10.2"
@@ -476,6 +478,7 @@ grpc-services = { group = "io.grpc", name = "grpc-services", version.ref = "grpc
 grpc-stub = { group = "io.grpc", name = "grpc-stub", version.ref = "grpc-java" }
 grpc-testing = { group = "io.grpc", name = "grpc-testing", version.ref = "grpc-java" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
 hibernate-core = { group = "org.hibernate", name = "hibernate-core", version.ref = "hibernate" }
 hibernate-graalvm = { group = "org.hibernate", name = "hibernate-graalvm", version.ref = "hibernate" }
 hibernate-hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", version.ref = "hibernate" }
@@ -512,6 +515,7 @@ jline-terminal-ffm = { module = "org.jline:jline-terminal-ffm", version.ref = "j
 jline-terminal-jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
 jline-terminal-jna = { module = "org.jline:jline-terminal-jna", version.ref = "jline" }
 jline-terminal-jni = { module = "org.jline:jline-terminal-jni", version.ref = "jline" }
+json = { group = "org.json", name = "json", version.ref = "json" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 junit = "junit:junit:4.13.2"
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }

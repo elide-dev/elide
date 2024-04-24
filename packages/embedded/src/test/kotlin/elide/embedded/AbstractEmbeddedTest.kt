@@ -40,12 +40,7 @@ import elide.util.UUID
 
 /** Shared test utilities for embedded runtime testing. */
 abstract class AbstractEmbeddedTest : CallBuilder {
-  /**
-   *
-   */
-  interface EmbeddedTestContext {
-    //
-  }
+  interface EmbeddedTestContext
 
   class PreconfiguredRequestContext(
     private val requestContext: AtomicReference<Pair<UnaryNativeCall, InFlightCallInfo>?>,
@@ -54,9 +49,6 @@ abstract class AbstractEmbeddedTest : CallBuilder {
     val inflight: InFlightCallInfo get() = requestContext.get()?.second ?: error("Test request context not initialized")
   }
 
-  /**
-   *
-   */
   class ConfiguredEmbeddedTestContext (
     val instance: ElideEmbedded,
     val config: InstanceConfiguration,
@@ -83,25 +75,16 @@ abstract class AbstractEmbeddedTest : CallBuilder {
       }
     }
 
-    /**
-     *
-     */
     fun capability(capability: Capability) = apply {
       capabilities.add(capability)
     }
 
-    /**
-     *
-     */
     inline fun customize(crossinline op: ConfiguredEmbeddedTestContext.() -> Unit): ConfiguredEmbeddedTestContext {
       return apply {
         op()
       }
     }
 
-    /**
-     *
-     */
     inline fun fetch(crossinline op: FetchRequestKt.Dsl.() -> Unit): ConfiguredEmbeddedTestContext = apply {
       val fetch = createFetch {
         request = httpRequest {
@@ -122,9 +105,6 @@ abstract class AbstractEmbeddedTest : CallBuilder {
       requestContext.set(fetch)
     }
 
-    /**
-     *
-     */
     inline fun scheduled(
       crossinline op: ScheduledInvocationRequestKt.Dsl.() -> Unit
     ): ConfiguredEmbeddedTestContext = apply {
@@ -134,9 +114,6 @@ abstract class AbstractEmbeddedTest : CallBuilder {
       requestContext.set(alarm)
     }
 
-    /**
-     *
-     */
     inline fun queue(crossinline op: QueueInvocationRequestKt.Dsl.() -> Unit): ConfiguredEmbeddedTestContext = apply {
       val queue = createQueued {
         batch = queueMessageBatch {
@@ -200,9 +177,6 @@ abstract class AbstractEmbeddedTest : CallBuilder {
       }
     }
 
-    /**
-     *
-     */
     inline fun then(
       crossinline op: suspend ConfiguredEmbeddedTestContext.(req: PreconfiguredRequestContext) -> Unit
     ): Unit = runTest {
@@ -211,18 +185,12 @@ abstract class AbstractEmbeddedTest : CallBuilder {
       }
     }
 
-    /**
-     *
-     */
     inline fun thenAssert(crossinline op: suspend ConfiguredEmbeddedTestContext.() -> Unit) = runTest {
       prepareAndRun {
         op.invoke(this)
       }
     }
 
-    /**
-     *
-     */
     suspend fun exec(
       call: UnaryNativeCall,
       inflight: InFlightCallInfo,
@@ -261,9 +229,6 @@ abstract class AbstractEmbeddedTest : CallBuilder {
   companion object {
     const val EMBEDDED_API_VERSION: String = "v1alpha1"
 
-    /**
-     *
-     */
     inline fun embedded(): ConfiguredEmbeddedTestContext {
       return ConfiguredEmbeddedTestContext(
         ElideEmbedded.create(),
@@ -273,9 +238,6 @@ abstract class AbstractEmbeddedTest : CallBuilder {
       )
     }
 
-    /**
-     *
-     */
     inline fun withConfig(builder: HostConfigurationKt.Dsl.() -> Unit): ConfiguredEmbeddedTestContext {
       return ConfiguredEmbeddedTestContext(
         ElideEmbedded.create(),

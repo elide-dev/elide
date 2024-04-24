@@ -25,8 +25,23 @@ option java_package = "tools.elide.deps";
 option csharp_namespace = "Elide.Deps";
 option go_package = "github.com/elide-tools/elide/deps;deps";
 
-//
+// Enumerates dependency ecosystems that Elide can manage and recognize.
 enum DependencyEcosystem {
-  //
+  // Unrecognized or unknown dependency ecosystem.
   DEPENDENCY_ECOSYSTEM_UNRECOGNIZED = 0;
+
+  // Maven, the default Java dependency ecosystem.
+  MAVEN = 1;
+
+  // NPM, the default JavaScript dependency ecosystem.
+  NPM = 2;
+
+  // JSR, the JavaScript Registry.
+  JSR = 3;
+
+  // PyPI, the Python Package Index.
+  PYPI = 4;
+
+  // RubyGems, the Ruby package manager.
+  RUBYGEMS = 5;
 }

@@ -25,29 +25,29 @@ option java_package = "tools.elide.tools";
 option csharp_namespace = "Elide.Tools";
 option go_package = "github.com/elide-tools/elide/tools;tools";
 
-//
+// Enumerates supported tooling extensions for Elide.
 enum Tool {
-  //
+  // Unknown, unrecognized, or default tool.
   TOOL_UNKNOWN = 0;
 
-  //
+  // Main entry point runner.
   RUNNER = 1;
 
-  //
+  // Test entry point runner.
   TEST_RUNNER = 2;
 
-  //
+  // Coverage tools.
   COVERAGE = 3;
 
-  //
+  // Debugging tools.
   DEBUGGER = 4;
 
-  //
+  // Dependency resolution tools.
   RESOLVER = 5;
 
-  //
+  // Linting tools.
   LINTER = 6;
 
-  //
+  // Formatting tools.
   FORMATTER = 7;
 }

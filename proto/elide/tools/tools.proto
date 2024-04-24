@@ -26,32 +26,32 @@ option csharp_namespace = "Elide.Tools";
 option go_package = "github.com/elide-tools/elide/tools;tools";
 
 
-//
+// Describes tooling support for a given run of Elide.
 message ToolSupport {
   //
 }
 
-//
+// Describes info about a single supported tool.
 message ToolInfo {
   //
 }
 
-//
+// Describes options which can customize the behavior of a supported tool.
 message ToolOptions {
   //
 }
 
-//
+// Describes a request to run a tool within a user's project.
 message ToolRequest {
   //
 }
 
-//
+// Describes an error that occurred while running a tool within a user's project.
 message ToolError {
   //
 }
 
-//
+// Describes a response from a tool run within a user's project.
 message ToolResult {
   //
 }

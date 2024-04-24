@@ -747,7 +747,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     @JvmStatic private fun metadataForTarballDirectory(
       bundle: Int,
       folder: ArchiveEntry,
-      tarball: ArchiveInputStream,
+      tarball: ArchiveInputStream<*>,
       memoryFS: FileSystem,
       prefix: String,
       deferred: Boolean,
@@ -826,7 +826,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** @return [FilesystemInfo] metadata generated from a regular tarball. */
     @JvmStatic private fun metadataForTarball(
-      inputs: Sequence<ArchiveInputStream>,
+      inputs: Sequence<ArchiveInputStream<*>>,
       memoryFS: FileSystem,
       deferred: Boolean,
       registry: MutableMap<String, VfsObjectInfo>,
@@ -838,7 +838,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       rootDir.name = "/"
 
       val inputset = inputs.iterator()
-      var tarball: ArchiveInputStream? = inputset.next()
+      var tarball: ArchiveInputStream<*>? = inputset.next()
       var bundle = 0
 
       while (tarball != null) {
@@ -926,7 +926,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     /** @return [FilesystemInfo] metadata returned from an Elide bundle. */
     @JvmStatic
     @Suppress("UNUSED_PARAMETER")
-    private fun loadMetadataFromElideBundle(bundle: ArchiveInputStream): FilesystemInfo {
+    private fun loadMetadataFromElideBundle(bundle: ArchiveInputStream<ArchiveEntry>): FilesystemInfo {
       TODO("not yet implemented")
     }
 

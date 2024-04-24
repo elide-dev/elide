@@ -85,6 +85,8 @@ elide {
 
   checks {
     spotless = true
+    diktat = false
+    ktlint = false
   }
 }
 

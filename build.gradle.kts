@@ -127,6 +127,11 @@ buildscript {
     classpath(libs.jgit)
     classpath(libs.guava)
     classpath(libs.owasp)
+    classpath(libs.jgit)
+    classpath(libs.h2)
+    classpath(libs.json)
+    classpath(libs.okio)
+    classpath(libs.bouncycastle)
 
     if (hasProperty("elide.pluginMode") && properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${properties["elide.pluginVersion"] as String}")

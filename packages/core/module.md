@@ -4,6 +4,8 @@
 
 ## Universal applicability
 
+Utilities and declarations here are used throughout the framework and runtime.
+
 At this level, utilities are truly universal, with support for some encodings, annotations, and other _pure-Kotlin_
 logic. This is the lowest level of Elide, and it is the most portable.
 
@@ -12,7 +14,10 @@ including Kotlin `stdlib` and KotlinX.
 
 ## Installation
 
-The `elide-core` package is provided via [Maven Central][0], and also via Elide's own [GitHub Packages][1] repository.
+The `elide-core` module is provided via
+[Maven Central](https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-core), and also via Elide's own
+[GitHub Packages](https://github.com/orgs/elide-dev/packages?ecosystem=maven&q=core&tab=packages&ecosystem=maven&q=elide-core)
+repository.
 
 **Via Gradle (Catalog):**
 
@@ -72,7 +77,3 @@ Pure-Kotlin hex encoding via `elide.core.encoding`.
 # Package elide.core.platform
 
 Platform-specific defaults.
-
-[0]: https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-core
-[1]: https://github.com/orgs/elide-dev/packages?ecosystem=maven&q=core&tab=packages&ecosystem=maven&q=elide-core
-[2]: https://kotlinlang.org/docs/multiplatform.html

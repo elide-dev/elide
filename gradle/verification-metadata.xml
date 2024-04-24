@@ -62,7 +62,10 @@
             <trusting group="commons-logging" name="commons-logging" version="1.2"/>
          </trusted-key>
          <trusted-key id="0CDE80149711EB46DFF17AE421A24B3F8B0F594A" group="org.apache" name="apache" version="16"/>
-         <trusted-key id="0CFA413799E2464C7D7E26220A4B343F2A55FDAE" group="com.h2database" name="h2" version="2.1.214"/>
+         <trusted-key id="0CFA413799E2464C7D7E26220A4B343F2A55FDAE">
+            <trusting group="com.h2database" name="h2" version="2.1.214"/>
+            <trusting group="com.h2database" name="h2" version="2.2.224"/>
+         </trusted-key>
          <trusted-key id="0D35D3F60078655126908E8AF3D1600878E85A3D" group="^io[.]netty($|([.].*))" regex="true"/>
          <trusted-key id="0DCF749D41A80E58041AAE1728F57F70167C0B3A" group="org.sonatype.goodies" name="package-url-java" version="1.1.1"/>
          <trusted-key id="0E6E990FD54E8532780086612B183B279DFD639E" group="com.typesafe" name="config" version="1.4.3"/>
@@ -521,7 +524,10 @@
             <trusting group="^org[.]apache($|([.].*))" regex="true"/>
          </trusted-key>
          <trusted-key id="FA7929F83AD44C4590F6CC6815C71C0A4E0B8EDD" group="net.java.dev.jna" name="jna"/>
-         <trusted-key id="FB35C8D02B4724DADA23DE0AFD116C1969FCCFF3" group="org.json" name="json" version="20231013"/>
+         <trusted-key id="FB35C8D02B4724DADA23DE0AFD116C1969FCCFF3">
+            <trusting group="org.json" name="json" version="20231013"/>
+            <trusting group="org.json" name="json" version="20240303"/>
+         </trusted-key>
          <trusted-key id="FC2C31FC25FEDE4E7AD0D18C2BFD7825A8984FBE" group="com.github.javaparser"/>
          <trusted-key id="FC411CD3CB7DCB0ABC9801058118B3BCDB1A5000" group="jakarta.xml.bind"/>
          <trusted-key id="FEB9209F2F2F3F4664841E55AC107B386692DADD">

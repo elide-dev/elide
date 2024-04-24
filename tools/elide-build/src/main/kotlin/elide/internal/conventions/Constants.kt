@@ -90,7 +90,7 @@ public object Constants {
     const val ATOMICFU = "0.23.2"
 
     /** Constant: pinned version of BouncyCastle. */
-    const val BOUNCYCASTLE = "1.78"
+    const val BOUNCYCASTLE = "1.78.1"
 
     /** Constant: pinned version of Groovy. */
     const val GROOVY = "4.0.18"

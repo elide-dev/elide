@@ -34,6 +34,7 @@ import elide.tool.project.ProjectManager
   usageHelpAutoWidth = true,
   hidden = true,
 )
+@Suppress("unused", "UnusedPrivateProperty")
 @Singleton internal class ToolLintCommand @Inject constructor (
   private val projectManager: ProjectManager,
   private val workdir: WorkdirManager,

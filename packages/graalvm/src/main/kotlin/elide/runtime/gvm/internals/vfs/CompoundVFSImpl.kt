@@ -53,16 +53,20 @@ internal class CompoundVFSImpl private constructor (
     )
   }
 
-  private val inOrderCandidates: Array<GuestVFS> by lazy {
-    listOf(primary, *overlays)
-      .filter { it !is LanguageVFS }
-      .toTypedArray()
+  private val inOrderCandidates: Collection<GuestVFS> by lazy {
+    sequence {
+      yield(primary)
+      overlays.forEach { yield(it) }
+    }.filter {
+      it !is LanguageVFS
+    }
+    .toCollection(
+      ArrayList(overlays.size + 1)
+    )
   }
 
-  private val languageVfsOverlays: Array<LanguageVFS> by lazy {
-    arrayOf(primary, *overlays)
-      .filterIsInstance<LanguageVFS>()
-      .toTypedArray()
+  private val languageVfsOverlays: Collection<LanguageVFS> by lazy {
+    overlays.filterIsInstance<LanguageVFS>()
   }
 
   override fun allowsHostFileAccess(): Boolean = hostAllowed || overlays.any {
@@ -83,6 +87,7 @@ internal class CompoundVFSImpl private constructor (
     }
   }
 
+  @Suppress("SwallowedException")
   private inline fun <reified R> firstWritable(path: Path? = null, action: (GuestVFS) -> R): R? {
     return inOrderCandidates.filter {
       it.writable && (path == null || Files.isWritable(it.parsePath(path.toString())))
@@ -95,6 +100,7 @@ internal class CompoundVFSImpl private constructor (
     }
   }
 
+  @Suppress("SwallowedException")
   private inline fun <reified R> firstWithPath(path: Path, action: (GuestVFS, Path) -> R): R? {
     val str = path.toString()
     val languageVfsHandler = languageVfsOverlays.firstOrNull { it.accepts(path) }
@@ -106,7 +112,9 @@ internal class CompoundVFSImpl private constructor (
     return inOrderCandidates.firstNotNullOfOrNull {
       val candidate = try {
         (it to it.parsePath(str))
-      } catch (ioe: IOException) {
+      } catch (ioe: IllegalArgumentException) {
+        return@firstNotNullOfOrNull null
+      } catch (uoe: UnsupportedOperationException) {
         return@firstNotNullOfOrNull null
       }
       if (it.existsAny(candidate.second)) {
@@ -131,6 +139,7 @@ internal class CompoundVFSImpl private constructor (
     }
   }
 
+  @Suppress("SwallowedException")
   override fun close() {
     inOrderCandidates.forEach {
       try {

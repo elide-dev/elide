@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("MnInjectionPoints")
+@file:Suppress("MnInjectionPoints", "MaxLineLength")
 
 package elide.tool.cli
 

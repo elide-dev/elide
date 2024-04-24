@@ -35,6 +35,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     initializeEmbeddedScripts(context, resources)
   }
 
+  @Suppress("unused", "unused_parameter")
   private fun configureContext(builder: PolyglotContextBuilder) {
     // nothing yet
   }

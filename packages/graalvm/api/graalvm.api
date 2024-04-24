@@ -993,6 +993,7 @@ public class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/ru
 public abstract interface class elide/runtime/gvm/internals/GuestVFS : java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/io/FileSystem {
 	public abstract fun allowsHostFileAccess ()Z
 	public abstract fun allowsHostSocketAccess ()Z
+	public fun existsAny (Ljava/nio/file/Path;)Z
 	public abstract fun getCompound ()Z
 	public abstract fun getDeletable ()Z
 	public abstract fun getHost ()Z
@@ -1507,12 +1508,6 @@ public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystem
 	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-}
-
 public final synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1720,15 +1715,17 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 	public final fun component4 ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
 	public final fun component5 ()Ljava/util/List;
 	public final fun component6 ()Ljava/lang/String;
-	public final fun component7 ()Ljava/lang/String;
-	public final fun component8 ()Ljava/nio/file/Path;
-	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public final fun component7 ()Ljava/lang/Boolean;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/nio/file/Path;
+	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBundle ()Ljava/util/List;
 	public final fun getCaseSensitive ()Z
 	public static final fun getDEFAULTS$graalvm ()Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public final fun getDeferred ()Ljava/lang/Boolean;
 	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
 	public final fun getReadOnly ()Z
 	public final fun getRoot ()Ljava/lang/String;
@@ -2939,9 +2936,11 @@ public final class elide/runtime/plugins/vfs/Vfs$Plugin : elide/runtime/core/Eng
 }
 
 public final class elide/runtime/plugins/vfs/VfsConfig {
+	public final fun getDeferred ()Z
 	public final fun getLanguages ()Ljava/util/Set;
 	public final fun getWritable ()Z
 	public final fun include (Ljava/net/URI;)V
+	public final fun setDeferred (Z)V
 	public final fun setLanguages (Ljava/util/Set;)V
 	public final fun setWritable (Z)V
 }

@@ -14,6 +14,7 @@
 package elide.internal.conventions.linting
 
 import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import io.gitlab.arturbosch.detekt.DetektPlugin
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
@@ -62,6 +63,9 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
       detektMergeXml.configure {
         input.from(this@detekt.xmlReportFile)
       }
+    }
+    project.tasks.withType(DetektCreateBaselineTask::class) detekt@{
+      jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
     }
   }
 }

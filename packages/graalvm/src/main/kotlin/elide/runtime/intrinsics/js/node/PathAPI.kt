@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package elide.runtime.intrinsics.js.node
 
 import elide.runtime.intrinsics.js.node.path.Path as NodePath
@@ -286,8 +288,12 @@ import elide.vm.annotations.Polyglot
    * @return The joined path.
    * @see [Node.js `path.join()`](https://nodejs.org/api/path.html#path_path_join_paths)
    */
-  @Polyglot public fun join(first: String, vararg rest: String): String =
-    join(NodePath.from(first), *rest.map { NodePath.from(it) }.toTypedArray())
+  @Polyglot public fun join(first: String, vararg rest: String): String = join(sequence {
+    yield(NodePath.from(first))
+    rest.forEach {
+      yield(NodePath.from(it))
+    }
+  })
 
   /**
    * ## `join()`
@@ -301,8 +307,12 @@ import elide.vm.annotations.Polyglot
    * @return The joined path as a Kotlin path.
    * @see [Node.js `path.join()`](https://nodejs.org/api/path.html#path_path_join_paths)
    */
-  @Polyglot public fun join(first: Path, vararg rest: Path): String =
-    join(NodePath.from(first), *rest.map { NodePath.from(it) }.toTypedArray())
+  @Polyglot public fun join(first: Path, vararg rest: Path): String = join(sequence {
+    yield(NodePath.from(first))
+    rest.forEach {
+      yield(NodePath.from(it))
+    }
+  })
 
   /**
    * ## `join()`
@@ -317,6 +327,32 @@ import elide.vm.annotations.Polyglot
    * @see [Node.js `path.join()`](https://nodejs.org/api/path.html#path_path_join_paths)
    */
   @Polyglot public fun join(first: NodePath, vararg rest: NodePath): String
+
+  /**
+   * ## `join()`
+   *
+   * Joins multiple path segments together.
+   *
+   * This method variant accepts an [Iterable] suite of [NodePath] objects and returns a [String].
+   *
+   * @param paths Iterable of paths.
+   * @return The joined path as a Node path.
+   * @see [Node.js `path.join()`](https://nodejs.org/api/path.html#path_path_join_paths)
+   */
+  public fun join(paths: Iterable<NodePath>): String = join(paths.asSequence())
+
+  /**
+   * ## `join()`
+   *
+   * Joins multiple path segments together.
+   *
+   * This method variant accepts a [Sequence] of [NodePath] objects and returns a [String].
+   *
+   * @param sequence The sequence of path segments.
+   * @return The joined path as a Node path.
+   * @see [Node.js `path.join()`](https://nodejs.org/api/path.html#path_path_join_paths)
+   */
+  public fun join(sequence: Sequence<NodePath>): String
 
   /**
    * ## `normalize()`
@@ -438,8 +474,12 @@ import elide.vm.annotations.Polyglot
    * @return The resolved path as a string.
    * @see [Node.js `path.resolve()`](https://nodejs.org/api/path.html#path_path_resolve_paths)
    */
-  @Polyglot public fun resolve(first: String, vararg rest: String): String =
-    resolve(NodePath.from(first), *rest.map { NodePath.from(it) }.toTypedArray())
+  @Polyglot public fun resolve(first: String, vararg rest: String): String = resolve(sequence {
+    yield(NodePath.from(first))
+    rest.forEach {
+      yield(NodePath.from(it))
+    }
+  })
 
   /**
    * ## `resolve()`
@@ -453,8 +493,12 @@ import elide.vm.annotations.Polyglot
    * @return The resolved path as a string.
    * @see [Node.js `path.resolve()`](https://nodejs.org/api/path.html#path_path_resolve_paths)
    */
-  @Polyglot public fun resolve(first: Path, vararg rest: Path): String =
-    resolve(NodePath.from(first), *rest.map { NodePath.from(it) }.toTypedArray())
+  @Polyglot public fun resolve(first: Path, vararg rest: Path): String = resolve(sequence {
+    yield(NodePath.from(first))
+    rest.forEach {
+      yield(NodePath.from(it))
+    }
+  })
 
   /**
    * ## `resolve()`
@@ -469,6 +513,32 @@ import elide.vm.annotations.Polyglot
    * @see [Node.js `path.resolve()`](https://nodejs.org/api/path.html#path_path_resolve_paths)
    */
   @Polyglot public fun resolve(first: NodePath, vararg rest: NodePath): String
+
+  /**
+   * ## `resolve()`
+   *
+   * Resolves a sequence of paths or path segments into an absolute path.
+   *
+   * This method variant accepts an [Iterable] of [NodePath] objects and returns a [String].
+   *
+   * @param iterable The iterable of paths to resolve.
+   * @return The resolved path as a string.
+   * @see [Node.js `path.resolve()`](https://nodejs.org/api/path.html#path_path_resolve_paths)
+   */
+  public fun resolve(iterable: Iterable<NodePath>): String = resolve(iterable.asSequence())
+
+  /**
+   * ## `resolve()`
+   *
+   * Resolves a sequence of paths or path segments into an absolute path.
+   *
+   * This method variant accepts a [Sequence] of [NodePath] objects and returns a [String].
+   *
+   * @param sequence The iterable of paths to resolve.
+   * @return The resolved path as a string.
+   * @see [Node.js `path.resolve()`](https://nodejs.org/api/path.html#path_path_resolve_paths)
+   */
+  public fun resolve(sequence: Sequence<NodePath>): String
 
   /**
    * ## `toNamespacedPath()`

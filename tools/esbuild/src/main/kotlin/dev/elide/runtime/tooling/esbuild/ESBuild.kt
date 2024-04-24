@@ -70,7 +70,7 @@ public object ESBuild {
     ctx.enter()
     val evaluated = srcs.map { ctx.eval(it) }
     val esbuildWasm = evaluated[2]
-    val wasmEntry = ctx.getBindings("wasm").getMember("esbuild.wasm")
+    //val wasmEntry = ctx.getBindings("wasm").getMember("esbuild.wasm")
     ctx.getBindings("js").putMember("ESBUILD", esbuildWasm)
     val symbols = ctx.eval(entry)
     ctx.leave()
@@ -84,7 +84,7 @@ public object ESBuild {
    *
    */
   public fun run(args: Array<String>) {
-    val result = callable.execute(*args)
+    val result = callable.execute(args)
     val javaThen: Consumer<Any> = Consumer<Any> { value -> println("Resolved from JavaScript: $value") }
     result.invokeMember("then", javaThen)
   }

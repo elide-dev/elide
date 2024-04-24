@@ -19,6 +19,8 @@
   "COMPATIBILITY_WARNING",
 )
 
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import kotlinx.benchmark.gradle.benchmark
@@ -82,7 +84,7 @@ elide {
   }
 
   checks {
-    spotless = false
+    spotless = true
   }
 }
 

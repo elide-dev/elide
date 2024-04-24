@@ -33,15 +33,9 @@ import elide.runtime.core.evaluate
   esm: Boolean = false,
   name: String? = null,
 ): PolyglotValue {
-  val src = Source.newBuilder(
+  return evaluate(Source.newBuilder(
     /* language = */ JavaScript.languageId,
     /* characters = */ source,
     /* name = */ name ?: (if (esm) "source.mjs" else "source.js"),
-   ).build()
-
-  return try {
-    evaluate(src)
-  } catch (thr: Throwable) {
-    throw thr
-  }
+  ).build())
 }

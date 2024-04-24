@@ -12,7 +12,7 @@
  */
 
 @file:OptIn(DelicateElideApi::class)
-@file:Suppress("JSUnresolvedReference")
+@file:Suppress("JSUnresolvedReference", "LargeClass")
 
 package elide.runtime.gvm.internals.js.node
 

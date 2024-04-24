@@ -16,7 +16,6 @@ package elide.tool.cli.output
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.modifier.Modifier
@@ -37,7 +36,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 import elide.tool.cli.output.TestState.*
 import elide.tool.testing.TestInfo
 import elide.tool.testing.TestResult

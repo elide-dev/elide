@@ -16,12 +16,9 @@
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 

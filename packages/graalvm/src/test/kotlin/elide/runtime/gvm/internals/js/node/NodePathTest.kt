@@ -18,22 +18,19 @@ package elide.runtime.gvm.internals.js.node
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.nio.file.Paths
-import kotlin.io.path.Path as KotlinPath
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.node.NodeStdlib
 import elide.runtime.gvm.internals.node.path.*
-import elide.runtime.gvm.internals.node.path.NodePaths
-import elide.runtime.gvm.internals.node.path.NodePathsModule
 import elide.runtime.gvm.internals.node.path.PathStyle.POSIX
 import elide.runtime.gvm.internals.node.path.PathStyle.WIN32
-import elide.runtime.gvm.internals.node.path.PathUtils
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.PathAPI
-import elide.runtime.intrinsics.js.node.path.Path as PathIntrinsic
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
+import kotlin.io.path.Path as KotlinPath
+import elide.runtime.intrinsics.js.node.path.Path as PathIntrinsic
 
 // @TODO: this will need normalization for non-unix test runs
 // @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong

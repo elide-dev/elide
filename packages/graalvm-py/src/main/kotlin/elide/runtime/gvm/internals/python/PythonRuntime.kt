@@ -78,11 +78,7 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
     // nothing at this time
   }
 
-  override fun resolve(
-context: VMContext,
- script: PythonScript,
- mode: DispatchStyle?
-): PythonBindings {
+  override fun resolve(context: VMContext, script: PythonScript, mode: DispatchStyle?): PythonBindings {
     TODO("Not yet implemented")
   }
 

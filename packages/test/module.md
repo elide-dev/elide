@@ -1,15 +1,18 @@
 # Module test
 
-The `elide-test` module is a multi-platform Kotlin module which provides cross-platform test and assertion utilities and
+`elide-test` is a multi-platform Kotlin module which provides cross-platform test and assertion utilities and
 annotations.
 
 ### Platform support
 
-Elide's testing module uses [JUnit 5][2] via [Micronaut Test][3] when running on JVM.
+Elide's testing module uses [JUnit 5](https://junit.org/junit5/docs/current/user-guide/) via
+[Micronaut Test](https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html) when running on JVM.
 
 ## Installation
 
-The `elide-test` package is provided via [Maven Central][0], and also via Elide's own [GitHub Packages][1] repository.
+The `elide-test` package is provided via
+[Maven Central](https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-test), and also via Elide's own
+[GitHub Packages](https://github.com/orgs/elide-dev/packages?ecosystem=maven&q=core&tab=packages&ecosystem=maven&q=elide-test) repository.
 
 **Via Gradle (Catalog):**
 
@@ -38,6 +41,14 @@ implementation "dev.elide:elide-test"
 </dependency>
 ```
 
+# Package elide.server
+
+Test stub for Elide Server API tests.
+
+# Package elide.server.runtime
+
+Test-oriented runtime stub for Elide Server API tests.
+
 # Package elide.testing
 
 Provides testing and assertion utilities.
@@ -45,8 +56,3 @@ Provides testing and assertion utilities.
 # Package elide.testing.annotations
 
 Provides cross-platform annotations for use in tests.
-
-[0]: https://search.maven.org/search?q=g:dev.elide%20AND%20a:elide-test
-[1]: https://github.com/orgs/elide-dev/packages?ecosystem=maven&q=core&tab=packages&ecosystem=maven&q=elide-test
-[2]: https://junit.org/junit5/docs/current/user-guide/
-[3]: https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html

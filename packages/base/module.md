@@ -1,7 +1,18 @@
 # Module base
 
-The `elide-base` module is a multi-platform Kotlin module which provides basic utilities which are typically useful for
-all applications.
+`elide-base`  is a multi-platform Kotlin module which provides basic utilities that are typically useful for all
+software applications. For example:
+
+- **Annotations:** Common annotations used across the Elide framework and runtime
+- **Codecs:** Multiplatform-capable implementations of Base64, hex, and other common encoding tools
+- **Crypto:** Core crypto, hashing, and entropy primitives (for example, `UUID`)
+- **Structures:** Data structures in MPP and pure Kotlin for sorted maps, sets, and lists
+- **Logging:** Multiplatform-capable logging, which delegates to platform logging tools
+
+## Platform Support
+
+The `elide-base` module supports all Kotlin Multiplatform targets, including WASM/WASI. The `elide-base` module only
+depends on Elide Core, Kotlin Stdlib, and KotlinX.
 
 ## Installation
 
@@ -66,6 +77,18 @@ JavaScript bridge to `console`-based logging, among other JS utilities.
 # Package elide.runtime.jvm
 
 Java bridge to SLF4J-based logging, among other JVM utilities.
+
+# Package elide.struct
+
+Provides simple data structures like sorted maps and sets.
+
+# Package elide.struct.api
+
+Pure-Kotlin equivalents to JVM's base collection APIs, including `SortedList`, `SortedMap`, and `SortedSet`.
+
+# Package elide.struct.codec
+
+Kotlin Serialization codecs for `elide.struct` types.
 
 # Package elide.util
 

@@ -118,7 +118,7 @@ internal fun Project.configureKotlinBuild(
   // base Kotlin options
   extensions.getByType(KotlinProjectExtension::class.java).apply {
     sourceSets.apply {
-      if (conventions.wasmSourceSets) {
+      if (conventions.wasmSourceSets && !isWasmDisabled()) {
         val wasmMain = create("wasmMain") {
           findByName("commonMain")?.let { dependsOn(it) }
         }

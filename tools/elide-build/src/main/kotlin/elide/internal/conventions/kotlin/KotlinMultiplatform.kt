@@ -31,7 +31,7 @@ import elide.internal.conventions.kotlin.KotlinTarget.*
 private const val WASM_DISABLE_SWITCH = "elide.build.kotlin.wasm.disable"
 
 /** Returns whether the Kotlin/WASM target is forcibly disabled for this project. */
-private fun Project.isWasmDisabled(): Boolean {
+public fun Project.isWasmDisabled(): Boolean {
   return project.findProperty(WASM_DISABLE_SWITCH)?.toString()?.toBooleanStrictOrNull() ?: false
 }
 

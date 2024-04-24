@@ -4,9 +4,6 @@ koverXmlReport
 koverBinaryReport
 koverVerify
 copyCoverageReports
--x wasmJsTest
--x wasmWasiTest
--x wasmWasiNodeTest
 -x detekt
 --scan
 --build-cache

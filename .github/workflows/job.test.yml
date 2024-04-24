@@ -321,9 +321,6 @@ jobs:
             --warning-mode=none
             --dependency-verification=lenient
             -x apiCheck
-            -x wasmJsTest
-            -x wasmWasiTest
-            -x wasmWasiNodeTest
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
@@ -357,9 +354,6 @@ jobs:
             --warning-mode=none
             --dependency-verification=lenient
             -x apiCheck
-            -x wasmJsTest
-            -x wasmWasiTest
-            -x wasmWasiNodeTest
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false

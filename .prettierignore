@@ -3,6 +3,9 @@ build
 coverage
 docs
 kotlin-js-store
+.run
+module.md
+*/module.md
 .idea
 .gradle
 .github/workflows
@@ -25,6 +28,8 @@ samples/
 packages/*/src/*/resources/META-INF/native-image/*.json
 packages/*/src/*/resources/META-INF/native-image/dev/elide/*/*.json
 packages/*/src/*/resources/META-INF/native-image/dev.elide/*/*.json
+packages/graalvm/src/main/resources/META-INF/native-image/dev.elide/graalvm/native-image.properties
+tools/esbuild/src/main/resources/META-INF/elide/embedded/tools/esbuild/
 reflect-config.json
 jni-config.json
 proxy-config.json
@@ -42,3 +47,6 @@ gradle-wrapper.jar
 .kotlin
 .qodana
 detekt-baseline.xml
+tools/images/*/Dockerfile
+tools/umbrella
+third_party

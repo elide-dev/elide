@@ -22,6 +22,8 @@ import elide.runtime.Logger
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.vfs.AbstractBaseVFS.VFSBuilder
 import elide.runtime.gvm.internals.vfs.AbstractBaseVFS.VFSFactory
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.BundleInfo
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.VfsObjectInfo
 
 /**
  * # VFS: Guest Base
@@ -70,6 +72,30 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @see setDeferred for the builder-method equivalent.
      */
     var deferred: Boolean
+
+    /**
+     * ### Path Registry
+     *
+     * Defines a registry of string paths to VFS object info descriptors, which are used to satisfy deferred reads; such
+     * structures are produced by indexing embedded VFS bundles.
+     *
+     * This setting can be set as a property, or as a builder method.
+     *
+     * @see setRegistry for the builder-method equivalent.
+     */
+    var registry: MutableMap<String, VfsObjectInfo>
+
+    /**
+     * ### Bundle Mapping
+     *
+     * Defines a mapping of local integer IDs to indexed bundle info records; this type is used to satisfy deferred
+     * reads, which require bundles to be available after startup.
+     *
+     * This setting can be set as a property, or as a builder method.
+     *
+     * @see setBundleMapping for the builder-method equivalent.
+     */
+    var bundleMapping: MutableMap<Int, BundleInfo>
 
     /**
      * ### Read-only status
@@ -154,6 +180,30 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      */
     fun setDeferred(deferred: Boolean): VFSBuilder<VFS> {
       this.deferred = deferred
+      return this
+    }
+
+    /**
+     * Set the [registry] of known paths, which is used for deferred reads and writes.
+     *
+     * @see registry to set this value as a property.
+     * @param registry Registry of known file paths, produced by indexing bundles.
+     * @return This builder.
+     */
+    fun setRegistry(registry: MutableMap<String, VfsObjectInfo>): VFSBuilder<VFS> {
+      this.registry = registry
+      return this
+    }
+
+    /**
+     * Set the [bundles] which should be consulted for deferred reads.
+     *
+     * @see bundleMapping to set this value as a property.
+     * @param bundles Map of indexed bundles for deferred reads.
+     * @return This builder.
+     */
+    fun setBundleMapping(bundles: Map<Int, BundleInfo>): VFSBuilder<VFS> {
+      this.registry = registry
       return this
     }
 

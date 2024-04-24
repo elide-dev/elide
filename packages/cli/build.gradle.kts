@@ -872,7 +872,6 @@ val darwinReleaseArgs = darwinOnlyArgs.plus(
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
-    "--static",
     "-march=native",
     "-H:RuntimeCheckedCPUFeatures=" + listOf(
       "AVX",
@@ -925,6 +924,7 @@ val linuxReleaseArgs = linuxOnlyArgs.plus(
 )
 
 val muslArgs = listOf(
+  "--static",
   "--libc=musl",
 )
 

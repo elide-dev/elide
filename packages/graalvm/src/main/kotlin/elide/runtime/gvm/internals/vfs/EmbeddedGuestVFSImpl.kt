@@ -20,7 +20,6 @@ import com.google.common.jimfs.Feature
 import com.google.common.jimfs.Jimfs
 import com.google.protobuf.ByteString
 import com.google.protobuf.Timestamp
-import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Requires
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
@@ -32,11 +31,9 @@ import tools.elide.vfs.TreeEntry
 import tools.elide.vfs.TreeEntry.EntryCase.DIRECTORY
 import tools.elide.vfs.TreeEntry.EntryCase.FILE
 import java.io.BufferedInputStream
-import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 import java.net.URI
 import java.nio.channels.SeekableByteChannel
 import java.nio.file.*
@@ -104,12 +101,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
   private val tree: FilesystemInfo,
-  private val deferred: Boolean = Settings.ENABLE_DEFERRED_READS,
+  private val deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
   private val bundles: Map<Int, BundleInfo> = TreeMap(),
   private val knownPathMap: Map<String, VfsObjectInfo> = TreeMap(),
 ) : AbstractDelegateVFS<EmbeddedGuestVFSImpl>(config, backing) {
   /** Static settings for the embedded VFS implementation. */
-  private object Settings {
+  internal object Settings {
     /** File digest algorithm to use. */
     const val fileDigestAlgorithm: String = "SHA-256"
 
@@ -117,7 +114,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     val fileDigest: HashAlgorithm = HashAlgorithm.SHA256
 
     /** Whether to defer reads until needed, or copy files into the VFS eagerly. */
-    const val ENABLE_DEFERRED_READS = true
+    const val DEFAULT_DEFERRED_READS = false
   }
 
   /** Enumerates supported embedded VFS bundle formats. */
@@ -224,7 +221,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
   private val hydratedPathMap: MutableSet<Path> = ConcurrentSkipListSet()
 
   // Lazy-inflate a known-good VFS path and all children using the provided `fs` target.
-  private fun createDirectoryTree(fs: FileSystemProvider, path: Path) {
+  private fun createDirectoryTree(path: Path) {
     Files.createDirectories(path)
   }
 
@@ -282,12 +279,20 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
   // Lazy-inflate a known-good VFS path using the provided `fs` target.
   private fun inflatePath(path: Path, fs: FileSystem, info: VfsObjectInfo) {
-    if (path in hydratedPathMap) return
+    if (path in hydratedPathMap) {
+      logging.debug {
+        "Skipping lazy-inflate for already-hydrated VFS path '$path'"
+      }
+      return
+    }
+    logging.debug {
+      "Lazy-inflating VFS path '$path' with info '$info'"
+    }
 
     val embeddedPath = fs.getPath(info.path)
     when (info) {
       // create the tree of parent directories, as needed
-      is VfsDirectory -> createDirectoryTree(fs.provider(), embeddedPath).also {
+      is VfsDirectory -> createDirectoryTree(embeddedPath).also {
         hydratedPathMap.add(path)
       }
 
@@ -301,9 +306,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   // Lazy-inflate a known-good VFS path and all children using the provided `fs` target.
-  private fun inflateTree(path: Path, fs: FileSystem, info: VfsDirectory) {
+  private fun inflateTree(fs: FileSystem, info: VfsDirectory) {
     val embeddedPath = fs.getPath(info.path)
-    createDirectoryTree(fs.provider(), embeddedPath)
+    createDirectoryTree(embeddedPath)
 
     val children = info.info.childrenList
     children.forEach {
@@ -315,7 +320,6 @@ internal class EmbeddedGuestVFSImpl private constructor (
         )
 
         DIRECTORY -> inflateTree(
-          embeddedPath.resolve(it.directory.name),
           fs,
           requireNotNull(knownPath(it.file.name)) as VfsDirectory,
         )
@@ -326,8 +330,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   private fun knownPath(path: String): VfsObjectInfo? {
+    if (!deferred) return null
     val absoluted = if (path.startsWith("/")) path else "/$path"
-    return knownPathMap[absoluted]
+    val known = knownPathMap[absoluted]
+    if (known == null) logging.debug { "Path '$path' is not known to VFS" }
+    else logging.debug { "Path '$path' is known to VFS as '$known'" }
+    return known
   }
 
   private inline fun <reified R> embeddedForPathOrFallBack(
@@ -347,8 +355,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
   // Entrypoint for path checks, which needs to be overridden to account for lazy files.
   override fun existsAny(path: Path): Boolean {
-    val pathStr = path.toString()
-    return knownPath(pathStr) != null || super.existsAny(path)
+    return if (!deferred) {
+      super.existsAny(path)
+    } else {
+      knownPath(path.toString()) != null || super.existsAny(path)
+    }
   }
 
   // Lazy read access to indexed VFS entries.
@@ -362,6 +373,15 @@ internal class EmbeddedGuestVFSImpl private constructor (
     }) { fs, info ->
       inflatePath(path, fs, info)
       fs.provider().newByteChannel(path, options, *attrs)
+    }
+  }
+
+  override fun readStream(path: Path, vararg options: OpenOption): InputStream {
+    return embeddedForPathOrFallBack(path, {
+      super.readStream(path, *options)
+    }) { fs, info ->
+      inflatePath(path, fs, info)
+      fs.provider().newInputStream(path, *options)
     }
   }
 
@@ -387,7 +407,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     return embeddedForPathOrFallBack(dir, {
       super.newDirectoryStream(dir, filter)
     }) { fs, info ->
-      inflateTree(dir, fs, info as VfsDirectory)
+      inflateTree(fs, info as VfsDirectory)
       fs.provider().newDirectoryStream(dir, filter)
     }
   }
@@ -404,19 +424,23 @@ internal class EmbeddedGuestVFSImpl private constructor (
    * @param root Root directory of the file-system.
    * @param workingDirectory Working directory of the file-system.
    * @param policy Policy to apply to moderate guest I/O access to the file-system in question.
+   * @param registry Registry of known file paths which are consulted for deferred reads.
+   * @param bundleMapping Mapping of bundle IDs to bundle metadata; consulted for deferred reads.
    * @param bundle Bundle file to load the file-system from.
    * @param paths Paths to the bundle files, as regular host-filesystem paths, or `classpath:`-prefixed URIs for
    *   resources which should be fetched from the host app class-path.
    * @param files Files to load as file-system bundles.
    */
   @Suppress("unused") internal data class Builder (
-    override var deferred: Boolean = true,
+    override var deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
     override var readOnly: Boolean = true,
     override var caseSensitive: Boolean = true,
     override var enableSymlinks: Boolean = false,
     override var root: String = ROOT_SYSTEM_DEFAULT,
     override var workingDirectory: String = DEFAULT_CWD,
     override var policy: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS,
+    override var registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),
+    override var bundleMapping: MutableMap<Int, BundleInfo> = mutableMapOf(),
     internal var bundle: Pair<FilesystemInfo, FileSystem>? = null,
     internal var paths: List<URI> = emptyList(),
     internal var files: List<File> = emptyList(),
@@ -460,6 +484,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
       setBundle(
         bundle.first to bundle.second
       )
+      if (bundle.third.isNotEmpty()) {
+        this.bundleMapping.putAll(bundle.third)
+      }
       return this
     }
 
@@ -576,18 +603,21 @@ internal class EmbeddedGuestVFSImpl private constructor (
     private val built by lazy {
       val config = EffectiveGuestVFSConfig.fromBuilder(this)
       val fsConfig = config.buildFs()
-      val registry = ConcurrentSkipListMap<String, VfsObjectInfo>()
-      val (tree, bundle, bundleInfos) = when (val bundle = resolveBundles(this, fsConfig, deferred, registry)) {
-        null -> Triple(null, null, null)
+      val pathRegistry = ConcurrentSkipListMap<String, VfsObjectInfo>().apply {
+        putAll(registry)
+      }
+      val (tree, bundle, infos) = when (val bundle = resolveBundles(this, fsConfig, pathRegistry)) {
+        null -> Triple(null, null, bundleMapping)
         else -> bundle
       }
+
       if (tree == null || bundle == null) create(config) else EmbeddedGuestVFSImpl(
         config,
         bundle,
         tree,
         deferred,
-        bundleInfos ?: emptyMap(),
-        registry,
+        infos,
+        pathRegistry,
       )
     }
 
@@ -959,7 +989,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       image: Pair<String, InputStream>?,
       streams: List<Pair<String, InputStream>>,
       fsConfig: Configuration.Builder,
-      deferred: Boolean = Settings.ENABLE_DEFERRED_READS,
+      deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
       registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>> {
       // resolve the format from the filename, then pass along
@@ -1008,7 +1038,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       paths: List<URI>,
       files: List<File>,
       fsConfig: Configuration.Builder,
-      deferred: Boolean = Settings.ENABLE_DEFERRED_READS,
+      deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
       registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>>? {
       // if we got no paths, we have no bundles
@@ -1051,14 +1081,13 @@ internal class EmbeddedGuestVFSImpl private constructor (
     @JvmStatic internal fun resolveBundles(
       builder: Builder,
       fsConfig: Configuration.Builder,
-      deferred: Boolean,
       registry: ConcurrentMap<String, VfsObjectInfo>,
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>>? {
       return when {
         builder.bundle != null -> builder.bundle?.let { Triple(it.first, it.second, emptyMap()) }
         builder.zip != null -> loadWithFileTarget(builder.zip!!)
         builder.files.isNotEmpty() || builder.paths.isNotEmpty() ->
-          loadBundles(builder.paths, builder.files, fsConfig, deferred, registry)
+          loadBundles(builder.paths, builder.files, fsConfig, builder.deferred, registry)
         else -> null
       }
     }
@@ -1115,6 +1144,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         enableSymlinks = config.supportsSymbolicLinks
         policy = config.policy
         root = config.root
+        deferred = config.deferred ?: Settings.DEFAULT_DEFERRED_READS
         workingDirectory = config.workingDirectory
         if (config.bundle.isNotEmpty()) {
           paths = config.bundle.plus(
@@ -1132,7 +1162,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       // resolve the filesystem tree and data-bag based on the settings provided to the builder
       val fsConfig = config.buildFs()
       val vfsIndex: ConcurrentMap<String, VfsObjectInfo> = ConcurrentSkipListMap()
-      val (tree, fs, bundles) = when (val bundle = resolveBundles(builder, fsConfig, true, vfsIndex)) {
+      val (tree, fs, bundles) = when (val bundle = resolveBundles(builder, fsConfig, vfsIndex)) {
         null -> Triple(null, null, null)
         else -> bundle
       }
@@ -1146,6 +1176,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         effectiveFS,
         tree ?: FilesystemInfo.getDefaultInstance(),
         bundles = bundles ?: emptyMap(),
+        knownPathMap = vfsIndex,
       )
     }
   }

@@ -21,6 +21,7 @@ import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 
 /** Configuration DSL for the [Vfs] plugin. */
 @DelicateElideApi public class VfsConfig internal constructor(configuration: PolyglotEngineConfiguration) {
@@ -32,6 +33,9 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
 
   /** Whether the file system is writable. If false, write operations will throw an exception. */
   public var writable: Boolean = false
+
+  /** Enable deferred loading of embedded VFS assets, where supported. */
+  public var deferred: Boolean = EmbeddedGuestVFSImpl.Settings.DEFAULT_DEFERRED_READS
 
   /** Whether VFS-incompatible languages are present in the engine. */
   public var languages: MutableSet<GuestLanguage> = ConcurrentSkipListSet()

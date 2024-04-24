@@ -30,6 +30,8 @@ import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.BundleInfo
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.VfsObjectInfo
 
 /**
  * # VFS: Host.
@@ -62,6 +64,8 @@ internal class HostVFSImpl private constructor (
    */
   @Suppress("unused") internal data class Builder (
     override var deferred: Boolean = false,  // no-op
+    override var bundleMapping: MutableMap<Int, BundleInfo> = mutableMapOf(),  // no-op
+    override var registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),  // no-op
     override var readOnly: Boolean = GuestVFSPolicy.DEFAULT_READ_ONLY,
     override var root: String = ROOT_SYSTEM_DEFAULT,
     override var policy: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS,

@@ -7,6 +7,7 @@ import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
 import kotlin.io.path.pathString
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.Settings
 
 /**
  * A hybrid [FileSystem] implementation using two layers: an in-memory [overlay], which takes priority for reads but
@@ -116,11 +117,12 @@ internal class HybridVfs private constructor(
      * @param writable Whether to allow writes to the backing layer.
      * @return A new [HybridVfs] instance.
      */
-    fun acquire(writable: Boolean, overlay: List<URI>): HybridVfs {
+    fun acquire(writable: Boolean, overlay: List<URI>, deferred: Boolean = Settings.DEFAULT_DEFERRED_READS): HybridVfs {
       // configure an in-memory vfs with the provided bundles as overlay
       val inMemory = EmbeddedGuestVFSImpl.Builder.newBuilder()
         .setBundlePaths(overlay)
         .setReadOnly(true)
+        .setDeferred(deferred)
         .build()
 
       // suppress nfe for the inner class; it needs to fall-back

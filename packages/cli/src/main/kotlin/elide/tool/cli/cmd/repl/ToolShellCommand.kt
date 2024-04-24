@@ -1601,6 +1601,7 @@ import elide.tool.project.ProjectManager
 
     // configure VFS with user-specified bundles
     vfs {
+      deferred = true
       languages.addAll(language.resolve(project))
 
       // resolve the file-system bundles to use

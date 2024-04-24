@@ -42,9 +42,7 @@ internal class HybridVfsTest {
   }
 
   /** Convenience method used to [acquire][acquireVfs] a [HybridVfs] instance and use it in a test. */
-  private inline fun useVfs(block: (HybridVfs) -> Unit) {
-    return block(acquireVfs())
-  }
+  private inline fun useVfs(block: (HybridVfs) -> Unit) = block(acquireVfs())
 
   @Test fun testReadFromEmbeddedBundles(): Unit = useVfs { vfs ->
     val path = vfs.parsePath("/hello.txt")

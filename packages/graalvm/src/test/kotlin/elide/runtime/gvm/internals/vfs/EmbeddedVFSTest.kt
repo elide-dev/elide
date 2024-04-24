@@ -16,11 +16,12 @@ package elide.runtime.gvm.internals.vfs
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.nio.charset.StandardCharsets
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.*
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.Builder
-import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.EmbeddedVFSFactory
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.EmbeddedVFSFactory.buildFs
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
@@ -31,7 +32,7 @@ import elide.testing.annotations.TestCase
   override fun factory(): EmbeddedVFSFactory = EmbeddedVFSFactory
 
   /** @return New builder. */
-  override fun newBuilder(): Builder = Builder.newBuilder()
+  override fun newBuilder(): Builder = Builder.newBuilder().setDeferred(false) as Builder
 
   /** @return Indication that no host changes should be observed. */
   override fun shouldUseHost(): Boolean = false
@@ -46,7 +47,12 @@ import elide.testing.annotations.TestCase
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundles(listOf(sampleTarball.toURI()), emptyList(), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundles(
+      listOf(sampleTarball.toURI()),
+      emptyList(),
+      fsConfig,
+      deferred = false,
+    )
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
@@ -63,7 +69,58 @@ import elide.testing.annotations.TestCase
     assertEquals(0, testFile.offset, "offset for first file should be 0")
 
     // build it into a VFS instance
-    val vfs = newBuilder().setBundle(result).build()
+    val vfs = newBuilder().setBundle(result).setDeferred(false).build()
+    val path = vfs.getPath("hello.txt")
+    assertNotNull(path, "should be able to parse path 'hello.txt'")
+    assertNotNull(vfs, "should be able to create VFS from sample tarball")
+
+    val exampleFileContents = vfs.readStream(path).bufferedReader(StandardCharsets.UTF_8).use {
+      it.readText()
+    }
+    assertEquals("hello", exampleFileContents.trim(), "example file contents should decode correctly")
+  }
+
+  /** Test: Load a bundle from a regular (non-compressed) tarball, with deferred reads enabled. */
+  @Test @Ignore fun testBundleFromTarballDeferred() {
+    // load sample tarball
+    val sampleTarball = EmbeddedVFSTest::class.java.getResource("/sample-vfs.tar")
+    assertNotNull(sampleTarball, "should be able to find sample tarball")
+
+    // manually test loader fn
+    val effective = EffectiveGuestVFSConfig.DEFAULTS
+    val fsConfig = effective.buildFs()
+
+    val registry = mutableMapOf<String, VfsObjectInfo>()
+    val result = EmbeddedGuestVFSImpl.loadBundles(
+      listOf(sampleTarball.toURI()),
+      emptyList(),
+      fsConfig,
+      deferred = true,
+      registry = registry,
+    )
+    assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
+    val (tree, databag) = result
+    assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
+    assertNotNull(databag, "should not get `null` from `loadBundleFromURI` for known-good input")
+
+    // test consistency of the tree
+    assertTrue(tree.hasRoot(), "tree should always have root entry")
+    assertTrue(tree.root.hasDirectory(), "root should always be a directory")
+    val entries = tree.root.directory.childrenList
+    assertEquals(1, entries.size, "root directory should have exactly 1 child")
+    val testFile = entries.first().file
+    assertEquals("hello.txt", testFile.name, "test file name should be preserved")
+    assertEquals(6, testFile.size, "un-compressed size should be accurate")
+    assertEquals(0, testFile.offset, "offset for first file should be 0")
+
+    // build it into a VFS instance
+    val vfs = newBuilder()
+      .setBundle(result)
+      .setRegistry(registry)
+      .setBundleMapping(result.third)
+      .setDeferred(true)
+      .build()
+
     val path = vfs.getPath("hello.txt")
     assertNotNull(path, "should be able to parse path 'hello.txt'")
     assertNotNull(vfs, "should be able to create VFS from sample tarball")

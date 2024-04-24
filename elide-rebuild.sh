@@ -20,4 +20,3 @@
 #
 
 ./gradlew :packages:cli:installDist --configuration-cache --build-cache
-

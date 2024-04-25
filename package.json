@@ -29,6 +29,7 @@
     "packages/cli",
     "site/docs/content",
     "tools/scripts",
+    "tools/tsc",
     "tools/plugin/gradle-plugin"
   ],
   "dependencies": {

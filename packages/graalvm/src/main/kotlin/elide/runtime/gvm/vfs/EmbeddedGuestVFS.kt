@@ -19,7 +19,39 @@ import java.nio.file.Path
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 
-/** Public access to the factory for embedded guest virtual file-systems. */
+/**
+ * # Virtual File-System: Embedded
+ *
+ * Public access to the factory for embedded guest virtual file-systems. "Embedded" VFS operating modes use in-memory
+ * file system implementations. Embedded I/O can use tarballs, zip archives, or other sources for file system data.
+ *
+ * &nbsp;
+ *
+ * ## Usage
+ *
+ * Virtual file-systems can be created using the factory methods provided by this object, for example [empty],
+ * [writable], and [forBundle]. One or more bundles can be provided; they will be decoded in the order supplied, and
+ * consulted via the VFS internals with order preserved.
+ *
+ * Archives or sources of different types and origins can be combined in a single VFS instance. For example, in-memory
+ * data can be combined with on-disk data, or with data from a remote source.
+ *
+ * &nbsp;
+ *
+ * ## Elide VFS
+ *
+ * Elide uses embedded virtual filesystems for built-in features like support for the Node API. VFS features may be
+ * active to support these features even when Host I/O is enabled for a given run. In these cases, the VFS is used in
+ * an "overlay" fashion, where the VFS is consulted first, and then the host file system is consulted if the VFS does
+ * not contain the requested file (on read).
+ *
+ * Writable VFS instances absorb writes and changes to the VFS, but do not modify the underlying source data. This
+ * allows applications to use in-memory VFS for temporary files and other data, without modifying the original source
+ * data.
+ *
+ * Persistent data should always be written to disk using Host I/O. For disk-based persistence, VFS should be mounted
+ * read-only, with Host I/O granted at runtime.
+ */
 public object EmbeddedGuestVFS {
   /** @return Empty embedded VFS. */
   public fun empty(): GuestVFS = EmbeddedGuestVFSImpl.create()

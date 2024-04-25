@@ -60,7 +60,6 @@ dependencies {
 
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
-  implementation(projects.packages.graalvmWasm)
 
   // Testing
   testImplementation(projects.packages.test)

@@ -15,6 +15,7 @@
 
 package elide.runtime.intrinsics.js.node
 
+import org.graalvm.polyglot.Value
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.os.*
 import elide.vm.annotations.Polyglot
@@ -115,7 +116,7 @@ import elide.vm.annotations.Polyglot
    * @param pid The process ID of the process to query.
    * @return The scheduling priority of the process.
    */
-  @Polyglot public fun getPriority(pid: Long? = null): Int
+  @Polyglot public fun getPriority(pid: Value? = null): Int
 
   /**
    * ## Method: `os.homedir()`
@@ -179,7 +180,7 @@ import elide.vm.annotations.Polyglot
    * @param pid The process ID of the process to modify; defaults to `0`.
    * @param priority The new scheduling priority for the process.
    */
-  @Polyglot public fun setPriority(pid: Long = 0, priority: Int = PRIORITY_NORMAL)
+  @Polyglot public fun setPriority(pid: Value? = Value.asValue(0), priority: Value? = Value.asValue(PRIORITY_NORMAL))
 
   /**
    * ## Method: `os.tmpdir()`
@@ -224,7 +225,7 @@ import elide.vm.annotations.Polyglot
    *
    * @param options Options for the user information query.
    */
-  @Polyglot public fun userInfo(options: UserInfoOptions): UserInfo
+  @Polyglot public fun userInfo(options: UserInfoOptions? = null): UserInfo?
 
   /**
    * ## Method: `os.version()`

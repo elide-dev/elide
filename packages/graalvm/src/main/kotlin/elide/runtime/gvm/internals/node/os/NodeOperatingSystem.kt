@@ -15,9 +15,16 @@
 
 package elide.runtime.gvm.internals.node.os
 
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
+import org.jetbrains.annotations.VisibleForTesting
 import oshi.SystemInfo
 import java.lang.management.ManagementFactory
 import java.lang.management.OperatingSystemMXBean
+import java.net.InetAddress
 import java.nio.ByteOrder
 import elide.annotations.Factory
 import elide.annotations.Singleton
@@ -142,6 +149,32 @@ private val STUBBED_USER: UserInfo = UserInfo.of(
   STUBBED_USERINFO_GID,
 )
 
+// Module member names.
+private val moduleMembers = arrayOf(
+  "EOL",
+  "devNull",
+  "constants",
+  "availableParallelism",
+  "arch",
+  "cpus",
+  "endianness",
+  "freemem",
+  "getPriority",
+  "homedir",
+  "hostname",
+  "loadavg",
+  "networkInterfaces",
+  "platform",
+  "release",
+  "setPriority",
+  "tmpdir",
+  "totalmem",
+  "type",
+  "uptime",
+  "userInfo",
+  "version",
+)
+
 // Installs the Node OS module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeOperatingSystemModule : AbstractNodeBuiltinModule() {
   // Provide a compliant instance of the OS API to the DI context.
@@ -159,13 +192,47 @@ internal object NodeOperatingSystem {
   /** Primordial symbol where the OS API implementation is installed. */
   internal const val SYMBOL: String = "__Elide_node_os__"
 
+  internal abstract class ModuleBase : ProxyObject, OperatingSystemAPI {
+    override fun getMemberKeys(): Array<String> = moduleMembers
+    override fun hasMember(key: String): Boolean = key in moduleMembers
+    override fun getMember(key: String?): Any? = when (key) {
+      "EOL" -> EOL
+      "devNull" -> devNull
+      "constants" -> constants
+      "availableParallelism" -> ProxyExecutable { availableParallelism() }
+      "arch" -> ProxyExecutable { arch() }
+      "cpus" -> ProxyExecutable { cpus() }
+      "endianness" -> ProxyExecutable { endianness() }
+      "freemem" -> ProxyExecutable { freemem() }
+      "getPriority" -> ProxyExecutable { args -> getPriority(args.getOrNull(0)) }
+      "homedir" -> ProxyExecutable { homedir() }
+      "hostname" -> ProxyExecutable { hostname() }
+      "loadavg" -> ProxyExecutable { loadavg() }
+      "networkInterfaces" -> ProxyExecutable { networkInterfaces() }
+      "platform" -> ProxyExecutable { platform() }
+      "release" -> ProxyExecutable { release() }
+      "setPriority" -> ProxyExecutable { args -> setPriority(args.getOrNull(0), args.getOrNull(1)) }
+      "tmpdir" -> ProxyExecutable { tmpdir() }
+      "totalmem" -> ProxyExecutable { totalmem() }
+      "type" -> ProxyExecutable { type() }
+      "uptime" -> ProxyExecutable { uptime() }
+      "userInfo" -> ProxyExecutable { args -> userInfo(args.getOrNull(0)?.`as`(UserInfoOptions::class.java)) }
+      "version" -> ProxyExecutable { version() }
+      else -> null
+    }
+
+    override fun putMember(key: String?, value: Value?) {
+      throw UnsupportedOperationException("Cannot modify `os` module")
+    }
+  }
+
   /**
    * ## Stubbed OS
    *
    * Stubbed implementation of the `os` module for use in simulated or host-restricted environments; returns static,
    * predetermined values for all OS-related calls. Where necessary, chooses POSIX-style values.
    */
-  internal object StubbedOs : OperatingSystemAPI {
+  internal class StubbedOs : ModuleBase(), OperatingSystemAPI {
     override val family: OSType get() = POSIX
     override val EOL: String get() = posixEOL
     override val constants: OperatingSystemConstants get() = TODO("Not yet implemented: `os.constants`")
@@ -175,19 +242,19 @@ internal object NodeOperatingSystem {
     override fun cpus(): List<CPUInfo> = STUBBED_CPUS
     override fun endianness(): String = STUBBED_ENDIANNESS
     override fun freemem(): Long = STUBBED_FREEMEM
-    override fun getPriority(pid: Long?): Int = STUBBED_PRIORITY
+    override fun getPriority(pid: Value?): Int = STUBBED_PRIORITY
     override fun homedir(): String = STUBBED_HOMEDIR
     override fun hostname(): String = STUBBED_HOSTNAME
     override fun loadavg(): List<Double> = listOf(0.0, 0.0, 0.0)
     override fun networkInterfaces(): Map<String, List<NetworkInterfaceInfo>> = STUBBED_NICS
     override fun platform(): String = STUBBED_PLATFORM
     override fun release(): String = STUBBED_RELEASE
-    override fun setPriority(pid: Long, priority: Int) = Unit
+    override fun setPriority(pid: Value?, priority: Value?) = Unit
     override fun tmpdir(): String = STUBBED_TMPDIR
     override fun totalmem(): Long = STUBBED_TOTALMEM
     override fun type(): String = STUBBED_TYPE
     override fun uptime(): Double = STUBBED_UPTIME
-    override fun userInfo(options: UserInfoOptions): UserInfo = STUBBED_USER
+    override fun userInfo(options: UserInfoOptions?): UserInfo = STUBBED_USER
     override fun version(): String = STUBBED_VERSION
   }
 
@@ -200,12 +267,22 @@ internal object NodeOperatingSystem {
    * @see Win32 for Win32-style systems
    * @see Posix for POSIX-style systems
    */
-  abstract class BaseOS protected constructor (override val family: OSType) : OperatingSystemAPI {
+  @ReflectiveAccess @Introspected abstract class BaseOS protected constructor (override val family: OSType) :
+    ModuleBase(),
+    OperatingSystemAPI,
+    ProxyObject {
     /** Obtain system info. */
     private val systemInfo: SystemInfo by lazy { SystemInfo() }
     private val osManager: OperatingSystemMXBean by lazy { ManagementFactory.getOperatingSystemMXBean() }
 
-    private fun mapJvmArchToNodeArch(arch: String): String = when (arch.lowercase().trim()) {
+    private fun wrapCleanup(subject: String?): String =
+      subject?.trim()?.replace(Regex("[\n\r]"), "") ?: ""
+
+    private fun trimTrailing(subject: String?): String =
+      subject?.endsWith("/")?.let { if (it) subject.dropLast(1) else subject } ?: ""
+
+    @VisibleForTesting
+    internal fun mapJvmArchToNodeArch(arch: String): String = when (arch.lowercase().trim()) {
       JVM_X86 -> NODE_X86
       JVM_X86_64 -> NODE_X64
       JVM_AMD64 -> NODE_X64
@@ -214,9 +291,10 @@ internal object NodeOperatingSystem {
       else -> "unknown"
     }
 
-    private fun mapJvmOsToNodeOs(os: String = System.getProperty("os.name")): String = when (os.lowercase().trim()) {
+    @VisibleForTesting
+    internal fun mapJvmOsToNodeOs(os: String = System.getProperty("os.name")): String = when (os.lowercase().trim()) {
       "aix" -> OS_AIX
-      "darwin", "macos" -> OS_DARWIN
+      "mac os x" -> OS_DARWIN
       "freebsd" -> OS_FREEBSD
       "linux" -> OS_LINUX
       "openbsd" -> OS_OPENBSD
@@ -225,8 +303,12 @@ internal object NodeOperatingSystem {
       else -> "unknown"
     }
 
-    private fun wrapCleanup(subject: String?): String {
-      return subject?.trim()?.replace(Regex("[\n\r]"), "") ?: ""
+    @VisibleForTesting
+    internal fun typeForOsName(osName: String?): String = when (osName?.lowercase()?.trim()) {
+      "linux" -> OS_TYPE_LINUX
+      "mac os x" -> OS_TYPE_DARWIN
+      "windows" -> OS_TYPE_WINDOWS
+      else -> "unknown"
     }
 
     @Polyglot override fun availableParallelism(): Int = systemInfo.hardware.processor.logicalProcessorCount
@@ -252,10 +334,10 @@ internal object NodeOperatingSystem {
     @Polyglot override fun freemem(): Long = Runtime.getRuntime().freeMemory()
 
     // @TODO(sgammon): not yet implemented
-    @Polyglot override fun getPriority(pid: Long?): Int = PRIORITY_NORMAL
+    @Polyglot override fun getPriority(pid: Value?): Int = PRIORITY_NORMAL
 
     @Polyglot override fun homedir(): String = wrapCleanup(System.getProperty("user.home"))
-    @Polyglot override fun hostname(): String = wrapCleanup(System.getProperty("os.hostname"))
+    @Polyglot override fun hostname(): String = wrapCleanup(InetAddress.getLocalHost().hostName)
 
     @Polyglot override fun loadavg(): List<Double> = osManager.systemLoadAverage.let {
       listOf(it, 0.0, 0.0)  // @TODO: implement 5 and 15 minute averages
@@ -316,24 +398,18 @@ internal object NodeOperatingSystem {
     }
 
     @Polyglot override fun platform(): String = mapJvmOsToNodeOs()
-
     @Polyglot override fun release(): String = systemInfo.operatingSystem.toString()
 
     // @TODO(sgammon): not yet implemented
-    @Polyglot override fun setPriority(pid: Long, priority: Int) = Unit
-    @Polyglot override fun tmpdir(): String = wrapCleanup(System.getProperty("java.io.tmpdir"))
+    @Polyglot override fun setPriority(pid: Value?, priority: Value?) = Unit
+    @Polyglot override fun tmpdir(): String = trimTrailing(wrapCleanup(System.getProperty("java.io.tmpdir")))
     @Polyglot override fun totalmem(): Long = Runtime.getRuntime().totalMemory()
 
-    @Polyglot override fun type(): String = when (System.getProperty("os.name")) {
-      "linux" -> OS_TYPE_LINUX
-      "darwin" -> OS_TYPE_DARWIN
-      "windows" -> OS_TYPE_WINDOWS
-      else -> "unknown"
-    }
+    @Polyglot override fun type(): String = typeForOsName(System.getProperty("os.name"))
 
     @Polyglot override fun uptime(): Double = systemInfo.operatingSystem.systemUptime.toDouble()
 
-    @Polyglot override fun userInfo(options: UserInfoOptions): UserInfo {
+    @Polyglot override fun userInfo(options: UserInfoOptions?): UserInfo {
       TODO("Not yet implemented: `os.userInfo`")
     }
 
@@ -341,7 +417,7 @@ internal object NodeOperatingSystem {
   }
 
   // Implements Operating System API calls for Win32-style systems.
-  object Win32 : BaseOS(WIN32), OperatingSystemAPI {
+  @ReflectiveAccess @Introspected object Win32 : BaseOS(WIN32), OperatingSystemAPI {
     @get:Polyglot override val EOL: String get() = win32EOL
     @get:Polyglot override val devNull: String get() = win32DevNull
 
@@ -350,13 +426,16 @@ internal object NodeOperatingSystem {
   }
 
   // Implements Operating System API calls for POSIX-style systems.
-  object Posix : BaseOS(POSIX), OperatingSystemAPI {
+  @ReflectiveAccess @Introspected object Posix : BaseOS(POSIX), OperatingSystemAPI {
     @get:Polyglot override val EOL: String get() = posixEOL
     @get:Polyglot override val devNull: String get() = posixDevNull
 
     override val constants: OperatingSystemConstants
       get() = TODO("Not yet implemented: `os.constants` (POSIX)")
   }
+
+  // Stubbed OS module API singleton.
+  private val stubbed: StubbedOs by lazy { StubbedOs() }
 
   /**
    * ## Node Operating System API: Stubbed
@@ -365,7 +444,7 @@ internal object NodeOperatingSystem {
    *
    * @return A stubbed instance of the [OperatingSystemAPI].
    */
-  @JvmStatic fun stubbed(): OperatingSystemAPI = StubbedOs
+  @JvmStatic fun stubbed(): OperatingSystemAPI = stubbed
 
   /**
    * ## Node Operating System API: Create or Obtain

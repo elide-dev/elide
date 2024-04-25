@@ -65,11 +65,12 @@ public object ESBuild {
     val main: Value = symbols.getMember("main")
     main
   }
+
   private fun readSourcefile(
-lang: String,
- srcfile: String,
- name: String
-): Source {
+    lang: String,
+    srcfile: String,
+    name: String
+  ): Source {
     val bytes = ESBuild::class.java.getResourceAsStream(
       "/META-INF/elide/embedded/tools/esbuild/$srcfile"
     )?.readBytes()

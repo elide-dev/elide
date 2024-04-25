@@ -53,6 +53,7 @@ elide {
 
 dependencies {
   api(libs.graalvm.js.language)
+  implementation(projects.packages.graalvm)
 }
 
 tasks.named("run") {

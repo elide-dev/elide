@@ -1,20 +1,8 @@
 {
   "engine": "v4",
   "language": "TYPESCRIPT",
-  "vfs": [
-    { "name": "ts.modules.tar.gz" }
-  ],
+  "vfs": [],
   "artifacts": [],
-  "image": {
-    "type": "universal",
-    "universal": "ts.runtime.tar.gz"
-  },
-  "scripts": [
-    { "path": "polyfills.js" },
-    { "path": "compiler.js" }
-  ],
-  "bundles": [
-    { "path": "ts.runtime.tar.gz" },
-    { "path": "ts.modules.tar.gz" }
-  ]
+  "scripts": [],
+  "bundles": []
 }

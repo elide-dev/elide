@@ -1479,6 +1479,10 @@ public final synthetic class elide/runtime/gvm/internals/js/$JsRuntime$JsRuntime
 
 public final class elide/runtime/gvm/internals/node/NodeStdlib {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/node/NodeStdlib;
+	public final fun getFs ()Lelide/runtime/intrinsics/js/node/FilesystemAPI;
+	public final fun getFsPromises ()Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;
+	public final fun getInspector ()Lelide/runtime/intrinsics/js/node/InspectorAPI;
+	public final fun getOs ()Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;
 	public final fun getPath ()Lelide/runtime/intrinsics/js/node/PathAPI;
 	public final fun getProcess ()Lelide/runtime/intrinsics/js/node/ProcessAPI;
 }
@@ -1498,6 +1502,76 @@ public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystem
 	public fun getBeanType ()Ljava/lang/Class;
 	public fun getName ()Ljava/lang/String;
 	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$CPUInfoData$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$CPUInfoData$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$CPUTimingsData$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$CPUTimingsData$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NetworkInterfaceInfoData$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NetworkInterfaceInfoData$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$Provide0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public final synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
@@ -1796,6 +1870,11 @@ public abstract interface class elide/runtime/gvm/vfs/LanguageVFS$LanguageVFSInf
 	public abstract fun getRouter ()Lkotlin/jvm/functions/Function1;
 }
 
+public final class elide/runtime/gvm/vfs/OverlayVFS {
+	public static final field INSTANCE Lelide/runtime/gvm/vfs/OverlayVFS;
+	public final fun zipOverlay (Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/GuestVFS;
+}
+
 public final class elide/runtime/intrinsics/ElideBindings {
 	public static final field INSTANCE Lelide/runtime/intrinsics/ElideBindings;
 	public final fun install (Ljava/lang/String;Ljava/lang/Object;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
@@ -2007,13 +2086,19 @@ public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorFactory {
 	public static final fun forIterator (Ljava/util/Iterator;)Lelide/runtime/intrinsics/js/JsIterator;
 }
 
-public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorImpl : elide/runtime/intrinsics/js/JsIterator {
+public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorImpl : elide/runtime/intrinsics/js/JsIterator, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyIterator, org/graalvm/polyglot/proxy/ProxyObject {
 	public fun <init> (Ljava/util/Iterator;)V
 	public fun getIterator ()Ljava/lang/Object;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
 	public fun hasNext ()Z
 	public fun next ()Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
 	public synthetic fun next ()Ljava/lang/Object;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun remove ()V
+	public fun removeMember (Ljava/lang/String;)Z
 }
 
 public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorResult {
@@ -2243,6 +2328,8 @@ public abstract interface class elide/runtime/intrinsics/js/node/FilesystemAPI :
 	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
 	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
 	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public abstract fun readFileSync (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Ljava/lang/Object;
+	public static synthetic fun readFileSync$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/FilesystemPromiseAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -2256,7 +2343,38 @@ public abstract interface class elide/runtime/intrinsics/js/node/FilesystemPromi
 	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/InspectorAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/OperatingSystemAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun arch ()Ljava/lang/String;
+	public abstract fun availableParallelism ()I
+	public abstract fun cpus ()Ljava/util/List;
+	public abstract fun endianness ()Ljava/lang/String;
+	public abstract fun freemem ()J
+	public abstract fun getConstants ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants;
+	public abstract fun getDevNull ()Ljava/lang/String;
+	public abstract fun getEOL ()Ljava/lang/String;
+	public abstract fun getFamily ()Lelide/runtime/intrinsics/js/node/os/OSType;
+	public abstract fun getPriority (Ljava/lang/Long;)I
+	public static synthetic fun getPriority$default (Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;Ljava/lang/Long;ILjava/lang/Object;)I
+	public abstract fun homedir ()Ljava/lang/String;
+	public abstract fun hostname ()Ljava/lang/String;
+	public abstract fun loadavg ()Ljava/util/List;
+	public abstract fun networkInterfaces ()Ljava/util/Map;
+	public abstract fun platform ()Ljava/lang/String;
+	public abstract fun release ()Ljava/lang/String;
+	public abstract fun setPriority (JI)V
+	public static synthetic fun setPriority$default (Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;JIILjava/lang/Object;)V
+	public abstract fun tmpdir ()Ljava/lang/String;
+	public abstract fun totalmem ()J
+	public abstract fun type ()Ljava/lang/String;
+	public abstract fun uptime ()D
+	public abstract fun userInfo (Lelide/runtime/intrinsics/js/node/os/UserInfoOptions;)Lelide/runtime/intrinsics/js/node/os/UserInfo;
+	public abstract fun version ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/PathAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -2341,6 +2459,129 @@ public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions {
 
 public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/CPUInfo : org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/os/CPUInfo$Companion;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public abstract fun getModel ()Ljava/lang/String;
+	public abstract fun getSpeed ()J
+	public abstract fun getTimes ()Lelide/runtime/intrinsics/js/node/os/CPUTimes;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun of (Ljava/lang/String;JLelide/runtime/intrinsics/js/node/os/CPUTimes;)Lelide/runtime/intrinsics/js/node/os/CPUInfo;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/intrinsics/js/node/os/CPUInfo$Companion {
+	public final fun of (Ljava/lang/String;JLelide/runtime/intrinsics/js/node/os/CPUTimes;)Lelide/runtime/intrinsics/js/node/os/CPUInfo;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/CPUTimes : org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/os/CPUTimes$Companion;
+	public abstract fun getIdle ()J
+	public abstract fun getIrq ()J
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public abstract fun getNice ()J
+	public abstract fun getSys ()J
+	public abstract fun getUser ()J
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun of (JJJJJ)Lelide/runtime/intrinsics/js/node/os/CPUTimes;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/intrinsics/js/node/os/CPUTimes$Companion {
+	public final fun of (JJJJJ)Lelide/runtime/intrinsics/js/node/os/CPUTimes;
+}
+
+public final class elide/runtime/intrinsics/js/node/os/ConstantsKt {
+	public static final field ENDIAN_BIG Ljava/lang/String;
+	public static final field ENDIAN_LITTLE Ljava/lang/String;
+	public static final field PRIORITY_ABOVE_NORMAL I
+	public static final field PRIORITY_BELOW_NORMAL I
+	public static final field PRIORITY_HIGH I
+	public static final field PRIORITY_HIGHEST I
+	public static final field PRIORITY_LOW I
+	public static final field PRIORITY_NORMAL I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/NetworkInterfaceInfo : org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/os/NetworkInterfaceInfo$Companion;
+	public abstract fun getAddress ()Ljava/lang/String;
+	public abstract fun getCidr ()Ljava/lang/String;
+	public abstract fun getFamily ()Ljava/lang/String;
+	public abstract fun getInternal ()Z
+	public abstract fun getMac ()Ljava/lang/String;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public abstract fun getNetmask ()Ljava/lang/String;
+	public abstract fun getScopeid ()Ljava/lang/Integer;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun of (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/os/NetworkInterfaceInfo;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/intrinsics/js/node/os/NetworkInterfaceInfo$Companion {
+	public final fun of (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/os/NetworkInterfaceInfo;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/os/NetworkInterfaceInfo$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/os/NetworkInterfaceInfo;
+}
+
+public final class elide/runtime/intrinsics/js/node/os/OSPolicy : java/lang/Enum {
+	public static final field ALLOW Lelide/runtime/intrinsics/js/node/os/OSPolicy;
+	public static final field DENY Lelide/runtime/intrinsics/js/node/os/OSPolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/os/OSPolicy;
+	public static fun values ()[Lelide/runtime/intrinsics/js/node/os/OSPolicy;
+}
+
+public final class elide/runtime/intrinsics/js/node/os/OSType : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/os/OSType$Companion;
+	public static final field POSIX Lelide/runtime/intrinsics/js/node/os/OSType;
+	public static final field WIN32 Lelide/runtime/intrinsics/js/node/os/OSType;
+	public static final fun current ()Lelide/runtime/intrinsics/js/node/os/OSType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/os/OSType;
+	public static fun values ()[Lelide/runtime/intrinsics/js/node/os/OSType;
+}
+
+public final class elide/runtime/intrinsics/js/node/os/OSType$Companion {
+	public final fun current ()Lelide/runtime/intrinsics/js/node/os/OSType;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/OperatingSystemConstants : org/graalvm/polyglot/proxy/ProxyHashMap {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/UserInfo : org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/os/UserInfo$Companion;
+	public abstract fun getGid ()I
+	public abstract fun getHomedir ()Ljava/lang/Object;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public abstract fun getShell ()Ljava/lang/Object;
+	public abstract fun getUid ()I
+	public abstract fun getUsername ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun of (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)Lelide/runtime/intrinsics/js/node/os/UserInfo;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/intrinsics/js/node/os/UserInfo$Companion {
+	public final fun of (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)Lelide/runtime/intrinsics/js/node/os/UserInfo;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/UserInfoOptions : org/graalvm/polyglot/proxy/ProxyHashMap {
+	public abstract fun getEncoding ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/path/Path : elide/runtime/intrinsics/js/StringLike, java/lang/Comparable {
@@ -2843,6 +3084,7 @@ public final class elide/runtime/plugins/env/Environment$Plugin : elide/runtime/
 
 public final class elide/runtime/plugins/js/ExtensionsKt {
 	public static final fun javascript (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;ZLjava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static final fun javascript (Lelide/runtime/core/PolyglotContext;Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
 	public static synthetic fun javascript$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
 }
 

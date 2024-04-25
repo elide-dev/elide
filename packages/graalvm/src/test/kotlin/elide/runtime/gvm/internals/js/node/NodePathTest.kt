@@ -1270,7 +1270,6 @@ unixPaths().let {
     """
   }
 
-  @Ignore
   @Test fun `path format should be able to render dir-only paths (root)`() = conforms {
     unixPaths().let {
       val formatted = it.format(it.parse("/sample/cool"))
@@ -1281,7 +1280,7 @@ unixPaths().let {
     """
       const { equal } = require("assert");
       const { format } = require("path");
-      equal(format({ dir: 'sample/cool', root: '/' }), '/sample/cool/');
+      equal(format({ dir: 'sample/cool', root: '/' }), 'sample/cool/');
     """
   }
 

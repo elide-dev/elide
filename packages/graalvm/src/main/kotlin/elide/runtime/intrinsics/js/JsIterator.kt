@@ -10,11 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyIterable
 import org.graalvm.polyglot.proxy.ProxyIterator
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorResult
 import elide.runtime.intrinsics.js.err.Error
@@ -61,7 +63,11 @@ public interface JsIterator<T> : Iterator<JsIteratorResult<T>>, ProxyIterator, P
    * @see ProxyIterator for the interface provided by Truffle to mimic iterators.
    * @see ProxyIterable for the interface provided by Truffle to mimic iterable objects.
    */
-  public class JsIteratorImpl<T> (private val iter: Iterator<T>) : JsIterator<T> {
+  public class JsIteratorImpl<T> (private val iter: Iterator<T>) :
+    JsIterator<T>,
+    ProxyIterator,
+    ProxyIterable,
+    ProxyObject {
     @Polyglot override fun hasNext(): Boolean = iter.hasNext()
 
     @Polyglot override fun next(): JsIteratorResult<T> = try {
@@ -71,6 +77,27 @@ public interface JsIterator<T> : Iterator<JsIteratorResult<T>>, ProxyIterator, P
     }
 
     override fun getIterator(): Any = this
+
+    override fun getMemberKeys(): Array<String> = arrayOf(
+      "next",
+      "hasNext",
+    )
+
+    override fun hasMember(key: String): Boolean = key in memberKeys
+
+    override fun getMember(key: String): Any = when (key) {
+      "next" -> ProxyExecutable { next() }
+      "hasNext" -> ProxyExecutable { hasNext() }
+      else -> throw IllegalArgumentException("Unknown member key: $key")
+    }
+
+    override fun putMember(key: String?, value: Value?) {
+      // no-op
+    }
+
+    override fun removeMember(key: String?): Boolean {
+      return false
+    }
   }
 
   /**

@@ -274,7 +274,7 @@ internal object NodePaths {
           else -> filename
         }
         val path = when {
-          root != null -> "$root$sep$dirPrefixed"
+          root != null && filename.isNotEmpty() -> "$root$sep$dirPrefixed"
           else -> dirPrefixed
         }
         return PathBuf.from(path).toString()

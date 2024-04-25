@@ -202,7 +202,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @return This builder.
      */
     fun setBundleMapping(bundles: Map<Int, BundleInfo>): VFSBuilder<VFS> {
-      this.registry = registry
+      this.bundleMapping = bundles.toMutableMap()
       return this
     }
 

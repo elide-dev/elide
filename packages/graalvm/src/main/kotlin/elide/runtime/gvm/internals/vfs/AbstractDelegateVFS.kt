@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.vfs
 
 import java.io.FileNotFoundException
@@ -73,7 +72,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   private val suppressNotFound: AtomicBoolean = AtomicBoolean(false)
 
   // Debug log messages for the current VFS implementation.
-  private fun debugLog(message: () -> String) {
+  protected fun debugLog(message: () -> String) {
     if (logging.isEnabled(LogLevel.DEBUG)) {
       logging.debug("VFS: ${message()}")
     }

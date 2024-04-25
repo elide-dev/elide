@@ -18,6 +18,7 @@ package elide.runtime.gvm.js.vfs
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import kotlin.io.path.Path
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.vfs.HostVFSImpl
@@ -59,7 +60,7 @@ import elide.util.UUID
   }
 
   /** Test: JavaScript `import` call that loads a file from the Node modules path. */
-  @Test fun testImportHostFsNpmModulesDirect() {
+  @Test fun testImportHostFsNpmModules() {
     val fs = tempHostFs()
     fs.setCurrentWorkingDirectory(Path("/"))
     fs.createDirectory(fs.getPath("node_modules"))
@@ -104,7 +105,7 @@ import elide.util.UUID
     withHostFs(fs) {
       // language=javascript
       """
-        import testmod from "node_modules/testing/test.mjs";
+        import testmod from "testing";
         test(testmod).isNotNull();
         test(testmod.sample).isEqualTo("Hello, ESM direct!");
       """

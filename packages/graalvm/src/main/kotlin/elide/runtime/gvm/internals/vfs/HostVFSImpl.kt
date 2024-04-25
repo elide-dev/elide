@@ -10,6 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
+@file:Suppress("TooManyFunctions")
+
 package elide.runtime.gvm.internals.vfs
 
 import io.micronaut.context.annotation.Bean
@@ -19,12 +22,14 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.net.URI
 import java.nio.channels.SeekableByteChannel
 import java.nio.charset.Charset
 import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.io.path.toPath
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -188,32 +193,54 @@ internal class HostVFSImpl private constructor (
 
   override fun allowsHostSocketAccess(): Boolean = true
 
-  private fun Path.relativeFromBase(path: Path, trim: String? = null): Path {
-    val pathAsString = path.toString()
+  private fun Path.relativeFromBase(path: Path): Path {
+    val trim = realCwd.get()
+    val pathAsString = this.toString()
     val cleaned = when {
       pathAsString == "/" -> path
-      path.startsWith(this) -> path  // already scoped to host
-      path.isAbsolute && trim != null -> if (path.startsWith(trim)) {
+      this.startsWith(path) -> this  // already scoped
+      isAbsolute && trim != null -> if (startsWith(trim)) {
+        // both absolute: we can trim one from the other safely
         Path.of(pathAsString.drop(trim.length))
       } else {
-        val subject = path.toList()
-        val base = Path.of(trim).toList()
+        // sanity: check if paths have any common base
+        if (
+          // since both are absolute, we will need to drop the first character to accurately compare
+          pathAsString.drop(1).substringBefore(File.separator) != trim.drop(1).substringBefore(File.separator)
+        ) {
+          path.resolve(pathAsString.drop(1))
+        } else {
+          val subject = toList()
+          val base = Path.of(trim).toList()
 
-        Path.of(path.asSequence().drop(
-          subject.zip(base).takeWhile { (a, b) -> a == b }.size
-        ).joinToString(File.separator))
+          path.resolve(Path.of(path.asSequence().drop(
+            subject.zip(base).takeWhile { (a, b) -> a == b }.size
+          ).joinToString(File.separator)).toString().drop(1))
+        }
       }
 
-      path.isAbsolute -> resolve(Path.of(path.toString().drop(1)))
-      else -> resolve(path)
+      else -> path.resolve(pathAsString)
     }
     return cleaned
   }
 
-  private fun <R> maybeWithScopedPath(path: Path, op: (path: Path) -> R): R {
-    val real = realCwd.get()
+  private fun <R> maybeWithScopedPath(path: String, op: (path: String) -> R): R {
     return hostPath?.let {
-      op(it.relativeFromBase(path, trim = real))
+      op(Path.of(path).relativeFromBase(it).toString())
+    } ?: op(path)
+  }
+
+  private fun <R> maybeWithScopedPath(path: URI, op: (path: URI) -> R): R {
+    return hostPath?.let {
+      val out = Path.of(path).relativeFromBase(it).toUri()
+      debugLog { "Scoping path '${path}' to '$it': $out" }
+      op(out)
+    } ?: op(path)
+  }
+
+  private fun <R> maybeWithScopedPath(path: Path, op: (path: Path) -> R): R {
+    return hostPath?.let {
+      op(path.relativeFromBase(it))
     } ?: op(path)
   }
 
@@ -234,6 +261,18 @@ internal class HostVFSImpl private constructor (
 
   override fun writeStream(path: Path, vararg options: OpenOption): OutputStream = maybeWithScopedPath(path) {
     super.writeStream(it, *options)
+  }
+
+  override fun parsePath(path: String): Path {
+    return maybeWithScopedPath(path) {
+      super.parsePath(it)
+    }
+  }
+
+  override fun parsePath(uri: URI): Path {
+    return maybeWithScopedPath(uri) {
+      super.parsePath(it)
+    }
   }
 
   override fun newByteChannel(

@@ -13,20 +13,20 @@
 
 import esbuild from "esbuild";
 
-export const mode = 'esm'
+export const mode = "esm";
 
 async function buildTypescriptEntrypoint() {
   await esbuild.build({
     entryPoints: ["src/main/js/entry.mjs"],
-    outfile: `src/main/resources/META-INF/elide/embedded/tools/tsc/entry.${mode === 'esm' ? 'mjs' : 'cjs'}`,
+    outfile: `src/main/resources/META-INF/elide/embedded/tools/tsc/entry.${mode === "esm" ? "mjs" : "cjs"}`,
     format: mode,
     bundle: true,
     platform: "neutral",
     external: ["fs", "node:fs", "path", "node:path", "os", "node:os", "inspector", "node:inspector"],
-    mainFields: ["module", "main"]
-  })
+    mainFields: ["module", "main"],
+  });
 
-  console.info("TypeScript entrypoint build complete.")
+  console.info("TypeScript entrypoint build complete.");
 }
 
 console.info("Building TypeScript entrypoint...");

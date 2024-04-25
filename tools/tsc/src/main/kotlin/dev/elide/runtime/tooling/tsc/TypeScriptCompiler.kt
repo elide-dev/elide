@@ -12,13 +12,17 @@
  */
 
 @file:Suppress("unused", "unused_parameter", "all")
+@file:OptIn(DelicateElideApi::class)
 
 package dev.elide.runtime.tooling.tsc
 
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Engine
-import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.*
 import java.nio.charset.StandardCharsets
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotEngine
+import elide.runtime.plugins.js.JavaScript
+import elide.runtime.plugins.js.javascript
+import elide.runtime.plugins.vfs.Vfs
 
 /**
  *
@@ -30,29 +34,15 @@ object TypeScriptCompiler {
    *
    */
   @JvmStatic public fun tsc(vararg args: Array<String>) {
-//    val zipPath = requireNotNull(TypeScriptCompiler::class.java.getResource(
-//      "/META-INF/elide/embedded/tools/tsc/typescript.zip"
-//    )) {
-//      "Failed to resolve `typescript.zip` bundle; required for proper operation of TypeScript compiler"
-//    }.toURI().toPath()
+    // shared engine
+    val engine = PolyglotEngine {
+      // install plugins and configure engine
+      install(Vfs)
+      install(JavaScript)
+    }
 
-    val engine = Engine.newBuilder("js")
-      .build()
-
-//    val vfs = OverlayVFS.zipOverlay(zipPath)
-    val ctx = Context.newBuilder("js")
-      .engine(engine)
-      .allowAllAccess(true)
-      .allowExperimentalOptions(true)
-      .option("js.ecmascript-version", "2023")
-//      .option("js.commonjs-require", "true")
-//      .option("js.commonjs-require-cwd", "/")
-//      .option("js.esm-bare-specifier-relative-lookup", "true")
-//      .option("js.esm-eval-returns-exports", "true")
-//      .allowIO(IOAccess.newBuilder()
-//                 .fileSystem(vfs)
-//                 .build())
-      .build()
+    // vm context
+    val context = engine.acquire()
 
     val entrySrc = requireNotNull(TypeScriptCompiler::class.java.getResource(
       "/META-INF/elide/embedded/tools/tsc/$entry"
@@ -67,20 +57,18 @@ object TypeScriptCompiler {
       .interactive(false)
       .build()
 
-    ctx.enter()
-    val entrypoint = try {
-      ctx.eval(entry)
-    } finally {
-      ctx.leave()
-    }
+    val entrypoint = context.javascript(
+      entry
+    )
 
-    ctx.enter()
+    context.enter()
     val result = try {
       entrypoint.getMember("default").execute(args)
     } finally {
-      ctx.leave()
+      context.leave()
     }
 
+    // profit
     println("Result: ${result.asInt()}")
   }
 

@@ -19,7 +19,6 @@ enum class GuestLanguage (
   override val engine: String = id,
   internal val formalName: String,
   internal val experimental: Boolean = false,
-  internal val unimplemented: Boolean = false,
   internal val suppressExperimentalWarning: Boolean = false,
   internal val extensions: List<String> = emptyList(),
   internal val mimeTypes: List<String> = emptyList(),
@@ -35,6 +34,16 @@ enum class GuestLanguage (
     mimeTypes = listOf("application/javascript", "application/ecmascript"),
   ),
 
+  /** JavaScript VM enabled with TypeScript support. */
+  TYPESCRIPT (
+    id = "typescript",
+    engine = ENGINE_JS,
+    formalName = "TypeScript",
+    experimental = true,
+    extensions = listOf("ts", "cts", "mts", "tsx"),
+    mimeTypes = listOf("application/x-typescript"),
+  ),
+
   /** Interactive nested JVM. */
   LLVM (
     id = ENGINE_LLVM,
@@ -48,7 +57,6 @@ enum class GuestLanguage (
     id = ENGINE_PYTHON,
     formalName = "Python",
     experimental = true,
-    unimplemented = true,
     extensions = listOf("py"),
   ),
 
@@ -57,7 +65,6 @@ enum class GuestLanguage (
     id = ENGINE_RUBY,
     formalName = "Ruby",
     experimental = true,
-    unimplemented = true,
     extensions = listOf("rb"),
   ),
 
@@ -67,7 +74,6 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     formalName = "JVM",
     experimental = true,
-    unimplemented = true,
     extensions = listOf("class"),
     mimeTypes = emptyList(),
   ),
@@ -87,7 +93,6 @@ enum class GuestLanguage (
     formalName = "Kotlin",
     engine = ENGINE_JVM,
     experimental = true,
-    unimplemented = true,
     extensions = listOf("kt", "kts"),
     dependsOn = listOf(JVM),
   ),
@@ -98,7 +103,6 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     formalName = "Groovy",
     experimental = true,
-    unimplemented = true,
     extensions = listOf("groovy"),
     dependsOn = listOf(JVM),
   ),
@@ -109,7 +113,6 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     formalName = "Scala",
     experimental = true,
-    unimplemented = true,
     extensions = listOf("scala"),
     dependsOn = listOf(JVM),
   ),
@@ -144,6 +147,7 @@ enum class GuestLanguage (
       JVM.id -> JVM
       WASM.id -> WASM
       LLVM.id -> LLVM
+      TYPESCRIPT.id -> TYPESCRIPT
 
       // JVM extension guests
       KOTLIN.id -> KOTLIN

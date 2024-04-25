@@ -102,7 +102,7 @@ jimfs = "1.3.0"
 jline = "3.25.1"
 jmh-lib = "1.37"
 jmh-plugin = "0.7.2"
-jna = "5.8.0"
+jna = "5.14.0"
 jprofiler = "14.0.1"
 json = "20240303"
 jsoup = "1.17.2"
@@ -227,6 +227,7 @@ okio = "3.7.0"
 openrewrite-bom = "2.6.4"
 openrewrite-lib = "8.1.13"
 openrewrite-plugin = "6.11.2"
+oshi = "6.6.0"
 owasp = "9.1.0"
 parallelGzip = "1.0.5"
 picocli = "4.7.5"
@@ -515,6 +516,8 @@ jline-terminal-ffm = { module = "org.jline:jline-terminal-ffm", version.ref = "j
 jline-terminal-jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
 jline-terminal-jna = { module = "org.jline:jline-terminal-jna", version.ref = "jline" }
 jline-terminal-jni = { module = "org.jline:jline-terminal-jni", version.ref = "jline" }
+jna = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
+jna-jpms = { group = "net.java.dev.jna", name = "jna-jpms", version.ref = "jna" }
 json = { group = "org.json", name = "json", version.ref = "json" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 junit = "junit:junit:4.13.2"
@@ -651,6 +654,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 opentelemetry-exporter-googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
 opentelemetry-exporter-logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
+oshi-core = { group = "com.github.oshi", name = "oshi-core-java11", version.ref = "oshi" }
 owasp = { group = "org.owasp", name = "dependency-check-gradle", version.ref = "owasp" }
 parallelGzip = { group = "org.anarres", name = "parallelgzip", version.ref = "parallelGzip" }
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }

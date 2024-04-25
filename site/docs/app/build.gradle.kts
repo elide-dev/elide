@@ -14,7 +14,7 @@ plugins {
   kotlin("plugin.noarg")
   id("com.github.johnrengelman.shadow")
   id("io.micronaut.application") version "4.3.6"
-  id("io.micronaut.aot") version "4.3.6"
+  id("io.micronaut.aot") version "4.3.7"
   id("dev.elide.build.site.backend")
   id("dev.elide.build.docker")
   id("dev.elide.buildtools.plugin")

@@ -33,19 +33,62 @@ import elide.tool.io.WorkdirManager
  * Provides utilities for loading native portions of Elide early in the boot lifecycle.
  */
 object NativeEngine {
-  private const val loadEager = false
+  private const val loadEager = true
   private const val DEFAULT_NATIVES_PATH = "META-INF/native/"
   private val nativeTransportAvailable: AtomicBoolean = AtomicBoolean(false)
   private val errHolder: AtomicReference<Throwable?> = AtomicReference(null)
   private val missingLibraries: MutableSet<NativeLibInfo> = ConcurrentSkipListSet()
   private val nativeLibraryGroups: MutableMap<String, Boolean> = ConcurrentSkipListMap()
 
+  @JvmStatic private fun libExtension(os: HostPlatform.OperatingSystem): String? {
+    return when (os) {
+      DARWIN -> "jnilib"
+      LINUX -> "so"
+      WINDOWS -> "dll"
+      else -> null
+    }
+  }
+
   // Calculate the path to a native resource which needs to be loaded.
   @JvmStatic private fun nativeLib(
     group: String,
     staticName: String,
+    os: HostPlatform.OperatingSystem,
     base: String = DEFAULT_NATIVES_PATH,
-    extension: String? = null,
+    extension: String? = libExtension(os),
+  ): NativeLib {
+    val libname = StringBuilder().apply {
+      // `umbrella` ...
+      append(staticName)
+    }
+
+    val path = libname.toString() to StringBuilder(base).apply {
+      // `META-INF/native/libumbrella` ...
+      append("lib")
+      append(libname)
+
+      // `META-INF/native/libumbrella.so` ...
+      if (extension?.isNotBlank() == true) {
+        append(".")
+        append(extension)
+      }
+    }.toString()
+
+    return NativeLib.of(
+      group,
+      libname.toString(),
+      path.toString(),
+      staticName,
+    )
+  }
+
+  // Calculate the path to a Netty native resource which needs to be loaded.
+  @JvmStatic private fun nettyNativeLib(
+    group: String,
+    staticName: String,
+    base: String = DEFAULT_NATIVES_PATH,
+    os: HostPlatform.OperatingSystem,
+    extension: String? = libExtension(os),
     builder: StringBuilder.() -> Unit,
   ): NativeLib {
     val libname = StringBuilder().apply {
@@ -81,11 +124,7 @@ object NativeEngine {
     static: String = name,
   ): NativeLib {
     val arch = PlatformDependent.normalizedArch()
-    return nativeLib(group = group, staticName = static, extension = when (os) {
-     DARWIN -> "jnilib"
-     LINUX -> "so"
-     else -> null
-   }) {
+    return nettyNativeLib(group = group, os = os, staticName = static) {
       // `netty_` ...
       append("netty_")
 
@@ -136,18 +175,29 @@ object NativeEngine {
     linux: (() -> List<NativeLibInfo>?)? = null,
     darwin: (() -> List<NativeLibInfo>?)? = null,
     windows: (() -> List<NativeLibInfo>?)? = null,
+    default: (() -> List<NativeLibInfo>?)? = null,
   ) {
     when (os) {
       LINUX -> linux
       DARWIN -> darwin
       WINDOWS -> windows
-    }?.let {
-      when (val target = it.invoke()) {
+    }.let {
+      when (val target = (it?.invoke() ?: default?.invoke())) {
         null -> {}
         else -> ensureLoadableFromNatives(group, target, workdir, loader, forceLoad)
       }
     }
   }
+
+  // Load native tooling libraries, based on OS.
+  @JvmStatic private fun HostPlatform.loadNativeTooling(workdir: File, loader: ClassLoader) = loadByPlatform(
+    loader,
+    "tools",
+    workdir,
+    default = {
+      listOf(nativeLib("tools", "umbrella", os))
+    },
+  )
 
   // Load native transport libraries, based on OS.
   @JvmStatic private fun HostPlatform.loadNativeTransport(workdir: File, loader: ClassLoader) = loadByPlatform(
@@ -184,6 +234,7 @@ object NativeEngine {
     val loadNatives: () -> Unit = {
       loadNativeCrypto(natives, loader)
       loadNativeTransport(natives, loader)
+      loadNativeTooling(natives, loader)
     }
 
     try {
@@ -250,6 +301,7 @@ object NativeEngine {
     val libPath = if (!libraryPath.contains("/elide-runtime")) {
       libraryPath.split(separator).toMutableList().apply {
         add(0, nativesPath)
+        add(1, requireNotNull(System.getProperty("elide.natives")) { "Failed to resolve `elide.natives` path" })
       }.joinToString(separator)
     } else libraryPath
 
@@ -269,6 +321,7 @@ object NativeEngine {
     if (ImageInfo.inImageCode()) listOf(
       "crypto",
       "transport",
+      "tools",
     ).forEach {
       nativeLibraryGroups[it] = true
     }

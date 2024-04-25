@@ -236,9 +236,7 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
   @TestFactory open fun `node api - require(mod) should specify expected members`(): Stream<DynamicTest> {
     return requiredMembers().map { member ->
       DynamicTest.dynamicTest("$moduleName.$member") {
-        require().let { mod ->
-          assertContains(mod.memberKeys, member, "member '$member' should be present on module '$moduleName'")
-        }
+        assertContains(require().memberKeys, member, "member '$member' should be present on module '$moduleName'")
       }
     }.asStream()
   }
@@ -246,9 +244,7 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
   @TestFactory open fun `node api - require(mod) prefixed should specify expected members`(): Stream<DynamicTest> {
     return requiredMembers().map { member ->
       DynamicTest.dynamicTest("$moduleName.$member") {
-        require("node:$moduleName").let { mod ->
-          assertContains(mod.memberKeys, member, "member '$member' should be present on module '$moduleName'")
-        }
+        assertContains(require("node:$moduleName").memberKeys, member, "member '$member' should be present on module '$moduleName'")
       }
     }.asStream()
   }

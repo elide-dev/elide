@@ -4,7 +4,7 @@
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:AbstractVMEngine.kt$AbstractVMEngine.GuestVFSConfigurator$private fun resolveOsArch(): Pair&lt;String, String></ID>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
-    <ID>CyclomaticComplexMethod:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$override fun getMember(key: String): Any</ID>
+    <ID>CyclomaticComplexMethod:NodeOperatingSystem.kt$NodeOperatingSystem.ModuleBase$override fun getMember(key: String?): Any?</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
@@ -38,6 +38,7 @@
     <ID>MatchingDeclarationName:VfsPlugin.kt$Vfs</ID>
     <ID>MaxLineLength:JsConcurrentMap.kt$JsConcurrentMap.Factory$*</ID>
     <ID>MaxLineLength:JsMutableMultiMap.kt$JsMutableMultiMap.Factory$@JvmStatic override</ID>
+    <ID>MaxLineLength:NodeModuleConformanceTest.kt$NodeModuleConformanceTest$assertContains(require("node:$moduleName").memberKeys, member, "member '$member' should be present on module '$moduleName'")</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,true,URLs should be equal"</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
@@ -81,7 +82,7 @@
     <ID>TooManyFunctions:AbstractDelegateVFS.kt$AbstractDelegateVFS&lt;VFS> : GuestVFSAbstractBaseVFS</ID>
     <ID>TooManyFunctions:BaseMutableJsMultiMap.kt$BaseMutableJsMultiMap&lt;K: Any, V> : BaseJsMultiMapMutableMapMutableMultiMapLike</ID>
     <ID>TooManyFunctions:CompoundVFSImpl.kt$CompoundVFSImpl : AbstractBaseVFS</ID>
-    <ID>TooManyFunctions:NodeOperatingSystem.kt$NodeOperatingSystem$BaseOS : OperatingSystemAPIProxyObject</ID>
+    <ID>TooManyFunctions:NodeOperatingSystem.kt$NodeOperatingSystem$BaseOS : ModuleBaseOperatingSystemAPIProxyObject</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
     <ID>UnusedPrivateProperty:JsRuntime.kt$JsRuntime.Companion$// Root where we can find runtime-related files. private const val EMBEDDED_ROOT = "/META-INF/elide/embedded/runtime/js"</ID>

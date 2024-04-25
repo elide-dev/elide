@@ -16,7 +16,7 @@ fn hello_impl() {
 }
 
 #[call_from_java("dev.elide.cli.bridge.CliNativeBridge.lint")]
-fn run_lint(language: Language) {
+fn run_lint(vm: Instance) {
   println!("Hello from the Rust world!");
 }
 

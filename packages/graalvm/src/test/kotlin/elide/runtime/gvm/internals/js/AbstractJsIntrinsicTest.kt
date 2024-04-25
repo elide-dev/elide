@@ -69,7 +69,8 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     // prep intrinsic bindings under test
     val bindings = if (bind) {
       val target = HashMap<Symbol, Any>()
-      provide().install(GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(target))
+      val binding = GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(target)
+      provide().install(binding)
       target
     } else {
       emptyMap()

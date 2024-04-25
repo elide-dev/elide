@@ -15,9 +15,7 @@ package elide.runtime.intrinsics.js.node
 import elide.annotations.API
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.node.buffer.Buffer
-import elide.runtime.intrinsics.js.node.fs.FileHandle
-import elide.runtime.intrinsics.js.node.fs.ReadFileCallback
-import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
+import elide.runtime.intrinsics.js.node.fs.*
 import elide.vm.annotations.Polyglot
 
 /**
@@ -87,4 +85,16 @@ import elide.vm.annotations.Polyglot
     options: ReadFileOptions = ReadFileOptions.DEFAULTS,
     callback: ReadFileCallback,
   )
+
+  /**
+   * ## Method: `fs.readFileSync`
+   *
+   * Reads the contents of a file at the specified path and returns the results synchronously. This variant accepts a
+   * plain [String].
+   *
+   * @param path The path to the file to read.
+   * @param options The options to use for the file read operation.
+   * @return The contents of the file as a [Buffer].
+   */
+  @Polyglot public fun readFileSync(path: String, options: ReadFileOptions = ReadFileOptions.DEFAULTS): StringOrBuffer
 }

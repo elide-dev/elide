@@ -39,6 +39,12 @@ internal object NodeFilesystem {
   internal const val SYMBOL_STD: String = "__Elide_node_fs__"
   internal const val SYMBOL_PROMISES: String = "__Elide_node_fs_promises__"
 
+  /** @return Host-only implementation of the `fs` module. */
+  fun createStd(): FilesystemAPI = TODO("host-only node fs not yet implemented")
+
+  /** @return Host-only implementation of the `fs/promises` module. */
+  fun createPromises(): FilesystemPromiseAPI = TODO("host-only node fs not yet implemented")
+
   /** @return Instance of the `fs` module. */
   fun createStd(filesystem: GuestVFS): FilesystemAPI = NodeFilesystemProxy(filesystem)
 
@@ -47,9 +53,7 @@ internal object NodeFilesystem {
 }
 
 // Implements common baseline functionality for the Node filesystem modules.
-private abstract class FilesystemBaseline (protected val fs: GuestVFS) {
-
-}
+private abstract class FilesystemBaseline (protected val fs: GuestVFS)
 
 // Implements the Node `fs` module.
 private class NodeFilesystemProxy (fs: GuestVFS) : FilesystemAPI, FilesystemBaseline(fs) {
@@ -67,6 +71,10 @@ private class NodeFilesystemProxy (fs: GuestVFS) : FilesystemAPI, FilesystemBase
 
   override fun readFile(buffer: Buffer, options: ReadFileOptions, callback: ReadFileCallback) {
     TODO("Not yet implemented: fs.readFile (Node API)")
+  }
+
+  override fun readFileSync(path: String, options: ReadFileOptions): StringOrBuffer {
+    TODO("Not yet implemented")
   }
 }
 

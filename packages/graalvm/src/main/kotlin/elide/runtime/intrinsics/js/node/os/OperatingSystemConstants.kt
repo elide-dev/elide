@@ -10,18 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.gvm.internals.js.node
+package elide.runtime.intrinsics.js.node.os
 
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
-import elide.testing.annotations.TestCase
+import org.graalvm.polyglot.proxy.ProxyHashMap
 
-@TestCase internal class NodeFilesystemTest {
-  @Inject lateinit var filesystem: NodeFilesystemModule
+/**
+ * TBD.
+ */
+public interface OperatingSystemConstants : ProxyHashMap {
 
-  @Test fun testInjectable() {
-    assertNotNull(filesystem, "should be able to inject host-side filesystem module")
-  }
 }

@@ -52,7 +52,7 @@ kotlin {
 
   targets.all {
     compilations.all {
-      compileTaskProvider.configure{
+      compileTaskProvider.configure {
         compilerOptions {
           if (this is KotlinJvmCompilerOptions) {
             jvmTarget = JvmTarget.JVM_21

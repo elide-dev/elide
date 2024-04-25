@@ -15,12 +15,10 @@ package elide.runtime.feature.js.node
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.FrameworkFeature
+import elide.runtime.gvm.internals.node.os.NodeOperatingSystem
 import elide.runtime.gvm.internals.node.path.NodePaths
 import elide.runtime.gvm.internals.node.process.NodeProcess
-import elide.runtime.intrinsics.js.node.FilesystemAPI
-import elide.runtime.intrinsics.js.node.FilesystemPromiseAPI
-import elide.runtime.intrinsics.js.node.PathAPI
-import elide.runtime.intrinsics.js.node.ProcessAPI
+import elide.runtime.intrinsics.js.node.*
 
 /** GraalVM feature which enables reflective access to built-in Node modules. */
 @VMFeature internal class NodeJsFeature : FrameworkFeature {
@@ -36,6 +34,12 @@ import elide.runtime.intrinsics.js.node.ProcessAPI
     registerClassForReflection(access, NodePaths.BasePaths::class.java.name)
     registerClassForReflection(access, NodePaths.PosixPaths::class.java.name)
     registerClassForReflection(access, NodePaths.WindowsPaths::class.java.name)
+
+    // `os`
+    registerClassForReflection(access, OperatingSystemAPI::class.java.name)
+    registerClassForReflection(access, NodeOperatingSystem.BaseOS::class.java.name)
+    registerClassForReflection(access, NodeOperatingSystem.Posix::class.java.name)
+    registerClassForReflection(access, NodeOperatingSystem.Win32::class.java.name)
 
     // `fs`
     registerClassForReflection(access, FilesystemAPI::class.java.name)

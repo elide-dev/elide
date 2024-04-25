@@ -235,6 +235,9 @@ dependencies {
   implementation(mn.micronaut.http)
   implementation(mn.micronaut.context)
 
+  // OSHI (System Information)
+  implementation(libs.oshi.core)
+
   // Netty
   implementation(libs.netty.codec.http)
   implementation(libs.netty.codec.http2)

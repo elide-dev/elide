@@ -199,11 +199,13 @@ internal class JsRuntime @Inject constructor (
     private val coreModules: Map<String, String> = mapOf(
       "assert" to "/__runtime__/assert",
       "buffer" to "/__runtime__/buffer",
-      "util" to "/__runtime__/util",
+      "express" to "/__runtime__/express",
       "fs" to "/__runtime__/fs",
+      "inspector" to "/__runtime__/inspector",
+      "os" to "/__runtime__/os",
       "path" to "/__runtime__/path",
       "process" to "/__runtime__/process",
-      "express" to "/__runtime__/express",
+      "util" to "/__runtime__/util",
     )
 
     init {

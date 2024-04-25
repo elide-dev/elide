@@ -45,6 +45,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
       "buffer" to "/__runtime__/buffer",
       "express" to "/__runtime__/express",
       "fs" to "/__runtime__/fs",
+      "inspector" to "/__runtime__/inspector",
+      "os" to "/__runtime__/os",
       "path" to "/__runtime__/path",
       "process" to "/__runtime__/process",
       "util" to "/__runtime__/util",

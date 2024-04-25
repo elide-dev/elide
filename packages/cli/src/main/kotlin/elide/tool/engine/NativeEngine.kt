@@ -234,7 +234,7 @@ object NativeEngine {
     val loadNatives: () -> Unit = {
       loadNativeCrypto(natives, loader)
       loadNativeTransport(natives, loader)
-      loadNativeTooling(natives, loader)
+//      loadNativeTooling(natives, loader)
     }
 
     try {
@@ -301,7 +301,9 @@ object NativeEngine {
     val libPath = if (!libraryPath.contains("/elide-runtime")) {
       libraryPath.split(separator).toMutableList().apply {
         add(0, nativesPath)
-        add(1, requireNotNull(System.getProperty("elide.natives")) { "Failed to resolve `elide.natives` path" })
+        System.getProperty("elide.natives")?.let {
+          add(1, it)
+        }
       }.joinToString(separator)
     } else libraryPath
 

@@ -27,7 +27,9 @@ import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
+import java.nio.file.Files
 import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
@@ -131,6 +133,7 @@ val enableG1 = oracleGvm && HostManager.hostIsLinux
 val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
+val enableJna = true
 val enableSbom = true
 val enableSbomStrict = false
 val enableTruffleJson = enableEdge
@@ -266,6 +269,14 @@ val classpathExtras: Configuration by configurations.creating {
   extendsFrom(configurations.runtimeClasspath.get())
 }
 
+val jvmOnly: Configuration by configurations.creating {
+  isCanBeConsumed = false
+  isCanBeResolved = true
+}
+
+// Include JVM-only dependencies in the Shadow JAR.
+configurations.shadow.extendsFrom(configurations.named("jvmOnly"))
+
 dependencies {
   implementation(platform(libs.netty.bom))
 
@@ -331,7 +342,7 @@ dependencies {
 
   implementation(libs.jansi)
 
-  @Suppress("VulnerableLibrariesLocal", "VulnerableLibrariesGlobal")
+  @Suppress("VulnerableLibrariesGlobal")
   implementation(libs.picocli.jline3) {
     exclude(group = "org.jline", module = "jline")
     exclude(group = "org.jline", module = "jline-groovy")
@@ -377,6 +388,10 @@ dependencies {
 
   runtimeOnly(mn.micronaut.graal)
   implementation(libs.netty.tcnative)
+
+  // JVM-only dependencies which are filtered for native builds.
+  jvmOnly(libs.jline.terminal.jna)
+  if (!enableJna) jvmOnly(libs.jna) else implementation(libs.jna)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
@@ -658,6 +673,8 @@ val commonNativeArgs = listOfNotNull(
   "-H:+AddAllCharsets",
   "-H:DeadlockWatchdogInterval=15",
   "-H:MaxRuntimeCompileMethods=10000",
+  "-Delide.natives=$nativesPath",
+  "-J-Delide.natives=$nativesPath",
   "-H:CLibraryPath=$nativesPath",
   if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
   if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
@@ -1241,11 +1258,24 @@ fun Jar.applyJarSettings() {
 //  }
 //}
 
-/**
- * Build: CLI Docker Images
- */
-
 tasks {
+  val ensureNatives by registering {
+    doLast {
+      val out = layout.buildDirectory.dir(nativesPath).get().asFile
+      if (!out.exists()) {
+        Files.createDirectories(out.toPath())
+      }
+    }
+  }
+
+  nativeCompile {
+    dependsOn(ensureNatives)
+  }
+
+  nativeOptimizedCompile {
+    dependsOn(ensureNatives)
+  }
+
   processResources {
     filterResources()
   }
@@ -1285,6 +1315,8 @@ tasks {
   }
 
   named("run", JavaExec::class).configure {
+    dependsOn(ensureNatives)
+
     systemProperty(
       "micronaut.environments",
       "dev",
@@ -1305,6 +1337,10 @@ tasks {
       layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
     )
     systemProperty(
+      "elide.natives",
+      nativesPath,
+    )
+    systemProperty(
       "java.library.path",
       listOf(
         rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
@@ -1321,17 +1357,16 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-//    javaToolchains {
-//      javaLauncher.set(
-//        launcherFor {
-//          languageVersion = JavaLanguageVersion.of(22)
-//          vendor = JvmVendorSpec.GRAAL_VM
-//        },
-//      )
-//    }
+    classpath(
+      configurations.compileClasspath,
+      configurations.runtimeClasspath,
+      jvmOnly,
+    )
   }
 
   optimizedRun {
+    dependsOn(ensureNatives)
+
     systemProperty(
       "micronaut.environments",
       "dev",
@@ -1343,6 +1378,10 @@ tasks {
     systemProperty(
       "org.graalvm.language.python.home",
       layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "elide.natives",
+      nativesPath,
     )
     systemProperty(
       "java.library.path",
@@ -1365,14 +1404,11 @@ tasks {
     standardInput = System.`in`
     standardOutput = System.out
 
-//    javaToolchains {
-//      javaLauncher.set(
-//        launcherFor {
-//          languageVersion = JavaLanguageVersion.of(22)
-//          vendor = JvmVendorSpec.GRAAL_VM
-//        },
-//      )
-//    }
+    classpath(
+      configurations.compileClasspath,
+      configurations.runtimeClasspath,
+      jvmOnly,
+    )
   }
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
@@ -1440,7 +1476,7 @@ configurations.all {
 
   resolutionStrategy.dependencySubstitution {
     substitute(module("net.java.dev.jna:jna"))
-      .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
+      .using(module("net.java.dev.jna:jna-jpms:${libs.versions.jna.get()}"))
   }
 
   // graduated to `23.1`
@@ -1474,11 +1510,14 @@ afterEvaluate {
   }
 }
 
-configurations.all {
-  listOf(
-    "net.java.dev.jna" to "jna",
-    libs.jline.terminal.jna.get().let { it.group to it.name },
-  ).forEach {
-    exclude(group = it.first, module = it.second)
+if (!enableJna) configurations.all {
+  if ("jvmOnly" !in name && "shadow" !in name) {
+    listOf(
+      "net.java.dev.jna" to "jna",
+      "net.java.dev.jna" to "jna-jpms",
+      libs.jline.terminal.jna.get().let { it.group to it.name },
+    ).forEach {
+      exclude(group = it.first, module = it.second)
+    }
   }
 }

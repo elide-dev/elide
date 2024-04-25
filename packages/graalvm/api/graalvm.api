@@ -1549,6 +1549,51 @@ public final synthetic class elide/runtime/gvm/internals/node/os/$NetworkInterfa
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$BaseOS$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$BaseOS$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Posix$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Posix$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Win32$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Win32$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2359,21 +2404,22 @@ public abstract interface class elide/runtime/intrinsics/js/node/OperatingSystem
 	public abstract fun getDevNull ()Ljava/lang/String;
 	public abstract fun getEOL ()Ljava/lang/String;
 	public abstract fun getFamily ()Lelide/runtime/intrinsics/js/node/os/OSType;
-	public abstract fun getPriority (Ljava/lang/Long;)I
-	public static synthetic fun getPriority$default (Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;Ljava/lang/Long;ILjava/lang/Object;)I
+	public abstract fun getPriority (Lorg/graalvm/polyglot/Value;)I
+	public static synthetic fun getPriority$default (Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)I
 	public abstract fun homedir ()Ljava/lang/String;
 	public abstract fun hostname ()Ljava/lang/String;
 	public abstract fun loadavg ()Ljava/util/List;
 	public abstract fun networkInterfaces ()Ljava/util/Map;
 	public abstract fun platform ()Ljava/lang/String;
 	public abstract fun release ()Ljava/lang/String;
-	public abstract fun setPriority (JI)V
-	public static synthetic fun setPriority$default (Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;JIILjava/lang/Object;)V
+	public abstract fun setPriority (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun setPriority$default (Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
 	public abstract fun tmpdir ()Ljava/lang/String;
 	public abstract fun totalmem ()J
 	public abstract fun type ()Ljava/lang/String;
 	public abstract fun uptime ()D
 	public abstract fun userInfo (Lelide/runtime/intrinsics/js/node/os/UserInfoOptions;)Lelide/runtime/intrinsics/js/node/os/UserInfo;
+	public static synthetic fun userInfo$default (Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;Lelide/runtime/intrinsics/js/node/os/UserInfoOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/os/UserInfo;
 	public abstract fun version ()Ljava/lang/String;
 }
 

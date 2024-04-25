@@ -861,9 +861,7 @@ val initializeAtRuntimeTest: List<String> = emptyList()
 
 val rerunAtRuntimeTest: List<String> = emptyList()
 
-val defaultPlatformArgs: List<String> = listOf(
-  "--libc=glibc",
-)
+val defaultPlatformArgs: List<String> = listOf()
 
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",

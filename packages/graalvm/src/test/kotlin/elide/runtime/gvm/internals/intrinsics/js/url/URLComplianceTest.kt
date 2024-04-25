@@ -10,12 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.intrinsics.js.url
 
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assumptions.abort
+import org.opentest4j.AssertionFailedError
 import java.util.stream.Stream
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
@@ -24,10 +24,13 @@ import elide.runtime.intrinsics.js.err.ValueError
 import elide.testing.annotations.TestCase
 
 /** WPT compliance tests for the intrinsic `URL` implementation provided by Elide. */
-@Ignore @TestCase internal class URLComplianceTest : AbstractJsIntrinsicTest<URLIntrinsic>() {
+@TestCase internal class URLComplianceTest : AbstractJsIntrinsicTest<URLIntrinsic>() {
   companion object {
     const val testExactHref = false
+    const val strictCompliance = false
   }
+
+  private val skippedCases = sortedSetOf<Int>()
 
   private inline fun <T> withURLCases(crossinline op: (URLParseTestCase) -> List<T>): Stream<T> {
     return withJSON<List<Any>, List<T>>(
@@ -93,48 +96,68 @@ import elide.testing.annotations.TestCase
     assertNotNull(urlIntrinsic)
   }
 
-  private fun urlTest(case: URLParseTestCase, prop: String? = null, op: (URLIntrinsic.URLValue) -> Unit): DynamicTest {
-    return DynamicTest.dynamicTest(case.label(prop)) {
-      val subject = provide()
-      assertNotNull(subject)
-
-      // resolve base value as relative parse basis, or `null` for no relative parse
-      val (base, baseString) = when (val baseUrl = case.base) {
-        null -> null to null
-        else -> assertDoesNotThrow {
-          URLIntrinsic.URLValue.create(baseUrl) to baseUrl
+  private inline fun <reified R> wrapExceptions(op: () -> R) {
+    try {
+      op.invoke()
+    } catch (err: Throwable) {
+      if (strictCompliance) throw err
+      when (err) {
+        is AssertionFailedError -> {
+          abort<Unit>("✗ compliance failed")
         }
-      }
-      val mustPassToTest = !case.failure
-      val innerParse: (String) -> URLIntrinsic.URLValue = {
-        if (base != null && baseString != null) {
-          URLIntrinsic.URLValue.create(it, baseString)
-        } else {
-          URLIntrinsic.URLValue.create(it)
-        } as URLIntrinsic.URLValue
-      }
-      val parseUrl: (String) -> URLIntrinsic.URLValue = {
-        try {
-          innerParse.invoke(it)
-        } catch (err: RuntimeException) {
-          if (mustPassToTest) {
-            Assumptions.abort<Any>("parse failed")
-          }
-          throw err
-        }
-      }
-
-      if (case.failure) {
-        assertThrows<ValueError> {
-          op.invoke(parseUrl(case.input))  // if we didn't get an error, it should be `null`
-        }
-      } else assertDoesNotThrow {
-        op.invoke(assertNotNull(parseUrl(case.input)))
       }
     }
   }
 
-  @TestFactory fun cases(): Stream<DynamicTest> = withURLCases { case ->
+  private fun urlTest(case: URLParseTestCase, prop: String? = null, op: (URLIntrinsic.URLValue) -> Unit): DynamicTest {
+    return DynamicTest.dynamicTest(case.label(prop)) {
+      wrapExceptions {
+        val subject = provide()
+        assertNotNull(subject)
+
+        // resolve base value as relative parse basis, or `null` for no relative parse
+        val (base, baseString) = when (val baseUrl = case.base) {
+          null -> null to null
+          else -> assertDoesNotThrow {
+            URLIntrinsic.URLValue.create(baseUrl) to baseUrl
+          }
+        }
+        val mustPassToTest = !case.failure
+        val innerParse: (String) -> URLIntrinsic.URLValue = {
+          if (base != null && baseString != null) {
+            URLIntrinsic.URLValue.create(it, baseString)
+          } else {
+            URLIntrinsic.URLValue.create(it)
+          } as URLIntrinsic.URLValue
+        }
+        val parseUrl: (String) -> URLIntrinsic.URLValue = {
+          try {
+            innerParse.invoke(it)
+          } catch (err: RuntimeException) {
+            if (mustPassToTest) {
+              abort<Any>("parse failed")
+            }
+            throw err
+          }
+        }
+
+        if (case.failure) {
+          assertThrows<ValueError> {
+            op.invoke(parseUrl(case.input))  // if we didn't get an error, it should be `null`
+          }
+        } else assertDoesNotThrow {
+          op.invoke(assertNotNull(parseUrl(case.input)))
+        }
+      }
+    }
+  }
+
+  @TestFactory fun `web platform compliance`(): Stream<DynamicTest> = withURLCases { case ->
+    if (case.number in skippedCases) {
+      return@withURLCases listOf(DynamicTest.dynamicTest("URL(${case.number}) skipped") {
+        abort("skipped")
+      })
+    }
     if (case.failure) listOfNotNull(
       urlTest(case) {
         // nothing at this time

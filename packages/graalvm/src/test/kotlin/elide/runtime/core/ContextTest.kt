@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.core
 
 import org.graalvm.polyglot.PolyglotException
@@ -35,7 +34,7 @@ internal class ContextTest {
     override val languageId: String = "python"
   }
 
-  @Test @Ignore fun testIntrinsicBindings() {
+  @Test fun testIntrinsicBindings() {
     val context = PolyglotEngine {
       enableLanguage(Python)
       enableLanguage(JavaScript)
@@ -73,7 +72,7 @@ internal class ContextTest {
     )
   }
 
-  @Test @Ignore fun testIntrinsicBindingsPy() {
+  @Test fun testIntrinsicBindingsPy() {
     val context = PolyglotEngine {
       enableLanguage(Python)
     }.acquire()

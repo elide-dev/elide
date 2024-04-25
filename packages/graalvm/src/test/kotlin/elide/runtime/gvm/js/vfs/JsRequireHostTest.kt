@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("JSFileReferences", "JSUnresolvedFunction", "NpmUsedModulesInstalled")
 @file:OptIn(DelicateElideApi::class)
 
@@ -47,7 +46,7 @@ import elide.util.UUID
     }
     assertEquals("module.exports = {sample: 'Hello, CJS!'};", exampleCJSContents.trim())
 
-    withHostFs(fs) {
+    withHostFs(fs, esm = false) {
       // language=javascript
       """
         const testmod = require("./test.js");
@@ -58,7 +57,7 @@ import elide.util.UUID
   }
 
   /** Test: JavaScript `require` call that loads a file from a nested directory within a host-backed file-system. */
-  @Test @Ignore fun testRequireHostFsNested() {
+  @Test fun testRequireHostFsNested() {
     val fs = tempHostFs()
     fs.createDirectory(fs.getPath("testing"))
     val testPath = fs.getPath("testing/test.js")
@@ -72,7 +71,7 @@ import elide.util.UUID
     }
     assertEquals("module.exports = {sample: 'Hello, CJS!'};", exampleCJSContents.trim())
 
-    withHostFs(fs) {
+    withHostFs(fs, esm = false) {
       // language=javascript
       """
         const testmod = require("./testing/test.js");
@@ -83,7 +82,7 @@ import elide.util.UUID
   }
 
   /** Test: JavaScript `require` call that loads a file from the Node modules path. */
-  @Test @Ignore fun testRequireHostFsNpmModules() {
+  @Test fun testRequireHostFsNpmModules() {
     val fs = tempHostFs()
     fs.createDirectory(fs.getPath("node_modules"))
     fs.createDirectory(fs.getPath("node_modules/testing"))
@@ -110,7 +109,7 @@ import elide.util.UUID
     }
     assertEquals("module.exports = {sample: 'Hello, CJS!'};", exampleCJSContents.trim())
 
-    withHostFs(fs) {
+    withHostFs(fs, esm = false) {
       // language=javascript
       """
         const testmod = require("testing");

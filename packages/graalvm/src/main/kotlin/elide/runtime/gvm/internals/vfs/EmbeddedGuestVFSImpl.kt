@@ -233,12 +233,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
     val bundlePath = bundle.location
     val bundleType = bundle.type
 
-    if (!(bundlePath.startsWith("classpath:") || bundlePath.startsWith("/META-INF/"))) error(
-      "Unsupported bundle location '$bundlePath' for VFS file '${info.path}' in bundle '${bundle.location}'"
-    )
-
-    val bundleStreamData = requireNotNull(EmbeddedGuestVFSImpl::class.java.getResourceAsStream(bundlePath)) {
-      "Failed to resolve bundle data for deferred VFS file '${info.path}' in bundle '${bundle.location}'"
+    val absoluted = if (bundlePath.startsWith("/")) bundlePath else "/$bundlePath"
+    val bundleStreamData = requireNotNull(EmbeddedGuestVFSImpl::class.java.getResourceAsStream(absoluted)) {
+      "Failed to resolve bundle data for deferred VFS file '${info.path}'"
     }
     val bundleStream = when (bundleType) {
       BundleFormat.ELIDE_INTERNAL,
@@ -604,7 +601,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
       val pathRegistry = ConcurrentSkipListMap<String, VfsObjectInfo>().apply {
         putAll(registry)
       }
-      val (tree, bundle, infos) = when (val bundle = resolveBundles(this, fsConfig, pathRegistry)) {
+      val (tree, bundle, infos) = when (val bundle = resolveBundles(
+        this,
+        fsConfig,
+        pathRegistry,
+        bundleMapping,
+      )) {
         null -> Triple(null, null, bundleMapping)
         else -> bundle
       }
@@ -948,6 +950,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       fsConfig: Configuration.Builder,
       deferred: Boolean,
       registry: MutableMap<String, VfsObjectInfo>,
+      bundleMapping: MutableMap<Int, BundleInfo>,
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>> {
       // build a new empty in-memory FS
       val inMemoryFS = Jimfs.newFileSystem(
@@ -973,13 +976,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
       val onlyStreams = archiveStreams.asSequence().map { it.second }
       val fsInfo = metadataForTarball(onlyStreams, inMemoryFS, deferred, registry)
 
-      // build bundle infos
-      val bundleInfos = BundleInfo.buildFor(
+      bundleMapping.putAll(BundleInfo.buildFor(
         archiveStreams.mapIndexed { index, (uri, _, type) -> Triple(index, uri, type) }
-      )
+      ))
 
       // read each input tarball and compose the resulting structures
-      return Triple(fsInfo, inMemoryFS, bundleInfos)
+      return Triple(fsInfo, inMemoryFS, bundleMapping)
     }
 
     /** @return Loaded bundles from the provided input [streams], guessing the format from the file's name. */
@@ -989,6 +991,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       fsConfig: Configuration.Builder,
       deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
       registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),
+      bundleMapping: MutableMap<Int, BundleInfo> = mutableMapOf(),
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>> {
       // resolve the format from the filename, then pass along
       return loadBundlesToMemoryFS(
@@ -1014,6 +1017,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         fsConfig,
         deferred,
         registry,
+        bundleMapping,
       )
     }
 
@@ -1038,6 +1042,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       fsConfig: Configuration.Builder,
       deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
       registry: MutableMap<String, VfsObjectInfo> = mutableMapOf(),
+      bundleMapping: MutableMap<Int, BundleInfo> = mutableMapOf(),
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>>? {
       // if we got no paths, we have no bundles
       if (paths.isEmpty() && files.isEmpty()) return null
@@ -1072,7 +1077,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
           else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}' (URL: $path)")
         }
       }
-      return loadBundles(null, fileSources.plus(sources), fsConfig, deferred, registry)
+      return loadBundles(null, fileSources.plus(sources), fsConfig, deferred, registry, bundleMapping)
     }
 
     /** @return Resolve bundle input data from the provided [builder]. */
@@ -1080,12 +1085,13 @@ internal class EmbeddedGuestVFSImpl private constructor (
       builder: Builder,
       fsConfig: Configuration.Builder,
       registry: ConcurrentMap<String, VfsObjectInfo>,
+      bundleMapping: MutableMap<Int, BundleInfo> = mutableMapOf(),
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>>? {
       return when {
-        builder.bundle != null -> builder.bundle?.let { Triple(it.first, it.second, emptyMap()) }
+        builder.bundle != null -> builder.bundle?.let { Triple(it.first, it.second, bundleMapping) }
         builder.zip != null -> loadWithFileTarget(builder.zip!!)
         builder.files.isNotEmpty() || builder.paths.isNotEmpty() ->
-          loadBundles(builder.paths, builder.files, fsConfig, builder.deferred, registry)
+          loadBundles(builder.paths, builder.files, fsConfig, builder.deferred, registry, bundleMapping)
         else -> null
       }
     }

@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("JSUnresolvedVariable", "JSUnresolvedFunction")
 @file:OptIn(DelicateElideApi::class)
 
@@ -128,7 +127,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Test @Disabled fun testGuestIteratorManual() {
+  @Test fun testGuestIteratorManual() {
     val remaining = ArrayList<String>()
     remaining.add("one")
     remaining.add("two")
@@ -148,9 +147,10 @@ import elide.testing.annotations.TestCase
         const values = [];
         let result = testIter.next();
         test(result).isNotNull();
+        values.push(result.value);
         while (!result.done) {
-         values.push(result.value);
          result = testIter.next();
+         values.push(result.value);
         }
         test(values.length).isEqualTo(2);
         test(values[0]).isEqualTo("one");

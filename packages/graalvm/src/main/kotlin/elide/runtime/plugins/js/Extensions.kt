@@ -38,3 +38,14 @@ import elide.runtime.core.evaluate
     /* name = */ name ?: (if (esm) "source.mjs" else "source.js"),
   ).build())
 }
+
+/**
+ * Execute the given JavaScript [Source], returning the result. This is equivalent to calling
+ * [PolyglotContext.evaluate] and selecting [JavaScript] as source language.
+ *
+ * @param source The interpreted JavaScript source code to be executed.
+ * @return The result of the invocation. If [esm] is `true`, an object is returned, with exported values as members.
+ */
+@DelicateElideApi public fun PolyglotContext.javascript(source: Source): PolyglotValue {
+  return evaluate(source)
+}

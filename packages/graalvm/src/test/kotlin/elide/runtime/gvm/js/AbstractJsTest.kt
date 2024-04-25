@@ -99,7 +99,8 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
     // build a source chunk for the test script
     val src = Source.newBuilder(
       "js",
-      script,
+      // trim initial empty line
+      if (script[0] == '\n') script.drop(1) else script,
       if (esm) "test.mjs" else "test.js",
     ).interactive(
       false,
@@ -244,11 +245,11 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   }
 
   // Configure a context and then return a guest test execution bound to it.
-  protected fun withHostFs(fs: FileSystem, op: PolyglotContext.() -> String): GuestTestExecution {
+  protected fun withHostFs(fs: FileSystem, esm: Boolean = true, op: PolyglotContext.() -> String): GuestTestExecution {
     return GuestTestExecution(withCustomContext {
       option(
         "js.commonjs-require-cwd",
-        "."
+        "/"
       )
       allowIO(IOAccess.newBuilder()
         .fileSystem(fs)
@@ -258,7 +259,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
         this,
         bind = true,
         bindUtils = true,
-        esm = true,
+        esm = esm,
         op,
       )
     }

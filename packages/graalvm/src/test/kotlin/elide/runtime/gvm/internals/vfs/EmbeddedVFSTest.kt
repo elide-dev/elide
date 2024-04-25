@@ -79,7 +79,7 @@ import elide.testing.annotations.TestCase
   }
 
   /** Test: Load a bundle from a regular (non-compressed) tarball, with deferred reads enabled. */
-  @Test @Ignore fun testBundleFromTarballDeferred() {
+  @Test fun testBundleFromTarballDeferred() {
     // load sample tarball
     val sampleTarball = EmbeddedVFSTest::class.java.getResource("/sample-vfs.tar")
     assertNotNull(sampleTarball, "should be able to find sample tarball")
@@ -350,10 +350,5 @@ import elide.testing.annotations.TestCase
       it.readText()
     }
     assertEquals("hello", result, "should be able to read back the file contents")
-  }
-
-  /** Test: Load a bundle expressed in Elide's internal format. */
-  @Test @Disabled fun testBundleFromElideFormat() {
-
   }
 }

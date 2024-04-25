@@ -17,8 +17,10 @@ package elide.runtime.gvm.js.node
 import org.graalvm.polyglot.Value
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
+import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.Symbol
 import elide.runtime.plugins.env.EnvConfig
 import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.js.JavaScript
@@ -48,15 +50,37 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
   open val supportsEsm: Boolean get() = true
   open val supportsCjs: Boolean get() = true
 
-  protected fun require(module: String = moduleName): Value {
+  private fun beforeExec(bind: Boolean) {
+    // install bindings under test, if directed
+    val target = polyglotEngine.bindings(JavaScript)
+
+    // prep intrinsic bindings under test
+    val bindings = if (bind) {
+      val group = HashMap<Symbol, Any>()
+      val binding = GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(group)
+      ConsoleIntrinsic().install(binding)
+      provide().install(binding)
+      group
+    } else {
+      emptyMap()
+    }
+
+    bindings.forEach {
+      target.putMember(it.key.symbol, it.value)
+    }
+  }
+
+  protected fun require(module: String = moduleName, bind: Boolean = true): Value {
+    beforeExec(bind)
     return polyglotEngine.javascript(
       // language=js
       """require("$module");"""
     )
   }
 
-  protected fun import(module: String = moduleName): Value {
+  protected fun import(module: String = moduleName, bind: Boolean = true): Value {
     val modname = module.split(":").last()
+    beforeExec(bind)
     return polyglotEngine.javascript(
       // language=js
       """
@@ -67,5 +91,5 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     )
   }
 
-  protected fun load(module: String = moduleName): Value = import(module)
+  protected fun load(module: String = moduleName, bind: Boolean = true): Value = import(module, bind)
 }

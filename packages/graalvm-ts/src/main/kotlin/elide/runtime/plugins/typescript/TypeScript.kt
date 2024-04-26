@@ -25,14 +25,11 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
 @DelicateElideApi public class TypeScript(
   private val config: TypeScriptConfig,
-  private val resources: LanguagePluginManifest,
+  @Suppress("unused") private val resources: LanguagePluginManifest,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
-
-    // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
   }
 
   @Suppress("unused", "unused_parameter")
@@ -50,20 +47,14 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       configureLanguageSupport(scope)
 
       // apply the configuration and create the plugin instance
-      val config = TypeScriptConfig().apply(configuration)
-      configureSharedBindings(scope, config)
-
-      val resources = resolveEmbeddedManifest(scope)
-      val instance = TypeScript(config, resources)
-
-      // subscribe to lifecycle events
-      scope.lifecycle.on(ContextCreated, instance::configureContext)
-      scope.lifecycle.on(ContextInitialized, instance::initializeContext)
-
-      // register resources with the VFS
-      installEmbeddedBundles(scope, resources)
-
-      return instance
+      return TypeScriptConfig().apply(configuration).let { config ->
+        configureSharedBindings(scope, config)
+        TypeScript(config, resolveEmbeddedManifest(scope)).apply {
+          // subscribe to lifecycle events
+          scope.lifecycle.on(ContextCreated, this::configureContext)
+          scope.lifecycle.on(ContextInitialized, this::initializeContext)
+        }
+      }
     }
   }
 }

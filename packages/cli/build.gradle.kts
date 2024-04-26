@@ -488,6 +488,7 @@ distributions {
         tasks.createOptimizedStartScripts,
         layout.projectDirectory.dir("packaging/content"),
       )
+      exclude("*.iprof", "sources", "sources/**/*.*")
     }
   }
 
@@ -500,6 +501,7 @@ distributions {
         tasks.nativeCompile,
         layout.projectDirectory.dir("packaging/content"),
       )
+      exclude("*.iprof", "sources", "sources/**/*.*")
     }
   }
 
@@ -512,6 +514,7 @@ distributions {
         tasks.nativeOptimizedCompile,
         layout.projectDirectory.dir("packaging/content"),
       )
+      exclude("*.iprof", "sources", "sources/**/*.*")
     }
   }
 }

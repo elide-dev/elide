@@ -908,7 +908,7 @@ val darwinReleaseArgs = darwinOnlyArgs.plus(
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
-    "-march=native",
+    "-march=compatibility",
     "-H:RuntimeCheckedCPUFeatures=" + listOf(
       "AVX",
       "AVX2",

@@ -11,7 +11,7 @@
   <img alt="GitHub License" src="https://img.shields.io/github/license/elide-dev/elide">
   <br />
   <a href="https://openjdk.org/projects/jdk/22/"><img src="https://img.shields.io/badge/-Java%2022-blue.svg?logo=oracle" /></a>
-  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin%202.0.0-blue.svg?logo=kotlin&logoColor=white" /></a>
+  <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin%202.0.0-blue.svg?logo=kotlin&logoColor=white" /></a>
   <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/-ECMA2023-blue.svg?logo=javascript&logoColor=white" /></a>
   <img alt="Python 3.10.x" src="https://img.shields.io/badge/Python%203.10.x-green?style=flat&logo=python&logoColor=white&color=blue">
   <a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/-Ruby%203.2.x-blue.svg?logo=ruby&logoColor=white" /></a>

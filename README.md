@@ -19,9 +19,9 @@
   <br />
   <a href="https://www.graalvm.org/"><img src="https://img.shields.io/badge/-GraalVM%2024.1.x-blue.svg?logo=oracle" /></a>
   <a href="https://openjdk.org/projects/jdk/22/"><img src="https://img.shields.io/badge/-Java%2022-blue.svg?logo=oracle" /></a>
-  <a href="http://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin%202.0.0-blue.svg?logo=kotlin&logoColor=white" /></a>
+  <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin%202.0.0-blue.svg?logo=kotlin&logoColor=white" /></a>
   <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/-ECMA2023-blue.svg?logo=javascript&logoColor=white" /></a>
-  <img alt="Python 3.10.x" src="https://img.shields.io/badge/Python%203.10.x-green?style=flat&logo=python&logoColor=white&color=blue">
+  <img alt="Python 3.11.x" src="https://img.shields.io/badge/Python%203.11.x-green?style=flat&logo=python&logoColor=white&color=blue">
   <a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/-Ruby%203.2.x-blue.svg?logo=ruby&logoColor=white" /></a>
 </p>
 
@@ -268,7 +268,7 @@ not need some of these components:
 | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 22`   | `2.0.0-RC1`   | `24.x.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 21`   | `2.0.0-Beta4` | `23.1.x`    | `4.3.x`       | `18.x`    | `3.25.1`/`1.61.0`  |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.20`      | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`      | `23.0.x`    | `3.10.x`      | `18.x`    | `3.21.11`/`1.56.1` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.10`      | `23.0.x`    | `3.11.x`      | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`      | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`      | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
 | ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --            | --          | --            | --        | --                 |
@@ -282,7 +282,7 @@ The following version matrix describes language support for Elide, including **J
 |-----------------|-----------------------------------------------------------------|-------------|-------------------|---------------------|---------------|---------------|--------------|--------------|
 | **JavaScript**  | ![Status](https://img.shields.io/badge/-tested-success)         | `ECMA 2023` | `alpha4+`         | ✅ Full support      | ✅             | ✅             | ✅            | ✅            |
 | **WebAssembly** | ![Status](https://img.shields.io/badge/-tested-success)         | `WASI P2`   | `alpha4+`         | ✅ (With JS)         | ✅ (With JS)   | ✅             | ✅            | ✅            |
-| **Python**      | ![Status](https://img.shields.io/badge/-tested-success)         | `3.10.x`    | `alpha7+`         | Not supported       | Not supported | ✅             | ⚠️           | ✅            |
+| **Python**      | ![Status](https://img.shields.io/badge/-tested-success)         | `3.11.x`    | `alpha7+`         | Not supported       | Not supported | ✅             | ⚠️           | ✅            |
 | **Ruby**        | ![Status](https://img.shields.io/badge/-tested-success)         | `3.2`       | `alpha8+`         | Not supported       | Not supported | ✅             | ⚠️           | ✅            |
 | **Java**        | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 22`   | `edge`            | ✅ Partial support   | Not supported | Experimental  | Experimental | ✅            |
 | **Kotlin**      | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 22`   | `edge`            | ✅ Partial support   | Not supported | Experimental  | Experimental | ✅            |

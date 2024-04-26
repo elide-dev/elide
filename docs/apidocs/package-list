@@ -65,6 +65,7 @@ elide.runtime.intrinsics.js.express
 elide.runtime.intrinsics.js.node
 elide.runtime.intrinsics.js.node.buffer
 elide.runtime.intrinsics.js.node.fs
+elide.runtime.intrinsics.js.node.os
 elide.runtime.intrinsics.js.node.path
 elide.runtime.intrinsics.js.node.process
 elide.runtime.intrinsics.js.typed

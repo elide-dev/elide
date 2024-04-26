@@ -62,7 +62,7 @@
   <div class="breadcrumbs"><a href="../../../index.html">graalvm</a><span class="delimiter">/</span><a href="../../index.html">elide.runtime.gvm.vfs</a><span class="delimiter">/</span><a href="../index.html">LanguageVFS</a><span class="delimiter">/</span><span class="current">LanguageVFSInfo</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Language</span><wbr><span><span>VFSInfo</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">LanguageVFSInfo</a></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">LanguageVFSInfo</a></div><h2 class="">Language VFS Info</h2><p class="paragraph">Describes a configured language-level virtual file system; this includes a <a href="fs-provider.html">fsProvider</a> which can be used to obtain the VFS implementation, and a <a href="router.html">router</a> function which decides if a path is eligible to be handled by the VFS.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -79,7 +79,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="fs-provider.html">fsProvider</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span data-unresolved-link="org.graalvm.polyglot.io/FileSystem///PointingToDeclaration/">FileSystem</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="fs-provider.html">fsProvider</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span data-unresolved-link="org.graalvm.polyglot.io/FileSystem///PointingToDeclaration/">FileSystem</span></div><div class="brief "><p class="paragraph">Obtain an instance of the language VFS which should handle an eligible path.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -94,7 +94,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="router.html">router</a><span class="token operator">: </span><span class="token punctuation">(</span><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html">Path</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="router.html">router</a><span class="token operator">: </span><span class="token punctuation">(</span><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html">Path</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Given a <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html">Path</a>, determine if this language VFS instance should handle I/O.</p></div></div></div>
                 </div>
               </div>
             </div>

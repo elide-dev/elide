@@ -50,7 +50,7 @@
     "@type": "SoftwareSourceCode",
     "name": "Elide",
     "alternateName": "Elide Framework",
-    "runtimePlatform": "Java 21",
+    "runtimePlatform": "Java 22",
     "programmingLanguage": "Kotlin",
     "creativeWorkStatus": "Published",
     "codeRepository": "https://github.com/elide-dev/elide",

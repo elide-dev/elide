@@ -29,6 +29,7 @@ packages/*/src/*/resources/META-INF/native-image/*.json
 packages/*/src/*/resources/META-INF/native-image/dev/elide/*/*.json
 packages/*/src/*/resources/META-INF/native-image/dev.elide/*/*.json
 packages/graalvm/src/main/resources/META-INF/native-image/dev.elide/graalvm/native-image.properties
+tools/tsc/src/main/resources/META-INF/elide/embedded/tools/tsc/entry.mjs
 tools/esbuild/src/main/resources/META-INF/elide/embedded/tools/esbuild/
 reflect-config.json
 jni-config.json

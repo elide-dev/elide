@@ -5,12 +5,12 @@
     "@mdx-js/mdx": "3.0.1",
     "@mdx-js/preact": "3.0.1",
     "@mdx-js/react": "3.0.1",
-    "react": "18.2.0"
+    "react": "18.3.0"
   },
   "devDependencies": {
     "@mdx-js/esbuild": "3.0.1",
     "@mdx-js/loader": "3.0.1",
-    "@types/react": "18.2.79",
+    "@types/react": "18.3.0",
     "webpack": "5.91.0"
   }
 }

@@ -33,4 +33,11 @@ interface NativeEmbeddedConfig extends PointerBase {
    */
   @CField("guest_root")
   CCharPointer getGuestRoot();
+
+  /**
+   * Returns the value of the 'languages' struct field, which is a 32-bit integer treated as a collection of language
+   * flags using the {@link NativeAppLanguage} enum ordinal as bit position.
+   */
+  @CField("languages")
+  int getLanguageFlags();
 }

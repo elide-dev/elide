@@ -3,12 +3,8 @@ package elide.embedded.interop
 import org.graalvm.nativeimage.ObjectHandle
 import org.graalvm.nativeimage.ObjectHandles
 import kotlin.io.path.Path
-import elide.embedded.EmbeddedAppConfiguration
+import elide.embedded.*
 import elide.embedded.EmbeddedAppConfiguration.EmbeddedDispatchMode
-import elide.embedded.EmbeddedGuestLanguage
-import elide.embedded.EmbeddedConfiguration
-import elide.embedded.EmbeddedProtocolFormat
-import elide.embedded.EmbeddedProtocolVersion
 import elide.embedded.interop.NativeAppLanguage.JS
 import elide.embedded.interop.NativeAppLanguage.PYTHON
 import elide.embedded.interop.NativeAppMode.FETCH
@@ -54,13 +50,18 @@ internal object NativeInterop {
     version: NativeProtocolVersion,
     format: NativeProtocolFormat,
     guestRootPath: String,
+    languageFlags: Int,
   ): EmbeddedConfiguration {
     return EmbeddedConfiguration(
       protocolVersion = mapVersion(version),
       protocolFormat = mapFormat(format),
       guestRoot = Path(guestRootPath),
-      // TODO(@darvld): support configuration of supported guest languages
-      guestLanguages = setOf(EmbeddedGuestLanguage.JAVA_SCRIPT),
+      guestLanguages = buildSet {
+        for (lang in NativeAppLanguage.entries) {
+          // use the native enum value to check the language flag
+          if (languageFlags and (1 shl lang.nativeValue()) != 0) add(mapAppLanguage(lang))
+        }
+      },
     )
   }
 

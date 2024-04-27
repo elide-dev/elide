@@ -34,10 +34,10 @@ typedef enum {
 /* Defines the programming language used by a guest application. */
 typedef enum {
   /* Use JavaScript as guest language. */
-  JS,
+  JS = 0,
 
   /* Use Python as guest language. */
-  PYTHON,
+  PYTHON = 1,
 } elide_app_lang_t;
 
 /* Configuration struct for the embedded runtime. */
@@ -48,8 +48,11 @@ typedef struct elide_config_t {
   /* Dispatch protocol serial format. */
   elide_protocol_format_t format;
 
-  /** Path to the guest resources directory. */
+  /* Path to the guest resources directory. */
   char *guest_root;
+
+  /* Flags for language support. */
+  int languages;
 } elide_config_t;
 
 /* Configuration struct for an embedded application. */

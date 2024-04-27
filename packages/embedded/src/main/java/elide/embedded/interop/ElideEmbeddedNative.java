@@ -76,8 +76,9 @@ final class ElideEmbeddedNative {
       var version = NativeProtocolVersion.fromNativeValue(config.getVersion());
       var format = NativeProtocolFormat.fromNativeValue(config.getFormat());
       var guestRoot = CTypeConversion.toJavaString(config.getGuestRoot());
+      var languages = config.getLanguageFlags();
 
-      var embeddedConfig = NativeInterop.createConfig(version, format, guestRoot);
+      var embeddedConfig = NativeInterop.createConfig(version, format, guestRoot, languages);
       instance.initialize(embeddedConfig);
       return NativeResultCodes.ok();
     } catch (Throwable cause) {

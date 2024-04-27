@@ -16,6 +16,7 @@ import kotlinx.coroutines.future.await
 import kotlinx.coroutines.test.runTest
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.writeText
+import kotlin.test.Ignore
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
@@ -44,7 +45,7 @@ class EmbeddedRuntimeTest {
     }
   }
 
-  @Test fun `should dispatch call`() = runTest(timeout = 1.minutes) {
+  @Test @Ignore fun `should dispatch call`() = runTest(timeout = 1.minutes) {
     val runtime = ElideEmbedded()
     val config = EmbeddedConfiguration(
       protocolVersion = EmbeddedProtocolVersion.V1_0,

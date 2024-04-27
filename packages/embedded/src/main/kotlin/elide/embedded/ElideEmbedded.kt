@@ -6,7 +6,6 @@ import kotlinx.atomicfu.getAndUpdate
 import kotlinx.coroutines.future.asCompletableFuture
 import elide.embedded.ElideEmbedded.State.*
 import elide.embedded.ElideEmbedded.State.Uninitialized.context
-import elide.embedded.http.EmbeddedResponse
 import elide.embedded.internal.MicronautRuntimeContext
 import elide.runtime.Logging
 
@@ -161,11 +160,18 @@ public class ElideEmbedded {
   }
 
   /**
-   * Dispatch an incoming call with the runtime. This operation is currently under construction.
+   * Dispatch an incoming call with the runtime, returning a future to receive the response when ready. The [call]
+   * parameter is inherently type-unsafe to accommodate for the differences in dispatch protocols; the runtime codec
+   * will enforce type/format restrictions during deserialization instead.
+   *
+   * The returned response will follow the same type-safety rules as the call, and its form will depend on the protocol
+   * implementation selected during rungime initialization.
+   *
+   * The selected [app] must be running for this operation to succeed.
    */
-  public fun dispatch(call: UnsafeCall, app: EmbeddedApp): CompletionStage<EmbeddedResponse> {
+  public fun dispatch(call: UnsafeCall, app: EmbeddedApp): CompletionStage<UnsafeResponse> {
     return useContext {
-      dispatcher.dispatch(codec.decode(call), app).asCompletableFuture()
+      dispatcher.dispatch(codec.decode(call), app).asCompletableFuture().thenApply(codec::encode)
     }
   }
 

@@ -152,10 +152,6 @@ final class ElideEmbeddedNative {
       if (callback.isNonNull()) {
         var wrapper = new NativeAppCallbackHolder(callback);
         completion.handle((success, failure) -> {
-          if (success != null) {
-            logging.info("Response: %s %s".formatted(success.getStatusCode(), success.getStatusMessage()));
-          }
-
           wrapper.invoke(failure == null);
           return Unit.INSTANCE;
         });

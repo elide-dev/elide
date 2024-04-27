@@ -14,6 +14,9 @@ import elide.embedded.http.EmbeddedResponse
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
+import elide.runtime.plugins.bindings.Bindings
+import elide.runtime.plugins.bindings.BindingsInstaller
+import elide.runtime.plugins.bindings.BindingsResolver
 import elide.runtime.plugins.js.JavaScript
 
 /**
@@ -22,6 +25,7 @@ import elide.runtime.plugins.js.JavaScript
  */
 @Singleton internal class EmbeddedDispatcherImpl(
   private val config: EmbeddedConfiguration,
+  private val intrinsics: List<BindingsInstaller>,
 ) : EmbeddedCallDispatcher {
   /** Engine used to acquire the [local context][localContext] instances for dispatch. */
   private val engine: PolyglotEngine by lazy(::prepareEngine)
@@ -50,16 +54,16 @@ import elide.runtime.plugins.js.JavaScript
     // host IO required for accessing guest source code
     hostAccess = ALLOW_IO
 
+    // shared intrinsics, used to inject Request/Response types
+    // and other bindings required by the specification
+    install(Bindings) {
+      resolver = BindingsResolver { intrinsics.asSequence() }
+    }
+
     // language plugins
     for (language in config.guestLanguages) when (language) {
       JAVA_SCRIPT -> install(JavaScript) {
         wasm = false
-
-        bindings {
-          // register interop bindings for request and response types
-          // TODO(@darvld): use constants for binding names
-          put("Response", ImmediateResponse::class.java)
-        }
       }
 
       PYTHON -> error("Support for Python in guest apps is not yet available")

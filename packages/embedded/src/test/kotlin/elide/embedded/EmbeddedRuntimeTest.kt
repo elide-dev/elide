@@ -110,6 +110,6 @@ class EmbeddedRuntimeTest {
     val requestBytes = ByteBuffer.wrap(requestMessage.toByteArray())
     val result = runtime.dispatch(requestBytes, app).await()
 
-    logging.info("Response: ${result.statusCode} ${result.statusMessage}")
+    logging.info("Response: $result")
   }
 }

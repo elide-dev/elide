@@ -87,7 +87,6 @@ graalvmNative {
     ).map { "--initialize-at-build-time=$it" }
 
     buildArgs.addAll(initializeAtBuildTime.toList())
-    buildArgs.add("--trace-class-initialization=kotlin.coroutines.intrinsics.CoroutineSingletons")
   }
 }
 

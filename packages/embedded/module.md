@@ -4,7 +4,7 @@
 
 ## Usage
 
-Embedded Elide dispatch is meant to be impleemented from within a [GraalVM](https://www.graalvm.org/) native image. The
+Embedded Elide dispatch is meant to be implemented from within a [GraalVM](https://www.graalvm.org/) native image. The
 interface accepts native structures for request dispatch, and handles routing, marshaling, and error handling.
 
 ## Installation
@@ -35,6 +35,7 @@ implementation "dev.elide:elide-embedded"
 **Via Maven:**
 
 ```xml
+
 <dependency>
   <groupId>dev.elide</groupId>
   <artifactId>elide-embedded</artifactId>
@@ -43,24 +44,10 @@ implementation "dev.elide:elide-embedded"
 
 # Package elide.embedded
 
-Top-level Embedded Elide package.
+Public API used to interact with the embedded runtime, including configuration, initialization, and dispatch.
+Implementations for most interfaces are kept private and are meant to be accessed only by the `ElideEmbedded` class,
+as a singleton representing a runtime instance.
 
-# Package elide.embedded.api
+# Package elide.embedded.http
 
-Embedded application dispatch API and native type layouts.
-
-# Package elide.embedded.cfg
-
-Configuration for native embedded application dispatch.
-
-# Package elide.embedded.env
-
-Embedded application environment types and implementations.
-
-# Package elide.embedded.err
-
-Errors and error marshaling logic for Elide Embedded application dispatch.
-
-# Package elide.embedded.feature
-
-GraalVM feature implementations for embedded Elide dispatch.
+Public types used during dispatch, as a bridge between guest application code and runtime logic.

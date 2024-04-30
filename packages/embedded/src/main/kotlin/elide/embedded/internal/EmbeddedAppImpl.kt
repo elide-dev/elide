@@ -108,13 +108,10 @@ internal class EmbeddedAppImpl private constructor(
    * thrown. Exceptions will be rethrown after causing the handle to fail.
    */
   private inline fun withHandle(handle: CompletableJob, block: () -> Unit) {
-    try {
-      block()
-      handle.complete()
-    } catch (cause: Throwable) {
-      handle.completeExceptionally(cause)
-      throw cause
-    }
+    runCatching(block)
+      .onSuccess { handle.complete() }
+      .onFailure { handle.completeExceptionally(it) }
+      .getOrThrow()
   }
 
   /**

@@ -121,10 +121,4 @@ context: VMContext,
       }
     }
   }
-
-  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
-    RUBY,
-    { runtimeInfo.get() }
-  )
 }

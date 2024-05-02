@@ -17,7 +17,7 @@ import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
 /**
- * # JavaScript: `URL`
+ * # JavaScript: URL
  *
  * The `URL` class is universally supported across JavaScript engines and browser implementations, and behaves similarly
  * in each case; it is used for parsing well-formed URLs and extracting their constituent parts.

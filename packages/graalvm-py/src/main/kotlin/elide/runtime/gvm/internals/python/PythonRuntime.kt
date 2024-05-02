@@ -116,10 +116,4 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
       }
     }
   }
-
-  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class PythonRuntimeVFSConfigurator : GuestVFSConfigurator(
-    PYTHON,
-    { runtimeInfo.get() }
-  )
 }

@@ -12,10 +12,13 @@
  */
 package elide.runtime.intrinsics.js.node
 
+import com.oracle.truffle.js.runtime.objects.JSObject
+import org.graalvm.polyglot.Value
 import elide.annotations.API
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.node.buffer.Buffer
 import elide.runtime.intrinsics.js.node.fs.*
+import elide.runtime.intrinsics.js.node.path.Path
 import elide.vm.annotations.Polyglot
 
 /**
@@ -26,15 +29,15 @@ import elide.vm.annotations.Polyglot
    * ## Method: `fs.readFile`
    *
    * Reads the contents of a file at the specified path; provides the results or an error to the callback. This variant
-   * accepts a plain [String].
+   * accepts a polyglot [Value].
    *
    * @param path The path to the file to read.
    * @param options The options to use for the file read operation.
    * @param callback The callback to provide the results or an error.
    */
   @Polyglot public fun readFile(
-    path: String,
-    options: ReadFileOptions = ReadFileOptions.DEFAULTS,
+    path: Value,
+    options: Value,
     callback: ReadFileCallback,
   )
 
@@ -42,15 +45,13 @@ import elide.vm.annotations.Polyglot
    * ## Method: `fs.readFile`
    *
    * Reads the contents of a file at the specified path; provides the results or an error to the callback. This variant
-   * accepts a [URL].
+   * accepts a polyglot [Value].
    *
-   * @param url The URL of the file to read.
-   * @param options The options to use for the file read operation.
+   * @param path The path to the file to read.
    * @param callback The callback to provide the results or an error.
    */
   @Polyglot public fun readFile(
-    url: URL,
-    options: ReadFileOptions = ReadFileOptions.DEFAULTS,
+    path: Value,
     callback: ReadFileCallback,
   )
 
@@ -58,30 +59,14 @@ import elide.vm.annotations.Polyglot
    * ## Method: `fs.readFile`
    *
    * Reads the contents of a file at the specified path; provides the results or an error to the callback. This variant
-   * accepts a live [FileHandle].
+   * accepts a polyglot [Value].
    *
-   * @param handle File handle to read.
+   * @param path The path to the file to read.
    * @param options The options to use for the file read operation.
    * @param callback The callback to provide the results or an error.
    */
   @Polyglot public fun readFile(
-    handle: FileHandle,
-    options: ReadFileOptions = ReadFileOptions.DEFAULTS,
-    callback: ReadFileCallback,
-  )
-
-  /**
-   * ## Method: `fs.readFile`
-   *
-   * Reads the contents of a file at the specified path; provides the results or an error to the callback. This variant
-   * accepts a live [FileHandle].
-   *
-   * @param buffer Buffer containing a file path.
-   * @param options The options to use for the file read operation.
-   * @param callback The callback to provide the results or an error.
-   */
-  @Polyglot public fun readFile(
-    buffer: Buffer,
+    path: Path,
     options: ReadFileOptions = ReadFileOptions.DEFAULTS,
     callback: ReadFileCallback,
   )
@@ -90,11 +75,23 @@ import elide.vm.annotations.Polyglot
    * ## Method: `fs.readFileSync`
    *
    * Reads the contents of a file at the specified path and returns the results synchronously. This variant accepts a
-   * plain [String].
+   * plain [Value].
    *
    * @param path The path to the file to read.
    * @param options The options to use for the file read operation.
    * @return The contents of the file as a [Buffer].
    */
-  @Polyglot public fun readFileSync(path: String, options: ReadFileOptions = ReadFileOptions.DEFAULTS): StringOrBuffer
+  @Polyglot public fun readFileSync(path: Value, options: Value? = null): StringOrBuffer
+
+  /**
+   * ## Method: `fs.readFileSync`
+   *
+   * Reads the contents of a file at the specified path and returns the results synchronously. This variant accepts a
+   * plain [Value].
+   *
+   * @param path The path to the file to read.
+   * @param options The options to use for the file read operation.
+   * @return The contents of the file as a [Buffer].
+   */
+  @Polyglot public fun readFileSync(path: Path, options: ReadFileOptions = ReadFileOptions.DEFAULTS): StringOrBuffer
 }

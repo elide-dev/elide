@@ -12,8 +12,140 @@
  */
 package elide.runtime.intrinsics.js.node.buffer
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyArray
+import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyIterable
+import org.graalvm.polyglot.proxy.ProxyObject
+import elide.vm.annotations.Polyglot
+
 /**
- *
+ * # Node: Buffer
  */
-public interface Buffer {
+public interface Buffer : java.io.Serializable, ProxyObject, ProxyArray, ProxyInstantiable, ProxyIterable {
+  /**
+   * ## Buffer: Constructors
+   */
+  public interface BufferConstructors {
+    /**
+     * TBD.
+     */
+    @Polyglot public fun create(array: Value, encoding: String? = null): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun create(array: Value, byteOffset: Int? = null, length: Int? = null): Buffer
+  }
+
+  /**
+   * ## Buffer: Static Utilities
+   */
+  public interface BufferUtilities {
+    /**
+     * TBD.
+     */
+    @Polyglot public fun byteLength(string: String, encoding: String? = null): Int
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun compare(buf1: Buffer, buf2: Buffer): Int
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun concat(list: Array<Buffer>, totalLength: Int? = null): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun copyBytesFrom(view: Buffer, offset: Int = 0, length: Int = view.length): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun isBuffer(obj: Any): Boolean
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun isEncoding(encoding: String): Boolean
+
+    /**
+     * TBD.
+     */
+    @get:Polyglot public val poolSize: Int
+  }
+
+  /**
+   * ## Buffer: Factories
+   */
+  public interface BufferFactories : BufferUtilities {
+    /**
+     * TBD.
+     */
+    @Polyglot public fun alloc(size: Int, fill: Value? = null, encoding: String? = null): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun allocUnsafe(size: Int): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun allocUnsafeSlow(size: Int): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun from(array: Array<Byte>): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun from(arrayBuffer: Value, byteOffset: Int = 0, length: Int? = null): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun from(buffer: Buffer): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun from(`object`: Value, offsetOrEncoding: Value? = null, length: Value? = null): Buffer
+
+    /**
+     * TBD.
+     */
+    @Polyglot public fun from(string: String, encoding: String? = null): Buffer
+  }
+
+  /**
+   * ## Buffer: Statics
+   */
+  public interface BufferStatics : BufferConstructors, BufferFactories
+
+  /**
+   * TBD.
+   */
+  @get:Polyglot public val length: Int
+
+  override fun getMember(key: String?): Any {
+    TODO("Not yet implemented")
+  }
+
+  override fun getMemberKeys(): Any {
+    TODO("Not yet implemented")
+  }
+
+  override fun hasMember(key: String?): Boolean {
+    TODO("Not yet implemented")
+  }
+
+  override fun putMember(key: String?, value: Value?) {
+    TODO("Not yet implemented")
+  }
 }

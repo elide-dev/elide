@@ -14,7 +14,7 @@
 /** Declares common build script versions. */
 object Versions {
   /** Kotlin version. */
-  const val kotlin = "2.0.0-RC1"
+  const val kotlin = "2.0.0-RC2"
 
   /** BouncyCastle version. */
   const val bouncycastle = "1.78.1"

@@ -68,6 +68,6 @@ buildscript {
   }
 
   dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0-RC1")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0-RC2")
   }
 }

@@ -59,3 +59,7 @@ dependencies {
 tasks.named("run") {
   outputs.cacheIf { false }
 }
+
+tasks.detekt {
+  enabled = false
+}

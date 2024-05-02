@@ -2,6 +2,7 @@
   "name": "@elide-dev/framework",
   "version": "1.0.0-alpha8",
   "private": true,
+  "packageManager": "pnpm@9.0.6",
   "lint-staged": {
     "not-packages/*": "pnpm exec prettier --ignore-unknown"
   },
@@ -39,8 +40,8 @@
     "jszip": "3.10.1",
     "postcss": "8.4.38",
     "preact": "10.20.2",
-    "react": "18.3.0",
-    "react-dom": "18.3.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "typescript": "5.4.5",
     "web-streams-polyfill": "4.0.0"
   },

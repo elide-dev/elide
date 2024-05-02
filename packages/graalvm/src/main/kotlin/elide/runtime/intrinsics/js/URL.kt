@@ -10,14 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.intrinsics.js
 
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
 /**
- * # JavaScript: `URL`
+ * # JavaScript: URL
  *
  * The `URL` class is universally supported across JavaScript engines and browser implementations, and behaves similarly
  * in each case; it is used for parsing well-formed URLs and extracting their constituent parts.

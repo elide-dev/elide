@@ -1,6 +1,6 @@
 [
   {
-    "interfaces":[]
+    "interfaces":["kotlin.jvm.functions.Function2"]
   },
   {
     "interfaces":["com.github.ajalt.mordant.internal.jna.MacosLibC"]

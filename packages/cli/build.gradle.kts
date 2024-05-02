@@ -390,8 +390,13 @@ dependencies {
   implementation(libs.netty.tcnative)
 
   // JVM-only dependencies which are filtered for native builds.
-  jvmOnly(libs.jline.terminal.jna)
-  if (!enableJna) jvmOnly(libs.jna) else implementation(libs.jna)
+  if (!enableJna) {
+    jvmOnly(libs.jline.terminal.jna)
+    jvmOnly(libs.jna)
+  } else {
+    implementation(libs.jline.terminal.jna)
+    implementation(libs.jna)
+  }
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
@@ -679,9 +684,9 @@ val commonNativeArgs = listOfNotNull(
   "-Delide.natives=$nativesPath",
   "-J-Delide.natives=$nativesPath",
   "-H:CLibraryPath=$nativesPath",
-  if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
-  if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
-  if (enableEspresso) "-J-Despresso.finalization.UnsafeOverride=true" else null,
+//  if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
+//  if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
+//  if (enableEspresso) "-J-Despresso.finalization.UnsafeOverride=true" else null,
   "-R:MaxDirectMemorySize=256M",
   "-J-Dio.netty.allocator.type=unpooled",
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
@@ -765,7 +770,7 @@ val profiles: List<String> = listOf(
 // GVM release flags
 val gvmReleaseFlags: List<String> = listOf(
   "-O3",
-  "-flto",
+  //"-flto",
 )
 
 // Full release flags (for all operating systems and platforms).

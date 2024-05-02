@@ -20,7 +20,6 @@ import org.graalvm.polyglot.*
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.io.InputStream
-import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -43,7 +42,6 @@ import elide.runtime.gvm.*
 import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
-import elide.runtime.gvm.internals.GuestVFS.VFSConfigurator
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.context.GuestLogProxy
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
@@ -201,86 +199,6 @@ public abstract class AbstractVMEngine<
    * Access to VM-specific configuration.
    */
   protected val config: Config get() = resolveConfig()
-
-  /**
-   * TBD.
-   */
-  public abstract class GuestVFSConfigurator (
-    private val guestLanguage: GuestLanguage,
-    private val runtimeInfoProducer: () -> RuntimeInfo
-  ) : VFSConfigurator {
-    private val runtimeInfoCached by lazy {
-      runtimeInfoProducer.invoke()
-    }
-
-    // Resolve an OS/architecture pair for the current platform.
-    private fun resolveOsArch(): Pair<String, String> {
-      val os = System.getProperty("os.name", "unknown").lowercase()
-      val arch = System.getProperty("os.arch", "unknown").lowercase()
-      return when {
-        os.contains("linux") && (arch.contains("x86_64") || arch.contains("amd64")) ->
-          "linux" to "amd64"
-        os.contains("linux") && (arch.contains("arm64") || arch.contains("aarch64")) ->
-          "linux" to "arm64"
-        os.contains("mac") && (arch.contains("x86_64") || arch.contains("amd64")) ->
-          "darwin" to "amd64"
-        os.contains("mac") && (arch.contains("arm64") || arch.contains("aarch64")) ->
-          "darwin" to "arm64"
-        os.contains("windows") && (arch.contains("x86_64") || arch.contains("amd64")) ->
-          "windows" to "amd64"
-        os.contains("windows") && (arch.contains("arm64") || arch.contains("aarch64")) ->
-          "windows" to "arm64"
-        else -> error("Unsupported platform; could not detect OS/architecture pair: $os/$arch")
-      }
-    }
-
-    override fun image(): RuntimeVFS? = runtimeInfoCached.let { info ->
-      val (os, arch) = resolveOsArch()
-
-      val target: String? = when (val imgInfo = info.image) {
-        // with no image info, we have a `null`
-        null -> null
-
-        // with universal info, we use the universal bundle
-        is RuntimeImageInfo.UniversalImageInfo -> imgInfo.universal
-
-        // anything else is unrecognized
-        else -> (imgInfo as RuntimeImageInfo.NativeImageInfo).let { nativeInfo ->
-          val osBase = when (os) {
-            "linux" -> nativeInfo.linux
-            "darwin" -> nativeInfo.darwin
-            "windows" -> nativeInfo.windows
-            else -> error("Unrecognized image info OS: $imgInfo")
-          } ?: error("No image info for OS: $imgInfo")
-
-          when (arch) {
-            "amd64" -> osBase.amd64?.bundle
-            "arm64" -> osBase.arm64?.bundle
-            else -> error("Unrecognized image info architecture: $imgInfo")
-          } ?: error("No image info for architecture: $imgInfo")
-        }
-      }
-      if (target != null) {
-        RuntimeVFS(target)
-      } else {
-        null
-      }
-    }
-
-    override fun bundles(): List<URI> = runtimeInfoCached.let { info ->
-      val base = when (val img = image()) {
-        null -> emptyList()
-        else -> listOf(img)
-      }
-
-      base.plus(info.vfs).map {
-        val path = "$EMBEDDED_ROOT/${guestLanguage.symbol}/${it.name}"
-        GuestVFSConfigurator::class.java.getResource(path)?.toURI() ?: error(
-          "Failed to locate embedded runtime bundle: $it (path: '$path')"
-        )
-      }
-    }
-  }
 
   /**
    * ## Runtime Info.

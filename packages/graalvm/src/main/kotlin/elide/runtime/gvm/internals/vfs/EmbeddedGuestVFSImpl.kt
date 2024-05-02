@@ -1133,10 +1133,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param ioConfig Guest I/O configuration to use for creating the VFS.
      * @return Embedded VFS implementation built according to the provided [config].
      */
-    @Singleton internal fun spawn(
-      ioConfig: GuestIOConfiguration,
-      configurators: List<GuestVFS.VFSConfigurator>,
-    ): EmbeddedGuestVFSImpl {
+    @Singleton internal fun spawn(ioConfig: GuestIOConfiguration): EmbeddedGuestVFSImpl {
       // generate an effective configuration
       val config = withConfig(ioConfig)
 
@@ -1150,15 +1147,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         deferred = config.deferred ?: Settings.DEFAULT_DEFERRED_READS
         workingDirectory = config.workingDirectory
         if (config.bundle.isNotEmpty()) {
-          paths = config.bundle.plus(
-            configurators.flatMap {
-              it.bundles()
-            },
-          )
-        } else if (configurators.isNotEmpty()) {
-          paths = configurators.flatMap {
-            it.bundles()
-          }
+          paths = config.bundle
         }
       }
 

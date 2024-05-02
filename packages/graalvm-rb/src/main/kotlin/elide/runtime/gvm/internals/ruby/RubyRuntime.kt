@@ -18,9 +18,7 @@ import org.graalvm.polyglot.Source
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
-import elide.annotations.Context
 import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.internals.AbstractVMEngine
@@ -121,10 +119,4 @@ context: VMContext,
       }
     }
   }
-
-  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
-    RUBY,
-    { runtimeInfo.get() }
-  )
 }

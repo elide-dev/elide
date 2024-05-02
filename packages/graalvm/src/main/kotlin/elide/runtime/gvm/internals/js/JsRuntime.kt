@@ -201,6 +201,7 @@ internal class JsRuntime @Inject constructor (
       "buffer" to "/__runtime__/buffer",
       "express" to "/__runtime__/express",
       "fs" to "/__runtime__/fs",
+      "fs/promises" to "/__runtime__/fs/promises",
       "inspector" to "/__runtime__/inspector",
       "os" to "/__runtime__/os",
       "path" to "/__runtime__/path",
@@ -220,12 +221,6 @@ internal class JsRuntime @Inject constructor (
       }
     }
   }
-
-  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFSConfigurator(
-    GraalVMGuest.JAVASCRIPT,
-    { runtimeInfo.get() }
-  )
 
   // Resolve the expected configuration symbol for the given ECMA standard level.
   private val JsLanguageLevel.symbol: String get() = when (this) {

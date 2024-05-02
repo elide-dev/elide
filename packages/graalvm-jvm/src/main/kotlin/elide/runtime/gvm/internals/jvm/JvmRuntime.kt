@@ -21,9 +21,7 @@ import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
-import elide.annotations.Context
 import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.internals.AbstractVMEngine
@@ -34,9 +32,6 @@ import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.jvm.cfg.JvmRuntimeConfig
 import org.graalvm.polyglot.Context as VMContext
 
-/**
- * TBD.
- */
 @Requires(
   property = "elide.gvm.enabled",
   value = "true",
@@ -68,7 +63,7 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
     VMStaticProperty.inactive("java.EnableAgents"),
     VMStaticProperty.inactive("java.EnableManagement"),
     VMStaticProperty.inactive("java.ExposeNativeJavaVM"),
-// VMStaticProperty.of("java.JImageMode", "native"),
+    VMStaticProperty.of("java.JImageMode", "native"),
   ).stream()
 
   override fun prepare(context: VMContext, globals: Value) {
@@ -117,10 +112,4 @@ context: VMContext,
       }
     }
   }
-
-  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-  @Singleton @Context class PythonRuntimeVFSConfigurator : GuestVFSConfigurator(
-    JVM,
-    { runtimeInfo.get() }
-  )
 }

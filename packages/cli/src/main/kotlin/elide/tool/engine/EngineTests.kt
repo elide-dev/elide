@@ -41,8 +41,8 @@ abstract class LanguageCondition (
 }
 
 class JsEngineCondition: LanguageCondition("js")
-class PythonEngineCondition: LanguageCondition("python", disabledByDefault = true)
-class RubyEngineCondition: LanguageCondition("ruby", disabledByDefault = true)
+class PythonEngineCondition: LanguageCondition("python")
+class RubyEngineCondition: LanguageCondition("ruby")
 class JvmEngineCondition: LanguageCondition("java")
 class WasmEngineCondition: LanguageCondition("wasm")
 

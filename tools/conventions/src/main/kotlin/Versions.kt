@@ -20,7 +20,7 @@ object Versions {
   const val bouncycastle = "1.78.1"
 
   /** Micronaut version. */
-  const val micronaut = "4.3.6"
+  const val micronaut = "4.4.1"
 
   /** Ant/JUnit version. */
   const val antJUnit = "1.10.12"
@@ -35,7 +35,7 @@ object Versions {
   const val guava = "33.1.0-jre"
 
   /** gRPC version. */
-  const val grpc = "1.61.1"
+  const val grpc = "1.62.2"
 
   /** GraalVM version. */
   const val graalvm = "24.1.0-SNAPSHOT"

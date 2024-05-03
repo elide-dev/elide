@@ -18,7 +18,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.11
+# Version: 0.12
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to

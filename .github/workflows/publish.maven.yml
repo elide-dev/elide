@@ -204,7 +204,7 @@ jobs:
           echo "APP_VERSION=$(cat .version)" >> $GITHUB_ENV;
           echo "Releasing version $APP_VERSION"
       - name: "Publish: Conventions"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         if: ${{ inputs.conventions }}
         with:
           arguments: |
@@ -221,7 +221,7 @@ jobs:
             -x test
             :conventions:publish
       - name: "Publish: Substrate"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         if: ${{ inputs.substrate }}
         with:
           arguments: |
@@ -238,7 +238,7 @@ jobs:
             -x test
             :substrate:publish
       - name: "Publish: Processor"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         if: ${{ inputs.processor }}
         with:
           arguments: |
@@ -255,7 +255,7 @@ jobs:
             -x test
             :tools:processor:publish
       - name: "Publish: Packages"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         if: ${{ inputs.packages }}
         with:
           arguments: |

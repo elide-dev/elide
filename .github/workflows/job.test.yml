@@ -289,7 +289,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Testsuite"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -326,7 +326,7 @@ jobs:
             -PbuildDocs=false
             -PbuildDocsSite=false
       - name: "Analysis: Sonar"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         continue-on-error: true
         env:
           CI: true
@@ -359,7 +359,7 @@ jobs:
             -PbuildDocs=false
             -PbuildDocsSite=false
       - name: "Runtime Self-tests (JVM)"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         continue-on-error: true
         env:
           CI: true
@@ -525,7 +525,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Run Tests (Native)"
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         continue-on-error: true
         env:
           CI: true

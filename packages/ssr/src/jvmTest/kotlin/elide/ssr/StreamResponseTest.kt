@@ -14,11 +14,12 @@
 package elide.ssr
 
 import org.graalvm.polyglot.Context
+import org.junit.jupiter.api.Disabled
 import kotlin.test.*
 
 /** Tests for response streaming across polyglot boundaries. */
-@Ignore class StreamResponseTest {
-  @Test @Ignore fun testSSRBasic() {
+@Disabled class StreamResponseTest {
+  @Test fun testSSRBasic() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -47,7 +48,7 @@ import kotlin.test.*
       }
   }
 
-  @Test @Ignore fun testSSRPluckMethod() {
+  @Test fun testSSRPluckMethod() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -97,7 +98,7 @@ import kotlin.test.*
       }
   }
 
-  @Test @Ignore fun testSSRInterface() {
+  @Test fun testSSRInterface() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -152,7 +153,7 @@ import kotlin.test.*
       }
   }
 
-  @Test @Ignore fun testSSRStream() {
+  @Test fun testSSRStream() {
     // language=javascript
     val testCode = """
       var embedded = (() => {

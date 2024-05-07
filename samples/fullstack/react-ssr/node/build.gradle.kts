@@ -34,7 +34,7 @@ kotlin {
   }
 }
 
-elide {
+elideApp {
   mode = if (devMode) {
     BuildMode.DEVELOPMENT
   } else {
@@ -53,10 +53,10 @@ elide {
 }
 
 dependencies {
-  implementation(projects.packages.base)
-  implementation(projects.packages.graalvmJs)
-  implementation(projects.packages.graalvmReact)
-  implementation(projects.samples.fullstack.reactSsr.frontend)
+  implementation(framework.elide.base)
+  implementation(framework.elide.graalvm.js)
+  implementation(framework.elide.graalvm.react)
+  implementation(projects.fullstack.reactSsr.frontend)
 
   // Kotlin Wrappers
   implementation(libs.kotlinx.wrappers.react)

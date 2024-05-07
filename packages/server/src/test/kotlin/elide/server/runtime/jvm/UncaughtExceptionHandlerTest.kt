@@ -13,12 +13,30 @@
 
 package elide.server.runtime.jvm
 
+import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
 import org.junit.jupiter.api.assertDoesNotThrow
+import java.util.function.Supplier
+import jakarta.inject.Singleton
 import kotlin.test.Test
+import elide.annotations.Factory
+import elide.annotations.Inject
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.testing.annotations.TestCase
+
+@Factory
+@Requires(env = ["test"])
+@Replaces(UncaughtExceptionHandler.UncaughtExceptionHandlerLoggingProvider::class)
+class TestUncaughtExceptionHandlerLoggingProvider : UncaughtExceptionHandler.UncaughtExceptionHandlerLoggingProvider() {
+  @Singleton override fun get(): Logger {
+    return Logging.named("uncaught-exception-handler-test")
+  }
+}
 
 /** Test for the default [UncaughtExceptionHandler]. */
-class UncaughtExceptionHandlerTest {
-  val handler = UncaughtExceptionHandler()
+@TestCase class UncaughtExceptionHandlerTest {
+  @Inject internal lateinit var handler: UncaughtExceptionHandler
 
   @Test fun testLogUncaughtException() {
     assertDoesNotThrow {

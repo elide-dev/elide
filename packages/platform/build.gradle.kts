@@ -48,7 +48,11 @@ dependencies {
     // BOMs: gRPC, Netty, Micronaut.
     api(libs.grpc.bom)
     api(libs.netty.bom)
-    api(libs.projectreactor.bom)
+
+    // Elide.
+    api(projects.packages.core)
+    api(projects.packages.base)
+    api(projects.packages.graalvm)
 
     // Kotlin.
     api(kotlin("stdlib"))

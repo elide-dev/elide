@@ -2,7 +2,7 @@ package elide.runtime.plugins.kotlin
 
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.io.ByteSequence
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
@@ -15,7 +15,7 @@ import elide.runtime.core.PolyglotEngine
 import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.testing.annotations.Test
 
-@OptIn(DelicateElideApi::class) @Disabled class KotlinShellTest {
+@OptIn(DelicateElideApi::class) class KotlinShellTest {
   /** Temporary classpath root used for guest JARs. */
   @TempDir lateinit var tempClasspathRoot: File
 
@@ -26,7 +26,17 @@ import elide.testing.annotations.Test
     }
   }
 
-  @Test fun testKotlinInterpreter() {
+  private fun wrapEspresso(block: () -> Unit) {
+    try {
+      block()
+    } catch (err: Throwable) {
+      if (err.message?.contains("nespresso") == true) {
+        Assumptions.abort<Unit>("Espresso not supported on this platform")
+      }
+    }
+  }
+
+  @Test fun testKotlinInterpreter() = wrapEspresso {
     val context = configureEngine().acquire()
     val interpreter = GuestKotlinEvaluator(context)
 
@@ -49,7 +59,7 @@ import elide.testing.annotations.Test
     )
   }
 
-  @Test fun testSourceValidation() {
+  @Test fun testSourceValidation() = wrapEspresso {
     val context = configureEngine().acquire()
     val interpreter = GuestKotlinEvaluator(context)
 
@@ -71,7 +81,7 @@ import elide.testing.annotations.Test
     }
   }
 
-  @Test fun testEvaluateKotlinInteractive() {
+  @Test fun testEvaluateKotlinInteractive() = wrapEspresso {
     val context = configureEngine().acquire()
     val source = Source.newBuilder(Kotlin.languageId, "5.let { it * 5 }", "interactive.kt")
       .interactive(true)
@@ -88,7 +98,7 @@ import elide.testing.annotations.Test
     )
   }
 
-  @Test fun testEvaluateKotlinScript() {
+  @Test fun testEvaluateKotlinScript() = wrapEspresso {
     val context = configureEngine().acquire()
     val scriptFile = File.createTempFile("elide", ".kts")
     scriptFile.writeText(

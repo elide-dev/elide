@@ -77,11 +77,9 @@ java {
 afterEvaluate {
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-      apiVersion = "1.9"
-      languageVersion = "1.9"
       jvmTarget = "21"
       javaParameters = true
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
       incremental = true
     }
   }

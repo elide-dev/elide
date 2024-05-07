@@ -66,7 +66,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether this project uses KAPT. Only allowed for [jvm] projects. */
     public var kapt: Boolean = false
 
-    /** Whether this project uses KSP. Only allowed for [jvm] projects. */
+    /** Whether this project uses KSP. */
     public var ksp: Boolean = false
 
     /** Whether to configure the Kotlin AllOpen plugin with predefined settings. */

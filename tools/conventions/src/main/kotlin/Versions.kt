@@ -29,10 +29,10 @@ object Versions {
   const val netty = "4.1.109.Final"
 
   /** Protocol Buffers version. */
-  const val protobuf = "3.21.11"
+  const val protobuf = "3.25.2"
 
   /** Guava version. */
-  const val guava = "33.1.0-jre"
+  const val guava = "33.2.0-jre"
 
   /** gRPC version. */
   const val grpc = "1.62.2"

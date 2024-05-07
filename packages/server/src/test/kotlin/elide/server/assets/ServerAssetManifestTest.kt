@@ -14,6 +14,7 @@
 package elide.server.assets
 
 import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.ManifestFormat
@@ -88,7 +89,7 @@ import elide.testing.annotations.TestCase
     )
   }
 
-  @Test @Ignore fun testManifestEqualsAcrossFormats() {
+  @Test fun testManifestEqualsAcrossFormats() {
     val dataBinary = TestUtil.loadBinary("/manifests/app.assets.pb")
     val dataJson = TestUtil.loadBinary("/manifests/app.assets.pb.json")
     val provider = ServerAssetManifestProvider()

@@ -2,7 +2,7 @@ package elide.runtime.plugins.java
 
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.io.ByteSequence
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -13,13 +13,23 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.plugins.java.shell.GuestJavaEvaluator
 
-@OptIn(DelicateElideApi::class) @Disabled class JavaShellTest {
+@OptIn(DelicateElideApi::class) class JavaShellTest {
   /** Acquire a [PolyglotEngine] configured with the [Java] plugin. */
   private fun configureEngine() = PolyglotEngine {
     install(Java)
   }
 
-  @Test fun testJavaInterpreter() {
+  private fun wrapEspresso(block: () -> Unit) {
+    try {
+      block()
+    } catch (err: Throwable) {
+      if (err.message?.contains("nespresso") == true) {
+        Assumptions.abort<Unit>("Espresso not supported on this platform")
+      }
+    }
+  }
+
+  @Test fun testJavaInterpreter() = wrapEspresso {
     val context = configureEngine().acquire()
     val interpreter = GuestJavaEvaluator(context)
 
@@ -42,7 +52,7 @@ import elide.runtime.plugins.java.shell.GuestJavaEvaluator
     )
   }
 
-  @Test fun testSourceValidation() {
+  @Test fun testSourceValidation() = wrapEspresso {
     val context = configureEngine().acquire()
     val interpreter = GuestJavaEvaluator(context)
 
@@ -68,7 +78,7 @@ import elide.runtime.plugins.java.shell.GuestJavaEvaluator
     }
   }
 
-  @Test fun testEvaluateJava() {
+  @Test fun testEvaluateJava() = wrapEspresso {
     val context = configureEngine().acquire()
     val source = Source.newBuilder(Java.languageId, "Math.abs(-5)", "interactive.java")
       .interactive(true)

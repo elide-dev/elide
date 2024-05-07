@@ -69,10 +69,3 @@ dependencies {
     runtimeOnly(libs.junit.jupiter.engine)
   }
 }
-
-afterEvaluate {
-  // @TODO(sgammon): breakage while fetching `joda-core` dependency
-  tasks.named { it == "wasmJsBrowserTest" }.configureEach {
-    enabled = false
-  }
-}

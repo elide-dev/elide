@@ -35,7 +35,7 @@ kotlin {
 }
 
 dependencies {
-  implementation(projects.packages.base)
+  implementation(framework.elide.base)
   implementation(kotlin("stdlib"))
   implementation(libs.kotlinx.wrappers.js)
   implementation(libs.kotlinx.wrappers.browser)

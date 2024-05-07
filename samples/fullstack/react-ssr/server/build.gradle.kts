@@ -9,12 +9,12 @@ import dev.elide.buildtools.gradle.plugin.BuildMode.DEVELOPMENT
 import dev.elide.buildtools.gradle.plugin.BuildMode.PRODUCTION
 import io.micronaut.gradle.MicronautRuntime.NETTY
 import tools.elide.assets.EmbeddedScriptLanguage
-import tools.elide.assets.ManifestFormat.BINARY
+import tools.elide.assets.ManifestFormat
 
 plugins {
   kotlin("jvm")
-  kotlin("plugin.serialization")
-  id(libs.plugins.ksp.get().pluginId)
+  kotlin("kapt")
+  kotlin("plugin.serialization") version "2.0.0-RC2"
   id("dev.elide.buildtools.plugin")
   id("io.micronaut.application")
   id("io.micronaut.docker")
@@ -27,7 +27,16 @@ group = "dev.elide.samples"
 version = rootProject.version as String
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
-elide {
+java {
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
+}
+
+kotlin {
+  jvmToolchain(22)
+}
+
+elideApp {
   injectDependencies = false
 
   mode = if (devMode) {
@@ -38,11 +47,11 @@ elide {
 
   server {
     ssr(EmbeddedScriptLanguage.JS) {
-      bundle(projects.samples.fullstack.reactSsr.node)
+      bundle(projects.fullstack.reactSsr.node)
     }
     assets {
       bundler {
-        format(BINARY)
+        format(ManifestFormat.BINARY)
 
         compression {
           minimumSizeBytes(0)
@@ -56,7 +65,7 @@ elide {
       }
 
       script("scripts.ui") {
-        from(projects.samples.fullstack.reactSsr.frontend)
+        from(projects.fullstack.reactSsr.frontend)
       }
     }
   }
@@ -103,14 +112,16 @@ application {
 dependencies {
   api(kotlin("stdlib"))
   api(kotlin("stdlib-jdk8"))
-  implementation(projects.packages.base)
-  implementation(projects.packages.ssr)
-  implementation(projects.packages.server)
-  implementation(projects.packages.graalvm)
+  kapt(mn.micronaut.inject.java)
+  implementation(framework.elide.base)
+  implementation(framework.elide.ssr)
+  implementation(framework.elide.server)
+  implementation(framework.elide.graalvm)
 
   implementation(libs.jsoup)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
+  implementation(mn.micronaut.reactor)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
@@ -127,7 +138,7 @@ dependencies {
   runtimeOnly(mn.snakeyaml)
 
   testImplementation(kotlin("test-junit5"))
-  testImplementation(projects.packages.test)
+  testImplementation(framework.elide.test)
   testImplementation(mn.micronaut.test.junit5)
 }
 

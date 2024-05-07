@@ -19,8 +19,10 @@
         </encoder>
     </appender>
 
+    <logger name="uncaught-exception-handler-test" level="OFF" />
+
     <!-- Root Logger -->
-    <root level="info">
+    <root level="error">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

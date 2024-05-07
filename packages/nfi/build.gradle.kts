@@ -16,7 +16,7 @@ plugins {
 }
 
 elide {
-  // Nothing to set.
+  // Nothing at this time.
 }
 
 group = "dev.elide.embedded"

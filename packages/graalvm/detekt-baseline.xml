@@ -2,7 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>CyclomaticComplexMethod:AbstractVMEngine.kt$AbstractVMEngine.GuestVFSConfigurator$private fun resolveOsArch(): Pair&lt;String, String></ID>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
     <ID>CyclomaticComplexMethod:NodeOperatingSystem.kt$NodeOperatingSystem.ModuleBase$override fun getMember(key: String?): Any?</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
@@ -32,13 +31,13 @@
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL$3</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL.Companion$31</ID>
     <ID>MagicNumber:VMStaticProperty.kt$VMStaticProperty.Companion$3</ID>
+    <ID>MatchingDeclarationName:AbstractJSException.kt$AbstractJsException</ID>
     <ID>MatchingDeclarationName:DebugPlugin.kt$Debug</ID>
     <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
     <ID>MatchingDeclarationName:Types.kt$GuestHandlerFunction</ID>
     <ID>MatchingDeclarationName:VfsPlugin.kt$Vfs</ID>
     <ID>MaxLineLength:JsConcurrentMap.kt$JsConcurrentMap.Factory$*</ID>
     <ID>MaxLineLength:JsMutableMultiMap.kt$JsMutableMultiMap.Factory$@JvmStatic override</ID>
-    <ID>MaxLineLength:NodeModuleConformanceTest.kt$NodeModuleConformanceTest$assertContains(require("node:$moduleName").memberKeys, member, "member '$member' should be present on module '$moduleName'")</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,true,URLs should be equal"</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>

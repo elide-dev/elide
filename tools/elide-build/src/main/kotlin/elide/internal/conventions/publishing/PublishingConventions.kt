@@ -13,11 +13,15 @@
 
 package elide.internal.conventions.publishing
 
+import Dev_sigstore_signPlugin
 import dev.sigstore.sign.SigstoreSignExtension
+import dev.sigstore.sign.tasks.SigstoreSignFilesTask
 import org.gradle.api.Project
+import org.gradle.api.credentials.AwsCredentials
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
+import org.gradle.kotlin.dsl.register
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 import java.net.URI
@@ -103,20 +107,29 @@ internal fun Project.configurePublishing(
  */
 internal fun Project.configurePublishingRepositories() {
   extensions.getByType(PublishingExtension::class.java).apply {
+    val elideRepoUrl = URI.create(project.properties[Publishing.MAVEN_REPO_URL] as String)
+
     // configure repositories for publishing
     repositories.apply {
       // configurable repository, to be overridden by project settings
       maven {
         name = "elide"
-        url = URI.create(project.properties[Publishing.MAVEN_REPO_URL] as String)
+        url = elideRepoUrl
 
         if (project.findProperty(Publishing.MAVEN_AUTH_REQUIRED).toString().toBoolean()) {
-          credentials {
-            username = (project.properties[Credentials.MAVEN_USER] as? String
-              ?: System.getenv(Credentials.PUBLISH_USER))?.ifBlank { null }
+          if (elideRepoUrl.toString().contains("s3://")) {
+//            credentials(AwsCredentials::class.java) {
+//              accessKey awsCredentials.AWSAccessKeyId
+//              secretKey awsCredentials.AWSSecretKey
+//            }
+          } else {
+            credentials {
+              username = (project.properties[Credentials.MAVEN_USER] as? String
+                ?: System.getenv(Credentials.PUBLISH_USER))?.ifBlank { null }
 
-            password = (project.properties[Credentials.MAVEN_PASSWORD] as? String
-              ?: System.getenv(Credentials.PUBLISH_TOKEN))?.ifBlank { null }
+              password = (project.properties[Credentials.MAVEN_PASSWORD] as? String
+                ?: System.getenv(Credentials.PUBLISH_TOKEN))?.ifBlank { null }
+            }
           }
         }
       }
@@ -178,14 +191,19 @@ internal fun Project.configureSigning() {
 }
 
 internal fun Project.configureSigstore() {
-  extensions.getByType(SigstoreSignExtension::class.java).apply {
-    oidcClient.apply {
-      gitHub {
-        audience.set("sigstore")
-      }
-      web {
-        clientId.set("sigstore")
-        issuer.set("https://oauth2.sigstore.dev/auth")
+  if (!pluginManager.hasPlugin("dev.sigstore.sign")) {
+    pluginManager.apply(Dev_sigstore_signPlugin::class.java)
+  }
+  pluginManager.withPlugin("dev.sigstore.sign") {
+    extensions.getByType(SigstoreSignExtension::class.java).apply {
+      oidcClient.apply {
+        gitHub {
+          audience.set("sigstore")
+        }
+        web {
+          clientId.set("sigstore")
+          issuer.set("https://oauth2.sigstore.dev/auth")
+        }
       }
     }
   }

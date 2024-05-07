@@ -130,8 +130,6 @@ tasks.withType(Copy::class).configureEach {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
-    apiVersion = "1.9"
-    languageVersion = "1.9"
     jvmTarget = javaLanguageVersion
     javaParameters = true
     incremental = true

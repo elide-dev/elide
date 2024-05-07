@@ -50,7 +50,6 @@ kotlin {
 
 dependencies {
   jvm {
-    implementation(projects.packages.server)
     api(kotlin("stdlib-jdk8"))
     api(kotlin("test-junit5"))
     api(libs.jakarta.inject)

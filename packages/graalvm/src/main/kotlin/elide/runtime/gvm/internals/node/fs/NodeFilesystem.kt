@@ -40,11 +40,12 @@ import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.node.FilesystemAPI
 import elide.runtime.intrinsics.js.node.FilesystemPromiseAPI
+import elide.runtime.intrinsics.js.node.NodeFilesystemAPI
+import elide.runtime.intrinsics.js.node.NodeFilesystemPromiseAPI
 import elide.runtime.intrinsics.js.node.buffer.Buffer
-import elide.runtime.intrinsics.js.node.fs.ReadFileCallback
-import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
-import elide.runtime.intrinsics.js.node.fs.StringOrBuffer
+import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
+import elide.vm.annotations.Polyglot
 
 // Installs the Node `fs` and `fs/promises` modules into the intrinsic bindings.
 @Intrinsic internal class NodeFilesystemModule : AbstractNodeBuiltinModule() {
@@ -95,7 +96,7 @@ internal object NodeFilesystem {
 }
 
 // Implements common baseline functionality for the Node filesystem modules.
-private abstract class FilesystemBaseline (
+internal abstract class FilesystemBase (
   protected val exec: ExecutorService,
   protected val fs: GuestVFS,
   protected val dispatcher: CoroutineDispatcher = exec.asCoroutineDispatcher(),
@@ -125,6 +126,28 @@ private abstract class FilesystemBaseline (
       }
 
       else -> error("Unknown options passed to `fs` readFile: ${options.asString()}")
+    }
+  }
+
+  protected fun writeFileOptions(options: Value?): WriteFileOptions {
+    return when {
+      options == null -> WriteFileOptions.DEFAULTS
+      options.isString -> TODO()
+      options.hasMembers() -> {
+        val encoding = options.getMember("encoding")
+
+        if (encoding == null) {
+          WriteFileOptions.DEFAULTS
+        } else WriteFileOptions(
+          encoding = when {
+            encoding.isNull -> null
+            encoding.isString -> encoding.asString()
+            else -> error("Unknown encoding type passed to `fs` writeFile: ${encoding.asString()}")
+          },
+        )
+      }
+
+      else -> error("Unknown options passed to `fs` writeFile: ${options.asString()}")
     }
   }
 
@@ -186,8 +209,8 @@ private abstract class FilesystemBaseline (
 }
 
 // Implements the Node `fs` module.
-private class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : FilesystemAPI, FilesystemBaseline(exec, fs) {
-  override fun readFile(path: Value, options: Value, callback: ReadFileCallback) {
+internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeFilesystemAPI, FilesystemBase(exec, fs) {
+  @Polyglot override fun readFile(path: Value, options: Value, callback: ReadFileCallback) {
     val resolved = resolvePath("readFile", path)
     val opts = readFileOptions(options)
     val nioPath = resolved.toJavaPath()
@@ -205,7 +228,7 @@ private class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : Filesy
     }
   }
 
-  override fun readFile(path: Value, callback: ReadFileCallback) {
+  @Polyglot override fun readFile(path: Value, callback: ReadFileCallback) {
     val resolved = resolvePath("readFile", path)
     val nioPath = resolved.toJavaPath()
     val encoding = resolveEncoding(ReadFileOptions.DEFAULTS.encoding)
@@ -222,7 +245,7 @@ private class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : Filesy
     }
   }
 
-  override fun readFile(path: Path, options: ReadFileOptions, callback: ReadFileCallback) {
+  @Polyglot override fun readFile(path: Path, options: ReadFileOptions, callback: ReadFileCallback) {
     val encoding = resolveEncoding(options.encoding)
     val nioPath = path.toJavaPath()
 
@@ -238,7 +261,7 @@ private class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : Filesy
     }
   }
 
-  override fun readFileSync(path: Value, options: Value?): StringOrBuffer {
+  @Polyglot override fun readFileSync(path: Value, options: Value?): StringOrBuffer {
     val resolved = resolvePath("readFileSync", path)
     val opts = readFileOptions(options)
     val nioPath = resolved.toJavaPath()
@@ -249,7 +272,7 @@ private class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : Filesy
     }
   }
 
-  override fun readFileSync(path: Path, options: ReadFileOptions): StringOrBuffer {
+  @Polyglot override fun readFileSync(path: Path, options: ReadFileOptions): StringOrBuffer {
     val nioPath = path.toJavaPath()
     val encoding = resolveEncoding(options.encoding)
 
@@ -257,12 +280,20 @@ private class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : Filesy
       readFileData(nioPath, encoding)
     }
   }
+
+  @Polyglot override fun writeFile(path: Value, data: StringOrBuffer, options: Value, callback: WriteFileCallback) {
+    TODO("Not yet implemented: fs.writeFile(Value, StringOrBuffer, Value, WriteFileCallback)")
+  }
+
+  @Polyglot override fun writeFileSync(path: Value, data: StringOrBuffer, options: Value?) {
+    TODO("Not yet implemented: fs.writeFileSync(Value, StringOrBuffer, Value?)")
+  }
 }
 
 // Implements the Node `fs/promises` module.
 private class NodeFilesystemPromiseProxy (executor: ExecutorService, fs: GuestVFS)
-  : FilesystemPromiseAPI, FilesystemBaseline(executor, fs) {
-  override fun readFile(path: Value, options: Value?): JsPromise<StringOrBuffer> {
+  : NodeFilesystemPromiseAPI, FilesystemBase(executor, fs) {
+  @Polyglot override fun readFile(path: Value, options: Value?): JsPromise<StringOrBuffer> {
     val op: () -> StringOrBuffer = {
       val resolved = resolvePath("readFile", path)
       val opts = readFileOptions(options)

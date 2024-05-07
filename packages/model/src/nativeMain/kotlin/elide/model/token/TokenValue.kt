@@ -21,4 +21,7 @@ import elide.annotations.data.Sensitive
 @Sensitive @Serializable public actual data class TokenValue actual constructor (
   /** Sensitive inner value for this token. */
   @Contextual public actual val value: String,
-)
+) {
+  override fun toString(): String = "TokenValue(●●●●)"
+}
+

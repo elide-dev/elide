@@ -12,6 +12,7 @@
  */
 
 plugins {
+  alias(libs.plugins.shadow) apply false
   id("dev.elide.buildtools.plugin") apply false
 }
 

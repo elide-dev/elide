@@ -58,6 +58,12 @@ public object Constants {
 
     /** Property: URL of the Maven repo to be used for publishing. */
     const val MAVEN_REPO_URL = "elide.publish.repo.maven"
+
+    /** Property: Whether to enable Sigstore when publishing. */
+    const val ENABLE_SIGSTORE = "enableSigstore"
+
+    /** Property: Whether to enable GPG signing when publishing. */
+    const val ENABLE_SIGNING = "enableSigning"
   }
 
   /** Remote repositories used for publishing, etc. */
@@ -108,7 +114,7 @@ public object Constants {
     const val JVM_TARGET = "versions.java.target"
 
     /** Property: JVM bytecode target if no other version is specified. */
-    const val JVM_DEFAULT = "17"
+    const val JVM_DEFAULT = "21"
 
     /** GraalVM metadata repository version. */
     const val GRAALVM_METADATA = "0.3.6"
@@ -126,7 +132,7 @@ public object Constants {
     const val PRETTIER = "3.2.5"
 
     /** Pinned Protobuf version. */
-    const val PROTOBUF = "3.21.11"
+    const val PROTOBUF = "3.25.2"
 
     /** Pinned Jupiter (JUnit5) version. */
     const val JUPITER = "5.10.2"
@@ -135,7 +141,7 @@ public object Constants {
     const val NETTY = "4.1.109.Final"
 
     /** Guava version. */
-    const val GUAVA = "33.1.0-jre"
+    const val GUAVA = "33.2.0-jre"
 
     /** gRPC version. */
     const val GRPC = "1.62.2"

@@ -13,7 +13,10 @@
 
 package elide.server.runtime.jvm
 
+import java.util.function.Supplier
 import jakarta.inject.Singleton
+import elide.annotations.Factory
+import elide.annotations.Inject
 import elide.runtime.Logger
 import elide.runtime.Logging
 
@@ -31,9 +34,19 @@ import elide.runtime.Logging
  * }
  * ```
  */
-@Singleton public open class UncaughtExceptionHandler: Thread.UncaughtExceptionHandler {
+@Singleton public open class UncaughtExceptionHandler @Inject constructor (
+  private val provider: UncaughtExceptionHandlerLoggingProvider,
+): Thread.UncaughtExceptionHandler {
+  @Factory public open class UncaughtExceptionHandlerLoggingProvider : Supplier<Logger> {
+    @Singleton override fun get(): Logger {
+      return Logging.root()
+    }
+  }
+
   // Root logger.
-  private val logging: Logger = Logging.root()
+  private val logging: Logger by lazy {
+    provider.get()
+  }
 
   override fun uncaughtException(thread: Thread, err: Throwable) {
     // not yet implemented

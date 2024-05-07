@@ -155,7 +155,7 @@ jobs:
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"
-          java-version: 21
+          java-version: 22
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
@@ -197,4 +197,4 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.minimum=11
-            -Pversions.java.language=21
+            -Pversions.java.language=22

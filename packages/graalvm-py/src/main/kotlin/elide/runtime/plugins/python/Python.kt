@@ -61,14 +61,25 @@ import elide.runtime.plugins.vfs.Vfs
     }
 
     builder.setOptions(
-      "python.PosixModuleBackend" to "java",
+      "python.HPyBackend" to "jni",
+      "python.Sha3ModuleBackend" to "native",
+      "python.PosixModuleBackend" to "native",
     )
+
+    config.executable?.let {
+      builder.setOptions("python.Executable" to it)
+    }
+    config.executableList?.let {
+      builder.setOptions("python.OrigArgv" to it.joinToString(GPY_LIST_SEPARATOR))
+      builder.setOptions("python.ExecutableList" to it.joinToString(GPY_LIST_SEPARATOR))
+    }
   }
 
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
     private const val ENABLE_EXPERIMENTAL = false
+    private const val GPY_LIST_SEPARATOR = "🏆"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
@@ -80,7 +91,7 @@ import elide.runtime.plugins.vfs.Vfs
           }
 
           override val fsProvider: () -> FileSystem get() = {
-            org.graalvm.python.embedding.utils.VirtualFileSystem
+            org.graalvm.python.embedding.vfs.VirtualFileSystem
               .newBuilder()
               .build()
           }

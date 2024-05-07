@@ -24,8 +24,8 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
  */
 @DelicateElideApi public abstract class PolyglotEngineConfiguration internal constructor() : PluginRegistry {
   /**
-   * Enumerates the access privileges that can be conceded to guest code over host resources, such as environment
-   * variables, or file system (IO).
+   * Lists the access privileges that can be conceded to guest code over host resources, such as environment variables,
+   * or file system (IO).
    *
    * @see hostAccess
    */
@@ -54,4 +54,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_NONE
 
   /** Enables support for the specified [language] on all contexts created by the engine. */
   public abstract fun enableLanguage(language: GuestLanguage)
+
+  /** Set the main entrypoint arguments to expose to guest languages. */
+  public abstract fun args(args: Array<String>)
 }

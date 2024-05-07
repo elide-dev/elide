@@ -4,12 +4,18 @@ plugins {
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.buildConfig)
-
   id("elide.internal.conventions")
 }
 
 /** Whether to enable Panama-based tests for the shared native binary. */
 val nativeTest = findProperty("elide.embedded.tests.native")?.toString()?.toBooleanStrictOrNull() == true
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(21))
+    vendor.set(JvmVendorSpec.GRAAL_VM)
+  }
+}
 
 kotlin {
   explicitApi()
@@ -39,6 +45,10 @@ dependencies {
 
   testImplementation(kotlin("test"))
   testImplementation(libs.kotlinx.coroutines.test)
+}
+
+tasks.detekt {
+  enabled = false
 }
 
 buildConfig {

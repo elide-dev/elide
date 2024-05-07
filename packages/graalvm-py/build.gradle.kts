@@ -68,6 +68,7 @@ dependencies {
   api(libs.graalvm.python.resources)
   api(libs.graalvm.python.embedding)
   api(libs.graalvm.polyglot.python.community)
+  api(libs.graalvm.truffle.nfi.libffi)
 
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)

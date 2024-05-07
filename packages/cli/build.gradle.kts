@@ -303,6 +303,14 @@ dependencies {
   compileOnly(libs.graalvm.svm)
   compileOnly(libs.graalvm.truffle.runtime.svm)
 
+  // Truffle NFI
+  api(libs.graalvm.truffle.nfi.libffi)
+  api(libs.graalvm.truffle.nfi.panama)
+  api(libs.graalvm.truffle.nfi.native.darwin.amd64)
+  api(libs.graalvm.truffle.nfi.native.darwin.aarch64)
+  api(libs.graalvm.truffle.nfi.native.linux.amd64)
+  api(libs.graalvm.truffle.nfi.native.linux.aarch64)
+
   // GraalVM: Tooling
   implementation(libs.graalvm.tools.dap)
   implementation(libs.graalvm.tools.chromeinspector)

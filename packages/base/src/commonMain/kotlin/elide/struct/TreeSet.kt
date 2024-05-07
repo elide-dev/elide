@@ -19,7 +19,7 @@ import elide.struct.api.SortedSet
 /**
  *
  */
-public class TreeSet<Value> internal constructor (
+public class TreeSet<Value> internal constructor(
   entries: Collection<Value>,
   presorted: Boolean = false,
 ) : SortedSet<Value> where Value : Comparable<Value> {
@@ -27,12 +27,13 @@ public class TreeSet<Value> internal constructor (
     /**
      *
      */
-    @JvmStatic public fun <Value: Comparable<Value>> of(pairs: Collection<Value>): TreeSet<Value> = TreeSet(pairs)
+    @JvmStatic public fun <Value : Comparable<Value>> of(pairs: Collection<Value>): TreeSet<Value> = TreeSet(pairs)
 
     /**
      *
      */
-    @JvmStatic public fun <Value: Comparable<Value>> of(vararg values: Value): TreeSet<Value> = TreeSet(values.toList())
+    @JvmStatic public fun <Value : Comparable<Value>> of(vararg values: Value): TreeSet<Value> =
+      TreeSet(values.toList())
   }
 
   //
@@ -42,10 +43,9 @@ public class TreeSet<Value> internal constructor (
   private data object Marker
 
   //
-  private val backing: TreeMap<Value, Marker> = TreeMap(
-    entries.map { it to Marker },
-    presorted,
-  )
+  private val backing: RedBlackTreeMap<Value, Marker> = RedBlackTreeMap<Value, Marker>().apply {
+    entries.forEach { put(it, Marker) }
+  }
 
   override val size: Int get() = backing.size
 

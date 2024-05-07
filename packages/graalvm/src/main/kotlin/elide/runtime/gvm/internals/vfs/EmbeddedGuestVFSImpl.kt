@@ -39,6 +39,7 @@ import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
 import java.security.MessageDigest
+import java.util.SortedMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
@@ -51,7 +52,6 @@ import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.gvm.internals.GuestVFS
-import elide.struct.TreeMap
 import elide.util.UUID
 
 /**
@@ -100,8 +100,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
   backing: FileSystem,
   private val tree: FilesystemInfo,
   private val deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
-  private val bundles: Map<Int, BundleInfo> = TreeMap(),
-  private val knownPathMap: Map<String, VfsObjectInfo> = TreeMap(),
+  private val bundles: Map<Int, BundleInfo> = sortedMapOf(),
+  private val knownPathMap: Map<String, VfsObjectInfo> = sortedMapOf(),
 ) : AbstractDelegateVFS<EmbeddedGuestVFSImpl>(config, backing) {
   /** Static settings for the embedded VFS implementation. */
   internal object Settings {

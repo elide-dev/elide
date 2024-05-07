@@ -38,6 +38,7 @@ pluginManagement {
       url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
       content {
         includeGroup("dev.elide")
+        includeGroup("dev.elide.tools")
         includeGroup("com.google.devtools.ksp")
         includeGroup("org.jetbrains.reflekt")
       }
@@ -187,7 +188,12 @@ if (buildUuid == "true") {
 
 if (enableSubstrate == "true") {
   includeBuild("tools/conventions")
-  includeBuild("tools/substrate")
+  includeBuild("tools/substrate") {
+    dependencySubstitution {
+      substitute(module("dev.elide.tools:compiler-util")).using(project(":compiler-util"))
+      substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))
+    }
+  }
 }
 
 // Build modules.
@@ -234,6 +240,7 @@ include(
 )
 
 val buildDocs: String by settings
+val buildDocsModules: String by settings
 val buildDocsSite: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
@@ -246,26 +253,14 @@ includeBuild(
 )
 
 if (buildSamples == "true") {
-  include(
-    ":samples:server:helloworld",
-    ":samples:server:hellocss",
-    ":samples:fullstack:basic:frontend",
-    ":samples:fullstack:basic:server",
-    ":samples:fullstack:ssr:node",
-    ":samples:fullstack:ssr:server",
-    ":samples:fullstack:react:frontend",
-    ":samples:fullstack:react:server",
-    ":samples:fullstack:react-ssr:frontend",
-    ":samples:fullstack:react-ssr:node",
-    ":samples:fullstack:react-ssr:server",
-  )
+  includeBuild("samples")
 }
 
 if (buildRpc == "true") include(":packages:rpc")
 
 if (buildFlatbuffers == "true") include(":packages:proto:proto-flatbuffers")
 
-if (buildDocs == "true") {
+if (buildDocs == "true" && buildDocsModules == "true") {
   include(
     ":docs:architecture",
     ":docs:guide",
@@ -314,7 +309,6 @@ buildless {
 buildCache {
   local {
     isEnabled = true
-    removeUnusedEntriesAfterDays = 14
     directory = layout.rootDirectory.dir(".codebase/build-cache")
   }
 }

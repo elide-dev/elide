@@ -6,7 +6,7 @@
 
 plugins {
   kotlin("jvm")
-  id("com.google.devtools.ksp")
+  kotlin("kapt")
   id("io.micronaut.docker")
   id("io.micronaut.application")
   id("io.micronaut.aot")
@@ -17,6 +17,15 @@ version = rootProject.version as String
 
 application {
   mainClass.set("hellocss.App")
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
+}
+
+kotlin {
+  jvmToolchain(22)
 }
 
 micronaut {
@@ -38,8 +47,8 @@ micronaut {
 }
 
 dependencies {
-  ksp(projects.tools.processor)
-  implementation(projects.packages.server)
+  kapt(mn.micronaut.inject.java)
+  implementation(framework.elide.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)

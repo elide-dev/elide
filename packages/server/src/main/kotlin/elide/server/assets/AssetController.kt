@@ -15,6 +15,8 @@ package elide.server.assets
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpStatus
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import java.nio.charset.StandardCharsets
@@ -50,12 +52,27 @@ public class AssetController @Inject constructor(private val assetManager: Asset
    * @param ext Extension value from the URL.
    */
   @Get("/{tag}.{ext}")
-  public suspend fun assetGet(request: HttpRequest<*>, tag: String, ext: String): FinalizedAssetResponse {
+  public suspend fun assetGet(request: HttpRequest<*>, tag: String, ext: String): MutableHttpResponse<*> {
     logging.debug("Loading asset with tag '$tag' (extension: '$ext')")
     return assetManager.serveAsync(request).await().let { response ->
       val body = response.body()
       if (body == null) response.body("Not found".toByteArray(StandardCharsets.UTF_8)) else response.body().let {
-        response.contentType(it.first).body(it.second)
+        val size = it.second.size.toLong()
+
+        when {
+          response.status != HttpStatus.OK ->
+            response
+
+          size > 0 -> response
+            .contentType(it.first)
+            .contentLength(it.second.size.toLong())
+            .body(it.second)
+
+          else -> response
+            .contentType(it.first)
+            .status(HttpStatus.NO_CONTENT)
+            .body(ByteArray(0))
+        }
       }
     }
   }

@@ -22,6 +22,8 @@ plugins {
   distribution
   signing
   idea
+  java
+  `jvm-toolchains`
 
   alias(libs.plugins.testLogger)
   alias(libs.plugins.versionCheck)
@@ -49,6 +51,10 @@ gradlePlugin {
 java {
   sourceCompatibility = JavaVersion.VERSION_21
   targetCompatibility = JavaVersion.VERSION_21
+
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(22)
+  }
 }
 
 kotlin {
@@ -112,6 +118,9 @@ dependencies {
   implementation(libs.json)
   implementation(libs.okio)
   implementation(libs.bouncycastle)
+  implementation(libs.bouncycastle.util)
+  implementation(libs.protobuf.java)
+  implementation(libs.protobuf.util)
   implementation(libs.guava)
 
   // embedded Kotlin plugins

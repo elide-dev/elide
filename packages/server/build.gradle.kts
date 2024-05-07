@@ -19,12 +19,11 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
+  kotlin("kapt")
   kotlin("plugin.serialization")
   
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
-
-  id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")
 }
 
@@ -42,8 +41,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
-    ksp = true
-    kotlinVersionOverride = "1.9"  // @TODO: remove when KSP supports v2.0
+    kapt = true
   }
 
   java {
@@ -92,9 +90,9 @@ dependencies {
   api(projects.packages.ssr)
   api(projects.packages.graalvm)
 
-  // KSP
-  ksp(mn.micronaut.inject)
-  ksp(mn.micronaut.inject.kotlin)
+  // KSP (test-only)
+  testAnnotationProcessor(mn.micronaut.inject)
+  testAnnotationProcessor(mn.micronaut.inject.java)
 
   // General
   implementation(libs.jackson.core)
@@ -129,8 +127,13 @@ dependencies {
   // Brotli
   implementation(libs.brotli)
   implementation(libs.brotli.native.osx)
+  implementation(libs.brotli.native.osx.amd64)
+  implementation(libs.brotli.native.osx.arm64)
   implementation(libs.brotli.native.linux)
+  implementation(libs.brotli.native.linux.amd64)
+  implementation(libs.brotli.native.linux.arm64)
   implementation(libs.brotli.native.windows)
+  implementation(libs.brotli.native.windows.amd64)
 
   // Micronaut
   implementation(mn.micronaut.http)

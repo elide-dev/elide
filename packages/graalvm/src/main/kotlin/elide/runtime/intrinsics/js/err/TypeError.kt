@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.intrinsics.js.err
 
 /**
@@ -27,10 +26,10 @@ package elide.runtime.intrinsics.js.err
  * For more information about the expected behavior and API surface of a [TypeError], see the following resources:
  * - [MDN: `ValueError`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError)
  *
- * @see AbstractJSException for the host base interface type of all JavaScript exceptions.
+ * @see AbstractJsException for the host base interface type of all JavaScript exceptions.
  * @see Error for the top-most guest-exposed base class for all JavaScript errors.
  */
-public abstract class TypeError : AbstractJSException, Error() {
+public abstract class TypeError : AbstractJsException, Error() {
   override val name: String get() = "TypeError"
 
   /**
@@ -39,7 +38,7 @@ public abstract class TypeError : AbstractJSException, Error() {
    * Public factory for [TypeError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJSException.ErrorFactory<TypeError> {
+  public companion object Factory: AbstractJsException.ErrorFactory<TypeError> {
     override fun create(error: Throwable): TypeError {
       return object : TypeError() {
         override val message: String get() = error.message ?: "An error occurred"

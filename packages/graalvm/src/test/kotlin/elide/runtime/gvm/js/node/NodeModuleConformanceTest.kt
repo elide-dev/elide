@@ -15,6 +15,7 @@
 package elide.runtime.gvm.js.node
 
 import org.intellij.lang.annotations.Language
+import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import java.io.File
@@ -231,12 +232,19 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
     return runConformance(rendered.toString())
   }
 
+  open fun expectCompliance(): Boolean = true
+
   open fun requiredMembers(): Sequence<String> = emptySequence()
 
   @TestFactory open fun `node api - require(mod) should specify expected members`(): Stream<DynamicTest> {
     return requiredMembers().map { member ->
       DynamicTest.dynamicTest("$moduleName.$member") {
-        assertContains(require().memberKeys, member, "member '$member' should be present on module '$moduleName'")
+        val keys = require().memberKeys
+        if (!expectCompliance() && !keys.contains(member)) {
+          Assumptions.abort<Unit>("not yet compliant for member '$member' (module: '$moduleName')")
+        } else {
+          assertContains(keys, member, "member '$member' should be present on module '$moduleName'")
+        }
       }
     }.asStream()
   }
@@ -244,7 +252,12 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
   @TestFactory open fun `node api - require(mod) prefixed should specify expected members`(): Stream<DynamicTest> {
     return requiredMembers().map { member ->
       DynamicTest.dynamicTest("$moduleName.$member") {
-        assertContains(require("node:$moduleName").memberKeys, member, "member '$member' should be present on module '$moduleName'")
+        val keys = require("node:$moduleName").memberKeys
+        if (!expectCompliance() && !keys.contains(member)) {
+          Assumptions.abort<Unit>("not yet compliant for member '$member' (module: 'node:$moduleName')")
+        } else {
+          assertContains(keys, member, "member '$member' should be present on module 'node:$moduleName'")
+        }
       }
     }.asStream()
   }

@@ -12,8 +12,10 @@
  */
 package elide.runtime.intrinsics.js.node
 
+import elide.annotations.API
+
 /**
- * TBD.
+ * ## Node API: Inspector
  */
-public interface InspectorAPI : NodeAPI {
+@API public interface InspectorAPI : NodeAPI {
 }

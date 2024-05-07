@@ -12,7 +12,7 @@
  */
 package elide.runtime.intrinsics.js.node.fs
 
-import elide.runtime.intrinsics.js.err.AbstractJSException
+import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.node.AbortSignal
 
 /**
@@ -48,4 +48,4 @@ public data class ReadFileOptions(
  *
  * Describes the callback function shape which is provided to the `readFile` operation.
  */
-public typealias ReadFileCallback = (err: AbstractJSException?, data: Any?) -> Unit
+public typealias ReadFileCallback = (err: AbstractJsException?, data: Any?) -> Unit

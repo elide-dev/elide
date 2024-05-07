@@ -43,6 +43,8 @@ import elide.internal.conventions.project.Projects
 
 plugins {
   idea
+  java
+  `jvm-toolchains`
   `project-report`
   alias(libs.plugins.kotlin.multiplatform) apply false
 
@@ -101,6 +103,7 @@ val enableOwasp: String? by properties
 
 val buildSamples: String by properties
 val buildDocs: String by properties
+val buildDocsModules: String by properties
 
 buildscript {
   repositories {
@@ -136,6 +139,9 @@ buildscript {
     classpath(libs.json)
     classpath(libs.okio)
     classpath(libs.bouncycastle)
+    classpath(libs.bouncycastle.util)
+    classpath(libs.protobuf.java)
+    classpath(libs.protobuf.util)
 
     if (hasProperty("elide.pluginMode") && properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${properties["elide.pluginVersion"] as String}")
@@ -145,6 +151,12 @@ buildscript {
     configurations.classpath {
       resolutionStrategy.activateDependencyLocking()
     }
+  }
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(22)
   }
 }
 
@@ -356,21 +368,13 @@ apiValidation {
     listOf(
       "bom",
       "cli",
+      "cli-bridge",
       "embedded",
       "proto",
       "processor",
       "reports",
     ).plus(
-      if (buildSamples == "true") {
-        listOf(
-          "samples",
-          "basic",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
-      if (properties["buildDocs"] == "true") {
+      if (buildDocs == "true" && buildDocsModules == "true") {
         listOf(
           "architecture",
           "docs",

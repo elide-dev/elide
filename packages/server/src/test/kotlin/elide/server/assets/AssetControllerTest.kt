@@ -43,19 +43,36 @@ class AssetControllerTest {
     assertEquals(404, response.status.code)
   }
 
-  @Test @Ignore fun testServeKnownGoodAssetStyle() {
+  @Test fun testServeKnownGoodAssetStyle() {
     val response = assertDoesNotThrow {
       runBlocking {
         controller.assetGet(
-          HttpRequest.GET<Any>("/753eb23d.css"),
-          "753eb23d",
+          HttpRequest.GET<Any>("02ade191.css"),
+          "02ade191",
           "css",
         )
       }
     }
     assertNotNull(response)
     assertEquals(200, response.status.code)
-    assertEquals(response.contentType.get().toString(), "text/css")
+    assertEquals("text/css", response.contentType.get().toString())
+    assertNotNull(response.headers.get("Content-Length"))
+    assertNotEquals(0, response.headers.get("Content-Length")?.toLong())
+  }
+
+  @Test fun testServeKnownGoodAssetScript() {
+    val response = assertDoesNotThrow {
+      runBlocking {
+        controller.assetGet(
+          HttpRequest.GET<Any>("c426de48.js"),
+          "c426de48",
+          "js",
+        )
+      }
+    }
+    assertNotNull(response)
+    assertEquals(200, response.status.code)
+    assertEquals("application/javascript", response.contentType.get().toString())
     assertNotNull(response.headers.get("Content-Length"))
     assertNotEquals(0, response.headers.get("Content-Length")?.toLong())
   }

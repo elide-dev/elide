@@ -23,4 +23,6 @@ import elide.annotations.data.Sensitive
 
   /** Inner token value. */
   @Sensitive public actual val value: TokenValue,
-)
+) {
+  override fun toString(): String = "Token(type=$type, value=●●●●)"
+}

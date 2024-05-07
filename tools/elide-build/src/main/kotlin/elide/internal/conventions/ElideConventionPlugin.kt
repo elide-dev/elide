@@ -222,10 +222,14 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     //
     maybeApplyConvention(conventions.publishing) {
       configurePublishing(id, name, description)
+      val doSigning = (findProperty(Constants.Publishing.ENABLE_SIGNING) as? String)?.toBooleanStrictOrNull()
+        ?: signPublications
+      val doSigstore = (findProperty(Constants.Publishing.ENABLE_SIGSTORE) as? String)?.toBooleanStrictOrNull()
+        ?: enableSigstore
 
       if (commonRepositories) configurePublishingRepositories()
-      if (signPublications) configureSigning()
-      if (enableSigstore) configureSigstore()
+      if (doSigning) configureSigning()
+      if (doSigstore) configureSigstore()
     }
 
     // -- Conventions: Testing ----------------------------------------------------------------------------------------

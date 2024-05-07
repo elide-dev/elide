@@ -16,16 +16,25 @@ plugins {
 group = "dev.elide.samples"
 version = rootProject.version as String
 
-elide {
+elideApp {
   injectDependencies = false
 
   server {
     assets {
       script("scripts.ui") {
-        from(project(":samples:fullstack:basic:frontend"))
+        from(project(":fullstack:basic:frontend"))
       }
     }
   }
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
+}
+
+kotlin {
+  jvmToolchain(22)
 }
 
 application {
@@ -35,15 +44,18 @@ application {
 micronaut {
   version.set(libs.versions.micronaut.lib.get())
   runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+
   processing {
     incremental.set(true)
     annotations.add("fullstack.basic.*")
   }
+
   aot {
     optimizeServiceLoading.set(true)
     convertYamlToJava.set(true)
     precomputeOperations.set(true)
     cacheEnvironment.set(true)
+
     netty {
       enabled.set(true)
     }
@@ -51,7 +63,7 @@ micronaut {
 }
 
 dependencies {
-  implementation(projects.packages.server)
+  implementation(framework.elide.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)

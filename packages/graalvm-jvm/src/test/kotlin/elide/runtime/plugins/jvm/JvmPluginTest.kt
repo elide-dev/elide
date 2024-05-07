@@ -1,7 +1,7 @@
 package elide.runtime.plugins.jvm
 
+import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
@@ -14,12 +14,22 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 
-@OptIn(DelicateElideApi::class) @Disabled class JvmPluginTest {
+@OptIn(DelicateElideApi::class) class JvmPluginTest {
   /** Test-scoped logger. */
   private val logging by lazy { Logging.of(JvmPluginTest::class) }
 
   /** Temporary directory into which compiled class files will be placed for the guest vm to access. */
   @TempDir private lateinit var tempClasspath: Path
+
+  private fun wrapEspresso(block: () -> Unit) {
+    try {
+      block()
+    } catch (err: Throwable) {
+      if (err.message?.contains("nespresso") == true) {
+        Assumptions.abort<Unit>("Espresso not supported on this platform")
+      }
+    }
+  }
 
   /** Copy classpath entries used in tests to a temporary directory. */
   @BeforeEach fun unpackSampleClasspath() {
@@ -50,7 +60,7 @@ import elide.runtime.core.PolyglotEngine
     }
   }
 
-  @Test fun testRunEntrypoint() {
+  @Test fun testRunEntrypoint() = wrapEspresso {
     val context = configureEngine().acquire()
 
     // run the entrypoint from a compiled class file

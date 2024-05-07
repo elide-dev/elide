@@ -44,18 +44,18 @@ import jakarta.inject.Singleton
 @DefaultScope(Singleton::class)
 public annotation class Page(
   /** HTTP route that should be bound to this page. */
-  @get:AliasFor(annotation = UriMapping::class, member = "value")
+  @get:AliasFor(annotation = UriMapping::class)
   public val route: String = UriMapping.DEFAULT_URI,
 
   /** Name for this route. */
   public val name: String = "",
 
   /** Content-Type produced by this endpoint; defaults to HTML. */
-  @get:AliasFor(annotation = Produces::class, member = "value")
+  @get:AliasFor(annotation = Produces::class)
   public val produces: Array<String> = [MediaType.TEXT_HTML],
 
   /** Content-Type consumed by this endpoint; defaults to JSON. */
-  @get:AliasFor(annotation = Consumes::class, member = "value")
+  @get:AliasFor(annotation = Consumes::class)
   public val consumes: Array<String> = [],
 
   /** Enable pre-compilation for this page (i.e. via SSG). */

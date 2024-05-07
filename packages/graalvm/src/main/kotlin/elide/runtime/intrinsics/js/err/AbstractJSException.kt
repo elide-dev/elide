@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.intrinsics.js.err
 
 /**
@@ -20,7 +19,7 @@ package elide.runtime.intrinsics.js.err
  * which creates such types). Implementations or interfaces which extend this class implement core JavaScript exception
  * types which are surfaced from intrinsics.
  */
-public sealed interface AbstractJSException {
+public sealed interface AbstractJsException {
   /**
    * ## JavaScript: Error Factory
    *
@@ -30,14 +29,14 @@ public sealed interface AbstractJSException {
    * When constructing a JS error from a Java exception, Elide will attempt to use an appropriate JS error type, and
    * will provide the maximum amount of developer ergonomics possible to identify where the error took place.
    *
-   * @param T type of JavaScript error implemented by this factory. Must implement [AbstractJSException].
-   * @see AbstractJSException for the regular object interface implemented for each JS exception type.
+   * @param T type of JavaScript error implemented by this factory. Must implement [AbstractJsException].
+   * @see AbstractJsException for the regular object interface implemented for each JS exception type.
    */
-  public interface ErrorFactory<T: AbstractJSException> {
+  public interface ErrorFactory<T: AbstractJsException> {
     /**
      * ## Interface: Create from [Throwable]
      *
-     * Create a JavaScript-environment error of type [T] (an [AbstractJSException]) which wraps the provided [Throwable]
+     * Create a JavaScript-environment error of type [T] (an [AbstractJsException]) which wraps the provided [Throwable]
      * [error]. Any non-private fields and information on the provided [Throwable] will be included with the JS error.
      *
      * @param error Error to wrap in a JS error.
@@ -48,7 +47,7 @@ public sealed interface AbstractJSException {
     /**
      * ## Interface: Create from and [message] and optional [cause]
      *
-     * Create a JavaScript-environment error of type [T] (an [AbstractJSException]) which wraps the provided [message]
+     * Create a JavaScript-environment error of type [T] (an [AbstractJsException]) which wraps the provided [message]
      * string and optional [Throwable] [cause]. Any non-private fields and information on the provided [Throwable], if
      * present, will be included with the JS error.
      *

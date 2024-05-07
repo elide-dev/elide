@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import elide.server.runtime.AppExecutor.DefaultExecutor
 import elide.server.runtime.jvm.UncaughtExceptionHandler
+import elide.server.runtime.jvm.UncaughtExceptionHandler.UncaughtExceptionHandlerLoggingProvider
 
 
 /**
@@ -103,7 +104,9 @@ public interface AppExecutor {
   ): AppExecutor {
     public companion object {
       /** Uncaught exception handler (global). */
-      private val errHandler = UncaughtExceptionHandler()
+      private val errHandler = UncaughtExceptionHandler(
+        UncaughtExceptionHandlerLoggingProvider()
+      )
 
       /** Main executor. */
       private val mainExec = DefaultExecutor(errHandler)

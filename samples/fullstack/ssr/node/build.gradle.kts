@@ -8,6 +8,7 @@
 import dev.elide.buildtools.gradle.plugin.BuildMode
 import dev.elide.buildtools.gradle.plugin.js.BundleTarget
 import dev.elide.buildtools.gradle.plugin.js.BundleTool
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 
 plugins {
@@ -23,19 +24,20 @@ val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 kotlin {
   js {
     browser()
-    generateTypeScriptDefinitions()
+    useEsModules()
 
     compilations.all {
-      kotlinOptions {
+      compilerOptions {
         sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
+        moduleKind = JsModuleKind.MODULE_ES
+        target = "es2015"
+        useEsClasses.set(true)
       }
     }
   }
 }
 
-elide {
+elideApp {
   mode = if (devMode) {
     BuildMode.DEVELOPMENT
   } else {
@@ -48,7 +50,7 @@ elide {
 
     runtime {
       inject(true)
-      languageLevel(JsLanguageLevel.ES2020)
+      languageLevel(JsLanguageLevel.ES2023)
     }
   }
 }
@@ -56,8 +58,8 @@ elide {
 dependencies {
   implementation(kotlin("stdlib"))
   implementation(libs.kotlinx.wrappers.js)
-  implementation(projects.packages.base)
-  implementation(project(":packages:graalvm-js"))
+  implementation(framework.elide.base)
+  implementation(framework.elide.graalvm.js)
   implementation(npm("esbuild", libs.versions.npm.esbuild.get()))
 }
 

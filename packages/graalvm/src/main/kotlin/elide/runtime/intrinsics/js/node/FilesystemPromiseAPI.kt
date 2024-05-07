@@ -25,7 +25,7 @@ import elide.vm.annotations.Polyglot
 /**
  * # Node API: `fs/promises`
  */
-@API public interface FilesystemPromiseAPI : NodeAPI {
+@API public interface FilesystemPromiseAPI {
   /**
    * ## Method: `fs.readFile`
    *
@@ -38,3 +38,15 @@ import elide.vm.annotations.Polyglot
    */
   @Polyglot public fun readFile(path: Value, options: Value? = null): JsPromise<StringOrBuffer>
 }
+
+/**
+ * # Node API: `fs/promises` (Writable)
+ */
+@API public interface WritableFilesystemPromiseAPI {
+
+}
+
+/**
+ * # Node API: `fs/promises` (Node)
+ */
+@API public interface NodeFilesystemPromiseAPI: NodeAPI, FilesystemPromiseAPI, WritableFilesystemPromiseAPI

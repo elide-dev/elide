@@ -23,6 +23,7 @@ import tools.elide.assets.AssetBundle.AssetContent
 import tools.elide.assets.AssetBundle.GenericBundle
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 import elide.server.StreamedAsset
 import elide.testing.annotations.TestCase
@@ -31,7 +32,8 @@ import elide.testing.annotations.TestCase
 @TestCase class ServerAssetServingTest {
   companion object {
     private const val assetPrefix = "/_/assets"
-    private const val sampleStylesheet = "$assetPrefix/753eb23d.css"
+    private const val sampleStylesheet = "$assetPrefix/02ade191.css"
+    private const val sampleScript = "$assetPrefix/c426de48.js"
   }
 
   // Asset index.
@@ -40,15 +42,13 @@ import elide.testing.annotations.TestCase
   // Asset manager.
   @Inject lateinit var manager: AssetManager
 
-  private fun execute(
+  private suspend fun execute(
     request: HttpRequest<Any>,
     moduleId: String? = null
-  ): HttpResponse<StreamedAsset> = runBlocking {
-    return@runBlocking manager.serveAsync(
-      request,
-      moduleId,
-    ).await()
-  }
+  ): HttpResponse<StreamedAsset> = manager.serveAsync(
+    request,
+    moduleId,
+  ).await()
 
   private fun assertAsset(
     assetType: AssetType,
@@ -68,7 +68,7 @@ import elide.testing.annotations.TestCase
       assertTrue(response.headers.get("Content-Type")!!.contains(assetType.mediaType.type))
       assertTrue(response.headers.get("Content-Type")!!.contains(assetType.mediaType.subtype))
       if (encoding != null) {
-        assertTrue(response.headers.contains("Content-Encoding"))
+        assertTrue(response.headers.contains("Content-Encoding"), "headers should specify `Content-Encoding`")
         assertEquals(response.headers.get("Content-Encoding"), encoding)
       }
     }
@@ -80,7 +80,7 @@ import elide.testing.annotations.TestCase
     assertNotNull(index)
   }
 
-  @Test @Ignore fun testNonConditional() {
+  @Test fun testNonConditionalStyle() = runTest {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertEquals(200, response.status.code)
     assertAsset(
@@ -89,7 +89,16 @@ import elide.testing.annotations.TestCase
     )
   }
 
-  @Test @Ignore fun testEtags() {
+  @Test fun testNonConditionalScript() = runTest {
+    val response = execute(HttpRequest.GET(sampleScript))
+    assertEquals(200, response.status.code)
+    assertAsset(
+      AssetType.SCRIPT,
+      response,
+    )
+  }
+
+  @Test fun testEtagsStyle() = runTest {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
       AssetType.STYLESHEET,
@@ -103,7 +112,21 @@ import elide.testing.annotations.TestCase
     assertTrue(etag.endsWith("\""))
   }
 
-  @Test @Ignore fun testConditionalRequestETag() {
+  @Test fun testEtagsScript() = runTest {
+    val response = execute(HttpRequest.GET(sampleScript))
+    assertAsset(
+      AssetType.SCRIPT,
+      response,
+    )
+    assertTrue(response.headers.contains("ETag"))
+    val etag = response.headers.get("ETag")!!
+    if (etag.startsWith("W/")) {
+      assertTrue(etag.drop(2).startsWith("\""))
+    }
+    assertTrue(etag.endsWith("\""))
+  }
+
+  @Test fun testConditionalRequestETagStyle() = runTest {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
       AssetType.STYLESHEET,
@@ -122,6 +145,29 @@ import elide.testing.annotations.TestCase
         .header("If-None-Match", response.header("ETag")!!)
     )
     assertAsset(AssetType.STYLESHEET, conditionSatisfied, status = 304) {
+      assertTrue(response.headers.contains("Content-Length"))
+    }
+  }
+
+  @Test fun testConditionalRequestETagScript() = runTest {
+    val response = execute(HttpRequest.GET(sampleScript))
+    assertAsset(
+      AssetType.SCRIPT,
+      response,
+    )
+    val conditionNotSatisified = execute(
+      HttpRequest.GET<Any>(sampleScript)
+        .header("If-None-Match", "some-value-that-isnt-the-etag")
+    )
+    assertAsset(
+      AssetType.SCRIPT,
+      conditionNotSatisified,
+    )
+    val conditionSatisfied = execute(
+      HttpRequest.GET<Any>(sampleScript)
+        .header("If-None-Match", response.header("ETag")!!)
+    )
+    assertAsset(AssetType.SCRIPT, conditionSatisfied, status = 304) {
       assertTrue(response.headers.contains("Content-Length"))
     }
   }
@@ -191,8 +237,7 @@ import elide.testing.annotations.TestCase
 
   @CsvSource("gzip", "br", "deflate")
   @ParameterizedTest
-  @Ignore
-  fun testCompressionSupported(encodingName: String) {
+  fun testCompressionSupportedStyle(encodingName: String) = runTest {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
       AssetType.STYLESHEET,
@@ -209,7 +254,26 @@ import elide.testing.annotations.TestCase
     )
   }
 
-  @Test @Ignore fun testUnsupportedCompression() {
+  @CsvSource("gzip", "br", "deflate")
+  @ParameterizedTest
+  fun testCompressionSupportedScript(encodingName: String) = runTest {
+    val response = execute(HttpRequest.GET(sampleScript))
+    assertAsset(
+      AssetType.SCRIPT,
+      response,
+    )
+    val compressedResponse = execute(
+      HttpRequest.GET<Any?>(sampleScript)
+        .header("Accept-Encoding", encodingName)
+    )
+    assertAsset(
+      AssetType.SCRIPT,
+      compressedResponse,
+      encoding = encodingName,
+    )
+  }
+
+  @Test fun testUnsupportedCompressionStyle() = runTest {
     val response = execute(HttpRequest.GET(sampleStylesheet))
     assertAsset(
       AssetType.STYLESHEET,
@@ -225,10 +289,34 @@ import elide.testing.annotations.TestCase
     )
   }
 
-  @Test fun testLocateKnownGoodModule() {
+  @Test fun testUnsupportedCompressionScript() = runTest {
+    val response = execute(HttpRequest.GET(sampleScript))
+    assertAsset(
+      AssetType.SCRIPT,
+      response,
+    )
+    val identityResponse = execute(
+      HttpRequest.GET<Any?>(sampleScript)
+        .header("Accept-Encoding", "some-encoding, some-other-unfamiliar-encoding, perhaps-another")
+    )
+    assertAsset(
+      AssetType.SCRIPT,
+      identityResponse,
+    )
+  }
+
+  @Test fun testLocateKnownGoodModuleStyle() {
     assertNotNull(
       assertDoesNotThrow {
         manager.findAssetByModuleId("styles.base")
+      }
+    )
+  }
+
+  @Test fun testLocateKnownGoodModuleScript() {
+    assertNotNull(
+      assertDoesNotThrow {
+        manager.findAssetByModuleId("scripts.ui")
       }
     )
   }

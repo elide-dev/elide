@@ -10,12 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.intrinsics.js
 
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
-import elide.runtime.intrinsics.js.err.AbstractJSException
+import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.Error
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
@@ -24,14 +23,14 @@ import elide.runtime.intrinsics.js.err.ValueError
 @Suppress("unused") internal object JsError {
   // Wrap a caught `Throwable` in the provided JS error `type`.
   @Suppress("UNCHECKED_CAST")
-  private fun <E: AbstractJSException> wrapped(error: Throwable, type: KClass<out E>): E {
-    return (type.companionObjectInstance as AbstractJSException.ErrorFactory<E>).create(error)
+  private fun <E: AbstractJsException> wrapped(error: Throwable, type: KClass<out E>): E {
+    return (type.companionObjectInstance as AbstractJsException.ErrorFactory<E>).create(error)
   }
 
   // Wrap a string `message` and optional `Throwable` `cause` in the provided JS error `type`.
   @Suppress("UNCHECKED_CAST")
-  private fun <E: AbstractJSException> wrapped(message: String, cause: Throwable? = null, type: KClass<out E>): E {
-    return (type.companionObjectInstance as AbstractJSException.ErrorFactory<E>).create(message, cause)
+  private fun <E: AbstractJsException> wrapped(message: String, cause: Throwable? = null, type: KClass<out E>): E {
+    return (type.companionObjectInstance as AbstractJsException.ErrorFactory<E>).create(message, cause)
   }
 
   /**

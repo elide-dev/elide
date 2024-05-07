@@ -12,10 +12,8 @@
  */
 package elide.runtime.intrinsics.js.node
 
-import com.oracle.truffle.js.runtime.objects.JSObject
 import org.graalvm.polyglot.Value
 import elide.annotations.API
-import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.node.buffer.Buffer
 import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
@@ -24,7 +22,7 @@ import elide.vm.annotations.Polyglot
 /**
  * # Node API: `fs`
  */
-@API public interface FilesystemAPI : NodeAPI {
+@API public interface FilesystemAPI {
   /**
    * ## Method: `fs.readFile`
    *
@@ -95,3 +93,46 @@ import elide.vm.annotations.Polyglot
    */
   @Polyglot public fun readFileSync(path: Path, options: ReadFileOptions = ReadFileOptions.DEFAULTS): StringOrBuffer
 }
+
+/**
+ * # Node API: `fs` (Writable)
+ */
+@API public interface WritableFilesystemAPI : NodeAPI {
+  /**
+   * ## Method: `fs.writeFile`
+   *
+   * Writes the contents of a file at the specified path; provides the results or an error to the callback. This variant
+   * accepts a polyglot [Value].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
+   * @param options The options to use for the file write operation.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun writeFile(
+    path: Value,
+    data: StringOrBuffer,
+    options: Value,
+    callback: WriteFileCallback,
+  )
+
+  /**
+   * ## Method: `fs.writeFileSync`
+   *
+   * Writes the contents of a file at the specified path; provides the results or an error to the callback.
+   * This variant accepts a polyglot [Value].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
+   */
+  @Polyglot public fun writeFileSync(
+    path: Value,
+    data: StringOrBuffer,
+    options: Value? = null,
+  )
+}
+
+/**
+ * # Node API: `fs` (Node)
+ */
+@API public interface NodeFilesystemAPI : NodeAPI, FilesystemAPI, WritableFilesystemAPI

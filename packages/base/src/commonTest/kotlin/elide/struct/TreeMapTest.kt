@@ -19,22 +19,26 @@ import kotlinx.serialization.json.Json
 import kotlin.test.*
 
 class TreeMapTest {
+  private fun <K : Comparable<K>, V> treeMapOf(vararg entries: Pair<K, V>): RedBlackTreeMap<K, V> {
+    return RedBlackTreeMap<K, V>().apply { entries.forEach { put(it.first, it.second) } }
+  }
+
   @Test fun testEmpty() {
-    val map = TreeMap.empty<String, String>()
+    val map = RedBlackTreeMap<String, String>()
     assertTrue(map.isEmpty())
     assertFalse(map.isNotEmpty())
     assertEquals(0, map.size)
   }
 
   @Test fun testEmptyMutable() {
-    val map = MutableTreeMap.create<String, String>()
+    val map = RedBlackTreeMap<String, String>()
     assertTrue(map.isEmpty())
     assertFalse(map.isNotEmpty())
     assertEquals(0, map.size)
   }
 
   @Test fun testNonEmpty() {
-    val map = TreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertFalse(map.isEmpty())
     assertTrue(map.isNotEmpty())
     assertEquals(1, map.size)
@@ -42,7 +46,7 @@ class TreeMapTest {
   }
 
   @Test fun testNonEmptyMutable() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertFalse(map.isEmpty())
     assertTrue(map.isNotEmpty())
     assertEquals(1, map.size)
@@ -50,7 +54,7 @@ class TreeMapTest {
   }
 
   @Test fun testClear() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(1, map.size)
     map.clear()
@@ -59,7 +63,7 @@ class TreeMapTest {
   }
 
   @Test fun testClearMutable() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(1, map.size)
     map.clear()
@@ -68,7 +72,7 @@ class TreeMapTest {
   }
 
   @Test fun testAdd() {
-    val map = MutableTreeMap.create<String, String>()
+    val map = RedBlackTreeMap<String, String>()
     assertTrue(map.isEmpty())
     assertEquals(0, map.size)
     map["hi"] = "hello"
@@ -78,7 +82,7 @@ class TreeMapTest {
   }
 
   @Test fun testAddAll() {
-    val map = MutableTreeMap.create<String, String>()
+    val map = RedBlackTreeMap<String, String>()
     assertTrue(map.isEmpty())
     assertEquals(0, map.size)
     map.putAll(mapOf("hi" to "hello", "bye" to "goodbye"))
@@ -89,7 +93,7 @@ class TreeMapTest {
   }
 
   @Test fun testRemove() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(1, map.size)
     assertEquals("hello", map.remove("hi"))
@@ -98,31 +102,31 @@ class TreeMapTest {
   }
 
   @Test fun testContains() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertTrue("hi" in map)
     assertFalse("bye" in map)
   }
 
   @Test fun testContainsMutable() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertTrue("hi" in map)
     assertFalse("bye" in map)
   }
 
   @Test fun testContainsValue() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertTrue(map.containsValue("hello"))
     assertFalse(map.containsValue("bye"))
   }
 
   @Test fun testContainsValueMutable() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     assertTrue(map.containsValue("hello"))
     assertFalse(map.containsValue("bye"))
   }
 
   @Test fun testIterator() {
-    val map = TreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(2, map.size)
 
@@ -135,7 +139,7 @@ class TreeMapTest {
   }
 
   @Test fun testIteratorMutable() {
-    val map = MutableTreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     val iter = map.iterator()
     assertTrue(iter.hasNext())
     assertEquals("bye", iter.next().key)
@@ -145,7 +149,7 @@ class TreeMapTest {
   }
 
   @Test fun testEntriesSet() {
-    val map = TreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(2, map.size)
 
@@ -162,7 +166,7 @@ class TreeMapTest {
   }
 
   @Test fun testEntriesSetMutable() {
-    val map = MutableTreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(2, map.size)
 
@@ -179,7 +183,7 @@ class TreeMapTest {
   }
 
   @Test fun testKeysSet() {
-    val map = TreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(2, map.size)
 
@@ -192,7 +196,7 @@ class TreeMapTest {
   }
 
   @Test fun testKeysSetMutable() {
-    val map = MutableTreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(2, map.size)
 
@@ -205,7 +209,7 @@ class TreeMapTest {
   }
 
   @Test fun testValuesSet() {
-    val map = TreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(2, map.size)
 
@@ -218,7 +222,7 @@ class TreeMapTest {
   }
 
   @Test fun testValuesSetMutable() {
-    val map = MutableTreeMap.of("bye" to "goodbye", "hi" to "hello")
+    val map = treeMapOf("bye" to "goodbye", "hi" to "hello")
     assertFalse(map.isEmpty())
     assertEquals(2, map.size)
 
@@ -231,186 +235,198 @@ class TreeMapTest {
   }
 
   @Test fun testSerializer() {
-    assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
-    assertNotNull(Json.encodeToString(TreeMap.of("hi" to "hello")))
+    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    assertNotNull(Json.encodeToString(treeMapOf("hi" to "hello")))
   }
 
   @Test fun testSerializerMutable() {
-    assertNotNull(MutableTreeMap.serializer(String.serializer(), String.serializer()))
-    assertNotNull(Json.encodeToString(MutableTreeMap.of("hi" to "hello")))
+    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    assertNotNull(Json.encodeToString(treeMapOf("hi" to "hello")))
   }
 
   @Test fun testCodecJson() {
-    assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
-    val serialized = assertNotNull(Json.encodeToString(TreeMap.of("hi" to "hello")))
-    val map = Json.decodeFromString(TreeMap.serializer(String.serializer(), String.serializer()), serialized)
+    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    val serialized = assertNotNull(Json.encodeToString(treeMapOf("hi" to "hello")))
+    val map = Json.decodeFromString(RedBlackTreeMap.serializer(String.serializer(), String.serializer()), serialized)
     assertFalse(map.isEmpty())
     assertEquals(1, map.size)
     assertEquals("hello", map["hi"])
   }
 
   @Test fun testCodecJsonMutable() {
-    assertNotNull(MutableTreeMap.serializer(String.serializer(), String.serializer()))
-    val serialized = assertNotNull(Json.encodeToString(MutableTreeMap.of("hi" to "hello")))
-    val map = Json.decodeFromString(MutableTreeMap.serializer(String.serializer(), String.serializer()), serialized)
+    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    val serialized = assertNotNull(Json.encodeToString(treeMapOf("hi" to "hello")))
+    val map = Json.decodeFromString(RedBlackTreeMap.serializer(String.serializer(), String.serializer()), serialized)
     assertFalse(map.isEmpty())
     assertEquals(1, map.size)
     assertEquals("hello", map["hi"])
   }
 
   @Test fun testCodecJsonInterchangeable() {
-    val map = MutableTreeMap.of("hi" to "hello")
+    val map = treeMapOf("hi" to "hello")
     val serialized = Json.encodeToString(map)
-    val deserialized = Json.decodeFromString(TreeMap.serializer(String.serializer(), String.serializer()), serialized)
+    val deserialized =
+      Json.decodeFromString(RedBlackTreeMap.serializer(String.serializer(), String.serializer()), serialized)
     val serialized2 = Json.encodeToString(deserialized)
     assertEquals(serialized, serialized2)
     val deserialized2 = Json.decodeFromString(
-      MutableTreeMap.serializer(String.serializer(), String.serializer()),
+      RedBlackTreeMap.serializer(String.serializer(), String.serializer()),
       serialized,
     )
     assertEquals(map, deserialized2)
   }
 
   @Test fun testEquals() {
-    val one = TreeMap.of("hi" to "hey")
+    val one = treeMapOf("hi" to "hey")
     assertEquals(one, one)  // same object
     assertNotEquals<Map<String, String>?>(one, null)
 
-    val two = TreeMap.of("hi" to "hey")
+    val two = treeMapOf("hi" to "hey")
     assertEquals(two, two)  // same object
     assertEquals(one, two)  // identical maps
     assertNotEquals<Map<String, String>?>(two, null)
 
-    val three = TreeMap.of("hi" to "hello")
+    val three = treeMapOf("hi" to "hello")
     assertEquals(three, three)   // same object
     assertNotEquals(two, three)  // different values
 
-    val four = TreeMap.of("hello" to "hello")
+    val four = treeMapOf("hello" to "hello")
     assertEquals(four, four)      // same object
     assertNotEquals(three, four)  // different keys
     assertNotEquals(one, four)    // different values and keys
 
-    val five = TreeMap.of("hi" to "hello")
+    val five = treeMapOf("hi" to "hello")
     assertEquals(five, five)      // same object
     assertNotEquals(four, five)   // different keys
     assertNotEquals(two, five)    // different values
   }
 
   @Test fun testEqualsMutable() {
-    val one = MutableTreeMap.of("hi" to "hey")
+    val one = treeMapOf("hi" to "hey")
     assertEquals(one, one)  // same object
     assertNotEquals<Map<String, String>?>(one, null)
 
-    val two = MutableTreeMap.of("hi" to "hey")
+    val two = treeMapOf("hi" to "hey")
     assertEquals(two, two)  // same object
     assertEquals(one, two)  // identical maps
     assertNotEquals<Map<String, String>?>(two, null)
 
-    val three = MutableTreeMap.of("hi" to "hello")
+    val three = treeMapOf("hi" to "hello")
     assertEquals(three, three)   // same object
     assertNotEquals(two, three)  // different values
 
-    val four = MutableTreeMap.of("hello" to "hello")
+    val four = treeMapOf("hello" to "hello")
     assertEquals(four, four)      // same object
     assertNotEquals(three, four)  // different keys
     assertNotEquals(one, four)    // different values and keys
 
-    val five = MutableTreeMap.of("hi" to "hello")
+    val five = treeMapOf("hi" to "hello")
     assertEquals(five, five)      // same object
     assertNotEquals(four, five)   // different keys
     assertNotEquals(two, five)    // different values
   }
 
   @Test fun testEqualsInterchangeable() {
-    val one = TreeMap.of("hi" to "hey")
+    val one = treeMapOf("hi" to "hey")
     assertEquals(one, one)  // same object
     assertNotEquals<Map<String, String>?>(one, null)
 
-    val two = MutableTreeMap.of("hi" to "hey")
+    val two = treeMapOf("hi" to "hey")
     assertEquals(two, two)  // same object
     assertEquals<Map<String, String>>(one, two)  // identical maps
     assertNotEquals<Map<String, String>?>(two, null)
 
-    val three = TreeMap.of("hi" to "hello")
+    val three = treeMapOf("hi" to "hello")
     assertEquals(three, three)   // same object
     assertNotEquals<Map<String, String>>(two, three)  // different values
 
-    val four = MutableTreeMap.of("hello" to "hello")
+    val four = treeMapOf("hello" to "hello")
     assertEquals(four, four)      // same object
     assertNotEquals<Map<String, String>>(three, four)  // different keys
     assertNotEquals<Map<String, String>>(one, four)    // different values and keys
 
-    val five = TreeMap.of("hi" to "hello")
+    val five = treeMapOf("hi" to "hello")
     assertEquals(five, five)      // same object
     assertNotEquals<Map<String, String>>(four, five)   // different keys
     assertNotEquals<Map<String, String>>(two, five)    // different values
   }
 
   @Test fun testHashcode() {
-    val one = TreeMap.of("hi" to "hey")
+    val one = treeMapOf("hi" to "hey")
     assertEquals(one.hashCode(), one.hashCode())  // same object
-    val two = TreeMap.of("hi" to "hey")
+    val two = treeMapOf("hi" to "hey")
     assertEquals(one.hashCode(), two.hashCode())  // identical maps
-    val three = TreeMap.of("hi" to "hello")
+    val three = treeMapOf("hi" to "hello")
     assertNotEquals(one.hashCode(), three.hashCode())  // different values
-    val four = TreeMap.of("hello" to "hey")
+    val four = treeMapOf("hello" to "hey")
     assertNotEquals(one.hashCode(), four.hashCode())    // different keys
     assertNotEquals(three.hashCode(), four.hashCode())  // different values and keys
   }
 
   @Test fun testHashcodeMutable() {
-    val one = MutableTreeMap.of("hi" to "hey")
+    val one = treeMapOf("hi" to "hey")
     assertEquals(one.hashCode(), one.hashCode())  // same object
-    val two = MutableTreeMap.of("hi" to "hey")
+    val two = treeMapOf("hi" to "hey")
     assertEquals(one.hashCode(), two.hashCode())  // identical maps
-    val three = MutableTreeMap.of("hi" to "hello")
+    val three = treeMapOf("hi" to "hello")
     assertNotEquals(one.hashCode(), three.hashCode())  // different values
-    val four = MutableTreeMap.of("hello" to "hey")
+    val four = treeMapOf("hello" to "hey")
     assertNotEquals(one.hashCode(), four.hashCode())    // different keys
     assertNotEquals(three.hashCode(), four.hashCode())  // different values and keys
   }
 
-  @Test @Ignore fun testRebalance() {
-    val map = MutableTreeMap.of(
+  @Test fun testRebalance() {
+    val map = treeMapOf(
       "hi" to "hello",
       "bye" to "goodbye",
       "hey" to "hello",
       "yo" to "sup",
       "abc" to "xyz",
     )
+
     assertFalse(map.isEmpty())
     assertTrue(map.isNotEmpty())
     assertEquals(5, map.size)
+
     map.remove("bye")
     assertEquals(4, map.size)
+
     map.remove("hey")
     assertEquals(3, map.size)
-    map.put("hey", "hello")  // not in the map
+
+    map["hey"] = "hello"  // not in the map
     assertEquals(4, map.size)
-    map.put("hey", "xyzxyz")  // already in the map
+
+    map["hey"] = "xyzxyz"  // already in the map
     assertEquals(4, map.size)
   }
 
-  @Test @Ignore fun testRebalanceRoot() {
-    val map = MutableTreeMap.of(
+  @Test fun testRebalanceRoot() {
+    val map = treeMapOf(
       "hi" to "hello",
       "bye" to "goodbye",
       "hey" to "hello",
       "yo" to "sup",
       "abc" to "xyz",
     )
+
     assertFalse(map.isEmpty())
     assertTrue(map.isNotEmpty())
     assertEquals(5, map.size)
-    map.remove("hi")  // remove root
+
+    map.remove("hi")
     assertEquals(4, map.size)
+
     map.remove("bye")
     assertEquals(3, map.size)
+
     map.remove("hey")
     assertEquals(2, map.size)
-    map.put("hey", "hello")  // already in the map
-    assertEquals(2, map.size)
-    map.put("hey", "xyzxyz")  // already in the map
-    assertEquals(2, map.size)
+
+    map["hey"] = "hello"  // not in the map
+    assertEquals(3, map.size)
+
+    map["hey"] = "xyzxyz"  // already in the map
+    assertEquals(3, map.size)
   }
 }

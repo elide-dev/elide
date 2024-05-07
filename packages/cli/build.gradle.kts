@@ -85,11 +85,6 @@ elide {
   }
 }
 
-java {
-  sourceCompatibility = JavaVersion.VERSION_22
-  targetCompatibility = JavaVersion.VERSION_22
-}
-
 // Flags affecting this build script:
 //
 // - `elide.release`: true/false
@@ -215,6 +210,11 @@ java {
   sourceCompatibility = JavaVersion.VERSION_22
   targetCompatibility = JavaVersion.VERSION_22
   if (enableJpms) modularity.inferModulePath = true
+
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(22))
+    vendor.set(JvmVendorSpec.GRAAL_VM)
+  }
 }
 
 kapt {
@@ -1256,13 +1256,6 @@ fun Jar.applyJarSettings() {
     )
   }
 }
-
-//java {
-//  toolchain {
-//    languageVersion.set(JavaLanguageVersion.of(22))
-//    vendor.set(JvmVendorSpec.GRAAL_VM)
-//  }
-//}
 
 tasks {
   val ensureNatives by registering {

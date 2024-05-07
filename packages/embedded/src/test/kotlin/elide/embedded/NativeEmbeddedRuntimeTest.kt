@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.io.TempDir
 import tools.elide.call.callMetadata
-import tools.elide.call.v1alpha1.UnaryInvocationRequest
 import tools.elide.call.v1alpha1.fetchRequest
 import tools.elide.call.v1alpha1.unaryInvocationRequest
 import tools.elide.http.HttpMethod
@@ -48,7 +47,7 @@ class NativeEmbeddedRuntimeTest {
   @TempDir lateinit var testGuestRoot: Path
 
   /** Create a GraalVM native isolate thread in the current arena and return a pointer to it. */
-  context(Arena) private fun prepareIsolate(): MemorySegment {
+  private fun Arena.prepareIsolate(): MemorySegment {
     // allocate the pointer for the thread
     val threadPointer = allocatePointer()
 
@@ -60,7 +59,7 @@ class NativeEmbeddedRuntimeTest {
   }
 
   /** Allocate and initialize a runtime configuration struct with the specified values. */
-  context(Arena) private fun prepareRuntimeConfig(
+  private fun Arena.prepareRuntimeConfig(
     version: Int = 0,
     format: Int = 0,
     guestRoot: String = testGuestRoot.absolutePathString(),

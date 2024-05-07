@@ -61,9 +61,9 @@ import elide.runtime.plugins.vfs.Vfs
     }
 
     builder.setOptions(
-      "python.HPyBackend" to "jni",
+      "python.HPyBackend" to "nfi",
       "python.Sha3ModuleBackend" to "native",
-      "python.PosixModuleBackend" to "native",
+      "python.PosixModuleBackend" to PYTHON_POSIX_BACKEND,
     )
 
     config.executable?.let {
@@ -78,7 +78,8 @@ import elide.runtime.plugins.vfs.Vfs
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
-    private const val ENABLE_EXPERIMENTAL = false
+    private const val PYTHON_POSIX_BACKEND = "java"  // @TODO(sgammon): support for `native`
+    private const val ENABLE_EXPERIMENTAL = true
     private const val GPY_LIST_SEPARATOR = "🏆"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)

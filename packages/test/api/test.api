@@ -27,12 +27,6 @@ public final class elide/server/TestUtil {
 	public final fun loadFixture (Ljava/lang/String;)Ljava/lang/String;
 }
 
-public final class elide/server/runtime/TestAppExecutor : elide/server/runtime/AppExecutor {
-	public fun <init> ()V
-	public synthetic fun service ()Lcom/google/common/util/concurrent/ListeningExecutorService;
-	public fun service ()Lcom/google/common/util/concurrent/ListeningScheduledExecutorService;
-}
-
 public final class elide/testing/ElideTesting {
 	public static final field INSTANCE Lelide/testing/ElideTesting;
 }

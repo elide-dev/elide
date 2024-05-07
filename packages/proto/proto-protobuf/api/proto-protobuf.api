@@ -312,7 +312,6 @@ public final class tools/elide/app/ActiveApplication : com/google/protobuf/Gener
 	public fun getIsolationOrBuilder ()Ltools/elide/app/PrivilegesOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ltools/elide/std/Version;
 	public fun getVersionOrBuilder ()Ltools/elide/std/VersionOrBuilder;
 	public fun hasApp ()Z
@@ -427,6 +426,7 @@ public final class tools/elide/app/ActiveApplication$Builder : com/google/protob
 	public fun mergeVersion (Ltools/elide/std/Version;)Ltools/elide/app/ActiveApplication$Builder;
 	public fun putAllEnv (Ljava/util/Map;)Ltools/elide/app/ActiveApplication$Builder;
 	public fun putEnv (Ljava/lang/String;Ltools/elide/app/RenderedEnvironment;)Ltools/elide/app/ActiveApplication$Builder;
+	public fun putEnvBuilderIfAbsent (Ljava/lang/String;)Ltools/elide/app/RenderedEnvironment$Builder;
 	public fun removeEnv (Ljava/lang/String;)Ltools/elide/app/ActiveApplication$Builder;
 	public fun setApp (Ltools/elide/app/Application$Builder;)Ltools/elide/app/ActiveApplication$Builder;
 	public fun setApp (Ltools/elide/app/Application;)Ltools/elide/app/ActiveApplication$Builder;
@@ -531,7 +531,6 @@ public final class tools/elide/app/AppAsset : com/google/protobuf/GeneratedMessa
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/AppAsset$Builder;
@@ -648,7 +647,6 @@ public final class tools/elide/app/AppBundle : com/google/protobuf/GeneratedMess
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/AppBundle$Builder;
@@ -823,7 +821,6 @@ public final class tools/elide/app/AppConfiguration : com/google/protobuf/Genera
 	public fun getServiceList ()Ljava/util/List;
 	public fun getServiceOrBuilder (I)Ltools/elide/net/ServiceOrBuilder;
 	public fun getServiceOrBuilderList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVm ()Ltools/elide/meta/GuestConfiguration;
 	public fun getVmOrBuilder ()Ltools/elide/meta/GuestConfigurationOrBuilder;
 	public fun hasIdentity ()Z
@@ -1122,6 +1119,7 @@ public final class tools/elide/app/AppConfigurationKt$Dsl {
 	public final fun getIdentity ()Ltools/elide/app/IdentityConfiguration;
 	public final synthetic fun getKv ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getLanguage ()Ltools/elide/meta/GuestLanguage;
+	public final fun getLanguageValue ()I
 	public final fun getMachine ()Ltools/elide/app/AppMachineConfiguration;
 	public final fun getName ()Ljava/lang/String;
 	public final synthetic fun getSecret ()Lcom/google/protobuf/kotlin/DslList;
@@ -1152,6 +1150,7 @@ public final class tools/elide/app/AppConfigurationKt$Dsl {
 	public final fun setIdentity (Ltools/elide/app/IdentityConfiguration;)V
 	public final synthetic fun setKv (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/kv/Namespace;)V
 	public final fun setLanguage (Ltools/elide/meta/GuestLanguage;)V
+	public final fun setLanguageValue (I)V
 	public final fun setMachine (Ltools/elide/app/AppMachineConfiguration;)V
 	public final fun setName (Ljava/lang/String;)V
 	public final synthetic fun setSecret (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/app/Secret;)V
@@ -1254,7 +1253,6 @@ public final class tools/elide/app/AppConfigurationSource : com/google/protobuf/
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/AppConfigurationSource$Builder;
@@ -1387,7 +1385,6 @@ public final class tools/elide/app/AppConfigurationSuite : com/google/protobuf/G
 	public fun getSerializedSize ()I
 	public fun getSource ()Ltools/elide/app/AppConfigurationSource;
 	public fun getSourceOrBuilder ()Ltools/elide/app/AppConfigurationSourceOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasSource ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -1584,7 +1581,6 @@ public final class tools/elide/app/AppMachineConfiguration : com/google/protobuf
 	public fun getSerializedSize ()I
 	public fun getSize ()Ltools/elide/app/MachineSize;
 	public fun getSizeOrBuilder ()Ltools/elide/app/MachineSizeOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasNetworking ()Z
 	public fun hasSize ()Z
 	public fun hashCode ()I
@@ -1738,7 +1734,6 @@ public final class tools/elide/app/AppNamespace : com/google/protobuf/GeneratedM
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasContext ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -1899,7 +1894,6 @@ public final class tools/elide/app/Application : com/google/protobuf/GeneratedMe
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasConfig ()Z
 	public fun hasKey ()Z
 	public fun hashCode ()I
@@ -2097,7 +2091,6 @@ public final class tools/elide/app/ApplicationInstance : com/google/protobuf/Gen
 	public fun getSerializedSize ()I
 	public fun getStatus ()Ltools/elide/app/InstanceStatus;
 	public fun getStatusValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ltools/elide/std/Version;
 	public fun getVersionOrBuilder ()Ltools/elide/std/VersionOrBuilder;
 	public fun hasApp ()Z
@@ -2304,6 +2297,7 @@ public final class tools/elide/app/ApplicationInstanceKt$Dsl {
 	public final fun getKey ()Ltools/elide/app/InstanceKey;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getStatus ()Ltools/elide/app/InstanceStatus;
+	public final fun getStatusValue ()I
 	public final fun getVersion ()Ltools/elide/std/Version;
 	public final fun hasApp ()Z
 	public final fun hasAssignment ()Z
@@ -2323,6 +2317,7 @@ public final class tools/elide/app/ApplicationInstanceKt$Dsl {
 	public final fun setKey (Ltools/elide/app/InstanceKey;)V
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setStatus (Ltools/elide/app/InstanceStatus;)V
+	public final fun setStatusValue (I)V
 	public final fun setVersion (Ltools/elide/std/Version;)V
 }
 
@@ -2394,7 +2389,6 @@ public final class tools/elide/app/ApplicationKey : com/google/protobuf/Generate
 	public fun getOwnerBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/ApplicationKey$Builder;
@@ -2546,6 +2540,7 @@ public final class tools/elide/app/ApplicationKt$Dsl {
 	public final fun getConfig ()Ltools/elide/app/AppConfiguration;
 	public final fun getDisplayName ()Ljava/lang/String;
 	public final fun getEntry ()Ltools/elide/app/EntrypointType;
+	public final fun getEntryValue ()I
 	public final fun getKey ()Ltools/elide/app/ApplicationKey;
 	public final fun getName ()Ljava/lang/String;
 	public final fun hasConfig ()Z
@@ -2559,6 +2554,7 @@ public final class tools/elide/app/ApplicationKt$Dsl {
 	public final fun setConfig (Ltools/elide/app/AppConfiguration;)V
 	public final fun setDisplayName (Ljava/lang/String;)V
 	public final fun setEntry (Ltools/elide/app/EntrypointType;)V
+	public final fun setEntryValue (I)V
 	public final fun setKey (Ltools/elide/app/ApplicationKey;)V
 	public final fun setName (Ljava/lang/String;)V
 }
@@ -2634,7 +2630,6 @@ public final class tools/elide/app/ConfigurationValue : com/google/protobuf/Gene
 	public fun getSerializedSize ()I
 	public fun getTypedValue ()Lcom/google/protobuf/Any;
 	public fun getTypedValueOrBuilder ()Lcom/google/protobuf/AnyOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Lcom/google/protobuf/Value;
 	public fun getValueOrBuilder ()Lcom/google/protobuf/ValueOrBuilder;
 	public fun hasTypedValue ()Z
@@ -2823,7 +2818,6 @@ public final class tools/elide/app/Deployment : com/google/protobuf/GeneratedMes
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ltools/elide/std/Version;
 	public fun getVersionOrBuilder ()Ltools/elide/std/VersionOrBuilder;
 	public fun hasMachine ()Z
@@ -3010,7 +3004,6 @@ public final class tools/elide/app/Domain : com/google/protobuf/GeneratedMessage
 	public fun getRedirectTo ()Ljava/lang/String;
 	public fun getRedirectToBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/Domain$Builder;
@@ -3124,7 +3117,6 @@ public final class tools/elide/app/DomainDelegationTicket : com/google/protobuf/
 	public fun getRecordOrBuilder (I)Ltools/elide/app/VerificationDnsRecordOrBuilder;
 	public fun getRecordOrBuilderList ()Ljava/util/List;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/DomainDelegationTicket$Builder;
@@ -3280,7 +3272,6 @@ public final class tools/elide/app/DomainDnsVerification : com/google/protobuf/G
 	public fun getRecordOrBuilder (I)Ltools/elide/app/VerificationDnsRecordOrBuilder;
 	public fun getRecordOrBuilderList ()Ljava/util/List;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/DomainDnsVerification$Builder;
@@ -3433,7 +3424,6 @@ public final class tools/elide/app/DomainHttpVerification : com/google/protobuf/
 	public fun getEndpointOrBuilder ()Ltools/elide/app/VerificationHttpEndpointOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasEndpoint ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -3641,7 +3631,6 @@ public final class tools/elide/app/DomainVerification : com/google/protobuf/Gene
 	public fun getSerializedSize ()I
 	public fun getStatus ()Ltools/elide/app/DomainStatus;
 	public fun getStatusValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasLastCheck ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -3767,12 +3756,14 @@ public final class tools/elide/app/DomainVerificationKt$Dsl {
 	public final fun getLastCheck ()Lcom/google/protobuf/Timestamp;
 	public final synthetic fun getProblem ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getStatus ()Ltools/elide/app/DomainStatus;
+	public final fun getStatusValue ()I
 	public final fun hasLastCheck ()Z
 	public final synthetic fun plusAssignAllProblem (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignProblem (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/String;)V
 	public final fun setLastCheck (Lcom/google/protobuf/Timestamp;)V
 	public final synthetic fun setProblem (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setStatus (Ltools/elide/app/DomainStatus;)V
+	public final fun setStatusValue (I)V
 }
 
 public final class tools/elide/app/DomainVerificationKt$Dsl$Companion {
@@ -3839,7 +3830,6 @@ public final class tools/elide/app/DomainVerificationTicket : com/google/protobu
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public fun getTicketCase ()Ltools/elide/app/DomainVerificationTicket$TicketCase;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDns ()Z
 	public fun hasHttp ()Z
 	public fun hashCode ()I
@@ -3976,12 +3966,14 @@ public final class tools/elide/app/DomainVerificationTicketKt$Dsl {
 	public final fun getDns ()Ltools/elide/app/DomainDnsVerification;
 	public final fun getHttp ()Ltools/elide/app/DomainHttpVerification;
 	public final fun getMode ()Ltools/elide/app/DomainVerificationMode;
+	public final fun getModeValue ()I
 	public final fun getTicketCase ()Ltools/elide/app/DomainVerificationTicket$TicketCase;
 	public final fun hasDns ()Z
 	public final fun hasHttp ()Z
 	public final fun setDns (Ltools/elide/app/DomainDnsVerification;)V
 	public final fun setHttp (Ltools/elide/app/DomainHttpVerification;)V
 	public final fun setMode (Ltools/elide/app/DomainVerificationMode;)V
+	public final fun setModeValue (I)V
 }
 
 public final class tools/elide/app/DomainVerificationTicketKt$Dsl$Companion {
@@ -4024,7 +4016,6 @@ public final class tools/elide/app/EncryptedSecret : com/google/protobuf/Generat
 	public fun getRef ()Ltools/elide/app/SecretReference;
 	public fun getRefOrBuilder ()Ltools/elide/app/SecretReferenceOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasPreamble ()Z
 	public fun hasRef ()Z
 	public fun hashCode ()I
@@ -4224,7 +4215,6 @@ public final class tools/elide/app/EnvVar : com/google/protobuf/GeneratedMessage
 	public fun getSerializedSize ()I
 	public fun getSymbolic ()Ltools/elide/app/SymbolicEnvValue;
 	public fun getSymbolicValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValueCase ()Ltools/elide/app/EnvVar$ValueCase;
 	public fun hasHost ()Z
 	public fun hasLiteral ()Z
@@ -4378,6 +4368,7 @@ public final class tools/elide/app/EnvVarKt$Dsl {
 	public final fun getName ()Ljava/lang/String;
 	public final fun getSecret ()Ltools/elide/app/SecretReference;
 	public final fun getSymbolic ()Ltools/elide/app/SymbolicEnvValue;
+	public final fun getSymbolicValue ()I
 	public final fun getValueCase ()Ltools/elide/app/EnvVar$ValueCase;
 	public final fun hasHost ()Z
 	public final fun hasLiteral ()Z
@@ -4388,6 +4379,7 @@ public final class tools/elide/app/EnvVarKt$Dsl {
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setSecret (Ltools/elide/app/SecretReference;)V
 	public final fun setSymbolic (Ltools/elide/app/SymbolicEnvValue;)V
+	public final fun setSymbolicValue (I)V
 }
 
 public final class tools/elide/app/EnvVarKt$Dsl$Companion {
@@ -4454,7 +4446,6 @@ public final class tools/elide/app/EnvironmentInfo : com/google/protobuf/Generat
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/EnvironmentInfo$Builder;
@@ -4561,8 +4552,10 @@ public final class tools/elide/app/EnvironmentInfoKt$Dsl {
 	public final fun clearEnvironment ()V
 	public final fun clearName ()V
 	public final fun getEnvironment ()Ltools/elide/app/Environment;
+	public final fun getEnvironmentValue ()I
 	public final fun getName ()Ljava/lang/String;
 	public final fun setEnvironment (Ltools/elide/app/Environment;)V
+	public final fun setEnvironmentValue (I)V
 	public final fun setName (Ljava/lang/String;)V
 }
 
@@ -4591,7 +4584,6 @@ public final class tools/elide/app/Identity : com/google/protobuf/GeneratedMessa
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/Identity$Builder;
@@ -4686,7 +4678,6 @@ public final class tools/elide/app/IdentityConfiguration : com/google/protobuf/G
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/IdentityConfiguration$Builder;
@@ -4840,7 +4831,6 @@ public final class tools/elide/app/InstanceAllocation : com/google/protobuf/Gene
 	public fun getIdBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/InstanceAllocation$Builder;
@@ -4970,7 +4960,6 @@ public final class tools/elide/app/InstanceAssignment : com/google/protobuf/Gene
 	public fun getHostBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/InstanceAssignment$Builder;
@@ -5103,7 +5092,6 @@ public final class tools/elide/app/InstanceKey : com/google/protobuf/GeneratedMe
 	public fun getOwnerBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/InstanceKey$Builder;
@@ -5285,7 +5273,6 @@ public final class tools/elide/app/MachineSize : com/google/protobuf/GeneratedMe
 	public fun getMhz ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCores ()Z
 	public fun hasMhz ()Z
 	public fun hashCode ()I
@@ -5464,7 +5451,6 @@ public final class tools/elide/app/MappedDomain : com/google/protobuf/GeneratedM
 	public fun getSerializedSize ()I
 	public fun getTicket ()Ltools/elide/app/DomainVerificationTicket;
 	public fun getTicketOrBuilder ()Ltools/elide/app/DomainVerificationTicketOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVerification ()Ltools/elide/app/DomainVerification;
 	public fun getVerificationOrBuilder ()Ltools/elide/app/DomainVerificationOrBuilder;
 	public fun hasDcv ()Z
@@ -5679,7 +5665,6 @@ public final class tools/elide/app/Privileges : com/google/protobuf/GeneratedMes
 	public fun getPrivilegeValue (I)I
 	public fun getPrivilegeValueList ()Ljava/util/List;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/Privileges$Builder;
@@ -5842,7 +5827,6 @@ public final class tools/elide/app/Region : com/google/protobuf/GeneratedMessage
 	public fun getProvider ()Ljava/lang/String;
 	public fun getProviderBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasKey ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -5994,7 +5978,6 @@ public final class tools/elide/app/RegionKey : com/google/protobuf/GeneratedMess
 	public fun getIdBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/RegionKey$Builder;
@@ -6141,6 +6124,7 @@ public final class tools/elide/app/RegionKt$Dsl {
 	public final fun getAvailable ()Z
 	public final fun getDisplayName ()Ljava/lang/String;
 	public final fun getFlag ()Ltools/elide/app/RegionFlag;
+	public final fun getFlagValue ()I
 	public final fun getKey ()Ltools/elide/app/RegionKey;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getProvider ()Ljava/lang/String;
@@ -6149,6 +6133,7 @@ public final class tools/elide/app/RegionKt$Dsl {
 	public final fun setAvailable (Z)V
 	public final fun setDisplayName (Ljava/lang/String;)V
 	public final fun setFlag (Ltools/elide/app/RegionFlag;)V
+	public final fun setFlagValue (I)V
 	public final fun setKey (Ltools/elide/app/RegionKey;)V
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setProvider (Ljava/lang/String;)V
@@ -6198,7 +6183,6 @@ public final class tools/elide/app/RegionReference : com/google/protobuf/Generat
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/RegionReference$Builder;
@@ -6331,7 +6315,6 @@ public final class tools/elide/app/RenderedEnvironment : com/google/protobuf/Gen
 	public fun getSecret ()Ltools/elide/app/EncryptedSecret;
 	public fun getSecretOrBuilder ()Ltools/elide/app/EncryptedSecretOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValueCase ()Ltools/elide/app/RenderedEnvironment$ValueCase;
 	public fun hasLiteral ()Z
 	public fun hasSecret ()Z
@@ -6499,7 +6482,6 @@ public final class tools/elide/app/Secret : com/google/protobuf/GeneratedMessage
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/Secret$Builder;
@@ -6638,7 +6620,6 @@ public final class tools/elide/app/SecretReference : com/google/protobuf/Generat
 	public fun getOwnerBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/SecretReference$Builder;
@@ -6804,7 +6785,6 @@ public final class tools/elide/app/VerificationDnsRecord : com/google/protobuf/G
 	public fun getLastCheckOrBuilder ()Lcom/google/protobuf/TimestampOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValid ()Lcom/google/protobuf/Timestamp;
 	public fun getValidOrBuilder ()Lcom/google/protobuf/TimestampOrBuilder;
 	public fun getVerified ()Z
@@ -6999,7 +6979,6 @@ public final class tools/elide/app/VerificationHttpEndpoint : com/google/protobu
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/app/VerificationHttpEndpoint$Builder;
@@ -7152,7 +7131,6 @@ public final class tools/elide/assets/AssetBundle : com/google/protobuf/Generate
 	public fun getStylesMap ()Ljava/util/Map;
 	public fun getStylesOrDefault (Ljava/lang/String;Ltools/elide/assets/AssetBundle$StyleBundle;)Ltools/elide/assets/AssetBundle$StyleBundle;
 	public fun getStylesOrThrow (Ljava/lang/String;)Ltools/elide/assets/AssetBundle$StyleBundle;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()I
 	public fun hasGenerated ()Z
 	public fun hasSettings ()Z
@@ -7201,7 +7179,6 @@ public final class tools/elide/assets/AssetBundle$AssetContent : com/google/prot
 	public fun getSerializedSize ()I
 	public fun getToken ()Ljava/lang/String;
 	public fun getTokenBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVariant (I)Ltools/elide/data/CompressedData;
 	public fun getVariantCount ()I
 	public fun getVariantList ()Ljava/util/List;
@@ -7363,7 +7340,6 @@ public final class tools/elide/assets/AssetBundle$AssetDependencies : com/google
 	public fun getTransitiveCount ()I
 	public fun getTransitiveList ()Lcom/google/protobuf/ProtocolStringList;
 	public synthetic fun getTransitiveList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMask ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -7599,8 +7575,11 @@ public final class tools/elide/assets/AssetBundle$Builder : com/google/protobuf/
 	public fun putAllScripts (Ljava/util/Map;)Ltools/elide/assets/AssetBundle$Builder;
 	public fun putAllStyles (Ljava/util/Map;)Ltools/elide/assets/AssetBundle$Builder;
 	public fun putGeneric (Ljava/lang/String;Ltools/elide/assets/AssetBundle$GenericBundle;)Ltools/elide/assets/AssetBundle$Builder;
+	public fun putGenericBuilderIfAbsent (Ljava/lang/String;)Ltools/elide/assets/AssetBundle$GenericBundle$Builder;
 	public fun putScripts (Ljava/lang/String;Ltools/elide/assets/AssetBundle$ScriptBundle;)Ltools/elide/assets/AssetBundle$Builder;
+	public fun putScriptsBuilderIfAbsent (Ljava/lang/String;)Ltools/elide/assets/AssetBundle$ScriptBundle$Builder;
 	public fun putStyles (Ljava/lang/String;Ltools/elide/assets/AssetBundle$StyleBundle;)Ltools/elide/assets/AssetBundle$Builder;
+	public fun putStylesBuilderIfAbsent (Ljava/lang/String;)Ltools/elide/assets/AssetBundle$StyleBundle$Builder;
 	public fun removeAsset (I)Ltools/elide/assets/AssetBundle$Builder;
 	public fun removeGeneric (Ljava/lang/String;)Ltools/elide/assets/AssetBundle$Builder;
 	public fun removeScripts (Ljava/lang/String;)Ltools/elide/assets/AssetBundle$Builder;
@@ -7648,7 +7627,6 @@ public final class tools/elide/assets/AssetBundle$BundlerSettings : com/google/p
 	public fun getPrepack ()Z
 	public fun getRewriting ()Z
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDigestSettings ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -7794,7 +7772,6 @@ public final class tools/elide/assets/AssetBundle$DigestSettings : com/google/pr
 	public fun getRounds ()I
 	public fun getSerializedSize ()I
 	public fun getTail ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/AssetBundle$DigestSettings$Builder;
@@ -7923,7 +7900,6 @@ public final class tools/elide/assets/AssetBundle$GenericBundle : com/google/pro
 	public fun getSerializedSize ()I
 	public fun getToken ()Ljava/lang/String;
 	public fun getTokenBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVariant (I)Ltools/elide/data/CompressedData;
 	public fun getVariantCount ()I
 	public fun getVariantList ()Ljava/util/List;
@@ -8092,7 +8068,6 @@ public final class tools/elide/assets/AssetBundle$RewriteMap : com/google/protob
 	public fun getMapOrThrow (Ljava/lang/String;)Ljava/lang/String;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/AssetBundle$RewriteMap$Builder;
@@ -8232,7 +8207,6 @@ public final class tools/elide/assets/AssetBundle$ScriptBundle : com/google/prot
 	public fun getModuleBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDependencies ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -8377,7 +8351,6 @@ public final class tools/elide/assets/AssetBundle$ScriptBundle$ScriptAsset : com
 	public fun getSerializedSize ()I
 	public fun getToken ()Ljava/lang/String;
 	public fun getTokenBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasScript ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -8536,7 +8509,6 @@ public final class tools/elide/assets/AssetBundle$StyleBundle : com/google/proto
 	public fun getRewriteMap ()Ltools/elide/assets/AssetBundle$RewriteMap;
 	public fun getRewriteMapOrBuilder ()Ltools/elide/assets/AssetBundle$RewriteMapOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDependencies ()Z
 	public fun hasRewriteMap ()Z
 	public fun hashCode ()I
@@ -8689,7 +8661,6 @@ public final class tools/elide/assets/AssetBundle$StyleBundle$StyleAsset : com/g
 	public fun getStylesheetOrBuilder ()Ltools/elide/page/Context$Styles$StylesheetOrBuilder;
 	public fun getToken ()Ljava/lang/String;
 	public fun getTokenBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasStylesheet ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -8958,9 +8929,11 @@ public final class tools/elide/assets/AssetBundleKt$DigestSettingsKt$Dsl {
 	public final fun clearRounds ()V
 	public final fun clearTail ()V
 	public final fun getAlgorithm ()Ltools/elide/std/HashAlgorithm;
+	public final fun getAlgorithmValue ()I
 	public final fun getRounds ()I
 	public final fun getTail ()I
 	public final fun setAlgorithm (Ltools/elide/std/HashAlgorithm;)V
+	public final fun setAlgorithmValue (I)V
 	public final fun setRounds (I)V
 	public final fun setTail (I)V
 }
@@ -9344,7 +9317,6 @@ public final class tools/elide/assets/EmbeddedScript : com/google/protobuf/Gener
 	public fun getTransitiveDependencyCount ()I
 	public fun getTransitiveDependencyList ()Lcom/google/protobuf/ProtocolStringList;
 	public synthetic fun getTransitiveDependencyList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasLastModified ()Z
 	public fun hasMetadata ()Z
 	public fun hasScript ()Z
@@ -9525,6 +9497,7 @@ public final class tools/elide/assets/EmbeddedScriptKt$Dsl {
 	public final synthetic fun getDirectDependency ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getFilename ()Ljava/lang/String;
 	public final fun getLanguage ()Ltools/elide/assets/EmbeddedScriptLanguage;
+	public final fun getLanguageValue ()I
 	public final fun getLastModified ()Lcom/google/protobuf/Timestamp;
 	public final fun getMetadata ()Ltools/elide/assets/EmbeddedScriptMetadata;
 	public final fun getModule ()Ljava/lang/String;
@@ -9542,6 +9515,7 @@ public final class tools/elide/assets/EmbeddedScriptKt$Dsl {
 	public final synthetic fun setDirectDependency (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setFilename (Ljava/lang/String;)V
 	public final fun setLanguage (Ltools/elide/assets/EmbeddedScriptLanguage;)V
+	public final fun setLanguageValue (I)V
 	public final fun setLastModified (Lcom/google/protobuf/Timestamp;)V
 	public final fun setMetadata (Ltools/elide/assets/EmbeddedScriptMetadata;)V
 	public final fun setModule (Ljava/lang/String;)V
@@ -9635,7 +9609,6 @@ public final class tools/elide/assets/EmbeddedScriptMetadata : com/google/protob
 	public fun getRuby ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
 	public fun getRubyOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadataOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasJavascript ()Z
 	public fun hasJvm ()Z
 	public fun hasPython ()Z
@@ -9771,7 +9744,6 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata : 
 	public fun getLevelValue ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$Builder;
@@ -9925,7 +9897,6 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata :
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public fun getTargetEffective ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasGroovy ()Z
 	public fun hasKotlin ()Z
 	public fun hashCode ()I
@@ -10046,7 +10017,6 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$G
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
@@ -10176,7 +10146,6 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$K
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
@@ -10299,7 +10268,6 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata : 
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
@@ -10397,7 +10365,6 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata : 
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
@@ -10532,7 +10499,9 @@ public final class tools/elide/assets/EmbeddedScriptMetadataKt$JsScriptMetadataK
 	public final synthetic fun _build ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
 	public final fun clearLevel ()V
 	public final fun getLevel ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public final fun getLevelValue ()I
 	public final fun setLevel (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;)V
+	public final fun setLevelValue (I)V
 }
 
 public final class tools/elide/assets/EmbeddedScriptMetadataKt$JsScriptMetadataKt$Dsl$Companion {
@@ -10556,12 +10525,14 @@ public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadata
 	public final fun getGroovy ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
 	public final fun getKotlin ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
 	public final fun getLevel ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public final fun getLevelValue ()I
 	public final fun getTargetEffective ()I
 	public final fun hasGroovy ()Z
 	public final fun hasKotlin ()Z
 	public final fun setGroovy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;)V
 	public final fun setKotlin (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;)V
 	public final fun setLevel (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;)V
+	public final fun setLevelValue (I)V
 	public final fun setTargetEffective (I)V
 }
 
@@ -10768,7 +10739,6 @@ public final class tools/elide/base/LanguageSpec : com/google/protobuf/Generated
 	public fun getModifierCase ()Ltools/elide/base/LanguageSpec$ModifierCase;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSelectionCase ()Ltools/elide/base/LanguageSpec$SelectionCase;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDialect ()Z
 	public fun hasIsoCountry ()Z
 	public fun hasIsoLanguage ()Z
@@ -10913,6 +10883,7 @@ public final class tools/elide/base/LanguageSpecKt$Dsl {
 	public final fun getIsoCountry ()Ljava/lang/String;
 	public final fun getIsoLanguage ()Ljava/lang/String;
 	public final fun getLanguage ()Ltools/elide/base/Language;
+	public final fun getLanguageValue ()I
 	public final fun getModifierCase ()Ltools/elide/base/LanguageSpec$ModifierCase;
 	public final fun getSelectionCase ()Ltools/elide/base/LanguageSpec$SelectionCase;
 	public final fun hasDialect ()Z
@@ -10923,6 +10894,7 @@ public final class tools/elide/base/LanguageSpecKt$Dsl {
 	public final fun setIsoCountry (Ljava/lang/String;)V
 	public final fun setIsoLanguage (Ljava/lang/String;)V
 	public final fun setLanguage (Ltools/elide/base/Language;)V
+	public final fun setLanguageValue (I)V
 }
 
 public final class tools/elide/base/LanguageSpecKt$Dsl$Companion {
@@ -10969,7 +10941,6 @@ public final class tools/elide/call/ActiveHostSystem : com/google/protobuf/Gener
 	public fun getSerializedSize ()I
 	public fun getStatus ()Ltools/elide/call/HostStatus;
 	public fun getStatusValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAsOf ()Z
 	public fun hasHost ()Z
 	public fun hashCode ()I
@@ -11092,11 +11063,13 @@ public final class tools/elide/call/ActiveHostSystemKt$Dsl {
 	public final fun getAsOf ()Lcom/google/protobuf/Timestamp;
 	public final fun getHost ()Ltools/elide/call/HostSystem;
 	public final fun getStatus ()Ltools/elide/call/HostStatus;
+	public final fun getStatusValue ()I
 	public final fun hasAsOf ()Z
 	public final fun hasHost ()Z
 	public final fun setAsOf (Lcom/google/protobuf/Timestamp;)V
 	public final fun setHost (Ltools/elide/call/HostSystem;)V
 	public final fun setStatus (Ltools/elide/call/HostStatus;)V
+	public final fun setStatusValue (I)V
 }
 
 public final class tools/elide/call/ActiveHostSystemKt$Dsl$Companion {
@@ -11142,7 +11115,6 @@ public final class tools/elide/call/CallInfo : com/google/protobuf/GeneratedMess
 	public fun getSerializedSize ()I
 	public fun getTiming ()Ltools/elide/call/CallTiming;
 	public fun getTimingOrBuilder ()Ltools/elide/call/CallTimingOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMetadata ()Z
 	public fun hasTiming ()Z
 	public fun hashCode ()I
@@ -11299,7 +11271,6 @@ public final class tools/elide/call/CallMetadata : com/google/protobuf/Generated
 	public fun getRequestId ()Ljava/lang/String;
 	public fun getRequestIdBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/CallMetadata$Builder;
@@ -11438,7 +11409,6 @@ public final class tools/elide/call/CallTiming : com/google/protobuf/GeneratedMe
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/CallTiming$Builder;
@@ -11585,7 +11555,6 @@ public final class tools/elide/call/EngineConfiguration : com/google/protobuf/Ge
 	public fun getSettingsList ()Ljava/util/List;
 	public fun getSettingsOrBuilder (I)Ltools/elide/meta/GuestSettingsStanzaOrBuilder;
 	public fun getSettingsOrBuilderList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasGeneral ()Z
 	public fun hasGvm ()Z
 	public fun hasHvm ()Z
@@ -11832,7 +11801,6 @@ public final class tools/elide/call/HostCapabilities : com/google/protobuf/Gener
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/HostCapabilities$Builder;
@@ -12025,7 +11993,6 @@ public final class tools/elide/call/HostConfiguration : com/google/protobuf/Gene
 	public fun getLoggingOrBuilder ()Ltools/elide/call/LoggingConfigurationOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasEngine ()Z
 	public fun hasHost ()Z
 	public fun hasLogging ()Z
@@ -12308,7 +12275,6 @@ public final class tools/elide/call/HostIdentity : com/google/protobuf/Generated
 	public fun getSerializedSize ()I
 	public fun getTag ()Ljava/lang/String;
 	public fun getTagBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVendor ()Ljava/lang/String;
 	public fun getVendorBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -12495,7 +12461,6 @@ public final class tools/elide/call/HostNetworking : com/google/protobuf/Generat
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/HostNetworking$Builder;
@@ -12683,7 +12648,6 @@ public final class tools/elide/call/HostSystem : com/google/protobuf/GeneratedMe
 	public fun getNetworkingOrBuilder ()Ltools/elide/call/HostNetworkingOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCapabilities ()Z
 	public fun hasMachine ()Z
 	public fun hasNetworking ()Z
@@ -12884,7 +12848,6 @@ public final class tools/elide/call/ListenerConfiguration : com/google/protobuf/
 	public fun getSocketOrBuilder ()Ltools/elide/call/ListenerConfiguration$SocketListenerOrBuilder;
 	public fun getType ()Ltools/elide/call/ListenerType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasPort ()Z
 	public fun hasSettings ()Z
 	public fun hasSocket ()Z
@@ -13026,7 +12989,6 @@ public final class tools/elide/call/ListenerConfiguration$ListenerSettings : com
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public fun getTls ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/ListenerConfiguration$ListenerSettings$Builder;
@@ -13139,7 +13101,6 @@ public final class tools/elide/call/ListenerConfiguration$PortListener : com/goo
 	public fun getProtocolValue (I)I
 	public fun getProtocolValueList ()Ljava/util/List;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAddress ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -13275,7 +13236,6 @@ public final class tools/elide/call/ListenerConfiguration$SocketListener : com/g
 	public fun getPathBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
 	public fun getSymbolic ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/ListenerConfiguration$SocketListener$Builder;
@@ -13396,6 +13356,7 @@ public final class tools/elide/call/ListenerConfigurationKt$Dsl {
 	public final fun getSettings ()Ltools/elide/call/ListenerConfiguration$ListenerSettings;
 	public final fun getSocket ()Ltools/elide/call/ListenerConfiguration$SocketListener;
 	public final fun getType ()Ltools/elide/call/ListenerType;
+	public final fun getTypeValue ()I
 	public final fun hasPort ()Z
 	public final fun hasSettings ()Z
 	public final fun hasSocket ()Z
@@ -13403,6 +13364,7 @@ public final class tools/elide/call/ListenerConfigurationKt$Dsl {
 	public final fun setSettings (Ltools/elide/call/ListenerConfiguration$ListenerSettings;)V
 	public final fun setSocket (Ltools/elide/call/ListenerConfiguration$SocketListener;)V
 	public final fun setType (Ltools/elide/call/ListenerType;)V
+	public final fun setTypeValue (I)V
 }
 
 public final class tools/elide/call/ListenerConfigurationKt$Dsl$Companion {
@@ -13552,7 +13514,6 @@ public final class tools/elide/call/LoggingConfiguration : com/google/protobuf/G
 	public fun getRoot ()Ltools/elide/std/LoggingSettings;
 	public fun getRootOrBuilder ()Ltools/elide/std/LoggingSettingsOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasRoot ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -13758,7 +13719,6 @@ public final class tools/elide/call/VMConfiguration : com/google/protobuf/Genera
 	public fun getFlagOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/VMConfiguration$Builder;
@@ -13879,7 +13839,6 @@ public final class tools/elide/call/VMConfiguration$VMFlag : com/google/protobuf
 	public fun getSerializedSize ()I
 	public fun getString ()Ljava/lang/String;
 	public fun getStringBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValueCase ()Ltools/elide/call/VMConfiguration$VMFlag$ValueCase;
 	public fun hasBool ()Z
 	public fun hasString ()Z
@@ -14094,7 +14053,6 @@ public final class tools/elide/call/v1alpha1/FetchInvocation : com/google/protob
 	public fun getResponse ()Ltools/elide/call/v1alpha1/FetchResponse;
 	public fun getResponseOrBuilder ()Ltools/elide/call/v1alpha1/FetchResponseOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasRequest ()Z
 	public fun hasResponse ()Z
 	public fun hashCode ()I
@@ -14251,7 +14209,6 @@ public final class tools/elide/call/v1alpha1/FetchRequest : com/google/protobuf/
 	public fun getRequest ()Ltools/elide/http/HttpRequest;
 	public fun getRequestOrBuilder ()Ltools/elide/http/HttpRequestOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMetadata ()Z
 	public fun hasRequest ()Z
 	public fun hashCode ()I
@@ -14411,7 +14368,6 @@ public final class tools/elide/call/v1alpha1/FetchResponse : com/google/protobuf
 	public fun getSerializedSize ()I
 	public fun getStatus ()Ltools/elide/call/v1alpha1/InvocationStatus;
 	public fun getStatusValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMetadata ()Z
 	public fun hasResponse ()Z
 	public fun hashCode ()I
@@ -14534,11 +14490,13 @@ public final class tools/elide/call/v1alpha1/FetchResponseKt$Dsl {
 	public final fun getMetadata ()Ltools/elide/call/CallMetadata;
 	public final fun getResponse ()Ltools/elide/http/HttpResponse;
 	public final fun getStatus ()Ltools/elide/call/v1alpha1/InvocationStatus;
+	public final fun getStatusValue ()I
 	public final fun hasMetadata ()Z
 	public final fun hasResponse ()Z
 	public final fun setMetadata (Ltools/elide/call/CallMetadata;)V
 	public final fun setResponse (Ltools/elide/http/HttpResponse;)V
 	public final fun setStatus (Ltools/elide/call/v1alpha1/InvocationStatus;)V
+	public final fun setStatusValue (I)V
 }
 
 public final class tools/elide/call/v1alpha1/FetchResponseKt$Dsl$Companion {
@@ -14602,7 +14560,6 @@ public final class tools/elide/call/v1alpha1/QueueInvocation : com/google/protob
 	public fun getResponse ()Ltools/elide/call/v1alpha1/QueueInvocationResponse;
 	public fun getResponseOrBuilder ()Ltools/elide/call/v1alpha1/QueueInvocationResponseOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasRequest ()Z
 	public fun hasResponse ()Z
 	public fun hashCode ()I
@@ -14759,7 +14716,6 @@ public final class tools/elide/call/v1alpha1/QueueInvocationRequest : com/google
 	public fun getMetadataOrBuilder ()Ltools/elide/call/CallMetadataOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasBatch ()Z
 	public fun hasMetadata ()Z
 	public fun hashCode ()I
@@ -14919,7 +14875,6 @@ public final class tools/elide/call/v1alpha1/QueueInvocationResponse : com/googl
 	public fun getSerializedSize ()I
 	public fun getStatus ()Ltools/elide/call/v1alpha1/InvocationStatus;
 	public fun getStatusValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMetadata ()Z
 	public fun hasResult ()Z
 	public fun hashCode ()I
@@ -15042,11 +14997,13 @@ public final class tools/elide/call/v1alpha1/QueueInvocationResponseKt$Dsl {
 	public final fun getMetadata ()Ltools/elide/call/CallMetadata;
 	public final fun getResult ()Ltools/elide/call/v1alpha1/QueueMessageOutcomeBatch;
 	public final fun getStatus ()Ltools/elide/call/v1alpha1/InvocationStatus;
+	public final fun getStatusValue ()I
 	public final fun hasMetadata ()Z
 	public final fun hasResult ()Z
 	public final fun setMetadata (Ltools/elide/call/CallMetadata;)V
 	public final fun setResult (Ltools/elide/call/v1alpha1/QueueMessageOutcomeBatch;)V
 	public final fun setStatus (Ltools/elide/call/v1alpha1/InvocationStatus;)V
+	public final fun setStatusValue (I)V
 }
 
 public final class tools/elide/call/v1alpha1/QueueInvocationResponseKt$Dsl$Companion {
@@ -15083,7 +15040,6 @@ public final class tools/elide/call/v1alpha1/QueueMessage : com/google/protobuf/
 	public fun getIdBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/v1alpha1/QueueMessage$Builder;
@@ -15189,7 +15145,6 @@ public final class tools/elide/call/v1alpha1/QueueMessageBatch : com/google/prot
 	public fun getMessagesOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/v1alpha1/QueueMessageBatch$Builder;
@@ -15372,7 +15327,6 @@ public final class tools/elide/call/v1alpha1/QueueMessageOutcome : com/google/pr
 	public fun getSerializedSize ()I
 	public fun getStatus ()Ltools/elide/call/v1alpha1/QueueMessageStatus;
 	public fun getStatusValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/v1alpha1/QueueMessageOutcome$Builder;
@@ -15483,7 +15437,6 @@ public final class tools/elide/call/v1alpha1/QueueMessageOutcomeBatch : com/goog
 	public fun getOutcomeOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/call/v1alpha1/QueueMessageOutcomeBatch$Builder;
@@ -15636,8 +15589,10 @@ public final class tools/elide/call/v1alpha1/QueueMessageOutcomeKt$Dsl {
 	public final fun clearStatus ()V
 	public final fun getId ()Ljava/lang/String;
 	public final fun getStatus ()Ltools/elide/call/v1alpha1/QueueMessageStatus;
+	public final fun getStatusValue ()I
 	public final fun setId (Ljava/lang/String;)V
 	public final fun setStatus (Ltools/elide/call/v1alpha1/QueueMessageStatus;)V
+	public final fun setStatusValue (I)V
 }
 
 public final class tools/elide/call/v1alpha1/QueueMessageOutcomeKt$Dsl$Companion {
@@ -15689,7 +15644,6 @@ public final class tools/elide/call/v1alpha1/ScheduledInvocation : com/google/pr
 	public fun getResponse ()Ltools/elide/call/v1alpha1/ScheduledInvocationResponse;
 	public fun getResponseOrBuilder ()Ltools/elide/call/v1alpha1/ScheduledInvocationResponseOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasRequest ()Z
 	public fun hasResponse ()Z
 	public fun hashCode ()I
@@ -15843,7 +15797,6 @@ public final class tools/elide/call/v1alpha1/ScheduledInvocationRequest : com/go
 	public fun getMetadataOrBuilder ()Ltools/elide/call/CallMetadataOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMetadata ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -15983,7 +15936,6 @@ public final class tools/elide/call/v1alpha1/ScheduledInvocationResponse : com/g
 	public fun getSerializedSize ()I
 	public fun getStatus ()Ltools/elide/call/v1alpha1/InvocationStatus;
 	public fun getStatusValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMetadata ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -16095,9 +16047,11 @@ public final class tools/elide/call/v1alpha1/ScheduledInvocationResponseKt$Dsl {
 	public final fun clearStatus ()V
 	public final fun getMetadata ()Ltools/elide/call/CallMetadata;
 	public final fun getStatus ()Ltools/elide/call/v1alpha1/InvocationStatus;
+	public final fun getStatusValue ()I
 	public final fun hasMetadata ()Z
 	public final fun setMetadata (Ltools/elide/call/CallMetadata;)V
 	public final fun setStatus (Ltools/elide/call/v1alpha1/InvocationStatus;)V
+	public final fun setStatusValue (I)V
 }
 
 public final class tools/elide/call/v1alpha1/ScheduledInvocationResponseKt$Dsl$Companion {
@@ -16133,7 +16087,6 @@ public final class tools/elide/call/v1alpha1/UnaryInvocation : com/google/protob
 	public fun getResponse ()Ltools/elide/call/v1alpha1/UnaryInvocationResponse;
 	public fun getResponseOrBuilder ()Ltools/elide/call/v1alpha1/UnaryInvocationResponseOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasRequest ()Z
 	public fun hasResponse ()Z
 	public fun hashCode ()I
@@ -16294,7 +16247,6 @@ public final class tools/elide/call/v1alpha1/UnaryInvocationRequest : com/google
 	public fun getScheduled ()Ltools/elide/call/v1alpha1/ScheduledInvocationRequest;
 	public fun getScheduledOrBuilder ()Ltools/elide/call/v1alpha1/ScheduledInvocationRequestOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasFetch ()Z
 	public fun hasQueue ()Z
 	public fun hasScheduled ()Z
@@ -16489,7 +16441,6 @@ public final class tools/elide/call/v1alpha1/UnaryInvocationResponse : com/googl
 	public fun getScheduled ()Ltools/elide/call/v1alpha1/ScheduledInvocationResponse;
 	public fun getScheduledOrBuilder ()Ltools/elide/call/v1alpha1/ScheduledInvocationResponseOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasFetch ()Z
 	public fun hasQueue ()Z
 	public fun hasScheduled ()Z
@@ -16678,7 +16629,6 @@ public final class tools/elide/cli/CommandLineConfig : com/google/protobuf/Gener
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSettings ()Ltools/elide/cli/ElideToolOptions;
 	public fun getSettingsOrBuilder ()Ltools/elide/cli/ElideToolOptionsOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDefaults ()Z
 	public fun hasSettings ()Z
 	public static fun newBuilder ()Ltools/elide/cli/CommandLineConfig$Builder;
@@ -16817,7 +16767,6 @@ public final class tools/elide/cli/ElideToolOptions : com/google/protobuf/Genera
 	public fun getOutput ()Ltools/elide/cli/ElideToolOptions$OutputOptions;
 	public fun getOutputOrBuilder ()Ltools/elide/cli/ElideToolOptions$OutputOptionsOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasOutput ()Z
 	public static fun newBuilder ()Ltools/elide/cli/ElideToolOptions$Builder;
 	public static fun newBuilder (Ltools/elide/cli/ElideToolOptions;)Ltools/elide/cli/ElideToolOptions$Builder;
@@ -16913,7 +16862,6 @@ public final class tools/elide/cli/ElideToolOptions$OutputOptions : com/google/p
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getPretty ()Z
 	public fun getQuiet ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVerbose ()Z
 	public static fun newBuilder ()Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
 	public static fun newBuilder (Ltools/elide/cli/ElideToolOptions$OutputOptions;)Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
@@ -17077,7 +17025,6 @@ public final class tools/elide/cli/ElideToolState : com/google/protobuf/Generate
 	public fun getDefaultInstanceForType ()Ltools/elide/cli/ElideToolState;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAuth ()Z
 	public fun hasConfig ()Z
 	public static fun newBuilder ()Ltools/elide/cli/ElideToolState$Builder;
@@ -17215,7 +17162,6 @@ public final class tools/elide/cli/LocalAuthToken : com/google/protobuf/Generate
 	public fun getDefaultInstanceForType ()Ltools/elide/cli/LocalAuthToken;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUserToken ()Ltools/elide/data/secrets/Token;
 	public fun getUserTokenOrBuilder ()Ltools/elide/data/secrets/TokenOrBuilder;
 	public fun hasUserToken ()Z
@@ -17363,7 +17309,6 @@ public final class tools/elide/crypto/Certificate : com/google/protobuf/Generate
 	public fun getFingerprint ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/crypto/Certificate$Builder;
@@ -17506,7 +17451,6 @@ public final class tools/elide/crypto/CipherInfo : com/google/protobuf/Generated
 	public fun getKnownValue ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCustom ()Z
 	public fun hasKnown ()Z
 	public fun hashCode ()I
@@ -17645,12 +17589,14 @@ public final class tools/elide/crypto/CipherInfoKt$Dsl {
 	public final fun getIv ()Lcom/google/protobuf/ByteString;
 	public final fun getKid ()Ljava/lang/String;
 	public final fun getKnown ()Ltools/elide/crypto/KnownCipher;
+	public final fun getKnownValue ()I
 	public final fun hasCustom ()Z
 	public final fun hasKnown ()Z
 	public final fun setCustom (Ljava/lang/String;)V
 	public final fun setIv (Lcom/google/protobuf/ByteString;)V
 	public final fun setKid (Ljava/lang/String;)V
 	public final fun setKnown (Ltools/elide/crypto/KnownCipher;)V
+	public final fun setKnownValue (I)V
 }
 
 public final class tools/elide/crypto/CipherInfoKt$Dsl$Companion {
@@ -17702,7 +17648,6 @@ public final class tools/elide/crypto/EncryptedPreamble : com/google/protobuf/Ge
 	public fun getIntegrityOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/crypto/EncryptedPreamble$Builder;
@@ -17830,12 +17775,16 @@ public final class tools/elide/crypto/EncryptedPreambleKt$Dsl {
 	public final fun clearEncoding ()V
 	public final synthetic fun clearIntegrity (Lcom/google/protobuf/kotlin/DslList;)V
 	public final fun getCompression ()Ltools/elide/data/CompressionMode;
+	public final fun getCompressionValue ()I
 	public final fun getEncoding ()Ltools/elide/data/Encoding;
+	public final fun getEncodingValue ()I
 	public final synthetic fun getIntegrity ()Lcom/google/protobuf/kotlin/DslList;
 	public final synthetic fun plusAssignAllIntegrity (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignIntegrity (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/data/DataFingerprint;)V
 	public final fun setCompression (Ltools/elide/data/CompressionMode;)V
+	public final fun setCompressionValue (I)V
 	public final fun setEncoding (Ltools/elide/data/Encoding;)V
+	public final fun setEncodingValue (I)V
 	public final synthetic fun setIntegrity (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/data/DataFingerprint;)V
 }
 
@@ -17916,7 +17865,6 @@ public final class tools/elide/crypto/SymmetricPreamble : com/google/protobuf/Ge
 	public fun getMetadataOrBuilder ()Ltools/elide/data/DataContainerOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCipher ()Z
 	public fun hasMetadata ()Z
 	public fun hashCode ()I
@@ -18110,7 +18058,6 @@ public final class tools/elide/crypto/TlsConnectionInfo : com/google/protobuf/Ge
 	public fun getPeer ()Ltools/elide/crypto/TlsPeer;
 	public fun getPeerOrBuilder ()Ltools/elide/crypto/TlsPeerOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ltools/elide/crypto/TlsVersion;
 	public fun getVersionValue ()I
 	public fun hasPeer ()Z
@@ -18224,9 +18171,11 @@ public final class tools/elide/crypto/TlsConnectionInfoKt$Dsl {
 	public final fun clearVersion ()V
 	public final fun getPeer ()Ltools/elide/crypto/TlsPeer;
 	public final fun getVersion ()Ltools/elide/crypto/TlsVersion;
+	public final fun getVersionValue ()I
 	public final fun hasPeer ()Z
 	public final fun setPeer (Ltools/elide/crypto/TlsPeer;)V
 	public final fun setVersion (Ltools/elide/crypto/TlsVersion;)V
+	public final fun setVersionValue (I)V
 }
 
 public final class tools/elide/crypto/TlsConnectionInfoKt$Dsl$Companion {
@@ -18265,7 +18214,6 @@ public final class tools/elide/crypto/TlsPeer : com/google/protobuf/GeneratedMes
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCertificate ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -18470,7 +18418,6 @@ public final class tools/elide/data/CompressedData : com/google/protobuf/Generat
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public fun getSize ()J
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasData ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -18606,6 +18553,7 @@ public final class tools/elide/data/CompressedDataKt$Dsl {
 	public final synthetic fun clearIntegrity (Lcom/google/protobuf/kotlin/DslList;)V
 	public final fun clearSize ()V
 	public final fun getCompression ()Ltools/elide/data/CompressionMode;
+	public final fun getCompressionValue ()I
 	public final fun getData ()Ltools/elide/data/DataContainer;
 	public final synthetic fun getIntegrity ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getSize ()J
@@ -18613,6 +18561,7 @@ public final class tools/elide/data/CompressedDataKt$Dsl {
 	public final synthetic fun plusAssignAllIntegrity (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignIntegrity (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/data/DataFingerprint;)V
 	public final fun setCompression (Ltools/elide/data/CompressionMode;)V
+	public final fun setCompressionValue (I)V
 	public final fun setData (Ltools/elide/data/DataContainer;)V
 	public final synthetic fun setIntegrity (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/data/DataFingerprint;)V
 	public final fun setSize (J)V
@@ -18695,7 +18644,6 @@ public final class tools/elide/data/DataContainer : com/google/protobuf/Generate
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getRaw ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/data/DataContainer$Builder;
@@ -18821,11 +18769,13 @@ public final class tools/elide/data/DataContainerKt$Dsl {
 	public final synthetic fun clearIntegrity (Lcom/google/protobuf/kotlin/DslList;)V
 	public final fun clearRaw ()V
 	public final fun getEncoding ()Ltools/elide/data/Encoding;
+	public final fun getEncodingValue ()I
 	public final synthetic fun getIntegrity ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getRaw ()Lcom/google/protobuf/ByteString;
 	public final synthetic fun plusAssignAllIntegrity (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignIntegrity (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/data/DataFingerprint;)V
 	public final fun setEncoding (Ltools/elide/data/Encoding;)V
+	public final fun setEncodingValue (I)V
 	public final synthetic fun setIntegrity (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/data/DataFingerprint;)V
 	public final fun setRaw (Lcom/google/protobuf/ByteString;)V
 }
@@ -18872,7 +18822,6 @@ public final class tools/elide/data/DataContainerRef : com/google/protobuf/Gener
 	public fun getResource ()Ltools/elide/data/DataContainerRef$FingerprintPathPair;
 	public fun getResourceOrBuilder ()Ltools/elide/data/DataContainerRef$FingerprintPathPairOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasData ()Z
 	public fun hasFilesystem ()Z
 	public fun hasResource ()Z
@@ -19002,7 +18951,6 @@ public final class tools/elide/data/DataContainerRef$FingerprintPathPair : com/g
 	public fun getPath ()Ljava/lang/String;
 	public fun getPathBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasFingerprint ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -19222,7 +19170,6 @@ public final class tools/elide/data/DataFingerprint : com/google/protobuf/Genera
 	public fun getSuffix (I)Lcom/google/protobuf/ByteString;
 	public fun getSuffixCount ()I
 	public fun getSuffixList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/data/DataFingerprint$Builder;
@@ -19357,8 +19304,10 @@ public final class tools/elide/data/DataFingerprintKt$Dsl {
 	public final fun clearSeparator ()V
 	public final synthetic fun clearSuffix (Lcom/google/protobuf/kotlin/DslList;)V
 	public final fun getEncoding ()Ltools/elide/data/Encoding;
+	public final fun getEncodingValue ()I
 	public final fun getFingerprint ()Lcom/google/protobuf/ByteString;
 	public final fun getHash ()Ltools/elide/std/HashAlgorithm;
+	public final fun getHashValue ()I
 	public final synthetic fun getPrefix ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getSeparator ()Lcom/google/protobuf/ByteString;
 	public final synthetic fun getSuffix ()Lcom/google/protobuf/kotlin/DslList;
@@ -19367,8 +19316,10 @@ public final class tools/elide/data/DataFingerprintKt$Dsl {
 	public final synthetic fun plusAssignPrefix (Lcom/google/protobuf/kotlin/DslList;Lcom/google/protobuf/ByteString;)V
 	public final synthetic fun plusAssignSuffix (Lcom/google/protobuf/kotlin/DslList;Lcom/google/protobuf/ByteString;)V
 	public final fun setEncoding (Ltools/elide/data/Encoding;)V
+	public final fun setEncodingValue (I)V
 	public final fun setFingerprint (Lcom/google/protobuf/ByteString;)V
 	public final fun setHash (Ltools/elide/std/HashAlgorithm;)V
+	public final fun setHashValue (I)V
 	public final synthetic fun setPrefix (Lcom/google/protobuf/kotlin/DslList;ILcom/google/protobuf/ByteString;)V
 	public final fun setSeparator (Lcom/google/protobuf/ByteString;)V
 	public final synthetic fun setSuffix (Lcom/google/protobuf/kotlin/DslList;ILcom/google/protobuf/ByteString;)V
@@ -19441,7 +19392,6 @@ public final class tools/elide/data/secrets/Token : com/google/protobuf/Generate
 	public fun getFingerprint ()Ltools/elide/data/DataFingerprint;
 	public fun getFingerprintOrBuilder ()Ltools/elide/data/DataFingerprintOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ltools/elide/data/secrets/Token$TokenValue;
 	public fun getValueOrBuilder ()Ltools/elide/data/secrets/Token$TokenValueOrBuilder;
 	public fun hasFingerprint ()Z
@@ -19547,7 +19497,6 @@ public final class tools/elide/data/secrets/Token$TokenValue : com/google/protob
 	public fun getInnerValue ()Ltools/elide/data/DataContainer;
 	public fun getInnerValueOrBuilder ()Ltools/elide/data/DataContainerOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasInnerValue ()Z
 	public static fun newBuilder ()Ltools/elide/data/secrets/Token$TokenValue$Builder;
 	public static fun newBuilder (Ltools/elide/data/secrets/Token$TokenValue;)Ltools/elide/data/secrets/Token$TokenValue$Builder;
@@ -19676,9 +19625,11 @@ public final class tools/elide/data/secrets/TokenKt$TokenValueKt$Dsl {
 	public final fun clearEncoding ()V
 	public final fun clearInnerValue ()V
 	public final fun getEncoding ()Ltools/elide/data/Encoding;
+	public final fun getEncodingValue ()I
 	public final fun getInnerValue ()Ltools/elide/data/DataContainer;
 	public final fun hasInnerValue ()Z
 	public final fun setEncoding (Ltools/elide/data/Encoding;)V
+	public final fun setEncodingValue (I)V
 	public final fun setInnerValue (Ltools/elide/data/DataContainer;)V
 }
 
@@ -19719,7 +19670,6 @@ public final class tools/elide/db/Database : com/google/protobuf/GeneratedMessag
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/db/Database$Builder;
@@ -19848,7 +19798,6 @@ public final class tools/elide/deps/Dependencies : com/google/protobuf/Generated
 	public fun getSuiteList ()Ljava/util/List;
 	public fun getSuiteOrBuilder (I)Ltools/elide/deps/DependencySuiteOrBuilder;
 	public fun getSuiteOrBuilderList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/deps/Dependencies$Builder;
@@ -20020,7 +19969,6 @@ public final class tools/elide/deps/Dependency : com/google/protobuf/GeneratedMe
 	public fun getSpec ()Ljava/lang/String;
 	public fun getSpecBytes ()Lcom/google/protobuf/ByteString;
 	public fun getTestOnly ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ljava/lang/String;
 	public fun getVersionBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -20193,6 +20141,7 @@ public final class tools/elide/deps/DependencyKt$Dsl {
 	public final fun getClassifier ()Ljava/lang/String;
 	public final fun getDevOnly ()Z
 	public final fun getEcosystem ()Ltools/elide/deps/DependencyEcosystem;
+	public final fun getEcosystemValue ()I
 	public final fun getGroup ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getOptional ()Z
@@ -20202,6 +20151,7 @@ public final class tools/elide/deps/DependencyKt$Dsl {
 	public final fun setClassifier (Ljava/lang/String;)V
 	public final fun setDevOnly (Z)V
 	public final fun setEcosystem (Ltools/elide/deps/DependencyEcosystem;)V
+	public final fun setEcosystemValue (I)V
 	public final fun setGroup (Ljava/lang/String;)V
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setOptional (Z)V
@@ -20287,7 +20237,6 @@ public final class tools/elide/deps/DependencySuite : com/google/protobuf/Genera
 	public fun getScopeValue ()I
 	public fun getSerializedSize ()I
 	public fun getTestOnly ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/deps/DependencySuite$Builder;
@@ -20424,6 +20373,7 @@ public final class tools/elide/deps/DependencySuiteKt$Dsl {
 	public final fun getDevOnly ()Z
 	public final fun getOptional ()Z
 	public final fun getScope ()Ltools/elide/deps/DependencyScope;
+	public final fun getScopeValue ()I
 	public final fun getTestOnly ()Z
 	public final synthetic fun plusAssignAllDependency (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignDependency (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/deps/Dependency;)V
@@ -20431,6 +20381,7 @@ public final class tools/elide/deps/DependencySuiteKt$Dsl {
 	public final fun setDevOnly (Z)V
 	public final fun setOptional (Z)V
 	public final fun setScope (Ltools/elide/deps/DependencyScope;)V
+	public final fun setScopeValue (I)V
 	public final fun setTestOnly (Z)V
 }
 
@@ -20496,7 +20447,6 @@ public final class tools/elide/http/ConnectionInfo : com/google/protobuf/Generat
 	public fun getRemoteAddressBytes ()Lcom/google/protobuf/ByteString;
 	public fun getRemotePort ()I
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/http/ConnectionInfo$Builder;
@@ -20667,7 +20617,6 @@ public final class tools/elide/http/HttpAuthorization : com/google/protobuf/Gene
 	public fun getTokenOrBuilder ()Ltools/elide/http/HttpAuthorization$TokenValueOrBuilder;
 	public fun getType ()Ltools/elide/http/HttpAuthorizationType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUser ()Ltools/elide/http/HttpAuthorization$UsernamePassword;
 	public fun getUserOrBuilder ()Ltools/elide/http/HttpAuthorization$UsernamePasswordOrBuilder;
 	public fun getValueCase ()Ltools/elide/http/HttpAuthorization$ValueCase;
@@ -20820,7 +20769,6 @@ public final class tools/elide/http/HttpAuthorization$TokenValue : com/google/pr
 	public fun getSerializedSize ()I
 	public fun getToken ()Ljava/lang/String;
 	public fun getTokenBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/http/HttpAuthorization$TokenValue$Builder;
@@ -20929,7 +20877,6 @@ public final class tools/elide/http/HttpAuthorization$UsernamePassword : com/goo
 	public fun getPassword ()Ljava/lang/String;
 	public fun getPasswordBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUsername ()Ljava/lang/String;
 	public fun getUsernameBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -21057,7 +21004,6 @@ public final class tools/elide/http/HttpAuthorizationInfo : com/google/protobuf/
 	public fun getInfoBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/http/HttpAuthorizationInfo$Builder;
@@ -21197,6 +21143,7 @@ public final class tools/elide/http/HttpAuthorizationKt$Dsl {
 	public final fun getSpec ()Ljava/lang/String;
 	public final fun getToken ()Ltools/elide/http/HttpAuthorization$TokenValue;
 	public final fun getType ()Ltools/elide/http/HttpAuthorizationType;
+	public final fun getTypeValue ()I
 	public final fun getUser ()Ltools/elide/http/HttpAuthorization$UsernamePassword;
 	public final fun getValueCase ()Ltools/elide/http/HttpAuthorization$ValueCase;
 	public final fun hasSpec ()Z
@@ -21207,6 +21154,7 @@ public final class tools/elide/http/HttpAuthorizationKt$Dsl {
 	public final fun setSpec (Ljava/lang/String;)V
 	public final fun setToken (Ltools/elide/http/HttpAuthorization$TokenValue;)V
 	public final fun setType (Ltools/elide/http/HttpAuthorizationType;)V
+	public final fun setTypeValue (I)V
 	public final fun setUser (Ltools/elide/http/HttpAuthorization$UsernamePassword;)V
 }
 
@@ -21321,7 +21269,6 @@ public final class tools/elide/http/HttpBody : com/google/protobuf/GeneratedMess
 	public fun getSize ()J
 	public fun getType ()Ljava/lang/String;
 	public fun getTypeBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/http/HttpBody$Builder;
@@ -21489,7 +21436,6 @@ public final class tools/elide/http/HttpCommonMetadata : com/google/protobuf/Gen
 	public fun getSerializedSize ()I
 	public fun getTransport ()Ltools/elide/http/TransportMetadata;
 	public fun getTransportOrBuilder ()Ltools/elide/http/TransportMetadataOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ltools/elide/http/HttpVersion;
 	public fun getVersionValue ()I
 	public fun hasTransport ()Z
@@ -21608,12 +21554,16 @@ public final class tools/elide/http/HttpCommonMetadataKt$Dsl {
 	public final fun clearTransport ()V
 	public final fun clearVersion ()V
 	public final fun getEncoding ()Ltools/elide/data/Encoding;
+	public final fun getEncodingValue ()I
 	public final fun getTransport ()Ltools/elide/http/TransportMetadata;
 	public final fun getVersion ()Ltools/elide/http/HttpVersion;
+	public final fun getVersionValue ()I
 	public final fun hasTransport ()Z
 	public final fun setEncoding (Ltools/elide/data/Encoding;)V
+	public final fun setEncodingValue (I)V
 	public final fun setTransport (Ltools/elide/http/TransportMetadata;)V
 	public final fun setVersion (Ltools/elide/http/HttpVersion;)V
+	public final fun setVersionValue (I)V
 }
 
 public final class tools/elide/http/HttpCommonMetadataKt$Dsl$Companion {
@@ -21651,7 +21601,6 @@ public final class tools/elide/http/HttpCycle : com/google/protobuf/GeneratedMes
 	public fun getResponse ()Ltools/elide/http/HttpResponse;
 	public fun getResponseOrBuilder ()Ltools/elide/http/HttpResponseOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasRequest ()Z
 	public fun hasResponse ()Z
 	public fun hashCode ()I
@@ -21811,7 +21760,6 @@ public final class tools/elide/http/HttpEdgeInfo : com/google/protobuf/Generated
 	public fun getRegion ()Ljava/lang/String;
 	public fun getRegionBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/http/HttpEdgeInfo$Builder;
@@ -21962,7 +21910,6 @@ public final class tools/elide/http/HttpHeader : com/google/protobuf/GeneratedMe
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ljava/lang/String;
 	public fun getValueBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -22107,7 +22054,6 @@ public final class tools/elide/http/HttpHeaders : com/google/protobuf/GeneratedM
 	public fun getHeaderOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/http/HttpHeaders$Builder;
@@ -22313,7 +22259,6 @@ public final class tools/elide/http/HttpRequest : com/google/protobuf/GeneratedM
 	public fun getSerializedSize ()I
 	public fun getStandard ()Ltools/elide/http/HttpMethod;
 	public fun getStandardValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasBody ()Z
 	public fun hasCustom ()Z
 	public fun hasHeaders ()Z
@@ -22488,7 +22433,6 @@ public final class tools/elide/http/HttpRequestInfo : com/google/protobuf/Genera
 	public fun getQuery ()Ljava/lang/String;
 	public fun getQueryBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasHeaders ()Z
 	public fun hasMethod ()Z
 	public fun hasMethodName ()Z
@@ -22638,6 +22582,7 @@ public final class tools/elide/http/HttpRequestInfoKt$Dsl {
 	public final fun getHttpMethodCase ()Ltools/elide/http/HttpRequestInfo$HttpMethodCase;
 	public final fun getMethod ()Ltools/elide/http/HttpMethod;
 	public final fun getMethodName ()Ljava/lang/String;
+	public final fun getMethodValue ()I
 	public final fun getPath ()Ljava/lang/String;
 	public final fun getQuery ()Ljava/lang/String;
 	public final fun hasHeaders ()Z
@@ -22646,6 +22591,7 @@ public final class tools/elide/http/HttpRequestInfoKt$Dsl {
 	public final fun setHeaders (Ltools/elide/http/HttpHeaders;)V
 	public final fun setMethod (Ltools/elide/http/HttpMethod;)V
 	public final fun setMethodName (Ljava/lang/String;)V
+	public final fun setMethodValue (I)V
 	public final fun setPath (Ljava/lang/String;)V
 	public final fun setQuery (Ljava/lang/String;)V
 }
@@ -22701,6 +22647,7 @@ public final class tools/elide/http/HttpRequestKt$Dsl {
 	public final fun getPath ()Ljava/lang/String;
 	public final fun getQuery ()Ljava/lang/String;
 	public final fun getStandard ()Ltools/elide/http/HttpMethod;
+	public final fun getStandardValue ()I
 	public final fun hasBody ()Z
 	public final fun hasCustom ()Z
 	public final fun hasHeaders ()Z
@@ -22713,6 +22660,7 @@ public final class tools/elide/http/HttpRequestKt$Dsl {
 	public final fun setPath (Ljava/lang/String;)V
 	public final fun setQuery (Ljava/lang/String;)V
 	public final fun setStandard (Ltools/elide/http/HttpMethod;)V
+	public final fun setStandardValue (I)V
 }
 
 public final class tools/elide/http/HttpRequestKt$Dsl$Companion {
@@ -22748,7 +22696,6 @@ public final class tools/elide/http/HttpRequestMetadata : com/google/protobuf/Ge
 	public fun getProxy ()Ltools/elide/http/ProxyMetadata;
 	public fun getProxyOrBuilder ()Ltools/elide/http/ProxyMetadataOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAuthorization ()Z
 	public fun hasCommon ()Z
 	public fun hasEdge ()Z
@@ -22974,7 +22921,6 @@ public final class tools/elide/http/HttpResponse : com/google/protobuf/Generated
 	public fun getStatusCase ()Ltools/elide/http/HttpResponse$StatusCase;
 	public fun getTrailers ()Ltools/elide/http/HttpHeaders;
 	public fun getTrailersOrBuilder ()Ltools/elide/http/HttpHeadersOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasBody ()Z
 	public fun hasCustom ()Z
 	public fun hasHeaders ()Z
@@ -23141,6 +23087,7 @@ public final class tools/elide/http/HttpResponseKt$Dsl {
 	public final fun getHeaders ()Ltools/elide/http/HttpHeaders;
 	public final fun getMetadata ()Ltools/elide/http/HttpResponseMetadata;
 	public final fun getStandard ()Ltools/elide/http/HttpStatus;
+	public final fun getStandardValue ()I
 	public final fun getStatusCase ()Ltools/elide/http/HttpResponse$StatusCase;
 	public final fun getTrailers ()Ltools/elide/http/HttpHeaders;
 	public final fun hasBody ()Z
@@ -23154,6 +23101,7 @@ public final class tools/elide/http/HttpResponseKt$Dsl {
 	public final fun setHeaders (Ltools/elide/http/HttpHeaders;)V
 	public final fun setMetadata (Ltools/elide/http/HttpResponseMetadata;)V
 	public final fun setStandard (Ltools/elide/http/HttpStatus;)V
+	public final fun setStandardValue (I)V
 	public final fun setTrailers (Ltools/elide/http/HttpHeaders;)V
 }
 
@@ -23185,7 +23133,6 @@ public final class tools/elide/http/HttpResponseMetadata : com/google/protobuf/G
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAuthorizationInfo ()Z
 	public fun hasCommon ()Z
 	public fun hashCode ()I
@@ -23491,7 +23438,6 @@ public final class tools/elide/http/ProxyMetadata : com/google/protobuf/Generate
 	public fun getFowardedProtoBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAuthorization ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -23661,7 +23607,6 @@ public final class tools/elide/http/TransportMetadata : com/google/protobuf/Gene
 	public fun getSerializedSize ()I
 	public fun getTls ()Ltools/elide/crypto/TlsConnectionInfo;
 	public fun getTlsOrBuilder ()Ltools/elide/crypto/TlsConnectionInfoOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasConnection ()Z
 	public fun hasTls ()Z
 	public fun hashCode ()I
@@ -23816,7 +23761,6 @@ public final class tools/elide/kv/KeyValue : com/google/protobuf/GeneratedMessag
 	public fun getKeyBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ltools/elide/kv/Value;
 	public fun getValueOrBuilder ()Ltools/elide/kv/ValueOrBuilder;
 	public fun hasValue ()Z
@@ -23974,7 +23918,6 @@ public final class tools/elide/kv/Namespace : com/google/protobuf/GeneratedMessa
 	public fun getIdBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/kv/Namespace$Builder;
@@ -24117,7 +24060,6 @@ public final class tools/elide/kv/OwnedKeyValue : com/google/protobuf/GeneratedM
 	public fun getNamespaceOrBuilder ()Ltools/elide/kv/NamespaceOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasKeyValue ()Z
 	public fun hasNamespace ()Z
 	public fun hashCode ()I
@@ -24270,7 +24212,6 @@ public final class tools/elide/kv/Value : com/google/protobuf/GeneratedMessageV3
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValueCase ()Ltools/elide/kv/Value$ValueCase;
 	public fun hasData ()Z
 	public fun hashCode ()I
@@ -24519,7 +24460,6 @@ public final class tools/elide/machine/ArchitectureInfo : com/google/protobuf/Ge
 	public fun getFeatureValueList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVendor ()Ljava/lang/String;
 	public fun getVendorBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -24662,8 +24602,10 @@ public final class tools/elide/machine/ArchitectureInfoKt$Dsl {
 	public final synthetic fun clearFeature (Lcom/google/protobuf/kotlin/DslList;)V
 	public final fun clearVendor ()V
 	public final fun getArch ()Ltools/elide/machine/Architecture;
+	public final fun getArchValue ()I
 	public final synthetic fun getCustomFeature ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getFamily ()Ltools/elide/machine/ArchFamily;
+	public final fun getFamilyValue ()I
 	public final synthetic fun getFeature ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getVendor ()Ljava/lang/String;
 	public final synthetic fun plusAssignAllCustomFeature (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
@@ -24671,8 +24613,10 @@ public final class tools/elide/machine/ArchitectureInfoKt$Dsl {
 	public final synthetic fun plusAssignCustomFeature (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/String;)V
 	public final synthetic fun plusAssignFeature (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/machine/ArchFeature;)V
 	public final fun setArch (Ltools/elide/machine/Architecture;)V
+	public final fun setArchValue (I)V
 	public final synthetic fun setCustomFeature (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setFamily (Ltools/elide/machine/ArchFamily;)V
+	public final fun setFamilyValue (I)V
 	public final synthetic fun setFeature (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/machine/ArchFeature;)V
 	public final fun setVendor (Ljava/lang/String;)V
 }
@@ -24742,7 +24686,6 @@ public final class tools/elide/machine/CpuInfo : com/google/protobuf/GeneratedMe
 	public fun getModelBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVendor ()Ljava/lang/String;
 	public fun getVendorBytes ()Lcom/google/protobuf/ByteString;
 	public fun hasArchitecture ()Z
@@ -24976,7 +24919,6 @@ public final class tools/elide/machine/DeviceInfo : com/google/protobuf/Generate
 	public fun getModelBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVendor ()Ljava/lang/String;
 	public fun getVendorBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -25107,12 +25049,14 @@ public final class tools/elide/machine/DeviceInfoKt$Dsl {
 	public final fun getAvailable ()Z
 	public final fun getCapacity ()I
 	public final fun getFamily ()Ltools/elide/machine/DeviceFamily;
+	public final fun getFamilyValue ()I
 	public final fun getId ()Ljava/lang/String;
 	public final fun getModel ()Ljava/lang/String;
 	public final fun getVendor ()Ljava/lang/String;
 	public final fun setAvailable (Z)V
 	public final fun setCapacity (I)V
 	public final fun setFamily (Ltools/elide/machine/DeviceFamily;)V
+	public final fun setFamilyValue (I)V
 	public final fun setId (Ljava/lang/String;)V
 	public final fun setModel (Ljava/lang/String;)V
 	public final fun setVendor (Ljava/lang/String;)V
@@ -25160,7 +25104,6 @@ public final class tools/elide/machine/Disk : com/google/protobuf/GeneratedMessa
 	public fun getSerializedSize ()I
 	public fun getType ()Ltools/elide/machine/DiskType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/machine/Disk$Builder;
@@ -25283,7 +25226,6 @@ public final class tools/elide/machine/DiskInfo : com/google/protobuf/GeneratedM
 	public fun getDiskOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/machine/DiskInfo$Builder;
@@ -25453,11 +25395,15 @@ public final class tools/elide/machine/DiskKt$Dsl {
 	public final fun getCapacity ()I
 	public final fun getId ()Ljava/lang/String;
 	public final fun getMode ()Ltools/elide/machine/DiskMode;
+	public final fun getModeValue ()I
 	public final fun getType ()Ltools/elide/machine/DiskType;
+	public final fun getTypeValue ()I
 	public final fun setCapacity (I)V
 	public final fun setId (Ljava/lang/String;)V
 	public final fun setMode (Ltools/elide/machine/DiskMode;)V
+	public final fun setModeValue (I)V
 	public final fun setType (Ltools/elide/machine/DiskType;)V
+	public final fun setTypeValue (I)V
 }
 
 public final class tools/elide/machine/DiskKt$Dsl$Companion {
@@ -25554,7 +25500,6 @@ public final class tools/elide/machine/Machine : com/google/protobuf/GeneratedMe
 	public fun getOsOrBuilder ()Ltools/elide/machine/OsInfoOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCpu ()Z
 	public fun hasDisk ()Z
 	public fun hasMem ()Z
@@ -25713,7 +25658,6 @@ public final class tools/elide/machine/MachineCpuInfo : com/google/protobuf/Gene
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/machine/MachineCpuInfo$Builder;
@@ -25959,7 +25903,6 @@ public final class tools/elide/machine/Memory : com/google/protobuf/GeneratedMes
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public fun getSpeed ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/machine/Memory$Builder;
@@ -26160,7 +26103,6 @@ public final class tools/elide/machine/OsInfo : com/google/protobuf/GeneratedMes
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/machine/OsInfo$Builder;
@@ -26294,7 +26236,6 @@ public final class tools/elide/meta/AppInfo : com/google/protobuf/GeneratedMessa
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ljava/lang/String;
 	public fun getVersionBytes ()Lcom/google/protobuf/ByteString;
 	public fun hasName ()Z
@@ -26389,6 +26330,7 @@ public final class tools/elide/meta/AppInfo$Builder : com/google/protobuf/Genera
 	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/AppInfo$Builder;
 	public fun putAllEndpoints (Ljava/util/Map;)Ltools/elide/meta/AppInfo$Builder;
 	public fun putEndpoints (Ljava/lang/String;Ltools/elide/meta/Endpoint;)Ltools/elide/meta/AppInfo$Builder;
+	public fun putEndpointsBuilderIfAbsent (Ljava/lang/String;)Ltools/elide/meta/Endpoint$Builder;
 	public fun removeEndpoints (Ljava/lang/String;)Ltools/elide/meta/AppInfo$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
@@ -26472,7 +26414,6 @@ public final class tools/elide/meta/AppManifest : com/google/protobuf/GeneratedM
 	public fun getGuestOrBuilder ()Ltools/elide/meta/GuestVMOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasApp ()Z
 	public fun hasBuild ()Z
 	public fun hasGuest ()Z
@@ -26643,7 +26584,6 @@ public final class tools/elide/meta/BuildInfo : com/google/protobuf/GeneratedMes
 	public fun getSerializedSize ()I
 	public fun getStamp ()Lcom/google/protobuf/Timestamp;
 	public fun getStampOrBuilder ()Lcom/google/protobuf/TimestampOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasStamp ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -26822,7 +26762,6 @@ public final class tools/elide/meta/Endpoint : com/google/protobuf/GeneratedMess
 	public fun getTailBytes ()Lcom/google/protobuf/ByteString;
 	public fun getType ()Ltools/elide/meta/EndpointType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasHandler ()Z
 	public fun hasName ()Z
 	public fun hasOptions ()Z
@@ -27033,6 +26972,7 @@ public final class tools/elide/meta/EndpointKt$Dsl {
 	public final fun getTag ()Ljava/lang/String;
 	public final fun getTail ()Ljava/lang/String;
 	public final fun getType ()Ltools/elide/meta/EndpointType;
+	public final fun getTypeValue ()I
 	public final fun hasHandler ()Z
 	public final fun hasName ()Z
 	public final fun hasOptions ()Z
@@ -27055,6 +26995,7 @@ public final class tools/elide/meta/EndpointKt$Dsl {
 	public final fun setTag (Ljava/lang/String;)V
 	public final fun setTail (Ljava/lang/String;)V
 	public final fun setType (Ltools/elide/meta/EndpointType;)V
+	public final fun setTypeValue (I)V
 }
 
 public final class tools/elide/meta/EndpointKt$Dsl$Companion {
@@ -27113,7 +27054,6 @@ public final class tools/elide/meta/EndpointOptions : com/google/protobuf/Genera
 	public fun getPrecompilable ()Z
 	public fun getSerializedSize ()I
 	public fun getStateful ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/EndpointOptions$Builder;
@@ -27311,7 +27251,6 @@ public final class tools/elide/meta/GeneralLanguageSettings : com/google/protobu
 	public fun getEnabled ()Z
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDefaultPolicy ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -27479,7 +27418,6 @@ public final class tools/elide/meta/GuestConfiguration : com/google/protobuf/Gen
 	public fun getSettingsList ()Ljava/util/List;
 	public fun getSettingsOrBuilder (I)Ltools/elide/meta/GuestSettingsOrBuilder;
 	public fun getSettingsOrBuilderList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/GuestConfiguration$Builder;
@@ -27724,7 +27662,6 @@ public final class tools/elide/meta/GuestPolicy : com/google/protobuf/GeneratedM
 	public fun getSerializedSize ()I
 	public fun getStackDepth ()I
 	public fun getThreads ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAllowAll ()Z
 	public fun hasIntegrated ()Z
 	public fun hasIsolated ()Z
@@ -27989,7 +27926,6 @@ public final class tools/elide/meta/GuestSettings : com/google/protobuf/Generate
 	public fun getRuby ()Ltools/elide/meta/RubySettings;
 	public fun getRubyOrBuilder ()Ltools/elide/meta/RubySettingsOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getWasm ()Ltools/elide/meta/WasmSettings;
 	public fun getWasmOrBuilder ()Ltools/elide/meta/WasmSettingsOrBuilder;
 	public fun hasJs ()Z
@@ -28185,6 +28121,7 @@ public final class tools/elide/meta/GuestSettingsKt$Dsl {
 	public final fun getKotlin ()Ltools/elide/meta/KotlinSettings;
 	public final fun getLang ()Ltools/elide/meta/GuestLanguage;
 	public final fun getLangSettingsCase ()Ltools/elide/meta/GuestSettings$LangSettingsCase;
+	public final fun getLangValue ()I
 	public final fun getLlvm ()Ltools/elide/meta/LlvmSettings;
 	public final fun getPython ()Ltools/elide/meta/PythonSettings;
 	public final fun getRuby ()Ltools/elide/meta/RubySettings;
@@ -28200,6 +28137,7 @@ public final class tools/elide/meta/GuestSettingsKt$Dsl {
 	public final fun setJvm (Ltools/elide/meta/JvmSettings;)V
 	public final fun setKotlin (Ltools/elide/meta/KotlinSettings;)V
 	public final fun setLang (Ltools/elide/meta/GuestLanguage;)V
+	public final fun setLangValue (I)V
 	public final fun setLlvm (Ltools/elide/meta/LlvmSettings;)V
 	public final fun setPython (Ltools/elide/meta/PythonSettings;)V
 	public final fun setRuby (Ltools/elide/meta/RubySettings;)V
@@ -28284,7 +28222,6 @@ public final class tools/elide/meta/GuestSettingsStanza : com/google/protobuf/Ge
 	public fun getRuby ()Ltools/elide/meta/RubySettings;
 	public fun getRubyOrBuilder ()Ltools/elide/meta/RubySettingsOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getWasm ()Ltools/elide/meta/WasmSettings;
 	public fun getWasmOrBuilder ()Ltools/elide/meta/WasmSettingsOrBuilder;
 	public fun hasGeneral ()Z
@@ -28491,6 +28428,7 @@ public final class tools/elide/meta/GuestSettingsStanzaKt$Dsl {
 	public final fun getKotlin ()Ltools/elide/meta/KotlinSettings;
 	public final fun getLang ()Ltools/elide/meta/GuestLanguage;
 	public final fun getLangSettingsCase ()Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public final fun getLangValue ()I
 	public final fun getLlvm ()Ltools/elide/meta/LlvmSettings;
 	public final fun getPython ()Ltools/elide/meta/PythonSettings;
 	public final fun getRuby ()Ltools/elide/meta/RubySettings;
@@ -28508,6 +28446,7 @@ public final class tools/elide/meta/GuestSettingsStanzaKt$Dsl {
 	public final fun setJvm (Ltools/elide/meta/JvmSettings;)V
 	public final fun setKotlin (Ltools/elide/meta/KotlinSettings;)V
 	public final fun setLang (Ltools/elide/meta/GuestLanguage;)V
+	public final fun setLangValue (I)V
 	public final fun setLlvm (Ltools/elide/meta/LlvmSettings;)V
 	public final fun setPython (Ltools/elide/meta/PythonSettings;)V
 	public final fun setRuby (Ltools/elide/meta/RubySettings;)V
@@ -28579,7 +28518,6 @@ public final class tools/elide/meta/GuestVM : com/google/protobuf/GeneratedMessa
 	public fun getLanguageValueList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasConfig ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -28791,7 +28729,6 @@ public final class tools/elide/meta/JsSettings : com/google/protobuf/GeneratedMe
 	public fun getLevelValue ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/JsSettings$Builder;
@@ -28946,6 +28883,7 @@ public final class tools/elide/meta/JsSettingsKt$Dsl {
 	public final synthetic fun getDisabled ()Lcom/google/protobuf/kotlin/DslList;
 	public final synthetic fun getEnabled ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getLevel ()Ltools/elide/meta/JsLanguageLevel;
+	public final fun getLevelValue ()I
 	public final synthetic fun plusAssignAllDisabled (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignAllEnabled (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignDisabled (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/meta/JsSettings$JsFeature;)V
@@ -28953,6 +28891,7 @@ public final class tools/elide/meta/JsSettingsKt$Dsl {
 	public final synthetic fun setDisabled (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/meta/JsSettings$JsFeature;)V
 	public final synthetic fun setEnabled (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/meta/JsSettings$JsFeature;)V
 	public final fun setLevel (Ltools/elide/meta/JsLanguageLevel;)V
+	public final fun setLevelValue (I)V
 }
 
 public final class tools/elide/meta/JsSettingsKt$Dsl$Companion {
@@ -29009,7 +28948,6 @@ public final class tools/elide/meta/JvmSettings : com/google/protobuf/GeneratedM
 	public fun getSerializedSize ()I
 	public fun getTarget ()Ltools/elide/meta/JvmSettings$JvmTarget;
 	public fun getTargetValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/JvmSettings$Builder;
@@ -29140,7 +29078,6 @@ public final class tools/elide/meta/JvmSettings$ClasspathEntry : com/google/prot
 	public fun getPath ()Ljava/lang/String;
 	public fun getPathBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/JvmSettings$ClasspathEntry$Builder;
@@ -29304,6 +29241,7 @@ public final class tools/elide/meta/JvmSettingsKt$Dsl {
 	public final synthetic fun getClasspath ()Lcom/google/protobuf/kotlin/DslList;
 	public final synthetic fun getJvmFlag ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getTarget ()Ltools/elide/meta/JvmSettings$JvmTarget;
+	public final fun getTargetValue ()I
 	public final synthetic fun plusAssignAllClasspath (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignAllJvmFlag (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignClasspath (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/meta/JvmSettings$ClasspathEntry;)V
@@ -29311,6 +29249,7 @@ public final class tools/elide/meta/JvmSettingsKt$Dsl {
 	public final synthetic fun setClasspath (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/meta/JvmSettings$ClasspathEntry;)V
 	public final synthetic fun setJvmFlag (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setTarget (Ltools/elide/meta/JvmSettings$JvmTarget;)V
+	public final fun setTargetValue (I)V
 }
 
 public final class tools/elide/meta/JvmSettingsKt$Dsl$ClasspathProxy : com/google/protobuf/kotlin/DslProxy {
@@ -29352,7 +29291,6 @@ public final class tools/elide/meta/KotlinSettings : com/google/protobuf/Generat
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/KotlinSettings$Builder;
@@ -29469,7 +29407,6 @@ public final class tools/elide/meta/LlvmSettings : com/google/protobuf/Generated
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/LlvmSettings$Builder;
@@ -29586,7 +29523,6 @@ public final class tools/elide/meta/PythonSettings : com/google/protobuf/Generat
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/PythonSettings$Builder;
@@ -29703,7 +29639,6 @@ public final class tools/elide/meta/RubySettings : com/google/protobuf/Generated
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/RubySettings$Builder;
@@ -29826,7 +29761,6 @@ public final class tools/elide/meta/WasmSettings : com/google/protobuf/Generated
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/WasmSettings$Builder;
@@ -29943,7 +29877,6 @@ public final class tools/elide/model/BigQueryOptions : com/google/protobuf/Gener
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/BigQueryOptions$Builder;
@@ -30183,7 +30116,6 @@ public final class tools/elide/model/DatapointOptions : com/google/protobuf/Gene
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getRequired ()Z
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVisibility ()Ltools/elide/model/Visibility;
 	public fun getVisibilityValue ()I
 	public fun hashCode ()I
@@ -30301,10 +30233,12 @@ public final class tools/elide/model/DatapointOptionsKt$Dsl {
 	public final fun getEphemeral ()Z
 	public final fun getRequired ()Z
 	public final fun getVisibility ()Ltools/elide/model/Visibility;
+	public final fun getVisibilityValue ()I
 	public final fun setConcrete (Z)V
 	public final fun setEphemeral (Z)V
 	public final fun setRequired (Z)V
 	public final fun setVisibility (Ltools/elide/model/Visibility;)V
+	public final fun setVisibilityValue (I)V
 }
 
 public final class tools/elide/model/DatapointOptionsKt$Dsl$Companion {
@@ -30397,7 +30331,6 @@ public final class tools/elide/model/FieldPersistenceOptions : com/google/protob
 	public fun getSummaryBytes ()Lcom/google/protobuf/ByteString;
 	public fun getType ()Ltools/elide/model/FieldType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVisibility ()Ltools/elide/model/FieldVisibility;
 	public fun getVisibilityValue ()I
 	public fun hashCode ()I
@@ -30545,7 +30478,9 @@ public final class tools/elide/model/FieldPersistenceOptionsKt$Dsl {
 	public final fun getStampUpdate ()Z
 	public final fun getSummary ()Ljava/lang/String;
 	public final fun getType ()Ltools/elide/model/FieldType;
+	public final fun getTypeValue ()I
 	public final fun getVisibility ()Ltools/elide/model/FieldVisibility;
+	public final fun getVisibilityValue ()I
 	public final fun setDescription (Ljava/lang/String;)V
 	public final fun setExplicit (Z)V
 	public final fun setImmutable (Z)V
@@ -30554,7 +30489,9 @@ public final class tools/elide/model/FieldPersistenceOptionsKt$Dsl {
 	public final fun setStampUpdate (Z)V
 	public final fun setSummary (Ljava/lang/String;)V
 	public final fun setType (Ltools/elide/model/FieldType;)V
+	public final fun setTypeValue (I)V
 	public final fun setVisibility (Ltools/elide/model/FieldVisibility;)V
+	public final fun setVisibilityValue (I)V
 }
 
 public final class tools/elide/model/FieldPersistenceOptionsKt$Dsl$Companion {
@@ -30653,7 +30590,6 @@ public final class tools/elide/model/ObjectMapping : com/google/protobuf/Generat
 	public synthetic fun getInstanceList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/ObjectMapping$Builder;
@@ -30803,7 +30739,6 @@ public final class tools/elide/model/PersistenceOptions : com/google/protobuf/Ge
 	public fun getPath ()Ljava/lang/String;
 	public fun getPathBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/PersistenceOptions$Builder;
@@ -30916,9 +30851,11 @@ public final class tools/elide/model/PersistenceOptionsKt$Dsl {
 	public final fun clearParent ()V
 	public final fun clearPath ()V
 	public final fun getMode ()Ltools/elide/model/CollectionMode;
+	public final fun getModeValue ()I
 	public final fun getParent ()Ljava/lang/String;
 	public final fun getPath ()Ljava/lang/String;
 	public final fun setMode (Ltools/elide/model/CollectionMode;)V
+	public final fun setModeValue (I)V
 	public final fun setParent (Ljava/lang/String;)V
 	public final fun setPath (Ljava/lang/String;)V
 }
@@ -30971,7 +30908,6 @@ public final class tools/elide/model/SpannerFieldOptions : com/google/protobuf/G
 	public fun getStored ()Z
 	public fun getType ()Ltools/elide/model/SpannerOptions$SpannerType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/SpannerFieldOptions$Builder;
@@ -31116,6 +31052,7 @@ public final class tools/elide/model/SpannerFieldOptionsKt$Dsl {
 	public final fun getSize ()I
 	public final fun getStored ()Z
 	public final fun getType ()Ltools/elide/model/SpannerOptions$SpannerType;
+	public final fun getTypeValue ()I
 	public final fun setColumn (Ljava/lang/String;)V
 	public final fun setExpression (Ljava/lang/String;)V
 	public final fun setIgnore (Z)V
@@ -31125,6 +31062,7 @@ public final class tools/elide/model/SpannerFieldOptionsKt$Dsl {
 	public final fun setSize (I)V
 	public final fun setStored (Z)V
 	public final fun setType (Ltools/elide/model/SpannerOptions$SpannerType;)V
+	public final fun setTypeValue (I)V
 }
 
 public final class tools/elide/model/SpannerFieldOptionsKt$Dsl$Companion {
@@ -31160,7 +31098,6 @@ public final class tools/elide/model/SpannerOptions : com/google/protobuf/Genera
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/SpannerOptions$Builder;
@@ -31322,7 +31259,6 @@ public final class tools/elide/model/SubmessageOptions : com/google/protobuf/Gen
 	public fun getPath ()Ljava/lang/String;
 	public fun getPathBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/SubmessageOptions$Builder;
@@ -31441,10 +31377,12 @@ public final class tools/elide/model/SubmessageOptionsKt$Dsl {
 	public final fun getConcrete ()Ljava/lang/String;
 	public final fun getEmbed ()Z
 	public final fun getMode ()Ltools/elide/model/CollectionMode;
+	public final fun getModeValue ()I
 	public final fun getPath ()Ljava/lang/String;
 	public final fun setConcrete (Ljava/lang/String;)V
 	public final fun setEmbed (Z)V
 	public final fun setMode (Ltools/elide/model/CollectionMode;)V
+	public final fun setModeValue (I)V
 	public final fun setPath (Ljava/lang/String;)V
 }
 
@@ -31496,7 +31434,6 @@ public final class tools/elide/model/TableFieldOptions : com/google/protobuf/Gen
 	public fun getSize ()I
 	public fun getSptype ()Ltools/elide/model/SpannerOptions$SpannerType;
 	public fun getSptypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/TableFieldOptions$Builder;
@@ -31631,6 +31568,7 @@ public final class tools/elide/model/TableFieldOptionsKt$Dsl {
 	public final fun clearSize ()V
 	public final fun clearSptype ()V
 	public final fun getBqtype ()Ltools/elide/model/BigQueryOptions$BigQueryType;
+	public final fun getBqtypeValue ()I
 	public final fun getId ()Ljava/lang/String;
 	public final fun getIgnore ()Z
 	public final fun getName ()Ljava/lang/String;
@@ -31638,7 +31576,9 @@ public final class tools/elide/model/TableFieldOptionsKt$Dsl {
 	public final fun getRequire ()Z
 	public final fun getSize ()I
 	public final fun getSptype ()Ltools/elide/model/SpannerOptions$SpannerType;
+	public final fun getSptypeValue ()I
 	public final fun setBqtype (Ltools/elide/model/BigQueryOptions$BigQueryType;)V
+	public final fun setBqtypeValue (I)V
 	public final fun setId (Ljava/lang/String;)V
 	public final fun setIgnore (Z)V
 	public final fun setName (Ljava/lang/String;)V
@@ -31646,6 +31586,7 @@ public final class tools/elide/model/TableFieldOptionsKt$Dsl {
 	public final fun setRequire (Z)V
 	public final fun setSize (I)V
 	public final fun setSptype (Ltools/elide/model/SpannerOptions$SpannerType;)V
+	public final fun setSptypeValue (I)V
 }
 
 public final class tools/elide/model/TableFieldOptionsKt$Dsl$Companion {
@@ -31687,7 +31628,6 @@ public final class tools/elide/model/TableOptions : com/google/protobuf/Generate
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/model/TableOptions$Builder;
@@ -31874,7 +31814,6 @@ public final class tools/elide/net/DnsRecord : com/google/protobuf/GeneratedMess
 	public fun getString ()Ltools/elide/net/DnsRecord$StringValue;
 	public fun getStringOrBuilder ()Ltools/elide/net/DnsRecord$StringValueOrBuilder;
 	public fun getTtl ()J
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValueCase ()Ltools/elide/net/DnsRecord$ValueCase;
 	public fun hasAddress ()Z
 	public fun hasHostname ()Z
@@ -31916,7 +31855,6 @@ public final class tools/elide/net/DnsRecord$AddressValue : com/google/protobuf/
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ltools/elide/net/IpAddress;
 	public fun getValueOrBuilder ()Ltools/elide/net/IpAddressOrBuilder;
 	public fun hasValue ()Z
@@ -32135,7 +32073,6 @@ public final class tools/elide/net/DnsRecord$HostnameValue : com/google/protobuf
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ljava/lang/String;
 	public fun getValueBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -32245,7 +32182,6 @@ public final class tools/elide/net/DnsRecord$PriorityValue : com/google/protobuf
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getPriority ()I
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ljava/lang/String;
 	public fun getValueBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -32357,7 +32293,6 @@ public final class tools/elide/net/DnsRecord$StringValue : com/google/protobuf/G
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ljava/lang/String;
 	public fun getValueBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -32664,7 +32599,6 @@ public final class tools/elide/net/DnsSettings : com/google/protobuf/GeneratedMe
 	public fun getHostsOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUpstream (I)Ljava/lang/String;
 	public fun getUpstreamBytes (I)Lcom/google/protobuf/ByteString;
 	public fun getUpstreamCount ()I
@@ -32856,7 +32790,6 @@ public final class tools/elide/net/Domain : com/google/protobuf/GeneratedMessage
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/net/Domain$Builder;
@@ -33012,7 +32945,6 @@ public final class tools/elide/net/IpAddress : com/google/protobuf/GeneratedMess
 	public fun getDynamic ()Z
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVersion ()Ltools/elide/net/IpProtocolVersion;
 	public fun getVersionValue ()I
 	public fun getVisibility ()Ltools/elide/net/IpVisibility;
@@ -33135,11 +33067,15 @@ public final class tools/elide/net/IpAddressKt$Dsl {
 	public final fun getAddress ()Ljava/lang/String;
 	public final fun getDynamic ()Z
 	public final fun getVersion ()Ltools/elide/net/IpProtocolVersion;
+	public final fun getVersionValue ()I
 	public final fun getVisibility ()Ltools/elide/net/IpVisibility;
+	public final fun getVisibilityValue ()I
 	public final fun setAddress (Ljava/lang/String;)V
 	public final fun setDynamic (Z)V
 	public final fun setVersion (Ltools/elide/net/IpProtocolVersion;)V
+	public final fun setVersionValue (I)V
 	public final fun setVisibility (Ltools/elide/net/IpVisibility;)V
+	public final fun setVisibilityValue (I)V
 }
 
 public final class tools/elide/net/IpAddressKt$Dsl$Companion {
@@ -33236,7 +33172,6 @@ public final class tools/elide/net/MappedHost : com/google/protobuf/GeneratedMes
 	public fun getHostnameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/net/MappedHost$Builder;
@@ -33385,7 +33320,6 @@ public final class tools/elide/net/MappedService : com/google/protobuf/Generated
 	public fun getSerializedSize ()I
 	public fun getService ()Ltools/elide/net/Service;
 	public fun getServiceOrBuilder ()Ltools/elide/net/ServiceOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMapped ()Z
 	public fun hasService ()Z
 	public fun hashCode ()I
@@ -33577,7 +33511,6 @@ public final class tools/elide/net/MappedServicePort : com/google/protobuf/Gener
 	public fun getPort ()Ltools/elide/net/Port;
 	public fun getPortOrBuilder ()Ltools/elide/net/PortOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAddress ()Z
 	public fun hasPort ()Z
 	public fun hashCode ()I
@@ -33738,7 +33671,6 @@ public final class tools/elide/net/Network : com/google/protobuf/GeneratedMessag
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/net/Network$Builder;
@@ -33886,7 +33818,6 @@ public final class tools/elide/net/Networking : com/google/protobuf/GeneratedMes
 	public fun getNetworkOrBuilder ()Ltools/elide/net/NetworkOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDns ()Z
 	public fun hasNetwork ()Z
 	public fun hashCode ()I
@@ -34030,6 +33961,7 @@ public final class tools/elide/net/NetworkingKt$Dsl {
 	public final synthetic fun getAddresses ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getDns ()Ltools/elide/net/DnsSettings;
 	public final fun getMode ()Ltools/elide/net/NetworkingMode;
+	public final fun getModeValue ()I
 	public final fun getNetwork ()Ltools/elide/net/Network;
 	public final fun hasDns ()Z
 	public final fun hasNetwork ()Z
@@ -34038,6 +33970,7 @@ public final class tools/elide/net/NetworkingKt$Dsl {
 	public final synthetic fun setAddresses (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/net/IpAddress;)V
 	public final fun setDns (Ltools/elide/net/DnsSettings;)V
 	public final fun setMode (Ltools/elide/net/NetworkingMode;)V
+	public final fun setModeValue (I)V
 	public final fun setNetwork (Ltools/elide/net/Network;)V
 }
 
@@ -34114,7 +34047,6 @@ public final class tools/elide/net/Port : com/google/protobuf/GeneratedMessageV3
 	public fun getProtocolValueList ()Ljava/util/List;
 	public fun getSerializedSize ()I
 	public fun getTarget ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getWellKnown ()Ltools/elide/net/WellKnownPort;
 	public fun getWellKnownValue ()I
 	public fun hasNumber ()Z
@@ -34262,6 +34194,7 @@ public final class tools/elide/net/PortKt$Dsl {
 	public final synthetic fun getProtocol ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getTarget ()I
 	public final fun getWellKnown ()Ltools/elide/net/WellKnownPort;
+	public final fun getWellKnownValue ()I
 	public final fun hasNumber ()Z
 	public final fun hasWellKnown ()Z
 	public final synthetic fun plusAssignAllProtocol (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
@@ -34270,6 +34203,7 @@ public final class tools/elide/net/PortKt$Dsl {
 	public final synthetic fun setProtocol (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/net/Layer4Protocol;)V
 	public final fun setTarget (I)V
 	public final fun setWellKnown (Ltools/elide/net/WellKnownPort;)V
+	public final fun setWellKnownValue (I)V
 }
 
 public final class tools/elide/net/PortKt$Dsl$Companion {
@@ -34336,7 +34270,6 @@ public final class tools/elide/net/Service : com/google/protobuf/GeneratedMessag
 	public fun getPort ()Ltools/elide/net/Port;
 	public fun getPortOrBuilder ()Ltools/elide/net/PortOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVisibility ()Ltools/elide/net/ServiceVisibility;
 	public fun getVisibilityValue ()I
 	public fun hasPort ()Z
@@ -34478,6 +34411,7 @@ public final class tools/elide/net/ServiceKt$Dsl {
 	public final synthetic fun getDomain ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getPort ()Ltools/elide/net/Port;
 	public final fun getVisibility ()Ltools/elide/net/ServiceVisibility;
+	public final fun getVisibilityValue ()I
 	public final fun hasPort ()Z
 	public final synthetic fun plusAssignAlias (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/String;)V
 	public final synthetic fun plusAssignAllAlias (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
@@ -34487,6 +34421,7 @@ public final class tools/elide/net/ServiceKt$Dsl {
 	public final synthetic fun setDomain (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setPort (Ltools/elide/net/Port;)V
 	public final fun setVisibility (Ltools/elide/net/ServiceVisibility;)V
+	public final fun setVisibilityValue (I)V
 }
 
 public final class tools/elide/net/ServiceKt$Dsl$AliasProxy : com/google/protobuf/kotlin/DslProxy {
@@ -34655,7 +34590,6 @@ public final class tools/elide/page/Context : com/google/protobuf/GeneratedMessa
 	public fun getSerializedSize ()I
 	public fun getStyles ()Ltools/elide/page/Context$Styles;
 	public fun getStylesOrBuilder ()Ltools/elide/page/Context$StylesOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVary (I)Ljava/lang/String;
 	public fun getVaryBytes (I)Lcom/google/protobuf/ByteString;
 	public fun getVaryCount ()I
@@ -34750,7 +34684,6 @@ public final class tools/elide/page/Context$AppManifest : com/google/protobuf/Ge
 	public fun getShortNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getStartUrl ()Ljava/lang/String;
 	public fun getStartUrlBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasLanguage ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -34970,7 +34903,6 @@ public final class tools/elide/page/Context$AppManifest$Icon : com/google/protob
 	public fun getSizeList ()Ljava/util/List;
 	public fun getSrc ()Lcom/google/common/html/types/TrustedResourceUrlProto;
 	public fun getSrcOrBuilder ()Lcom/google/common/html/types/TrustedResourceUrlProtoOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasSrc ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -35128,7 +35060,6 @@ public final class tools/elide/page/Context$AppManifest$RelatedApplication : com
 	public fun getPlatform ()Ltools/elide/page/Context$AppManifest$RelatedApplication$AppPlatform;
 	public fun getPlatformValue ()I
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Lcom/google/common/html/types/TrustedResourceUrlProto;
 	public fun getUriOrBuilder ()Lcom/google/common/html/types/TrustedResourceUrlProtoOrBuilder;
 	public fun hasUri ()Z
@@ -35594,7 +35525,6 @@ public final class tools/elide/page/Context$ClientHints : com/google/protobuf/Ge
 	public fun getSupportedList ()Ljava/util/List;
 	public fun getSupportedValue (I)I
 	public fun getSupportedValueList ()Ljava/util/List;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getViewportWidth ()I
 	public fun getWidth ()I
 	public fun hashCode ()I
@@ -35819,7 +35749,6 @@ public final class tools/elide/page/Context$Cookie : com/google/protobuf/Generat
 	public fun getSameSiteValue ()I
 	public fun getSecure ()Z
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ljava/lang/String;
 	public fun getValueBytes ()Lcom/google/protobuf/ByteString;
 	public fun hasAbsoluteExpire ()Z
@@ -36068,7 +35997,6 @@ public final class tools/elide/page/Context$DynamicETag : com/google/protobuf/Ge
 	public fun getResponseOrBuilder ()Ltools/elide/data/DataFingerprintOrBuilder;
 	public fun getSerializedSize ()I
 	public fun getStrong ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasPreimage ()Z
 	public fun hasResponse ()Z
 	public fun hashCode ()I
@@ -36204,7 +36132,6 @@ public final class tools/elide/page/Context$Fonts : com/google/protobuf/Generate
 	public fun getPackageOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/page/Context$Fonts$Builder;
@@ -36354,7 +36281,6 @@ public final class tools/elide/page/Context$Fonts$FontPackage : com/google/proto
 	public fun getReferenceOrBuilder (I)Ltools/elide/page/Context$Fonts$FontReferenceOrBuilder;
 	public fun getReferenceOrBuilderList ()Ljava/util/List;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/page/Context$Fonts$FontPackage$Builder;
@@ -36500,7 +36426,6 @@ public final class tools/elide/page/Context$Fonts$FontReference : com/google/pro
 	public fun getSerializedSize ()I
 	public fun getType ()Ltools/elide/page/Context$Fonts$FontReferenceType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Lcom/google/common/html/types/TrustedResourceUrlProto;
 	public fun getUriOrBuilder ()Lcom/google/common/html/types/TrustedResourceUrlProtoOrBuilder;
 	public fun getVariant ()Ljava/lang/String;
@@ -36776,7 +36701,6 @@ public final class tools/elide/page/Context$Metadata : com/google/protobuf/Gener
 	public fun getTitleBytes ()Lcom/google/protobuf/ByteString;
 	public fun getTouchIcon ()Ljava/lang/String;
 	public fun getTouchIconBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getViewport ()Ljava/lang/String;
 	public fun getViewportBytes ()Lcom/google/protobuf/ByteString;
 	public fun hasLanguage ()Z
@@ -37052,7 +36976,6 @@ public final class tools/elide/page/Context$Metadata$OpenGraph : com/google/prot
 	public fun getTwitterOrBuilder ()Ltools/elide/page/Context$Metadata$TwitterOrBuilder;
 	public fun getType ()Ljava/lang/String;
 	public fun getTypeBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUrl ()Ljava/lang/String;
 	public fun getUrlBytes ()Lcom/google/protobuf/ByteString;
 	public fun getVideo (I)Ltools/elide/page/Context$Metadata$OpenGraph$OpenGraphVideo;
@@ -37250,7 +37173,6 @@ public final class tools/elide/page/Context$Metadata$OpenGraph$OpenGraphImage : 
 	public fun getSerializedSize ()I
 	public fun getType ()Ljava/lang/String;
 	public fun getTypeBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Ljava/lang/String;
 	public fun getUriBytes ()Lcom/google/protobuf/ByteString;
 	public fun getWidth ()I
@@ -37380,7 +37302,6 @@ public final class tools/elide/page/Context$Metadata$OpenGraph$OpenGraphVideo : 
 	public fun getSerializedSize ()I
 	public fun getType ()Ljava/lang/String;
 	public fun getTypeBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Ljava/lang/String;
 	public fun getUriBytes ()Lcom/google/protobuf/ByteString;
 	public fun getWidth ()I
@@ -37558,7 +37479,6 @@ public final class tools/elide/page/Context$Metadata$Twitter : com/google/protob
 	public fun getSiteNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getTitle ()Ljava/lang/String;
 	public fun getTitleBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUrl ()Ljava/lang/String;
 	public fun getUrlBytes ()Lcom/google/protobuf/ByteString;
 	public fun hasLocale ()Z
@@ -37783,7 +37703,6 @@ public final class tools/elide/page/Context$PageLink : com/google/protobuf/Gener
 	public fun getSerializedSize ()I
 	public fun getType ()Ljava/lang/String;
 	public fun getTypeBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasHref ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -37913,7 +37832,6 @@ public final class tools/elide/page/Context$RDFPrefix : com/google/protobuf/Gene
 	public fun getSerializedSize ()I
 	public fun getTarget ()Ljava/lang/String;
 	public fun getTargetBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/page/Context$RDFPrefix$Builder;
@@ -38063,7 +37981,6 @@ public final class tools/elide/page/Context$ResponseHeader : com/google/protobuf
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ljava/lang/String;
 	public fun getValueBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -38190,7 +38107,6 @@ public final class tools/elide/page/Context$Scripts : com/google/protobuf/Genera
 	public fun getLinkOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasLifted ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -38330,7 +38246,6 @@ public final class tools/elide/page/Context$Scripts$JavaScript : com/google/prot
 	public fun getPreload ()Z
 	public fun getPush ()Z
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Lcom/google/common/html/types/TrustedResourceUrlProto;
 	public fun getUriOrBuilder ()Lcom/google/common/html/types/TrustedResourceUrlProtoOrBuilder;
 	public fun hasUri ()Z
@@ -38497,7 +38412,6 @@ public final class tools/elide/page/Context$Styles : com/google/protobuf/Generat
 	public fun getLinkOrBuilderList ()Ljava/util/List;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasLifted ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -38632,7 +38546,6 @@ public final class tools/elide/page/Context$Styles$Stylesheet : com/google/proto
 	public fun getPreload ()Z
 	public fun getPush ()Z
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Lcom/google/common/html/types/TrustedResourceUrlProto;
 	public fun getUriOrBuilder ()Lcom/google/common/html/types/TrustedResourceUrlProtoOrBuilder;
 	public fun hasUri ()Z
@@ -38819,9 +38732,11 @@ public final class tools/elide/page/ContextKt$AppManifestKt$Dsl {
 	public final fun getDescription ()Ljava/lang/String;
 	public final fun getDirection ()Ljava/lang/String;
 	public final fun getDisplay ()Ltools/elide/page/Context$AppManifest$DisplayMode;
+	public final fun getDisplayValue ()I
 	public final fun getLanguage ()Ltools/elide/base/LanguageSpec;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getOrientation ()Ltools/elide/page/Context$AppManifest$OrientationMode;
+	public final fun getOrientationValue ()I
 	public final fun getPreferRelatedApplications ()Z
 	public final synthetic fun getRelatedApplication ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getScope ()Ljava/lang/String;
@@ -38837,9 +38752,11 @@ public final class tools/elide/page/ContextKt$AppManifestKt$Dsl {
 	public final fun setDescription (Ljava/lang/String;)V
 	public final fun setDirection (Ljava/lang/String;)V
 	public final fun setDisplay (Ltools/elide/page/Context$AppManifest$DisplayMode;)V
+	public final fun setDisplayValue (I)V
 	public final fun setLanguage (Ltools/elide/base/LanguageSpec;)V
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setOrientation (Ltools/elide/page/Context$AppManifest$OrientationMode;)V
+	public final fun setOrientationValue (I)V
 	public final fun setPreferRelatedApplications (Z)V
 	public final synthetic fun setRelatedApplication (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/page/Context$AppManifest$RelatedApplication;)V
 	public final fun setScope (Ljava/lang/String;)V
@@ -38901,10 +38818,12 @@ public final class tools/elide/page/ContextKt$AppManifestKt$RelatedApplicationKt
 	public final fun clearUri ()V
 	public final fun getId ()Ljava/lang/String;
 	public final fun getPlatform ()Ltools/elide/page/Context$AppManifest$RelatedApplication$AppPlatform;
+	public final fun getPlatformValue ()I
 	public final fun getUri ()Lcom/google/common/html/types/TrustedResourceUrlProto;
 	public final fun hasUri ()Z
 	public final fun setId (Ljava/lang/String;)V
 	public final fun setPlatform (Ltools/elide/page/Context$AppManifest$RelatedApplication$AppPlatform;)V
+	public final fun setPlatformValue (I)V
 	public final fun setUri (Lcom/google/common/html/types/TrustedResourceUrlProto;)V
 }
 
@@ -38939,6 +38858,7 @@ public final class tools/elide/page/ContextKt$ClientHintsKt$Dsl {
 	public final fun getDevicePixelRatio ()I
 	public final fun getDownlink ()F
 	public final fun getEffectiveConnectionType ()Ltools/elide/page/Context$ConnectionHint;
+	public final fun getEffectiveConnectionTypeValue ()I
 	public final synthetic fun getIndicated ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getLifetime ()J
 	public final fun getRoundTripTime ()I
@@ -38954,6 +38874,7 @@ public final class tools/elide/page/ContextKt$ClientHintsKt$Dsl {
 	public final fun setDevicePixelRatio (I)V
 	public final fun setDownlink (F)V
 	public final fun setEffectiveConnectionType (Ltools/elide/page/Context$ConnectionHint;)V
+	public final fun setEffectiveConnectionTypeValue (I)V
 	public final synthetic fun setIndicated (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/page/Context$ClientHint;)V
 	public final fun setLifetime (J)V
 	public final fun setRoundTripTime (I)V
@@ -39003,6 +38924,7 @@ public final class tools/elide/page/ContextKt$CookieKt$Dsl {
 	public final fun getPath ()Ljava/lang/String;
 	public final fun getRelativeExpire ()Lcom/google/protobuf/Duration;
 	public final fun getSameSite ()Ltools/elide/page/Context$Cookie$SameSitePolicy;
+	public final fun getSameSiteValue ()I
 	public final fun getSecure ()Z
 	public final fun getValue ()Ljava/lang/String;
 	public final fun hasAbsoluteExpire ()Z
@@ -39018,6 +38940,7 @@ public final class tools/elide/page/ContextKt$CookieKt$Dsl {
 	public final fun setPath (Ljava/lang/String;)V
 	public final fun setRelativeExpire (Lcom/google/protobuf/Duration;)V
 	public final fun setSameSite (Ltools/elide/page/Context$Cookie$SameSitePolicy;)V
+	public final fun setSameSiteValue (I)V
 	public final fun setSecure (Z)V
 	public final fun setValue (Ljava/lang/String;)V
 }
@@ -39069,6 +38992,7 @@ public final class tools/elide/page/ContextKt$Dsl {
 	public final synthetic fun getFeaturePolicy ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getFonts ()Ltools/elide/page/Context$Fonts;
 	public final fun getFramingPolicy ()Ltools/elide/page/Context$FramingPolicy;
+	public final fun getFramingPolicyValue ()I
 	public final synthetic fun getHeader ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getHints ()Ltools/elide/page/Context$ClientHints;
 	public final fun getLanguage ()Ljava/lang/String;
@@ -39076,6 +39000,7 @@ public final class tools/elide/page/ContextKt$Dsl {
 	public final fun getMeta ()Ltools/elide/page/Context$Metadata;
 	public final synthetic fun getPreconnect ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getReferrerPolicy ()Ltools/elide/page/Context$ReferrerPolicy;
+	public final fun getReferrerPolicyValue ()I
 	public final fun getScripts ()Ltools/elide/page/Context$Scripts;
 	public final fun getStyles ()Ltools/elide/page/Context$Styles;
 	public final synthetic fun getVary ()Lcom/google/protobuf/kotlin/DslList;
@@ -39108,6 +39033,7 @@ public final class tools/elide/page/ContextKt$Dsl {
 	public final synthetic fun setFeaturePolicy (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setFonts (Ltools/elide/page/Context$Fonts;)V
 	public final fun setFramingPolicy (Ltools/elide/page/Context$FramingPolicy;)V
+	public final fun setFramingPolicyValue (I)V
 	public final synthetic fun setHeader (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/page/Context$ResponseHeader;)V
 	public final fun setHints (Ltools/elide/page/Context$ClientHints;)V
 	public final fun setLanguage (Ljava/lang/String;)V
@@ -39115,6 +39041,7 @@ public final class tools/elide/page/ContextKt$Dsl {
 	public final fun setMeta (Ltools/elide/page/Context$Metadata;)V
 	public final synthetic fun setPreconnect (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setReferrerPolicy (Ltools/elide/page/Context$ReferrerPolicy;)V
+	public final fun setReferrerPolicyValue (I)V
 	public final fun setScripts (Ltools/elide/page/Context$Scripts;)V
 	public final fun setStyles (Ltools/elide/page/Context$Styles;)V
 	public final synthetic fun setVary (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
@@ -39242,21 +39169,25 @@ public final class tools/elide/page/ContextKt$FontsKt$FontReferenceKt$Dsl {
 	public final fun clearVariant ()V
 	public final fun clearWeight ()V
 	public final fun getFormat ()Ltools/elide/page/Context$Fonts$FontFormat;
+	public final fun getFormatValue ()I
 	public final fun getName ()Ljava/lang/String;
 	public final fun getPrefetch ()Z
 	public final fun getPreload ()Z
 	public final fun getPush ()Z
 	public final fun getType ()Ltools/elide/page/Context$Fonts$FontReferenceType;
+	public final fun getTypeValue ()I
 	public final fun getUri ()Lcom/google/common/html/types/TrustedResourceUrlProto;
 	public final fun getVariant ()Ljava/lang/String;
 	public final fun getWeight ()Ljava/lang/String;
 	public final fun hasUri ()Z
 	public final fun setFormat (Ltools/elide/page/Context$Fonts$FontFormat;)V
+	public final fun setFormatValue (I)V
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setPrefetch (Z)V
 	public final fun setPreload (Z)V
 	public final fun setPush (Z)V
 	public final fun setType (Ltools/elide/page/Context$Fonts$FontReferenceType;)V
+	public final fun setTypeValue (I)V
 	public final fun setUri (Lcom/google/common/html/types/TrustedResourceUrlProto;)V
 	public final fun setVariant (Ljava/lang/String;)V
 	public final fun setWeight (Ljava/lang/String;)V
@@ -39899,7 +39830,6 @@ public final class tools/elide/page/MediaAsset : com/google/protobuf/GeneratedMe
 	public fun getMediaCase ()Ltools/elide/page/MediaAsset$MediaCase;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVideo ()Ltools/elide/page/MediaAsset$Video;
 	public fun getVideoOrBuilder ()Ltools/elide/page/MediaAsset$VideoOrBuilder;
 	public fun hasImage ()Z
@@ -40033,7 +39963,6 @@ public final class tools/elide/page/MediaAsset$Document : com/google/protobuf/Ge
 	public fun getSerializedSize ()I
 	public fun getType ()Ltools/elide/page/MediaAsset$Document$DocumentType;
 	public fun getTypeValue ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/page/MediaAsset$Document$Builder;
@@ -40176,7 +40105,6 @@ public final class tools/elide/page/MediaAsset$Image : com/google/protobuf/Gener
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/page/MediaAsset$Image$Builder;
@@ -40302,7 +40230,6 @@ public final class tools/elide/page/MediaAsset$Image$ImageAsset : com/google/pro
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getResolution ()F
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Ljava/lang/String;
 	public fun getUriBytes ()Lcom/google/protobuf/ByteString;
 	public fun getWidth ()J
@@ -40468,7 +40395,6 @@ public final class tools/elide/page/MediaAsset$Link : com/google/protobuf/Genera
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Ljava/lang/String;
 	public fun getUriBytes ()Lcom/google/protobuf/ByteString;
 	public fun hashCode ()I
@@ -40611,7 +40537,6 @@ public final class tools/elide/page/MediaAsset$Video : com/google/protobuf/Gener
 	public fun getSerializedSize ()I
 	public fun getTitle ()Ljava/lang/String;
 	public fun getTitleBytes ()Lcom/google/protobuf/ByteString;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/page/MediaAsset$Video$Builder;
@@ -40749,7 +40674,6 @@ public final class tools/elide/page/MediaAsset$Video$VideoAsset : com/google/pro
 	public fun getSerializedSize ()I
 	public fun getThumb ()Ltools/elide/page/MediaAsset$Image;
 	public fun getThumbOrBuilder ()Ltools/elide/page/MediaAsset$ImageOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getUri ()Ljava/lang/String;
 	public fun getUriBytes ()Lcom/google/protobuf/ByteString;
 	public fun hasThumb ()Z
@@ -40899,7 +40823,9 @@ public final class tools/elide/page/MediaAssetKt$DocumentKt$Dsl {
 	public final synthetic fun _build ()Ltools/elide/page/MediaAsset$Document;
 	public final fun clearType ()V
 	public final fun getType ()Ltools/elide/page/MediaAsset$Document$DocumentType;
+	public final fun getTypeValue ()I
 	public final fun setType (Ltools/elide/page/MediaAsset$Document$DocumentType;)V
+	public final fun setTypeValue (I)V
 }
 
 public final class tools/elide/page/MediaAssetKt$DocumentKt$Dsl$Companion {
@@ -40917,6 +40843,7 @@ public final class tools/elide/page/MediaAssetKt$Dsl {
 	public final fun clearVideo ()V
 	public final fun getImage ()Ltools/elide/page/MediaAsset$Image;
 	public final fun getKind ()Ltools/elide/page/MediaType;
+	public final fun getKindValue ()I
 	public final fun getLink ()Ltools/elide/page/MediaAsset$Link;
 	public final fun getMediaCase ()Ltools/elide/page/MediaAsset$MediaCase;
 	public final fun getVideo ()Ltools/elide/page/MediaAsset$Video;
@@ -40925,6 +40852,7 @@ public final class tools/elide/page/MediaAssetKt$Dsl {
 	public final fun hasVideo ()Z
 	public final fun setImage (Ltools/elide/page/MediaAsset$Image;)V
 	public final fun setKind (Ltools/elide/page/MediaType;)V
+	public final fun setKindValue (I)V
 	public final fun setLink (Ltools/elide/page/MediaAsset$Link;)V
 	public final fun setVideo (Ltools/elide/page/MediaAsset$Video;)V
 }
@@ -41033,6 +40961,7 @@ public final class tools/elide/page/MediaAssetKt$VideoKt$Dsl {
 	public final synthetic fun getAsset ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getDescription ()Ljava/lang/String;
 	public final fun getProvider ()Ltools/elide/page/VideoProvider;
+	public final fun getProviderValue ()I
 	public final fun getRunTime ()J
 	public final fun getTitle ()Ljava/lang/String;
 	public final synthetic fun plusAssignAllAsset (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
@@ -41040,6 +40969,7 @@ public final class tools/elide/page/MediaAssetKt$VideoKt$Dsl {
 	public final synthetic fun setAsset (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/page/MediaAsset$Video$VideoAsset;)V
 	public final fun setDescription (Ljava/lang/String;)V
 	public final fun setProvider (Ltools/elide/page/VideoProvider;)V
+	public final fun setProviderValue (I)V
 	public final fun setRunTime (J)V
 	public final fun setTitle (Ljava/lang/String;)V
 }
@@ -41063,10 +40993,12 @@ public final class tools/elide/page/MediaAssetKt$VideoKt$VideoAssetKt$Dsl {
 	public final fun clearThumb ()V
 	public final fun clearUri ()V
 	public final fun getResolution ()Ltools/elide/page/VideoResolution;
+	public final fun getResolutionValue ()I
 	public final fun getThumb ()Ltools/elide/page/MediaAsset$Image;
 	public final fun getUri ()Ljava/lang/String;
 	public final fun hasThumb ()Z
 	public final fun setResolution (Ltools/elide/page/VideoResolution;)V
+	public final fun setResolutionValue (I)V
 	public final fun setThumb (Ltools/elide/page/MediaAsset$Image;)V
 	public final fun setUri (Ljava/lang/String;)V
 }
@@ -41157,7 +41089,6 @@ public final class tools/elide/page/SemanticMetadata : com/google/protobuf/Gener
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getPayloadCase ()Ltools/elide/page/SemanticMetadata$PayloadCase;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasContent ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -41317,6 +41248,7 @@ public final class tools/elide/page/SemanticMetadataKt$Dsl {
 	public final fun getContent ()Ljava/lang/String;
 	public final synthetic fun getFormat ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getKind ()Ltools/elide/page/Kind;
+	public final fun getKindValue ()I
 	public final synthetic fun getMedia ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getPayloadCase ()Ltools/elide/page/SemanticMetadata$PayloadCase;
 	public final fun hasContent ()Z
@@ -41327,6 +41259,7 @@ public final class tools/elide/page/SemanticMetadataKt$Dsl {
 	public final fun setContent (Ljava/lang/String;)V
 	public final synthetic fun setFormat (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/page/Format;)V
 	public final fun setKind (Ltools/elide/page/Kind;)V
+	public final fun setKindValue (I)V
 	public final synthetic fun setMedia (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/page/MediaAsset;)V
 }
 
@@ -41480,7 +41413,6 @@ public final class tools/elide/std/LogHandler : com/google/protobuf/GeneratedMes
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasConfig ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -41676,7 +41608,6 @@ public final class tools/elide/std/Logger : com/google/protobuf/GeneratedMessage
 	public fun getSerializedSize ()I
 	public fun getSettings ()Ltools/elide/std/LoggerSettings;
 	public fun getSettingsOrBuilder ()Ltools/elide/std/LoggerSettingsOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasSettings ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -41836,7 +41767,6 @@ public final class tools/elide/std/LoggerSettings : com/google/protobuf/Generate
 	public fun getLevelValue ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/std/LoggerSettings$Builder;
@@ -41951,10 +41881,12 @@ public final class tools/elide/std/LoggerSettingsKt$Dsl {
 	public final fun clearLevel ()V
 	public final synthetic fun getHandler ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getLevel ()Ltools/elide/std/LogLevel;
+	public final fun getLevelValue ()I
 	public final synthetic fun plusAssignAllHandler (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignHandler (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/String;)V
 	public final synthetic fun setHandler (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setLevel (Ltools/elide/std/LogLevel;)V
+	public final fun setLevelValue (I)V
 }
 
 public final class tools/elide/std/LoggerSettingsKt$Dsl$Companion {
@@ -42002,7 +41934,6 @@ public final class tools/elide/std/LoggingSettings : com/google/protobuf/Generat
 	public fun getLevelValue ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/std/LoggingSettings$Builder;
@@ -42117,10 +42048,12 @@ public final class tools/elide/std/LoggingSettingsKt$Dsl {
 	public final fun clearLevel ()V
 	public final synthetic fun getHandler ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getLevel ()Ltools/elide/std/LogLevel;
+	public final fun getLevelValue ()I
 	public final synthetic fun plusAssignAllHandler (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignHandler (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/String;)V
 	public final synthetic fun setHandler (Lcom/google/protobuf/kotlin/DslList;ILjava/lang/String;)V
 	public final fun setLevel (Ltools/elide/std/LogLevel;)V
+	public final fun setLevelValue (I)V
 }
 
 public final class tools/elide/std/LoggingSettingsKt$Dsl$Companion {
@@ -42163,7 +42096,6 @@ public final class tools/elide/std/Version : com/google/protobuf/GeneratedMessag
 	public fun getSemantic ()Ltools/elide/std/Version$SemanticVersioning;
 	public fun getSemanticOrBuilder ()Ltools/elide/std/Version$SemanticVersioningOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getValue ()Ljava/lang/String;
 	public fun getValueBytes ()Lcom/google/protobuf/ByteString;
 	public fun getVersionCase ()Ltools/elide/std/Version$VersionCase;
@@ -42308,7 +42240,6 @@ public final class tools/elide/std/Version$CalendarVersioning : com/google/proto
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSecond ()I
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getYear ()I
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -42434,7 +42365,6 @@ public final class tools/elide/std/Version$NameVersioning : com/google/protobuf/
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/std/Version$NameVersioning$Builder;
@@ -42551,7 +42481,6 @@ public final class tools/elide/std/Version$SemanticVersioning : com/google/proto
 	public fun getPreRelease ()Ljava/lang/String;
 	public fun getPreReleaseBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/std/Version$SemanticVersioning$Builder;
@@ -42861,7 +42790,6 @@ public final class tools/elide/struct/BloomFilter : com/google/protobuf/Generate
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getRounds ()I
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/struct/BloomFilter$Builder;
@@ -42996,7 +42924,6 @@ public final class tools/elide/struct/BloomFilter$FilterLayer : com/google/proto
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/struct/BloomFilter$FilterLayer$Builder;
@@ -43122,6 +43049,7 @@ public final class tools/elide/struct/BloomFilterKt$Dsl {
 	public final fun clearLimit ()V
 	public final fun clearRounds ()V
 	public final fun getAlgorithm ()Ltools/elide/std/HashAlgorithm;
+	public final fun getAlgorithmValue ()I
 	public final fun getCount ()J
 	public final synthetic fun getLayer ()Lcom/google/protobuf/kotlin/DslList;
 	public final fun getLimit ()J
@@ -43129,6 +43057,7 @@ public final class tools/elide/struct/BloomFilterKt$Dsl {
 	public final synthetic fun plusAssignAllLayer (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
 	public final synthetic fun plusAssignLayer (Lcom/google/protobuf/kotlin/DslList;Ltools/elide/struct/BloomFilter$FilterLayer;)V
 	public final fun setAlgorithm (Ltools/elide/std/HashAlgorithm;)V
+	public final fun setAlgorithmValue (I)V
 	public final fun setCount (J)V
 	public final synthetic fun setLayer (Lcom/google/protobuf/kotlin/DslList;ILtools/elide/struct/BloomFilter$FilterLayer;)V
 	public final fun setLimit (J)V
@@ -43234,7 +43163,6 @@ public final class tools/elide/tools/ToolError : com/google/protobuf/GeneratedMe
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/tools/ToolError$Builder;
@@ -43351,7 +43279,6 @@ public final class tools/elide/tools/ToolInfo : com/google/protobuf/GeneratedMes
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/tools/ToolInfo$Builder;
@@ -43468,7 +43395,6 @@ public final class tools/elide/tools/ToolOptions : com/google/protobuf/Generated
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/tools/ToolOptions$Builder;
@@ -43591,7 +43517,6 @@ public final class tools/elide/tools/ToolRequest : com/google/protobuf/Generated
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/tools/ToolRequest$Builder;
@@ -43708,7 +43633,6 @@ public final class tools/elide/tools/ToolResult : com/google/protobuf/GeneratedM
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/tools/ToolResult$Builder;
@@ -43825,7 +43749,6 @@ public final class tools/elide/tools/ToolSupport : com/google/protobuf/Generated
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/tools/ToolSupport$Builder;
@@ -43984,7 +43907,6 @@ public final class tools/elide/vfs/BundleArtifacts : com/google/protobuf/Generat
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/vfs/BundleArtifacts$Builder;
@@ -44110,7 +44032,6 @@ public final class tools/elide/vfs/BundleHeader : com/google/protobuf/GeneratedM
 	public fun getMagic ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/vfs/BundleHeader$Builder;
@@ -44223,10 +44144,12 @@ public final class tools/elide/vfs/BundleHeaderKt$Dsl {
 	public final fun clearFormatVersion ()V
 	public final fun clearMagic ()V
 	public final fun getCompressionMode ()Ltools/elide/data/CompressionMode;
+	public final fun getCompressionModeValue ()I
 	public final fun getCrc32 ()I
 	public final fun getFormatVersion ()I
 	public final fun getMagic ()I
 	public final fun setCompressionMode (Ltools/elide/data/CompressionMode;)V
+	public final fun setCompressionModeValue (I)V
 	public final fun setCrc32 (I)V
 	public final fun setFormatVersion (I)V
 	public final fun setMagic (I)V
@@ -44267,7 +44190,6 @@ public final class tools/elide/vfs/BundleInfo : com/google/protobuf/GeneratedMes
 	public fun getSerializedSize ()I
 	public fun getTree ()Ltools/elide/vfs/Filesystem;
 	public fun getTreeOrBuilder ()Ltools/elide/vfs/FilesystemOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasArtifacts ()Z
 	public fun hasHeader ()Z
 	public fun hasTree ()Z
@@ -44450,7 +44372,6 @@ public final class tools/elide/vfs/Directory : com/google/protobuf/GeneratedMess
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/vfs/Directory$Builder;
@@ -44644,7 +44565,6 @@ public final class tools/elide/vfs/File : com/google/protobuf/GeneratedMessageV3
 	public fun getSerializedSize ()I
 	public fun getSize ()J
 	public fun getTail ()J
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasFingerprint ()Z
 	public fun hasKnown ()Z
 	public fun hasMime ()Z
@@ -44812,7 +44732,6 @@ public final class tools/elide/vfs/File$FileFingerprint : com/google/protobuf/Ge
 	public fun getSerializedSize ()I
 	public fun getUncompressed ()Ltools/elide/vfs/File$Fingerprint;
 	public fun getUncompressedOrBuilder ()Ltools/elide/vfs/File$FingerprintOrBuilder;
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCompressed ()Z
 	public fun hasUncompressed ()Z
 	public fun hashCode ()I
@@ -44953,7 +44872,6 @@ public final class tools/elide/vfs/File$Fingerprint : com/google/protobuf/Genera
 	public fun getHash ()Lcom/google/protobuf/ByteString;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasCrc32 ()Z
 	public fun hasHash ()Z
 	public fun hashCode ()I
@@ -45102,9 +45020,11 @@ public final class tools/elide/vfs/FileKt$Dsl {
 	public final synthetic fun getAttributesMap ()Lcom/google/protobuf/kotlin/DslMap;
 	public final fun getCompressed ()J
 	public final fun getEncoding ()Ltools/elide/data/Encoding;
+	public final fun getEncodingValue ()I
 	public final fun getFileTypeCase ()Ltools/elide/vfs/File$FileTypeCase;
 	public final fun getFingerprint ()Ltools/elide/vfs/File$FileFingerprint;
 	public final fun getKnown ()Ltools/elide/vfs/KnownMimeType;
+	public final fun getKnownValue ()I
 	public final fun getMime ()Ljava/lang/String;
 	public final fun getModified ()Lcom/google/protobuf/Timestamp;
 	public final fun getName ()Ljava/lang/String;
@@ -45121,8 +45041,10 @@ public final class tools/elide/vfs/FileKt$Dsl {
 	public final synthetic fun setAttributes (Lcom/google/protobuf/kotlin/DslMap;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun setCompressed (J)V
 	public final fun setEncoding (Ltools/elide/data/Encoding;)V
+	public final fun setEncodingValue (I)V
 	public final fun setFingerprint (Ltools/elide/vfs/File$FileFingerprint;)V
 	public final fun setKnown (Ltools/elide/vfs/KnownMimeType;)V
+	public final fun setKnownValue (I)V
 	public final fun setMime (Ljava/lang/String;)V
 	public final fun setModified (Lcom/google/protobuf/Timestamp;)V
 	public final fun setName (Ljava/lang/String;)V
@@ -45173,12 +45095,14 @@ public final class tools/elide/vfs/FileKt$FingerprintKt$Dsl {
 	public final fun clearFingerprint ()V
 	public final fun clearHash ()V
 	public final fun getAlgorithm ()Ltools/elide/std/HashAlgorithm;
+	public final fun getAlgorithmValue ()I
 	public final fun getCrc32 ()Lcom/google/protobuf/ByteString;
 	public final fun getFingerprintCase ()Ltools/elide/vfs/File$Fingerprint$FingerprintCase;
 	public final fun getHash ()Lcom/google/protobuf/ByteString;
 	public final fun hasCrc32 ()Z
 	public final fun hasHash ()Z
 	public final fun setAlgorithm (Ltools/elide/std/HashAlgorithm;)V
+	public final fun setAlgorithmValue (I)V
 	public final fun setCrc32 (Lcom/google/protobuf/ByteString;)V
 	public final fun setHash (Lcom/google/protobuf/ByteString;)V
 }
@@ -45249,7 +45173,6 @@ public final class tools/elide/vfs/Filesystem : com/google/protobuf/GeneratedMes
 	public fun getRoot ()Ltools/elide/vfs/TreeEntry;
 	public fun getRootOrBuilder ()Ltools/elide/vfs/TreeEntryOrBuilder;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasMetadata ()Z
 	public fun hasRoot ()Z
 	public fun hashCode ()I
@@ -45372,7 +45295,6 @@ public final class tools/elide/vfs/Filesystem$Metadata : com/google/protobuf/Gen
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public fun getSize ()J
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasModified ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -45525,11 +45447,13 @@ public final class tools/elide/vfs/FilesystemKt$MetadataKt$Dsl {
 	public final fun clearSize ()V
 	public final fun getCompressed ()J
 	public final fun getCompression ()Ltools/elide/data/CompressionMode;
+	public final fun getCompressionValue ()I
 	public final fun getModified ()Lcom/google/protobuf/Timestamp;
 	public final fun getSize ()J
 	public final fun hasModified ()Z
 	public final fun setCompressed (J)V
 	public final fun setCompression (Ltools/elide/data/CompressionMode;)V
+	public final fun setCompressionValue (I)V
 	public final fun setModified (Lcom/google/protobuf/Timestamp;)V
 	public final fun setSize (J)V
 }
@@ -45578,7 +45502,6 @@ public final class tools/elide/vfs/GuestVFSConfig : com/google/protobuf/Generate
 	public fun getRootBytes ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
 	public fun getSymbolicLinks ()Z
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getWorkingDirectory ()Ljava/lang/String;
 	public fun getWorkingDirectoryBytes ()Lcom/google/protobuf/ByteString;
 	public fun hasPolicy ()Z
@@ -45767,7 +45690,6 @@ public final class tools/elide/vfs/GuestVFSPolicy : com/google/protobuf/Generate
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getPolicyCase ()Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAllowAll ()Z
 	public fun hasCombined ()Z
 	public fun hasGuest ()Z
@@ -45900,7 +45822,6 @@ public final class tools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy : com/google/
 	public fun getHostOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun getVirtual ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
 	public fun getVirtualOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder;
 	public fun hasHost ()Z
@@ -46024,7 +45945,6 @@ public final class tools/elide/vfs/GuestVFSPolicy$HostIOPolicy : com/google/prot
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
@@ -46135,7 +46055,6 @@ public final class tools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy : com/google/p
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
@@ -46378,7 +46297,6 @@ public final class tools/elide/vfs/TreeEntry : com/google/protobuf/GeneratedMess
 	public fun getParentOrBuilder ()Ltools/elide/vfs/TreeEntryOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
-	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasDirectory ()Z
 	public fun hasFile ()Z
 	public fun hasParent ()Z

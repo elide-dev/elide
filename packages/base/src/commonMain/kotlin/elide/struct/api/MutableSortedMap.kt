@@ -16,6 +16,8 @@ package elide.struct.api
 /**
  *
  */
-public interface MutableSortedMap<Key, Value> : MutableMap<Key, Value> where Key : Comparable<Key> {
+public interface MutableSortedMap<Key, Value> :
+  MutableMap<Key, Value>,
+  SortedMap<Key, Value> where Key : Comparable<Key> {
   //
 }

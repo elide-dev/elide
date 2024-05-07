@@ -95,7 +95,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       .allowHostAccess(contextHostAccess)
       .allowInnerContextOptions(false)
       .allowCreateThread(true)
-      .allowCreateProcess(false)
+      .allowCreateProcess(true)  // @TODO(sgammon): needs policy enforcement
       .allowHostClassLoading(true)
       .allowNativeAccess(true)
       .engine(engine)

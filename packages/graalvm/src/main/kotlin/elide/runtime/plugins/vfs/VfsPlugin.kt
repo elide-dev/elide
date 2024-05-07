@@ -79,6 +79,7 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
     // use the configured VFS for each context
     builder.allowIO(IOAccess.newBuilder()
         .fileSystem(fileSystem)
+        .allowHostSocketAccess(true)  // @TODO(sgammon): needs policy enforcement
         .build())
   }
 

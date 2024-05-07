@@ -48,7 +48,6 @@ import elide.runtime.plugins.vfs.Vfs
     )
 
     builder.enableOptions(
-      "python.UsePanama",
       "python.NativeModules",
       "python.LazyStrings",
       "python.WithTRegex",
@@ -56,6 +55,7 @@ import elide.runtime.plugins.vfs.Vfs
 
     if (ENABLE_EXPERIMENTAL) {
       builder.enableOptions(
+        "python.UsePanama",
         "python.WithCachedSources",
       )
     }

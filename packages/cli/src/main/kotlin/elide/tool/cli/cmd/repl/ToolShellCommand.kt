@@ -734,6 +734,18 @@ import elide.tool.project.ProjectManager
   )
   internal var runnable: String? = null
 
+  /** Script arguments to pass. */
+  @Parameters(
+    index = "1",
+    arity = "0..*",
+    paramLabel = "ARG",
+    description = [
+      "Arguments to pass to the script to run; must be positioned " +
+              "after the file to run.",
+    ],
+  )
+  internal var arguments: List<String>? = null
+
   // Language hint passed in from outer tools, like when the user calls `elide python`.
   internal var languageHint: String? = null
 
@@ -1597,6 +1609,19 @@ import elide.tool.project.ProjectManager
       dotenv = appEnvironment.dotenv,
     )
 
+    // load arguments into context if we have them
+    when (val arguments = arguments) {
+      null -> emptyArray()
+      else -> if (arguments.isEmpty()) emptyArray() else {
+        arguments.toTypedArray()
+      }
+    }.let {
+      val runnable = runnable?.ifBlank { null }
+      args(if (runnable == null) it else {
+        listOf(runnable).plus(it).toTypedArray()
+      })
+    }
+
     // configure VFS with user-specified bundles
     vfs {
       deferred = true
@@ -1640,6 +1665,10 @@ import elide.tool.project.ProjectManager
     val versionProp = VERSION_INSTRINSIC_NAME to ElideTool.version()
     val intrinsics = intrinsicsManager.resolver()
 
+    // resolve entrypoint arguments
+    val cmd = ProcessHandle.current().info().command().orElse("elide")
+    val args = Statics.args.get() ?: emptyList()
+
     (language ?: LanguageSelector()).resolve().forEach { lang ->
       when (lang) {
         // Primary Engines
@@ -1660,6 +1689,8 @@ import elide.tool.project.ProjectManager
           install(elide.runtime.plugins.python.Python) {
             logging.debug("Configuring Python VM")
             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+            executable = cmd
+            executableList = listOf(cmd).plus(args)
           }
         }
 

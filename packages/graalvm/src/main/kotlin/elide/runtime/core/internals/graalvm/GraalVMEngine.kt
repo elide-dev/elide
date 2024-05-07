@@ -103,6 +103,15 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     // allow plugins to customize the context on creation
     lifecycle.emit(EngineLifecycleEvent.ContextCreated, builder)
 
+    // mount application entrypoint arguments for each language
+    config.arguments.let {
+      if (it.isNotEmpty()) {
+        config.languages.forEach { lang ->
+          builder.arguments(lang.languageId, it)
+        }
+      }
+    }
+
     // build the context and notify event listeners
     val context = GraalVMContext(finalizer.invoke(builder.apply { cfg.invoke(builder) }))
     lifecycle.emit(EngineLifecycleEvent.ContextInitialized, context)

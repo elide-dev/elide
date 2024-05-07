@@ -133,11 +133,11 @@ jobs:
               args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
-      - name: "Setup: GraalVM (Java 21)"
+      - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"
-          java-version: 21
+          java-version: 22
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Artifacts"

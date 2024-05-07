@@ -1,6 +1,6 @@
 package dev.elide.buildtools.gradle.plugin
 
-import dev.elide.buildtools.gradle.plugin.ElideExtension.Companion.elide
+import dev.elide.buildtools.gradle.plugin.ElideExtension.Companion.elideApp
 import dev.elide.buildtools.gradle.plugin.tasks.BundleAssetsBuildTask
 import dev.elide.buildtools.gradle.plugin.tasks.ElideDependencies.installApplyKSP
 import dev.elide.buildtools.gradle.plugin.tasks.ElideDependencies.installCommonLibs
@@ -15,7 +15,8 @@ import org.gradle.api.Project
 @Suppress("unused")
 public abstract class ElidePlugin : Plugin<Project> {
     public companion object {
-        public const val EXTENSION_NAME: String = "elide"
+        public const val EXTENSION_NAME: String = "elideApp"
+        private const val ENABLE_PROCESSOR: Boolean = false
     }
 
     override fun apply(project: Project): Unit = project.run {
@@ -23,7 +24,7 @@ public abstract class ElidePlugin : Plugin<Project> {
         var isKotlinJVM = false
         var isKotlinMPP = false
         var isKotlinJS = false
-        val elide = elide()
+        val elide = elideApp()
 
         // kotlin MPP isn't supported yet, but it counts as a plugin
         if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
@@ -41,12 +42,12 @@ public abstract class ElidePlugin : Plugin<Project> {
         }
 
         // always make sure KSP is installed.
-        if (isKotlinJVM) project.installApplyKSP()
+        if (isKotlinJVM && ENABLE_PROCESSOR) project.installApplyKSP()
 
         project.afterEvaluate {
             // if we're instructed to configure the build, it's time to install common Kotlin libraries, and we'll
             // also need the Elide processor for KSP.
-            if (isKotlinJVM) project.installElideProcessor()
+            if (isKotlinJVM && ENABLE_PROCESSOR) project.installElideProcessor()
 
             // install baseline project dependencies, as demanded by configuration
             val shouldConfig = elide.shouldConfigureBuild()

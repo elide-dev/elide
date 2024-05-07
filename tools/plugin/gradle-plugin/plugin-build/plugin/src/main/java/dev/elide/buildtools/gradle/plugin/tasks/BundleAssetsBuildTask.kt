@@ -146,7 +146,7 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
                     )
                 }
                 it.into(
-                    "${project.buildDir}/resources/main/embedded"
+                  project.layout.buildDirectory.dir("resources/main/embedded").get().asFile.path
                 )
             }
 
@@ -332,7 +332,7 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
 
                 // copy all into main assets directory
                 copy.into(
-                    "${project.buildDir}/$ASSETS_INTERMEDIATE_FOLDER/main/assets"
+                    project.layout.buildDirectory.dir("$ASSETS_INTERMEDIATE_FOLDER/main/assets").get().asFile.path
                 )
             }
 
@@ -346,7 +346,7 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
                 it.compressionConfig.set(extension.server.assets.bundlerConfig.compressionConfig())
                 it.bundleEncoding.set(extension.server.assets.bundlerConfig.format.get())
                 it.outputBundleFolder.set(project.file(
-                    "${project.buildDir}/$ASSETS_INTERMEDIATE_FOLDER/main/bundle"
+                    project.layout.buildDirectory.dir("$ASSETS_INTERMEDIATE_FOLDER/main/bundle").get().asFile
                 ).absolutePath)
                 it.manifestName.set("app")
                 it.manifestFile.set(project.file(
@@ -354,7 +354,7 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
                     "${it.outputBundleFolder.get()}/${it.bundleEncoding.get().fileNamed(it.manifestName.get())}"
                 ))
                 it.inputFiles.set(project.files(project.file(
-                    "${project.buildDir}/$ASSETS_INTERMEDIATE_FOLDER/main/assets"
+                    project.layout.buildDirectory.dir("$ASSETS_INTERMEDIATE_FOLDER/main/assets")
                 ).listFiles()))
             }
 
@@ -363,15 +363,17 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
             val finalizedAssetCopy = project.tasks.register("copyFinalAssets", Copy::class.java) { copy ->
                 copy.dependsOn(assetsCopy)
                 copy.dependsOn(assetGraph)
-                copy.from("${project.buildDir}/$ASSETS_INTERMEDIATE_FOLDER/main/assets") {
+                copy.from(
+                    project.layout.buildDirectory.dir("$ASSETS_INTERMEDIATE_FOLDER/main/assets").get().asFile
+                ) {
                     it.include("**/*.*")
                 }
-                copy.from("${project.buildDir}/$ASSETS_INTERMEDIATE_FOLDER/main/bundle") {
+                copy.from(
+                    project.layout.buildDirectory.dir("$ASSETS_INTERMEDIATE_FOLDER/main/bundle").get().asFile
+                ) {
                     it.include("**/*.*")
                 }
-                copy.into(
-                    "${project.buildDir}/resources/main/assets"
-                )
+                copy.into(project.layout.buildDirectory.dir("resources/main/assets"))
             }
 
             // resolve the process-resources step for the server target, and make it depend on our embedded assets.
@@ -392,12 +394,8 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
         // set defaults
         with(project) {
             // set the default output bundle folder
-            outputBundleFolder.set(
-                file("$buildDir\\$defaultOutputBundleFolder").absolutePath
-            )
-            bundleEncoding.set(
-                StaticValues.defaultEncoding
-            )
+            outputBundleFolder.set(file(project.layout.buildDirectory.dir(defaultOutputBundleFolder)).absolutePath)
+            bundleEncoding.set(StaticValues.defaultEncoding)
         }
     }
 

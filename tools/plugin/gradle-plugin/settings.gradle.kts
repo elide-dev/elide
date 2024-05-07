@@ -58,6 +58,7 @@ dependencyResolutionManagement {
             url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
             content {
                 includeGroup("dev.elide")
+                includeGroup("dev.elide.tools")
                 includeGroup("org.capnproto")
             }
         }

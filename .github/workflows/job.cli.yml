@@ -196,19 +196,12 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
           cache: "gradle"
-      - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
-        with:
-          distribution: "graalvm"
-          java-version: "21"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: "false"
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
         with:
@@ -379,19 +372,12 @@ jobs:
         uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
         with:
           arch: ${{ matrix.arch }}
-      - name: "Setup: GraalVM (Java 21)"
-        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
-        with:
-          distribution: "graalvm"
-          java-version: "21"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          set-java-home: "false"
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:

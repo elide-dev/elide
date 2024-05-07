@@ -80,7 +80,7 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler {
 public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$AssetBundlerConfig {
 	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
 	public final fun compression (Lorg/gradle/api/Action;)V
-	public final fun digestAlgorithm (Ltools/elide/crypto/HashAlgorithm;)V
+	public final fun digestAlgorithm (Ltools/elide/std/HashAlgorithm;)V
 	public final fun format (Ltools/elide/assets/ManifestFormat;)V
 	public final fun tagGenerator (Lorg/gradle/api/Action;)V
 }
@@ -167,7 +167,7 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$AssetCopy
 
 public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$AssetTagHandler {
 	public fun <init> ()V
-	public final fun digestAlgorithm (Ltools/elide/crypto/HashAlgorithm;)V
+	public final fun digestAlgorithm (Ltools/elide/std/HashAlgorithm;)V
 	public final fun rounds (I)V
 	public final fun tailSize (I)V
 }
@@ -335,7 +335,7 @@ public abstract class dev/elide/buildtools/gradle/plugin/tasks/BundleBaseTask : 
 	public static final field defaultOutputOptimizedName Ljava/lang/String;
 	public fun <init> ()V
 	public static final fun applyPlugin (Lorg/gradle/api/Project;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public static final fun digester$plugin (Ltools/elide/crypto/HashAlgorithm;)Ljava/security/MessageDigest;
+	public static final fun digester$plugin (Ltools/elide/std/HashAlgorithm;)Ljava/security/MessageDigest;
 	public static final fun fileNamed$plugin (Ltools/elide/assets/ManifestFormat;Ljava/lang/String;)Ljava/lang/String;
 	protected static final fun fingerprintMessage (Lcom/google/protobuf/Message;)Lcom/google/protobuf/ByteString;
 	protected fun postAction ()V

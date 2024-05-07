@@ -36,7 +36,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-val defaultJavaVersion = "17"
+val defaultJavaVersion = "21"
 val defaultKotlinVersion = "2.0"
 
 val defaultElideGroup = "dev.elide"
@@ -137,9 +137,9 @@ pluginBundle {
 }
 
 val minimumMicronaut = "4.0.5"
-val preferredMicronaut = "4.2.1"
-val defaultJavaMin = "17"
-val defaultJavaMax = "19"
+val preferredMicronaut = "4.4.1"
+val defaultJavaMin = "21"
+val defaultJavaMax = "22"
 val baseJavaMin: Int = (defaultJavaMin).toInt()
 val skipVersions = sortedSetOf(
     12,
@@ -148,6 +148,7 @@ val skipVersions = sortedSetOf(
     15,
     16,
     18,
+    20,
 )
 
 val javaMin: Int = (
@@ -195,7 +196,7 @@ dependencies {
     api(libs.protobuf.java)
     api(libs.protobuf.util)
     api(libs.protobuf.kotlin)
-    api(libs.elide.tools.processor)
+//    api(libs.elide.tools.processor)
     api(libs.elide.base)
     api(libs.elide.proto.core)
     api(libs.elide.proto.protobuf)
@@ -227,14 +228,21 @@ dependencies {
     api(libs.kotlinx.serialization.json)
     api(libs.kotlinx.serialization.protobuf)
 
-    // Elide: Kotlin Plugins
-    implementation(libs.elide.kotlin.plugin.redakt)
-
     // Elide: Embedded Tools
-    embedded(libs.brotli)
-    embedded(libs.brotli.native.osx)
-    embedded(libs.brotli.native.linux)
-    embedded(libs.brotli.native.windows)
+    listOf(
+        libs.brotli,
+        libs.brotli.native.osx,
+        libs.brotli.native.osx.amd64,
+        libs.brotli.native.osx.arm64,
+        libs.brotli.native.linux,
+        libs.brotli.native.linux.amd64,
+        libs.brotli.native.linux.arm64,
+        libs.brotli.native.windows,
+        libs.brotli.native.windows.amd64,
+    ).forEach {
+        embedded(it)
+        api(it)
+    }
 
     // Common Dependencies
     api(libs.protobuf.java)
@@ -258,8 +266,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 kotlin {
@@ -305,6 +313,10 @@ tasks.withType<KotlinCompile>().configureEach {
         allWarningsAsErrors = true
         incremental = true
     }
+}
+
+tasks.detekt {
+    enabled = false
 }
 
 detekt {

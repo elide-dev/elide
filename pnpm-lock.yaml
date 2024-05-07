@@ -28,8 +28,8 @@ importers:
         specifier: 8.4.38
         version: 8.4.38
       preact:
-        specifier: 10.20.2
-        version: 10.20.2
+        specifier: 10.21.0
+        version: 10.21.0
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -138,7 +138,7 @@ importers:
         version: 3.0.1
       '@mdx-js/preact':
         specifier: 3.0.1
-        version: 3.0.1(preact@10.20.2)
+        version: 3.0.1(preact@10.21.0)
       '@mdx-js/react':
         specifier: 3.0.1
         version: 3.0.1(@types/react@18.3.1)(react@18.3.1)
@@ -2243,8 +2243,8 @@ packages:
     resolution: {integrity: sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==, tarball: https://registry.npmjs.org/postcss/-/postcss-8.4.38.tgz}
     engines: {node: ^10 || ^12 || >=14}
 
-  preact@10.20.2:
-    resolution: {integrity: sha512-S1d1ernz3KQ+Y2awUxKakpfOg2CEmJmwOP+6igPx6dgr6pgDvenqYviyokWso2rhHvGtTlWWnJDa7RaPbQerTg==, tarball: https://registry.npmjs.org/preact/-/preact-10.20.2.tgz}
+  preact@10.21.0:
+    resolution: {integrity: sha512-aQAIxtzWEwH8ou+OovWVSVNlFImL7xUCwJX3YMqA3U8iKCNC34999fFOnWjYNsylgfPgMexpbk7WYOLtKr/mxg==, tarball: https://registry.npmjs.org/preact/-/preact-10.21.0.tgz}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==, tarball: https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz}
@@ -3091,10 +3091,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mdx-js/preact@3.0.1(preact@10.20.2)':
+  '@mdx-js/preact@3.0.1(preact@10.21.0)':
     dependencies:
       '@types/mdx': 2.0.13
-      preact: 10.20.2
+      preact: 10.21.0
 
   '@mdx-js/react@3.0.1(@types/react@18.3.1)(react@18.3.1)':
     dependencies:
@@ -5166,7 +5166,7 @@ snapshots:
       picocolors: 1.0.0
       source-map-js: 1.2.0
 
-  preact@10.20.2: {}
+  preact@10.21.0: {}
 
   prelude-ls@1.2.1: {}
 

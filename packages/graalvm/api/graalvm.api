@@ -326,11 +326,14 @@ public abstract interface class elide/runtime/feature/FrameworkFeature : org/gra
 	public fun registerPackageForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
 }
 
-public final synthetic class elide/runtime/gvm/$VMFacadeFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/$VMFacadeFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -499,75 +502,99 @@ public abstract interface annotation class elide/runtime/gvm/api/GuestRuntime : 
 	public abstract fun engine ()Ljava/lang/String;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestIOConfiguration$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$GuestIOConfiguration$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMConfiguration$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$GuestVMConfiguration$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMEEConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$GuestVMEEConfig$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMEESandboxConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$GuestVMEESandboxConfig$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMInspectConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$GuestVMInspectConfig$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsEsmConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsEsmConfig$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsNpmConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsNpmConfig$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -632,19 +659,27 @@ public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
 }
 
-public final synthetic class elide/runtime/gvm/internals/$GuestExecutorManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/$GuestExecutorManager$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -688,12 +723,6 @@ public abstract class elide/runtime/gvm/internals/AbstractVMEngine : elide/runti
 public final class elide/runtime/gvm/internals/AbstractVMEngine$Companion {
 	public final fun resolveRuntimeInfo (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lkotlin/Pair;
 	public static synthetic fun resolveRuntimeInfo$default (Lelide/runtime/gvm/internals/AbstractVMEngine$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lkotlin/Pair;
-}
-
-public abstract class elide/runtime/gvm/internals/AbstractVMEngine$GuestVFSConfigurator : elide/runtime/gvm/internals/GuestVFS$VFSConfigurator {
-	public fun <init> (Lelide/runtime/gvm/GuestLanguage;Lkotlin/jvm/functions/Function0;)V
-	public fun bundles ()Ljava/util/List;
-	public fun image ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact {
@@ -1092,11 +1121,14 @@ public final class elide/runtime/gvm/internals/VMStaticProperty$Companion {
 	public static synthetic fun whenAtMost$default (Lelide/runtime/gvm/internals/VMStaticProperty$Companion;Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
 }
 
-public final synthetic class elide/runtime/gvm/internals/context/$NativeContextManagerImpl$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/context/$NativeContextManagerImpl$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -1118,19 +1150,27 @@ public final class elide/runtime/gvm/internals/context/ContextManager$Companion 
 public abstract interface class elide/runtime/gvm/internals/context/ContextManager$VMInvocation {
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/$BuiltinIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/$BuiltinIntrinsicsResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/$ServiceIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/$ServiceIntrinsicsResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -1190,106 +1230,70 @@ public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy$PropertyPro
 	public fun toString ()Ljava/lang/String;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoKey$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoKey$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoKey$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
 public abstract class elide/runtime/gvm/internals/intrinsics/js/struct/map/AbstractJsMap : elide/runtime/intrinsics/js/MapLike {
@@ -1410,107 +1414,584 @@ public final class elide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$Com
 	public fun random-G0GOI2s ()Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchParamsIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/js/$JsRuntime$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/js/$JsTimerExecutorProviderImpl$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/js/$JsTimerExecutorProviderImpl$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchParamsIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchParamsIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/js/$JsRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/js/$JsRuntime$JsRuntimeVFSConfigurator$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public final class elide/runtime/gvm/internals/node/NodeStdlib {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/node/NodeStdlib;
+	public final fun getAssert ()Lelide/runtime/intrinsics/js/node/AssertAPI;
+	public final fun getAssertStrict ()Lelide/runtime/intrinsics/js/node/AssertStrictAPI;
+	public final fun getBuffer ()Lelide/runtime/intrinsics/js/node/BufferAPI;
+	public final fun getChildProcess ()Lelide/runtime/intrinsics/js/node/ChildProcessAPI;
+	public final fun getCluster ()Lelide/runtime/intrinsics/js/node/ClusterAPI;
+	public final fun getConsole ()Lelide/runtime/intrinsics/js/node/ConsoleAPI;
+	public final fun getCrypto ()Lelide/runtime/intrinsics/js/node/CryptoAPI;
+	public final fun getDgram ()Lelide/runtime/intrinsics/js/node/DatagramAPI;
+	public final fun getDiagnosticsChannel ()Lelide/runtime/intrinsics/js/node/DiagnosticsChannelAPI;
+	public final fun getDns ()Lelide/runtime/intrinsics/js/node/DNSAPI;
+	public final fun getDnsPromises ()Lelide/runtime/intrinsics/js/node/DNSPromisesAPI;
+	public final fun getDomain ()Lelide/runtime/intrinsics/js/node/DomainAPI;
+	public final fun getEvents ()Lelide/runtime/intrinsics/js/node/EventsAPI;
 	public final fun getFs ()Lelide/runtime/intrinsics/js/node/FilesystemAPI;
 	public final fun getFsPromises ()Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;
+	public final fun getHttp ()Lelide/runtime/intrinsics/js/node/HTTPAPI;
+	public final fun getHttp2 ()Lelide/runtime/intrinsics/js/node/HTTP2API;
+	public final fun getHttps ()Lelide/runtime/intrinsics/js/node/HTTPSAPI;
 	public final fun getInspector ()Lelide/runtime/intrinsics/js/node/InspectorAPI;
+	public final fun getModule ()Lelide/runtime/intrinsics/js/node/ModuleAPI;
+	public final fun getNet ()Lelide/runtime/intrinsics/js/node/NetAPI;
 	public final fun getOs ()Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;
 	public final fun getPath ()Lelide/runtime/intrinsics/js/node/PathAPI;
+	public final fun getPerfHooks ()Lelide/runtime/intrinsics/js/node/PerformanceHooksAPI;
 	public final fun getProcess ()Lelide/runtime/intrinsics/js/node/ProcessAPI;
+	public final fun getQuerystring ()Lelide/runtime/intrinsics/js/node/QuerystringAPI;
+	public final fun getReadline ()Lelide/runtime/intrinsics/js/node/ReadlineAPI;
+	public final fun getReadlinePromises ()Lelide/runtime/intrinsics/js/node/ReadlinePromisesAPI;
+	public final fun getStream ()Lelide/runtime/intrinsics/js/node/StreamAPI;
+	public final fun getStreamConsumers ()Lelide/runtime/intrinsics/js/node/StreamConsumersAPI;
+	public final fun getStreamPromises ()Lelide/runtime/intrinsics/js/node/StreamPromisesAPI;
+	public final fun getStringDecoder ()Lelide/runtime/intrinsics/js/node/StringDecoderAPI;
+	public final fun getTest ()Lelide/runtime/intrinsics/js/node/TestAPI;
+	public final fun getWebstream ()Lelide/runtime/intrinsics/js/node/WebStreamsAPI;
+	public final fun getWorker ()Lelide/runtime/intrinsics/js/node/WorkerAPI;
+	public final fun getZlib ()Lelide/runtime/intrinsics/js/node/ZlibAPI;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/node/asserts/$NodeAssertModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/node/asserts/$NodeAssertModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$CPUInfoData$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/node/asserts/$NodeAssertStrictModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/asserts/$NodeAssertStrictModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/buffer/$NodeBufferIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/buffer/$NodeBufferModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/buffer/$NodeBufferModuleFacade$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/childProcess/$NodeChildProcessModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/childProcess/$NodeChildProcessModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/cluster/$NodeClusterModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/cluster/$NodeClusterModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/console/$NodeConsoleModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/console/$NodeConsoleModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/crypto/$NodeCryptoModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/crypto/$NodeCryptoModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/dgram/$NodeDatagramModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/dgram/$NodeDatagramModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/diagnostics/$NodeDiagnosticsChannelModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/diagnostics/$NodeDiagnosticsChannelModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/dns/$NodeDNSModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/dns/$NodeDNSModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/dns/$NodeDNSPromisesModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/dns/$NodeDNSPromisesModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/domain/$NodeDomainModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/domain/$NodeDomainModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/events/$NodeEventsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/events/$NodeEventsModuleFacade$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/http/$NodeHttpModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/http/$NodeHttpModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/http2/$NodeHttp2Module$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/http2/$NodeHttp2Module$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/https/$NodeHttpsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/https/$NodeHttpsModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/inspector/$NodeInspectorModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/inspector/$NodeInspectorPromisesModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/module/$NodeModulesModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/module/$NodeModulesModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/net/$NodeNetworkModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/net/$NodeNetworkModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/node/os/$CPUInfoData$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiateInternal ([Ljava/lang/Object;)Ljava/lang/Object;
+	public fun isBuildable ()Z
 }
 
 public final synthetic class elide/runtime/gvm/internals/node/os/$CPUInfoData$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
@@ -1519,13 +2000,12 @@ public final synthetic class elide/runtime/gvm/internals/node/os/$CPUInfoData$Re
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$CPUTimingsData$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public final synthetic class elide/runtime/gvm/internals/node/os/$CPUTimingsData$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+	public fun hasBuilder ()Z
+	public fun instantiateInternal ([Ljava/lang/Object;)Ljava/lang/Object;
+	public fun isBuildable ()Z
 }
 
 public final synthetic class elide/runtime/gvm/internals/node/os/$CPUTimingsData$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
@@ -1534,13 +2014,12 @@ public final synthetic class elide/runtime/gvm/internals/node/os/$CPUTimingsData
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$NetworkInterfaceInfoData$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public final synthetic class elide/runtime/gvm/internals/node/os/$NetworkInterfaceInfoData$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+	public fun hasBuilder ()Z
+	public fun instantiateInternal ([Ljava/lang/Object;)Ljava/lang/Object;
+	public fun isBuildable ()Z
 }
 
 public final synthetic class elide/runtime/gvm/internals/node/os/$NetworkInterfaceInfoData$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
@@ -1549,13 +2028,12 @@ public final synthetic class elide/runtime/gvm/internals/node/os/$NetworkInterfa
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$BaseOS$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$BaseOS$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+	public fun hasBuilder ()Z
+	public fun instantiateInternal ([Ljava/lang/Object;)Ljava/lang/Object;
+	public fun isBuildable ()Z
 }
 
 public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$BaseOS$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
@@ -1564,13 +2042,11 @@ public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingS
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Posix$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Posix$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+	public fun hasBuilder ()Z
+	public fun isBuildable ()Z
 }
 
 public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Posix$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
@@ -1579,13 +2055,11 @@ public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingS
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Win32$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Win32$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+	public fun hasBuilder ()Z
+	public fun isBuildable ()Z
 }
 
 public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystem$Win32$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
@@ -1594,46 +2068,37 @@ public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingS
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/node/os/$NodeOperatingSystemModule$Provide0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
 public final class elide/runtime/gvm/internals/node/path/PathBuf : elide/runtime/intrinsics/js/node/path/Path {
@@ -1689,69 +2154,363 @@ public final class elide/runtime/gvm/internals/node/path/PathStyle : java/lang/E
 	public static fun values ()[Lelide/runtime/gvm/internals/node/path/PathStyle;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/node/perfHooks/$NodePerformanceHooksModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+public synthetic class elide/runtime/gvm/internals/node/perfHooks/$NodePerformanceHooksModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$Provide0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Spawn$graalvm0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/node/process/$NodeProcessModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/vfs/$GuestVFSPolicy$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
+public synthetic class elide/runtime/gvm/internals/node/querystring/$NodeQuerystringModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/querystring/$NodeQuerystringModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/readline/$NodeReadlineModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/readline/$NodeReadlineModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/readline/$NodeReadlinePromisesModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/readline/$NodeReadlinePromisesModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamConsumersModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamConsumersModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamPromisesModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamPromisesModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamWebModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stream/$NodeStreamWebModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stringDecoder/$NodeStringDecoderModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/stringDecoder/$NodeStringDecoderModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/test/$NodeTestModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/test/$NodeTestModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/url/$NodeURLModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/url/$NodeURLModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/worker/$NodeWorkerModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/worker/$NodeWorkerModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/zlib/$NodeZlibModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/zlib/$NodeZlibModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Spawn$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/vfs/$GuestVFSPolicy$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
 	public fun getInterceptedType ()Ljava/lang/Class;
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Spawn$graalvm0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Spawn$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -2154,9 +2913,32 @@ public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorResult {
 	public static final fun ofErr (Lelide/runtime/intrinsics/js/err/Error;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/JsPromise {
+public abstract interface class elide/runtime/intrinsics/js/JsPromise : org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/JsPromise$Companion;
 	public abstract fun catch (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
-	public abstract fun then (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun catch (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun of (Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Ljava/util/concurrent/Future;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public static fun rejected (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun then (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun then (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun then$default (Lelide/runtime/intrinsics/js/JsPromise;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun then$default (Lelide/runtime/intrinsics/js/JsPromise;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public final class elide/runtime/intrinsics/js/JsPromise$Companion {
+	public final fun of (Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Ljava/util/concurrent/Future;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun rejected (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/MapLike : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
@@ -2246,6 +3028,19 @@ public abstract interface class elide/runtime/intrinsics/js/StringLike : java/la
 public abstract interface class elide/runtime/intrinsics/js/SubtleCrypto {
 }
 
+public abstract interface class elide/runtime/intrinsics/js/Timers {
+	public abstract fun clearInterval (J)V
+	public abstract fun clearTimeout (J)V
+	public abstract fun setInterval (Ljava/lang/Long;Lkotlin/jvm/functions/Function0;)J
+	public abstract fun setInterval (Ljava/lang/Long;[Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)J
+	public static synthetic fun setInterval$default (Lelide/runtime/intrinsics/js/Timers;Ljava/lang/Long;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)J
+	public static synthetic fun setInterval$default (Lelide/runtime/intrinsics/js/Timers;Ljava/lang/Long;[Ljava/lang/Object;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)J
+	public abstract fun setTimeout (Ljava/lang/Long;Lkotlin/jvm/functions/Function0;)J
+	public abstract fun setTimeout (Ljava/lang/Long;[Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)J
+	public static synthetic fun setTimeout$default (Lelide/runtime/intrinsics/js/Timers;Ljava/lang/Long;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)J
+	public static synthetic fun setTimeout$default (Lelide/runtime/intrinsics/js/Timers;Ljava/lang/Long;[Ljava/lang/Object;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)J
+}
+
 public abstract interface class elide/runtime/intrinsics/js/URL : java/io/Serializable {
 	public abstract fun getHash ()Ljava/lang/String;
 	public abstract fun getHost ()Ljava/lang/String;
@@ -2281,16 +3076,16 @@ public abstract interface class elide/runtime/intrinsics/js/URLMutableSearchPara
 public abstract interface class elide/runtime/intrinsics/js/URLSearchParams : elide/runtime/intrinsics/js/MultiMapLike, java/io/Serializable {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/err/AbstractJSException {
+public abstract interface class elide/runtime/intrinsics/js/err/AbstractJsException {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory {
-	public abstract fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
-	public abstract fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
-	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+public abstract interface class elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory {
+	public abstract fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
+	public abstract fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 }
 
-public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeException, elide/runtime/intrinsics/js/err/AbstractJSException {
+public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeException, elide/runtime/intrinsics/js/err/AbstractJsException {
 	public fun <init> ()V
 	public fun getCause ()Lelide/runtime/intrinsics/js/err/Error;
 	public synthetic fun getCause ()Ljava/lang/Throwable;
@@ -2302,6 +3097,19 @@ public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeE
 	public final fun getStackTrace ()Lelide/runtime/intrinsics/js/err/Stacktrace;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/err/JsError {
+	public abstract fun getMessage ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/err/JsException : elide/runtime/intrinsics/js/err/AbstractJsException, elide/runtime/intrinsics/js/err/JsError {
+	public fun getName ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/err/JsRegisteredError : elide/runtime/intrinsics/js/err/JsError {
+	public abstract fun getCode ()Ljava/lang/String;
+}
+
 public final class elide/runtime/intrinsics/js/err/QuotaExceededError : elide/runtime/intrinsics/js/err/ValueError {
 	public fun <init> (Ljava/lang/String;)V
 	public fun getMessage ()Ljava/lang/String;
@@ -2310,29 +3118,29 @@ public final class elide/runtime/intrinsics/js/err/QuotaExceededError : elide/ru
 public abstract interface class elide/runtime/intrinsics/js/err/Stacktrace {
 }
 
-public abstract class elide/runtime/intrinsics/js/err/TypeError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJSException {
+public abstract class elide/runtime/intrinsics/js/err/TypeError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException {
 	public static final field Factory Lelide/runtime/intrinsics/js/err/TypeError$Factory;
 	public fun <init> ()V
 	public fun getName ()Ljava/lang/String;
 }
 
-public final class elide/runtime/intrinsics/js/err/TypeError$Factory : elide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory {
-	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+public final class elide/runtime/intrinsics/js/err/TypeError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory {
+	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
-	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
 }
 
-public abstract class elide/runtime/intrinsics/js/err/ValueError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJSException {
+public abstract class elide/runtime/intrinsics/js/err/ValueError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException {
 	public static final field Factory Lelide/runtime/intrinsics/js/err/ValueError$Factory;
 	public fun <init> ()V
 	public fun getName ()Ljava/lang/String;
 }
 
-public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory {
-	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory {
+	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
-	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 }
 
@@ -2364,34 +3172,134 @@ public abstract interface class elide/runtime/intrinsics/js/express/ExpressRespo
 public abstract interface class elide/runtime/intrinsics/js/node/AbortSignal {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/FilesystemAPI : elide/runtime/intrinsics/js/node/NodeAPI {
-	public abstract fun readFile (Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
-	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
-	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
-	public abstract fun readFile (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
-	public abstract fun readFileSync (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Ljava/lang/Object;
-	public static synthetic fun readFileSync$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Ljava/lang/Object;
+public abstract interface class elide/runtime/intrinsics/js/node/AssertAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun assert (Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun assert$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun deepEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun deepEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun deepStrictEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun deepStrictEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun doesNotMatch (Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;)V
+	public abstract fun doesNotMatch (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Ljava/lang/String;)V
+	public static synthetic fun doesNotMatch$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun doesNotMatch$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/String;Lorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun doesNotReject (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun doesNotReject$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun doesNotThrow (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public abstract fun doesNotThrow (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun doesNotThrow$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun doesNotThrow$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun equal (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun equal$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun fail (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V
+	public abstract fun fail (Ljava/lang/String;)V
+	public static synthetic fun fail$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)V
+	public static synthetic fun fail$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun ifError (Ljava/lang/Object;)V
+	public static synthetic fun ifError$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;ILjava/lang/Object;)V
+	public abstract fun match (Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;)V
+	public abstract fun match (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Ljava/lang/String;)V
+	public static synthetic fun match$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun match$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/String;Lorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun notDeepEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun notDeepEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun notDeepStrictEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun notDeepStrictEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun notEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun notEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun notOk (Ljava/lang/Object;Ljava/lang/Object;)V
+	public abstract fun ok (Ljava/lang/Object;Ljava/lang/Object;)V
+	public static synthetic fun ok$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)V
+	public abstract fun rejects (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun rejects$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun strict (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public static synthetic fun strict$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun throws (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	public abstract fun throws (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun throws$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun throws$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/FilesystemPromiseAPI : elide/runtime/intrinsics/js/node/NodeAPI {
-	public abstract fun readFile (Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
-	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
-	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
-	public abstract fun readFile (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Lelide/runtime/intrinsics/js/URL;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Lelide/runtime/intrinsics/js/node/fs/FileHandle;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+public abstract interface class elide/runtime/intrinsics/js/node/AssertStrictAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ChildProcessAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ClusterAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ConsoleAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/CryptoAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/DNSAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/DNSPromisesAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/DatagramAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/DiagnosticsChannelAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/DomainAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/EventsAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/FilesystemAPI {
+	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
+	public abstract fun readFile (Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function2;)V
+	public abstract fun readFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function2;)V
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public abstract fun readFileSync (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Ljava/lang/Object;
+	public abstract fun readFileSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public static synthetic fun readFileSync$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun readFileSync$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/FilesystemPromiseAPI {
+	public abstract fun readFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/HTTP2API : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/HTTPAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/HTTPSAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/InspectorAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/InspectorPromisesAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ModuleAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/NetAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/NodeFilesystemAPI : elide/runtime/intrinsics/js/node/FilesystemAPI, elide/runtime/intrinsics/js/node/NodeAPI, elide/runtime/intrinsics/js/node/WritableFilesystemAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/NodeFilesystemPromiseAPI : elide/runtime/intrinsics/js/node/FilesystemPromiseAPI, elide/runtime/intrinsics/js/node/NodeAPI, elide/runtime/intrinsics/js/node/WritableFilesystemPromiseAPI {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/OperatingSystemAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -2467,6 +3375,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/PathAPI : elide
 	public fun toNamespacedPath (Lkotlinx/io/files/Path;)Ljava/lang/String;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/PerformanceHooksAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/ProcessAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 	public abstract fun exit ()V
 	public abstract fun exit (I)V
@@ -2479,7 +3390,177 @@ public abstract interface class elide/runtime/intrinsics/js/node/ProcessAPI : el
 	public abstract fun nextTick (Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)V
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer {
+public abstract interface class elide/runtime/intrinsics/js/node/QuerystringAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ReadlineAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ReadlinePromisesAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/StreamAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/StreamConsumersAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/StreamPromisesAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/StringDecoderAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/TLSAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/TestAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/TimersPromisesAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/URLAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/UtilAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/V8API : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/VMAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/WASIAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/WebStreamsAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/WorkerAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesystemAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun writeFile (Lorg/graalvm/polyglot/Value;Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun writeFileSync (Lorg/graalvm/polyglot/Value;Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun writeFileSync$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lorg/graalvm/polyglot/Value;Ljava/lang/Object;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesystemPromiseAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ZlibAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/asserts/AssertionError : elide/runtime/intrinsics/js/err/JsRegisteredError {
+	public abstract fun getActual ()Ljava/lang/Object;
+	public fun getCode ()Ljava/lang/String;
+	public abstract fun getExpected ()Ljava/lang/Object;
+	public abstract fun getGeneratedMessage ()Z
+	public fun getName ()Ljava/lang/String;
+	public abstract fun getOperator ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/Blob {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer : java/io/Serializable, org/graalvm/polyglot/proxy/ProxyArray, org/graalvm/polyglot/proxy/ProxyInstantiable, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/buffer/Buffer$Companion;
+	public static fun alloc (ILjava/lang/Boolean;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static fun empty ()Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun getLength ()I
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun mutable (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static fun mutable ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static fun of (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static fun of ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors {
+	public abstract fun create (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun create (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors;Lorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories : elide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities {
+	public abstract fun alloc (ILorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun alloc$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;ILorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun allocUnsafe (I)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun allocUnsafeSlow (I)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun from (Lelide/runtime/intrinsics/js/node/buffer/Buffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun from (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun from (Lorg/graalvm/polyglot/Value;ILjava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun from (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun from ([Ljava/lang/Byte;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;Lorg/graalvm/polyglot/Value;ILjava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferStatics : elide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors, elide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities {
+	public abstract fun byteLength (Ljava/lang/String;Ljava/lang/String;)I
+	public static synthetic fun byteLength$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)I
+	public abstract fun compare (Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/buffer/Buffer;)I
+	public abstract fun concat ([Lelide/runtime/intrinsics/js/node/buffer/Buffer;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun concat$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities;[Lelide/runtime/intrinsics/js/node/buffer/Buffer;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun copyBytesFrom (Lelide/runtime/intrinsics/js/node/buffer/Buffer;II)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun copyBytesFrom$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities;Lelide/runtime/intrinsics/js/node/buffer/Buffer;IIILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public abstract fun getPoolSize ()I
+	public abstract fun isBuffer (Ljava/lang/Object;)Z
+	public abstract fun isEncoding (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/intrinsics/js/node/buffer/Buffer$Companion {
+	public final fun alloc (ILjava/lang/Boolean;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public static synthetic fun alloc$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$Companion;ILjava/lang/Boolean;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public final fun empty ()Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public final fun mutable (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public final fun mutable ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public final fun of (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+	public final fun of ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/events/CustomEvent {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/events/Event {
+	public abstract fun composedPath ()[Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public abstract fun getBubbles ()Z
+	public abstract fun getCancelable ()Z
+	public abstract fun getComposed ()Z
+	public abstract fun getCurrentTarget ()Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public abstract fun getDefaultPrevented ()Z
+	public abstract fun getEventPhase ()I
+	public abstract fun getReturnValue ()Z
+	public abstract fun getSrcElement ()Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public abstract fun getTarget ()Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public abstract fun getTimeStamp ()D
+	public abstract fun getType ()Ljava/lang/String;
+	public abstract fun initEvent (Ljava/lang/String;ZZ)V
+	public abstract fun isTrusted ()Z
+	public abstract fun preventDefault ()V
+	public abstract fun stopImmediatePropagation ()V
+	public abstract fun stopPropagation ()V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/events/EventEmitter {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/events/EventListener {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/events/EventTarget {
+	public abstract fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public abstract fun dispatchEvent (Lelide/runtime/intrinsics/js/node/events/Event;)Z
+	public abstract fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/fs/FileHandle {
@@ -2505,6 +3586,30 @@ public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions {
 
 public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
+}
+
+public final class elide/runtime/intrinsics/js/node/fs/WriteFileOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun component4 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun copy (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEncoding ()Ljava/lang/Object;
+	public final fun getFlag ()Ljava/lang/String;
+	public final fun getMode ()Ljava/lang/Integer;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/fs/WriteFileOptions$Companion {
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/os/CPUInfo : org/graalvm/polyglot/proxy/ProxyObject {

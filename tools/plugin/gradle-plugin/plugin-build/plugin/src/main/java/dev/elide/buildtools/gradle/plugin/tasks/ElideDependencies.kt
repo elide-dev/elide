@@ -65,6 +65,9 @@ internal object ElideDependencies {
         /** The dependency should be considered internal. */
         IMPLEMENTATION("implementation"),
 
+        /** The dependency should be considered constraint-related. */
+        PLATFORM("api"),
+
         /** The dependency should only be available at compile time. */
         COMPILE("compileOnly"),
 
@@ -199,6 +202,22 @@ internal object ElideDependencies {
             config = DependencyVisibility.IMPLEMENTATION,
             type = DependencyTarget.MAIN,
             supports = EnumSet.of(DependencyPlatform.JS),
+        ),
+
+        /** Dependency catalog/BOM. */
+        CATALOG(
+            spec = DEPENDENCY_CATALOG,
+            config = DependencyVisibility.IMPLEMENTATION,
+            type = DependencyTarget.MAIN,
+            supports = EnumSet.of(DependencyPlatform.JVM),
+        ),
+
+        /** Gradle platform. */
+        PLATFORM(
+            spec = DEPENDENCY_PLATFORM,
+            config = DependencyVisibility.PLATFORM,
+            type = DependencyTarget.MAIN,
+            supports = EnumSet.of(DependencyPlatform.JVM),
         );
 
         override val target: DependencyTarget get() = type
@@ -244,6 +263,15 @@ internal object ElideDependencies {
 
         /** Injectable package which is part of the Elide Library suite as part of a JVM module. */
         data class JVMLibrary internal constructor(private val pkg: Package) : ElideDependency(
+            name = pkg.name.lowercase(),
+            artifact = pkg.artifactId,
+            group = pkg.groupId,
+            type = pkg.target,
+            config = pkg.visibility,
+        )
+
+        /** Injectable platform which constrains JVM versions */
+        data class JVMPlatform internal constructor(private val pkg: Package) : ElideDependency(
             name = pkg.name.lowercase(),
             artifact = pkg.artifactId,
             group = pkg.groupId,
@@ -301,10 +329,10 @@ internal object ElideDependencies {
         val PROCESSOR = ElideDependency.AnnotationProcessor.fromSpec(DEPENDENCY_PROCESSOR)
 
         /** Gradle Java Platform. */
-        val PLATFORM = ElideDependency.AnnotationProcessor.fromSpec(DEPENDENCY_PLATFORM)
+        val PLATFORM = ElideDependency.JVMPlatform(Package.PLATFORM)
 
         /** Gradle Version Catalog. */
-        val CATALOG = ElideDependency.AnnotationProcessor.fromSpec(DEPENDENCY_CATALOG)
+        val CATALOG = ElideDependency.JVMLibrary(Package.CATALOG)
 
         /** Gradle substrate. */
         val SUBSTRATE = ElideDependency.AnnotationProcessor.fromSpec(DEPENDENCY_SUBSTRATE)
@@ -405,12 +433,15 @@ internal object ElideDependencies {
 
             val sourceSets = project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
             val sourceSet = (sourceSets.getByName(sourceSetName) as DefaultKotlinSourceSet)
-            configurations.getByName(when (spec.visibility) {
-                DependencyVisibility.API -> sourceSet.apiConfigurationName
+            when (spec.visibility) {
+                DependencyVisibility.API, DependencyVisibility.PLATFORM -> sourceSet.apiConfigurationName
                 DependencyVisibility.COMPILE -> sourceSet.compileOnlyConfigurationName
                 DependencyVisibility.IMPLEMENTATION -> sourceSet.implementationConfigurationName
                 DependencyVisibility.RUNTIME -> sourceSet.runtimeOnlyConfigurationName
-            })
+                else -> null
+            }?.let { name ->
+                configurations.getByName(name)
+            } ?: error("Failed to resolve configuration for source set '$sourceSetName'")
         }
 
         // otherwise, we can assume there is a single Kotlin source-set.
@@ -467,15 +498,19 @@ internal object ElideDependencies {
             it.name == spec.artifactId
         }
 
-        // no such dependency exists; add it to the configuration
-        if (existing == null) {
-            logger.lifecycle("[Elide]: Providing dependency '${spec.groupId}:${spec.artifactId}'")
+        if (spec.visibility == DependencyVisibility.PLATFORM) {
+            // no-op at this time
+        } else {
+            // no such dependency exists; add it to the configuration
+            if (existing == null) {
+                logger.lifecycle("[Elide]: Providing dependency '${spec.groupId}:${spec.artifactId}'")
 
-            configuration.dependencies.add(
-                dependencies.create(extension, spec)
-            )
-        } else if (logger.isDebugEnabled) {
-            logger.debug("[Elide]: Dependency '${spec.groupId}:${spec.artifactId}' already provided")
+                configuration.dependencies.add(
+                    dependencies.create(extension, spec)
+                )
+            } else if (logger.isDebugEnabled) {
+                logger.debug("[Elide]: Dependency '${spec.groupId}:${spec.artifactId}' already provided")
+            }
         }
     }
 

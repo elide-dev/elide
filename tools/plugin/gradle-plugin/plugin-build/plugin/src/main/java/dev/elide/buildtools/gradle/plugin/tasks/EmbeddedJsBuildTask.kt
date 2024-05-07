@@ -11,6 +11,7 @@ import dev.elide.buildtools.gradle.plugin.js.BundleTool
 import dev.elide.buildtools.gradle.plugin.js.BundleType
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.file.CopySpec
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.plugins.BasePlugin
@@ -20,6 +21,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
 import org.gradle.api.tasks.options.Option
 import org.gradle.configurationcache.extensions.capitalized
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.targets.js.npm.NpmDependencyExtension
@@ -42,6 +44,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         private val defaultTargetType: BundleTarget = BundleTarget.EMBEDDED
         private const val defaultTargetTypeName: String = BundleTarget.EMBEDDED_NAME
 
+        private const val kjsEcmaVersion: String = "2015"
         private const val defaultEcmaVersion: String = "2022"
         private const val defaultLibraryName: String = "embedded"
         private const val defaultEntrypointName: String = "main.mjs"
@@ -99,6 +102,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         }
 
         // Build and install tasks within the scope of applied required plugins.
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         @JvmStatic public fun installTasks(extension: ElideExtension, project: Project) {
             // resolve the inflate-runtime task installed on the root project, or if there is not one, create it.
             val inflateRuntime = resolveInflateRuntimeTask(project, extension)
@@ -111,13 +115,21 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 )
 
                 jsExt.js(KotlinJsCompilerType.IR) {
+                    moduleName = "entry"
+                    useEsModules()
+                    generateTypeScriptDefinitions()
+
                     if (hasNode || elideJsExt.bundleTarget.get() == BundleTarget.EMBEDDED) {
                         nodejs {
                             binaries.executable()
+                            compilerOptions.useEsClasses.set(true)
+                            compilerOptions.target.set("es$kjsEcmaVersion")
                         }
                     } else {
                         browser {
                             binaries.executable()
+                            compilerOptions.useEsClasses.set(true)
+                            compilerOptions.target.set("es$kjsEcmaVersion")
                         }
                     }
                 }
@@ -127,18 +139,14 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                     project
                 )
 
-                // resolve embedded sources at `ssr/ssr.js`
+                // resolve embedded sources at `ssr/entry.mjs`
                 val fetchBuildSources = project.tasks.create("prepareEmbeddedJsBuild", Copy::class.java) {
                     it.dependsOn(compileProdKotlinJs)
                     it.from(compileProdKotlinJs.outputs.files.files) { copySpec ->
                         copySpec.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     }
-                    @Suppress("deprecation")
-                    it.from(compileProdKotlinJs.outputFileProperty) { copySpec ->
-                        copySpec.rename { "ssr.js" }
-                    }
                     it.into(
-                        "${project.buildDir}/ssr"
+                        project.layout.buildDirectory.dir("ssr")
                     )
                 }
 
@@ -175,10 +183,14 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
             project.plugins.apply("com.github.node-gradle.node")
             project.dependencies.apply {
                 (this as ExtensionAware).extensions.configure(NpmDependencyExtension::class.java) { npm ->
-                    add("implementation", npm("esbuild", Versions.esbuild))
-                    add("implementation", npm("prepack", Versions.prepack))
-                    add("implementation", npm("buffer", Versions.buffer))
-                    add("implementation", npm("web-streams-polyfill", Versions.webstreams))
+                    add("implementation", npm("esbuild", "0.20.2"))
+                    add("implementation", npm("prepack", "0.2.54"))
+                    add("implementation", npm("buffer", "6.0.3"))
+                    add("implementation", npm("web-streams-polyfill", "4.0.0"))
+//                    add("implementation", npm("esbuild", Versions.esbuild))
+//                    add("implementation", npm("prepack", Versions.prepack))
+//                    add("implementation", npm("buffer", Versions.buffer))
+//                    add("implementation", npm("web-streams-polyfill", Versions.webstreams))
                 }
             }
         }
@@ -286,7 +298,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 it.mode = mode
                 it.tool = jsExtension.bundleTool.get()
                 it.target = jsExtension.bundleTarget.get()
-                it.entryFile.set(fetchSources.destinationDir / "ssr.js")
+                it.entryFile.set(fetchSources.destinationDir / "entry.mjs")
                 it.libraryName = jsExtension.libraryName.get()
 
                 // setup properties
@@ -299,17 +311,19 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                     append(".mjs")
                 })
                 it.outputBundleFolder.set(
-                    File("${project.buildDir}/distributions").absolutePath
+                    project.layout.buildDirectory.dir("distributions").get().asFile.absolutePath
                 )
                 it.processShim.set(
-                    File("${project.buildDir}/esbuild/process-shim.${modeName.lowercase()}.js")
+                    project.layout.buildDirectory
+                        .file("esbuild/process-shim.${modeName.lowercase()}.js").get().asFile
                 )
                 it.outputConfig.set(
-                    File("${project.buildDir}/esbuild/esbuild.${modeName.lowercase()}.mjs")
+                    project.layout.buildDirectory
+                        .file("esbuild/esbuild.${modeName.lowercase()}.mjs").get().asFile
                 )
                 it.modulesFolders.set(listOf(
                     File(inflateRuntime.modulesPath.get().absolutePath),
-                    File("${project.rootProject.buildDir}/js/node_modules"),
+                    project.layout.buildDirectory.dir("js/node_modules").get().asFile,
                     File("${project.rootProject.projectDir}/node_modules"),
                 ))
                 val defaultOptimize = mode == BuildMode.PRODUCTION
@@ -350,7 +364,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 it.inputs.files(
                     buildTask.processShim,
                     buildTask.outputConfig,
-                    fetchSources.destinationDir / "ssr.js",
+                    fetchSources.destinationDir / "entry.mjs",
                 )
                 if (mode == BuildMode.PRODUCTION) {
                     it.outputs.file(buildTask.outputOptimizedFile.absolutePath)
@@ -407,7 +421,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         with(project) {
             // set the default output bundle folder
             outputBundleFolder.set(
-                file("$buildDir\\$defaultOutputBundleFolder").absolutePath
+                project.layout.buildDirectory.dir(defaultOutputBundleFolder).get().asFile.absolutePath
             )
 
             // setup asset spec
@@ -428,12 +442,12 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
 
             // set the default output config file/wrapper
             outputConfig.set(file(
-                "$buildDir/$defaultOutputConfig"
+                project.layout.buildDirectory.file(defaultOutputConfig).get().asFile
             ))
 
             // set the default process shim file
             processShim.set(file(
-                "$buildDir/$defaultProcessShim"
+                project.layout.buildDirectory.file(defaultProcessShim).get().asFile
             ))
         }
     }

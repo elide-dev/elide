@@ -1,32 +1,33 @@
 [versions]
-elide = "1.0.0-alpha7"
-elideTools = "1.0.0-alpha7"
+elide = "1.0.0-alpha8"
+elideTools = "1.0.0-alpha8"
 ksp = "2.0.0-RC2-1.0.20"
-detekt = "1.23.1"
+detekt = "1.23.6"
 kotlin = "2.0.0-RC2"
 kotlin_dsl = "4.0.7"
 kotlinx_coroutines = "1.8.1-Beta"
 kotlinx_collections = "0.3.5"
-kotlinx_datetime = "0.4.1"
+kotlinx_datetime = "0.6.0-RC.2"
 kotlinx_serialization = "1.6.3"
-kotlinx_abiValidator = "0.13.2"
+kotlinx_abiValidator = "0.14.0"
 google_api_common = "2.14.1"
 google_html_types = "1.0.8"
 atomicfu = "0.23.2"
+#pluginPublish = "1.2.1"
 pluginPublish = "0.21.0"
-pluginProtobuf = "0.9.3"
-versionCheck = "0.47.0"
-nodePlugin = "5.0.0"
-sonar = "4.3.0.3225"
-protobuf = "3.21.11"
-truth = "1.1.5"
-picocli = "4.7.4"
-slf4j = "2.0.9"
-brotli4j = "1.12.0"
+pluginProtobuf = "0.9.4"
+versionCheck = "0.51.0"
+nodePlugin = "7.0.2"
+sonar = "4.4.1.3373"
+protobuf = "3.25.2"
+truth = "1.4.2"
+picocli = "4.7.5"
+slf4j = "2.0.12"
+brotli4j = "1.16.0"
 gson = "2.10.1"
-guava = "33.1.0-jre"
+guava = "33.2.0-jre"
 checker_compat_qual = "2.5.5"
-npm_esbuild = "0.18.17"
+npm_esbuild = "0.20.2"
 npm_prepack = "0.2.54"
 commons_compress = "1.24.0"
 shadow_plugin = "7.1.2"
@@ -35,11 +36,12 @@ closure = "v20230103"
 closure_stylesheets = "1.5.0"
 buildconfig_plugin = "4.1.2"
 auto_service = "1.1.1"
-kover_plugin = "0.7.3"
-testLoggerPlugin = "3.2.0"
-dependencyAnalysis = "1.20.0"
-micronaut = "4.1.2"
-micronaut_plugin = "4.0.3"
+kover_plugin = "0.7.5"
+testLoggerPlugin = "4.0.0"
+dependencyAnalysis = "1.31.0"
+micronaut = "4.4.1"
+micronaut_plugin = "4.3.8"
+zstd = "1.5.6-3"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
@@ -105,9 +107,14 @@ picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli_codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
-brotli_native_osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
-brotli_native_linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
-brotli_native_windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+brotli-native-linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli-native-linux-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli-native-linux-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-aarch64", version.ref = "brotli4j" }
+brotli-native-osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli-native-osx-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli-native-osx-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-aarch64", version.ref = "brotli4j" }
+brotli-native-windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+brotli-native-windows-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 gson_parent = { group = "com.google.code.gson", name = "gson-parent", version.ref = "gson" }
 checker = { group = "org.checkerframework", name = "checker-compat-qual", version.ref = "checker_compat_qual" }
@@ -118,6 +125,7 @@ closure_stylesheets = { group = "com.google.closure-stylesheets", name = "closur
 autoService_ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.0.0" }
 google_auto_service = { group = "com.google.auto.service", name = "auto-service", version.ref = "auto_service" }
 google_auto_service_annotations = { group = "com.google.auto.service", name = "auto-service-annotations", version.ref = "auto_service" }
+zstd = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstd" }
 
 elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }

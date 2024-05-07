@@ -38,8 +38,8 @@ public open class ElideExtension @Inject constructor(project: Project) {
     /** Static methods provided by the Elide extension. */
     public companion object {
         /** Configure the Elide plugin for the receiver [Project]. */
-        public fun Project.elide(): ElideExtension {
-            return extensions.create("elide", ElideExtension::class.java)
+        public fun Project.elideApp(): ElideExtension {
+            return extensions.create("elideApp", ElideExtension::class.java)
         }
     }
 

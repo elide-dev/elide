@@ -12,3 +12,25 @@
  */
 package elide.runtime.gvm.internals.node.inspector
 
+import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.node.InspectorAPI
+
+// Symbol where the internal module implementation is installed.
+private const val INSPECTOR_MODULE_SYMBOL: String = "__Elide_node_inspector__"
+
+// Installs the Node inspector module into the intrinsic bindings.
+@Intrinsic internal class NodeInspectorModule : AbstractNodeBuiltinModule() {
+  override fun install(bindings: MutableIntrinsicBindings) {
+    bindings[INSPECTOR_MODULE_SYMBOL.asJsSymbol()] = NodeInspector.obtain()
+  }
+}
+
+internal class NodeInspector : InspectorAPI {
+  companion object {
+    private val SINGLETON = NodeInspector()
+    @JvmStatic fun obtain(): NodeInspector = SINGLETON
+  }
+}

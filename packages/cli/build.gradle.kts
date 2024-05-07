@@ -24,7 +24,7 @@ import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_22
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
@@ -67,7 +67,7 @@ elide {
   }
 
   jvm {
-    target = JVM_21
+    target = JVM_22
   }
 
   java {
@@ -86,8 +86,8 @@ elide {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
 }
 
 // Flags affecting this build script:
@@ -212,8 +212,8 @@ val ktCompilerArgs = listOf(
 )
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
   if (enableJpms) modularity.inferModulePath = true
 }
 
@@ -1429,12 +1429,12 @@ tasks {
   }
 
   dockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm21:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm22:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 
   optimizedDockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm21:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm22:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 }

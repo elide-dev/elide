@@ -12,5 +12,32 @@
  */
 package elide.runtime.gvm.internals.js.node
 
-class NodeInspectorTest {
+import kotlin.test.Test
+import kotlin.test.assertNotNull
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.node.inspector.NodeInspectorModule
+import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.testing.annotations.TestCase
+
+/** Tests for the built-in [NodeInspectorModule]. */
+@TestCase internal class NodeInspectorTest : NodeModuleConformanceTest<NodeInspectorModule>() {
+  override val moduleName: String get() = "inspector"
+  override fun provide(): NodeInspectorModule = NodeInspectorModule()
+  @Inject lateinit var inspector: NodeInspectorModule
+
+  // @TODO(sgammon): Not yet fully supported
+  override fun expectCompliance(): Boolean = false
+
+  override fun requiredMembers(): Sequence<String> = sequence {
+    yield("Session")
+    yield("close")
+    yield("console")
+    yield("open")
+    yield("url")
+    yield("waitForDebugger")
+  }
+
+  @Test override fun testInjectable() {
+    assertNotNull(inspector)
+  }
 }

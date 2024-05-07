@@ -6,12 +6,12 @@
 
 plugins {
   kotlin("jvm")
+  kotlin("kapt")
   id("com.github.johnrengelman.shadow")
 //  id("dev.elide.build.samples.backend")
 //  id("dev.elide.build.docker")
   id("io.micronaut.application")
   id("io.micronaut.aot")
-  id("com.google.devtools.ksp")
 }
 
 group = "dev.elide.samples"
@@ -19,6 +19,15 @@ version = rootProject.version as String
 
 application {
   mainClass.set("helloworld.App")
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
+}
+
+kotlin {
+  jvmToolchain(22)
 }
 
 micronaut {
@@ -46,8 +55,8 @@ configurations.all {
 }
 
 dependencies {
-  ksp(projects.tools.processor)
-  implementation(projects.packages.server)
+  kapt(mn.micronaut.inject.java)
+  implementation(framework.elide.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)

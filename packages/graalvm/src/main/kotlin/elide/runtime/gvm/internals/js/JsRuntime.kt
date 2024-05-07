@@ -10,8 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("JAVA_MODULE_DOES_NOT_READ_UNNAMED_MODULE")
-
 package elide.runtime.gvm.internals.js
 
 import io.micronaut.context.annotation.Requires
@@ -196,18 +194,58 @@ internal class JsRuntime @Inject constructor (
     internal val runtimeInit: AtomicReference<Source> = AtomicReference(null)
 
     // Core modules which patch Node.js builtins.
-    private val coreModules: Map<String, String> = mapOf(
-      "assert" to "/__runtime__/assert",
-      "buffer" to "/__runtime__/buffer",
-      "express" to "/__runtime__/express",
-      "fs" to "/__runtime__/fs",
-      "fs/promises" to "/__runtime__/fs/promises",
-      "inspector" to "/__runtime__/inspector",
-      "os" to "/__runtime__/os",
-      "path" to "/__runtime__/path",
-      "process" to "/__runtime__/process",
-      "util" to "/__runtime__/util",
-    )
+    private val coreModules: Map<String, String> = listOf(
+      "assert",
+      "assert/strict",
+      "buffer",
+      "child_process",
+      "cluster",
+      "console",
+      "crypto",
+      "dgram",
+      "diagnostics_channel",
+      "dns",
+      "dns/promises",
+      "domain",
+      "events",
+      "express",
+      "fs",
+      "fs/promises",
+      "http",
+      "http2",
+      "https",
+      "inspector",
+      "inspector/promises",
+      "module",
+      "net",
+      "os",
+      "path",
+      "perf_hooks",
+      "process",
+      "querystring",
+      "readline",
+      "readline/promises",
+      "stream",
+      "stream/consumers",
+      "stream/promises",
+      "stream/web",
+      "string_decoder",
+      "test",
+      "timers",
+      "timers/promises",
+      "tls",
+      "trace_events",
+      "tty",
+      "url",
+      "util",
+      "v8",
+      "vm",
+      "wasi",
+      "worker",
+      "zlib",
+    ).associateWith {
+      "/__runtime__/$it"
+    }
 
     init {
       check(!runtimeReady.get()) {

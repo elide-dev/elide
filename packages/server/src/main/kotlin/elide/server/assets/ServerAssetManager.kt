@@ -136,14 +136,14 @@ public class ServerAssetManager @Inject internal constructor(
       }
     }
     return withContext(Dispatchers.IO) {
-      async {
-        // pass off to the reader to read the asset
-        buildAssetResponse(
-          reader.readAsync(
-            asset,
-            request = request,
-          ).await()
-        )
+      // pass off to the reader to read the asset
+      reader.readAsync(
+        asset,
+        request = request,
+      ).let {
+        async {
+          buildAssetResponse(it.await())
+        }
       }
     }
   }

@@ -48,21 +48,6 @@ import kotlin.test.assertNotNull
     )
   }
 
-  @Test @Disabled fun testRunAsyncTask() {
-    val result = assertDoesNotThrow {
-      runBlocking {
-        AppExecutor.async {
-          return@async 5
-        }.await()
-      }
-    }
-    assertEquals(
-      5,
-      result,
-      "should be able to run task on `async` scheduler and retrieve result"
-    )
-  }
-
   @Test fun testRunIOTask() {
     val result = assertDoesNotThrow {
       runBlocking {

@@ -266,7 +266,7 @@ import elide.testing.annotations.TestCase
     )
   }
 
-  @Test @Ignore fun testGenerateEtagsStrong() {
+  @Test fun testGenerateEtagsStrong() {
     // standard config
     val (sample, indexer) = createIndexer(
       config = object : AssetConfig {
@@ -308,7 +308,7 @@ import elide.testing.annotations.TestCase
     assertTrue(etag.endsWith("\""), "weak etag should end with a double-quote")
   }
 
-  @Test @Ignore fun testRenderConditionalStrongETagMatch() {
+  @Test fun testRenderConditionalStrongETagMatch() {
     // standard config
     val cfg = object : AssetConfig {
       override fun isEnabled(): Boolean = true
@@ -371,7 +371,7 @@ import elide.testing.annotations.TestCase
     assertEquals(304, response.status.code, "should get HTTP 200 from conditional etag match")
   }
 
-  @Test @Ignore fun testRenderConditionalStrongETagMismatch() {
+  @Test fun testRenderConditionalStrongETagMismatch() {
     // standard config
     val cfg =object : AssetConfig {
       override fun isEnabled(): Boolean = true
@@ -623,7 +623,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Test @Ignore fun testRenderConditionalWeakETagMatchInStrongMode() {
+  @Test fun testRenderConditionalWeakETagMatchInStrongMode() {
     val (sample, indexerWithWeakEtags) = createIndexer(
       config = object : AssetConfig {
         override fun isEnabled(): Boolean = true

@@ -10,12 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.intrinsics
 
 import io.micronaut.context.annotation.DefaultScope
 import io.micronaut.context.annotation.Infrastructure
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import elide.annotations.Context
 import elide.annotations.Singleton
@@ -34,7 +32,6 @@ import elide.runtime.gvm.internals.GraalVMGuest
  *   supported guest language at this time.
  */
 @Singleton
-@Introspected
 @Infrastructure
 @MustBeDocumented
 @ReflectiveAccess

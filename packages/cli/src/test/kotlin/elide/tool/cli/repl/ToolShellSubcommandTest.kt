@@ -22,7 +22,7 @@ import elide.tool.cli.AbstractSubtoolTest
 import elide.tool.cli.cmd.repl.ToolShellCommand
 
 /** Tests for the Elide tool `shell`/`repl` subcommand. */
-@Ignore @TestCase class ToolShellSubcommandTest : AbstractSubtoolTest() {
+@TestCase class ToolShellSubcommandTest : AbstractSubtoolTest() {
   @Inject internal lateinit var shell: ToolShellCommand
 
   override fun subcommand(): Runnable = shell

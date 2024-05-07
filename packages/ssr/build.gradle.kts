@@ -64,6 +64,7 @@ dependencies {
   jvmTest {
     implementation(kotlin("test"))
     implementation(projects.packages.test)
+    implementation(libs.graalvm.js.language)
     implementation(libs.junit.jupiter.api)
     implementation(libs.junit.jupiter.params)
     implementation(libs.kotlinx.serialization.core)

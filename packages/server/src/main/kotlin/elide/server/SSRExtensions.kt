@@ -34,7 +34,7 @@ import elide.server.ssr.ServerSSRRenderer
 public const val EMBEDDED_ROOT: String = "embedded"
 
 // SSR script name default.
-private const val SSR_SCRIPT_DEFAULT: String = "elide-ssr.mjs"
+private const val SSR_SCRIPT_DEFAULT: String = "entry.mjs"
 
 // Default base member for SSR invocation.
 public val DEFAULT_INVOCATION_BASE: String? = null

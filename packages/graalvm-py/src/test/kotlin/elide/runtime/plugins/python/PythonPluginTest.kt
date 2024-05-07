@@ -14,13 +14,12 @@
 package elide.runtime.plugins.python
 
 import org.junit.jupiter.api.Test
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 
 @OptIn(DelicateElideApi::class)
-@Ignore internal class PythonPluginTest {
+internal class PythonPluginTest {
   @Test fun testExecution() {
     val engine = PolyglotEngine { install(Python) }
     val context = engine.acquire()

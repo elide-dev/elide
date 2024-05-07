@@ -9,7 +9,7 @@ import io.micronaut.gradle.MicronautRuntime.NETTY
 
 plugins {
   kotlin("jvm")
-  id(libs.plugins.ksp.get().pluginId)
+  kotlin("kapt")
   id("io.micronaut.application")
   id("io.micronaut.aot")
   id("io.micronaut.graalvm")
@@ -20,13 +20,22 @@ plugins {
 group = "dev.elide.samples"
 version = rootProject.version as String
 
-elide {
+java {
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
+}
+
+kotlin {
+  jvmToolchain(22)
+}
+
+elideApp {
   injectDependencies = false
 
   server {
     assets {
       script("scripts.ui") {
-        from(projects.samples.fullstack.react.frontend)
+        from(projects.fullstack.react.frontend)
       }
     }
   }
@@ -58,7 +67,8 @@ micronaut {
 }
 
 dependencies {
-  implementation(projects.packages.server)
+  kapt(mn.micronaut.inject.java)
+  implementation(framework.elide.server)
   implementation(mn.micronaut.context)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)

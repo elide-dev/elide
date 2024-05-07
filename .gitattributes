@@ -5,9 +5,10 @@
 *.owl linguist-language=Web-Ontology-Language
 *.BUILD -linguist-detectable
 *.bzl linguist-language=Starlark linguist-detectable
-*.lockfile linguist-generated
-pnpm-lock.yaml linguist-generated
-gradle/verification* linguist-generated
+*.lockfile linguist-generated binary
+*.lock linguist-generated binary
+pnpm-lock.yaml linguist-generated binary
+gradle/verification* linguist-generated binary
 **/package-info.java -linguist-detectable linguist-generated
 samples/** -linguist-detectable
 tools/tsc/src/main/resources/META-INF/elide/embedded/tools/tsc/entry.mjs linguist-generated

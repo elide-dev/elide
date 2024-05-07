@@ -17,7 +17,21 @@ import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyIterable
 import org.graalvm.polyglot.proxy.ProxyObject
+import java.nio.ByteBuffer
+import elide.runtime.gvm.internals.node.buffer.NodeBufferFactory
 import elide.vm.annotations.Polyglot
+
+// Keys on `Buffer` objects.
+private val BUFFER_KEYS = arrayOf(
+  "length",
+  "byteLength",
+  "compare",
+  "concat",
+  "copy",
+  "isBuffer",
+  "isEncoding",
+  "poolSize",
+)
 
 /**
  * # Node: Buffer
@@ -133,19 +147,61 @@ public interface Buffer : java.io.Serializable, ProxyObject, ProxyArray, ProxyIn
    */
   @get:Polyglot public val length: Int
 
-  override fun getMember(key: String?): Any {
-    TODO("Not yet implemented")
-  }
-
-  override fun getMemberKeys(): Any {
-    TODO("Not yet implemented")
-  }
-
-  override fun hasMember(key: String?): Boolean {
-    TODO("Not yet implemented")
-  }
-
+  override fun getMemberKeys(): Array<String> = BUFFER_KEYS
+  override fun hasMember(key: String): Boolean = key in BUFFER_KEYS
   override fun putMember(key: String?, value: Value?) {
-    TODO("Not yet implemented")
+    throw UnsupportedOperationException("Buffer objects are read-only.")
+  }
+
+  /** Host-side factory methods. */
+  public companion object {
+    /**
+     * Create a buffer wrapping the provided [byteArray].
+     *
+     * @param byteArray The byte array to wrap.
+     * @return A new buffer wrapping the provided byte array.
+     */
+    @JvmStatic public fun of(byteArray: ByteArray): Buffer = NodeBufferFactory.factory().of(byteArray)
+
+    /**
+     * Create a buffer wrapping the provided [buf].
+     *
+     * @param buf The byte buffer to wrap.
+     * @return A new buffer wrapping the provided byte buffer.
+     */
+    @JvmStatic public fun of(buf: ByteBuffer): Buffer = NodeBufferFactory.factory().of(buf)
+
+    /**
+     * Create an empty buffer.
+     *
+     * @return A new empty buffer.
+     */
+    @JvmStatic public fun empty(): Buffer = NodeBufferFactory.factory().empty()
+
+    /**
+     * Create a mutable buffer wrapping the provided [byteArray].
+     *
+     * @param byteArray The byte array to wrap.
+     * @return A new mutable buffer wrapping the provided byte array.
+     */
+    @JvmStatic public fun mutable(byteArray: ByteArray): Buffer = NodeBufferFactory.factory().ofMutable(byteArray)
+
+    /**
+     * Create a mutable buffer wrapping the provided [buf].
+     *
+     * @param buf The byte buffer to wrap.
+     * @return A new mutable buffer wrapping the provided byte buffer.
+     */
+    @JvmStatic public fun mutable(buf: ByteBuffer): Buffer = NodeBufferFactory.factory().ofMutable(buf)
+
+    /**
+     * Allocate a new buffer with the specified [size].
+     *
+     * @param size The size of the buffer to allocate.
+     * @return A new buffer with the specified size.
+     */
+    @JvmStatic public fun alloc(size: Int = 0, direct: Boolean? = null): Buffer {
+      TODO("`Buffer.alloc` is not implemented yet")
+    }
   }
 }

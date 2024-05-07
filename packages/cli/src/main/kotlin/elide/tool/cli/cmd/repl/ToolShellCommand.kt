@@ -12,7 +12,6 @@
  */
 
 @file:Suppress(
-  "JAVA_MODULE_DOES_NOT_READ_UNNAMED_MODULE",
   "UNUSED_PARAMETER",
 )
 

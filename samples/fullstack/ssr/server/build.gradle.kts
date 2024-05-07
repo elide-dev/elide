@@ -10,7 +10,7 @@ import io.micronaut.gradle.MicronautRuntime.NETTY
 
 plugins {
   kotlin("jvm")
-  id(libs.plugins.ksp.get().pluginId)
+  kotlin("kapt")
   id("dev.elide.buildtools.plugin")
   id("io.micronaut.application")
   id("io.micronaut.graalvm")
@@ -22,15 +22,11 @@ group = "dev.elide.samples"
 version = rootProject.version as String
 val devMode = (project.property("elide.buildMode") ?: "dev") != "prod"
 
-kotlin {
-  // nothing at this time
-}
-
 application {
   mainClass.set("fullstack.ssr.App")
 }
 
-elide {
+elideApp {
   // we manage deps internally for this sample (it's embedded within the elide codebase)
   injectDependencies = false
 
@@ -43,9 +39,18 @@ elide {
 
   server {
     ssr(tools.elide.assets.EmbeddedScriptLanguage.JS) {
-      bundle(projects.samples.fullstack.ssr.node)
+      bundle(projects.fullstack.ssr.node)
     }
   }
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
+}
+
+kotlin {
+  jvmToolchain(22)
 }
 
 micronaut {
@@ -128,10 +133,12 @@ graalvmNative {
 }
 
 dependencies {
-  implementation(projects.packages.base)
-  implementation(projects.packages.server)
-  implementation(projects.packages.graalvm)
+  kapt(mn.micronaut.inject.java)
+  implementation(framework.elide.base)
+  implementation(framework.elide.server)
+  implementation(framework.elide.graalvm)
   implementation(mn.micronaut.context)
+  implementation(mn.micronaut.reactor)
   implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)

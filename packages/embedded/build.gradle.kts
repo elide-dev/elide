@@ -5,7 +5,6 @@ plugins {
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.buildConfig)
 
-  id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")
 }
 
@@ -103,3 +102,4 @@ tasks.test {
   // suppress Panama-related warnings when using downcalls
   jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
+

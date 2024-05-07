@@ -35,9 +35,9 @@ kotlin {
 }
 
 dependencies {
-  implementation(projects.packages.base)
-  implementation(projects.packages.frontend)
-  implementation(projects.packages.graalvmReact)
+  implementation(framework.elide.base)
+  implementation(framework.elide.frontend)
+  implementation(framework.elide.graalvm.react)
 
   implementation(kotlin("stdlib-js"))
   implementation(libs.kotlinx.wrappers.css)

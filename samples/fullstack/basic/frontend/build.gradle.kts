@@ -16,6 +16,7 @@ val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 kotlin {
   js(IR) {
     binaries.executable()
+
     browser {
       commonWebpackConfig {
         sourceMaps = false
@@ -34,7 +35,6 @@ kotlin {
 }
 
 dependencies {
-  implementation(projects.packages.base)
   implementation(kotlin("stdlib-js"))
   implementation(libs.kotlinx.wrappers.browser)
 }

@@ -80,14 +80,14 @@ import elide.tool.io.RuntimeWorkdirManager
     " Usage:  ",
     "    or:  elide @|bold,fg(cyan) info|help|discord|bug...|@ [OPTIONS]",
     "    or:  elide @|bold,fg(yellow) srcfile.<js|py|rb|kt|java|wasm|...>|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] [FILE]",
+    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
-    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [FILE]",
+    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ --js [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) run|repl|@ --language=[@|bold,fg(green) JS|@] [OPTIONS] [FILE]",
-    "    or:  elide @|bold,fg(cyan) run|repl|@ --languages=[@|bold,fg(green) JS|@,@|bold,fg(green) PYTHON|@,...] [OPTIONS] [FILE]",
+    "    or:  elide @|bold,fg(cyan) run|repl|@ --language=[@|bold,fg(green) JS|@] [OPTIONS] [FILE] [ARG...]",
+    "    or:  elide @|bold,fg(cyan) run|repl|@ --languages=[@|bold,fg(green) JS|@,@|bold,fg(green) PYTHON|@,...] [OPTIONS] [FILE] [ARG...]",
   ],
 )
 @Suppress("MemberVisibilityCanBePrivate")
@@ -228,6 +228,16 @@ import elide.tool.io.RuntimeWorkdirManager
   )
   internal var srcfile: String? = null
 
+  /** Script file arguments. */
+  @Parameters(
+    index = "1",
+    description = ["Arguments to pass"],
+    scope = ScopeType.INHERIT,
+    arity = "0..*",
+    paramLabel = "ARG",
+  )
+  internal var args: List<String>? = null
+
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     // proxy to the `shell` command for a naked run
     return beanContext.getBean(ToolShellCommand::class.java).apply {
@@ -244,6 +254,9 @@ import elide.tool.io.RuntimeWorkdirManager
       srcfile?.let {
         if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
           runnable = it
+          if (args?.isNotEmpty() == true) {
+            arguments = args!!
+          }
         } else {
           languageHint = it
         }

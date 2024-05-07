@@ -18,6 +18,12 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
 
 @DelicateElideApi public class PythonConfig : AbstractLanguageConfig() {
+  /** Executable which should be returned by `sys.executable`. */
+  public var executable: String? = null
+
+  /** Full suite of executable args as presented by `sys.argv`. */
+  public var executableList: List<String>? = null
+
   /** Apply init-time settings to a new [context]. */
   internal fun applyTo(context: PolyglotContext) {
     // register intrinsics

@@ -13,6 +13,7 @@
 
 package elide.runtime.core.internals.graalvm
 
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.internals.MutableEngineLifecycle
@@ -40,11 +41,17 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   /** Internal mutable set of enabled languages. */
   private val langs: MutableSet<GuestLanguage> = mutableSetOf()
 
+  /** All main entrypoint arguments. */
+  private val entrypointArgs: AtomicReference<Array<out String>> = AtomicReference(null)
+
   /** A set of languages enabled for use in the engine. */
   internal val languages: Set<GuestLanguage> get() = langs
 
   /** Runtime info, resolved from GraalVM static properties. */
   override val hostRuntime: HostRuntime = GraalVMRuntime()
+
+  /** Arguments to provide to guest code. */
+  val arguments: Array<out String> get() = entrypointArgs.get() ?: emptyArray()
 
   override fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit): I {
     require(plugin.key.id !in plugins) { "A plugin with the provided key is already registered" }
@@ -62,5 +69,9 @@ import elide.runtime.core.internals.MutableEngineLifecycle
 
   override fun enableLanguage(language: GuestLanguage) {
     langs.add(language)
+  }
+
+  override fun args(args: Array<String>) {
+    entrypointArgs.set(args)
   }
 }

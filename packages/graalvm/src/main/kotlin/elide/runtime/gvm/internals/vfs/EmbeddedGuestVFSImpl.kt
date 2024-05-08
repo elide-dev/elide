@@ -39,7 +39,6 @@ import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
 import java.security.MessageDigest
-import java.util.SortedMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
@@ -100,8 +99,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
   backing: FileSystem,
   private val tree: FilesystemInfo,
   private val deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
-  private val bundles: Map<Int, BundleInfo> = sortedMapOf(),
-  private val knownPathMap: Map<String, VfsObjectInfo> = sortedMapOf(),
+  private val bundles: Map<Int, BundleInfo> = emptyMap(),
+  private val knownPathMap: Map<String, VfsObjectInfo> = emptyMap(),
 ) : AbstractDelegateVFS<EmbeddedGuestVFSImpl>(config, backing) {
   /** Static settings for the embedded VFS implementation. */
   internal object Settings {

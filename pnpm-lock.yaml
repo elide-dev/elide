@@ -24,6 +24,9 @@ importers:
       jszip:
         specifier: 3.10.1
         version: 3.10.1
+      mitata:
+        specifier: git+https://github.com/elide-dev/mitata.git#e886e79f03987d452a90e6a6978e4bbe9ea68198
+        version: https://codeload.github.com/elide-dev/mitata/tar.gz/e886e79f03987d452a90e6a6978e4bbe9ea68198
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -63,7 +66,7 @@ importers:
         version: 20.12.10
       '@typescript-eslint/eslint-plugin':
         specifier: 7.8.0
-        version: 7.8.0(@typescript-eslint/parser@7.8.0)(eslint@8.57.0)(typescript@5.4.5)
+        version: 7.8.0(@typescript-eslint/parser@7.8.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/parser':
         specifier: 7.8.0
         version: 7.8.0(eslint@8.57.0)(typescript@5.4.5)
@@ -84,7 +87,7 @@ importers:
         version: 15.2.2
       postcss-cli:
         specifier: 11.0.0
-        version: 11.0.0(postcss@8.4.38)
+        version: 11.0.0(jiti@1.21.0)(postcss@8.4.38)
       prettier:
         specifier: 3.2.5
         version: 3.2.5
@@ -151,7 +154,7 @@ importers:
         version: 3.0.1(esbuild@0.21.1)
       '@mdx-js/loader':
         specifier: 3.0.1
-        version: 3.0.1(webpack@5.91.0)
+        version: 3.0.1(webpack@5.91.0(esbuild@0.21.1))
       '@types/react':
         specifier: 18.3.1
         version: 18.3.1
@@ -1890,6 +1893,10 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==, tarball: https://registry.npmjs.org/minimist/-/minimist-1.2.8.tgz}
 
+  mitata@https://codeload.github.com/elide-dev/mitata/tar.gz/e886e79f03987d452a90e6a6978e4bbe9ea68198:
+    resolution: {tarball: https://codeload.github.com/elide-dev/mitata/tar.gz/e886e79f03987d452a90e6a6978e4bbe9ea68198}
+    version: 0.1.12-elide
+
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==, tarball: https://registry.npmjs.org/ms/-/ms-2.0.0.tgz}
 
@@ -2861,7 +2868,7 @@ snapshots:
       '@commitlint/types': 19.0.3
       chalk: 5.3.0
       cosmiconfig: 9.0.0(typescript@5.4.5)
-      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.12.10)(cosmiconfig@9.0.0)(typescript@5.4.5)
+      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.12.10)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -3049,7 +3056,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mdx-js/loader@3.0.1(webpack@5.91.0)':
+  '@mdx-js/loader@3.0.1(webpack@5.91.0(esbuild@0.21.1))':
     dependencies:
       '@mdx-js/mdx': 3.0.1
       source-map: 0.7.4
@@ -3184,7 +3191,7 @@ snapshots:
 
   '@types/unist@3.0.2': {}
 
-  '@typescript-eslint/eslint-plugin@7.8.0(@typescript-eslint/parser@7.8.0)(eslint@8.57.0)(typescript@5.4.5)':
+  '@typescript-eslint/eslint-plugin@7.8.0(@typescript-eslint/parser@7.8.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)':
     dependencies:
       '@eslint-community/regexpp': 4.10.0
       '@typescript-eslint/parser': 7.8.0(eslint@8.57.0)(typescript@5.4.5)
@@ -3199,6 +3206,7 @@ snapshots:
       natural-compare: 1.4.0
       semver: 7.6.1
       ts-api-utils: 1.3.0(typescript@5.4.5)
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -3211,6 +3219,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 7.8.0
       debug: 4.3.4
       eslint: 8.57.0
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -3227,6 +3236,7 @@ snapshots:
       debug: 4.3.4
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.4.5)
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -3243,6 +3253,7 @@ snapshots:
       minimatch: 9.0.4
       semver: 7.6.1
       ts-api-utils: 1.3.0(typescript@5.4.5)
+    optionalDependencies:
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -3644,7 +3655,7 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig-typescript-loader@5.0.0(@types/node@20.12.10)(cosmiconfig@9.0.0)(typescript@5.4.5):
+  cosmiconfig-typescript-loader@5.0.0(@types/node@20.12.10)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5):
     dependencies:
       '@types/node': 20.12.10
       cosmiconfig: 9.0.0(typescript@5.4.5)
@@ -3657,6 +3668,7 @@ snapshots:
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
+    optionalDependencies:
       typescript: 5.4.5
 
   cross-spawn@7.0.3:
@@ -4832,6 +4844,8 @@ snapshots:
 
   minimist@1.2.8: {}
 
+  mitata@https://codeload.github.com/elide-dev/mitata/tar.gz/e886e79f03987d452a90e6a6978e4bbe9ea68198: {}
+
   ms@2.0.0: {}
 
   ms@2.1.2: {}
@@ -4965,7 +4979,7 @@ snapshots:
       postcss-selector-parser: 6.0.16
       postcss-value-parser: 4.2.0
 
-  postcss-cli@11.0.0(postcss@8.4.38):
+  postcss-cli@11.0.0(jiti@1.21.0)(postcss@8.4.38):
     dependencies:
       chokidar: 3.6.0
       dependency-graph: 0.11.0
@@ -4974,7 +4988,7 @@ snapshots:
       globby: 14.0.1
       picocolors: 1.0.0
       postcss: 8.4.38
-      postcss-load-config: 5.1.0(postcss@8.4.38)
+      postcss-load-config: 5.1.0(jiti@1.21.0)(postcss@8.4.38)
       postcss-reporter: 7.1.0(postcss@8.4.38)
       pretty-hrtime: 1.0.3
       read-cache: 1.0.0
@@ -5014,11 +5028,13 @@ snapshots:
     dependencies:
       postcss: 8.4.38
 
-  postcss-load-config@5.1.0(postcss@8.4.38):
+  postcss-load-config@5.1.0(jiti@1.21.0)(postcss@8.4.38):
     dependencies:
       lilconfig: 3.1.1
-      postcss: 8.4.38
       yaml: 2.4.2
+    optionalDependencies:
+      jiti: 1.21.0
+      postcss: 8.4.38
 
   postcss-merge-longhand@6.0.5(postcss@8.4.38):
     dependencies:
@@ -5490,15 +5506,16 @@ snapshots:
 
   tapable@2.2.1: {}
 
-  terser-webpack-plugin@5.3.10(esbuild@0.21.1)(webpack@5.91.0):
+  terser-webpack-plugin@5.3.10(esbuild@0.21.1)(webpack@5.91.0(esbuild@0.21.1)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
-      esbuild: 0.21.1
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
       terser: 5.31.0
       webpack: 5.91.0(esbuild@0.21.1)
+    optionalDependencies:
+      esbuild: 0.21.1
 
   terser@5.31.0:
     dependencies:
@@ -5653,7 +5670,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(esbuild@0.21.1)(webpack@5.91.0)
+      terser-webpack-plugin: 5.3.10(esbuild@0.21.1)(webpack@5.91.0(esbuild@0.21.1))
       watchpack: 2.4.1
       webpack-sources: 3.2.3
     transitivePeerDependencies:

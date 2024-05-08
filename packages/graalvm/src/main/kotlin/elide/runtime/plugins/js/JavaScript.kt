@@ -50,6 +50,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
     enableOptions(
+      "js.allow-eval",
       "js.async-context",
       "js.async-iterator-helpers",
       "js.async-stack-traces",
@@ -78,7 +79,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     )
 
     disableOptions(
-      "js.allow-eval",
       "js.annex-b",
       "js.console",
       "js.graal-builtin",

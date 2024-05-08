@@ -29,6 +29,12 @@ import elide.runtime.core.PolyglotContext
   /** An immutable map of the intrinsics defined using the [bindings] function. */
   protected val intrinsicBindings: Map<String, Any> get() = mutableBindings
 
+  /** Executable which should be returned by `sys.executable`. */
+  public var executable: String? = null
+
+  /** Full suite of executable args as presented by `sys.argv`. */
+  public var executableList: List<String>? = null
+
   /** Path to native libraries and resources. */
   public var resourcesPath: String? = null
 

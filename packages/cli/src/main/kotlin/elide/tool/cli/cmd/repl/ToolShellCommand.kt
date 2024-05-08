@@ -1676,6 +1676,8 @@ import elide.tool.project.ProjectManager
         JS -> install(elide.runtime.plugins.js.JavaScript) {
           logging.debug("Configuring JS VM")
           resourcesPath = GVM_RESOURCES
+          executable = cmd
+          executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
           jsSettings.apply(this)
         }
@@ -1684,6 +1686,8 @@ import elide.tool.project.ProjectManager
           install(elide.runtime.plugins.ruby.Ruby) {
             logging.debug("Configuring Ruby VM")
             resourcesPath = GVM_RESOURCES
+            executable = cmd
+            executableList = listOf(cmd).plus(args)
             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
           }
         }

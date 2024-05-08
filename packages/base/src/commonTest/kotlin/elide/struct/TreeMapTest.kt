@@ -23,6 +23,22 @@ class TreeMapTest {
     return RedBlackTreeMap<K, V>().apply { entries.forEach { put(it.first, it.second) } }
   }
 
+  @Test fun testStubbed() {
+    val map = emptySortedMap<String, String>()
+    assertTrue(map.isEmpty())
+    assertEquals(0, map.size)
+
+    assertTrue(map.keys.isEmpty())
+    assertTrue(map.values.isEmpty())
+    assertTrue(map.entries.isEmpty())
+
+    assertFalse(map.isNotEmpty())
+    assertFalse(map.containsKey("key"))
+    assertFalse(map.containsValue("value"))
+
+    assertNull(map["key"])
+  }
+
   @Test fun testEmpty() {
     val map = RedBlackTreeMap<String, String>()
     assertTrue(map.isEmpty())

@@ -59,7 +59,7 @@ internal abstract class BaseJsMultiMap<K: Any, V>(
   override fun isEmpty(): Boolean = backingMap.isEmpty()
 
   /** @inheritDoc */
-  override val entries: Set<Map.Entry<K, V>> get() = backingMap.entries.flatMap {
+  @get:Polyglot override val entries: Set<Map.Entry<K, V>> get() = backingMap.entries.flatMap {
     it.value.map { valueEntry ->
       object: Map.Entry<K, V> {
         override val key: K = it.key
@@ -68,38 +68,28 @@ internal abstract class BaseJsMultiMap<K: Any, V>(
     }
   }.toSet()
 
-  /** @inheritDoc */
-  override val keys: Set<K> get() = backingMap.keys
+  @get:Polyglot override val keys: Set<K> get() = backingMap.keys
 
-  /** @inheritDoc */
-  override val values: Collection<V> get() = backingMap.values.flatten()
+  @get:Polyglot override val values: Collection<V> get() = backingMap.values.flatten()
 
-  /** @inheritDoc */
   @get:Polyglot override val size: Int get() = backingMap.size
 
-  /** @inheritDoc */
-  override fun get(key: K): V? = backingMap[key]?.firstOrNull()
+  @Polyglot override fun get(key: K): V? = backingMap[key]?.firstOrNull()
 
-  /** @inheritDoc */
   override fun getOrDefault(key: K, defaultValue: V): V = backingMap[key]?.firstOrNull() ?: defaultValue
 
-  /** @inheritDoc */
   @Polyglot override fun getAll(key: K): List<V> = backingMap[key]?.toImmutableList() ?: emptyList()
 
-  /** @inheritDoc */
-  override fun has(key: K): Boolean = backingMap.containsKey(key)
+  @Polyglot override fun has(key: K): Boolean = backingMap.containsKey(key)
 
-  /** @inheritDoc */
   override fun keys(): JsIterator<K> = JsIterator.JsIteratorFactory.forIterator(
     backingMap.keys.iterator()
   )
 
-  /** @inheritDoc */
   override fun values(): JsIterator<V> = JsIterator.JsIteratorFactory.forIterator(
     backingMap.values.flatten().iterator()
   )
 
-  /** @inheritDoc */
   override fun entries(): JsIterator<MapLike.Entry<K, V>> = JsIterator.JsIteratorFactory.forIterator(
     backingMap.entries.flatMap {
       it.value.map { valueEntry ->
@@ -111,16 +101,12 @@ internal abstract class BaseJsMultiMap<K: Any, V>(
     }.iterator()
   )
 
-  /** @inheritDoc */
-  override fun forEach(op: (MapLike.Entry<K, V>) -> Unit) = entries.forEach {
+  @Polyglot override fun forEach(op: (MapLike.Entry<K, V>) -> Unit) = entries.forEach {
     op.invoke(BaseJsMap.entry(
       it.key,
       it.value,
     ))
   }
 
-  /**
-   * TBD.
-   */
   @Polyglot abstract override fun toString(): String
 }

@@ -16,6 +16,8 @@ import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import kotlin.reflect.KClass
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.FrameworkFeature
+import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
 import elide.runtime.gvm.internals.node.asserts.NodeAssert
 import elide.runtime.gvm.internals.node.buffer.NodeBufferModuleFacade
 import elide.runtime.gvm.internals.node.childProcess.NodeChildProcess
@@ -50,8 +52,11 @@ import elide.runtime.gvm.internals.node.stream.NodeStreamPromises
 import elide.runtime.gvm.internals.node.stream.NodeWebStreams
 import elide.runtime.gvm.internals.node.stringDecoder.NodeStringDecoder
 import elide.runtime.gvm.internals.node.test.NodeTest
+import elide.runtime.gvm.internals.node.url.NodeURL
 import elide.runtime.gvm.internals.node.worker.NodeWorker
 import elide.runtime.gvm.internals.node.zlib.NodeZlib
+import elide.runtime.intrinsics.js.URL
+import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.node.*
 
 /** GraalVM feature which enables reflective access to built-in Node modules. */
@@ -189,6 +194,15 @@ import elide.runtime.intrinsics.js.node.*
     // `test`
     cls(TestAPI::class)
     cls(NodeTest::class)
+
+    // `url`
+    cls(URLAPI::class)
+    cls(NodeURL::class)
+    cls(URL::class)
+    cls(URLIntrinsic::class)
+    cls(URLSearchParams::class)
+    cls(URLSearchParamsIntrinsic.URLSearchParams::class)
+    cls(URLSearchParamsIntrinsic.MutableURLSearchParams::class)
 
     // `worker`
     cls(WorkerAPI::class)

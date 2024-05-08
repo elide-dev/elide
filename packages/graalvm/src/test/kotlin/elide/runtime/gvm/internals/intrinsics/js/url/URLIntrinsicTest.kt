@@ -1111,4 +1111,13 @@ import elide.testing.annotations.TestCase
       url.lock()  // cannot lock if already locked
     }
   }
+
+  @Test fun testURLSymbolPresentGlobally() = dual {
+    // no-op
+  }.guest {
+    // language=javascript
+    """
+      test(URL).isNotNull();
+    """
+  }
 }

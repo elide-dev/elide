@@ -44,6 +44,13 @@ public data class ReadFileOptions(
 }
 
 /**
+ * ## Callback: `fs.access`
+ *
+ * Describes the callback function shape which is provided to the `access` operation.
+ */
+public typealias AccessCallback = (err: AbstractJsException?) -> Unit
+
+/**
  * ## Callback: `fs.readFile`
  *
  * Describes the callback function shape which is provided to the `readFile` operation.

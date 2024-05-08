@@ -80,6 +80,7 @@ import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cfg.ElideCLITool
+import elide.tool.cli.cfg.ElideCLITool.GVM_RESOURCES
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
 import elide.tool.cli.options.EngineJavaScriptOptions
@@ -1674,6 +1675,7 @@ import elide.tool.project.ProjectManager
         // Primary Engines
         JS -> install(elide.runtime.plugins.js.JavaScript) {
           logging.debug("Configuring JS VM")
+          resourcesPath = GVM_RESOURCES
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
           jsSettings.apply(this)
         }
@@ -1681,6 +1683,7 @@ import elide.tool.project.ProjectManager
         RUBY -> ignoreNotInstalled {
           install(elide.runtime.plugins.ruby.Ruby) {
             logging.debug("Configuring Ruby VM")
+            resourcesPath = GVM_RESOURCES
             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
           }
         }
@@ -1689,6 +1692,7 @@ import elide.tool.project.ProjectManager
           install(elide.runtime.plugins.python.Python) {
             logging.debug("Configuring Python VM")
             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+            resourcesPath = GVM_RESOURCES
             executable = cmd
             executableList = listOf(cmd).plus(args)
           }

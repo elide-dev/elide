@@ -65,6 +65,7 @@ google-api-common = "2.30.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
 graalvm = "24.1.0-SNAPSHOT"
+graalvm-stable = "24.0.1"
 graalvm-metadata = "0.3.6"
 graalvm-pin = "24.1.0-SNAPSHOT"
 graalvm-plugin = "0.10.1"
@@ -460,10 +461,10 @@ graalvm-truffle-api = { group = "org.graalvm.truffle", name = "truffle-api", ver
 graalvm-truffle-enterprise = { group = "org.graalvm.truffle", name = "truffle-enterprise", version.ref = "graalvm" }
 graalvm-truffle-nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm" }
 graalvm-truffle-nfi-libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-darwin-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-aarch64", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-darwin-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-amd64", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-linux-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-aarch64", version.ref = "graalvm" }
-graalvm-truffle-nfi-native-linux-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-amd64", version.ref = "graalvm" }
+graalvm-truffle-nfi-native-darwin-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-aarch64", version.ref = "graalvm-stable" }
+graalvm-truffle-nfi-native-darwin-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-amd64", version.ref = "graalvm-stable" }
+graalvm-truffle-nfi-native-linux-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-aarch64", version.ref = "graalvm-stable" }
+graalvm-truffle-nfi-native-linux-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-amd64", version.ref = "graalvm-stable" }
 graalvm-truffle-nfi-panama = { group = "org.graalvm.truffle", name = "truffle-nfi-panama", version.ref = "graalvm" }
 graalvm-truffle-processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm" }
 graalvm-truffle-runtime-svm = { group = "org.graalvm.nativeimage", name = "truffle-runtime-svm", version.ref = "graalvm" }

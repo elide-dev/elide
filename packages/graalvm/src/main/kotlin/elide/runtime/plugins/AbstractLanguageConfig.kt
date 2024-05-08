@@ -30,6 +30,9 @@ import elide.runtime.core.PolyglotContext
   /** An immutable map of the intrinsics defined using the [bindings] function. */
   protected val intrinsicBindings: Map<String, Any> get() = mutableBindings
 
+  /** Path to native libraries and resources. */
+  public var resourcesPath: String? = null
+
   /**
    * Configure intrinsic bindings for this language. These bindings will be available as top-level symbols in every
    * context, with the names provided by the specified keys.

@@ -62,16 +62,25 @@ import elide.runtime.plugins.vfs.Vfs
 
     builder.setOptions(
       "python.HPyBackend" to "nfi",
-      "python.Sha3ModuleBackend" to "native",
-      "python.PosixModuleBackend" to PYTHON_POSIX_BACKEND,
+      "python.PosixModuleBackend" to "java",
     )
-
     config.resourcesPath?.let {
       builder.setOptions(
+        "python.HPyBackend" to "nfi",
+        "python.Sha3ModuleBackend" to "native",
+        "python.PosixModuleBackend" to "native",
+      )
+
+      builder.setOptions(
         "python.CoreHome" to "$it/python/python-home/lib/graalpy24.1",
+        "python.SysPrefix" to "$it/python/python-home/lib/graalpy24.1",
+        "python.StdLibHome" to "$it/python/python-home/lib/python3.11",
+        "python.JNILibrary" to "$it/python/python-home/lib/graalpy24.1",
+        "python.CAPI" to "$it/python/python-home",
         "python.PythonHome" to "$it/python/python-home",
       )
     }
+
     config.executable?.let {
       builder.setOptions("python.Executable" to it)
     }
@@ -84,7 +93,6 @@ import elide.runtime.plugins.vfs.Vfs
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
-    private const val PYTHON_POSIX_BACKEND = "native"
     private const val ENABLE_EXPERIMENTAL = true
     private const val ENABLE_PANAMA = false
     private const val GPY_LIST_SEPARATOR = "🏆"

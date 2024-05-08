@@ -15,6 +15,7 @@ package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
+import io.netty.handler.codec.http.HttpDecoderConfig
 import io.netty.handler.codec.http.HttpRequestDecoder
 import io.netty.handler.codec.http.HttpResponseEncoder
 import elide.runtime.core.DelicateElideApi
@@ -28,10 +29,11 @@ import elide.runtime.core.DelicateElideApi
 
   /** Configure a new [HttpRequestDecoder] to be added to the channel pipeline. */
   private fun createHttpDecoder() = HttpRequestDecoder(
-    /* maxInitialLineLength = */ MAX_INITIAL_LINE_LENGTH,
-    /* maxHeaderSize = */ MAX_HEADER_SIZE,
-    /* maxChunkSize = */  MAX_CHUNK_SIZE,
-    /* validateHeaders = */VALIDATE_HEADERS,
+    HttpDecoderConfig().apply {
+      maxInitialLineLength = MAX_INITIAL_LINE_LENGTH
+      maxHeaderSize = MAX_HEADER_SIZE
+      maxChunkSize = MAX_CHUNK_SIZE
+    }
   )
 
   override fun initChannel(channel: SocketChannel) {
@@ -59,8 +61,5 @@ import elide.runtime.core.DelicateElideApi
 
     /** Maximum chunk length (in bytes) allowed by the request decoder. */
     private const val MAX_CHUNK_SIZE = 8192
-
-    /** Whether to validate incoming request headers. */
-    private const val VALIDATE_HEADERS = false
   }
 }

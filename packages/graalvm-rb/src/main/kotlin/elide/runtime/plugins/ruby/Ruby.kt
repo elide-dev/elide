@@ -20,7 +20,6 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotContextBuilder
-import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.plugins.AbstractLanguagePlugin

@@ -50,20 +50,26 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
     enableOptions(
+      "js.async-context",
+      "js.async-iterator-helpers",
       "js.async-stack-traces",
       "js.atomics",
+      "js.atomics-wait-async",
       "js.bind-member-functions",
       "js.class-fields",
       "js.direct-byte-buffer",
-      "js.disable-eval",
       "js.error-cause",
       "js.esm-eval-returns-exports",
       "js.foreign-hash-properties",
       "js.foreign-object-prototype",
       "js.import-attributes",
       "js.intl-402",
+      "js.iterator-helpers",
       "js.json-modules",
+      "js.lazy-translation",
+      "js.new-set-methods",
       "js.performance",
+      "js.scope-optimization",
       "js.shadow-realm",
       "js.shared-array-buffer",
       "js.strict",
@@ -72,6 +78,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     )
 
     disableOptions(
+      "js.allow-eval",
       "js.annex-b",
       "js.console",
       "js.graal-builtin",
@@ -103,6 +110,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.esm-eval-returns-exports" to config.esm,
       "js.shell" to config.interactive,
       "js.v8-compat" to config.v8,
+      "js.v8-intrinsics" to config.v8,
     )
 
     if (config.wasm && wasmSupported) enableOptions(

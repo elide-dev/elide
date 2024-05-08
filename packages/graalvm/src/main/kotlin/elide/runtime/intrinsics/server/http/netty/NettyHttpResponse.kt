@@ -29,7 +29,7 @@ import elide.runtime.intrinsics.server.http.HttpResponse
   private val sent = AtomicBoolean(false)
 
   /** Headers for this response, dispatched once the response is sent to the client. */
-  private val headers = DefaultHttpHeaders(true)
+  private val headers = DefaultHttpHeaders()
 
   @Export override fun send(status: Int, body: PolyglotValue?) {
     send(HttpResponseStatus.valueOf(status), body)

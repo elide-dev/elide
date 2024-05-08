@@ -2911,12 +2911,18 @@ public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorImpl : elide
 	public fun removeMember (Ljava/lang/String;)Z
 }
 
-public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorResult {
+public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorResult : org/graalvm/polyglot/proxy/ProxyObject {
 	public synthetic fun <init> (Ljava/lang/Object;ZLjava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getDone ()Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
 	public final fun getValue ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
 	public static final fun of (Ljava/lang/Object;Z)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
 	public static final fun ofErr (Lelide/runtime/intrinsics/js/err/Error;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
 }
 
 public abstract interface class elide/runtime/intrinsics/js/JsPromise : org/graalvm/polyglot/proxy/ProxyObject {
@@ -3053,11 +3059,13 @@ public abstract interface class elide/runtime/intrinsics/js/Timers {
 	public static synthetic fun setTimeout$default (Lelide/runtime/intrinsics/js/Timers;Ljava/lang/Long;[Ljava/lang/Object;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)J
 }
 
-public abstract interface class elide/runtime/intrinsics/js/URL : java/io/Serializable {
+public abstract interface class elide/runtime/intrinsics/js/URL : java/io/Serializable, org/graalvm/polyglot/proxy/ProxyObject {
 	public abstract fun getHash ()Ljava/lang/String;
 	public abstract fun getHost ()Ljava/lang/String;
 	public abstract fun getHostname ()Ljava/lang/String;
 	public abstract fun getHref ()Ljava/lang/String;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
 	public abstract fun getOrigin ()Ljava/lang/String;
 	public abstract fun getPassword ()Ljava/lang/String;
 	public abstract fun getPathname ()Ljava/lang/String;
@@ -3066,6 +3074,7 @@ public abstract interface class elide/runtime/intrinsics/js/URL : java/io/Serial
 	public abstract fun getSearch ()Ljava/lang/String;
 	public abstract fun getSearchParams ()Lelide/runtime/intrinsics/js/URLSearchParams;
 	public abstract fun getUsername ()Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
 	public abstract fun toJSON ()Ljava/lang/String;
 	public abstract fun toString ()Ljava/lang/String;
 }
@@ -3974,6 +3983,8 @@ public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public static synthetic fun applyBindings$default (Lelide/runtime/plugins/AbstractLanguageConfig;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)V
 	public final fun bindings (Lkotlin/jvm/functions/Function1;)V
 	protected final fun getIntrinsicBindings ()Ljava/util/Map;
+	public final fun getResourcesPath ()Ljava/lang/String;
+	public final fun setResourcesPath (Ljava/lang/String;)V
 }
 
 public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runtime/core/EnginePlugin, elide/runtime/core/GuestLanguage {

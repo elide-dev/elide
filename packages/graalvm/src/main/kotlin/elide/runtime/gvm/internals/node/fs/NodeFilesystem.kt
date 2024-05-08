@@ -22,6 +22,7 @@ import java.nio.channels.Channels
 import java.nio.channels.SeekableByteChannel
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import java.nio.file.AccessMode
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 import java.util.concurrent.ExecutorService
@@ -107,6 +108,10 @@ internal abstract class FilesystemBase (
     else -> error("Unknown type passed to `fs` $operation: ${path.asString()}")
   }
 
+  protected fun translateMode(options: Value?): AccessMode {
+    TODO("Not yet implemented")
+  }
+
   protected fun readFileOptions(options: Value?): ReadFileOptions {
     return when {
       options == null -> ReadFileOptions.DEFAULTS
@@ -159,7 +164,7 @@ internal abstract class FilesystemBase (
     }
   }
 
-  protected fun resolveEncodingString(encoding: String): Charset = when (encoding.trim().lowercase()) {
+  private fun resolveEncodingString(encoding: String): Charset = when (encoding.trim().lowercase()) {
     "utf8", "utf-8" -> StandardCharsets.UTF_8
     "utf16", "utf-16" -> StandardCharsets.UTF_16
     "utf32", "utf-32" -> TODO("UTF-32 is not implemented yet")
@@ -210,6 +215,46 @@ internal abstract class FilesystemBase (
 
 // Implements the Node `fs` module.
 internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeFilesystemAPI, FilesystemBase(exec, fs) {
+  @Polyglot override fun access(path: Value, callback: Value) {
+    TODO("Not yet implemented: `fs.access(Value, AccessCallback)`")
+  }
+
+  @Polyglot override fun access(path: Value, mode: Value, callback: Value) {
+    TODO("Not yet implemented: `fs.access(Value, Value, AccessCallback)`")
+  }
+
+  @Polyglot override fun access(path: Path, mode: AccessMode, callback: AccessCallback) {
+    TODO("Not yet implemented: `fs.access(Path, AccessMode, AccessCallback)`")
+  }
+
+  @Polyglot override fun accessSync(path: Value) {
+    TODO("Not yet implemented: `fs.accessSync(Value)`")
+  }
+
+  @Polyglot override fun accessSync(path: Value, mode: Value) {
+    TODO("Not yet implemented: `fs.accessSync(Value, Value)`")
+  }
+
+  @Polyglot override fun accessSync(path: Path, mode: AccessMode) {
+    TODO("Not yet implemented: `fs.accessSync(Path, AccessMode)`")
+  }
+
+  @Polyglot override fun exists(path: Value, callback: Value) {
+    TODO("Not yet implemented: `fs.exists(Value, Value)`")
+  }
+
+  @Polyglot override fun exists(path: Path, callback: (Boolean) -> Unit) {
+    TODO("Not yet implemented: `fs.exists(Path, (Boolean) -> Unit))`")
+  }
+
+  @Polyglot override fun existsSync(path: Value): Boolean {
+    TODO("Not yet implemented: `fs.existsSync(Value)`")
+  }
+
+  @Polyglot override fun existsSync(path: Path): Boolean {
+    TODO("Not yet implemented: `fs.existsSync(Path)")
+  }
+
   @Polyglot override fun readFile(path: Value, options: Value, callback: ReadFileCallback) {
     val resolved = resolvePath("readFile", path)
     val opts = readFileOptions(options)

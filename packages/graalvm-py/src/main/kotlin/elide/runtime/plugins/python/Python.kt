@@ -54,10 +54,10 @@ import elide.runtime.plugins.vfs.Vfs
     )
 
     if (ENABLE_EXPERIMENTAL) {
-      builder.enableOptions(
-        "python.UsePanama",
-        "python.WithCachedSources",
-      )
+      builder.enableOptions("python.WithCachedSources")
+      if (ENABLE_PANAMA) {
+        builder.enableOptions("python.UsePanama")
+      }
     }
 
     builder.setOptions(
@@ -66,6 +66,12 @@ import elide.runtime.plugins.vfs.Vfs
       "python.PosixModuleBackend" to PYTHON_POSIX_BACKEND,
     )
 
+    config.resourcesPath?.let {
+      builder.setOptions(
+        "python.CoreHome" to "$it/python/python-home/lib/graalpy24.1",
+        "python.PythonHome" to "$it/python/python-home",
+      )
+    }
     config.executable?.let {
       builder.setOptions("python.Executable" to it)
     }
@@ -78,8 +84,9 @@ import elide.runtime.plugins.vfs.Vfs
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
-    private const val PYTHON_POSIX_BACKEND = "java"  // @TODO(sgammon): support for `native`
+    private const val PYTHON_POSIX_BACKEND = "native"
     private const val ENABLE_EXPERIMENTAL = true
+    private const val ENABLE_PANAMA = false
     private const val GPY_LIST_SEPARATOR = "🏆"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)

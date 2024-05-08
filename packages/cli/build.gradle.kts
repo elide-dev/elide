@@ -252,6 +252,10 @@ val cliVersion = if (stamp) {
   "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
 }
 val nativesPath = nativesRootTemplate(cliVersion)
+val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
+  .get()
+  .asFile
+  .path
 
 buildConfig {
   className("ElideCLITool")
@@ -261,6 +265,7 @@ buildConfig {
   buildConfigField("String", "ELIDE_RELEASE_TYPE", if (isRelease) "\"RELEASE\"" else "\"DEV\"")
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"$cliVersion\"")
   buildConfigField("String", "NATIVES_PATH", "\"${nativesPath}\"")
+  buildConfigField("String", "GVM_RESOURCES", "\"${gvmResourcesPath}\"")
 }
 
 val modules: Configuration by configurations.creating
@@ -305,11 +310,6 @@ dependencies {
 
   // Truffle NFI
   api(libs.graalvm.truffle.nfi.libffi)
-  api(libs.graalvm.truffle.nfi.panama)
-  api(libs.graalvm.truffle.nfi.native.darwin.amd64)
-  api(libs.graalvm.truffle.nfi.native.darwin.aarch64)
-  api(libs.graalvm.truffle.nfi.native.linux.amd64)
-  api(libs.graalvm.truffle.nfi.native.linux.aarch64)
 
   // GraalVM: Tooling
   implementation(libs.graalvm.tools.dap)
@@ -428,12 +428,10 @@ dependencies {
           implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
           implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-$arch") })
           implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-$arch") })
-          if (enableExperimental) {
-            if (targetArch == "aarch64") {
-              implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
-            } else {
-              implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
-            }
+          if (targetArch == "aarch64") {
+            implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
+          } else {
+            implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
           }
         }
 
@@ -443,12 +441,14 @@ dependencies {
           implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
           implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
           implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
+
           if (enableExperimental) {
-            if (targetArch == "aarch64") {
-              implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
-            } else {
-              implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
-            }
+            api(libs.graalvm.truffle.nfi.panama)
+          }
+          if (targetArch == "aarch64") {
+            implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
+          } else {
+            implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
           }
         }
       }

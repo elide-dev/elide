@@ -68,15 +68,14 @@ import elide.runtime.plugins.vfs.Vfs
       builder.setOptions(
         "python.HPyBackend" to "nfi",
         "python.Sha3ModuleBackend" to "native",
-        "python.PosixModuleBackend" to "native",
+        "python.PosixModuleBackend" to "java",
       )
 
       builder.setOptions(
         "python.CoreHome" to "$it/python/python-home/lib/graalpy24.1",
         "python.SysPrefix" to "$it/python/python-home/lib/graalpy24.1",
         "python.StdLibHome" to "$it/python/python-home/lib/python3.11",
-        "python.JNILibrary" to "$it/python/python-home/lib/graalpy24.1",
-        "python.CAPI" to "$it/python/python-home",
+        "python.CAPI" to "$it/python/python-home/lib/graalpy24.1",
         "python.PythonHome" to "$it/python/python-home",
       )
     }

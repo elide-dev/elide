@@ -1437,6 +1437,11 @@ public synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchP
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public final class elide/runtime/gvm/internals/intrinsics/js/url/URLSearchParamsIntrinsicKt {
+	public static final fun mutableUrlParams (Ljava/lang/String;)Lelide/runtime/intrinsics/js/MutableURLSearchParams;
+	public static final fun urlParams (Ljava/lang/String;)Lelide/runtime/intrinsics/js/URLSearchParams;
+}
+
 public synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2994,6 +2999,12 @@ public abstract interface class elide/runtime/intrinsics/js/MutableURL : elide/r
 	public abstract fun setUsername (Ljava/lang/String;)V
 }
 
+public abstract interface class elide/runtime/intrinsics/js/MutableURLSearchParams : elide/runtime/intrinsics/js/URLSearchParams {
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+}
+
 public abstract interface class elide/runtime/intrinsics/js/RandomSource {
 	public abstract fun getRandomValues (Ljava/lang/Object;)V
 	public abstract fun randomUUID ()Lelide/runtime/intrinsics/js/typed/UUID;
@@ -3071,10 +3082,11 @@ public abstract interface class elide/runtime/intrinsics/js/URL$URLStaticMethods
 	public abstract fun revokeObjectURL (Lelide/runtime/intrinsics/js/URL;)V
 }
 
-public abstract interface class elide/runtime/intrinsics/js/URLMutableSearchParams : elide/runtime/intrinsics/js/MutableMultiMapLike, elide/runtime/intrinsics/js/URLSearchParams {
-}
-
-public abstract interface class elide/runtime/intrinsics/js/URLSearchParams : elide/runtime/intrinsics/js/MultiMapLike, java/io/Serializable {
+public abstract interface class elide/runtime/intrinsics/js/URLSearchParams : elide/runtime/intrinsics/js/MultiMapLike, java/io/Serializable, org/graalvm/polyglot/proxy/ProxyHashMap, org/graalvm/polyglot/proxy/ProxyObject {
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public abstract fun sort ()V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/err/AbstractJsException {
@@ -3258,6 +3270,17 @@ public abstract interface class elide/runtime/intrinsics/js/node/EventsAPI : eli
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/FilesystemAPI {
+	public abstract fun access (Lelide/runtime/intrinsics/js/node/path/Path;Ljava/nio/file/AccessMode;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun access (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun access (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun accessSync (Lelide/runtime/intrinsics/js/node/path/Path;Ljava/nio/file/AccessMode;)V
+	public abstract fun accessSync (Lorg/graalvm/polyglot/Value;)V
+	public abstract fun accessSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun accessSync$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Ljava/nio/file/AccessMode;ILjava/lang/Object;)V
+	public abstract fun exists (Lelide/runtime/intrinsics/js/node/path/Path;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun exists (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun existsSync (Lelide/runtime/intrinsics/js/node/path/Path;)Z
+	public abstract fun existsSync (Lorg/graalvm/polyglot/Value;)Z
 	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
 	public abstract fun readFile (Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function2;)V
 	public abstract fun readFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function2;)V
@@ -3564,6 +3587,15 @@ public abstract interface class elide/runtime/intrinsics/js/node/events/EventTar
 	public abstract fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/fs/Dir {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/fs/Dirent {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/fs/FSWatcher {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/fs/FileHandle {
 }
 
@@ -3589,6 +3621,18 @@ public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions$Companion
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/fs/ReadStream {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/fs/StatFs {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/fs/StatWatcher {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/fs/Stats {
+}
+
 public final class elide/runtime/intrinsics/js/node/fs/WriteFileOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions$Companion;
 	public fun <init> ()V
@@ -3611,6 +3655,9 @@ public final class elide/runtime/intrinsics/js/node/fs/WriteFileOptions {
 
 public final class elide/runtime/intrinsics/js/node/fs/WriteFileOptions$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/fs/WriteStream {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/os/CPUInfo : org/graalvm/polyglot/proxy/ProxyObject {

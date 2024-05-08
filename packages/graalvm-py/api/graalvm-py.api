@@ -58,6 +58,10 @@ public final class elide/runtime/plugins/python/Python$Plugin : elide/runtime/pl
 
 public final class elide/runtime/plugins/python/PythonConfig : elide/runtime/plugins/AbstractLanguageConfig {
 	public fun <init> ()V
+	public final fun getExecutable ()Ljava/lang/String;
+	public final fun getExecutableList ()Ljava/util/List;
+	public final fun setExecutable (Ljava/lang/String;)V
+	public final fun setExecutableList (Ljava/util/List;)V
 }
 
 public final class elide/runtime/plugins/python/features/BouncyCastleFeature : org/graalvm/nativeimage/hosted/Feature {

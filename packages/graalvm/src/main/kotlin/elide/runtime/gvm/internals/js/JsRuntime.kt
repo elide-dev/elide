@@ -139,7 +139,6 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("js.import-attributes"),
       StaticProperty.active("js.intl-402"),
       StaticProperty.active("js.json-modules"),
-      StaticProperty.active("js.nashorn-compat"),  // @TODO(sgammon): disable after oracle/graaljs/issues/119
       StaticProperty.active("js.performance"),
       StaticProperty.active("js.shadow-realm"),
       StaticProperty.active("js.shared-array-buffer"),

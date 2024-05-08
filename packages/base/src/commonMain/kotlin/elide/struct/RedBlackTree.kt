@@ -90,14 +90,14 @@ public abstract class RedBlackTree<K : Comparable<K>, V> internal constructor() 
    * default in a Red/Black Tree.
    */
   private inline val Node<K, V>?.isRed: Boolean
-    get() = this?.color == RED
+    get() = this != null && color == RED
 
   /**
    * Returns `true` if this node is `null` or its color is [BLACK]. Empty (null) nodes are considered [BLACK] by
    * default in a Red/Black Tree.
    */
   private inline val Node<K, V>?.isBlack: Boolean
-    get() = this?.color != RED
+    get() = this == null || color == BLACK
 
   /**
    * Returns a boolean value representing the subtree this node is located in, relative to its parent: `true` if it is

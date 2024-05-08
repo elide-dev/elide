@@ -206,7 +206,7 @@ jobs:
           persist-credentials: false
       - name: "Setup: Cache Restore (Build)"
         id: cache-restore-build
-        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
           restore-keys: |
@@ -240,7 +240,7 @@ jobs:
             tools/elide-build/build/generated-sources
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
-        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
@@ -411,7 +411,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Artifact: Caches"
-        uses: actions/cache/save@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
           path: |
@@ -443,7 +443,7 @@ jobs:
           persist-credentials: false
       - name: "Setup: Cache Restore (Build)"
         id: cache-restore-build
-        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
           restore-keys: |
@@ -477,7 +477,7 @@ jobs:
             tools/elide-build/build/generated-sources
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
-        uses: actions/cache/restore@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |

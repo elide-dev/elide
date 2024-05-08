@@ -4,6 +4,9 @@
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
     <ID>CyclomaticComplexMethod:NodeOperatingSystem.kt$NodeOperatingSystem.ModuleBase$override fun getMember(key: String?): Any?</ID>
+    <ID>CyclomaticComplexMethod:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
+    <ID>CyclomaticComplexMethod:NodePaths.kt$NodePaths.BasePaths$override fun getMember(key: String): Any?</ID>
+    <ID>CyclomaticComplexMethod:URLIntrinsic.kt$URLIntrinsic.URLValue$override fun putMember(key: String?, value: Value?)</ID>
     <ID>CyclomaticComplexMethod:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
@@ -52,6 +55,7 @@
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
     <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
+    <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
     <ID>ReturnCount:Version.kt$Version$public override operator fun compareTo(other: Version): Int</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:AbstractVMEngine.kt$AbstractVMEngine$( *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray() )</ID>
@@ -62,6 +66,7 @@
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
     <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
     <ID>SpreadOperator:NativeContextManagerImpl.kt$NativeContextManagerImpl$(*(config.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray())</ID>
+    <ID>SpreadOperator:NodePaths.kt$NodePaths.BasePaths$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
     <ID>SwallowedException:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$err: Throwable</ID>
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
     <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>

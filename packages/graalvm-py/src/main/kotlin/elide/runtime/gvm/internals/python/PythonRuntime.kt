@@ -68,7 +68,7 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
     VMStaticProperty.active("python.WithTRegex"),
     VMStaticProperty.active("python.UsePanama"),
     VMStaticProperty.inactive("python.EmulateJython"),
-    VMStaticProperty.of("python.CoreHome", "/python/python-home/lib/graalpy23.1"),
+    VMStaticProperty.of("python.CoreHome", "/python/python-home/lib/graalpy24.1"),
     VMStaticProperty.of("python.PythonHome", "/python/python-home"),
   ).stream()
 

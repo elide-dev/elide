@@ -17,5 +17,5 @@ import elide.annotations.API
 /**
  *
  */
-@API public interface FileHandle {
+@API public interface Dirent {
 }

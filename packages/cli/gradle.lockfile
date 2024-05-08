@@ -321,6 +321,7 @@ org.graalvm.tools:profiler-tool:24.1.0-SNAPSHOT=compileClasspath,runtimeClasspat
 org.graalvm.truffle:truffle-api:24.1.0-SNAPSHOT=compileClasspath,runtimeClasspath
 org.graalvm.truffle:truffle-compiler:24.1.0-SNAPSHOT=compileClasspath,runtimeClasspath
 org.graalvm.truffle:truffle-nfi-libffi:24.1.0-SNAPSHOT=compileClasspath,runtimeClasspath
+org.graalvm.truffle:truffle-nfi-native-darwin-amd64:24.0.1=compileClasspath,runtimeClasspath
 org.graalvm.truffle:truffle-nfi:24.1.0-SNAPSHOT=compileClasspath,runtimeClasspath
 org.graalvm.truffle:truffle-runtime:24.1.0-SNAPSHOT=compileClasspath,runtimeClasspath
 org.graalvm.wasm:wasm-community:24.1.0-SNAPSHOT=runtimeClasspath

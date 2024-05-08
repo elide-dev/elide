@@ -16,22 +16,37 @@ package elide.struct
 import elide.struct.api.MutableSortedSet
 import elide.struct.api.SortedSet
 
-private val EMPTY_SORTED_SET: SortedSet<Nothing> = TreeSet(emptyList())
+/** A stubbed [SortedSet] implementation, meant to be used as an optimized return value for [emptySortedSet]. */
+private object EmptySortedSet : SortedSet<Nothing> {
+  override val size: Int = 0
+  override fun isEmpty(): Boolean = true
+  override fun iterator(): Iterator<Nothing> = object : Iterator<Nothing> {
+    override fun hasNext(): Boolean = false
+    override fun next(): Nothing = error("Iterator is empty")
+  }
 
-/**
- *
- */
+  override fun containsAll(elements: Collection<Nothing>): Boolean = false
+  override fun contains(element: Nothing): Boolean = false
+}
+
+/** Returns an empty, read-only sorted map. */
 @Suppress("UNCHECKED_CAST")
-public fun <V: Comparable<V>> sortedSetOf(): SortedSet<V> = EMPTY_SORTED_SET as SortedSet<V>
+public fun <V : Comparable<V>> emptySortedSet(): SortedSet<V> {
+  return EmptySortedSet as SortedSet<V>
+}
 
 /**
- *
+ * Returns a new read-only sorted set with the given elements. Elements of the set are iterated in according to their
+ * natural order.
  */
-public fun <V: Comparable<V>> sortedSetOf(vararg values: V): SortedSet<V> =
-  TreeSet(values.toList())
+public fun <V : Comparable<V>> sortedSetOf(vararg values: V): SortedSet<V> {
+  return RedBlackTreeSet<V>().apply { addAll(values) }
+}
 
 /**
- *
+ * Returns a new mutable sorted set with the given elements. Elements of the set are iterated in according to their
+ * natural order.
  */
-public fun <V: Comparable<V>> mutableSortedSetOf(vararg values: V): MutableSortedSet<V> =
-  MutableTreeSet(values.toList())
+public fun <V : Comparable<V>> mutableSortedSetOf(vararg values: V): MutableSortedSet<V> {
+  return RedBlackTreeSet<V>().apply { addAll(values) }
+}

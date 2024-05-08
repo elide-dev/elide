@@ -16,6 +16,6 @@ package elide.struct.api
 /**
  *
  */
-public interface MutableSortedSet<Value> : MutableSet<Value> where Value : Comparable<Value> {
+public interface MutableSortedSet<Value> : MutableSet<Value>, SortedSet<Value> where Value : Comparable<Value> {
   //
 }

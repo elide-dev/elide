@@ -14,6 +14,9 @@
 
 package elide.runtime.gvm.internals.node.path
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.File
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
@@ -66,6 +69,25 @@ public enum class PathStyle {
     WIN32 -> path.toString().let { it.length > win32MinRoot && it[1] == win32DriveDelim[0] && it[2] == win32PathSep[0] }
   }
 }
+
+// All member keys.
+private val pathMemberKeys = arrayOf(
+  "basename",
+  "delimiter",
+  "dirname",
+  "extname",
+  "format",
+  "isAbsolute",
+  "join",
+  "normalize",
+  "parse",
+  "posix",
+  "relative",
+  "resolve",
+  "sep",
+  "toNamespacedPath",
+  "win32",
+)
 
 // Private path utilities.
 internal object PathUtils {
@@ -190,7 +212,7 @@ internal object NodePaths {
    * @see WindowsPaths for Win32-style paths
    * @see PosixPaths for POSIX-style paths
    */
-  abstract class BasePaths protected constructor (private val mode: PathStyle) : PathAPI {
+  abstract class BasePaths protected constructor (private val mode: PathStyle) : PathAPI, ProxyObject {
     @get:Polyglot override val posix: PathAPI get() = posixPaths
     @get:Polyglot override val win32: PathAPI get() = windowsPaths
 
@@ -292,6 +314,28 @@ internal object NodePaths {
           return doFormat(base, root, dir, name, ext)
         }
 
+        is Value -> when {
+          pathObject.isProxyObject || pathObject.hasMembers() -> {
+            val dir = pathObject.getMember("dir")?.asString()
+            val root = pathObject.getMember("root")?.asString()
+            val base = pathObject.getMember("base")?.asString()
+            val ext = pathObject.getMember("ext")?.asString()
+            val name = pathObject.getMember("name")?.asString()
+            return doFormat(base, root, dir, name, ext)
+          }
+
+          pathObject.hasHashEntries() -> {
+            val dir = pathObject.getHashValue("dir")?.asString()
+            val root = pathObject.getHashValue("root")?.asString()
+            val base = pathObject.getHashValue("base")?.asString()
+            val ext = pathObject.getHashValue("ext")?.asString()
+            val name = pathObject.getHashValue("name")?.asString()
+            return doFormat(base, root, dir, name, ext)
+          }
+
+          else -> error("Cannot format guest value as path, of type: '${pathObject::class.java.simpleName}'")
+        }
+
         else -> error("Cannot format unrecognized object as path, of type: '${pathObject::class.java.simpleName}'")
       }
     }
@@ -299,6 +343,105 @@ internal object NodePaths {
     override fun parse(path: String, pathStyle: PathStyle?): Path = PathBuf.from(path, mode).also {
       if (pathStyle != null)
         require(pathStyle == mode) { "${mode.name} path utils cannot parse paths of type '$pathStyle'" }
+    }
+
+    override fun hasMember(key: String): Boolean = key in pathMemberKeys
+    override fun getMemberKeys(): Array<String> = pathMemberKeys
+
+    override fun getMember(key: String): Any? = when (key) {
+      "sep" -> sep
+      "delimiter" -> delimiter
+      "posix" -> posix
+      "win32" -> win32
+
+      "join" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> join(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())
+        }
+      }
+
+      "resolve" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> resolve(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())
+        }
+      }
+
+      "basename" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          1 -> basename(args[0].asString())
+          else -> basename(args[0].asString(), args[1].asString())
+        }
+      }
+
+      "dirname" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> dirname(args[0].asString())
+        }
+      }
+
+      "isAbsolute" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> false
+          else -> isAbsolute(args[0].asString())
+        }
+      }
+
+      "extname" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> extname(args[0].asString())
+        }
+      }
+
+      "relative" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          1 -> ""
+          else -> relative(args[0].asString(), args[1].asString())
+        }
+      }
+
+      "normalize" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> normalize(args[0].asString())
+        }
+      }
+
+      "toNamespacedPath" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> toNamespacedPath(args[0].asString())
+        }
+      }
+
+      "format" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> format(args[0])
+        }
+      }
+
+      "parse" -> ProxyExecutable { args ->
+        when (args.size) {
+          0 -> ""
+          else -> parse(args[0].asString(), args.getOrNull(1)?.asString()?.let(PathStyle::valueOf))
+        }
+      }
+
+      else -> null
+    }
+
+    override fun putMember(key: String?, value: Value?) {
+      throw UnsupportedOperationException("Path utilities are read-only")
+    }
+
+    override fun removeMember(key: String?): Boolean {
+      throw UnsupportedOperationException("Path utilities are read-only")
     }
   }
 

@@ -13,6 +13,8 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.url
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.Serializable
 import java.net.URI
@@ -1043,6 +1045,20 @@ import java.net.URI as NativeURL
         // if we are given a guest value string, handle it as a regular URL string
         target.isString -> parseString(target, base)
 
+        // if we are given a host-convertible string, we should convert it and use that
+        (
+          target.isProxyObject &&
+          target.hasMember("toString") &&
+          target.getMember("toString").canExecute()
+        ) -> parseString(target.getMember("toString").execute(), base)
+
+        // if we are given a guest-convertible string, we should convert it and use that
+        (
+          target.isProxyObject &&
+          target.hasMember("valueOf") &&
+          target.getMember("valueOf").canExecute()
+        ) -> parseString(target.getMember("valueOf").execute(), base)
+
         // if we are given another URL class, let's clone it
         target.isHostObject && target.`as`(URLValue::class.java) != null ->
           target.`as`(URLValue::class.java).target
@@ -1195,6 +1211,41 @@ import java.net.URI as NativeURL
     @get:Polyglot override val searchParams: URLSearchParams get() = target.get().searchParams.resolve()
 
     @Polyglot override fun toJSON(): String = toString()
+
+    override fun getMember(key: String): Any? = when (key) {
+      "hash" -> hash
+      "host" -> host
+      "hostname" -> hostname
+      "href" -> href
+      "origin" -> origin
+      "password" -> password
+      "pathname" -> pathname
+      "port" -> port
+      "protocol" -> protocol
+      "search" -> search
+      "searchParams" -> searchParams
+      "username" -> username
+      "toJSON" -> ProxyExecutable { toJSON() }
+      "toString" -> ProxyExecutable { toString() }
+      "valueOf" -> ProxyExecutable { toString() }
+      else -> error("Unknown member for `URL`: '$key'")
+    }
+
+    override fun putMember(key: String?, value: Value?) {
+      when (key) {
+        "hash" -> hash = value?.asString() ?: ""
+        "host" -> host = value?.asString() ?: ""
+        "hostname" -> hostname = value?.asString() ?: ""
+        "href" -> href = value?.asString() ?: ""
+        "password" -> password = value?.asString() ?: ""
+        "pathname" -> pathname = value?.asString() ?: ""
+        "port" -> port = value?.asInt()
+        "protocol" -> protocol = value?.asString() ?: ""
+        "search" -> search = value?.asString() ?: ""
+        "username" -> username = value?.asString() ?: ""
+        else -> error("Unknown member for `URL`: '$key'")
+      }
+    }
   }
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {

@@ -12,8 +12,28 @@
  */
 package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
+
+// Properties expected on URL instances.
+private val URL_PROPS = arrayOf(
+  "hash",
+  "host",
+  "hostname",
+  "href",
+  "origin",
+  "password",
+  "pathname",
+  "port",
+  "protocol",
+  "search",
+  "searchParams",
+  "username",
+  "toJSON",
+  "toString",
+  "valueOf",
+)
 
 /**
  * # JavaScript: URL
@@ -61,7 +81,7 @@ import elide.vm.annotations.Polyglot
  * `URL` objects are a common primitive used by other, higher-order JavaScript ecosystem standards. Most notably, `URL`
  * objects can be used with the Fetch API. URLs can be passed to the constructor for `Request`.
  */
-public interface URL : java.io.Serializable {
+public interface URL : java.io.Serializable, ProxyObject {
   /**
    * ## URL: Constructors
    *
@@ -483,4 +503,7 @@ public interface URL : java.io.Serializable {
    * @return Absolute string URL.
    */
   @Polyglot override fun toString(): String
+
+  override fun getMemberKeys(): Array<String> = URL_PROPS
+  override fun hasMember(key: String): Boolean = key in URL_PROPS
 }

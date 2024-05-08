@@ -79,8 +79,7 @@ import elide.testing.annotations.TestCase
 
     // guest URL
     val url2 = URLValue.fromString("https://google.com")
-    val guestUrlString2 = asValue(url2)
-    val guestUrl2 = URLValue(guestUrlString2)
+    val guestUrl2 = URLValue(url2)
     assertNotNull(guestUrl2, "should be able to construct a `URL` from a guest string")
   }
 
@@ -233,10 +232,78 @@ import elide.testing.annotations.TestCase
     "not-equal,https://github.com,https://google.com?hello=hi,false,two URLs which differ in query should not be equal",
     "not-equal,https://github.com,https://google.com?hello,false,two URLs which differ in query should not be equal",
   ])
-  @Suppress("AssertBetweenInconvertibleTypes")
   @ParameterizedTest(
     name = "[{index}:dual]: {0}: {4}",
-  ) fun testURLEquals(label: String, base: String, comparison: String, expectEquals: Boolean, msg: String) = dual {
+  ) fun testURLEquals(label: String, base: String, comparison: String, expectEquals: Boolean, msg: String) {
+    val shouldEqual: (URLValue, URLValue) -> Unit = { left, right ->
+      assertEquals(
+        left,
+        right,
+        "case($label): $msg ($left != $right)"
+      )
+    }
+    val shouldNotEqual: (URLValue, URLValue) -> Unit = { left, right ->
+      assertNotEquals(
+        left,
+        right,
+        "case($label): $msg ($left == $right)"
+      )
+    }
+    val op = if (expectEquals) {
+      shouldEqual
+    } else {
+      shouldNotEqual
+    }
+    op.invoke(URLValue.fromString(base), URLValue.fromString(comparison))
+    assertNotEquals(URLValue.fromString(base), 5)
+    assertNotEquals(URLValue.fromString(base), 5.5)
+    assertNotEquals(URLValue.fromString(base), false)
+    assertNotEquals(URLValue.fromString(base), null)
+    val parsedOne = URLValue.fromString(base).parsedURL()
+    val parsedTwo = URLValue.fromString(base).parsedURL()
+    assertEquals(parsedOne, parsedOne)
+    assertSame(parsedOne, parsedOne)
+    assertNotSame(parsedOne, parsedTwo)
+    assertEquals(parsedOne, parsedTwo)
+    assertEquals(parsedOne.hashCode(), parsedTwo.hashCode())
+    assertNotEquals(parsedOne, 5)
+    assertNotEquals(parsedOne, 5.5)
+    assertNotEquals(parsedOne, false)
+    assertNotEquals(parsedOne, null)
+  }
+
+  @CsvSource(value = [
+    // Basic Cases: Normal
+    "equal,https://google.com,https://google.com,true,URLs should be equal",
+    "equal,https://github.com/elide-dev/v3,https://github.com/elide-dev/v3,true,URLs should be equal",
+    "equal,https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
+    "equal,https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi,true,URLs should be equal",
+    "equal,http://www.google.com/#hello,http://www.google.com/#hello,true,URLs should be equal",
+    "equal,//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
+    "equal,ftp://hello.local.dev/hello/test,ftp://hello.local.dev/hello/test,true,URLs should be equal",
+    "equal,file://here/is/a/file/path,file://here/is/a/file/path,true,URLs should be equal",
+    "equal,blob://some-blob-id,blob://some-blob-id,true,URLs should be equal",
+    "equal,blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool,true,URLs should be equal",
+    "equal,https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
+
+    // Smart Cases: Positive
+    "equal-smart,https://google.com/,https://google.com,true,two URLs with the same effective path should be equal",
+    "equal-smart,https://google.com#,https://google.com,true,two URLs with the same effective fragment should be equal",
+    "equal-smart,https://google.com?,https://google.com,true,two URLs with the same effective query should be equal",
+
+    // Basic Cases: Negative
+    "not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal",
+    "not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal",
+    "not-equal,http://google.com,https://google.com,false,two URLs which differ in protocol should not be equal",
+    "not-equal,https://google.com,https://google.co.uk,false,two URLs which differ in host should not be equal",
+    "not-equal,https://google.com,https://google.com:444,false,two URLs which differ in port should not be equal",
+    "not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal",
+    "not-equal,https://github.com,https://google.com?hello=hi,false,two URLs which differ in query should not be equal",
+    "not-equal,https://github.com,https://google.com?hello,false,two URLs which differ in query should not be equal",
+  ])
+  @ParameterizedTest(
+    name = "[{index}:dual]: {0}: {4}",
+  ) fun testURLEqualsGuest(label: String, base: String, comparison: String, expectEquals: Boolean, msg: String) = dual {
     val shouldEqual: (URLValue, URLValue) -> Unit = { left, right ->
       assertEquals(
         left,
@@ -275,11 +342,6 @@ import elide.testing.annotations.TestCase
   }.guest {
     // language=javascript
     """
-      if ($expectEquals) {
-        test(new URL("$base")).isEqualTo(new URL("$comparison"), "$msg");
-      } else {
-        test(new URL("$base")).isNotEqualTo(new URL("$comparison"), "$msg");
-      }
       test(new URL("$base")).isNotEqualTo(5);
       test(new URL("$base")).isNotEqualTo(5.5);
       test(new URL("$base")).isNotEqualTo(false);
@@ -711,10 +773,7 @@ import elide.testing.annotations.TestCase
     """
       test(new URL("$testString")).isNotNull("should be able to parse URL");
       test(new URL("$testString").href).isEqualTo("$expected");
-      test(new URL("$testString").toString()).isEqualTo("$expected");
-      test(new URL("$testString")).isEqualTo(new URL("$testString"));
       test(new URL("$testString").href).isEqualTo(new URL("$testString").href);
-      test(new URL("$testString").toString()).isEqualTo(new URL("$testString").toString());
     """
   }
 

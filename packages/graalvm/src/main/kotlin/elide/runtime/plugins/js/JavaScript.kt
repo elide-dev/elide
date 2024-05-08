@@ -63,7 +63,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.import-attributes",
       "js.intl-402",
       "js.json-modules",
-      "js.nashorn-compat", // @TODO(sgammon): disable once https://github.com/oracle/graaljs/issues/119 is resolved.
       "js.performance",
       "js.shadow-realm",
       "js.shared-array-buffer",

@@ -3982,8 +3982,12 @@ public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	protected final fun applyBindings (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
 	public static synthetic fun applyBindings$default (Lelide/runtime/plugins/AbstractLanguageConfig;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)V
 	public final fun bindings (Lkotlin/jvm/functions/Function1;)V
+	public final fun getExecutable ()Ljava/lang/String;
+	public final fun getExecutableList ()Ljava/util/List;
 	protected final fun getIntrinsicBindings ()Ljava/util/Map;
 	public final fun getResourcesPath ()Ljava/lang/String;
+	public final fun setExecutable (Ljava/lang/String;)V
+	public final fun setExecutableList (Ljava/util/List;)V
 	public final fun setResourcesPath (Ljava/lang/String;)V
 }
 

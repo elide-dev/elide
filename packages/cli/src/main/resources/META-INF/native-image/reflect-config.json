@@ -303,6 +303,9 @@
   "fields":[{"name":"value"}]
 },
 {
+  "name":"com.oracle.svm.core.jdk.resources.NativeImageResourceFileSystemProvider"
+},
+{
   "name":"com.sun.crypto.provider.AESCipher$General",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -345,6 +348,54 @@
 {
   "name":"com.sun.jna.CallbackProxy",
   "methods":[{"name":"callback","parameterTypes":["java.lang.Object[]"] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFDataRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFIndex",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFMutableDictionaryRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFStringRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeID",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.IOKit$IOIterator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.IOKit$IORegistryEntry",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.unix.LibCAPI$size_t",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.ptr.IntByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.ptr.PointerByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.management.GarbageCollectorMXBean",
@@ -401,11 +452,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.$VMFacadeFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.$VMFacadeFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.cfg.$GuestIOConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.cfg.$GuestIOConfiguration$Intercepted$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -417,11 +476,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.cfg.$GuestVMConfiguration$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.cfg.$GuestVMConfiguration$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.cfg.$GuestVMEEConfig$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.cfg.$GuestVMEEConfig$Intercepted$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -433,11 +500,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.cfg.$GuestVMEESandboxConfig$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.cfg.$GuestVMEESandboxConfig$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.cfg.$GuestVMInspectConfig$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.cfg.$GuestVMInspectConfig$Intercepted$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -449,11 +524,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$JsEsmConfig$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$JsEsmConfig$Intercepted$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -465,7 +548,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$JsNpmConfig$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$JsNpmConfig$Intercepted$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.$GuestExecutorManager$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -473,7 +564,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.$IntrinsicsManager$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.$IntrinsicsManager$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.context.$NativeContextManagerImpl$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -481,11 +580,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.$BuiltinIntrinsicsResolver$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.$BuiltinIntrinsicsResolver$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.$ServiceIntrinsicsResolver$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.$ServiceIntrinsicsResolver$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.intrinsics.js.base64.$Base64Intrinsic$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -497,6 +608,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.js.console.$ConsoleIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.js.console.$ConsoleIntrinsic$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -505,11 +620,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.js.crypto.$WebCryptoIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.js.crypto.$WebCryptoIntrinsic$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.internals.intrinsics.js.crypto.$WebCryptoIntrinsic$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.intrinsics.js.crypto.$WebCryptoKey$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -529,11 +652,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchIntrinsic$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchIntrinsic$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.intrinsics.js.stream.$CoreStreamsIntrinsic$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -545,6 +676,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.js.url.$URLIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.js.url.$URLIntrinsic$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -553,11 +688,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.js.url.$URLSearchParamsIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.js.url.$URLSearchParamsIntrinsic$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.internals.intrinsics.js.url.$URLSearchParamsIntrinsic$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.intrinsics.js.webstreams.$ReadableStreamIntrinsic$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -573,6 +716,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.js.$JsRuntime$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.js.$JsRuntime$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -581,11 +728,143 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.js.$JsTimerExecutorProviderImpl$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.js.$JsTimerExecutorProviderImpl$Provide0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.js.$JsTimersIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.js.$JsTimersIntrinsic$Provide0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.js.JsTimersIntrinsic",
+  "fields":[{"name":"execProvider"}]
+},
+{
   "name":"elide.runtime.gvm.internals.jvm.$JvmRuntime$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.internals.jvm.$JvmRuntime$PythonRuntimeVFSConfigurator$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.asserts.$NodeAssertModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.asserts.$NodeAssertModule$Provide0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.asserts.$NodeAssertStrictModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.asserts.$NodeAssertStrictModule$Provide0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.buffer.$NodeBufferIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.buffer.$NodeBufferModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.buffer.$NodeBufferModuleFacade$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.childProcess.$NodeChildProcessModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.childProcess.$NodeChildProcessModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.cluster.$NodeClusterModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.cluster.$NodeClusterModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.console.$NodeConsoleModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.console.$NodeConsoleModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.crypto.$NodeCryptoModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.crypto.$NodeCryptoModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.dgram.$NodeDatagramModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.dgram.$NodeDatagramModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.diagnostics.$NodeDiagnosticsChannelModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.diagnostics.$NodeDiagnosticsChannelModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.dns.$NodeDNSModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.dns.$NodeDNSModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.dns.$NodeDNSPromisesModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.dns.$NodeDNSPromisesModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.domain.$NodeDomainModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.domain.$NodeDomainModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.events.$NodeEventsModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.events.$NodeEventsModuleFacade$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.fs.$NodeFilesystemModule$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -597,11 +876,107 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.node.http.$NodeHttpModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.http.$NodeHttpModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.http2.$NodeHttp2Module$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.http2.$NodeHttp2Module$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.https.$NodeHttpsModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.https.$NodeHttpsModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.inspector.$NodeInspectorModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.inspector.$NodeInspectorPromisesModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.module.$NodeModulesModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.module.$NodeModulesModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.net.$NodeNetworkModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.net.$NodeNetworkModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$CPUInfoData$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$CPUTimingsData$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$NetworkInterfaceInfoData$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$NodeOperatingSystem$BaseOS$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$NodeOperatingSystem$Posix$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$NodeOperatingSystem$Win32$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$NodeOperatingSystemModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.os.$NodeOperatingSystemModule$Provide0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.path.$NodePathsModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.node.path.$NodePathsModule$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.internals.node.path.$NodePathsModule$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.perfHooks.$NodePerformanceHooksModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.perfHooks.$NodePerformanceHooksModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.process.$NodeProcessModule$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -613,7 +988,107 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.node.process.$NodeProcessModule$Provide0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.node.process.$NodeProcessModule$Provide0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.querystring.$NodeQuerystringModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.querystring.$NodeQuerystringModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.readline.$NodeReadlineModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.readline.$NodeReadlineModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.readline.$NodeReadlinePromisesModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.readline.$NodeReadlinePromisesModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamConsumersModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamConsumersModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamPromisesModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamPromisesModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamWebModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stream.$NodeStreamWebModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stringDecoder.$NodeStringDecoderModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.stringDecoder.$NodeStringDecoderModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.test.$NodeTestModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.test.$NodeTestModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.url.$NodeURLModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.url.$NodeURLModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.worker.$NodeWorkerModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.worker.$NodeWorkerModule$Provide$graalvm0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.zlib.$NodeZlibModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.zlib.$NodeZlibModule$Provide$graalvm0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -633,7 +1108,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.vfs.$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.vfs.$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.vfs.$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Spawn$graalvm0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -645,7 +1128,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.vfs.$GuestVFSPolicy$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.vfs.$GuestVFSPolicy$Intercepted$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.vfs.$HostVFSImpl$HostVFSConfigurationFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -735,12 +1226,20 @@
   "allPublicClasses":true
 },
 {
+  "name":"elide.server.$Application$AppStartupListener$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.$Application$AppStartupListener$Definition$Reference"},
   "name":"elide.server.$Application$AppStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.$Application$AppStartupListener$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.assets.$AssetController$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -753,12 +1252,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition$Reference"},
   "name":"elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.assets.$ServerAssetIndex$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -771,6 +1278,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.server.assets.$ServerAssetManager$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.assets.$ServerAssetManager$Definition$Reference"},
   "name":"elide.server.assets.$ServerAssetManager$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -780,12 +1291,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.server.assets.$ServerAssetManifestProvider$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.assets.$ServerAssetManifestProvider$Definition$Reference"},
   "name":"elide.server.assets.$ServerAssetManifestProvider$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.assets.$ServerAssetManifestProvider$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.assets.$ServerAssetReader$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -807,12 +1326,20 @@
   "fields":[{"name":"beanContext"}]
 },
 {
+  "name":"elide.server.cfg.$AssetConfig$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference"},
   "name":"elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.cfg.$ServerConfig$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -834,12 +1361,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.server.controller.builtin.$NotFoundController$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.controller.builtin.$NotFoundController$Definition$Reference"},
   "name":"elide.server.controller.builtin.$NotFoundController$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.controller.builtin.$NotFoundController$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.controller.builtin.$ServerErrorController$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -852,12 +1387,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.server.http.$HeaderFinalizingFilter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.http.$HeaderFinalizingFilter$Definition$Reference"},
   "name":"elide.server.http.$HeaderFinalizingFilter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.http.$HeaderFinalizingFilter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.http.$RequestContextFilter$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -870,6 +1413,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.server.runtime.$AppExecutor$DefaultExecutor$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.runtime.$AppExecutor$DefaultExecutor$Definition$Reference"},
   "name":"elide.server.runtime.$AppExecutor$DefaultExecutor$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -879,12 +1426,24 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "condition":{"typeReachable":"elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference"},
   "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$UncaughtExceptionHandlerLoggingProvider$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$UncaughtExceptionHandlerLoggingProvider$Get0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -919,6 +1478,10 @@
   "name":"elide.tool.bundler.cmd.unpack.BundleUnpackCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.$ElideTool$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -992,6 +1555,10 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.cmd.discord.$ToolDiscordCommand$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.discord.$ToolDiscordCommand$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1016,6 +1583,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.cmd.info.$ToolInfoCommand$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.info.$ToolInfoCommand$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1023,6 +1594,10 @@
   "name":"elide.tool.cli.cmd.info.ToolInfoCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
+},
+{
+  "name":"elide.tool.cli.cmd.lint.$ToolLintCommand$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.cmd.lint.$ToolLintCommand$Definition$Reference",
@@ -1034,7 +1609,15 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$DebugConfig$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$DebugConfig$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1042,11 +1625,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$EnvironmentConfig$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$EnvironmentConfig$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$GroovySettings$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$GroovySettings$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$InspectorConfig$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1058,7 +1653,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$JvmSettings$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$JvmSettings$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$KotlinSettings$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1066,7 +1669,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$LanguageSelector$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$LanguageSelector$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$PythonSettings$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1074,7 +1685,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$RubySettings$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$RubySettings$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.cmd.repl.$ToolShellCommand$WasmSettings$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1153,6 +1772,10 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.cmd.selftest.$SelfTestCommand$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.cmd.selftest.$SelfTestCommand$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1160,6 +1783,10 @@
   "name":"elide.tool.cli.cmd.selftest.SelfTestCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
+},
+{
+  "name":"elide.tool.cli.cmd.update.$SelfUpdateCommand$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.cmd.update.$SelfUpdateCommand$Definition$Reference",
@@ -1180,7 +1807,15 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.cli.options.$AbstractEngineOptions$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.options.$AbstractEngineOptions$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.options.$AccessControlOptions$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1188,11 +1823,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.options.$CommonOptions$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.options.$CommonOptions$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.options.$EngineJavaScriptOptions$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.options.$EngineJavaScriptOptions$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.cli.options.$LanguagePositionals$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1230,7 +1877,15 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"elide.tool.engine.$EngineTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$EngineTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$JsEngineCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1238,7 +1893,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$JsEngineTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$JsEngineTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$JvmEngineCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1250,6 +1913,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$LanguageCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$LanguageCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1258,7 +1925,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$OsArchTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$OsArchTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$OsNameTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1266,7 +1941,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$PythonEngineCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$PythonEngineCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$PythonEngineTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1274,7 +1957,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$RubyEngineCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$RubyEngineCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$RubyEngineTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1282,7 +1973,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.engine.$WasmEngineCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.engine.$WasmEngineCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.engine.$WasmEngineTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1290,7 +1989,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.err.$DefaultErrorHandler$DefaultErrorHandlerProvider$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.err.$DefaultErrorHandler$DefaultErrorHandlerProvider$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$DefaultErrorHandler$DefaultErrorHandlerProvider$Get0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1298,7 +2005,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.err.$DefaultStructuredErrorRecorder$DefaultMarkdownErrorRecorderProvider$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.err.$DefaultStructuredErrorRecorder$DefaultMarkdownErrorRecorderProvider$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$DefaultStructuredErrorRecorder$DefaultMarkdownErrorRecorderProvider$Get0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1306,7 +2021,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.err.$ErrorHandlerAcquireTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.err.$ErrorHandlerAcquireTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$ErrorRecorderAcquireTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1314,11 +2037,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.err.$ErrorRecorderWriteTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.err.$ErrorRecorderWriteTest$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.io.$RuntimeWorkdirManager$DefaultRuntimeWorkdirManagerProvider$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.io.$RuntimeWorkdirManager$DefaultRuntimeWorkdirManagerProvider$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$RuntimeWorkdirManager$DefaultRuntimeWorkdirManagerProvider$Get0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1330,7 +2065,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.io.$TempWriteTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.io.$TempWriteTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$TestCacheWrite$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1338,7 +2081,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.io.$WorkdirTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.io.$WorkdirTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.project.$DefaultProjectManager$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1346,7 +2097,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.testing.$SanitySelfTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.testing.$SanitySelfTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.transport.$KQueueTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1354,7 +2113,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.transport.$NativeCryptoTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.transport.$NativeCryptoTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.transport.$NativeTransportTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1372,7 +2139,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.buffer.netty.$DefaultByteBufAllocatorConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.buffer.netty.$DefaultByteBufAllocatorConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.buffer.netty.$NettyByteBufferFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1524,6 +2299,10 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"io.micronaut.context.propagation.instrument.execution.$ExecutorServiceInstrumenter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.context.propagation.instrument.execution.$ExecutorServiceInstrumenter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1565,11 +2344,23 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"io.micronaut.discovery.$DefaultCompositeDiscoveryClient$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.discovery.$DefaultCompositeDiscoveryClient$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.discovery.$DefaultServiceInstanceIdGenerator$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.discovery.$DefaultServiceInstanceIdGenerator$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.discovery.cloud.digitalocean.$DigitalOceanInstanceMetadata$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1585,7 +2376,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.discovery.config.$DefaultCompositeConfigurationClient$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.discovery.config.$DefaultCompositeConfigurationClient$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.health.$DefaultCurrentHealthStatus$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1593,11 +2392,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.health.$HealthStatus$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.health.$HealthStatus$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.health.$HeartbeatConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.health.$HeartbeatConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.health.$HeartbeatDiscoveryClientCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1623,7 +2434,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.bind.$DefaultRequestBinderRegistry$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.bind.$DefaultRequestBinderRegistry$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.bind.binders.$DefaultBodyAnnotationBinder$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1631,7 +2450,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.body.$CharSequenceBodyWriter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.body.$CharSequenceBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$DefaultMessageBodyHandlerRegistry$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1639,7 +2466,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawByteArrayHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawByteArrayHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawByteBufferHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1647,7 +2482,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawStringHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawStringHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$TextPlainHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1655,7 +2498,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.body.$TextStreamBodyWriter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.body.$TextStreamBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$WritableBodyWriter$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1667,7 +2518,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$DefaultHttpClientConfiguration$DefaultConnectionPoolConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$DefaultHttpClientConfiguration$DefaultConnectionPoolConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$DefaultHttpClientConfiguration$DefaultWebSocketCompressionConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1675,7 +2534,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$DefaultHttpClientConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$DefaultHttpClientConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$DefaultLoadBalancerResolver$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1683,7 +2550,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$ServiceHttpClientCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$ServiceHttpClientCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1691,7 +2566,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceConnectionPoolConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceConnectionPoolConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$DefaultKeyConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1699,7 +2582,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$DefaultKeyStoreConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$DefaultKeyStoreConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$DefaultTrustStoreConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1707,7 +2598,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceWebSocketCompressionConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1715,7 +2614,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$ServiceHttpClientFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$ServiceHttpClientFactory$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$ServiceHttpClientFactory$HealthCheckStarter1$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1723,7 +2630,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.$ServiceHttpClientFactory$ServiceInstanceList0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.$ServiceHttpClientFactory$ServiceInstanceList0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.bind.$DefaultHttpClientBinderRegistry$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1731,7 +2646,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.filter.$DefaultHttpClientFilterResolver$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.filter.$DefaultHttpClientFilterResolver$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.interceptor.$HttpClientIntroductionAdvice$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1739,11 +2662,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.interceptor.configuration.$DefaultClientVersioningConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.interceptor.configuration.$DefaultClientVersioningConfiguration$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.interceptor.configuration.$NamedClientVersioningConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.interceptor.configuration.$NamedClientVersioningConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.loadbalance.$DiscoveryClientLoadBalancerFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1755,6 +2690,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.loadbalance.$ServiceInstanceListLoadBalancerFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.loadbalance.$ServiceInstanceListLoadBalancerFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1763,7 +2702,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.client.netty.$DefaultNettyHttpClientRegistry$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.netty.$DefaultNettyHttpClientRegistry$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.netty.$DefaultNettyHttpClientRegistry$HttpClient0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1774,11 +2721,23 @@
   "name":"io.micronaut.http.client.netty.NettyClientHttpRequestFactory"
 },
 {
+  "name":"io.micronaut.http.client.netty.ssl.$NettyClientSslBuilder$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.client.netty.ssl.$NettyClientSslBuilder$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.codec.$CodecConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.codec.$CodecConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.converters.$HttpConverterRegistrar$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1794,7 +2753,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.expression.$RequestConditionContext$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.expression.$RequestConditionContext$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.hateoas.$AbstractResource$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1802,7 +2769,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.hateoas.$DefaultLink$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.hateoas.$DefaultLink$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.hateoas.$GenericResource$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1810,7 +2785,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.hateoas.$JsonError$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.hateoas.$JsonError$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.hateoas.$Resource$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1818,7 +2801,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.hateoas.$VndError$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.hateoas.$VndError$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$ByteBufRawMessageBodyHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1826,7 +2817,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.body.$NettyJsonHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.body.$NettyJsonHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$NettyJsonStreamHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1834,7 +2833,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.body.$NettyTextPlainHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.body.$NettyTextPlainHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$NettyWritableBodyWriter$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1842,7 +2849,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1850,7 +2865,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupRegistry$DefaultEventLoopGroup1$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupRegistry$DefaultEventLoopGroup1$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupRegistry$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1858,7 +2881,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupRegistry$EventLoopGroup0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.$DefaultEventLoopGroupRegistry$EventLoopGroup0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$EpollAvailabilityCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1870,6 +2901,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.$IoUringAvailabilityCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.$IoUringAvailabilityCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1878,7 +2913,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.$KQueueAvailabilityCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.$KQueueAvailabilityCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$KQueueEventLoopGroupFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1886,11 +2929,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.$NettyThreadFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.$NettyThreadFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.$NettyThreadFactory$NettyThreadFactory0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.$NettyThreadFactory$NettyThreadFactory0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$NioEventLoopGroupFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1906,7 +2961,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.channel.converters.$KQueueChannelOptionFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.channel.converters.$KQueueChannelOptionFactory$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.configuration.$NettyGlobalConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1914,7 +2977,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.netty.websocket.$NettyServerWebSocketBroadcaster$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.netty.websocket.$NettyServerWebSocketBroadcaster$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.websocket.$WebSocketMessageEncoder$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1922,7 +2993,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.resource.$ResourceLoaderFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.resource.$ResourceLoaderFactory$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.resource.$ResourceLoaderFactory$FileSystemResourceLoader1$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1930,7 +3009,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.resource.$ResourceLoaderFactory$GetClassPathResourceLoader0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.resource.$ResourceLoaderFactory$GetClassPathResourceLoader0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.resource.$ResourceLoaderFactory$ResourceResolver2$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1938,7 +3025,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.$CoroutineHelper$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.$CoroutineHelper$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.$HttpServerConfiguration$CorsConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1946,7 +3041,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.$HttpServerConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.$HttpServerConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.$HttpServerConfiguration$HostResolutionConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1954,11 +3057,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.$HttpServerConfiguration$HttpLocaleResolutionConfigurationProperties$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.$HttpServerConfiguration$HttpLocaleResolutionConfigurationProperties$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.$HttpServerConfiguration$MultipartConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.$HttpServerConfiguration$MultipartConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.$RouteExecutor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1970,7 +3085,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.binding.$BasicAuthArgumentBinder$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.binding.$BasicAuthArgumentBinder$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.binding.$LocaleArgumentBinder$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1978,7 +3101,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.binding.$RequestArgumentSatisfier$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.binding.$RequestArgumentSatisfier$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.codec.$TextStreamCodec$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1994,6 +3125,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.cors.$CorsFilter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.cors.$CorsFilter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2002,7 +3137,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.exceptions.$ContentLengthExceededHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.exceptions.$ContentLengthExceededHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.exceptions.$ConversionErrorHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2010,7 +3153,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.exceptions.$DuplicateRouteHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.exceptions.$DuplicateRouteHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.exceptions.$HttpStatusHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2018,7 +3169,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.exceptions.$JacksonExceptionHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.exceptions.$JacksonExceptionHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.exceptions.$JsonExceptionHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2026,7 +3185,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.exceptions.$URISyntaxHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.exceptions.$URISyntaxHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.exceptions.$UnsatisfiedArgumentHandler$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2034,7 +3201,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.exceptions.$UnsatisfiedRouteHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.exceptions.$UnsatisfiedRouteHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.exceptions.response.$HateoasErrorResponseProcessor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2046,7 +3221,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.$DefaultHttpCompressionStrategy$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.$DefaultHttpCompressionStrategy$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.$DefaultHttpContentProcessorResolver$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2054,7 +3237,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.$DefaultNettyEmbeddedServerFactory$BuildDefaultServer0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.$DefaultNettyEmbeddedServerFactory$BuildDefaultServer0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.$DefaultNettyEmbeddedServerFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2067,6 +3258,10 @@
 },
 {
   "name":"io.micronaut.http.server.netty.$NettyEmbeddedServerInstance$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.$NettyRequestArgumentSatisfier$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2084,6 +3279,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.binders.$NettyServerRequestBinderRegistry$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.binders.$NettyServerRequestBinderRegistry$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2092,7 +3291,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.body.$FileBodyWriter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.body.$FileBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.body.$InputStreamBodyWriter$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2100,7 +3307,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.body.$StreamFileBodyWriter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.body.$StreamFileBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.body.$SystemFileBodyWriter$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2108,7 +3323,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$AccessLogger$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$AccessLogger$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2116,7 +3339,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$FileTypeHandlerConfiguration$CacheControlConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$FileTypeHandlerConfiguration$CacheControlConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$FileTypeHandlerConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2124,7 +3355,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Http2Settings$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Http2Settings$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Http3Settings$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2132,7 +3371,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$NettyListenerConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$NettyListenerConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Parent$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2140,7 +3387,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Worker$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Worker$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.converters.$NettyConverters$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2152,7 +3407,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.discovery.$NettyEmbeddedServerInstance$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.discovery.$NettyEmbeddedServerInstance$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.discovery.$NettyServiceDiscovery$ApplicationEventListener$onStart1$Intercepted$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2160,7 +3423,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.discovery.$NettyServiceDiscovery$ApplicationEventListener$onStop2$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.discovery.$NettyServiceDiscovery$ApplicationEventListener$onStop2$Intercepted$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.discovery.$NettyServiceDiscovery$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2232,6 +3503,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.jackson.$JsonHttpContentSubscriberFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.jackson.$JsonHttpContentSubscriberFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2244,11 +3519,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.ssl.$BuildSelfSignedCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.ssl.$BuildSelfSignedCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.http.server.netty.ssl.$CertificateProvidedSslBuilder$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.ssl.$CertificateProvidedSslBuilder$SelfSignedNotConfigured$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2260,7 +3543,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.ssl.$SelfSignedSslBuilder$SelfSignedConfigured$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.ssl.$SelfSignedSslBuilder$SelfSignedConfigured$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.ssl.$SslEnabledCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2276,7 +3567,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.websocket.$WebSocketUpgradeHandlerFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.websocket.$WebSocketUpgradeHandlerFactory$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.util.$DefaultHttpClientAddressResolver$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2284,7 +3583,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.util.$DefaultHttpHostResolver$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.util.$DefaultHttpHostResolver$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.util.locale.$CompositeHttpLocaleResolver$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2300,6 +3607,14 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.util.locale.$HttpLocalizedMessageSource$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.util.locale.$HttpLocalizedMessageSource$Definition$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.util.locale.$HttpLocalizedMessageSource$Definition$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2308,7 +3623,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.util.locale.$RequestLocaleResolver$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.util.locale.$RequestLocaleResolver$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.websocket.$ServerWebSocketProcessor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2328,7 +3651,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.ssl.$ClientSslConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.ssl.$ClientSslConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.ssl.$DefaultSslConfiguration$DefaultKeyConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2336,11 +3667,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.ssl.$DefaultSslConfiguration$DefaultKeyStoreConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.ssl.$DefaultSslConfiguration$DefaultKeyStoreConfiguration$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.ssl.$DefaultSslConfiguration$DefaultTrustStoreConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.ssl.$DefaultSslConfiguration$DefaultTrustStoreConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.ssl.$DefaultSslConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2360,7 +3703,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.ssl.$ServerSslConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.ssl.$ServerSslConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.util.$OutgoingHttpRequestProcessorImpl$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2424,7 +3775,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.$JacksonConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.$JacksonConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.$ObjectMapperFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2432,7 +3791,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.$ObjectMapperFactory$JsonFactory0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.$ObjectMapperFactory$JsonFactory0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.$ObjectMapperFactory$ObjectMapper1$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2440,7 +3807,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.codec.$JsonMediaTypeCodec$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.codec.$JsonMediaTypeCodec$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.codec.$JsonStreamMediaTypeCodec$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2464,7 +3839,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.databind.$DatabindPropertyBinderExceptionHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.databind.$DatabindPropertyBinderExceptionHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.databind.$JacksonDatabindMapper$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2472,7 +3855,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.databind.convert.$JacksonConverterRegistrar$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.databind.convert.$JacksonConverterRegistrar$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.kotlin.$KotlinModuleFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2480,7 +3871,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.kotlin.$KotlinModuleFactory$KotlinModuleFactory0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.kotlin.$KotlinModuleFactory$KotlinModuleFactory0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.modules.$BeanIntrospectionModule$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2488,7 +3887,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.serialize.$ConvertibleMultiValuesSerializer$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.serialize.$ConvertibleMultiValuesSerializer$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.serialize.$ConvertibleValuesSerializer$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2496,7 +3903,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.serialize.$JacksonObjectSerializer$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.serialize.$JacksonObjectSerializer$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.serialize.$JsonNodeDeserializer$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2504,11 +3919,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.serialize.$JsonNodeSerializer$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.serialize.$JsonNodeSerializer$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.serialize.$OptionalValuesSerializer$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.jackson.serialize.$OptionalValuesSerializer$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.jackson.serialize.$ResourceModule$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2520,7 +3947,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.json.$JsonObjectSerializer$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.json.$JsonObjectSerializer$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.json.bind.$JsonBeanPropertyBinder$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2528,7 +3963,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.json.body.$JsonMessageHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.json.body.$JsonMessageHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.json.codec.$JsonMediaTypeCodec$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2536,7 +3979,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.json.codec.$JsonStreamMediaTypeCodec$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.json.codec.$JsonStreamMediaTypeCodec$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.json.convert.$JsonConverterRegistrar$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2544,11 +3995,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.kotlin.converters.$FlowPublisherConverterRegistrar$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.kotlin.converters.$FlowPublisherConverterRegistrar$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.kotlin.converters.$FlowReactorConverterRegistrar$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.kotlin.converters.$FlowReactorConverterRegistrar$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.logging.$LogLevel$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2568,6 +4031,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.logging.impl.$LogbackLoggingSystem$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.logging.impl.$LogbackLoggingSystem$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2576,7 +4043,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.$EndpointConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.$EndpointConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.$EndpointDefaultConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2584,7 +4059,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.$EndpointEnabledCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.$EndpointEnabledCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.$EndpointSensitivityProcessor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2592,7 +4075,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.$EndpointsFilter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.$EndpointsFilter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.beans.$BeansEndpoint$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2600,7 +4091,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.beans.impl.$DefaultBeanDefinitionData$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.beans.impl.$DefaultBeanDefinitionData$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.beans.impl.$DefaultBeanDefinitionDataCollector$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2612,7 +4111,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.health.$HealthEndpoint$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.health.$HealthEndpoint$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.health.$HealthEndpoint$StatusConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2620,7 +4127,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.health.filter.$HealthResultFilter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.health.filter.$HealthResultFilter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.info.$InfoEndpoint$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2628,11 +4143,27 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.info.impl.$ReactiveInfoAggregator$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.info.impl.$ReactiveInfoAggregator$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.info.source.$BuildInfoSource$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.info.source.$BuildInfoSource$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.info.source.$ConfigurationInfoSource$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.info.source.$ConfigurationInfoSource$Definition$Intercepted$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2641,6 +4172,10 @@
 },
 {
   "name":"io.micronaut.management.endpoint.info.source.$ConfigurationInfoSource$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.info.source.$GitInfoSource$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2664,7 +4199,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.processors.$DeleteEndpointRouteBuilder$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.processors.$DeleteEndpointRouteBuilder$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.processors.$ReadEndpointRouteBuilder$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2672,7 +4215,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.processors.$WriteEndpointRouteBuilder$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.processors.$WriteEndpointRouteBuilder$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.refresh.$RefreshEndpoint$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2680,11 +4231,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.routes.$RoutesEndpoint$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.routes.$RoutesEndpoint$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.routes.impl.$DefaultRouteData$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.routes.impl.$DefaultRouteData$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.routes.impl.$DefaultRouteDataCollector$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2696,7 +4259,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.endpoint.threads.$ThreadDumpEndpoint$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.endpoint.threads.$ThreadDumpEndpoint$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.endpoint.threads.impl.$DefaultThreadInfoMapper$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2704,7 +4275,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.health.aggregator.$DefaultHealthAggregator$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.health.aggregator.$DefaultHealthAggregator$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.health.indicator.$DefaultHealthResult$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2712,7 +4291,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.health.indicator.$HealthResult$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.health.indicator.$HealthResult$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.health.indicator.discovery.$DiscoveryClientHealthIndicator$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2720,11 +4307,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.health.indicator.discovery.$DiscoveryClientHealthIndicatorConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.health.indicator.discovery.$DiscoveryClientHealthIndicatorConfiguration$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.health.indicator.diskspace.$DiskSpaceIndicator$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.health.indicator.diskspace.$DiskSpaceIndicator$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.health.indicator.diskspace.$DiskSpaceIndicatorConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2736,11 +4335,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.health.indicator.service.$ServiceReadyHealthIndicator$ApplicationEventListener$onServerStarted2$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.health.indicator.service.$ServiceReadyHealthIndicator$ApplicationEventListener$onServerStarted2$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.health.indicator.service.$ServiceReadyHealthIndicator$ApplicationEventListener$onServiceStarted1$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.health.indicator.service.$ServiceReadyHealthIndicator$ApplicationEventListener$onServiceStarted1$Intercepted$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.health.indicator.service.$ServiceReadyHealthIndicator$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2784,6 +4395,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.reactor.config.$ReactorConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.reactor.config.$ReactorConfiguration$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2792,7 +4407,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.reactor.instrument.$ReactorInstrumentation$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.reactor.instrument.$ReactorInstrumentation$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.retry.annotation.$DefaultRetryPredicate$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2800,7 +4423,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.retry.annotation.$RetryPredicate$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.retry.annotation.$RetryPredicate$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.retry.intercept.$DefaultRetryInterceptor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2808,7 +4439,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.retry.intercept.$RecoveryInterceptor$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.retry.intercept.$RecoveryInterceptor$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.runtime.$ApplicationConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2816,7 +4455,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.runtime.$ApplicationConfiguration$InstanceConfiguration$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.runtime.$ApplicationConfiguration$InstanceConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.runtime.beans.$MapperIntroduction$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2824,7 +4471,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.runtime.beans.$MapperMethodProcessor$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.runtime.beans.$MapperMethodProcessor$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.runtime.context.$CompositeMessageSource$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2832,7 +4487,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.runtime.context.env.$ConfigurationIntroductionAdvice$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.runtime.context.env.$ConfigurationIntroductionAdvice$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.runtime.context.scope.$ThreadLocalCustomScope$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2843,11 +4506,23 @@
   "name":"io.micronaut.runtime.context.scope.Refreshable"
 },
 {
+  "name":"io.micronaut.runtime.context.scope.refresh.$RefreshInterceptor$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.runtime.context.scope.refresh.$RefreshInterceptor$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.runtime.context.scope.refresh.$RefreshScope$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.runtime.context.scope.refresh.$RefreshScope$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.runtime.context.scope.refresh.$RefreshScopeCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2863,7 +4538,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.runtime.http.codec.$MediaTypeCodecRegistryFactory$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.runtime.http.codec.$MediaTypeCodecRegistryFactory$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.runtime.http.codec.$MediaTypeCodecRegistryFactory$MediaTypeCodecRegistry0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2871,7 +4554,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.runtime.http.codec.$TextPlainCodec$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.runtime.http.codec.$TextPlainCodec$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.runtime.http.scope.$RequestCustomScope$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2883,7 +4574,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.$DefaultTaskExceptionHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.$DefaultTaskExceptionHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.$LoomSupport$LoomCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2891,7 +4590,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.$ScheduledExecutorTaskScheduler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.$ScheduledExecutorTaskScheduler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.async.$AsyncInterceptor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2899,7 +4606,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.executor.$DefaultExecutorSelector$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.executor.$DefaultExecutorSelector$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$DefaultThreadFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2907,7 +4622,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.executor.$DefaultThreadFactory$ThreadFactory0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.executor.$DefaultThreadFactory$ThreadFactory0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$ExecutorFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2915,11 +4638,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.executor.$ExecutorFactory$EventLoopGroupThreadFactory0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.executor.$ExecutorFactory$EventLoopGroupThreadFactory0$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.executor.$ExecutorFactory$ExecutorService1$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.executor.$ExecutorFactory$ExecutorService1$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Blocking2$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2931,7 +4666,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Io0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2939,7 +4682,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Virtual1$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Virtual1$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$ScheduledExecutorServiceConfig$Configuration0$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2947,7 +4698,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.executor.$ScheduledExecutorServiceConfig$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.executor.$ScheduledExecutorServiceConfig$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$UserExecutorConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2967,6 +4726,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.io.watch.$FileWatchCondition$Introspection",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.io.watch.$FileWatchCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2983,7 +4746,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.processor.$ScheduledMethodProcessor$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.processor.$ScheduledMethodProcessor$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.test.condition.$TestActiveCondition$Introspection",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2991,7 +4762,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.test.support.sql.$DataSourceSqlHandler$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.test.support.sql.$DataSourceSqlHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.web.router.$AnnotatedFilterRouteBuilder$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2999,11 +4778,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.web.router.$AnnotatedMethodRouteBuilder$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.web.router.$AnnotatedMethodRouteBuilder$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.web.router.$DefaultRouter$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.web.router.$DefaultRouter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.web.router.$ServerFilterRouteBuilder$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -3015,7 +4806,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.web.router.naming.$HyphenatedUriNamingStrategy$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.web.router.naming.$HyphenatedUriNamingStrategy$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.web.router.resource.$StaticResourceConfiguration$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -3023,7 +4822,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.web.router.resource.$StaticResourceResolverFactory$Build0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.web.router.resource.$StaticResourceResolverFactory$Build0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.web.router.resource.$StaticResourceResolverFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -3060,6 +4867,10 @@
 },
 {
   "name":"io.micronaut.web.router.version.resolution.$ParameterVersionResolverConfiguration$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.websocket.interceptor.$ClientWebSocketInterceptor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -3354,7 +5165,8 @@
   "fields":[{"name":"TYPE"}]
 },
 {
-  "name":"java.lang.Enum"
+  "name":"java.lang.Enum",
+  "methods":[{"name":"name","parameterTypes":[] }]
 },
 {
   "name":"java.lang.Exception"
@@ -3690,6 +5502,14 @@
 },
 {
   "name":"java.util.LinkedHashSet"
+},
+{
+  "name":"java.util.Locale",
+  "allDeclaredClasses":true,
+  "methods":[{"name":"getDefault","parameterTypes":["java.util.Locale$Category"] }, {"name":"setDefault","parameterTypes":["java.util.Locale$Category","java.util.Locale"] }]
+},
+{
+  "name":"java.util.Locale$Category"
 },
 {
   "name":"java.util.PropertyPermission",
@@ -4463,6 +6283,18 @@
 {
   "name":"org.graalvm.polyglot.management.Management",
   "fields":[{"name":"ACCESS"}]
+},
+{
+  "name":"org.graalvm.shadowed.com.ibm.icu.impl.ICUCurrencyDisplayInfoProvider",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.graalvm.shadowed.com.ibm.icu.impl.ICUCurrencyMetaInfo",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.graalvm.shadowed.com.ibm.icu.number.LocalizedNumberFormatter",
+  "fields":[{"name":"callCountInternal"}]
 },
 {
   "name":"org.graalvm.shadowed.org.jcodings.provider.JCodingsProviderImpl"
@@ -8777,6 +10609,10 @@
 {
   "name":"org.truffleruby.stdlib.readline.ReadlineNodesFactory$SetBasicWordBreakCharactersNodeFactory",
   "methods":[{"name":"getInstance","parameterTypes":[] }]
+},
+{
+  "name":"oshi.jna.ByRef$CloseableSizeTByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"picocli.CommandLine$AutoHelpMixin",

@@ -15,7 +15,6 @@
 
 package elide.runtime.intrinsics.js
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.*
 import elide.runtime.core.DelicateElideApi

@@ -37,12 +37,35 @@ public interface JsIterator<T> : Iterator<JsIteratorResult<T>>, ProxyIterator, P
     private val held: T?,
     @Polyglot public val done: Boolean,
     private val err: Throwable? = null,
-  ) {
+  ) : ProxyObject {
     /** Fetch the held value or throw the held error. */
     @get:Polyglot public val value: T? get() = if (err != null) {
       throw err
     } else {
       held
+    }
+
+    override fun hasMember(key: String): Boolean = key == "value" || key == "done"
+
+    override fun getMemberKeys(): Array<String> = arrayOf(
+      "value",
+      "done",
+    )
+
+    override fun getMember(key: String?): Any? {
+      return when (key) {
+        "value" -> value
+        "done" -> done
+        else -> throw IllegalArgumentException("Unknown member key: $key")
+      }
+    }
+
+    override fun putMember(key: String?, value: Value?) {
+      // no-op
+    }
+
+    override fun removeMember(key: String?): Boolean {
+      return false
     }
 
     internal companion object {

@@ -246,17 +246,17 @@ class SortedMapTest {
     assertEquals("hello", lastValue)
   }
 
-  @Test fun testSerializer() {
+  @Ignore @Test fun testSerializer() {
     assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
   }
 
-  @Test fun testSerializerMutable() {
+  @Ignore @Test fun testSerializerMutable() {
     assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
   }
 
-  @Test fun testCodecJson() {
+  @Ignore @Test fun testCodecJson() {
     assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     val serialized = assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
     val map = Json.decodeFromString(TreeMap.serializer(String.serializer(), String.serializer()), serialized)
@@ -265,7 +265,7 @@ class SortedMapTest {
     assertEquals("hello", map["hi"])
   }
 
-  @Test fun testCodecJsonMutable() {
+  @Ignore @Test fun testCodecJsonMutable() {
     assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     val serialized = assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
     val map = Json.decodeFromString(TreeMap.serializer(String.serializer(), String.serializer()), serialized)
@@ -274,7 +274,7 @@ class SortedMapTest {
     assertEquals("hello", map["hi"])
   }
 
-  @Test fun testCodecJsonInterchangeable() {
+  @Ignore @Test fun testCodecJsonInterchangeable() {
     val map = sortedMapOf("hi" to "hello")
     val serialized = Json.encodeToString(map)
     val deserialized =

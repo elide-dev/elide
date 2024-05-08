@@ -18,13 +18,16 @@ import com.google.common.util.concurrent.MoreExecutors
 import org.graalvm.polyglot.Value
 import java.io.BufferedReader
 import java.io.IOException
+import java.io.OutputStream
 import java.nio.channels.Channels
 import java.nio.channels.SeekableByteChannel
+import java.nio.channels.WritableByteChannel
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.nio.file.AccessMode
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
+import java.util.EnumSet
 import java.util.concurrent.ExecutorService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
@@ -33,6 +36,7 @@ import kotlin.coroutines.CoroutineContext
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
+import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.node.NodeStdlib
 import elide.runtime.gvm.vfs.HostVFS
@@ -96,6 +100,57 @@ internal object NodeFilesystem {
   )
 }
 
+// Filesystem constant values used by Node.
+internal object FilesystemConstants {
+  const val F_OK: Int = 0
+  const val R_OK: Int = 4
+  const val W_OK: Int = 2
+  const val X_OK: Int = 1
+}
+
+// Context for a file write operation with managed state.
+internal interface FileWriterContext {
+  companion object {
+    @JvmStatic fun of(path: java.nio.file.Path, encoding: Charset?, channel: WritableByteChannel): FileWriterContext {
+      return object : FileWriterContext {
+        override val path: java.nio.file.Path = path
+        override val encoding: Charset? = encoding
+        override val channel: WritableByteChannel = channel
+      }
+    }
+  }
+
+  /** Path to the file which is being written to. */
+  val path: java.nio.file.Path
+
+  /** Encoding assignment for this write operation, if available. */
+  val encoding: Charset?
+
+  /** Writable channel where bytes should be sent. */
+  val channel: WritableByteChannel
+
+  /** Write a string to the channel. */
+  fun writeString(data: String) {
+    val bytes = data.toByteArray(encoding ?: StandardCharsets.UTF_8)
+    val buffer = java.nio.ByteBuffer.wrap(bytes)
+    channel.write(buffer)
+  }
+
+  /** Write a buffer to the channel. */
+  fun writeBuffer(data: Buffer) {
+    TODO("Binary write not implemented: fs.writeFileSync(Value, ...) (Node API)")
+  }
+
+  /** Write using a [StringOrBuffer] value. */
+  fun writeStringOrBuffer(data: StringOrBuffer) {
+    when (data) {
+      is String -> writeString(data)
+      is Buffer -> writeBuffer(data)
+      else -> error("Unknown type passed to `fs` writeFile: $data")
+    }
+  }
+}
+
 // Implements common baseline functionality for the Node filesystem modules.
 internal abstract class FilesystemBase (
   protected val exec: ExecutorService,
@@ -108,14 +163,31 @@ internal abstract class FilesystemBase (
     else -> error("Unknown type passed to `fs` $operation: ${path.asString()}")
   }
 
+  private fun constantToAccessMode(constant: Int = FilesystemConstants.F_OK): AccessMode {
+    return when (constant) {
+      FilesystemConstants.F_OK,
+      FilesystemConstants.R_OK -> AccessMode.READ
+      FilesystemConstants.W_OK -> AccessMode.WRITE
+      FilesystemConstants.X_OK -> AccessMode.EXECUTE
+      else -> error("Unknown constant passed to `fs` access: $constant")
+    }
+  }
+
   protected fun translateMode(options: Value?): AccessMode {
-    TODO("Not yet implemented")
+    return when {
+      options == null || options.isNull -> constantToAccessMode()
+      options.isNumber -> constantToAccessMode(options.asInt())
+      else -> error("Unknown type passed as access mode: ${options.asString()}")
+    }
   }
 
   protected fun readFileOptions(options: Value?): ReadFileOptions {
     return when {
       options == null -> ReadFileOptions.DEFAULTS
-      options.isString -> TODO("Read file with string options as encoding")
+      options.isString -> ReadFileOptions(
+        encoding = resolveEncodingString(options.asString()),
+      )
+
       options.hasMembers() -> {
         val encoding = options.getMember("encoding")
 
@@ -137,7 +209,10 @@ internal abstract class FilesystemBase (
   protected fun writeFileOptions(options: Value?): WriteFileOptions {
     return when {
       options == null -> WriteFileOptions.DEFAULTS
-      options.isString -> TODO()
+      options.isString -> WriteFileOptions(
+        encoding = resolveEncodingString(options.asString()),
+      )
+
       options.hasMembers() -> {
         val encoding = options.getMember("encoding")
 
@@ -173,23 +248,35 @@ internal abstract class FilesystemBase (
     else -> error("Unknown encoding passed to `fs` readFile: $encoding")
   }
 
-  protected fun checkFileForRead(path: java.nio.file.Path) {
+  private fun checkFileExists(path: java.nio.file.Path) {
     when {
       !fs.existsAny(path) -> error("ENOENT: no such file or directory, open '${path}'")
       !Files.isRegularFile(path) -> error("EISDIR: illegal operation on a directory, open '${path}'")
+    }
+  }
+
+  protected fun checkFileForRead(path: java.nio.file.Path) {
+    checkFileExists(path)
+    when {
       !Files.isReadable(path) -> error("EACCES: permission denied, open '${path}'")
+    }
+  }
+
+  protected fun checkFileForWrite(path: java.nio.file.Path, expectExists: Boolean = false) {
+    if (expectExists) checkFileExists(path)
+    when {
+      !Files.isWritable(path) -> error("EACCES: permission denied, open '${path}'")
     }
   }
 
   protected inline fun <reified T> openAndRead(path: java.nio.file.Path, op: SeekableByteChannel.() -> T): T {
     checkFileForRead(path)
 
-    val channel = try {
+    return (try {
       Files.newByteChannel(path, StandardOpenOption.READ)
     } catch (e: IOException) {
       error("EACCES: failed to open stream to '${path}': ${e.message}")
-    }
-    return channel.use {
+    }).use {
       op(it)
     }
   }
@@ -201,7 +288,11 @@ internal abstract class FilesystemBase (
           TODO("Binary read not implemented: fs.readFileSync(Value, ...) (Node API)")
         }
 
-        StandardCharsets.UTF_8 -> Channels.newReader(this, StandardCharsets.UTF_8).let { reader ->
+        StandardCharsets.US_ASCII,
+        StandardCharsets.UTF_8,
+        StandardCharsets.UTF_16,
+        StandardCharsets.UTF_16LE,
+        StandardCharsets.UTF_16BE -> Channels.newReader(this, encoding).let { reader ->
           BufferedReader(reader).use { it.readText() }
         }
 
@@ -211,49 +302,67 @@ internal abstract class FilesystemBase (
       error("EIO: failed to read file '${path}': ${ioe.message}")
     }
   }
+
+  protected inline fun <reified T> openForWrite(path: java.nio.file.Path, op: WritableByteChannel.() -> T): T {
+    checkFileForWrite(path)
+    return op(Files.newByteChannel(path, EnumSet.of(StandardOpenOption.CREATE)))
+  }
+
+  protected fun <R> WritableByteChannel.writeFileData(
+    path: java.nio.file.Path,
+    encoding: Charset?,
+    op: FileWriterContext.() -> R,
+  ): R = Channels.newOutputStream(this).use {
+    FileWriterContext.of(path, encoding, this).op()
+  }
 }
 
 // Implements the Node `fs` module.
 internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeFilesystemAPI, FilesystemBase(exec, fs) {
-  @Polyglot override fun access(path: Value, callback: Value) {
-    TODO("Not yet implemented: `fs.access(Value, AccessCallback)`")
+  @Polyglot override fun access(path: Value, callback: Value) = access(
+    resolvePath("access", path),
+    AccessMode.READ
+  ) {
+    callback.executeVoid(it)
   }
 
-  @Polyglot override fun access(path: Value, mode: Value, callback: Value) {
-    TODO("Not yet implemented: `fs.access(Value, Value, AccessCallback)`")
+  @Polyglot override fun access(path: Value, mode: Value, callback: Value) = access(
+    resolvePath("access", path),
+    translateMode(mode),
+  ) {
+    callback.executeVoid(it)
   }
 
-  @Polyglot override fun access(path: Path, mode: AccessMode, callback: AccessCallback) {
-    TODO("Not yet implemented: `fs.access(Path, AccessMode, AccessCallback)`")
+  @Polyglot override fun access(path: Path, mode: AccessMode, callback: AccessCallback) = try {
+    checkFileForRead(path.toJavaPath())
+  } catch (err: Throwable) {
+    callback(JsError.wrap(err))
   }
 
-  @Polyglot override fun accessSync(path: Value) {
-    TODO("Not yet implemented: `fs.accessSync(Value)`")
-  }
+  @Polyglot override fun accessSync(path: Value) =
+    accessSync(resolvePath("accessSync", path))
 
-  @Polyglot override fun accessSync(path: Value, mode: Value) {
-    TODO("Not yet implemented: `fs.accessSync(Value, Value)`")
-  }
+  @Polyglot override fun accessSync(path: Value, mode: Value) =
+    accessSync(resolvePath("accessSync", path), translateMode(mode))
 
   @Polyglot override fun accessSync(path: Path, mode: AccessMode) {
-    TODO("Not yet implemented: `fs.accessSync(Path, AccessMode)`")
+    try {
+      checkFileForRead(path.toJavaPath())
+    } catch (err: Throwable) {
+      throw JsError.wrap(err)
+    }
   }
 
-  @Polyglot override fun exists(path: Value, callback: Value) {
-    TODO("Not yet implemented: `fs.exists(Value, Value)`")
+  @Polyglot override fun exists(path: Value, callback: Value) = exists(resolvePath("exists", path)) {
+    callback.executeVoid(it)
   }
 
   @Polyglot override fun exists(path: Path, callback: (Boolean) -> Unit) {
-    TODO("Not yet implemented: `fs.exists(Path, (Boolean) -> Unit))`")
+    callback(Files.exists(path.toJavaPath()))
   }
 
-  @Polyglot override fun existsSync(path: Value): Boolean {
-    TODO("Not yet implemented: `fs.existsSync(Value)`")
-  }
-
-  @Polyglot override fun existsSync(path: Path): Boolean {
-    TODO("Not yet implemented: `fs.existsSync(Path)")
-  }
+  @Polyglot override fun existsSync(path: Value): Boolean = existsSync(resolvePath("existsSync", path))
+  @Polyglot override fun existsSync(path: Path): Boolean = Files.exists(path.toJavaPath())
 
   @Polyglot override fun readFile(path: Value, options: Value, callback: ReadFileCallback) {
     val resolved = resolvePath("readFile", path)
@@ -262,14 +371,12 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     val encoding = resolveEncoding(opts.encoding)
 
     openAndRead(nioPath) {
-      val out = try {
+      callback(null, try {
         readFileData(nioPath, encoding)
       } catch (err: Throwable) {
         callback(TypeError.create(err), null)
         return
-      }
-
-      callback(null, out)
+      })
     }
   }
 
@@ -279,14 +386,12 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     val encoding = resolveEncoding(ReadFileOptions.DEFAULTS.encoding)
 
     openAndRead(nioPath) {
-      val out = try {
+      callback(null, try {
         readFileData(nioPath, encoding)
       } catch (err: Throwable) {
         callback(TypeError.create(err), null)
         return
-      }
-
-      callback(null, out)
+      })
     }
   }
 
@@ -295,14 +400,12 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     val nioPath = path.toJavaPath()
 
     openAndRead(nioPath) {
-      val out = try {
+      callback(null, try {
         readFileData(nioPath, encoding)
       } catch (err: Throwable) {
         callback(TypeError.create(err), null)
         return
-      }
-
-      callback(null, out)
+      })
     }
   }
 
@@ -327,11 +430,33 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
   }
 
   @Polyglot override fun writeFile(path: Value, data: StringOrBuffer, options: Value, callback: WriteFileCallback) {
-    TODO("Not yet implemented: fs.writeFile(Value, StringOrBuffer, Value, WriteFileCallback)")
+    val resolved = resolvePath("writeFile", path)
+    val opts = writeFileOptions(options)
+    val nioPath = resolved.toJavaPath()
+    val encoding = resolveEncoding(opts.encoding)
+
+    try {
+      openForWrite(nioPath) {
+        writeFileData(nioPath, encoding) {
+          writeStringOrBuffer(data)
+        }
+      }
+    } catch (err: Throwable) {
+      callback(TypeError.create(err))
+    }
   }
 
   @Polyglot override fun writeFileSync(path: Value, data: StringOrBuffer, options: Value?) {
-    TODO("Not yet implemented: fs.writeFileSync(Value, StringOrBuffer, Value?)")
+    val resolved = resolvePath("writeFile", path)
+    val opts = writeFileOptions(options)
+    val nioPath = resolved.toJavaPath()
+    val encoding = resolveEncoding(opts.encoding)
+
+    openForWrite(nioPath) {
+      writeFileData(nioPath, encoding) {
+        writeStringOrBuffer(data)
+      }
+    }
   }
 }
 

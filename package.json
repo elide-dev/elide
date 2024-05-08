@@ -2,7 +2,7 @@
   "name": "@elide-dev/framework",
   "version": "1.0.0-alpha9",
   "private": true,
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.1.0",
   "lint-staged": {
     "not-packages/*": "pnpm exec prettier --ignore-unknown"
   },

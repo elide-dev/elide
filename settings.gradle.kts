@@ -296,7 +296,7 @@ val isCI: Boolean = System.getenv("CI") != "true"
 
 buildless {
   remoteCache {
-    enabled = false
+    enabled = true
 
     // allow disabling pushing to the remote cache
     push.set(cachePush?.toBooleanStrictOrNull() ?: true)

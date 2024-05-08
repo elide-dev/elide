@@ -247,28 +247,28 @@ class SortedMapTest {
   }
 
   @Test fun testSerializer() {
-    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
   }
 
   @Test fun testSerializerMutable() {
-    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
   }
 
   @Test fun testCodecJson() {
-    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     val serialized = assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
-    val map = Json.decodeFromString(RedBlackTreeMap.serializer(String.serializer(), String.serializer()), serialized)
+    val map = Json.decodeFromString(TreeMap.serializer(String.serializer(), String.serializer()), serialized)
     assertFalse(map.isEmpty())
     assertEquals(1, map.size)
     assertEquals("hello", map["hi"])
   }
 
   @Test fun testCodecJsonMutable() {
-    assertNotNull(RedBlackTreeMap.serializer(String.serializer(), String.serializer()))
+    assertNotNull(TreeMap.serializer(String.serializer(), String.serializer()))
     val serialized = assertNotNull(Json.encodeToString(sortedMapOf("hi" to "hello")))
-    val map = Json.decodeFromString(RedBlackTreeMap.serializer(String.serializer(), String.serializer()), serialized)
+    val map = Json.decodeFromString(TreeMap.serializer(String.serializer(), String.serializer()), serialized)
     assertFalse(map.isEmpty())
     assertEquals(1, map.size)
     assertEquals("hello", map["hi"])
@@ -278,11 +278,11 @@ class SortedMapTest {
     val map = sortedMapOf("hi" to "hello")
     val serialized = Json.encodeToString(map)
     val deserialized =
-      Json.decodeFromString(RedBlackTreeMap.serializer(String.serializer(), String.serializer()), serialized)
+      Json.decodeFromString(TreeMap.serializer(String.serializer(), String.serializer()), serialized)
     val serialized2 = Json.encodeToString(deserialized)
     assertEquals(serialized, serialized2)
     val deserialized2 = Json.decodeFromString(
-      RedBlackTreeMap.serializer(String.serializer(), String.serializer()),
+      TreeMap.serializer(String.serializer(), String.serializer()),
       serialized,
     )
     assertEquals(map, deserialized2)

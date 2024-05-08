@@ -225,6 +225,98 @@ public final class elide/struct/PresortedList$Companion {
 	public final fun serializer (Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
 }
 
+public abstract class elide/struct/RedBlackTree {
+	protected final fun addNode (Ljava/lang/Comparable;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
+	protected final fun findNodeByKey (Ljava/lang/Comparable;)Lelide/struct/RedBlackTree$Node;
+	protected final fun getNodeCount ()I
+	public fun hashCode ()I
+	protected final fun nodes ()Lkotlin/sequences/Sequence;
+	protected final fun removeNode (Lelide/struct/RedBlackTree$Node;)Lelide/struct/RedBlackTree$Node;
+	protected final fun removeNodeByKey (Ljava/lang/Comparable;)Lelide/struct/RedBlackTree$Node;
+	protected final fun reset ()V
+}
+
+protected final class elide/struct/RedBlackTree$Node : java/util/Map$Entry, kotlin/jvm/internal/markers/KMutableMap$Entry {
+	public field color Lelide/struct/RedBlackTree$NodeColor;
+	public field left Lelide/struct/RedBlackTree$Node;
+	public field parent Lelide/struct/RedBlackTree$Node;
+	public field right Lelide/struct/RedBlackTree$Node;
+	public fun <init> (Ljava/lang/Comparable;Ljava/lang/Object;Lelide/struct/RedBlackTree$NodeColor;Lelide/struct/RedBlackTree$Node;Lelide/struct/RedBlackTree$Node;Lelide/struct/RedBlackTree$Node;)V
+	public synthetic fun <init> (Ljava/lang/Comparable;Ljava/lang/Object;Lelide/struct/RedBlackTree$NodeColor;Lelide/struct/RedBlackTree$Node;Lelide/struct/RedBlackTree$Node;Lelide/struct/RedBlackTree$Node;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getKey ()Ljava/lang/Comparable;
+	public synthetic fun getKey ()Ljava/lang/Object;
+	public fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun setKey (Ljava/lang/Comparable;)V
+	public fun setValue (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun setValue (Ljava/lang/Object;)V
+}
+
+protected final class elide/struct/RedBlackTree$NodeColor : java/lang/Enum {
+	public static final field BLACK Lelide/struct/RedBlackTree$NodeColor;
+	public static final field RED Lelide/struct/RedBlackTree$NodeColor;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/struct/RedBlackTree$NodeColor;
+	public static fun values ()[Lelide/struct/RedBlackTree$NodeColor;
+}
+
+public final class elide/struct/RedBlackTreeMap : elide/struct/RedBlackTree, elide/struct/api/MutableSortedMap {
+	public static final field Companion Lelide/struct/RedBlackTreeMap$Companion;
+	public fun <init> ()V
+	public fun clear ()V
+	public fun containsKey (Ljava/lang/Comparable;)Z
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/Object;)Z
+	public final fun entrySet ()Ljava/util/Set;
+	public fun get (Ljava/lang/Comparable;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public fun put (Ljava/lang/Comparable;Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun putAll (Ljava/util/Map;)V
+	public fun remove (Ljava/lang/Comparable;)Ljava/lang/Object;
+	public final fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun size ()I
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class elide/struct/RedBlackTreeMap$Companion {
+	public final fun serializer (Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/struct/RedBlackTreeSet : elide/struct/RedBlackTree, elide/struct/api/MutableSortedSet {
+	public static final field Companion Lelide/struct/RedBlackTreeSet$Companion;
+	public fun <init> ()V
+	public fun add (Ljava/lang/Comparable;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun clear ()V
+	public fun contains (Ljava/lang/Comparable;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public fun remove (Ljava/lang/Comparable;)Z
+	public final fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public final fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+}
+
+public final class elide/struct/RedBlackTreeSet$Companion {
+	public final fun serializer (Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/struct/SortedMapsKt {
 	public static final fun emptySortedMap ()Lelide/struct/api/SortedMap;
 	public static final fun mutableSortedMapOf ([Lkotlin/Pair;)Lelide/struct/api/MutableSortedMap;

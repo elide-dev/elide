@@ -15,7 +15,7 @@ package elide.struct
 
 import kotlinx.serialization.Serializable
 import elide.struct.api.MutableSortedSet
-import elide.struct.codec.RedBlackTreeSetCodec
+import elide.struct.codec.TreeSetCodec
 
 /**
  * A [MutableSortedSet] implementation backed by a Red/Black Tree, with each map entry being represented as a node.
@@ -23,8 +23,8 @@ import elide.struct.codec.RedBlackTreeSetCodec
  *
  * Removing map entries while iterating is not allowed, and using [MutableIterator.remove] will throw an exception.
  */
-@Serializable(with = RedBlackTreeSetCodec::class)
-internal class RedBlackTreeSet<V : Comparable<V>> : MutableSortedSet<V>, RedBlackTree<V, Unit>() {
+@Serializable(with = TreeSetCodec::class)
+public class TreeSet<V : Comparable<V>> : MutableSortedSet<V>, RedBlackTree<V, Unit>() {
   override val size: Int get() = nodeCount
   override fun isEmpty(): Boolean = nodeCount == 0
 
@@ -57,5 +57,5 @@ internal class RedBlackTreeSet<V : Comparable<V>> : MutableSortedSet<V>, RedBlac
     return modified
   }
 
-  override fun clear() = reset()
+  override fun clear(): Unit = reset()
 }

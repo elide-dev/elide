@@ -16,7 +16,7 @@ package elide.struct
 import kotlinx.serialization.Serializable
 import kotlin.collections.MutableMap.MutableEntry
 import elide.struct.api.MutableSortedMap
-import elide.struct.codec.RedBlackTreeMapCodec
+import elide.struct.codec.TreeMapCodec
 
 /**
  * A [MutableSortedMap] implementation backed by a Red/Black Tree, with each map entry being represented as a node.
@@ -28,8 +28,8 @@ import elide.struct.codec.RedBlackTreeMapCodec
  *
  * Removing map entries while iterating is not allowed, and using [MutableIterator.remove] will throw an exception.
  */
-@Serializable(with = RedBlackTreeMapCodec::class)
-internal class RedBlackTreeMap<K : Comparable<K>, V> : MutableSortedMap<K, V>, RedBlackTree<K, V>() {
+@Serializable(with = TreeMapCodec::class)
+public class TreeMap<K : Comparable<K>, V> : MutableSortedMap<K, V>, RedBlackTree<K, V>() {
   /**
    * A specialized [MutableSet] sharing the tree of its parent map, to be used as a read/write view of its keys.
    * Operations performed on the set will be reflected on the map immediately at no additional cost.
@@ -134,8 +134,8 @@ internal class RedBlackTreeMap<K : Comparable<K>, V> : MutableSortedMap<K, V>, R
   override fun containsValue(value: V): Boolean = nodes().any { it.value == value }
 
   override fun put(key: K, value: V): V? = addNode(key, value)
-  override fun putAll(from: Map<out K, V>) = from.forEach { (key, value) -> addNode(key, value) }
+  override fun putAll(from: Map<out K, V>): Unit = from.forEach { (key, value) -> addNode(key, value) }
 
   override fun remove(key: K): V? = removeNodeByKey(key)?.value
-  override fun clear() = reset()
+  override fun clear(): Unit = reset()
 }

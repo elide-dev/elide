@@ -46,7 +46,7 @@ public fun <K : Comparable<K>, V> emptySortedMap(): SortedMap<K, V> {
  * The order of the entries is not preserved, but iterating over the map will always yield entries sorted by their keys.
  */
 public fun <K : Comparable<K>, V> sortedMapOf(pairs: Collection<Pair<K, V>>): SortedMap<K, V> {
-  return RedBlackTreeMap<K, V>().apply { pairs.forEach { put(it.first, it.second) } }
+  return TreeMap<K, V>().apply { pairs.forEach { put(it.first, it.second) } }
 }
 
 /**
@@ -58,7 +58,7 @@ public fun <K : Comparable<K>, V> sortedMapOf(pairs: Collection<Pair<K, V>>): So
  * The order of the entries is not preserved, but iterating over the map will always yield entries sorted by their keys.
  */
 public fun <K : Comparable<K>, V> sortedMapOf(vararg pairs: Pair<K, V>): SortedMap<K, V> {
-  return RedBlackTreeMap<K, V>().apply { pairs.forEach { put(it.first, it.second) } }
+  return TreeMap<K, V>().apply { pairs.forEach { put(it.first, it.second) } }
 }
 
 /**
@@ -70,5 +70,5 @@ public fun <K : Comparable<K>, V> sortedMapOf(vararg pairs: Pair<K, V>): SortedM
  * The order of the entries is not preserved, but iterating over the map will always yield entries sorted by their keys.
  */
 public fun <K : Comparable<K>, V> mutableSortedMapOf(vararg pairs: Pair<K, V>): MutableSortedMap<K, V> {
-  return RedBlackTreeMap<K, V>().apply { pairs.forEach { put(it.first, it.second) } }
+  return TreeMap<K, V>().apply { pairs.forEach { put(it.first, it.second) } }
 }

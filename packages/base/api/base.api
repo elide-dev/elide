@@ -262,8 +262,21 @@ protected final class elide/struct/RedBlackTree$NodeColor : java/lang/Enum {
 	public static fun values ()[Lelide/struct/RedBlackTree$NodeColor;
 }
 
-public final class elide/struct/RedBlackTreeMap : elide/struct/RedBlackTree, elide/struct/api/MutableSortedMap {
-	public static final field Companion Lelide/struct/RedBlackTreeMap$Companion;
+public final class elide/struct/SortedMapsKt {
+	public static final fun emptySortedMap ()Lelide/struct/api/SortedMap;
+	public static final fun mutableSortedMapOf ([Lkotlin/Pair;)Lelide/struct/api/MutableSortedMap;
+	public static final fun sortedMapOf (Ljava/util/Collection;)Lelide/struct/api/SortedMap;
+	public static final fun sortedMapOf ([Lkotlin/Pair;)Lelide/struct/api/SortedMap;
+}
+
+public final class elide/struct/SortedSetsKt {
+	public static final fun emptySortedSet ()Lelide/struct/api/SortedSet;
+	public static final fun mutableSortedSetOf ([Ljava/lang/Comparable;)Lelide/struct/api/MutableSortedSet;
+	public static final fun sortedSetOf ([Ljava/lang/Comparable;)Lelide/struct/api/SortedSet;
+}
+
+public final class elide/struct/TreeMap : elide/struct/RedBlackTree, elide/struct/api/MutableSortedMap {
+	public static final field Companion Lelide/struct/TreeMap$Companion;
 	public fun <init> ()V
 	public fun clear ()V
 	public fun containsKey (Ljava/lang/Comparable;)Z
@@ -287,12 +300,12 @@ public final class elide/struct/RedBlackTreeMap : elide/struct/RedBlackTree, eli
 	public final fun values ()Ljava/util/Collection;
 }
 
-public final class elide/struct/RedBlackTreeMap$Companion {
+public final class elide/struct/TreeMap$Companion {
 	public final fun serializer (Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
 }
 
-public final class elide/struct/RedBlackTreeSet : elide/struct/RedBlackTree, elide/struct/api/MutableSortedSet {
-	public static final field Companion Lelide/struct/RedBlackTreeSet$Companion;
+public final class elide/struct/TreeSet : elide/struct/RedBlackTree, elide/struct/api/MutableSortedSet {
+	public static final field Companion Lelide/struct/TreeSet$Companion;
 	public fun <init> ()V
 	public fun add (Ljava/lang/Comparable;)Z
 	public synthetic fun add (Ljava/lang/Object;)Z
@@ -313,21 +326,8 @@ public final class elide/struct/RedBlackTreeSet : elide/struct/RedBlackTree, eli
 	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
 }
 
-public final class elide/struct/RedBlackTreeSet$Companion {
+public final class elide/struct/TreeSet$Companion {
 	public final fun serializer (Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
-}
-
-public final class elide/struct/SortedMapsKt {
-	public static final fun emptySortedMap ()Lelide/struct/api/SortedMap;
-	public static final fun mutableSortedMapOf ([Lkotlin/Pair;)Lelide/struct/api/MutableSortedMap;
-	public static final fun sortedMapOf (Ljava/util/Collection;)Lelide/struct/api/SortedMap;
-	public static final fun sortedMapOf ([Lkotlin/Pair;)Lelide/struct/api/SortedMap;
-}
-
-public final class elide/struct/SortedSetsKt {
-	public static final fun emptySortedSet ()Lelide/struct/api/SortedSet;
-	public static final fun mutableSortedSetOf ([Ljava/lang/Comparable;)Lelide/struct/api/MutableSortedSet;
-	public static final fun sortedSetOf ([Ljava/lang/Comparable;)Lelide/struct/api/SortedSet;
 }
 
 public abstract interface class elide/struct/api/MutableSortedList : java/util/List, kotlin/jvm/internal/markers/KMutableList {

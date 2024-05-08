@@ -22,6 +22,7 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
+import elide.runtime.core.extensions.setOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
@@ -39,7 +40,12 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.enableOptions(
+      "ruby.cexts",
+      "ruby.core-as-internal",
+      "ruby.did-you-mean",
       "ruby.embedded",
+      "ruby.experimental-engine-caching",
+      "ruby.frozen-string-literals",
       "ruby.platform-native-interrupt",
       "ruby.platform-native",
       "ruby.polyglot-stdio",
@@ -51,15 +57,15 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       "ruby.lazy-translation-core",
       "ruby.lazy-translation-user",
       "ruby.shared-objects",
-      "ruby.experimental-engine-caching",
-    )
-
-    builder.disableOptions(
+      "ruby.stdlib-as-internal",
       "ruby.virtual-thread-fibers",
-      "ruby.cexts",
+      "ruby.use-truffle-regex",
+      "ruby.warn-locale",
     )
 
-    builder.option("log.level", "OFF")
+    builder.setOptions(
+      "log.level" to "OFF",
+    )
   }
 
   public companion object Plugin : AbstractLanguagePlugin<RubyConfig, Ruby>() {

@@ -40,7 +40,7 @@ public fun <V : Comparable<V>> emptySortedSet(): SortedSet<V> {
  * natural order.
  */
 public fun <V : Comparable<V>> sortedSetOf(vararg values: V): SortedSet<V> {
-  return RedBlackTreeSet<V>().apply { addAll(values) }
+  return TreeSet<V>().apply { addAll(values) }
 }
 
 /**
@@ -48,5 +48,5 @@ public fun <V : Comparable<V>> sortedSetOf(vararg values: V): SortedSet<V> {
  * natural order.
  */
 public fun <V : Comparable<V>> mutableSortedSetOf(vararg values: V): MutableSortedSet<V> {
-  return RedBlackTreeSet<V>().apply { addAll(values) }
+  return TreeSet<V>().apply { addAll(values) }
 }

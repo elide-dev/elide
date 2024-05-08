@@ -28,7 +28,7 @@ import elide.struct.RedBlackTree.NodeColor.RED
  * This class is _not_ safe for concurrent modifications, no locks are used and adding/removing/updating values while
  * iterating will cause unspecified behavior.
  */
-internal abstract class RedBlackTree<K : Comparable<K>, V> {
+public abstract class RedBlackTree<K : Comparable<K>, V> internal constructor() {
   /** The color of a node in a Red/Black tree. */
   protected enum class NodeColor { RED, BLACK }
 
@@ -52,13 +52,13 @@ internal abstract class RedBlackTree<K : Comparable<K>, V> {
     /** The value associated with the [key]. */
     @Volatile override var value: V,
     /** The color of this node. */
-    @Volatile @JvmField var color: NodeColor,
+    @Volatile @JvmField public var color: NodeColor,
     /** The left child of this node. */
-    @Volatile @JvmField var left: Node<K, V>? = null,
+    @Volatile @JvmField public var left: Node<K, V>? = null,
     /** The right child of this node. */
-    @Volatile @JvmField var right: Node<K, V>? = null,
+    @Volatile @JvmField public var right: Node<K, V>? = null,
     /** The parent of this node, or `null` if this node is the root. */
-    @Volatile @JvmField var parent: Node<K, V>? = null,
+    @Volatile @JvmField public var parent: Node<K, V>? = null,
   ) : MutableMap.MutableEntry<K, V> {
     override fun setValue(newValue: V): V {
       val old = value

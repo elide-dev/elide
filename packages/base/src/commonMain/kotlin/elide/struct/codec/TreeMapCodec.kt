@@ -18,21 +18,21 @@ import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import elide.struct.RedBlackTreeMap
+import elide.struct.TreeMap
 
-/** Serializer for the [RedBlackTreeMap] structure, using a [MapSerializer] delegate with key and value serializers. */
-internal class RedBlackTreeMapCodec<K : Comparable<K>, V>(
+/** Serializer for the [TreeMap] structure, using a [MapSerializer] delegate with key and value serializers. */
+internal class TreeMapCodec<K : Comparable<K>, V>(
   keySerializer: KSerializer<K>,
   valueSerializer: KSerializer<V>,
-) : KSerializer<RedBlackTreeMap<K, V>> {
+) : KSerializer<TreeMap<K, V>> {
   private val delegateSerializer = MapSerializer(keySerializer, valueSerializer)
   override val descriptor: SerialDescriptor = delegateSerializer.descriptor
 
-  override fun deserialize(decoder: Decoder): RedBlackTreeMap<K, V> {
-    return RedBlackTreeMap<K, V>().apply { putAll(delegateSerializer.deserialize(decoder)) }
+  override fun deserialize(decoder: Decoder): TreeMap<K, V> {
+    return TreeMap<K, V>().apply { putAll(delegateSerializer.deserialize(decoder)) }
   }
 
-  override fun serialize(encoder: Encoder, value: RedBlackTreeMap<K, V>) {
+  override fun serialize(encoder: Encoder, value: TreeMap<K, V>) {
     delegateSerializer.serialize(encoder, value)
   }
 }

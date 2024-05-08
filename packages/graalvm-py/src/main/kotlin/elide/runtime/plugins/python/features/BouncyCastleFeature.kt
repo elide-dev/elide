@@ -27,7 +27,7 @@ import java.security.Security
  *
  * Registers intrinsics and reflection configurations for BouncyCastle use via Python on Elide.
  */
-@Suppress("LargeClass", "LongMethod", "TooGenericExceptionThrown")
+@Suppress("LargeClass", "LongMethod", "TooGenericExceptionThrown", "deprecation")
 public class BouncyCastleFeature : Feature {
   // @TODO(sgammon): Remove once https://github.com/oracle/graal/issues/8795 is fixed
   override fun afterRegistration(access: AfterRegistrationAccess) {

@@ -21,7 +21,6 @@ import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.enableOptions
-import elide.runtime.core.extensions.setOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
@@ -62,9 +61,9 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       "ruby.warn-locale",
     )
 
-    builder.setOptions(
-      "log.level" to "OFF",
-    )
+// builder.setOptions(
+// "log.level" to "OFF",
+// )
   }
 
   public companion object Plugin : AbstractLanguagePlugin<RubyConfig, Ruby>() {

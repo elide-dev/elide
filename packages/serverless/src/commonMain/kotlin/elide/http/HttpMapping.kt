@@ -14,8 +14,8 @@
 package elide.http
 
 import elide.http.api.HttpText
-import elide.struct.TreeMap
 import elide.struct.api.SortedMap
+import elide.struct.emptySortedMap
 import elide.http.api.HttpMapping as HttpMappingAPI
 
 /**
@@ -23,6 +23,6 @@ import elide.http.api.HttpMapping as HttpMappingAPI
  */
 public class HttpMapping<Key, Value> private constructor (
   /** */
-  private val backing: SortedMap<Key, Value> = TreeMap.empty(),
+  private val backing: SortedMap<Key, Value> = emptySortedMap(),
 ) : HttpMappingAPI<Key, Value>, SortedMap<Key, Value> by backing
         where Key : Comparable<Key>, Key: HttpText, Value: HttpText

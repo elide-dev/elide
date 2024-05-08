@@ -17,8 +17,8 @@ import kotlin.jvm.JvmStatic
 import elide.http.api.HttpHeaders.HeaderName
 import elide.http.api.HttpHeaders.HeaderValue
 import elide.http.api.HttpString
-import elide.struct.MutableTreeMap
 import elide.struct.api.SortedMap
+import elide.struct.mutableSortedMapOf
 import elide.struct.sortedMapOf
 import elide.http.api.HttpHeaders as HttpHeadersAPI
 import elide.http.api.MutableHttpHeaders as MutableHttpHeadersAPI
@@ -113,7 +113,7 @@ public class HttpHeaders private constructor (
       // map each pair into a `HeaderName` and string value, then group by `HeaderName`
       pairs.map { HeaderName.of(it.first) to it.second }.groupingBy {
         it.first
-      }.foldTo(MutableTreeMap.create<HeaderName, ArrayList<String>>(), ArrayList(2)) { acc, el ->
+      }.foldTo(mutableSortedMapOf<HeaderName, ArrayList<String>>(), ArrayList(2)) { acc, el ->
         // fold into a collection of string values for each `HeaderName`, preserving insertion order
         acc.apply {
           add(el.second)

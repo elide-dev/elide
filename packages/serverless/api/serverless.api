@@ -346,6 +346,7 @@ public final class elide/http/MutableHttpMapping : elide/http/api/MutableHttpMap
 	public static final fun empty ()Lelide/http/api/MutableHttpMapping;
 	public final fun entrySet ()Ljava/util/Set;
 	public fun get (Ljava/lang/Comparable;)Ljava/lang/CharSequence;
+	public synthetic fun get (Ljava/lang/Comparable;)Ljava/lang/Object;
 	public final fun get (Ljava/lang/Object;)Ljava/lang/CharSequence;
 	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
 	public fun getEntries ()Ljava/util/Set;

@@ -16,8 +16,8 @@ package elide.http
 import kotlin.jvm.JvmStatic
 import elide.http.api.HttpText
 import elide.http.api.MutableHttpMapping
-import elide.struct.MutableTreeMap
 import elide.struct.api.MutableSortedMap
+import elide.struct.mutableSortedMapOf
 import elide.http.api.MutableHttpMapping as MutableHttpMappingAPI
 
 /**
@@ -25,7 +25,7 @@ import elide.http.api.MutableHttpMapping as MutableHttpMappingAPI
  */
 public class MutableHttpMapping<Key, Value> private constructor (
   /** */
-  private val backing: MutableSortedMap<Key, Value> = MutableTreeMap.create(),
+  private val backing: MutableSortedMap<Key, Value> = mutableSortedMapOf(),
 ) : MutableHttpMappingAPI<Key, Value>, MutableSortedMap<Key, Value> by backing
         where Key: Comparable<Key>, Key: HttpText, Value: HttpText {
   //

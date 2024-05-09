@@ -14,6 +14,8 @@
 
 package elide.runtime.gvm.internals.node.process
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import kotlin.collections.Map.Entry
 import kotlin.system.exitProcess
 import elide.annotations.Factory
@@ -26,9 +28,7 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ProcessAPI
-import elide.runtime.intrinsics.js.node.process.ProcessArch
-import elide.runtime.intrinsics.js.node.process.ProcessEnvironmentAPI
-import elide.runtime.intrinsics.js.node.process.ProcessPlatform
+import elide.runtime.intrinsics.js.node.process.*
 import elide.runtime.plugins.env.EnvConfig
 import elide.vm.annotations.Polyglot
 
@@ -252,18 +252,49 @@ internal object NodeProcess {
   ) : ProcessAPI, NodeProcessBaseline() {
     @get:Polyglot override val env: ProcessEnvironmentAPI get() = EnvironmentAccessMediator(envApi)
     @get:Polyglot override val argv: Array<String> get() = argvMediator.all()
-    @get:Polyglot override val cwd: String get() = cwdAccessor.cwd()
     @get:Polyglot override val pid: Long get() = pidAccessor.pid()
     @get:Polyglot override val arch: String get() = activeArch.symbol
     @get:Polyglot override val platform: String get() = activePlatform.symbol
-    @Polyglot override fun exit(code: Int) = exiter.exit(code)
+    @Polyglot override fun cwd(): String = cwdAccessor.cwd()
+    @Polyglot override fun exit(code: Int?) = exiter.exit(code ?: 0)
     @Polyglot override fun exit() = exiter.exit(0)
+
+    @Polyglot override fun exit(code: Value?) {
+      when {
+        code == null || code.isNull -> exiter.exit(0)
+        code.isNumber && code.fitsInInt() -> exiter.exit(code.asInt())
+        else -> error("Cannot exit with value '$code'")
+      }
+    }
+
+    @get:Polyglot override val stdout: ProcessStandardOutputStream
+      get() = ProcessStandardOutputStream.wrap(System.out)
+
+    @get:Polyglot override val stderr: ProcessStandardOutputStream
+      get() = ProcessStandardOutputStream.wrap(System.err)
+
+    @get:Polyglot override val stdin: ProcessStandardInputStream
+      get() = ProcessStandardInputStream.wrap(System.`in`)
+
+    override fun getMember(key: String): Any? = when (key) {
+      "env" -> env
+      "argv" -> argv
+      "stdout" -> stdout
+      "stderr" -> stderr
+      "stdin" -> stdin
+      "pid" -> pid
+      "arch" -> arch
+      "platform" -> platform
+      "cwd" -> ProxyExecutable { cwd() }
+      "exit" -> ProxyExecutable { exit(it.getOrNull(0)) }
+      else -> null
+    }
   }
 
-  // Resolve the currently-active operating system (platform) value.
+  // Resolve the currently active operating system (platform) value.
   @JvmStatic private fun resolveCurrentPlatform(): ProcessPlatform = ProcessPlatform.host()
 
-  // Resolve the currently-active CPU architecture value.
+  // Resolve the currently active CPU architecture value.
   @JvmStatic private fun resolveCurrentArchitecture(): ProcessArch = ProcessArch.host()
 
   // Host-side process implementation.

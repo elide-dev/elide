@@ -114,7 +114,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `host cwd property should not be null`() {
-    assertNotNull(process.cwd, "should have a cwd value")
+    assertNotNull(process.cwd(), "should have a cwd value")
   }
 
   @Test fun `host pid property should not be null`() {
@@ -151,7 +151,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `cwd should match host cwd by default`() {
-    assertEquals(System.getProperty("user.dir"), process.cwd)
+    assertEquals(System.getProperty("user.dir"), process.cwd())
   }
 
   @Test fun `platform should match host platform by default`() {
@@ -171,7 +171,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `stubbed cwd property should not be null`() {
-    assertNotNull(stubbed.cwd, "should have a cwd value")
+    assertNotNull(stubbed.cwd(), "should have a cwd value")
   }
 
   @Test fun `stubbed pid property should not be null`() {
@@ -199,7 +199,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `stubbed cwd property should be empty`() {
-    assertEquals("", stubbed.cwd)
+    assertEquals("", stubbed.cwd())
   }
 
   @Test fun `stubbed pid property should be -1`() {

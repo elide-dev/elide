@@ -2,7 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>NewLineAtEndOfFile:Extensions.kt$elide.runtime.plugins.kotlin.Extensions.kt</ID>
     <ID>TooGenericExceptionThrown:GuestKotlinEvaluator.kt$GuestKotlinEvaluator$throw RuntimeException("Exception during snippet evaluation", replResult.cause)</ID>
   </CurrentIssues>
 </SmellBaseline>

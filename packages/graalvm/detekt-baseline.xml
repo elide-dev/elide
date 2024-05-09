@@ -90,6 +90,7 @@
     <ID>TooManyFunctions:BaseMutableJsMultiMap.kt$BaseMutableJsMultiMap&lt;K: Any, V> : BaseJsMultiMapMutableMapMutableMultiMapLike</ID>
     <ID>TooManyFunctions:CompoundVFSImpl.kt$CompoundVFSImpl : AbstractBaseVFS</ID>
     <ID>TooManyFunctions:NodeOperatingSystem.kt$NodeOperatingSystem$BaseOS : ModuleBaseOperatingSystemAPIProxyObject</ID>
+    <ID>TooManyFunctions:Readable.kt$Readable : EventEmitterProxyObjectProxyIterable</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
     <ID>UnusedPrivateProperty:JsRuntime.kt$JsRuntime.Companion$// Root where we can find runtime-related files. private const val EMBEDDED_ROOT = "/META-INF/elide/embedded/runtime/js"</ID>

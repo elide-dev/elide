@@ -12,12 +12,29 @@
  */
 package elide.runtime.intrinsics.js.node
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.process.ProcessEnvironmentAPI
+import elide.runtime.intrinsics.js.node.process.ProcessStandardInputStream
+import elide.runtime.intrinsics.js.node.process.ProcessStandardOutputStream
 import elide.vm.annotations.Polyglot
 
+// Properties available on the Node process object and module.
+private val NODE_PROCESS_PROPS = arrayOf(
+  "env",
+  "argv",
+  "cwd",
+  "pid",
+  "platform",
+  "arch",
+  "stdout",
+  "stderr",
+  "stdin",
+)
+
 /**
- * # Node API: `process`
+ * # Node API: Process
  *
  * Describes the "process" object, as specified by the Node JS "process" built-in module. The "process" object provides
  * information about the current process, and allows the user to interact with the process environment. This includes
@@ -35,9 +52,9 @@ import elide.vm.annotations.Polyglot
  *
  * ## Behavior
  *
- * Depending on access rights in the current environment, the `process` object behaves roughly the same in Elide as it
- * does in Node. Where values are forbidden for access or otherwise unavailable, sensible values are provided instead of
- * their real counterparts (for example, `-1` as the process ID).
+ * Depending on the access rights in the current environment, the `process` object behaves roughly the same in Elide as
+ * it does in Node. Where values are forbidden for access or otherwise unavailable, sensible values are provided instead
+ * of their real counterparts (for example, `-1` as the process ID).
  *
  * Behavior and requisite access rights are described below for each property, along with any other applicable behavior:
  *
@@ -62,7 +79,7 @@ import elide.vm.annotations.Polyglot
  * See the [Node Process API](https://nodejs.org/api/process.html) for more information.
  * @see ProcessEnvironmentAPI for details about how Elide handles Node-style environment access.
  */
-@API public interface ProcessAPI : NodeAPI {
+@API public interface ProcessAPI : NodeAPI, ProxyObject {
   /**
    * ## Process Environment
    *
@@ -81,15 +98,6 @@ import elide.vm.annotations.Polyglot
    * See also: [Node Process API: `argv`](https://nodejs.org/api/process.html#process_process_argv).
    */
   @get:Polyglot public val argv: Array<String>
-
-  /**
-   * ## Current Working Directory
-   *
-   * Access the current working directory of the current process.
-   *
-   * See also: [Node Process API: `cwd`](https://nodejs.org/api/process.html#process_process_cwd).
-   */
-  @get:Polyglot public val cwd: String
 
   /**
    * ## Process ID
@@ -119,20 +127,72 @@ import elide.vm.annotations.Polyglot
   @get:Polyglot public val arch: String
 
   /**
-   * ## Process Exit
+   * ## Streams: Standard Output
    *
-   * Exit the current process with the specified exit code.
+   * Access to a stream for emitting content to `stdout`.
    *
-   * See also: [Node Process API: `exit`](https://nodejs.org/api/process.html#process_process_exit_code).
-   *
-   * @param code Exit code to use
+   * See also: [Node Process API: `stdout`](https://nodejs.org/api/process.html#process_process_stdout).
+   * @see ProcessStandardOutputStream for the layout of a standard output stream.
    */
-  @Polyglot public fun exit(code: Int)
+  @get:Polyglot public val stdout: ProcessStandardOutputStream
+
+  /**
+   * ## Streams: Standard Error
+   *
+   * Access to a stream for emitting content to `stderr`.
+   *
+   * See also: [Node Process API: `stderr`](https://nodejs.org/api/process.html#process_process_stderr).
+   * @see ProcessStandardOutputStream for the layout of a standard output stream.
+   */
+  @get:Polyglot public val stderr: ProcessStandardOutputStream
+
+  /**
+   * ## Streams: Standard Input
+   *
+   * Access to a stream for consuming content from `stdin`.
+   *
+   * See also: [Node Process API: `stdin`](https://nodejs.org/api/process.html#process_process_stdin).
+   * @see ProcessStandardInputStream for the layout of a standard input stream
+   */
+  @get:Polyglot public val stdin: ProcessStandardInputStream
+
+  /**
+   * ## Current Working Directory
+   *
+   * Access the current working directory of the current process.
+   *
+   * See also: [Node Process API: `cwd`](https://nodejs.org/api/process.html#process_process_cwd).
+   */
+  @Polyglot public fun cwd(): String
 
   /**
    * ## Process Exit
    *
    * Exit the current process with the specified exit code.
+   * This variant works on a host exit code [Int].
+   *
+   * See also: [Node Process API: `exit`](https://nodejs.org/api/process.html#process_process_exit_code).
+   *
+   * @param code Exit code to use
+   */
+  @Polyglot public fun exit(code: Int?)
+
+  /**
+   * ## Process Exit
+   *
+   * Exit the current process with the specified exit code.
+   * This variant works on a guest [Value].
+   *
+   * See also: [Node Process API: `exit`](https://nodejs.org/api/process.html#process_process_exit_code).
+   *
+   * @param code Exit code to use
+   */
+  @Polyglot public fun exit(code: Value?)
+
+  /**
+   * ## Process Exit
+   *
+   * Exit the current process with the specified exit code; uses code `0`.
    *
    * See also: [Node Process API: `exit`](https://nodejs.org/api/process.html#process_process_exit_code).
    */
@@ -149,4 +209,15 @@ import elide.vm.annotations.Polyglot
    * @param args Arguments to pass to the callback
    */
   @Polyglot public fun nextTick(callback: (args: Array<Any>) -> Unit, vararg args: Any)
+
+  override fun hasMember(key: String): Boolean = key in NODE_PROCESS_PROPS
+  override fun getMemberKeys(): Array<String> = NODE_PROCESS_PROPS
+
+  override fun putMember(key: String?, value: Value?) {
+    throw UnsupportedOperationException("Cannot mutate members from the process object")
+  }
+
+  override fun removeMember(key: String?): Boolean {
+    throw UnsupportedOperationException("Cannot mutate members from the process object")
+  }
 }

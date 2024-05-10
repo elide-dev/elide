@@ -16,11 +16,15 @@ package elide.tool.engine
 import io.netty.channel.unix.Unix
 import io.netty.util.internal.PlatformDependent
 import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.ProcessProperties
 import java.io.File
+import java.nio.file.Files
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
 import elide.runtime.LogLevel.DEBUG
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem.*
@@ -298,12 +302,48 @@ object NativeEngine {
       else -> ":"
     }
     val libraryPath = System.getProperty("java.library.path", "")
+    val execPath = if (!ImageInfo.inImageCode()) null else {
+      Path(ProcessProperties.getExecutableName())
+    }
+
+    // sanity check: exec path should exist, then convert it into a suite of lib exec paths
+    val libExecPaths = (if (execPath != null) {
+      if (!Files.exists(execPath)) error("Executable path does not exist: $execPath")
+      if (Files.isDirectory(execPath)) {
+        execPath.resolve("resources")
+      } else {
+        // if it's a binary, we need the peer directory
+        execPath.parent.resolve("resources")
+      }
+    } else {
+      // with no exec path, use the current working directory
+      Path(System.getProperty("user.dir")?.ifBlank { null } ?: error("No working directory"))
+    }).let { resolvedExecPrefix ->
+      listOf(
+        resolvedExecPrefix,
+        resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.1"),
+        resolvedExecPrefix.resolve("llvm/libsulong-native"),
+        resolvedExecPrefix.resolve("ruby/ruby-home"),
+      )
+    }
+
+    val javaLibraryPath = System.getenv("JAVA_HOME")?.ifBlank { null }?.let {
+      Path(it).resolve("lib")
+    }
+
     val libPath = if (!libraryPath.contains("/elide-runtime")) {
       libraryPath.split(separator).toMutableList().apply {
+        // elide's natives path
         add(0, nativesPath)
-        System.getProperty("elide.natives")?.let {
-          add(1, it)
-        }
+
+        // any given override path
+        System.getProperty("elide.natives")?.let { add(1, it) }
+
+        // bundled library paths
+        addAll(libExecPaths.map { it.absolutePathString() })
+
+        // java's library path
+        if (javaLibraryPath != null) add(javaLibraryPath.absolutePathString())
       }.joinToString(separator)
     } else libraryPath
 

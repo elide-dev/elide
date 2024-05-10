@@ -37,10 +37,17 @@ private val CUSTOM_EVENT_PROPS_AND_METHODS = arrayOf(
   "preventDefault",
   "stopImmediatePropagation",
   "stopPropagation",
+  "srcElement",
+  "target",
+  "timeStamp",
+  "type",
 )
 
 /**
  * ## Node API: Custom Event
+ *
+ * The [CustomEvent] object is an adaptation of the [CustomEvent Web API](https://dom.spec.whatwg.org/#customevent).
+ * Instances are created internally by Node.js.
  */
 @Implementable
 @API public open class CustomEvent (
@@ -65,6 +72,9 @@ private val CUSTOM_EVENT_PROPS_AND_METHODS = arrayOf(
   private val origin: AtomicReference<EventTarget> = AtomicReference()
   private val activeTarget: AtomicReference<EventTarget> = AtomicReference()
   private val detailData: AtomicReference<Any> = AtomicReference(detail)
+
+  // Indicate whether propagation is enabled for this event; host-side only.
+  internal val propagates: Boolean get() = doesBubble.get() && !stopPropagation.get() && !stopImmediate.get()
 
   @get:Polyglot override val bubbles: Boolean get() = doesBubble.get()
   @get:Polyglot override val cancelable: Boolean get() = canCancel.get()
@@ -116,13 +126,24 @@ private val CUSTOM_EVENT_PROPS_AND_METHODS = arrayOf(
   @get:Polyglot override val defaultPrevented: Boolean get() = stopDefault.get()
   @get:Polyglot override val isTrusted: Boolean get() = isTrustedEvent.get()
   @get:Polyglot override val returnValue: Boolean get() = !defaultPrevented
-  @get:Polyglot override val srcElement: EventTarget? get() = target
-  @get:Polyglot override val target: EventTarget? get() = activeTarget.get()
+  @get:Polyglot override val srcElement: EventTarget? get() = origin.get()
+  @get:Polyglot override val target: EventTarget? get() = origin.get()
   @get:Polyglot override val timeStamp: Double get() = createdAt
-  @Polyglot override fun composedPath(): Array<EventTarget> = targetSuite.toTypedArray()
+  @Polyglot override fun composedPath(): Array<EventTarget> {
+    val active = activeTarget.get()
+    val suite = targetSuite
+
+    if (active != null) {
+      val path = ArrayList<EventTarget>(1 + suite.size)
+      path.add(active)
+      path.addAll(suite)
+      return path.toTypedArray()
+    }
+    return emptyArray()
+  }
 
   @Polyglot override fun initEvent(type: String, bubbles: Boolean, cancelable: Boolean) {
-    require(!initialized.get()) { "Cannot re-initialize event" }
+    if (initialized.get()) error("Cannot re-initialize event")
     eventType.set(type)
     doesBubble.set(bubbles)
     canCancel.set(cancelable)
@@ -152,7 +173,7 @@ private val CUSTOM_EVENT_PROPS_AND_METHODS = arrayOf(
     throw UnsupportedOperationException("Cannot remove properties from a CustomEvent")
   }
 
-  override fun getMember(key: String): Any? = when (key) {
+  override fun getMember(key: String?): Any? = when (key) {
     "bubbles" -> bubbles
     "cancelable" -> cancelable
     "composed" -> composed
@@ -165,10 +186,10 @@ private val CUSTOM_EVENT_PROPS_AND_METHODS = arrayOf(
     "target" -> target
     "timeStamp" -> timeStamp
     "type" -> type
-
-    "composedPath" -> ProxyExecutable {
-      composedPath()
-    }
+    "preventDefault" -> ProxyExecutable { preventDefault() }
+    "stopImmediatePropagation" -> ProxyExecutable { stopImmediatePropagation() }
+    "stopPropagation" -> ProxyExecutable { stopPropagation() }
+    "composedPath" -> ProxyExecutable { composedPath() }
 
     "initEvent" -> ProxyExecutable {
       val name = it.getOrNull(0)?.asString()
@@ -176,18 +197,6 @@ private val CUSTOM_EVENT_PROPS_AND_METHODS = arrayOf(
       val cancelable = it.getOrNull(2)?.asBoolean() ?: false
       require(name?.ifBlank { null } != null) { "Event type must be provided" }
       initEvent(name!!, bubbles, cancelable)
-    }
-
-    "preventDefault" -> ProxyExecutable {
-      preventDefault()
-    }
-
-    "stopImmediatePropagation" -> ProxyExecutable {
-      stopImmediatePropagation()
-    }
-
-    "stopPropagation" -> ProxyExecutable {
-      stopPropagation()
     }
 
     else -> null

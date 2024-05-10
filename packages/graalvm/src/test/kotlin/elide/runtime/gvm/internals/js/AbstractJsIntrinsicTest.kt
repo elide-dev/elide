@@ -14,6 +14,8 @@
 
 package elide.runtime.gvm.internals.js
 
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
@@ -162,5 +164,16 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         )
       }
     }
+  }
+
+  suspend inline fun SequenceScope<DynamicTest>.dynamicGuestTest(
+    name: String,
+    crossinline cbk: () -> String,
+  ) {
+    yield(
+      dynamicTest(name) {
+      dual {}.guest { cbk.invoke() }
+    }
+    )
   }
 }

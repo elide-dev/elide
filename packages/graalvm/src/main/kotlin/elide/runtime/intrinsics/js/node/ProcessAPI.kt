@@ -229,11 +229,13 @@ private val NODE_PROCESS_PROPS = arrayOf(
       if (value == null || !value.isString)
         throw JsError.valueError("Cannot set process title to non-string value")
       title = value.asString()
+      return
     }
-    throw UnsupportedOperationException("Cannot mutate members from the process object")
+
+    // ignore
   }
 
   override fun removeMember(key: String?): Boolean {
-    throw UnsupportedOperationException("Cannot mutate members from the process object")
+    return false
   }
 }

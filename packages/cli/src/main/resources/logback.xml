@@ -73,9 +73,6 @@
   <logger name="elide:engine:wasm" level="debug" />
 
   <logger name="elide.tool.cli.cmd.repl.ToolShellCommand" level="warn" />
-  <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="warn" />
-  <logger name="elide.runtime.gvm.internals.context.NativeContextManagerImpl" level="warn" />
-  <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />
 
   <logger name="elide.tool.cli.cmd.update.SelfUpdateCommand" level="warn" />
 

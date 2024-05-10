@@ -54,3 +54,4 @@ ignore:
   - "packages/cli/src/main/kotlin/elide/tool/cli/output/Mosaic.kt"
   - "packages/cli/src/main/kotlin/elide/tool/engine/NativeUtil.kt"
   - "packages/cli/src/main/kotlin/elide/tool/testing/TestContext.kt"
+  - "packages/*/src/commonMain/**/*.*"

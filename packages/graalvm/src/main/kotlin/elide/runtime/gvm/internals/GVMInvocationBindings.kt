@@ -104,7 +104,7 @@ public abstract class GVMInvocationBindings<Bindings, Script> : InvocationBindin
      * modes for that script. Available modes are [DispatchStyle.UNARY], [DispatchStyle.SERVER], and
      * [DispatchStyle.RENDER] at the time of this writing.
      *
-     * Depending on the inputs for a given VM execution, an [AbstractVMAdapter] then selects how to dispatch a given
+     * Depending on the inputs for a given VM execution, an `AbstractVMAdapter` then selects how to dispatch a given
      * [Script] based on the resulting [Bindings] and [DispatchStyle] modes.
      *
      * @param script The script which was evaluated to produce the provided [bindings].

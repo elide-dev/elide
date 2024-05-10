@@ -32,8 +32,6 @@ import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutableScript
 import elide.runtime.gvm.ExecutionInputs
-import elide.runtime.gvm.VMFacadeFactory
-import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.js.JavaScript
 import elide.server.SuspensionRenderer
 import elide.server.controller.ElideController
@@ -117,23 +115,24 @@ public class ServerSSRRenderer (
   public suspend fun renderSuspendAsync(): Deferred<String> = coroutineScope {
     return@coroutineScope async {
       prepareContext { _, props ->
-        val vm = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
-          error("Failed to resolve JavaScript runtime provider")
-        }.acquireVM(
-          GraalVMGuest.JAVASCRIPT  // @TODO(sgammon): don't hard-code this
-        )
-
-        buffer.apply {
-          logging.trace("Starting SSR execution")
-          val op = vm.executeRender(
-            script,
-            request,
-            receiver = ::chunkReady,
-            context = props,
-          )
-          job.set(op)
-          op.join()
-        }
+        TODO("Stubbed for transition to plugin-based VM")
+//        val vm = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
+//          error("Failed to resolve JavaScript runtime provider")
+//        }.acquireVM(
+//          GraalVMGuest.JAVASCRIPT  // @TODO(sgammon): don't hard-code this
+//        )
+//
+//        buffer.apply {
+//          logging.trace("Starting SSR execution")
+//          val op = vm.executeRender(
+//            script,
+//            request,
+//            receiver = ::chunkReady,
+//            context = props,
+//          )
+//          job.set(op)
+//          op.join()
+//        }
       }
     }
   }

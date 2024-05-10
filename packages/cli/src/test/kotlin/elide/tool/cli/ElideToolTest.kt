@@ -20,7 +20,6 @@ import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import elide.tool.cli.cmd.repl.ToolShellCommand
 
 /** Tests for the main CLI tool entrypoint. */
 @TestCase class ElideToolTest {

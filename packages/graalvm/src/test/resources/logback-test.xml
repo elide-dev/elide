@@ -25,8 +25,6 @@
     <logger name="http:access" additivity="false" level="off" />
     <logger name="gvm:js.console" level="off" />
 
-    <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="off" />
-    <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="off" />
     <logger name="elide.runtime.gvm.internals.vfs.HostVFSImpl" level="trace" />
     <logger name="elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl" level="trace" />
 

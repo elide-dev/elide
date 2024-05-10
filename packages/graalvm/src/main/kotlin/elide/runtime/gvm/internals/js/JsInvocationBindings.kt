@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.js
 
 import java.util.*
@@ -21,7 +20,7 @@ import org.graalvm.polyglot.Value as GuestValue
 /**
  * # JS: Invocation Bindings
  *
- * Implementation of [InvocationBindings] for the [JsRuntime]. Charged with resolving a set of invocation bindings from
+ * Implementation of [InvocationBindings] for JavaScript. Charged with resolving a set of invocation bindings from an
  * an input script and evaluated [GuestValue] pair. In essence, this involves crawling what the user hands back to us
  * from guest code, matching that structure to an invocation style, and then wiring together the appropriate bindings
  * to dispatch those exports.

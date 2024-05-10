@@ -13,32 +13,20 @@
 
 package elide.runtime.gvm
 
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.AbstractDualTest
-import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.ruby.AbstractRubyIntrinsicTest
-import elide.runtime.gvm.internals.ruby.RubyRuntime
 import elide.runtime.plugins.ruby.Ruby
 import elide.runtime.plugins.ruby.ruby
 
 /** Abstract base for all non-intrinsic Ruby guest execution tests. */
 @OptIn(DelicateElideApi::class)
 abstract class RubyTest : AbstractDualTest() {
-  private val initialized: AtomicBoolean = AtomicBoolean(false)
-
-  // Guest context manager.
-  @Inject lateinit var contextManager: ContextManager<Context, Context.Builder>
-
-  // Ruby runtime.
-  @Inject internal lateinit var ruby: RubyRuntime
-
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.install(Ruby)
   }

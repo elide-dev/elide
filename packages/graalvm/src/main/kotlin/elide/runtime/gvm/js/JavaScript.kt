@@ -50,7 +50,6 @@ import elide.ssr.type.RequestState
  * as they are executed outside the guest VM. Once executing, a script can only "see" or access I/O according to the
  * applied guest I/O policy.
  */
-@Suppress("unused", "UNUSED_PARAMETER")
 public object JavaScript {
   /**
    * ## JavaScript: Literal from string.

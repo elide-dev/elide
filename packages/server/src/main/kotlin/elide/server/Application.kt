@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.server
 
 import io.micronaut.context.annotation.Bean
@@ -129,11 +128,9 @@ public interface Application {
         Initialization.CallbackStage.INIT
       )
 
-      if (RuntimeFlag.warmup) {
-        Initialization.trigger(
-          Initialization.CallbackStage.WARMUP
-        )
-      }
+      if (RuntimeFlag.warmup) Initialization.trigger(
+        Initialization.CallbackStage.WARMUP
+      )
     }
   }
 
@@ -141,26 +138,17 @@ public interface Application {
    * Boot an Elide application with the provided [args], if any.
    *
    * Elide parses its own arguments and applies configuration or state based on any encountered values. All Elide flags
-   * are prefixed with "--elide.". Micronaut-relevant arguments are passed on to Micronaut, and user args are
+   * are prefixed with "--elide". Micronaut-relevant arguments are passed on to Micronaut, and user args are
    * additionally made available.
    *
    * Elide server arguments can be interrogated via [RuntimeFlag]s.
    *
    * @param args Arguments passed to the application.
    */
-  @Suppress("SpreadOperator", "DEPRECATION")
+  @Suppress("SpreadOperator")
   public fun boot(args: Array<String>) {
-    RuntimeFlag.setArgs(args)
     SecurityProviderConfigurator.initialize()
-
     Initialization.resolveHooks()
-    Initialization.initializeOnWarmup {
-      // Warm up the JVM.
-      Runtime.getRuntime().apply {
-        gc()
-      }
-    }
-
     Micronaut
       .build()
       .eagerInitConfiguration(true)

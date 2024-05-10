@@ -17,6 +17,7 @@ import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.awt.Desktop
 import java.net.URI
+import elide.annotations.Singleton
 import elide.tool.cli.*
 
 /** Find help or file a bug or PR against Elide. */
@@ -29,7 +30,7 @@ import elide.tool.cli.*
   abbreviateSynopsis = true,
   usageHelpAutoWidth = true,
 )
-internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private const val issuesBase: String = "https://github.com/elide-dev/elide/issues/new"
     private const val issueTemplateFeature: String = "new_feature.yaml"

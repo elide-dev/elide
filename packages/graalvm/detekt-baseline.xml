@@ -3,7 +3,7 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
-    <ID>CyclomaticComplexMethod:CustomEvent.kt$CustomEvent$override fun getMember(key: String): Any?</ID>
+    <ID>CyclomaticComplexMethod:CustomEvent.kt$CustomEvent$override fun getMember(key: String?): Any?</ID>
     <ID>CyclomaticComplexMethod:NodeEvents.kt$NodeEventsModuleFacade$@Polyglot override fun getMember(key: String): Any?</ID>
     <ID>CyclomaticComplexMethod:NodeOperatingSystem.kt$NodeOperatingSystem.ModuleBase$override fun getMember(key: String?): Any?</ID>
     <ID>CyclomaticComplexMethod:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
@@ -22,7 +22,6 @@
     <ID>LargeClass:URLIntrinsicTest.kt$URLIntrinsicTest : AbstractJsIntrinsicTest</ID>
     <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$@Suppress("ReplaceGetOrSet") protected open fun testMapGeneric(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
     <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$protected open fun testMapMutable(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
-    <ID>MagicNumber:AbstractVMEngine.kt$AbstractVMEngine$90</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.DebugAdapterConfig$4711</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.InspectorConfig$4200</ID>
     <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptSource$3</ID>
@@ -36,7 +35,6 @@
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL$3</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL.Companion$31</ID>
     <ID>MagicNumber:URLSearchParamsIntrinsic.kt$0x7F</ID>
-    <ID>MagicNumber:VMStaticProperty.kt$VMStaticProperty.Companion$3</ID>
     <ID>MatchingDeclarationName:AbstractJSException.kt$AbstractJsException</ID>
     <ID>MatchingDeclarationName:DebugPlugin.kt$Debug</ID>
     <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
@@ -51,7 +49,6 @@
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal"</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal"</ID>
     <ID>NestedBlockDepth:NodeStream.kt$AbstractReadable$private fun pump(untilHaltedOrExhausted: Boolean = true)</ID>
-    <ID>NestedClassesVisibility:AbstractVMAdapter.kt$AbstractVMAdapter$PromiseLike&lt;Output> : FutureCompletionStage</ID>
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$MutableURLSearchParams : AbstractMutableURLSearchParamsIMutableSearchParams</ID>
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
@@ -60,14 +57,12 @@
     <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
     <ID>ReturnCount:Version.kt$Version$public override operator fun compareTo(other: Version): Int</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
-    <ID>SpreadOperator:AbstractVMEngine.kt$AbstractVMEngine$( *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray() )</ID>
     <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(*supportedFeatures())</ID>
     <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(views.first(), *(views.drop(1).toTypedArray()))</ID>
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredConstructors)</ID>
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredFields)</ID>
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
     <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
-    <ID>SpreadOperator:NativeContextManagerImpl.kt$NativeContextManagerImpl$(*(config.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray())</ID>
     <ID>SpreadOperator:NodeEvents.kt$BoundEventListener$(*args)</ID>
     <ID>SpreadOperator:NodePaths.kt$NodePaths.BasePaths$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
     <ID>SwallowedException:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$err: Throwable</ID>
@@ -85,10 +80,7 @@
     <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
     <ID>TooGenericExceptionCaught:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$err: Throwable</ID>
-    <ID>TooGenericExceptionCaught:AbstractVMEngine.kt$AbstractVMEngine$exc: Throwable</ID>
-    <ID>TooGenericExceptionCaught:AbstractVMEngine.kt$AbstractVMEngine.Companion$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
-    <ID>TooGenericExceptionCaught:JsRuntime.kt$JsRuntime$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
     <ID>TooGenericExceptionCaught:NodeStream.kt$AbstractReadable$e: Throwable</ID>
     <ID>TooGenericExceptionThrown:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$throw Exception("Failed to resolve language resources with key $manifestKey for language $languageId", cause)</ID>
@@ -103,7 +95,5 @@
     <ID>TooManyFunctions:Readable.kt$Readable : StatefulStreamEventEmitterEventTargetProxyObjectProxyIterable</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
-    <ID>UnusedPrivateProperty:JsRuntime.kt$JsRuntime.Companion$// Root where we can find runtime-related files. private const val EMBEDDED_ROOT = "/META-INF/elide/embedded/runtime/js"</ID>
-    <ID>UnusedPrivateProperty:NativeContextManagerImpl.kt$NativeContextManagerImpl$// Thread-local VM execution context. private val workerContext: VMThreadLocal = VMThreadLocal()</ID>
   </CurrentIssues>
 </SmellBaseline>

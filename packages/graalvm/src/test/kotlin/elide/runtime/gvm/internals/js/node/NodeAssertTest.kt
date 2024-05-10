@@ -17,6 +17,8 @@ package elide.runtime.gvm.internals.js.node
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.Value.asValue
+import org.graalvm.polyglot.proxy.ProxyArray
+import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DynamicTest
@@ -24,8 +26,10 @@ import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import java.math.BigInteger
 import java.util.stream.Stream
 import kotlin.streams.asStream
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
@@ -96,6 +100,39 @@ import elide.testing.annotations.TestCase
     yield(dynamicTest("ok(mapOf(\"foo\" to \"bar\")) should pass") { assert.ok(mapOf("foo" to "bar")) })
   }.asStream()
 
+  @TestFactory fun `notOk() should behave as expected for truthy cases`(): Stream<DynamicTest> = sequence {
+    yield(dynamicTest("notOk(true) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(true) }
+    })
+    yield(dynamicTest("notOk(1) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(1) }
+    })
+    yield(dynamicTest("notOk(1L) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(1L) }
+    })
+    yield(dynamicTest("notOk(1.0) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(1.0) }
+    })
+    yield(dynamicTest("notOk(1.0f) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(1.0f) }
+    })
+    yield(dynamicTest("notOk(\"hi\") should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk("hi") }
+    })
+    yield(dynamicTest("notOk([\"hi\"]) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(arrayOf("hi")) }
+    })
+    yield(dynamicTest("notOk(listOf(\"hi\")) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(listOf("hi")) }
+    })
+    yield(dynamicTest("notOk({\"foo\": \"bar\"}) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(objectWithProperty) }
+    })
+    yield(dynamicTest("notOk(mapOf(\"foo\" to \"bar\")) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(mapOf("foo" to "bar")) }
+    })
+  }.asStream()
+
   @TestFactory fun `assert() should behave as expected for truthy cases`(): Stream<DynamicTest> = sequence {
     yield(dynamicTest("assert(true) should pass") { assert.assert(true) })
     yield(dynamicTest("assert(1) should pass") { assert.assert(1) })
@@ -122,6 +159,36 @@ import elide.testing.annotations.TestCase
     yield(dynamicTest("ok(listOf(\"hi\")) should pass") { assert.ok(asValue(listOf("hi"))) })
     yield(dynamicTest("ok(mapOf(\"foo\" to \"bar\")) should pass") {
       assert.ok(asValue(mapOf("foo" to "bar")))
+    })
+  }.asStream()
+
+  @TestFactory fun `notOk() should behave as expected for guest truthy cases`(): Stream<DynamicTest> = sequence {
+    yield(dynamicTest("notOk(true) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(true)) }
+    })
+    yield(dynamicTest("notOk(1) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(1)) }
+    })
+    yield(dynamicTest("notOk(1L) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(1L)) }
+    })
+    yield(dynamicTest("notOk(1.0) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(1.0)) }
+    })
+    yield(dynamicTest("notOk(1.0f) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(1.0f)) }
+    })
+    yield(dynamicTest("notOk(\"hi\") should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue("hi")) }
+    })
+    yield(dynamicTest("notOk([\"hi\"]) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(arrayOf("hi"))) }
+    })
+    yield(dynamicTest("notOk(listOf(\"hi\")) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(listOf("hi"))) }
+    })
+    yield(dynamicTest("notOk(mapOf(\"foo\" to \"bar\")) should fail") {
+      assertThrows<NodeAssertionError> { assert.notOk(asValue(mapOf("foo" to "bar"))) }
     })
   }.asStream()
 
@@ -182,6 +249,23 @@ import elide.testing.annotations.TestCase
     yield(dynamicTest("ok(emptyMap()) should fail") {
       assertThrows<NodeAssertionError> { assert.ok(emptyMap<String, String>()) }
     })
+  }.asStream()
+
+  @TestFactory fun `notOk() should behave as expected for falsy cases`(): Stream<DynamicTest> = sequence {
+    yield(dynamicTest("notOk(false) should pass") { assert.notOk(false) })
+    yield(dynamicTest("notOk(0) should pass") { assert.notOk(0) })
+    yield(dynamicTest("notOk(-1) should pass") { assert.notOk(-1) })
+    yield(dynamicTest("notOk(0L) should pass") { assert.notOk(0L) })
+    yield(dynamicTest("notOk(-1L) should pass") { assert.notOk(-1L) })
+    yield(dynamicTest("notOk(0.0) should pass") { assert.notOk(0.0) })
+    yield(dynamicTest("notOk(-1.0) should pass") { assert.notOk(-1.0) })
+    yield(dynamicTest("notOk(0.0f) should pass") { assert.notOk(0.0f) })
+    yield(dynamicTest("notOk(-1.0f) should pass") { assert.notOk(-1.0f) })
+    yield(dynamicTest("notOk(\"\") should pass") { assert.notOk("") })
+    yield(dynamicTest("notOk([]) should pass") { assert.notOk(arrayOf<String>()) })
+    yield(dynamicTest("notOk(emptyList()) should pass") { assert.notOk(listOf<String>()) })
+    yield(dynamicTest("notOk({}) should pass") { assert.notOk(emptyObject) })
+    yield(dynamicTest("notOk(emptyMap()) should pass") { assert.notOk(emptyMap<String, String>()) })
   }.asStream()
 
   @TestFactory fun `assert() should behave as expected for falsy cases`(): Stream<DynamicTest> = sequence {
@@ -612,367 +696,1013 @@ import elide.testing.annotations.TestCase
     """
   }
 
+  private fun testAssertEqual(left: Any?, right: Any?) {
+    assert.equal(left, left)
+    assert.equal(left, left, "Custom message with equal()")
+    assert.equal(left, right)
+    assert.equal(left, right, "Custom message with equal()")
+    assert.equal(right, right)
+    assert.equal(right, right, "Custom message with equal()")
+    assert.equal(right, left)
+    assert.equal(right, left, "Custom message with equal()")
+    if (left == null || right == null) return
+    if ((left is Value && left.isNull) || (right is Value && right.isNull)) return
+
+    assertThrows<NodeAssertionError> { assert.equal(left, null) }
+    assertThrows<NodeAssertionError> { assert.equal(null, right) }
+    assertThrows<NodeAssertionError> { assert.equal(left, null, "Custom message with equal()") }
+    assertThrows<NodeAssertionError> { assert.equal(null, right, "Custom message with equal()") }
+    assert.notEqual(left, null)
+    assert.notEqual(null, right)
+    assert.notEqual(right, null)
+    assert.notEqual(null, left)
+  }
+
+  @TestFactory fun `equal() range testing`(): Stream<DynamicTest> = sequence {
+    yield(
+      dynamicTest("equal() should pass for full range of shorts") {
+        for (i in Short.MIN_VALUE..Short.MAX_VALUE step 1000) {
+          val short = i.toShort()
+          assert.equal(short, short)
+          assert.equal(asValue(short), short)
+          assert.equal(asValue(short), asValue(short))
+          if (short != Short.MIN_VALUE) {
+            assert.notEqual(short, short - 1)
+            assert.notEqual(asValue(short), short - 1)
+            assert.notEqual(short, asValue(short - 1))
+            assert.notEqual(asValue(short), asValue(short - 1))
+          }
+          if (short != Short.MAX_VALUE) {
+            assert.notEqual(short, short + 1)
+            assert.notEqual(asValue(short), short + 1)
+            assert.notEqual(short, asValue(short + 1))
+            assert.notEqual(asValue(short), asValue(short + 1))
+          }
+        }
+      },
+    )
+    yield(dynamicTest("equal() should pass for full range of integers") {
+      for (i in Int.MIN_VALUE..Int.MAX_VALUE step 100000) {
+        assert.equal(i, i)
+        assert.equal(asValue(i), i)
+        assert.equal(i, asValue(i))
+        assert.equal(asValue(i), asValue(i))
+        if (i != Int.MIN_VALUE) assert.notEqual(i, i - 1)
+        if (i != Int.MAX_VALUE) assert.notEqual(i, i + 1)
+      }
+    })
+    yield(dynamicTest("equal() should pass for full range of longs") {
+      val i = Long.MAX_VALUE
+      assert.equal(i, i)
+      assert.equal(asValue(i), i)
+      assert.equal(i, asValue(i))
+      assert.equal(asValue(i), asValue(i))
+      assert.notEqual(i, i - 1)
+      assert.notEqual(asValue(i), i - 1)
+      assert.notEqual(i, asValue(i - 1))
+      assert.notEqual(asValue(i), asValue(i - 1))
+    })
+  }.asStream()
+
   @TestFactory fun `equal() should pass correctly with host types`(): Stream<DynamicTest> = sequence {
     yield(dynamicTest("equal() should pass for equal strings") {
-      assert.equal("hi", "hi")
-      assert.equal("hello", "hello")
-      assert.equal("", "")
-    })
-    yield(dynamicTest("equal() should pass for equal integers") {
-      assert.equal(1, 1)
-      assert.equal(2, 2)
-      assert.equal(20000, 20000)
-      assert.equal(0, 0)
-      assert.equal(-1, -1)
-    })
-    yield(dynamicTest("equal() should pass for equal longs") {
-      assert.equal(1L, 1L)
-      assert.equal(2L, 2L)
-      assert.equal(20000L, 20000L)
-      assert.equal(0L, 0L)
-      assert.equal(-1L, -1L)
-    })
-    yield(dynamicTest("equal() should pass for equal integers/longs") {
-      assert.equal(1, 1L)
-      assert.equal(2, 2L)
-      assert.equal(20000, 20000L)
-      assert.equal(0, 0L)
-      assert.equal(-1, -1L)
-    })
-    yield(dynamicTest("equal() should pass for equal floats") {
-      assert.equal(1.0f, 1.0f)
-      assert.equal(2.0f, 2.0f)
-      assert.equal(2.3333f, 2.3333f)
-      assert.equal(20000.0f, 20000.0f)
-      assert.equal(0.0f, 0.0f)
-      assert.equal(-1.0f, -1.0f)
-    })
-    yield(dynamicTest("equal() should pass for equal integers/floats") {
-      assert.equal(1.0f, 1)
-      assert.equal(2.0f, 2)
-      assert.equal(20000.0f, 20000)
-      assert.equal(0.0f, 0)
-      assert.equal(-1.0f, -1)
-    })
-    yield(dynamicTest("equal() should pass for equal longs/floats") {
-      assert.equal(1.0f, 1L)
-      assert.equal(2.0f, 2L)
-      assert.equal(20000.0f, 20000L)
-      assert.equal(0.0f, 0L)
-      assert.equal(-1.0f, -1L)
-    })
-    yield(dynamicTest("equal() should pass for equal doubles") {
-      assert.equal(1.0, 1.0)
-      assert.equal(2.0, 2.0)
-      assert.equal(2.3333, 2.3333)
-      assert.equal(20000.0, 20000.0)
-      assert.equal(0.0, 0.0)
-      assert.equal(-1.0, -1.0)
-    })
-    yield(dynamicTest("equal() should pass for equal integers/doubles") {
-      assert.equal(1.0, 1)
-      assert.equal(2.0, 2)
-      assert.equal(20000.0, 20000)
-      assert.equal(0.0, 0)
-      assert.equal(-1.0, -1)
-    })
-    yield(dynamicTest("equal() should pass for equal longs/doubles") {
-      assert.equal(1.0, 1L)
-      assert.equal(2.0, 2L)
-      assert.equal(20000.0, 20000L)
-      assert.equal(0.0, 0L)
-      assert.equal(-1.0, -1L)
-    })
-    yield(dynamicTest("equal() should pass for equal floats/doubles") {
-      assert.equal(1.0, 1.0f)
-      assert.equal(2.0, 2.0f)
-      assert.equal(2.3333, 2.3333f)
-      assert.equal(20000.0, 20000.0f)
-      assert.equal(0.0, 0.0f)
-      assert.equal(-1.0, -1.0f)
-    })
-    yield(dynamicTest("equal() should pass for equal uints") {
-      assert.equal(1u, 1u)
-      assert.equal(2u, 2u)
-      assert.equal(20000u, 20000u)
-      assert.equal(0u, 0u)
+      testAssertEqual("hi", "hi")
+      testAssertEqual("hello", "hello")
+      testAssertEqual("", "")
     })
     yield(dynamicTest("equal() should pass for equal bools or nulls") {
-      assert.equal(null, null)
-      assert.equal(actual = true, expected = true)
-      assert.equal(actual = false, expected = false)
+      testAssertEqual(null, null)
+      testAssertEqual(left = true, right = true)
+      testAssertEqual(left = false, right = false)
+    })
+    yield(dynamicTest("equal() should pass for equal integers") {
+      testAssertEqual(1, 1)
+      testAssertEqual(2, 2)
+      testAssertEqual(20000, 20000)
+      testAssertEqual(0, 0)
+      testAssertEqual(-1, -1)
+    })
+    yield(dynamicTest("equal() should pass for equal integer strings") {
+      testAssertEqual(1, "1")
+      testAssertEqual(2, "2")
+      testAssertEqual(20000, "20000")
+      testAssertEqual(0, "0")
+      testAssertEqual(-1, "-1")
+    })
+    yield(dynamicTest("equal() should pass for equal longs") {
+      testAssertEqual(1L, 1L)
+      testAssertEqual(2L, 2L)
+      testAssertEqual(20000L, 20000L)
+      testAssertEqual(0L, 0L)
+      testAssertEqual(-1L, -1L)
+    })
+    yield(dynamicTest("equal() should pass for equal long strings") {
+      testAssertEqual(1L, "1")
+      testAssertEqual(2L, "2")
+      testAssertEqual(20000L, "20000")
+      testAssertEqual(0L, "0")
+      testAssertEqual(-1L, "-1")
+    })
+    yield(dynamicTest("equal() should pass for equal shorts") {
+      testAssertEqual(1.toShort(), 1.toShort())
+      testAssertEqual(2.toShort(), 2.toShort())
+      testAssertEqual(0.toShort(), 0.toShort())
+      testAssertEqual((-1).toShort(), (-1).toShort())
+    })
+    yield(dynamicTest("equal() should pass for equal short strings") {
+      testAssertEqual(1.toShort(), "1")
+      testAssertEqual(2.toShort(), "2")
+      testAssertEqual(0.toShort(), "0")
+      testAssertEqual((-1).toShort(), "-1")
+    })
+    yield(dynamicTest("equal() should pass for equal floats") {
+      testAssertEqual(1.0f, 1.0f)
+      testAssertEqual(2.0f, 2.0f)
+      testAssertEqual(2.3333f, 2.3333f)
+      testAssertEqual(20000.0f, 20000.0f)
+      testAssertEqual(0.0f, 0.0f)
+      testAssertEqual(-1.0f, -1.0f)
+    })
+    yield(dynamicTest("equal() should pass for equal float strings") {
+      testAssertEqual(1.0f, "1.0")
+      testAssertEqual(2.0f, "2.0")
+      testAssertEqual(20000.0f, "20000.0")
+      testAssertEqual(0.0f, "0.0")
+      testAssertEqual(-1.0f, "-1.0")
+    })
+    yield(dynamicTest("equal() should pass for equal doubles") {
+      testAssertEqual(1.0, 1.0)
+      testAssertEqual(2.0, 2.0)
+      testAssertEqual(2.3333, 2.3333)
+      testAssertEqual(20000.0, 20000.0)
+      testAssertEqual(0.0, 0.0)
+      testAssertEqual(-1.0, -1.0)
+    })
+    yield(dynamicTest("equal() should pass for equal double strings") {
+      testAssertEqual(1.0, "1.0")
+      testAssertEqual(2.0, "2.0")
+      testAssertEqual(20000.0, "20000.0")
+      testAssertEqual(0.0, "0.0")
+      testAssertEqual(-1.0, "-1.0")
+    })
+    yield(dynamicTest("equal() should pass for equal big integers") {
+      testAssertEqual(BigInteger.valueOf(1), BigInteger.valueOf(1))
+      testAssertEqual(BigInteger.valueOf(2), BigInteger.valueOf(2))
+      testAssertEqual(BigInteger.valueOf(20000), BigInteger.valueOf(20000))
+      testAssertEqual(BigInteger.valueOf(0), BigInteger.valueOf(0))
+      testAssertEqual(BigInteger.valueOf(0), BigInteger.ZERO)
+      testAssertEqual(BigInteger.valueOf(-1), BigInteger.valueOf(-1))
+    })
+    yield(dynamicTest("equal() should pass for equal big integer strings") {
+      testAssertEqual(BigInteger.valueOf(1), "1")
+      testAssertEqual(BigInteger.valueOf(2), "2")
+      testAssertEqual(BigInteger.valueOf(20000), "20000")
+      testAssertEqual(BigInteger.valueOf(0), "0")
+      testAssertEqual(BigInteger.valueOf(0), "0")
+      testAssertEqual(BigInteger.valueOf(-1), "-1")
+    })
+    yield(dynamicTest("equal() should pass for equal uints") {
+      testAssertEqual(1u, 1u)
+      testAssertEqual(2u, 2u)
+      testAssertEqual(20000u, 20000u)
+      testAssertEqual(0u, 0u)
+    })
+    yield(dynamicTest("equal() should pass for equal uint strings") {
+      testAssertEqual(1u, "1")
+      testAssertEqual(2u, "2")
+      testAssertEqual(20000u, "20000")
+      testAssertEqual(0u, "0")
+    })
+
+    // shorts first
+    yield(dynamicTest("equal() should pass for equal shorts/longs") {
+      testAssertEqual(1.toShort(), 1L)
+      testAssertEqual(2.toShort(), 2L)
+      testAssertEqual(20000.toShort(), 20000L)
+      testAssertEqual(0.toShort(), 0L)
+      testAssertEqual((-1).toShort(), -1L)
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/integers") {
+      testAssertEqual(1.toShort(), 1)
+      testAssertEqual(2.toShort(), 2)
+      testAssertEqual(0.toShort(), 0)
+      testAssertEqual((-1).toShort(), -1)
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/floats") {
+      testAssertEqual(1.toShort(), 1.0f)
+      testAssertEqual(2.toShort(), 2.0f)
+      testAssertEqual(20000.toShort(), 20000.0f)
+      testAssertEqual(0.toShort(), 0.0f)
+      testAssertEqual((-1).toShort(), -1.0f)
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/doubles") {
+      testAssertEqual(1.toShort(), 1.0)
+      testAssertEqual(2.toShort(), 2.0)
+      testAssertEqual(20000.toShort(), 20000.0)
+      testAssertEqual(0.toShort(), 0.0)
+      testAssertEqual((-1).toShort(), -1.0)
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/big integers") {
+      testAssertEqual(1.toShort(), BigInteger.valueOf(1))
+      testAssertEqual(2.toShort(), BigInteger.valueOf(2))
+      testAssertEqual(20000.toShort(), BigInteger.valueOf(20000))
+      testAssertEqual(0.toShort(), BigInteger.valueOf(0))
+      testAssertEqual(0.toShort(), BigInteger.ZERO)
+      testAssertEqual((-1).toShort(), BigInteger.valueOf(-1))
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/uints") {
+      testAssertEqual(1.toShort(), 1u)
+      testAssertEqual(2.toShort(), 2u)
+      testAssertEqual(20000.toShort(), 20000u)
+      testAssertEqual(0.toShort(), 0u)
+    })
+
+    // integers first
+    yield(dynamicTest("equal() should pass for equal integers/longs") {
+      testAssertEqual(1, 1L)
+      testAssertEqual(2, 2L)
+      testAssertEqual(20000, 20000L)
+      testAssertEqual(0, 0L)
+      testAssertEqual(-1, -1L)
+    })
+    yield(dynamicTest("equal() should pass for equal integers/shorts") {
+      testAssertEqual(1, 1.toShort())
+      testAssertEqual(1.toShort(), 1)
+      testAssertEqual(2, 2.toShort())
+      testAssertEqual(2.toShort(), 2)
+    })
+    yield(dynamicTest("equal() should pass for equal integers/floats") {
+      testAssertEqual(1, 1.0f)
+      testAssertEqual(2, 2.0f)
+      testAssertEqual(20000, 20000.0f)
+      testAssertEqual(0, 0.0f)
+      testAssertEqual(-1, -1.0f)
+    })
+    yield(dynamicTest("equal() should pass for equal integers/doubles") {
+      testAssertEqual(1, 1.0)
+      testAssertEqual(2, 2.0)
+      testAssertEqual(20000, 20000.0)
+      testAssertEqual(0, 0.0)
+      testAssertEqual(-1, -1.0)
+    })
+    yield(dynamicTest("equal() should pass for equal integers/big integers") {
+      testAssertEqual(1, BigInteger.valueOf(1))
+      testAssertEqual(2, BigInteger.valueOf(2))
+      testAssertEqual(20000, BigInteger.valueOf(20000))
+      testAssertEqual(0, BigInteger.valueOf(0))
+      testAssertEqual(0, BigInteger.ZERO)
+      testAssertEqual(-1, BigInteger.valueOf(-1))
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/uints") {
+      testAssertEqual(1, 1u)
+      testAssertEqual(2, 2u)
+      testAssertEqual(20000, 20000u)
+      testAssertEqual(0, 0u)
+    })
+
+    // uints first
+    yield(dynamicTest("equal() should pass for equal uints/longs") {
+      testAssertEqual(1u, 1L)
+      testAssertEqual(2u, 2L)
+      testAssertEqual(20000u, 20000L)
+      testAssertEqual(0u, 0L)
+    })
+    yield(dynamicTest("equal() should pass for equal uints/shorts") {
+      testAssertEqual(1u, 1.toShort())
+      testAssertEqual(1.toShort(), 1u)
+      testAssertEqual(2u, 2.toShort())
+      testAssertEqual(2.toShort(), 2u)
+    })
+    yield(dynamicTest("equal() should pass for equal uints/floats") {
+      testAssertEqual(1u, 1.0f)
+      testAssertEqual(2u, 2.0f)
+      testAssertEqual(20000u, 20000.0f)
+      testAssertEqual(0u, 0.0f)
+    })
+    yield(dynamicTest("equal() should pass for equal uints/doubles") {
+      testAssertEqual(1u, 1.0)
+      testAssertEqual(2u, 2.0)
+      testAssertEqual(20000u, 20000.0)
+      testAssertEqual(0u, 0.0)
+    })
+    yield(dynamicTest("equal() should pass for equal uints/big integers") {
+      testAssertEqual(1u, BigInteger.valueOf(1))
+      testAssertEqual(2u, BigInteger.valueOf(2))
+      testAssertEqual(20000u, BigInteger.valueOf(20000))
+      testAssertEqual(0u, BigInteger.valueOf(0))
+      testAssertEqual(0u, BigInteger.ZERO)
+    })
+
+    // longs first
+    yield(dynamicTest("equal() should pass for equal longs/floats") {
+      testAssertEqual(1L, 1.0f)
+      testAssertEqual(2L, 2.0f)
+      testAssertEqual(20000L, 20000.0f)
+      testAssertEqual(0L, 0.0f)
+      testAssertEqual(-1L, -1.0f)
+    })
+    yield(dynamicTest("equal() should pass for equal longs/shorts") {
+      testAssertEqual(1L, 1.toShort())
+      testAssertEqual(2L, 2.toShort())
+      testAssertEqual(20000L, 20000.toShort())
+      testAssertEqual(0L, 0.toShort())
+      testAssertEqual(-1L, (-1).toShort())
+    })
+    yield(dynamicTest("equal() should pass for equal longs/doubles") {
+      testAssertEqual(1L, 1.0)
+      testAssertEqual(2L, 2.0)
+      testAssertEqual(20000L, 20000.0)
+      testAssertEqual(0L, 0.0)
+      testAssertEqual(-1L, -1.0)
+    })
+    yield(dynamicTest("equal() should pass for equal longs/integers") {
+      testAssertEqual(1L, 1)
+      testAssertEqual(2L, 2)
+      testAssertEqual(20000L, 20000)
+      testAssertEqual(0L, 0)
+      testAssertEqual(-1L, -1)
+    })
+    yield(dynamicTest("equal() should pass for equal longs/big integers") {
+      testAssertEqual(1L, BigInteger.valueOf(1))
+      testAssertEqual(2L, BigInteger.valueOf(2))
+      testAssertEqual(20000L, BigInteger.valueOf(20000))
+      testAssertEqual(0L, BigInteger.valueOf(0))
+      testAssertEqual(0L, BigInteger.ZERO)
+      testAssertEqual(-1L, BigInteger.valueOf(-1))
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/uints") {
+      testAssertEqual(1L, 1u)
+      testAssertEqual(2L, 2u)
+      testAssertEqual(20000L, 20000u)
+      testAssertEqual(0L, 0u)
+    })
+
+    // floats first
+    yield(dynamicTest("equal() should pass for equal floats/doubles") {
+      testAssertEqual(1.0f, 1.0)
+      testAssertEqual(2.0f, 2.0)
+      testAssertEqual(2.3333f, 2.3333)
+      testAssertEqual(20000.0f, 20000.0)
+      testAssertEqual(0.0f, 0.0)
+      testAssertEqual(-1.0f, -1.0)
+    })
+    yield(dynamicTest("equal() should pass for equal floats/integers") {
+      testAssertEqual(1.0f, 1)
+      testAssertEqual(2.0f, 2)
+      testAssertEqual(20000.0f, 20000)
+      testAssertEqual(0.0f, 0)
+      testAssertEqual(-1.0f, -1)
+    })
+    yield(dynamicTest("equal() should pass for equal floats/longs") {
+      testAssertEqual(1.0f, 1L)
+      testAssertEqual(2.0f, 2L)
+      testAssertEqual(20000.0f, 20000L)
+      testAssertEqual(0.0f, 0L)
+      testAssertEqual(-1.0f, -1L)
+    })
+    yield(dynamicTest("equal() should pass for equal floats/shorts") {
+      testAssertEqual(1.0f, 1.toShort())
+      testAssertEqual(2.0f, 2.toShort())
+      testAssertEqual(20000.0f, 20000.toShort())
+      testAssertEqual(0.0f, 0.toShort())
+      testAssertEqual(-1.0f, (-1).toShort())
+    })
+    yield(dynamicTest("equal() should pass for equal floats/big integers") {
+      testAssertEqual(1.0f, BigInteger.valueOf(1))
+      testAssertEqual(2.0f, BigInteger.valueOf(2))
+      testAssertEqual(20000.0f, BigInteger.valueOf(20000))
+      testAssertEqual(0.0f, BigInteger.valueOf(0))
+      testAssertEqual(0.0f, BigInteger.ZERO)
+      testAssertEqual(-1.0f, BigInteger.valueOf(-1))
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/uints") {
+      testAssertEqual(1.0f, 1u)
+      testAssertEqual(2.0f, 2u)
+      testAssertEqual(20000.0f, 20000u)
+      testAssertEqual(0.0f, 0u)
+    })
+
+    // doubles first
+    yield(dynamicTest("equal() should pass for equal doubles/shorts") {
+      testAssertEqual(1.0, 1.toShort())
+      testAssertEqual(2.0, 2.toShort())
+      testAssertEqual(20000.0, 20000.toShort())
+      testAssertEqual(0.0, 0.toShort())
+      testAssertEqual(-1.0, (-1).toShort())
+    })
+    yield(dynamicTest("equal() should pass for equal doubles/longs") {
+      testAssertEqual(1.0, 1L)
+      testAssertEqual(2.0, 2L)
+      testAssertEqual(20000.0, 20000L)
+      testAssertEqual(0.0, 0L)
+      testAssertEqual(-1.0, -1L)
+    })
+    yield(dynamicTest("equal() should pass for equal doubles/floats") {
+      testAssertEqual(1.0, 1.0f)
+      testAssertEqual(2.0, 2.0f)
+      testAssertEqual(20000.0, 20000.0f)
+      testAssertEqual(0.0, 0.0f)
+      testAssertEqual(-1.0, -1.0f)
+    })
+    yield(dynamicTest("equal() should pass for equal doubles/integers") {
+      testAssertEqual(1.0, 1)
+      testAssertEqual(2.0, 2)
+      testAssertEqual(20000.0, 20000)
+      testAssertEqual(0.0, 0)
+      testAssertEqual(-1.0, -1)
+    })
+    yield(dynamicTest("equal() should pass for equal doubles/big integers") {
+      testAssertEqual(1.0, BigInteger.valueOf(1))
+      testAssertEqual(2.0, BigInteger.valueOf(2))
+      testAssertEqual(20000.0, BigInteger.valueOf(20000))
+      testAssertEqual(0.0, BigInteger.valueOf(0))
+      testAssertEqual(0.0, BigInteger.ZERO)
+      testAssertEqual(-1.0, BigInteger.valueOf(-1))
+    })
+    yield(dynamicTest("equal() should pass for equal shorts/uints") {
+      testAssertEqual(1.0, 1u)
+      testAssertEqual(2.0, 2u)
+      testAssertEqual(20000.0, 20000u)
+      testAssertEqual(0.0, 0u)
+    })
+  }.asStream()
+
+  @TestFactory fun `equal() should pass correctly with mixed types`(): Stream<DynamicTest> = sequence {
+    yield(dynamicTest("equal() with mixed types should pass for equal strings") {
+      assert.equal("hi", asValue("hi"))
+      assert.equal("hello", asValue("hello"))
+      assert.equal("", asValue(""))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal bools or nulls") {
+      assert.equal(null, asValue(null))
+      assert.equal(actual = true, expected = asValue(true))
+      assert.equal(actual = false, expected = asValue(false))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal integers") {
+      assert.equal(1, asValue(1))
+      assert.equal(2, asValue(2))
+      assert.equal(20000, asValue(20000))
+      assert.equal(0, asValue(0))
+      assert.equal(-1, asValue(-1))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal longs") {
+      assert.equal(1L, asValue(1L))
+      assert.equal(2L, asValue(2L))
+      assert.equal(20000L, asValue(20000L))
+      assert.equal(0L, asValue(0L))
+      assert.equal(-1L, asValue(-1L))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal shorts") {
+      assert.equal(1.toShort(), asValue(1.toShort()))
+      assert.equal(2.toShort(), asValue(2.toShort()))
+      assert.equal(0.toShort(), asValue(0.toShort()))
+      assert.equal((-1).toShort(), asValue((-1).toShort()))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal floats") {
+      assert.equal(1.0f, asValue(1.0f))
+      assert.equal(2.0f, asValue(2.0f))
+      assert.equal(2.3333f, asValue(2.3333f))
+      assert.equal(20000.0f, asValue(20000.0f))
+      assert.equal(0.0f, asValue(0.0f))
+      assert.equal(-1.0f, asValue(-1.0f))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal doubles") {
+      assert.equal(1.0, asValue(1.0))
+      assert.equal(2.0, asValue(2.0))
+      assert.equal(2.3333, asValue(2.3333))
+      assert.equal(20000.0, asValue(20000.0))
+      assert.equal(0.0, asValue(0.0))
+      assert.equal(-1.0, asValue(-1.0))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal big integers") {
+      assert.equal(BigInteger.valueOf(1), asValue(BigInteger.valueOf(1)))
+      assert.equal(BigInteger.valueOf(2), asValue(BigInteger.valueOf(2)))
+      assert.equal(BigInteger.valueOf(20000), asValue(BigInteger.valueOf(20000)))
+      assert.equal(BigInteger.valueOf(0), asValue(BigInteger.valueOf(0)))
+      assert.equal(BigInteger.valueOf(0), asValue(BigInteger.ZERO))
+      assert.equal(BigInteger.valueOf(-1), asValue(BigInteger.valueOf(-1)))
+    })
+
+    // shorts first
+    yield(dynamicTest("equal() with mixed types should pass for equal shorts/longs") {
+      assert.equal(1.toShort(), asValue(1L))
+      assert.equal(2.toShort(), asValue(2L))
+      assert.equal(20000.toShort(), asValue(20000L))
+      assert.equal(0.toShort(), asValue(0L))
+      assert.equal((-1).toShort(), asValue(-1L))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal shorts/integers") {
+      assert.equal(1.toShort(), asValue(1))
+      assert.equal(2.toShort(), asValue(2))
+      assert.equal(0.toShort(), asValue(0))
+      assert.equal((-1).toShort(), asValue(-1))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal shorts/floats") {
+      assert.equal(1.toShort(), asValue(1.0f))
+      assert.equal(2.toShort(), asValue(2.0f))
+      assert.equal(20000.toShort(), asValue(20000.0f))
+      assert.equal(0.toShort(), asValue(0.0f))
+      assert.equal((-1).toShort(), asValue(-1.0f))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal shorts/doubles") {
+      assert.equal(1.toShort(), asValue(1.0))
+      assert.equal(2.toShort(), asValue(2.0))
+      assert.equal(20000.toShort(), asValue(20000.0))
+      assert.equal(0.toShort(), asValue(0.0))
+      assert.equal((-1).toShort(), asValue(-1.0))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal shorts/big integers") {
+      assert.equal(1.toShort(), asValue(BigInteger.valueOf(1)))
+      assert.equal(2.toShort(), asValue(BigInteger.valueOf(2)))
+      assert.equal(20000.toShort(), asValue(BigInteger.valueOf(20000)))
+      assert.equal(0.toShort(), asValue(BigInteger.valueOf(0)))
+      assert.equal(0.toShort(), asValue(BigInteger.ZERO))
+      assert.equal((-1).toShort(), asValue(BigInteger.valueOf(-1)))
+    })
+
+    // integers first
+    yield(dynamicTest("equal() with mixed types should pass for equal integers/longs") {
+      assert.equal(1, asValue(1L))
+      assert.equal(2, asValue(2L))
+      assert.equal(20000, asValue(20000L))
+      assert.equal(0, asValue(0L))
+      assert.equal(-1, asValue(-1L))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal integers/shorts") {
+      assert.equal(1, asValue(1.toShort()))
+      assert.equal(1.toShort(), asValue(1))
+      assert.equal(2, asValue(2.toShort()))
+      assert.equal(2.toShort(), asValue(2))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal integers/floats") {
+      assert.equal(1, asValue(1.0f))
+      assert.equal(2, asValue(2.0f))
+      assert.equal(20000, asValue(20000.0f))
+      assert.equal(0, asValue(0.0f))
+      assert.equal(-1, asValue(-1.0f))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal integers/doubles") {
+      assert.equal(1, asValue(1.0))
+      assert.equal(2, asValue(2.0))
+      assert.equal(20000, asValue(20000.0))
+      assert.equal(0, asValue(0.0))
+      assert.equal(-1, asValue(-1.0))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal integers/big integers") {
+      assert.equal(1, asValue(BigInteger.valueOf(1)))
+      assert.equal(2, asValue(BigInteger.valueOf(2)))
+      assert.equal(20000, asValue(BigInteger.valueOf(20000)))
+      assert.equal(0, asValue(BigInteger.valueOf(0)))
+      assert.equal(0, asValue(BigInteger.ZERO))
+      assert.equal(-1, asValue(BigInteger.valueOf(-1)))
+    })
+
+    // longs first
+    yield(dynamicTest("equal() with mixed types should pass for equal longs/floats") {
+      assert.equal(1L, asValue(1.0f))
+      assert.equal(2L, asValue(2.0f))
+      assert.equal(20000L, asValue(20000.0f))
+      assert.equal(0L, asValue(0.0f))
+      assert.equal(-1L, asValue(-1.0f))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal longs/shorts") {
+      assert.equal(1L, asValue(1.toShort()))
+      assert.equal(2L, asValue(2.toShort()))
+      assert.equal(20000L, asValue(20000.toShort()))
+      assert.equal(0L, asValue(0.toShort()))
+      assert.equal(-1L, asValue((-1).toShort()))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal longs/doubles") {
+      assert.equal(1L, asValue(1.0))
+      assert.equal(2L, asValue(2.0))
+      assert.equal(20000L, asValue(20000.0))
+      assert.equal(0L, asValue(0.0))
+      assert.equal(-1L, asValue(-1.0))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal longs/integers") {
+      assert.equal(1L, asValue(1))
+      assert.equal(2L, asValue(2))
+      assert.equal(20000L, asValue(20000))
+      assert.equal(0L, asValue(0))
+      assert.equal(-1L, asValue(-1))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal longs/big integers") {
+      assert.equal(1L, asValue(BigInteger.valueOf(1)))
+      assert.equal(2L, asValue(BigInteger.valueOf(2)))
+      assert.equal(20000L, asValue(BigInteger.valueOf(20000)))
+      assert.equal(0L, asValue(BigInteger.valueOf(0)))
+      assert.equal(0L, asValue(BigInteger.ZERO))
+      assert.equal(-1L, asValue(BigInteger.valueOf(-1)))
+    })
+
+    // floats first
+    yield(dynamicTest("equal() with mixed types should pass for equal floats/doubles") {
+      assert.equal(1.0f, asValue(1.0))
+      assert.equal(2.0f, asValue(2.0))
+      // assert.equal(2.3333f, asValue(2.3333))  @TODO(sgammon): file with gvm for precision issue
+      assert.equal(20000.0f, asValue(20000.0))
+      assert.equal(0.0f, asValue(0.0))
+      assert.equal(-1.0f, asValue(-1.0))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal floats/integers") {
+      assert.equal(1.0f, asValue(1))
+      assert.equal(2.0f, asValue(2))
+      assert.equal(20000.0f, asValue(20000))
+      assert.equal(0.0f, asValue(0))
+      assert.equal(-1.0f, asValue(-1))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal floats/longs") {
+      assert.equal(1.0f, asValue(1L))
+      assert.equal(2.0f, asValue(2L))
+      assert.equal(20000.0f, asValue(20000L))
+      assert.equal(0.0f, asValue(0L))
+      assert.equal(-1.0f, asValue(-1L))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal floats/shorts") {
+      assert.equal(1.0f, asValue(1.toShort()))
+      assert.equal(2.0f, asValue(2.toShort()))
+      assert.equal(20000.0f, asValue(20000.toShort()))
+      assert.equal(0.0f, asValue(0.toShort()))
+      assert.equal(-1.0f, asValue((-1).toShort()))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal floats/big integers") {
+      assert.equal(1.0f, asValue(BigInteger.valueOf(1)))
+      assert.equal(2.0f, asValue(BigInteger.valueOf(2)))
+      assert.equal(20000.0f, asValue(BigInteger.valueOf(20000)))
+      assert.equal(0.0f, asValue(BigInteger.valueOf(0)))
+      assert.equal(0.0f, asValue(BigInteger.ZERO))
+      assert.equal(-1.0f, asValue(BigInteger.valueOf(-1)))
+    })
+
+    // doubles first
+    yield(dynamicTest("equal() with mixed types should pass for equal doubles/shorts") {
+      assert.equal(1.0, asValue(1.toShort()))
+      assert.equal(2.0, asValue(2.toShort()))
+      assert.equal(20000.0, asValue(20000.toShort()))
+      assert.equal(0.0, asValue(0.toShort()))
+      assert.equal(-1.0, asValue((-1).toShort()))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal doubles/longs") {
+      assert.equal(1.0, asValue(1L))
+      assert.equal(2.0, asValue(2L))
+      assert.equal(20000.0, asValue(20000L))
+      assert.equal(0.0, asValue(0L))
+      assert.equal(-1.0, asValue(-1L))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal doubles/floats") {
+      assert.equal(1.0, asValue(1.0f))
+      assert.equal(2.0, asValue(2.0f))
+      assert.equal(20000.0, asValue(20000.0f))
+      assert.equal(0.0, asValue(0.0f))
+      assert.equal(-1.0, asValue(-1.0f))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal doubles/integers") {
+      assert.equal(1.0, asValue(1))
+      assert.equal(2.0, asValue(2))
+      assert.equal(20000.0, asValue(20000))
+      assert.equal(0.0, asValue(0))
+      assert.equal(-1.0, asValue(-1))
+    })
+    yield(dynamicTest("equal() with mixed types should pass for equal doubles/big integers") {
+      assert.equal(1.0, asValue(BigInteger.valueOf(1)))
+      assert.equal(2.0, asValue(BigInteger.valueOf(2)))
+      assert.equal(20000.0, asValue(BigInteger.valueOf(20000)))
+      assert.equal(0.0, asValue(BigInteger.valueOf(0)))
+      assert.equal(0.0, asValue(BigInteger.ZERO))
+      assert.equal(-1.0, asValue(BigInteger.valueOf(-1)))
     })
   }.asStream()
 
   @TestFactory fun `equal() should fail correctly with host types`(): Stream<DynamicTest> = sequence {
     yield(dynamicTest("equal() should fail for unequal strings") {
-      assertThrows<NodeAssertionError> {
-        assert.equal("hi", "hello")
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal("hello", "hi")
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal("", "hi")
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal("hi", "")
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal integers") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1, 2)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2, 1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000, 20001)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20001, 20000)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1, -2)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-2, -1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0, 1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(1, 0)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0, -1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1, 0)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal longs") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1L, 2L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2L, 1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000L, 20001L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20001L, 20000L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1L, -2L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-2L, -1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0L, 1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(1L, 0L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0L, -1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1L, 0L)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal integers/longs") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1, 2L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2L, 1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000, 20001L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0, 1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1, 1L)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal floats") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1.0f, 1.1f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.0f, 2.1f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.3333f, 2.4444f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000.0f, 20001.0f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0.0f, 0.1f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1.0f, -1.1f)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal integers/floats") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1.0f, 2)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.0f, 0)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000.0f, 20001)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0.0f, 1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1.0f, -2)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal longs/floats") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1.0f, 2L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.0f, 1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000.0f, 20001L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0.0f, 1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1.0f, 0L)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal doubles") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1.0, 1.1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.0, 2.1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.3333, 2.4444)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000.0, 20001.0)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0.0, 0.1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1.0, -1.1)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal integers/doubles") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1.0, 2)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.0, 3)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000.0, 20001)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0.0, 1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1.0, -2)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal longs/doubles") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1.0, 2L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.0, 1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000.0, 20001L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0.0, 1L)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1.0, -2L)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal floats/doubles") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1.0, 1.1f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.0, 2.1f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2.3333, 2.4444f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000.0, 20001.0f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0.0, 0.1f)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(-1.0, -1.1f)
-      }
-    })
-    yield(dynamicTest("equal() should fail for unequal uints") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(1u, 2u)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(2u, 1u)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(20000u, 20001u)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0u, 1u)
-      }
+      assertThrows<NodeAssertionError> { testAssertEqual("hi", "hello") }
+      assertThrows<NodeAssertionError> { testAssertEqual("hello", "hi") }
+      assertThrows<NodeAssertionError> { testAssertEqual("", "hi") }
+      assertThrows<NodeAssertionError> { testAssertEqual("hi", "") }
     })
     yield(dynamicTest("equal() should fail for unequal bools or nulls") {
-      assertThrows<NodeAssertionError> {
-        assert.equal(null, "hi")
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(null, true)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal("hi", null)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(true, null)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(null, 0)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(null, 1)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(0, null)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(1, null)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(actual = true, expected = false)
-      }
-      assertThrows<NodeAssertionError> {
-        assert.equal(actual = false, expected = true)
-      }
+      assertThrows<NodeAssertionError> { testAssertEqual(null, "hi") }
+      assertThrows<NodeAssertionError> { testAssertEqual(null, true) }
+      assertThrows<NodeAssertionError> { testAssertEqual("hi", null) }
+      assertThrows<NodeAssertionError> { testAssertEqual(true, null) }
+      assertThrows<NodeAssertionError> { testAssertEqual(null, 0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(null, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, null) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1, null) }
+      assertThrows<NodeAssertionError> { testAssertEqual(left = true, right = false) }
+      assertThrows<NodeAssertionError> { testAssertEqual(left = false, right = true) }
+    })
+
+    yield(dynamicTest("equal() should fail for unequal integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1, 2) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1, "2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2, "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000, 20001) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000, "20001") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20001, 20000) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20001, "20000") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, -2) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, "-2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-2, -1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-2, "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(1, 0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1, "0") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, -1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, 0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, "0") }
+    })
+    yield(dynamicTest("equal() should fail for unequal longs") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, 2L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, "2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2L, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2L, "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000L, 20001L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000L, "20001") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20001L, 20000L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20001L, "20000") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, -2L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, "-2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-2L, -1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-2L, "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, 0L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, "0") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, -1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, 0L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, "0") }
+    })
+    yield(dynamicTest("equal() should fail for unequal shorts") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), 2.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), "2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.toShort(), 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.toShort(), "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.toShort(), 20001.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.toShort(), "20001") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20001.toShort(), 20000.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20001.toShort(), "20000") }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), (-2).toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), "-2") }
+      assertThrows<NodeAssertionError> { testAssertEqual((-2).toShort(), (-1).toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-2).toShort(), "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), 0.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), "0") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), (-1).toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), 0.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), "0") }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0f, 1.1f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0f, "1.1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0f, 2.1f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0f, "2.1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.3333f, 2.4444f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.3333f, "2.4444") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0f, 20001.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0f, "20001.0") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0f, 0.1f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0f, "0.1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0f, -1.1f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0f, "-1.1") }
+    })
+    yield(dynamicTest("equal() should fail for unequal doubles") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0, 1.1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0, "1.1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0, 2.1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0, "2.1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.3333, 2.4444) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.3333, "2.4444") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0, 20001.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0, "20001.0") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0, 0.1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0, "0.1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0, -1.1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0, "-1.1") }
+    })
+    yield(dynamicTest("equal() should fail for unequal uints") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1u, 2u) }
+      assertThrows<NodeAssertionError> { testAssertEqual(1u, "2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(2u, 1u) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2u, "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000u, 20001u) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000u, "20001") }
+      assertThrows<NodeAssertionError> { testAssertEqual(0u, 1u) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0u, "1") }
+    })
+    yield(dynamicTest("equal() should fail for unequal big integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(1), BigInteger.valueOf(2)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(1), "2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(2), BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(2), "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(20000), BigInteger.valueOf(20001)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(20000), "20001") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(20001), BigInteger.valueOf(20000)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(20001), "20000") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(-1), BigInteger.valueOf(-2)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(-1), "-2") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(-2), BigInteger.valueOf(-1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(-2), "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(0), BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(0), "1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(1), BigInteger.valueOf(0)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(1), "0") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(0), BigInteger.valueOf(-1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(0), "-1") }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(-1), BigInteger.valueOf(0)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(BigInteger.valueOf(-1), "0") }
+    })
+
+    // shorts first
+    yield(dynamicTest("equal() should fail for unequal shorts/integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), 2) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.toShort(), 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.toShort(), 20001) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), 1) }
+    })
+    yield(dynamicTest("equal() should fail for unequal shorts/longs") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), 2L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.toShort(), 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.toShort(), 20001L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), 1L) }
+    })
+    yield(dynamicTest("equal() should fail for unequal shorts/floats") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), 2.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.toShort(), 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.toShort(), 20001.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), 1.0f) }
+    })
+    yield(dynamicTest("equal() should fail for unequal shorts/doubles") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), 2.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.toShort(), 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.toShort(), 20001.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), 1.0) }
+    })
+    yield(dynamicTest("equal() should fail for unequal shorts/big integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.toShort(), BigInteger.valueOf(2)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.toShort(), BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.toShort(), BigInteger.valueOf(20001)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.toShort(), BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual((-1).toShort(), BigInteger.valueOf(1)) }
+    })
+
+    // integers first
+    yield(dynamicTest("equal() should fail for unequal integers/shorts") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1, 2.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000, 20001.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, 1.toShort()) }
+    })
+    yield(dynamicTest("equal() should fail for unequal integers/longs") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1, 2L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000, 20001L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, 1L) }
+    })
+    yield(dynamicTest("equal() should fail for unequal integers/floats") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1, 2.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2, 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000, 20001.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, 1.0f) }
+    })
+    yield(dynamicTest("equal() should fail for unequal integers/doubles") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1, 2.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2, 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000, 20001.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, 1.0) }
+    })
+    yield(dynamicTest("equal() should fail for unequal integers/big integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1, BigInteger.valueOf(2)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000, BigInteger.valueOf(20001)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1, BigInteger.valueOf(1)) }
+    })
+
+    // longs first
+    yield(dynamicTest("equal() should fail for unequal longs/shorts") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, 2.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2L, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000L, 20001.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, 1.toShort()) }
+    })
+    yield(dynamicTest("equal() should fail for unequal longs/integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, 2) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2L, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000L, 20001) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, 1) }
+    })
+    yield(dynamicTest("equal() should fail for unequal longs/floats") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, 2.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2L, 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000L, 20001.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, 1.0f) }
+    })
+    yield(dynamicTest("equal() should fail for unequal longs/doubles") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, 2.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2L, 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000L, 20001.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, 1.0) }
+    })
+    yield(dynamicTest("equal() should fail for unequal longs/big integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1L, BigInteger.valueOf(2)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2L, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000L, BigInteger.valueOf(20001)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0L, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1L, BigInteger.valueOf(1)) }
+    })
+
+    // floats first
+    yield(dynamicTest("equal() should fail for unequal floats/shorts") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0f, 2.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0f, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0f, 20001.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0f, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0f, 1.toShort()) }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats/integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0f, 2) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0f, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0f, 20001) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0f, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0f, 1) }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats/longs") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0f, 2L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0f, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0f, 20001L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0f, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0f, 1L) }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats/doubles") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0f, 2.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0f, 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0f, 20001.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0f, 1.0) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0f, 1.0) }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats/big integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0f, BigInteger.valueOf(2)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0f, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0f, BigInteger.valueOf(20001)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0f, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0f, BigInteger.valueOf(1)) }
+    })
+
+    // doubles first
+    yield(dynamicTest("equal() should fail for unequal floats/shorts") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0, 2.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0, 20001.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0, 1.toShort()) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0, 1.toShort()) }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats/integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0, 2) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0, 20001) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0, 1) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0, 1) }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats/longs") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0, 2L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0, 20001L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0, 1L) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0, 1L) }
+    })
+    yield(dynamicTest("equal() should fail for unequal floats/floats") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0, 2.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0, 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0, 20001.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0, 1.0f) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0, 1.0f) }
+    })
+    yield(dynamicTest("equal() should fail for unequal doubles/big integers") {
+      assertThrows<NodeAssertionError> { testAssertEqual(1.0, BigInteger.valueOf(2)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(2.0, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(20000.0, BigInteger.valueOf(20001)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(0.0, BigInteger.valueOf(1)) }
+      assertThrows<NodeAssertionError> { testAssertEqual(-1.0, BigInteger.valueOf(1)) }
     })
   }.asStream()
 
@@ -1251,257 +1981,257 @@ import elide.testing.annotations.TestCase
   @TestFactory fun `equal() should fail correctly with guest types`(): Stream<DynamicTest> = sequence {
     yield(dynamicTest("equal() should fail for unequal strings") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue("hi"), asValue("hello"))
+        testAssertEqual(asValue("hi"), asValue("hello"))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue("hello"), asValue("hi"))
+        testAssertEqual(asValue("hello"), asValue("hi"))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(""), asValue("hi"))
+        testAssertEqual(asValue(""), asValue("hi"))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue("hi"), asValue(""))
+        testAssertEqual(asValue("hi"), asValue(""))
       }
     })
     yield(dynamicTest("equal() should fail for unequal integers") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1), asValue(2))
+        testAssertEqual(asValue(1), asValue(2))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2), asValue(1))
+        testAssertEqual(asValue(2), asValue(1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000), asValue(20001))
+        testAssertEqual(asValue(20000), asValue(20001))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20001), asValue(20000))
+        testAssertEqual(asValue(20001), asValue(20000))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1), asValue(-2))
+        testAssertEqual(asValue(-1), asValue(-2))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-2), asValue(-1))
+        testAssertEqual(asValue(-2), asValue(-1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0), asValue(1))
+        testAssertEqual(asValue(0), asValue(1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1), asValue(0))
+        testAssertEqual(asValue(1), asValue(0))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0), asValue(-1))
+        testAssertEqual(asValue(0), asValue(-1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1), asValue(0))
+        testAssertEqual(asValue(-1), asValue(0))
       }
     })
     yield(dynamicTest("equal() should fail for unequal longs") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1L), asValue(2L))
+        testAssertEqual(asValue(1L), asValue(2L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2L), asValue(1L))
+        testAssertEqual(asValue(2L), asValue(1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000L), asValue(20001L))
+        testAssertEqual(asValue(20000L), asValue(20001L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20001L), asValue(20000L))
+        testAssertEqual(asValue(20001L), asValue(20000L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1L), asValue(-2L))
+        testAssertEqual(asValue(-1L), asValue(-2L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-2L), asValue(-1L))
+        testAssertEqual(asValue(-2L), asValue(-1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0L), asValue(1L))
+        testAssertEqual(asValue(0L), asValue(1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1L), asValue(0L))
+        testAssertEqual(asValue(1L), asValue(0L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0L), asValue(-1L))
+        testAssertEqual(asValue(0L), asValue(-1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1L), asValue(0L))
+        testAssertEqual(asValue(-1L), asValue(0L))
       }
     })
     yield(dynamicTest("equal() should fail for unequal integers/longs") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1), asValue(2L))
+        testAssertEqual(asValue(1), asValue(2L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2L), asValue(1))
+        testAssertEqual(asValue(2L), asValue(1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000), asValue(20001L))
+        testAssertEqual(asValue(20000), asValue(20001L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0), asValue(1L))
+        testAssertEqual(asValue(0), asValue(1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1), asValue(1L))
+        testAssertEqual(asValue(-1), asValue(1L))
       }
     })
     yield(dynamicTest("equal() should fail for unequal floats") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1.0f), asValue(1.1f))
+        testAssertEqual(asValue(1.0f), asValue(1.1f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.0f), asValue(2.1f))
+        testAssertEqual(asValue(2.0f), asValue(2.1f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.3333f), asValue(2.4444f))
+        testAssertEqual(asValue(2.3333f), asValue(2.4444f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000.0f), asValue(20001.0f))
+        testAssertEqual(asValue(20000.0f), asValue(20001.0f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0.0f), asValue(0.1f))
+        testAssertEqual(asValue(0.0f), asValue(0.1f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1.0f), asValue(-1.1f))
+        testAssertEqual(asValue(-1.0f), asValue(-1.1f))
       }
     })
     yield(dynamicTest("equal() should fail for unequal integers/floats") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1.0f), asValue(2))
+        testAssertEqual(asValue(1.0f), asValue(2))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.0f), asValue(0))
+        testAssertEqual(asValue(2.0f), asValue(0))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000.0f), asValue(20001))
+        testAssertEqual(asValue(20000.0f), asValue(20001))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0.0f), asValue(1))
+        testAssertEqual(asValue(0.0f), asValue(1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1.0f), asValue(-2))
+        testAssertEqual(asValue(-1.0f), asValue(-2))
       }
     })
     yield(dynamicTest("equal() should fail for unequal longs/floats") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1.0f), asValue(2L))
+        testAssertEqual(asValue(1.0f), asValue(2L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.0f), asValue(1L))
+        testAssertEqual(asValue(2.0f), asValue(1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000.0f), asValue(20001L))
+        testAssertEqual(asValue(20000.0f), asValue(20001L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0.0f), asValue(1L))
+        testAssertEqual(asValue(0.0f), asValue(1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1.0f), asValue(0L))
+        testAssertEqual(asValue(-1.0f), asValue(0L))
       }
     })
     yield(dynamicTest("equal() should fail for unequal doubles") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1.0), asValue(1.1))
+        testAssertEqual(asValue(1.0), asValue(1.1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.0), asValue(2.1))
+        testAssertEqual(asValue(2.0), asValue(2.1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.3333), asValue(2.4444))
+        testAssertEqual(asValue(2.3333), asValue(2.4444))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000.0), asValue(20001.0))
+        testAssertEqual(asValue(20000.0), asValue(20001.0))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0.0), asValue(0.1))
+        testAssertEqual(asValue(0.0), asValue(0.1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1.0), asValue(-1.1))
+        testAssertEqual(asValue(-1.0), asValue(-1.1))
       }
     })
     yield(dynamicTest("equal() should fail for unequal integers/doubles") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1.0), asValue(2))
+        testAssertEqual(asValue(1.0), asValue(2))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.0), asValue(3))
+        testAssertEqual(asValue(2.0), asValue(3))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000.0), asValue(20001))
+        testAssertEqual(asValue(20000.0), asValue(20001))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0.0), asValue(1))
+        testAssertEqual(asValue(0.0), asValue(1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1.0), asValue(-2))
+        testAssertEqual(asValue(-1.0), asValue(-2))
       }
     })
     yield(dynamicTest("equal() should fail for unequal longs/doubles") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1.0), asValue(2L))
+        testAssertEqual(asValue(1.0), asValue(2L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.0), asValue(1L))
+        testAssertEqual(asValue(2.0), asValue(1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000.0), asValue(20001L))
+        testAssertEqual(asValue(20000.0), asValue(20001L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0.0), asValue(1L))
+        testAssertEqual(asValue(0.0), asValue(1L))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1.0), asValue(-2L))
+        testAssertEqual(asValue(-1.0), asValue(-2L))
       }
     })
     yield(dynamicTest("equal() should fail for unequal floats/doubles") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1.0), asValue(1.1f))
+        testAssertEqual(asValue(1.0), asValue(1.1f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.0), asValue(2.1f))
+        testAssertEqual(asValue(2.0), asValue(2.1f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(2.3333), asValue(2.4444f))
+        testAssertEqual(asValue(2.3333), asValue(2.4444f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(20000.0), asValue(20001.0f))
+        testAssertEqual(asValue(20000.0), asValue(20001.0f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0.0), asValue(0.1f))
+        testAssertEqual(asValue(0.0), asValue(0.1f))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(-1.0), asValue(-1.1f))
+        testAssertEqual(asValue(-1.0), asValue(-1.1f))
       }
     })
     yield(dynamicTest("equal() should fail for unequal bools or nulls") {
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(null), asValue("hi"))
+        testAssertEqual(asValue(null), asValue("hi"))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(null), asValue(true))
+        testAssertEqual(asValue(null), asValue(true))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue("hi"), asValue(null))
+        testAssertEqual(asValue("hi"), asValue(null))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(true), asValue(null))
+        testAssertEqual(asValue(true), asValue(null))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(null), asValue(0))
+        testAssertEqual(asValue(null), asValue(0))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(null), asValue(1))
+        testAssertEqual(asValue(null), asValue(1))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(0), asValue(null))
+        testAssertEqual(asValue(0), asValue(null))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(asValue(1), asValue(null))
+        testAssertEqual(asValue(1), asValue(null))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(actual = asValue(true), expected = asValue(false))
+        testAssertEqual(left = asValue(true), right = asValue(false))
       }
       assertThrows<NodeAssertionError> {
-        assert.equal(actual = asValue(false), expected = asValue(true))
+        testAssertEqual(left = asValue(false), right = asValue(true))
       }
     })
   }.asStream()
@@ -1766,87 +2496,87 @@ import elide.testing.annotations.TestCase
 
   @TestFactory fun `equal() should pass correctly with guest types`(): Stream<DynamicTest> = sequence {
     yield(dynamicTest("equal() should pass for equal strings") {
-      assert.equal(asValue("hi"), asValue("hi"))
-      assert.equal(asValue("hello"), asValue("hello"))
-      assert.equal(asValue(""), asValue(""))
+      testAssertEqual(asValue("hi"), asValue("hi"))
+      testAssertEqual(asValue("hello"), asValue("hello"))
+      testAssertEqual(asValue(""), asValue(""))
     })
     yield(dynamicTest("equal() should pass for equal integers") {
-      assert.equal(asValue(1), asValue(1))
-      assert.equal(asValue(2), asValue(2))
-      assert.equal(asValue(20000), asValue(20000))
-      assert.equal(asValue(0), asValue(0))
-      assert.equal(asValue(-1), asValue(-1))
+      testAssertEqual(asValue(1), asValue(1))
+      testAssertEqual(asValue(2), asValue(2))
+      testAssertEqual(asValue(20000), asValue(20000))
+      testAssertEqual(asValue(0), asValue(0))
+      testAssertEqual(asValue(-1), asValue(-1))
     })
     yield(dynamicTest("equal() should pass for equal longs") {
-      assert.equal(asValue(1L), asValue(1L))
-      assert.equal(asValue(2L), asValue(2L))
-      assert.equal(asValue(20000L), asValue(20000L))
-      assert.equal(asValue(0L), asValue(0L))
-      assert.equal(asValue(-1L), asValue(-1L))
+      testAssertEqual(asValue(1L), asValue(1L))
+      testAssertEqual(asValue(2L), asValue(2L))
+      testAssertEqual(asValue(20000L), asValue(20000L))
+      testAssertEqual(asValue(0L), asValue(0L))
+      testAssertEqual(asValue(-1L), asValue(-1L))
     })
     yield(dynamicTest("equal() should pass for equal integers/longs") {
-      assert.equal(asValue(1), asValue(1L))
-      assert.equal(asValue(2), asValue(2L))
-      assert.equal(asValue(20000), asValue(20000L))
-      assert.equal(asValue(0), asValue(0L))
-      assert.equal(asValue(-1), asValue(-1L))
+      testAssertEqual(asValue(1), asValue(1L))
+      testAssertEqual(asValue(2), asValue(2L))
+      testAssertEqual(asValue(20000), asValue(20000L))
+      testAssertEqual(asValue(0), asValue(0L))
+      testAssertEqual(asValue(-1), asValue(-1L))
     })
     yield(dynamicTest("equal() should pass for equal floats") {
-      assert.equal(asValue(1.0f), asValue(1.0f))
-      assert.equal(asValue(2.0f), asValue(2.0f))
-      assert.equal(asValue(2.3333f), asValue(2.3333f))
-      assert.equal(asValue(20000.0f), asValue(20000.0f))
-      assert.equal(asValue(0.0f), asValue(0.0f))
-      assert.equal(asValue(-1.0f), asValue(-1.0f))
+      testAssertEqual(asValue(1.0f), asValue(1.0f))
+      testAssertEqual(asValue(2.0f), asValue(2.0f))
+      testAssertEqual(asValue(2.3333f), asValue(2.3333f))
+      testAssertEqual(asValue(20000.0f), asValue(20000.0f))
+      testAssertEqual(asValue(0.0f), asValue(0.0f))
+      testAssertEqual(asValue(-1.0f), asValue(-1.0f))
     })
     yield(dynamicTest("equal() should pass for equal integers/floats") {
-      assert.equal(asValue(1.0f), asValue(1))
-      assert.equal(asValue(2.0f), asValue(2))
-      assert.equal(asValue(20000.0f), asValue(20000))
-      assert.equal(asValue(0.0f), asValue(0))
-      assert.equal(asValue(-1.0f), asValue(-1))
+      testAssertEqual(asValue(1.0f), asValue(1))
+      testAssertEqual(asValue(2.0f), asValue(2))
+      testAssertEqual(asValue(20000.0f), asValue(20000))
+      testAssertEqual(asValue(0.0f), asValue(0))
+      testAssertEqual(asValue(-1.0f), asValue(-1))
     })
     yield(dynamicTest("equal() should pass for equal longs/floats") {
-      assert.equal(asValue(1.0f), asValue(1L))
-      assert.equal(asValue(2.0f), asValue(2L))
-      assert.equal(asValue(20000.0f), asValue(20000L))
-      assert.equal(asValue(0.0f), asValue(0L))
-      assert.equal(asValue(-1.0f), asValue(-1L))
+      testAssertEqual(asValue(1.0f), asValue(1L))
+      testAssertEqual(asValue(2.0f), asValue(2L))
+      testAssertEqual(asValue(20000.0f), asValue(20000L))
+      testAssertEqual(asValue(0.0f), asValue(0L))
+      testAssertEqual(asValue(-1.0f), asValue(-1L))
     })
     yield(dynamicTest("equal() should pass for equal doubles") {
-      assert.equal(asValue(1.0), asValue(1.0))
-      assert.equal(asValue(2.0), asValue(2.0))
-      assert.equal(asValue(2.3333), asValue(2.3333))
-      assert.equal(asValue(20000.0), asValue(20000.0))
-      assert.equal(asValue(0.0), asValue(0.0))
-      assert.equal(asValue(-1.0), asValue(-1.0))
+      testAssertEqual(asValue(1.0), asValue(1.0))
+      testAssertEqual(asValue(2.0), asValue(2.0))
+      testAssertEqual(asValue(2.3333), asValue(2.3333))
+      testAssertEqual(asValue(20000.0), asValue(20000.0))
+      testAssertEqual(asValue(0.0), asValue(0.0))
+      testAssertEqual(asValue(-1.0), asValue(-1.0))
     })
     yield(dynamicTest("equal() should pass for equal integers/doubles") {
-      assert.equal(asValue(1.0), asValue(1))
-      assert.equal(asValue(2.0), asValue(2))
-      assert.equal(asValue(20000.0), asValue(20000))
-      assert.equal(asValue(0.0), asValue(0))
-      assert.equal(asValue(-1.0), asValue(-1))
+      testAssertEqual(asValue(1.0), asValue(1))
+      testAssertEqual(asValue(2.0), asValue(2))
+      testAssertEqual(asValue(20000.0), asValue(20000))
+      testAssertEqual(asValue(0.0), asValue(0))
+      testAssertEqual(asValue(-1.0), asValue(-1))
     })
     yield(dynamicTest("equal() should pass for equal longs/doubles") {
-      assert.equal(asValue(1.0), asValue(1L))
-      assert.equal(asValue(2.0), asValue(2L))
-      assert.equal(asValue(20000.0), asValue(20000L))
-      assert.equal(asValue(0.0), asValue(0L))
-      assert.equal(asValue(-1.0), asValue(-1L))
+      testAssertEqual(asValue(1.0), asValue(1L))
+      testAssertEqual(asValue(2.0), asValue(2L))
+      testAssertEqual(asValue(20000.0), asValue(20000L))
+      testAssertEqual(asValue(0.0), asValue(0L))
+      testAssertEqual(asValue(-1.0), asValue(-1L))
     })
     yield(dynamicTest("equal() should pass for equal floats/doubles") {
-      assert.equal(asValue(1.0), asValue(1.0f))
-      assert.equal(asValue(2.0), asValue(2.0f))
-      // assert.equal(asValue(2.3333), asValue(2.3333f))  @TODO(sgammon): file with gvm for precision issue
-      assert.equal(asValue(20000.0), asValue(20000.0f))
-      assert.equal(asValue(0.0), asValue(0.0f))
-      assert.equal(asValue(-1.0), asValue(-1.0f))
+      testAssertEqual(asValue(1.0), asValue(1.0f))
+      testAssertEqual(asValue(2.0), asValue(2.0f))
+      // testAssertEqual(asValue(2.3333), asValue(2.3333f))  @TODO(sgammon): file with gvm for precision issue
+      testAssertEqual(asValue(20000.0), asValue(20000.0f))
+      testAssertEqual(asValue(0.0), asValue(0.0f))
+      testAssertEqual(asValue(-1.0), asValue(-1.0f))
     })
     yield(dynamicTest("equal() should pass for equal bools or nulls") {
-      assert.equal(asValue(null), asValue(null))
-      assert.equal(actual = asValue(true), expected = asValue(true))
-      assert.equal(actual = asValue(false), expected = asValue(false))
+      testAssertEqual(asValue(null), asValue(null))
+      testAssertEqual(left = asValue(true), right = asValue(true))
+      testAssertEqual(left = asValue(false), right = asValue(false))
     })
   }.asStream()
 
@@ -2033,7 +2763,300 @@ import elide.testing.annotations.TestCase
     })
   }.asStream()
 
-//  @TestFactory fun `strict() should fail correctly with host types`(): Stream<DynamicTest> = sequence {
-//
-//  }.asStream()
+  @Test fun `ok() should work for falsy host values`() {
+    assert.notOk(false)
+    assertThrows<NodeAssertionError> {
+      assert.ok(false)
+    }
+    assert.notOk(null)
+    assertThrows<NodeAssertionError> {
+      assert.ok(null)
+    }
+    assert.notOk(emptyList<String>())
+    assertThrows<NodeAssertionError> {
+      assert.ok(emptyList<String>())
+    }
+    assert.notOk(emptyMap<String, String>())
+    assertThrows<NodeAssertionError> {
+      assert.ok(emptyMap<String, String>())
+    }
+    assert.notOk(emptyList<String>().iterator())
+    assertThrows<NodeAssertionError> {
+      assert.ok(emptyList<String>().iterator())
+    }
+    assert.notOk(Unit)
+    assertThrows<NodeAssertionError> {
+      assert.ok(Unit)
+    }
+    assert.notOk(0.toShort())
+    assertThrows<NodeAssertionError> {
+      assert.ok(0.toShort())
+    }
+    assert.notOk(0)
+    assertThrows<NodeAssertionError> {
+      assert.ok(0)
+    }
+    assert.notOk(0L)
+    assertThrows<NodeAssertionError> {
+      assert.ok(0L)
+    }
+    assert.notOk(BigInteger.ZERO)
+    assertThrows<NodeAssertionError> {
+      assert.ok(BigInteger.ZERO)
+    }
+    assert.notOk(0.0f)
+    assertThrows<NodeAssertionError> {
+      assert.ok(0.0f)
+    }
+    assert.notOk(0.0)
+    assertThrows<NodeAssertionError> {
+      assert.ok(0.0)
+    }
+  }
+
+  @Test fun `ok() should work for falsy guest values`() {
+    assert.notOk(asValue(false))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(false))
+    }
+    assert.notOk(asValue(null))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(null))
+    }
+    assert.notOk(asValue(emptyList<String>()))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(emptyList<String>()))
+    }
+    assert.notOk(asValue(emptyMap<String, String>()))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(emptyMap<String, String>()))
+    }
+    assert.notOk(asValue(emptyList<String>().iterator()))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(emptyList<String>().iterator()))
+    }
+    assert.notOk(asValue(0.toShort()))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(0.toShort()))
+    }
+    assert.notOk(asValue(0))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(0))
+    }
+    assert.notOk(asValue(0L))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(0L))
+    }
+    assert.notOk(asValue(BigInteger.ZERO))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(BigInteger.ZERO))
+    }
+    assert.notOk(asValue(0.0f))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(0.0f))
+    }
+    assert.notOk(asValue(0.0))
+    assertThrows<NodeAssertionError> {
+      assert.ok(asValue(0.0))
+    }
+  }
+
+  @Test fun `ok() should work for proxy arrays`() {
+    val map = object: ProxyArray {
+      override fun get(index: Long): Any? = if (index == 0L) "hello" else null
+      override fun set(index: Long, value: Value?) {
+        TODO("not needed")
+      }
+      override fun getSize(): Long = 1
+    }
+    val empty = object: ProxyArray {
+      override fun get(index: Long): Any? = if (index == 0L) "hello" else null
+      override fun set(index: Long, value: Value?) {
+        TODO("not needed")
+      }
+      override fun getSize(): Long = 0
+    }
+    assertDoesNotThrow {
+      assert.ok(map)
+    }
+    assertThrows<NodeAssertionError> {
+      assert.ok(empty)
+    }
+  }
+
+  @Test fun `ok() should work for proxy maps`() {
+    val map = object: ProxyHashMap {
+      override fun getHashSize(): Long = 1
+      override fun hasHashEntry(key: Value?): Boolean = key?.asString() == "hello"
+      override fun getHashValue(key: Value?): Any? = if (key?.asString() == "hello") "hi" else null
+      override fun putHashEntry(key: Value?, value: Value?) {
+        TODO("not needed")
+      }
+      override fun getHashEntriesIterator(): Any {
+        TODO("not needed")
+      }
+    }
+    val empty = object: ProxyHashMap {
+      override fun getHashSize(): Long = 0
+      override fun hasHashEntry(key: Value?): Boolean = false
+      override fun getHashValue(key: Value?): Any? = null
+      override fun putHashEntry(key: Value?, value: Value?) {
+        TODO("not needed")
+      }
+      override fun getHashEntriesIterator(): Any {
+        TODO("not needed")
+      }
+    }
+    assertDoesNotThrow {
+      assert.ok(map)
+    }
+    assertThrows<NodeAssertionError> {
+      assert.ok(empty)
+    }
+  }
+
+  @Test fun `ok() should work for proxy objects`() {
+    val obj = object: ProxyObject {
+      override fun getMember(key: String?): Any? = if (key == "hello") "hi" else null
+      override fun getMemberKeys(): Any = arrayOf("hello")
+      override fun hasMember(key: String?): Boolean = key == "hello"
+
+      override fun putMember(key: String?, value: Value?) {
+        TODO("not needed")
+      }
+    }
+    val empty = object: ProxyObject {
+      override fun getMember(key: String?): Any? = null
+      override fun getMemberKeys(): Any = emptyArray<String>()
+      override fun hasMember(key: String?): Boolean = false
+
+      override fun putMember(key: String?, value: Value?) {
+        TODO("not needed")
+      }
+    }
+    assertDoesNotThrow {
+      assert.ok(obj)
+    }
+    assertThrows<NodeAssertionError> {
+      assert.ok(empty)
+    }
+  }
+
+  @TestFactory fun `equal() guest testing - pass cases`(): Stream<DynamicTest> = sequence {
+    dynamicGuestTest("pass: `true == true`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal(true, true);
+      """
+    }
+    dynamicGuestTest("pass: `false == false`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal(false, false);
+      """
+    }
+    dynamicGuestTest("pass: `null == null`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal(null, null);
+      """
+    }
+    dynamicGuestTest("pass: `undefined == undefined`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal(undefined, undefined);
+      """
+    }
+    dynamicGuestTest("pass: `1 == 1`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal(1, 1);
+      """
+    }
+    dynamicGuestTest("pass: `1 == 1.0`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal(1, 1.0);
+      """
+    }
+    dynamicGuestTest("pass: `'' == ''`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal('', '');
+      """
+    }
+    dynamicGuestTest("pass: `'hello' == 'hello'`") {
+      // language=javascript
+      """
+        const { equal } = require("node:assert");
+        equal('hello', 'hello');
+      """
+    }
+  }.asStream()
+
+  @TestFactory fun `equal() guest testing - fail cases`(): Stream<DynamicTest> = sequence {
+    dynamicGuestTest("fail: `true != false`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal(true, false));
+      """
+    }
+    dynamicGuestTest("fail: `false != true`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal(false, true));
+      """
+    }
+    dynamicGuestTest("fail: `null != true`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal(null, true));
+      """
+    }
+    dynamicGuestTest("fail: `undefined != true`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal(undefined, true));
+      """
+    }
+    dynamicGuestTest("fail: `1 != 2`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal(1, 2));
+      """
+    }
+    dynamicGuestTest("fail: `1 != 2.0`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal(1, 2.0));
+      """
+    }
+    dynamicGuestTest("fail: `'' != 'hello'`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal('', 'hello'));
+      """
+    }
+    dynamicGuestTest("fail: `'hello' != ''`") {
+      // language=javascript
+      """
+        const { equal, throws } = require("node:assert");
+        throws(() => equal('hello', ''));
+      """
+    }
+  }.asStream()
 }

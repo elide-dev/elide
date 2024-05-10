@@ -126,40 +126,13 @@ internal class NodeAssert : AssertAPI {
   // Assert that a given `value` is truthy (or falsy, if `reverse` is true).
   private fun checkTruthy(reverse: Boolean, value: Any?, message: Any?): Boolean {
     return when (value) {
-      null -> throw assertionError(message ?: OK_EXPECTATION)
+      null -> false
       is Boolean -> value
       is String -> value.isNotEmpty()
-      is Array<*> -> value.isNotEmpty()
-      is Collection<*> -> value.isNotEmpty()
-      is Map<*, *> -> value.isNotEmpty()
-      is Iterator<*> -> value.hasNext()
-      is Unit -> throw assertionError(message ?: OK_EXPECTATION)
-      is Number -> when (value) {
-        is Short -> value > 0
-        is Int -> value > 0
-        is Long -> value > 0L
-        is BigInteger -> value > BigInteger.ZERO
-        is Float -> value > 0.0f
-        is Double -> value > 0.0
-        else -> throw assertionError(message ?: OK_EXPECTATION)
-      }
-
-      is ProxyArray -> value.size > 0L
-      is ProxyHashMap -> value.hashSize > 0L
-
-      is ProxyObject -> value.memberKeys.let { keys ->
-        when (keys) {
-          is ProxyArray -> keys.size > 0L
-          is Array<*> -> keys.size > 0
-          is Collection<*> -> keys.size > 0
-          else -> throw assertionError(message ?: OK_EXPECTATION)
-        }
-      }
-
       is Value -> when {
+        value.isNull -> false
         value.isBoolean -> value.asBoolean()
         value.isString -> value.asString().isNotEmpty()
-        value.isNull -> throw assertionError(message ?: OK_EXPECTATION)
 
         value.isNumber -> when {
           value.fitsInShort() -> value.asShort() > 0
@@ -168,7 +141,7 @@ internal class NodeAssert : AssertAPI {
           value.fitsInBigInteger() -> value.asBigInteger() > BigInteger.ZERO
           value.fitsInFloat() -> value.asFloat() > 0.0f
           value.fitsInDouble() -> value.asDouble() > 0.0
-          else -> throw assertionError(message ?: OK_EXPECTATION)
+          else -> false
         }
 
         // Non-empty objects should pass
@@ -194,15 +167,34 @@ internal class NodeAssert : AssertAPI {
         else -> error("Unrecognized polyglot value type: $value (${value.metaObject} / ${value::class.java.name})")
       }
 
+      is Array<*> -> value.isNotEmpty()
+      is Collection<*> -> value.isNotEmpty()
+      is Map<*, *> -> value.isNotEmpty()
+      is Iterator<*> -> value.hasNext()
+      is Unit -> false
+      is Short -> value > 0
+      is Int -> value > 0
+      is Long -> value > 0L
+      is BigInteger -> value > BigInteger.ZERO
+      is Float -> value > 0.0f
+      is Double -> value > 0.0
+
+      is ProxyArray -> value.size > 0L
+      is ProxyHashMap -> value.hashSize > 0L
+
+      is ProxyObject -> value.memberKeys.let { keys ->
+        when (keys) {
+          is ProxyArray -> keys.size > 0L
+          is Array<*> -> keys.size > 0
+          is Collection<*> -> keys.size > 0
+          else -> false
+        }
+      }
+
       else -> error("Unrecognized value type: $value")
 
-    }.let { condition ->
-      if (reverse) {
-        if (condition) throw assertionError(message ?: OK_EXPECTATION)
-      } else {
-        if (!condition) throw assertionError(message ?: OK_EXPECTATION)
-      }
-      condition
+    }.also { condition ->
+      if (condition == reverse) throw assertionError(message ?: OK_EXPECTATION)
     }
   }
 
@@ -243,191 +235,158 @@ internal class NodeAssert : AssertAPI {
     checkTruthy(false, value, message)
   }
 
-  @Polyglot override fun equal(actual: Any?, expected: Any?, message: String?) {
-    when {
-      actual == null && expected == null -> {}
-      actual == null || expected == null ->
-        throw assertionError(message, actualValue = empty(), expectedValue = ofNullable(expected))
-
-      actual is Value && expected is Value -> when {
-        actual.isNumber && expected.isNumber -> when {
-          expected.fitsInShort() && actual.fitsInShort() -> {
-            if (actual.asShort() != expected.asShort()) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
+  private fun checkEqual(condition: Boolean, actual: Any?, expected: Any?, message: String?): Boolean {
+    return when {
+      // if they are the same object, they are also equal
+      actual === expected -> true
+      actual == null && expected == null -> true
+      else -> when {
+        // comparison algorithm for two guest values
+        actual is Value && expected is Value -> when {
+          actual.isNull && expected.isNull -> true
+          actual.isNull || expected.isNull -> false
+          actual.isNumber && expected.isNumber -> when {
+            expected.fitsInShort() && actual.fitsInShort() -> actual.asShort() == expected.asShort()
+            expected.fitsInInt() && actual.fitsInInt() -> actual.asInt() == expected.asInt()
+            expected.fitsInLong() && actual.fitsInLong() -> actual.asLong() == expected.asLong()
+            expected.fitsInFloat() && actual.fitsInFloat() -> actual.asFloat() == expected.asFloat()
+            expected.fitsInDouble() && actual.fitsInDouble() -> actual.asDouble() == expected.asDouble()
+            expected.fitsInBigInteger() && actual.fitsInBigInteger() -> actual.asBigInteger() == expected.asBigInteger()
+            else -> actual == expected
           }
 
-          expected.fitsInInt() && actual.fitsInInt() -> {
-            if (actual.asInt() != expected.asInt()) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          expected.fitsInLong() && actual.fitsInLong() -> {
-            if (actual.asLong() != expected.asLong()) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          expected.fitsInFloat() && actual.fitsInFloat() -> {
-            if (actual.asFloat() != expected.asFloat()) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          expected.fitsInDouble() && actual.fitsInDouble() -> {
-            if (actual.asDouble() != expected.asDouble()) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          expected.fitsInBigInteger() && actual.fitsInBigInteger() -> {
-            if (actual.asBigInteger() != expected.asBigInteger()) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          else -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
+          actual.isHostObject && expected.isHostObject -> actual == expected
+          else -> actual == expected
         }
 
-        actual.isHostObject && expected.isHostObject -> {
-          if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
+        // guest and host nulls are equivalent
+        (actual == null) && (expected is Value && expected.isNull) -> true
+        (expected is Value && expected.isNull) && actual == null -> true
+
+        // either side being null with the other being non-null means they are not equal
+        actual == null || expected == null -> false
+
+        // comparison algorithm for two host values
+        actual !is Value && expected !is Value -> when (actual) {
+          // String == ...
+          is String -> when (expected) {
+            is String -> actual == expected  // == String
+            else -> actual == expected.toString()  // == <non-string>
           }
+
+          // Int == ...
+          is Int -> when (expected) {
+            is Int -> actual == expected  // == Int
+            is UInt -> actual == expected.toInt()  // == UInt
+            is Short -> actual == expected.toInt()  // == Short
+            is Long -> actual.toLong() == expected.toLong()  // == Long
+            is Float -> actual.toFloat() == expected.toFloat()  // == Float
+            is Double -> actual.toDouble() == expected.toDouble()  // == Double
+            is BigInteger -> BigInteger.valueOf(actual.toLong()) == expected  // == BigInteger
+            is String -> actual.toString() == expected  // == String
+            else -> actual == expected
+          }
+
+          // UInt == ...
+          is UInt -> when (expected) {
+            is UInt -> actual == expected  // == UInt
+            is Int -> actual.toInt() == expected  // == Int
+            is Short -> actual.toInt() == expected.toInt()  // == Short
+            is Long -> actual.toLong() == expected.toLong()  // == Long
+            is Float -> actual.toFloat() == expected.toFloat()  // == Float
+            is Double -> actual.toDouble() == expected.toDouble()  // == Double
+            is BigInteger -> BigInteger.valueOf(actual.toLong()) == expected  // == BigInteger
+            is String -> actual.toString() == expected  // == String
+            else -> actual == expected
+          }
+
+          // Long == ...
+          is Long -> when (expected) {
+            is Long -> actual == expected  // == Long
+            is Short -> actual == expected.toLong()  // == Short
+            is UInt -> actual == expected.toLong()  // == Int
+            is Int -> actual == expected.toLong()  // == UInt
+            is Float -> actual.toFloat() == expected  // == Float
+            is Double -> actual.toDouble() == expected  // == Double
+            is BigInteger -> actual.toBigInteger() == expected  // == BigInteger
+            is String -> actual.toString() == expected  // == String
+            else -> actual == expected
+          }
+
+          // Short == ...
+          is Short -> when (expected) {
+            is Short -> actual == expected  // == Short
+            is Int -> actual == expected.toShort()  // == Int
+            is UInt -> actual.toInt() == expected.toInt()  // == UInt
+            is Long -> actual.toLong() == expected  // == Long
+            is Float -> actual.toFloat() == expected  // == Float
+            is Double -> actual.toDouble() == expected  // == Double
+            is BigInteger -> BigInteger.valueOf(actual.toLong()) == expected  // == BigInteger
+            is String -> actual.toString() == expected  // == String
+            else -> actual == expected
+          }
+
+          // Float == ...
+          is Float -> when (expected) {
+            is Float -> actual == expected  // == Float
+            is Double -> actual == expected.toFloat()  // == Double
+            is Short -> actual == expected.toFloat() // == Short
+            is Int -> actual == expected.toFloat()  // == Int
+            is UInt -> actual == expected.toFloat()  // == UInt
+            is Long -> actual == expected.toFloat()  // == Long
+            is BigInteger -> actual == expected.toFloat()  // == BigInteger
+            is String -> actual.toString() == expected  // == String
+            else -> actual == expected
+          }
+
+          // Double == ...
+          is Double -> when (expected) {
+            is Double -> actual == expected  // == Double
+            is Short -> actual == expected.toDouble()  // == Short
+            is Int -> actual == expected.toDouble()  // == Int
+            is UInt -> actual == expected.toDouble()  // == UInt
+            is Long -> actual == expected.toDouble()  // == Long
+            is Float -> actual.toFloat() == expected  // == Float
+            is BigInteger -> actual == expected.toDouble()  // == BigInteger
+            is String -> actual.toString() == expected  // == String
+            else -> actual == expected
+          }
+
+          // BigInteger == ...
+          is BigInteger -> when (expected) {
+            is BigInteger -> actual == expected  // == BigInteger
+            is Int -> actual == BigInteger.valueOf(expected.toLong())  // == Int
+            is UInt -> actual == BigInteger.valueOf(expected.toLong())  // == UInt
+            is Short -> actual == BigInteger.valueOf(expected.toLong())  // == Short
+            is Long -> actual == BigInteger.valueOf(expected)  // == Long
+            is Float -> actual.toFloat() == expected.toFloat()  // == Float
+            is Double -> actual.toDouble() == expected.toDouble()  // == Double
+            is String -> actual.toString() == expected  // == String
+            else -> actual == expected
+          }
+
+          // (fallback, simple comparison)
+          else -> actual == expected
         }
 
-        else -> if (actual != expected) {
-          throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-        }
+        // if only one side is a guest value, wrap the other side as a guest value for comparison
+        actual is Value || expected is Value -> checkEqual(
+          condition,
+          if (actual is Value) actual else asValue(actual),
+          if (expected is Value) expected else asValue(expected),
+          message,
+        )
+
+        else -> error("Incomparable guest types")
       }
-
-      actual !is Value && expected !is Value -> when (actual) {
-        is Short -> when (expected) {
-          is Short -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Int, is Long, is Float, is Double -> {
-            // cast to the larger type and compare
-            if (actual.toLong() != expected) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-        }
-
-        is Int -> when (expected) {
-          is Int -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Short -> if (actual != expected.toInt()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Long, is Float, is Double -> {
-            // cast to the larger type and compare
-            if (actual.toLong() != expected) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-        }
-
-        is Long -> when (expected) {
-          is Long -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Short -> if (actual != expected.toLong()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Int -> if (actual != expected.toLong()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Float, is Double -> {
-            // cast to the larger type and compare
-            if (actual.toDouble() != expected) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          is BigInteger -> {
-            if (actual.toBigInteger() != expected) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          else -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-        }
-
-        is Float -> when (expected) {
-          is Float -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Short -> if (actual != expected.toFloat()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Int -> if (actual != expected.toFloat()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Long -> if (actual != expected.toFloat()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Double -> {
-            if (actual.toDouble() != expected) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          else -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-        }
-
-        is Double -> when (expected) {
-          is Double -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Short -> if (actual != expected.toDouble()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Int -> if (actual != expected.toDouble()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Long -> if (actual != expected.toDouble()) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-
-          is Float -> {
-            if (actual.toFloat() != expected) {
-              throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-            }
-          }
-
-          else -> if (actual != expected) {
-            throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-          }
-        }
-
-        else -> if (actual != expected) {
-          throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
-        }
-      }
-
-      else -> error("Incomparable types: actual=$actual, expected=$expected, message=$message")
+    }.also {
+      if (it != condition)
+        throw assertionError(message, actualValue = ofNullable(actual), expectedValue = ofNullable(expected))
     }
+  }
+
+  @Polyglot override fun equal(actual: Any?, expected: Any?, message: String?) {
+    checkEqual(true, actual, expected, message)
   }
 
   @Polyglot override fun strict(actual: Any?, expected: Any?, message: String?) {
@@ -645,7 +604,7 @@ internal class NodeAssert : AssertAPI {
   }
 
   @Polyglot override fun notEqual(actual: Any?, expected: Any?, message: String?) {
-    TODO("Not yet implemented: `assert.notEqual`")
+    checkEqual(false, actual, expected, message)
   }
 
   @Polyglot override fun deepEqual(actual: Any?, expected: Any?, message: String?) {

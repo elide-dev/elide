@@ -46,7 +46,7 @@ import elide.vm.annotations.Polyglot
    * @param value The value to test.
    * @param message The message to display on error.
    */
-  @Polyglot public fun notOk(value: Any?, message: Any?)
+  @Polyglot public fun notOk(value: Any?, message: Any? = null)
 
   /**
    * ## Assert: `fail(message)`

@@ -14,6 +14,8 @@
 
 package elide.runtime.gvm.internals.js.node
 
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.gvm.internals.node.NodeStdlib
@@ -22,6 +24,8 @@ import elide.runtime.gvm.internals.node.events.NodeEventsModule
 import elide.runtime.gvm.internals.node.events.NodeEventsModuleFacade
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.EventsAPI
+import elide.runtime.intrinsics.js.node.events.CustomEvent
+import elide.runtime.intrinsics.js.node.events.Event
 import elide.testing.annotations.TestCase
 
 /** Tests for the built-in `assert` module. */
@@ -130,5 +134,151 @@ import elide.testing.annotations.TestCase
     assertEquals(10, aware.getMaxListeners())
     assertEquals(10, events.getMaxListeners(aware))
     assertEquals(15, events.getMaxListeners(aware2))
+  }
+
+  @Test fun testCustomEvent() {
+    val event = CustomEvent("sample")
+    assertIs<Event>(event)
+    assertEquals("sample", event.type)
+    assertNull(event.target)
+    assertNull(event.detail)
+    val eventWithDetail = CustomEvent("sample", "hello")
+    assertEquals("sample", eventWithDetail.type)
+    assertNull(eventWithDetail.target)
+    assertEquals("hello", eventWithDetail.detail)
+    val overridden = object : CustomEvent("sample") {
+      override val detail: Any get() = "hi"
+    }
+    assertEquals("hi", overridden.detail)
+    val fresh = CustomEvent()
+    assertEquals("", fresh.type)
+    fresh.initEvent("someType", bubbles = false, cancelable = false)
+    assertEquals("someType", fresh.type)
+    assertFalse(fresh.bubbles)
+    assertFalse(fresh.cancelable)
+    val cancellable = CustomEvent()
+    assertEquals("", cancellable.type)
+    cancellable.initEvent("someType", bubbles = false, cancelable = true)
+    assertEquals("someType", cancellable.type)
+    assertFalse(cancellable.bubbles)
+    assertTrue(cancellable.cancelable)
+    assertThrows<IllegalStateException> {
+      // re-initializing an event should fail
+      cancellable.initEvent("reinit", bubbles = false, cancelable = false)
+    }
+  }
+
+  @Test fun testCustomEventPreventDefault() {
+    val notPrevented = CustomEvent("sample")
+    val prevented = CustomEvent("sample")
+    assertFalse(notPrevented.defaultPrevented)
+    assertFalse(prevented.defaultPrevented)
+    prevented.preventDefault()
+    assertFalse(notPrevented.defaultPrevented)
+    assertTrue(prevented.defaultPrevented)
+  }
+
+  @Test fun testCustomEventStopPropagation() {
+    val notStopped = CustomEvent("sample")
+    val stopped = CustomEvent("sample")
+    assertTrue(notStopped.propagates)
+    assertTrue(stopped.propagates)
+    stopped.stopPropagation()
+    assertFalse(stopped.propagates)
+  }
+
+  @Test fun testCustomEventStopPropagationImmediate() {
+    val notStopped = CustomEvent("sample")
+    val stopped = CustomEvent("sample")
+    assertTrue(notStopped.propagates)
+    stopped.stopImmediatePropagation()
+    assertFalse(stopped.propagates)
+  }
+
+  @Test fun testCustomEventMembers() {
+    val event = CustomEvent("sample")
+    val members = event.memberKeys
+    members.forEach {
+      assertTrue(event.hasMember(it))
+
+      assertDoesNotThrow {
+        event.getMember(it)
+      }
+    }
+  }
+
+  @Test fun testCustomEventTarget() {
+    val event = CustomEvent("sample")
+    val target = EventAware.create()
+    assertTrue(event.bubbles)
+    assertTrue(event.cancelable)
+    assertTrue(event.canDispatch())
+    assertNull(event.target)
+    assertNull(event.currentTarget)
+    assertNull(event.srcElement)
+    assertNull(event.detail)
+    assertEquals(0, event.eventPhase)
+    assertEquals("sample", event.type)
+    assertDoesNotThrow {
+      event.notifyDispatch(target)
+    }
+    assertEquals(2, event.eventPhase)
+    assertTrue(event.bubbles)
+    assertTrue(event.cancelable)
+    assertNotNull(event.currentTarget)
+    assertNotNull(event.target)
+    assertNotNull(event.srcElement)
+    assertSame(target, event.currentTarget)
+    assertSame(target, event.target)
+    assertSame(target, event.srcElement)
+    val path = event.composedPath()
+    assertEquals(1, path.size)
+    assertSame(target, path[0])
+    val next = EventAware.create()
+    event.notifyTarget(next)
+    assertEquals(2, event.eventPhase)
+    assertSame(next, event.currentTarget)
+    assertSame(target, event.target)
+    assertSame(target, event.srcElement)
+    val path2 = event.composedPath()
+    assertEquals(2, path2.size)
+    assertSame(next, path2[0])
+    assertSame(target, path2[1])
+  }
+
+  @Test fun testCustomEventTimestamp() {
+    val event = CustomEvent("sample")
+    assertNotNull(event.timeStamp)
+    assertTrue(event.timeStamp > 0)
+    Thread.sleep(1000)
+    val event2 = CustomEvent("sample")
+    assertNotNull(event2.timeStamp)
+    assertTrue(event2.timeStamp > 0)
+    assertTrue(event2.timeStamp > event.timeStamp)
+  }
+
+  @Test fun testCustomEventTrusted() {
+    CustomEvent("sample").let {
+      assertTrue(it.canDispatch())
+      assertFalse(it.isTrusted)
+    }
+    CustomEvent("sample").apply { notifyTrusted() }.let {
+      assertTrue(it.canDispatch())
+      assertTrue(it.isTrusted)
+    }
+  }
+
+  @Test fun testEmptyComposedPath() {
+    val empty = CustomEvent("sample")
+    val path = empty.composedPath()
+    assertTrue(path.isEmpty())
+    assertEquals(0, path.size)
+  }
+
+  @Test fun testCannotDispatchIfStopImmediate() {
+    val event = CustomEvent("sample")
+    assertTrue(event.canDispatch())
+    event.stopImmediatePropagation()
+    assertFalse(event.canDispatch())
   }
 }

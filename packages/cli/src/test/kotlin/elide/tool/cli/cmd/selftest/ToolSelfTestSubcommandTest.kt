@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.info
+package elide.tool.cli.cmd.selftest
 
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
@@ -21,12 +21,12 @@ import elide.tool.cli.AbstractSubtoolTest
 import elide.tool.cli.cmd.info.ToolInfoCommand
 
 /** Tests for the main CLI tool entrypoint. */
-@TestCase class ToolInfoSubcommandTest : AbstractSubtoolTest() {
-  @Inject internal lateinit var info: ToolInfoCommand
+@TestCase class ToolSelfTestSubcommandTest : AbstractSubtoolTest() {
+  @Inject internal lateinit var selftest: SelfTestCommand
 
-  override fun subcommand(): Runnable = info
+  override fun subcommand(): Runnable = selftest
 
   @Test fun testEntrypoint() {
-    assertNotNull(info, "should be able to init and inject info subcommand")
+    assertNotNull(selftest, "should be able to init and inject info subcommand")
   }
 }

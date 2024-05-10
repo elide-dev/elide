@@ -11,34 +11,22 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli
+package elide.tool.cli.cmd.info
 
-import io.micronaut.configuration.picocli.PicocliRunner
-import org.junit.jupiter.api.assertDoesNotThrow
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.AbstractSubtoolTest
+import elide.tool.cli.cmd.info.ToolInfoCommand
 
 /** Tests for the main CLI tool entrypoint. */
-@TestCase class ElideToolTest {
-  @Inject lateinit var tool: ElideTool
+@TestCase class ToolInfoSubcommandTest : AbstractSubtoolTest() {
+  @Inject internal lateinit var info: ToolInfoCommand
+
+  override fun subcommand(): Runnable = info
 
   @Test fun testEntrypoint() {
-    assertNotNull(tool, "should be able to init and inject entrypoint")
-  }
-
-  @Test fun testEntrypointHelp() {
-    assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(ToolShellCommand::class.java, "--help"))
-    }
-  }
-
-  @Test fun testEntrypointVersion() {
-    assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(ToolShellCommand::class.java, "--version"))
-    }
+    assertNotNull(info, "should be able to init and inject info subcommand")
   }
 }

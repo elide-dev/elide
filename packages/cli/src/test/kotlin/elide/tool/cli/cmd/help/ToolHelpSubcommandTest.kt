@@ -11,27 +11,30 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.repl
+package elide.tool.cli.cmd.help
 
-import kotlin.test.Ignore
+import io.micronaut.configuration.picocli.PicocliRunner
+import org.junit.jupiter.api.assertDoesNotThrow
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import elide.tool.cli.AbstractSubtoolTest
-import elide.tool.cli.cmd.repl.ToolShellCommand
 
-/** Tests for the Elide tool `shell`/`repl` subcommand. */
-@TestCase class ToolShellSubcommandTest : AbstractSubtoolTest() {
-  @Inject internal lateinit var shell: ToolShellCommand
+/** Tests for the main CLI tool entrypoint. */
+@TestCase class ToolHelpSubcommandTest : AbstractSubtoolTest() {
+  @Inject internal lateinit var help: HelpCommand
 
-  override fun subcommand(): Runnable = shell
-
-  override fun runCommand() {
-    // inert (temporary)
-  }
+  override fun subcommand(): Runnable = help
 
   @Test fun testEntrypoint() {
-    assertNotNull(shell, "should be able to init and inject shell subcommand")
+    assertNotNull(help, "should be able to init and inject info subcommand")
+  }
+
+  override fun runCommand() {
+    assertDoesNotThrow {
+      assertEquals(0, PicocliRunner.execute(HelpCommand::class.java, "--help"))
+    }
   }
 }

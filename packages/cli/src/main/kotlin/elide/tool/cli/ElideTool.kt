@@ -22,6 +22,8 @@ import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.ContextConfigurer
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.ProcessProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
@@ -130,6 +132,13 @@ import elide.tool.io.RuntimeWorkdirManager
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
       initializeNatives()
+
+      if (ImageInfo.inImageCode()) try {
+        ProcessProperties.setArgumentVectorProgramName("elide")
+      } catch (uoe: UnsupportedOperationException) {
+        // no-op
+      }
+
       val runner = {
         if (!org.fusesource.jansi.AnsiConsole.isInstalled()) {
           initializeTerminal()

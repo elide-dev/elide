@@ -50,31 +50,25 @@ import elide.tool.cli.cmd.repl.ToolShellCommand
     assertDoesNotThrow {
       assertEquals(
         0,
-        PicocliRunner.execute(ToolShellCommand::class.java, "run", "-c", "'console.log(\"Hello!\");'"),
+        PicocliRunner.execute(ToolShellCommand::class.java, "-c", "'console.log(\"Hello!\");'"),
       )
     }
   }
 
-  @Test fun testEntrypointExecuteSimpleJsAliasNode() {
-    assertDoesNotThrow {
-      PicocliRunner.execute(ToolShellCommand::class.java, "node", "-c", "'console.log(\"Hello!\");'")
-    }
-  }
-
-  @Test fun testEntrypointExecuteSimpleJsAliasDeno() {
+  @Test fun testEntrypointExecuteSimpleJsExplicit() {
     assertDoesNotThrow {
       assertEquals(
         0,
-        PicocliRunner.execute(ToolShellCommand::class.java, "deno", "-c", "'console.log(\"Hello!\");'"),
+        PicocliRunner.execute(ToolShellCommand::class.java, "--javascript", "-c", "'console.log(\"Hello!\");'"),
       )
     }
   }
 
-  @Test fun testEntrypointExecuteSimplePyAlias() {
+  @Test fun testEntrypointExecuteSimplePy() {
     assertDoesNotThrow {
       assertEquals(
         0,
-        PicocliRunner.execute(ToolShellCommand::class.java, "python", "-c", "'print(\"Hello!\")'"),
+        PicocliRunner.execute(ToolShellCommand::class.java, "--python", "-c", "'print(\"Hello!\")'"),
       )
     }
   }

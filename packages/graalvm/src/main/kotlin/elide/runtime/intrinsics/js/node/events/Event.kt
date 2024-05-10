@@ -13,11 +13,36 @@
 package elide.runtime.intrinsics.js.node.events
 
 import elide.annotations.API
+import elide.runtime.intrinsics.js.JsSymbol
 
 /**
  * ## Node API: Event
+ *
+ * The [Event] object is an adaptation of the [Event Web API](https://dom.spec.whatwg.org/#event). Instances are created
+ * internally by Elide.
+ *
+ * The root [Event] interface describes properties which are made available on all event types, regardless of how they
+ * are created or used; application-level events should extend [CustomEvent] to gain [Event] implementation access.
+ *
+ * &nbsp;
+ *
+ * ### Event Properties
+ *
+ * Events, by nature, are always expected to _at least_ define a string [type] as their "event name," or "event type."
+ * Listeners typically subscribe to events based on the [type] value.
+ *
+ * The event [type] can be a [String] or a [JsSymbol].
+ *
+ * &nbsp;
+ *
+ * ### Custom Events
+ *
+ * Applications that wish to dispatch or emit their own events can do so by either (1) extending [CustomEvent] and
+ * overriding properties as needed; or (2) creating an instance of [CustomEvent] via the provided public constructor.
+ *
+ * Custom events can be initialized via their constructor, or via the [CustomEvent.initEvent] method.
  */
-@API public interface Event {
+@API public sealed interface Event {
   /**
    * TBD.
    */
@@ -36,7 +61,7 @@ import elide.annotations.API
   /**
    * TBD.
    */
-  public val currentTarget: EventTarget
+  public val currentTarget: EventTarget?
 
   /**
    * TBD.
@@ -61,12 +86,12 @@ import elide.annotations.API
   /**
    * TBD.
    */
-  public val srcElement: EventTarget
+  public val srcElement: EventTarget?
 
   /**
    * TBD.
    */
-  public val target: EventTarget
+  public val target: EventTarget?
 
   /**
    * TBD.

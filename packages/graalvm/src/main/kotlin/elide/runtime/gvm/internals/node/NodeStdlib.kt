@@ -152,7 +152,7 @@ public object NodeStdlib {
    *
    * Provides access to a compliant implementation of the Node Events API, at the built-in module name `events`.
    */
-  public val events: EventsAPI by lazy { NodeEventsModuleFacade() }
+  public val events: EventsAPI by lazy { NodeEventsModuleFacade.obtain() }
 
   /**
    * ## `fs`

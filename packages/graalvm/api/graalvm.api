@@ -1838,6 +1838,17 @@ public synthetic class elide/runtime/gvm/internals/node/events/$NodeEventsModule
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public synthetic class elide/runtime/gvm/internals/node/events/$NodeEventsModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/runtime/gvm/internals/node/events/$NodeEventsModuleFacade$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1847,6 +1858,42 @@ public synthetic class elide/runtime/gvm/internals/node/events/$NodeEventsModule
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract interface class elide/runtime/gvm/internals/node/events/EventAware : elide/runtime/intrinsics/js/node/events/EventEmitter, elide/runtime/intrinsics/js/node/events/EventTarget {
+	public static final field Companion Lelide/runtime/gvm/internals/node/events/EventAware$Companion;
+	public static fun create ()Lelide/runtime/gvm/internals/node/events/EventAware;
+	public static fun create (Ljava/lang/Iterable;)Lelide/runtime/gvm/internals/node/events/EventAware;
+	public static fun create ([Ljava/lang/String;)Lelide/runtime/gvm/internals/node/events/EventAware;
+}
+
+public final class elide/runtime/gvm/internals/node/events/EventAware$Companion {
+	public final fun create ()Lelide/runtime/gvm/internals/node/events/EventAware;
+	public final fun create (Ljava/lang/Iterable;)Lelide/runtime/gvm/internals/node/events/EventAware;
+	public final fun create ([Ljava/lang/String;)Lelide/runtime/gvm/internals/node/events/EventAware;
+}
+
+public abstract interface class elide/runtime/gvm/internals/node/events/GuestEventListener : elide/runtime/intrinsics/js/node/events/EventListener, java/util/function/Consumer, org/graalvm/polyglot/proxy/ProxyExecutable {
+	public static final field Companion Lelide/runtime/gvm/internals/node/events/GuestEventListener$Companion;
+	public fun accept (Lelide/runtime/intrinsics/js/node/events/Event;)V
+	public synthetic fun accept (Ljava/lang/Object;)V
+	public fun execute ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public static fun of (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventListener;
+}
+
+public final class elide/runtime/gvm/internals/node/events/GuestEventListener$Companion {
+	public final fun of (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventListener;
+}
+
+public abstract interface class elide/runtime/gvm/internals/node/events/HostEventListener : elide/runtime/intrinsics/js/node/events/EventListener, java/util/function/Consumer, org/graalvm/polyglot/proxy/ProxyExecutable {
+	public static final field Companion Lelide/runtime/gvm/internals/node/events/HostEventListener$Companion;
+	public fun accept (Ljava/lang/Object;)V
+	public fun execute ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public static fun of (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/node/events/EventListener;
+}
+
+public final class elide/runtime/gvm/internals/node/events/HostEventListener$Companion {
+	public final fun of (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/node/events/EventListener;
 }
 
 public synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
@@ -2740,6 +2787,10 @@ public abstract interface class elide/runtime/intrinsics/js/CryptoKey {
 public abstract interface class elide/runtime/intrinsics/js/CryptoKey$Constructors {
 }
 
+public abstract interface class elide/runtime/intrinsics/js/Disposable {
+	public abstract fun dispose ()V
+}
+
 public abstract interface class elide/runtime/intrinsics/js/FetchAPI {
 	public abstract fun fetch (Lelide/runtime/intrinsics/js/FetchRequest;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun fetch (Lelide/runtime/intrinsics/js/URL;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -2953,6 +3004,9 @@ public final class elide/runtime/intrinsics/js/JsPromise$Companion {
 	public final fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/JsSymbol {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/MapLike : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
 	public abstract fun entries ()Lelide/runtime/intrinsics/js/JsIterator;
 	public abstract fun forEach (Lkotlin/jvm/functions/Function1;)V
@@ -3137,6 +3191,19 @@ public final class elide/runtime/intrinsics/js/err/QuotaExceededError : elide/ru
 	public fun getMessage ()Ljava/lang/String;
 }
 
+public abstract class elide/runtime/intrinsics/js/err/RangeError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException {
+	public static final field Factory Lelide/runtime/intrinsics/js/err/RangeError$Factory;
+	public fun <init> ()V
+	public fun getName ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/err/RangeError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory {
+	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
+	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/RangeError;
+	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
+	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/RangeError;
+}
+
 public abstract interface class elide/runtime/intrinsics/js/err/Stacktrace {
 }
 
@@ -3275,7 +3342,29 @@ public abstract interface class elide/runtime/intrinsics/js/node/DiagnosticsChan
 public abstract interface class elide/runtime/intrinsics/js/node/DomainAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/EventsAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+public abstract interface class elide/runtime/intrinsics/js/node/EventsAPI : elide/runtime/intrinsics/js/node/NodeAPI, org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun addAbortListener (Lelide/runtime/intrinsics/js/node/AbortSignal;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/Disposable;
+	public abstract fun getCaptureRejections ()Z
+	public abstract fun getDefaultMaxListeners ()I
+	public abstract fun getErrorMonitor ()Ljava/lang/Object;
+	public abstract fun getEventListeners (Ljava/lang/Object;Ljava/lang/String;)Ljava/util/List;
+	public abstract fun getMaxListeners (Ljava/lang/Object;)I
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public abstract fun listenerCount (Lelide/runtime/intrinsics/js/node/events/EventEmitterOrTarget;Ljava/lang/String;)I
+	public abstract fun listenerCount (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)I
+	public abstract fun on (Lelide/runtime/intrinsics/js/node/events/EventEmitter;Ljava/lang/String;)V
+	public abstract fun on (Lelide/runtime/intrinsics/js/node/events/EventEmitter;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;)V
+	public abstract fun on (Lelide/runtime/intrinsics/js/node/events/EventEmitter;Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun once (Lelide/runtime/intrinsics/js/node/events/EventEmitter;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun once (Lelide/runtime/intrinsics/js/node/events/EventEmitter;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun once (Lelide/runtime/intrinsics/js/node/events/EventEmitter;Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+	public abstract fun setDefaultMaxListeners (I)V
+	public abstract fun setErrorMonitor (Ljava/lang/Object;)V
+	public abstract fun setMaxListeners (I[Ljava/lang/Object;)V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/FilesystemAPI {
@@ -3426,10 +3515,12 @@ public abstract interface class elide/runtime/intrinsics/js/node/ProcessAPI : el
 	public abstract fun getStderr ()Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
 	public abstract fun getStdin ()Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream;
 	public abstract fun getStdout ()Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
+	public abstract fun getTitle ()Ljava/lang/String;
 	public fun hasMember (Ljava/lang/String;)Z
 	public abstract fun nextTick (Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)V
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun removeMember (Ljava/lang/String;)Z
+	public abstract fun setTitle (Ljava/lang/String;)V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/QuerystringAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -3570,7 +3661,64 @@ public final class elide/runtime/intrinsics/js/node/buffer/Buffer$Companion {
 	public final fun of ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/events/CustomEvent {
+public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZ)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZ)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
+	public final fun getCapture ()Z
+	public final fun getOnce ()Z
+	public final fun getPassive ()Z
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptions$Companion {
+	public final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
+}
+
+public class elide/runtime/intrinsics/js/node/events/CustomEvent : elide/runtime/intrinsics/js/node/events/Event, org/graalvm/polyglot/proxy/ProxyObject {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Object;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun canDispatch ()Z
+	public fun composedPath ()[Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public fun getBubbles ()Z
+	public fun getCancelable ()Z
+	public fun getComposed ()Z
+	public fun getCurrentTarget ()Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public fun getDefaultPrevented ()Z
+	public fun getDetail ()Ljava/lang/Object;
+	public fun getEventPhase ()I
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getReturnValue ()Z
+	public fun getSrcElement ()Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public fun getTarget ()Lelide/runtime/intrinsics/js/node/events/EventTarget;
+	public fun getTimeStamp ()D
+	public fun getType ()Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun initEvent (Ljava/lang/String;ZZ)V
+	public fun isTrusted ()Z
+	public final fun notifyDispatch (Lelide/runtime/intrinsics/js/node/events/EventTarget;)V
+	public final fun notifyTarget (Lelide/runtime/intrinsics/js/node/events/EventTarget;)V
+	public final fun notifyTrusted ()V
+	public fun preventDefault ()V
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+	public fun stopImmediatePropagation ()V
+	public fun stopPropagation ()V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/events/Event {
@@ -3593,16 +3741,83 @@ public abstract interface class elide/runtime/intrinsics/js/node/events/Event {
 	public abstract fun stopPropagation ()V
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/events/EventEmitter {
+public abstract interface class elide/runtime/intrinsics/js/node/events/EventEmitter : elide/runtime/intrinsics/js/node/events/EventEmitterOrTarget, java/io/Closeable, java/lang/AutoCloseable {
+	public abstract fun addListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public abstract fun addListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun emit (Ljava/lang/String;[Ljava/lang/Object;)Z
+	public abstract fun eventNames ()Ljava/util/List;
+	public abstract fun getMaxListeners ()I
+	public abstract fun listenerCount (Ljava/lang/String;)I
+	public abstract fun listeners (Ljava/lang/String;)Ljava/util/List;
+	public abstract fun off (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun on (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public abstract fun on (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public abstract fun once (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public abstract fun once (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun prependListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public abstract fun prependListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun prependOnceListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public abstract fun prependOnceListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun rawListeners (Ljava/lang/String;)Ljava/util/List;
+	public abstract fun removeAllListeners ()V
+	public abstract fun removeAllListeners (Ljava/lang/String;)V
+	public abstract fun removeListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun setMaxListeners (I)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/events/EventEmitterOrTarget {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/events/EventListener {
+	public abstract fun handleEvent ([Ljava/lang/Object;)V
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/events/EventTarget {
+public abstract interface class elide/runtime/intrinsics/js/node/events/EventTarget : elide/runtime/intrinsics/js/node/events/EventEmitterOrTarget {
+	public abstract fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
 	public abstract fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public abstract fun addEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun dispatchEvent (Lelide/runtime/intrinsics/js/node/events/Event;)Z
 	public abstract fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public abstract fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;)V
+	public abstract fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+}
+
+public final class elide/runtime/intrinsics/js/node/events/EventsOnceOptions {
+	public fun <init> ()V
+	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/events/NodeEventTarget {
+}
+
+public final class elide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;
+	public final fun getCapture ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions$Companion {
+	public final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/fs/Dir {
@@ -3889,36 +4104,220 @@ public final class elide/runtime/intrinsics/js/node/process/ProcessPlatform$Comp
 	public fun unresolved (Ljava/lang/String;)Lelide/core/api/Symbolic$Unresolved;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/process/ProcessStandardInputStream : elide/runtime/intrinsics/js/node/process/ProcessStandardStream, elide/runtime/intrinsics/js/node/stream/Writable {
+public final class elide/runtime/intrinsics/js/node/process/ProcessStandardInputStream : elide/runtime/intrinsics/js/node/process/ProcessStandardStream, elide/runtime/intrinsics/js/node/stream/Readable {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream$Companion;
-	public static fun wrap (Ljava/io/InputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream;
+	public synthetic fun <init> (ILelide/runtime/intrinsics/js/node/stream/Readable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun addListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun close ()V
+	public fun compose (Lelide/runtime/intrinsics/js/node/stream/Stream;)Lelide/runtime/intrinsics/js/node/stream/Duplex;
+	public fun compose (Lelide/runtime/intrinsics/js/node/stream/Stream;Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;)Lelide/runtime/intrinsics/js/node/stream/Duplex;
+	public fun compose (Lelide/runtime/intrinsics/js/node/stream/Stream;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Duplex;
+	public fun destroy ()V
+	public fun destroy (Ljava/lang/Throwable;)V
+	public fun destroy (Lorg/graalvm/polyglot/Value;)V
+	public fun dispatchEvent (Lelide/runtime/intrinsics/js/node/events/Event;)Z
+	public fun drop (I)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun drop (ILelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun drop (ILorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun emit (Ljava/lang/String;[Ljava/lang/Object;)Z
+	public fun eventNames ()Ljava/util/List;
+	public fun every (Lelide/runtime/intrinsics/js/node/stream/ReadableEveryOptions;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun every (Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun every (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun every (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun filter (Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun filter (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun filter (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun filter (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun find (Lelide/runtime/intrinsics/js/node/stream/ReadableFindOptions;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun find (Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun find (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun find (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun flatMap (Lelide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun flatMap (Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun flatMap (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun flatMap (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun forEach (Lelide/runtime/intrinsics/js/node/stream/ReadableForEachOptions;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun forEach (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun forEach (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun forEach (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun getClosed ()Z
+	public fun getDestroyed ()Z
+	public fun getErrored ()Ljava/lang/Object;
+	public fun getFd ()I
+	public fun getIterator ()Ljava/lang/Object;
+	public fun getMaxListeners ()I
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getReadable ()Z
+	public fun getReadableAborted ()Z
+	public fun getReadableDidRead ()Z
+	public fun getReadableEncoding ()Ljava/lang/String;
+	public fun getReadableEnded ()Z
+	public fun getReadableFlowing ()Ljava/lang/Boolean;
+	public fun getReadableHighWaterMark ()I
+	public fun getReadableLength ()I
+	public fun getReadableObjectMode ()Z
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun isPaused ()Z
+	public fun iterator ()V
+	public fun iterator (Lelide/runtime/intrinsics/js/node/stream/ReadableIteratorOptions;)V
+	public fun iterator (Lorg/graalvm/polyglot/Value;)V
+	public fun listenerCount (Ljava/lang/String;)I
+	public fun listeners (Ljava/lang/String;)Ljava/util/List;
+	public fun map (Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun map (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun map (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun map (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun off (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun on (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public fun on (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public fun once (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun once (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun pause ()Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun pipe (Lelide/runtime/intrinsics/js/node/stream/Writable;)V
+	public fun pipe (Lelide/runtime/intrinsics/js/node/stream/Writable;Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;)V
+	public fun pipe (Lelide/runtime/intrinsics/js/node/stream/Writable;Lorg/graalvm/polyglot/Value;)V
+	public fun prependListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun prependListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun prependOnceListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun prependOnceListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun rawListeners (Ljava/lang/String;)Ljava/util/List;
+	public fun read ()Ljava/lang/Object;
+	public fun read (I)Ljava/lang/Object;
+	public fun read (Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public fun reduce (Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun reduce (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun reduce (Lorg/graalvm/polyglot/Value;Lelide/runtime/intrinsics/js/node/stream/ReadableReduceOptions;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun reduce (Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun reduce (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun reduce (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun removeAllListeners ()V
+	public fun removeAllListeners (Ljava/lang/String;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun removeListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+	public fun resume ()Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun setEncoding (Ljava/lang/String;)V
+	public fun setMaxListeners (I)V
+	public fun some (Lelide/runtime/intrinsics/js/node/stream/ReadableSomeOptions;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun some (Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun some (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun some (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun take (I)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun take (ILelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun take (ILorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun toArray ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun toArray (Lelide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun toArray (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun unpipe ()V
+	public fun unpipe (Lelide/runtime/intrinsics/js/node/stream/Writable;)V
+	public fun unshift (Ljava/lang/Object;)V
+	public fun unshift (Ljava/lang/Object;Ljava/lang/String;)V
+	public fun unshift (Lorg/graalvm/polyglot/Value;)V
+	public static final fun wrap (ILelide/runtime/intrinsics/js/node/stream/Readable;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream;
+	public static final fun wrap (ILjava/io/InputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream;
+	public fun wrap (Lelide/runtime/intrinsics/js/node/stream/Stream;)V
 }
 
 public final class elide/runtime/intrinsics/js/node/process/ProcessStandardInputStream$Companion {
-	public final fun wrap (Ljava/io/InputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream;
+	public final fun wrap (ILelide/runtime/intrinsics/js/node/stream/Readable;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream;
+	public final fun wrap (ILjava/io/InputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardInputStream;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream : elide/runtime/intrinsics/js/node/process/ProcessStandardStream, elide/runtime/intrinsics/js/node/stream/Readable {
+public final class elide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream : elide/runtime/intrinsics/js/node/process/ProcessStandardStream, elide/runtime/intrinsics/js/node/stream/Writable {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream$Companion;
-	public static fun wrap (Ljava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
+	public synthetic fun <init> (ILelide/runtime/intrinsics/js/node/stream/Writable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun addListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun close ()V
+	public fun cork ()V
+	public fun destroy ()V
+	public fun destroy (Ljava/lang/Throwable;)V
+	public fun destroy (Lorg/graalvm/polyglot/Value;)V
+	public fun dispatchEvent (Lelide/runtime/intrinsics/js/node/events/Event;)Z
+	public fun emit (Ljava/lang/String;[Ljava/lang/Object;)Z
+	public fun end ()V
+	public fun end (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)V
+	public fun end (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function0;)V
+	public fun end (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun eventNames ()Ljava/util/List;
+	public fun getClosed ()Z
+	public fun getDestroyed ()Z
+	public fun getErrored ()Ljava/lang/Object;
+	public fun getFd ()I
+	public fun getMaxListeners ()I
+	public fun getWritable ()Z
+	public fun getWritableAborted ()Z
+	public fun getWritableCorked ()I
+	public fun getWritableEnded ()Z
+	public fun getWritableFinished ()Z
+	public fun getWritableHighWaterMark ()I
+	public fun getWritableLength ()I
+	public fun getWritableNeedDrain ()Z
+	public fun getWritableObjectMode ()Z
+	public fun listenerCount (Ljava/lang/String;)I
+	public fun listeners (Ljava/lang/String;)Ljava/util/List;
+	public fun off (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun on (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public fun on (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public fun once (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun once (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun prependListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun prependListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun prependOnceListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun prependOnceListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun rawListeners (Ljava/lang/String;)Ljava/util/List;
+	public fun removeAllListeners ()V
+	public fun removeAllListeners (Ljava/lang/String;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun removeListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun setMaxListeners (I)V
+	public static final fun wrap (ILelide/runtime/intrinsics/js/node/stream/Writable;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
+	public static final fun wrap (ILjava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
+	public fun write (Ljava/lang/Object;)V
+	public fun write (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)V
+	public fun write (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function0;)V
+	public fun write (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
 }
 
 public final class elide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream$Companion {
-	public final fun wrap (Ljava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
+	public final fun wrap (ILelide/runtime/intrinsics/js/node/stream/Writable;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
+	public final fun wrap (ILjava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/process/ProcessStandardOutputStream;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/process/ProcessStandardStream : elide/runtime/intrinsics/js/node/stream/Stream {
+	public abstract fun getFd ()I
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/stream/Duplex : elide/runtime/intrinsics/js/node/stream/Stream {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/stream/Readable : elide/runtime/intrinsics/js/node/events/EventEmitter, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyObject {
+public abstract interface class elide/runtime/intrinsics/js/node/stream/Readable : elide/runtime/intrinsics/js/node/events/EventEmitter, elide/runtime/intrinsics/js/node/events/EventTarget, elide/runtime/intrinsics/js/node/stream/StatefulStream, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/stream/Readable$Companion;
 	public abstract fun compose (Lelide/runtime/intrinsics/js/node/stream/Stream;)Lelide/runtime/intrinsics/js/node/stream/Duplex;
 	public abstract fun compose (Lelide/runtime/intrinsics/js/node/stream/Stream;Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;)Lelide/runtime/intrinsics/js/node/stream/Duplex;
 	public abstract fun compose (Lelide/runtime/intrinsics/js/node/stream/Stream;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Duplex;
+	public abstract fun destroy ()V
 	public abstract fun destroy (Ljava/lang/Throwable;)V
-	public static synthetic fun destroy$default (Lelide/runtime/intrinsics/js/node/stream/Readable;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public abstract fun destroy (Lorg/graalvm/polyglot/Value;)V
 	public abstract fun drop (I)Lelide/runtime/intrinsics/js/node/stream/Readable;
 	public abstract fun drop (ILelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;)Lelide/runtime/intrinsics/js/node/stream/Readable;
 	public abstract fun drop (ILorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
@@ -3942,19 +4341,17 @@ public abstract interface class elide/runtime/intrinsics/js/node/stream/Readable
 	public abstract fun forEach (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun forEach (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun forEach (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
-	public abstract fun getClosed ()Z
-	public abstract fun getDestroyed ()Z
-	public abstract fun getErrored ()Ljava/lang/Error;
+	public abstract fun getErrored ()Ljava/lang/Object;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public abstract fun getReadable ()Z
 	public abstract fun getReadableAborted ()Z
 	public abstract fun getReadableDidRead ()Z
-	public abstract fun getReadableEncoding ()Z
+	public abstract fun getReadableEncoding ()Ljava/lang/String;
 	public abstract fun getReadableEnded ()Z
-	public abstract fun getReadableFlowing ()Z
-	public abstract fun getReadableHighWaterMark ()Z
-	public abstract fun getReadableLength ()Z
+	public abstract fun getReadableFlowing ()Ljava/lang/Boolean;
+	public abstract fun getReadableHighWaterMark ()I
+	public abstract fun getReadableLength ()I
 	public abstract fun getReadableObjectMode ()Z
 	public fun hasMember (Ljava/lang/String;)Z
 	public abstract fun isPaused ()Z
@@ -3968,7 +4365,6 @@ public abstract interface class elide/runtime/intrinsics/js/node/stream/Readable
 	public abstract fun pause ()Lelide/runtime/intrinsics/js/node/stream/Readable;
 	public abstract fun pipe (Lelide/runtime/intrinsics/js/node/stream/Writable;)V
 	public abstract fun pipe (Lelide/runtime/intrinsics/js/node/stream/Writable;Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;)V
-	public abstract fun pipe (Lelide/runtime/intrinsics/js/node/stream/Writable;Ljava/util/Map;)V
 	public abstract fun pipe (Lelide/runtime/intrinsics/js/node/stream/Writable;Lorg/graalvm/polyglot/Value;)V
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun read ()Ljava/lang/Object;
@@ -3999,6 +4395,28 @@ public abstract interface class elide/runtime/intrinsics/js/node/stream/Readable
 	public abstract fun unshift (Ljava/lang/Object;Ljava/lang/String;)V
 	public abstract fun unshift (Lorg/graalvm/polyglot/Value;)V
 	public abstract fun wrap (Lelide/runtime/intrinsics/js/node/stream/Stream;)V
+	public static fun wrap (Ljava/io/InputStream;Ljava/nio/charset/Charset;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+}
+
+public final class elide/runtime/intrinsics/js/node/stream/Readable$Companion : elide/runtime/intrinsics/js/node/stream/Readable$Constructors {
+	public fun from (Ljava/lang/Iterable;Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun from (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public final fun wrap (Ljava/io/InputStream;Ljava/nio/charset/Charset;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public static synthetic fun wrap$default (Lelide/runtime/intrinsics/js/node/stream/Readable$Companion;Ljava/io/InputStream;Ljava/nio/charset/Charset;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/stream/Readable$Constructors : org/graalvm/polyglot/proxy/ProxyInstantiable, org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun from (Ljava/lang/Iterable;Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public abstract fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public abstract fun from (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/Readable;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableComposeOptions {
@@ -4097,6 +4515,20 @@ public final class elide/runtime/intrinsics/js/node/stream/ReadableForEachOption
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class elide/runtime/intrinsics/js/node/stream/ReadableFromOptions {
+	public fun <init> ()V
+	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public fun hashCode ()I
+	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/runtime/intrinsics/js/node/stream/ReadableIteratorOptions {
 	public fun <init> ()V
 	public fun <init> (Z)V
@@ -4132,6 +4564,7 @@ public final class elide/runtime/intrinsics/js/node/stream/ReadableMapOptions {
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadablePipeOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions$Companion;
 	public fun <init> ()V
 	public fun <init> (Z)V
 	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -4139,10 +4572,16 @@ public final class elide/runtime/intrinsics/js/node/stream/ReadablePipeOptions {
 	public final fun copy (Z)Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;
 	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;
 	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;
 	public final fun getEnd ()Z
 	public fun hashCode ()I
 	public final fun setEnd (Z)V
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/stream/ReadablePipeOptions$Companion {
+	public final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/stream/ReadablePipeOptions;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableReduceOptions {
@@ -4204,10 +4643,48 @@ public final class elide/runtime/intrinsics/js/node/stream/ReadableToArrayOption
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/stream/StatefulStream : java/io/Closeable, java/lang/AutoCloseable {
+	public abstract fun destroy ()V
+	public abstract fun destroy (Ljava/lang/Throwable;)V
+	public abstract fun destroy (Lorg/graalvm/polyglot/Value;)V
+	public abstract fun getClosed ()Z
+	public abstract fun getDestroyed ()Z
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/stream/Stream {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/stream/Writable : elide/runtime/intrinsics/js/node/events/EventEmitter {
+public abstract interface class elide/runtime/intrinsics/js/node/stream/Writable : elide/runtime/intrinsics/js/node/events/EventEmitter, elide/runtime/intrinsics/js/node/events/EventTarget, elide/runtime/intrinsics/js/node/stream/StatefulStream {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/stream/Writable$Companion;
+	public abstract fun cork ()V
+	public abstract fun destroy ()V
+	public abstract fun destroy (Ljava/lang/Throwable;)V
+	public abstract fun destroy (Lorg/graalvm/polyglot/Value;)V
+	public abstract fun end ()V
+	public abstract fun end (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun end (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function0;)V
+	public abstract fun end (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun end$default (Lelide/runtime/intrinsics/js/node/stream/Writable;Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun getErrored ()Ljava/lang/Object;
+	public abstract fun getWritable ()Z
+	public abstract fun getWritableAborted ()Z
+	public abstract fun getWritableCorked ()I
+	public abstract fun getWritableEnded ()Z
+	public abstract fun getWritableFinished ()Z
+	public abstract fun getWritableHighWaterMark ()I
+	public abstract fun getWritableLength ()I
+	public abstract fun getWritableNeedDrain ()Z
+	public abstract fun getWritableObjectMode ()Z
+	public static fun wrap (Ljava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/stream/Writable;
+	public abstract fun write (Ljava/lang/Object;)V
+	public abstract fun write (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun write (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function0;)V
+	public abstract fun write (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun write$default (Lelide/runtime/intrinsics/js/node/stream/Writable;Ljava/lang/Object;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+}
+
+public final class elide/runtime/intrinsics/js/node/stream/Writable$Companion {
+	public final fun wrap (Ljava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/stream/Writable;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/typed/UUID : elide/runtime/intrinsics/js/StringLike {

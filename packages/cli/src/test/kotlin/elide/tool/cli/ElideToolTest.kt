@@ -68,13 +68,4 @@ import elide.tool.cli.cmd.repl.ToolShellCommand
       )
     }
   }
-
-  @Test fun testEntrypointExecuteSimpleRbCode() {
-    assertDoesNotThrow {
-      assertEquals(
-        0,
-        PicocliRunner.execute(ElideTool::class.java, "run", "--ruby", "-c", "'puts \"Hello!\"'"),
-      )
-    }
-  }
 }

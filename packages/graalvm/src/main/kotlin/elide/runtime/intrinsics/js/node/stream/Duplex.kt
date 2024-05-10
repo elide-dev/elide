@@ -12,9 +12,11 @@
  */
 package elide.runtime.intrinsics.js.node.stream
 
+import org.graalvm.polyglot.HostAccess
 import elide.annotations.API
 
 /**
  * # Node: Duplex Stream.
  */
+@HostAccess.Implementable
 @API public interface Duplex : Stream

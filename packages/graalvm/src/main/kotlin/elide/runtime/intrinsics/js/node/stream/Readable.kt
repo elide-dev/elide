@@ -12,12 +12,20 @@
  */
 package elide.runtime.intrinsics.js.node.stream
 
+import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyIterable
 import org.graalvm.polyglot.proxy.ProxyObject
+import java.io.InputStream
+import java.nio.charset.Charset
 import elide.annotations.API
+import elide.runtime.gvm.internals.intrinsics.js.JsError
+import elide.runtime.gvm.internals.node.stream.WrappedInputStream
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.events.EventEmitter
+import elide.runtime.intrinsics.js.node.events.EventTarget
 import elide.vm.annotations.Polyglot
 
 // All properties made available via `Readable`.
@@ -59,14 +67,90 @@ private val READABLE_PROPS_AND_METHODS = arrayOf(
   "reduce"
 )
 
+// All properties made available via the class `Readable`.
+private val READABLE_STATIC_PROPS_AND_METHODS = arrayOf(
+  "from",
+)
+
 /**
  * # Node: Readable Stream.
  *
  * A Readable stream is an abstraction for a source from which data is consumed; an example of a Readable stream is the
  * response object returned by `http.get()`, or the input stream provided to a running program.
  *
- * The Readable stream interface is the abstraction for a source of data that you are reading from. In other words, data
- * comes out of a Readable stream, and is typically consumed directly or "piped" to a [Writable] stream.
+ * Examples of Readable streams include:
+ *
+ * - HTTP responses, on the client
+ * - HTTP requests, on the server
+ * - fs read streams
+ * - zlib streams
+ * - crypto streams
+ * - TCP sockets
+ * - child process `stdout` and `stderr`
+ * - `process.stdin`
+ *
+ * All Readable streams implement the interface defined by the stream.Readable class.
+ *
+ * &nbsp;
+ *
+ * ## Two reading modes
+ *
+ * [Readable] streams effectively operate in one of two modes: flowing and paused. These modes are separate from
+ * [object mode](https://nodejs.org/api/stream.html#object-mode). A [Readable] stream can be in object mode or not,
+ * regardless of whether it is in flowing mode or paused mode.
+ *
+ * In flowing mode, data is read from the underlying system automatically and provided to an application as quickly as
+ * possible using events via the [EventEmitter] interface.
+ *
+ * In paused mode, the [read] method must be called explicitly to read chunks of data from the stream.
+ *
+ * All [Readable] streams begin in paused mode but can be switched to flowing mode in one of the following ways:
+ *
+ * - Adding a `'data'` event handler.
+ * - Calling the [resume] method.
+ * - Calling the [pipe] method to send the data to a [Writable].
+ * - The [Readable] can switch back to paused mode using one of the following:
+ *   - If there are no pipe destinations, by calling the [pause] method.
+ *   - If there are pipe destinations, by removing all pipe destinations. Multiple pipe destinations may be removed by
+ *     calling the [unpipe] method.
+ *
+ * The important concept to remember is that a [Readable] will not generate data until a mechanism for either consuming
+ * or ignoring that data is provided. If the consuming mechanism is disabled or taken away, the [Readable] will attempt
+ * to stop generating the data.
+ *
+ * For backward compatibility reasons, removing `'data'` event handlers will not automatically pause the stream. Also,
+ * if there are piped destinations, then calling [pause] will not guarantee that the stream will remain paused once
+ * those destinations drain and ask for more data.
+ *
+ * If a Readable is switched into flowing mode and there are no consumers available to handle the data, that data will
+ * be lost. This can occur, for instance, when the [resume] method is called without a listener attached to the `'data'`
+ * event, or when a `'data'` event handler is removed from the stream.
+ *
+ * Adding a `'readable'` event handler automatically makes the stream stop flowing, and the data has to be consumed via
+ * [read]. If the `'readable'` event handler is removed, then the stream will start flowing again if there is a `'data'`
+ * event handler.
+ *
+ * &nbsp;
+ *
+ * ## Three states
+ *
+ * The "two modes" of operation for a [Readable] stream are a simplified abstraction for the more complicated internal
+ * state management that is happening within the [Readable] stream implementation.
+ *
+ * Specifically, at any given point in time, every [Readable] is in one of three possible states:
+ *
+ * - `readable.readableFlowing === null`
+ * - `readable.readableFlowing === false`
+ * - `readable.readableFlowing === true`
+ *
+ * When [Readable.readableFlowing] is `null`, no mechanism for consuming the stream's data is provided. Therefore, the
+ * stream will not generate data. While in this state, attaching a listener for the `'data'` event, calling the
+ * [Readable.pipe] method, or calling the [Readable.resume] method will switch [Readable.readableFlowing] to `true`,
+ * causing the [Readable] to begin actively emitting events as data is generated.
+ *
+ * Calling [Readable.pause], [Readable.unpipe], or receiving backpressure will cause the [Readable.readableFlowing]
+ * flag to be set as `false`, temporarily halting the flowing of events but not halting the generation of data. While in
+ * this state, attaching a listener for the `'data'` event will not switch [Readable.readableFlowing] to `true`.
  *
  * &nbsp;
  *
@@ -77,17 +161,8 @@ private val READABLE_PROPS_AND_METHODS = arrayOf(
  *
  * @see Writable for the corresponding writable stream interface.
  */
-@API public interface Readable : EventEmitter, ProxyObject, ProxyIterable {
-  /**
-   * Is true after `'close'` has been emitted.
-   */
-  @get:Polyglot public val closed: Boolean
-
-  /**
-   * Is true after `readable.destroy()` has been called.
-   */
-  @get:Polyglot public val destroyed: Boolean
-
+@HostAccess.Implementable
+@API public interface Readable : StatefulStream, EventEmitter, EventTarget, ProxyObject, ProxyIterable {
   /**
    * Is true if it is safe to call `readable.read()`, which means the stream has not been destroyed or emitted `'error'`
    * or `'end'`.
@@ -108,7 +183,7 @@ private val READABLE_PROPS_AND_METHODS = arrayOf(
    * Getter for the property `encoding` of a given `Readable` stream. The encoding property can be set using the
    * `readable.setEncoding()` method.
    */
-  @get:Polyglot public val readableEncoding: Boolean
+  @get:Polyglot public val readableEncoding: String?
 
   /**
    * Becomes true when `'end'` event is emitted.
@@ -118,23 +193,23 @@ private val READABLE_PROPS_AND_METHODS = arrayOf(
   /**
    * Returns error if the stream has been destroyed with an error.
    */
-  @get:Polyglot public val errored: Error?
+  @get:Polyglot public val errored: Any?
 
   /**
    * This property reflects the current state of a Readable stream as described in the "Three states" section.
    */
-  @get:Polyglot public val readableFlowing: Boolean
+  @get:Polyglot public val readableFlowing: Boolean?
 
   /**
    * Returns the value of `highWaterMark` passed when creating this `Readable`.
    */
-  @get:Polyglot public val readableHighWaterMark: Boolean
+  @get:Polyglot public val readableHighWaterMark: Int
 
   /**
    * This property contains the number of bytes (or objects) in the queue ready to be read. The value provides
    * introspection data regarding the status of the `highWaterMark`.
    */
-  @get:Polyglot public val readableLength: Boolean
+  @get:Polyglot public val readableLength: Int
 
   /**
    * Getter for the property `objectMode` of a given `Readable` stream.
@@ -150,10 +225,36 @@ private val READABLE_PROPS_AND_METHODS = arrayOf(
    * may be emitted as `error`.
    *
    * Implementors should not override this method, but instead implement `readable._destroy()`.
+   */
+  @Polyglot override fun destroy()
+
+  /**
+   * Destroy the stream. Optionally emit an `error` event, and emit a `close` event (unless emitClose is set to false).
+   * After this call, the readable stream will release any internal resources and subsequent calls to `push()` will be
+   * ignored.
+   *
+   * Once `destroy()` has been called any further calls will be a no-op and no further errors except from `_destroy()`
+   * may be emitted as `error`.
+   *
+   * Implementors should not override this method, but instead implement `readable._destroy()`.
    *
    * @param error The error, if any, that caused the stream to be destroyed.
    */
-  @Polyglot public fun destroy(error: Throwable? = null)
+  @Polyglot override fun destroy(error: Value)
+
+  /**
+   * Destroy the stream. Optionally emit an `error` event, and emit a `close` event (unless emitClose is set to false).
+   * After this call, the readable stream will release any internal resources and subsequent calls to `push()` will be
+   * ignored.
+   *
+   * Once `destroy()` has been called any further calls will be a no-op and no further errors except from `_destroy()`
+   * may be emitted as `error`.
+   *
+   * Implementors should not override this method, but instead implement `readable._destroy()`.
+   *
+   * @param error The error, if any, that caused the stream to be destroyed.
+   */
+  @Polyglot override fun destroy(error: Throwable)
 
   /**
    * The `readable.isPaused()` method returns the current operating state of the Readable. This is used primarily by the
@@ -226,24 +327,6 @@ private val READABLE_PROPS_AND_METHODS = arrayOf(
    * @param options The options for the pipe operation.
    */
   @Polyglot public fun pipe(destination: Writable, options: ReadablePipeOptions)
-
-  /**
-   * The `readable.pipe()` method attaches a Writable stream to the readable, causing it to switch into flowing mode.
-   *
-   * Data is read from the Readable source and passed to the supplied Writable destination. The destination is generally
-   * a Writable stream, but may be any object that implements the `Writable` stream interface.
-   *
-   * The `options` argument is an optional object that may contain the following properties:
-   *
-   * - `end` - A boolean that specifies whether or not the `destination` should be automatically closed when the
-   *   `source` ends. Default: `true`.
-   *
-   * This method variant takes a [destination] and [options], expressed as a [Map].
-   *
-   * @param destination The destination for writing data.
-   * @param options The options for the pipe operation.
-   */
-  @Polyglot public fun pipe(destination: Writable, options: Map<String, Any>)
 
   /**
    * The `readable.read()` method reads some data from the readable stream and returns it. The data will not be returned
@@ -780,5 +863,87 @@ private val READABLE_PROPS_AND_METHODS = arrayOf(
 
   override fun removeMember(key: String?): Boolean {
     throw UnsupportedOperationException("Cannot mutate arbitrary members on `Readable`")
+  }
+
+  /**
+   * ## Node Readable: Constructors
+   *
+   * Describes the type layout of static methods which are made available on the [Readable] class.
+   */
+  @API public interface Constructors : ProxyInstantiable, ProxyObject {
+    /**
+     * Create a new [Readable] stream from the given iterable.
+     *
+     * @param iterable The iterable to create the stream from.
+     * @return The new readable stream.
+     */
+    @Polyglot public fun from(iterable: Value): Readable
+
+    /**
+     * Create a new [Readable] stream from the given iterable.
+     *
+     * @param iterable The iterable to create the stream from.
+     * @param options The options for the stream.
+     * @return The new readable stream.
+     */
+    @Polyglot public fun from(iterable: Value, options: Value): Readable
+
+    /**
+     * Create a new [Readable] stream from the given iterable.
+     *
+     * @param iterable The iterable to create the stream from.
+     * @param options The options for the stream.
+     * @return The new readable stream.
+     */
+    @Polyglot public fun from(iterable: Iterable<*>, options: ReadableFromOptions): Readable
+
+    override fun getMemberKeys(): Array<String> = READABLE_STATIC_PROPS_AND_METHODS
+    override fun hasMember(key: String): Boolean = key in READABLE_STATIC_PROPS_AND_METHODS
+
+    override fun putMember(key: String, value: Value) {
+      throw UnsupportedOperationException("Cannot mutate arbitrary members on `Readable`")
+    }
+
+    override fun removeMember(key: String): Boolean {
+      throw UnsupportedOperationException("Cannot mutate arbitrary members on `Readable`")
+    }
+
+    override fun getMember(key: String): Any? = when (key) {
+      "from" -> ProxyExecutable {
+        val iterable = it.getOrNull(0)
+          ?: throw JsError.valueError("Expected an iterable as the first argument to `Readable.from`")
+        val options = it.getOrNull(1)
+        if (options != null) from(iterable, options) else from(iterable)
+      }
+      else -> null
+    }
+  }
+
+  /** Factory methods for creating [Readable] streams. */
+  public companion object : Constructors {
+    /**
+     * Wrap the provided [InputStream] as a [Readable].
+     *
+     * @param stream The input stream to wrap.
+     * @return The wrapped readable stream.
+     */
+    @JvmStatic public fun wrap(stream: InputStream, encoding: Charset? = null): Readable =
+      WrappedInputStream.wrap(stream, encoding)
+
+    @Polyglot override fun from(iterable: Value): Readable {
+      TODO("Not yet implemented")
+    }
+
+    @Polyglot override fun from(iterable: Value, options: Value): Readable {
+      TODO("Not yet implemented")
+    }
+
+    @Polyglot override fun from(iterable: Iterable<*>, options: ReadableFromOptions): Readable {
+      TODO("Not yet implemented")
+    }
+
+    override fun newInstance(vararg arguments: Value?): Any {
+      TODO("Not yet implemented")
+    }
   }
 }

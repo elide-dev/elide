@@ -10,13 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.js.node
+package elide.runtime.intrinsics.js
 
 import elide.annotations.API
 
 /**
- * ## Node API: Streams
+ * # JavaScript API: Symbol
  */
-@API public interface StreamAPI : NodeAPI {
-
-}
+@API public interface JsSymbol

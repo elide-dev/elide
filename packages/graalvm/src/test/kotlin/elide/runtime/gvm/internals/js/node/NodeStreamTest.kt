@@ -12,11 +12,15 @@
  */
 package elide.runtime.gvm.internals.js.node
 
-import kotlin.test.Test
-import kotlin.test.assertNotNull
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.gvm.internals.node.stream.NodeStreamModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.intrinsics.js.node.stream.Readable
+import elide.runtime.intrinsics.js.node.stream.Writable
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `stream` built-in module. */
@@ -51,5 +55,91 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(stream)
+  }
+
+  @Test fun `Readable - consume data as raw bytes`() {
+    val bytes = "hello".toByteArray(StandardCharsets.UTF_8)
+    Readable.wrap(ByteArrayInputStream(bytes)).let {
+      assertNotNull(it, "should not get `null` from `Readable.wrap`")
+      assertTrue(it.readable, "`readable` should report as `true` initially")
+      assertEquals(null, it.readableFlowing, "`readable` should not be flowing initially")
+      val data = it.read()
+      assertIs<ByteArray>(data, "should get byte array back from raw-bytes readable")
+      val str = String(data, StandardCharsets.UTF_8)
+      assertEquals("hello", str, "decoded string should be correct value from `readable`")
+    }
+  }
+
+  @Test fun `Readable - consume data as raw bytes with explicit size`() {
+    val bytes = "hello".toByteArray(StandardCharsets.UTF_8)
+    Readable.wrap(ByteArrayInputStream(bytes)).let {
+      assertNotNull(it, "should not get `null` from `Readable.wrap`")
+      assertTrue(it.readable, "`readable` should report as `true` initially")
+      assertEquals(null, it.readableFlowing, "`readable` should not be flowing initially")
+      val data = it.read(4)
+      assertIs<ByteArray>(data, "should get byte array back from raw-bytes readable")
+      val str = String(data, StandardCharsets.UTF_8)
+      assertEquals("hell", str, "decoded string should be correct value from `readable`")
+    }
+  }
+
+  @Test fun `Readable - consume data as an encoded string`() {
+    val bytes = "hello".toByteArray(StandardCharsets.UTF_8)
+    Readable.wrap(ByteArrayInputStream(bytes), StandardCharsets.UTF_8).let {
+      assertNotNull(it, "should not get `null` from `Readable.wrap`")
+      assertTrue(it.readable, "`readable` should report as `true` initially")
+      assertEquals(null, it.readableFlowing, "`readable` should not be flowing initially")
+      val data = it.read()
+      assertIs<String>(data, "should get byte array back from raw-bytes readable")
+      assertEquals("hello", data, "decoded string should be correct value from `readable`")
+    }
+  }
+
+  @Test fun `Readable - consume data as an encoded string with explicit size`() {
+    val bytes = "hello".toByteArray(StandardCharsets.UTF_8)
+    Readable.wrap(ByteArrayInputStream(bytes), StandardCharsets.UTF_8).let {
+      assertNotNull(it, "should not get `null` from `Readable.wrap`")
+      assertTrue(it.readable, "`readable` should report as `true` initially")
+      assertEquals(null, it.readableFlowing, "`readable` should not be flowing initially")
+      val data = it.read(4)
+      assertIs<String>(data, "should get byte array back from raw-bytes readable")
+      assertEquals("hell", data, "decoded string should be correct value from `readable`")
+    }
+  }
+
+  @Test fun `Readable - consume data as events`() {
+    val bytes = "hello".toByteArray(StandardCharsets.UTF_8)
+    Readable.wrap(ByteArrayInputStream(bytes), StandardCharsets.UTF_8).let {
+      assertNotNull(it, "should not get `null` from `Readable.wrap`")
+      assertTrue(it.readable, "`readable` should report as `true` initially")
+      assertEquals(null, it.readableFlowing, "`readable` should not be flowing initially")
+      val buffer = StringBuilder()
+      var didEnd = false
+      var didSeeData = false
+      it.addEventListener("end") {
+        didEnd = true
+      }
+      it.addEventListener("data") { args ->
+        didSeeData = true
+        buffer.append(args.first() as String)
+      }
+      assertTrue(didSeeData, "should have seen `data` event")
+      assertTrue(didEnd, "should have seen `end` event")
+      assertEquals("hello", buffer.toString(), "should have consumed all data from `Readable`")
+    }
+  }
+
+  @Test fun `Writable - write data as raw bytes`() {
+    val bytes = "hello".toByteArray(StandardCharsets.UTF_8)
+    val out = ByteArrayOutputStream()
+    Writable.wrap(out).let {
+      assertNotNull(it, "should not get `null` from `Writable.wrap`")
+      assertTrue(it.writable, "`writable` should report as `true` initially")
+      it.write(bytes)
+      it.end()
+      assertEquals("hello", out.toString(StandardCharsets.UTF_8), "should have written to `Writable`")
+      assertFalse(it.writable)
+      assertTrue(it.writableEnded)
+    }
   }
 }

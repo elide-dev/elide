@@ -14,10 +14,7 @@ package elide.runtime.gvm.internals.intrinsics.js
 
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
-import elide.runtime.intrinsics.js.err.AbstractJsException
-import elide.runtime.intrinsics.js.err.Error
-import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.err.ValueError
+import elide.runtime.intrinsics.js.err.*
 
 /** Utility for wrapping JavaScript error types. */
 @Suppress("unused") internal object JsError {
@@ -72,6 +69,21 @@ import elide.runtime.intrinsics.js.err.ValueError
   @Throws(TypeError::class)
   fun typeError(message: String, cause: Throwable? = null, raise: Boolean = false): TypeError {
     val exc = wrapped(message, cause, TypeError::class)
+    if (raise) throw exc
+    return exc
+  }
+
+  /**
+   * [RangeError] convenience function: wrap the provided [message] and optional [cause]; then, optionally [raise].
+   *
+   * @param message String message for this error.
+   * @param cause Throwable error to wrap and consider the cause of this error.
+   * @param raise Whether to throw the error after wrapping. Defaults to `false`.
+   * @return Wrapped [RangeError], ready to be raised.
+   */
+  @Throws(RangeError::class)
+  fun rangeError(message: String, cause: Throwable? = null, raise: Boolean = false): RangeError {
+    val exc = wrapped(message, cause, RangeError::class)
     if (raise) throw exc
     return exc
   }

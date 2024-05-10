@@ -12,6 +12,7 @@
  */
 package elide.runtime.intrinsics.js.node.stream
 
+import org.graalvm.polyglot.Value
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.AbortSignal
 import elide.vm.annotations.Polyglot
@@ -26,7 +27,26 @@ import elide.vm.annotations.Polyglot
    * End the writer when the reader ends. Default: `true`.
    */
   @get:Polyglot public var end: Boolean = true,
-)
+) {
+  /**
+   * ## Readable Pipe Options
+   *
+   * Default options for the `Readable.pipe` method.
+   */
+  public companion object {
+    public val DEFAULTS: ReadablePipeOptions = ReadablePipeOptions()
+
+    @JvmStatic public fun fromGuest(value: Value): ReadablePipeOptions = ReadablePipeOptions(
+      end = if (value.hasMembers()) {
+        value.getMember("end")?.asBoolean() ?: false
+      } else if (value.hasHashEntries()) {
+        value.getMember("end")?.asBoolean() ?: false
+      } else {
+        false
+      }
+    )
+  }
+}
 
 /**
  * ## Readable Compose Options
@@ -218,6 +238,18 @@ import elide.vm.annotations.Polyglot
  * Defines the structure of options which relate to the `Readable.reduce` method.
  */
 @API public data class ReadableReduceOptions(
+  /**
+   * Abort signal to use for the operation.
+   */
+  @get:Polyglot public var signal: AbortSignal? = null,
+)
+
+/**
+ * ## Readable From Options
+ *
+ * Defines the structure of options which relate to the `Readable.from` static method.
+ */
+@API public data class ReadableFromOptions(
   /**
    * Abort signal to use for the operation.
    */

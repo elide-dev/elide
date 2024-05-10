@@ -31,6 +31,7 @@
     <ID>SpreadOperator:ElideTool.kt$ElideTool.Companion$(*args)</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$ioe: IOException</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
+    <ID>SwallowedException:ElideTool.kt$ElideTool.Companion$uoe: UnsupportedOperationException</ID>
     <ID>SwallowedException:NativeEngine.kt$NativeEngine$err: Throwable</ID>
     <ID>SwallowedException:NativeUtil.kt$NativeUtil$thr: Throwable</ID>
     <ID>SwallowedException:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>

@@ -58,6 +58,15 @@ import elide.runtime.gvm.internals.node.zlib.NodeZlib
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.node.*
+import elide.runtime.intrinsics.js.node.events.Event
+import elide.runtime.intrinsics.js.node.events.EventEmitter
+import elide.runtime.intrinsics.js.node.events.EventTarget
+import elide.runtime.intrinsics.js.node.process.ProcessStandardInputStream
+import elide.runtime.intrinsics.js.node.process.ProcessStandardOutputStream
+import elide.runtime.intrinsics.js.node.process.ProcessStandardStream
+import elide.runtime.intrinsics.js.node.stream.Duplex
+import elide.runtime.intrinsics.js.node.stream.StatefulStream
+import elide.runtime.intrinsics.js.node.stream.Writable
 
 /** GraalVM feature which enables reflective access to built-in Node modules. */
 @VMFeature internal class NodeJsFeature : FrameworkFeature {
@@ -116,6 +125,9 @@ import elide.runtime.intrinsics.js.node.*
     cls(NodeDomain::class)
 
     // `events`
+    cls(Event::class)
+    cls(EventTarget::class)
+    cls(EventEmitter::class)
     cls(EventsAPI::class)
     cls(NodeEventsModuleFacade::class)
 
@@ -166,6 +178,9 @@ import elide.runtime.intrinsics.js.node.*
     // `process`
     cls(ProcessAPI::class)
     cls(NodeProcess.NodeProcessModuleImpl::class)
+    cls(ProcessStandardStream::class)
+    cls(ProcessStandardInputStream::class)
+    cls(ProcessStandardOutputStream::class)
 
     // `querystring`
     cls(QuerystringAPI::class)
@@ -186,6 +201,10 @@ import elide.runtime.intrinsics.js.node.*
     cls(NodeStreamPromises::class)
     cls(WebStreamsAPI::class)
     cls(NodeWebStreams::class)
+    cls(Readable::class)
+    cls(Writable::class)
+    cls(Duplex::class)
+    cls(StatefulStream::class)
 
     // `string_decoder`
     cls(StringDecoderAPI::class)

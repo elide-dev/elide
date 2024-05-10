@@ -23,27 +23,40 @@ import elide.runtime.intrinsics.js.node.stream.Writable
  * TBD.
  */
 @API public sealed interface ProcessStandardStream : Stream {
-
+  /**
+   * TBD.
+   */
+  public val fd: Int
 }
 
 /**
  * TBD.
  */
-@API public sealed interface ProcessStandardOutputStream : Readable, ProcessStandardStream {
+@API public class ProcessStandardOutputStream private constructor (
+  override val fd: Int,
+  private val backing: Writable,
+) : Writable by backing, ProcessStandardStream {
   public companion object {
-    @JvmStatic public fun wrap(stream: OutputStream): ProcessStandardOutputStream {
-      TODO("Not yet implemented")
-    }
+    @JvmStatic public fun wrap(id: Int, stream: OutputStream): ProcessStandardOutputStream =
+      wrap(id, Writable.wrap(stream))
+
+    @JvmStatic public fun wrap(id: Int, stream: Writable): ProcessStandardOutputStream =
+      ProcessStandardOutputStream(id, stream)
   }
 }
 
 /**
  * TBD.
  */
-@API public sealed interface ProcessStandardInputStream : Writable, ProcessStandardStream {
+@API public class ProcessStandardInputStream private constructor (
+  override val fd: Int,
+  private val backing: Readable,
+) : Readable by backing, ProcessStandardStream {
   public companion object {
-    @JvmStatic public fun wrap(stream: InputStream): ProcessStandardInputStream {
-      TODO("Not yet implemented")
-    }
+    @JvmStatic public fun wrap(id: Int, stream: InputStream): ProcessStandardInputStream =
+      wrap(id, Readable.wrap(stream))
+
+    @JvmStatic public fun wrap(id: Int, stream: Readable): ProcessStandardInputStream =
+      ProcessStandardInputStream(id, stream)
   }
 }

@@ -10,13 +10,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.js.node
+package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.HostAccess.Implementable
 import elide.annotations.API
 
 /**
- * ## Node API: Streams
+ * # JavaScript: Disposable
  */
-@API public interface StreamAPI : NodeAPI {
-
+@Implementable
+@FunctionalInterface
+@API public fun interface Disposable {
+  /**
+   * TBD.
+   */
+  public fun dispose()
 }

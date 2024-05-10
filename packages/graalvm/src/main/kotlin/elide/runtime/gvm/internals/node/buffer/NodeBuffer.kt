@@ -24,6 +24,8 @@ import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.BufferAPI
 import elide.runtime.intrinsics.js.node.buffer.Buffer
+import elide.runtime.intrinsics.js.node.stream.ByteAccessor
+import elide.runtime.intrinsics.js.node.stream.MutableByteAccessor
 
 // Symbol at which the main `Buffer` intrinsic is installed.
 private const val BUFFER_SYMBOL = "Buffer"
@@ -33,113 +35,6 @@ private const val BUFFER_MODULE_SYMBOL = "__Elide_node_buffer__"
 
 // Default setting for direct buffers.
 private const val DEFAULT_DIRECT_BUFFERS = false
-
-/**
- * TBD.
- */
-internal interface ByteAccessor {
-  /**
-   * TBD.
-   */
-  val mutable: Boolean get() = false
-
-  /**
-   * TBD.
-   */
-  fun size(): Int
-
-  /**
-   * TBD.
-   */
-  fun get(index: Int): Byte
-
-  companion object {
-    /**
-     * TBD.
-     */
-    @JvmStatic fun of(byteBuffer: ByteBuffer): ByteAccessor {
-      return object : ByteAccessor {
-        override fun size(): Int {
-          return byteBuffer.capacity()
-        }
-
-        override fun get(index: Int): Byte {
-          return byteBuffer.get(index)
-        }
-      }
-    }
-
-    /**
-     * TBD.
-     */
-    @JvmStatic fun of(byteArray: ByteArray): ByteAccessor {
-      return object : ByteAccessor {
-        override fun size(): Int {
-          return byteArray.size
-        }
-
-        override fun get(index: Int): Byte {
-          return byteArray[index]
-        }
-      }
-    }
-  }
-}
-
-/**
- * TBD.
- */
-internal interface MutableByteAccessor : ByteAccessor {
-  /**
-   * TBD.
-   */
-  override val mutable: Boolean get() = false
-
-  /**
-   * TBD.
-   */
-  fun set(index: Int, value: Byte)
-
-  companion object {
-    /**
-     * TBD.
-     */
-    @JvmStatic fun of(byteBuffer: ByteBuffer): MutableByteAccessor {
-      return object : MutableByteAccessor {
-        override fun size(): Int {
-          return byteBuffer.capacity()
-        }
-
-        override fun get(index: Int): Byte {
-          return byteBuffer.get(index)
-        }
-
-        override fun set(index: Int, value: Byte) {
-          byteBuffer.put(index, value)
-        }
-      }
-    }
-
-    /**
-     * TBD.
-     */
-    @JvmStatic fun of(byteArray: ByteArray): MutableByteAccessor {
-      return object : MutableByteAccessor {
-        override fun size(): Int {
-          return byteArray.size
-        }
-
-        override fun get(index: Int): Byte {
-          return byteArray[index]
-        }
-
-        override fun set(index: Int, value: Byte) {
-          byteArray[index] = value
-        }
-      }
-    }
-  }
-}
 
 /**
  * TBD.

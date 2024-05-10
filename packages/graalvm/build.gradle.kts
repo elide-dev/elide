@@ -41,7 +41,6 @@ plugins {
   id("elide.internal.conventions")
 }
 
-
 group = "dev.elide"
 version = rootProject.version as String
 
@@ -84,6 +83,19 @@ elide {
     spotless = true
     diktat = false
     ktlint = false
+  }
+}
+
+kover {
+  excludeInstrumentation {
+    classes(
+      "elide.runtime.gvm.js.JavaScript",
+      "elide.runtime.gvm.internals.intrinsics.NativeRuntime",
+    )
+    packages(
+      "elide.runtime.feature",
+      "elide.runtime.feature.*"
+    )
   }
 }
 

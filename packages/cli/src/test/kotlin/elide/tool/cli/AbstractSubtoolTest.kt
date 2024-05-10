@@ -14,7 +14,6 @@
 package elide.tool.cli
 
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
-import org.junit.jupiter.api.Disabled
 import elide.testing.annotations.Test
 
 /** Common test utilities for Elide Tool sub-commands. */
@@ -29,7 +28,7 @@ abstract class AbstractSubtoolTest {
   }
 
   // needs a way to interactively pause
-  @Test @Disabled open fun testRunPlain() {
+  @Test open fun testRunPlain() {
     assertDoesNotThrow {
       runCommand()
     }

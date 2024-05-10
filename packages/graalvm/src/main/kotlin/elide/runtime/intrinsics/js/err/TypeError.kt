@@ -13,7 +13,7 @@
 package elide.runtime.intrinsics.js.err
 
 /**
- * # JavaScript: `TypeError`
+ * # JavaScript: Type Error
  *
  * This type implements the API surface of a `TypeError` exception raised within the context of an executing JavaScript
  * guest. `TypeError` instances are typically raised when a value is passed to a function or operation that is not of

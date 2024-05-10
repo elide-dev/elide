@@ -32,13 +32,49 @@ import elide.tool.cli.cmd.repl.ToolShellCommand
 
   @Test fun testEntrypointHelp() {
     assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(ToolShellCommand::class.java, "--help"))
+      assertEquals(0, PicocliRunner.execute(ElideTool::class.java, "--help"))
     }
   }
 
   @Test fun testEntrypointVersion() {
     assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(ToolShellCommand::class.java, "--version"))
+      assertEquals(0, PicocliRunner.execute(ElideTool::class.java, "--version"))
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteJsCode() {
+    assertDoesNotThrow {
+      assertEquals(
+        0,
+        PicocliRunner.execute(ElideTool::class.java, "run", "-c", "'console.log(\"Hello!\");'"),
+      )
+    }
+  }
+
+  @Test fun testEntrypointExecuteSimpleJsExplicit() {
+    assertDoesNotThrow {
+      assertEquals(
+        0,
+        PicocliRunner.execute(ElideTool::class.java, "run", "--javascript", "-c", "'console.log(\"Hello!\");'"),
+      )
+    }
+  }
+
+  @Test fun testEntrypointExecuteSimplePyCode() {
+    assertDoesNotThrow {
+      assertEquals(
+        0,
+        PicocliRunner.execute(ElideTool::class.java, "run", "--python", "-c", "'print(\"Hello!\")'"),
+      )
+    }
+  }
+
+  @Test fun testEntrypointExecuteSimpleRbCode() {
+    assertDoesNotThrow {
+      assertEquals(
+        0,
+        PicocliRunner.execute(ElideTool::class.java, "run", "--ruby", "-c", "'puts \"Hello!\"'"),
+      )
     }
   }
 }

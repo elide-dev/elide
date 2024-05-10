@@ -11,11 +11,15 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 @file:OptIn(DelicateElideApi::class)
+@file:Suppress("MnInjectionPoints")
 
 package elide.runtime.gvm.internals.node.process
 
+import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.ProcessProperties
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.Map.Entry
 import kotlin.system.exitProcess
 import elide.annotations.Factory
@@ -250,11 +254,40 @@ internal object NodeProcess {
     private val cwdAccessor: CwdAccessor,
     private val pidAccessor: PidAccessor,
   ) : ProcessAPI, NodeProcessBaseline() {
+    private companion object {
+      private const val STDOUT_FD = 1
+      private const val STDERR_FD = 2
+      private const val STDIN_FD = 0
+      private val BOOT_PROGRAM_NAME = if (ImageInfo.inImageCode()) {
+        ProcessProperties.getArgumentVectorProgramName() ?: "elide"
+      } else {
+        "elide"  // probably running on JVM
+      }
+    }
+
+    // Process title/program name override.
+    private val programNameOverride: AtomicReference<String> = AtomicReference()
+
     @get:Polyglot override val env: ProcessEnvironmentAPI get() = EnvironmentAccessMediator(envApi)
     @get:Polyglot override val argv: Array<String> get() = argvMediator.all()
     @get:Polyglot override val pid: Long get() = pidAccessor.pid()
     @get:Polyglot override val arch: String get() = activeArch.symbol
     @get:Polyglot override val platform: String get() = activePlatform.symbol
+
+    @get:Polyglot @set:Polyglot override var title: String?
+      get() = programNameOverride.get() ?: BOOT_PROGRAM_NAME
+      set(value) {
+        require(!value.isNullOrEmpty() && value.isNotBlank()) {
+          "Program name must be a non-empty, non-blank string"
+        }
+        try {
+          programNameOverride.set(value)
+          ProcessProperties.setArgumentVectorProgramName(value)
+        } catch (uoe: UnsupportedOperationException) {
+          // no-op (swallow)
+        }
+      }
+
     @Polyglot override fun cwd(): String = cwdAccessor.cwd()
     @Polyglot override fun exit(code: Int?) = exiter.exit(code ?: 0)
     @Polyglot override fun exit() = exiter.exit(0)
@@ -268,13 +301,13 @@ internal object NodeProcess {
     }
 
     @get:Polyglot override val stdout: ProcessStandardOutputStream
-      get() = ProcessStandardOutputStream.wrap(System.out)
+      get() = ProcessStandardOutputStream.wrap(STDOUT_FD, System.out)
 
     @get:Polyglot override val stderr: ProcessStandardOutputStream
-      get() = ProcessStandardOutputStream.wrap(System.err)
+      get() = ProcessStandardOutputStream.wrap(STDERR_FD, System.err)
 
     @get:Polyglot override val stdin: ProcessStandardInputStream
-      get() = ProcessStandardInputStream.wrap(System.`in`)
+      get() = ProcessStandardInputStream.wrap(STDIN_FD, System.`in`)
 
     override fun getMember(key: String): Any? = when (key) {
       "env" -> env
@@ -285,6 +318,7 @@ internal object NodeProcess {
       "pid" -> pid
       "arch" -> arch
       "platform" -> platform
+      "title" -> title
       "cwd" -> ProxyExecutable { cwd() }
       "exit" -> ProxyExecutable { exit(it.getOrNull(0)) }
       else -> null
@@ -331,7 +365,6 @@ internal object NodeProcess {
    * @return Node Process API instance.
    */
   @JvmStatic fun obtain(allow: Boolean = true): ProcessAPI {
-    // @TODO: factor in vm policy here
     return if (allow) host else stubbed
   }
 

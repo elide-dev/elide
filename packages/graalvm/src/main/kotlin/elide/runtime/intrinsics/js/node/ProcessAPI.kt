@@ -15,6 +15,7 @@ package elide.runtime.intrinsics.js.node
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
+import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.node.process.ProcessEnvironmentAPI
 import elide.runtime.intrinsics.js.node.process.ProcessStandardInputStream
 import elide.runtime.intrinsics.js.node.process.ProcessStandardOutputStream
@@ -31,6 +32,7 @@ private val NODE_PROCESS_PROPS = arrayOf(
   "stdout",
   "stderr",
   "stdin",
+  "title",
 )
 
 /**
@@ -157,6 +159,15 @@ private val NODE_PROCESS_PROPS = arrayOf(
   @get:Polyglot public val stdin: ProcessStandardInputStream
 
   /**
+   * ## Process Title
+   *
+   * Access to retrieve the current process title.
+   *
+   * See also: [Node Process API: `title`](https://nodejs.org/api/process.html#process_process_title).
+   */
+  @get:Polyglot @set:Polyglot public var title: String?
+
+  /**
    * ## Current Working Directory
    *
    * Access the current working directory of the current process.
@@ -213,7 +224,12 @@ private val NODE_PROCESS_PROPS = arrayOf(
   override fun hasMember(key: String): Boolean = key in NODE_PROCESS_PROPS
   override fun getMemberKeys(): Array<String> = NODE_PROCESS_PROPS
 
-  override fun putMember(key: String?, value: Value?) {
+  override fun putMember(key: String, value: Value?) {
+    if (key == "title") {
+      if (value == null || !value.isString)
+        throw JsError.valueError("Cannot set process title to non-string value")
+      title = value.asString()
+    }
     throw UnsupportedOperationException("Cannot mutate members from the process object")
   }
 

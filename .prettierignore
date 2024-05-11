@@ -1,7 +1,16 @@
 README.md
 build
 coverage
-docs
+docs/*.html
+docs/**/*.html
+docs/*.js
+docs/**/*.js
+docs/*.css
+docs/**/*.css
+docs/*.json
+docs/**/*.json
+docs/*.svg
+docs/**/*.svg
 kotlin-js-store
 .run
 module.md

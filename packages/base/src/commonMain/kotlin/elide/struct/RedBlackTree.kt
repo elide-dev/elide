@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("NothingToInline")
 
 package elide.struct
@@ -119,7 +118,7 @@ public abstract class RedBlackTree<K : Comparable<K>, V> internal constructor() 
    * Returns the child of this node corresponding to a [direction] (right child if `true`, left child if `false`), if
    * it exists.
    */
-  private inline fun Node<K, V>.child(direction: Boolean): Node<K, V>? {
+  private fun Node<K, V>.child(direction: Boolean): Node<K, V>? {
     return if (direction) right else left
   }
 
@@ -130,7 +129,7 @@ public abstract class RedBlackTree<K : Comparable<K>, V> internal constructor() 
    * Note that if the corresponding child is already assigned to a node, it will be replaced but its parent field will
    * not be updated. It is up to the caller to correctly reparent the orphaned node.
    */
-  private inline fun Node<K, V>.setChild(direction: Boolean, child: Node<K, V>?) {
+  private fun Node<K, V>.setChild(direction: Boolean, child: Node<K, V>?) {
     if (direction) right = child
     else left = child
 
@@ -138,21 +137,21 @@ public abstract class RedBlackTree<K : Comparable<K>, V> internal constructor() 
   }
 
   /** Remove a [child] node, failing with an exception if it is not actually a child of this node. */
-  private inline fun Node<K, V>.remove(child: Node<K, V>) = when (child) {
+  private fun Node<K, V>.remove(child: Node<K, V>) = when (child) {
     right -> right = null
     left -> left = null
     else -> error("The specified node ($child) is not a child of this node ($this)")
   }
 
   /** Replace a [child] node with another, failing with an exception if [child] is not a child of this node. */
-  private inline fun Node<K, V>.replace(child: Node<K, V>, with: Node<K, V>) = when (child) {
+  private fun Node<K, V>.replace(child: Node<K, V>, with: Node<K, V>) = when (child) {
     right -> right = with.also { it.parent = this }
     left -> left = with.also { it.parent = this }
     else -> error("The specified node ($child) is not a child of this node ($this)")
   }
 
   /** Swap the `key` and `value` of this node and another, preserving all parents, children, and colors. */
-  private inline fun Node<K, V>.swap(other: Node<K, V>) {
+  private fun Node<K, V>.swap(other: Node<K, V>) {
     val oldKey = key
     val oldValue = value
 

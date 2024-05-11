@@ -17,6 +17,7 @@ import java.nio.file.AccessMode
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.buffer.Buffer
 import elide.runtime.intrinsics.js.node.fs.*
+import elide.runtime.intrinsics.js.node.fs.WriteFileOptions.Companion
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.vm.annotations.Polyglot
 
@@ -264,13 +265,55 @@ import elide.vm.annotations.Polyglot
    *
    * @param path The path to the file to write.
    * @param data The data to write to the file.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun writeFile(path: Value, data: Value, callback: Value)
+
+  /**
+   * ## Method: `fs.writeFile`
+   *
+   * Writes the contents of a file at the specified path; provides the results or an error to the callback. This variant
+   * accepts a polyglot [Value].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun writeFile(path: Value, data: Value, options: Value?, callback: Value)
+
+  /**
+   * ## Method: `fs.writeFile`
+   *
+   * Writes the contents of a file at the specified path; provides the results or an error to the callback. This variant
+   * accepts a polyglot [Value].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
    * @param options The options to use for the file write operation.
    * @param callback The callback to provide the results or an error.
    */
   @Polyglot public fun writeFile(
-    path: Value,
-    data: StringOrBuffer,
-    options: Value,
+    path: Path,
+    data: String,
+    options: WriteFileOptions = WriteFileOptions.DEFAULTS,
+    callback: WriteFileCallback,
+  )
+
+  /**
+   * ## Method: `fs.writeFile`
+   *
+   * Writes the contents of a file at the specified path; provides the results or an error to the callback. This variant
+   * accepts a polyglot [Value].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
+   * @param options The options to use for the file write operation.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun writeFile(
+    path: Path,
+    data: ByteArray,
+    options: WriteFileOptions = WriteFileOptions.DEFAULTS,
     callback: WriteFileCallback,
   )
 
@@ -283,11 +326,122 @@ import elide.vm.annotations.Polyglot
    * @param path The path to the file to write.
    * @param data The data to write to the file.
    */
+  @Polyglot public fun writeFileSync(path: Value, data: Value)
+
+  /**
+   * ## Method: `fs.writeFileSync`
+   *
+   * Writes the contents of a file at the specified path; provides the results or an error to the callback.
+   * This variant accepts a polyglot [Value].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
+   * @param options The options to use for the file write operation.
+   */
+  @Polyglot public fun writeFileSync(path: Value, data: Value, options: Value?)
+
+  /**
+   * ## Method: `fs.writeFileSync`
+   *
+   * Writes the contents of a file at the specified path synchronously; throws if an error prevents the file from being
+   * written. This variant accepts a [ByteArray].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
+   * @param options The options to use for the file write operation.
+   */
   @Polyglot public fun writeFileSync(
-    path: Value,
-    data: StringOrBuffer,
-    options: Value? = null,
+    path: Path,
+    data: ByteArray,
+    options: WriteFileOptions = WriteFileOptions.DEFAULTS,
   )
+
+  /**
+   * ## Method: `fs.writeFileSync`
+   *
+   * Writes the contents of a file at the specified path synchronously; throws if an error prevents the file from being
+   * written. This variant accepts a [String].
+   *
+   * @param path The path to the file to write.
+   * @param data The data to write to the file.
+   * @param options The options to use for the file write operation.
+   */
+  @Polyglot public fun writeFileSync(
+    path: Path,
+    data: String,
+    options: WriteFileOptions = WriteFileOptions.DEFAULTS,
+  )
+
+  /**
+   * ## Method: `fs.mkdir`
+   *
+   * Create a directory, asynchronously, specified by the provided [path].
+   *
+   * @param path The path to the directory to create.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun mkdir(path: Value, callback: Value?)
+
+  /**
+   * ## Method: `fs.mkdir`
+   *
+   * Create a directory, asynchronously, specified by the provided [path].
+   *
+   * @param path The path to the directory to create.
+   * @param options The options to use for the directory create operation.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun mkdir(path: Value, options: Value?, callback: Value?)
+
+  /**
+   * ## Method: `fs.mkdir`
+   *
+   * Create a directory, synchronously, specified by the provided [path].
+   *
+   * @param path The path to the directory to create.
+   * @param options The options to use for the directory create operation.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun mkdir(
+    path: Path,
+    options: MkdirOptions = MkdirOptions.DEFAULTS,
+    callback: MkdirCallback,
+  )
+
+  /**
+   * ## Method: `fs.mkdirSync`
+   *
+   * Create a directory, synchronously, specified by the provided [path].
+   *
+   * @param path The path to the directory to create.
+   * @return The path to the directory created, or `null` if an error occurred.
+   */
+  @Polyglot public fun mkdirSync(path: Value): String?
+
+  /**
+   * ## Method: `fs.mkdirSync`
+   *
+   * Create a directory, synchronously, specified by the provided [path].
+   *
+   * @param path The path to the directory to create.
+   * @param options The options to use for the directory create operation.
+   * @return The path to the directory created, or `null` if an error occurred.
+   */
+  @Polyglot public fun mkdirSync(path: Value, options: Value?): String?
+
+  /**
+   * ## Method: `fs.mkdirSync`
+   *
+   * Create a directory, synchronously, specified by the provided [path].
+   *
+   * @param path The path to the directory to create.
+   * @param options The options to use for the directory create operation.
+   * @return The path to the directory created, or `null` if an error occurred.
+   */
+  @Polyglot public fun mkdirSync(
+    path: Path,
+    options: MkdirOptions = MkdirOptions.DEFAULTS,
+  ): String?
 }
 
 /**

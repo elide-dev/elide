@@ -11,6 +11,7 @@ docs/*.json
 docs/**/*.json
 docs/*.svg
 docs/**/*.svg
+site/docs
 kotlin-js-store
 .run
 module.md

@@ -1,4 +1,3 @@
-
 <center>
 <img src="https://static.elide.dev/assets/org-profile/creative/elide-banner-purple.png" alt="Elide" />
 <br />
@@ -36,13 +35,13 @@ looking for docs describing Elide's use as a runtime, head to the [website](http
 Elide, as a framework, ranges from a Nothing Burger to Everything You Could Want, based on the set of modules you choose
 to add to your app.
 
-| Module          | Platforms                     | Description                                               |
-|-----------------|-------------------------------|-----------------------------------------------------------|
-| [`core`][10]    | JVM, JavaScript, Native, WASM | Broadest platform support; simplest tools.                |
-| [`base`][11]    | JVM, JavaScript, Native       | Useful tools which aren't yet available on all platforms. |
-| [`test`][12]    | JVM, JavaScript, Native       | Test and assertion utilities and annotations.             |
-| [`ssr`][13]     | JVM, JavaScript               | Shared SSR annotations and logic across platforms.        |
-| [`server`][14]  | JVM                           | Server operational code, annotations, controllers.        |
+| Module         | Platforms                     | Description                                               |
+| -------------- | ----------------------------- | --------------------------------------------------------- |
+| [`core`][10]   | JVM, JavaScript, Native, WASM | Broadest platform support; simplest tools.                |
+| [`base`][11]   | JVM, JavaScript, Native       | Useful tools which aren't yet available on all platforms. |
+| [`test`][12]   | JVM, JavaScript, Native       | Test and assertion utilities and annotations.             |
+| [`ssr`][13]    | JVM, JavaScript               | Shared SSR annotations and logic across platforms.        |
+| [`server`][14] | JVM                           | Server operational code, annotations, controllers.        |
 
 **Note:** In this case, _Native_ refers to [Kotlin Native](https://kotlinlang.org/docs/native-overview.html), not the
 GraalVM Native Image tool, which Elide also uses (when used as a runtime).

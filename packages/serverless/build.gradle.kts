@@ -21,13 +21,13 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("multiplatform")
+  kotlin("kapt")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
 
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
 
-  id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")
   idea
 }

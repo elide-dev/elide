@@ -203,7 +203,7 @@ val ktCompilerArgs = listOf(
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
   // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-RC2",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-RC3",
 )
 
 java {

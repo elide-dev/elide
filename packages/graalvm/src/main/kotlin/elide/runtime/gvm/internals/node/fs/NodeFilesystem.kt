@@ -143,14 +143,10 @@ internal interface FileWriterContext {
   val channel: WritableByteChannel
 
   /** Write an array of bytes to the channel. */
-  fun writeBytes(data: ByteArray) {
-    channel.write(ByteBuffer.wrap(data))
-  }
+  fun writeBytes(data: ByteArray): Int = channel.write(ByteBuffer.wrap(data))
 
   /** Write a string to the channel. */
-  fun writeString(data: String) {
-    writeBytes(data.toByteArray(encoding ?: StandardCharsets.UTF_8))
-  }
+  fun writeString(data: String): Int = writeBytes(data.toByteArray(encoding ?: StandardCharsets.UTF_8))
 
   /** Write a buffer to the channel. */
   fun writeBuffer(data: Buffer) {
@@ -285,6 +281,15 @@ internal abstract class FilesystemBase (
     when {
       !fs.existsAny(path) -> error("ENOENT: no such file or directory, open '${path}'")
       !Files.isRegularFile(path) -> error("EISDIR: illegal operation on a directory, open '${path}'")
+    }
+  }
+
+  protected fun checkFile(path: java.nio.file.Path, mode: AccessMode = AccessMode.READ) {
+    checkFileExists(path)
+    when (mode) {
+      AccessMode.READ -> checkFileForRead(path)
+      AccessMode.WRITE -> checkFileForWrite(path)
+      AccessMode.EXECUTE -> error("EACCES: permission denied for execute, open '${path}'")
     }
   }
 
@@ -425,13 +430,14 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     val nioPath = resolved.toJavaPath()
     val encoding = resolveEncoding(opts.encoding)
 
-    openAndRead(nioPath) {
-      callback(null, try {
-        readFileData(nioPath, encoding)
-      } catch (err: Throwable) {
-        callback(TypeError.create(err), null)
-        return
-      })
+    exec.submit {
+      openAndRead(nioPath) {
+        callback(null, try {
+          readFileData(nioPath, encoding)
+        } catch (err: Throwable) {
+          callback(TypeError.create(err), null)
+        })
+      }
     }
   }
 
@@ -440,13 +446,14 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     val nioPath = resolved.toJavaPath()
     val encoding = resolveEncoding(ReadFileOptions.DEFAULTS.encoding)
 
-    openAndRead(nioPath) {
-      callback(null, try {
-        readFileData(nioPath, encoding)
-      } catch (err: Throwable) {
-        callback(TypeError.create(err), null)
-        return
-      })
+    exec.submit {
+      openAndRead(nioPath) {
+        callback(null, try {
+          readFileData(nioPath, encoding)
+        } catch (err: Throwable) {
+          callback(TypeError.create(err), null)
+        })
+      }
     }
   }
 
@@ -454,13 +461,14 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     val encoding = resolveEncoding(options.encoding)
     val nioPath = path.toJavaPath()
 
-    openAndRead(nioPath) {
-      callback(null, try {
-        readFileData(nioPath, encoding)
-      } catch (err: Throwable) {
-        callback(TypeError.create(err), null)
-        return
-      })
+    exec.submit {
+      openAndRead(nioPath) {
+        callback(null, try {
+          readFileData(nioPath, encoding)
+        } catch (err: Throwable) {
+          callback(TypeError.create(err), null)
+        })
+      }
     }
   }
 
@@ -506,14 +514,16 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     val nioPath = path.toJavaPath()
     val encoding = resolveEncoding(options.encoding)
 
-    try {
-      openForWrite(nioPath) {
-        writeFileData(nioPath, encoding) {
-          writeStringOrBuffer(data)
+    exec.submit {
+      try {
+        openForWrite(nioPath) {
+          writeFileData(nioPath, encoding) {
+            writeStringOrBuffer(data)
+          }
         }
+      } catch (err: Throwable) {
+        callback(TypeError.create(err))
       }
-    } catch (err: Throwable) {
-      callback(TypeError.create(err))
     }
   }
 
@@ -562,23 +572,27 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
     require(callback != null && !callback.isNull) {
       "Callback for `mkdir` cannot be `null` or missing"
     }
-    mkdir(
-      resolvePath("mkdir", path),
-      MkdirOptions.fromGuest(options),
-    ) {
-      if (callback.canExecute()) callback.executeVoid(it)
+    exec.submit {
+      mkdir(
+        resolvePath("mkdir", path),
+        MkdirOptions.fromGuest(options),
+      ) {
+        if (callback.canExecute()) callback.executeVoid(it)
+      }
     }
   }
 
   @Polyglot override fun mkdir(path: Path, options: MkdirOptions, callback: MkdirCallback) {
     val nioPath = path.toJavaPath()
-    checkForDirectoryCreate(nioPath) {
-      try {
-        createDirectory(nioPath, options.recursive) {
-          callback.invoke(null)
+    exec.submit {
+      checkForDirectoryCreate(nioPath) {
+        try {
+          createDirectory(nioPath, options.recursive) {
+            callback.invoke(null)
+          }
+        } catch (ioe: IOException) {
+          callback.invoke(TypeError.create(ioe))
         }
-      } catch (ioe: IOException) {
-        callback.invoke(TypeError.create(ioe))
       }
     }
   }
@@ -602,18 +616,64 @@ internal class NodeFilesystemProxy (exec: ExecutorService, fs: GuestVFS) : NodeF
 // Implements the Node `fs/promises` module.
 private class NodeFilesystemPromiseProxy (executor: ExecutorService, fs: GuestVFS)
   : NodeFilesystemPromiseAPI, FilesystemBase(executor, fs) {
-  @Polyglot override fun readFile(path: Value, options: Value?): JsPromise<StringOrBuffer> {
-    val op: () -> StringOrBuffer = {
-      val resolved = resolvePath("readFile", path)
-      val opts = readFileOptions(options)
-      val nioPath = resolved.toJavaPath()
-      val encoding = resolveEncoding(opts.encoding)
+  @Polyglot override fun readFile(path: Value): JsPromise<StringOrBuffer> =
+    readFile(resolvePath("readFile", path), ReadFileOptions.DEFAULTS)
 
-      openAndRead(nioPath) {
-        readFileData(nioPath, encoding)
-      }
+  @Polyglot override fun readFile(path: Value, options: Value?): JsPromise<StringOrBuffer> =
+    readFile(resolvePath("readFile", path), readFileOptions(options))
+
+  override fun readFile(path: Path, options: ReadFileOptions?) = JsPromise.of(exec.submit<StringOrBuffer> {
+    val encoding = resolveEncoding(options?.encoding)
+    val nioPath = path.toJavaPath()
+
+    openAndRead(nioPath) {
+      readFileData(nioPath, encoding)
     }
+  })
 
-    return JsPromise.of(exec.submit<StringOrBuffer>(op))
+  @Polyglot override fun access(path: Value): JsPromise<Unit> =
+    access(resolvePath("access", path), AccessMode.READ)
+
+  @Polyglot override fun access(path: Value, mode: Value?): JsPromise<Unit> =
+    access(resolvePath("access", path), translateMode(mode))
+
+  override fun access(path: Path, mode: AccessMode?): JsPromise<Unit> = JsPromise.of(exec.submit<Unit> {
+    checkFile(path.toJavaPath(), mode ?: AccessMode.READ)
+  })
+
+  @Polyglot override fun writeFile(path: Value, data: Value): JsPromise<Unit> =
+    writeFile(resolvePath("writeFile", path), data, null)
+
+  @Polyglot override fun writeFile(path: Value, data: Value, options: Value?): JsPromise<Unit> =
+    writeFile(resolvePath("writeFile", path), data, writeFileOptions(options))
+
+  override fun writeFile(path: Path, data: StringOrBuffer, options: WriteFileOptions?): JsPromise<Unit> {
+    return JsPromise.of(exec.submit<Unit> {
+      val encoding = resolveEncoding(options?.encoding)
+      val nioPath = path.toJavaPath()
+
+      openForWrite(nioPath) {
+        writeFileData(nioPath, encoding) {
+          writeStringOrBuffer(data)
+        }
+      }
+    })
+  }
+
+  @Polyglot override fun mkdir(path: Value): JsPromise<StringOrBuffer> =
+    mkdir(resolvePath("mkdir", path), null)
+
+  @Polyglot override fun mkdir(path: Value, options: Value?): JsPromise<StringOrBuffer> =
+    mkdir(resolvePath("mkdir", path), MkdirOptions.fromGuest(options))
+
+  override fun mkdir(path: Path, options: MkdirOptions?): JsPromise<StringOrBuffer> {
+    return JsPromise.of(exec.submit<StringOrBuffer> {
+      path.toJavaPath().let { nioPath ->
+        checkForDirectoryCreate(nioPath) {
+          createDirectory(nioPath, options?.recursive ?: false)
+        }
+        nioPath
+      }.toString()
+    })
   }
 }

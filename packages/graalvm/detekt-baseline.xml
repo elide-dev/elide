@@ -91,6 +91,7 @@
     <ID>TooManyFunctions:BaseMutableJsMultiMap.kt$BaseMutableJsMultiMap&lt;K: Any, V> : BaseJsMultiMapMutableMapMutableMultiMapLike</ID>
     <ID>TooManyFunctions:CompoundVFSImpl.kt$CompoundVFSImpl : AbstractBaseVFS</ID>
     <ID>TooManyFunctions:NodeEvents.kt$EventAwareRelay : EventAware</ID>
+    <ID>TooManyFunctions:NodeFilesystem.kt$NodeFilesystemProxy : NodeFilesystemAPIFilesystemBase</ID>
     <ID>TooManyFunctions:NodeOperatingSystem.kt$NodeOperatingSystem$BaseOS : ModuleBaseOperatingSystemAPIProxyObject</ID>
     <ID>TooManyFunctions:NodeStream.kt$AbstractReadable&lt;T> : AbstractStreamReadable</ID>
     <ID>TooManyFunctions:Readable.kt$Readable : StatefulStreamEventEmitterEventTargetProxyObjectProxyIterable</ID>

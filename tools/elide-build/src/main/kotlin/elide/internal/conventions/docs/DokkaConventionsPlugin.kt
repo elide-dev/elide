@@ -21,6 +21,8 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.dokka.versioning.VersioningConfiguration
+import org.jetbrains.dokka.versioning.VersioningPlugin
 import java.io.File
 import elide.internal.conventions.Constants
 import elide.internal.conventions.ElideBuildExtension
@@ -35,9 +37,9 @@ private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension,
     }
 
     pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-      footerMessage = "© 2024 Elide Technologies, Inc."
-      separateInheritedMembers = false
-      mergeImplicitExpectActualDeclarations = true
+      moduleName = "Elide API"
+      moduleVersion = project.version as String
+      footerMessage = "© 2023—2024 Elide Technologies, Inc."
       templatesDir = target.rootProject.layout.projectDirectory.dir("docs/templates").asFile
       customAssets = listOf(
         creativeAsset("logo/logo-wide-1200-w-r2.png"),
@@ -47,6 +49,15 @@ private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension,
         docAsset("styles/logo-styles.css"),
         docAsset("styles/theme-styles.css"),
       )
+    }
+
+    val projectVersion = project.version as String
+    pluginConfiguration<VersioningPlugin, VersioningConfiguration> {
+      version = projectVersion
+      versionsOrdering = listOf("1.0.0-alpha8")
+      olderVersionsDir = project.file("docs/versions")
+      olderVersions = listOf(project.file("docs/versions/1.0.0-alpha8"))
+      renderVersionsNavigationOnAllPages = true
     }
   }
 }

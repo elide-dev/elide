@@ -9,7 +9,7 @@
           <@template_cmd name="pathToRoot">
             <a class="library-name--link" href="${pathToRoot}index.html">
               <@template_cmd name="projectName">
-                <span>Elide</span>
+                <span>Elide API</span>
               </@template_cmd>
             </a>
           </@template_cmd>

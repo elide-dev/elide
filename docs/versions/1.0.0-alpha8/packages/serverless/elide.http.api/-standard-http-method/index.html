@@ -1,0 +1,367 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>StandardHttpMethod</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            Elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.http.api/-standard-http-method/index.html&quot;}">1.0.0-alpha8</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":packages:serverless:dokkaHtmlPartial/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="serverless::elide.http.api/StandardHttpMethod///PointingToDeclaration//543311228">
+  <div class="breadcrumbs"><a href="../../index.html">serverless</a><span class="delimiter">/</span><a href="../index.html">elide.http.api</a><span class="delimiter">/</span><span class="current">StandardHttpMethod</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Standard</span><wbr><span>Http</span><wbr><span><span>Method</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="../../../../packages/base/elide.annotations/-a-p-i/index.html"><span class="token annotation builtin">API</span></a></div><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlinx.serialization/Serializable///PointingToDeclaration/"><span class="token annotation builtin">Serializable</span></span></div></div><span class="token keyword">enum </span><a href="index.html">StandardHttpMethod</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">StandardHttpMethod</a><span class="token operator">&gt; </span>, <a href="../-http-method/index.html">HttpMethod</a></div><h1 class="">HTTP: Standard Method</h1><p class="paragraph">Enumerates standard HTTP request methods, binding them to unique identifiers for serialization, and providing various utility methods for working with HTTP methods.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>write</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Whether this operation is expected to modify the state of the server or its resources; if <code class="lang-kotlin">true</code>, the operation is considered a write operation, and is not expected to be idempotent by default.</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>idempotent</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Whether this operation is expected to perform idempotent work; if <code class="lang-kotlin">true</code>, the operation is considered safe for certain use cases.</p></div></div></div></div></div><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-http-method/index.html"><span>Http</span><wbr><span><span>Method</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the interface guaranteed by HTTP method description classes or objects.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="ENTRY">Entries</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="ENTRY">
+        <h2 class="">Entries</h2>
+        <div class="table"><a data-name="-1033973230%2FClasslikes%2F543311228" anchor-label="GET" id="-1033973230%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-g-e-t/index.html">GET</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1033973230%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-g-e-t/index.html">GET</a></div></div><div class="brief "><p class="paragraph">HTTP GET method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1338582892%2FClasslikes%2F543311228" anchor-label="POST" id="1338582892%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-o-s-t/index.html">POST</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1338582892%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-p-o-s-t/index.html">POST</a></div></div><div class="brief "><p class="paragraph">HTTP POST method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1388445685%2FClasslikes%2F543311228" anchor-label="PUT" id="-1388445685%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-u-t/index.html">PUT</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1388445685%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-p-u-t/index.html">PUT</a></div></div><div class="brief "><p class="paragraph">HTTP PUT method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-455919305%2FClasslikes%2F543311228" anchor-label="DELETE" id="-455919305%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-e-l-e-t-e/index.html">DELETE</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-455919305%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-d-e-l-e-t-e/index.html">DELETE</a></div></div><div class="brief "><p class="paragraph">HTTP DELETE method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-781973116%2FClasslikes%2F543311228" anchor-label="PATCH" id="-781973116%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-a-t-c-h/index.html">PATCH</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-781973116%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-p-a-t-c-h/index.html">PATCH</a></div></div><div class="brief "><p class="paragraph">HTTP PATCH method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-767710036%2FClasslikes%2F543311228" anchor-label="HEAD" id="-767710036%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-h-e-a-d/index.html">HEAD</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-767710036%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-h-e-a-d/index.html">HEAD</a></div></div><div class="brief "><p class="paragraph">HTTP HEAD method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1907384154%2FClasslikes%2F543311228" anchor-label="OPTIONS" id="1907384154%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-o-p-t-i-o-n-s/index.html">OPTIONS</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1907384154%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-o-p-t-i-o-n-s/index.html">OPTIONS</a></div></div><div class="brief "><p class="paragraph">HTTP OPTIONS method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="640492993%2FClasslikes%2F543311228" anchor-label="TRACE" id="640492993%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-t-r-a-c-e/index.html">TRACE</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="640492993%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-t-r-a-c-e/index.html">TRACE</a></div></div><div class="brief "><p class="paragraph">HTTP TRACE method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2054010022%2FClasslikes%2F543311228" anchor-label="CONNECT" id="2054010022%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-n-n-e-c-t/index.html">CONNECT</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2054010022%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><a href="-c-o-n-n-e-c-t/index.html">CONNECT</a></div></div><div class="brief "><p class="paragraph">HTTP CONNECT method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-89947139%2FClasslikes%2F543311228" anchor-label="Companion" id="-89947139%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-89947139%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div><div class="brief "><p class="paragraph">Utilities for dealing with HTTP methods.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1943133634%2FProperties%2F543311228" anchor-label="body" id="1943133634%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="body.html"><span><span>body</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1943133634%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="body.html">body</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></div><div class="brief "><p class="paragraph">Whether this operation, by spec, is allowed to carry a body payload.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="345561702%2FProperties%2F543311228" anchor-label="entries" id="345561702%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="entries.html"><span><span>entries</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="345561702%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="entries.html">entries</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.enums/-enum-entries/index.html">EnumEntries</a><span class="token operator">&lt;</span><a href="index.html">StandardHttpMethod</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a representation of an immutable list of all enum entries, in the order they're declared.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1340970293%2FProperties%2F543311228" anchor-label="idempotent" id="-1340970293%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="idempotent.html"><span><span>idempotent</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1340970293%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="idempotent.html">idempotent</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-372974862%2FProperties%2F543311228" anchor-label="name" id="-372974862%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-n-n-e-c-t/index.html#-372974862%2FProperties%2F543311228"><span><span>name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-372974862%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-n-n-e-c-t/index.html#-372974862%2FProperties%2F543311228">name</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-739389684%2FProperties%2F543311228" anchor-label="ordinal" id="-739389684%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-c-o-n-n-e-c-t/index.html#-739389684%2FProperties%2F543311228"><span><span>ordinal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-739389684%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="-c-o-n-n-e-c-t/index.html#-739389684%2FProperties%2F543311228">ordinal</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1769736247%2FProperties%2F543311228" anchor-label="write" id="1769736247%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="write.html"><span><span>write</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1769736247%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="write.html">write</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-62678794%2FFunctions%2F543311228" anchor-label="valueOf" id="-62678794%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="value-of.html"><span>value</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-62678794%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="value-of.html"><span class="token function">valueOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">StandardHttpMethod</a></div><div class="brief "><p class="paragraph">Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1874898050%2FFunctions%2F543311228" anchor-label="values" id="1874898050%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="values.html"><span><span>values</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1874898050%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="values.html"><span class="token function">values</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="index.html">StandardHttpMethod</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an array containing the constants of this enum type, in the order they're declared.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

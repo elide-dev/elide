@@ -36,7 +36,7 @@ Elide, as a framework, ranges from a Nothing Burger to Everything You Could Want
 to add to your app.
 
 | Module          | Platforms                     | Description                                               |
-|-----------------|-------------------------------|-----------------------------------------------------------|
+| --------------- | ----------------------------- | --------------------------------------------------------- |
 | [`core`][10]    | JVM, JavaScript, Native, WASM | Broadest platform support; simplest tools.                |
 | [`base`][11]    | JVM, JavaScript, Native       | Useful tools which aren't yet available on all platforms. |
 | [`test`][12]    | JVM, JavaScript, Native       | Test and assertion utilities and annotations.             |

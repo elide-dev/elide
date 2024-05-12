@@ -202,24 +202,20 @@ internal abstract class FilesystemBase (
     }
   }
 
-  protected fun translateMode(options: Value?): AccessMode {
-    return when {
-      options == null || options.isNull -> constantToAccessMode()
-      options.isNumber -> constantToAccessMode(options.asInt())
-      else -> error("Unknown type passed as access mode: ${options.asString()}")
-    }
+  protected fun translateMode(options: Value?): AccessMode = when {
+    options == null || options.isNull -> constantToAccessMode()
+    options.isNumber -> constantToAccessMode(options.asInt())
+    else -> error("Unknown type passed as access mode: ${options.asString()}")
   }
 
   protected fun readFileOptions(options: Value?): ReadFileOptions {
     return when {
-      options == null -> ReadFileOptions.DEFAULTS
+      options == null || options.isNull -> ReadFileOptions.DEFAULTS
       options.isString -> ReadFileOptions(
         encoding = resolveEncodingString(options.asString()),
       )
 
-      options.hasMembers() -> {
-        val encoding = options.getMember("encoding")
-
+      options.hasMembers() -> options.getMember("encoding").let { encoding ->
         if (encoding == null) {
           ReadFileOptions.DEFAULTS
         } else ReadFileOptions(

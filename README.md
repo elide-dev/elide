@@ -22,7 +22,7 @@
   <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin%202.0.0-blue.svg?logo=kotlin&logoColor=white" /></a>
   <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/-ECMA2023-blue.svg?logo=javascript&logoColor=white" /></a>
   <img alt="Python 3.11.x" src="https://img.shields.io/badge/Python%203.11.x-green?style=flat&logo=python&logoColor=white&color=blue">
-  <a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/-Ruby%203.2.x-blue.svg?logo=ruby&logoColor=white" /></a>
+  <a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/-Ruby%203.2-blue.svg?logo=ruby&logoColor=white" /></a>
 </p>
 
 <p align="center">

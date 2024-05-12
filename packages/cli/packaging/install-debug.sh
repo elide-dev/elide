@@ -18,7 +18,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.12
+# Version: 0.13
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -41,6 +41,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.13 2024-05-12  Sam Gammon  Fixes for install prefix and alpha9 release
 #   0.12 2024-04-17  Sam Gammon  Cleanups for alpha8 release
 #   0.11 2023-08-01  Sam Gammon  Archive support fixes, fix for uuid package
 #   0.10 2023-08-01  Sam Gammon  Version bump for launch
@@ -57,8 +58,8 @@
 set -e
 set +x
 
-TOOL_REVISION="1.0.0-alpha8"
-INSTALLER_VERSION="v0.12"
+TOOL_REVISION="1.0.0-alpha9"
+INSTALLER_VERSION="v0.13"
 
 TOOL="cli"
 VERSION="v1"
@@ -290,7 +291,7 @@ mkdir -p "$INSTALL_DIR" \
     -H "User-Agent: elide-installer/$INSTALLER_VERSION" \
     -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT \
   | $COMPRESSION_TOOL $DECOMPRESS_ARGS \
-    | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f - \
+  | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f --strip-components=1 - \
   && chmod +x "$INSTALL_DIR/$BINARY"
 
 set +x
@@ -323,6 +324,7 @@ if [ -x "$INSTALL_DIR/$BINARY" ]; then
     "$INSTALL_DIR/$BINARY" --help
     echo ""
   fi
+  debug "Finished running Elide help."
 else
   debug "Binary failed to install Path \"$INSTALL_DIR/$BINARY\" does not exist or is not executable."
   exit 1
@@ -330,33 +332,33 @@ fi
 
 ## if we're here, we're done!
 echo -e "Elide installed successfully! 🎉"
+echo ""
+echo "Installation location: $INSTALL_DIR/elide"
 
 ## check to see if it's on the PATH.
 IS_ON_PATH="false"
+INSTALLED_INTO=""
+debug "Starting path logic."
 if [ -x "$(command -v $BINARY)" ]; then
+  echo ""
+  echo "Elide is already present on your PATH, so no further action is necessary."
   IS_ON_PATH="true"
 else
   if [ "$INSTALL_INTO_PATH" == true ]; then
     DID_INSTALL="false"
 
-    ## look for a regular `.profile` file
-    if [ -f ~/.profile ]; then
+    ## look for a zsh profile, install the install dir onto the path there if found
+    if [ -f ~/.zshrc ]; then
       DID_INSTALL="true"
       IS_ON_PATH="true"
-      echo "" >> ~/.profile
-      echo "# Elide PATH export" >> ~/.profile
-      echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.profile
-    fi
-
-    ## look for a zsh profile, install the install dir onto the path there if found
-    if [ "$DID_INSTALL" != true ]; then
-      if [ -f ~/.zshrc ]; then
-        DID_INSTALL="true"
-        IS_ON_PATH="true"
-        echo "" >> ~/.zshrc
-        echo "# Elide PATH export" >> ~/.zshrc
-        echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.zshrc
-      fi
+      # shellcheck disable=SC2088
+      INSTALLED_INTO="~/.zshrc"
+      debug "Found .zshrc; adding PATH installation for Elide."
+      echo "" >> ~/.zshrc
+      echo "# Elide PATH export" >> ~/.zshrc
+      echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.zshrc
+    else
+      debug "No .zshrc found."
     fi
 
     ## look for a bash profile, install the install dir onto the path there if found
@@ -364,24 +366,54 @@ else
       if [ -f ~/.bashrc ]; then
         DID_INSTALL="true"
         IS_ON_PATH="true"
+        # shellcheck disable=SC2088
+        INSTALLED_INTO="~/.bashrc"
+        debug "Found .bashrc; adding PATH installation for Elide."
         echo "" >> ~/.bashrc
         echo "# Elide PATH export" >> ~/.bashrc
         echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.bashrc
+      else
+        debug "No .bashrc found."
       fi
     fi
-  fi
 
-  if [ "$IS_ON_PATH" != true ]; then
+    ## look for a regular `.profile` file
+    if [ "$DID_INSTALL" != true ]; then
+      ## look for a regular `.profile` file
+      if [ -f ~/.profile ]; then
+        DID_INSTALL="true"
+        IS_ON_PATH="true"
+        # shellcheck disable=SC2088
+        INSTALLED_INTO="~/.profile"
+        debug "Found .profile; adding PATH installation for Elide."
+        echo "" >> ~/.profile
+        echo "# Elide PATH export" >> ~/.profile
+        echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> ~/.profile
+      else
+        debug "No .profile found."
+      fi
+    fi
+  else
+    debug "Skipping path installation."
+  fi
+  if [ "$DID_INSTALL" == true ]; then
     echo -e ""
-    echo -e "Note: Elide is not available on your PATH."
-    echo -e "Add the following to your shell profile to add it to your PATH:"
+    echo -e "Elide has been added to your PATH."
+    echo -e "Run the following to update your current shell:"
     echo -e ""
-    echo -e "  export PATH=\"\$PATH:$INSTALL_DIR\""
-    echo -e ""
+    echo -e "  source $INSTALLED_INTO"
+  else
+    if [ "$IS_ON_PATH" != true ]; then
+      echo -e ""
+      echo -e "Note: Elide is not available on your PATH."
+      echo -e "Add the following to your shell profile to add it to your PATH:"
+      echo -e ""
+      echo -e "  export PATH=\"\$PATH:$INSTALL_DIR\""
+    fi
   fi
 fi
 
 echo -e ""
 echo -e " Get started with:"
-echo -e "  $ $BINARY shell"
+echo -e "  $ $BINARY"
 echo -e ""

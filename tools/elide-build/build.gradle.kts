@@ -105,7 +105,6 @@ dependencies {
   implementation(libs.jgit)
   implementation(libs.json)
   implementation(libs.kotlinpoet)
-  implementation(libs.kotlinx.knit)
   implementation(libs.okio)
   implementation(libs.plugin.detekt)
   implementation(libs.plugin.docker)

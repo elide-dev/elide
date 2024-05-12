@@ -8,10 +8,10 @@ ARG JAVA_VERSION=zulu22
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Tools: Zulu JDK (Java 22)"
 LABEL org.opencontainers.image.description="Java 22 tools for Elide."
-LABEL org.opencontainers.image.version=v3-alpha1
+LABEL org.opencontainers.image.version=v1.0.0-alpha9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/jdk20/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/jdk22/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \

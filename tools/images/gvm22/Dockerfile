@@ -1,5 +1,5 @@
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:ce2fe9474ca168eebfd35b0c7682db11045b0f10418ec46ae9b0c7610c295913"
+ARG BASE_HASH="@sha256:89ed76666b460e342e3103d3498dd8b75a027b1273714547831cace58b74b590"
 
 FROM ghcr.io/elide-dev/base${BASE_VERSION}${BASE_HASH}
 
@@ -10,10 +10,10 @@ ARG GRAAL_RELEASE="22.0.1+8.1"
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Tools: GraalVM (Java 22)"
 LABEL org.opencontainers.image.description="Java 22 tools for Elide/GraalVM"
-LABEL org.opencontainers.image.version=v3-alpha1
+LABEL org.opencontainers.image.version=v1.0.0-alpha9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/gvm22/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/gvm22/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -27,14 +27,11 @@ RUN apt-get update \
   && mkdir -p /tmp/gvm \
   && cd /tmp/gvm \
   && export ARCH="$(uname -m)" \
-  && export COMPONENTS="native-image js espresso" \
-  && if [ "$ARCH" = "x86_64" ]; then
-    ARCH="x64"
-    COMPONENTS="native-image js espresso wasm"
-  fi \
+  && if [ "$ARCH" = "x86_64" ]; then ARCH="x64"; fi \
   && if [ "$ARCH" = "arm64" ]; then ARCH="aarch64"; fi \
+  && if [ "$ARCH" = "aarch64" ]; then ARCH="aarch64"; fi \
   && export GRAAL_DOWNLOAD_URL="https://download.oracle.com/graalvm/$JAVA_VERSION/latest/graalvm-jdk-${JAVA_VERSION}_linux-${ARCH}_bin.tar.gz" \
-  && echo "GraalVM Download URL: $GRAAL_DOWNLOAD_URL" \
+  && echo "GraalVM Download URL ($ARCH): $GRAAL_DOWNLOAD_URL" \
   && curl --progress-bar -SL "$GRAAL_DOWNLOAD_URL" > ./graalvm.tar.gz \
   && curl --progress-bar -sSL "$GRAAL_DOWNLOAD_URL.sha256" > ./graalvm.tar.gz.sha256 \
   && ls -la ./graalvm.tar.gz ./graalvm.tar.gz.sha256 \
@@ -48,8 +45,6 @@ RUN apt-get update \
   && export JAVA_HOME=/usr/lib/gvm \
     GRAALVM_HOME=/usr/lib/gvm \
     PATH=/usr/lib/gvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
-  && echo "Installing GraalVM modules..." \
-  && $GRAALVM_HOME/bin/gu install $COMPONENTS \
   && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_HOME=/usr/lib/gvm \

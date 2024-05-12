@@ -3,10 +3,11 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu-24.04
 ARG DEV_USER=dev
 ARG IBAZEL_VERSION=v0.15.10
 
-ARG NODE_VERSION="18"
+ARG NODE_VERSION="22"
 ARG YARN_VERSION="berry"
-ARG GRADLE_VERSION=8.3
-ARG KOTLIN_VERSION=1.9.21
+ARG GRADLE_VERSION=8.8-rc-1
+ARG KOTLIN_VERSION=2.0.0-RC3
+ARG LLVM_VERSION=18
 ARG GRADLE_DIST=bin
 ARG INSTALL_ZSH="true"
 ARG UPGRADE_PACKAGES="true"
@@ -14,9 +15,9 @@ ARG USERNAME=${DEV_USER}
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG GRAAL_EDITION=ce
-ARG GRAAL_VERSION=20.0.2
-ARG JAVA_VERSION=20
-ARG JAVA_VM_VERSION=graalvm-jdk-20.0.2+9.1
+ARG GRAAL_VERSION=24.1.0
+ARG JAVA_VERSION=22
+ARG JAVA_VM_VERSION=graalvm-jdk-22.0.1+8.1
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -61,8 +62,6 @@ RUN apt-get update \
     sudo \
     fakeroot \
     multitail \
-    python2 \
-    python2-dev \
     python3 \
     python3-dev \
     python3-pip \
@@ -80,21 +79,20 @@ RUN apt-get update \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js" \
-  && if [ "$ARCH" = "x86_64" ]; then
-    ARCH="x64"
-    FORMAL_ARCH="amd64"
-    BAZELISK_ARCH="x86_64"
-    COMPONENTS="native-image js python ruby wasm llvm llvm-toolchain native-image-llvm-backend"
+  && if [ "$ARCH" = "x86_64" ]; then \
+    ARCH="x64"; \
+    FORMAL_ARCH="amd64"; \
+    BAZELISK_ARCH="x86_64"; \
   fi \
-  && if [ "$ARCH" = "aarch64" ]; then
-    ARCH="aarch64"
-    FORMAL_ARCH="arm64"
-    BAZELISK_ARCH="arm64"
+  && if [ "$ARCH" = "aarch64" ]; then \
+    ARCH="aarch64"; \
+    FORMAL_ARCH="arm64"; \
+    BAZELISK_ARCH="arm64"; \
   fi \
-  && if [ "$ARCH" = "arm64" ]; then
-    ARCH="aarch64"
-    FORMAL_ARCH="arm64"
-    BAZELISK_ARCH="arm64"
+  && if [ "$ARCH" = "arm64" ]; then \
+    ARCH="aarch64"; \
+    FORMAL_ARCH="arm64"; \
+    BAZELISK_ARCH="arm64"; \
   fi \
   && mkdir -p /tmp/gvm \
   && cd /tmp/gvm \
@@ -155,12 +153,6 @@ RUN apt-get update \
   && chmod +x /usr/local/bin/buf \
   && echo "Setting up Debian-based codespace..." \
   && yes | unminimize 2>&1 \
-  && wget https://apt.llvm.org/llvm.sh \
-  && chmod +x llvm.sh \
-  && sudo ./llvm.sh 15 \
-  && rm -fv llvm.sh \
-  && echo "Installing GraalVM modules..." \
-  && $GRAALVM_HOME/bin/gu install $COMPONENTS \
   && rm -rf /var/lib/apt/lists/*
 
 RUN echo "Preparing dev root..." \

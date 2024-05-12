@@ -1,5 +1,5 @@
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:ce2fe9474ca168eebfd35b0c7682db11045b0f10418ec46ae9b0c7610c295913"
+ARG BASE_HASH="@sha256:89ed76666b460e342e3103d3498dd8b75a027b1273714547831cace58b74b590"
 
 FROM ghcr.io/elide-dev/base${BASE_VERSION}${BASE_HASH}
 
@@ -8,10 +8,10 @@ ARG JAVA_VERSION=zulu20
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Tools: Zulu JDK (Java 20)"
 LABEL org.opencontainers.image.description="Java 20 tools for Elide."
-LABEL org.opencontainers.image.version=v3-alpha1
+LABEL org.opencontainers.image.version=v1.0.0-alpha9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/jdk20/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/jdk20/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \

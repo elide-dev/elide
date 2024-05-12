@@ -1,6 +1,5 @@
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:ce2fe9474ca168eebfd35b0c7682db11045b0f10418ec46ae9b0c7610c295913"
-
+ARG BASE_HASH="@sha256:89ed76666b460e342e3103d3498dd8b75a027b1273714547831cace58b74b590"
 FROM ghcr.io/elide-dev/base${BASE_VERSION}${BASE_HASH}
 
 ARG GRAAL_VERSION=23.0.1
@@ -10,10 +9,10 @@ ARG GRAAL_RELEASE="20.0.2+9.1"
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Tools: GraalVM (Java 20)"
 LABEL org.opencontainers.image.description="Java 20 tools for Elide/GraalVM"
-LABEL org.opencontainers.image.version=v3-alpha1
+LABEL org.opencontainers.image.version=v1.0.0-alpha9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/runtime-jvm20/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/runtime-jvm20/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -27,10 +26,10 @@ RUN apt-get update \
   && cd /tmp/gvm \
   && export ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js espresso" \
-  && if [ "$ARCH" = "x86_64" ]; then
-    ARCH="x64"
-    COMPONENTS="js wasm"
-  fi \
+  && if [ "$ARCH" = "x86_64" ]; then \
+    ARCH="x64" \
+    COMPONENTS="js wasm" \
+  fi; \
   && if [ "$ARCH" = "arm64" ]; then ARCH="aarch64"; fi \
   && export GRAAL_DOWNLOAD_URL="https://download.oracle.com/graalvm/$JAVA_VERSION/latest/graalvm-jdk-${JAVA_VERSION}_linux-${ARCH}_bin.tar.gz" \
   && echo "GraalVM Download URL: $GRAAL_DOWNLOAD_URL" \

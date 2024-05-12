@@ -1384,7 +1384,7 @@ import elide.tool.project.ProjectManager
               break  // just in case
             }
           } catch (eof: EndOfFileException) {
-            continue
+            break  // user sent ctrl+d
           } catch (interrupt: InterruptedException) {
             println("Interrupted (sys)")
             logging.debug("Session interrupted; concluding")

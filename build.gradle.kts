@@ -27,6 +27,8 @@ import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+import org.jetbrains.dokka.versioning.VersioningPlugin
+import org.jetbrains.dokka.versioning.VersioningConfiguration
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
@@ -128,18 +130,18 @@ buildscript {
   }
 
   dependencies {
-    classpath(libs.kotlinx.knit)
-    classpath(libs.plugin.kotlinx.atomicfu)
-    classpath(libs.kotlinpoet)
-    classpath(libs.jgit)
-    classpath(libs.guava)
-    classpath(libs.owasp)
-    classpath(libs.jgit)
-    classpath(libs.h2)
-    classpath(libs.json)
-    classpath(libs.okio)
     classpath(libs.bouncycastle)
     classpath(libs.bouncycastle.util)
+    classpath(libs.guava)
+    classpath(libs.h2)
+    classpath(libs.jgit)
+    classpath(libs.jgit)
+    classpath(libs.json)
+    classpath(libs.kotlinpoet)
+    classpath(libs.kotlinx.knit)
+    classpath(libs.okio)
+    classpath(libs.owasp)
+    classpath(libs.plugin.kotlinx.atomicfu)
     classpath(libs.protobuf.java)
     classpath(libs.protobuf.util)
 
@@ -168,7 +170,6 @@ dependencies {
   kover(projects.packages.embedded)
   kover(projects.packages.graalvm)
   kover(projects.packages.graalvmJava)
-  kover(projects.packages.graalvmJs)
   kover(projects.packages.graalvmJvm)
   kover(projects.packages.graalvmKt)
   kover(projects.packages.graalvmLlvm)
@@ -193,12 +194,10 @@ dependencies {
 
   if (buildDocs == "true") {
     val dokkaPlugin by configurations
-    val dokkaVersion: Provider<String> = libs.versions.dokka
-    val mermaidDokka: Provider<String> = libs.versions.mermaidDokka
-    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:${dokkaVersion.get()}")
-    dokkaPlugin("org.jetbrains.dokka:templating-plugin:${dokkaVersion.get()}")
-    dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${dokkaVersion.get()}")
-    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:${mermaidDokka.get()}")
+    dokkaPlugin(libs.plugin.dokka.versioning)
+    dokkaPlugin(libs.plugin.dokka.templating)
+    dokkaPlugin(libs.plugin.dokka.kotlinAsJava)
+    dokkaPlugin(libs.plugin.dokka.mermaid)
   }
 }
 
@@ -477,17 +476,29 @@ if (enableKnit == "true") {
   val knit = the<kotlinx.knit.KnitPluginExtension>()
   knit.apply {
     siteRoot = "https://docs.elide.dev/"
+    moduleRoots = listOf("./packages")
+    moduleMarkers = listOf("build.gradle", "build.gradle.kts")
     moduleDocs = "docs/apidocs"
     files = fileTree(getRootDir()) {
-      include("README.md")
-      include("docs/guide/**/*.md")
-      include("docs/guide/**/*.kt")
-      include("samples/**/*.md")
-      include("samples/**/*.kt")
-      include("samples/**/*.kts")
-      exclude("**/build/**")
-      exclude("**/.gradle/**")
-      exclude("**/node_modules/**")
+      include(
+        "packages/**/*.md",
+        "packages/**/*.kt",
+        "docs/guide/**/*.md",
+        "docs/guide/**/*.kt",
+        "samples/**/*.md",
+        "samples/**/*.kt",
+      )
+      exclude(
+        "**/build/**",
+        "**/.gradle/**",
+        "node_modules/**",
+        "**/node_modules/**",
+        "third_party/**",
+        "**/third_party/**",
+        "tools/**",
+        "**/tools/**",
+        "packages/uuid/**/*.*",
+      )
     }
   }
 }
@@ -568,14 +579,23 @@ tasks {
     }
 
     val dokkaHtmlMultiModule by getting(DokkaMultiModuleTask::class) {
-      moduleName = "Elide"
-      includes.from(layout.projectDirectory.dir("docs/docs.md").asFile)
+      moduleName = "Elide API"
+      moduleVersion = project.version as String
       outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
 
+      suppressInheritedMembers = true
+      suppressObviousFunctions = true
+
+      includes.from(listOf(
+        "docs/docs.md",
+        "docs/includes/resources.md",
+      ).map {
+        layout.projectDirectory.file(it).asFile
+      })
+
       pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-        footerMessage = "© 2024 Elide Technologies, Inc."
-        separateInheritedMembers = false
-        mergeImplicitExpectActualDeclarations = true
+        footerMessage = "© 2023—2024 Elide Technologies, Inc."
+        homepageLink = "https://docs.elide.dev"
         templatesDir = rootProject.layout.projectDirectory.dir("docs/templates").asFile
         customAssets = listOf(
           creativeAsset("logo/logo-wide-1200-w-r2.png"),
@@ -585,6 +605,15 @@ tasks {
           docAsset("styles/logo-styles.css"),
           docAsset("styles/theme-styles.css"),
         )
+      }
+
+      val projectVersion = project.version as String
+      pluginConfiguration<VersioningPlugin, VersioningConfiguration> {
+        version = projectVersion
+        versionsOrdering = listOf("1.0.0-alpha8")
+        olderVersionsDir = file("docs/versions")
+        olderVersions = listOf(file("docs/versions/1.0.0-alpha8"))
+        renderVersionsNavigationOnAllPages = true
       }
     }
   }

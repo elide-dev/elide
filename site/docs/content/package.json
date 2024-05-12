@@ -10,7 +10,7 @@
   "devDependencies": {
     "@mdx-js/esbuild": "3.0.1",
     "@mdx-js/loader": "3.0.1",
-    "@types/react": "18.3.1",
+    "@types/react": "18.3.2",
     "webpack": "5.91.0"
   }
 }

@@ -1,0 +1,318 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>EventsAPI</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            Elide API
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.runtime.intrinsics.js.node/-events-a-p-i/index.html&quot;}"><div class="versions-dropdown">
+  <div class="versions-dropdown-button">1.0.0-alpha9</div>
+  <div class="versions-dropdown-data"><a href="../../../../not-found-version.html?v=1.0.0-alpha8">1.0.0-alpha8</a></div>
+</div>
+</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:graalvm:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="graalvm::elide.runtime.intrinsics.js.node/EventsAPI///PointingToDeclaration//-1883836547">
+  <div class="breadcrumbs"><a href="../../index.html">graalvm</a><span class="delimiter">/</span><a href="../index.html">elide.runtime.intrinsics.js.node</a><span class="delimiter">/</span><span class="current">EventsAPI</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Events</span><wbr><span><span>API</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="../../../../packages/base/elide.annotations/-a-p-i/index.html"><span class="token annotation builtin">API</span></a></div></div><span class="token keyword">interface </span><a href="index.html">EventsAPI</a> : <a href="../-node-a-p-i/index.html">NodeAPI</a>, <span data-unresolved-link="org.graalvm.polyglot.proxy/ProxyObject///PointingToDeclaration/">ProxyObject</span></div><h1 class="">Node API: Events</h1><p class="paragraph">Describes the surface of the <code class="lang-kotlin">events</code> built-in module provided as part of the Node API; the <code class="lang-kotlin">events</code> API provides types like <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a>, <a href="../../elide.runtime.intrinsics.js.node.events/-event-target/index.html">EventTarget</a>, <a href="../../elide.runtime.intrinsics.js.node.events/-event/index.html">Event</a>, and <a href="../../elide.runtime.intrinsics.js.node.events/-event-listener/index.html">EventListener</a> to work with events in Node.js.</p><p class="paragraph">Events in Node behave similarly to DOM (browser) events, with a few caveats.</p><p class="paragraph">For information about how the Node API behaves and how it differs from browsers, see the <a href="https://nodejs.org/dist/latest-v16.x/docs/api/events.html">Node.js Events documentation</a>.</p><h2 class="">Node Events</h2><p class="paragraph">Much of the Node.js core API is built around an idiomatic asynchronous event-driven architecture in which certain kinds of objects (called "emitters") emit named events that cause Function objects ("listeners") to be called.</p><p class="paragraph">For instance: a <code class="lang-kotlin">net.Server</code> object emits an event each time a peer connects to it; a <code class="lang-kotlin">fs.ReadStream</code> emits an event when the file is opened; a stream emits an event whenever data is available to be read.</p><p class="paragraph">All objects that emit events are instances of the <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> class. These objects expose an <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/on.html">EventEmitter.on</a> function that allows one or more functions to be attached to named events emitted by the object. Typically, event names are camel-cased strings but any valid JavaScript property key can be used.</p><p class="paragraph">When the <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> object emits an event, all functions attached to that specific event are called synchronously. Any values returned by the called listeners are ignored and discarded.</p><p class="paragraph">The following example shows a simple <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> instance with a single listener. The <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/on.html">EventEmitter.on</a> method is used to register listeners, while the <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/emit.html">EventEmitter.emit</a> method is used to trigger the event:</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br><br>class MyEmitter extends EventEmitter {}<br><br>const myEmitter = new MyEmitter();<br>myEmitter.on('event', () =&gt; {<br>  console.log('an event occurred!');<br>});<br>myEmitter.emit('event');</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">&nbsp;</p><h3 class="">Passing arguments and <code class="lang-kotlin">this</code> to listeners</h3><p class="paragraph">The <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/emit.html">EventEmitter.emit</a> method allows an arbitrary set of arguments to be passed to the listener functions. Keep in mind that when an ordinary listener function is called, the standard <code class="lang-kotlin">this</code> keyword is intentionally set to reference the <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> instance to which the listener is attached.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>class MyEmitter extends EventEmitter {}<br>const myEmitter = new MyEmitter();<br>myEmitter.on('event', function(a, b) {<br>  console.log(a, b, this, this === myEmitter);<br>  // Prints:<br>  //   a b MyEmitter {<br>  //     _events: [Object: null prototype] { event: [Function (anonymous)] },<br>  //     _eventsCount: 1,<br>  //     _maxListeners: undefined,<br>  //     [Symbol(shapeMode)]: false,<br>  //     [Symbol(kCapture)]: false<br>  //   } true<br>});<br>myEmitter.emit('event', 'a', 'b');</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">It is possible to use ES6 Arrow Functions as listeners, however, when doing so, the <code class="lang-kotlin">this</code> keyword will no longer reference the EventEmitter instance:</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>class MyEmitter extends EventEmitter {}<br>const myEmitter = new MyEmitter();<br>myEmitter.on('event', (a, b) =&gt; {<br>  console.log(a, b, this);<br>  // Prints: a b {}<br>});<br>myEmitter.emit('event', 'a', 'b');</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">&nbsp;</p><h3 class="">Asynchronous vs. synchronous</h3><p class="paragraph">The <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> calls all listeners synchronously in the order in which they were registered. This ensures the proper sequencing of events and helps avoid race conditions and logic errors. When appropriate, listener functions can switch to an asynchronous mode of operation using the <code class="lang-kotlin">setImmediate()</code> or <code class="lang-kotlin">process.nextTick()</code> methods:</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>class MyEmitter extends EventEmitter {}<br>const myEmitter = new MyEmitter();<br>myEmitter.on('event', (a, b) =&gt; {<br>  setImmediate(() =&gt; {<br>    console.log('this happens asynchronously');<br>  });<br>});<br>myEmitter.emit('event', 'a', 'b');</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">&nbsp;</p><h3 class="">Handling events only once</h3><p class="paragraph">When a listener is registered using the <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/on.html">EventEmitter.on</a> method, that listener is invoked every time the named event is emitted.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>class MyEmitter extends EventEmitter {}<br>const myEmitter = new MyEmitter();<br>let m = 0;<br>myEmitter.on('event', () =&gt; {<br>  console.log(++m);<br>});<br>myEmitter.emit('event');<br>// Prints: 1<br>myEmitter.emit('event');<br>// Prints: 2</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Using the <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/once.html">EventEmitter.once</a> method, it is possible to register a listener which is called at most once for a particular event. Once the event is emitted, the listener is unregistered and then called.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>class MyEmitter extends EventEmitter {}<br>const myEmitter = new MyEmitter();<br>let m = 0;<br>myEmitter.once('event', () =&gt; {<br>  console.log(++m);<br>});<br>myEmitter.emit('event');<br>// Prints: 1<br>myEmitter.emit('event');<br>// Ignored</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">&nbsp;</p><h3 class="">Error events</h3><p class="paragraph">When an error occurs within an <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> instance, the typical action is for an <code class="lang-kotlin">'error'</code> event to be emitted. These are treated as special cases within Node.js.</p><p class="paragraph">If an <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> does not have at least one listener registered for the <code class="lang-kotlin">'error'</code> event, and an <code class="lang-kotlin">'error'</code> event is emitted, the error is thrown, a stack trace is printed, and the Node.js process exits.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>class MyEmitter extends EventEmitter {}<br>const myEmitter = new MyEmitter();<br>myEmitter.emit('error', new Error('whoops!'));<br>// Throws and crashes Node.js</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">To guard against crashing the Node.js process the <code class="lang-kotlin">domain</code> module can be used. (Note, however, that the <code class="lang-kotlin">node:domain</code> module is deprecated.)</p><p class="paragraph">As a best practice, listeners should always be added for the <code class="lang-kotlin">'error'</code> events.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>class MyEmitter extends EventEmitter {}<br>const myEmitter = new MyEmitter();<br>myEmitter.on('error', (err) =&gt; {<br>  console.error('whoops! there was an error');<br>});<br>myEmitter.emit('error', new Error('whoops!'));<br>// Prints: whoops! there was an error</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">It is possible to monitor <code class="lang-kotlin">'error'</code> events without consuming the emitted error by installing a listener using the symbol <code class="lang-kotlin">events.errorMonitor</code>.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter, errorMonitor } from 'node:events';<br><br>const myEmitter = new EventEmitter();<br>myEmitter.on(errorMonitor, (err) =&gt; {<br>  MyMonitoringTool.log(err);<br>});<br>myEmitter.emit('error', new Error('whoops!'));<br>// Still throws and crashes Node.js</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">&nbsp;</p><h3 class="">Capture rejections of promises</h3><p class="paragraph">Using <code class="lang-kotlin">async</code> functions with event handlers is problematic, because it can lead to an unhandled rejection in case of a thrown exception:</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>const ee = new EventEmitter();<br>ee.on('something', async (value) =&gt; {<br>  throw new Error('kaboom');<br>});</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">The <code class="lang-kotlin">captureRejections</code> option in the <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a> constructor or the global setting change this behavior, installing a <code class="lang-kotlin">.then(undefined, handler)</code> handler on the Promise. This handler routes the exception asynchronously to the <code class="lang-kotlin">Symbol.for('nodejs.rejection')</code> method if there is one, or to <code class="lang-kotlin">'error'</code> event handler if there is none.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br>const ee1 = new EventEmitter({ captureRejections: true });<br>ee1.on('something', async (value) =&gt; {<br>  throw new Error('kaboom');<br>});<br><br>ee1.on('error', console.log);<br><br>const ee2 = new EventEmitter({ captureRejections: true });<br>ee2.on('something', async (value) =&gt; {<br>  throw new Error('kaboom');<br>});<br><br>ee2[Symbol.for('nodejs.rejection')] = console.log;</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Setting <code class="lang-kotlin">events.captureRejections = true</code> will change the default for all new instances of <a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a>.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">import { EventEmitter } from 'node:events';<br><br>EventEmitter.captureRejections = true;<br>const ee1 = new EventEmitter();<br>ee1.on('something', async (value) =&gt; {<br>  throw new Error('kaboom');<br>});<br><br>ee1.on('error', console.log);</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">The <code class="lang-kotlin">'error'</code> events that are generated by the <code class="lang-kotlin">captureRejections</code> behavior do not have a catch handler to avoid infinite error loops: the recommendation is to not use async functions as <code class="lang-kotlin">'error'</code> event handlers.</p><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../elide.runtime.intrinsics.js.node.events/-event/index.html"><span><span>Event</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the base class for all events</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../elide.runtime.intrinsics.js.node.events/-custom-event/index.html"><span>Custom</span><wbr><span><span>Event</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the extension point used to create custom event types</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../elide.runtime.intrinsics.js.node.events/-event-target/index.html"><span>Event</span><wbr><span><span>Target</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the interface supported for targets, or subjects, of events</p></div></div></div></div><div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html"><span>Event</span><wbr><span><span>Emitter</span></span></a></div></span></div><div><div class="title"><p class="paragraph">for the interface supported for objects that emit events</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="98739458%2FProperties%2F-1883836547" anchor-label="captureRejections" id="98739458%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="capture-rejections.html"><span>capture</span><wbr><span><span>Rejections</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="98739458%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="capture-rejections.html">captureRejections</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">If set to <code class="lang-kotlin">true</code>, the <code class="lang-kotlin">'rejectionHandled'</code> event is emitted whenever a Promise is rejected, but there are no listeners to handle the rejection. This event is emitted with the following arguments:</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1191481194%2FProperties%2F-1883836547" anchor-label="defaultMaxListeners" id="-1191481194%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="default-max-listeners.html"><span>default</span><wbr><span>Max</span><wbr><span><span>Listeners</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1191481194%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="default-max-listeners.html">defaultMaxListeners</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">By default, a maximum of 10 listeners can be registered for any single event. This limit can be changed for individual EventEmitter instances using the <code class="lang-kotlin">emitter.setMaxListeners(n) </code>method. To change the default for all EventEmitter instances, the events.defaultMaxListeners property can be used. If this value is not a positive number, a RangeError is thrown.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-877437962%2FProperties%2F-1883836547" anchor-label="errorMonitor" id="-877437962%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="error-monitor.html"><span>error</span><wbr><span><span>Monitor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-877437962%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="error-monitor.html">errorMonitor</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">This symbol shall be used to install a listener for only monitoring <code class="lang-kotlin">'error'</code> events. Listeners installed using this symbol are called before the regular <code class="lang-kotlin">'error'</code> listeners are called.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1895042455%2FFunctions%2F-1883836547" anchor-label="addAbortListener" id="1895042455%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-abort-listener.html"><span>add</span><wbr><span>Abort</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1895042455%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="add-abort-listener.html"><span class="token function">addAbortListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">signal<span class="token operator">: </span><a href="../-abort-signal/index.html">AbortSignal</a><span class="token punctuation">, </span></span><span class="parameter ">listener<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-listener/index.html">EventListener</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js/-disposable/index.html">Disposable</a></div><div class="brief "><p class="paragraph">Listens once to the <code class="lang-kotlin">abort</code> event on the provided <code class="lang-kotlin">signal</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1273315267%2FFunctions%2F-1883836547" anchor-label="getEventListeners" id="-1273315267%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-event-listeners.html"><span>get</span><wbr><span>Event</span><wbr><span><span>Listeners</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1273315267%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-event-listeners.html"><span class="token function">getEventListeners</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitterOrTarget<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-emitter-or-target/index.html">EmitterOrTarget</a><span class="token punctuation">, </span></span><span class="parameter ">event<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../elide.runtime.intrinsics.js.node.events/-event-listener/index.html">EventListener</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an array listing the events for which the emitter has registered listeners. The values in the array are strings or Symbols.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="891070690%2FFunctions%2F-1883836547" anchor-label="getMaxListeners" id="891070690%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-max-listeners.html"><span>get</span><wbr><span>Max</span><wbr><span><span>Listeners</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="891070690%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-max-listeners.html"><span class="token function">getMaxListeners</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitterOrTarget<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-emitter-or-target/index.html">EmitterOrTarget</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Returns the current max listener value for the given emitter or target.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1553177764%2FFunctions%2F-1883836547" anchor-label="getMember" id="-1553177764%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.runtime.intrinsics.js.node.stream/-readable/index.html#-1553177764%2FFunctions%2F-1883836547"><span>get</span><wbr><span><span>Member</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1553177764%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../elide.runtime.intrinsics.js.node.stream/-readable/index.html#-1553177764%2FFunctions%2F-1883836547"><span class="token function">getMember</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1779196978%2FFunctions%2F-1883836547" anchor-label="getMemberKeys" id="-1779196978%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-member-keys.html"><span>get</span><wbr><span>Member</span><wbr><span><span>Keys</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1779196978%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-member-keys.html"><span class="token function">getMemberKeys</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1188021158%2FFunctions%2F-1883836547" anchor-label="hasMember" id="1188021158%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="has-member.html"><span>has</span><wbr><span><span>Member</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1188021158%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="has-member.html"><span class="token function">hasMember</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1035915158%2FFunctions%2F-1883836547" anchor-label="listenerCount" id="-1035915158%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="listener-count.html"><span>listener</span><wbr><span><span>Count</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1035915158%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="listener-count.html"><span class="token function">listenerCount</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter-or-target/index.html">EventEmitterOrTarget</a><span class="token punctuation">, </span></span><span class="parameter ">eventName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Returns the number of listeners listening to the event named <a href="listener-count.html">eventName</a>.</p></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="listener-count.html"><span class="token function">listenerCount</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Value///PointingToDeclaration/">Value</span><span class="token punctuation">, </span></span><span class="parameter ">event<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Returns the number of listeners listening to the event named <code class="lang-kotlin">event</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="556732685%2FFunctions%2F-1883836547" anchor-label="on" id="556732685%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on.html"><span><span>on</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="556732685%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on.html"><span class="token function">on</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a><span class="token punctuation">, </span></span><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on.html"><span class="token function">on</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a><span class="token punctuation">, </span></span><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-events-once-options/index.html">EventsOnceOptions</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on.html"><span class="token function">on</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a><span class="token punctuation">, </span></span><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Value///PointingToDeclaration/">Value</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Adds the listener function to the end of the listeners array for the event named <code class="lang-kotlin">name</code> to the <code class="lang-kotlin">emitter</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="964407151%2FFunctions%2F-1883836547" anchor-label="once" id="964407151%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="once.html"><span><span>once</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="964407151%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="once.html"><span class="token function">once</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a><span class="token punctuation">, </span></span><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js/-js-promise/index.html">JsPromise</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="once.html"><span class="token function">once</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a><span class="token punctuation">, </span></span><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-events-once-options/index.html">EventsOnceOptions</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js/-js-promise/index.html">JsPromise</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="once.html"><span class="token function">once</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">emitter<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-event-emitter/index.html">EventEmitter</a><span class="token punctuation">, </span></span><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">options<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Value///PointingToDeclaration/">Value</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js/-js-promise/index.html">JsPromise</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Adds a one-time listener function for the event named <code class="lang-kotlin">name</code> to the <code class="lang-kotlin">emitter</code>. The next time <code class="lang-kotlin">name</code> is triggered, this listener is removed and then invoked.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1845930459%2FFunctions%2F-1883836547" anchor-label="putMember" id="-1845930459%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="put-member.html"><span>put</span><wbr><span><span>Member</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1845930459%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="put-member.html"><span class="token function">putMember</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Value///PointingToDeclaration/">Value</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1239225417%2FFunctions%2F-1883836547" anchor-label="removeMember" id="1239225417%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-member.html"><span>remove</span><wbr><span><span>Member</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1239225417%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="remove-member.html"><span class="token function">removeMember</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1753428829%2FFunctions%2F-1883836547" anchor-label="setMaxListeners" id="1753428829%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-max-listeners.html"><span>set</span><wbr><span>Max</span><wbr><span><span>Listeners</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1753428829%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-max-listeners.html"><span class="token function">setMaxListeners</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">count<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>emittersOrTargets<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.events/-emitter-or-target/index.html">EmitterOrTarget</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the maximum number of listeners for the given emitter or target.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

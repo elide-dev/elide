@@ -1,0 +1,353 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MutableHttpHeaders</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            Elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.http/-mutable-http-headers/index.html&quot;}"><div class="versions-dropdown">
+  <div class="versions-dropdown-button">1.0.0-alpha8</div>
+  <div class="versions-dropdown-data"><a href="index.html">1.0.0-alpha8</a></div>
+</div>
+</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":packages:serverless:dokkaHtmlPartial/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="serverless::elide.http/MutableHttpHeaders///PointingToDeclaration//543311228">
+  <div class="breadcrumbs"><a href="../../index.html">serverless</a><span class="delimiter">/</span><a href="../index.html">elide.http</a><span class="delimiter">/</span><span class="current">MutableHttpHeaders</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Mutable</span><wbr><span>Http</span><wbr><span><span>Headers</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">MutableHttpHeaders</a> : <a href="../../elide.http.api/-mutable-http-headers/index.html">MutableHttpHeaders</a>, <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token punctuation">, </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a><span class="token operator">&gt; </span></div><h1 class="">HTTP Headers (Mutable)</h1><p class="paragraph">Describes the API provided for mutable mapping structures specialized to store HTTP headers associated with values; behaves as a sorted multi-map with multi-values behaving as single values unless addressed with iterators.</p><p class="paragraph"><a href="../../elide.http.api/-http-headers/-header-name/index.html">HeaderName</a> keys are normalized for case and trailing/leading whitespace; order of insertion is preserved for values via <a href="../../elide.http.api/-http-headers/-header-value/index.html">HeaderValue</a>.</p><p class="paragraph">&nbsp;</p><h2 class="">Mutability</h2><p class="paragraph">This structure is the mutable form of <a href="../../elide.http.api/-http-headers/index.html">HttpHeaders</a>. Headers and values can be mutated with standard map-like methods after creation in an arbitrary manner. The underlying structure should preserve insertion order for values associated with a given key, and should produce sorted keys when iterated or exported.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-1740374689%2FClasslikes%2F543311228" anchor-label="Companion" id="-1740374689%2FClasslikes%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1740374689%2FClasslikes%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a> : <a href="../../elide.http.api/-mutable-http-headers/-factory/index.html">MutableHttpHeaders.Factory</a></div><div class="brief "><p class="paragraph"><a href="../../elide.http.api/-mutable-http-headers/-factory/index.html">HttpHeadersAPI.Factory</a> methods.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="43098407%2FProperties%2F543311228" anchor-label="entries" id="43098407%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-headers/index.html#43098407%2FProperties%2F543311228"><span><span>entries</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="43098407%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../elide.http.api/-mutable-http-headers/index.html#43098407%2FProperties%2F543311228">entries</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/-mutable-entry/index.html">MutableMap.MutableEntry</a><span class="token operator">&lt;</span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token punctuation">, </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-915758449%2FProperties%2F543311228" anchor-label="keys" id="-915758449%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-headers/index.html#-915758449%2FProperties%2F543311228"><span><span>keys</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-915758449%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../elide.http.api/-mutable-http-headers/index.html#-915758449%2FProperties%2F543311228">keys</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html">MutableSet</a><span class="token operator">&lt;</span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-157521630%2FProperties%2F543311228" anchor-label="size" id="-157521630%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-mapping/index.html#-157521630%2FProperties%2F543311228"><span><span>size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-157521630%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../elide.http.api/-mutable-http-mapping/index.html#-157521630%2FProperties%2F543311228">size</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1310951841%2FProperties%2F543311228" anchor-label="values" id="1310951841%2FProperties%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-headers/index.html#1310951841%2FProperties%2F543311228"><span><span>values</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1310951841%2FProperties%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="../../elide.http.api/-mutable-http-headers/index.html#1310951841%2FProperties%2F543311228">values</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html">MutableCollection</a><span class="token operator">&lt;</span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-2024001633%2FFunctions%2F543311228" anchor-label="add" id="-2024001633%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add.html"><span><span>add</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2024001633%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="add.html"><span class="token function">add</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="../../elide.http.api/-http-string/index.html">HttpString</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add a <a href="add.html">value</a> to a given header <a href="add.html">key</a>.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-headers/add.html"><span class="token function">add</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="../../elide.http.api/-http-string/index.html">HttpString</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add a <a href="../../elide.http.api/-mutable-http-headers/add.html">value</a> to a given header <a href="../../elide.http.api/-mutable-http-headers/add.html">key</a> string.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1264776610%2FFunctions%2F543311228" anchor-label="clear" id="1264776610%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-mapping/index.html#1264776610%2FFunctions%2F543311228"><span><span>clear</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1264776610%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-mapping/index.html#1264776610%2FFunctions%2F543311228"><span class="token function">clear</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="516110563%2FFunctions%2F543311228" anchor-label="contains" id="516110563%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="contains.html"><span><span>contains</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="516110563%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator override </span><span class="token keyword">fun </span><a href="contains.html"><span class="token function">contains</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Check if the header named by <a href="contains.html">key</a> is present.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="../../elide.http.api/-http-headers/contains.html"><span class="token function">contains</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Check if the header string <a href="../../elide.http.api/-http-headers/contains.html">key</a> is present.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1763869740%2FFunctions%2F543311228" anchor-label="containsKey" id="-1763869740%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-headers/index.html#-1763869740%2FFunctions%2F543311228"><span>contains</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1763869740%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-headers/index.html#-1763869740%2FFunctions%2F543311228"><span class="token function">containsKey</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1993431808%2FFunctions%2F543311228" anchor-label="containsValue" id="1993431808%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-headers/index.html#1993431808%2FFunctions%2F543311228"><span>contains</span><wbr><span><span>Value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1993431808%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-headers/index.html#1993431808%2FFunctions%2F543311228"><span class="token function">containsValue</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="331425977%2FFunctions%2F543311228" anchor-label="get" id="331425977%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get.html"><span><span>get</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="331425977%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator override </span><span class="token keyword">fun </span><a href="get.html"><span class="token function">get</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Get a singular value for the header named by <a href="get.html">key</a>.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="../../elide.http.api/-http-headers/get.html"><span class="token function">get</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Get a singular value for the header string named by <a href="../../elide.http.api/-http-headers/get.html">key</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1130025157%2FFunctions%2F543311228" anchor-label="getAll" id="-1130025157%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-all.html"><span>get</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1130025157%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-all.html"><span class="token function">getAll</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../../elide.http.api/-http-string/index.html">HttpString</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Get all values for the header named by <a href="get-all.html">key</a>.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="../../elide.http.api/-http-headers/get-all.html"><span class="token function">getAll</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../../elide.http.api/-http-string/index.html">HttpString</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Get all values for the header named by <a href="../../elide.http.api/-http-headers/get-all.html">key</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1708477740%2FFunctions%2F543311228" anchor-label="isEmpty" id="-1708477740%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-mapping/index.html#-1708477740%2FFunctions%2F543311228"><span>is</span><wbr><span><span>Empty</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1708477740%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-mapping/index.html#-1708477740%2FFunctions%2F543311228"><span class="token function">isEmpty</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-303048465%2FFunctions%2F543311228" anchor-label="put" id="-303048465%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-headers/index.html#-303048465%2FFunctions%2F543311228"><span><span>put</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-303048465%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-headers/index.html#-303048465%2FFunctions%2F543311228"><span class="token function">put</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-541341669%2FFunctions%2F543311228" anchor-label="putAll" id="-541341669%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../elide.http.api/-mutable-http-headers/index.html#-541341669%2FFunctions%2F543311228"><span>put</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-541341669%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-headers/index.html#-541341669%2FFunctions%2F543311228"><span class="token function">putAll</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">from<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><span class="token keyword">out </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token punctuation">, </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="955102431%2FFunctions%2F543311228" anchor-label="remove" id="955102431%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove.html"><span><span>remove</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="955102431%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="remove.html"><span class="token function">remove</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="../../elide.http.api/-http-string/index.html">HttpString</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Remove a <a href="remove.html">value</a> to a given header <a href="remove.html">key</a>, if present.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-headers/remove.html"><span class="token function">remove</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-value/index.html">HttpHeaders.HeaderValue</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Remove all values for a given header <a href="../../../../packages/serverless/elide.http/-mutable-http-headers/remove.html">key</a>, if present.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-815350145%2FFunctions%2F543311228" anchor-label="set" id="-815350145%2FFunctions%2F543311228" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":packages:serverless:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:serverless:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set.html"><span><span>set</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-815350145%2FFunctions%2F543311228"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:serverless:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator override </span><span class="token keyword">fun </span><a href="set.html"><span class="token function">set</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="../../elide.http.api/-http-headers/-header-name/index.html">HttpHeaders.HeaderName</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="../../elide.http.api/-http-string/index.html">HttpString</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set a <a href="set.html">value</a> for a given header <a href="set.html">key</a>.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="../../elide.http.api/-mutable-http-headers/set.html"><span class="token function">set</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">key<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="../../elide.http.api/-http-string/index.html">HttpString</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set a <a href="../../elide.http.api/-mutable-http-headers/set.html">value</a> for a given header <a href="../../elide.http.api/-mutable-http-headers/set.html">key</a> string.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

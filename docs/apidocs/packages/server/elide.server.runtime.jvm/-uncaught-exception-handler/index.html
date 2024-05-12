@@ -39,10 +39,14 @@
             <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
             <div class="library-name">
 <a class="library-name--link" href="../../../../index.html">
-                            Elide
+                            Elide API
                     </a>            </div>
             <div class="library-version">
-<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.server.runtime.jvm/-uncaught-exception-handler/index.html&quot;}">1.0.0-alpha8</dokka-template-command>            </div>
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.server.runtime.jvm/-uncaught-exception-handler/index.html&quot;}"><div class="versions-dropdown">
+  <div class="versions-dropdown-button">1.0.0-alpha9</div>
+  <div class="versions-dropdown-data"><a href="../../../../older/1.0.0-alpha8/packages/server/elide.server.runtime.jvm/-uncaught-exception-handler/index.html">1.0.0-alpha8</a></div>
+</div>
+</dokka-template-command>            </div>
         </div>
         <div class="filter-section" id="filter-section">
                 <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:server:dokkaHtmlPartial/main">jvm</button>
@@ -62,24 +66,43 @@
   <div class="breadcrumbs"><a href="../../index.html">server</a><span class="delimiter">/</span><a href="../index.html">elide.server.runtime.jvm</a><span class="delimiter">/</span><span class="current">UncaughtExceptionHandler</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Uncaught</span><wbr><span>Exception</span><wbr><span><span>Handler</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="jakarta.inject/Singleton///PointingToDeclaration/"><span class="token annotation builtin">Singleton</span></span></div></div><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">UncaughtExceptionHandler</a> : <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.UncaughtExceptionHandler.html">Thread.UncaughtExceptionHandler</a></div><p class="paragraph">Default uncaught exception handler; logs the error to the root logger, along with a stacktrace and message from the exception, if any.</p><p class="paragraph">Application-level code can override this default handler by using the <code class="lang-kotlin">@Replaces</code> annotation from Micronaut, as demonstrated below:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Singleton @Replaces(UncaughtExceptionHandler::class)<br>class MyHandler: Thread.UncaughtExceptionHandler {<br>  // ...<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="jakarta.inject/Singleton///PointingToDeclaration/"><span class="token annotation builtin">Singleton</span></span></div></div><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">UncaughtExceptionHandler</a>&nbsp;<span><span class="token annotation builtin">@</span><span data-unresolved-link="jakarta.inject/Inject///PointingToDeclaration/"><span class="token annotation builtin">Inject</span></span>&nbsp;</span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">provider<span class="token operator">: </span><a href="-uncaught-exception-handler-logging-provider/index.html">UncaughtExceptionHandler.UncaughtExceptionHandlerLoggingProvider</a></span></span><span class="token punctuation">)</span> : <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.UncaughtExceptionHandler.html">Thread.UncaughtExceptionHandler</a></div><p class="paragraph">Default uncaught exception handler; logs the error to the root logger, along with a stacktrace and message from the exception, if any.</p><p class="paragraph">Application-level code can override this default handler by using the <code class="lang-kotlin">@Replaces</code> annotation from Micronaut, as demonstrated below:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Singleton @Replaces(UncaughtExceptionHandler::class)<br>class MyHandler: Thread.UncaughtExceptionHandler {<br>  // ...<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="-1737572494%2FConstructors%2F-1592384214" anchor-label="UncaughtExceptionHandler" id="-1737572494%2FConstructors%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+        <div class="table"><a data-name="1989842635%2FConstructors%2F-1592384214" anchor-label="UncaughtExceptionHandler" id="1989842635%2FConstructors%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
           <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-uncaught-exception-handler.html"><span>Uncaught</span><wbr><span>Exception</span><wbr><span><span>Handler</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1737572494%2FConstructors%2F-1592384214"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1989842635%2FConstructors%2F-1592384214"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="jakarta.inject/Inject///PointingToDeclaration/"><span class="token annotation builtin">Inject</span></span></div></div><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">provider<span class="token operator">: </span><a href="-uncaught-exception-handler-logging-provider/index.html">UncaughtExceptionHandler.UncaughtExceptionHandlerLoggingProvider</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="63036811%2FClasslikes%2F-1592384214" anchor-label="UncaughtExceptionHandlerLoggingProvider" id="63036811%2FClasslikes%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-uncaught-exception-handler-logging-provider/index.html"><span>Uncaught</span><wbr><span>Exception</span><wbr><span>Handler</span><wbr><span>Logging</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="63036811%2FClasslikes%2F-1592384214"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.context.annotation/Factory///PointingToDeclaration/"><span class="token annotation builtin">Factory</span></span></div></div><span class="token keyword">open </span><span class="token keyword">class </span><a href="-uncaught-exception-handler-logging-provider/index.html">UncaughtExceptionHandlerLoggingProvider</a> : <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html">Supplier</a><span class="token operator">&lt;</span><a href="../../../../packages/base/elide.runtime/-logger/index.html">Logger</a><span class="token operator">&gt; </span></div></div></div>
                 </div>
               </div>
             </div>

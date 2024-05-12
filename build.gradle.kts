@@ -100,7 +100,6 @@ val isCI = hasProperty("elide.ci") && properties["elide.ci"] == "true"
 val javaLanguageVersion = properties["versions.java.language"] as String
 val kotlinLanguageVersion = properties["versions.kotlin.language"] as String
 val nodeVersion: String by properties
-val enableKnit: String? by properties
 val enableOwasp: String? by properties
 
 val buildSamples: String by properties
@@ -138,7 +137,6 @@ buildscript {
     classpath(libs.jgit)
     classpath(libs.json)
     classpath(libs.kotlinpoet)
-    classpath(libs.kotlinx.knit)
     classpath(libs.okio)
     classpath(libs.owasp)
     classpath(libs.plugin.kotlinx.atomicfu)
@@ -394,7 +392,6 @@ apiValidation {
 }
 
 // Conditional plugins to apply.
-if (enableKnit == "true") apply(plugin = "kotlinx-knit")
 if (enableOwasp == "true") apply(plugin = "org.owasp.dependencycheck")
 
 // --- Node JS --------------------------------------------------------------------------------------------------------
@@ -467,39 +464,6 @@ snyk {
   setAutoUpdate(true)
   System.getenv("SNYK_API_KEY")?.ifBlank { null }?.let {
     setApi(it)
-  }
-}
-
-// --- Knit -----------------------------------------------------------------------------------------------------------
-//
-if (enableKnit == "true") {
-  val knit = the<kotlinx.knit.KnitPluginExtension>()
-  knit.apply {
-    siteRoot = "https://docs.elide.dev/"
-    moduleRoots = listOf("./packages")
-    moduleMarkers = listOf("build.gradle", "build.gradle.kts")
-    moduleDocs = "docs/apidocs"
-    files = fileTree(getRootDir()) {
-      include(
-        "packages/**/*.md",
-        "packages/**/*.kt",
-        "docs/guide/**/*.md",
-        "docs/guide/**/*.kt",
-        "samples/**/*.md",
-        "samples/**/*.kt",
-      )
-      exclude(
-        "**/build/**",
-        "**/.gradle/**",
-        "node_modules/**",
-        "**/node_modules/**",
-        "third_party/**",
-        "**/third_party/**",
-        "tools/**",
-        "**/tools/**",
-        "packages/uuid/**/*.*",
-      )
-    }
   }
 }
 
@@ -615,14 +579,6 @@ tasks {
         olderVersions = listOf(file("docs/versions/1.0.0-alpha8"))
         renderVersionsNavigationOnAllPages = true
       }
-    }
-  }
-
-  // --- Task: Knit
-  //
-  if (enableKnit == "true") {
-    named("knitPrepare").configure {
-      dependsOn("docs")
     }
   }
 

@@ -291,7 +291,7 @@ mkdir -p "$INSTALL_DIR" \
     -H "User-Agent: elide-installer/$INSTALLER_VERSION" \
     -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT \
   | $COMPRESSION_TOOL $DECOMPRESS_ARGS \
-  | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f --strip-components=1 - \
+    | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f --strip-components=1 - \
   && chmod +x "$INSTALL_DIR/$BINARY"
 
 set +x

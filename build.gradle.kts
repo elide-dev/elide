@@ -27,8 +27,8 @@ import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
-import org.jetbrains.dokka.versioning.VersioningPlugin
 import org.jetbrains.dokka.versioning.VersioningConfiguration
+import org.jetbrains.dokka.versioning.VersioningPlugin
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
@@ -550,12 +550,14 @@ tasks {
       suppressInheritedMembers = true
       suppressObviousFunctions = true
 
-      includes.from(listOf(
-        "docs/docs.md",
-        "docs/includes/resources.md",
-      ).map {
-        layout.projectDirectory.file(it).asFile
-      })
+      includes.from(
+        listOf(
+          "docs/docs.md",
+          "docs/includes/resources.md",
+        ).map {
+          layout.projectDirectory.file(it).asFile
+        },
+      )
 
       pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
         footerMessage = "© 2023—2024 Elide Technologies, Inc."

@@ -12,8 +12,11 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assumptions.abort
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.opentest4j.AssertionFailedError
 import java.util.stream.Stream
 import kotlin.test.assertEquals

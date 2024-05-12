@@ -15,7 +15,6 @@ package elide.runtime.gvm.internals.js.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.dns.NodeDNSModule
 import elide.runtime.gvm.internals.node.dns.NodeDNSPromisesModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.testing.annotations.TestCase

@@ -48,7 +48,6 @@ import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.runtime.gvm.internals.GuestVFS
 import elide.util.UUID
 
 /**

@@ -12,7 +12,6 @@
  */
 package elide.runtime.gvm.vfs
 
-import jdk.nio.zipfs.ZipFileSystemProvider
 import java.net.URI
 import java.nio.channels.SeekableByteChannel
 import java.nio.file.*

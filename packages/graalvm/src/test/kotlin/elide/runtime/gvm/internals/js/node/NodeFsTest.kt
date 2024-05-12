@@ -27,8 +27,8 @@ import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.WritableFilesystemAPI
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.fs.WriteFileOptions
-import elide.runtime.intrinsics.js.node.path.Path as NodePath
 import elide.testing.annotations.TestCase
+import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
 /** Tests for Elide's implementation of the Node `fs` built-in module. */
 @TestCase internal class NodeFsTest : NodeModuleConformanceTest<NodeFilesystemModule>() {

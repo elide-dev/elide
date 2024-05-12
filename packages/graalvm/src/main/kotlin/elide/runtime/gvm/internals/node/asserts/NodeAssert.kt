@@ -28,10 +28,8 @@ import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.math.BigInteger
-import java.util.Optional
-import java.util.Optional.empty
-import java.util.Optional.of
-import java.util.Optional.ofNullable
+import java.util.*
+import java.util.Optional.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function

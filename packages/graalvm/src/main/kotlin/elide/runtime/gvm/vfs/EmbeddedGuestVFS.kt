@@ -17,6 +17,9 @@ import java.net.URI
 import java.nio.file.Path
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
+import elide.runtime.gvm.vfs.EmbeddedGuestVFS.empty
+import elide.runtime.gvm.vfs.EmbeddedGuestVFS.forBundle
+import elide.runtime.gvm.vfs.EmbeddedGuestVFS.writable
 
 /**
  * # Virtual File-System: Embedded

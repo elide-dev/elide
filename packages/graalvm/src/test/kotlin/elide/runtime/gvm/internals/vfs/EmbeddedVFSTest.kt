@@ -12,10 +12,8 @@
  */
 package elide.runtime.gvm.internals.vfs
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.nio.charset.StandardCharsets
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue

@@ -17,8 +17,7 @@ package elide.runtime.gvm.internals.node.events
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.lang.ref.WeakReference
-import java.util.LinkedList
-import java.util.SortedSet
+import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -38,6 +37,7 @@ import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.AbortSignal
 import elide.runtime.intrinsics.js.node.EventsAPI
 import elide.runtime.intrinsics.js.node.events.*
+import elide.runtime.intrinsics.js.node.events.EventListener
 import elide.vm.annotations.Polyglot
 
 // Internal symbol where the Node built-in module is installed.

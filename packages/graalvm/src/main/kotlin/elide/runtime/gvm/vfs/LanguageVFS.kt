@@ -15,6 +15,7 @@ package elide.runtime.gvm.vfs
 import org.graalvm.polyglot.io.FileSystem
 import java.nio.file.Path
 import elide.runtime.gvm.internals.LanguageVFS
+import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
 
 /**
  * # Virtual File Systems: Language I/O

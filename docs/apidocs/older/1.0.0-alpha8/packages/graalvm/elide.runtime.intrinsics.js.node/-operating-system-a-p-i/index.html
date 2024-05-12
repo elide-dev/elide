@@ -1,0 +1,439 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>OperatingSystemAPI</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            Elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.runtime.intrinsics.js.node/-operating-system-a-p-i/index.html&quot;}"><div class="versions-dropdown">
+  <div class="versions-dropdown-button">1.0.0-alpha8</div>
+  <div class="versions-dropdown-data"><a href="index.html">1.0.0-alpha8</a></div>
+</div>
+</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:graalvm:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="graalvm::elide.runtime.intrinsics.js.node/OperatingSystemAPI///PointingToDeclaration//-1883836547">
+  <div class="breadcrumbs"><a href="../../index.html">graalvm</a><span class="delimiter">/</span><a href="../index.html">elide.runtime.intrinsics.js.node</a><span class="delimiter">/</span><span class="current">OperatingSystemAPI</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Operating</span><wbr><span>System</span><wbr><span><span>API</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="../../../../packages/base/elide.annotations/-a-p-i/index.html"><span class="token annotation builtin">API</span></a></div></div><span class="token keyword">interface </span><a href="index.html">OperatingSystemAPI</a> : <a href="../-node-a-p-i/index.html">NodeAPI</a></div><h1 class="">Node API: <code class="lang-kotlin">os</code></h1><p class="paragraph">Describes the API provided by the Node API built-in <code class="lang-kotlin">os</code> module, which supplies operating system-related utilities, such as load averages, OS constants, resource usage, and more. Access to these methods is moderated by the active Elide security policy specified by the user.</p><p class="paragraph">&nbsp;</p><h2 class="">Summary</h2><p class="paragraph">The default implementation of the <code class="lang-kotlin">os</code> module supplies cross-platform logic, which works on POSIX and Win32-style systems. Operating system APIs are called on-demand. Where access is not granted to such APIs, mock or stubbed values are supplied, or errors are thrown, as applicable.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="846439692%2FProperties%2F-1883836547" anchor-label="constants" id="846439692%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="constants.html"><span><span>constants</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="846439692%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="constants.html">constants</a><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.os/-operating-system-constants/index.html">OperatingSystemConstants</a></div><div class="brief "><p class="paragraph">Returns an object containing commonly-used operating system constants for error codes, process signals, and more.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="365393727%2FProperties%2F-1883836547" anchor-label="devNull" id="365393727%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="dev-null.html"><span>dev</span><wbr><span><span>Null</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="365393727%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="dev-null.html">devNull</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The path to the operating system's null device.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1904044889%2FProperties%2F-1883836547" anchor-label="EOL" id="1904044889%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-o-l.html"><span><span>EOL</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1904044889%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="-e-o-l.html">EOL</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The end-of-line marker used by the operating system.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="870915547%2FProperties%2F-1883836547" anchor-label="family" id="870915547%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="family.html"><span><span>family</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="870915547%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="family.html">family</a><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.os/-o-s-type/index.html">OSType</a></div><div class="brief "><p class="paragraph">Type of operating system this instance implements calls for; not exposed to the guest VM.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1630661207%2FFunctions%2F-1883836547" anchor-label="arch" id="-1630661207%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="arch.html"><span><span>arch</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1630661207%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="arch.html"><span class="token function">arch</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the architecture of the operating system.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="623550988%2FFunctions%2F-1883836547" anchor-label="availableParallelism" id="623550988%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="available-parallelism.html"><span>available</span><wbr><span><span>Parallelism</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="623550988%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="available-parallelism.html"><span class="token function">availableParallelism</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Returns the number of logical CPUs available to the Node.js instance.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="735416276%2FFunctions%2F-1883836547" anchor-label="cpus" id="735416276%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="cpus.html"><span><span>cpus</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="735416276%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="cpus.html"><span class="token function">cpus</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../elide.runtime.intrinsics.js.node.os/-c-p-u-info/index.html">CPUInfo</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an array of objects containing information about each CPU/core installed on the system.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="752645005%2FFunctions%2F-1883836547" anchor-label="endianness" id="752645005%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="endianness.html"><span><span>endianness</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="752645005%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="endianness.html"><span class="token function">endianness</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the endianness of the CPU.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-892737742%2FFunctions%2F-1883836547" anchor-label="freemem" id="-892737742%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="freemem.html"><span><span>freemem</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-892737742%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="freemem.html"><span class="token function">freemem</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">Returns the amount of free system memory in bytes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1718702181%2FFunctions%2F-1883836547" anchor-label="getPriority" id="-1718702181%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-priority.html"><span>get</span><wbr><span><span>Priority</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1718702181%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-priority.html"><span class="token function">getPriority</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pid<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Value///PointingToDeclaration/">Value</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Returns the scheduling priority of a process, specified by its process ID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="419367789%2FFunctions%2F-1883836547" anchor-label="homedir" id="419367789%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="homedir.html"><span><span>homedir</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="419367789%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="homedir.html"><span class="token function">homedir</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the path to the current user's home directory.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-907076756%2FFunctions%2F-1883836547" anchor-label="hostname" id="-907076756%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="hostname.html"><span><span>hostname</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-907076756%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="hostname.html"><span class="token function">hostname</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the hostname of the operating system.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="179063887%2FFunctions%2F-1883836547" anchor-label="loadavg" id="179063887%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="loadavg.html"><span><span>loadavg</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="179063887%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="loadavg.html"><span class="token function">loadavg</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an array containing the 1, 5, and 15 minute load averages.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-7692461%2FFunctions%2F-1883836547" anchor-label="networkInterfaces" id="-7692461%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="network-interfaces.html"><span>network</span><wbr><span><span>Interfaces</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-7692461%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="network-interfaces.html"><span class="token function">networkInterfaces</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../elide.runtime.intrinsics.js.node.os/-network-interface-info/index.html">NetworkInterfaceInfo</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an object containing information about the network interfaces on the system.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1240639700%2FFunctions%2F-1883836547" anchor-label="platform" id="-1240639700%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="platform.html"><span><span>platform</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1240639700%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="platform.html"><span class="token function">platform</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the operating system platform.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-338991916%2FFunctions%2F-1883836547" anchor-label="release" id="-338991916%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="release.html"><span><span>release</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-338991916%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="release.html"><span class="token function">release</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the operating system release.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1686991524%2FFunctions%2F-1883836547" anchor-label="setPriority" id="1686991524%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-priority.html"><span>set</span><wbr><span><span>Priority</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1686991524%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-priority.html"><span class="token function">setPriority</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pid<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Value///PointingToDeclaration/">Value</span><span class="token operator">?</span><span class="token operator"> = </span>Value.asValue(0)<span class="token punctuation">, </span></span><span class="parameter ">priority<span class="token operator">: </span><span data-unresolved-link="org.graalvm.polyglot/Value///PointingToDeclaration/">Value</span><span class="token operator">?</span><span class="token operator"> = </span>Value.asValue(PRIORITY_NORMAL)</span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the scheduling priority of a process, specified by its process ID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1873948009%2FFunctions%2F-1883836547" anchor-label="tmpdir" id="1873948009%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="tmpdir.html"><span><span>tmpdir</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1873948009%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="tmpdir.html"><span class="token function">tmpdir</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the operating system's default directory for temporary files.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-208496306%2FFunctions%2F-1883836547" anchor-label="totalmem" id="-208496306%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="totalmem.html"><span><span>totalmem</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-208496306%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="totalmem.html"><span class="token function">totalmem</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">Returns the total amount of system memory in bytes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="688201541%2FFunctions%2F-1883836547" anchor-label="type" id="688201541%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="type.html"><span><span>type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="688201541%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="type.html"><span class="token function">type</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the operating system name.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1389315625%2FFunctions%2F-1883836547" anchor-label="uptime" id="-1389315625%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="uptime.html"><span><span>uptime</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1389315625%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="uptime.html"><span class="token function">uptime</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></div><div class="brief "><p class="paragraph">Returns the system uptime in seconds.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="361383368%2FFunctions%2F-1883836547" anchor-label="userInfo" id="361383368%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-info.html"><span>user</span><wbr><span><span>Info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="361383368%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="user-info.html"><span class="token function">userInfo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">options<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.os/-user-info-options/index.html">UserInfoOptions</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.os/-user-info/index.html">UserInfo</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Returns information about the current user.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="81710371%2FFunctions%2F-1883836547" anchor-label="version" id="81710371%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="version.html"><span><span>version</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="81710371%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="version.html"><span class="token function">version</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Returns the operating system version.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

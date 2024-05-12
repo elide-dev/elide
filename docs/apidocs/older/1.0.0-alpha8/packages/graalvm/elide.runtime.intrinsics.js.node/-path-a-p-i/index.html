@@ -1,0 +1,319 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PathAPI</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../../index.html">
+                            Elide
+                    </a>            </div>
+            <div class="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;elide.runtime.intrinsics.js.node/-path-a-p-i/index.html&quot;}"><div class="versions-dropdown">
+  <div class="versions-dropdown-button">1.0.0-alpha8</div>
+  <div class="versions-dropdown-data"><a href="index.html">1.0.0-alpha8</a></div>
+</div>
+</dokka-template-command>            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":packages:graalvm:dokkaHtmlPartial/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="graalvm::elide.runtime.intrinsics.js.node/PathAPI///PointingToDeclaration//-1883836547">
+  <div class="breadcrumbs"><a href="../../index.html">graalvm</a><span class="delimiter">/</span><a href="../index.html">elide.runtime.intrinsics.js.node</a><span class="delimiter">/</span><span class="current">PathAPI</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Path</span><wbr><span><span>API</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="../../../../packages/base/elide.annotations/-a-p-i/index.html"><span class="token annotation builtin">API</span></a></div></div><span class="token keyword">interface </span><a href="index.html">PathAPI</a> : <a href="../-node-a-p-i/index.html">NodeAPI</a></div><h1 class="">Node API: <code class="lang-kotlin">path</code></h1><p class="paragraph">Describes the API provided by the Node API built-in <code class="lang-kotlin">path</code> module, which supplies utilities for dealing with file and directory paths. Routines are provided for joining, parsing, and extracting bits of information from paths.</p><p class="paragraph">&nbsp;</p><h2 class="">Summary</h2><p class="paragraph">The default implementation of the <code class="lang-kotlin">path</code> module supplies path logic for the operating system on which the program is currently running; specific implementations for POSIX and Windows are also provided. The module provides utilities for common path operations, including:</p><ul><li><p class="paragraph"><code class="lang-kotlin">basename()</code>: Extracts the last portion of a path.</p></li><li><p class="paragraph"><code class="lang-kotlin">dirname()</code>: Extracts the directory portion of a path.</p></li><li><p class="paragraph"><code class="lang-kotlin">extname()</code>: Extracts the file extension from a path.</p></li><li><p class="paragraph"><code class="lang-kotlin">isAbsolute()</code>: Determines if a path is absolute.</p></li><li><p class="paragraph"><code class="lang-kotlin">join()</code>: Joins multiple path segments together.</p></li><li><p class="paragraph"><code class="lang-kotlin">normalize()</code>: Normalizes a path.</p></li><li><p class="paragraph"><code class="lang-kotlin">parse()</code>: Parses a path into an object.</p></li><li><p class="paragraph"><code class="lang-kotlin">relative()</code>: Determines the relative path between two paths.</p></li><li><p class="paragraph"><code class="lang-kotlin">resolve()</code>: Resolves a sequence of paths or path segments into an absolute path.</p></li><li><p class="paragraph"><code class="lang-kotlin">toNamespacedPath()</code>: Converts a path to a namespace-prefixed path.</p></li><li><p class="paragraph"><code class="lang-kotlin">format()</code>: Converts a path object to a path string.</p></li></ul><p class="paragraph">Several configuration properties are also provided, including:</p><ul><li><p class="paragraph"><code class="lang-kotlin">sep</code>: The path segment separator.</p></li><li><p class="paragraph"><code class="lang-kotlin">delimiter</code>: The path delimiter.</p></li></ul><p class="paragraph">&nbsp;</p><h2 class="">Specification compliance</h2><p class="paragraph">This formulation of the Node Path API follows the official definition of the <code class="lang-kotlin">path</code> module for Node version <code class="lang-kotlin">21.7.3</code>, which is current at the time of this writing. The specification for this API can be found <a href="https://nodejs.org/api/path.html">here</a>.</p><p class="paragraph">Differences in behavior between Node's implementation of this API are usually considered bugs; where this behavior is intentional, it will be noted in this section.</p><p class="paragraph">&nbsp;</p><h2 class="">Behavior in Elide</h2><p class="paragraph">Elide doesn't provide host I/O access by default, and in the case of embedded VFS use, paths are considered under Unix-style rules unconditionally. Most path function implementations use the underlying JVM NIO path utilities.</p><p class="paragraph">&nbsp;</p><h2 class="">Further reading</h2><ul><li><p class="paragraph"><a href="https://nodejs.org/api/path.html">Node.js <code class="lang-kotlin">path</code> module</a></p></li><li><p class="paragraph"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html">Java NIO <code class="lang-kotlin">Path</code></a></p></li></ul></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-1437041385%2FProperties%2F-1883836547" anchor-label="delimiter" id="-1437041385%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delimiter.html"><span><span>delimiter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1437041385%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="delimiter.html">delimiter</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Provides the platform-specific path delimiter:</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="415306907%2FProperties%2F-1883836547" anchor-label="posix" id="415306907%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="posix.html"><span><span>posix</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="415306907%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="posix.html">posix</a><span class="token operator">: </span><a href="index.html">PathAPI</a></div><div class="brief "><p class="paragraph">Provides utilities implementing the <a href="../-node-a-p-i/index.html">NodeAPI</a> for POSIX-style paths, regardless of the current operating system. Paths passed to this instance will forcibly be considered as <a href="../../elide.runtime.gvm.internals.node.path/-path-style/-p-o-s-i-x/index.html">PathStyle.POSIX</a>-style paths.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="179673952%2FProperties%2F-1883836547" anchor-label="sep" id="179673952%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="sep.html"><span><span>sep</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="179673952%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="sep.html">sep</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Provides the platform-specific path segment separator:</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-654376221%2FProperties%2F-1883836547" anchor-label="win32" id="-654376221%2FProperties%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="win32.html"><span><span>win32</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-654376221%2FProperties%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="win32.html">win32</a><span class="token operator">: </span><a href="index.html">PathAPI</a></div><div class="brief "><p class="paragraph">Provides utilities implementing the <a href="../-node-a-p-i/index.html">NodeAPI</a> for Windows-style paths, regardless of the current operating system. Paths passed to this instance will forcibly be considered as <a href="../../elide.runtime.gvm.internals.node.path/-path-style/-w-i-n32/index.html">PathStyle.WIN32</a>-style paths.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1436731377%2FFunctions%2F-1883836547" anchor-label="basename" id="1436731377%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="basename.html"><span><span>basename</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1436731377%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="basename.html"><span class="token function">basename</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter ">ext<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="basename.html"><span class="token function">basename</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">ext<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="basename.html"><span class="token function">basename</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span><span class="token punctuation">, </span></span><span class="parameter ">ext<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Extracts the last portion of a path.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1146127245%2FFunctions%2F-1883836547" anchor-label="dirname" id="-1146127245%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="dirname.html"><span><span>dirname</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1146127245%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="dirname.html"><span class="token function">dirname</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="dirname.html"><span class="token function">dirname</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="dirname.html"><span class="token function">dirname</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Extracts the directory portion of a path.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-887961209%2FFunctions%2F-1883836547" anchor-label="extname" id="-887961209%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="extname.html"><span><span>extname</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-887961209%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="extname.html"><span class="token function">extname</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="extname.html"><span class="token function">extname</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="extname.html"><span class="token function">extname</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Extracts the file extension from a path.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="10114694%2FFunctions%2F-1883836547" anchor-label="format" id="10114694%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="format.html"><span><span>format</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="10114694%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="format.html"><span class="token function">format</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pathObject<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Formats the provided <a href="format.html">pathObject</a> as a string path; the path object may carry a complete set, or valid subset of, the suite of properties defined on a <a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">NodePath</a> object; these include:</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="12417028%2FFunctions%2F-1883836547" anchor-label="isAbsolute" id="12417028%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-absolute.html"><span>is</span><wbr><span><span>Absolute</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="12417028%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="is-absolute.html"><span class="token function">isAbsolute</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="is-absolute.html"><span class="token function">isAbsolute</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="is-absolute.html"><span class="token function">isAbsolute</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Determines if a path is absolute.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1583787039%2FFunctions%2F-1883836547" anchor-label="join" id="-1583787039%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="join.html"><span><span>join</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1583787039%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="join.html"><span class="token function">join</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">paths<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a><span class="token operator">&lt;</span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="join.html"><span class="token function">join</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sequence<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="join.html"><span class="token function">join</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">first<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>rest<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="join.html"><span class="token function">join</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">first<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>rest<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="join.html"><span class="token function">join</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">first<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>rest<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Joins multiple path segments together.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1301334712%2FFunctions%2F-1883836547" anchor-label="normalize" id="-1301334712%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="normalize.html"><span><span>normalize</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1301334712%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="normalize.html"><span class="token function">normalize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="normalize.html"><span class="token function">normalize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="normalize.html"><span class="token function">normalize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Normalizes a path.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1774790714%2FFunctions%2F-1883836547" anchor-label="parse" id="1774790714%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="parse.html"><span><span>parse</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1774790714%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="parse.html"><span class="token function">parse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="parse.html"><span class="token function">parse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">pathStyle<span class="token operator">: </span><a href="../../elide.runtime.gvm.internals.node.path/-path-style/index.html">PathStyle</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></div><div class="brief "><p class="paragraph">Parses a path into an object.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-709792271%2FFunctions%2F-1883836547" anchor-label="relative" id="-709792271%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="relative.html"><span><span>relative</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-709792271%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="relative.html"><span class="token function">relative</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">from<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter ">to<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="relative.html"><span class="token function">relative</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">from<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">to<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="relative.html"><span class="token function">relative</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">from<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span><span class="token punctuation">, </span></span><span class="parameter ">to<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Determines the relative path between two paths.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1997202775%2FFunctions%2F-1883836547" anchor-label="resolve" id="1997202775%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="resolve.html"><span><span>resolve</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1997202775%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">iterable<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a><span class="token operator">&lt;</span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sequence<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/index.html">Sequence</a><span class="token operator">&lt;</span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">first<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>rest<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">first<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>rest<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">first<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>rest<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Resolves a sequence of paths or path segments into an absolute path.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2069304636%2FFunctions%2F-1883836547" anchor-label="toNamespacedPath" id="2069304636%2FFunctions%2F-1883836547" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main"></a>
+          <div class="table-row" data-filterable-current=":packages:graalvm:dokkaHtmlPartial/main" data-filterable-set=":packages:graalvm:dokkaHtmlPartial/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-namespaced-path.html"><span>to</span><wbr><span>Namespaced</span><wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2069304636%2FFunctions%2F-1883836547"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="to-namespaced-path.html"><span class="token function">toNamespacedPath</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../../elide.runtime.intrinsics.js.node.path/-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="to-namespaced-path.html"><span class="token function">toNamespacedPath</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="to-namespaced-path.html"><span class="token function">toNamespacedPath</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.files/Path///PointingToDeclaration/">Path</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Converts a path to a namespace-prefixed path.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

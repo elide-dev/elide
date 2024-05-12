@@ -28,7 +28,6 @@ import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.io.path.toPath
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging

@@ -15,6 +15,9 @@ package elide.runtime.gvm.vfs
 import java.nio.file.Path
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.vfs.HostVFSImpl
+import elide.runtime.gvm.vfs.HostVFS.acquire
+import elide.runtime.gvm.vfs.HostVFS.acquireWritable
+import elide.runtime.gvm.vfs.HostVFS.scopedTo
 
 /**
  * # Virtual File Systems: Host I/O

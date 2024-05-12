@@ -15,7 +15,6 @@ package elide.runtime.gvm.internals.js.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.inspector.NodeInspectorModule
 import elide.runtime.gvm.internals.node.inspector.NodeInspectorPromisesModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.testing.annotations.TestCase

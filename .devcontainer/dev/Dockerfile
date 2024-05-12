@@ -1,4 +1,4 @@
-FROM ghcr.io/elide-dev/codespace@sha256:4ee81688a0be011baeca66129ebd73b14e5fa0c8bb72ae5ac67d8696f413d24d
+FROM ghcr.io/elide-dev/codespace:latest
 
 USER root
 

@@ -1,24 +1,25 @@
-ARG BASE_IMAGE=gvm21
+ARG BASE_IMAGE=gvm22
 ARG BASE_VERSION=":latest"
 ARG BASE_HASH=""
 
-FROM us-docker.pkg.dev/elide-fw/tools/${BASE_IMAGE}${BASE_VERSION}${BASE_HASH}
+FROM ghcr.io/elide-dev/tools/${BASE_IMAGE}${BASE_VERSION}${BASE_HASH}
 
-ARG JDK_VERSION="21"
-ARG NODE_VERSION="18"
+ARG JDK_VERSION="22"
+ARG NODE_VERSION="22"
 ARG YARN_VERSION="berry"
-ARG GRADLE_VERSION=8.7
+ARG GRADLE_VERSION=8.8-rc-1
 ARG KOTLIN_VERSION=2.0.0-RC3
+ARG LLVM_VERSION=16
 ARG BAZELISK_VERSION=v1.15.0
 ARG GRADLE_DIST=bin
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Builder"
 LABEL org.opencontainers.image.description="Builder image for Elide apps and tools"
-LABEL org.opencontainers.image.version=v3-alpha1
+LABEL org.opencontainers.image.version=v1.0.0-alpha9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/builder/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/builder/Dockerfile
 
 RUN echo "Building Elide builder image..." \
   && set -eux \
@@ -43,7 +44,6 @@ RUN echo "Building Elide builder image..." \
     libtool \
     make \
     pkg-config \
-    qt5-default \
     software-properties-common \
     tar \
     time \
@@ -51,16 +51,16 @@ RUN echo "Building Elide builder image..." \
     wget \
     sudo \
     zlib1g \
+  && echo "Installing LLVM ${LLVM_VERSION}..." \
+  && wget https://apt.llvm.org/llvm.sh \
+  && chmod +x llvm.sh \
+  && sudo ./llvm.sh ${LLVM_VERSION} \
+  && rm -fv llvm.sh \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
-  && export COMPONENTS="native-image js" \
-  && if [ "$ARCH" = "x86_64" ]; then
-    ARCH="amd64"
-    FORMAL_ARCH="amd64"
-    COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"
-  fi \
   && if [ "$ARCH" = "arm64" ]; then FORMAL_ARCH="arm64"; fi \
   && if [ "$ARCH" = "aarch64" ]; then FORMAL_ARCH="arm64"; fi \
+  && if [ "$ARCH" = "x86_64" ]; then FORMAL_ARCH="amd64"; fi \
   && cd ~ \
   && echo "Installing NodeJS (v$NODE_VERSION / Yarn $YARN_VERSION)..." \
   && curl -sL "https://deb.nodesource.com/setup_$NODE_VERSION.x" | bash - \
@@ -73,8 +73,6 @@ RUN echo "Building Elide builder image..." \
          $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends docker-ce docker-ce-cli containerd.io \
-  && echo "Installing GraalVM modules..." \
-  && $GRAALVM_HOME/bin/gu install $COMPONENTS \
   && echo "Installing Gradle..." \
   && mkdir -p /opt/gradle \
   && cd /opt/gradle \

@@ -33,8 +33,8 @@ import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Value as GuestValue
-import elide.runtime.intrinsics.js.URLSearchParams as IURLSearchParams
 import elide.runtime.intrinsics.js.MutableURLSearchParams as IMutableSearchParams
+import elide.runtime.intrinsics.js.URLSearchParams as IURLSearchParams
 
 // Separator between URL parameter segments.
 private const val URL_PARAMS_SEPARATOR = '&'

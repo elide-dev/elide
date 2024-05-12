@@ -17,7 +17,6 @@ package elide.runtime.gvm.js.vfs
 
 import java.nio.charset.StandardCharsets
 import kotlin.io.path.Path
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl

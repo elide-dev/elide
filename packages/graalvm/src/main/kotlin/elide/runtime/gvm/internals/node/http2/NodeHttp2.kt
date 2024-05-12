@@ -19,7 +19,6 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.HTTP2API
-import elide.runtime.intrinsics.js.node.HTTPAPI
 
 // Internal symbol where the Node built-in module is installed.
 private const val HTTP2_MODULE_SYMBOL = "__Elide_node_http2__"

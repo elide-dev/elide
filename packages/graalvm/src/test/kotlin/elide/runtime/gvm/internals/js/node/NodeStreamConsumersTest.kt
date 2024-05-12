@@ -16,7 +16,6 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.runtime.gvm.internals.node.stream.NodeStreamConsumersModule
-import elide.runtime.gvm.internals.node.stream.NodeStreamPromisesModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.testing.annotations.TestCase
 

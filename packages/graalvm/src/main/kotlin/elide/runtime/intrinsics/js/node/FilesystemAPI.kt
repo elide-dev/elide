@@ -17,7 +17,6 @@ import java.nio.file.AccessMode
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.buffer.Buffer
 import elide.runtime.intrinsics.js.node.fs.*
-import elide.runtime.intrinsics.js.node.fs.WriteFileOptions.Companion
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.vm.annotations.Polyglot
 

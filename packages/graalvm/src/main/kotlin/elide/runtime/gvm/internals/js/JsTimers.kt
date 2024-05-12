@@ -21,7 +21,6 @@ import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.io.Closeable
-import java.lang.AutoCloseable
 import java.lang.ref.WeakReference
 import java.time.Duration
 import java.util.concurrent.ConcurrentSkipListMap

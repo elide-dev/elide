@@ -12,7 +12,6 @@
  */
 package elide.runtime.gvm.js.node
 
-import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.Value.asValue
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

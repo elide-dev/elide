@@ -114,6 +114,8 @@ elide.js.ssr
 emotion.server.worker
 mui.material
 module:graalvm-ts
+elide.runtime.lang.typescript
+elide.runtime.lang.typescript.internals
 elide.runtime.plugins.typescript
 module:graalvm-wasm
 elide.runtime.gvm.wasm

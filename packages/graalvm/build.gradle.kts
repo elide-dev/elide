@@ -298,7 +298,6 @@ dependencies {
   testImplementation(libs.junit.jupiter.params)
   testImplementation(mn.micronaut.test.junit5)
   testRuntimeOnly(libs.junit.jupiter.engine)
-
   testImplementation(projects.packages.graalvmPy)
 }
 

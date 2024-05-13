@@ -323,6 +323,7 @@ dependencies {
     if (enabled) implementation(spec) else compileOnly(spec)
   }
 
+  implementation(projects.packages.graalvmTs)
   runtimeIf(enableEspresso, projects.packages.graalvmJvm)
   runtimeIf(enableEspresso, projects.packages.graalvmJava)
   runtimeIf(enableEspresso, projects.packages.graalvmKt)
@@ -814,6 +815,15 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
+  // --- TypeScript -----
+
+  "elide.runtime.lang.typescript.TypeScriptLanguage",
+  "elide.runtime.lang.typescript.TypeScriptLanguageProvider",
+  "elide.runtime.lang.typescript.internals.JSRealmPatcher",
+  "elide.runtime.lang.typescript.internals.TypeScriptCompiler",
+  "elide.runtime.lang.typescript.internals.TypeScriptFileTypeDetector",
+  "elide.runtime.lang.typescript.internals.TypeScriptModuleLoader",
+
   // --- AWT -----
 
   "sun.awt.resources.awt",

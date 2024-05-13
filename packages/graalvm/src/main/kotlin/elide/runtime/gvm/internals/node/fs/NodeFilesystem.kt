@@ -216,18 +216,10 @@ internal abstract class FilesystemBase (
       )
 
       options.hasMembers() -> options.getMember("encoding").let { encoding ->
-        if (encoding == null) {
-          ReadFileOptions.DEFAULTS
-        } else ReadFileOptions(
-          encoding = when {
-            encoding.isNull -> null
-            encoding.isString -> encoding.asString()
-            else -> error("Unknown encoding type passed to `fs` readFile: ${encoding.asString()}")
-          },
-        )
+        if (encoding == null) ReadFileOptions.DEFAULTS else ReadFileOptions.fromGuest(options)
       }
 
-      else -> error("Unknown options passed to `fs` readFile: ${options.asString()}")
+      else -> error("Unknown options passed to `fs` readFile: $options")
     }
   }
 

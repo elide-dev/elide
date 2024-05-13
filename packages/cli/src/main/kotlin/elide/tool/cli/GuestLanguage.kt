@@ -31,7 +31,7 @@ enum class GuestLanguage (
     formalName = "JavaScript",
     experimental = false,
     extensions = listOf("js", "cjs", "mjs"),
-    mimeTypes = listOf("application/javascript", "application/ecmascript"),
+    mimeTypes = listOf("application/javascript", "application/javascript+module", "application/ecmascript"),
   ),
 
   /** JavaScript VM enabled with TypeScript support. */
@@ -41,7 +41,7 @@ enum class GuestLanguage (
     formalName = "TypeScript",
     experimental = true,
     extensions = listOf("ts", "cts", "mts", "tsx"),
-    mimeTypes = listOf("application/x-typescript"),
+    mimeTypes = listOf("application/typescript", "application/x-typescript", "text/typescript"),
   ),
 
   /** Interactive nested JVM. */

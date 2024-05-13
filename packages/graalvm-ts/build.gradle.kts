@@ -46,20 +46,16 @@ elide {
     // disable module-info processing (not present)
     configureModularity = false
   }
-
-  native {
-    target = NativeTarget.LIB
-    useAgent = false
-  }
 }
 
 dependencies {
-  api(libs.graalvm.wasm.language)
+  kapt(libs.graalvm.truffle.processor)
   api(projects.tools.tsc)
   implementation(projects.tools.esbuild)
 
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
+  implementation(libs.graalvm.js.language)
 
   // Testing
   testImplementation(projects.packages.test)

@@ -55,7 +55,7 @@ import elide.runtime.plugins.js.JavaScriptVersion
     description = ["Whether to enable NPM support. Experimental."],
     defaultValue = "false",
   )
-  internal var nodeModules: Boolean = false
+  internal var nodeModules: Boolean = true
 
   /** Whether to activate NPM support. */
   @Option(
@@ -63,7 +63,7 @@ import elide.runtime.plugins.js.JavaScriptVersion
     description = ["Whether to enable ESM support. Experimental."],
     defaultValue = "false",
   )
-  internal var esm: Boolean = false
+  internal var esm: Boolean = true
 
   /** Whether to activate WASM support. */
   @Option(
@@ -71,7 +71,7 @@ import elide.runtime.plugins.js.JavaScriptVersion
     description = ["Whether to enable WebAssembly support. Experimental."],
     defaultValue = "false",
   )
-  internal var wasm: Boolean = false
+  internal var wasm: Boolean = true
 
   /** Apply these settings to the configuration for the JavaScript runtime plugin. */
   internal fun apply(config: JavaScriptConfig) {

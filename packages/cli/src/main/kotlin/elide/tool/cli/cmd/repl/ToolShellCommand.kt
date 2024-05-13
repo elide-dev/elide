@@ -133,6 +133,7 @@ import elide.tool.project.ProjectManager
     private const val ENABLE_JVM = false
     private const val ENABLE_RUBY = true
     private const val ENABLE_PYTHON = true
+    private const val ENABLE_TYPESCRIPT = true
 
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
@@ -182,6 +183,13 @@ import elide.tool.project.ProjectManager
     )
     internal var javascript: Boolean = false
 
+    /** Flag for JavaScript with TypeScript support/ */
+    @Option(
+      names = ["--ts", "--typescript", "-ts"],
+      description = ["Equivalent to passing '--language=TYPESCRIPT'."],
+    )
+    internal var typescript: Boolean = false
+
     /** Flag for JVM support. */
     @Option(
       names = ["--jvm", "--java", "-java"],
@@ -229,6 +237,7 @@ import elide.tool.project.ProjectManager
       EnumSet.noneOf(GuestLanguage::class.java).apply {
         add(JS)
         add(WASM)
+        if (ENABLE_TYPESCRIPT) add(TYPESCRIPT)
         if (ENABLE_PYTHON) add(PYTHON)
         if (ENABLE_RUBY) add(RUBY)
         if (ENABLE_JVM) add(JVM)
@@ -262,6 +271,7 @@ import elide.tool.project.ProjectManager
       // languages by flags
       val explicitlySelectedLanguagesByBoolean = listOf(
         JS to javascript,
+        TYPESCRIPT to typescript,
         RUBY to ruby,
         PYTHON to python,
         JVM to jvm,
@@ -1680,6 +1690,11 @@ import elide.tool.project.ProjectManager
           executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
           jsSettings.apply(this)
+        }
+
+        TYPESCRIPT -> install(elide.runtime.plugins.typescript.TypeScript) {
+          logging.debug("Configuring TypeScript support")
+          resourcesPath = GVM_RESOURCES
         }
 
         RUBY -> ignoreNotInstalled {

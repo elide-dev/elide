@@ -6,6 +6,6 @@ com.fasterxml.jackson.core:jackson-core:2.15.2=compileClasspath,runtimeClasspath
 com.fasterxml.jackson.core:jackson-databind:2.15.2=compileClasspath,runtimeClasspath
 com.fasterxml.jackson:jackson-bom:2.15.2=compileClasspath,runtimeClasspath
 io.github.astonbitecode:j4rs:0.18.0=compileClasspath,runtimeClasspath
-org.jetbrains.kotlin:kotlin-stdlib:2.0.0-RC2=compileClasspath,runtimeClasspath
+org.jetbrains.kotlin:kotlin-stdlib:2.0.0-RC3=compileClasspath,runtimeClasspath
 org.jetbrains:annotations:13.0=compileClasspath,runtimeClasspath
 empty=

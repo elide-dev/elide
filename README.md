@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-Latest version: <code>1.0.0-alpha9</code>
+Latest: <code>1.0.0-alpha9</code>
 </p>
 
 <hr />

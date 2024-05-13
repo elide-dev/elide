@@ -24,6 +24,10 @@ kotlin {
   // and opt-in for the new context receivers syntax
   compilerOptions.optIn.add("elide.runtime.core.DelicateElideApi")
   compilerOptions.freeCompilerArgs.add("-Xcontext-receivers")
+
+  jvmToolchain {
+    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(21))
+  }
 }
 
 dependencies {

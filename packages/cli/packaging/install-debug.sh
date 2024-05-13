@@ -140,7 +140,7 @@ if [[ "$@" == *"help"* ]]; then
   echo -e "  ${YELLOW}--version${NC}                Show version information"
   echo -e "  ${YELLOW}--help${NC}                   Show this help message"
   echo -e ""
-  echo -e "Copyright 2023, Sam Gammon and the Elide Project Authors."
+  echo -e "Copyright 2024, Elide Technologies, Inc."
   exit 0
 fi
 

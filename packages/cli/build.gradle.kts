@@ -657,6 +657,7 @@ micronaut {
 tasks.withType(Test::class).configureEach {
   useJUnitPlatform()
   systemProperty("elide.test", "true")
+  maxHeapSize = "1g"
 }
 
 /**

@@ -141,7 +141,7 @@ importers:
         version: 3.0.1(preact@10.20.2)
       '@mdx-js/react':
         specifier: 3.0.1
-        version: 3.0.1(@types/react@18.3.1)(react@18.3.1)
+        version: 3.0.1(@types/react@18.3.2)(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -153,8 +153,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1(webpack@5.91.0(esbuild@0.20.2))
       '@types/react':
-        specifier: 18.3.1
-        version: 18.3.1
+        specifier: 18.3.2
+        version: 18.3.2
       webpack:
         specifier: 5.91.0
         version: 5.91.0(esbuild@0.20.2)
@@ -580,8 +580,8 @@ packages:
   '@types/prop-types@15.7.12':
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==, tarball: https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.12.tgz}
 
-  '@types/react@18.3.1':
-    resolution: {integrity: sha512-V0kuGBX3+prX+DQ/7r2qsv1NsdfnCLnTgnRJ1pYnxykBhGMz+qj+box5lq7XsO5mtZsBqpjwwTu/7wszPfMBcw==, tarball: https://registry.npmjs.org/@types/react/-/react-18.3.1.tgz}
+  '@types/react@18.3.2':
+    resolution: {integrity: sha512-Btgg89dAnqD4vV7R3hlwOxgqobUQKgx3MmrQRi0yYbs/P0ym8XozIAlkqVilPqHQwXs4e9Tf63rrCgl58BcO4w==, tarball: https://registry.npmjs.org/@types/react/-/react-18.3.2.tgz}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==, tarball: https://registry.npmjs.org/@types/semver/-/semver-7.5.8.tgz}
@@ -3096,10 +3096,10 @@ snapshots:
       '@types/mdx': 2.0.13
       preact: 10.20.2
 
-  '@mdx-js/react@3.0.1(@types/react@18.3.1)(react@18.3.1)':
+  '@mdx-js/react@3.0.1(@types/react@18.3.2)(react@18.3.1)':
     dependencies:
       '@types/mdx': 2.0.13
-      '@types/react': 18.3.1
+      '@types/react': 18.3.2
       react: 18.3.1
 
   '@nodelib/fs.scandir@2.1.5':
@@ -3179,7 +3179,7 @@ snapshots:
 
   '@types/prop-types@15.7.12': {}
 
-  '@types/react@18.3.1':
+  '@types/react@18.3.2':
     dependencies:
       '@types/prop-types': 15.7.12
       csstype: 3.1.3

@@ -23,32 +23,27 @@ import com.oracle.truffle.api.nodes.LanguageInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.js.lang.JavaScriptLanguage;
-import com.oracle.truffle.js.runtime.JSContext;
 import com.oracle.truffle.js.runtime.JSEngine;
-import com.oracle.truffle.js.runtime.JSLanguageOptions;
 import com.oracle.truffle.js.runtime.JSRealm;
 import elide.runtime.lang.typescript.internals.JSRealmPatcher;
 import elide.runtime.lang.typescript.internals.TypeScriptCompiler;
 import elide.runtime.lang.typescript.internals.TypeScriptFileTypeDetector;
 import elide.runtime.lang.typescript.internals.TypeScriptModuleLoader;
+import java.util.List;
 import org.graalvm.polyglot.SandboxPolicy;
 
-import java.util.List;
-
-/**
- * TBD.
- */
+/** TBD. */
 @Registration(
-        id = "ts",
-        name = "TypeScript",
-        implementationName = "Elide TypeScript",
-        version = "5.4.5",
-        dependentLanguages = "js",
-        characterMimeTypes = "application/typescript",
-        website = "https://docs.elide.dev",
-        fileTypeDetectors = TypeScriptFileTypeDetector.class,
-        contextPolicy = ContextPolicy.SHARED,
-        sandbox = SandboxPolicy.UNTRUSTED)
+    id = "ts",
+    name = "TypeScript",
+    implementationName = "Elide TypeScript",
+    version = "5.4.5",
+    dependentLanguages = "js",
+    characterMimeTypes = "application/typescript",
+    website = "https://docs.elide.dev",
+    fileTypeDetectors = TypeScriptFileTypeDetector.class,
+    contextPolicy = ContextPolicy.SHARED,
+    sandbox = SandboxPolicy.UNTRUSTED)
 public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   public static final String TEXT_MIME_TYPE = "text/typescript";
   public static final String APPLICATION_MIME_TYPE = "application/typescript";
@@ -83,7 +78,9 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   @Override
   protected CallTarget parse(ParsingRequest parsingRequest) {
     Source tsSource = parsingRequest.getSource();
-    Source jsSource = tsCompiler.compileToNewSource(tsSource.getCharacters(), tsSource.getName(), true, tsSource.getPath());
+    Source jsSource =
+        tsCompiler.compileToNewSource(
+            tsSource.getCharacters(), tsSource.getName(), true, tsSource.getPath());
     List<String> argumentNames = parsingRequest.getArgumentNames();
     var parsed = (RootCallTarget) env.parseInternal(jsSource, argumentNames.toArray(new String[0]));
     var wrapper = new TSRootNode(this, parsed.getRootNode());

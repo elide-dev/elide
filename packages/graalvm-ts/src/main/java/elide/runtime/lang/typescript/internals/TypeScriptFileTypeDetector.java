@@ -13,12 +13,9 @@
 package elide.runtime.lang.typescript.internals;
 
 import com.oracle.truffle.api.TruffleFile;
-
 import java.nio.charset.Charset;
 
-/**
- * TBD.
- */
+/** TBD. */
 public class TypeScriptFileTypeDetector implements TruffleFile.FileTypeDetector {
   public String findMimeType(TruffleFile file) {
     String fileName = file.getName();

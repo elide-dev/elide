@@ -13,37 +13,15 @@
 
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
-    target-branch: "main"
     schedule:
       interval: "daily"
     assignees:
       - "sgammon"
 
-  # Maintain dependencies for npm
-  - package-ecosystem: "npm"
-    directory: "/"
-    target-branch: "main"
-    schedule:
-      interval: "daily"
-    assignees:
-      - "sgammon"
-
-  # Maintain dependencies for Gradle
   - package-ecosystem: "gradle"
     directory: "/"
-    target-branch: "main"
-    schedule:
-      interval: "daily"
-    assignees:
-      - "sgammon"
-
-  # Maintain dependencies for Docker
-  - package-ecosystem: "docker"
-    directory: "images"
-    target-branch: "main"
     schedule:
       interval: "daily"
     assignees:

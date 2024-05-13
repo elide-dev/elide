@@ -13,12 +13,9 @@
 package elide.runtime.lang.typescript.internals;
 
 import com.oracle.truffle.js.runtime.JSRealm;
-
 import java.lang.reflect.Field;
 
-/**
- * TBD.
- */
+/** TBD. */
 public class JSRealmPatcher {
   public static void setTSModuleLoader(JSRealm jsRealm, TypeScriptModuleLoader newModuleLoader) {
     try {

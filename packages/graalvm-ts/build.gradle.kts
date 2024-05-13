@@ -12,7 +12,6 @@
  */
 
 import elide.internal.conventions.kotlin.KotlinTarget
-import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {

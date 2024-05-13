@@ -21,28 +21,26 @@ import com.oracle.truffle.api.interop.UnsupportedMessageException;
 import com.oracle.truffle.api.interop.UnsupportedTypeException;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.strings.TruffleString;
-import org.apache.commons.io.IOUtils;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.zip.GZIPInputStream;
+import org.apache.commons.io.IOUtils;
 
-/**
- * TBD.
- */
+/** TBD. */
 public class TypeScriptCompiler implements AutoCloseable {
-  private static final String TYPESCRIPT_COMPILER_PATH = "/META-INF/elide/embedded/tools/tsc/typescript.js.gz";
+  private static final String TYPESCRIPT_COMPILER_PATH =
+      "/META-INF/elide/embedded/tools/tsc/typescript.js.gz";
   private static final Source TYPESCRIPT_COMPILER_SOURCE = createTypeScriptCompilerSource();
-//  private static final Source TYPESCRIPT_TRANSPILE_FUNCTION_SOURCE = createTypeScriptTranspileFunctionSource();
+  //  private static final Source TYPESCRIPT_TRANSPILE_FUNCTION_SOURCE =
+  // createTypeScriptTranspileFunctionSource();
   private final TruffleContext context;
   private final Object transpileFunction;
 
   public TypeScriptCompiler(Env env) {
-    this.context = env.newInnerContextBuilder("js")
-            .build();
+    this.context = env.newInnerContextBuilder("js").build();
     transpileFunction = context.evalInternal(null, TYPESCRIPT_COMPILER_SOURCE);
-//    transpileFunction = context.evalInternal(null, TYPESCRIPT_TRANSPILE_FUNCTION_SOURCE);
+    //    transpileFunction = context.evalInternal(null, TYPESCRIPT_TRANSPILE_FUNCTION_SOURCE);
   }
 
   public String compileToString(CharSequence ts, String name) {
@@ -54,19 +52,20 @@ public class TypeScriptCompiler implements AutoCloseable {
     }
   }
 
-  public Source compileToNewSource(CharSequence ts, String name, boolean isModule, String filePath) {
+  public Source compileToNewSource(
+      CharSequence ts, String name, boolean isModule, String filePath) {
     var js = compileToString(ts, name);
     if (filePath == null) {
       return Source.newBuilder("js", js, name)
-              .mimeType(isModule ? "application/javascript+module" : "application/javascript")
-              .build();
+          .mimeType(isModule ? "application/javascript+module" : "application/javascript")
+          .build();
     } else {
       try {
         return Source.newBuilder("js", Path.of(filePath).toUri().toURL())
-                .name(name)
-                .content(js)
-                .mimeType(isModule ? "application/javascript+module" : "application/javascript")
-                .build();
+            .name(name)
+            .content(js)
+            .mimeType(isModule ? "application/javascript+module" : "application/javascript")
+            .build();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -74,41 +73,42 @@ public class TypeScriptCompiler implements AutoCloseable {
   }
 
   private static Source createTypeScriptCompilerSource() {
-    return Source
-            .newBuilder("js", getTypeScriptCompilerCode(), "typescript.js")
-            .mimeType("application/javascript")
-//            .cached(true)
-//            .encoding(StandardCharsets.UTF_8)
-//            .canonicalizePath(true)
-//            .interactive(false)
-//            .internal(true)
-            .build();
+    return Source.newBuilder("js", getTypeScriptCompilerCode(), "typescript.js")
+        .mimeType("application/javascript")
+        //            .cached(true)
+        //            .encoding(StandardCharsets.UTF_8)
+        //            .canonicalizePath(true)
+        //            .interactive(false)
+        //            .internal(true)
+        .build();
   }
 
-//  private static Source createTypeScriptTranspileFunctionSource() {
-//    String function = """
-//        (code, fileName) => ts.transpile(code, {
-//          module: "ESNext",
-//          inlineSourceMap: true,
-//          inlineSources: true,
-//        }, fileName);
-//        """;
-//    return Source
-//            .newBuilder("js", function, "typescript-transpile.js")
-//            .mimeType("application/javascript")
-////            .cached(true)
-////            .interactive(false)
-////            .internal(true)
-////            .encoding(StandardCharsets.UTF_8)
-//            .build();
-//  }
+  //  private static Source createTypeScriptTranspileFunctionSource() {
+  //    String function = """
+  //        (code, fileName) => ts.transpile(code, {
+  //          module: "ESNext",
+  //          inlineSourceMap: true,
+  //          inlineSources: true,
+  //        }, fileName);
+  //        """;
+  //    return Source
+  //            .newBuilder("js", function, "typescript-transpile.js")
+  //            .mimeType("application/javascript")
+  ////            .cached(true)
+  ////            .interactive(false)
+  ////            .internal(true)
+  ////            .encoding(StandardCharsets.UTF_8)
+  //            .build();
+  //  }
 
   private static String getTypeScriptCompilerCode() {
     try (var stream = TypeScriptCompiler.class.getResourceAsStream(TYPESCRIPT_COMPILER_PATH)) {
       if (stream == null) {
         throw new RuntimeException("TypeScript compiler not found in resources");
       }
-      try (var reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(stream), StandardCharsets.UTF_8))) {
+      try (var reader =
+          new BufferedReader(
+              new InputStreamReader(new GZIPInputStream(stream), StandardCharsets.UTF_8))) {
         // read all code preserving newlines
         return IOUtils.toString(reader);
       }

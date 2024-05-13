@@ -22,13 +22,10 @@ import com.oracle.truffle.js.runtime.objects.DefaultESModuleLoader;
 import com.oracle.truffle.js.runtime.objects.JSModuleData;
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord;
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-/**
- * TBD.
- */
+/** TBD. */
 public class TypeScriptModuleLoader extends DefaultESModuleLoader {
   private final TypeScriptCompiler tsCompiler;
 
@@ -38,13 +35,15 @@ public class TypeScriptModuleLoader extends DefaultESModuleLoader {
   }
 
   @Override
-  public JSModuleRecord resolveImportedModule(ScriptOrModule referrer, Module.ModuleRequest moduleRequest) {
+  public JSModuleRecord resolveImportedModule(
+      ScriptOrModule referrer, Module.ModuleRequest moduleRequest) {
     try {
       return super.resolveImportedModule(referrer, moduleRequest);
     } catch (JSException e1) {
       var originalSpecifier = moduleRequest.getSpecifier().toJavaStringUncached();
       var specifier = originalSpecifier + ".ts";
-      var specifierTS = TruffleString.fromJavaStringUncached(specifier, TruffleString.Encoding.UTF_8);
+      var specifierTS =
+          TruffleString.fromJavaStringUncached(specifier, TruffleString.Encoding.UTF_8);
       var tsModuleRequest = Module.ModuleRequest.create(specifierTS, moduleRequest.getAttributes());
 
       try {
@@ -59,7 +58,12 @@ public class TypeScriptModuleLoader extends DefaultESModuleLoader {
   }
 
   @Override
-  protected JSModuleRecord loadModuleFromUrl(ScriptOrModule referrer, Module.ModuleRequest moduleRequest, TruffleFile maybeModuleFile, String maybeCanonicalPath) throws IOException {
+  protected JSModuleRecord loadModuleFromUrl(
+      ScriptOrModule referrer,
+      Module.ModuleRequest moduleRequest,
+      TruffleFile maybeModuleFile,
+      String maybeCanonicalPath)
+      throws IOException {
     var maybeModuleFilePath = maybeModuleFile.getPath();
     if (maybeModuleFile.exists() && maybeModuleFilePath.endsWith(".ts")) {
       var canonicalPath = maybeModuleFile.getCanonicalFile().getPath();
@@ -69,7 +73,9 @@ public class TypeScriptModuleLoader extends DefaultESModuleLoader {
       }
 
       var content = new String(maybeModuleFile.readAllBytes(), StandardCharsets.UTF_8);
-      Source source = tsCompiler.compileToNewSource(content, moduleRequest.getSpecifier().toJavaStringUncached(), true, canonicalPath);
+      Source source =
+          tsCompiler.compileToNewSource(
+              content, moduleRequest.getSpecifier().toJavaStringUncached(), true, canonicalPath);
       JSModuleData parsedModule = realm.getContext().getEvaluator().envParseModule(realm, source);
       var module = new JSModuleRecord(parsedModule, this);
       moduleMap.put(canonicalPath, module);

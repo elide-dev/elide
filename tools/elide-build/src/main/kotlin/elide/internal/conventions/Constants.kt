@@ -90,7 +90,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.0.0-RC2"
+    const val KOTLIN_SDK_PIN = "2.0.0-RC3"
 
     /** Constant: pinned version of AtomicFU. */
     const val ATOMICFU = "0.23.2"
@@ -147,7 +147,7 @@ public object Constants {
     const val GRPC = "1.62.2"
 
     /** JLine version. */
-    const val JLINE = "3.25.1"
+    const val JLINE = "3.26.1"
 
     /** Okio version. */
     const val OKIO = "3.7.0"

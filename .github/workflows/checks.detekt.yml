@@ -130,6 +130,6 @@ jobs:
             -x nativeCompile
             -x nativeOptimizedCompile
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@c7f9125735019aa87cfc361530512d50ea439c71 # v3.25.1
+        uses: github/codeql-action/upload-sarif@b7cec7526559c32f1616476ff32d17ba4c59b2d6 # v3.25.5
         with:
           sarif_file: build/reports/detekt/detekt.sarif

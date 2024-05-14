@@ -182,9 +182,9 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-      - name: "Setup: Buildless"
-        if: contains(matrix.runner, 'macos') == false
-        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      #- name: "Setup: Buildless"
+        #if: contains(matrix.runner, 'macos') == false
+        #uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: MSVC"
         if: contains(matrix.runner, 'windows')
         uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
@@ -351,9 +351,9 @@ jobs:
             tools/elide-build/build/klib
             tools/elide-build/build/generated
             tools/elide-build/build/generated-sources
-      - name: "Setup: Buildless"
-        if: contains(matrix.runner, 'macos') == false
-        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
+      #- name: "Setup: Buildless"
+      #  if: contains(matrix.runner, 'macos') == false
+      #  uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: google-github-actions/auth@55bd3a7c6e2ae7cf1877fd1ccb9d54c0503c457c # v2.1.2

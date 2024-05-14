@@ -280,32 +280,20 @@ jobs:
     #        contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
     #        contains(github.event.head_commit.message, 'ci:build-cli')
     #      )
-
     strategy:
       fail-fast: false
       matrix:
         os: ["Linux"]
-        arch: ["amd64"]
-        runner:
-          - ${{ inputs.runner_large }}
+        arch: ["aarch64"]
+        runner: ["${{ inputs.runner_large || inputs.runner }}"]
         labs: [false]
-        tag: [linux-amd64]
+        tag: [linux-aarch64]
         include:
           - os: Linux
-            runner: ${{ inputs.runner_large }}
-            arch: amd64
+            runner: ${{ inputs.runner_large || inputs.runner }}
+            arch: aarch64
             labs: false
-            tag: linux-amd64
-          - os: macOS
-            runner: ${{ inputs.runner_large_macos }}
-            arch: amd64
-            labs: false
-            tag: darwin-amd64
-          - os: Windows
-            runner: ${{ inputs.runner_large_windows }}
-            arch: amd64
-            tag: windows-amd64
-            labs: true
+            tag: linux-aarch64
 
     steps:
       - name: "Setup: Harden Runner"

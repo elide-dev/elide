@@ -244,7 +244,11 @@ jobs:
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
+            ./packages/cli/build/native/nativeCompile/elide.debug
+            ./packages/cli/build/native/nativeCompile/elide.debug.debug
             ./packages/cli/build/native/nativeCompile/elide.debug.xz
+            ./packages/cli/build/native/nativeCompile/resources
+            ./packages/cli/build/native/nativeCompile/*.so
       - name: "Artifacts: Debug Binary (Windows)"
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         if: success() && contains(matrix.runner, 'windows')
@@ -252,13 +256,8 @@ jobs:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug
-      - name: "Artifacts: Dashboard Dump"
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
-        if: success()
-        with:
-          name: cli-debug-report-${{ matrix.tag }}
-          path: |
-            ./packages/cli/build/native/nativeCompile/elide-tool.bgv
+            ./packages/cli/build/native/nativeCompile/resources
+            ./packages/cli/build/native/nativeCompile/*.dll
 
   ##
   ## Job: CLI (Native Release)
@@ -379,6 +378,7 @@ jobs:
           arguments: |
             :packages:cli:nativeOptimizedCompile
             :packages:cli:dist
+            -x :packages:cli:nativeCompile
             -Prelease=true
             -PbuildMode=release
             --scan
@@ -395,4 +395,6 @@ jobs:
         with:
           name: cli-release-${{ matrix.tag }}
           path: |
-            ./packages/cli/build/distributions/*
+            ./packages/cli/build/native/nativeOptimizedCompile/elide
+            ./packages/cli/build/native/nativeOptimizedCompile/resources
+            ./packages/cli/build/native/nativeOptimizedCompile/*.so

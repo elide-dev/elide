@@ -106,7 +106,7 @@ val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompi
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val oracleGvm = false
+val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
 val enablePython = true

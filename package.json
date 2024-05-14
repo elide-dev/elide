@@ -51,7 +51,7 @@
     "@mdx-js/esbuild": "3.0.1",
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
-    "@types/node": "20.12.7",
+    "@types/node": "20.12.12",
     "@typescript-eslint/eslint-plugin": "7.7.1",
     "@typescript-eslint/parser": "7.7.1",
     "commitlint": "19.3.0",

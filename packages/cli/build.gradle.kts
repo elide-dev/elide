@@ -900,7 +900,7 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else listOf(
   "-Delide.vm.engine.preinitialize=false",
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
+  "-J-Xmx24g",
 ) else emptyList())).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:-AuxiliaryEngineCache",
 ) else emptyList())
@@ -915,7 +915,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else listOf(
   "-Delide.vm.engine.preinitialize=false",
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
+  "-J-Xmx24g",
 ) else listOf(
   "-J-Xmx48g",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
@@ -967,7 +967,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
   ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
+  "-J-Xmx24g",
 ) else listOf(
   "-J-Xmx24g",
 ))

@@ -978,7 +978,7 @@ val linuxGvmReleaseFlags = listOf(
 
 val linuxReleaseArgs = linuxOnlyArgs.plus(
   listOf(
-    "-R:+WriteableCodeCache",
+//    "-R:+WriteableCodeCache",
     "-H:+StripDebugInfo",
   ).plus(if (oracleGvm) linuxGvmReleaseFlags else emptyList()),
 )

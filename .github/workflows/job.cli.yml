@@ -118,22 +118,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["Linux"]
+        os: ["macOS"]
         arch: ["amd64"]
-        runner: ["${{ inputs.runner_large }}"]
+        runner: ["${{ inputs.runner_large || inputs.runner }}"]
         labs: [false]
-        tag: [linux-amd64]
-        include:
-          - os: Linux
-            runner: ${{ inputs.runner_large }}
-            arch: amd64
-            labs: false
-            tag: linux-amd64
-          - os: macOS
-            runner: ${{ inputs.runner_large_macos }}
-            arch: amd64
-            labs: false
-            tag: darwin-amd64
+        tag: [darwin-amd64]
 
     steps:
       - name: "Setup: Harden Runner"

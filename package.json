@@ -40,7 +40,7 @@
     "jszip": "3.10.1",
     "mitata": "git+https://github.com/elide-dev/mitata.git#e886e79f03987d452a90e6a6978e4bbe9ea68198",
     "postcss": "8.4.38",
-    "preact": "10.21.0",
+    "preact": "10.22.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typescript": "5.4.5",

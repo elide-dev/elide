@@ -53,7 +53,7 @@ You can also use Elide in a container, or in a GitHub Codespace.
 ### Using Elide via Docker
 
 ```
-docker run --platform linux/amd64 --rm -it ghcr.io/elide-dev/elide --help
+docker run --rm -it ghcr.io/elide-dev/elide --help
 ```
 
 ### Using Elide via Homebrew

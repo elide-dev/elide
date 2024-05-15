@@ -1,0 +1,2 @@
+theme /home/dev/.elide/nanorc/dark.nanorctheme
+include /home/dev/.elide/nanorc/*.nanorc

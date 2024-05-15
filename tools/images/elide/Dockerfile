@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 debian:stable-slim AS builder
+FROM debian:stable-slim@sha256:2b2e35d67c8fda0ba853d40cd18e57b99ab12d82fd3200607015eb09784068bd AS builder
 
 RUN apt-get update \
   && apt-get install -y \
@@ -13,15 +13,15 @@ RUN apt-get update \
 USER dev
 RUN echo "Installing Elide..." && curl -sSL elide.sh | bash -s -
 
-FROM --platform=linux/amd64 debian:stable-slim AS runtime
+FROM debian:stable-slim@sha256:2b2e35d67c8fda0ba853d40cd18e57b99ab12d82fd3200607015eb09784068bd AS runtime
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime"
 LABEL org.opencontainers.image.description="Elide runtime CLI as a container image"
 LABEL org.opencontainers.image.version=1.0.0-alpha9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
-LABEL org.opencontainers.image.base.name=ghcr.io/elide-dev/base
-LABEL org.opencontainers.image.base.digest=sha256:ce2fe9474ca168eebfd35b0c7682db11045b0f10418ec46ae9b0c7610c295913
+LABEL org.opencontainers.image.base.name=debian:stable-slim
+LABEL org.opencontainers.image.base.digest=sha256:2b2e35d67c8fda0ba853d40cd18e57b99ab12d82fd3200607015eb09784068bd
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/elide/Dockerfile
 
 RUN groupadd elide \
@@ -34,11 +34,17 @@ RUN groupadd elide \
     bash \
     ca-certificates \
     curl \
-    uuid-runtime
+    uuid-runtime \
+    locales \
+  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+  && locale-gen en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
 
 COPY --from=builder --chown=dev:elide /home/dev/elide /home/dev/elide
-COPY entrypoint.sh /home/dev/elide/entrypoint.sh
 USER dev
+COPY ./elide /home/dev/.elide
+COPY entrypoint.sh /home/dev/elide/entrypoint.sh
 
 RUN echo "Setting up Elide..." \
   && mkdir -p /home/dev/.elide /home/dev/workdir \

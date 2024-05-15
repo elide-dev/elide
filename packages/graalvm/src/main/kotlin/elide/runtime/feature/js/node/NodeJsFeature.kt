@@ -16,6 +16,7 @@ import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import kotlin.reflect.KClass
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.FrameworkFeature
+import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
 import elide.runtime.gvm.internals.node.asserts.NodeAssert
@@ -55,6 +56,7 @@ import elide.runtime.gvm.internals.node.test.NodeTest
 import elide.runtime.gvm.internals.node.url.NodeURL
 import elide.runtime.gvm.internals.node.worker.NodeWorker
 import elide.runtime.gvm.internals.node.zlib.NodeZlib
+import elide.runtime.intrinsics.js.JavaScriptConsole
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.node.*
@@ -101,6 +103,8 @@ import elide.runtime.intrinsics.js.node.stream.Writable
     // `console`
     cls(ConsoleAPI::class)
     cls(NodeConsole::class)
+    cls(JavaScriptConsole::class)
+    cls(ConsoleIntrinsic::class)
 
     // `crypto`
     cls(CryptoAPI::class)

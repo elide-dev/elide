@@ -228,6 +228,7 @@ jobs:
           arguments: |
             :packages:cli:nativeCompile
             -Prelease=false
+            -Pelide.stamp=true
             -PbuildMode=dev
             --scan
             --no-daemon
@@ -393,6 +394,9 @@ jobs:
             -x :packages:cli:nativeCompile
             -Prelease=true
             -PbuildMode=release
+            -Pelide.release=true
+            -Pelide.buildMode=release
+            -Pelide.stamp=true
             --scan
             --no-daemon
             --warning-mode=none

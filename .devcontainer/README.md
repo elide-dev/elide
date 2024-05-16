@@ -31,7 +31,11 @@ elide selftest
 **To run a JavaScript terminal:**
 
 ```
-elide shell
+elide
+```
+Or:
+```
+elide repl
 ```
 
 **Encode some JSON:**
@@ -69,7 +73,7 @@ elide serve tools/scripts/server.js
 **To run a Python terminal:**
 
 ```
-elide shell --python
+elide repl --python
 ```
 
 **To see `.env` environment:**
@@ -77,3 +81,31 @@ elide shell --python
 ```python
 import os; print(os.environ)
 ```
+
+**To see all environment, including host env:**
+
+```
+elide repl --python --host:allow-env
+```
+
+```python
+import os; print(os.environ)
+```
+
+### Ruby
+
+**To run a Ruby terminal:**
+
+```
+elide repl --ruby
+```
+
+**Say hello:**
+
+```ruby
+puts "Hello, Elide!"
+```
+
+## Further Reading
+
+Check out Elide's [docs](https://docs.elide.dev) for more exercises.

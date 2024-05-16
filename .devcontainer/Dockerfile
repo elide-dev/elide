@@ -25,7 +25,10 @@ RUN apt-get update \
   && elide --help \
   && elide selftest \
   && elide info \
+  && mkdir -p $HOME/.elide \
   && echo "Elide codespace container image ready."
 
-ENTRYPOINT ["/usr/local/share/docker-init.sh"]
+COPY ./elide-home/* /home/vscode/.elide/
+RUN chown -R $(whoami) $HOME/.elide
+
 CMD ["sleep", "infinity"]

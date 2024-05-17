@@ -3956,6 +3956,30 @@
     "pattern":"org/jline/utils/.*caps$"
   }, {
     "pattern":"org/jline/utils/capabilities\\.txt$"
+  }, {
+    "pattern":"\\Qnanorc/args.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/command.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/dark.nanorctheme\\E"
+  }, {
+    "pattern":"\\Qnanorc/java.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/javascript.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/json.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/kotlin.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/light.nanorctheme\\E"
+  }, {
+    "pattern":"\\Qnanorc/nanorctheme.template\\E"
+  }, {
+    "pattern":"\\Qnanorc/python.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/ruby.nanorc\\E"
+  }, {
+    "pattern":"\\Qnanorc/ts.nanorc\\E"
   }]},
   "bundles":[{
     "name":"ElideTool",

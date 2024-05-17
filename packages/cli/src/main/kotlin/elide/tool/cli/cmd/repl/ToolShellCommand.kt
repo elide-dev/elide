@@ -1017,7 +1017,12 @@ import elide.tool.project.ProjectManager
           logging.debug("Syntax file '$it' already exists. Skipping...")
           return@forEach
         }
-        val fileStream = ToolShellCommand::class.java.getResourceAsStream("/nanorc/$it") ?: return@forEach
+        val fileStream = ToolShellCommand::class.java.getResourceAsStream("/nanorc/$it")
+        if (fileStream == null) {
+          logging.warn("Failed to locate nanorc config file from resources: $it")
+          return@forEach
+        }
+
         val contents = IOUtils.readText(fileStream.bufferedReader(StandardCharsets.UTF_8))
 
         try {

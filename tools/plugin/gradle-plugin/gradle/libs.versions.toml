@@ -40,7 +40,7 @@ kover_plugin = "0.7.5"
 testLoggerPlugin = "4.0.0"
 dependencyAnalysis = "1.31.0"
 micronaut = "4.4.1"
-micronaut_plugin = "4.3.8"
+micronaut_plugin = "4.4.0"
 zstd = "1.5.6-3"
 
 [plugins]

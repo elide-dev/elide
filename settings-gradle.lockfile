@@ -2,5 +2,5 @@
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
 dev.elide:elide-bom:1.0.0-alpha8=incomingCatalogForFramework0
-io.micronaut.platform:micronaut-platform:4.3.8=incomingCatalogForMn0
+io.micronaut.platform:micronaut-platform:4.4.0=incomingCatalogForMn0
 empty=incomingCatalogForLibs0

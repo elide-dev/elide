@@ -11,10 +11,6 @@
  *  License for the specific language governing permissions and limitations under the License.
  */
 
-//
-// Elide
-//
-
 @file:Suppress(
   "UnstableApiUsage",
   "DSL_SCOPE_VIOLATION",

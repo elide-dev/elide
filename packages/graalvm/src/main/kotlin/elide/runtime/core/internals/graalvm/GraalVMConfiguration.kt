@@ -12,7 +12,10 @@
  */
 package elide.runtime.core.internals.graalvm
 
+import java.net.URL
+import java.util.LinkedList
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.collections.immutable.toImmutableList
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.internals.MutableEngineLifecycle
@@ -25,13 +28,23 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   /** A [MutableEngineLifecycle] instance that can be used to emit events to registered plugins. */
   private val lifecycle: MutableEngineLifecycle
 ) : PolyglotEngineConfiguration() {
+  // Registered VFS bundles from plugins.
+  private val registeredBundles = LinkedList<URL>()
+
   /**
    * Represents an [InstallationScope] used by plugins, binding to this configuration's lifecycle and other required
    * properties.
    */
-  @JvmInline private value class GraalVMInstallationScope(val config: GraalVMConfiguration) : InstallationScope {
+  private inner class GraalVMInstallationScope(val config: GraalVMConfiguration) : InstallationScope {
     override val configuration: PolyglotEngineConfiguration get() = config
     override val lifecycle: EngineLifecycle get() = config.lifecycle
+
+    override fun registerBundle(resource: URL) {
+      registeredBundles.add(resource)
+    }
+
+    override fun registeredBundles(): List<URL> =
+      registeredBundles.toImmutableList()
   }
 
   /** Internal map holding plugin instances that can be retrieved during engine configuration. */
@@ -73,4 +86,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   override fun args(args: Array<String>) {
     entrypointArgs.set(args)
   }
+
+  override fun registeredBundles(): List<URL> =
+    registeredBundles.toImmutableList()
 }

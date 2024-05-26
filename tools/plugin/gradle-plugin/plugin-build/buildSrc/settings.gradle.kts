@@ -20,7 +20,7 @@ pluginManagement {
 
         maven {
             name = "elide-snapshots"
-            url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+            url = uri("https://maven.elide.dev")
             content {
                 includeGroup("dev.elide")
             }
@@ -38,7 +38,7 @@ dependencyResolutionManagement {
         maven("https://gradle.pkg.st")
         maven {
             name = "elide-snapshots"
-            url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+            url = uri("https://maven.elide.dev")
             content {
                 includeGroup("dev.elide")
                 includeGroup("dev.elide.tools")

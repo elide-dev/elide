@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.intrinsics.server.http.internal
 
 import elide.runtime.core.DelicateElideApi
@@ -22,7 +21,7 @@ import elide.runtime.core.DelicateElideApi
  * called to obtain new thread-scoped references provided by guest code.
  *
  * By scoping handler references to the current thread, this registry guarantees that they can safely be used with a
- * simiarily scoped context, avoiding the limitations on concurrency imposed by GraalVM's JavaScript engine and other
+ * similarly scoped context, avoiding the limitations on concurrency imposed by GraalVM's JavaScript engine and other
  * single-threaded guest languages.
  *
  * @param preInitialized Whether to pre-initialize the backing map for the construction thread.

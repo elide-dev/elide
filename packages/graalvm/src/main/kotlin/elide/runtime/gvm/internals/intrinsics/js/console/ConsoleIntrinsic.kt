@@ -10,9 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.intrinsics.js.console
 
+import io.micronaut.core.annotation.ReflectiveAccess
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -34,6 +34,7 @@ import org.graalvm.polyglot.Value as GuestValue
  * Defines a native intrinsic for use as a JavaScript `console` implementation; pipes to the central Elide logging
  * system, with each corresponding log level. See method documentation for more info.
  */
+@ReflectiveAccess
 @Intrinsic(global = ConsoleIntrinsic.GLOBAL_CONSOLE)
 internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   internal companion object {

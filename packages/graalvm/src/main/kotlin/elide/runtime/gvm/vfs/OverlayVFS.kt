@@ -17,7 +17,7 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
-import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.vfs.GuestVFS
 
 /**
  * # Virtual File Systems: Overlays

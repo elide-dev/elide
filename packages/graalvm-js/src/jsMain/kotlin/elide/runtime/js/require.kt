@@ -23,6 +23,6 @@ public external fun require(module: String): dynamic
 /**
  *
  */
-public fun <T : Any> import(path: String): js.promise.Promise<T> {
+public suspend fun <T : Any> import(path: String): js.promise.Promise<T> {
   return jsImport(path)
 }

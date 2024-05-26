@@ -88,6 +88,10 @@ public class DetektConventionsPlugin : Plugin<Project> {
           enabled = false
           jvmTarget = "21"  // @TODO pull from property state
         }
+        target.tasks.withType(DetektCreateBaselineTask::class) {
+          enabled = false
+          jvmTarget = "21"  // @TODO pull from property state
+        }
       }
     }
   }

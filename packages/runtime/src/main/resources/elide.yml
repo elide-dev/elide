@@ -1,0 +1,39 @@
+elide:
+  gvm:
+    enabled: true
+    languages: ["JS"]
+    defer: true
+    js:
+      enabled: true
+      wasm: true
+      interactive: false
+
+micronaut:
+  application:
+    name: elide
+    default-charset: utf-8
+
+  executors:
+    default:
+      threads: 1
+      type: VIRTUAL
+    io:
+      threads: 2
+      type: VIRTUAL
+    scheduled:
+      threads: 1
+      type: VIRTUAL
+
+jackson:
+  serialization:
+    ORDER_MAP_ENTRIES_BY_KEYS: true
+
+## Performance
+netty.default.allocator.max-order: 3
+netty.resource-leak-detector-level: DISABLED
+micronaut.server.netty.use-native-transport: true
+micronaut.server.netty.parent.prefer-native-transport: true
+micronaut.server.netty.worker.prefer-native-transport: true
+micronaut.netty.event-loops.default.prefer-native-transport: true
+micronaut.netty.event-loops.default.num-threads: 2
+micronaut.netty.event-loops.parent.num-threads: 2

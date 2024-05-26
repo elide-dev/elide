@@ -29,7 +29,7 @@ dependencyResolutionManagement {
 
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")

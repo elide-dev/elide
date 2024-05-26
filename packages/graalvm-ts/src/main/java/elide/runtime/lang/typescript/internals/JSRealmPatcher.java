@@ -12,11 +12,13 @@
  */
 package elide.runtime.lang.typescript.internals;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.js.runtime.JSRealm;
 import java.lang.reflect.Field;
 
 /** TBD. */
 public class JSRealmPatcher {
+  @CompilerDirectives.TruffleBoundary
   public static void setTSModuleLoader(JSRealm jsRealm, TypeScriptModuleLoader newModuleLoader) {
     try {
       Field moduleLoaderField = JSRealm.class.getDeclaredField("moduleLoader");
@@ -26,7 +28,7 @@ public class JSRealmPatcher {
         moduleLoaderField.set(jsRealm, newModuleLoader);
       }
     } catch (NoSuchFieldException | IllegalAccessException e) {
-      throw new RuntimeException(e);
+      assert false;
     }
   }
 }

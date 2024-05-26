@@ -45,6 +45,10 @@ gradlePlugin {
       id = "elide.internal.cpp"
       implementationClass = "elide.internal.cpp.ElideCppPlugin"
     }
+    create("elideToolchainManager") {
+      id = "elide.toolchains.jvm"
+      implementationClass = "elide.toolchain.jvm.JvmToolchainResolverPlugin"
+    }
   }
 }
 

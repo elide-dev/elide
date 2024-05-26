@@ -69,7 +69,7 @@ jobs:
             api.github.com:443
             d3ob9fqp587by1.cloudfront.net:443
             download.oracle.com:443
-            elide-snapshots.storage-download.googleapis.com:443
+            maven.elide.dev:443
             github.com:443
             dl.less.build:443
             gradle.less.build:443

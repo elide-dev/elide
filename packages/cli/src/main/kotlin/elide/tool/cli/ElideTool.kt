@@ -43,6 +43,7 @@ import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.lint.ToolLintCommand
+import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.selftest.SelfTestCommand
 import elide.tool.cli.cmd.update.SelfUpdateCommand
@@ -67,6 +68,7 @@ import elide.tool.io.RuntimeWorkdirManager
     HelpCommand::class,
     SelfUpdateCommand::class,
     SelfTestCommand::class,
+    ToolPklCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
     "   ______     __         __     _____     ______%n" +
@@ -117,7 +119,34 @@ import elide.tool.io.RuntimeWorkdirManager
     }
 
     @JvmStatic private fun initializeTerminal() {
+      assert(!ImageInfo.inImageBuildtimeCode())
       org.fusesource.jansi.AnsiConsole.systemInstall()
+    }
+
+    @JvmStatic private fun initializeTerminalNative(win32: Boolean = false) {
+      // this trick is necessary to capture the out/err streams set up by `AnsiConsole`, which performs those steps in
+      // private code; after the streams are captured, they are uninstalled and instead mounted via the native image
+      // I/O stream wrappers, which will delegate to the assigned streams anyway.
+      //
+      // streams for stdout and stderr are forbidden to be replaced during native image building, and this class must
+      // initialize at build time for the compiler to effectively optimize the rest of the runtime; thus, this routine
+      // replaces `initializeTerminal` only for build-time execution.
+      try {
+        org.fusesource.jansi.AnsiConsole.systemInstall().also {
+          // capture assigned streams
+          Statics.assignStreams(
+            out = System.out,
+            err = System.err,
+            `in` = System.`in`,
+          )
+        }
+      } finally {
+        // thou shall not pass
+        org.fusesource.jansi.AnsiConsole.systemUninstall()
+        org.fusesource.jansi.AnsiConsole.systemUninstall()
+        org.fusesource.jansi.AnsiConsole.systemUninstall()
+        org.fusesource.jansi.AnsiConsole.systemUninstall()
+      }
     }
 
     // Maybe install terminal support for Windows if it is needed.
@@ -140,8 +169,15 @@ import elide.tool.io.RuntimeWorkdirManager
       }
 
       val runner = {
-        if (!org.fusesource.jansi.AnsiConsole.isInstalled()) {
-          initializeTerminal()
+        when {
+          // build-time code cannot swap the out/err streams, but instead must delegate via the native I/O wrapper.
+          ImageInfo.inImageBuildtimeCode() -> {
+          }
+
+          // otherwise, we can simply swap the streams so that the ANSI terminal takes over.
+          !org.fusesource.jansi.AnsiConsole.isInstalled() -> {
+            initializeTerminal()
+          }
         }
       }
 

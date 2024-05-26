@@ -14,8 +14,8 @@ package elide.runtime.gvm.vfs
 
 import org.graalvm.polyglot.io.FileSystem
 import java.nio.file.Path
-import elide.runtime.gvm.internals.LanguageVFS
-import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
+import elide.runtime.vfs.LanguageVFS
+import elide.runtime.vfs.LanguageVFS.LanguageVFSInfo
 
 /**
  * # Virtual File Systems: Language I/O
@@ -44,28 +44,6 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
  * VFS instances, which return the appropriate data.
  */
 public object LanguageVFS {
-  /**
-   * ## Language VFS Info
-   *
-   * Describes a configured language-level virtual file system; this includes a [fsProvider] which can be used to obtain
-   * the VFS implementation, and a [router] function which decides if a path is eligible to be handled by the VFS.
-   */
-  public interface LanguageVFSInfo {
-    /**
-     * ### Language VFS: Router
-     *
-     * Given a [Path], determine if this language VFS instance should handle I/O.
-     */
-    public val router: (Path) -> Boolean
-
-    /**
-     * ### Language VFS: Provider
-     *
-     * Obtain an instance of the language VFS which should handle an eligible path.
-     */
-    public val fsProvider: () -> FileSystem
-  }
-
   /**
    * Delegate VFS
    *

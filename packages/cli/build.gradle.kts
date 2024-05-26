@@ -88,7 +88,7 @@ elide {
 // Flags affecting this build script:
 //
 // - `elide.release`: true/false
-// - `elide.buildMode`: `dev`, `release`, etc
+// - `elide.buildMode`: `dev`, `release`, `debug`
 // - `elide.targetOs`: `darwin`, `linux`, `windows`
 // - `elide.targetArch`: `amd64`, `arm64`
 
@@ -100,17 +100,23 @@ val isRelease = !quickbuild && (
   project.properties["elide.release"] == "true" ||
   project.properties["elide.buildMode"] == "release"
 )
+val isDebug = !isRelease && (
+  project.properties["elide.buildMode"] == "debug"
+)
 
 val nativesType = if (isRelease) "release" else "debug"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
+val enablePkl = false
 val oracleGvm = false
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
 val enableRuby = true
+val enableJit = true
+val enablePreinitializeAll = true
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
@@ -131,6 +137,7 @@ val enablePgoInstrumentation = false
 val enableJna = true
 val enableSbom = true
 val enableSbomStrict = false
+val glibcTarget = "glibc"
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 val globalExclusions = emptyList<Pair<String, String>>()
@@ -144,7 +151,7 @@ buildscript {
     maven("https://gradle.pkg.st")
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
@@ -203,17 +210,26 @@ val ktCompilerArgs = listOf(
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
   // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0-RC3",
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0",
 )
 
+val edgeJvmTarget = 23
+val edgeJavaVersion = JavaVersion.toVersion(edgeJvmTarget)
+val jvmType = if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
+
+val gvmEdgeLauncher = javaToolchains.launcherFor {
+  languageVersion.set(JavaLanguageVersion.of(edgeJvmTarget))
+  vendor.set(jvmType)
+}
+
 java {
-  sourceCompatibility = JavaVersion.VERSION_22
-  targetCompatibility = JavaVersion.VERSION_22
+  sourceCompatibility = edgeJavaVersion
+  targetCompatibility = edgeJavaVersion
   if (enableJpms) modularity.inferModulePath = true
 
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(22))
-    vendor.set(JvmVendorSpec.GRAAL_VM)
+    languageVersion.set(JavaLanguageVersion.of(edgeJvmTarget))
+    vendor.set(jvmType)
   }
 }
 
@@ -298,6 +314,7 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.tink)
+  implementation(libs.bouncycastle)
   implementation(libs.github.api) {
     exclude(group = "org.bouncycastle")
   }
@@ -310,6 +327,13 @@ dependencies {
 
   // Truffle NFI
   api(libs.graalvm.truffle.nfi.libffi)
+
+  // Pkl
+  if (enablePkl) {
+    implementation(libs.pkl.core)
+    implementation(libs.pkl.cli)
+    implementation(libs.pkl.executor)
+  }
 
   // GraalVM: Tooling
   implementation(libs.graalvm.tools.dap)
@@ -429,10 +453,12 @@ dependencies {
           implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
           implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-$arch") })
           implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-$arch") })
-          if (targetArch == "aarch64") {
-            implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
-          } else {
-            implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
+          if (oracleGvm && !enableEdge) {
+            if (targetArch == "aarch64") {
+              implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
+            } else {
+              implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
+            }
           }
         }
 
@@ -446,10 +472,12 @@ dependencies {
           if (enableExperimental) {
             api(libs.graalvm.truffle.nfi.panama)
           }
-          if (targetArch == "aarch64") {
-            implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
-          } else {
-            implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
+          if (oracleGvm && !enableEdge) {
+            if (targetArch == "aarch64") {
+              implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
+            } else {
+              implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
+            }
           }
         }
       }
@@ -669,8 +697,18 @@ val commonGvmArgs = listOfNotNull(
 ).plus(if (enableBuildReport) listOf("-H:+BuildReport") else emptyList())
 
 val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
+val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 
 val commonNativeArgs = listOfNotNull(
+//  "--report-unsupported-elements-at-runtime",
+//  "--trace-object-instantiation=org.jline.terminal.impl.jna.solaris.CLibrary",
+//  "--trace-object-instantiation=kotlin.random.jdk8.PlatformThreadLocalRandom",
+//  "--trace-object-instantiation=java.nio.DirectByteBuffer",
+//  "--trace-object-instantiation=org.bouncycastle.crypto.prng.SP800SecureRandom",
+//  "-H:-TruffleCheckBlockListMethods",
+  if (enableJit) null else "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime",
+  "--strict-image-heap",
+  //
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -682,8 +720,6 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
-  "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
-  "-J-Dgraalvm.locatorDisabled=false",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
@@ -693,18 +729,19 @@ val commonNativeArgs = listOfNotNull(
   "-H:MaxRuntimeCompileMethods=10000",
   "-Delide.natives=$nativesPath",
   "-J-Delide.natives=$nativesPath",
+  "-J-Delide.js.vm.enableStreams=true",
   "-H:CLibraryPath=$nativesPath",
-//  if (enableEspresso) "-H:+AllowJRTFileSystem" else null,
-//  if (enableEspresso) "-J-Djdk.image.use.jvm.map=false" else null,
-//  if (enableEspresso) "-J-Despresso.finalization.UnsafeOverride=true" else null,
   "-R:MaxDirectMemorySize=256M",
   "-J-Dio.netty.allocator.type=unpooled",
+  "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
+  "-J-Dgraalvm.locatorDisabled=false",
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
     "js",
-    if (enableRuby) "ruby" else null,
-    if (enablePython) "python" else null,
-    if (enableEspresso) "java" else null,
+    if (enablePkl) "pkl" else null,
+    if (enablePreinitializeAll && enableRuby) "ruby" else null,
+    if (enablePreinitializeAll && enablePython) "python" else null,
+    if (enablePreinitializeAll && enableEspresso) "java" else null,
   ).joinToString(","),
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
   if (enablePgoSampling) "--pgo-sampling" else null,
@@ -718,6 +755,8 @@ val commonNativeArgs = listOfNotNull(
 
 val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
+  "-H:DashboardJson=true",
+  "-H:DashboardBgv=false",
   "-H:+DashboardAll",
 )
 
@@ -779,17 +818,21 @@ val profiles: List<String> = listOf(
 
 // GVM release flags
 val gvmReleaseFlags: List<String> = listOf(
-  "-O3",
-  //"-flto",
+  "-O4",
+)
+
+// Experimental C-compiler flags.
+val experimentalCFlags: List<String> = listOf(
+  "-flto=thin",
 )
 
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
-  "-O3",
+  "-O4",
   "-H:+RemoveUnusedSymbols",
   "-H:-ParseRuntimeOptions",
   "-H:+LocalizationOptimizedMode",
-).asSequence().plus(releaseCFlags.flatMap {
+).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
     "--native-compiler-options=$it",
@@ -816,6 +859,14 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
+  // --- macOS/JDK -----
+
+  "apple.security.AppleProvider",
+
+  // --- Kotlin -----
+
+  // tbd
+
   // --- TypeScript -----
 
   "elide.runtime.lang.typescript.TypeScriptLanguage",
@@ -858,6 +909,18 @@ val initializeAtBuildTime = listOf(
   "org.slf4j.helpers.BasicMarkerFactory",
   "org.slf4j.helpers.BasicMarker",
 
+  // --- Pkl -----
+
+  "org.pkl",
+  "org.antlr",
+  "org.fusesource",
+  "org.intellij",
+  "org.jetbrains.annotations",
+  "org.organicdesign",
+  "org.jline",
+  "org.msgpack",
+  "org.snakeyaml.engine",
+
   // --- Mordant -----
 
   "com.github.ajalt.mordant.internal.MppImplKt",
@@ -866,7 +929,13 @@ val initializeAtBuildTime = listOf(
   // --- Netty ------
 
   "io.netty.util.concurrent.FastThreadLocal",
-)
+).plus(if (enablePkl) listOf(
+  "org.pkl.core.runtime.VmLanguageProvider",
+  "org.pkl.core.runtime.VmLanguage",
+  "org.pkl.core.runtime.VmContext",
+  "org.pkl.core.runtime.VmContext${'$'}Holder",
+  "org.pkl.core.runtime.VmEngineManager",
+) else emptyList())
 
 val initializeAtBuildTimeTest: List<String> = listOf(
   "org.junit.platform.launcher.core.LauncherConfig",
@@ -874,14 +943,135 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
+  "sun.nio.ch.UnixDomainSockets",
+
+  // --- JVM/JDK -----
+
   "com.sun.tools.javac.file.Locations",
+
+  // --- OSHI -----
+
+  "oshi.hardware.platform.linux",
+  "oshi.hardware.platform.mac",
+  "oshi.hardware.platform.unix",
+  "oshi.hardware.platform.unix.aix",
+  "oshi.hardware.platform.unix.freebsd",
+  "oshi.hardware.platform.unix.openbsd",
+  "oshi.hardware.platform.unix.solaris",
+  "oshi.hardware.platform.windows",
+  "oshi.software.os",
+  "oshi.software.os.linux",
+  "oshi.util.platform.linux.DevPath",
+  "oshi.util.platform.linux.SysPath",
+  "oshi.util.platform.linux.ProcPath",
+  "oshi.software.os.linux.LinuxOperatingSystem",
+  "oshi.software.os.mac",
+  "oshi.util.platform.mac.CFUtil",
+  "oshi.util.platform.mac.SmcUtil",
+  "oshi.util.platform.mac.SysctlUtil",
+  "oshi.software.os.mac.MacOperatingSystem",
+  "oshi.software.os.unix.aix",
+  "oshi.software.os.unix.aix.AixOperatingSystem",
+  "oshi.software.os.unix.freebsd",
+  "oshi.software.os.unix.freebsd.FreeBsdOperatingSystem",
+  "oshi.util.platform.unix.freebsd.ProcstatUtil",
+  "oshi.util.platform.unix.freebsd.BsdSysctlUtil",
+  "oshi.software.os.unix.openbsd",
+  "oshi.software.os.unix.openbsd.OpenBsdOperatingSystem",
+  "oshi.util.platform.unix.openbsd.FstatUtil",
+  "oshi.util.platform.unix.openbsd.OpenBsdSysctlUtil",
+  "oshi.software.os.unix.solaris",
+  "oshi.software.os.unix.solaris.SolarisOperatingSystem",
+  "oshi.util.platform.unix.solaris.KstatUtil",
+  "oshi.software.os.windows",
+  "oshi.software.os.windows.WindowsOperatingSystem",
+
+  // --- Logback -----
+
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
+
+  // --- Micronaut -----
+
   "io.micronaut.core.util.KotlinUtils",
+  "io.micronaut.core.io.socket.SocketUtils",
+  "io.micronaut.core.type.RuntimeTypeInformation${'$'}LazyTypeInfo",
+  "io.micronaut.context.env.CachedEnvironment",
+  "io.micronaut.context.env.exp.RandomPropertyExpressionResolver",
+
+  // --- Kotlin -----
+
   "kotlin.random.AbstractPlatformRandom",
   "kotlin.random.XorWowRandom",
+  "kotlin.random.Random",
   "kotlin.random.Random${'$'}Default",
   "kotlin.random.RandomKt",
   "kotlin.random.jdk8.PlatformThreadLocalRandom",
+
+  // --- Netty -----
+
+  "io.netty.buffer.PooledByteBufAllocator",
+  "io.netty.buffer.ByteBufAllocator",
+  "io.netty.buffer.ByteBufUtil",
+  "io.netty.buffer.AbstractReferenceCountedByteBuf",
+  "io.netty.handler.codec.compression.BrotliDecoder",
+  "io.netty.channel.epoll",
+  "io.netty.channel.unix.Limits",
+  "io.netty.channel.unix.IovArray",
+  "io.netty.channel.unix.Errors",
+  "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
+  "io.netty.resolver.dns.DnsServerAddressStreamProviders${'$'}DefaultProviderHolder",
+  "io.netty.resolver.dns.DnsNameResolver",
+  "io.netty.resolver.HostsFileEntriesResolver",
+  "io.netty.resolver.dns.ResolvConf${'$'}ResolvConfLazy",
+  "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
+  "io.netty.handler.codec.http2.Http2CodecUtil",
+  "io.netty.handler.codec.http2.Http2ClientUpgradeCodec",
+  "io.netty.handler.codec.http2.Http2ConnectionHandler",
+  "io.netty.handler.codec.http2.DefaultHttp2FrameWriter",
+  "io.netty.incubator.channel.uring.IOUringEventLoopGroup",
+
+  // --- JNA -----
+
+  "com.sun.jna.internal.Cleaner",
+  "com.sun.jna.internal.Cleaner${'$'}Cleanable",
+  "com.sun.jna.internal.Cleaner${'$'}CleanerRef",
+  "com.sun.jna.internal.Cleaner${'$'}CleanerThread",
+
+  // --- BouncyCastle -----
+
+  "org.bouncycastle.jcajce.provider.drbg.DRBG",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}Default",
+
+  // --- Elide -----
+
+  "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
+
+  // --- JLine Native -----
+
+  "org.jline.terminal.impl.jna.osx.OsXNativePty",
+  "org.jline.terminal.impl.jna.linux.LinuxNativePty",
+  "org.jline.nativ.Kernel32",
+  "org.jline.nativ.Kernel32${'$'}CHAR_INFO",
+  "org.jline.nativ.Kernel32${'$'}CONSOLE_SCREEN_BUFFER_INFO",
+  "org.jline.nativ.Kernel32${'$'}COORD",
+  "org.jline.nativ.Kernel32${'$'}FOCUS_EVENT_RECORD",
+  "org.jline.nativ.Kernel32${'$'}INPUT_EVENT_RECORD",
+  "org.jline.nativ.Kernel32${'$'}INPUT_RECORD",
+  "org.jline.nativ.Kernel32${'$'}KEY_EVENT_RECORD",
+  "org.jline.nativ.Kernel32${'$'}MENU_EVENT_RECORD",
+  "org.jline.nativ.Kernel32${'$'}MOUSE_EVENT_RECORD",
+  "org.jline.nativ.Kernel32${'$'}SMALL_RECT",
+  "org.jline.nativ.Kernel32${'$'}WINDOW_BUFFER_SIZE_RECORD",
+).plus(if (enablePkl) listOf(
+  "org.msgpack.core.buffer.DirectBufferAccess",
+  "org.pkl.cli.repl.ReplCommandsKt",
+) else emptyList())
+
+val pklArgs: List<String> = listOf(
+  "-H:IncludeResources=org/pkl/core/stdlib/.*\\.pkl",
+  "-H:IncludeResources=org/jline/utils/.*",
+  "-H:IncludeResources=org/pkl/commons/cli/commands/IncludedCARoots.pem",
+  "-H:IncludeResourceBundles=org.pkl.core.errorMessages",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -891,7 +1081,7 @@ val rerunAtRuntimeTest: List<String> = emptyList()
 val defaultPlatformArgs: List<String> = listOf()
 
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
+  "-march=compatibility",
   "--gc=serial",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
@@ -906,7 +1096,7 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else emptyList())
 
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
+  "-march=compatibility",
   "--gc=serial",
   "--initialize-at-build-time=sun.awt.resources.awtosx,sun.awt.resources.awt",
   "-R:MaximumHeapSizePercent=80",
@@ -924,11 +1114,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 
 val windowsReleaseArgs = windowsOnlyArgs
 
-val darwinReleaseArgs = darwinOnlyArgs.plus(
-  listOf(
-    "-march=native",
-  ),
-)
+val darwinReleaseArgs = darwinOnlyArgs.toList()
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
@@ -990,29 +1176,34 @@ val muslArgs = listOf(
 
 val testOnlyArgs: List<String> = emptyList()
 
+val nativeOverrideArgs: List<String> = listOf(
+  "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
+)
+
 fun nativeCliImageArgs(
   platform: String = "generic",
-  target: String = "glibc",
-  debug: Boolean = quickbuild,
+  target: String = glibcTarget,
+  debug: Boolean = isDebug,
   test: Boolean = false,
-  release: Boolean = (!quickbuild && !test && (properties["elide.release"] == "true" || properties["buildMode"] == "release")),
+  release: Boolean = isRelease,
 ): List<String> =
-  commonNativeArgs.asSequence().plus(
-    jvmCompileArgs,
-  ).plus(
+  commonNativeArgs.asSequence().plus(jvmCompileArgs).plus(if (enablePkl) pklArgs else emptyList()).plus(
     StringBuilder().apply {
       append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
       append(File.pathSeparator)
       append(System.getProperty("java.library.path", ""))
     }.toString().let {
-      listOf("-Djava.library.path=$it")
+      listOf(
+        "-Djava.library.path=$it",
+        "-J-Djava.library.path=$it",
+      )
     }
   ).plus(
     jvmCompileArgs.map { "-J$it" },
   ).plus(
-    initializeAtBuildTime.map { "--initialize-at-build-time=$it" },
+    initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
   ).plus(
-    initializeAtRuntime.map { "--initialize-at-run-time=$it" },
+    initializeAtRuntime.map { "--initialize-at-run-time=$it" }
   ).plus(
     when (platform) {
       "windows" -> if (release) windowsReleaseArgs else windowsOnlyArgs
@@ -1043,20 +1234,26 @@ fun nativeCliImageArgs(
   ).plus(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
   ).plus(
-    if (debug && !release) debugFlags else if (release) releaseFlags else emptyList(),
+    when {
+      debug -> debugFlags
+      release -> releaseFlags
+      else -> emptyList()
+    }
+  ).plus(
+    nativeOverrideArgs
   ).toList()
 
 graalvmNative {
-  toolchainDetection = false
   testSupport = true
+  toolchainDetection = false
 
   agent {
     defaultMode = "standard"
     builtinCallerFilter = true
     builtinHeuristicFilter = true
-    enableExperimentalPredefinedClasses = false
-    enableExperimentalUnsafeAllocationTracing = false
     trackReflectionMetadata = true
+    enableExperimentalPredefinedClasses = true
+    enableExperimentalUnsafeAllocationTracing = true
     enabled = System.getenv("GRAALVM_AGENT") == "true"
 
     modes {
@@ -1075,10 +1272,9 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs).plus(listOf(
-        "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
-      )))
+      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
+      javaLauncher = gvmEdgeLauncher
     }
 
     named("optimized") {
@@ -1086,16 +1282,16 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs).plus(listOf(
-        "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
-      )))
+      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
+      javaLauncher = gvmEdgeLauncher
     }
 
     named("test") {
       imageName = "elide.test"
       fallback = false
       quickBuild = true
+      javaLauncher = gvmEdgeLauncher
       buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).plus(
         nativeCompileJvmArgs
       ))
@@ -1288,10 +1484,20 @@ tasks {
 
   nativeCompile {
     dependsOn(ensureNatives)
+
+    if (nativeImageBuildVerbose) doFirst {
+      val args = nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs)
+      logger.lifecycle("Native Image args (dev/debug):\n${args.joinToString("\n")}")
+    }
   }
 
   nativeOptimizedCompile {
     dependsOn(ensureNatives)
+
+    if (nativeImageBuildVerbose) doFirst {
+      val args = nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs)
+      logger.lifecycle("Native Image args (release):\n${args.joinToString("\n")}")
+    }
   }
 
   processResources {

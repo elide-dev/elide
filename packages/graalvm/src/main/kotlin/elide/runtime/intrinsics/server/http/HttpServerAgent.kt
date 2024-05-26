@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.intrinsics.server.http
 
 import org.graalvm.polyglot.Source
@@ -55,7 +54,7 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
    * behavior through injected intrinsics.
    *
    * The [acquireContext] function will be called multiple times to obtain thread-local [PolyglotContext] instances,
-   * which is required to enable proper multi-threaded request handling.
+   * which is required to enable proper multithreaded request handling.
    *
    * @param entrypoint The guest code to be evaluated as server and routing configuration.
    * @param acquireContext Factory function used to obtain a [PolyglotContext] for the current thread.
@@ -80,14 +79,15 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     val engine = NettyServerEngine(config, router)
 
     // prepare a new context, injecting the router to allow guest code to register
-    // handlers, this differs from thread-local initialization in that the router
+    // handlers; this differs from thread-local initialization in that the router
     // also constructs a shared handler pipeline that does not require references
-    val context = acquireContext()
-    context.installEngine(engine, entrypoint)
-    context.evaluate(entrypoint)
-
-    // automatically start if requested
-    if (config.autoStart) engine.start()
+    acquireContext().apply {
+      installEngine(engine, entrypoint)
+      evaluate(entrypoint).also {
+        // automatically start if requested
+        if (config.autoStart) engine.start()
+      }
+    }
   }
 
   /**
@@ -112,7 +112,7 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
 
   public companion object {
     /** Binding path for the route builder. */
-    private const val ENGINE_BIND_PATH: String = "Elide.http"
+    internal const val ENGINE_BIND_PATH: String = "Elide.http"
 
     /** Install a server [engine] at the standard [ENGINE_BIND_PATH] in this context. */
     private fun PolyglotContext.installEngine(engine: HttpServerEngine, entrypoint: Source) {

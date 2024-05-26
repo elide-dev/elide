@@ -91,13 +91,13 @@ public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
     public val DEFAULT_JS_LANGUAGE_LEVEL: JsLanguageLevel = JsLanguageLevel.ES2022
 
     /** Default JS VM locale. */
-    public val DEFAULT_LOCALE: Locale = Locale.getDefault()
+    public val DEFAULT_LOCALE: Locale get() = LanguageDefaults.DEFAULT_LOCALE
 
     /** Default JS VM time zone. */
-    public val DEFAULT_TIMEZONE: ZoneId = ZoneId.systemDefault()
+    public val DEFAULT_TIMEZONE: ZoneId get() = LanguageDefaults.DEFAULT_TIMEZONE
 
     /** Default character set to use with raw data exchanged with the JS VM. */
-    public val DEFAULT_CHARSET: Charset = StandardCharsets.UTF_8
+    public val DEFAULT_CHARSET: Charset get() = LanguageDefaults.DEFAULT_CHARSET
   }
 
   override fun isEnabled(): Boolean = DEFAULT_ENABLED

@@ -58,7 +58,6 @@ public object Projects {
     "serverless",
     "ssr",
     "test",
-    "runtime",
   ).map { ":packages:$it" }.plus(
     listOf(
       // Tools

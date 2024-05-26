@@ -10,17 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.plugins.js
 
 import org.junit.jupiter.api.Test
 import java.net.URL
 import kotlin.test.assertEquals
 import kotlin.test.fail
-import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotEngine
-import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.*
 import elide.runtime.plugins.vfs.Vfs
 import elide.runtime.plugins.vfs.include
 
@@ -38,7 +34,7 @@ internal class JsPluginTest {
    * This method is intended to be used for convenience in [withJsPlugin]'s `configureEngine` argument.
    */
   private fun useResourceBundle(vararg bundles: String): PolyglotEngineConfiguration.() -> Unit = {
-    install(Vfs) {
+    getOrInstall(Vfs) {
       for(bundle in bundles) include(resource(bundle))
     }
   }
@@ -66,8 +62,9 @@ internal class JsPluginTest {
     use: PolyglotContext.() -> Unit,
   ) {
     val engine = PolyglotEngine {
-      configureEngine()
       install(JavaScript, configurePlugin)
+      configureEngine()
+      getOrInstall(Vfs)
     }
 
     use(engine.acquire())

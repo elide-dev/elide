@@ -53,10 +53,10 @@ elide {
 }
 
 dependencies {
+  api(projects.packages.engine)
   api(projects.packages.graalvmLlvm)
   api(libs.graalvm.polyglot.java.community)
   implementation(libs.kotlinx.coroutines.core)
-  implementation(projects.packages.graalvm)
   implementation(libs.graalvm.espresso.hotswap)
   implementation(libs.graalvm.espresso.language)
   implementation(libs.graalvm.truffle.nfi.libffi)
@@ -64,4 +64,6 @@ dependencies {
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.graalvm)
+  testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }

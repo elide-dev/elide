@@ -33,6 +33,7 @@ import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.runtime.plugins.js.JavaScript
+import elide.runtime.plugins.vfs.vfs
 
 /** Abstract dual-execution test which expects a JavaScript snippet in addition to a regular test. */
 @OptIn(DelicateElideApi::class)
@@ -60,11 +61,11 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
 
   // Logic to execute a guest-side test.
   private inline fun executeGuestInternal(
-    ctx: PolyglotContext,
-    bind: Boolean,
-    bindUtils: Boolean,
-    esm: Boolean,
-    op: PolyglotContext.() -> String,
+      ctx: PolyglotContext,
+      bind: Boolean,
+      bindUtils: Boolean,
+      esm: Boolean,
+      op: PolyglotContext.() -> String,
   ): Value {
     // resolve the script
     val script = op.invoke(ctx)
@@ -129,7 +130,10 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   }
 
   override fun configureEngine(config: PolyglotEngineConfiguration) {
-    config.install(JavaScript)
+    config.apply {
+      install(JavaScript)
+      vfs { deferred = false }
+    }
   }
 
   // Build an entirely custom context.

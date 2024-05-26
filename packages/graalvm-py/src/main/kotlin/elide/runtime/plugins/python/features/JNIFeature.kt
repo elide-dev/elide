@@ -26,6 +26,8 @@ import org.graalvm.nativeimage.hosted.RuntimeJNIAccess
  */
 @Suppress("LargeClass", "LongMethod", "TooGenericExceptionThrown")
 public class JNIFeature : Feature {
+  override fun getDescription(): String = "Registers native libraries for use by GraalPython"
+
   // @TODO(sgammon): Remove once https://github.com/oracle/graal/issues/8795 is fixed
   public override fun afterRegistration(access: AfterRegistrationAccess) {
     try {

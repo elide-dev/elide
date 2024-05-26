@@ -2,8 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>UnusedPrivateProperty:RubyMicronautRequestExecutionInputs.kt$RubyMicronautRequestExecutionInputs$private val request: HttpRequest&lt;Any></ID>
-    <ID>UnusedPrivateProperty:RubyServerRequestExecutionInputs.kt$RubyServerRequestExecutionInputs$private val state: Any? = null</ID>
-    <ID>UnusedPrivateProperty:RubyTest.kt$RubyTest$private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
+    <ID>TooGenericExceptionCaught:ElideRuby.kt$ElideRuby$err: Throwable</ID>
   </CurrentIssues>
 </SmellBaseline>

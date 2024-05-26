@@ -23,8 +23,8 @@ import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
 import elide.runtime.Logger
-import elide.runtime.gvm.internals.GuestVFS
-import elide.runtime.gvm.internals.LanguageVFS
+import elide.runtime.vfs.GuestVFS
+import elide.runtime.vfs.LanguageVFS
 
 /**
  * TBD.

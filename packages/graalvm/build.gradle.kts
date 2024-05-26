@@ -218,6 +218,7 @@ dependencies {
   api(projects.packages.base)
   api(projects.packages.core)
   api(projects.packages.ssr)
+  api(projects.packages.engine)
 
   // Kotlin / KotlinX
   implementation(kotlin("stdlib"))
@@ -310,6 +311,7 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+    systemProperty("elide.js.vm.enableStreams", "true")
   }
 
   javadoc {

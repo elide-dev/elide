@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.vfs
 
 import io.micronaut.test.support.TestPropertyProvider
@@ -18,7 +17,7 @@ import org.junit.jupiter.api.TestInstance
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.vfs.GuestVFS
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 

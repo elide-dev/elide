@@ -131,8 +131,8 @@ import elide.tool.project.ProjectManager
 
     // Whether to enable extended language plugins.
     private const val ENABLE_JVM = false
-    private const val ENABLE_RUBY = true
-    private const val ENABLE_PYTHON = true
+    private const val ENABLE_RUBY = false
+    private const val ENABLE_PYTHON = false
     private const val ENABLE_TYPESCRIPT = true
 
     private val logging: Logger by lazy {
@@ -799,13 +799,13 @@ import elide.tool.project.ProjectManager
 
   // Execute a single chunk of code, or literal statement.
   @Suppress("SameParameterValue") private fun executeOneChunk(
-    languages: EnumSet<GuestLanguage>,
-    primaryLanguage: GuestLanguage,
-    ctx: PolyglotContext,
-    origin: String,
-    code: String,
-    interactive: Boolean = false,
-    literal: Boolean = false,
+      languages: EnumSet<GuestLanguage>,
+      primaryLanguage: GuestLanguage,
+      ctx: PolyglotContext,
+      origin: String,
+      code: String,
+      interactive: Boolean = false,
+      literal: Boolean = false,
   ): Value {
     val chunk = Source.newBuilder(primaryLanguage.engine, code, origin)
       .interactive(false)
@@ -845,10 +845,10 @@ import elide.tool.project.ProjectManager
 
   // Execute a single chunk of code as a literal statement.
   private fun executeSingleStatement(
-    languages: EnumSet<GuestLanguage>,
-    primaryLanguage: GuestLanguage,
-    ctx: PolyglotContext,
-    code: String,
+      languages: EnumSet<GuestLanguage>,
+      primaryLanguage: GuestLanguage,
+      ctx: PolyglotContext,
+      code: String,
   ) {
     if (serveMode()) {
       serverRunning.set(true)
@@ -1500,11 +1500,11 @@ import elide.tool.project.ProjectManager
 
   // Read an executable script, and then execute the script; if it's a server, delegate to `readStartServer`.
   private fun readExecuteCode(
-    label: String,
-    languages: EnumSet<GuestLanguage>,
-    primaryLanguage: GuestLanguage,
-    ctx: PolyglotContext,
-    source: Source,
+      label: String,
+      languages: EnumSet<GuestLanguage>,
+      primaryLanguage: GuestLanguage,
+      ctx: PolyglotContext,
+      source: Source,
   ) {
     if (serveMode()) readStartServer(
       label,
@@ -1638,45 +1638,6 @@ import elide.tool.project.ProjectManager
       })
     }
 
-    // configure VFS with user-specified bundles
-    vfs {
-      deferred = true
-      languages.addAll(language.resolve(project))
-
-      // resolve the file-system bundles to use
-      val userBundles = filesystems.mapNotNull { checkFsBundle(it) }
-      if (userBundles.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
-        logging.debug("File-system bundle(s) specified: ${userBundles.joinToString(",")}")
-      } else {
-        logging.debug("No file-system bundles specified")
-      }
-
-      userBundles.forEach { uri ->
-        // check the bundle URI
-        if (uri.scheme == "classpath:") {
-          logging.warn("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
-          throw ShellError.BUNDLE_NOT_FOUND.asError()
-        } else {
-          // make sure the file can be read
-          val file = try {
-            logging.trace("Checking bundle at URI '$uri'")
-            File(uri)
-          } catch (err: IOException) {
-            throw ShellError.BUNDLE_NOT_FOUND.asError()
-          }
-
-          logging.trace("Checking existence of '$uri'")
-          if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
-
-          logging.trace("Checking readability of '$uri'")
-          if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
-
-          logging.debug("Mounting guest filesystem at URI: '$uri'")
-          include(uri)
-        }
-      }
-    }
-
     // configure support for guest languages
     val versionProp = VERSION_INSTRINSIC_NAME to ElideTool.version()
     val intrinsics = intrinsicsManager.resolver()
@@ -1748,6 +1709,45 @@ import elide.tool.project.ProjectManager
         SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
 
         else -> {}
+      }
+    }
+
+    // configure VFS with user-specified bundles
+    vfs {
+      deferred = true
+      languages.addAll(language.resolve(project))
+
+      // resolve the file-system bundles to use
+      val userBundles = filesystems.mapNotNull { checkFsBundle(it) }
+      if (userBundles.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
+        logging.debug("File-system bundle(s) specified: ${userBundles.joinToString(",")}")
+      } else {
+        logging.debug("No file-system bundles specified")
+      }
+
+      userBundles.forEach { uri ->
+        // check the bundle URI
+        if (uri.scheme == "classpath:") {
+          logging.warn("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
+          throw ShellError.BUNDLE_NOT_FOUND.asError()
+        } else {
+          // make sure the file can be read
+          val file = try {
+            logging.trace("Checking bundle at URI '$uri'")
+            File(uri)
+          } catch (err: IOException) {
+            throw ShellError.BUNDLE_NOT_FOUND.asError()
+          }
+
+          logging.trace("Checking existence of '$uri'")
+          if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
+
+          logging.trace("Checking readability of '$uri'")
+          if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
+
+          logging.debug("Mounting guest filesystem at URI: '$uri'")
+          include(uri)
+        }
       }
     }
   }

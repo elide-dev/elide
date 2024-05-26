@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets
 import java.time.ZoneId
 import java.util.*
 import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
-import elide.runtime.gvm.cfg.JsRuntimeConfig
+import elide.runtime.gvm.cfg.LanguageDefaults
 
 /**
  * TBD.
@@ -31,12 +31,12 @@ public class JvmRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
   /**
    * @return Default locale to apply to the JS VM. Defaults to the system default.
    */
-  public val defaultLocale: Locale? get() = JsRuntimeConfig.DEFAULT_LOCALE
+  public val defaultLocale: Locale? get() = LanguageDefaults.DEFAULT_LOCALE
 
   /**
    * @return Default timezone to apply to the JS VM. Defaults to the system default.
    */
-  public val timezone: ZoneId? get() = JsRuntimeConfig.DEFAULT_TIMEZONE
+  public val timezone: ZoneId? get() = LanguageDefaults.DEFAULT_TIMEZONE
 
   /**
    * @return Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`. `UTF-8` and

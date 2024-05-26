@@ -18,7 +18,7 @@ export STRICT ?= yes
 export WASM ?= no
 export RELOCK ?= no
 export SITE ?= no
-DEFAULT_REPOSITORY ?= gcs://elide-snapshots/repository/v3
+DEFAULT_REPOSITORY ?= s3://elide-maven
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
 SAMPLES ?= no

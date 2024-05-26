@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("MemberVisibilityCanBePrivate")
 @file:OptIn(DelicateElideApi::class)
 
@@ -315,8 +314,8 @@ abstract class AbstractDualTest {
 
   /** Single test execution within the scope of a guest VM. */
   inner class GuestTestExecution(
-    val factory: (PolyglotContext.() -> Unit) -> Unit,
-    val test: PolyglotContext.() -> Value?
+      val factory: (PolyglotContext.() -> Unit) -> Unit,
+      val test: PolyglotContext.() -> Value?
   ) {
     // Return value, if any.
     private val returnValue: AtomicReference<Value?> = AtomicReference(null)
@@ -329,8 +328,8 @@ abstract class AbstractDualTest {
 
     /** After guest execution concludes, execute the provided [assertions] against the test context. */
     fun thenAssert(
-      allowFailure: Boolean = false,
-      assertions: (PolyglotContext.(GuestTestExecution) -> Unit)? = null,
+        allowFailure: Boolean = false,
+        assertions: (PolyglotContext.(GuestTestExecution) -> Unit)? = null,
     ) = factory {
       if (allowFailure) {
         failsWith<Throwable> {

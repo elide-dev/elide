@@ -38,11 +38,10 @@
     "cssnano": "6.1.2",
     "google-protobuf": "3.21.2",
     "jszip": "3.10.1",
-    "mitata": "git+https://github.com/elide-dev/mitata.git#e886e79f03987d452a90e6a6978e4bbe9ea68198",
     "postcss": "8.4.38",
     "preact": "10.21.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.0.0-beta-26f2496093-20240514",
+    "react-dom": "19.0.0-beta-26f2496093-20240514",
     "typescript": "5.4.5",
     "web-streams-polyfill": "3.3.3"
   },

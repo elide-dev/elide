@@ -41,9 +41,9 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
 
   protected val polyglotEngine by lazy {
     PolyglotEngine {
-      vfs { configureVfs() }
-      environment { configureEnvironment() }
       install(JavaScript)
+      environment { configureEnvironment() }
+      vfs { configureVfs() }
     }.acquire()
   }
 

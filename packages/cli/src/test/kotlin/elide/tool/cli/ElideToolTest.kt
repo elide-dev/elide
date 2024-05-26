@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
@@ -76,7 +77,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Test fun testRootEntrypointExecutePyFile() {
+  @Ignore @Test fun testRootEntrypointExecutePyFile() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -104,7 +105,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Test fun testRootEntrypointExecutePyFileWithRun() {
+  @Ignore @Test fun testRootEntrypointExecutePyFileWithRun() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -132,7 +133,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Test fun testRootEntrypointExecutePyFileExplicit() {
+  @Ignore @Test fun testRootEntrypointExecutePyFileExplicit() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))

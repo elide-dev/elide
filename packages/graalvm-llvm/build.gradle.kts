@@ -52,13 +52,30 @@ elide {
   }
 }
 
+val oracleGvm = false
+
 dependencies {
   api(libs.bundles.graalvm.llvm)
   implementation(libs.kotlinx.coroutines.core)
-  implementation(projects.packages.graalvm)
+  implementation(projects.packages.engine)
+  compileOnly(libs.graalvm.llvm.language.nfi)
+  compileOnly(libs.graalvm.llvm.language.native.resources)
+
+  if (oracleGvm) {
+    compileOnly(libs.graalvm.llvm.language.managed)
+    compileOnly(libs.graalvm.llvm.language.enterprise)
+    compileOnly(libs.graalvm.llvm.language.native.enterprise)
+  }
+
+  compileOnly(libs.graalvm.svm)
+  if (oracleGvm) {
+    compileOnly(libs.graalvm.truffle.enterprise)
+  }
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.graalvm)
+  testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 
 tasks.jar.configure {

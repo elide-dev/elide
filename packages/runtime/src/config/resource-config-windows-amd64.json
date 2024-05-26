@@ -1,0 +1,27 @@
+{
+  "resources":{
+    "includes": [
+      {"pattern":"\\QMETA-INF/services/jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory\\E"},
+      {"pattern":"\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E"}
+    ],
+    "excludes": [
+      {"pattern":"*linux*"},
+      {"pattern":"*Linux*"},
+      {"pattern":"*macos*"},
+      {"pattern":"*macos*"},
+      {"pattern":"*darwin*"},
+      {"pattern":"*darwin*"},
+      {"pattern":"*win32*"},
+      {"pattern":"*Win32*"},
+      {"pattern":"\\Q**/*.so\\E"},
+      {"pattern":"\\Q**/*.dylib\\E"}
+    ]
+  },
+  "bundles":[{
+    "name":"ElideTool",
+    "locales":["en-US"]
+  }, {
+    "name":"sun.awt.resources.awt",
+    "classNames":["sun.awt.resources.awt"]
+  }]
+}

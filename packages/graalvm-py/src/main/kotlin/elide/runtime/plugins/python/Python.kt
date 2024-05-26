@@ -25,10 +25,10 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
-import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
-import elide.runtime.plugins.vfs.Vfs
+import elide.runtime.vfs.LanguageVFS.LanguageVFSInfo
+import elide.runtime.vfs.registerLanguageVfs
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
@@ -67,8 +67,8 @@ import elide.runtime.plugins.vfs.Vfs
     config.resourcesPath?.let {
       builder.setOptions(
         "python.HPyBackend" to "nfi",
-        "python.Sha3ModuleBackend" to "native",
         "python.PosixModuleBackend" to "java",
+        // "python.Sha3ModuleBackend" to "native",
       )
 
       builder.setOptions(
@@ -99,14 +99,15 @@ import elide.runtime.plugins.vfs.Vfs
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
     init {
-      Vfs.registerLanguageVfs(PYTHON_LANGUAGE_ID) {
+      registerLanguageVfs(PYTHON_LANGUAGE_ID) {
         object : LanguageVFSInfo {
           override val router: (Path) -> Boolean get() = { path ->
             path.toString().startsWith("<frozen ")
           }
 
+          @Suppress("DEPRECATION")
           override val fsProvider: () -> FileSystem get() = {
-            org.graalvm.python.embedding.vfs.VirtualFileSystem
+            org.graalvm.python.embedding.utils.VirtualFileSystem
               .newBuilder()
               .build()
           }

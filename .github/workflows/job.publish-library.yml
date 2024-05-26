@@ -93,7 +93,6 @@ jobs:
       processor: true
       substrate: true
       conventions: true
-      url: https://console.cloud.google.com/storage/browser/elide-snapshots/repository/v3
 
   ##
   ## Publish: Library OSSRH

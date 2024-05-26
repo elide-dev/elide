@@ -104,7 +104,8 @@ apt-get update \
   && echo "org.gradle.java.home=$JAVA_HOME" >> /home/buildbot/.gradle/gradle.properties \
   && echo "org.gradle.jvmargs=-Xmx12g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC" >> /home/buildbot/.gradle/gradle.properties \
   && echo "elide.ci=true" >> /home/buildbot/.gradle/gradle.properties \
-  && echo "elide.publish.repo.maven=gcs://elide-snapshots/repository/v3" >> /home/buildbot/.gradle/gradle.properties \
+  && echo "elide.publish.repo.maven=s3://elide-maven" >> /home/buildbot/.gradle/gradle.properties \
+  && echo "systemProp.org.gradle.s3.endpoint=https://8d4252856750d8486c1740c063bc5a40.r2.cloudflarestorage.com" >> /home/buildbot/.gradle/gradle.properties \
   && echo "elide.publish.repo.docker.tools=us-docker.pkg.dev/elide-fw/tools" >> /home/buildbot/.gradle/gradle.properties \
   && echo "elide.publish.repo.docker.samples=us-docker.pkg.dev/elide-fw/samples" >> /home/buildbot/.gradle/gradle.properties \
   && echo "kotlin.build.report.enable=true" >> /home/buildbot/.gradle/gradle.properties \

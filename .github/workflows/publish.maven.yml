@@ -25,7 +25,7 @@ concurrency:
       repo:
         description: "Repository"
         required: false
-        default: "gcs://elide-snapshots/repository/v3"
+        default: "s3://elide-maven"
         type: string
 
       ## Environment to update with this deployment.
@@ -104,7 +104,7 @@ concurrency:
       repo:
         description: "Repository"
         required: true
-        default: "gcs://elide-snapshots/repository/v3"
+        default: "s3://elide-maven"
         type: string
       environment:
         description: "Target"

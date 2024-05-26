@@ -35,7 +35,7 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlin.coroutines.CoroutineContext
 import elide.annotations.Factory
 import elide.annotations.Singleton
-import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.vfs.GuestVFS
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsError
@@ -182,10 +182,10 @@ private fun guestToStringOrBuffer(value: Any?, encoding: Charset = StandardChars
 
 // Implements common baseline functionality for the Node filesystem modules.
 internal abstract class FilesystemBase (
-  protected val exec: ExecutorService,
-  protected val fs: GuestVFS,
-  protected val dispatcher: CoroutineDispatcher = exec.asCoroutineDispatcher(),
-  protected val fsContext: CoroutineContext = dispatcher + CoroutineName("node-fs"),
+    protected val exec: ExecutorService,
+    protected val fs: GuestVFS,
+    protected val dispatcher: CoroutineDispatcher = exec.asCoroutineDispatcher(),
+    protected val fsContext: CoroutineContext = dispatcher + CoroutineName("node-fs"),
 ) {
   protected fun resolvePath(operation: String, path: Value): Path = when {
     path.isString -> NodeStdlib.path.parse(path.asString())

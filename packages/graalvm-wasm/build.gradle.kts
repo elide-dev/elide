@@ -53,10 +53,12 @@ elide {
 }
 
 dependencies {
+  api(projects.packages.engine)
   api(libs.graalvm.polyglot.wasm.community)
   implementation(libs.kotlinx.coroutines.core)
-  implementation(projects.packages.graalvm)
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.graalvm)
+  testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }

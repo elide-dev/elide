@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.LogLevel
 import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.vfs.GuestVFS
 
 /**
  * # VFS: Backed Implementation

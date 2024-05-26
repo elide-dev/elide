@@ -28,8 +28,8 @@ internal class JsCoreModulesTest {
   )
   fun testCoreModulePresentCjs(module: String) {
     PolyglotEngine {
-      install(Vfs)
       install(JavaScript)
+      install(Vfs)
     }.acquire().javascript(
       // language=js
       """require("$module");"""
@@ -42,8 +42,8 @@ internal class JsCoreModulesTest {
   )
   fun testCoreModulePresentNodePrefixCjs(module: String) {
     PolyglotEngine {
-      install(Vfs)
       install(JavaScript)
+      install(Vfs)
     }.acquire().javascript(
       // language=js
       """require("$module");"""
@@ -56,8 +56,8 @@ internal class JsCoreModulesTest {
   )
   fun testCoreModulePresentEsm(module: String) {
     PolyglotEngine {
-      install(Vfs)
       install(JavaScript)
+      install(Vfs)
     }.acquire().javascript(
       // language=js
       """
@@ -75,8 +75,8 @@ internal class JsCoreModulesTest {
   fun testCoreModulePresentNodePrefixEsm(module: String) {
     val modname = module.split(":").last()
     PolyglotEngine {
-      install(Vfs)
       install(JavaScript)
+      install(Vfs)
     }.acquire().javascript(
       // language=js
       """

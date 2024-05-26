@@ -12,10 +12,8 @@
  */
 package elide.runtime.lang.typescript;
 
-import com.oracle.truffle.api.CallTarget;
-import com.oracle.truffle.api.CompilerAsserts;
-import com.oracle.truffle.api.RootCallTarget;
-import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.*;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleLanguage.ContextPolicy;
 import com.oracle.truffle.api.TruffleLanguage.Registration;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -75,6 +73,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     tsCompiler.close();
   }
 
+  @TruffleBoundary
   @Override
   protected CallTarget parse(ParsingRequest parsingRequest) {
     Source tsSource = parsingRequest.getSource();
@@ -97,8 +96,10 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
 
     @Override
     public Object execute(VirtualFrame frame) {
-      JSRealm realm = JSRealm.get(delegate);
-      JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
+      // @TODO breaks with blocklisted methods
+      //      JSRealm realm = JSRealm.get(delegate);
+      //      JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm,
+      // tsCompiler));
       return delegate.execute(frame);
     }
   }

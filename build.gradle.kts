@@ -48,24 +48,24 @@ plugins {
   java
   `jvm-toolchains`
   `project-report`
-  alias(libs.plugins.kotlin.multiplatform) apply false
 
   alias(libs.plugins.cyclonedx)
   alias(libs.plugins.dependencyAnalysis)
-  alias(libs.plugins.detekt)
-  alias(libs.plugins.dokka)
   alias(libs.plugins.gradle.checksum)
   alias(libs.plugins.gradle.testretry)
   alias(libs.plugins.kotlinx.plugin.abiValidator)
-  alias(libs.plugins.kover)
   alias(libs.plugins.nexusPublishing)
   alias(libs.plugins.openrewrite)
   alias(libs.plugins.shadow)
-  alias(libs.plugins.snyk)
-  alias(libs.plugins.sonar)
   alias(libs.plugins.spdx.sbom)
-  alias(libs.plugins.spotless)
   alias(libs.plugins.versionCatalogUpdate)
+
+  alias(libs.plugins.snyk)
+  alias(libs.plugins.spotless)
+  alias(libs.plugins.sonar)
+  alias(libs.plugins.detekt)
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.kover)
 
   id("elide.internal.conventions")
 }
@@ -113,7 +113,7 @@ buildscript {
 
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
@@ -363,9 +363,11 @@ apiValidation {
 
   ignoredProjects +=
     listOf(
+      "auximage",
       "bom",
       "cli",
       "cli-bridge",
+      "runtime",
       "embedded",
       "proto",
       "processor",
@@ -453,18 +455,6 @@ configure<DependencyCheckExtension> {
 
   analyzers.ossIndex.enabled = true
   analyzers.experimentalEnabled = false
-}
-
-// --- Snyk -----------------------------------------------------------------------------------------------------------
-//
-snyk {
-  setArguments("--all-sub-projects")
-  setSeverity("low")
-  setAutoDownload(true)
-  setAutoUpdate(true)
-  System.getenv("SNYK_API_KEY")?.ifBlank { null }?.let {
-    setApi(it)
-  }
 }
 
 // --------------------------------------------------------------------------------------------------------------------

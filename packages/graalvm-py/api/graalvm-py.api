@@ -1,37 +1,5 @@
-public final class elide/runtime/gvm/internals/python/PythonServerAdapter {
-	public fun <init> ()V
-}
-
 public final class elide/runtime/gvm/python/Python {
 	public static final field INSTANCE Lelide/runtime/gvm/python/Python;
-}
-
-public synthetic class elide/runtime/gvm/python/cfg/$PythonRuntimeConfig$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
-	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final class elide/runtime/gvm/python/cfg/PythonRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
-	public static final field Companion Lelide/runtime/gvm/python/cfg/PythonRuntimeConfig$Companion;
-	public static final field DEFAULT_ENABLED Z
-	public fun <init> ()V
-	public final fun getCharset ()Ljava/nio/charset/Charset;
-	public final fun getDefaultLocale ()Ljava/util/Locale;
-	public final fun getLocale ()Ljava/util/Locale;
-	public final fun getTimezone ()Ljava/time/ZoneId;
-	public fun isEnabled ()Z
-}
-
-public final class elide/runtime/gvm/python/cfg/PythonRuntimeConfig$Companion {
-	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
-	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
-	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
 }
 
 public final class elide/runtime/plugins/python/ExtensionsKt {
@@ -59,10 +27,12 @@ public final class elide/runtime/plugins/python/features/BouncyCastleFeature : o
 	public fun <init> ()V
 	public fun afterRegistration (Lorg/graalvm/nativeimage/hosted/Feature$AfterRegistrationAccess;)V
 	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
+	public fun getDescription ()Ljava/lang/String;
 }
 
 public final class elide/runtime/plugins/python/features/JNIFeature : org/graalvm/nativeimage/hosted/Feature {
 	public fun <init> ()V
 	public fun afterRegistration (Lorg/graalvm/nativeimage/hosted/Feature$AfterRegistrationAccess;)V
+	public fun getDescription ()Ljava/lang/String;
 }
 

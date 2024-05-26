@@ -17,6 +17,7 @@ import js.objects.jso
 import react.ReactElement
 import web.streams.ReadableStreamDefaultReader
 import web.streams.ReadableStreamReadValueResult
+import kotlinx.coroutines.await
 import kotlin.js.Promise
 import react.dom.server.rawRenderToString as renderSSRString
 import react.dom.server.renderToReadableStream as renderSSRStreaming
@@ -52,7 +53,7 @@ public typealias RenderCallback = (ResponseChunk) -> Unit
 /**
  *
  */
-public class ApplicationBuffer constructor (private val app: ReactElement<*>, private val stream: Boolean = true) {
+public class ApplicationBuffer (private val app: ReactElement<*>, private val stream: Boolean = true) {
   // Whether we have finished streaming.
   private var fin: Boolean = false
 
@@ -64,8 +65,8 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
     })
   }
 
-  private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
-    reader.read().then { value ->
+  private suspend fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
+    reader.read().let { value ->
       val chunk: dynamic = value.unsafeCast<ReadableStreamReadValueResult<ByteArray?>>()
 
       val rawContent: ByteArray? = chunk.value as? ByteArray
@@ -101,22 +102,24 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
     }
   }
 
+  private suspend fun renderStream(callback: (ResponseChunk) -> Unit): Promise<*> {
+    return renderSSRStreaming(app).await().let { stream ->
+      pump(stream.getReader(), callback)
+      Promise { accept, _ ->
+        accept(stream)
+      }
+    }
+  }
+
   /**
    * TBD
    */
-  private fun render(callback: (ResponseChunk) -> Unit): Promise<*> {
-    return if (stream) {
-      renderSSRStreaming(app).then { stream ->
-        val reader = stream.getReader()
-        pump(reader, callback)
-      }
-    } else {
-      Promise { accept, reject ->
-        try {
-          accept(renderSSRString(app))
-        } catch (err: Throwable) {
-          reject(err)
-        }
+  private suspend fun render(callback: (ResponseChunk) -> Unit): Promise<*> {
+    return if (stream) renderStream(callback) else Promise { accept, reject ->
+      try {
+        accept(renderSSRString(app))
+      } catch (err: Throwable) {
+        reject(err)
       }
     }
   }
@@ -127,7 +130,7 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
   /**
    * TBD
    */
-  public fun execute(callback: (ResponseChunk) -> Unit): Promise<*> {
+  public suspend fun execute(callback: (ResponseChunk) -> Unit): Promise<*> {
     return render(callback)
   }
 }

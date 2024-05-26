@@ -21,3 +21,18 @@
 [submodule "oxc"]
 	path = third_party/oxc-project/oxc
 	url = git@github.com:oxc-project/oxc.git
+[submodule "grcuda"]
+	path = third_party/nvidia/grcuda
+	url = git@github.com:elide-dev/grcuda.git
+[submodule "graal"]
+	path = third_party/graalvm/graal
+	url = git@github.com:elide-dev/graal.git
+[submodule "graaljs"]
+	path = third_party/graalvm/graaljs
+	url = git@github.com:oracle/graaljs.git
+[submodule "graalpython"]
+	path = third_party/graalvm/graalpython
+	url = git@github.com:oracle/graalpython.git
+[submodule "truffleruby"]
+	path = third_party/graalvm/truffleruby
+	url = git@github.com:oracle/truffleruby.git

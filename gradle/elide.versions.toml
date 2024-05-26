@@ -38,6 +38,7 @@ closure-stylesheets = "1.5.0"
 commons-codec = "1.17.0"
 commons-compress = "1.26.1"
 commons-csv = "1.10.0"
+commons-io = "2.16.1"
 commons-pool = "2.11.1"
 compose = "1.5.7.1"
 confundus = "1.0.0"
@@ -69,7 +70,7 @@ google-html-types = "1.0.8"
 gr8 = "0.10"
 graalvm = "24.1.0-SNAPSHOT"
 graalvm-stable = "24.0.1"
-graalvm-metadata = "0.3.6"
+graalvm-metadata = "0.3.8"
 graalvm-pin = "24.1.0-SNAPSHOT"
 graalvm-plugin = "0.10.2"
 graalvm-svm-driver = "24.1.0-SNAPSHOT"
@@ -121,7 +122,7 @@ kotest-plugin = "0.8.18"
 kotlin-compile-testing = "1.5.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.0"
-kotlin-sdk = "2.0.0-RC3"
+kotlin-sdk = "2.0.0"
 kotlinx-abiValidator = "0.14.0"
 kotlinx-browser = "0.1"
 kotlinx-benchmark = "0.4.10"
@@ -134,43 +135,43 @@ kotlinx-knit = "0.5.0"
 kotlinx-metadata-jvm = "0.5.0"
 kotlinx-nodejs = "0.0.7"
 kotlinx-serialization = "1.6.3"
-kotlinx-wrappers-bom = "1.0.0-pre.697"
-kotlinx-wrappers-browser = "1.0.0-pre.697"
-kotlinx-wrappers-cesium = "1.114.0-pre.697"
-kotlinx-wrappers-css = "1.0.0-pre.697"
-kotlinx-wrappers-csstype = "3.1.4-pre.697"
-kotlinx-wrappers-emotion = "11.11.1-pre.697"
-kotlinx-wrappers-history = "5.3.0-pre.506"
-kotlinx-wrappers-js = "1.0.0-pre.697"
-kotlinx-wrappers-mui = "5.15.9-pre.697"
-kotlinx-wrappers-mui-base = "5.0.0-beta.36-pre.697"
-kotlinx-wrappers-mui-icons = "5.15.9-pre.697"
-kotlinx-wrappers-node = "20.11.5-pre.697"
-kotlinx-wrappers-popper = "2.11.8-pre.697"
-kotlinx-wrappers-react = "18.2.0-pre.697"
-kotlinx-wrappers-react-beautiful-dnd = "13.1.1-pre.697"
-kotlinx-wrappers-react-popper = "2.3.0-pre.697"
-kotlinx-wrappers-react-redux = "7.2.6-pre.697"
-kotlinx-wrappers-react-router-dom = "6.22.0-pre.697"
-kotlinx-wrappers-react-select = "5.8.0-pre.697"
-kotlinx-wrappers-redux = "4.1.2-pre.697"
-kotlinx-wrappers-remix-run-router = "1.15.0-pre.697"
-kotlinx-wrappers-ringUi = "4.1.5-pre.697"
-kotlinx-wrappers-styled = "5.3.11-pre.697"
-kotlinx-wrappers-styled-next = "1.2.4-pre.697"
-kotlinx-wrappers-tanstack-query-core = "5.20.1-pre.697"
-kotlinx-wrappers-tanstack-react-query = "5.20.1-pre.697"
-kotlinx-wrappers-tanstack-react-query-devtools = "5.20.1-pre.697"
-kotlinx-wrappers-tanstack-react-table = "8.11.8-pre.697"
-kotlinx-wrappers-tanstack-react-virtual = "3.0.4-pre.697"
-kotlinx-wrappers-tanstack-table-core = "8.11.8-pre.697"
-kotlinx-wrappers-tanstack-virtual-core = "3.0.4-pre.697"
-kotlinx-wrappers-typescript = "5.4.0-beta-pre.697"
-kotlinx-wrappers-web = "1.0.0-pre.697"
-kotlinxWrappers = "pre.697"
+kotlinx-wrappers-bom = "1.0.0-pre.752"
+kotlinx-wrappers-browser = "1.0.0-pre.752"
+kotlinx-wrappers-cesium = "1.114.0-pre.752"
+kotlinx-wrappers-css = "1.0.0-pre.752"
+kotlinx-wrappers-csstype = "3.1.4-pre.752"
+kotlinx-wrappers-emotion = "11.11.4-pre.752"
+kotlinx-wrappers-history = "5.3.0-pre.506-compat"
+kotlinx-wrappers-js = "1.0.0-pre.752"
+kotlinx-wrappers-mui = "5.15.18-pre.752"
+kotlinx-wrappers-mui-base = "5.0.0-beta.45-pre.752"
+kotlinx-wrappers-mui-icons = "5.15.18-pre.752"
+kotlinx-wrappers-node = "20.11.30-pre.752"
+kotlinx-wrappers-popper = "2.11.8-pre.752"
+kotlinx-wrappers-react = "18.3.1-pre.752"
+kotlinx-wrappers-react-beautiful-dnd = "13.1.1-pre.752"
+kotlinx-wrappers-react-popper = "2.3.0-pre.752"
+kotlinx-wrappers-react-redux = "7.2.6-pre.752"
+kotlinx-wrappers-react-router-dom = "6.23.1-pre.752"
+kotlinx-wrappers-react-select = "5.8.0-pre.752"
+kotlinx-wrappers-redux = "4.1.2-pre.752"
+kotlinx-wrappers-remix-run-router = "1.16.1-pre.752"
+kotlinx-wrappers-ringUi = "4.1.5-pre.752"
+kotlinx-wrappers-styled = "5.3.11-pre.752"
+kotlinx-wrappers-styled-next = "1.2.4-pre.752"
+kotlinx-wrappers-tanstack-query-core = "5.28.6-pre.752"
+kotlinx-wrappers-tanstack-react-query = "5.28.6-pre.752"
+kotlinx-wrappers-tanstack-react-query-devtools = "5.28.6-pre.752"
+kotlinx-wrappers-tanstack-react-table = "8.17.3-pre.752"
+kotlinx-wrappers-tanstack-react-virtual = "3.5.0-pre.752"
+kotlinx-wrappers-tanstack-table-core = "8.17.3-pre.752"
+kotlinx-wrappers-tanstack-virtual-core = "3.5.0-pre.752"
+kotlinx-wrappers-typescript = "5.4.5-pre.752"
+kotlinx-wrappers-web = "1.0.0-pre.752"
+kotlinxWrappers = "pre.752"
 kover = "0.7.5"
 kover-plugin = "0.7.5"
-ksp = "2.0.0-RC3-1.0.20"
+ksp = "2.0.0-1.0.21"
 ktlint = "1.1.1"
 ktoml = "0.5.1"
 larray = "0.2.1"
@@ -240,6 +241,7 @@ parallelGzip = "1.0.5"
 picnic = "0.7.0"
 picocli = "4.7.6"
 picocli-jansi-graalvm = "1.2.0"
+pkl = "0.25.3"
 pluginBuf = "0.8.5"
 pluginProtobuf = "0.9.4"
 pluginPublish = "1.2.1"
@@ -252,7 +254,7 @@ projectreactor-netty = "1.1.13"
 protobuf = "3.25.2"
 protobufJavalite = "3.0.0"
 qodanaGradle = "2023.3.1"
-react = "18.2.0"
+react = "19.0.0-beta-26f2496093-20240514"
 reactivestreams = "1.0.4"
 redacted-plugin = "1.7.1"
 semver = "3.1.0"
@@ -378,6 +380,7 @@ closure-templates = { group = "com.google.template", name = "soy", version.ref =
 commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }
 commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons-csv" }
+commons-io = { group = "commons-io", name = "commons-io", version.ref = "commons-io" }
 commons-pool = { group = "org.apache.commons", name = "commons-pool2", version.ref = "commons-pool" }
 confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
 conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }
@@ -415,24 +418,24 @@ graalvm-launcher-common = { group = "org.graalvm.sdk", name = "launcher-common",
 graalvm-launcher-js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm" }
 graalvm-llvm-api = { group = "org.graalvm.llvm", name = "llvm-api", version.ref = "graalvm" }
 graalvm-llvm-language = { group = "org.graalvm.llvm", name = "llvm-language", version.ref = "graalvm" }
-graalvm-llvm-language-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-enterprise", version.ref = "graalvm" }
+graalvm-llvm-language-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-enterprise", version.ref = "graalvm-stable" }
 graalvm-llvm-language-managed = { group = "org.graalvm.llvm", name = "llvm-language-managed", version.ref = "graalvm" }
 graalvm-llvm-language-managed-resources = { group = "org.graalvm.llvm", name = "llvm-language-managed-resources", version.ref = "graalvm" }
 graalvm-llvm-language-native = { group = "org.graalvm.llvm", name = "llvm-language-native", version.ref = "graalvm" }
-graalvm-llvm-language-native-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-native-enterprise", version.ref = "graalvm" }
+graalvm-llvm-language-native-enterprise = { group = "org.graalvm.llvm", name = "llvm-language-native-enterprise", version.ref = "graalvm-stable" }
 graalvm-llvm-language-native-resources = { group = "org.graalvm.llvm", name = "llvm-language-native-resources", version.ref = "graalvm" }
 graalvm-llvm-language-nfi = { group = "org.graalvm.llvm", name = "llvm-language-nfi", version.ref = "graalvm" }
 graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm" }
-graalvm-polyglot-java = { group = "org.graalvm.polyglot", name = "java", version.ref = "graalvm" }
+graalvm-polyglot-java = { group = "org.graalvm.polyglot", name = "java", version.ref = "graalvm-stable" }
 graalvm-polyglot-java-community = { group = "org.graalvm.polyglot", name = "java-community", version.ref = "graalvm" }
-graalvm-polyglot-js = { group = "org.graalvm.polyglot", name = "js", version.ref = "graalvm" }
+graalvm-polyglot-js = { group = "org.graalvm.polyglot", name = "js", version.ref = "graalvm-stable" }
 graalvm-polyglot-js-community = { group = "org.graalvm.polyglot", name = "js-community", version.ref = "graalvm" }
 graalvm-polyglot-js-isolate = { group = "org.graalvm.polyglot", name = "js-isolate", version.ref = "graalvm" }
-graalvm-polyglot-llvm = { group = "org.graalvm.polyglot", name = "llvm", version.ref = "graalvm" }
+graalvm-polyglot-llvm = { group = "org.graalvm.polyglot", name = "llvm", version.ref = "graalvm-stable" }
 graalvm-polyglot-llvm-community = { group = "org.graalvm.polyglot", name = "llvm-community", version.ref = "graalvm" }
-graalvm-polyglot-python = { group = "org.graalvm.polyglot", name = "python", version.ref = "graalvm" }
+graalvm-polyglot-python = { group = "org.graalvm.polyglot", name = "python", version.ref = "graalvm-stable" }
 graalvm-polyglot-python-community = { group = "org.graalvm.polyglot", name = "python-community", version.ref = "graalvm" }
-graalvm-polyglot-ruby = { group = "org.graalvm.polyglot", name = "ruby", version.ref = "graalvm" }
+graalvm-polyglot-ruby = { group = "org.graalvm.polyglot", name = "ruby", version.ref = "graalvm-stable" }
 graalvm-polyglot-ruby-community = { group = "org.graalvm.polyglot", name = "ruby-community", version.ref = "graalvm" }
 graalvm-polyglot-tools = { group = "org.graalvm.polyglot", name = "tools", version.ref = "graalvm" }
 graalvm-polyglot-tools-coverage = { group = "org.graalvm.polyglot", name = "coverage", version.ref = "graalvm" }
@@ -442,11 +445,11 @@ graalvm-polyglot-tools-insight = { group = "org.graalvm.polyglot", name = "insig
 graalvm-polyglot-tools-inspect = { group = "org.graalvm.polyglot", name = "inspect-tool", version.ref = "graalvm" }
 graalvm-polyglot-tools-lsp = { group = "org.graalvm.polyglot", name = "lsp-tool", version.ref = "graalvm" }
 graalvm-polyglot-tools-profiler = { group = "org.graalvm.polyglot", name = "profiler-tool", version.ref = "graalvm" }
-graalvm-polyglot-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
+graalvm-polyglot-wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm-stable" }
 graalvm-polyglot-wasm-community = { group = "org.graalvm.polyglot", name = "wasm-community", version.ref = "graalvm" }
 graalvm-python-embedding = { group = "org.graalvm.python", name = "python-embedding", version.ref = "graalvm" }
 graalvm-python-language = { group = "org.graalvm.python", name = "python-language", version.ref = "graalvm" }
-graalvm-python-language-enterprise = { group = "org.graalvm.python", name = "python-language-enterprise", version.ref = "graalvm" }
+graalvm-python-language-enterprise = { group = "org.graalvm.python", name = "python-language-enterprise", version.ref = "graalvm-stable" }
 graalvm-python-launcher = { group = "org.graalvm.python", name = "python-launcher", version.ref = "graalvm" }
 graalvm-python-resources = { group = "org.graalvm.python", name = "python-resources", version.ref = "graalvm" }
 graalvm-regex = { group = "org.graalvm.regex", name = "regex", version.ref = "graalvm" }
@@ -676,6 +679,12 @@ picocli-codegen = { group = "info.picocli", name = "picocli-codegen", version.re
 picocli-jansi-graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli-jansi-graalvm" }
 picocli-jline3 = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
 picnic = { group = "com.jakewharton.picnic", name = "picnic", version.ref = "picnic" }
+pkl-core = { group = "org.pkl-lang", name = "pkl-core", version.ref = "pkl" }
+pkl-executor = { group = "org.pkl-lang", name = "pkl-executor", version.ref = "pkl" }
+pkl-commons-cli = { group = "org.pkl-lang", name = "pkl-commons-cli", version.ref = "pkl" }
+pkl-cli = { group = "org.pkl-lang", name = "pkl-cli", version.ref = "pkl" }
+pkl-config-java = { group = "org.pkl-lang", name = "pkl-config-java", version.ref = "pkl" }
+pkl-codegen-java = { group = "org.pkl-lang", name = "pkl-codegen-java", version.ref = "pkl" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }
 projectreactor-bom = { group = "io.projectreactor", name = "reactor-bom", version.ref = "projectreactor" }
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }

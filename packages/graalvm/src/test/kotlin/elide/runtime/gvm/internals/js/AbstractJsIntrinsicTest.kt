@@ -60,10 +60,10 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
   // Logic to execute a guest-side test.
   private inline fun executeGuestInternal(
-    ctx: PolyglotContext,
-    bind: Boolean,
-    bindUtils: Boolean,
-    op: PolyglotContext.() -> String,
+      ctx: PolyglotContext,
+      bind: Boolean,
+      bindUtils: Boolean,
+      op: PolyglotContext.() -> String,
   ): GuestValue {
     // resolve the script
     val script = op.invoke(ctx)
@@ -109,8 +109,8 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.apply {
-      vfs { deferred = false }
       install(JavaScript)
+      vfs { deferred = false }
     }
   }
 
@@ -129,9 +129,9 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
   protected fun executeDual(
-    bind: Boolean,
-    op: () -> Unit,
-    guest: PolyglotContext.() -> String,
+      bind: Boolean,
+      op: () -> Unit,
+      guest: PolyglotContext.() -> String,
   ) = GuestTestExecution(::withContext) {
     op.invoke()
     executeGuestInternal(

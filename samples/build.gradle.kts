@@ -22,7 +22,7 @@ buildscript {
 
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
@@ -69,6 +69,6 @@ buildscript {
   }
 
   dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0-RC3")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0")
   }
 }

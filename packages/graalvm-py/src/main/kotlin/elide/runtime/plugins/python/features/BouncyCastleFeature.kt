@@ -29,6 +29,8 @@ import java.security.Security
  */
 @Suppress("LargeClass", "LongMethod", "TooGenericExceptionThrown", "deprecation")
 public class BouncyCastleFeature : Feature {
+  override fun getDescription(): String = "Registers BouncyCastle native libraries for use by GraalPython"
+
   // @TODO(sgammon): Remove once https://github.com/oracle/graal/issues/8795 is fixed
   override fun afterRegistration(access: AfterRegistrationAccess) {
     val support = ImageSingletons.lookup(

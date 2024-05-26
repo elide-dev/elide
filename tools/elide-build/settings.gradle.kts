@@ -22,7 +22,7 @@ pluginManagement {
 
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("com.google.devtools.ksp")
@@ -33,7 +33,7 @@ pluginManagement {
 }
 
 plugins {
-  id("com.gradle.enterprise") version("3.16.2")
+  id("com.gradle.develocity") version("3.17.4")
 }
 
 dependencyResolutionManagement {
@@ -42,7 +42,7 @@ dependencyResolutionManagement {
     maven("https://gradle.pkg.st")
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
@@ -60,9 +60,9 @@ dependencyResolutionManagement {
   }
 }
 
-gradleEnterprise {
+develocity {
   buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
+    termsOfUseUrl = "https://gradle.com/terms-of-service"
+    termsOfUseAgree = "yes"
   }
 }

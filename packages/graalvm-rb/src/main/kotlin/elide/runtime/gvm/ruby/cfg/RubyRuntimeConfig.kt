@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets
 import java.time.ZoneId
 import java.util.*
 import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
-import elide.runtime.gvm.cfg.JsRuntimeConfig
+import elide.runtime.gvm.cfg.LanguageDefaults
 
 /**
  * TBD.
@@ -31,18 +31,18 @@ public class RubyRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
   /**
    * @return Default locale to apply to the JS VM. Defaults to the system default.
    */
-  public val defaultLocale: Locale? get() = JsRuntimeConfig.DEFAULT_LOCALE
+  public var defaultLocale: Locale = LanguageDefaults.DEFAULT_LOCALE
 
   /**
    * @return Default timezone to apply to the JS VM. Defaults to the system default.
    */
-  public val timezone: ZoneId? get() = JsRuntimeConfig.DEFAULT_TIMEZONE
+  public var timezone: ZoneId = LanguageDefaults.DEFAULT_TIMEZONE
 
   /**
    * @return Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`. `UTF-8` and
    *   `UTF-32` are explicitly supported; other support may vary.
    */
-  public val charset: Charset? get() = null
+  public var charset: Charset? = LanguageDefaults.DEFAULT_CHARSET
 
   /**
    * @return Locale to use for embedded JS VMs.

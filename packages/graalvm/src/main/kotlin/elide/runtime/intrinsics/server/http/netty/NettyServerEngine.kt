@@ -10,13 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelOption
-import org.graalvm.polyglot.HostAccess.Export
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.net.InetSocketAddress
 import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.Logging
@@ -25,6 +26,14 @@ import elide.runtime.intrinsics.server.http.HttpServerEngine
 import elide.runtime.intrinsics.server.http.internal.PipelineRouter
 import elide.vm.annotations.Polyglot
 
+// Properties accessible to guest code on the server engine.
+private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
+  "config",
+  "router",
+  "running",
+  "start",
+)
+
 /**
  * Netty-based [HttpServerEngine] implementation.
  *
@@ -32,9 +41,9 @@ import elide.vm.annotations.Polyglot
  * performance.
  */
 @DelicateElideApi internal class NettyServerEngine(
-  @Polyglot override val config: NettyServerConfig,
-  @Polyglot override val router: PipelineRouter,
-) : HttpServerEngine {
+  @get:Polyglot override val config: NettyServerConfig,
+  @get:Polyglot override val router: PipelineRouter,
+) : HttpServerEngine, ProxyObject {
   /** Thread-safe flag to signal  */
   private val serverRunning = AtomicBoolean(false)
 
@@ -48,7 +57,7 @@ import elide.vm.annotations.Polyglot
     return NettyChannelInitializer(NettyRequestHandler(router))
   }
 
-  @Export override fun start() {
+  @Polyglot override fun start() {
     logging.debug("Starting server")
 
     // allow this call only once
@@ -73,6 +82,7 @@ import elide.vm.annotations.Polyglot
       // attach custom handler pipeline and configure client channels
       childHandler(prepareChannelInitializer())
       childOption(ChannelOption.SO_REUSEADDR, true)
+      childOption(ChannelOption.TCP_NODELAY, true)
 
       // start listening
       val address = InetSocketAddress(config.port)
@@ -82,6 +92,26 @@ import elide.vm.annotations.Polyglot
       logging.debug { "Server listening at $address" }
       config.onBindCallback?.invoke()
     }
+  }
+
+  override fun hasMember(key: String?): Boolean = key != null && key in HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS
+  override fun getMemberKeys(): Array<String> = HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS
+
+  override fun putMember(key: String?, value: Value?) {
+    // no-op
+  }
+
+  override fun removeMember(key: String?): Boolean {
+    return false  // not allowed
+  }
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "config" -> config
+    "router" -> router
+    "running" -> running
+    "start" -> ProxyExecutable { start() }
+    null -> null
+    else -> null
   }
 
   private companion object {

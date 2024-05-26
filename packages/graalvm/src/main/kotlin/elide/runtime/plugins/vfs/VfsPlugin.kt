@@ -16,7 +16,6 @@ import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.polyglot.io.IOAccess
 import java.net.URI
 import java.util.*
-import java.util.concurrent.ConcurrentSkipListMap
 import elide.runtime.Logging
 import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
@@ -29,7 +28,7 @@ import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 import elide.runtime.gvm.internals.vfs.HybridVfs
 import elide.runtime.gvm.vfs.HostVFS
 import elide.runtime.gvm.vfs.LanguageVFS
-import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
+import elide.runtime.vfs.languageVfsRegistry
 
 /**
  * Engine plugin providing configurable VFS support for polyglot contexts. Both embedded and host VFS implementations
@@ -85,23 +84,14 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
 
   /** Identifier for the [Vfs] plugin, which configures contexts with a custom file system. */
   public companion object Plugin : EnginePlugin<VfsConfig, Vfs> {
-    private val languageVfsRegistry = ConcurrentSkipListMap<String, () -> LanguageVFSInfo>()
-
-    /**
-     * Register a language-specific VFS implementation for the specified [languageId].
-     *
-     * @param languageId Identifier for the language to register the VFS for.
-     * @param provider The VFS implementation provider to register.
-     */
-    @JvmStatic public fun registerLanguageVfs(languageId: String, provider: () -> LanguageVFSInfo) {
-      languageVfsRegistry[languageId] = provider
-    }
-
     override val key: Key<Vfs> = Key("GuestVFS")
 
     override fun install(scope: InstallationScope, configuration: VfsConfig.() -> Unit): Vfs {
       // apply the configuration and create the plugin instance
-      val config = VfsConfig(scope.configuration).apply(configuration)
+      val allRegistered = scope.registeredBundles()
+      val config = VfsConfig(scope.configuration)
+      if (allRegistered.isNotEmpty()) allRegistered.forEach { config.include(it) }
+      config.apply(configuration)
       val instance = Vfs(config)
 
       // subscribe to lifecycle events
@@ -122,10 +112,10 @@ import elide.runtime.gvm.vfs.LanguageVFS.LanguageVFSInfo
       .setDeferred(deferred)
       .build()
 
-    private fun resolveLanguageVfs(language: GuestLanguage): elide.runtime.gvm.internals.LanguageVFS? {
+    private fun resolveLanguageVfs(language: GuestLanguage): elide.runtime.vfs.LanguageVFS? {
       return LanguageVFS.delegate(
         language.languageId,
-        languageVfsRegistry[language.languageId] ?: return null
+        languageVfsRegistry()[language.languageId] ?: return null
       )
     }
 

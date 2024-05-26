@@ -22,18 +22,31 @@ pluginManagement {
 
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("com.google.devtools.ksp")
         includeGroup("org.jetbrains.reflekt")
+        includeGroupAndSubgroups("org.graalvm")
+        includeGroupByRegex("org.graalvm.*")
+
+        listOf(
+          "org.graalvm.ruby",
+          "org.graalvm.llvm",
+          "org.graalvm.python",
+          "org.graalvm.js",
+          "org.graalvm.polyglot",
+          "org.graalvm.tools",
+        ).forEach {
+          includeGroupAndSubgroups(it)
+        }
       }
     }
   }
 }
 
 plugins {
-  id("com.gradle.enterprise") version("3.16.2")
+  id("com.gradle.develocity") version("3.17.4")
   id("io.micronaut.platform.catalog") version (extra.properties["micronautVersion"] as String)
 }
 
@@ -43,7 +56,7 @@ dependencyResolutionManagement {
     maven("https://gradle.pkg.st")
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
@@ -62,25 +75,6 @@ dependencyResolutionManagement {
         includeGroup("org.jetbrains.kotlinx")
       }
     }
-    maven {
-      name = "gvm-dev"
-      url = uri("https://dl.less.build/repository/gvm-edge")
-      content {
-        includeGroupAndSubgroups("org.graalvm")
-        includeGroupByRegex("org.graalvm.*")
-
-        listOf(
-          "org.graalvm.ruby",
-          "org.graalvm.llvm",
-          "org.graalvm.python",
-          "org.graalvm.js",
-          "org.graalvm.polyglot",
-          "org.graalvm.tools",
-        ).forEach {
-          includeGroupAndSubgroups(it)
-        }
-      }
-    }
     google()
   }
 
@@ -94,10 +88,10 @@ dependencyResolutionManagement {
   }
 }
 
-gradleEnterprise {
+develocity {
   buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
+    termsOfUseUrl = "https://gradle.com/terms-of-service"
+    termsOfUseAgree = "yes"
   }
 }
 

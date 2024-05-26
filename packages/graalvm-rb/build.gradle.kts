@@ -18,6 +18,7 @@ import elide.internal.conventions.publishing.publish
 plugins {
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
+  alias(libs.plugins.shadow)
 
   kotlin("jvm")
   kotlin("kapt")
@@ -25,6 +26,9 @@ plugins {
 
   id("elide.internal.conventions")
 }
+
+// Enable LLVM use for Ruby.
+val enableLlvm = false
 
 elide {
   publishing {
@@ -53,14 +57,82 @@ elide {
   }
 }
 
+val oracleGvm = false
+val nativeArgs = listOfNotNull(
+  "--shared",
+  "--initialize-at-build-time=",
+  "-H:+JNIExportSymbols",
+  "-H:+SourceLevelDebug",
+  "-H:-RemoveUnusedSymbols",
+  "-H:-StripDebugInfo",
+  "-H:Class=elide.runtime.ruby.ElideRuby",
+  "-H:Method=main",
+  "-H:+UnlockExperimentalVMOptions",
+)
+
+graalvmNative {
+  binaries {
+    create("shared") {
+      sharedLibrary = true
+      imageName = "libelideruby"
+      buildArgs(nativeArgs)
+
+      classpath(
+        tasks.compileJava.get().outputs.files,
+        tasks.compileKotlin.get().outputs.files,
+        configurations.compileClasspath,
+        configurations.runtimeClasspath,
+      )
+    }
+
+    named("test") {
+      fallback = false
+      sharedLibrary = false
+      quickBuild = true
+      buildArgs(nativeArgs)
+
+      classpath(
+        tasks.compileJava.get().outputs.files,
+        tasks.compileKotlin.get().outputs.files,
+        tasks.compileTestJava.get().outputs.files,
+        tasks.compileTestKotlin.get().outputs.files,
+        configurations.testCompileClasspath,
+        configurations.testRuntimeClasspath,
+      )
+    }
+  }
+}
+
+fun ExternalModuleDependency.banLlvm() {
+  exclude("org.graalvm.llvm", "llvm-language")
+  exclude("org.graalvm.llvm", "llvm-language-native")
+  exclude("org.graalvm.llvm", "llvm-native-community")
+  exclude("org.graalvm.llvm", "llvm-language-nfi")
+}
+
+fun ExternalModuleDependency.rubyExclusions() {
+  if (!enableLlvm) {
+    banLlvm()
+  }
+}
+
 dependencies {
-  api(libs.graalvm.polyglot.ruby.community)
-  implementation(libs.bundles.graalvm.ruby)
+  api(projects.packages.engine)
+  implementation(libs.bundles.graalvm.ruby) { rubyExclusions() }
   implementation(libs.kotlinx.coroutines.core)
-  implementation(projects.packages.graalvm)
+  api(libs.graalvm.ruby.language) { rubyExclusions() }
+  if (!oracleGvm) {
+    api(libs.graalvm.polyglot.ruby.community)
+  }
+
+  compileOnly(libs.graalvm.svm)
+  if (oracleGvm) {
+    compileOnly(libs.graalvm.truffle.enterprise)
+  }
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.graalvm)
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 

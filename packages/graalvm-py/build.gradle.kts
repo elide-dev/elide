@@ -18,6 +18,7 @@ import elide.internal.conventions.publishing.publish
 plugins {
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
+  alias(libs.plugins.shadow)
 
   kotlin("jvm")
   kotlin("kapt")
@@ -59,22 +60,55 @@ elide {
   }
 }
 
-detekt {
-  ignoreFailures = true
+val oracleGvm = false
+val nativeArgs = listOfNotNull(
+  "--shared",
+  "--initialize-at-build-time=",
+  "-H:+JNIExportSymbols",
+  "-H:+SourceLevelDebug",
+  "-H:-RemoveUnusedSymbols",
+  "-H:-StripDebugInfo",
+)
+
+graalvmNative {
+  binaries {
+    create("shared") {
+      sharedLibrary = true
+      imageName = "libelidepython"
+      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
+      buildArgs(nativeArgs)
+    }
+
+    named("test") {
+      fallback = false
+      sharedLibrary = false
+      quickBuild = true
+      buildArgs(nativeArgs)
+    }
+  }
 }
 
 dependencies {
+  api(projects.packages.engine)
+  api(libs.graalvm.truffle.nfi.libffi)
   api(libs.graalvm.python.language)
   api(libs.graalvm.python.resources)
   api(libs.graalvm.python.embedding)
-  api(libs.graalvm.polyglot.python.community)
-  api(libs.graalvm.truffle.nfi.libffi)
+
+  if (oracleGvm) {
+    api(libs.graalvm.python.language.enterprise)
+  } else {
+    api(libs.graalvm.polyglot.python.community)
+  }
 
   implementation(libs.kotlinx.coroutines.core)
-  implementation(projects.packages.graalvm)
+
+  compileOnly(libs.graalvm.svm)
+  if (oracleGvm) compileOnly(libs.graalvm.truffle.enterprise)
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.graalvm)
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 
@@ -88,5 +122,6 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+    systemProperty("elide.js.vm.enableStreams", "true")
   }
 }

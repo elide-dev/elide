@@ -53,7 +53,7 @@ elide {
 }
 
 dependencies {
-  implementation(projects.packages.graalvm)
+  api(projects.packages.engine)
   implementation(projects.packages.graalvmJvm)
 
   implementation(libs.kotlin.scripting.jvm)
@@ -62,4 +62,6 @@ dependencies {
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.graalvm)
+  testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }

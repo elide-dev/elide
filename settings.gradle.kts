@@ -17,6 +17,8 @@
 )
 
 pluginManagement {
+  includeBuild("tools/elide-toolchains")
+
   repositories {
     maven {
       name = "pkgst-gradle"
@@ -35,7 +37,7 @@ pluginManagement {
     }
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("dev.elide.tools")
@@ -43,23 +45,23 @@ pluginManagement {
         includeGroup("org.jetbrains.reflekt")
       }
     }
+    maven {
+      name = "gvm-plugin-snapshots"
+      url = uri("https://raw.githubusercontent.com/graalvm/native-build-tools/snapshots")
+    }
     gradlePluginPortal()
     google()
     mavenCentral()
-  }
-
-  if (extra["buildPlugins"] == "true") {
-    includeBuild("third_party/apple/pkl")
-    includeBuild("tools/plugin/gradle-plugin")
   }
 }
 
 plugins {
   id("build.less") version ("1.0.0-rc2")
-  id("com.gradle.enterprise") version ("3.16.2")
+  id("com.gradle.develocity") version ("3.17.4")
   id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version ("1.12.1")
   id("io.micronaut.platform.catalog") version (extra.properties["micronautVersion"] as String)
+  id("elide.toolchains.jvm")
 }
 
 // Fix: Force CWD to proper value and store secondary value.
@@ -67,8 +69,19 @@ System.setProperty("user.dir", rootProject.projectDir.toString())
 System.setProperty("elide.home", rootProject.projectDir.toString())
 
 val buildUuid: String by settings
+val buildPkl: String by settings
 val buildlessApiKey: String by settings
 val enableSubstrate: String by settings
+
+toolchainManagement {
+  jvm {
+    javaRepositories {
+      repository("gvm-edge") {
+        resolverClass = elide.toolchain.jvm.JvmToolchainResolver::class.java
+      }
+    }
+  }
+}
 
 dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
@@ -87,12 +100,23 @@ dependencyResolutionManagement {
     }
     maven {
       name = "elide-snapshots"
-      url = uri("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+      url = uri("https://maven.elide.dev")
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
         includeGroup("org.jetbrains.reflekt")
         includeGroup("com.google.devtools.ksp")
+        includeGroupAndSubgroups("org.graalvm")
+        includeGroupByRegex("org.graalvm.*")
+
+        listOf(
+          "org.graalvm.ruby",
+          "org.graalvm.llvm",
+          "org.graalvm.python",
+          "org.graalvm.js",
+          "org.graalvm.polyglot",
+          "org.graalvm.tools",
+        ).forEach(::includeGroupAndSubgroups)
       }
     }
     maven {
@@ -107,25 +131,6 @@ dependencyResolutionManagement {
       url = uri("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
       content {
         includeGroup("org.jetbrains.dokka")
-      }
-    }
-    maven {
-      name = "gvm-dev"
-      url = uri("https://dl.less.build/repository/gvm-edge")
-      content {
-        includeGroupAndSubgroups("org.graalvm")
-        includeGroupByRegex("org.graalvm.*")
-
-        listOf(
-          "org.graalvm.ruby",
-          "org.graalvm.llvm",
-          "org.graalvm.python",
-          "org.graalvm.js",
-          "org.graalvm.polyglot",
-          "org.graalvm.tools",
-        ).forEach {
-          includeGroupAndSubgroups(it)
-        }
       }
     }
     maven {
@@ -196,6 +201,25 @@ if (enableSubstrate == "true") {
   }
 }
 
+// Embedded languages.
+if (buildPkl == "true") {
+  includeBuild("third_party/apple/pkl") {
+    dependencySubstitution {
+      substitute(module("org.pkl-lang:pkl-core")).using(project(":pkl-core"))
+      substitute(module("org.pkl-lang:pkl-executor")).using(project(":pkl-executor"))
+      substitute(module("org.pkl-lang:pkl-commons-cli")).using(project(":pkl-commons-cli"))
+      substitute(module("org.pkl-lang:pkl-codegen-java")).using(project(":pkl-codegen-java"))
+      substitute(module("org.pkl-lang:pkl-codegen-kotlin")).using(project(":pkl-codegen-kotlin"))
+      substitute(module("org.pkl-lang:pkl-config-java")).using(project(":pkl-config-java"))
+      substitute(module("org.pkl-lang:pkl-config-kotlin")).using(project(":pkl-config-kotlin"))
+      substitute(module("org.pkl-lang:pkl-tools")).using(project(":pkl-tools"))
+      substitute(module("org.pkl-lang:pkl-server")).using(project(":pkl-server"))
+      substitute(module("org.pkl-lang:pkl-doc")).using(project(":pkl-doc"))
+      substitute(module("org.pkl-lang:pkl-cli")).using(project(":pkl-cli"))
+    }
+  }
+}
+
 // Build modules.
 include(
   ":packages:base",
@@ -204,6 +228,7 @@ include(
   ":packages:cli-bridge",
   ":packages:core",
   ":packages:embedded",
+  ":packages:engine",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",
@@ -231,6 +256,7 @@ include(
   ":packages:ssr",
   ":packages:test",
   ":packages:wasm",
+  ":tools:auximage",
   ":tools:esbuild",
   ":tools:tsc",
   ":tools:processor",
@@ -248,9 +274,7 @@ val buildBenchmarks: String by settings
 val buildRpc: String by settings
 val buildFlatbuffers: String by settings
 
-includeBuild(
-  "tools/elide-build",
-)
+includeBuild("tools/elide-build")
 
 if (buildSamples == "true") {
   includeBuild("samples")
@@ -265,6 +289,10 @@ if (buildDocs == "true" && buildDocsModules == "true") {
     ":docs:architecture",
     ":docs:guide",
   )
+}
+
+if (buildPlugins == "true") {
+  includeBuild("tools/plugin/gradle-plugin")
 }
 
 if (buildDocsSite == "true") {
@@ -284,10 +312,10 @@ if (buildBenchmarks == "true") {
   )
 }
 
-gradleEnterprise {
+develocity {
   buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
+    termsOfUseUrl = "https://gradle.com/terms-of-service"
+    termsOfUseAgree = "yes"
   }
 }
 

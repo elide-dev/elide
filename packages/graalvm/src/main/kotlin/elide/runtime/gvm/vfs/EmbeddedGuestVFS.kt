@@ -15,7 +15,7 @@ package elide.runtime.gvm.vfs
 import java.io.File
 import java.net.URI
 import java.nio.file.Path
-import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.vfs.GuestVFS
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS.empty
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS.forBundle

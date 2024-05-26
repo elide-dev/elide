@@ -175,7 +175,7 @@ jobs:
             download.oracle.com:443
             ea6ne4j2sb.execute-api.eu-central-1.amazonaws.com:443
             edge.pkg.st:443
-            elide-snapshots.storage-download.googleapis.com:443
+            maven.elide.dev:443
             github.com:22
             github.com:443
             global.less.build:443

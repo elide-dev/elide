@@ -53,7 +53,7 @@
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
     "@types/node": "20.12.11",
-    "@typescript-eslint/eslint-plugin": "7.10.0",
+    "@typescript-eslint/eslint-plugin": "7.11.0",
     "@typescript-eslint/parser": "7.10.0",
     "commitlint": "19.3.0",
     "esbuild": "0.21.2",

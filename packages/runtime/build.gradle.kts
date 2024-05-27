@@ -256,10 +256,6 @@ val ktCompilerArgs = listOf(
 
   // opt-in to Elide's delicate runtime API
   "-opt-in=elide.runtime.core.DelicateElideApi",
-
-  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
-  // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0",
 )
 
 java {
@@ -298,8 +294,9 @@ sourceSets {
 }
 
 // use consistent compose plugin version
+val kotlinVersion = libs.versions.kotlin.sdk.get()
 if (enableMosaic) the<MosaicExtension>().kotlinCompilerPlugin =
-  libs.androidx.compose.compiler.get().toString()
+  "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlinVersion"
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 val cliVersion = if (stamp) {

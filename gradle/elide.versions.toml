@@ -16,7 +16,6 @@
 #
 
 [versions]
-androidx-compose = "1.5.13-dev-k2.0.0-RC1-50f08dfa4b4"
 arrow = "1.2.0"
 asciidata = "1.4.0"
 assertk = "0.28.1"
@@ -311,6 +310,7 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-sdk" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-sdk" }
 kotlin-plugin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-sdk" }
 kotlin-plugin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin-sdk" }
+kotlin-plugin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-sdk" }
 kotlin-plugin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin-dataframe" }
 kotlin-plugin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin-sdk" }
 kotlin-plugin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin-sdk" }
@@ -349,7 +349,6 @@ versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionChe
 
 [libraries]
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
-androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "androidx-compose" }
 arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }

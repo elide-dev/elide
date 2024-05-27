@@ -42,13 +42,11 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  id("io.micronaut.docker")
   alias(libs.plugins.kover)
   alias(libs.plugins.buildConfig)
   alias(libs.plugins.micronaut.application)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.micronaut.aot)
-  alias(libs.plugins.shadow)
   alias(libs.plugins.gradle.checksum)
 
   id("elide.internal.conventions")
@@ -58,10 +56,6 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     kotlinVersionOverride = "2.0"
-  }
-
-  docker {
-    useGoogleCredentials = true
   }
 
   jvm {
@@ -331,9 +325,6 @@ val jvmOnly: Configuration by configurations.creating {
   isCanBeResolved = true
 }
 
-// Include JVM-only dependencies in the Shadow JAR.
-configurations.shadow.extendsFrom(configurations.named("jvmOnly"))
-
 dependencies {
   kapt(mn.micronaut.inject.java)
   kapt(libs.picocli.codegen)
@@ -505,7 +496,6 @@ distributions {
 
     contents {
       from(
-        tasks.shadowJar,
         tasks.createOptimizedStartScripts,
         layout.projectDirectory.dir("packaging/content"),
       )
@@ -593,9 +583,6 @@ tasks {
     description = "Builds CLI distributions"
 
     dependsOn(
-      // Distribution: Shadow JAR
-      shadowJar,
-
       // Distribution: Optimized Binary
       nativeOptimizedCompile,
 
@@ -616,6 +603,30 @@ tasks {
   }
 
   installDist {
+    duplicatesStrategy = EXCLUDE
+  }
+
+  buildLayers {
+    enabled = false
+  }
+
+  optimizedBuildLayers {
+    enabled = false
+  }
+
+  optimizedDistZip {
+    duplicatesStrategy = EXCLUDE
+  }
+
+  optimizedDistTar {
+    duplicatesStrategy = EXCLUDE
+  }
+
+  distTar {
+    duplicatesStrategy = EXCLUDE
+  }
+
+  distZip {
     duplicatesStrategy = EXCLUDE
   }
 }
@@ -1468,7 +1479,6 @@ tasks {
 
   listOf(
     startScripts,
-    startShadowScripts,
     createOptimizedStartScripts,
   ).forEach {
     it.configure {
@@ -1480,7 +1490,6 @@ tasks {
     jar,
     optimizedJitJar,
     optimizedNativeJar,
-    shadowJar,
   ).forEach {
     it.configure {
       applyJarSettings()

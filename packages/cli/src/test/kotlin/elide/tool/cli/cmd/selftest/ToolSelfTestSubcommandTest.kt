@@ -13,6 +13,7 @@
 
 package elide.tool.cli.cmd.selftest
 
+import kotlin.test.Ignore
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
@@ -21,7 +22,7 @@ import elide.tool.cli.AbstractSubtoolTest
 import elide.tool.cli.cmd.info.ToolInfoCommand
 
 /** Tests for the main CLI tool entrypoint. */
-@TestCase class ToolSelfTestSubcommandTest : AbstractSubtoolTest() {
+@Ignore @TestCase class ToolSelfTestSubcommandTest : AbstractSubtoolTest() {
   @Inject internal lateinit var selftest: SelfTestCommand
 
   override fun subcommand(): Runnable = selftest

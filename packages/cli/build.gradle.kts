@@ -207,10 +207,6 @@ val ktCompilerArgs = listOf(
 
   // opt-in to Elide's delicate runtime API
   "-opt-in=elide.runtime.core.DelicateElideApi",
-
-  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
-  // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0",
 )
 
 val edgeJvmTarget = 23
@@ -258,8 +254,9 @@ sourceSets {
 }
 
 // use consistent compose plugin version
+val kotlinVersion = libs.versions.kotlin.sdk.get()
 if (enableMosaic) the<MosaicExtension>().kotlinCompilerPlugin =
-  libs.androidx.compose.compiler.get().toString()
+  "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlinVersion"
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 val cliVersion = if (stamp) {
@@ -267,6 +264,7 @@ val cliVersion = if (stamp) {
 } else {
   "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
 }
+
 val nativesPath = nativesRootTemplate(cliVersion)
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
   .get()
@@ -1365,8 +1363,6 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
     "META-INF/native/freebsd32/*",
     "META-INF/native/freebsd64/*",
     "META-INF/native/linux32/*",
-    "META-INF/com.android.tools",
-    "META-INF/com.android.tools/*/*",
     *excludedStatics,
     *(if (!enableEmbeddedResources) arrayOf(
       "META-INF/elide/embedded/runtime/*/*-windows*",

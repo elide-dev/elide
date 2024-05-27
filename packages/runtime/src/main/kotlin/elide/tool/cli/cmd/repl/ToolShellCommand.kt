@@ -153,6 +153,11 @@ import elide.tool.project.ProjectManager
       "kotlin" to "jvm",
       "kt" to "jvm",
     )
+
+    init {
+      loadLanguageExtensionMaybe("python")
+      loadLanguageExtensionMaybe("ruby")
+    }
   }
 
   /** [SystemRegistryImpl] that filters for special REPL commands. */

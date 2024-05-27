@@ -214,12 +214,14 @@ val nativesRootTemplate: (String) -> String = { version ->
 }
 
 val jvmCompileArgs = listOfNotNull(
+  "-Xlog:library=info",
   "--enable-preview",
   "--add-modules=jdk.incubator.vector",
   "--enable-native-access=" + listOfNotNull(
     "ALL-UNNAMED",
   ).joinToString(","),
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
+  "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
@@ -298,6 +300,14 @@ val cliVersion = if (stamp) {
 } else {
   "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
 }
+
+val languagePluginPaths = listOf(
+  "graalvm-py",
+  "graalvm-rb",
+).map { module ->
+  project(":packages:$module").layout.buildDirectory.dir("native/nativeSharedCompile")
+}
+
 val nativesPath = nativesRootTemplate(cliVersion)
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
   .get()
@@ -730,6 +740,8 @@ val commonNativeArgs = listOfNotNull(
   if (!enableFfm) null else "-H:+ForeignAPISupport",
   if (!dumpPointsTo) null else "-H:PrintAnalysisCallTreeType=CSV",
   if (!dumpPointsTo) null else "-H:+PrintImageObjectTree",
+  "-Xlog:library=info",
+  "-J-Xlog:library=info",
   //
   "--no-fallback",
   "--enable-preview",
@@ -741,7 +753,10 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-H:+ReportExceptionStackTraces",
+  "-H:+JNIEnhancedErrorCodes",
+  "-H:+JNIVerboseLookupErrors",
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
   "-Delide.natives=$nativesPath",
@@ -1129,6 +1144,10 @@ fun nativeCliImageArgs(
     .plus(StringBuilder().apply {
       append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
       append(File.pathSeparator)
+      languagePluginPaths.forEach {
+        append(it)
+        append(File.pathSeparator)
+      }
       append(System.getProperty("java.library.path", ""))
     }.toString().let {
       listOf(
@@ -1533,10 +1552,16 @@ tasks {
         rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
         nativesPath,
       ).plus(
+        languagePluginPaths.map {
+          it.get().asFile.path.toString()
+        }
+      ).plus(
         System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
           it.isNotEmpty()
         }
-      ).joinToString(File.pathSeparator)
+      ).joinToString(
+        File.pathSeparator
+      )
     )
 
     jvmArgs(jvmModuleArgs)

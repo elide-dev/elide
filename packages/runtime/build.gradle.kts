@@ -406,6 +406,7 @@ dependencies {
   implementation(libs.magicProgress)
 
   runtimeOnly(mn.micronaut.graal)
+  implementation(mn.netty.handler)
   implementation(libs.netty.tcnative)
 
   // JVM-only dependencies which are filtered for native builds.

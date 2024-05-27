@@ -418,6 +418,7 @@ dependencies {
   runtimeOnly(projects.packages.proto.protoKotlinx)
 
   runtimeOnly(mn.micronaut.graal)
+  implementation(mn.netty.handler)
   implementation(libs.netty.tcnative)
 
   // JVM-only dependencies which are filtered for native builds.

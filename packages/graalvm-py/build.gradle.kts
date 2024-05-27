@@ -62,12 +62,19 @@ elide {
 
 val oracleGvm = false
 val nativeArgs = listOfNotNull(
+  "--verbose",
   "--shared",
   "--initialize-at-build-time=",
-  "-H:+JNIExportSymbols",
   "-H:+SourceLevelDebug",
+  "-H:-JNIExportSymbols",
   "-H:-RemoveUnusedSymbols",
   "-H:-StripDebugInfo",
+  "-H:Class=elide.runtime.python.ElidePythonLanguage",
+  "-H:Method=main",
+  "-H:+JNIEnhancedErrorCodes",
+  "-H:+JNIVerboseLookupErrors",
+  "-H:+UnlockExperimentalVMOptions",
+  "-H:+ReportExceptionStackTraces",
 )
 
 graalvmNative {

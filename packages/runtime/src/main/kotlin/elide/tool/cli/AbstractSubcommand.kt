@@ -15,6 +15,7 @@ package elide.tool.cli
 
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
+import com.oracle.svm.util.ReflectionUtil
 import lukfor.progress.TaskServiceBuilder
 import lukfor.progress.executors.ITaskExecutor
 import lukfor.progress.tasks.ITaskRunnable
@@ -39,6 +40,7 @@ import elide.runtime.Logger
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.plugins.api.NativePluginAPI
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.state.CommandState
@@ -91,6 +93,38 @@ import org.graalvm.polyglot.Engine as VMEngine
         }
       }
     }
+
+    @JvmStatic fun loadLanguageExtensionMaybe(name: String) = try {
+      loadLanguageExtension(name)
+    } catch (err: Throwable) {
+      Statics.logging.error("Failed to load extension '$name'", err)
+    }
+
+    @JvmStatic fun loadLanguageExtension(name: String) {
+      val libname = "elide$name"
+      Statics.logging.debug("Loading extension '$name' ('$libname')")
+      System.loadLibrary(libname)
+      val capitalized = name.replaceFirstChar {
+        if (it. isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+      }
+      val symbol = "elide.runtime.${name}.Elide${capitalized}Language"
+      val klass = Class.forName(symbol)
+      Statics.logging.debug("Loaded extension '$name' ('$libname') as '$klass'")
+      try {
+        val obtainer = ReflectionUtil.lookupMethod(klass, "get")
+        val plugin = obtainer.invoke(null) as NativePluginAPI
+        plugin.init()
+      } catch (err: Throwable) {
+        Statics.logging.error("Failed to load obtainer for plugin '$name'", err)
+
+        try {
+          val instance = klass.declaredConstructors.first().newInstance() as NativePluginAPI
+          instance.init()
+        } catch (err: Throwable) {
+          throw err
+        }
+      }
+    }
   }
 
   private val _cpus = Runtime.getRuntime().availableProcessors()
@@ -103,7 +137,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     enableVirtualThreads -> MoreExecutors.listeningDecorator(Executors.newThreadPerTaskExecutor(threadFactory))
     enableFixedThreadPool -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(_cpus, threadFactory))
     enableFlexibleThreadPool -> MoreExecutors.listeningDecorator(
-      MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory))
+      MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory)),
     )
     else -> MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(threadFactory))
   }

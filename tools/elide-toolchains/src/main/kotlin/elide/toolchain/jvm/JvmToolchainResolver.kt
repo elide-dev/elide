@@ -164,7 +164,8 @@ private val oracleDownloadUrl = DownloadLink { gvm, platform ->
 }
 
 private val gvmCeDownloadUrl = DownloadLink { gvm, platform ->
-  "https://github.com/graalvm/graalvm-ce-dev-builds/releases/download/$gvm/graalvm-community-java23-$platform-dev.tar.gz"
+  val platformCe = platform.replace("x64", "amd64")
+  "https://github.com/graalvm/graalvm-ce-dev-builds/releases/download/$gvm/graalvm-community-java23-${platformCe}-dev.tar.gz"
 }
 
 private fun linkFor(type: ReleaseType, gvm: String, platform: String): String {

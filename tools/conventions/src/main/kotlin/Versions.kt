@@ -26,7 +26,7 @@ object Versions {
   const val antJUnit = "1.10.12"
 
   /** Static Netty version. */
-  const val netty = "4.1.109.Final"
+  const val netty = "4.1.110.Final"
 
   /** Protocol Buffers version. */
   const val protobuf = "3.25.2"

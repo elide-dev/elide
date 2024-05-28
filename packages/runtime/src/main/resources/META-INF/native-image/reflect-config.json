@@ -1269,6 +1269,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.transport.$EpollTest$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.transport.$KQueueTest$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },

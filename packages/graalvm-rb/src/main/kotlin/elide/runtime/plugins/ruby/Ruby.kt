@@ -26,14 +26,14 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
 @DelicateElideApi public class Ruby(
   private val config: RubyConfig,
-  private val resources: LanguagePluginManifest,
+  private val resources: LanguagePluginManifest? = null,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
 
     // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
+    if (resources != null) initializeEmbeddedScripts(context, resources)
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {
@@ -79,16 +79,15 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       val config = RubyConfig().apply(configuration)
       configureSharedBindings(scope, config)
 
-      val resources = resolveEmbeddedManifest(scope)
-      val instance = Ruby(config, resources)
+      // val resources = resolveEmbeddedManifest(scope)
+      val instance = Ruby(config)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
       // register resources with the VFS
-      installEmbeddedBundles(scope, resources)
-
+      // if (resources != null) installEmbeddedBundles(scope, resources)
       return instance
     }
   }

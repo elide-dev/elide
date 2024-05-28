@@ -1,38 +1,38 @@
 [submodule "runtime"]
 	path = runtime
-	url = git@github.com:elide-dev/runtime.git
+	url = https://github.com/elide-dev/runtime.git
 	branch = main
 [submodule "elide-uuid"]
 	path = packages/uuid
-	url = git@github.com:elide-dev/uuid.git
+	url = https://github.com/elide-dev/uuid.git
 [submodule "ruff"]
 	path = third_party/astral/ruff
-	url = git@github.com:astral-sh/ruff.git
+	url = https://github.com/astral-sh/ruff.git
 [submodule "uv"]
 	path = third_party/astral/uv
-	url = git@github.com:astral-sh/uv.git
+	url = https://github.com/astral-sh/uv.git
 [submodule "esbuild"]
 	path = third_party/evanw/esbuild
-	url = git@github.com:evanw/esbuild.git
+	url = https://github.com/evanw/esbuild.git
 [submodule "pkl"]
 	path = third_party/apple/pkl
-	url = git@github.com:elide-dev/pkl.git
+	url = https://github.com/elide-dev/pkl.git
 	branch = edge
 [submodule "oxc"]
 	path = third_party/oxc-project/oxc
-	url = git@github.com:oxc-project/oxc.git
+	url = https://github.com/oxc-project/oxc.git
 [submodule "grcuda"]
 	path = third_party/nvidia/grcuda
-	url = git@github.com:elide-dev/grcuda.git
+	url = https://github.com/elide-dev/grcuda.git
 [submodule "graal"]
 	path = third_party/graalvm/graal
-	url = git@github.com:elide-dev/graal.git
+	url = https://github.com/elide-dev/graal.git
 [submodule "graaljs"]
 	path = third_party/graalvm/graaljs
-	url = git@github.com:oracle/graaljs.git
+	url = https://github.com/oracle/graaljs.git
 [submodule "graalpython"]
 	path = third_party/graalvm/graalpython
-	url = git@github.com:oracle/graalpython.git
+	url = https://github.com/oracle/graalpython.git
 [submodule "truffleruby"]
 	path = third_party/graalvm/truffleruby
-	url = git@github.com:oracle/truffleruby.git
+	url = https://github.com/oracle/truffleruby.git

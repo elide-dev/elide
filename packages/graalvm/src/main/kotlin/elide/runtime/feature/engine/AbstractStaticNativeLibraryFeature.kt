@@ -16,6 +16,7 @@ import com.oracle.svm.core.jdk.NativeLibrarySupport
 import com.oracle.svm.core.jdk.PlatformNativeLibrarySupport
 import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
+import kotlin.io.path.Path
 import elide.runtime.feature.NativeLibraryFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.SHARED
@@ -29,6 +30,16 @@ internal abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeatur
    * TBD.
    */
   protected fun libraryNamed(name: String): NativeLibInfo = NativeLibInfo.of(name)
+
+  protected fun unpackLibrary(name: String, arch: String, path: String) {
+    val stream = AbstractStaticNativeLibraryFeature::class.java.getResourceAsStream(path)
+    requireNotNull(stream) { "Failed to locate library '$name' (arch: '$arch', path: '$path')" }
+    stream.use {
+      val nativesPath = requireNotNull(System.getProperty("elide.natives")?.ifBlank { null })
+      val targetPath = Path(nativesPath).resolve(Path(path).fileName)
+      targetPath.toFile().outputStream().use { it.write(stream.readBytes()) }
+    }
+  }
 
   /**
    * TBD.

@@ -32,14 +32,14 @@ import elide.runtime.vfs.registerLanguageVfs
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
-  private val resources: LanguagePluginManifest,
+  private val resources: LanguagePluginManifest? = null,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
 
     // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
+    if (resources != null) initializeEmbeddedScripts(context, resources)
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {
@@ -122,16 +122,15 @@ import elide.runtime.vfs.registerLanguageVfs
       val config = PythonConfig().apply(configuration)
       configureSharedBindings(scope, config)
 
-      val resources = resolveEmbeddedManifest(scope)
-      val instance = Python(config, resources)
+      // val resources = resolveEmbeddedManifest(scope)
+      val instance = Python(config)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
       // register resources with the VFS
-      installEmbeddedBundles(scope, resources)
-
+      // if (resources != null) installEmbeddedBundles(scope, resources)
       return instance
     }
   }

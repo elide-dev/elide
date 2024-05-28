@@ -1,5 +1,41 @@
 [
   {
+    "name":"elide.runtime.python.ElidePythonLanguage",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "queryAllPublicMethods":true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+
+        ]
+      },
+      {
+        "name": "init",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "elide.runtime.plugins.python.PythonConfig",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "queryAllPublicMethods":true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+
+        ]
+      }
+    ]
+  },
+  {
     "name": "elide.runtime.gvm.python.cfg.PythonRuntimeConfig",
     "queryAllDeclaredMethods": true,
     "methods": [

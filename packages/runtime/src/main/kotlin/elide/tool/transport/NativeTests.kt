@@ -46,7 +46,8 @@ import elide.tool.testing.SelfTest
 @Requires(os = [Requires.Family.LINUX])
 @Bean @EmbeddedTest class EpollTest : SelfTest() {
   override suspend fun SelfTestContext.test() {
-    assertTrue(Epoll.isAvailable(), "epoll should be available on linux")
+    val reason = if (!Epoll.isAvailable()) Epoll.unavailabilityCause()?.toString() else null
+    assertTrue(Epoll.isAvailable(), "epoll should be available on linux: $reason")
   }
 }
 

@@ -106,10 +106,12 @@ val entrypoint = "elide.tool.cli.ElideTool"
 val enablePkl = false
 val enableWasm = true
 val enablePython = true
-val enableRuby = true
+val enableRuby = false
 val enableLlvm = false
 val enableJvm = HostManager.hostIsLinux
-val enableFfm = false
+val enableKotlin = false
+val enableToolchains = !HostManager.hostIsLinux
+val enableFfm = HostManager.hostIsLinux && System.getProperty("os.arch") == "amd64"
 val oracleGvm = false
 val enableEdge = true
 val enableStage = true
@@ -119,6 +121,7 @@ val enableJit = true
 val enablePreinitializeAll = true
 val enableTools = true
 val enableMosaic = true
+val enableMosaicExperimental = false
 val enableProguard = false
 val enableExperimental = false
 val enableEmbeddedResources = false
@@ -132,7 +135,7 @@ val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enablePgoReport = true
-val enableJna = true
+val enableJna = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
 val glibcTarget = "glibc"
@@ -155,6 +158,9 @@ val exclusions = listOfNotNull(
 
   // only include jline jna integration if jna is enabled and ffm is disabled
   if (!enableFfm && enableJna) null else libs.jline.terminal.jna,
+
+  // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
+  if (enableKotlin) null else libs.kotlin.compiler.embedded,
 )
 
 buildscript {
@@ -214,7 +220,7 @@ val nativesRootTemplate: (String) -> String = { version ->
 }
 
 val jvmCompileArgs = listOfNotNull(
-  "-Xlog:library=info",
+  // "-Xlog:library=info",
   "--enable-preview",
   "--add-modules=jdk.incubator.vector",
   "--enable-native-access=" + listOfNotNull(
@@ -252,6 +258,10 @@ val ktCompilerArgs = listOf(
 
   // opt-in to Elide's delicate runtime API
   "-opt-in=elide.runtime.core.DelicateElideApi",
+
+  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
+  // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0",
 )
 
 java {
@@ -290,9 +300,16 @@ sourceSets {
 }
 
 // use consistent compose plugin version
-val kotlinVersion = libs.versions.kotlin.sdk.get()
-if (enableMosaic) the<MosaicExtension>().kotlinCompilerPlugin =
-  "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlinVersion"
+if (enableMosaic) {
+  if (enableMosaicExperimental) {
+    val kotlinVersion = libs.versions.kotlin.sdk.get()
+    the<MosaicExtension>().kotlinCompilerPlugin =
+      "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlinVersion"   
+  } else {
+    the<MosaicExtension>().kotlinCompilerPlugin =
+      libs.androidx.compose.compiler.get().toString()
+  }
+}
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 val cliVersion = if (stamp) {
@@ -305,7 +322,7 @@ val languagePluginPaths = listOf(
   "graalvm-py",
   "graalvm-rb",
 ).map { module ->
-  project(":packages:$module").layout.buildDirectory.dir("native/nativeSharedCompile")
+  project(":packages:$module").layout.buildDirectory.dir("native/nativeSharedCompile").get().asFile.path
 }
 
 val nativesPath = nativesRootTemplate(cliVersion)
@@ -357,8 +374,14 @@ dependencies {
   implementation(libs.jline.reader)
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
-  if (!enableFfm) implementation(libs.jline.terminal.jni)
-  if (enableFfm) implementation(libs.jline.terminal.ffm)
+
+  implementation(libs.jline.terminal.jansi)
+  implementation(libs.jline.terminal.jni)
+  // implementation(libs.jline.terminal.jna)
+  implementation(libs.jline.terminal.ffm)
+  // if (!enableFfm) implementation(libs.jline.terminal.jni)
+  // if (enableFfm) implementation(libs.jline.terminal.ffm)
+
   implementation(libs.jline.builtins)
   implementation(libs.jline.graal) {
     exclude(group = "org.slf4j", module = "slf4j-jdk14")
@@ -384,7 +407,7 @@ dependencies {
     if (enableJvm) {
       implementation(projects.packages.graalvmJvm)
       implementation(projects.packages.graalvmJava)
-      implementation(projects.packages.graalvmKt)
+      if (enableKotlin) implementation(projects.packages.graalvmKt)
     }
   }
 
@@ -734,29 +757,34 @@ val deprecatedNativeArgs = listOf(
 )
 
 val commonNativeArgs = listOfNotNull(
-//  "--trace-object-instantiation=io.netty.buffer.AbstractReferenceCountedByteBuf",
-  "--trace-object-instantiation=java.nio.DirectByteBuffer",
+  "--verbose",
+  "--report-unsupported-elements-at-runtime",
+  // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner.referenceQueue",
+  // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner${'$'}CleanerThread.this${'$'}0",
+  // "--trace-object-instantiation=java.nio.DirectByteBuffer",
+  // "--trace-object-instantiation=java.lang.Thread",
+  // "--trace-object-instantiation=com.sun.jna.internal.Cleaner",
   if (enableJit) null else "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime",
   if (!enableFfm) null else "-H:+ForeignAPISupport",
   if (!dumpPointsTo) null else "-H:PrintAnalysisCallTreeType=CSV",
   if (!dumpPointsTo) null else "-H:+PrintImageObjectTree",
-  "-Xlog:library=info",
-  "-J-Xlog:library=info",
+  // "-J-Xlog:library=info",
+  // "-H:+JNIVerboseLookupErrors",
   //
   "--no-fallback",
   "--enable-preview",
-  "--enable-native-access=ALL-UNNAMED",
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
   "--macro:truffle-svm",
+  "--enable-native-access=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-H:+ReportExceptionStackTraces",
   "-H:+JNIEnhancedErrorCodes",
-  "-H:+JNIVerboseLookupErrors",
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
   "-Delide.natives=$nativesPath",
@@ -888,6 +916,32 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
+  "java.awt.Desktop",
+  "java.awt.Toolkit",
+  "sun.java2d.Disposer",
+  "sun.awt.X11.XToolkit",
+  "sun.awt.X11.XWM",
+  "sun.awt.X11.XSelection",
+  "sun.awt.X11.XWindow",
+  "sun.awt.X11.XDataTransferer",
+  "sun.awt.X11.XDnDConstants",
+  "sun.awt.X11.MotifDnDConstants",
+  "sun.awt.X11.WindowPropertyGetter",
+  "sun.awt.X11.XSystemTrayPeer",
+  "sun.awt.X11.XToolkitThreadBlockedHandler",
+  "sun.awt.dnd.SunDropTargetContextPeer${'$'}EventDispatcher",
+  "sun.awt.X11GraphicsConfig",
+  "sun.font.SunFontManager",
+  "sun.font.StrikeCache",
+  "sun.font.PhysicalStrike",
+  "sun.awt.X11.XDragAndDropProtocols",
+  "sun.awt.X11.XBaseWindow",
+  "sun.awt.X11.XRootWindow",
+  "sun.awt.X11.XRootWindow${'$'}LazyHolder",
+
+  // "com.sun.jna.internal.Cleaner",
+  // "com.sun.jna.internal.Cleaner${'$'}CleanerThread",
+
   "sun.nio.ch.UnixDomainSockets",
   "sun.security.provider.NativePRNG",
 
@@ -979,10 +1033,13 @@ val initializeAtRuntime: List<String> = listOf(
   "io.netty.buffer.ByteBufUtil",
   "io.netty.buffer.AbstractReferenceCountedByteBuf",
   "io.netty.handler.codec.compression.BrotliDecoder",
-  "io.netty.channel.epoll",
+  // "io.netty.channel.epoll",
   "io.netty.channel.unix.Limits",
   "io.netty.channel.unix.IovArray",
   "io.netty.channel.unix.Errors",
+  "io.netty.channel.kqueue",
+  "io.netty.channel.kqueue.KQueueEventLoop",
+  "io.netty.channel.kqueue.Native",
   "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
   "io.netty.resolver.dns.DnsServerAddressStreamProviders${'$'}DefaultProviderHolder",
   "io.netty.resolver.dns.DnsNameResolver",
@@ -1027,11 +1084,18 @@ val initializeAtRuntime: List<String> = listOf(
   "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
   "elide.runtime.intrinsics.server.http.netty.NettyTransport",
   "elide.runtime.intrinsics.server.http.netty.KQueueTransport",
-  "elide.runtime.intrinsics.server.http.netty.EpollTransport",
+  // "elide.runtime.intrinsics.server.http.netty.EpollTransport",
   "elide.runtime.intrinsics.server.http.netty.IOUringTransport",
   "elide.runtime.intrinsics.server.http.netty.NettyTransport",
   "elide.runtime.intrinsics.server.http.netty.NettyTransport${'$'}Companion",
   "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
+
+  // --- Elide CLI -----
+
+  "elide.tool.cli.cmd.help.HelpCommand",
+  "elide.tool.cli.cmd.discord",
+  "elide.tool.cli.cmd.discord.ToolDiscordCommand",
+  "elide.tool.cli.cmd.selftest.SelfTestCommand",
 )
 
 val pklArgs: List<String> = listOf(
@@ -1233,7 +1297,7 @@ graalvmNative {
       sharedLibrary = false
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
-      javaLauncher = gvmLauncher
+      if (enableToolchains) javaLauncher = gvmLauncher
     }
 
     named("optimized") {
@@ -1243,14 +1307,14 @@ graalvmNative {
       sharedLibrary = false
       buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
-      javaLauncher = gvmLauncher
+      if (enableToolchains) javaLauncher = gvmLauncher
     }
 
     named("test") {
       imageName = "elide.test"
       fallback = false
       quickBuild = true
-      javaLauncher = gvmLauncher
+      if (enableToolchains) javaLauncher = gvmLauncher
       buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).plus(
         nativeCompileJvmArgs
       ))
@@ -1553,7 +1617,7 @@ tasks {
         nativesPath,
       ).plus(
         languagePluginPaths.map {
-          it.get().asFile.path.toString()
+          it.toString()
         }
       ).plus(
         System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
@@ -1645,10 +1709,16 @@ tasks {
   }
 }
 
-configurations.all {
-  exclusions.forEach { exclusion ->
-    exclusion.get().let { dep ->
-      exclude(group = dep.group, module = dep.name)
+listOf(
+  configurations.compileClasspath,
+  configurations.runtimeClasspath,
+  configurations.nativeImageClasspath,
+).forEach {
+  it.get().apply {
+    exclusions.forEach { exclusion ->
+      exclusion.get().let { dep ->
+        exclude(group = dep.group, module = dep.name)
+      }
     }
   }
 }

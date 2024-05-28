@@ -46,6 +46,8 @@ import elide.runtime.plugins.llvm.LLVM
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {
+    builder.allowCreateThread(true)
+    builder.allowNativeAccess(true)
     builder.enableOptions(
       "java.BytecodeLevelInlining",
       "java.CHA",

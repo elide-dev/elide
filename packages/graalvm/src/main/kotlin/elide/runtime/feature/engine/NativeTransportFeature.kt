@@ -12,6 +12,7 @@
  */
 package elide.runtime.feature.engine
 
+import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import elide.annotations.internal.VMFeature
@@ -25,10 +26,10 @@ import elide.annotations.internal.VMFeature
 
   override fun isInConfiguration(access: IsInConfigurationAccess): Boolean {
     return (
-      access.findClassByName("io.netty.channel.kqueue.KQueue") != null ||
-      access.findClassByName("io.netty.channel.epoll.Epoll") != null ||
-      access.findClassByName("io.netty.incubator.channel.uring.IOUring") != null
-    )
+            access.findClassByName("io.netty.channel.kqueue.KQueue") != null ||
+                    access.findClassByName("io.netty.channel.epoll.Epoll") != null ||
+                    access.findClassByName("io.netty.incubator.channel.uring.IOUring") != null
+            )
   }
 
   override fun nativeLibs(access: BeforeAnalysisAccess) = if (enabled) listOf(
@@ -41,4 +42,31 @@ import elide.annotations.internal.VMFeature
     nativeLibrary(darwin = libraryNamed("netty_resolver_dns_native_macos")),
     nativeLibrary(darwin = libraryNamed("netty_quiche_osx")),
   ) else emptyList()
+
+  private fun unpackNatives() {
+    if (!Platform.includedIn(Platform.LINUX::class.java)) {
+      // not linux
+      return
+    }
+    when (System.getProperty("os.arch")) {
+      "x86_64" -> unpackLibrary(
+        "netty_transport_native_epoll",
+        "x86-64",
+        "META-INF/native/libnetty_transport_native_epoll_x86_64.so",
+      )
+
+      "aarch64" -> unpackLibrary(
+        "netty_transport_native_epoll",
+        "aarch64",
+        "META-INF/native/libnetty_transport_native_epoll_aarch_64.so",
+      )
+
+      else -> {}
+    }
+  }
+
+  override fun beforeAnalysis(access: BeforeAnalysisAccess) {
+    unpackNatives()
+    super.beforeAnalysis(access)
+  }
 }

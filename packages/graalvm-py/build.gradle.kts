@@ -62,8 +62,8 @@ elide {
 
 val oracleGvm = false
 val nativeArgs = listOfNotNull(
-  "--verbose",
   "--shared",
+  "--verbose",
   "--initialize-at-build-time=",
   "-H:+SourceLevelDebug",
   "-H:-JNIExportSymbols",
@@ -75,12 +75,12 @@ val nativeArgs = listOfNotNull(
   "-H:+JNIVerboseLookupErrors",
   "-H:+UnlockExperimentalVMOptions",
   "-H:+ReportExceptionStackTraces",
+  "-J--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=org.graalvm.truffle.runtime",
 )
 
 graalvmNative {
   binaries {
     create("shared") {
-      sharedLibrary = true
       imageName = "libelidepython"
       classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
       buildArgs(nativeArgs)

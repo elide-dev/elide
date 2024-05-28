@@ -1,6 +1,8 @@
 {
   "resources":{
   "includes":[{
+    "pattern":"\\Q(netty_quiche_linux_x86_64, META-INF/native/libnetty_quiche_linux_x86_64.so)\\E"
+  }, {
     "pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/native/libnetty_quiche_osx_aarch_64.jnilib)\\E"
   }, {
     "pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/nativelibnetty_quiche_osx_aarch_64.dylib\\E"
@@ -9,9 +11,13 @@
   }, {
     "pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/nativelibnetty_resolver_dns_native_macos_aarch_64.dylib\\E"
   }, {
+    "pattern":"\\Q(netty_tcnative_linux_x86_64, META-INF/native/libnetty_tcnative_linux_x86_64.so)\\E"
+  }, {
     "pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/native/libnetty_tcnative_osx_aarch_64.jnilib)\\E"
   }, {
     "pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/nativelibnetty_tcnative_osx_aarch_64.dylib\\E"
+  }, {
+    "pattern":"\\Q(netty_transport_native_epoll_x86_64, META-INF/native/libnetty_transport_native_epoll_x86_64.so)\\E"
   }, {
     "pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib)\\E"
   }, {
@@ -49,13 +55,27 @@
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
+    "pattern":"\\QMETA-INF/native/libnetty_transport_native_io_uring_x86_64.so\\E"
+  }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.dylib\\E"
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib\\E"
   }, {
     "pattern":"\\QMETA-INF/resources/engine/libtruffleattach/darwin/aarch64/sha256\\E"
   }, {
+    "pattern":"\\QMETA-INF/resources/engine/libtruffleattach/linux/amd64/sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/include.sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libgraalpy.sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/libpython.sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/linux/amd64/native.sha256\\E"
+  }, {
     "pattern":"\\QMETA-INF/resources/nfi-native/libnfi/darwin/aarch64/sha256\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/ni.sha256\\E"
   }, {
     "pattern":"\\QMETA-INF/services/ch.qos.logback.classic.spi.Configurator\\E"
   }, {
@@ -500,6 +520,8 @@
     "pattern":"\\Qlogback-test.scmo\\E"
   }, {
     "pattern":"\\Qlogback.scmo\\E"
+  }, {
+    "pattern":"\\Qorg/fusesource/jansi/internal/native/Linux/x86_64/libjansi.so\\E"
   }, {
     "pattern":"\\Qorg/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib\\E"
   }, {

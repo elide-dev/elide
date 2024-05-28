@@ -29,7 +29,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
     private const val DEFAULT_ALLOW_IO = false
     private const val DEFAULT_ALLOW_ENV = false
     private const val DEFAULT_ALLOW_NATIVE = true
-    private const val DEFAULT_ALLOW_THREADS = false
+    private const val DEFAULT_ALLOW_THREADS = true
     private const val DEFAULT_ALLOW_PROC = false
     private const val DEFAULT_ISOLATES = false
   }

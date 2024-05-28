@@ -1,9 +1,15 @@
 [
 {
+  "name":"[J"
+},
+{
   "name":"[Lcom.sun.management.internal.DiagnosticCommandArgumentInfo;"
 },
 {
   "name":"[Lcom.sun.management.internal.DiagnosticCommandInfo;"
+},
+{
+  "name":"[[J"
 },
 {
   "name":"com.sun.jna.Callback",
@@ -194,6 +200,15 @@
 },
 {
   "name":"io.netty.channel.unix.Socket"
+},
+{
+  "name":"io.netty.incubator.channel.uring.LinuxSocket"
+},
+{
+  "name":"io.netty.incubator.channel.uring.Native"
+},
+{
+  "name":"io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods"
 },
 {
   "name":"java.io.FileDescriptor",

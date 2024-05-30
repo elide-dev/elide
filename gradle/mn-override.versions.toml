@@ -1,2 +1,13 @@
 [versions]
 jackson = "2.16.1"
+micronaut-core = "4.5.0"
+micronaut-graal = "4.5.0"
+micronaut-inject = "4.5.0"
+micronaut-inject-java = "4.5.0"
+micronaut-http = "4.4.10"
+micronaut-http-client = "4.4.10"
+micronaut-http-netty = "4.4.10"
+micronaut-http-server = "4.4.10"
+micronaut-runtime = "4.4.10"
+micronaut-runtime-osx = "4.4.10"
+micronaut-websocket = "4.4.10"

@@ -16,7 +16,6 @@ import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
-  alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.shadow)
 

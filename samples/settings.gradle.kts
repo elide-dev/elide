@@ -46,7 +46,7 @@ pluginManagement {
 }
 
 plugins {
-  id("com.gradle.develocity") version("3.17.4")
+  id("com.gradle.enterprise") version("3.16.2")
   id("io.micronaut.platform.catalog") version (extra.properties["micronautVersion"] as String)
 }
 
@@ -88,10 +88,10 @@ dependencyResolutionManagement {
   }
 }
 
-develocity {
+gradleEnterprise {
   buildScan {
-    termsOfUseUrl = "https://gradle.com/terms-of-service"
-    termsOfUseAgree = "yes"
+    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    termsOfServiceAgree = "yes"
   }
 }
 

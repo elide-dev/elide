@@ -15,7 +15,6 @@ import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
-  alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
 
   kotlin("jvm")

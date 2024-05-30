@@ -20,7 +20,7 @@ object Versions {
   const val bouncycastle = "1.78.1"
 
   /** Micronaut version. */
-  const val micronaut = "4.4.2"
+  const val micronaut = "4.4.3"
 
   /** Ant/JUnit version. */
   const val antJUnit = "1.10.12"

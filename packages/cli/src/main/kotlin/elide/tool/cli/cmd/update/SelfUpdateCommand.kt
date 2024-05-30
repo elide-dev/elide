@@ -187,7 +187,9 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
 
   private fun unpackArchive(ext: String, archive: File, dest: File) {
     when (ext.trim().lowercase()) {
-      "zip" -> ZipFile(archive).use {
+      "zip" -> ZipFile.builder().apply {
+        setFile(archive)
+      }.get().use {
         it.entries.toList().stream().forEach { entry ->
           unpackFile(it, entry, dest)
         }
@@ -198,7 +200,7 @@ internal class SelfUpdateCommand : AbstractSubcommand<ToolState, CommandContext>
           var entry = it.currentEntry
           while (entry != null) {
             unpackFile(it, entry, dest)
-            entry = it.nextTarEntry
+            entry = it.nextEntry
           }
         }
         dest.resolve("elide.bin").outputStream().use { out ->

@@ -23,7 +23,7 @@ import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_22
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
@@ -59,7 +59,7 @@ elide {
   }
 
   jvm {
-    target = JVM_22
+    target = JVM_21
   }
 
   java {
@@ -293,7 +293,7 @@ kapt {
 kotlin {
   target.compilations.all {
     compilerOptions {
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }
@@ -1710,7 +1710,7 @@ tasks {
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
     compilerOptions {
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }

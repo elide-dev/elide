@@ -7,7 +7,7 @@ publish = false
 
 [lib]
 name = "umbrella"
-crate-type = ["cdylib"]
+crate-type = ["lib", "staticlib", "cdylib"]
 
 [features]
 default = ["jni/default", "jni/invocation"]

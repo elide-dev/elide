@@ -109,8 +109,6 @@ internal fun Project.configureNativeBuild(
 
         // base args (not applicable for samples)
         if (target == APP || target == LIB) buildArgs(
-          "--language:js",
-          "--language:regex",
           "-Dpolyglot.image-build-time.PreinitializeContexts=js",
         )
 
@@ -123,12 +121,10 @@ internal fun Project.configureNativeBuild(
 
       // all targets include a "test" binary
       named("test") {
-        quickBuild.set(quickBuildEnabled)
+        quickBuild.set(true)
 
         // base args (not applicable for samples)
         if (target == APP || target == LIB) buildArgs(
-          "--language:js",
-          "--language:regex",
           "-Dpolyglot.image-build-time.PreinitializeContexts=js",
         )
 
@@ -143,9 +139,7 @@ internal fun Project.configureNativeBuild(
       if (target == APP) named("optimized") {
         quickBuild.set(quickBuildEnabled)
         buildArgs(
-          "--language:js",
-          "--language:regex",
-          "-O2",
+          "-O3",
           "--enable-all-security-services",
           "-Dpolyglot.image-build-time.PreinitializeContexts=js",
         )

@@ -26,6 +26,7 @@ import java.io.InputStream
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.nio.file.FileSystems
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.Path
 import elide.runtime.feature.NativeLibraryFeature
@@ -75,9 +76,11 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     error("Resource not found in any JAR: '$path' in JARs: '${jars.joinToString(", ")}'")
   }
 
-  private fun BeforeAnalysisAccess.scanForResource(jarToken: String, path: String): InputStream {
+  private fun BeforeAnalysisAccess.scanForResource(jarToken: String, path: String): InputStream? {
     val candidates = applicationClassPath.filter { it.toString().contains(jarToken) }
-    require(candidates.isNotEmpty()) { "No JAR on classpath matches token '$jarToken'" }
+    if (candidates.isEmpty()) {
+      return null
+    }
     return scanJarsForResource(candidates, path)
   }
 
@@ -85,24 +88,33 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     jar: String,
     name: String,
     arch: String,
-    path: String,
-    renameTo: String? = null,
+    vararg path: String,
+    renameTo: ((String) -> String)? = null,
     cbk: (() -> Unit)? = null,
   ) {
     val nativesPath = requireNotNull(System.getProperty("elide.natives")?.ifBlank { null })
-    scanForResource(jar, path).use { stream ->
-      Path(nativesPath)
-        .resolve(renameTo?.let { Path(it) } ?: Path(path).fileName.let {
-          val filename = it.fileName
-          val dylibName = filename.toString().replace(".jnilib", ".dylib")
-          val parent = it.parent
-          if (parent != null) it.parent.resolve(dylibName)
-          else it.resolveSibling(dylibName)
-        })
-        .toFile()
-        .outputStream().use { it.write(stream.readBytes()) }
+    for (candidate in path) {
+      val stream = scanForResource(jar, candidate) ?: continue
+      stream.use {
+        val target = Path(nativesPath)
+          .resolve(renameTo?.let { Path(it.invoke(candidate)) } ?: Path(candidate).fileName.let {
+            val filename = it.fileName
+            val dylibName = filename.toString().replace(".jnilib", ".dylib")
+            val parent = it.parent
+            if (parent != null) it.parent.resolve(dylibName)
+            else it.resolveSibling(dylibName)
+          })
+          .toFile()
+
+        val exists = target.exists()
+        val size = if (exists) Files.size(target.toPath()) else -1
+
+        if (!exists || size != stream.available().toLong()) {
+          target.outputStream().use { it.write(stream.readBytes()) }
+        }
+        cbk?.invoke()
+      }
     }
-    cbk?.invoke()
   }
 
   protected fun nativeLibrary(

@@ -83,14 +83,18 @@ import elide.tool.project.ProjectManager
     }
 
     output {
+      val (transportEngine, _) = NativeEngine.transportEngine()
       appendLine("Elide v${version} (${ElideCLITool.ELIDE_RELEASE_TYPE})")
       appendLine("Engine: ${engine.implementationName} v${engine.version}")
       appendLine("Platform: $operatingMode")
       appendLine("Languages: " + engine.languages.keys.joinToString(", "))
       appendLine()
       appendLine("Native:")
+      appendLine("- Console: ${libraryGroupLoaded("console").label()}")
       appendLine("- Crypto: ${libraryGroupLoaded("crypto").label()}")
-      appendLine("- Transport: ${libraryGroupLoaded("transport").label()}")
+      appendLine("- SQLite: ${libraryGroupLoaded("sqlite").label()}")
+      appendLine("- Tools: ${libraryGroupLoaded("tools").label()}")
+      appendLine("- Transport: ${libraryGroupLoaded("transport").label()} (${transportEngine})")
       appendLine()
       appendLine("Paths: ")
       appendLine("- Working Root: ${workingRoot.absolutePath}")

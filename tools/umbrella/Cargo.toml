@@ -10,7 +10,7 @@ name = "umbrella"
 crate-type = ["cdylib"]
 
 [features]
-default = ["jvm", "python", "js", "ruby", "wasm"]
+default = ["jni/default", "jni/invocation"]
 jvm = ["j4rs"]
 python = ["ruff", "uv"]
 ruby = []

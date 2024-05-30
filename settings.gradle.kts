@@ -259,7 +259,7 @@ include(
   ":packages:transport:transport-unix",
   ":packages:transport:transport-epoll",
   ":packages:transport:transport-kqueue",
-  ":packages:transport:transport-io_uring",
+  ":packages:transport:transport-uring",
   ":packages:wasm",
   ":tools:auximage",
   ":tools:esbuild",

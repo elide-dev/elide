@@ -164,7 +164,7 @@ val exclusions = listOfNotNull(
 ).plus(listOf(
   // disable netty native transports if our own transport libraries are in use
   libs.netty.transport.native.epoll,
-  libs.netty.transport.native.iouring,
+  //libs.netty.transport.native.iouring,
   libs.netty.transport.native.kqueue,
 ).onlyIf(enableNativeTransportV2))
 
@@ -468,7 +468,6 @@ dependencies {
   if (enableNativeTransportV2) {
     implementation(projects.packages.transport.transportEpoll)
     implementation(projects.packages.transport.transportKqueue)
-    implementation(projects.packages.transport.transportIoUring)
     implementation(libs.netty.transport.native.classes.epoll)
     implementation(libs.netty.transport.native.classes.kqueue)
     implementation(libs.netty.transport.native.classes.iouring)

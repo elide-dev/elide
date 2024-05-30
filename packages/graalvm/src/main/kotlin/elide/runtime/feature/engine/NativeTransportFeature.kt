@@ -110,32 +110,36 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
         "transport-epoll",
         "netty_transport_native_epoll",
         "x86-64",
+        "META-INF/native/linux/x86-64/libtransport-epoll.a",
         "META-INF/native/linux/x86-64/libtransport-epoll.so",
-        renameTo = "libnetty_transport_native_epoll.so",
+        renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
       )
 
       Platform.includedIn(Platform.LINUX_AARCH64::class.java) -> access.unpackLibrary(
         "transport-epoll",
         "netty_transport_native_epoll",
         "aarch64",
+        "META-INF/native/linux/arm64/libtransport-epoll.a",
         "META-INF/native/linux/arm64/libtransport-epoll.so",
-        renameTo = "libnetty_transport_native_epoll.so",
+        renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
       )
 
       Platform.includedIn(Platform.DARWIN_AMD64::class.java) -> access.unpackLibrary(
         "transport-kqueue",
         "netty_transport_native_kqueue",
         "aarch64",
+        "META-INF/native/x86-64/libtransport-kqueue.a",
         "META-INF/native/x86-64/libtransport-kqueue.dylib",
-        renameTo = "libnetty_transport_native_kqueue.dylib",
+        renameTo = { "libnetty_transport_native_kqueue.${it.substringAfterLast(".")}" },
       )
 
       Platform.includedIn(Platform.DARWIN_AARCH64::class.java) -> access.unpackLibrary(
         "transport-kqueue",
         "netty_transport_native_kqueue",
         "aarch64",
+        "META-INF/native/arm64/libtransport-kqueue.a",
         "META-INF/native/arm64/libtransport-kqueue.dylib",
-        renameTo = "libnetty_transport_native_kqueue.dylib",
+        renameTo = { "libnetty_transport_native_kqueue.${it.substringAfterLast(".")}" },
       )
     } else when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {

@@ -22,9 +22,12 @@ plugins {
 }
 
 library {
+  linkage = listOf(Linkage.STATIC, Linkage.SHARED)
+
   targetMachines = listOf(
     machines.macOS.x86_64,
     machines.macOS.architecture("arm64"),
+    machines.linux.x86_64,
   )
 }
 
@@ -59,7 +62,8 @@ dependencies {
 }
 
 tasks.withType(CppCompile::class.java).configureEach {
-  onlyIf { HostManager.hostIsMac }
+  group = "build"
+  description = "Compile native code"
   source.from(layout.projectDirectory.dir("src/main/cpp").asFileTree.matching { include("**/*.c") })
 
   compilerArgs.addAll(listOf(
@@ -70,17 +74,22 @@ tasks.withType(CppCompile::class.java).configureEach {
     "-fPIC",
     "-fno-omit-frame-pointer",
     "-Wunused-variable",
-    "-mmacosx-version-min=11.0",
     "-I$jdkIncludePath",
     "-I$jdkNativeIncludePath",
   ))
+
+  if (HostManager.hostIsMac) {
+    compilerArgs.add("-mmacosx-version-min=11.0")
+  }
 }
 
 tasks.withType(LinkSharedLibrary::class.java).configureEach {
-  onlyIf { HostManager.hostIsMac }
-  linkerArgs.addAll(listOf(
-    "-Wl,-platform_version,macos,11.0,11.0",
-  ))
+  group = "build"
+  description = "Link shared libraries"
+
+  if (HostManager.hostIsMac) {
+    linkerArgs.add("-Wl,-platform_version,macos,11.0,11.0")
+  }
 }
 
 tasks.processResources {
@@ -88,8 +97,9 @@ tasks.processResources {
   val compiles = tasks.withType(CppCompile::class)
   val linkages = tasks.withType(LinkSharedLibrary::class)
   val stripped = tasks.withType(StripSymbols::class)
+  val statics = tasks.withType(CreateStaticLibrary::class)
 
-  dependsOn(compiles, linkages, stripped)
+  dependsOn(compiles, linkages, stripped, statics)
 
   inputs.dir(libs)
 

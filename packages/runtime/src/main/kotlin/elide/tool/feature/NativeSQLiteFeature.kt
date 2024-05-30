@@ -43,14 +43,14 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
   override fun unpackNatives(access: BeforeAnalysisAccess) {
     when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "sqlite-jdbc",
           "sqlitejdbc",
           "x86-64",
           "org/sqlite/native/Linux/x86_64/libsqlitejdbc.so",
         )
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "sqlite-jdbc",
           "sqlitejdbc",
           "x86-64",
@@ -59,14 +59,14 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
       }
 
       Platform.includedIn(Platform.DARWIN::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "sqlite-jdbc",
           "sqlitejdbc",
           "x86-64",
           "org/sqlite/native/Mac/x86_64/libsqlitejdbc.dylib",
         )
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "sqlite-jdbc",
           "sqlitejdbc",
           "x86-64",

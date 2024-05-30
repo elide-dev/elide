@@ -39,14 +39,14 @@ import elide.annotations.internal.VMFeature
   override fun unpackNatives(access: BeforeAnalysisAccess) {
     when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "jansi",
           "jansi",
           "x86-64",
           "org/fusesource/jansi/internal/native/Linux/x86_64/libjansi.so",
         )
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "jansi",
           "jansi",
           "aarch64",
@@ -57,14 +57,14 @@ import elide.annotations.internal.VMFeature
       }
 
       Platform.includedIn(Platform.MACOS::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "jansi",
           "jansi",
           "x86-64",
           "org/fusesource/jansi/internal/native/Mac/x86_64/libjansi.jnilib",
         )
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "jansi",
           "jansi",
           "aarch64",
@@ -75,14 +75,14 @@ import elide.annotations.internal.VMFeature
       }
 
       Platform.includedIn(Platform.WINDOWS::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "jansi",
           "jansi",
           "x86-64",
           "org/fusesource/jansi/internal/native/Windows/x86_64/libjansi.dll",
         )
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "jansi",
           "jansi",
           "aarch64",

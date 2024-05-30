@@ -134,7 +134,7 @@ val enableAuxCache = false
 val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
-val enableG1 = oracleGvm && hostIsLinux
+val enableG1 = false
 val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
@@ -1169,6 +1169,9 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
     "-march=compatibility",
     "-H:+StaticExecutableWithDynamicLibC",
+    "--initialize-at-run-time=io.netty.channel.kqueue.Native",
+    "--initialize-at-run-time=io.netty.channel.kqueue.Native",
+    "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
   ),
 ).plus(
   if (enableG1) listOf(

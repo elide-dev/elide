@@ -392,6 +392,21 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public abstract class elide/runtime/plugins/api/NativePlugin : elide/runtime/plugins/api/NativePluginAPI {
+	protected fun <init> (Ljava/lang/String;)V
+	protected fun apply ([Ljava/lang/String;)V
+	public fun context (Lorg/graalvm/polyglot/Engine;Lorg/graalvm/polyglot/Context$Builder;[Ljava/lang/String;)V
+	public fun getPluginId ()Ljava/lang/String;
+	public fun init ()V
+	public static fun initialize (Lelide/runtime/plugins/api/NativePlugin;)Lorg/graalvm/polyglot/Context$Builder;
+}
+
+public abstract interface class elide/runtime/plugins/api/NativePluginAPI {
+	public abstract fun context (Lorg/graalvm/polyglot/Engine;Lorg/graalvm/polyglot/Context$Builder;[Ljava/lang/String;)V
+	public abstract fun getPluginId ()Ljava/lang/String;
+	public abstract fun init ()V
+}
+
 public final class elide/runtime/plugins/bindings/Bindings {
 	public static final field Plugin Lelide/runtime/plugins/bindings/Bindings$Plugin;
 	public synthetic fun <init> (Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V

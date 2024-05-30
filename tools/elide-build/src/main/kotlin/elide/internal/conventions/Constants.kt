@@ -138,7 +138,7 @@ public object Constants {
     const val JUPITER = "5.10.2"
 
     /** Static Netty version. */
-    const val NETTY = "4.1.109.Final"
+    const val NETTY = "4.1.110.Final"
 
     /** Guava version. */
     const val GUAVA = "33.2.0-jre"

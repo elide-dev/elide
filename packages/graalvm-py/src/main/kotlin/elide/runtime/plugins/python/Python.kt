@@ -67,8 +67,8 @@ import elide.runtime.vfs.registerLanguageVfs
     config.resourcesPath?.let {
       builder.setOptions(
         "python.HPyBackend" to "nfi",
-        "python.PosixModuleBackend" to "java",
-        // "python.Sha3ModuleBackend" to "native",
+        "python.PosixModuleBackend" to "native",
+        "python.Sha3ModuleBackend" to "native",
       )
 
       builder.setOptions(
@@ -122,15 +122,15 @@ import elide.runtime.vfs.registerLanguageVfs
       val config = PythonConfig().apply(configuration)
       configureSharedBindings(scope, config)
 
-      // val resources = resolveEmbeddedManifest(scope)
-      val instance = Python(config)
+      val resources = resolveEmbeddedManifest(scope)
+      val instance = Python(config, resources)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
       // register resources with the VFS
-      // if (resources != null) installEmbeddedBundles(scope, resources)
+      installEmbeddedBundles(scope, resources)
       return instance
     }
   }

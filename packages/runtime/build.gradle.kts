@@ -25,9 +25,9 @@ import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_22
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
+import java.nio.file.Path
 import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
@@ -98,9 +98,11 @@ val isDebug = !isRelease && (
   project.properties["elide.buildMode"] == "debug"
 )
 
+val hostIsLinux = HostManager.hostIsLinux
+val hostIsMac = HostManager.hostIsMac
+val hostIsWindows = HostManager.hostIsMingw
 val nativesType = if (isRelease) "release" else "debug"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
-
 val entrypoint = "elide.tool.cli.ElideTool"
 
 val enablePkl = false
@@ -108,15 +110,17 @@ val enableWasm = true
 val enablePython = true
 val enableRuby = false
 val enableLlvm = false
-val enableJvm = HostManager.hostIsLinux
+val enableJvm = hostIsLinux
 val enableKotlin = false
-val enableToolchains = !HostManager.hostIsLinux
-val enableFfm = HostManager.hostIsLinux && System.getProperty("os.arch") == "amd64"
-val oracleGvm = false
+val enableSqlite = true
+val enableToolchains = !hostIsLinux
+val enableFfm = hostIsLinux && System.getProperty("os.arch") == "amd64"
+val oracleGvm = true
 val enableEdge = true
 val enableStage = true
+val enableNativeTransportV2 = true
 val enableDynamicPlugins = false
-val enableDeprecated = !enableEdge
+val enableDeprecated = false
 val enableJit = true
 val enablePreinitializeAll = true
 val enableTools = true
@@ -130,7 +134,7 @@ val enableAuxCache = false
 val enableJpms = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
-val enableG1 = oracleGvm && HostManager.hostIsLinux
+val enableG1 = oracleGvm && hostIsLinux
 val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
@@ -141,10 +145,6 @@ val enableSbomStrict = false
 val glibcTarget = "glibc"
 val enableTruffleJson = enableEdge
 val dumpPointsTo = false
-val globalExclusions = emptyList<Pair<String, String>>()
-val moduleExclusions = listOf(
-  "io.micronaut" to "micronaut-core-processor",
-)
 
 val exclusions = listOfNotNull(
   // always exclude non-jpms jna
@@ -161,7 +161,12 @@ val exclusions = listOfNotNull(
 
   // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
   if (enableKotlin) null else libs.kotlin.compiler.embedded,
-)
+).plus(listOf(
+  // disable netty native transports if our own transport libraries are in use
+  libs.netty.transport.native.epoll,
+  libs.netty.transport.native.iouring,
+  libs.netty.transport.native.kqueue,
+).onlyIf(enableNativeTransportV2))
 
 buildscript {
   repositories {
@@ -206,9 +211,9 @@ private fun platformConfig(type: String = "resource"): String {
     if (it.contains("x86")) "amd64" else it
   }
   return when {
-    HostManager.hostIsLinux -> namedConfig("linux-$arch", type = type)
-    HostManager.hostIsMac -> namedConfig("darwin-$arch", type = type)
-    HostManager.hostIsMingw -> namedConfig("windows-$arch", type = type)
+    hostIsLinux -> namedConfig("linux-$arch", type = type)
+    hostIsMac -> namedConfig("darwin-$arch", type = type)
+    hostIsWindows -> namedConfig("windows-$arch", type = type)
     else -> error("Unsupported platform for '$type' configuration")
   }
 }
@@ -219,8 +224,11 @@ val nativesRootTemplate: (String) -> String = { version ->
   "/tmp/elide-runtime/v$version/native"
 }
 
+val jvmOnlyCompileArgs = listOfNotNull(
+  "-Xlog:library=info",
+)
+
 val jvmCompileArgs = listOfNotNull(
-  // "-Xlog:library=info",
   "--enable-preview",
   "--add-modules=jdk.incubator.vector",
   "--enable-native-access=" + listOfNotNull(
@@ -318,7 +326,7 @@ val cliVersion = if (stamp) {
   "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
 }
 
-val languagePluginPaths = listOf(
+val languagePluginPaths = if (!enableDynamicPlugins) emptyList() else listOf(
   "graalvm-py",
   "graalvm-rb",
 ).map { module ->
@@ -326,6 +334,7 @@ val languagePluginPaths = listOf(
 }
 
 val nativesPath = nativesRootTemplate(cliVersion)
+val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
   .get()
   .asFile
@@ -374,18 +383,16 @@ dependencies {
   implementation(libs.jline.reader)
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
-
   implementation(libs.jline.terminal.jansi)
   implementation(libs.jline.terminal.jni)
-  // implementation(libs.jline.terminal.jna)
   implementation(libs.jline.terminal.ffm)
-  // if (!enableFfm) implementation(libs.jline.terminal.jni)
-  // if (enableFfm) implementation(libs.jline.terminal.ffm)
-
   implementation(libs.jline.builtins)
   implementation(libs.jline.graal) {
     exclude(group = "org.slf4j", module = "slf4j-jdk14")
   }
+
+  // SQLite Engine
+  if (enableSqlite) implementation(libs.sqlite)
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
@@ -450,60 +457,43 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(mn.micronaut.test.junit5)
 
-  // Native Libraries
-  val arch = when (System.getProperty("os.arch")) {
-    "amd64", "x86_64" -> "x86_64"
-    "arm64", "aarch64", "aarch_64" -> "aarch_64"
-    else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+  implementation(libs.netty.tcnative.boringssl.static)
+  implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-x86_64") })
+  implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-aarch_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+
+  if (enableNativeTransportV2) {
+    implementation(projects.packages.transport.transportEpoll)
+    implementation(projects.packages.transport.transportKqueue)
+    implementation(projects.packages.transport.transportIoUring)
+    implementation(libs.netty.transport.native.classes.epoll)
+    implementation(libs.netty.transport.native.classes.kqueue)
+    implementation(libs.netty.transport.native.classes.iouring)
+  } else {
+    implementation(libs.netty.transport.native.epoll)
+    implementation(libs.netty.transport.native.unix)
+    implementation(libs.netty.transport.native.kqueue)
+    implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-x86_64") })
+    implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-aarch_64") })
+    implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-x86_64") })
+    implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-aarch_64") })
+
+    implementation(libs.netty.transport.native.iouring)
+    implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-x86_64") })
+    implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-aarch_64") })
   }
-  when {
-    Os.isFamily(Os.FAMILY_WINDOWS) -> {
-      compileOnly(libs.netty.transport.native.epoll)
-      compileOnly(libs.netty.transport.native.kqueue)
-      implementation(libs.netty.tcnative.boringssl.static)
+
+  if (oracleGvm && !enableEdge) {
+    if (enableExperimental && hostIsLinux) {
+      api(libs.graalvm.truffle.nfi.panama)
     }
-
-    Os.isFamily(Os.FAMILY_UNIX) -> {
-      when {
-        Os.isFamily(Os.FAMILY_MAC) -> {
-          compileOnly(libs.netty.transport.native.epoll)
-          compileOnly(libs.netty.transport.native.iouring)
-          implementation(libs.netty.transport.native.unix)
-          implementation(libs.netty.transport.native.kqueue)
-          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
-          implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-$arch") })
-          implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-$arch") })
-          if (oracleGvm && !enableEdge) {
-            if (targetArch == "aarch64") {
-              implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
-            } else {
-              implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
-            }
-          }
-        }
-
-        else -> {
-          compileOnly(libs.netty.transport.native.kqueue)
-          implementation(libs.netty.transport.native.epoll)
-          implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
-          implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
-          implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
-
-          if (enableExperimental) {
-            api(libs.graalvm.truffle.nfi.panama)
-          }
-          if (oracleGvm && !enableEdge) {
-            if (targetArch == "aarch64") {
-              implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
-            } else {
-              implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
-            }
-          }
-        }
-      }
-    }
-
-    else -> {}
+    implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
+    implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
+    implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
+    implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
   }
 }
 
@@ -711,43 +701,51 @@ tasks.withType(Test::class).configureEach {
   maxHeapSize = "1g"
 }
 
+private fun <T> onlyIf(flag: Boolean, value: T): T? = value.takeIf { flag }
+private fun <T> List<T>.onlyIf(flag: Boolean): List<T> = if (flag) this else emptyList()
+
+
 /**
- * Build: CLI Native Image
+ * --------- Build: CLI Native Image
  */
 
 val commonGvmArgs = listOfNotNull(
-  if (!oracleGvm) null else "-H:+UseCompressedReferences",
-).plus(if (enableBuildReport) listOf("-H:+BuildReport") else emptyList())
+  "-H:+UseCompressedReferences",
+  onlyIf(enableBuildReport, "-H:+BuildReport"),
+).onlyIf(oracleGvm)
 
 val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
 val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 
 val stagedNativeArgs: List<String> = listOfNotNull(
-//  "-H:-IncludeMethodData",
-//  "-H:-IncludeNodeSourcePositions",
-//  "-H:InlineBeforeAnalysisAllowedInlinings=1000",
-//  "-H:InlineBeforeAnalysisMethodHandleAllowedInlinings=1000",
-//  "-H:InlineBeforeAnalysisMethodHandleAllowedNodes=1000",
-//  "-H:InlinedCompilerNodeLimit=10000",
-//  "-H:+JNIEnhancedErrorCodes",
-//  "-H:+RemoveUnusedSymbols",
-//  "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}",
-//  "-H:+ProfileCompiledMethods",
-//  "-H:+ProfileConstantObjects",
-//  "-H:+ProfileLockElimination",
-//  "-H:+ProfileMonitors",
-//  "-H:+ProfileOptBulkAllocation",
-//  "-H:+SIMDVectorizationDirectLoadStore",
-//  "-H:+SIMDVectorizationSingletons",
-//  "-H:+UseReachabilityMethodSummaries",
-//  "-H:+VectorPolynomialIntrinsics",
-//  "-H:+VectorizeSIMD",
+  "-H:+LayeredBaseImageAnalysis",
+  "-H:+JNIEnhancedErrorCodes",
+  "-H:+RemoveUnusedSymbols",
+
+  onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
+  onlyIf(oracleGvm, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
+
+  onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
+  onlyIf(enableExperimental, "-H:+ProfileConstantObjects"),
+  onlyIf(enableExperimental, "-H:+ProfileLockElimination"),
+  onlyIf(enableExperimental, "-H:+ProfileMonitors"),
+  onlyIf(enableExperimental, "-H:+ProfileOptBulkAllocation"),
+  onlyIf(enableExperimental, "-H:+SIMDVectorizationDirectLoadStore"),
+  onlyIf(enableExperimental, "-H:+SIMDVectorizationSingletons"),
+  onlyIf(enableExperimental, "-H:+VectorPolynomialIntrinsics"),
+  onlyIf(enableExperimental, "-H:-IncludeMethodData"),
+  onlyIf(enableExperimental, "-H:-IncludeNodeSourcePositions"),
+  onlyIf(enableExperimental, "-H:InlineBeforeAnalysisAllowedInlinings=1000"),
+  onlyIf(enableExperimental, "-H:InlineBeforeAnalysisMethodHandleAllowedInlinings=1000"),
+  onlyIf(enableExperimental, "-H:InlineBeforeAnalysisMethodHandleAllowedNodes=1000"),
+  onlyIf(enableExperimental, "-H:InlinedCompilerNodeLimit=10000"),
 
   // Breakages
 //  "-H:+LSRAOptimization",
 //  "-H:+LIRProfileMethods",
 //  "-H:+LIRProfileMoves",
 //  "-H:+UseExperimentalReachabilityAnalysis",  // not supported by truffle feature
+//  "-H:+UseReachabilityMethodSummaries",  // not supported by truffle feature
 //  "-H:+VMContinuations",  // not supported with runtime compilation
 )
 
@@ -756,32 +754,42 @@ val deprecatedNativeArgs = listOf(
   "--enable-all-security-services",
 )
 
+val enabledFeatures = listOfNotNull(
+  "elide.tool.feature.ToolingUmbrellaFeature",
+  onlyIf(enableSqlite, "elide.tool.feature.NativeSQLiteFeature"),
+)
+
+val linkerOptions: List<String> = listOfNotNull()
+
 val commonNativeArgs = listOfNotNull(
-  "--verbose",
-  "--report-unsupported-elements-at-runtime",
-  // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner.referenceQueue",
+  // "--verbose",
   // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner${'$'}CleanerThread.this${'$'}0",
-  // "--trace-object-instantiation=java.nio.DirectByteBuffer",
-  // "--trace-object-instantiation=java.lang.Thread",
   // "--trace-object-instantiation=com.sun.jna.internal.Cleaner",
-  if (enableJit) null else "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime",
-  if (!enableFfm) null else "-H:+ForeignAPISupport",
-  if (!dumpPointsTo) null else "-H:PrintAnalysisCallTreeType=CSV",
-  if (!dumpPointsTo) null else "-H:+PrintImageObjectTree",
   // "-J-Xlog:library=info",
-  // "-H:+JNIVerboseLookupErrors",
+  //
+  onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
+  onlyIf(enableFfm, "-H:+ForeignAPISupport"),
+  onlyIf(dumpPointsTo, "-H:PrintAnalysisCallTreeType=CSV"),
+  onlyIf(dumpPointsTo, "-H:+PrintImageObjectTree"),
+  onlyIf(enabledFeatures.isNotEmpty(), "--features=${enabledFeatures.joinToString(",")}"),
+  //
+  "--report-unsupported-elements-at-runtime",
   //
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
+  "--enable-url-protocols=jar",
   "--macro:truffle-svm",
   "--enable-native-access=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.jni=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
+  "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-H:+ReportExceptionStackTraces",
   "-H:+JNIEnhancedErrorCodes",
@@ -789,37 +797,52 @@ val commonNativeArgs = listOfNotNull(
   "-H:MaxRuntimeCompileMethods=20000",
   "-Delide.natives=$nativesPath",
   "-J-Delide.natives=$nativesPath",
-  "-H:CLibraryPath=$nativesPath",
-  "-R:MaxDirectMemorySize=256M",
+  "-Dorg.sqlite.lib.path=$nativesPath",
+  "-J-Dorg.sqlite.lib.path=$nativesPath",
+  "-Dorg.sqlite.lib.exportPath=$nativesPath",
+  "-J-Dorg.sqlite.lib.exportPath=$nativesPath",
+  "-Dio.netty.native.workdir=$nativesPath",
+  "-J-Dio.netty.native.workdir=$nativesPath",
+  "-Dio.netty.native.deleteLibAfterLoading=false",
+  "-J-Dio.netty.native.deleteLibAfterLoading=false",
   "-J-Dio.netty.allocator.type=unpooled",
+  "-R:MaxDirectMemorySize=256M",
+  "-Delide.nativeTransport.v2=${enableNativeTransportV2}",
+  "-J-Delide.nativeTransport.v2=${enableNativeTransportV2}",
   "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
-  "-J-Dpolyglotimpl.DisableVersionChecks=true",
   "-J-Dgraalvm.locatorDisabled=false",
+  "-J-Dpolyglotimpl.DisableVersionChecks=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
     "js",
-    if (enablePkl) "pkl" else null,
-    if (enablePreinitializeAll && enableRuby) "ruby" else null,
-    if (enablePreinitializeAll && enablePython) "python" else null,
-    if (enablePreinitializeAll && enableJvm) "java" else null,
-  ).joinToString(","),
-  if (enablePgoInstrumentation) "--pgo-instrument" else null,
-  if (enablePgoSampling) "--pgo-sampling" else null,
-  if (enablePgoInstrumentation && enablePgo) "-H:+BuildReportSamplerFlamegraph" else null,
-).asSequence().plus(if (enableEdge) listOf(
-  "-H:+UnlockExperimentalVMOptions",
-) else emptyList()).plus(
-  if (oracleGvm) commonGvmArgs else emptyList()
-).plus(if (nativeImageBuildDebug) listOf(
-  "--debug-attach",
-) else emptyList()).toList()
+    onlyIf(enablePkl, "pkl"),
+    onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
+    onlyIf(enablePreinitializeAll && enablePython, "python"),
+    onlyIf(enablePreinitializeAll && enableJvm, "java"),
+).joinToString(","),
+   onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
+  onlyIf(enablePgoSampling, "--pgo-sampling"),
+  onlyIf(enablePgoInstrumentation && enablePgo, "-H:+BuildReportSamplerFlamegraph"),
+).asSequence().plus(
+  languagePluginPaths.plus(listOf(nativesPath, umbrellaNativesPath)).filter {
+    Files.exists(Path.of(it))
+  }.map {
+    "-H:CLibraryPath=$it"
+  }
+).plus(
+  listOf("-H:+UnlockExperimentalVMOptions").onlyIf(enableEdge)
+).plus(
+  commonGvmArgs.onlyIf(oracleGvm)
+).plus(
+  listOf("--debug-attach").onlyIf(nativeImageBuildDebug)
+).plus(
+  linkerOptions
+).toList()
 
 val debugFlags: List<String> = listOfNotNull(
   "-march=compatibility",
 ).plus(
-  if (HostManager.hostIsLinux) listOf(
-    "-g",
-  ) else emptyList(),
+  listOf("-g").onlyIf(hostIsLinux)
 )
 
 val experimentalFlags = listOf(
@@ -889,9 +912,9 @@ val releaseFlags: List<String> = listOf(
     "-H:NativeLinkerOption=$it",
     "--native-compiler-options=$it",
   )
-}).plus(if (enablePgo) listOf(
-  "--pgo=${profiles.joinToString(",")}",
-) else emptyList()).plus(listOf(
+}).plus(
+  listOf("--pgo=${profiles.joinToString(",")}").onlyIf(enablePgo)
+).plus(listOf(
   if (oracleGvm && enableSbom) listOf(
     if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
   ) else emptyList(),
@@ -899,11 +922,16 @@ val releaseFlags: List<String> = listOf(
 ).flatten()).toList()
 
 val jvmDefs = mapOf(
+  "io.netty.allocator.type" to "unpooled",
+  "io.netty.native.deleteLibAfterLoading" to "false",
+  "io.netty.native.detectNativeLibraryDuplicates" to "false",
+  "io.netty.native.tryPatchShadedId" to "false",
+  "java.net.preferIPv4Stack" to "true",
+  "logback.statusListenerClass" to "ch.qos.logback.core.status.NopStatusListener",
+  "networkaddress.cache.ttl" to "10",
+  "polyglotimpl.DisableVersionChecks" to "true",
   "user.country" to "US",
   "user.language" to "en",
-  "io.netty.allocator.type" to "unpooled",
-  "logback.statusListenerClass" to "ch.qos.logback.core.status.NopStatusListener",
-  "polyglotimpl.DisableVersionChecks" to "true",
 )
 
 val hostedRuntimeOptions = mapOf(
@@ -918,26 +946,26 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 val initializeAtRuntime: List<String> = listOf(
   "java.awt.Desktop",
   "java.awt.Toolkit",
-  "sun.java2d.Disposer",
-  "sun.awt.X11.XToolkit",
-  "sun.awt.X11.XWM",
-  "sun.awt.X11.XSelection",
-  "sun.awt.X11.XWindow",
-  "sun.awt.X11.XDataTransferer",
-  "sun.awt.X11.XDnDConstants",
   "sun.awt.X11.MotifDnDConstants",
   "sun.awt.X11.WindowPropertyGetter",
-  "sun.awt.X11.XSystemTrayPeer",
-  "sun.awt.X11.XToolkitThreadBlockedHandler",
-  "sun.awt.dnd.SunDropTargetContextPeer${'$'}EventDispatcher",
-  "sun.awt.X11GraphicsConfig",
-  "sun.font.SunFontManager",
-  "sun.font.StrikeCache",
-  "sun.font.PhysicalStrike",
-  "sun.awt.X11.XDragAndDropProtocols",
   "sun.awt.X11.XBaseWindow",
+  "sun.awt.X11.XDataTransferer",
+  "sun.awt.X11.XDnDConstants",
+  "sun.awt.X11.XDragAndDropProtocols",
   "sun.awt.X11.XRootWindow",
   "sun.awt.X11.XRootWindow${'$'}LazyHolder",
+  "sun.awt.X11.XSelection",
+  "sun.awt.X11.XSystemTrayPeer",
+  "sun.awt.X11.XToolkit",
+  "sun.awt.X11.XToolkitThreadBlockedHandler",
+  "sun.awt.X11.XWM",
+  "sun.awt.X11.XWindow",
+  "sun.awt.X11GraphicsConfig",
+  "sun.awt.dnd.SunDropTargetContextPeer${'$'}EventDispatcher",
+  "sun.font.PhysicalStrike",
+  "sun.font.StrikeCache",
+  "sun.font.SunFontManager",
+  "sun.java2d.Disposer",
 
   // "com.sun.jna.internal.Cleaner",
   // "com.sun.jna.internal.Cleaner${'$'}CleanerThread",
@@ -1032,14 +1060,6 @@ val initializeAtRuntime: List<String> = listOf(
   "io.netty.buffer.ByteBufAllocator",
   "io.netty.buffer.ByteBufUtil",
   "io.netty.buffer.AbstractReferenceCountedByteBuf",
-  "io.netty.handler.codec.compression.BrotliDecoder",
-  // "io.netty.channel.epoll",
-  "io.netty.channel.unix.Limits",
-  "io.netty.channel.unix.IovArray",
-  "io.netty.channel.unix.Errors",
-  "io.netty.channel.kqueue",
-  "io.netty.channel.kqueue.KQueueEventLoop",
-  "io.netty.channel.kqueue.Native",
   "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
   "io.netty.resolver.dns.DnsServerAddressStreamProviders${'$'}DefaultProviderHolder",
   "io.netty.resolver.dns.DnsNameResolver",
@@ -1082,12 +1102,12 @@ val initializeAtRuntime: List<String> = listOf(
 
   "elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
   "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
-  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
-  "elide.runtime.intrinsics.server.http.netty.KQueueTransport",
+//  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
+//  "elide.runtime.intrinsics.server.http.netty.KQueueTransport",
   // "elide.runtime.intrinsics.server.http.netty.EpollTransport",
   "elide.runtime.intrinsics.server.http.netty.IOUringTransport",
-  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
-  "elide.runtime.intrinsics.server.http.netty.NettyTransport${'$'}Companion",
+//  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
+//  "elide.runtime.intrinsics.server.http.netty.NettyTransport${'$'}Companion",
   "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
 
   // --- Elide CLI -----
@@ -1191,6 +1211,7 @@ val testOnlyArgs: List<String> = emptyList()
 
 val nativeOverrideArgs: List<String> = listOf(
   "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
+  "--exclude-config", "sqlite-jdbc-${libs.versions.sqlite.get()}.jar", "META-INF\\/native-image\\/.*.properties",
 )
 
 fun nativeCliImageArgs(
@@ -1201,12 +1222,14 @@ fun nativeCliImageArgs(
   release: Boolean = isRelease,
 ): List<String> =
   commonNativeArgs.asSequence()
-    .plus(if (!enableDeprecated) emptyList() else deprecatedNativeArgs)
-    .plus(if (!enableStage) emptyList() else stagedNativeArgs)
+    .plus(deprecatedNativeArgs.onlyIf(enableDeprecated))
+    .plus(stagedNativeArgs.onlyIf(enableStage))
     .plus(jvmCompileArgs)
-    .plus(if (enablePkl) pklArgs else emptyList())
+    .plus(pklArgs.onlyIf(enablePkl))
     .plus(StringBuilder().apply {
       append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+      append(File.pathSeparator)
+      append(nativesPath)
       append(File.pathSeparator)
       languagePluginPaths.forEach {
         append(it)
@@ -1233,11 +1256,7 @@ fun nativeCliImageArgs(
       else -> defaultPlatformArgs
     },
   ).plus(
-    if (!test) emptyList() else testOnlyArgs.plus(
-      initializeAtBuildTimeTest.map {
-        "--initialize-at-build-time=$it"
-      },
-    ).plus(
+    testOnlyArgs.plus(
       initializeAtRuntimeTest.map {
         "--initialize-at-run-time=$it"
       },
@@ -1245,7 +1264,7 @@ fun nativeCliImageArgs(
       rerunAtRuntimeTest.map {
         "--rerun-class-initialization-at-runtime=$it"
       },
-    ),
+    ).onlyIf(test),
   ).plus(
     jvmDefs.map { "-D${it.key}=${it.value}" },
   ).plus(
@@ -1353,9 +1372,9 @@ fun resolveTarget(target: String? = properties["elide.targetOs"] as? String): El
   target == "darwin-amd64" -> ElideTarget.MACOS_AMD64
   target == "darwin-aarch64" -> ElideTarget.MACOS_AARCH64
   target == "windows-amd64" -> ElideTarget.WINDOWS_AMD64
-  HostManager.hostIsLinux -> ElideTarget.LINUX_AMD64
-  HostManager.hostIsMingw -> ElideTarget.WINDOWS_AMD64
-  HostManager.hostIsMac -> when (System.getProperty("os.arch")) {
+  hostIsLinux -> ElideTarget.LINUX_AMD64
+  hostIsWindows -> ElideTarget.WINDOWS_AMD64
+  hostIsMac -> when (System.getProperty("os.arch")) {
     "aarch64" -> ElideTarget.MACOS_AARCH64
     else -> ElideTarget.MACOS_AMD64
   }
@@ -1397,7 +1416,7 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
       "META-INF/elide/embedded/runtime/*/*-darwin*",
       "META-INF/elide/embedded/runtime/*/*-linux*",
     ) else emptyArray()),
-    *(if (!HostManager.hostIsMingw) arrayOf(
+    *(if (!hostIsWindows) arrayOf(
       "*.dll",
       "**/*.dll",
       "win",
@@ -1416,7 +1435,7 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
       "META-INF/elide/embedded/runtime/*/*-windows*",
     ) else emptyArray()),
 
-    *(if (!HostManager.hostIsMac) arrayOf(
+    *(if (!hostIsMac) arrayOf(
       "*.dylib",
       "**/*.dylib",
       "darwin",
@@ -1436,7 +1455,7 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
       "META-INF/elide/embedded/runtime/*/*-darwin*",
     ) else emptyArray()),
 
-    *(if (!HostManager.hostIsLinux) arrayOf(
+    *(if (!hostIsLinux) arrayOf(
       "*.so",
       "**/*.so",
       "linux/aarch64/*.so",
@@ -1613,7 +1632,7 @@ tasks {
     systemProperty(
       "java.library.path",
       listOf(
-        rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
+        umbrellaNativesPath,
         nativesPath,
       ).plus(
         languagePluginPaths.map {
@@ -1662,7 +1681,7 @@ tasks {
     systemProperty(
       "java.library.path",
       listOf(
-        rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
+        umbrellaNativesPath,
         nativesPath,
       ).plus(
         System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
@@ -1699,7 +1718,7 @@ tasks {
   }
 
   withType<JavaCompile>().configureEach {
-    options.compilerArgs.addAll(jvmCompileArgs)
+    options.compilerArgs.addAll(jvmCompileArgs.plus(jvmOnlyCompileArgs))
   }
 
   withType<KotlinCompile>().configureEach {

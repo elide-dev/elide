@@ -39,10 +39,13 @@ import elide.tool.io.WorkdirManager
 object NativeEngine {
   private const val loadEager = true
   private const val DEFAULT_NATIVES_PATH = "META-INF/native/"
+  private val transportEngine: AtomicReference<String> = AtomicReference("nio")
   private val nativeTransportAvailable: AtomicBoolean = AtomicBoolean(false)
   private val errHolder: AtomicReference<Throwable?> = AtomicReference(null)
   private val missingLibraries: MutableSet<NativeLibInfo> = ConcurrentSkipListSet()
   private val nativeLibraryGroups: MutableMap<String, Boolean> = ConcurrentSkipListMap()
+
+  internal fun transportEngine(): Pair<String, Boolean> = transportEngine.get() to nativeTransportAvailable.get()
 
   @JvmStatic private fun libExtension(os: HostPlatform.OperatingSystem): String? {
     return when (os) {
@@ -251,12 +254,12 @@ object NativeEngine {
           // check and return availability of epoll
           when {
             io.netty.incubator.channel.uring.IOUring.isAvailable() ->
-              io.netty.incubator.channel.uring.IOUring.ensureAvailability().let { true }
+              io.netty.incubator.channel.uring.IOUring.ensureAvailability().let { "io_uring" to true }
 
             io.netty.channel.epoll.Epoll.isAvailable() ->
-              io.netty.channel.epoll.Epoll.ensureAvailability().let { true }
+              io.netty.channel.epoll.Epoll.ensureAvailability().let { "epoll" to true }
 
-            else -> false
+            else -> "nio" to false
           }
         }}
 
@@ -269,17 +272,18 @@ object NativeEngine {
           loadNatives()
 
           // then check and load KQueue and return
-          io.netty.channel.kqueue.KQueue.ensureAvailability().let { true }
+          io.netty.channel.kqueue.KQueue.ensureAvailability().let { "kqueue" to true }
         }}
 
         // no native transport available
-        else -> {{ false }}
+        else -> {{ "nio" to false }}
       }.invoke()
     } catch (err: Throwable) {
       errHolder.set(err)
-      false
-    }.also {
-      nativeTransportAvailable.set(it)
+      "nio" to false
+    }.also { (label, available) ->
+      transportEngine.set(label)
+      nativeTransportAvailable.set(available)
     }
   }
 

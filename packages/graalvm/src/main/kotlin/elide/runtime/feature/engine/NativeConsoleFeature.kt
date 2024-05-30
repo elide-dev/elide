@@ -12,6 +12,7 @@
  */
 package elide.runtime.feature.engine
 
+import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import elide.annotations.internal.VMFeature
@@ -27,6 +28,69 @@ import elide.annotations.internal.VMFeature
   }
 
   override fun nativeLibs(access: BeforeAnalysisAccess) = listOf(
-    libraryNamed("jansi"),
+    libraryNamed(
+      "jansi",
+      "org.fusesource.jansi.internal.CLibrary",
+      builtin = false,
+      eager = false,
+    ),
   )
+
+  override fun unpackNatives(access: BeforeAnalysisAccess) {
+    when {
+      Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
+        "x86_64" -> access.unpackLibrary(
+          "jansi",
+          "jansi",
+          "x86-64",
+          "org/fusesource/jansi/internal/native/Linux/x86_64/libjansi.so",
+        )
+
+        "aarch64" -> access.unpackLibrary(
+          "jansi",
+          "jansi",
+          "aarch64",
+          "org/fusesource/jansi/internal/native/Linux/arm64/libjansi.so",
+        )
+
+        else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+      }
+
+      Platform.includedIn(Platform.MACOS::class.java) -> when (System.getProperty("os.arch")) {
+        "x86_64" -> access.unpackLibrary(
+          "jansi",
+          "jansi",
+          "x86-64",
+          "org/fusesource/jansi/internal/native/Mac/x86_64/libjansi.jnilib",
+        )
+
+        "aarch64" -> access.unpackLibrary(
+          "jansi",
+          "jansi",
+          "aarch64",
+          "org/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib",
+        )
+
+        else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+      }
+
+      Platform.includedIn(Platform.WINDOWS::class.java) -> when (System.getProperty("os.arch")) {
+        "x86_64" -> access.unpackLibrary(
+          "jansi",
+          "jansi",
+          "x86-64",
+          "org/fusesource/jansi/internal/native/Windows/x86_64/libjansi.dll",
+        )
+
+        "aarch64" -> access.unpackLibrary(
+          "jansi",
+          "jansi",
+          "aarch64",
+          "org/fusesource/jansi/internal/native/Windows/arm64/libjansi.dll",
+        )
+
+        else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+      }
+    }
+  }
 }

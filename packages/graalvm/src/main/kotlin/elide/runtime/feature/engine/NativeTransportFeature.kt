@@ -110,7 +110,7 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
         "transport-epoll",
         "netty_transport_native_epoll",
         "x86-64",
-        "META-INF/native/x86-64/libtransport-epoll.so",
+        "META-INF/native/linux/x86-64/libtransport-epoll.so",
         renameTo = "libnetty_transport_native_epoll.so",
       )
 
@@ -118,7 +118,7 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
         "transport-epoll",
         "netty_transport_native_epoll",
         "aarch64",
-        "META-INF/native/arm64/libtransport-epoll.so",
+        "META-INF/native/linux/arm64/libtransport-epoll.so",
         renameTo = "libnetty_transport_native_epoll.so",
       )
 
@@ -139,14 +139,14 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
       )
     } else when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "netty-transport-native-epoll",
           "netty_transport_native_epoll_x86_64",
           "x86-64",
           "META-INF/native/libnetty_transport_native_epoll_x86_64.so",
         ) { io.netty.channel.epoll.Epoll.ensureAvailability() }
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "netty-transport-native-epoll",
           "netty_transport_native_epoll_aarch_64",
           "aarch64",
@@ -155,14 +155,14 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
       }
 
       Platform.includedIn(Platform.DARWIN::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "netty-transport-native-kqueue",
           "netty_transport_native_kqueue_x86_64",
           "x86-64",
           "META-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib",
         ) { io.netty.channel.kqueue.KQueue.ensureAvailability() }
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "netty-transport-native-kqueue",
           "netty_transport_native_kqueue_aarch_64",
           "aarch64",

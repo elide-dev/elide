@@ -37,14 +37,14 @@ import elide.annotations.internal.VMFeature
   override fun unpackNatives(access: BeforeAnalysisAccess) {
     when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_linux_x86_64",
           "x86-64",
           "META-INF/native/libnetty_tcnative_linux_x86_64.so",
         ) { initializeTcNative() }
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_linux_aarch_64",
           "aarch64",
@@ -53,14 +53,14 @@ import elide.annotations.internal.VMFeature
       }
 
       Platform.includedIn(Platform.DARWIN::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_osx_x86_64",
           "x86-64",
           "META-INF/native/libnetty_tcnative_osx_x86_64.jnilib",
         ) { initializeTcNative() }
 
-        "aarch64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_osx_aarch_64",
           "aarch64",
@@ -71,8 +71,8 @@ import elide.annotations.internal.VMFeature
   }
 
   override fun nativeLibs(access: BeforeAnalysisAccess) = when (val arch = System.getProperty("os.arch")) {
-    "x86_64" -> "x86_64"
-    "aarch64" -> "aarch_64"
+    "x86_64", "amd64" -> "x86_64"
+    "aarch64", "arm64" -> "aarch_64"
     else -> error("Unsupported architecture: $arch")
   }.let { archTag ->
     listOf(

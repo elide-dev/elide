@@ -29,7 +29,7 @@ java {
 library {
   targetMachines = listOf(
     machines.linux.x86_64,
-    machines.linux.architecture("arm64"),
+    machines.macOS.architecture("arm64"),
   )
 }
 
@@ -42,6 +42,7 @@ val jdkHome: String = System.getenv("GRAALVM_HOME")?.ifBlank { null }
   ?: System.getProperty("java.home")
 
 val jdkHomePath: Path = Path.of(jdkHome)
+val jdkLibPath: Path = jdkHomePath.resolve("lib")
 val jdkIncludePath: Path = jdkHomePath.resolve("include")
 val jdkNativeIncludePath: Path = when {
   HostManager.hostIsMac -> jdkIncludePath.resolve("darwin")
@@ -52,10 +53,10 @@ val jdkNativeIncludePath: Path = when {
 tasks.withType(CppCompile::class.java).configureEach {
   group = "build"
   description = "Compile shared library"
+  source.from(layout.projectDirectory.dir("src/main/cpp").asFileTree.matching { include("**/*.c") })
 
   compilerArgs.addAll(listOf(
     "-x", "c",
-    "-target", "linux-x86-64",
     "-O3",
     "-Werror",
     "-fno-omit-frame-pointer",
@@ -71,7 +72,7 @@ tasks.withType(LinkSharedLibrary::class.java).configureEach {
   description = "Link shared library"
 
   linkerArgs.addAll(listOf(
-    "-Wl,-platform_version,macos,10.9,10.9"
+    "-L$jdkLibPath",
   ))
 }
 

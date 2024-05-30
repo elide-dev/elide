@@ -100,6 +100,10 @@ tasks.withType(LinkSharedLibrary::class.java).configureEach {
   ))
 }
 
+tasks.withType(StripSymbols::class).configureEach {
+  onlyIf { HostManager.hostIsMac }
+}
+
 tasks.processResources {
   val resources = layout.projectDirectory.dir("src/main/resources")
   val libs = layout.buildDirectory.dir("lib/main/release")
@@ -110,10 +114,13 @@ tasks.processResources {
   dependsOn(compiles, linkages, stripped)
 
   inputs.dir(resources)
-  inputs.dir(libs)
 
-  from("build/lib/main/release") {
-    exclude("**/stripped/**")
-    into("META-INF/native/")
+  if (HostManager.hostIsMac) {
+    inputs.dir(libs)
+
+    from("build/lib/main/release") {
+      exclude("**/stripped/**")
+      into("META-INF/native/")
+    }
   }
 }

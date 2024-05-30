@@ -28,7 +28,6 @@ library {
     machines.macOS.x86_64,
     machines.macOS.architecture("arm64"),
     machines.linux.x86_64,
-    machines.linux.architecture("arm64"),
   )
 }
 
@@ -56,17 +55,23 @@ tasks.withType(CppCompile::class) {
 
   compilerArgs.addAll(listOf(
     "-x", "c",
-    "-mmacosx-version-min=11.0",
     "-I$jdkIncludePath",
     "-I$jdkNativeIncludePath",
   ))
+
+  if (HostManager.hostIsMac) {
+    compilerArgs.add("-mmacosx-version-min=11.0")
+  }
 }
 
 tasks.withType(LinkSharedLibrary::class.java).configureEach {
   linkerArgs.addAll(listOf(
-    "-Wl,-platform_version,macos,11.0,11.0",
     "-L$jdkLibPath",
   ))
+
+  if (HostManager.hostIsMac) {
+    linkerArgs.add("-Wl,-platform_version,macos,11.0,11.0")
+  }
 }
 
 tasks.processResources {

@@ -219,23 +219,8 @@ graalvmNative {
       buildArgs.addAll(listOf(
         "-g",
         "--no-fallback",
-        "--language:js",
-        "--language:regex",
         "--enable-http",
         "--enable-https",
-//        "--gc=G1",
-//        "--static",
-//        "--libc=glibc",
-//        "--enable-all-security-services",
-//        "--install-exit-handlers",
-//        "--report-unsupported-elements-at-runtime",
-//        "-Duser.country=US",
-//        "-Duser.language=en",
-//        "-H:IncludeLocales=en",
-//        "-H:+InstallExitHandlers",
-//        "-H:+ReportExceptionStackTraces",
-//        "--pgo-instrument",
-//        "-dsa",
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
     }

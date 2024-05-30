@@ -45,6 +45,7 @@ group = "dev.elide"
 version = rootProject.version as String
 
 val enableJpms = false
+val oracleGvm = false
 val ktCompilerArgs = emptyList<String>()
 val javacArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
@@ -76,7 +77,6 @@ elide {
 
   native {
     target = NativeTarget.LIB
-    useAgent = false
   }
 
   checks {
@@ -123,38 +123,56 @@ sourceSets {
   }
 }
 
-val initializeAtBuildTime = listOf(
-  "kotlin.DeprecationLevel",
-  "kotlin.annotation.AnnotationRetention",
-  "kotlin.annotation.AnnotationTarget",
-  "kotlin.coroutines.intrinsics.CoroutineSingletons",
-)
-
-val initializeAtBuildTimeTest = listOf(
-  "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
-  "org.junit.platform.launcher.core.LauncherConfig",
-)
-
-val sharedLibArgs = listOf(
-  "-H:+AuxiliaryEngineCache",
+val sharedLibArgs = listOfNotNull(
+  "--verbose",
+  "--initialize-at-build-time=",
+  "-H:+ReportExceptionStackTraces",
+  if (oracleGvm) "-H:+AuxiliaryEngineCache" else null,
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.jni=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
+  "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
 )
 
 graalvmNative {
+  agent {
+    defaultMode = "standard"
+    builtinCallerFilter = true
+    builtinHeuristicFilter = true
+    trackReflectionMetadata = true
+    enableExperimentalPredefinedClasses = true
+    enableExperimentalUnsafeAllocationTracing = true
+    enabled = System.getenv("GRAALVM_AGENT") == "true"
+
+    modes {
+      standard {}
+    }
+    metadataCopy {
+      inputTaskNames.addAll(listOf("run", "optimizedRun", "test"))
+      if (gradle.startParameter.taskNames.contains("test") || properties.containsKey("agentTest")) {
+        outputDirectories.add("src/test/resources/META-INF/native-image")
+      } else {
+        outputDirectories.add("src/main/resources/META-INF/native-image")
+      }
+      mergeWithExisting = true
+    }
+  }
+
   binaries {
     create("shared") {
       sharedLibrary = true
-      buildArgs(initializeAtBuildTime.map {
-        "--initialize-at-build-time=$it"
-      }.plus(sharedLibArgs))
+      buildArgs(sharedLibArgs)
     }
 
     named("test") {
       fallback = false
       sharedLibrary = false
       quickBuild = true
-      buildArgs(initializeAtBuildTime.plus(initializeAtBuildTimeTest).map {
-        "--initialize-at-build-time=$it"
-      }.plus(sharedLibArgs))
+      buildArgs(sharedLibArgs)
     }
   }
 }
@@ -289,8 +307,13 @@ dependencies {
 
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
-  api(libs.graalvm.polyglot.js.community)
   compileOnly(libs.graalvm.svm)
+
+  if (oracleGvm) {
+    api(libs.graalvm.polyglot.js)
+  } else {
+    api(libs.graalvm.polyglot.js.community)
+  }
 
   // Testing
   testImplementation(projects.packages.test)
@@ -300,6 +323,12 @@ dependencies {
   testImplementation(mn.micronaut.test.junit5)
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(projects.packages.graalvmPy)
+
+  // Testing: Native Transports
+  testImplementation(projects.packages.transport.transportEpoll)
+  testImplementation(projects.packages.transport.transportKqueue)
+  testImplementation(libs.netty.transport.native.classes.kqueue)
+  testImplementation(libs.netty.transport.native.classes.epoll)
 }
 
 // Configurations: Testing

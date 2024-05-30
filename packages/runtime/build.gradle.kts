@@ -115,7 +115,7 @@ val enableKotlin = false
 val enableSqlite = true
 val enableToolchains = !hostIsLinux
 val enableFfm = hostIsLinux && System.getProperty("os.arch") == "amd64"
-val oracleGvm = true
+val oracleGvm = false
 val enableEdge = true
 val enableStage = true
 val enableNativeTransportV2 = true

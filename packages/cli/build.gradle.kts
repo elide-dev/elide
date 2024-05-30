@@ -1259,7 +1259,7 @@ graalvmNative {
       standard {}
     }
     metadataCopy {
-      inputTaskNames.addAll(listOf("run", "optimizedRun"))
+      inputTaskNames.addAll(listOf("run", "optimizedRun", "test"))
       outputDirectories.add("src/main/resources/META-INF/native-image")
       mergeWithExisting = true
     }

@@ -72,16 +72,12 @@ graalvmNative {
       sharedLibrary = true
       quickBuild = quickbuild
       buildArgs.addAll(listOf(
-        "--language:js",
-        "--language:regex",
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
     }
 
     named("test") {
       buildArgs.addAll(listOf(
-        "--language:js",
-        "--language:regex",
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
 

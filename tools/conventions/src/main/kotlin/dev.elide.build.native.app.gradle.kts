@@ -56,7 +56,6 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       buildArgs.addAll(listOf(
-        "--language:js",
         "--language:regex",
         "--enable-all-security-services",
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
@@ -80,8 +79,6 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       buildArgs.addAll(listOf(
-        "--language:js",
-        "--language:regex",
         "-O2",
         "--enable-all-security-services",
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
@@ -103,8 +100,6 @@ graalvmNative {
 
     named("test") {
       buildArgs.addAll(listOf(
-        "--language:js",
-        "--language:regex",
         "--enable-all-security-services",
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))

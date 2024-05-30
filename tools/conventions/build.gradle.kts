@@ -79,7 +79,7 @@ afterEvaluate {
     kotlinOptions {
       jvmTarget = "21"
       javaParameters = true
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       incremental = true
     }
   }

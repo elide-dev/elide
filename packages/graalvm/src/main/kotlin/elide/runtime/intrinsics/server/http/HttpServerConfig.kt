@@ -71,9 +71,9 @@ private const val DEFAULT_ELIDE_HTTP_SERVER_PORT = 8080
   override fun putMember(key: String?, value: Value?): Unit = when (key) {
     "port" -> {
       val isNull = value == null || value.isNull
-      if (!isNull && value != null) {
+      if (!isNull) {
         when {
-          !value.isNumber -> throw JsError.typeError("Please set `port` to a number")
+          !value!!.isNumber -> throw JsError.typeError("Please set `port` to a number")
           !value.fitsInShort() -> throw JsError.valueError("Port is out of range (not a short)")
           else -> value.asInt().let { portInt ->
             when {

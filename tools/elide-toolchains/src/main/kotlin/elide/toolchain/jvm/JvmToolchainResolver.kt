@@ -21,6 +21,7 @@ import org.gradle.jvm.toolchain.JavaToolchainDownload
 import org.gradle.jvm.toolchain.JavaToolchainRequest
 import org.gradle.jvm.toolchain.JavaToolchainResolver
 import org.gradle.jvm.toolchain.JavaToolchainResolverRegistry
+import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
 import java.net.URI
@@ -29,9 +30,6 @@ import javax.inject.Inject
 
 // Whether to enable the custom toolchain resolver.
 private const val USE_CUSTOM_TOOLCHAINS = true
-
-// Whether to use an enterprise toolchain by default.
-private const val USE_ENTERPRISE = false
 
 // Latest Oracle GVM version ("GraalVM Enterprise").
 private val latestOracleGvmVersion = "23.0.0-ea.09" to JavaVersion.VERSION_23
@@ -225,7 +223,10 @@ public abstract class JvmToolchainResolver : JavaToolchainResolver {
 
   override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
     if (!USE_CUSTOM_TOOLCHAINS) return Optional.empty()
-    return resolveToolchain(USE_ENTERPRISE, request).let {
+    return resolveToolchain(
+      request.javaToolchainSpec.vendor.get() != JvmVendorSpec.GRAAL_VM,
+      request,
+    ).let {
       Optional.of(JavaToolchainDownload.fromUri(URI.create(it.linkFor(GraalVMPlatform.fromRequest(
         request.buildPlatform.architecture,
         request.buildPlatform.operatingSystem,

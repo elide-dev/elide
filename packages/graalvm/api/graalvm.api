@@ -110,8 +110,8 @@ public abstract class elide/runtime/feature/engine/AbstractStaticNativeLibraryFe
 	public static synthetic fun nativeLibrary$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
 	public static synthetic fun nativeLibrary$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
 	public abstract fun nativeLibs (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
-	protected final fun unpackLibrary (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public static synthetic fun unpackLibrary$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	protected final fun unpackLibrary (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun unpackLibrary$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public fun unpackNatives (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
 }
 

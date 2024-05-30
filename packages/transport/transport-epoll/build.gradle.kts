@@ -56,6 +56,7 @@ tasks.withType(CppCompile::class.java).configureEach {
   group = "build"
   description = "Compile shared library"
   source.from(layout.projectDirectory.dir("src/main/cpp").asFileTree.matching { include("**/*.c") })
+  onlyIf { HostManager.hostIsLinux }
 
   compilerArgs.addAll(listOf(
     "-x", "c",
@@ -72,10 +73,21 @@ tasks.withType(CppCompile::class.java).configureEach {
 tasks.withType(LinkSharedLibrary::class.java).configureEach {
   group = "build"
   description = "Link shared library"
+  onlyIf { HostManager.hostIsLinux }
 
   linkerArgs.addAll(listOf(
     "-L$jdkLibPath",
   ))
+}
+
+tasks.withType(CreateStaticLibrary::class.java).configureEach {
+  group = "build"
+  description = "Create static library"
+  onlyIf { HostManager.hostIsLinux }
+}
+
+tasks.withType(StripSymbols::class.java).configureEach {
+  onlyIf { HostManager.hostIsLinux }
 }
 
 tasks.processResources {
@@ -88,10 +100,18 @@ tasks.processResources {
   dependsOn(compiles, linkages, stripped, statics)
 
   inputs.dir(resources)
-  inputs.dir(libs)
 
-  from("build/lib/main/release") {
-    exclude("**/stripped/**")
-    into("META-INF/native/")
+  if (HostManager.hostIsLinux) {
+    inputs.dir(libs)
+
+    listOf(
+      "build/lib/main/release/shared",
+      "build/lib/main/release/static",
+    ).forEach {
+      from(it) {
+        exclude("**/stripped/**")
+        into("META-INF/native/")
+      }
+    }
   }
 }

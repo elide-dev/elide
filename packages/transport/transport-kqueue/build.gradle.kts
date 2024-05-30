@@ -27,6 +27,8 @@ java {
 }
 
 library {
+  linkage = listOf(Linkage.STATIC, Linkage.SHARED)
+
   targetMachines = listOf(
     machines.macOS.x86_64,
     machines.macOS.architecture("arm64"),
@@ -110,8 +112,9 @@ tasks.processResources {
   val compiles = tasks.withType(CppCompile::class)
   val linkages = tasks.withType(LinkSharedLibrary::class)
   val stripped = tasks.withType(StripSymbols::class)
+  val statics = tasks.withType(CreateStaticLibrary::class)
 
-  dependsOn(compiles, linkages, stripped)
+  dependsOn(compiles, linkages, stripped, statics)
 
   inputs.dir(resources)
 

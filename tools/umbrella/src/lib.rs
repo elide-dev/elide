@@ -1,26 +1,13 @@
-use std::io::{self, Write};
-
-use j4rs::{InvocationArg, JavaClass};
-use j4rs::prelude::*;
-use j4rs_derive::*;
-use serde::{Deserialize, Serialize};
+#![allow(non_snake_case)]
+use jni::JNIEnv;
+use jni::objects::{JClass, JString};
 
 enum Language {
   V4,
   V6,
 }
 
-#[call_from_java("dev.elide.cli.bridge.CliNativeBridge.hello")]
-fn hello_impl() {
+#[no_mangle]
+pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_hello<'local>(mut env: JNIEnv, class: JClass) {
   println!("Hello from the Rust world!");
-}
-
-#[call_from_java("dev.elide.cli.bridge.CliNativeBridge.lint")]
-fn run_lint(vm: Instance) {
-  println!("Hello from the Rust world!");
-}
-
-pub fn say_hello() {
-  println!("Hello world!");
-  io::stdout().flush().unwrap();
 }

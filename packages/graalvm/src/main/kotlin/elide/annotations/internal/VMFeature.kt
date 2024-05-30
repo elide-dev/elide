@@ -19,4 +19,4 @@ package elide.annotations.internal
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
-internal annotation class VMFeature
+public annotation class VMFeature

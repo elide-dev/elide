@@ -12,6 +12,13 @@
   "name":"[[J"
 },
 {
+  "name":"dev.elide.cli.bridge.CliNativeBridge",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
   "name":"com.sun.jna.Callback",
   "allDeclaredMethods":true,
   "allPublicMethods":true,

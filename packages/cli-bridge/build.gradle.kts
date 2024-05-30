@@ -50,5 +50,5 @@ elide {
 }
 
 dependencies {
-  implementation(libs.j4rs)
+  // nothing at this time
 }

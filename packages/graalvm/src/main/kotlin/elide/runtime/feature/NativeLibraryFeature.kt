@@ -13,29 +13,56 @@
 
 package elide.runtime.feature
 
+import java.nio.file.Path
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
 
 /**
  * TBD.
  */
-internal interface NativeLibraryFeature : FrameworkFeature {
+public interface NativeLibraryFeature : FrameworkFeature {
   /** Types of linking for native libraries. */
-  enum class NativeLibType {
+  public enum class NativeLibType {
     SHARED,
     STATIC
   }
 
   /** Native library info used at build-time. */
-  @JvmRecord data class NativeLibInfo(
+  @JvmRecord public data class NativeLibInfo(
     val name: String,
+    val prefix: List<String>,
     val type: NativeLibType,
-    val prefix: String = name,
-    val registerPrefix: Boolean = false,
-    val registerJni: Boolean = true,
+    val linkName: String = name,
+    val registerPrefix: Boolean,
+    val registerJni: Boolean,
+    val builtin: Boolean,
+    val eager: Boolean,
+    val absolutePath: Path?,
+    val initializer: Boolean,
   ) {
-    companion object {
-      @JvmStatic fun of(name: String, type: NativeLibType = STATIC, prefix: Boolean = false, jni: Boolean = true) =
-        NativeLibInfo(name, type, registerPrefix = prefix, registerJni = jni)
+    public companion object {
+      @JvmStatic public fun of(
+        name: String,
+        vararg layout: String,
+        type: NativeLibType = STATIC,
+        linkName: String = name,
+        prefix: Boolean,
+        jni: Boolean,
+        builtin: Boolean,
+        eager: Boolean,
+        absolutePath: Path?,
+        initializer: Boolean,
+      ): NativeLibInfo = NativeLibInfo(
+        name = name,
+        prefix = layout.toList(),
+        linkName = linkName,
+        type = type,
+        registerPrefix = prefix,
+        registerJni = jni,
+        builtin = builtin,
+        eager = eager,
+        absolutePath = absolutePath,
+        initializer = initializer,
+      )
     }
   }
 }

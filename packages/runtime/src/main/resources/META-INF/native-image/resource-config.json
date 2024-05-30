@@ -55,6 +55,14 @@
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.core.beans.BeanIntrospectionReference\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.core.convert.TypeConverterRegistrar\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
+  }, {
+    "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
+  }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_io_uring_x86_64.so\\E"
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.dylib\\E"
@@ -119,9 +127,19 @@
   }, {
     "pattern":"\\QMETA-INF/services/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.core.beans.BeanIntrospectionReference\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.core.convert.TypeConverterRegistrar\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/io.micronaut.core.optim.StaticOptimizations$Loader\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.inject.BeanConfiguration\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/io.micronaut.inject.BeanDefinitionReference\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/java.lang.System$LoggerFinder\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.net.spi.InetAddressResolverProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.nio.channels.spi.SelectorProvider\\E"
   }, {
@@ -132,6 +150,8 @@
     "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.util.spi.ResourceBundleControlProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.management.remote.JMXConnectorServerProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory\\E"
   }, {

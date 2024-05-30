@@ -150,9 +150,6 @@ dependencies {
     exclude(group = "com.google.protobuf", module = "protobuf-util")
   }
 
-  // Compile-only
-  compileOnly(libs.google.cloud.nativeImageSupport)
-
   // Test
   testImplementation(projects.packages.test)
   testImplementation(libs.truth)

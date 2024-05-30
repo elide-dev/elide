@@ -67,7 +67,7 @@ kotlin {
   compilerOptions {
     jvmTarget = JVM_21
     javaParameters = true
-    allWarningsAsErrors = false
+    allWarningsAsErrors = true
     apiVersion = KOTLIN_2_0
     languageVersion = KOTLIN_2_0
     freeCompilerArgs = listOf(

@@ -24,7 +24,7 @@ import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.crypto.checksum.Checksum
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_22
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.utils.extendsFrom
@@ -67,7 +67,7 @@ elide {
   }
 
   jvm {
-    target = JVM_22
+    target = JVM_21
   }
 
   java {
@@ -209,7 +209,7 @@ val ktCompilerArgs = listOf(
   "-opt-in=elide.runtime.core.DelicateElideApi",
 )
 
-val edgeJvmTarget = 23
+val edgeJvmTarget = 22
 val edgeJavaVersion = JavaVersion.toVersion(edgeJvmTarget)
 val jvmType = if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
 
@@ -239,7 +239,7 @@ kapt {
 kotlin {
   target.compilations.all {
     compilerOptions {
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }
@@ -1634,7 +1634,7 @@ tasks {
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
     compilerOptions {
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
     }
   }
@@ -1715,7 +1715,7 @@ afterEvaluate {
   tasks.withType(KotlinJvmCompile::class.java).configureEach {
     compilerOptions {
       freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
     }
   }
 

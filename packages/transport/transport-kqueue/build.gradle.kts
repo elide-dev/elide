@@ -121,9 +121,14 @@ tasks.processResources {
   if (HostManager.hostIsMac) {
     inputs.dir(libs)
 
-    from("build/lib/main/release") {
-      exclude("**/stripped/**")
-      into("META-INF/native/")
+    listOf(
+      "build/lib/main/release/shared",
+      "build/lib/main/release/static",
+    ).forEach {
+      from(it) {
+        exclude("**/stripped/**")
+        into("META-INF/native/")
+      }
     }
   }
 }

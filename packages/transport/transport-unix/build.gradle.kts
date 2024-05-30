@@ -22,7 +22,7 @@ plugins {
 }
 
 library {
-  linkage = listOf(Linkage.STATIC, Linkage.SHARED)
+  linkage = listOf(Linkage.STATIC)
 
   targetMachines = listOf(
     machines.macOS.x86_64,

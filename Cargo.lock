@@ -1816,7 +1816,7 @@ dependencies = [
  "jni-sys 0.4.0",
  "lazy_static",
  "libc",
- "libloading",
+ "libloading 0.8.3",
  "log",
  "serde",
  "serde_json",
@@ -1853,7 +1853,9 @@ dependencies = [
  "cesu8",
  "cfg-if",
  "combine",
+ "java-locator",
  "jni-sys 0.3.0",
+ "libloading 0.7.4",
  "log",
  "thiserror",
  "walkdir",
@@ -2018,6 +2020,16 @@ dependencies = [
  "libz-sys",
  "openssl-sys",
  "pkg-config",
+]
+
+[[package]]
+name = "libloading"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b67380fd3b2fbe7527a606e18729d21c6f3951633d0500574c4dc22d2d638b9f"
+dependencies = [
+ "cfg-if",
+ "winapi",
 ]
 
 [[package]]

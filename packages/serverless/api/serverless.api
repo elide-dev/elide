@@ -18,7 +18,6 @@ public final class elide/http/HttpHeaders : elide/http/api/HttpHeaders, java/uti
 	public fun computeIfPresent (Lelide/http/api/HttpHeaders$HeaderName;Ljava/util/function/BiFunction;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public synthetic fun computeIfPresent (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
 	public fun contains (Lelide/http/api/HttpHeaders$HeaderName;)Z
-	public fun contains (Ljava/lang/String;)Z
 	public fun containsKey (Lelide/http/api/HttpHeaders$HeaderName;)Z
 	public final fun containsKey (Ljava/lang/Object;)Z
 	public fun containsValue (Lelide/http/api/HttpHeaders$HeaderValue;)Z
@@ -28,9 +27,7 @@ public final class elide/http/HttpHeaders : elide/http/api/HttpHeaders, java/uti
 	public fun get (Lelide/http/api/HttpHeaders$HeaderName;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public final fun get (Ljava/lang/Object;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
-	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getAll (Lelide/http/api/HttpHeaders$HeaderName;)Lkotlin/sequences/Sequence;
-	public fun getAll (Ljava/lang/String;)Lkotlin/sequences/Sequence;
 	public fun getEntries ()Ljava/util/Set;
 	public fun getKeys ()Ljava/util/Set;
 	public fun getSize ()I
@@ -126,7 +123,6 @@ public abstract class elide/http/HttpMessage : elide/http/api/HttpMessage {
 	public synthetic fun getBody ()Lelide/http/api/HttpPayload;
 	public fun getHeaders ()Lelide/http/HttpHeaders;
 	public synthetic fun getHeaders ()Lelide/http/api/HttpHeaders;
-	public fun getMutable ()Z
 	public fun getVersion ()Lelide/http/api/HttpVersion;
 }
 
@@ -176,7 +172,6 @@ public final class elide/http/HttpMethod$Standard : elide/http/api/HttpMethod {
 public abstract class elide/http/HttpPayload : elide/http/api/HttpPayload {
 	public synthetic fun <init> (Lelide/http/HttpBytes;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lelide/http/HttpBytes;Ljava/lang/String;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun contentTypeOrDefault-PwY7DFU ()Ljava/lang/String;
 	public fun getBytes ()Lelide/http/HttpBytes;
 	public fun getContentType-8OAbpuQ ()Ljava/lang/String;
 	public fun getMutable ()Z
@@ -211,10 +206,8 @@ public final class elide/http/HttpRequest : elide/http/HttpMessage, elide/http/a
 	public static fun create (Lelide/http/api/HttpMethod;Ljava/lang/String;Lelide/http/api/HttpMapping;)Lelide/http/api/HttpRequest;
 	public static final fun create$default (Lelide/http/api/HttpMethod;Ljava/lang/String;Lelide/http/api/HttpMapping;ILjava/lang/Object;)Lelide/http/api/HttpRequest;
 	public fun getMethod ()Lelide/http/api/HttpMethod;
-	public fun getMutable ()Z
 	public fun getPath ()Ljava/lang/String;
 	public fun getQuery ()Lelide/http/api/HttpMapping;
-	public fun getType ()Lelide/http/api/HttpMessageType;
 	public fun getUrl ()Lelide/net/api/URL;
 }
 
@@ -232,7 +225,6 @@ public final class elide/http/HttpResponse : elide/http/HttpMessage, elide/http/
 	public fun <init> ()V
 	public fun getStatus ()Lelide/http/api/HttpStatus;
 	public fun getTrailers ()Lelide/http/api/HttpHeaders;
-	public fun getType ()Lelide/http/api/HttpMessageType;
 }
 
 public final class elide/http/HttpResponse$Companion : elide/http/api/HttpResponse$Factory {
@@ -280,10 +272,8 @@ public final class elide/http/HttpStatusCode : java/lang/Enum {
 public final class elide/http/MutableHttpHeaders : elide/http/api/MutableHttpHeaders, java/util/Map, kotlin/jvm/internal/markers/KMutableMap {
 	public static final field Companion Lelide/http/MutableHttpHeaders$Companion;
 	public fun add (Lelide/http/api/HttpHeaders$HeaderName;Ljava/lang/String;)V
-	public fun add (Ljava/lang/String;Ljava/lang/String;)V
 	public fun clear ()V
 	public fun contains (Lelide/http/api/HttpHeaders$HeaderName;)Z
-	public fun contains (Ljava/lang/String;)Z
 	public fun containsKey (Lelide/http/api/HttpHeaders$HeaderName;)Z
 	public final fun containsKey (Ljava/lang/Object;)Z
 	public fun containsValue (Lelide/http/api/HttpHeaders$HeaderValue;)Z
@@ -293,9 +283,7 @@ public final class elide/http/MutableHttpHeaders : elide/http/api/MutableHttpHea
 	public fun get (Lelide/http/api/HttpHeaders$HeaderName;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public final fun get (Ljava/lang/Object;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
-	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public fun getAll (Lelide/http/api/HttpHeaders$HeaderName;)Lkotlin/sequences/Sequence;
-	public fun getAll (Ljava/lang/String;)Lkotlin/sequences/Sequence;
 	public fun getEntries ()Ljava/util/Set;
 	public fun getKeys ()Ljava/util/Set;
 	public fun getSize ()I
@@ -314,7 +302,6 @@ public final class elide/http/MutableHttpHeaders : elide/http/api/MutableHttpHea
 	public final fun remove (Ljava/lang/Object;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public final synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
 	public fun set (Lelide/http/api/HttpHeaders$HeaderName;Ljava/lang/String;)V
-	public fun set (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun size ()I
 	public final fun values ()Ljava/util/Collection;
 }
@@ -379,7 +366,6 @@ public abstract class elide/http/MutableHttpMessage : elide/http/api/MutableHttp
 	public fun getHeaders ()Lelide/http/MutableHttpHeaders;
 	public synthetic fun getHeaders ()Lelide/http/api/HttpHeaders;
 	public synthetic fun getHeaders ()Lelide/http/api/MutableHttpHeaders;
-	public fun getMutable ()Z
 	public fun getVersion ()Lelide/http/api/HttpVersion;
 	public fun setBody (Lelide/http/MutableHttpPayload;)V
 	public fun setVersion (Lelide/http/api/HttpVersion;)V
@@ -419,11 +405,9 @@ public final class elide/http/MutableHttpPayload$Text : elide/http/MutableHttpPa
 public final class elide/http/MutableHttpRequest : elide/http/MutableHttpMessage, elide/http/api/MutableHttpRequest {
 	public fun <init> ()V
 	public fun getMethod ()Lelide/http/api/HttpMethod;
-	public fun getMutable ()Z
 	public fun getPath ()Ljava/lang/String;
 	public synthetic fun getQuery ()Lelide/http/api/HttpMapping;
 	public fun getQuery ()Lelide/http/api/MutableHttpMapping;
-	public fun getType ()Lelide/http/api/HttpMessageType;
 	public fun getUrl ()Lelide/net/api/URL;
 	public fun setMethod (Lelide/http/api/HttpMethod;)V
 	public fun setPath (Ljava/lang/String;)V
@@ -435,7 +419,6 @@ public final class elide/http/MutableHttpResponse : elide/http/MutableHttpMessag
 	public fun <init> ()V
 	public fun getStatus ()Lelide/http/api/HttpStatus;
 	public fun getTrailers ()Lelide/http/api/HttpHeaders;
-	public fun getType ()Lelide/http/api/HttpMessageType;
 	public fun setStatus (Lelide/http/api/HttpStatus;)V
 	public fun setTrailers (Lelide/http/api/HttpHeaders;)V
 }
@@ -462,16 +445,11 @@ public final class elide/http/api/HttpEncoding : elide/http/api/HeaderValueToken
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
-	public fun getAllValues ()Ljava/util/Collection;
-	public static fun getAllValues-impl (Lkotlin/Pair;)Ljava/util/Collection;
 	public fun getAsString ()Ljava/lang/String;
 	public static fun getAsString-impl (Lkotlin/Pair;)Ljava/lang/String;
 	public synthetic fun getToken ()Ljava/lang/Object;
 	public fun getToken ()Ljava/lang/String;
 	public static fun getToken-impl (Lkotlin/Pair;)Ljava/lang/String;
-	public synthetic fun getValue ()Ljava/lang/Object;
-	public fun getValue ()Ljava/lang/String;
-	public static fun getValue-impl (Lkotlin/Pair;)Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Lkotlin/Pair;)I
 	public fun toString ()Ljava/lang/String;
@@ -481,7 +459,8 @@ public final class elide/http/api/HttpEncoding : elide/http/api/HeaderValueToken
 
 public abstract interface class elide/http/api/HttpHeader : java/lang/Comparable {
 	public static final field Companion Lelide/http/api/HttpHeader$Companion;
-	public abstract fun compareTo (Lelide/http/api/HttpHeader;)I
+	public fun compareTo (Lelide/http/api/HttpHeader;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
 	public abstract fun getName ()Lelide/http/api/HttpHeaders$HeaderName;
 	public abstract fun getType ()Lkotlin/reflect/KClass;
 }
@@ -509,10 +488,6 @@ public final class elide/http/api/HttpHeader$Companion {
 	public final fun getLOCATION ()Lelide/http/api/HttpHeader;
 	public final fun getSERVER ()Lelide/http/api/HttpHeader;
 	public final fun getSET_COOKIE ()Lelide/http/api/HttpHeader;
-}
-
-public final class elide/http/api/HttpHeader$DefaultImpls {
-	public static fun compareTo (Lelide/http/api/HttpHeader;Lelide/http/api/HttpHeader;)I
 }
 
 public abstract interface class elide/http/api/HttpHeaderValue {
@@ -569,17 +544,11 @@ public final class elide/http/api/HttpHeaderValue$ContentType {
 
 public abstract interface class elide/http/api/HttpHeaders : elide/http/api/HttpMapping {
 	public abstract fun contains (Lelide/http/api/HttpHeaders$HeaderName;)Z
-	public abstract fun contains (Ljava/lang/String;)Z
+	public fun contains (Ljava/lang/String;)Z
 	public abstract fun get (Lelide/http/api/HttpHeaders$HeaderName;)Lelide/http/api/HttpHeaders$HeaderValue;
-	public abstract fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
 	public abstract fun getAll (Lelide/http/api/HttpHeaders$HeaderName;)Lkotlin/sequences/Sequence;
-	public abstract fun getAll (Ljava/lang/String;)Lkotlin/sequences/Sequence;
-}
-
-public final class elide/http/api/HttpHeaders$DefaultImpls {
-	public static fun contains (Lelide/http/api/HttpHeaders;Ljava/lang/String;)Z
-	public static fun get (Lelide/http/api/HttpHeaders;Ljava/lang/String;)Ljava/lang/String;
-	public static fun getAll (Lelide/http/api/HttpHeaders;Ljava/lang/String;)Lkotlin/sequences/Sequence;
+	public fun getAll (Ljava/lang/String;)Lkotlin/sequences/Sequence;
 }
 
 public abstract interface class elide/http/api/HttpHeaders$Factory {
@@ -614,19 +583,22 @@ public final class elide/http/api/HttpHeaders$HeaderName$Companion {
 
 public abstract interface class elide/http/api/HttpHeaders$HeaderValue : java/lang/Comparable, java/util/Collection, kotlin/jvm/internal/markers/KMappedMarker {
 	public static final field Companion Lelide/http/api/HttpHeaders$HeaderValue$Companion;
-	public abstract fun compareTo (Lelide/http/api/HttpHeaders$HeaderValue;)I
-	public abstract fun compareTo (Ljava/lang/String;)I
-	public abstract fun contains (Ljava/lang/String;)Z
-	public abstract fun containsAll (Ljava/util/Collection;)Z
+	public fun compareTo (Lelide/http/api/HttpHeaders$HeaderValue;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun compareTo (Ljava/lang/String;)I
+	public fun contains (Ljava/lang/Object;)Z
+	public fun contains (Ljava/lang/String;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
 	public abstract fun getAllValues ()Ljava/util/List;
 	public abstract fun getAsString ()Ljava/lang/String;
-	public abstract fun getSize ()I
-	public abstract fun isEmpty ()Z
-	public abstract fun iterator ()Ljava/util/Iterator;
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
 	public static fun multi (Ljava/util/Collection;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public static fun multi ([Ljava/lang/String;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public static fun of (Ljava/util/Collection;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public static fun single (Ljava/lang/String;)Lelide/http/api/HttpHeaders$HeaderValue;
+	public fun size ()I
 }
 
 public final class elide/http/api/HttpHeaders$HeaderValue$Companion {
@@ -636,33 +608,13 @@ public final class elide/http/api/HttpHeaders$HeaderValue$Companion {
 	public final fun single (Ljava/lang/String;)Lelide/http/api/HttpHeaders$HeaderValue;
 }
 
-public final class elide/http/api/HttpHeaders$HeaderValue$DefaultImpls {
-	public static fun compareTo (Lelide/http/api/HttpHeaders$HeaderValue;Lelide/http/api/HttpHeaders$HeaderValue;)I
-	public static fun compareTo (Lelide/http/api/HttpHeaders$HeaderValue;Ljava/lang/String;)I
-	public static fun contains (Lelide/http/api/HttpHeaders$HeaderValue;Ljava/lang/String;)Z
-	public static fun containsAll (Lelide/http/api/HttpHeaders$HeaderValue;Ljava/util/Collection;)Z
-	public static fun getSize (Lelide/http/api/HttpHeaders$HeaderValue;)I
-	public static fun isEmpty (Lelide/http/api/HttpHeaders$HeaderValue;)Z
-	public static fun iterator (Lelide/http/api/HttpHeaders$HeaderValue;)Ljava/util/Iterator;
-}
-
 public final class elide/http/api/HttpHeaders$HeaderValue$MultiValue : elide/http/api/HttpHeaders$HeaderValue, java/lang/Comparable {
 	public synthetic fun add (Ljava/lang/Object;)Z
 	public fun add (Ljava/lang/String;)Z
 	public fun addAll (Ljava/util/Collection;)Z
 	public static final synthetic fun box-impl ([Ljava/lang/String;)Lelide/http/api/HttpHeaders$HeaderValue$MultiValue;
 	public fun clear ()V
-	public fun compareTo (Lelide/http/api/HttpHeaders$HeaderValue;)I
-	public synthetic fun compareTo (Ljava/lang/Object;)I
-	public fun compareTo (Ljava/lang/String;)I
-	public static fun compareTo-impl ([Ljava/lang/String;Lelide/http/api/HttpHeaders$HeaderValue;)I
-	public static fun compareTo-impl ([Ljava/lang/String;Ljava/lang/String;)I
 	public static fun constructor-impl ([Ljava/lang/String;)[Ljava/lang/String;
-	public final fun contains (Ljava/lang/Object;)Z
-	public fun contains (Ljava/lang/String;)Z
-	public static fun contains-impl ([Ljava/lang/String;Ljava/lang/String;)Z
-	public fun containsAll (Ljava/util/Collection;)Z
-	public static fun containsAll-impl ([Ljava/lang/String;Ljava/util/Collection;)Z
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl ([Ljava/lang/String;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 ([Ljava/lang/String;[Ljava/lang/String;)Z
@@ -670,19 +622,12 @@ public final class elide/http/api/HttpHeaders$HeaderValue$MultiValue : elide/htt
 	public static fun getAllValues-impl ([Ljava/lang/String;)Ljava/util/List;
 	public fun getAsString ()Ljava/lang/String;
 	public static fun getAsString-impl ([Ljava/lang/String;)Ljava/lang/String;
-	public fun getSize ()I
-	public static fun getSize-impl ([Ljava/lang/String;)I
 	public fun hashCode ()I
 	public static fun hashCode-impl ([Ljava/lang/String;)I
-	public fun isEmpty ()Z
-	public static fun isEmpty-impl ([Ljava/lang/String;)Z
-	public fun iterator ()Ljava/util/Iterator;
-	public static fun iterator-impl ([Ljava/lang/String;)Ljava/util/Iterator;
 	public fun remove (Ljava/lang/Object;)Z
 	public fun removeAll (Ljava/util/Collection;)Z
 	public fun removeIf (Ljava/util/function/Predicate;)Z
 	public fun retainAll (Ljava/util/Collection;)Z
-	public synthetic fun size ()I
 	public fun toArray ()[Ljava/lang/Object;
 	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
 	public fun toString ()Ljava/lang/String;
@@ -696,10 +641,8 @@ public final class elide/http/api/HttpHeaders$HeaderValue$SingleValue : elide/ht
 	public fun addAll (Ljava/util/Collection;)Z
 	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/http/api/HttpHeaders$HeaderValue$SingleValue;
 	public fun clear ()V
-	public fun compareTo (Lelide/http/api/HttpHeaders$HeaderValue;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
 	public fun compareTo (Ljava/lang/String;)I
-	public static fun compareTo-impl (Ljava/lang/String;Lelide/http/api/HttpHeaders$HeaderValue;)I
 	public static fun compareTo-impl (Ljava/lang/String;Ljava/lang/String;)I
 	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
 	public final fun contains (Ljava/lang/Object;)Z
@@ -740,13 +683,9 @@ public abstract interface class elide/http/api/HttpMapping : java/util/Map, kotl
 public abstract interface class elide/http/api/HttpMessage {
 	public abstract fun getBody ()Lelide/http/api/HttpPayload;
 	public abstract fun getHeaders ()Lelide/http/api/HttpHeaders;
-	public abstract fun getMutable ()Z
+	public fun getMutable ()Z
 	public abstract fun getType ()Lelide/http/api/HttpMessageType;
 	public abstract fun getVersion ()Lelide/http/api/HttpVersion;
-}
-
-public final class elide/http/api/HttpMessage$DefaultImpls {
-	public static fun getMutable (Lelide/http/api/HttpMessage;)Z
 }
 
 public final class elide/http/api/HttpMessageType : java/lang/Enum {
@@ -765,7 +704,7 @@ public abstract interface class elide/http/api/HttpMethod {
 }
 
 public abstract interface class elide/http/api/HttpPayload {
-	public abstract fun contentTypeOrDefault-PwY7DFU ()Ljava/lang/String;
+	public fun contentTypeOrDefault-PwY7DFU ()Ljava/lang/String;
 	public abstract fun getBytes ()Lelide/http/HttpBytes;
 	public abstract fun getContentType-8OAbpuQ ()Ljava/lang/String;
 	public abstract fun getMutable ()Z
@@ -773,22 +712,13 @@ public abstract interface class elide/http/api/HttpPayload {
 	public abstract fun getSize-s-VKNKU ()J
 }
 
-public final class elide/http/api/HttpPayload$DefaultImpls {
-	public static fun contentTypeOrDefault-PwY7DFU (Lelide/http/api/HttpPayload;)Ljava/lang/String;
-}
-
 public abstract interface class elide/http/api/HttpRequest : elide/http/api/HttpMessage {
 	public abstract fun getMethod ()Lelide/http/api/HttpMethod;
-	public abstract fun getMutable ()Z
+	public fun getMutable ()Z
 	public abstract fun getPath ()Ljava/lang/String;
 	public abstract fun getQuery ()Lelide/http/api/HttpMapping;
-	public abstract fun getType ()Lelide/http/api/HttpMessageType;
+	public fun getType ()Lelide/http/api/HttpMessageType;
 	public abstract fun getUrl ()Lelide/net/api/URL;
-}
-
-public final class elide/http/api/HttpRequest$DefaultImpls {
-	public static fun getMutable (Lelide/http/api/HttpRequest;)Z
-	public static fun getType (Lelide/http/api/HttpRequest;)Lelide/http/api/HttpMessageType;
 }
 
 public final class elide/http/api/HttpRequest$Defaults {
@@ -802,23 +732,15 @@ public final class elide/http/api/HttpRequest$Defaults {
 
 public abstract interface class elide/http/api/HttpRequest$Factory {
 	public abstract fun copy (Lelide/http/api/HttpRequest;Lelide/http/api/HttpMethod;Ljava/lang/String;Lelide/http/api/HttpMapping;)Lelide/http/api/HttpRequest;
-	public abstract fun create (Lelide/http/api/HttpMethod;Ljava/lang/String;Lelide/http/api/HttpMapping;)Lelide/http/api/HttpRequest;
-}
-
-public final class elide/http/api/HttpRequest$Factory$DefaultImpls {
 	public static synthetic fun copy$default (Lelide/http/api/HttpRequest$Factory;Lelide/http/api/HttpRequest;Lelide/http/api/HttpMethod;Ljava/lang/String;Lelide/http/api/HttpMapping;ILjava/lang/Object;)Lelide/http/api/HttpRequest;
+	public abstract fun create (Lelide/http/api/HttpMethod;Ljava/lang/String;Lelide/http/api/HttpMapping;)Lelide/http/api/HttpRequest;
 	public static synthetic fun create$default (Lelide/http/api/HttpRequest$Factory;Lelide/http/api/HttpMethod;Ljava/lang/String;Lelide/http/api/HttpMapping;ILjava/lang/Object;)Lelide/http/api/HttpRequest;
 }
 
 public abstract interface class elide/http/api/HttpResponse : elide/http/api/HttpMessage {
 	public abstract fun getStatus ()Lelide/http/api/HttpStatus;
 	public abstract fun getTrailers ()Lelide/http/api/HttpHeaders;
-	public abstract fun getType ()Lelide/http/api/HttpMessageType;
-}
-
-public final class elide/http/api/HttpResponse$DefaultImpls {
-	public static fun getMutable (Lelide/http/api/HttpResponse;)Z
-	public static fun getType (Lelide/http/api/HttpResponse;)Lelide/http/api/HttpMessageType;
+	public fun getType ()Lelide/http/api/HttpMessageType;
 }
 
 public abstract interface class elide/http/api/HttpResponse$Factory {
@@ -856,15 +778,8 @@ public final class elide/http/api/HttpToken : elide/http/api/HeaderValueTokenTyp
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
-	public fun getAllValues ()Ljava/util/Collection;
-	public static fun getAllValues-impl (Ljava/lang/String;)Ljava/util/Collection;
-	public fun getAsString ()Ljava/lang/String;
-	public static fun getAsString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public synthetic fun getToken ()Ljava/lang/Object;
 	public fun getToken ()Ljava/lang/String;
-	public synthetic fun getValue ()Ljava/lang/Object;
-	public fun getValue ()Ljava/lang/String;
-	public static fun getValue-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/lang/String;)I
 	public fun toString ()Ljava/lang/String;
@@ -877,15 +792,10 @@ public final class elide/http/api/HttpTokenList : elide/http/api/HeaderValueMult
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
-	public fun getAllValues ()Ljava/util/Collection;
-	public static fun getAllValues-impl (Ljava/util/List;)Ljava/util/Collection;
 	public fun getAsString ()Ljava/lang/String;
 	public static fun getAsString-impl (Ljava/util/List;)Ljava/lang/String;
 	public synthetic fun getTokens ()Ljava/util/Collection;
 	public fun getTokens ()Ljava/util/List;
-	public synthetic fun getValue ()Ljava/lang/Object;
-	public fun getValue ()Ljava/lang/String;
-	public static fun getValue-impl (Ljava/util/List;)Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/util/List;)I
 	public fun toString ()Ljava/lang/String;
@@ -907,15 +817,8 @@ public final class elide/http/api/Language : elide/http/api/HeaderValueTokenType
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
-	public fun getAllValues ()Ljava/util/Collection;
-	public static fun getAllValues-impl (Ljava/lang/String;)Ljava/util/Collection;
-	public fun getAsString ()Ljava/lang/String;
-	public static fun getAsString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public synthetic fun getToken ()Ljava/lang/Object;
 	public fun getToken ()Ljava/lang/String;
-	public synthetic fun getValue ()Ljava/lang/Object;
-	public fun getValue ()Ljava/lang/String;
-	public static fun getValue-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/lang/String;)I
 	public fun toString ()Ljava/lang/String;
@@ -929,15 +832,8 @@ public final class elide/http/api/Mimetype : elide/http/api/HeaderValueTokenType
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
-	public fun getAllValues ()Ljava/util/Collection;
-	public static fun getAllValues-impl (Ljava/lang/String;)Ljava/util/Collection;
-	public fun getAsString ()Ljava/lang/String;
-	public static fun getAsString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public synthetic fun getToken ()Ljava/lang/Object;
 	public fun getToken ()Ljava/lang/String;
-	public synthetic fun getValue ()Ljava/lang/Object;
-	public fun getValue ()Ljava/lang/String;
-	public static fun getValue-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/lang/String;)I
 	public fun toString ()Ljava/lang/String;
@@ -952,19 +848,11 @@ public final class elide/http/api/Mimetype$Companion {
 
 public abstract interface class elide/http/api/MutableHttpHeaders : elide/http/api/HttpHeaders, elide/http/api/MutableHttpMapping {
 	public abstract fun add (Lelide/http/api/HttpHeaders$HeaderName;Ljava/lang/String;)V
-	public abstract fun add (Ljava/lang/String;Ljava/lang/String;)V
+	public fun add (Ljava/lang/String;Ljava/lang/String;)V
 	public abstract fun remove (Lelide/http/api/HttpHeaders$HeaderName;)Lelide/http/api/HttpHeaders$HeaderValue;
 	public abstract fun remove (Lelide/http/api/HttpHeaders$HeaderName;Ljava/lang/String;)V
 	public abstract fun set (Lelide/http/api/HttpHeaders$HeaderName;Ljava/lang/String;)V
-	public abstract fun set (Ljava/lang/String;Ljava/lang/String;)V
-}
-
-public final class elide/http/api/MutableHttpHeaders$DefaultImpls {
-	public static fun add (Lelide/http/api/MutableHttpHeaders;Ljava/lang/String;Ljava/lang/String;)V
-	public static fun contains (Lelide/http/api/MutableHttpHeaders;Ljava/lang/String;)Z
-	public static fun get (Lelide/http/api/MutableHttpHeaders;Ljava/lang/String;)Ljava/lang/String;
-	public static fun getAll (Lelide/http/api/MutableHttpHeaders;Ljava/lang/String;)Lkotlin/sequences/Sequence;
-	public static fun set (Lelide/http/api/MutableHttpHeaders;Ljava/lang/String;Ljava/lang/String;)V
+	public fun set (Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public abstract interface class elide/http/api/MutableHttpHeaders$Factory : elide/http/api/HttpHeaders$Factory {
@@ -981,23 +869,15 @@ public abstract interface class elide/http/api/MutableHttpMapping : elide/http/a
 public abstract interface class elide/http/api/MutableHttpMessage : elide/http/api/HttpMessage {
 	public abstract fun getBody ()Lelide/http/api/MutableHttpPayload;
 	public abstract fun getHeaders ()Lelide/http/api/MutableHttpHeaders;
-	public abstract fun getMutable ()Z
-}
-
-public final class elide/http/api/MutableHttpMessage$DefaultImpls {
-	public static fun getMutable (Lelide/http/api/MutableHttpMessage;)Z
+	public fun getMutable ()Z
 }
 
 public abstract interface class elide/http/api/MutableHttpPayload : elide/http/api/HttpPayload {
 }
 
-public final class elide/http/api/MutableHttpPayload$DefaultImpls {
-	public static fun contentTypeOrDefault-PwY7DFU (Lelide/http/api/MutableHttpPayload;)Ljava/lang/String;
-}
-
 public abstract interface class elide/http/api/MutableHttpRequest : elide/http/api/HttpRequest, elide/http/api/MutableHttpMessage {
 	public abstract fun getMethod ()Lelide/http/api/HttpMethod;
-	public abstract fun getMutable ()Z
+	public fun getMutable ()Z
 	public abstract fun getPath ()Ljava/lang/String;
 	public abstract fun getQuery ()Lelide/http/api/MutableHttpMapping;
 	public abstract fun getUrl ()Lelide/net/api/URL;
@@ -1005,11 +885,6 @@ public abstract interface class elide/http/api/MutableHttpRequest : elide/http/a
 	public abstract fun setPath (Ljava/lang/String;)V
 	public abstract fun setQuery (Lelide/http/api/MutableHttpMapping;)V
 	public abstract fun setUrl (Lelide/net/api/URL;)V
-}
-
-public final class elide/http/api/MutableHttpRequest$DefaultImpls {
-	public static fun getMutable (Lelide/http/api/MutableHttpRequest;)Z
-	public static fun getType (Lelide/http/api/MutableHttpRequest;)Lelide/http/api/HttpMessageType;
 }
 
 public abstract interface class elide/http/api/MutableHttpRequest$Factory : elide/http/api/HttpRequest$Factory {
@@ -1021,11 +896,6 @@ public abstract interface class elide/http/api/MutableHttpResponse : elide/http/
 	public abstract fun getStatus ()Lelide/http/api/HttpStatus;
 	public abstract fun getTrailers ()Lelide/http/api/HttpHeaders;
 	public abstract fun setStatus (Lelide/http/api/HttpStatus;)V
-}
-
-public final class elide/http/api/MutableHttpResponse$DefaultImpls {
-	public static fun getMutable (Lelide/http/api/MutableHttpResponse;)Z
-	public static fun getType (Lelide/http/api/MutableHttpResponse;)Lelide/http/api/HttpMessageType;
 }
 
 public abstract interface class elide/http/api/MutableHttpResponse$Factory : elide/http/api/HttpResponse$Factory {

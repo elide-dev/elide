@@ -150,9 +150,9 @@ public abstract interface class elide/rpc/server/web/GrpcWebConfig : io/micronau
 	public static final field DEFAULT_ENABLED Z
 	public static final field DEFAULT_TIMEOUT_SECONDS J
 	public static final field defaultEndpoint Ljava/lang/String;
-	public abstract fun getEndpoint ()Ljava/lang/String;
-	public abstract fun getTimeout ()Ljava/time/Duration;
-	public abstract fun isEnabled ()Z
+	public fun getEndpoint ()Ljava/lang/String;
+	public fun getTimeout ()Ljava/time/Duration;
+	public fun isEnabled ()Z
 }
 
 public final class elide/rpc/server/web/GrpcWebConfig$Companion {
@@ -160,12 +160,6 @@ public final class elide/rpc/server/web/GrpcWebConfig$Companion {
 	public static final field DEFAULT_TIMEOUT_SECONDS J
 	public static final field defaultEndpoint Ljava/lang/String;
 	public final fun getDEFAULTS ()Lelide/rpc/server/web/GrpcWebConfig;
-}
-
-public final class elide/rpc/server/web/GrpcWebConfig$DefaultImpls {
-	public static fun getEndpoint (Lelide/rpc/server/web/GrpcWebConfig;)Ljava/lang/String;
-	public static fun getTimeout (Lelide/rpc/server/web/GrpcWebConfig;)Ljava/time/Duration;
-	public static fun isEnabled (Lelide/rpc/server/web/GrpcWebConfig;)Z
 }
 
 public final class elide/rpc/server/web/GrpcWebContentType : java/lang/Enum {

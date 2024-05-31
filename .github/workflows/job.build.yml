@@ -274,13 +274,15 @@ jobs:
           toolchain: stable
           target: wasm32-wasi
           components: clippy,rustfmt
+          cache: false
           rustflags: ""
       - name: "Setup: Zig"
         uses: goto-bus-stop/setup-zig@7ab2955eb728f5440978d5824358023be3a2802d # v2.2.0
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@2e7f9ec7921547d4b46598398ca573513895d0bd # v0.0.4
+        if: false
       - name: "Setup: Rust Caching"
-        if: github.event_name != 'release' && github.event_name != 'workflow_dispatch'
+        if: false && github.event_name != 'release' && github.event_name != 'workflow_dispatch'
         run: |
           cargo install cargo-zigbuild
           echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV

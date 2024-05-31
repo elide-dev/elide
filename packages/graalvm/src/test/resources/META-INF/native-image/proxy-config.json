@@ -16,5 +16,11 @@
   },
   {
     "interfaces":["oshi.jna.platform.mac.SystemConfiguration"]
+  },
+  {
+    "interfaces":["kotlin.jvm.functions.Function0"]
+  },
+  {
+    "interfaces":["kotlin.jvm.functions.Function2"]
   }
 ]

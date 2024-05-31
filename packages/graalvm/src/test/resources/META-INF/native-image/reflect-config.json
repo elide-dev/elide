@@ -459,7 +459,12 @@
 {
   "name":"elide.runtime.gvm.internals.AbstractDualTest$TestContext",
   "allDeclaredClasses":true,
-  "queryAllPublicMethods":true
+  "queryAllPublicMethods":true,
+  "methods":[
+    {"name":"isNotNull","parameterTypes":[]},
+    {"name":"isNotNull","parameterTypes":["java.lang.String"]},
+    {"name":"isEqualTo","parameterTypes":["java.lang.Object"]}
+  ]
 },
 {
   "name":"elide.runtime.gvm.internals.AbstractDualTest$TestResultContext",

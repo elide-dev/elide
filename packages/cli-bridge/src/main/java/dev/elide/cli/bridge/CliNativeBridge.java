@@ -12,9 +12,27 @@
  */
 package dev.elide.cli.bridge;
 
+/**
+ * Bridge to native code from the "umbrella" library.
+ */
 public class CliNativeBridge {
-  /** Say hello. */
+  /** Token expected for the tooling API at version 1. */
+  public static final String VERSION_V1 = "v1";
+
+  /** Say hello from Rust. */
   public static native void hello();
+
+  /** Return the tooling protocol version. */
+  public static native String version();
+
+  /** Return the suite of reported tool names. */
+  public static native String[] supportedTools();
+
+  /** Return the languages which relate to a given tool. */
+  public static native String[] relatesTo(String toolName);
+
+  /** Return the version string for a tool. */
+  public static native String toolVersion(String toolName);
 
   static {
     System.loadLibrary("umbrella");

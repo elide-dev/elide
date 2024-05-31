@@ -158,9 +158,6 @@ public object Constants {
 
   /** Kotlin conventions. */
   internal object Kotlin {
-    /** Whether to default to strict mode being active. */
-    const val DEFAULT_STRICT = true
-
     /** Property: whether to treat all warnings as errors. */
     const val STRICT_MODE = "strictMode"
 
@@ -224,9 +221,7 @@ public object Constants {
       "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
       "-Xsuppress-version-warnings",
-    ).plus(if (Kotlin.DEFAULT_STRICT) listOf(
-      "-Werror",
-    ) else emptyList())
+    )
 
     /** Compiler args to include in Kotlin JVM targets. */
     internal val JvmCompilerArgs = BaseCompilerArgs.plus(

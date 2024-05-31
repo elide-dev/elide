@@ -32,6 +32,7 @@ elide {
   kotlin {
     target = KotlinTarget.JsBrowser
     explicitApi = true
+    strict = false
   }
 }
 

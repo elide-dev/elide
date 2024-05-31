@@ -26,14 +26,23 @@ dead_code = "allow"
 #ruff_diagnostics = { path = "../../third_party/astral/ruff/crates/ruff_diagnostics", optional = true }
 #ruff_formatter = { path = "../../third_party/astral/ruff/crates/ruff_formatter", optional = true }
 #ruff_linter = { path = "../../third_party/astral/ruff/crates/ruff_linter", optional = true }
+boring = "4.6.0"
 deno_npm = "0.17.0"
 heapless = "0.8.0"
 jni = "0.21.1"
 lazy_static = "1.4.0"
 oxc = { path = "../../third_party/oxc-project/oxc/crates/oxc", optional = true }
+polling = "3.7.0"
 protobuf = "3.4.0"
 pubgrub = "0.2.1"
 serde = { version = "1.0.203", features = ["derive"] }
+serde_v8 = "0.192.0"
+tokio = "1.38.0"
+tokio-boring = "4.6.0"
+tokio-pipe = "0.2.12"
+tokio-stream = "0.1.15"
+tokio-tfo = "0.3.1"
 typeshare = "1.0.3"
+rusqlite = { version = "0.31.0", features = ["bundled"] }
 uv = { path = "../../third_party/astral/uv/crates/uv", optional = true }
 v8 = "0.92.0"

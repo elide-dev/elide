@@ -41,8 +41,8 @@ import elide.tool.project.ProjectManager
 ) : AbstractSubcommand<ToolState, CommandContext>() {
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     output {
-      append("Running linter (testing)")
-      dev.elide.cli.bridge.CliNativeBridge.hello()
+      val version = dev.elide.cli.bridge.CliNativeBridge.apiVersion()
+      append("Running linter (testing, version: $version)")
     }
     return success()
   }

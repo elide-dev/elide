@@ -8,40 +8,7 @@ use jni::objects::{JClass, JString};
 use lazy_static::lazy_static;
 use std::collections::HashMap;
 use jni::sys::{jint, jobjectArray, jstring};
-use serde::{Deserialize, Serialize};
-use crate::tools::ToolInfo;
-
-#[derive(Serialize, Deserialize)]
-enum ToolType {
-  LINTER,
-}
-
-// Library version of the tooling layer.
-static LIB_VERSION: &'static str = "0.1.0";
-
-// API version of the tooling layer.
-static API_VERSION: &'static str = "v1";
-
-static UV_INFO: ToolInfo = ToolInfo {
-  name: "uv",
-  version: "0.1.9",
-  language: "python",
-  experimental: true,
-};
-
-static RUFF_INFO: ToolInfo = ToolInfo {
-  name: "ruff",
-  version: "0.4.0",
-  language: "python",
-  experimental: true,
-};
-
-static OXY_INFO: ToolInfo = ToolInfo {
-  name: "oxy",
-  version: "0.12.3",
-  language: "js",
-  experimental: false,
-};
+use crate::tools::{API_VERSION, LIB_VERSION, OXY_INFO, RUFF_INFO, ToolInfo, UV_INFO};
 
 lazy_static! {
     static ref TOOL_MAP: HashMap<&'static str, &'static ToolInfo> = {
@@ -96,10 +63,7 @@ fn runRuffOnSingleFile(mut env: JNIEnv, file: &JString) -> jint {
 
 // -- JNI Aliases
 
-pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_hello<'local>(_env: JNIEnv, _class: JClass) {
-  println!("Hello from the Rust world!");
-}
-
+#[no_mangle]
 pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_libVersion(
   env: JNIEnv,
   _class: JClass,
@@ -107,6 +71,7 @@ pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_libVersion(
   env.new_string(LIB_VERSION).unwrap().into_raw()
 }
 
+#[no_mangle]
 pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_apiVersion(
   env: JNIEnv,
   _class: JClass,
@@ -114,6 +79,7 @@ pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_apiVersion(
   env.new_string(API_VERSION).unwrap().into_raw()
 }
 
+#[no_mangle]
 pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_supportedTools<'local>(
   mut env: JNIEnv,
   _class: JClass,
@@ -132,6 +98,7 @@ pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_supportedTools<
   array.into_raw()
 }
 
+#[no_mangle]
 pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_relatesTo<'local>(
   mut env: JNIEnv,
   _class: JClass,
@@ -155,6 +122,7 @@ pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_relatesTo<'loca
   array.into_raw()
 }
 
+#[no_mangle]
 pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_toolVersion<'local>(
   mut env: JNIEnv,
   _class: JClass,
@@ -169,6 +137,7 @@ pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_toolVersion<'lo
   env.new_string(tool.version).unwrap().into_raw()
 }
 
+#[no_mangle]
 pub extern "system" fn Java_dev_elide_cli_bridge_CliNativeBridge_runToolOnFile<'local>(
   mut env: JNIEnv,
   _class: JClass,

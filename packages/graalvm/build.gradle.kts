@@ -46,7 +46,7 @@ version = rootProject.version as String
 
 val enableJpms = false
 val oracleGvm = false
-val enableTransportV2 = true
+val enableTransportV2 = false
 val ktCompilerArgs = emptyList<String>()
 val javacArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
@@ -124,11 +124,54 @@ sourceSets {
   }
 }
 
+val nativesRootTemplate: (String) -> String = { version ->
+  "/tmp/elide-runtime/v$version/native"
+}
+
+val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
+val pkgVersion = if (stamp) {
+  libs.versions.elide.asProvider().get()
+} else {
+  "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
+}
+
+val nativesPath = nativesRootTemplate(pkgVersion)
+val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$pkgVersion").asFile.path
+
 val jvmDefs = mapOf(
   "elide.nativeTransport.v2" to enableTransportV2.toString(),
 )
 
 val initializeAtRunTime = listOfNotNull(
+  "elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
+  "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
+  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
+  "elide.runtime.intrinsics.server.http.netty.KQueueTransport",
+  "elide.runtime.intrinsics.server.http.netty.EpollTransport",
+  "elide.runtime.intrinsics.server.http.netty.IOUringTransport",
+  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
+  "elide.runtime.intrinsics.server.http.netty.NettyTransport${'$'}Companion",
+  "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
+  "io.netty.buffer.AbstractReferenceCountedByteBuf",
+  "io.netty.buffer.PooledByteBufAllocator",
+  "io.netty.buffer.ByteBufAllocator",
+  "io.netty.buffer.ByteBufUtil",
+  "io.netty.buffer.AbstractReferenceCountedByteBuf",
+  "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
+  "io.netty.resolver.dns.DnsServerAddressStreamProviders${'$'}DefaultProviderHolder",
+  "io.netty.resolver.dns.DnsNameResolver",
+  "io.netty.resolver.HostsFileEntriesResolver",
+  "io.netty.resolver.dns.ResolvConf${'$'}ResolvConfLazy",
+  "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
+  "io.netty.handler.codec.http2.Http2CodecUtil",
+  "io.netty.handler.codec.http2.Http2ClientUpgradeCodec",
+  "io.netty.handler.codec.http2.Http2ConnectionHandler",
+  "io.netty.handler.codec.http2.DefaultHttp2FrameWriter",
+  "io.netty.incubator.channel.uring",
+  "io.netty.incubator.channel.uring.IOUringEventLoopGroup",
+  "io.netty.incubator.channel.uring.Native",
+  "io.netty.handler.codec.http.HttpObjectEncoder",
+  "io.netty.internal.tcnative.SSL",
   "io.micronaut.core.util.KotlinUtils",
   "io.micronaut.core.io.socket.SocketUtils",
   "io.micronaut.core.type.RuntimeTypeInformation${'$'}LazyTypeInfo",
@@ -180,8 +223,12 @@ val initializeAtRunTime = listOfNotNull(
   "oshi.util.platform.unix.solaris.KstatUtil",
 )
 
+val initializeAtRunTimeTest = listOfNotNull(
+  "org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeServicesMode",
+)
+
 val sharedLibArgs = listOfNotNull(
-  "--verbose",
+  // "--verbose",
   "--initialize-at-build-time=",
   "--initialize-at-run-time=${initializeAtRunTime.joinToString(",")}",
   "-H:+ReportExceptionStackTraces",
@@ -203,7 +250,18 @@ val sharedLibArgs = listOfNotNull(
   }
 )
 
+val testLibArgs = sharedLibArgs.plus(
+  "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
+).plus(listOf(
+  "--initialize-at-build-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}1",
+  "--initialize-at-build-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}2",
+  "--initialize-at-build-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}3",
+))
+
 graalvmNative {
+  testSupport = true
+  useArgFile = true
+
   agent {
     defaultMode = "standard"
     builtinCallerFilter = true
@@ -237,7 +295,7 @@ graalvmNative {
       fallback = false
       sharedLibrary = false
       quickBuild = true
-      buildArgs(sharedLibArgs.plus(listOf(
+      buildArgs(sharedLibArgs.plus(testLibArgs).plus(listOf(
         "--features=org.graalvm.junit.platform.JUnitPlatformFeature",
       )))
     }
@@ -390,6 +448,19 @@ dependencies {
   testImplementation(mn.micronaut.test.junit5)
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(projects.packages.graalvmPy)
+
+  testImplementation(libs.bouncycastle)
+  testImplementation(libs.bouncycastle.tls)
+  testImplementation(libs.bouncycastle.pkix)
+  testImplementation(libs.bouncycastle.util)
+
+  testImplementation(libs.netty.tcnative.boringssl.static)
+  testImplementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-x86_64") })
+  testImplementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-aarch_64") })
+  testImplementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
+  testImplementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
+  testImplementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+  testImplementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
 
   if (enableTransportV2) {
     // Testing: Native Transports

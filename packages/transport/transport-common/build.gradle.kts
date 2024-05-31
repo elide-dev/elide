@@ -57,6 +57,7 @@ tasks.withType(CppCompile::class) {
 
   compilerArgs.addAll(listOf(
     "-x", "c",
+    "-fPIC",
     "-I$jdkIncludePath",
     "-I$jdkNativeIncludePath",
   ))

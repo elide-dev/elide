@@ -27,18 +27,19 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.AbstractDualTest
+import elide.runtime.gvm.internals.AbstractDualTest.JavaScript
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
-import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.vfs.vfs
+import elide.runtime.plugins.js.JavaScript as JavaScriptPlugin
 
 /** Abstract dual-execution test which expects a JavaScript snippet in addition to a regular test. */
 @OptIn(DelicateElideApi::class)
 @Suppress("unused")
-internal abstract class AbstractJsTest : AbstractDualTest() {
+internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
   /**
    * Typed and highlighted JavaScript test executor context.
    */
@@ -60,18 +61,18 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   protected open fun intrinsicsManager(): IntrinsicsManager = defaultIntrinsicsManager
 
   // Logic to execute a guest-side test.
-  private inline fun executeGuestInternal(
+  private fun executeGuestInternal(
       ctx: PolyglotContext,
       bind: Boolean,
       bindUtils: Boolean,
       esm: Boolean,
-      op: PolyglotContext.() -> String,
+      op: JavaScript,
   ): Value {
     // resolve the script
     val script = op.invoke(ctx)
 
     // install bindings under test, if directed
-    val target = ctx.bindings(JavaScript)
+    val target = ctx.bindings(JavaScriptPlugin)
 
     // prep intrinsic bindings under test
     if (bind) {
@@ -131,7 +132,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
 
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.apply {
-      install(JavaScript)
+      install(JavaScriptPlugin)
       vfs { deferred = false }
     }
   }
@@ -176,7 +177,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   //}
 
   // Run the provided factory to produce an ESM script, then run that test within a warmed `Context`.
-  fun executeESM(bind: Boolean = true, op: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+  fun executeESM(bind: Boolean = true, op: JavaScript) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       this,
       bind,
@@ -210,7 +211,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   }
 
   // Run the provided factory to produce a script, then run that test within a warmed `Context`.
-  override fun executeGuest(bind: Boolean, op: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+  override fun executeGuest(bind: Boolean, op: JavaScript) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       this,
       bind,
@@ -288,22 +289,23 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   }
 
   /** Proxy which wires together a dual-test execution (in the guest and on the host). */
-  internal abstract inner class JsDualTestExecutionProxy : AbstractDualTest.DualTestExecutionProxy() {
+  internal abstract inner class JsDualTestExecutionProxy :
+    AbstractDualTest<JavaScript>.DualTestExecutionProxy<JavaScript>() {
     /**
      * Wire together the guest-side of a dual test.
      *
      * @param esm Whether to execute as an ESM module.
      * @param guestOperation Operation to run on the guest.
      */
-    abstract fun guest(esm: Boolean = false, guestOperation: PolyglotContext.() -> String)
+    abstract fun guest(esm: Boolean = false, guestOperation: JavaScript)
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
+  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<JavaScript> {
     op.invoke()
 
     return object : JsDualTestExecutionProxy() {
-      override fun guest(esm: Boolean, guestOperation: PolyglotContext.() -> String) =
+      override fun guest(esm: Boolean, guestOperation: JavaScript) =
         GuestTestExecution(::withContext) {
           executeGuestInternal(
             this,
@@ -314,11 +316,11 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
           )
         }.doesNotFail()
 
-      override fun guest(guestOperation: PolyglotContext.() -> String) {
+      override fun guest(guestOperation: JavaScript) {
         return guest(false, guestOperation)
       }
 
-      override fun thenRun(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+      override fun thenRun(guestOperation: JavaScript) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,

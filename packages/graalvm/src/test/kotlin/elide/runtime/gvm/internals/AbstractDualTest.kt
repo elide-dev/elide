@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
@@ -31,10 +32,11 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.gvm.internals.AbstractDualTest.CodeGenerator
 import elide.vm.annotations.Polyglot
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
-abstract class AbstractDualTest {
+abstract class AbstractDualTest<Generator: CodeGenerator> {
   companion object {
     @JvmStatic
     fun loadResource(path: String): String {
@@ -310,7 +312,7 @@ abstract class AbstractDualTest {
   }
 
   /** @return Execute a guest script with the subject intrinsics bound. */
-  protected abstract fun executeGuest(bind: Boolean = true, op: PolyglotContext.() -> String): GuestTestExecution
+  protected abstract fun executeGuest(bind: Boolean = true, op: Generator): GuestTestExecution
 
   /** Single test execution within the scope of a guest VM. */
   inner class GuestTestExecution(
@@ -383,14 +385,35 @@ abstract class AbstractDualTest {
     }
   }
 
+  @FunctionalInterface fun interface CodeGenerator {
+    fun PolyglotContext.generate(): String
+
+    operator fun invoke(ctx: PolyglotContext): String = ctx.generate()
+  }
+
+  @FunctionalInterface fun interface JavaScript : CodeGenerator {
+    @Language("js")
+    override fun PolyglotContext.generate(): String
+  }
+
+  @FunctionalInterface fun interface Python : CodeGenerator {
+    @Language("python")
+    override fun PolyglotContext.generate(): String
+  }
+
+  @FunctionalInterface fun interface Ruby : CodeGenerator {
+    @Language("ruby")
+    override fun PolyglotContext.generate(): String
+  }
+
   /** Proxy which wires together a dual-test execution (in the guest and on the host). */
-  abstract inner class DualTestExecutionProxy {
+  abstract inner class DualTestExecutionProxy<T> where T: CodeGenerator {
     /**
      * Wire together the guest-side of a dual test.
      *
      * @param guestOperation Operation to run on the guest.
      */
-    abstract fun guest(guestOperation: PolyglotContext.() -> String)
+    abstract fun guest(guestOperation: T)
 
     /**
      * Wire together the guest-side of a dual test, but defer for additional assertions.
@@ -398,13 +421,13 @@ abstract class AbstractDualTest {
      * @param guestOperation Operation to run on the guest.
      * @return Guest test execution control proxy.
      */
-    abstract fun thenRun(guestOperation: PolyglotContext.() -> String): GuestTestExecution
+    abstract fun thenRun(guestOperation: T): GuestTestExecution
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun dual(op: () -> Unit): DualTestExecutionProxy =
+  protected fun dual(op: () -> Unit): DualTestExecutionProxy<Generator> =
     dual(true, op)
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected abstract fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy
+  protected abstract fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Generator>
 }

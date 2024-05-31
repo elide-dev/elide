@@ -42,6 +42,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     kotlinVersionOverride = "2.0"
+    explicitApi = true
   }
 
   docs {
@@ -51,4 +52,5 @@ elide {
 
 dependencies {
   api(libs.kotlinx.serialization.core)
+  implementation(libs.kotlinx.serialization.json)
 }

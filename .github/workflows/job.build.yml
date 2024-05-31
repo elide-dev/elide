@@ -359,6 +359,8 @@ jobs:
             -x optimizedJitJarAll
             -x optimizedDistTar
             -x optimizedDistZip
+            -x distZip
+            -x distTar
             --scan
             --build-cache
             --no-daemon

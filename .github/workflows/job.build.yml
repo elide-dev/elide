@@ -245,6 +245,7 @@ jobs:
             .codebase/
             ~/.konan
             .kotlin/
+            target/
             packages/*/build/bin
             packages/*/build/classes
             packages/*/build/kotlin
@@ -263,6 +264,12 @@ jobs:
             tools/elide-build/build/klib
             tools/elide-build/build/generated
             tools/elide-build/build/generated-sources
+      - name: "Setup: Rust"
+        uses: actions-rust-lang/setup-rust-toolchain@b113a30d27a8e59c969077c0a0168cc13dab5ffc # v1.8.0
+        with:
+          toolchain: stable
+          target: wasm32-wasi
+          components: clippy,rustfmt
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
@@ -293,7 +300,11 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-      - name: "🛠️ Build"
+      - name: "🛠️ Build Natives (Debug)"
+        run: cargo build
+      - name: "🛠️ Build Natives (Release)"
+        run: cargo build --release
+      - name: "🛠️ Build Packages"
         uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}

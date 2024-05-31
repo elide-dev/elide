@@ -461,16 +461,39 @@
   "allDeclaredClasses":true,
   "queryAllPublicMethods":true,
   "methods":[
+    {"name":"isNull","parameterTypes":[]},
+    {"name":"isNull","parameterTypes":["java.lang.String"]},
     {"name":"isNotNull","parameterTypes":[]},
     {"name":"isNotNull","parameterTypes":["java.lang.String"]},
-    {"name":"isEqualTo","parameterTypes":["java.lang.Object"]}
+    {"name":"isEqualTo","parameterTypes":["java.lang.Object"]},
+    {"name":"isEqualTo","parameterTypes":["java.lang.Object","java.lang.String"]},
+    {"name":"isNotEqualTo","parameterTypes":["java.lang.Object"]},
+    {"name":"isNotEqualTo","parameterTypes":["java.lang.Object","java.lang.String"]},
+    {"name":"fails","parameterTypes":[]},
+    {"name":"fails","parameterTypes":["java.lang.String"]},
+    {"name":"shouldBeTrue","parameterTypes":[]},
+    {"name":"shouldBeTrue","parameterTypes":["java.lang.String"]}
   ]
 },
 {
   "name":"elide.runtime.gvm.internals.AbstractDualTest$TestResultContext",
   "allDeclaredClasses":true,
   "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
+  "queryAllPublicMethods":true,
+  "methods":[
+    {"name":"isNull","parameterTypes":[]},
+    {"name":"isNull","parameterTypes":["java.lang.String"]},
+    {"name":"isNotNull","parameterTypes":[]},
+    {"name":"isNotNull","parameterTypes":["java.lang.String"]},
+    {"name":"isEqualTo","parameterTypes":["java.lang.Object"]},
+    {"name":"isEqualTo","parameterTypes":["java.lang.Object","java.lang.String"]},
+    {"name":"isNotEqualTo","parameterTypes":["java.lang.Object"]},
+    {"name":"isNotEqualTo","parameterTypes":["java.lang.Object","java.lang.String"]},
+    {"name":"fails","parameterTypes":[]},
+    {"name":"fails","parameterTypes":["java.lang.String"]},
+    {"name":"shouldBeTrue","parameterTypes":[]},
+    {"name":"shouldBeTrue","parameterTypes":["java.lang.String"]}
+  ]
 },
 {
   "name":"elide.runtime.gvm.internals.AbstractIntrinsicTest",

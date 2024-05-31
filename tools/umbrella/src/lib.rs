@@ -1,20 +1,15 @@
 #![allow(non_snake_case, dead_code)]
 
+mod diagnostics;
+mod tools;
+
 use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use lazy_static::lazy_static;
 use std::collections::HashMap;
 use jni::sys::{jint, jobjectArray, jstring};
 use serde::{Deserialize, Serialize};
-
-#[derive(Clone, Hash, Eq, PartialEq, Debug)]
-#[derive(Serialize, Deserialize)]
-pub struct ToolInfo {
-  name: &'static str,
-  version: &'static str,
-  language: &'static str,
-  experimental: bool,
-}
+use crate::tools::ToolInfo;
 
 #[derive(Serialize, Deserialize)]
 enum ToolType {

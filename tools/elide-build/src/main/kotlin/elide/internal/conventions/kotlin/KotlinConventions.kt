@@ -28,6 +28,8 @@ import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.noarg.gradle.NoArgExtension
+import java.util.LinkedList
+import java.util.TreeSet
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.Constants.Elide
@@ -135,6 +137,9 @@ internal fun Project.configureKotlinBuild(
     )
   }
 
+  val enableKapt = conventions.kapt || plugins.hasPlugin(KAPT_PLUGIN_ID)
+  val enableKsp = conventions.ksp || plugins.hasPlugin(KSP_PLUGIN_ID)
+
   val kotlinVersionParsed = KotlinVersion.fromVersion(kotlinVersion ?: Versions.KOTLIN_DEFAULT)
   fun <T: KotlinCommonCompilerOptions> T.configureCompilerOptions() {
     apiVersion.set(kotlinVersionParsed)
@@ -147,12 +152,27 @@ internal fun Project.configureKotlinBuild(
     }
 
     val kotlinCArgs = freeCompilerArgs.get().plus(when (target) {
-      JVM -> if (conventions.kapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
+      JVM -> if (enableKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
       JsBrowser, JsNode -> Elide.JsCompilerArgs
-      is Multiplatform, Native, NativeEmbedded, WASM, WASI -> Elide.KmpCompilerArgs
+      is Multiplatform, Native, NativeEmbedded, WASM, WASI -> when {
+        target.contains(JVM) && this is KotlinJvmCompilerOptions ->
+          Elide.KmpCompilerArgs.plus(if (enableKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs).toSet().toList()
+
+        else -> Elide.KmpCompilerArgs
+      }
     }).plus(conventions.customKotlinCompilerArgs).toList()
 
-    freeCompilerArgs.set(kotlinCArgs)
+    val currentSuite = TreeSet(freeCompilerArgs.get())
+    val additions = LinkedList<String>()
+    kotlinCArgs.forEach {
+      if (!currentSuite.contains(it)) {
+        currentSuite.add(it)
+        additions.add(it)
+      }
+    }
+    if (additions.isNotEmpty()) {
+      freeCompilerArgs.addAll(additions)
+    }
   }
 
   // base Kotlin options
@@ -223,7 +243,7 @@ internal fun Project.configureKotlinBuild(
   }
 
   // configure kapt extension
-  if (conventions.kapt) {
+  if (enableKapt) {
     pluginManager.withPlugin(KAPT_PLUGIN_ID) {
       extensions.getByType(KaptExtension::class.java).apply {
         useBuildCache = true
@@ -234,6 +254,13 @@ internal fun Project.configureKotlinBuild(
         inheritedAnnotations = true
       }
       afterEvaluate {
+        tasks.withType(KotlinJvmCompile::class.java).configureEach {
+          if (name.lowercase().contains("kapt")) {
+            compilerOptions {
+              configureCompilerOptions()
+            }
+          }
+        }
         tasks.withType(KaptGenerateStubsTask::class.java).configureEach {
           compilerOptions {
             configureCompilerOptions()
@@ -244,7 +271,7 @@ internal fun Project.configureKotlinBuild(
   }
 
   // configure KSP extension
-  if (conventions.ksp) pluginManager.withPlugin(KSP_PLUGIN_ID) {
+  if (enableKsp) pluginManager.withPlugin(KSP_PLUGIN_ID) {
     extensions.getByType(KspExtension::class.java).apply {
       allowSourcesFromOtherPlugins = true
       allWarningsAsErrors = true

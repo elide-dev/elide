@@ -36,12 +36,7 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
 
   // Logic to execute a guest-side test.
   @Suppress("SameParameterValue")
-  private fun executeGuestInternal(
-    ctx: PolyglotContext,
-    bind: Boolean,
-    bindUtils: Boolean,
-    op: Python,
-  ): Value {
+  private fun executeGuestInternal(ctx: PolyglotContext, bind: Boolean, bindUtils: Boolean, op: Python,): Value {
     // resolve the script
     val script = op.invoke(ctx)
 

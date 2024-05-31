@@ -48,10 +48,8 @@ elide {
 
 dependencies {
   kapt(libs.graalvm.truffle.processor)
-  api(projects.tools.tsc)
   api(projects.packages.engine)
   implementation(libs.commons.io)
-  implementation(projects.tools.esbuild)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.graalvm.js.language)
 

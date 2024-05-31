@@ -26,3 +26,23 @@ pub struct DiagnosticNote {
   pub location: CodeLocation,
   pub severity: Severity
 }
+
+#[derive(Clone, Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
+pub struct DiagnosticTimings {
+  pub start: u64,
+  pub end: u64,
+}
+
+#[derive(Clone, Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
+pub struct DiagnosticSuite {
+  pub maxSeverity: Severity,
+  pub notes: Vec<DiagnosticNote>,
+  pub timings: DiagnosticTimings,
+}
+
+#[derive(Clone, Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
+pub struct DiagnosticResult {
+  pub success: bool,
+  pub exitCode: i32,
+  pub diagnostics: Vec<DiagnosticSuite>,
+}

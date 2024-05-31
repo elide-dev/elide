@@ -16,6 +16,7 @@
 #
 
 [versions]
+aedile = "1.3.1"
 androidx-compose = "1.5.13-dev-k2.0.0-RC1-50f08dfa4b4"
 arrow = "1.2.0"
 asciidata = "1.4.0"
@@ -31,6 +32,7 @@ buf = "1.28.1"
 buildTimeTracker = "4.3.0"
 buildconfig-plugin = "5.3.5"
 byteunits = "0.9.1"
+caffeine = "3.1.8"
 capnproto = "0.1.18-elide"
 clikt = "4.2.2"
 closure = "v20221004"
@@ -69,17 +71,16 @@ google-api-common = "2.30.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
 graalvm = "24.1.0-SNAPSHOT"
-graalvm-stable = "24.0.1"
 graalvm-metadata = "0.3.8"
 graalvm-pin = "24.1.0-SNAPSHOT"
 graalvm-plugin = "0.10.2"
+graalvm-stable = "24.0.1"
 graalvm-svm-driver = "24.1.0-SNAPSHOT"
 gradleChecksum = "1.4.0"
 gradleCommonCustomUserData = "1.12.1"
 gradleTestRetry = "1.5.9"
 grpc-java = "1.62.2"
 grpc-kotlin = "1.4.1"
-kotlinpoet = "1.16.0"
 grpc-web = "1.4.2"
 guava = "33.2.0-jre"
 h2 = "2.2.224"
@@ -87,6 +88,7 @@ hamcrest-core = "2.2"
 hamcrest-junit = "2.0.0.0"
 hibernate = "5.6.11.Final"
 hikari = "4.0.3"
+hoplite = "2.7.5"
 inquirer = "0.1.0"
 j4rs = "0.19.0"
 jackson = "2.17.0"
@@ -123,9 +125,10 @@ kotlin-compile-testing = "1.5.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.0"
 kotlin-sdk = "2.0.0"
+kotlinpoet = "1.16.0"
 kotlinx-abiValidator = "0.14.0"
-kotlinx-browser = "0.1"
 kotlinx-benchmark = "0.4.10"
+kotlinx-browser = "0.1"
 kotlinx-collections = "0.4-wasm1"
 kotlinx-coroutines = "1.9.0-RC"
 kotlinx-datetime = "0.6.0"
@@ -349,13 +352,14 @@ versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.
 versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck" }
 
 [libraries]
-assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
+aedile-core = { group = "com.sksamuel.aedile", name = "aedile-core", version.ref = "aedile" }
 androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "androidx-compose" }
 arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
 arrow-optics-core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
 arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
+assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.1.0" }
 bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
 bouncycastle-pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
@@ -371,6 +375,9 @@ brotli-native-osx-arm64 = { group = "com.aayushatharva.brotli4j", name = "native
 brotli-native-windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 brotli-native-windows-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 byteunits = { group = "com.jakewharton.byteunits", name = "byteunits", version.ref = "byteunits" }
+caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
+caffeine-guava = { group = "com.github.ben-manes.caffeine", name = "guava", version.ref = "caffeine" }
+caffeine-jcache = { group = "com.github.ben-manes.caffeine", name = "jcache", version.ref = "caffeine" }
 capnproto-compiler = { group = "org.capnproto", name = "compiler", version.ref = "capnproto" }
 capnproto-runtime = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
 capnproto-runtime-rpc = { group = "org.capnproto", name = "runtime-rpc", version.ref = "capnproto" }
@@ -502,6 +509,13 @@ hibernate-hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", ver
 hibernate-java8 = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
 hibernate-search = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
+hoplite-arrow = { group = "com.sksamuel.hoplite", name = "hoplite-arrow", version.ref = "hoplite" }
+hoplite-core = { group = "com.sksamuel.hoplite", name = "hoplite-core", version.ref = "hoplite" }
+hoplite-datetime = { group = "com.sksamuel.hoplite", name = "hoplite-datetime", version.ref = "hoplite" }
+hoplite-hocon = { group = "com.sksamuel.hoplite", name = "hoplite-hocon", version.ref = "hoplite" }
+hoplite-json = { group = "com.sksamuel.hoplite", name = "hoplite-json", version.ref = "hoplite" }
+hoplite-toml = { group = "com.sksamuel.hoplite", name = "hoplite-toml", version.ref = "hoplite" }
+hoplite-yaml = { group = "com.sksamuel.hoplite", name = "hoplite-yaml", version.ref = "hoplite" }
 inquirer = { group = "com.github.kotlin-inquirer", name = "kotlin-inquirer", version.ref = "inquirer" }
 j4rs = { group = "io.github.astonbitecode", name = "j4rs", version.ref = "j4rs" }
 jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
@@ -679,17 +693,17 @@ opentelemetry-exporter-logging = { group = "io.opentelemetry", name = "opentelem
 oshi-core = { group = "com.github.oshi", name = "oshi-core-java11", version.ref = "oshi" }
 owasp = { group = "org.owasp", name = "dependency-check-gradle", version.ref = "owasp" }
 parallelGzip = { group = "org.anarres", name = "parallelgzip", version.ref = "parallelGzip" }
+picnic = { group = "com.jakewharton.picnic", name = "picnic", version.ref = "picnic" }
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli-codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
 picocli-jansi-graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli-jansi-graalvm" }
 picocli-jline3 = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
-picnic = { group = "com.jakewharton.picnic", name = "picnic", version.ref = "picnic" }
+pkl-cli = { group = "org.pkl-lang", name = "pkl-cli", version.ref = "pkl" }
+pkl-codegen-java = { group = "org.pkl-lang", name = "pkl-codegen-java", version.ref = "pkl" }
+pkl-commons-cli = { group = "org.pkl-lang", name = "pkl-commons-cli", version.ref = "pkl" }
+pkl-config-java = { group = "org.pkl-lang", name = "pkl-config-java", version.ref = "pkl" }
 pkl-core = { group = "org.pkl-lang", name = "pkl-core", version.ref = "pkl" }
 pkl-executor = { group = "org.pkl-lang", name = "pkl-executor", version.ref = "pkl" }
-pkl-commons-cli = { group = "org.pkl-lang", name = "pkl-commons-cli", version.ref = "pkl" }
-pkl-cli = { group = "org.pkl-lang", name = "pkl-cli", version.ref = "pkl" }
-pkl-config-java = { group = "org.pkl-lang", name = "pkl-config-java", version.ref = "pkl" }
-pkl-codegen-java = { group = "org.pkl-lang", name = "pkl-codegen-java", version.ref = "pkl" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }
 projectreactor-bom = { group = "io.projectreactor", name = "reactor-bom", version.ref = "projectreactor" }
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
@@ -764,9 +778,9 @@ plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-p
 plugin-docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut-plugin" }
 plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 plugin-dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref = "dokka" }
+plugin-dokka-kotlinAsJava = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version.ref = "dokka" }
 plugin-dokka-mermaid = { group = "com.glureau", name = "html-mermaid-dokka-plugin", version.ref = "mermaidDokka" }
 plugin-dokka-templating = { group = "org.jetbrains.dokka", name = "templating-plugin", version.ref = "dokka" }
-plugin-dokka-kotlinAsJava = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version.ref = "dokka" }
 plugin-dokka-versioning = { group = "org.jetbrains.dokka", name = "versioning-plugin", version.ref = "dokka" }
 plugin-flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers-plugin" }
 plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-plugin" }

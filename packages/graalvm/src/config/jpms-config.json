@@ -1,7 +1,7 @@
 {
   "addExports": [
     {
-      "module":  "org.graalvm.nativeimage.builder",
+      "module": "org.graalvm.nativeimage.builder",
       "packages": [
         "com.oracle.svm.core.jdk",
         "com.oracle.svm.hosted",
@@ -10,26 +10,17 @@
         "com.oracle.svm.core.jni",
         "com.oracle.svm.core.jdk"
       ],
-      "to": [
-        "ALL-UNNAMED"
-      ]},
+      "to": ["ALL-UNNAMED"]
+    },
     {
       "module": "org.graalvm.nativeimage.base",
-      "packages": [
-        "com.oracle.svm.util"
-      ],
-      "to": [
-        "ALL-UNNAMED"
-      ]
+      "packages": ["com.oracle.svm.util"],
+      "to": ["ALL-UNNAMED"]
     },
     {
       "module": "java.base",
-      "packages": [
-        "jdk.internal.module"
-      ],
-      "to": [
-        "ALL-UNNAMED"
-      ]
+      "packages": ["jdk.internal.module"],
+      "to": ["ALL-UNNAMED"]
     }
   ]
 }

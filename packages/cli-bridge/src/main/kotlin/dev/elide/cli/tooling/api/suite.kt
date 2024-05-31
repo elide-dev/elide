@@ -39,7 +39,7 @@ public object Diagnostics {
     }
   }
 
-  @JvmStatic public fun empty(): DiagnosticSuite = DiagnosticSuite(Severity.Info, emptyList())
+  @JvmStatic public fun empty(): DiagnosticSuite = DiagnosticSuite(Severity.INFO, emptyList())
 
   @JvmStatic public fun fromJson(json: String): DiagnosticSuite = diagnosticJson.decodeFromString(
     DiagnosticSuite.serializer(),

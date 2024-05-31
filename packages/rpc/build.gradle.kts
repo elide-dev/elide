@@ -18,9 +18,9 @@ import elide.internal.conventions.kotlin.*
 
 plugins {
   java
+  kotlin("kapt")
   kotlin("multiplatform")
   alias(libs.plugins.protobuf)
-
   id("elide.internal.conventions")
 }
 
@@ -34,7 +34,7 @@ elide {
   kotlin {
     target = KotlinTarget.All
     explicitApi = true
-    ksp = true
+    kapt = true
   }
 
   java {
@@ -84,6 +84,8 @@ protobuf {
 }
 
 dependencies {
+  add("kapt", mn.micronaut.inject.java)
+
   common {
     api(projects.packages.base)
     api(projects.packages.core)

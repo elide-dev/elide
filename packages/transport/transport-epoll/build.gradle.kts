@@ -61,6 +61,7 @@ tasks.withType(CppCompile::class.java).configureEach {
   compilerArgs.addAll(listOf(
     "-x", "c",
     "-O3",
+    "-fPIC",
     "-Werror",
     "-fno-omit-frame-pointer",
     "-Wunused-variable",

@@ -258,11 +258,10 @@ internal object NodeProcess {
       private const val STDOUT_FD = 1
       private const val STDERR_FD = 2
       private const val STDIN_FD = 0
+      private const val ELIDE = "elide"
       private val BOOT_PROGRAM_NAME = if (ImageInfo.inImageCode()) {
-        ProcessProperties.getArgumentVectorProgramName() ?: "elide"
-      } else {
-        "elide"  // probably running on JVM
-      }
+        if (ImageInfo.inImageBuildtimeCode()) ELIDE else ProcessProperties.getArgumentVectorProgramName() ?: ELIDE
+      } else ELIDE  // probably running on JVM
     }
 
     // Process title/program name override.
@@ -282,7 +281,9 @@ internal object NodeProcess {
         }
         try {
           programNameOverride.set(value)
-          ProcessProperties.setArgumentVectorProgramName(value)
+          if (ImageInfo.inImageRuntimeCode()) {
+            ProcessProperties.setArgumentVectorProgramName(value)
+          }
         } catch (uoe: UnsupportedOperationException) {
           // no-op (swallow)
         }

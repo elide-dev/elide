@@ -93,7 +93,7 @@ public object Constants {
     const val KOTLIN_SDK_PIN = "2.0.0"
 
     /** Constant: pinned version of AtomicFU. */
-    const val ATOMICFU = "0.23.2"
+    const val ATOMICFU = "0.24.0"
 
     /** Constant: pinned version of BouncyCastle. */
     const val BOUNCYCASTLE = "1.78.1"

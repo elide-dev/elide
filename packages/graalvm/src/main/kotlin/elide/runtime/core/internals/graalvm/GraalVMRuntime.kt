@@ -96,13 +96,13 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
     internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version? {
       // in a native image, we'll need to translate the SVM release to a known SDK release
       if (ImageInfo.inImageCode()) source.split("+").lastOrNull()?.let { svm ->
-        return Version.parse(SubstrateVersionMap[svm] ?: return null)
+        return Version.parse(SubstrateVersionMap[svm] ?: return GVM_24_1_0)
       }
 
       // running on GraalVM JVM (e.g. 20.0.2+9-jvmci-23.0-b14)
       val tag = source.lowercase().trim()
       if (source.contains("jvmci")) {
-        // check for LTS version tag, for example:
+        // check for LTS version tag, for example,
         // `21.0.2+13-LTS-jvmci-23.1-b30`
         val index = if (tag.contains("lts")) positionalLts else positionalNonLts
         return source.split("-").getOrNull(index)?.let { jvm ->

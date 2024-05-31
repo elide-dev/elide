@@ -14,6 +14,9 @@
 package elide.internal.conventions.kotlin
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
+import org.gradle.api.internal.catalog.ExternalModuleDependencyFactory.DependencyNotationSupplier
+import org.gradle.kotlin.dsl.accessors.runtime.addDependencyTo
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
@@ -29,6 +32,18 @@ public fun Project.dependencies(block: DependenciesScope.() -> Unit) {
     extensions.getByType(KotlinMultiplatformExtension::class.java),
     this,
   ).apply(block)
+}
+
+public fun DependenciesScope.add(configuration: String, spec: String) {
+  project.dependencies.apply {
+    this.add(configuration, spec)
+  }
+}
+
+public fun DependenciesScope.add(configuration: String, spec: DependencyNotationSupplier) {
+  project.dependencies.apply {
+    this.add(configuration, spec)
+  }
 }
 
 /** Configure dependencies for the `commonMain` source set. */

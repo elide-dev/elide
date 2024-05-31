@@ -253,9 +253,10 @@ val sharedLibArgs = listOfNotNull(
 val testLibArgs = sharedLibArgs.plus(
   "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
 ).plus(listOf(
-  "--initialize-at-build-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}1",
-  "--initialize-at-build-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}2",
-  "--initialize-at-build-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}3",
+  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services",
+  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}1",
+  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}2",
+  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}3",
 ))
 
 graalvmNative {

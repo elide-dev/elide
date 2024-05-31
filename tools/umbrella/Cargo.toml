@@ -19,6 +19,7 @@ js = ["oxc"]
 
 [lints.rust]
 unsafe_code = "warn"
+dead_code = "allow"
 
 [dependencies]
 lazy_static = "1.4.0"
@@ -28,8 +29,8 @@ protobuf = "3.4.0"
 pubgrub = "0.2.1"
 oxc = { path = "../../third_party/oxc-project/oxc/crates/oxc", optional = true }
 ruff = { path = "../../third_party/astral/ruff/crates/ruff", optional = true }
-ruff_linter = { path = "../../third_party/astral/ruff/crates/ruff_linter", optional = true }
-ruff_formatter = { path = "../../third_party/astral/ruff/crates/ruff_formatter", optional = true }
-ruff_diagnostics = { path = "../../third_party/astral/ruff/crates/ruff_diagnostics", optional = true }
+#ruff_linter = { path = "../../third_party/astral/ruff/crates/ruff_linter", optional = true }
+#ruff_formatter = { path = "../../third_party/astral/ruff/crates/ruff_formatter", optional = true }
+#ruff_diagnostics = { path = "../../third_party/astral/ruff/crates/ruff_diagnostics", optional = true }
 uv = { path = "../../third_party/astral/uv/crates/uv", optional = true }
 serde = { version = "1.0.203", features = ["derive"] }

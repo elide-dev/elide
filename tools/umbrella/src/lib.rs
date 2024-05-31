@@ -1,4 +1,5 @@
-#![allow(non_snake_case)]
+#![allow(non_snake_case, dead_code)]
+
 use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use lazy_static::lazy_static;

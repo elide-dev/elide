@@ -10,7 +10,7 @@ name = "umbrella"
 crate-type = ["lib", "staticlib", "cdylib"]
 
 [features]
-default = ["jni/default", "jni/invocation", "ruff", "ruff_linter"]
+default = ["jni/default", "jni/invocation", "ruff"]
 jvm = []
 python = ["ruff", "uv"]
 ruby = []

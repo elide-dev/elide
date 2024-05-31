@@ -50,5 +50,5 @@ elide {
 }
 
 dependencies {
-  // nothing at this time
+  api(libs.kotlinx.serialization.core)
 }

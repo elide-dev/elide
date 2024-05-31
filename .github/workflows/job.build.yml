@@ -140,6 +140,10 @@ name: Framework
 
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+  # SCCACHE_WEBDAV_ENDPOINT: "https://sccache.less.build"
+  # SCCACHE_WEBDAV_USERNAME: "apikey"
+  # SCCACHE_WEBDAV_PASSWORD: ${{ secrets.BUILDLESS_APIKEY }}
+  # SCCACHE_REDIS: "rediss://apikey:${{ secrets.BUILDLESS_APIKEY }}@redis.less.build:6380"
 
 permissions:
   contents: read
@@ -270,11 +274,15 @@ jobs:
           toolchain: stable
           target: wasm32-wasi
           components: clippy,rustfmt
+          rustflags: "--frozen --message-format=short"
+      - name: "Setup: Zig"
+        uses: goto-bus-stop/setup-zig@7ab2955eb728f5440978d5824358023be3a2802d # v2.2.0
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@2e7f9ec7921547d4b46598398ca573513895d0bd # v0.0.4
       - name: "Setup: Rust Caching"
         if: github.event_name != 'release' && github.event_name != 'workflow_dispatch'
         run: |
+          cargo install cargo-zigbuild
           echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
           echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 22)"

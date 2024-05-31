@@ -569,6 +569,17 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.js.crypto.WebCryptoIntrinsic",
+  "allDeclaredFields":true,
+  "allDeclaredClasses":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicMethods":true,
+  "methods":[
+    {"name": "randomUUID", "parameterType": []},
+    {"name": "getRandomValues", "parameterType": ["java.lang.Object"]}
+  ]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.js.crypto.WebCryptoIntrinsicTest",
   "allDeclaredFields":true,
   "allDeclaredClasses":true,
@@ -945,7 +956,8 @@
   "name":"elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest$CaptureAssertion",
   "allDeclaredClasses":true,
   "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
+  "queryAllPublicMethods":true,
+  "methods":[{"name":"apply","parameterTypes": ["java.lang.Object"] }]
 },
 {
   "name":"elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest$Companion",

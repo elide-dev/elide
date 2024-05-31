@@ -129,7 +129,17 @@ val jvmDefs = mapOf(
 )
 
 val initializeAtRunTime = listOfNotNull(
+  "io.micronaut.core.util.KotlinUtils",
+  "io.micronaut.core.io.socket.SocketUtils",
+  "io.micronaut.core.type.RuntimeTypeInformation${'$'}LazyTypeInfo",
+  "io.micronaut.context.env.CachedEnvironment",
+  "io.micronaut.context.env.exp.RandomPropertyExpressionResolver",
+  "io.micronaut.context.env.exp.RandomPropertyExpressionResolver${'$'}LazyInit",
   "com.sun.jna.platform.mac.CoreFoundation",
+  "com.sun.jna.Structure${'$'}FFIType",
+  "com.sun.jna.platform.mac.IOKit",
+  "com.sun.jna.platform.mac.IOKitUtil",
+  "com.sun.jna.platform.mac.SystemB",
   "oshi.hardware.platform.linux",
   "oshi.hardware.platform.mac",
   "oshi.hardware.platform.mac.MacFirmware",
@@ -227,7 +237,9 @@ graalvmNative {
       fallback = false
       sharedLibrary = false
       quickBuild = true
-      buildArgs(sharedLibArgs)
+      buildArgs(sharedLibArgs.plus(listOf(
+        "--features=org.graalvm.junit.platform.JUnitPlatformFeature",
+      )))
     }
   }
 }

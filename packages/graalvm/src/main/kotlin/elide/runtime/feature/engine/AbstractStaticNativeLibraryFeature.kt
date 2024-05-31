@@ -13,10 +13,7 @@
 package elide.runtime.feature.engine
 
 import com.oracle.svm.core.jdk.NativeLibrarySupport
-import com.oracle.svm.core.jdk.NativeLibrarySupport.LibraryInitializer
 import com.oracle.svm.core.jdk.PlatformNativeLibrarySupport
-import com.oracle.svm.core.jdk.PlatformNativeLibrarySupport.NativeLibrary
-import com.oracle.svm.core.jni.JNILibraryInitializer
 import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl
 import com.oracle.svm.hosted.jni.JNIFeature
 import org.graalvm.nativeimage.hosted.Feature
@@ -161,23 +158,6 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
 
       if (it.builtin) {
         libSupport.preregisterUninitializedBuiltinLibrary(it.linkName)
-
-//        val libraryInit = NativeLibrarySupport::class.java.getDeclaredField("libraryInitializer")
-//        libraryInit.isAccessible = true
-//        val knownLibrariesField = NativeLibrarySupport::class.java.getDeclaredField("knownLibraries")
-//        val libraryInitializer = libraryInit.get(libSupport) as JNILibraryInitializer
-//        knownLibrariesField.isAccessible = true
-//
-//        libraryInitializer.initialize(
-//          PlatformNativeLibrarySupport.singleton().createLibrary(it.linkName, true),
-//        )
-//        val knownLibraries = knownLibrariesField.get(libSupport) as MutableList<NativeLibrary>
-//        libSupport.preregisterUninitializedBuiltinLibrary(it.linkName)
-//        val target = knownLibraries.find { candidate -> candidate.canonicalIdentifier == it.linkName }
-//
-//        val loadedField = NativeLibrary::class.java.getDeclaredField("isLoaded")
-//        loadedField.isAccessible = true
-//        loadedField.setBoolean(target, true)
       }
       if (it.registerPrefix) {
         it.prefix.forEach { prefix ->

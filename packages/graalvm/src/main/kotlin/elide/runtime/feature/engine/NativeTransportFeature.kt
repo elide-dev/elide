@@ -86,8 +86,10 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
           nativeLibrary(linux = transportLibNamed("epoll", "aarch64", *epollImpls))
         else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
       },
-//    if (!Platform.includedIn(Platform.LINUX::class.java)) null else
-//      nativeLibrary(linux = libraryNamed("netty_quiche_linux")),
+
+      // quiche
+      if (!Platform.includedIn(Platform.LINUX::class.java)) null else
+        nativeLibrary(linux = libraryNamed("netty_quiche_linux")),
 
       // Native Transport: Darwin
       if (!Platform.includedIn(Platform.DARWIN::class.java)) null else when {
@@ -97,10 +99,14 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
           nativeLibrary(darwin = transportLibNamed("kqueue", "aarch64", *kqueueImpls))
         else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
       },
-//    if (!Platform.includedIn(Platform.LINUX::class.java)) null else
-//      nativeLibrary(darwin = libraryNamed("netty_resolver_dns_native_macos")),
-//    if (!Platform.includedIn(Platform.LINUX::class.java)) null else
-//      nativeLibrary(darwin = libraryNamed("netty_quiche_osx")),
+
+      // native dns
+      if (!Platform.includedIn(Platform.LINUX::class.java)) null else
+        nativeLibrary(darwin = libraryNamed("netty_resolver_dns_native_macos")),
+
+      // quiche
+      if (!Platform.includedIn(Platform.LINUX::class.java)) null else
+        nativeLibrary(darwin = libraryNamed("netty_quiche_osx")),
     )
   } else emptyList()
 

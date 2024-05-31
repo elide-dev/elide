@@ -46,6 +46,7 @@ version = rootProject.version as String
 
 val enableJpms = false
 val oracleGvm = false
+val enableTransportV2 = true
 val ktCompilerArgs = emptyList<String>()
 val javacArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
@@ -123,9 +124,56 @@ sourceSets {
   }
 }
 
+val jvmDefs = mapOf(
+  "elide.nativeTransport.v2" to enableTransportV2.toString(),
+)
+
+val initializeAtRunTime = listOfNotNull(
+  "com.sun.jna.platform.mac.CoreFoundation",
+  "oshi.hardware.platform.linux",
+  "oshi.hardware.platform.mac",
+  "oshi.hardware.platform.mac.MacFirmware",
+  "oshi.hardware.platform.unix",
+  "oshi.hardware.platform.unix.aix",
+  "oshi.hardware.platform.unix.freebsd",
+  "oshi.hardware.platform.unix.openbsd",
+  "oshi.hardware.platform.unix.solaris",
+  "oshi.hardware.platform.windows",
+  "oshi.jna.platform.mac.IOKit",
+  "oshi.jna.platform.mac.SystemB",
+  "oshi.jna.platform.mac.SystemConfiguration",
+  "oshi.software.os",
+  "oshi.software.os.linux",
+  "oshi.software.os.linux.LinuxOperatingSystem",
+  "oshi.software.os.mac",
+  "oshi.software.os.mac.MacOperatingSystem",
+  "oshi.software.os.unix.aix",
+  "oshi.software.os.unix.aix.AixOperatingSystem",
+  "oshi.software.os.unix.freebsd",
+  "oshi.software.os.unix.freebsd.FreeBsdOperatingSystem",
+  "oshi.software.os.unix.openbsd",
+  "oshi.software.os.unix.openbsd.OpenBsdOperatingSystem",
+  "oshi.software.os.unix.solaris",
+  "oshi.software.os.unix.solaris.SolarisOperatingSystem",
+  "oshi.software.os.windows",
+  "oshi.software.os.windows.WindowsOperatingSystem",
+  "oshi.util.platform.linux.DevPath",
+  "oshi.util.platform.linux.ProcPath",
+  "oshi.util.platform.linux.SysPath",
+  "oshi.util.platform.mac.CFUtil",
+  "oshi.util.platform.mac.SmcUtil",
+  "oshi.util.platform.mac.SysctlUtil",
+  "oshi.util.platform.unix.freebsd.BsdSysctlUtil",
+  "oshi.util.platform.unix.freebsd.ProcstatUtil",
+  "oshi.util.platform.unix.openbsd.FstatUtil",
+  "oshi.util.platform.unix.openbsd.OpenBsdSysctlUtil",
+  "oshi.util.platform.unix.solaris.KstatUtil",
+)
+
 val sharedLibArgs = listOfNotNull(
   "--verbose",
   "--initialize-at-build-time=",
+  "--initialize-at-run-time=${initializeAtRunTime.joinToString(",")}",
   "-H:+ReportExceptionStackTraces",
   if (oracleGvm) "-H:+AuxiliaryEngineCache" else null,
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
@@ -136,6 +184,13 @@ val sharedLibArgs = listOfNotNull(
   "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+).plus(
+  jvmDefs.flatMap { (k, v) ->
+    listOf(
+      "-D$k=$v",
+      "-J-D$k=$v",
+    )
+  }
 )
 
 graalvmNative {
@@ -324,11 +379,16 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(projects.packages.graalvmPy)
 
-  // Testing: Native Transports
-  testImplementation(projects.packages.transport.transportEpoll)
-  testImplementation(projects.packages.transport.transportKqueue)
-  testImplementation(libs.netty.transport.native.classes.kqueue)
-  testImplementation(libs.netty.transport.native.classes.epoll)
+  if (enableTransportV2) {
+    // Testing: Native Transports
+    testImplementation(projects.packages.transport.transportEpoll)
+    testImplementation(projects.packages.transport.transportKqueue)
+    testImplementation(libs.netty.transport.native.classes.kqueue)
+    testImplementation(libs.netty.transport.native.classes.epoll)
+  } else {
+    testImplementation(libs.netty.transport.native.kqueue)
+    testImplementation(libs.netty.transport.native.epoll)
+  }
 }
 
 // Configurations: Testing

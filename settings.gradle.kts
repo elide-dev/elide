@@ -262,8 +262,6 @@ include(
   ":packages:transport:transport-uring",
   ":packages:wasm",
   ":tools:auximage",
-  ":tools:esbuild",
-  ":tools:tsc",
   ":tools:processor",
   ":tools:umbrella",
   ":tools:reports",

@@ -12,9 +12,7 @@
  */
 package dev.elide.cli.bridge;
 
-/**
- * Bridge to native code from the "umbrella" library.
- */
+/** Bridge to native code from the "umbrella" library. */
 public class CliNativeBridge {
   /** Token expected for the tooling API at version 1. */
   public static final String VERSION_V1 = "v1";

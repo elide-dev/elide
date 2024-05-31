@@ -1,67 +1,444 @@
 [
 {
-  "name":"[Lcom.sun.management.internal.DiagnosticCommandArgumentInfo;"
+  "name":"[J"
 },
 {
-  "name":"[Lcom.sun.management.internal.DiagnosticCommandInfo;"
+  "name":"[[J"
 },
 {
-  "name":"com.sun.jna.Callback"
+  "name":"dev.elide.cli.bridge.CliNativeBridge",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.Callback",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
 },
 {
   "name":"com.sun.jna.CallbackReference",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"getCallback","parameterTypes":["java.lang.Class","com.sun.jna.Pointer","boolean"] }, {"name":"getFunctionPointer","parameterTypes":["com.sun.jna.Callback","boolean"] }, {"name":"getNativeString","parameterTypes":["java.lang.Object","boolean"] }, {"name":"initializeThread","parameterTypes":["com.sun.jna.Callback","com.sun.jna.CallbackReference$AttachOptions"] }]
 },
 {
-  "name":"com.sun.jna.CallbackReference$AttachOptions"
+  "name":"com.sun.jna.CallbackReference$AttachOptions",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
 },
 {
   "name":"com.sun.jna.FromNativeConverter",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"nativeType","parameterTypes":[] }]
 },
 {
   "name":"com.sun.jna.IntegerType",
-  "fields":[{"name":"value"}]
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"value", "allowWrite":true}]
 },
 {
-  "name":"com.sun.jna.JNIEnv"
+  "name":"com.sun.jna.JNIEnv",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
 },
 {
   "name":"com.sun.jna.Native",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"dispose","parameterTypes":[] }, {"name":"fromNative","parameterTypes":["com.sun.jna.FromNativeConverter","java.lang.Object","java.lang.reflect.Method"] }, {"name":"fromNative","parameterTypes":["java.lang.Class","java.lang.Object"] }, {"name":"fromNative","parameterTypes":["java.lang.reflect.Method","java.lang.Object"] }, {"name":"nativeType","parameterTypes":["java.lang.Class"] }, {"name":"toNative","parameterTypes":["com.sun.jna.ToNativeConverter","java.lang.Object"] }]
 },
 {
   "name":"com.sun.jna.Native$ffi_callback",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"invoke","parameterTypes":["long","long","long"] }]
 },
 {
+  "name":"com.sun.jna.NativeLong",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
   "name":"com.sun.jna.NativeMapped",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"toNative","parameterTypes":[] }]
 },
 {
   "name":"com.sun.jna.Pointer",
-  "fields":[{"name":"peer"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"peer", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["long"] }]
 },
 {
   "name":"com.sun.jna.PointerType",
-  "fields":[{"name":"pointer"}]
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"pointer", "allowWrite":true}]
 },
 {
   "name":"com.sun.jna.Structure",
-  "fields":[{"name":"memory"}, {"name":"typeInfo"}],
-  "methods":[{"name":"autoRead","parameterTypes":[] }, {"name":"autoWrite","parameterTypes":[] }, {"name":"getTypeInfo","parameterTypes":[] }, {"name":"newInstance","parameterTypes":["java.lang.Class","long"] }]
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"memory", "allowWrite":true}, {"name":"typeInfo", "allowWrite":true}],
+  "methods":[
+    {"name":"getTypeInfo","parameterTypes":[] },
+    {"name":"getTypeInfo","parameterTypes":["java.lang.Object"] },
+    {"name":"newInstance","parameterTypes":["java.lang.Class"] },
+    {"name":"newInstance","parameterTypes":["java.lang.Class","long"] },
+    {"name":"newInstance","parameterTypes":["java.lang.Class","com.sun.jna.Pointer"] },
+    {"name":"autoRead","parameterTypes":[] },
+    {"name":"autoWrite","parameterTypes":[] }
+  ]
 },
 {
-  "name":"com.sun.jna.Structure$ByValue"
+  "name":"com.sun.jna.Structure$ByValue",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.Structure$FFIType",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
 },
 {
   "name":"com.sun.jna.Structure$FFIType$FFITypes",
-  "fields":[{"name":"ffi_type_double"}, {"name":"ffi_type_float"}, {"name":"ffi_type_longdouble"}, {"name":"ffi_type_pointer"}, {"name":"ffi_type_sint16"}, {"name":"ffi_type_sint32"}, {"name":"ffi_type_sint64"}, {"name":"ffi_type_sint8"}, {"name":"ffi_type_uint16"}, {"name":"ffi_type_uint32"}, {"name":"ffi_type_uint64"}, {"name":"ffi_type_uint8"}, {"name":"ffi_type_void"}]
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"ffi_type_double", "allowWrite":true}, {"name":"ffi_type_float", "allowWrite":true}, {"name":"ffi_type_longdouble", "allowWrite":true}, {"name":"ffi_type_pointer", "allowWrite":true}, {"name":"ffi_type_sint16", "allowWrite":true}, {"name":"ffi_type_sint32", "allowWrite":true}, {"name":"ffi_type_sint64", "allowWrite":true}, {"name":"ffi_type_sint8", "allowWrite":true}, {"name":"ffi_type_uint16", "allowWrite":true}, {"name":"ffi_type_uint32", "allowWrite":true}, {"name":"ffi_type_uint64", "allowWrite":true}, {"name":"ffi_type_uint8", "allowWrite":true}, {"name":"ffi_type_void", "allowWrite":true}]
 },
 {
   "name":"com.sun.jna.WString",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"com.sun.jna.ptr.PointerByReference",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+  {
+    "name":"com.sun.management.internal.DiagnosticCommandArgumentInfo",
+    "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean","boolean","int"] }]
+  },
+  {
+    "name":"com.sun.management.internal.DiagnosticCommandInfo",
+    "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","java.util.List"] }]
+  },
+  {
+    "name":"elide.tool.cli.ElideTool",
+    "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
+  },
+  {
+    "name":"io.netty.channel.ChannelException"
+  },
+  {
+    "name":"io.netty.channel.DefaultFileRegion",
+    "fields":[{"name":"file"}, {"name":"transferred"}]
+  },
+  {
+    "name":"io.netty.channel.kqueue.BsdSocket"
+  },
+  {
+    "name":"io.netty.channel.kqueue.KQueueEventArray"
+  },
+  {
+    "name":"io.netty.channel.kqueue.KQueueStaticallyReferencedJniMethods"
+  },
+  {
+    "name":"io.netty.channel.kqueue.Native"
+  },
+  {
+    "name":"io.netty.channel.unix.Buffer"
+  },
+  {
+    "name":"io.netty.channel.unix.DatagramSocketAddress",
+    "methods":[{"name":"<init>","parameterTypes":["byte[]","int","int","int","io.netty.channel.unix.DatagramSocketAddress"] }]
+  },
+  {
+    "name":"io.netty.channel.unix.DomainDatagramSocketAddress",
+    "methods":[{"name":"<init>","parameterTypes":["byte[]","int","io.netty.channel.unix.DomainDatagramSocketAddress"] }]
+  },
+  {
+    "name":"io.netty.channel.unix.ErrorsStaticallyReferencedJniMethods"
+  },
+  {
+    "name":"io.netty.channel.unix.FileDescriptor"
+  },
+  {
+    "name":"io.netty.channel.unix.LimitsStaticallyReferencedJniMethods"
+  },
+  {
+    "name":"io.netty.channel.unix.PeerCredentials",
+    "methods":[{"name":"<init>","parameterTypes":["int","int","int[]"] }]
+  },
+  {
+    "name":"io.netty.channel.unix.Socket"
+  },
+  {
+    "name":"io.netty.incubator.channel.uring.LinuxSocket"
+  },
+  {
+    "name":"io.netty.incubator.channel.uring.Native"
+  },
+  {
+    "name":"io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods"
+  },
+  {
+    "name":"java.io.FileDescriptor",
+    "fields":[{"name":"fd"}]
+  },
+  {
+    "name":"java.io.IOException"
+  },
+  {
+    "name":"java.lang.Boolean",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
+    "methods":[{"name":"getBoolean","parameterTypes":["java.lang.String"] }]
+  },
+  {
+    "name":"java.lang.Byte",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}]
+  },
+  {
+    "name":"java.lang.Character",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}]
+  },
+  {
+    "name":"java.lang.Class",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "methods":[{"name":"getClassLoader","parameterTypes":[] }]
+  },
+  {
+    "name":"java.lang.ClassLoader",
+    "methods":[{"name":"loadClass","parameterTypes":["java.lang.String"] }]
+  },
+  {
+    "name":"java.lang.Double",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}]
+  },
+  {
+    "name":"java.lang.Float",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}]
+  },
+  {
+    "name":"java.lang.Integer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}]
+  },
+  {
+    "name":"java.lang.Long",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}]
+  },
+  {
+    "name":"java.lang.OutOfMemoryError"
+  },
+  {
+    "name":"java.lang.RuntimeException"
+  },
+  {
+    "name":"java.lang.Short",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}]
+  },
+  {
+    "name":"java.lang.String",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "methods":[{"name":"lastIndexOf","parameterTypes":["int"] }, {"name":"substring","parameterTypes":["int"] }]
+  },
+  {
+    "name":"java.lang.System",
+    "methods":[{"name":"getProperty","parameterTypes":["java.lang.String"] }, {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }]
+  },
+  {
+    "name":"java.lang.Void",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"TYPE"}]
+  },
+  {
+    "name":"java.lang.reflect.Method",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.net.InetSocketAddress",
+    "methods":[{"name":"<init>","parameterTypes":["java.lang.String","int"] }]
+  },
+  {
+    "name":"java.net.PortUnreachableException"
+  },
+  {
+    "name":"java.nio.Buffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true,
+    "fields":[{"name":"limit"}, {"name":"position"}],
+    "methods":[{"name":"limit","parameterTypes":[] }, {"name":"position","parameterTypes":[] }]
+  },
+  {
+    "name":"java.nio.ByteBuffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.nio.CharBuffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.nio.DirectByteBuffer"
+  },
+  {
+    "name":"java.nio.DoubleBuffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.nio.FloatBuffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.nio.IntBuffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.nio.LongBuffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.nio.ShortBuffer",
+    "allDeclaredMethods":true,
+    "allPublicMethods":true,
+    "allDeclaredConstructors":true,
+    "allPublicConstructors":true
+  },
+  {
+    "name":"java.nio.channels.ClosedChannelException",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"java.util.Arrays",
+    "methods":[{"name":"asList","parameterTypes":["java.lang.Object[]"] }]
+  },
+  {
+    "name":"jdk.internal.loader.ClassLoaders$AppClassLoader"
+  },
+  {
+    "name":"org.fusesource.jansi.internal.CLibrary",
+    "fields":[{"name":"HAVE_ISATTY"}, {"name":"HAVE_TTYNAME"}, {"name":"TCSADRAIN"}, {"name":"TCSAFLUSH"}, {"name":"TCSANOW"}, {"name":"TIOCGETA"}, {"name":"TIOCGETD"}, {"name":"TIOCGWINSZ"}, {"name":"TIOCSETA"}, {"name":"TIOCSETD"}, {"name":"TIOCSWINSZ"}]
+  },
+  {
+    "name":"sun.management.VMManagementImpl",
+    "fields":[{"name":"compTimeMonitoringSupport"}, {"name":"currentThreadCpuTimeSupport"}, {"name":"objectMonitorUsageSupport"}, {"name":"otherThreadCpuTimeSupport"}, {"name":"remoteDiagnosticCommandsSupport"}, {"name":"synchronizerUsageSupport"}, {"name":"threadAllocatedMemorySupport"}, {"name":"threadContentionMonitoringSupport"}]
+  },
+  {
+    "name":"sun.nio.ch.FileChannelImpl",
+    "fields":[{"name":"fd"}]
+  },
+{
+  "name":"[Lcom.sun.management.internal.DiagnosticCommandArgumentInfo;"
+},
+{
+  "name":"[Lcom.sun.management.internal.DiagnosticCommandInfo;"
 },
 {
   "name":"com.sun.management.internal.DiagnosticCommandArgumentInfo",

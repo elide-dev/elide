@@ -34,7 +34,9 @@ import elide.runtime.intrinsics.js.node.OperatingSystemAPI
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `os` built-in module. */
-@TestCase internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>() {
+@TestCase
+@Disabled("Not supported for native testing yet: needs static JNA support")
+internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>() {
   override val moduleName: String get() = "os"
   override fun provide(): NodeOperatingSystemModule = NodeOperatingSystemModule()
   private fun acquire(): OperatingSystemAPI = NodeOperatingSystem.Posix

@@ -85,7 +85,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var samWithReceiver: Boolean = false
 
     /** Whether to include the power-assert plugin. */
-    public var powerAssert: Boolean = false
+    public var powerAssert: Boolean = true
 
     /** Whether to configure the Kotlin NoArgs plugin with predefined settings. */
     public var noArgs: Boolean = false

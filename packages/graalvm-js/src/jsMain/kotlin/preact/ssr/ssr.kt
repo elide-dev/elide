@@ -10,17 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:JsModule("preact-render-to-string")
 
 package preact.ssr
 
 import react.ReactNode
 
-/**
- *
- */
 @JsName("default")
-public external fun render(
-  initialChildren: ReactNode,
-): String
+public external fun render(initialChildren: ReactNode): String

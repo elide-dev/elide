@@ -26,15 +26,16 @@ import elide.runtime.plugins.ruby.ruby
 
 /** Abstract base for all non-intrinsic Ruby guest execution tests. */
 @OptIn(DelicateElideApi::class)
-abstract class RubyTest : AbstractDualTest() {
+abstract class RubyTest : AbstractDualTest<AbstractDualTest.Ruby>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.install(Ruby)
   }
 
-  private inline fun executeGuestInternal(
+  @Suppress("SameParameterValue")
+  private fun executeGuestInternal(
     ctx: PolyglotContext,
     bindUtils: Boolean,
-    op: PolyglotContext.() -> String,
+    op: Ruby,
   ): Value {
     // resolve the script
     val script = op.invoke(ctx)
@@ -65,7 +66,7 @@ abstract class RubyTest : AbstractDualTest() {
     return returnValue
   }
 
-  override fun executeGuest(bind: Boolean, op: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+  override fun executeGuest(bind: Boolean, op: Ruby) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       ctx = this,
       op = op,
@@ -74,10 +75,10 @@ abstract class RubyTest : AbstractDualTest() {
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
+  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Ruby> {
     op.invoke()
-    return object : DualTestExecutionProxy() {
-      override fun guest(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+    return object : DualTestExecutionProxy<Ruby>() {
+      override fun guest(guestOperation: Ruby) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bindUtils = true,
@@ -85,7 +86,7 @@ abstract class RubyTest : AbstractDualTest() {
         )
       }.doesNotFail()
 
-      override fun thenRun(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+      override fun thenRun(guestOperation: Ruby) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bindUtils = true,

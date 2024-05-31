@@ -10,9 +10,9 @@ name = "umbrella"
 crate-type = ["lib", "staticlib", "cdylib"]
 
 [features]
-default = ["jni/default", "jni/invocation", "ruff"]
-jvm = []
-python = ["ruff", "uv"]
+default = ["jvm"]
+jvm = ["jni/default", "jni/invocation"]
+python = ["uv"]
 ruby = []
 wasm = []
 js = ["oxc"]
@@ -27,8 +27,9 @@ deno_npm = "0.17.0"
 jni = "0.21.1"
 protobuf = "3.4.0"
 pubgrub = "0.2.1"
+typeshare = "1.0.3"
 oxc = { path = "../../third_party/oxc-project/oxc/crates/oxc", optional = true }
-ruff = { path = "../../third_party/astral/ruff/crates/ruff", optional = true }
+#ruff = { path = "../../third_party/astral/ruff/crates/ruff", optional = true }
 #ruff_linter = { path = "../../third_party/astral/ruff/crates/ruff_linter", optional = true }
 #ruff_formatter = { path = "../../third_party/astral/ruff/crates/ruff_formatter", optional = true }
 #ruff_diagnostics = { path = "../../third_party/astral/ruff/crates/ruff_diagnostics", optional = true }

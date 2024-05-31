@@ -35,6 +35,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
+import elide.runtime.gvm.internals.AbstractDualTest
 import elide.runtime.intrinsics.GuestIntrinsic
 
 /**
@@ -49,7 +50,7 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
   }
 
   /** Proxy which wires together a dual-test execution (in the guest and on the host) with a conformance test. */
-  abstract inner class ConformanceTestExecutionProxy : DualTestExecutionProxy()
+  abstract inner class ConformanceTestExecutionProxy : DualTestExecutionProxy<JavaScript>()
 
   /**
    * Whether this is a built-in Node module implementation.
@@ -207,13 +208,13 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
     val dual = dual(bind, op)
 
     return object : ConformanceTestExecutionProxy() {
-      override fun guest(guestOperation: PolyglotContext.() -> String) {
+      override fun guest(guestOperation: JavaScript) {
         val code = guestOperation.invoke(polyglotEngine)
         dual.guest(guestOperation)
         runConformance(code)
       }
 
-      override fun thenRun(guestOperation: PolyglotContext.() -> String): GuestTestExecution {
+      override fun thenRun(guestOperation: JavaScript): AbstractDualTest<JavaScript>.GuestTestExecution {
         return dual.thenRun(guestOperation)
       }
     }

@@ -472,7 +472,9 @@
     {"name":"fails","parameterTypes":[]},
     {"name":"fails","parameterTypes":["java.lang.String"]},
     {"name":"shouldBeTrue","parameterTypes":[]},
-    {"name":"shouldBeTrue","parameterTypes":["java.lang.String"]}
+    {"name":"shouldBeTrue","parameterTypes":["java.lang.String"]},
+    {"name":"shouldBeFalse","parameterTypes":[]},
+    {"name":"shouldBeFalse","parameterTypes":["java.lang.String"]}
   ]
 },
 {
@@ -492,7 +494,9 @@
     {"name":"fails","parameterTypes":[]},
     {"name":"fails","parameterTypes":["java.lang.String"]},
     {"name":"shouldBeTrue","parameterTypes":[]},
-    {"name":"shouldBeTrue","parameterTypes":["java.lang.String"]}
+    {"name":"shouldBeTrue","parameterTypes":["java.lang.String"]},
+    {"name":"shouldBeFalse","parameterTypes":[]},
+    {"name":"shouldBeFalse","parameterTypes":["java.lang.String"]}
   ]
 },
 {

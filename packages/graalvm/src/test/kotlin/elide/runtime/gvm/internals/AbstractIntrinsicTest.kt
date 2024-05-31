@@ -14,13 +14,14 @@
 package elide.runtime.gvm.internals
 
 import org.junit.jupiter.api.Assertions.*
+import elide.runtime.gvm.internals.AbstractDualTest.CodeGenerator
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.Symbol
 import elide.testing.annotations.Test
 
 /** Abstract base for intrinsic-bound tests. */
-abstract class AbstractIntrinsicTest<T : GuestIntrinsic> : AbstractDualTest() {
+abstract class AbstractIntrinsicTest<T : GuestIntrinsic, Code: CodeGenerator> : AbstractDualTest<Code>() {
   /** @return Intrinsic implementation under test. */
   protected abstract fun provide(): T
 

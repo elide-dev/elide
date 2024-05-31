@@ -20,25 +20,27 @@ import java.util.function.Function
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.gvm.internals.AbstractDualTest.Python
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
-import elide.runtime.plugins.python.Python
 import elide.runtime.plugins.python.python
 import elide.vm.annotations.Polyglot
+import elide.runtime.plugins.python.Python as PythonPlugin
 
 /** Specializes the [AbstractIntrinsicTest] base with support for Python guest testing. */
 @OptIn(DelicateElideApi::class)
-abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T>() {
+abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T, Python>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
-    config.install(Python)
+    config.install(PythonPlugin)
   }
 
   // Logic to execute a guest-side test.
-  private inline fun executeGuestInternal(
+  @Suppress("SameParameterValue")
+  private fun executeGuestInternal(
     ctx: PolyglotContext,
     bind: Boolean,
     bindUtils: Boolean,
-    op: PolyglotContext.() -> String,
+    op: Python,
   ): Value {
     // resolve the script
     val script = op.invoke(ctx)
@@ -53,7 +55,7 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
     }
 
     // install bindings under test, if directed
-    val target = ctx.bindings(Python)
+    val target = ctx.bindings(PythonPlugin)
     bindings.forEach {
       target.putMember(it.key.symbol, it.value)
     }
@@ -82,10 +84,10 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
+  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Python> {
     op.invoke()
-    return object : DualTestExecutionProxy() {
-      override fun guest(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+    return object : DualTestExecutionProxy<Python>() {
+      override fun guest(guestOperation: Python) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,
@@ -94,7 +96,7 @@ abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrins
         )
       }.doesNotFail()
 
-      override fun thenRun(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+      override fun thenRun(guestOperation: Python) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,

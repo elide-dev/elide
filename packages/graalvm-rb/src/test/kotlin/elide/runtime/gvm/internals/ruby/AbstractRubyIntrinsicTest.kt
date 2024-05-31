@@ -20,26 +20,28 @@ import java.util.function.Function
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.gvm.internals.AbstractDualTest.Ruby
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
-import elide.runtime.plugins.ruby.Ruby
 import elide.runtime.plugins.ruby.ruby
 import elide.vm.annotations.Polyglot
+import elide.runtime.plugins.ruby.Ruby as RubyPlugin
 
 /** Specializes the [AbstractIntrinsicTest] base with support for Ruby guest testing. */
 @OptIn(DelicateElideApi::class)
-abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T>() {
+abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T, Ruby>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
-    config.install(Ruby)
+    config.install(RubyPlugin)
   }
 
   // Logic to execute a guest-side test.
-  private inline fun executeGuestInternal(
+  @Suppress("SameParameterValue")
+  private fun executeGuestInternal(
     ctx: PolyglotContext,
     bind: Boolean,
     bindUtils: Boolean,
-    op: PolyglotContext.() -> String,
+    op: Ruby,
   ): Value {
     // resolve the script
     val script = op.invoke(ctx)
@@ -54,7 +56,7 @@ abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsic
     }
 
     // install bindings under test, if directed
-    val target = ctx.bindings(Ruby)
+    val target = ctx.bindings(RubyPlugin)
     bindings.forEach {
       target.putMember(it.key.symbol, it.value)
     }
@@ -83,10 +85,10 @@ abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsic
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
+  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Ruby> {
     op.invoke()
-    return object : DualTestExecutionProxy() {
-      override fun guest(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+    return object : DualTestExecutionProxy<Ruby>() {
+      override fun guest(guestOperation: Ruby) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,
@@ -95,7 +97,7 @@ abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsic
         )
       }.doesNotFail()
 
-      override fun thenRun(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+      override fun thenRun(guestOperation: Ruby) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,

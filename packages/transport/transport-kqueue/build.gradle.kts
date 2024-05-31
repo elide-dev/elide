@@ -84,6 +84,7 @@ tasks.withType(CppCompile::class.java).configureEach {
     "-target", "arm64-apple-macos11",
     "-O3",
     "-Werror",
+    "-fPIC",
     "-fno-omit-frame-pointer",
     "-Wunused-variable",
     "-fvisibility=hidden",

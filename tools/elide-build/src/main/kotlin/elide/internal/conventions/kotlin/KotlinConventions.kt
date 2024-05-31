@@ -18,15 +18,17 @@ import com.google.devtools.ksp.gradle.KspTask
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.the
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
-import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask
 import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.noarg.gradle.NoArgExtension
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.Constants.Elide
 import elide.internal.conventions.Constants.Kotlin
@@ -43,6 +45,21 @@ private const val DEFAULT_JVM_MINIMUM = 8
 // When operating with a JVM target range, this is the maximum JVM target version.
 private const val DEFAULT_JVM_TARGET = 21
 
+// ID for the Kotlin power assert plugin.
+private const val POWER_ASSERT_PLUGIN_ID = "org.jetbrains.kotlin.plugin.power-assert"
+
+// ID for the Kotlin JS typed-plain-objects plugin.
+private const val JS_OBJECTS_PLUGIN_ID = "org.jetbrains.kotlin.plugin.js-plain-objects"
+
+// ID for the Kotlin SAM receiver plugin.
+private const val SAM_RECEIVER_PLUGIN_ID = "org.jetbrains.kotlin.plugin.sam-with-receiver"
+
+// ID for the Kotlin KAPT plugin.
+private const val KAPT_PLUGIN_ID = "org.jetbrains.kotlin.kapt"
+
+// ID for the Kotlin KSP plugin.
+private const val KSP_PLUGIN_ID = "com.google.devtools.ksp"
+
 /**
  * Configure a Kotlin project targeting a specific platform. Options passed to this convention are applied to every
  * Kotlin source set.
@@ -53,6 +70,7 @@ private const val DEFAULT_JVM_TARGET = 21
  * @param configureMultiReleaseJar Whether to create a multi-release JAR; must pass [configureJavaModules] as `true`.
  * @param javaTargetRange The range of Java versions to target for multi-release JARs; calculated from target & minimum.
  */
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
   conventions: ElideBuildExtension.Kotlin,
@@ -64,7 +82,9 @@ internal fun Project.configureKotlinBuild(
   jvmModuleName: String? = null,
 ) {
   val kotlinVersion = conventions.kotlinVersionOverride ?: findProperty(Versions.KOTLIN)?.toString()
-  val useStrictMode = findProperty(Kotlin.STRICT_MODE).toString().toBoolean()
+  val useStrictMode =
+    findProperty(Kotlin.STRICT_MODE).toString().toBoolean() ||
+    findProperty(Kotlin.STRICT_MODE_ALT).toString().toBoolean()
 
   // Maven Central requires a javadoc JAR artifact
   configureJavadoc()
@@ -115,8 +135,31 @@ internal fun Project.configureKotlinBuild(
     )
   }
 
+  val kotlinVersionParsed = KotlinVersion.fromVersion(kotlinVersion ?: Versions.KOTLIN_DEFAULT)
+  fun <T: KotlinCommonCompilerOptions> T.configureCompilerOptions() {
+    apiVersion.set(kotlinVersionParsed)
+    languageVersion.set(kotlinVersionParsed)
+    allWarningsAsErrors.set(useStrictMode)
+    progressiveMode.set(kotlinVersion != "2.0" && useStrictMode)  // progressive mode makes no sense for bleeding-edge
+
+    if (this is KotlinJvmCompilerOptions) {
+      javaParameters.set(true)
+    }
+
+    val kotlinCArgs = freeCompilerArgs.get().plus(when (target) {
+      JVM -> if (conventions.kapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
+      JsBrowser, JsNode -> Elide.JsCompilerArgs
+      is Multiplatform, Native, NativeEmbedded, WASM, WASI -> Elide.KmpCompilerArgs
+    }).plus(conventions.customKotlinCompilerArgs).toList()
+
+    freeCompilerArgs.set(kotlinCArgs)
+  }
+
   // base Kotlin options
-  extensions.getByType(KotlinProjectExtension::class.java).apply {
+  val multiplatformExtension = extensions.findByType(KotlinMultiplatformExtension::class.java)
+  val projectExtension = extensions.findByType(KotlinProjectExtension::class.java)
+
+  fun KotlinProjectExtension.configureKotlinProject() {
     sourceSets.apply {
       if (conventions.wasmSourceSets && !isWasmDisabled()) {
         val wasmMain = create("wasmMain") {
@@ -139,12 +182,32 @@ internal fun Project.configureKotlinBuild(
         }
       }
     }
+
     sourceSets.all {
       languageSettings {
+        optIn("kotlin.ExperimentalUnsignedTypes")
         if (conventions.explicitApi) explicitApi()
         progressiveMode = false
-        optIn("kotlin.ExperimentalUnsignedTypes")
+        apiVersion = kotlinVersionParsed.version
+        languageVersion = kotlinVersionParsed.version
       }
+    }
+  }
+
+  when {
+    multiplatformExtension != null -> multiplatformExtension.apply {
+      configureKotlinProject()
+      compilerOptions {
+        configureCompilerOptions()
+      }
+    }
+
+    projectExtension != null -> projectExtension.apply {
+      configureKotlinProject()
+    }
+
+    else -> {
+      logger.warn("No Kotlin project extension found; skipping Elide conventions")
     }
   }
 
@@ -155,36 +218,37 @@ internal fun Project.configureKotlinBuild(
   // Kotlin compilation tasks
   tasks.withType(KotlinCompilationTask::class.java).configureEach {
     compilerOptions {
-      val kotlinVersionParsed = KotlinVersion.fromVersion(kotlinVersion ?: Versions.KOTLIN_DEFAULT)
-      apiVersion.set(kotlinVersionParsed)
-      languageVersion.set(kotlinVersionParsed)
-      allWarningsAsErrors.set(useStrictMode)
-      progressiveMode.set(kotlinVersion != "2.0" && useStrictMode)  // progressive mode makes no sense for bleeding-edge
-
-      if (this is KotlinJvmCompilerOptions) {
-        javaParameters.set(true)
-      }
-
-      freeCompilerArgs.set(freeCompilerArgs.get().plus(when (target) {
-       JVM -> if (conventions.kapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
-       JsBrowser, JsNode -> Elide.JsCompilerArgs
-       is Multiplatform, Native, NativeEmbedded, WASM, WASI -> Elide.KmpCompilerArgs
-     }).plus(conventions.customKotlinCompilerArgs).toList())
+      configureCompilerOptions()
     }
   }
 
   // configure kapt extension
-  if (conventions.kapt) extensions.getByType(KaptExtension::class.java).apply {
-    useBuildCache = true
-    strictMode = true
-    correctErrorTypes = true
-    keepJavacAnnotationProcessors = true
-    includeCompileClasspath = false
+  if (conventions.kapt) {
+    pluginManager.withPlugin(KAPT_PLUGIN_ID) {
+      extensions.getByType(KaptExtension::class.java).apply {
+        useBuildCache = true
+        strictMode = true
+        correctErrorTypes = true
+        keepJavacAnnotationProcessors = true
+        includeCompileClasspath = false
+        inheritedAnnotations = true
+      }
+      afterEvaluate {
+        tasks.withType(KaptGenerateStubsTask::class.java).configureEach {
+          compilerOptions {
+            configureCompilerOptions()
+          }
+        }
+      }
+    }
   }
 
   // configure KSP extension
-  if (conventions.ksp) extensions.getByType(KspExtension::class.java).apply {
-    allowSourcesFromOtherPlugins = true
+  if (conventions.ksp) pluginManager.withPlugin(KSP_PLUGIN_ID) {
+    extensions.getByType(KspExtension::class.java).apply {
+      allowSourcesFromOtherPlugins = true
+      allWarningsAsErrors = true
+    }
   }
 
   // configure AllOpen plugin
@@ -198,13 +262,25 @@ internal fun Project.configureKotlinBuild(
   }
 
   // configure `js-plain-objects` plugin
-  if (conventions.jsObjects) TODO("not yet implemented")
+  if (conventions.jsObjects) plugins.apply(JS_OBJECTS_PLUGIN_ID).also {
+    pluginManager.withPlugin(JS_OBJECTS_PLUGIN_ID) {
+      // nothing at this time
+    }
+  }
 
   // configure `power-assert` plugin
-  if (conventions.powerAssert) TODO("not yet implemented")
+  if (conventions.powerAssert) plugins.apply(POWER_ASSERT_PLUGIN_ID).also {
+    pluginManager.withPlugin(POWER_ASSERT_PLUGIN_ID) {
+      // nothing at this time
+    }
+  }
 
   // configure `sam-with-receiver` plugin
-  if (conventions.samWithReceiver) TODO("not yet implemented")
+  if (conventions.samWithReceiver) plugins.apply(SAM_RECEIVER_PLUGIN_ID).also {
+    pluginManager.withPlugin(SAM_RECEIVER_PLUGIN_ID) {
+      // nothing at this time
+    }
+  }
 }
 
 /** Configure Dokka tasks to depend on KAPT or KSP generation tasks. */

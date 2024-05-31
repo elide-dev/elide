@@ -12,7 +12,9 @@
  */
 package dev.elide.cli.tooling.api
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 @Serializable @JvmRecord public data class DiagnosticTimings(
   public val start: Long = 0,
@@ -26,6 +28,20 @@ import kotlinx.serialization.Serializable
 )
 
 public object Diagnostics {
+  @OptIn(ExperimentalSerializationApi::class)
+  private val diagnosticJson: Json by lazy {
+    Json {
+      isLenient = true
+      allowComments = true
+      allowTrailingComma = true
+      ignoreUnknownKeys = true
+    }
+  }
+
   @JvmStatic public fun empty(): DiagnosticSuite = DiagnosticSuite(Severity.Info, emptyList())
-  @JvmStatic public fun fromJson(json: String): DiagnosticSuite = TODO("not yet implemented")
+
+  @JvmStatic public fun fromJson(json: String): DiagnosticSuite = diagnosticJson.decodeFromString(
+    DiagnosticSuite.serializer(),
+    json,
+  )
 }

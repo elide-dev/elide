@@ -34,6 +34,7 @@ buildconfig-plugin = "5.3.5"
 byteunits = "0.9.1"
 caffeine = "3.1.8"
 capnproto = "0.1.18-elide"
+cite = "0.2.0"
 clikt = "4.2.2"
 closure = "v20221004"
 closure-stylesheets = "1.5.0"
@@ -116,6 +117,7 @@ jsoup = "1.17.2"
 jsr310 = "2.9.8"
 junit-jupiter = "5.10.2"
 junixsocket = "2.8.3"
+kapshot = "0.2.0"
 koin = "3.4.3"
 koin-ksp = "1.2.2"
 konform = "0.4.0"
@@ -258,7 +260,7 @@ protobufJavalite = "3.0.0"
 qodanaGradle = "2023.3.1"
 react = "19.0.0-beta-26f2496093-20240514"
 reactivestreams = "1.0.4"
-redacted-plugin = "1.7.1"
+redacted-plugin = "1.9.0"
 semver = "3.1.0"
 shadow-plugin = "8.1.1"
 sigstore = "0.7.0"
@@ -297,6 +299,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker-plugin" }
 doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+cite = { id = "com.jakewharton.cite", version.ref = "cite" }
 flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers-plugin" }
 gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
 graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
@@ -307,6 +310,7 @@ gradle-wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrap
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }
 jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }
+kapshot = { id = "io.koalaql.kapshot-plugin", version.ref = "kapshot" }
 kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin-sdk" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-sdk" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-sdk" }
@@ -774,6 +778,7 @@ testing-mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter",
 ## Plugin Aliases
 plugin-buf = { group = "com.parmet", name = "buf-gradle-plugin", version.ref = "pluginBuf" }
 plugin-buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin", version.ref = "buildconfig-plugin" }
+plugin-cite = { group = "com.jakewharton.cite", name = "cite-gradle-plugin", version.ref = "cite" }
 plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 plugin-docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut-plugin" }
 plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
@@ -785,6 +790,7 @@ plugin-dokka-versioning = { group = "org.jetbrains.dokka", name = "versioning-pl
 plugin-flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers-plugin" }
 plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-plugin" }
 plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
+plugin-kapshot = { group = "io.koalaql", name = "kapshot-plugin-gradle", version.ref = "kapshot" }
 plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-sdk" }
 plugin-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin-sdk" }
 plugin-kotlin-atomicfu = { group = "org.jetbrains.kotlin",  name = "atomicfu", version.ref = "kotlin-sdk" }

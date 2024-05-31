@@ -1,5 +1,20 @@
 [
   {
     "interfaces":[]
+  },
+  {
+    "interfaces":["com.sun.jna.platform.mac.CoreFoundation"]
+  },
+  {
+    "interfaces":["com.sun.jna.platform.mac.IOKit"]
+  },
+  {
+    "interfaces":["com.sun.jna.platform.mac.SystemB"]
+  },
+  {
+    "interfaces":["oshi.jna.platform.mac.SystemB"]
+  },
+  {
+    "interfaces":["oshi.jna.platform.mac.SystemConfiguration"]
   }
 ]

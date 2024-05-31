@@ -10,27 +10,31 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
 package dev.elide.cli.tooling.api
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Serializable @JvmRecord public data class CodeLocation (
+@Serializable @JvmRecord public data class CodeLocation(
   public val file: String,
   public val line: UInt,
   public val column: UInt
 )
 
 @Serializable public enum class Severity(public val string: String) {
-  @SerialName("Info")
-  Info("Info"),
-  @SerialName("Warning")
-  Warning("Warning"),
   @SerialName("Error")
-  Error("Error"),
+  ERROR("Error"),
+
+  @SerialName("Info")
+  INFO("Info"),
+
+  @SerialName("Warning")
+  WARNING("Warning"),
+;
 }
 
-@Serializable @JvmRecord public data class DiagnosticNote (
+@Serializable @JvmRecord public data class DiagnosticNote(
   public val id: String,
   public val tool: String,
   public val code: String,
@@ -40,13 +44,15 @@ import kotlinx.serialization.SerialName
 )
 
 @Serializable public enum class ToolType(public val string: String) {
-  @SerialName("Linter")
-  Linter("Linter"),
   @SerialName("Compiler")
-  Compiler("Compiler"),
+  COMPILER("Compiler"),
+
+  @SerialName("Linter")
+  LINTER("Linter"),
+;
 }
 
-@Serializable @JvmRecord public data class ToolInfo (
+@Serializable @JvmRecord public data class ToolInfo(
   public val name: String,
   public val version: String,
   public val language: String,

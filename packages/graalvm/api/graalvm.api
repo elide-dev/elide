@@ -3473,10 +3473,6 @@ public final class elide/runtime/intrinsics/js/node/process/ProcessArch$Companio
 	public final fun host ()Lelide/runtime/intrinsics/js/node/process/ProcessArch;
 	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
 	public fun resolve (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessArch;
-	public synthetic fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
-	public fun resolveSymbol (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessArch;
-	public synthetic fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
-	public fun unresolved (Ljava/lang/String;)Lelide/core/api/Symbolic$Unresolved;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/process/ProcessEnvironmentAPI : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
@@ -3500,10 +3496,6 @@ public final class elide/runtime/intrinsics/js/node/process/ProcessPlatform$Comp
 	public final fun host ()Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
 	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
 	public fun resolve (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
-	public synthetic fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
-	public fun resolveSymbol (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/process/ProcessPlatform;
-	public synthetic fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
-	public fun unresolved (Ljava/lang/String;)Lelide/core/api/Symbolic$Unresolved;
 }
 
 public final class elide/runtime/intrinsics/js/node/process/ProcessStandardInputStream : elide/runtime/intrinsics/js/node/process/ProcessStandardStream, elide/runtime/intrinsics/js/node/stream/Readable {

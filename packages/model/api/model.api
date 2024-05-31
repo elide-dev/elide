@@ -3,41 +3,18 @@ public abstract interface class elide/model/AppModel {
 }
 
 public abstract interface class elide/model/AppRecord {
-	public abstract fun displayName ()Ljava/lang/String;
-	public abstract fun id ()Ljava/lang/Object;
-	public abstract fun parentId ()Ljava/lang/Object;
-}
-
-public final class elide/model/AppRecord$DefaultImpls {
-	public static fun displayName (Lelide/model/AppRecord;)Ljava/lang/String;
-	public static fun id (Lelide/model/AppRecord;)Ljava/lang/Object;
-	public static fun parentId (Lelide/model/AppRecord;)Ljava/lang/Object;
+	public fun displayName ()Ljava/lang/String;
+	public fun id ()Ljava/lang/Object;
+	public fun parentId ()Ljava/lang/Object;
 }
 
 public abstract interface class elide/model/StampedRecord : elide/model/AppRecord {
-	public abstract fun createdAt ()Lkotlinx/datetime/Instant;
-	public abstract fun updatedAt ()Lkotlinx/datetime/Instant;
-}
-
-public final class elide/model/StampedRecord$DefaultImpls {
-	public static fun createdAt (Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;
-	public static fun displayName (Lelide/model/StampedRecord;)Ljava/lang/String;
-	public static fun id (Lelide/model/StampedRecord;)Ljava/lang/Object;
-	public static fun parentId (Lelide/model/StampedRecord;)Ljava/lang/Object;
-	public static fun updatedAt (Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;
+	public fun createdAt ()Lkotlinx/datetime/Instant;
+	public fun updatedAt ()Lkotlinx/datetime/Instant;
 }
 
 public abstract interface class elide/model/VersionedRecord : elide/model/StampedRecord {
-	public abstract fun version ()J
-}
-
-public final class elide/model/VersionedRecord$DefaultImpls {
-	public static fun createdAt (Lelide/model/VersionedRecord;)Lkotlinx/datetime/Instant;
-	public static fun displayName (Lelide/model/VersionedRecord;)Ljava/lang/String;
-	public static fun id (Lelide/model/VersionedRecord;)Ljava/lang/Object;
-	public static fun parentId (Lelide/model/VersionedRecord;)Ljava/lang/Object;
-	public static fun updatedAt (Lelide/model/VersionedRecord;)Lkotlinx/datetime/Instant;
-	public static fun version (Lelide/model/VersionedRecord;)J
+	public fun version ()J
 }
 
 public class elide/model/WireMessage {
@@ -202,9 +179,6 @@ public final class kotlinx/serialization/protobuf/schema/ProtoBufGeneratorOption
 
 public abstract interface class kotlinx/serialization/protobuf/schema/ProtoBufSchemaBuilder {
 	public abstract fun generateSchemaText (Ljava/util/List;Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;)Ljava/lang/String;
-}
-
-public final class kotlinx/serialization/protobuf/schema/ProtoBufSchemaBuilder$DefaultImpls {
 	public static synthetic fun generateSchemaText$default (Lkotlinx/serialization/protobuf/schema/ProtoBufSchemaBuilder;Ljava/util/List;Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;ILjava/lang/Object;)Ljava/lang/String;
 }
 
@@ -227,15 +201,15 @@ public final class kotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion :
 }
 
 public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption {
-	public abstract fun getBuiltin ()Z
-	public abstract fun getImports ()Ljava/util/Set;
+	public fun getBuiltin ()Z
+	public fun getImports ()Ljava/util/Set;
 	public abstract fun getScope ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
 	public abstract fun getSymbol ()Ljava/lang/String;
-	public abstract fun getSymbolValue ()Ljava/lang/String;
+	public fun getSymbolValue ()Ljava/lang/String;
 	public abstract fun getTargets ()Ljava/util/EnumSet;
 	public abstract fun getValue ()Ljava/lang/Object;
-	public abstract fun isPresent ()Z
-	public abstract fun render ()Ljava/lang/String;
+	public fun isPresent ()Z
+	public fun render ()Ljava/lang/String;
 }
 
 public final class kotlinx/serialization/protobuf/schema/ProtoOption$All {
@@ -244,23 +218,7 @@ public final class kotlinx/serialization/protobuf/schema/ProtoOption$All {
 }
 
 public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption : kotlinx/serialization/protobuf/schema/ProtoOption {
-	public abstract fun getSymbolValue ()Ljava/lang/String;
-}
-
-public final class kotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption$DefaultImpls {
-	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Z
-	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Ljava/util/Set;
-	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Ljava/lang/String;
-	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Z
-	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Ljava/lang/String;
-}
-
-public final class kotlinx/serialization/protobuf/schema/ProtoOption$DefaultImpls {
-	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Z
-	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Ljava/util/Set;
-	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Ljava/lang/String;
-	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Z
-	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Ljava/lang/String;
+	public fun getSymbolValue ()Ljava/lang/String;
 }
 
 public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
@@ -277,15 +235,7 @@ public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumOptions
 }
 
 public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption : kotlinx/serialization/protobuf/schema/ProtoOption {
-	public abstract fun getSymbolValue ()Ljava/lang/String;
-}
-
-public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption$DefaultImpls {
-	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Z
-	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Ljava/util/Set;
-	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Ljava/lang/String;
-	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Z
-	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Ljava/lang/String;
+	public fun getSymbolValue ()Ljava/lang/String;
 }
 
 public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumValueOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
@@ -437,42 +387,26 @@ public abstract class kotlinx/serialization/protobuf/schema/ProtoOption$KnownFil
 	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;Ljava/lang/Object;Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;Ljava/lang/String;Ljava/util/EnumSet;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;Ljava/lang/Object;Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;Ljava/lang/String;Ljava/util/EnumSet;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getBuiltin ()Z
-	public fun getImports ()Ljava/util/Set;
 	public final fun getOption ()Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
 	public fun getScope ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
 	public fun getSymbol ()Ljava/lang/String;
-	public fun getSymbolValue ()Ljava/lang/String;
 	public fun getTargets ()Ljava/util/EnumSet;
 	public fun getValue ()Ljava/lang/Object;
-	public fun isPresent ()Z
-	public fun render ()Ljava/lang/String;
 }
 
 public abstract class kotlinx/serialization/protobuf/schema/ProtoOption$KnownMessageOption : kotlinx/serialization/protobuf/schema/ProtoOption {
 	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;Ljava/lang/Object;Ljava/lang/String;Ljava/util/EnumSet;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;Ljava/lang/Object;Ljava/lang/String;Ljava/util/EnumSet;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getBuiltin ()Z
-	public fun getImports ()Ljava/util/Set;
 	public final fun getOption ()Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
 	public fun getSymbol ()Ljava/lang/String;
-	public fun getSymbolValue ()Ljava/lang/String;
 	public fun getTargets ()Ljava/util/EnumSet;
 	public fun getValue ()Ljava/lang/Object;
-	public fun isPresent ()Z
-	public fun render ()Ljava/lang/String;
 }
 
 public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$KnownOption : kotlinx/serialization/protobuf/schema/ProtoOption {
-	public abstract fun getBuiltin ()Z
+	public fun getBuiltin ()Z
 	public abstract fun getOption ()Lkotlinx/serialization/protobuf/schema/ProtoOption;
-}
-
-public final class kotlinx/serialization/protobuf/schema/ProtoOption$KnownOption$DefaultImpls {
-	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Z
-	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Ljava/util/Set;
-	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Ljava/lang/String;
-	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Z
-	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Ljava/lang/String;
 }
 
 public final class kotlinx/serialization/protobuf/schema/ProtoOption$MessageOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
@@ -596,15 +530,7 @@ public final class kotlinx/serialization/protobuf/schema/ProtoOption$ServiceOpti
 }
 
 public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$StringOption : kotlinx/serialization/protobuf/schema/ProtoOption {
-	public abstract fun getSymbolValue ()Ljava/lang/String;
-}
-
-public final class kotlinx/serialization/protobuf/schema/ProtoOption$StringOption$DefaultImpls {
-	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Z
-	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Ljava/util/Set;
-	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Ljava/lang/String;
-	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Z
-	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Ljava/lang/String;
+	public fun getSymbolValue ()Ljava/lang/String;
 }
 
 public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {

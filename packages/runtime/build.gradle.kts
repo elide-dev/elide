@@ -965,10 +965,6 @@ val initializeAtRuntime: List<String> = listOf(
   "sun.font.StrikeCache",
   "sun.font.SunFontManager",
   "sun.java2d.Disposer",
-
-  // "com.sun.jna.internal.Cleaner",
-  // "com.sun.jna.internal.Cleaner${'$'}CleanerThread",
-
   "sun.nio.ch.UnixDomainSockets",
   "sun.security.provider.NativePRNG",
 
@@ -1101,12 +1097,7 @@ val initializeAtRuntime: List<String> = listOf(
 
   "elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
   "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
-//  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
-//  "elide.runtime.intrinsics.server.http.netty.KQueueTransport",
-  // "elide.runtime.intrinsics.server.http.netty.EpollTransport",
   "elide.runtime.intrinsics.server.http.netty.IOUringTransport",
-//  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
-//  "elide.runtime.intrinsics.server.http.netty.NettyTransport${'$'}Companion",
   "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
 
   // --- Elide CLI -----

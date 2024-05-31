@@ -13,9 +13,13 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.crypto
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.security.SecureRandom
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.typed.UUIDValue
 import elide.runtime.intrinsics.GuestIntrinsic
@@ -28,9 +32,15 @@ import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Value as GuestValue
 import elide.runtime.intrinsics.js.Crypto as WebCryptoAPI
 
+private val WEB_CRYPTO_PROPS_AND_METHODS = arrayOf(
+  "getRandomValues",
+  "randomUUID",
+  "subtle",
+)
+
 /** Intrinsic implementation of the [WebCryptoAPI]. */
 @Intrinsic(global = WebCryptoIntrinsic.GLOBAL_CRYPTO)
-internal class WebCryptoIntrinsic : WebCryptoAPI, AbstractJsIntrinsic() {
+internal class WebCryptoIntrinsic : WebCryptoAPI, ProxyObject, AbstractJsIntrinsic() {
   internal companion object {
     /** Injected name of the Base64 global. */
     const val GLOBAL_CRYPTO = "crypto"
@@ -93,4 +103,23 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, AbstractJsIntrinsic() {
   @Polyglot override fun randomUUID(): UUID = UUIDValue.random()
 
   @get:Polyglot override val subtle: SubtleCrypto get() = error("SubtleCrypto is not supported yet in Elide.")
+
+  override fun getMemberKeys(): Array<String> = WEB_CRYPTO_PROPS_AND_METHODS
+  override fun hasMember(key: String?): Boolean = key != null && key in WEB_CRYPTO_PROPS_AND_METHODS
+  override fun putMember(key: String?, value: Value?) {
+    // no-op
+  }
+
+  override fun removeMember(key: String?): Boolean = false
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "getRandomValues" -> ProxyExecutable {
+      getRandomValues(
+        it.getOrNull(0) ?: throw JsError.typeError("Missing argument for getRandomValues")
+      )
+    }
+    "randomUUID" -> ProxyExecutable { randomUUID() }
+    "subtle" -> this.subtle
+    else -> null
+  }
 }

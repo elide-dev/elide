@@ -12,6 +12,7 @@
  */
 package elide.tool.feature
 
+import dev.elide.cli.bridge.CliNativeBridge
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import org.graalvm.nativeimage.hosted.RuntimeJNIAccess.register
@@ -39,7 +40,9 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
   private fun loadUmbrella() {
     // force-load the library
     System.loadLibrary("umbrella")
-    dev.elide.cli.bridge.CliNativeBridge.hello()
+    require(CliNativeBridge.apiVersion() == CliNativeBridge.VERSION_V1) {
+      "Native bridge version mismatch"
+    }
   }
 
   private fun registerJniCalls() {

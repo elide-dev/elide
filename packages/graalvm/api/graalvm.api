@@ -546,6 +546,12 @@ public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy$PropertyPro
 	public fun toString ()Ljava/lang/String;
 }
 
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -555,6 +561,12 @@ public synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64I
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {

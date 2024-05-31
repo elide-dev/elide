@@ -132,6 +132,7 @@ dependencies {
   implementation(libs.protobuf.util)
 
   // embedded Kotlin plugins
+  implementation(libs.plugin.kotlin.atomicfu)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlin.powerAssert)

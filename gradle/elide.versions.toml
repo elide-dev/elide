@@ -21,7 +21,7 @@ androidx-compose = "1.5.13-dev-k2.0.0-RC1-50f08dfa4b4"
 arrow = "1.2.0"
 asciidata = "1.4.0"
 assertk = "0.28.1"
-atomicfu = "0.23.2"
+atomicfu = "0.24.0"
 auto-common = "1.2.2"
 auto-factory = "1.0.1"
 auto-service = "1.1.1"
@@ -787,6 +787,7 @@ plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.
 plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
 plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-sdk" }
 plugin-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin-sdk" }
+plugin-kotlin-atomicfu = { group = "org.jetbrains.kotlin",  name = "atomicfu", version.ref = "kotlin-sdk" }
 plugin-kotlin-jsObjects = { group = "org.jetbrains.kotlin", name = "js-plain-objects", version.ref = "kotlin-sdk" }
 plugin-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin-sdk" }
 plugin-kotlin-powerAssert = { group = "org.jetbrains.kotlin", name = "kotlin-power-assert", version.ref = "kotlin-sdk" }

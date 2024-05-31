@@ -33,10 +33,10 @@ abstract class RubyTest : AbstractDualTest<AbstractDualTest.Ruby>() {
 
   @Suppress("SameParameterValue")
   private fun executeGuestInternal(
-    ctx: PolyglotContext,
-    bindUtils: Boolean,
-    op: Ruby,
-  ): Value {
+ctx: PolyglotContext,
+ bindUtils: Boolean,
+ op: Ruby,
+): Value {
     // resolve the script
     val script = op.invoke(ctx)
 

@@ -175,13 +175,17 @@ tasks.named("compileTestKotlinJvm").configure {
   dependsOn("generateProto", "generateTestProto")
 }
 
-if (pluginManager.hasPlugin("org.jetbrains.kotlin.kapt")) afterEvaluate {
-  listOf(
-    "kaptGenerateStubsKotlinJvm",
-    "kaptGenerateStubsTestKotlinJvm",
-  ).forEach {
-    tasks.named(it) {
-      dependsOn("generateProto", "generateTestProto")
+run {
+  if (pluginManager.hasPlugin("org.jetbrains.kotlin.kapt")) {
+    afterEvaluate {
+      listOf(
+        "kaptGenerateStubsKotlinJvm",
+        "kaptGenerateStubsTestKotlinJvm",
+      ).forEach {
+        tasks.named(it) {
+          dependsOn("generateProto", "generateTestProto")
+        }
+      }
     }
   }
 }

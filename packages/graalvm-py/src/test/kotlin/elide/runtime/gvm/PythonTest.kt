@@ -32,11 +32,7 @@ abstract class PythonTest : AbstractDualTest<AbstractDualTest.Python>() {
   }
 
   @Suppress("SameParameterValue")
-  private fun executeGuestInternal(
-    ctx: PolyglotContext,
-    bindUtils: Boolean,
-    op: Python,
-  ): Value {
+  private fun executeGuestInternal(ctx: PolyglotContext, bindUtils: Boolean, op: Python,): Value {
     // resolve the script
     val script = op.invoke(ctx)
 

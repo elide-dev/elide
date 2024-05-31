@@ -38,11 +38,11 @@ abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsic
   // Logic to execute a guest-side test.
   @Suppress("SameParameterValue")
   private fun executeGuestInternal(
-    ctx: PolyglotContext,
-    bind: Boolean,
-    bindUtils: Boolean,
-    op: Ruby,
-  ): Value {
+ctx: PolyglotContext,
+ bind: Boolean,
+ bindUtils: Boolean,
+ op: Ruby,
+): Value {
     // resolve the script
     val script = op.invoke(ctx)
 

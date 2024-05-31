@@ -17,11 +17,11 @@ public class CliNativeBridge {
   /** Token expected for the tooling API at version 1. */
   public static final String VERSION_V1 = "v1";
 
-  /** Say hello from Rust. */
-  public static native void hello();
-
   /** Return the tooling protocol version. */
-  public static native String version();
+  public static native String apiVersion();
+
+  /** Return the library version. */
+  public static native String libVersion();
 
   /** Return the suite of reported tool names. */
   public static native String[] supportedTools();

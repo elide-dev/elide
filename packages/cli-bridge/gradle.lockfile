@@ -1,6 +1,10 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
+org.jetbrains.kotlin:kotlin-stdlib-common:2.0.0=compileClasspath
 org.jetbrains.kotlin:kotlin-stdlib:2.0.0=compileClasspath,runtimeClasspath
+org.jetbrains.kotlinx:kotlinx-serialization-bom:1.7.0-RC=compileClasspath
+org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.0-RC=compileClasspath
+org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.0-RC=compileClasspath
 org.jetbrains:annotations:13.0=compileClasspath,runtimeClasspath
 empty=

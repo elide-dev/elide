@@ -449,7 +449,7 @@ dependencies {
   implementation(projects.packages.proto.protoProtobuf)
   implementation(projects.packages.proto.protoKotlinx)
   implementation(libs.capnproto.runtime)
-  implementation(libs.capnproto.runtime.rpc)
+  // implementation(libs.capnproto.runtime.rpc)
 
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)

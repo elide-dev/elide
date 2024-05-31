@@ -84,9 +84,12 @@ internal fun Project.configureKotlinBuild(
   jvmModuleName: String? = null,
 ) {
   val kotlinVersion = conventions.kotlinVersionOverride ?: findProperty(Versions.KOTLIN)?.toString()
-  val useStrictMode =
+  val strictModeEligible = conventions.strict
+  val strictModeActive = (
     findProperty(Kotlin.STRICT_MODE).toString().toBoolean() ||
     findProperty(Kotlin.STRICT_MODE_ALT).toString().toBoolean()
+  )
+  val useStrictMode = strictModeEligible && strictModeActive
 
   // Maven Central requires a javadoc JAR artifact
   configureJavadoc()
@@ -274,7 +277,7 @@ internal fun Project.configureKotlinBuild(
   if (enableKsp) pluginManager.withPlugin(KSP_PLUGIN_ID) {
     extensions.getByType(KspExtension::class.java).apply {
       allowSourcesFromOtherPlugins = true
-      allWarningsAsErrors = true
+      allWarningsAsErrors = useStrictMode
     }
   }
 

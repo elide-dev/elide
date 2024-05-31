@@ -69,6 +69,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     /** Whether this project uses KSP. */
     public var ksp: Boolean = false
 
+    /** Whether this project should be eligible for strict mode. */
+    public var strict: Boolean = false
+
     /** Whether to configure the Kotlin AllOpen plugin with predefined settings. */
     public var allOpen: Boolean = false
 

@@ -26,15 +26,16 @@ import elide.runtime.plugins.python.python
 
 /** Abstract base for all non-intrinsic Python guest execution tests. */
 @OptIn(DelicateElideApi::class)
-abstract class PythonTest : AbstractDualTest() {
+abstract class PythonTest : AbstractDualTest<AbstractDualTest.Python>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.install(Python)
   }
 
-  private inline fun executeGuestInternal(
+  @Suppress("SameParameterValue")
+  private fun executeGuestInternal(
     ctx: PolyglotContext,
     bindUtils: Boolean,
-    op: PolyglotContext.() -> String,
+    op: Python,
   ): Value {
     // resolve the script
     val script = op.invoke(ctx)
@@ -65,7 +66,7 @@ abstract class PythonTest : AbstractDualTest() {
     return returnValue
   }
 
-  override fun executeGuest(bind: Boolean, op: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+  override fun executeGuest(bind: Boolean, op: Python) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       ctx = this,
       op = op,
@@ -74,10 +75,10 @@ abstract class PythonTest : AbstractDualTest() {
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
+  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Python> {
     op.invoke()
-    return object : DualTestExecutionProxy() {
-      override fun guest(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+    return object : DualTestExecutionProxy<Python>() {
+      override fun guest(guestOperation: Python) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bindUtils = true,
@@ -85,7 +86,7 @@ abstract class PythonTest : AbstractDualTest() {
         )
       }.doesNotFail()
 
-      override fun thenRun(guestOperation: PolyglotContext.() -> String) = GuestTestExecution(::withContext) {
+      override fun thenRun(guestOperation: Python) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bindUtils = true,

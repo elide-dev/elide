@@ -31,6 +31,8 @@
     <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: SortedSet&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
     <ID>SpreadOperator:ElideTool.kt$ElideTool.Companion$(*args)</ID>
+    <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields( NativeDB::class.java, "pointer", "busyHandler", "commitListener", "updateListener", "progressHandler", ))</ID>
+    <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*this.fields(Function::class.java, "context", "value", "args"))</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$ioe: IOException</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
     <ID>SwallowedException:ElideTool.kt$ElideTool.Companion$uoe: UnsupportedOperationException</ID>

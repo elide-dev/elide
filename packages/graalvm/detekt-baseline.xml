@@ -2,6 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>ComplexCondition:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$!it.builtin &amp;&amp; !it.registerPrefix &amp;&amp; !it.registerJni &amp;&amp; !it.eager</ID>
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
     <ID>CyclomaticComplexMethod:CustomEvent.kt$CustomEvent$override fun getMember(key: String?): Any?</ID>
@@ -23,6 +24,8 @@
     <ID>LargeClass:URLIntrinsicTest.kt$URLIntrinsicTest : AbstractJsIntrinsicTest</ID>
     <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$@Suppress("ReplaceGetOrSet") protected open fun testMapGeneric(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
     <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$protected open fun testMapMutable(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
+    <ID>LongParameterList:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$( name: String, vararg layout: String, type: NativeLibType = STATIC, linkName: String = name, builtin: Boolean = true, registerJni: Boolean = true, registerPrefix: Boolean = builtin, eager: Boolean = builtin, absolutePath: Path? = null, initializer: Boolean = false, )</ID>
+    <ID>LongParameterList:NativeLibraryFeature.kt$NativeLibraryFeature.NativeLibInfo.Companion$( name: String, vararg layout: String, type: NativeLibType = STATIC, linkName: String = name, prefix: Boolean, jni: Boolean, builtin: Boolean, eager: Boolean, absolutePath: Path?, initializer: Boolean, )</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.DebugAdapterConfig$4711</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.InspectorConfig$4200</ID>
     <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptSource$3</ID>
@@ -63,8 +66,15 @@
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredFields)</ID>
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
     <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
+    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "aarch64", *epollImpls)</ID>
+    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "x86-64", *epollImpls)</ID>
+    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "aarch64", *kqueueImpls)</ID>
+    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "x86-64", *kqueueImpls)</ID>
+    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("netty_transport_native_epoll", *epollImpls)</ID>
+    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("netty_transport_native_kqueue", *kqueueImpls)</ID>
     <ID>SpreadOperator:NodeEvents.kt$BoundEventListener$(*args)</ID>
     <ID>SpreadOperator:NodePaths.kt$NodePaths.BasePaths$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
+    <ID>SwallowedException:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$fnf: FileNotFoundException</ID>
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
     <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>
     <ID>SwallowedException:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>

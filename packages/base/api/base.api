@@ -48,36 +48,21 @@ public final class elide/runtime/LogLevel : java/lang/Enum {
 }
 
 public abstract interface class elide/runtime/Logger {
-	public abstract fun debug (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun debug ([Ljava/lang/Object;)V
-	public abstract fun error (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun error ([Ljava/lang/Object;)V
-	public abstract fun info (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun info ([Ljava/lang/Object;)V
+	public fun debug (Lkotlin/jvm/functions/Function0;)V
+	public fun debug ([Ljava/lang/Object;)V
+	public fun error (Lkotlin/jvm/functions/Function0;)V
+	public fun error ([Ljava/lang/Object;)V
+	public fun info (Lkotlin/jvm/functions/Function0;)V
+	public fun info ([Ljava/lang/Object;)V
 	public abstract fun isEnabled (Lelide/runtime/LogLevel;)Z
 	public abstract fun log (Lelide/runtime/LogLevel;Ljava/util/List;Z)V
-	public abstract fun trace (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun trace ([Ljava/lang/Object;)V
-	public abstract fun warn (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun warn ([Ljava/lang/Object;)V
-	public abstract fun warning (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun warning ([Ljava/lang/Object;)V
-}
-
-public final class elide/runtime/Logger$DefaultImpls {
-	public static fun debug (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
-	public static fun debug (Lelide/runtime/Logger;[Ljava/lang/Object;)V
-	public static fun error (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
-	public static fun error (Lelide/runtime/Logger;[Ljava/lang/Object;)V
-	public static fun info (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
-	public static fun info (Lelide/runtime/Logger;[Ljava/lang/Object;)V
 	public static synthetic fun log$default (Lelide/runtime/Logger;Lelide/runtime/LogLevel;Ljava/util/List;ZILjava/lang/Object;)V
-	public static fun trace (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
-	public static fun trace (Lelide/runtime/Logger;[Ljava/lang/Object;)V
-	public static fun warn (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
-	public static fun warn (Lelide/runtime/Logger;[Ljava/lang/Object;)V
-	public static fun warning (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
-	public static fun warning (Lelide/runtime/Logger;[Ljava/lang/Object;)V
+	public fun trace (Lkotlin/jvm/functions/Function0;)V
+	public fun trace ([Ljava/lang/Object;)V
+	public fun warn (Lkotlin/jvm/functions/Function0;)V
+	public fun warn ([Ljava/lang/Object;)V
+	public fun warning (Lkotlin/jvm/functions/Function0;)V
+	public fun warning ([Ljava/lang/Object;)V
 }
 
 public final class elide/runtime/Logging {
@@ -110,20 +95,8 @@ public final class elide/runtime/jvm/JvmLogLevelKt {
 
 public final class elide/runtime/jvm/Logger : elide/runtime/Logger {
 	public fun <init> (Lorg/slf4j/Logger;)V
-	public fun debug (Lkotlin/jvm/functions/Function0;)V
-	public fun debug ([Ljava/lang/Object;)V
-	public fun error (Lkotlin/jvm/functions/Function0;)V
-	public fun error ([Ljava/lang/Object;)V
-	public fun info (Lkotlin/jvm/functions/Function0;)V
-	public fun info ([Ljava/lang/Object;)V
 	public fun isEnabled (Lelide/runtime/LogLevel;)Z
 	public fun log (Lelide/runtime/LogLevel;Ljava/util/List;Z)V
-	public fun trace (Lkotlin/jvm/functions/Function0;)V
-	public fun trace ([Ljava/lang/Object;)V
-	public fun warn (Lkotlin/jvm/functions/Function0;)V
-	public fun warn ([Ljava/lang/Object;)V
-	public fun warning (Lkotlin/jvm/functions/Function0;)V
-	public fun warning ([Ljava/lang/Object;)V
 }
 
 public final class elide/struct/MutablePresortedList : elide/struct/api/MutableSortedList {

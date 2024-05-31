@@ -40,21 +40,12 @@ public abstract interface class elide/ssr/ServerRenderer : elide/ssr/ResponseRen
 }
 
 public abstract interface class elide/ssr/ServerResponse {
-	public abstract fun getContent ()Ljava/lang/String;
-	public abstract fun getCss ()Ljava/lang/String;
-	public abstract fun getFin ()Z
-	public abstract fun getHasContent ()Z
-	public abstract fun getHeaders ()Ljava/util/Map;
-	public abstract fun getStatus ()Ljava/lang/Integer;
-}
-
-public final class elide/ssr/ServerResponse$DefaultImpls {
-	public static fun getContent (Lelide/ssr/ServerResponse;)Ljava/lang/String;
-	public static fun getCss (Lelide/ssr/ServerResponse;)Ljava/lang/String;
-	public static fun getFin (Lelide/ssr/ServerResponse;)Z
-	public static fun getHasContent (Lelide/ssr/ServerResponse;)Z
-	public static fun getHeaders (Lelide/ssr/ServerResponse;)Ljava/util/Map;
-	public static fun getStatus (Lelide/ssr/ServerResponse;)Ljava/lang/Integer;
+	public fun getContent ()Ljava/lang/String;
+	public fun getCss ()Ljava/lang/String;
+	public fun getFin ()Z
+	public fun getHasContent ()Z
+	public fun getHeaders ()Ljava/util/Map;
+	public fun getStatus ()Ljava/lang/Integer;
 }
 
 public abstract class elide/ssr/StreamResponse : elide/ssr/ServerResponse {
@@ -62,7 +53,6 @@ public abstract class elide/ssr/StreamResponse : elide/ssr/ServerResponse {
 	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getContent ()Ljava/lang/String;
-	public fun getCss ()Ljava/lang/String;
 	public fun getFin ()Z
 	public fun getHasContent ()Z
 	public fun getHeaders ()Ljava/util/Map;

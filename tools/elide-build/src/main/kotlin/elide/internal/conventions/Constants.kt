@@ -160,6 +160,9 @@ public object Constants {
   internal object Kotlin {
     /** Property: whether to treat all warnings as errors. */
     const val STRICT_MODE = "strictMode"
+
+    /** Property: alternate switch for strictness. */
+    const val STRICT_MODE_ALT = "elide.strict"
   }
 
   /** Build properties and other top-level constants. */
@@ -244,7 +247,7 @@ public object Constants {
         "-Xemit-jvm-type-annotations",
         "-Xjvm-default=all",
         "-Xjsr305=strict",
-        // "-Xuse-kapt4",  @TODO(sgammon): breaks codegen in graalvm module
+        "-Xuse-kapt4",
       ),
     )
 

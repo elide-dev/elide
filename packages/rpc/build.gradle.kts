@@ -18,16 +18,10 @@ import elide.internal.conventions.kotlin.*
 
 plugins {
   java
-  kotlin("kapt")
   kotlin("multiplatform")
   alias(libs.plugins.protobuf)
 
   id("elide.internal.conventions")
-}
-
-kapt {
-  strictMode = true
-  correctErrorTypes = true
 }
 
 elide {
@@ -40,6 +34,7 @@ elide {
   kotlin {
     target = KotlinTarget.All
     explicitApi = true
+    ksp = true
   }
 
   java {
@@ -95,10 +90,13 @@ dependencies {
     api(projects.packages.model)
   }
 
+  commonTest {
+    implementation(projects.packages.test)
+  }
+
   jvm {
     implementation(kotlin("stdlib-jdk8"))
     implementation(projects.packages.server)
-    configurations["kapt"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
 
     // Protobuf
     implementation(libs.protobuf.java)
@@ -141,10 +139,8 @@ dependencies {
   jvmTest {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("test-junit5"))
-    configurations["kaptTest"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
 
     // Testing
-    implementation(projects.packages.test)
     implementation(kotlin("test-junit5"))
     implementation(mn.micronaut.test.junit5)
     implementation(libs.junit.jupiter.api)
@@ -154,7 +150,6 @@ dependencies {
   }
 
   js {
-    implementation(projects.packages.base)
     implementation(projects.packages.frontend)
     implementation(npm("@types/google-protobuf", libs.versions.npm.types.protobuf.get()))
     implementation(npm("google-protobuf", libs.versions.npm.google.protobuf.get()))
@@ -163,10 +158,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core.js)
     implementation(libs.kotlinx.serialization.json.js)
     implementation(libs.kotlinx.serialization.protobuf.js)
-  }
-
-  jsTest {
-    implementation(projects.packages.test)
   }
 }
 
@@ -182,7 +173,7 @@ tasks.named("compileTestKotlinJvm").configure {
   dependsOn("generateProto", "generateTestProto")
 }
 
-afterEvaluate {
+if (pluginManager.hasPlugin("org.jetbrains.kotlin.kapt")) afterEvaluate {
   listOf(
     "kaptGenerateStubsKotlinJvm",
     "kaptGenerateStubsTestKotlinJvm",

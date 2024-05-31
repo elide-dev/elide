@@ -249,7 +249,6 @@ pluginBuf = "0.8.5"
 pluginProtobuf = "0.9.4"
 pluginPublish = "1.2.1"
 postgres = "42.5.1"
-powerAssert = "0.13.0"
 proguard = "7.4.2"
 projectreactor = "2023.0.5"
 projectreactor-core = "3.6.0"
@@ -317,7 +316,9 @@ kotlin-plugin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.
 kotlin-plugin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-sdk" }
 kotlin-plugin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin-dataframe" }
 kotlin-plugin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin-sdk" }
+kotlin-plugin-jsObjects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version.ref = "kotlin-sdk" }
 kotlin-plugin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin-sdk" }
+kotlin-plugin-powerAssert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlin-sdk" }
 kotlinx-plugin-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
 kotlinx-plugin-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 kotlinx-plugin-knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlinx-knit" }
@@ -336,7 +337,6 @@ nexusPublishing = { id = "io.github.gradle-nexus.publish-plugin", version.ref = 
 node = { id = "com.github.node-gradle.node", version.ref = "node-plugin" }
 openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite-plugin" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
-powerAssert = { id = "com.bnorm.power.kotlin-power-assert", version.ref = "powerAssert" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
 redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted-plugin" }
@@ -787,7 +787,9 @@ plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.
 plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
 plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-sdk" }
 plugin-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin-sdk" }
+plugin-kotlin-jsObjects = { group = "org.jetbrains.kotlin", name = "js-plain-objects", version.ref = "kotlin-sdk" }
 plugin-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin-sdk" }
+plugin-kotlin-powerAssert = { group = "org.jetbrains.kotlin", name = "kotlin-power-assert", version.ref = "kotlin-sdk" }
 plugin-kotlin-samWithReceiver = { group = "org.jetbrains.kotlin", name = "kotlin-sam-with-receiver", version.ref = "kotlin-sdk" }
 plugin-kotlinx-abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
 plugin-kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }

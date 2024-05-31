@@ -10,21 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package react.router.dom.server
 
-
-/**
- *
- */
 public external interface StaticHandlerContext {
   // Nothing at this time.
 }
 
-
-/**
- *
- */
 public external interface Router {
   // Nothing at this time.
 }

@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:JsModule("react-dom/server.browser")
 @file:JsNonModule
 
@@ -21,9 +20,6 @@ import web.abort.AbortSignal
 import web.streams.ReadableStream
 import kotlin.js.Promise
 
-/**
- * TBD.
- */
 public external interface ReadableStreamRenderOptions {
   public var identifierPrefix: String?
   public var namespaceURI: String?
@@ -36,9 +32,6 @@ public external interface ReadableStreamRenderOptions {
   public var onError: (error: dynamic) -> Unit
 }
 
-/**
- * TBD.
- */
 public external fun renderToReadableStream(
   initialChildren: ReactNode,
   options: ReadableStreamRenderOptions = definedExternally,

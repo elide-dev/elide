@@ -44,6 +44,7 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
+val nativesType = "debug"
 val enableJpms = false
 val oracleGvm = false
 val enableTransportV2 = false
@@ -229,6 +230,7 @@ val initializeAtRunTimeTest = listOfNotNull(
 
 val sharedLibArgs = listOfNotNull(
   // "--verbose",
+  "--enable-native-access=com.sun.jna,ALL-UNNAMED",
   "--initialize-at-build-time=",
   "--initialize-at-run-time=${initializeAtRunTime.joinToString(",")}",
   "-H:+ReportExceptionStackTraces",
@@ -248,11 +250,29 @@ val sharedLibArgs = listOfNotNull(
       "-J-D$k=$v",
     )
   }
+).plus(
+  StringBuilder().apply {
+    append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+    append(File.pathSeparator)
+    append(nativesPath)
+    System.getProperty("java.library.path", "").let {
+      if (it.isNotEmpty()) {
+        append(File.pathSeparator)
+        append(it)
+      }
+    }
+  }.toString().let {
+    listOf(
+      "-Djava.library.path=$it",
+      "-J-Djava.library.path=$it",
+    )
+  },
 )
 
 val testLibArgs = sharedLibArgs.plus(
   "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
 ).plus(listOf(
+  // "-H:AbortOnTypeReachable=com.oracle.svm.core.util.UserError",
   "--initialize-at-run-time=org.gradle.internal.nativeintegration.services",
   "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}1",
   "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}2",
@@ -447,13 +467,14 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testImplementation(mn.micronaut.test.junit5)
-  testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(projects.packages.graalvmPy)
+  testRuntimeOnly(libs.junit.jupiter.engine)
 
   testImplementation(libs.bouncycastle)
   testImplementation(libs.bouncycastle.tls)
   testImplementation(libs.bouncycastle.pkix)
   testImplementation(libs.bouncycastle.util)
+  testImplementation(libs.jna.jpms)
 
   testImplementation(libs.netty.tcnative.boringssl.static)
   testImplementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-x86_64") })

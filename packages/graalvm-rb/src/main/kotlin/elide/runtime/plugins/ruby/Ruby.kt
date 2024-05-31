@@ -33,7 +33,9 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     config.applyTo(context)
 
     // run embedded initialization code
-    if (resources != null) initializeEmbeddedScripts(context, resources)
+    resources?.let {
+      initializeEmbeddedScripts(context, resources)
+    }
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {

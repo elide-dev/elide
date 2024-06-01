@@ -136,6 +136,7 @@ dependencies {
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlin.powerAssert)
+  implementation(libs.plugin.kotlin.compose)
   implementation(libs.plugin.kotlin.jsObjects)
   implementation(libs.plugin.kotlin.samWithReceiver)
   implementation(libs.plugin.kotlinx.serialization)

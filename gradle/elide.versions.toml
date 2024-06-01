@@ -197,7 +197,7 @@ micronaut-xml = "3.1.0"
 mockito-bom = "5.10.0"
 mockito-junit = "5.10.0"
 mordant = "2.4.0"
-mosaic = "0.11.0"
+mosaic = "0.13.0"
 mrjar = "0.1.1"
 msgpack = "0.9.4"
 netty = "4.1.110.Final"
@@ -674,6 +674,7 @@ logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = 
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
 mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
+mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-runtime", version.ref = "mosaic" }
 msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 netty-bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
 netty-codec-http = { group = "io.netty", name = "netty-codec-http" }
@@ -794,6 +795,7 @@ plugin-kapshot = { group = "io.koalaql", name = "kapshot-plugin-gradle", version
 plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-sdk" }
 plugin-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin-sdk" }
 plugin-kotlin-atomicfu = { group = "org.jetbrains.kotlin", name = "atomicfu", version.ref = "kotlin-sdk" }
+plugin-kotlin-compose = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin-sdk" }
 plugin-kotlin-jsObjects = { group = "org.jetbrains.kotlin", name = "js-plain-objects", version.ref = "kotlin-sdk" }
 plugin-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin-sdk" }
 plugin-kotlin-powerAssert = { group = "org.jetbrains.kotlin", name = "kotlin-power-assert", version.ref = "kotlin-sdk" }
@@ -804,7 +806,6 @@ plugin-kotlinx-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-
 plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover-plugin" }
 plugin-ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 plugin-micronaut = { group = "io.micronaut.gradle", name = "micronaut-gradle-plugin", version.ref = "micronaut-plugin" }
-plugin-mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
 plugin-nexusPublishing = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexusPublishing" }
 plugin-openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite-plugin" }
 plugin-proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }

@@ -21,7 +21,6 @@ import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Color.Companion.Black
-import com.jakewharton.mosaic.ui.Color.Companion.BrightBlack
 import com.jakewharton.mosaic.ui.Color.Companion.Green
 import com.jakewharton.mosaic.ui.Color.Companion.Red
 import com.jakewharton.mosaic.ui.Color.Companion.Yellow
@@ -126,12 +125,12 @@ fun TestRow(test: Test) {
       val dir = test.path.substringBeforeLast('/')
       val name = test.path.substringAfterLast('/')
       Text(" $dir/")
-      Text(name, style = Bold)
+      Text(name, textStyle = Bold)
     } else {
       val pkg = test.path.substringBeforeLast('.')
       val name = test.path.substringAfterLast('.')
       Text(" $pkg/")
-      Text(name, style = Bold)
+      Text(name, textStyle = Bold)
     }
   }
 }
@@ -183,14 +182,14 @@ private fun Summary(start: Long, totalTests: Int, tests: List<Test>) {
   val passed = counts[Pass] ?: 0
   val running = counts[Running] ?: 0
 
-  // var elapsed by remember { mutableStateOf(0) }
+  var elapsed by remember { mutableStateOf(0) }
 
   LaunchedEffect(Unit) {
     while (true) {
       delay(1_000)
-      //Snapshot.withMutableSnapshot {
-        //elapsed++
-      //}
+      Snapshot.withMutableSnapshot {
+        elapsed++
+      }
     }
   }
 
@@ -216,7 +215,7 @@ private fun Summary(start: Long, totalTests: Int, tests: List<Test>) {
   }
 
   val fmtMs = "%dms".format(System.currentTimeMillis() - start)
-  //Text("Time:  ${elapsed}s ($fmtMs)")
+  Text("Time:  ${elapsed}s ($fmtMs)")
 
   if (running > 0) {
     TestProgress(totalTests, passed, failed, running)
@@ -225,28 +224,28 @@ private fun Summary(start: Long, totalTests: Int, tests: List<Test>) {
 
 @Composable
 fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
-  //var showRunning by remember { mutableStateOf(true) }
+  var showRunning by remember { mutableStateOf(true) }
 
   LaunchedEffect(Unit) {
     while (true) {
       delay(500L)
 
-      //Snapshot.withMutableSnapshot {
-        //showRunning = !showRunning
-      //}
+      Snapshot.withMutableSnapshot {
+        showRunning = !showRunning
+      }
     }
   }
 
   val totalWidth = 40
   val failedWidth = (failed.toDouble() * totalWidth / totalTests).toInt()
   val passedWidth = (passed.toDouble() * totalWidth / totalTests).toInt()
-  // val runningWidth = if (showRunning) (running.toDouble() * totalWidth / totalTests).toInt() else 0
+  val runningWidth = if (showRunning) (running.toDouble() * totalWidth / totalTests).toInt() else 0
 
   Row {
     Text(" ".repeat(failedWidth), background = Red)
     Text(" ".repeat(passedWidth), background = Green)
-    // Text(" ".repeat(runningWidth), background = Yellow)
-    // Text(" ".repeat(totalWidth - failedWidth - passedWidth - runningWidth), background = BrightBlack)
+    Text(" ".repeat(runningWidth), background = Yellow)
+    Text(" ".repeat(totalWidth - failedWidth - passedWidth - runningWidth), background = Black)
   }
 }
 

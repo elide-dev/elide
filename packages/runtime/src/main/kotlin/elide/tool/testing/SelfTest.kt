@@ -21,16 +21,10 @@ import elide.tool.testing.TestContext.TestStage
  */
 abstract class SelfTest : AbstractTest<SelfTestContext>() {
   interface SelfTestContext : TestContext {
-    /**
-     * TBD.
-     */
     fun notify(stage: TestStage)
-
-    /**
-     * TBD.
-     */
     fun assignResult(testResult: TestResult)
   }
+
   override val name: String get() = this::class.java.name
 
   override fun testInfo(): TestInfo = TestInfo.of(name, this)

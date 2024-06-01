@@ -16,7 +16,6 @@
   "UnstableApiUsage",
 )
 
-import com.jakewharton.mosaic.gradle.MosaicExtension
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
@@ -41,6 +40,7 @@ plugins {
 
   kotlin("jvm")
   kotlin("kapt")
+  kotlin("plugin.compose")
   kotlin("plugin.serialization")
   alias(libs.plugins.kover)
   alias(libs.plugins.buildConfig)
@@ -124,8 +124,6 @@ val enableDeprecated = false
 val enableJit = true
 val enablePreinitializeAll = true
 val enableTools = true
-val enableMosaic = true
-val enableMosaicExperimental = false
 val enableProguard = false
 val enableExperimental = false
 val enableEmbeddedResources = false
@@ -183,7 +181,6 @@ buildscript {
   }
   dependencies {
     classpath(libs.plugin.proguard)
-    classpath(libs.plugin.mosaic)
   }
 }
 
@@ -217,8 +214,6 @@ private fun platformConfig(type: String = "resource"): String {
     else -> error("Unsupported platform for '$type' configuration")
   }
 }
-
-if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val nativesRootTemplate: (String) -> String = { version ->
   "/tmp/elide-runtime/v$version/native"
@@ -266,10 +261,6 @@ val ktCompilerArgs = listOf(
 
   // opt-in to Elide's delicate runtime API
   "-opt-in=elide.runtime.core.DelicateElideApi",
-
-  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
-  // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0",
 )
 
 java {
@@ -304,18 +295,6 @@ sourceSets {
     if (enableJpms) java.srcDirs(
       layout.projectDirectory.dir("src/main/java9"),
     )
-  }
-}
-
-// use consistent compose plugin version
-if (enableMosaic) {
-  if (enableMosaicExperimental) {
-    val kotlinVersion = libs.versions.kotlin.sdk.get()
-    the<MosaicExtension>().kotlinCompilerPlugin =
-      "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlinVersion"   
-  } else {
-    the<MosaicExtension>().kotlinCompilerPlugin =
-      libs.androidx.compose.compiler.get().toString()
   }
 }
 
@@ -378,6 +357,7 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.bouncycastle)
+  implementation(libs.mosaic)
   runtimeOnly(mn.micronaut.runtime)
 
   implementation(libs.jline.reader)
@@ -1606,6 +1586,10 @@ tasks {
     systemProperty(
       "picocli.ansi",
       "tty",
+    )
+    systemProperty(
+      "elide.nativeTransport.v2",
+      enableNativeTransportV2.toString(),
     )
     jvmDefs.map {
       systemProperty(it.key, it.value)

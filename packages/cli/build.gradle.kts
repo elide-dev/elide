@@ -16,7 +16,6 @@
   "UnstableApiUsage",
 )
 
-import com.jakewharton.mosaic.gradle.MosaicExtension
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -43,6 +42,7 @@ plugins {
 
   kotlin("jvm")
   kotlin("kapt")
+  kotlin("plugin.compose")
   kotlin("plugin.serialization")
   id("io.micronaut.docker")
   alias(libs.plugins.kover)
@@ -118,7 +118,6 @@ val enableRuby = true
 val enableJit = true
 val enablePreinitializeAll = true
 val enableTools = true
-val enableMosaic = true
 val enableProguard = false
 val enableLlvm = true
 val enableEspresso = false
@@ -160,11 +159,8 @@ buildscript {
   }
   dependencies {
     classpath(libs.plugin.proguard)
-    classpath(libs.plugin.mosaic)
   }
 }
-
-if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val nativesRootTemplate: (String) -> String = { version ->
   "/tmp/elide-runtime/v$version/native"
@@ -255,8 +251,6 @@ sourceSets {
 
 // use consistent compose plugin version
 val kotlinVersion = libs.versions.kotlin.sdk.get()
-if (enableMosaic) the<MosaicExtension>().kotlinCompilerPlugin =
-  "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlinVersion"
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 val cliVersion = if (stamp) {
@@ -265,6 +259,7 @@ val cliVersion = if (stamp) {
   "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
 }
 
+version = cliVersion
 val nativesPath = nativesRootTemplate(cliVersion)
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
   .get()
@@ -313,10 +308,10 @@ dependencies {
   implementation(libs.logback)
   implementation(libs.tink)
   implementation(libs.bouncycastle)
+  implementation(libs.mosaic)
   implementation(libs.github.api) {
     exclude(group = "org.bouncycastle")
   }
-  implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)

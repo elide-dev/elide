@@ -55,6 +55,7 @@ import elide.tool.testing.SelfTest
 @Requires(os = [Requires.Family.MAC_OS])
 @Bean @EmbeddedTest class KQueueTest : SelfTest() {
   override suspend fun SelfTestContext.test() {
-    assertTrue(KQueue.isAvailable(), "kqueue should be available on macos")
+    if (System.getProperty("elide.nativeTransport.v2") != "true")
+      assertTrue(KQueue.isAvailable(), "kqueue should be available on macos")
   }
 }

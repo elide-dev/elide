@@ -18,6 +18,9 @@
   "name":"[J"
 },
 {
+  "name":"[Lio.micronaut.context.annotation.Requires$Family;"
+},
+{
   "name":"[Ljava.lang.String;"
 },
 {
@@ -31,6 +34,17 @@
 },
 {
   "name":"[Z"
+},
+{
+  "name":"android.os.Build"
+},
+{
+  "name":"androidx.compose.runtime.AtomicInt",
+  "fields":[{"name":"delegate$volatile"}]
+},
+{
+  "name":"androidx.compose.runtime.AtomicReference",
+  "fields":[{"name":"delegate$volatile"}]
 },
 {
   "name":"apple.security.AppleProvider",
@@ -104,6 +118,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.github.ajalt.clikt.core.CliktCommand",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "methods":[{"name":"removeFileSystemRunnable","parameterTypes":["java.net.URI"] }]
 },
@@ -113,6 +132,42 @@
 },
 {
   "name":"com.oracle.svm.core.jdk.resources.NativeImageResourceFileSystemProvider"
+},
+{
+  "name":"com.sun.crypto.provider.AESCipher$General",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.ARCFOURCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.ChaCha20Cipher$ChaCha20Poly1305",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.DESCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.DESedeCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.DHParameters",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.GaloisCounterMode$AESGCM",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.TlsMasterSecretGenerator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.CallbackProxy",
+  "methods":[{"name":"callback","parameterTypes":["java.lang.Object[]"] }]
 },
 {
   "name":"com.sun.jna.CallbackReference",
@@ -204,6 +259,9 @@
 {
   "name":"com.sun.management.internal.OperatingSystemImpl",
   "queryAllPublicConstructors":true
+},
+{
+  "name":"com.sun.security.cert.internal.x509.X509V1CertImpl"
 },
 {
   "name":"elide.runtime.gvm.cfg.$GuestIOConfiguration$Intercepted$Definition",
@@ -626,6 +684,14 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.sqlite.$ElideSqliteModule$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.sqlite.$ElideSqliteModule$Provide0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.vfs.$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -944,6 +1010,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.tool.cli.$Elide$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.tool.cli.$ElideTool$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -963,6 +1033,15 @@
 },
 {
   "name":"elide.tool.cli.AotConstantPropertySources"
+},
+{
+  "name":"elide.tool.cli.Elide",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"elide.tool.cli.Elide$Companion$ToolConfigurator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.ElideTool",
@@ -1934,6 +2013,27 @@
   "name":"io.netty.channel.unix.PeerCredentials"
 },
 {
+  "name":"io.netty.internal.tcnative.CertificateCallback"
+},
+{
+  "name":"io.netty.internal.tcnative.CertificateCallbackTask"
+},
+{
+  "name":"io.netty.internal.tcnative.SSLContext"
+},
+{
+  "name":"io.netty.internal.tcnative.SSLPrivateKeyMethodDecryptTask"
+},
+{
+  "name":"io.netty.internal.tcnative.SSLPrivateKeyMethodSignTask"
+},
+{
+  "name":"io.netty.internal.tcnative.SSLPrivateKeyMethodTask"
+},
+{
+  "name":"io.netty.internal.tcnative.SSLTask"
+},
+{
   "name":"io.netty.util.AbstractReferenceCounted",
   "fields":[{"name":"refCnt"}]
 },
@@ -2006,8 +2106,14 @@
   "fields":[{"name":"TYPE"}]
 },
 {
+  "name":"java.lang.Exception"
+},
+{
   "name":"java.lang.Float",
   "fields":[{"name":"TYPE"}]
+},
+{
+  "name":"java.lang.IllegalArgumentException"
 },
 {
   "name":"java.lang.Integer",
@@ -2018,9 +2124,13 @@
   "fields":[{"name":"TYPE"}]
 },
 {
+  "name":"java.lang.NullPointerException"
+},
+{
   "name":"java.lang.Object",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"hashCode","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"java.lang.OutOfMemoryError"
@@ -2057,8 +2167,28 @@
   "methods":[{"name":"unstarted","parameterTypes":["java.lang.Runnable"] }]
 },
 {
+  "name":"java.lang.Throwable",
+  "methods":[{"name":"addSuppressed","parameterTypes":["java.lang.Throwable"] }]
+},
+{
   "name":"java.lang.Void",
   "fields":[{"name":"TYPE"}]
+},
+{
+  "name":"java.lang.invoke.MethodHandle",
+  "methods":[{"name":"bindTo","parameterTypes":["java.lang.Object"] }, {"name":"invokeWithArguments","parameterTypes":["java.lang.Object[]"] }]
+},
+{
+  "name":"java.lang.invoke.MethodHandles",
+  "methods":[{"name":"lookup","parameterTypes":[] }, {"name":"privateLookupIn","parameterTypes":["java.lang.Class","java.lang.invoke.MethodHandles$Lookup"] }]
+},
+{
+  "name":"java.lang.invoke.MethodHandles$Lookup",
+  "methods":[{"name":"findSpecial","parameterTypes":["java.lang.Class","java.lang.String","java.lang.invoke.MethodType","java.lang.Class"] }, {"name":"in","parameterTypes":["java.lang.Class"] }, {"name":"unreflectSpecial","parameterTypes":["java.lang.reflect.Method","java.lang.Class"] }]
+},
+{
+  "name":"java.lang.invoke.MethodType",
+  "methods":[{"name":"methodType","parameterTypes":["java.lang.Class","java.lang.Class[]"] }]
 },
 {
   "name":"java.lang.management.BufferPoolMXBean",
@@ -2117,6 +2247,10 @@
 {
   "name":"java.lang.management.ThreadInfo",
   "queryAllPublicMethods":true
+},
+{
+  "name":"java.lang.reflect.Method",
+  "methods":[{"name":"isDefault","parameterTypes":[] }, {"name":"isVarArgs","parameterTypes":[] }]
 },
 {
   "name":"java.math.BigDecimal"
@@ -2411,6 +2545,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"kotlinx.coroutines.CancellableContinuationImpl",
+  "fields":[{"name":"_decisionAndIndex$volatile"}, {"name":"_parentHandle$volatile"}, {"name":"_state$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.CancelledContinuation",
+  "fields":[{"name":"_resumed$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.CompletedExceptionally",
+  "fields":[{"name":"_handled$volatile"}]
+},
+{
   "name":"kotlinx.coroutines.EventLoopImplBase",
   "fields":[{"name":"_delayed$volatile"}, {"name":"_isCompleted$volatile"}, {"name":"_queue$volatile"}]
 },
@@ -2421,6 +2567,25 @@
 {
   "name":"kotlinx.coroutines.JobSupport$Finishing",
   "fields":[{"name":"_exceptionsHolder$volatile"}, {"name":"_isCompleting$volatile"}, {"name":"_rootCause$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.debug.internal.ByteBuddyDynamicAttach"
+},
+{
+  "name":"kotlinx.coroutines.debug.internal.ConcurrentWeakMap",
+  "fields":[{"name":"_size$volatile"}, {"name":"core$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.debug.internal.ConcurrentWeakMap$Core",
+  "fields":[{"name":"load$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.debug.internal.DebugProbesImpl$DebugProbesImpl$VolatileWrapper$atomicfu$private",
+  "fields":[{"name":"installations$volatile"}, {"name":"sequenceNumber$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.flow.StateFlowImpl",
+  "fields":[{"name":"_state$volatile"}]
 },
 {
   "name":"kotlinx.coroutines.internal.DispatchedContinuation",
@@ -2443,8 +2608,24 @@
   "fields":[{"name":"_next$volatile"}, {"name":"_state$volatile"}]
 },
 {
+  "name":"kotlinx.coroutines.internal.ThreadSafeHeap",
+  "fields":[{"name":"_size$volatile"}]
+},
+{
   "name":"kotlinx.coroutines.scheduling.CoroutineScheduler",
   "fields":[{"name":"_isTerminated$volatile"}, {"name":"controlState$volatile"}, {"name":"parkedWorkersStack$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.scheduling.CoroutineScheduler$Worker",
+  "fields":[{"name":"workerCtl$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.scheduling.WorkQueue",
+  "fields":[{"name":"blockingTasksInBuffer$volatile"}, {"name":"consumerIndex$volatile"}, {"name":"lastScheduledTask$volatile"}, {"name":"producerIndex$volatile"}]
+},
+{
+  "name":"kotlinx.coroutines.stream.StreamFlow",
+  "fields":[{"name":"consumed$volatile"}]
 },
 {
   "name":"libcore.io.Memory"
@@ -2848,6 +3029,9 @@
 },
 {
   "name":"org.robolectric.Robolectric"
+},
+{
+  "name":"org.sqlite.JDBC"
 },
 {
   "name":"org.truffleruby.RubyLanguageProvider"
@@ -7060,6 +7244,10 @@
   "methods":[{"name":"<init>","parameterTypes":["java.rmi.server.RemoteRef"] }]
 },
 {
+  "name":"sun.security.provider.DSA$SHA224withDSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"sun.security.provider.DSA$SHA256withDSA",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -7084,7 +7272,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"sun.security.provider.SHA2$SHA224",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"sun.security.provider.SHA2$SHA256",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA5$SHA384",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA5$SHA512",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -7092,11 +7292,27 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"sun.security.rsa.PSSParameters",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"sun.security.rsa.RSAKeyFactory$Legacy",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"sun.security.rsa.RSAPSSSignature",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSASignature$SHA224withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"sun.security.rsa.RSASignature$SHA256withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.ssl.SSLContextImpl$TLSContext",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {

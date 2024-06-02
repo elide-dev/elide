@@ -10,10 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+package elide.runtime.gvm.js.node
 
-package dev.elide
+import elide.runtime.intrinsics.GuestIntrinsic
 
-/** Elide runtime tools -- coming soon. */
-public object ElideRuntime {
-  public const val SERVICE_VERSION: String = "v3"
+internal abstract class ElideJsModuleTest<T> : GenericJsModuleTest<T>() where T: GuestIntrinsic {
+  abstract val pureModuleName: String
+  override val moduleName: String get() = pureModuleName
 }

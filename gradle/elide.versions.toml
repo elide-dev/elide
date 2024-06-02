@@ -483,7 +483,7 @@ graalvm-tools-lsp-api = { group = "org.graalvm.tools", name = "lsp_api", version
 graalvm-tools-lsp-impl = { group = "org.graalvm.tools", name = "lsp-tool", version.ref = "graalvm" }
 graalvm-tools-profiler = { group = "org.graalvm.tools", name = "profiler-tool", version.ref = "graalvm" }
 graalvm-truffle-api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm" }
-graalvm-truffle-enterprise = { group = "org.graalvm.truffle", name = "truffle-enterprise", version.ref = "graalvm" }
+graalvm-truffle-enterprise = { group = "org.graalvm.truffle", name = "truffle-enterprise", version.ref = "graalvm-stable" }
 graalvm-truffle-nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm" }
 graalvm-truffle-nfi-libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm" }
 graalvm-truffle-nfi-native-darwin-aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-aarch64", version.ref = "graalvm-stable" }

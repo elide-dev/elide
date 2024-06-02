@@ -433,6 +433,7 @@
             <trusting group="org.xerial" name="sqlite-jdbc" version="3.45.0.0"/>
             <trusting group="org.xerial" name="sqlite-jdbc" version="3.45.1.0"/>
             <trusting group="org.xerial" name="sqlite-jdbc" version="3.45.3.0"/>
+            <trusting group="org.xerial" name="sqlite-jdbc" version="3.46.0.0"/>
          </trusted-key>
          <trusted-key id="C59362A11366D431E292AA32075DEF3EF14F0793" group="com.moandjiezana.toml" name="toml4j" version="0.7.2"/>
          <trusted-key id="C5AA57F4A38EBA7B7F9156DDAB2DA4527F6FFC0B" group="com.squareup" name="kotlinpoet" version="1.12.0"/>

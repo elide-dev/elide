@@ -22,6 +22,7 @@ Or, from inside `third_party`, you can just run `make`.
 - [esbuild][5]: Very fast JavaScript bundler and minifier.
 - [GraalVM][7]: Pinned version for Elide's edge
 - [grCUDA][6]: CUDA bindings for GraalVM
+- [SQLite][11]: Pinned version for Elide's use
 
 ### GraalVM Language Engines
 
@@ -40,4 +41,4 @@ Or, from inside `third_party`, you can just run `make`.
 [8]: https://github.com/oracle/graaljs
 [9]: https://github.com/oracle/graalpython
 [10]: https://github.com/oracle/truffleruby
-
+[11]: https://sqlite.org

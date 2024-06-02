@@ -25,10 +25,10 @@ import java.lang.reflect.Method
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.LinkedList
 import kotlin.io.path.Path
 import elide.runtime.feature.NativeLibraryFeature
-import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
-import elide.runtime.feature.NativeLibraryFeature.NativeLibType
+import elide.runtime.feature.NativeLibraryFeature.*
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.SHARED
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
 
@@ -41,9 +41,9 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     builtin: Boolean = true,
     registerJni: Boolean = true,
     registerPrefix: Boolean = builtin,
-    eager: Boolean = builtin,
+    eager: Boolean = false,
     absolutePath: Path? = null,
-    initializer: Boolean = false,
+    initializer: Boolean = true,
   ): NativeLibInfo = NativeLibInfo.of(
     name,
     *layout,
@@ -88,8 +88,9 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     vararg path: String,
     renameTo: ((String) -> String)? = null,
     cbk: (() -> Unit)? = null,
-  ) {
+  ): List<UnpackedNative> {
     val nativesPath = requireNotNull(System.getProperty("elide.natives")?.ifBlank { null })
+    val unpacked: LinkedList<UnpackedNative> = LinkedList()
     for (candidate in path) {
       val stream = scanForResource(jar, candidate) ?: continue
       stream.use {
@@ -110,8 +111,10 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
           target.outputStream().use { it.write(stream.readBytes()) }
         }
         cbk?.invoke()
+        unpacked.add(UnpackedNative(name, candidate, arch, target.toPath().toAbsolutePath()))
       }
     }
+    return unpacked
   }
 
   protected fun nativeLibrary(
@@ -135,8 +138,9 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
 
   public abstract fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo?>
 
-  public open fun unpackNatives(access: BeforeAnalysisAccess) {
+  public open fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> {
     // native libraries to unpack at build time
+    return emptyList()
   }
 
   override fun getRequiredFeatures(): MutableList<Class<out Feature>> {
@@ -168,9 +172,6 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
         when (it.type) {
           STATIC -> nativeLibraries.addStaticJniLibrary(it.name)
           SHARED -> error("Dynamic native libraries not supported yet: $it")
-        }
-        if (it.eager) {
-          nativeLibraries.addDynamicNonJniLibrary(it.linkName)
         }
       }
       if (it.eager) {

@@ -36,3 +36,6 @@
 [submodule "truffleruby"]
 	path = third_party/graalvm/truffleruby
 	url = https://github.com/oracle/truffleruby.git
+[submodule "sqlite"]
+	path = third_party/sqlite
+	url = git@github.com:sqlite/sqlite.git

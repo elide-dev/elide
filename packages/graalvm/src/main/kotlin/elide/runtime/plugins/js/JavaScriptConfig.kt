@@ -39,6 +39,13 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   }
 
   public inner class BuiltInModulesConfig {
+    /** Injected Elide API modules. */
+    private val elideModules: MutableMap<String, String> = listOf(
+      "sqlite",
+    ).associateWith {
+      "/__runtime__/$it"
+    }.toMutableMap()
+
     /** Core module replacement map. */
     private val moduleReplacements: MutableMap<String, String> = listOf(
       "assert",
@@ -91,7 +98,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
       "zlib",
     ).associateWith {
       "/__runtime__/$it"
-    }.toMutableMap()
+    }.toMutableMap().also {
+      it.putAll(elideModules)
+    }
 
     internal fun replacements(): Map<String, String> {
       return moduleReplacements

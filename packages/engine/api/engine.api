@@ -283,6 +283,14 @@ public final class elide/runtime/core/extensions/EngineBuilderKt {
 	public static final fun setOptions (Lorg/graalvm/polyglot/Engine$Builder;[Lkotlin/Pair;)V
 }
 
+public final class elide/runtime/core/lib/NativeLibraries {
+	public static final field INSTANCE Lelide/runtime/core/lib/NativeLibraries;
+	public final fun loadLibrary (Ljava/lang/String;)Z
+	public final fun loadLibrary (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun resolve (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
+	public static synthetic fun resolve$default (Lelide/runtime/core/lib/NativeLibraries;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
+}
+
 public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
 }
 

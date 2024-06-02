@@ -53,6 +53,10 @@
   }, {
     "pattern":"\\QMETA-INF/graalvm/org.graalvm.truffle/version\\E"
   }, {
+    "pattern":"\\QMETA-INF/maven/org.xerial/sqlite-jdbc/VERSION\\E"
+  }, {
+    "pattern":"\\QMETA-INF/maven/org.xerial/sqlite-jdbc/pom.properties\\E"
+  }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.core.beans.BeanIntrospectionReference\\E"
@@ -63,11 +67,17 @@
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
   }, {
+    "pattern":"\\QMETA-INF/native/libnetty_tcnative_osx_aarch_64.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/native/libnetty_tcnative_osx_aarch_64.jnilib\\E"
+  }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_io_uring_x86_64.so\\E"
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.dylib\\E"
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/darwin/aarch64/native.sha256\\E"
   }, {
     "pattern":"\\QMETA-INF/resources/engine/libtruffleattach/darwin/aarch64/sha256\\E"
   }, {
@@ -141,11 +151,15 @@
   }, {
     "pattern":"\\QMETA-INF/services/java.net.spi.InetAddressResolverProvider\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/java.net.spi.URLStreamHandlerProvider\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/java.nio.channels.spi.SelectorProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileTypeDetector\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.sql.Driver\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
   }, {
@@ -156,6 +170,8 @@
     "pattern":"\\QMETA-INF/services/jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory\\E"
   }, {
     "pattern":"\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory\\E"
   }, {
     "pattern":"\\QMETA-INF/services/org.graalvm.home.HomeFinder\\E"
   }, {
@@ -534,6 +550,8 @@
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___HAM_EGGS.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin\\E"
+  }, {
+    "pattern":"\\Qcom/sun/jna/darwin-aarch64/libjnidispatch.jnilib\\E"
   }, {
     "pattern":"\\Qgraalpy_versions\\E"
   }, {

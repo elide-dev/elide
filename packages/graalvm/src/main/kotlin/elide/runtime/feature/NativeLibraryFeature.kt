@@ -26,6 +26,14 @@ public interface NativeLibraryFeature : FrameworkFeature {
   }
 
   /** Native library info used at build-time. */
+  @JvmRecord public data class UnpackedNative(
+    val name: String,
+    val resource: String,
+    val arch: String,
+    val path: Path,
+  )
+
+  /** Native library info used at build-time. */
   @JvmRecord public data class NativeLibInfo(
     val name: String,
     val prefix: List<String>,

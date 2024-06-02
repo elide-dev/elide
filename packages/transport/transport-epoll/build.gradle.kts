@@ -31,7 +31,6 @@ library {
 
   targetMachines = listOf(
     machines.linux.x86_64,
-    machines.macOS.architecture("arm64"),
   )
 }
 

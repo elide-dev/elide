@@ -232,3 +232,17 @@ Updated: 2021-05-15
 
 Outdated base version: https://github.com/primer/github-syntax-dark
 Current colors taken from GitHub's CSS
+
+--------------------
+
+SQLite
+
+SQLite is in the public domain.
+https://www.sqlite.org/copyright.html
+
+--------------------
+
+SQLite JDBC
+
+Released under Apache License 2.0
+https://github.com/xerial/sqlite-jdbc/blob/master/LICENSE

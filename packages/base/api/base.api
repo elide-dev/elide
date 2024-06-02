@@ -36,6 +36,43 @@ public abstract interface annotation class elide/annotations/core/Internal : jav
 public abstract interface annotation class elide/annotations/data/Sensitive : java/lang/annotation/Annotation {
 }
 
+public abstract interface class elide/jvm/BoundResource : java/io/Closeable, java/lang/AutoCloseable {
+	public static final field Companion Lelide/jvm/BoundResource$Companion;
+}
+
+public final class elide/jvm/BoundResource$AutoCloseableResource : elide/jvm/BoundResource {
+	public fun <init> (Ljava/lang/AutoCloseable;)V
+	public fun close ()V
+}
+
+public final class elide/jvm/BoundResource$CloseableResource : elide/jvm/BoundResource {
+	public fun <init> (Ljava/io/Closeable;)V
+	public fun close ()V
+}
+
+public final class elide/jvm/BoundResource$Companion {
+	public final fun of (Ljava/io/Closeable;)Lelide/jvm/BoundResource;
+	public final fun of (Ljava/lang/AutoCloseable;)Lelide/jvm/BoundResource;
+}
+
+public abstract interface class elide/jvm/LifecycleBoundResources {
+	public abstract fun getAllResources ()Lkotlin/sequences/Sequence;
+	public abstract fun register (Ljava/io/Closeable;)V
+	public abstract fun register (Ljava/lang/AutoCloseable;)V
+	public abstract fun unregister (Ljava/io/Closeable;)V
+	public abstract fun unregister (Ljava/lang/AutoCloseable;)V
+}
+
+public class elide/jvm/ResourceManager : elide/jvm/LifecycleBoundResources, java/io/Closeable, java/lang/AutoCloseable {
+	public fun <init> ()V
+	public fun close ()V
+	public fun getAllResources ()Lkotlin/sequences/Sequence;
+	public fun register (Ljava/io/Closeable;)V
+	public fun register (Ljava/lang/AutoCloseable;)V
+	public fun unregister (Ljava/io/Closeable;)V
+	public fun unregister (Ljava/lang/AutoCloseable;)V
+}
+
 public final class elide/runtime/LogLevel : java/lang/Enum {
 	public static final field DEBUG Lelide/runtime/LogLevel;
 	public static final field ERROR Lelide/runtime/LogLevel;

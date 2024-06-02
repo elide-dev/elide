@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.tool.feature
+package elide.runtime.feature.engine
 
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.*
@@ -28,52 +28,63 @@ import org.sqlite.jdbc3.JDBC3DatabaseMetaData
 import org.sqlite.util.LibraryLoaderUtil
 import org.sqlite.util.OSInfo
 import elide.annotations.internal.VMFeature
-import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
+import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
+import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
-@VMFeature class NativeSQLiteFeature : AbstractStaticNativeLibraryFeature() {
+/** Mounts the SQLite native library via static JNI. */
+@VMFeature public class NativeSQLiteFeature : AbstractStaticNativeLibraryFeature() {
+  private companion object {
+    private const val STATIC_JNI = false
+  }
+
   override fun getDescription(): String = "Registers native SQLite access"
 
-  override fun nativeLibs(access: BeforeAnalysisAccess) = listOfNotNull(
-    nativeLibrary(linux = libraryNamed(
-      "sqlitejdbc",
+  override fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo> = if (STATIC_JNI) listOfNotNull(
+    nativeLibrary(singular = libraryNamed(
+      "sqlite",
       "org.sqlite.core.NativeDB",
     )),
-  )
+  ) else emptyList()
 
-  override fun unpackNatives(access: BeforeAnalysisAccess) {
+  override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> {
     when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> access.unpackLibrary(
-          "sqlite-jdbc",
-          "sqlitejdbc",
+        "x86_64", "amd64" -> return access.unpackLibrary(
+          "sqlite",
+          "sqlite",
           "x86-64",
-          "org/sqlite/native/Linux/x86_64/libsqlitejdbc.so",
+          "META-INF/native/static/linux/x86-64/libsqlite.a",
+          "META-INF/native/shared/linux/x86-64/libsqlite.so",
         )
 
-        "aarch64", "arm64" -> access.unpackLibrary(
-          "sqlite-jdbc",
-          "sqlitejdbc",
+        "aarch64", "arm64" -> return access.unpackLibrary(
+          "sqlite",
+          "sqlite",
           "x86-64",
-          "org/sqlite/native/Linux/aarch64/libsqlitejdbc.so",
+          "META-INF/native/static/linux/arm64/libsqlite.a",
+          "META-INF/native/shared/linux/arm64/libsqlite.so",
         )
       }
 
       Platform.includedIn(Platform.DARWIN::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> access.unpackLibrary(
-          "sqlite-jdbc",
-          "sqlitejdbc",
+        "x86_64", "amd64" -> return access.unpackLibrary(
+          "sqlite",
+          "sqlite",
           "x86-64",
-          "org/sqlite/native/Mac/x86_64/libsqlitejdbc.dylib",
+          "META-INF/native/static/macos/x86-64/libsqlite.a",
+          "META-INF/native/shared/macos/x86-64/libsqlite.dylib",
         )
 
-        "aarch64", "arm64" -> access.unpackLibrary(
-          "sqlite-jdbc",
-          "sqlitejdbc",
+        "aarch64", "arm64" -> return access.unpackLibrary(
+          "sqlite",
+          "sqlite",
           "x86-64",
-          "org/sqlite/native/Mac/aarch64/libsqlitejdbc.dylib",
+          "META-INF/native/static/macos/arm64/libsqlite.a",
+          "META-INF/native/shared/macos/arm64/libsqlite.dylib",
         )
       }
     }
+    return emptyList()
   }
 
   private fun onDbReachable() {
@@ -127,20 +138,12 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
     RuntimeJNIAccess.register(BooleanArray::class.java)
   }
 
-  private fun initializeSqlite() {
-    assert(SQLiteJDBCLoader.initialize()) { "Failed to initialize SQLite" }
-    assert(SQLiteJDBCLoader.isNativeMode()) { "Native mode for SQLite should be enabled" }
-  }
-
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
     super.beforeAnalysis(access)
+    onDbReachable()
     RuntimeClassInitialization.initializeAtBuildTime(VersionHolder::class.java)
     RuntimeClassInitialization.initializeAtBuildTime(JDBC3DatabaseMetaData::class.java)
     RuntimeClassInitialization.initializeAtBuildTime(OSInfo::class.java)
     RuntimeClassInitialization.initializeAtBuildTime(LibraryLoaderUtil::class.java)
-    access.registerReachabilityHandler(
-      { onDbReachable().also { initializeSqlite() } },
-      method(SQLiteJDBCLoader::class.java, "initialize"),
-    )
   }
 }

@@ -28,6 +28,7 @@
     <ID>NestedBlockDepth:SelfTestCommand.kt$SelfTestCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>ObjectPropertyNaming:Statics.kt$Statics$val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
+    <ID>ReturnCount:NativeSQLiteFeature.kt$NativeSQLiteFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: SortedSet&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
     <ID>SpreadOperator:ElideTool.kt$ElideTool.Companion$(*args)</ID>
@@ -62,11 +63,9 @@
     <ID>TooGenericExceptionThrown:NativeUtil.kt$NativeUtil$throw RuntimeException("An error occurred while getting the resources for $path", iox)</ID>
     <ID>TooManyFunctions:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>UnusedParameter:ElideTool.kt$ElideTool.Companion$win32: Boolean = false</ID>
-    <ID>UnusedParameter:Mosaic.kt$running: Int</ID>
     <ID>UnusedPrivateMember:NativeEngine.kt$NativeEngine$@JvmStatic private fun HostPlatform.loadNativeTooling(workdir: File, loader: ClassLoader)</ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
-    <ID>UnusedPrivateProperty:Mosaic.kt$val fmtMs = "%dms".format(System.currentTimeMillis() - start)</ID>
     <ID>UnusedPrivateProperty:RuntimeWorkdirManager.kt$RuntimeWorkdirManager.Companion$private const val tempDir = "temp"</ID>
     <ID>VariableNaming:AbstractScriptEngineFactory.kt$AbstractScriptEngineFactory.PolyglotContext$private val `in`: PolyglotReader</ID>
     <ID>VariableNaming:ToolShellCommand.kt$ToolShellCommand.InspectorConfig$/** Specifies whether the inspector should suspend for internal (facade) sources. */ @Option( names = ["--inspect:internal"], description = ["Specifies whether the inspector should suspend for internal (facade) sources"], defaultValue = "false", hidden = false, ) internal var `internal`: Boolean = false</ID>

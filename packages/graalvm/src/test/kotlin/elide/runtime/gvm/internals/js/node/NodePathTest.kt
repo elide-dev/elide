@@ -32,6 +32,18 @@ import elide.testing.annotations.TestCase
 import kotlin.io.path.Path as KotlinPath
 import elide.runtime.intrinsics.js.node.path.Path as PathIntrinsic
 
+fun PathAPI.testDirname(parsed: PathIntrinsic): String? {
+  return dirname(parsed)
+}
+@Suppress("RedundantNullableReturnType")
+fun PathAPI.testBasename(parsed: PathIntrinsic): String? {
+  return basename(parsed)
+}
+@Suppress("RedundantNullableReturnType")
+fun PathAPI.testExtname(parsed: PathIntrinsic): String? {
+  return extname(parsed)
+}
+
 // @TODO: this will need normalization for non-unix test runs
 // @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong
 @TestCase internal class NodePathTest : NodeModuleConformanceTest<NodePathsModule>() {
@@ -420,23 +432,11 @@ import elide.runtime.intrinsics.js.node.path.Path as PathIntrinsic
       assertTrue(api.isAbsolute(parsed), "Absolute path should be absolute (API): $path (type: $label)")
     }
 
-    fun testDirname(parsed: PathIntrinsic): String? {
-      return api.dirname(parsed)
-    }
-    @Suppress("RedundantNullableReturnType")
-    fun testBasename(parsed: PathIntrinsic): String? {
-      return api.basename(parsed)
-    }
-    @Suppress("RedundantNullableReturnType")
-    fun testExtname(parsed: PathIntrinsic): String? {
-      return api.extname(parsed)
-    }
-
     // each basename and dirname test should match
     listOf(
-      "dirname" to (testPaths.dirnameTests to ::testDirname),
-      "basename" to (testPaths.basenameTests to ::testBasename),
-      "extname" to (testPaths.extnameTests to ::testExtname),
+      "dirname" to (testPaths.dirnameTests to api::testDirname),
+      "basename" to (testPaths.basenameTests to api::testBasename),
+      "extname" to (testPaths.extnameTests to api::testExtname),
     ).forEach { (testProfile, suite) ->
       val (samples, testOp) = suite
       samples.forEach { (path, expected) ->

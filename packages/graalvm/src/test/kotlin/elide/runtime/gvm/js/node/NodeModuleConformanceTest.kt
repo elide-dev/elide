@@ -44,7 +44,7 @@ import elide.runtime.intrinsics.GuestIntrinsic
  * Extends the default JavaScript module test profile to include a Node conformance test; in this mode, the guest code
  * is run against the embedded Elide guest, and also against Node, so the output can be compared.
  */
-internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJsModuleTest<T>() {
+internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJsModuleTest<T>() {
   companion object {
     private const val NODE_BIN = "node"
   }
@@ -57,7 +57,7 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
    */
   open val nodeBuiltin: Boolean get() = true
 
-  // Run a Node JS sub-process with the provided inputs.
+  // Run a Node.js subprocess with the provided inputs.
   private fun runConformanceInner(
     args: List<String>,
     stdin: String? = null,
@@ -233,23 +233,6 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
     return runConformance(rendered.toString())
   }
 
-  open fun expectCompliance(): Boolean = true
-
-  open fun requiredMembers(): Sequence<String> = emptySequence()
-
-  @TestFactory open fun `node api - require(mod) should specify expected members`(): Stream<DynamicTest> {
-    return requiredMembers().map { member ->
-      DynamicTest.dynamicTest("$moduleName.$member") {
-        val keys = require().memberKeys
-        if (!expectCompliance() && !keys.contains(member)) {
-          Assumptions.abort<Unit>("not yet compliant for member '$member' (module: '$moduleName')")
-        } else {
-          assertContains(keys, member, "member '$member' should be present on module '$moduleName'")
-        }
-      }
-    }.asStream()
-  }
-
   @TestFactory open fun `node api - require(mod) prefixed should specify expected members`(): Stream<DynamicTest> {
     return requiredMembers().map { member ->
       DynamicTest.dynamicTest("$moduleName.$member") {
@@ -263,23 +246,11 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : AbstractJ
     }.asStream()
   }
 
-  @Test fun `should be able to require() builtin module`() {
-    require()
-  }
-
   @Test fun `should be able to require() builtin module (node prefix)`() {
     require("node:$moduleName")
   }
 
-  @Test fun `should be able to import builtin module`() {
-    import()
-  }
-
   @Test fun `should be able to import builtin module (node prefix)`() {
     import("node:$moduleName")
-  }
-
-  @Test fun `should be able to load module from guest context`() {
-    load()
   }
 }

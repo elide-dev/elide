@@ -255,6 +255,7 @@ include(
   ":packages:serverless",
   ":packages:ssr",
   ":packages:test",
+  ":packages:sqlite",
   ":packages:transport:transport-common",
   ":packages:transport:transport-unix",
   ":packages:transport:transport-epoll",

@@ -60,6 +60,8 @@ elide {
 }
 
 val oracleGvm = false
+val enableEdge = true
+val enableToolchains = true
 val nativeArgs = listOfNotNull(
   "--shared",
   "--verbose",
@@ -76,6 +78,27 @@ val nativeArgs = listOfNotNull(
   "-H:+ReportExceptionStackTraces",
   "-J--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=org.graalvm.truffle.runtime",
 )
+
+// Java Launcher (GraalVM at either EA or LTS)
+val edgeJvmTarget = 23
+val ltsJvmTarget = 21
+val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
+val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)
+val selectedJvmTarget = if (enableEdge) edgeJvmTarget else ltsJvmTarget
+val selectedJvm = if (enableEdge) edgeJvm else ltsJvm
+
+val jvmType: JvmVendorSpec =
+  if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
+
+val gvmLauncher = javaToolchains.launcherFor {
+  languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+  vendor.set(jvmType)
+}
+
+val gvmCompiler = javaToolchains.compilerFor {
+  languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+  vendor.set(jvmType)
+}
 
 graalvmNative {
   binaries {
@@ -123,11 +146,20 @@ tasks {
     exclude("**/runtime.current.json")
   }
 
+  compileJava {
+    if (enableToolchains) javaCompiler = gvmCompiler
+  }
+
+  compileTestJava {
+    if (enableToolchains) javaCompiler = gvmCompiler
+  }
+
   test {
     maxHeapSize = "2G"
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.js.vm.enableStreams", "true")
+    if (enableToolchains) javaLauncher = gvmLauncher
   }
 }

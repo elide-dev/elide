@@ -31,7 +31,9 @@ JS_TOOLS ?= oxc esbuild
 PY_TOOLS ?= ruff uv
 LANGS ?= pkl
 
-ALL_LIBS ?= $(JS_TOOLS) $(PY_TOOLS) $(LANGS)
+REQUIRED ?= sqlite
+
+ALL_LIBS ?= $(REQUIRED)
 
 ifeq ($(RELOCK),yes)
 GRADLE_ARGS += --write-verification-metadata sha256,sha512 --export-keys --write-locks
@@ -43,7 +45,7 @@ else
 RULE ?= @
 endif
 
-all: pkl ruff uv esbuild oxc
+all: $(ALL_LIBS)
 
 pkl: apple/pkl/build
 
@@ -87,6 +89,23 @@ oxc-project/oxc/target:
 	@echo "Building oxc-project/oxc..."
 	$(RULE)cd oxc-project/oxc && $(CARGO) build
 
+SQLITE3_CONFIGURE ?= --enable-all --enable-memsys5 --enable-update-limit --enable-tempstore=yes --enable-debug
+
+sqlite: sqlite/sqlite3.c
+
+sqlite-clean:
+	$(RULE)cd sqlite && $(MAKE) clean && rm -fv Makefile sqlite3.c
+
+sqlite/Makefile:
+	@echo ""
+	@echo "Configuring sqlite3 amalgamation..."
+	$(RULE)cd sqlite && ./configure $(SQLITE3_CONFIGURE)
+
+sqlite/sqlite3.c: sqlite/Makefile
+	@echo ""
+	@echo "Building sqlite3 amalgamation..."
+	$(RULE)cd sqlite && $(MAKE) sqlite3.c
+
 libroot: $(LIBROOT)
 
 $(LIBROOT):
@@ -107,5 +126,6 @@ clean:
 	$(RULE)-cd astral/ruff && $(CARGO) clean
 	$(RULE)-cd astral/uv && $(CARGO) clean
 	$(RULE)-cd oxc-project/oxc && $(CARGO) clean
+	$(RULE)-cd sqlite && $(MAKE) clean && rm -fv Makefile sqlite3.c
 
 .PHONY: all pkl ruff uv oxc esbuild libroot

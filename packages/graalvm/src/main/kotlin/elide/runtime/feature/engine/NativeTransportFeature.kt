@@ -18,6 +18,7 @@ import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import java.nio.file.Path
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
+import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
 /** Registers native transport libraries for static JNI. */
 @VMFeature internal class NativeTransportFeature : AbstractStaticNativeLibraryFeature() {
@@ -110,53 +111,53 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
     )
   } else emptyList()
 
-  override fun unpackNatives(access: BeforeAnalysisAccess) {
+  override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> {
     if (enableV2Transport) when {
-      Platform.includedIn(Platform.LINUX_AMD64::class.java) -> access.unpackLibrary(
+      Platform.includedIn(Platform.LINUX_AMD64::class.java) -> return access.unpackLibrary(
         "transport-epoll",
         "netty_transport_native_epoll",
         "x86-64",
-        "META-INF/native/linux/x86-64/libtransport-epoll.a",
-        "META-INF/native/linux/x86-64/libtransport-epoll.so",
+        "META-INF/native/static/x86-64/libtransport-epoll.a",
+        "META-INF/native/shared/x86-64/libtransport-epoll.so",
         renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
       )
 
-      Platform.includedIn(Platform.LINUX_AARCH64::class.java) -> access.unpackLibrary(
+      Platform.includedIn(Platform.LINUX_AARCH64::class.java) -> return access.unpackLibrary(
         "transport-epoll",
         "netty_transport_native_epoll",
         "aarch64",
-        "META-INF/native/linux/arm64/libtransport-epoll.a",
-        "META-INF/native/linux/arm64/libtransport-epoll.so",
+        "META-INF/native/static/arm64/libtransport-epoll.a",
+        "META-INF/native/shared/arm64/libtransport-epoll.so",
         renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
       )
 
-      Platform.includedIn(Platform.DARWIN_AMD64::class.java) -> access.unpackLibrary(
+      Platform.includedIn(Platform.DARWIN_AMD64::class.java) -> return access.unpackLibrary(
         "transport-kqueue",
         "netty_transport_native_kqueue",
         "aarch64",
-        "META-INF/native/x86-64/libtransport-kqueue.a",
-        "META-INF/native/x86-64/libtransport-kqueue.dylib",
+        "META-INF/native/static/x86-64/libtransport-kqueue.a",
+        "META-INF/native/shared/x86-64/libtransport-kqueue.dylib",
         renameTo = { "libnetty_transport_native_kqueue.${it.substringAfterLast(".")}" },
       )
 
-      Platform.includedIn(Platform.DARWIN_AARCH64::class.java) -> access.unpackLibrary(
+      Platform.includedIn(Platform.DARWIN_AARCH64::class.java) -> return access.unpackLibrary(
         "transport-kqueue",
         "netty_transport_native_kqueue",
         "aarch64",
-        "META-INF/native/arm64/libtransport-kqueue.a",
-        "META-INF/native/arm64/libtransport-kqueue.dylib",
+        "META-INF/native/static/arm64/libtransport-kqueue.a",
+        "META-INF/native/shared/arm64/libtransport-kqueue.dylib",
         renameTo = { "libnetty_transport_native_kqueue.${it.substringAfterLast(".")}" },
       )
     } else when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> return access.unpackLibrary(
           "netty-transport-native-epoll",
           "netty_transport_native_epoll_x86_64",
           "x86-64",
           "META-INF/native/libnetty_transport_native_epoll_x86_64.so",
         ) { io.netty.channel.epoll.Epoll.ensureAvailability() }
 
-        "aarch64", "arm64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> return access.unpackLibrary(
           "netty-transport-native-epoll",
           "netty_transport_native_epoll_aarch_64",
           "aarch64",
@@ -165,14 +166,14 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
       }
 
       Platform.includedIn(Platform.DARWIN::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> return access.unpackLibrary(
           "netty-transport-native-kqueue",
           "netty_transport_native_kqueue_x86_64",
           "x86-64",
           "META-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib",
         ) { io.netty.channel.kqueue.KQueue.ensureAvailability() }
 
-        "aarch64", "arm64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> return access.unpackLibrary(
           "netty-transport-native-kqueue",
           "netty_transport_native_kqueue_aarch_64",
           "aarch64",
@@ -180,5 +181,6 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
         ) { io.netty.channel.kqueue.KQueue.ensureAvailability() }
       }
     }
+    return emptyList()
   }
 }

@@ -45,8 +45,12 @@ group = "dev.elide"
 version = rootProject.version as String
 
 val nativesType = "debug"
-val enableJpms = false
 val oracleGvm = false
+val enableJpms = false
+val enableEdge = true
+val enableSqlite = true
+val enableStaticJni = true
+val enableToolchains = true
 val enableTransportV2 = false
 val ktCompilerArgs = emptyList<String>()
 val javacArgs = listOf(
@@ -55,6 +59,27 @@ val javacArgs = listOf(
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
 )
+
+// Java Launcher (GraalVM at either EA or LTS)
+val edgeJvmTarget = 23
+val ltsJvmTarget = 21
+val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
+val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)
+val selectedJvmTarget = if (enableEdge) edgeJvmTarget else ltsJvmTarget
+val selectedJvm = if (enableEdge) edgeJvm else ltsJvm
+
+val jvmType: JvmVendorSpec =
+  if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
+
+val gvmLauncher = javaToolchains.launcherFor {
+  languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+  vendor.set(jvmType)
+}
+
+val gvmCompiler = javaToolchains.compilerFor {
+  languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+  vendor.set(jvmType)
+}
 
 elide {
   publishing {
@@ -93,10 +118,16 @@ kover {
     classes(
       "elide.runtime.gvm.js.JavaScript",
       "elide.runtime.gvm.internals.intrinsics.NativeRuntime",
+      "elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature",
+      "elide.runtime.feature.engine.NativeConsoleFeature",
+      "elide.runtime.feature.engine.NativeCryptoFeature",
+      "elide.runtime.feature.engine.NativeSQLiteFeature",
+      "elide.runtime.feature.engine.NativeTransportFeature",
     )
     packages(
       "elide.runtime.feature",
-      "elide.runtime.feature.*"
+      "elide.runtime.feature.*",
+      "elide.runtime.feature.engine",
     )
   }
 }
@@ -140,6 +171,9 @@ val nativesPath = nativesRootTemplate(pkgVersion)
 val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$pkgVersion").asFile.path
 
 val jvmDefs = mapOf(
+  "elide.natives" to nativesPath,
+  "org.sqlite.lib.path" to nativesPath,
+  "org.sqlite.lib.exportPath" to nativesPath,
   "elide.nativeTransport.v2" to enableTransportV2.toString(),
 )
 
@@ -230,6 +264,11 @@ val initializeAtRunTimeTest = listOfNotNull(
 
 val sharedLibArgs = listOfNotNull(
   // "--verbose",
+  // "-J-Xlog:library=info",
+  "-H:+JNIVerboseLookupErrors",
+  "-H:+JNI",
+  "-Delide.staticJni=$enableStaticJni",
+  "-J-Delide.staticJni=$enableStaticJni",
   "--enable-native-access=com.sun.jna,ALL-UNNAMED",
   "--initialize-at-build-time=",
   "--initialize-at-run-time=${initializeAtRunTime.joinToString(",")}",
@@ -441,7 +480,8 @@ dependencies {
   implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
 
   // SQLite
-  implementation(libs.sqlite)
+  if (enableSqlite) implementation(projects.packages.sqlite)
+  else compileOnly(projects.packages.sqlite)
 
   implementation(libs.protobuf.java)
   implementation(libs.protobuf.kotlin)
@@ -506,6 +546,7 @@ tasks {
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.js.vm.enableStreams", "true")
+    if (enableToolchains) javaLauncher = gvmLauncher
   }
 
   javadoc {
@@ -534,6 +575,19 @@ tasks {
     options.compilerArgumentProviders.add(CommandLineArgumentProvider {
       javacArgs
     })
+
+    if (enableToolchains) javaCompiler = gvmCompiler
+  }
+
+  compileTestJava {
+    options.javaModuleVersion = version as String
+    if (enableJpms) modularity.inferModulePath = true
+
+    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+      javacArgs
+    })
+
+    if (enableToolchains) javaCompiler = gvmCompiler
   }
 
   /**

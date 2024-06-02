@@ -18,7 +18,6 @@ import com.google.devtools.ksp.gradle.KspTask
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.the
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.*
@@ -28,9 +27,9 @@ import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.noarg.gradle.NoArgExtension
+import org.jetbrains.kotlin.powerassert.gradle.PowerAssertGradleExtension
 import java.util.LinkedList
 import java.util.TreeSet
-import java.util.concurrent.atomic.AtomicReference
 import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.Constants.Elide
 import elide.internal.conventions.Constants.Kotlin
@@ -61,6 +60,17 @@ private const val KAPT_PLUGIN_ID = "org.jetbrains.kotlin.kapt"
 
 // ID for the Kotlin KSP plugin.
 private const val KSP_PLUGIN_ID = "com.google.devtools.ksp"
+
+// List of symbols eligible for power-assert processing.
+private val powerAssertEligibleSymbols = setOf(
+  "kotlin.test.assertEquals",
+  "kotlin.test.assertTrue",
+  "kotlin.test.assertFalse",
+  "kotlin.test.assertNotNull",
+  "kotlin.test.assertNull",
+  "kotlin.test.assertSame",
+  "kotlin.test.assertNotSame",
+)
 
 /**
  * Configure a Kotlin project targeting a specific platform. Options passed to this convention are applied to every
@@ -301,7 +311,9 @@ internal fun Project.configureKotlinBuild(
   // configure `power-assert` plugin
   if (conventions.powerAssert) plugins.apply(POWER_ASSERT_PLUGIN_ID).also {
     pluginManager.withPlugin(POWER_ASSERT_PLUGIN_ID) {
-      // nothing at this time
+      extensions.getByType(PowerAssertGradleExtension::class.java).apply {
+        functions.addAll(powerAssertEligibleSymbols)
+      }
     }
   }
 

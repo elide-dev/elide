@@ -67,6 +67,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
+            objects.githubusercontent.com:443
             d3ob9fqp587by1.cloudfront.net:443
             download.oracle.com:443
             maven.elide.dev:443

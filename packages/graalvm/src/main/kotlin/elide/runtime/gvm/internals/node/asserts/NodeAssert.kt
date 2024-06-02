@@ -50,7 +50,6 @@ private const val ASSERT_MODULE_SYMBOL: String = "__Elide_node_assert__"
 
 // Installs the Node assert module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeAssertModule : AbstractNodeBuiltinModule() {
-  // Provide a compliant instance of the OS API to the DI context.
   @Singleton fun provide(): AssertAPI = NodeAssert.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {

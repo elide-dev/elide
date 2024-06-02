@@ -417,7 +417,6 @@ org.spockframework:spock-bom:2.3-groovy-4.0=compileClasspath,runtimeClasspath
 org.springframework:spring-framework-bom:6.1.5=compileClasspath,runtimeClasspath
 org.testcontainers:testcontainers-bom:1.19.7=compileClasspath,runtimeClasspath
 org.tukaani:xz:1.9=runtimeClasspath
-org.xerial:sqlite-jdbc:3.45.3.0=runtimeClasspath
 org.yaml:snakeyaml:2.2=compileClasspath,runtimeClasspath
 software.amazon.awssdk:bom:2.24.10=compileClasspath,runtimeClasspath
 empty=detektPlugins,intransitiveDependenciesMetadata,kotlinCompilerPluginClasspath,kotlinNativeCompilerPluginClasspath,kotlinProcessors,kotlinScriptDefExtensions,koverExternalArtifacts,ktlintReporter,modules,signatures,testIntransitiveDependenciesMetadata,testKotlinScriptDefExtensions

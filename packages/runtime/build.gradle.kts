@@ -54,8 +54,9 @@ plugins {
 
 elide {
   kotlin {
+    powerAssert = true
+    atomicFu = true
     target = KotlinTarget.JVM
-    kotlinVersionOverride = "2.0"
   }
 
   jvm {
@@ -113,6 +114,8 @@ val enableLlvm = false
 val enableJvm = hostIsLinux
 val enableKotlin = false
 val enableSqlite = true
+val enableSqliteStatic = false
+val enableStaticJni = true
 val enableToolchains = !hostIsLinux
 val enableFfm = hostIsLinux && System.getProperty("os.arch") == "amd64"
 val oracleGvm = false
@@ -162,7 +165,6 @@ val exclusions = listOfNotNull(
 ).plus(listOf(
   // disable netty native transports if our own transport libraries are in use
   libs.netty.transport.native.epoll,
-  //libs.netty.transport.native.iouring,
   libs.netty.transport.native.kqueue,
 ).onlyIf(enableNativeTransportV2))
 
@@ -372,7 +374,10 @@ dependencies {
   }
 
   // SQLite Engine
-  if (enableSqlite) implementation(libs.sqlite)
+  if (enableSqlite) {
+    implementation(projects.packages.sqlite)
+    testImplementation(libs.sqlite)
+  }
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
@@ -698,10 +703,8 @@ val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 
 val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+LayeredBaseImageAnalysis",
-  "-H:+JNIEnhancedErrorCodes",
   "-H:+RemoveUnusedSymbols",
 
-  onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(oracleGvm, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
 
   onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
@@ -735,25 +738,25 @@ val deprecatedNativeArgs = listOf(
 
 val enabledFeatures = listOfNotNull(
   "elide.tool.feature.ToolingUmbrellaFeature",
-  onlyIf(enableSqlite, "elide.tool.feature.NativeSQLiteFeature"),
+  onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
 )
 
 val linkerOptions: List<String> = listOfNotNull()
 
 val commonNativeArgs = listOfNotNull(
+  // Debugging flags:
   // "--verbose",
   // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner${'$'}CleanerThread.this${'$'}0",
   // "--trace-object-instantiation=com.sun.jna.internal.Cleaner",
-  // "-J-Xlog:library=info",
-  //
+  onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
   onlyIf(enableFfm, "-H:+ForeignAPISupport"),
   onlyIf(dumpPointsTo, "-H:PrintAnalysisCallTreeType=CSV"),
   onlyIf(dumpPointsTo, "-H:+PrintImageObjectTree"),
   onlyIf(enabledFeatures.isNotEmpty(), "--features=${enabledFeatures.joinToString(",")}"),
-  //
+  // Flags which should be dropped after fixes (Mosaic crash):
   "--report-unsupported-elements-at-runtime",
-  //
+  // Common flags:
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -774,6 +777,9 @@ val commonNativeArgs = listOfNotNull(
   "-H:+JNIEnhancedErrorCodes",
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
+  "-H:NativeLinkerOption=-L$nativesPath",
+  "-Delide.staticJni=$enableStaticJni",
+  "-J-Delide.staticJni=$enableStaticJni",
   "-Delide.natives=$nativesPath",
   "-J-Delide.natives=$nativesPath",
   "-Dorg.sqlite.lib.path=$nativesPath",
@@ -819,7 +825,18 @@ val commonNativeArgs = listOfNotNull(
 ).toList()
 
 val debugFlags: List<String> = listOfNotNull(
+  "--verbose",
   "-march=compatibility",
+  "-J-Xlog:library=info",
+  "-H:+SourceLevelDebug",
+  "-H:-DeleteLocalSymbols",
+  "-H:-RemoveUnusedSymbols",
+  "-H:+PreserveFramePointer",
+  // "-H:-ReduceDCE",
+  // "-H:+PrintMethodHistogram",
+  // "-H:+PrintPointsToStatistics",
+  // "-H:+PrintRuntimeCompileMethods",
+  // "-H:+ReportPerformedSubstitutions",
 ).plus(
   listOf("-g").onlyIf(hostIsLinux)
 )
@@ -883,9 +900,8 @@ val experimentalCFlags: List<String> = listOf(
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
   "-O4",
-  "-H:+RemoveUnusedSymbols",
-  "-H:-ParseRuntimeOptions",
   "-H:+LocalizationOptimizedMode",
+  "-H:+RemoveUnusedSymbols",
 ).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -901,6 +917,8 @@ val releaseFlags: List<String> = listOf(
 ).flatten()).toList()
 
 val jvmDefs = mapOf(
+  "elide.natives" to nativesPath,
+  "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
   "io.netty.allocator.type" to "unpooled",
   "io.netty.native.deleteLibAfterLoading" to "false",
   "io.netty.native.detectNativeLibraryDuplicates" to "false",
@@ -911,6 +929,10 @@ val jvmDefs = mapOf(
   "polyglotimpl.DisableVersionChecks" to "true",
   "user.country" to "US",
   "user.language" to "en",
+  "org.sqlite.lib.path" to nativesPath,
+  "org.sqlite.lib.exportPath" to nativesPath,
+  "io.netty.native.workdir" to nativesPath,
+  "io.netty.native.deleteLibAfterLoading" to false.toString(),
 )
 
 val hostedRuntimeOptions = mapOf(
@@ -922,7 +944,11 @@ val initializeAtBuildTimeTest: List<String> = listOf(
   "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
 )
 
-val initializeAtRuntime: List<String> = listOf(
+val initializeAtRuntime: List<String> = listOfNotNull(
+  onlyIf(!enableSqliteStatic, "org.sqlite.SQLiteJDBCLoader"),
+  onlyIf(!enableSqliteStatic, "org.sqlite.core.NativeDB"),
+  onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
+
   "java.awt.Desktop",
   "java.awt.Toolkit",
   "sun.awt.X11.MotifDnDConstants",
@@ -1045,9 +1071,19 @@ val initializeAtRuntime: List<String> = listOf(
   "io.netty.handler.codec.http2.Http2ClientUpgradeCodec",
   "io.netty.handler.codec.http2.Http2ConnectionHandler",
   "io.netty.handler.codec.http2.DefaultHttp2FrameWriter",
+  "io.netty.handler.ssl.ReferenceCountedOpenSslEngine",
   "io.netty.incubator.channel.uring.IOUringEventLoopGroup",
   "io.netty.incubator.channel.uring.Native",
   "io.netty.handler.codec.http.HttpObjectEncoder",
+
+  // --- Netty: Native Crypto -----
+
+  "io.netty.internal.tcnative.Buffer",
+  "io.netty.internal.tcnative.CertificateVerifier",
+  "io.netty.internal.tcnative.Library",
+  "io.netty.internal.tcnative.SSL",
+  "io.netty.internal.tcnative.SSLContext",
+  "io.netty.internal.tcnative.SSLSession",
 
   // --- BouncyCastle -----
 
@@ -1117,7 +1153,7 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else emptyList())
 
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
+  "-march=compatibility",
   "--gc=serial",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
@@ -1184,7 +1220,6 @@ val testOnlyArgs: List<String> = emptyList()
 
 val nativeOverrideArgs: List<String> = listOf(
   "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
-  "--exclude-config", "sqlite-jdbc-${libs.versions.sqlite.get()}.jar", "META-INF\\/native-image\\/.*.properties",
 )
 
 fun nativeCliImageArgs(
@@ -1578,6 +1613,10 @@ tasks {
 
   named("run", JavaExec::class).configure {
     dependsOn(ensureNatives)
+
+    jvmDefs.forEach {
+      systemProperty(it.key, it.value)
+    }
 
     systemProperty(
       "micronaut.environments",

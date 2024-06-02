@@ -16,35 +16,46 @@ import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import elide.annotations.internal.VMFeature
+import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
 /** Registers native crypto libraries for static JNI. */
 @VMFeature internal class NativeCryptoFeature : AbstractStaticNativeLibraryFeature() {
   private companion object {
     private const val PROVIDED = "provided"
+
+    private val tcnative = arrayOf(
+      "io.netty.handler.ssl.OpenSsl",
+      "io.netty.internal.tcnative.Buffer",
+      "io.netty.internal.tcnative.Library",
+      "io.netty.internal.tcnative.NativeStaticallyReferencedJniMethods",
+      "io.netty.internal.tcnative.SSL",
+      "io.netty.internal.tcnative.SSLContext",
+      "io.netty.internal.tcnative.SSLSession",
+    )
   }
 
   override fun getDescription(): String = "Registers native crypto libraries"
-
-  override fun isInConfiguration(access: IsInConfigurationAccess?): Boolean {
-    return false
-  }
 
   private fun initializeTcNative() {
     io.netty.handler.ssl.OpenSsl.ensureAvailability()
     io.netty.internal.tcnative.Library.initialize(PROVIDED, null)
   }
 
-  override fun unpackNatives(access: BeforeAnalysisAccess) {
+  override fun isInConfiguration(access: IsInConfigurationAccess?): Boolean {
+    return false  // disabled until a static library can be built properly
+  }
+
+  override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> {
     when {
       Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> return access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_linux_x86_64",
           "x86-64",
           "META-INF/native/libnetty_tcnative_linux_x86_64.so",
         ) { initializeTcNative() }
 
-        "aarch64", "arm64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> return access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_linux_aarch_64",
           "aarch64",
@@ -53,21 +64,24 @@ import elide.annotations.internal.VMFeature
       }
 
       Platform.includedIn(Platform.DARWIN::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> access.unpackLibrary(
+        "x86_64", "amd64" -> return access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_osx_x86_64",
           "x86-64",
           "META-INF/native/libnetty_tcnative_osx_x86_64.jnilib",
+          renameTo = { "libnetty_tcnative_osx_x86_64.dylib" },
         ) { initializeTcNative() }
 
-        "aarch64", "arm64" -> access.unpackLibrary(
+        "aarch64", "arm64" -> return access.unpackLibrary(
           "netty-tcnative-boringssl-static",
           "netty_tcnative_osx_aarch_64",
           "aarch64",
           "META-INF/native/libnetty_tcnative_osx_aarch_64.jnilib",
+          renameTo = { "libnetty_tcnative_osx_aarch_64.dylib" },
         ) { initializeTcNative() }
       }
     }
+    return emptyList()
   }
 
   override fun nativeLibs(access: BeforeAnalysisAccess) = when (val arch = System.getProperty("os.arch")) {
@@ -79,15 +93,13 @@ import elide.annotations.internal.VMFeature
       nativeLibrary(
         darwin = libraryNamed(
           "netty_tcnative_osx_$archTag",
-          "io.netty.handler.ssl.OpenSsl",
-          builtin = false,
-          eager = false,
+          *tcnative,
+          builtin = true,
         ),
         linux = libraryNamed(
           "netty_tcnative_linux_$archTag",
-          "io.netty.handler.ssl.OpenSsl",
-          builtin = false,
-          eager = false,
+          *tcnative,
+          builtin = true,
         ),
       )
     )

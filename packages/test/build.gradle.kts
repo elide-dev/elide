@@ -18,7 +18,7 @@ import elide.internal.conventions.kotlin.jvm
 
 plugins {
   kotlin("multiplatform")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {
@@ -29,7 +29,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Default
     explicitApi = true
   }
 }

@@ -38,27 +38,31 @@ public object Projects {
     // Library Packages
     "base",
     "core",
-    "frontend",
     "graalvm",
-    "graalvm-js",
     "graalvm-jvm",
     "graalvm-kt",
     "graalvm-llvm",
     "graalvm-py",
     "graalvm-rb",
-    "graalvm-react",
     "http",
-    "model",
     "proto:proto-core",
     "proto:proto-capnp",
     "proto:proto-kotlinx",
     "proto:proto-protobuf",
-    "rpc",
     "server",
-    "serverless",
     "ssr",
     "test",
-  ).map { ":packages:$it" }.plus(
+  ).map { ":packages:$it" }
+
+  /** All library modules which are deprecated. */
+  public val deprecatedModules: List<String> = listOf(
+    "rpc",
+    "model",
+    "frontend",
+    "graalvm-react",
+    "graalvm-js",
+    "serverless",
+  ).plus(
     listOf(
       // Tools
       "processor",

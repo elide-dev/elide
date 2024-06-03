@@ -16,7 +16,7 @@ import elide.internal.conventions.kotlin.*
 plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {
@@ -27,7 +27,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.Embedded
+    target = KotlinTarget.Default
     explicitApi = true
   }
 }

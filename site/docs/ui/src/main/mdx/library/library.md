@@ -1,2 +1,0 @@
-
-Library text here.

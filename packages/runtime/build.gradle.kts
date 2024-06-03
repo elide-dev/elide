@@ -21,7 +21,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
-import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -32,7 +31,6 @@ import elide.internal.conventions.kotlin.KotlinTarget
 plugins {
   java
   `java-library`
-  distribution
   publishing
   jacoco
   `jvm-test-suite`
@@ -42,40 +40,11 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.compose")
   kotlin("plugin.serialization")
-  alias(libs.plugins.kover)
   alias(libs.plugins.buildConfig)
-  alias(libs.plugins.micronaut.application)
+  alias(libs.plugins.micronaut.minimal.application)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.micronaut.aot)
-  alias(libs.plugins.gradle.checksum)
-
-  id("elide.internal.conventions")
-}
-
-elide {
-  kotlin {
-    powerAssert = true
-    atomicFu = true
-    target = KotlinTarget.JVM
-  }
-
-  jvm {
-    target = JVM_21
-  }
-
-  java {
-    configureModularity = false
-    includeJavadoc = false
-    includeSources = false
-  }
-
-  checks {
-    spotless = false
-  }
-
-  docs {
-    enabled = false
-  }
+  alias(libs.plugins.elide.conventions)
 }
 
 // Flags affecting this build script:
@@ -168,24 +137,6 @@ val exclusions = listOfNotNull(
   libs.netty.transport.native.kqueue,
 ).onlyIf(enableNativeTransportV2))
 
-buildscript {
-  repositories {
-    maven("https://maven.pkg.st")
-    maven("https://gradle.pkg.st")
-    maven {
-      name = "elide-snapshots"
-      url = uri("https://maven.elide.dev")
-      content {
-        includeGroup("dev.elide")
-        includeGroup("org.capnproto")
-      }
-    }
-  }
-  dependencies {
-    classpath(libs.plugin.proguard)
-  }
-}
-
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 23
 val ltsJvmTarget = 21
@@ -221,8 +172,8 @@ val nativesRootTemplate: (String) -> String = { version ->
   "/tmp/elide-runtime/v$version/native"
 }
 
-val jvmOnlyCompileArgs = listOfNotNull(
-  "-Xlog:library=info",
+val jvmOnlyCompileArgs: List<String> = listOfNotNull(
+  // Nothing at this time.
 )
 
 val jvmCompileArgs = listOfNotNull(
@@ -251,7 +202,7 @@ val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
 ).plus(jvmCompileArgs).plus(jvmRuntimeArgs)
 
-val ktCompilerArgs = listOf(
+val ktCompilerArgs = mutableListOf(
   "-Xallow-unstable-dependencies",
   "-Xcontext-receivers",
   "-Xemit-jvm-type-annotations",
@@ -264,6 +215,33 @@ val ktCompilerArgs = listOf(
   // opt-in to Elide's delicate runtime API
   "-opt-in=elide.runtime.core.DelicateElideApi",
 )
+
+elide {
+  kotlin {
+    powerAssert = true
+    atomicFu = true
+    target = KotlinTarget.JVM
+    customKotlinCompilerArgs = ktCompilerArgs
+  }
+
+  jvm {
+    target = JVM_21
+  }
+
+  java {
+    configureModularity = false
+    includeJavadoc = false
+    includeSources = false
+  }
+
+  checks {
+    spotless = false
+  }
+
+  docs {
+    enabled = false
+  }
+}
 
 java {
   sourceCompatibility = selectedJvm
@@ -496,146 +474,8 @@ val targetOs = when {
 val targetArch: String = System.getProperty("os.arch", "unknown")
 val targetTag = "$targetOs-$targetArch"
 
-distributions {
-  main {
-    distributionBaseName = "elide-jvm"
-    distributionClassifier = targetTag
-
-    contents {
-      from(
-        tasks.createOptimizedStartScripts,
-        layout.projectDirectory.dir("packaging/content"),
-      )
-      exclude("*.iprof", "sources", "sources/**/*.*")
-    }
-  }
-
-  create("debug") {
-    distributionBaseName = "elide-debug"
-    distributionClassifier = targetTag
-
-    contents {
-      from(
-        tasks.nativeCompile,
-        layout.projectDirectory.dir("packaging/content"),
-      )
-      exclude("*.iprof", "sources", "sources/**/*.*")
-    }
-  }
-
-  create("opt") {
-    distributionBaseName = "elide"
-    distributionClassifier = targetTag
-
-    contents {
-      from(
-        tasks.nativeOptimizedCompile,
-        layout.projectDirectory.dir("packaging/content"),
-      )
-      exclude("*.iprof", "sources", "sources/**/*.*")
-    }
-  }
-}
-
-val optDistZip by tasks.getting(Zip::class)
-val optDistTar by tasks.getting(Tar::class) {
-  compression = Compression.GZIP
-}
-val debugDistZip by tasks.getting(Zip::class)
-val debugDistTar by tasks.getting(Tar::class) {
-  compression = Compression.GZIP
-}
-
 signing {
   isRequired = properties["enableSigning"] == "true"
-  sign(optDistZip, optDistTar, debugDistZip, debugDistTar)
-}
-
-tasks {
-  val distributionChecksums by registering(Checksum::class) {
-    group = "distribution"
-    description = "Generates checksums for the distribution archives"
-
-    dependsOn(
-      debugDistZip,
-      debugDistTar,
-      optDistZip,
-      optDistTar,
-    )
-    inputFiles.setFrom(
-      layout.buildDirectory.file("distributions/elide-$version-$targetTag.zip"),
-      layout.buildDirectory.file("distributions/elide-$version-$targetTag.tgz"),
-    )
-    outputDirectory = layout.buildDirectory.dir("distributions")
-    appendFileNameToChecksum = true
-    checksumAlgorithm = Checksum.Algorithm.SHA256
-    outputs.cacheIf { true }
-  }
-
-  val signOptDistZip by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-  val signOptDistTar by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-  val signDebugDistZip by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-  val signDebugDistTar by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-
-  val dist by registering {
-    group = "distribution"
-    description = "Builds CLI distributions"
-
-    dependsOn(
-      // Distribution: Optimized Binary
-      nativeOptimizedCompile,
-
-      // Distribution: Archives
-      assembleDist,
-      debugDistTar,
-      debugDistZip,
-      optDistTar,
-      optDistZip,
-
-      // Distribution: Archive Checksums & Signatures
-      distributionChecksums,
-      signOptDistZip,
-      signOptDistTar,
-      signOptDistZip,
-      signOptDistTar,
-    )
-  }
-
-  installDist {
-    duplicatesStrategy = EXCLUDE
-  }
-
-  buildLayers {
-    enabled = false
-  }
-
-  optimizedBuildLayers {
-    enabled = false
-  }
-
-  optimizedDistZip {
-    duplicatesStrategy = EXCLUDE
-  }
-
-  optimizedDistTar {
-    duplicatesStrategy = EXCLUDE
-  }
-
-  distTar {
-    duplicatesStrategy = EXCLUDE
-  }
-
-  distZip {
-    duplicatesStrategy = EXCLUDE
-  }
 }
 
 /**
@@ -827,11 +667,11 @@ val commonNativeArgs = listOfNotNull(
 val debugFlags: List<String> = listOfNotNull(
   "--verbose",
   "-march=compatibility",
-  "-J-Xlog:library=info",
   "-H:+SourceLevelDebug",
   "-H:-DeleteLocalSymbols",
   "-H:-RemoveUnusedSymbols",
   "-H:+PreserveFramePointer",
+  // "-J-Xlog:library=info",
   // "-H:-ReduceDCE",
   // "-H:+PrintMethodHistogram",
   // "-H:+PrintPointsToStatistics",
@@ -1560,9 +1400,11 @@ tasks {
   nativeCompile {
     dependsOn(ensureNatives)
 
-    if (nativeImageBuildVerbose) doFirst {
+    doFirst {
       val args = nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs)
-      logger.lifecycle("Native Image args (dev/debug):\n${args.joinToString("\n")}")
+      if (nativeImageBuildVerbose) {
+        logger.lifecycle("Native Image args (dev/debug):\n${args.joinToString("\n")}")
+      }
     }
   }
 
@@ -1581,10 +1423,6 @@ tasks {
 
   jar {
     from(collectReachabilityMetadata)
-  }
-
-  runnerJar {
-    duplicatesStrategy = EXCLUDE
   }
 
   listOf(
@@ -1740,6 +1578,28 @@ tasks {
   withType<KotlinCompile>().configureEach {
     compilerOptions {
       freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
+    }
+  }
+
+  // Only built dists if specifically requested,
+  listOf(
+    distZip,
+    distTar,
+    optimizedDistZip,
+    optimizedDistTar,
+  ).forEach {
+    it.configure {
+      isEnabled = gradle.startParameter.taskNames.any { it.contains(name) }
+    }
+  }
+
+  // Only run native builds if specifically requested on the command line.
+  listOf(
+    nativeCompile,
+    nativeOptimizedCompile,
+  ).forEach {
+    it.configure {
+      isEnabled = gradle.startParameter.taskNames.any { it.contains(name) }
     }
   }
 }

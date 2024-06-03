@@ -22,9 +22,9 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.serialization")
   
-  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {
@@ -86,7 +86,6 @@ dependencies {
   // Modules
   api(projects.packages.base)
   api(projects.packages.core)
-  api(projects.packages.model)
   api(projects.packages.ssr)
   api(projects.packages.graalvm)
 

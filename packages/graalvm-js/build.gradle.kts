@@ -19,7 +19,7 @@ import elide.internal.conventions.kotlin.jsTest
 
 plugins {
   kotlin("multiplatform")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 val buildWasm = project.properties["buildWasm"] == "true"

@@ -23,7 +23,7 @@ plugins {
 
   id(libs.plugins.sonar.get().pluginId)
   id(libs.plugins.kover.get().pluginId)
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 val antJUnit: Configuration by configurations.creating

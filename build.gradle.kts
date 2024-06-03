@@ -47,27 +47,20 @@ plugins {
   idea
   java
   `jvm-toolchains`
-  `project-report`
 
-  alias(libs.plugins.cyclonedx)
-  alias(libs.plugins.dependencyAnalysis)
   alias(libs.plugins.gradle.checksum)
   alias(libs.plugins.gradle.testretry)
   alias(libs.plugins.kotlinx.plugin.abiValidator)
   alias(libs.plugins.nexusPublishing)
-  alias(libs.plugins.openrewrite)
-  alias(libs.plugins.shadow)
   alias(libs.plugins.spdx.sbom)
-  alias(libs.plugins.versionCatalogUpdate)
 
-  alias(libs.plugins.snyk)
-  alias(libs.plugins.spotless)
-  alias(libs.plugins.sonar)
-  alias(libs.plugins.detekt)
-  alias(libs.plugins.dokka)
-  alias(libs.plugins.kover)
+  id(libs.plugins.detekt.get().pluginId)
+  id(libs.plugins.dokka.get().pluginId)
+  id(libs.plugins.kover.get().pluginId)
+  id(libs.plugins.sonar.get().pluginId)
+  id(libs.plugins.spotless.get().pluginId)
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 group = "dev.elide"
@@ -84,15 +77,15 @@ version = if (hasProperty("elide.stamp") && properties["elide.stamp"] == "true")
 
 // Load property sources.
 val props = Properties().apply {
-  load(
-    file(
-      if (hasProperty("elide.ci") && properties["elide.ci"] == "true") {
-        "gradle-ci.properties"
-      } else {
-        "local.properties"
-      },
-    ).inputStream(),
-  )
+  if (hasProperty("elide.ci") && properties["elide.ci"] == "true") {
+    if (layout.projectDirectory.file("gradle-ci.properties").asFile.exists()) {
+      load(file("gradle-ci.properties").inputStream())
+    }
+  } else {
+    if (layout.projectDirectory.file("local.properties").asFile.exists()) {
+      load(file("local.properties").inputStream())
+    }
+  }
 }
 
 val isCI = hasProperty("elide.ci") && properties["elide.ci"] == "true"
@@ -104,13 +97,14 @@ val enableOwasp: String? by properties
 
 val buildSamples: String by properties
 val buildDocs: String by properties
+val buildRpc: String by properties
+val buildDeprecated: String by properties
+val buildEmbedded: String by properties
+val buildAuxImage: String by properties
 val buildDocsModules: String by properties
 
 buildscript {
   repositories {
-    maven("https://maven.pkg.st")
-    maven("https://gradle.pkg.st")
-
     maven {
       name = "elide-snapshots"
       url = uri("https://maven.elide.dev")
@@ -126,6 +120,8 @@ buildscript {
         includeGroup("dev.elide")
       }
     }
+    mavenCentral()
+    gradlePluginPortal()
   }
 
   dependencies {
@@ -165,7 +161,6 @@ dependencies {
   kover(projects.packages.base)
   kover(projects.packages.cli)
   kover(projects.packages.core)
-  kover(projects.packages.embedded)
   kover(projects.packages.graalvm)
   kover(projects.packages.graalvmJava)
   kover(projects.packages.graalvmJvm)
@@ -174,21 +169,24 @@ dependencies {
   kover(projects.packages.graalvmPy)
   kover(projects.packages.graalvmRb)
   kover(projects.packages.http)
-  kover(projects.packages.model)
   kover(projects.packages.proto.protoCore)
   kover(projects.packages.proto.protoKotlinx)
   kover(projects.packages.proto.protoProtobuf)
-  kover(projects.packages.rpc)
   kover(projects.packages.runtime)
   kover(projects.packages.server)
-  kover(projects.packages.serverless)
   kover(projects.packages.ssr)
   kover(projects.packages.test)
-  kover(projects.packages.wasm)
-  kover(projects.tools.processor)
 
-  // OpenRewrite: Recipes
-  rewrite(platform(libs.openrewrite.recipe.bom))
+  if (buildRpc == "true") {
+    kover(project(":packages:rpc"))
+    kover(project(":packages:model"))
+  }
+  if (buildDeprecated == "true") {
+    kover(project(":packages:wasm"))
+    kover(project(":packages:serverless"))
+    kover(project(":packages:embedded"))
+    kover(project(":tools:processor"))
+  }
 
   if (buildDocs == "true") {
     val dokkaPlugin by configurations
@@ -222,12 +220,6 @@ nexusPublishing {
       snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
     }
   }
-}
-
-// --- OpenRewrite ----------------------------------------------------------------------------------------------------
-//
-rewrite {
-  activeRecipe("org.openrewrite.java.OrderImports")
 }
 
 // --- Detekt ---------------------------------------------------------------------------------------------------------
@@ -363,15 +355,26 @@ apiValidation {
 
   ignoredProjects +=
     listOf(
-      "auximage",
-      "bom",
       "cli",
       "cli-bridge",
       "runtime",
-      "embedded",
+      "sqlite",
+      "transport",
+      "transport-common",
+      "transport-kqueue",
+      "transport-epoll",
+      "transport-uring",
+      "transport-unix",
       "proto",
-      "processor",
       "reports",
+    ).plus(
+      if (buildAuxImage == "true") {
+        listOf(
+          "auximage",
+        )
+      } else {
+        emptyList()
+      },
     ).plus(
       if (buildDocs == "true" && buildDocsModules == "true") {
         listOf(
@@ -383,9 +386,18 @@ apiValidation {
         emptyList()
       },
     ).plus(
-      if (properties["buildDocsSite"] == "true") {
+      if (buildDeprecated == "true") {
         listOf(
-          "site",
+          "bom",
+          "processor",
+        )
+      } else {
+        emptyList()
+      },
+    ).plus(
+      if (buildEmbedded == "true") {
+        listOf(
+          "embedded",
         )
       } else {
         emptyList()
@@ -507,23 +519,6 @@ tasks {
     }
   }
 
-  // --- Task: HTML Dependency Report
-  //
-  htmlDependencyReport {
-    reports.html.outputLocation = layout.projectDirectory.dir("docs/reports").asFile
-  }
-
-  // --- Task: Reports
-  //
-  val reports by registering {
-    description = "Build all reports."
-
-    dependsOn(
-      dependencyReport,
-      htmlDependencyReport,
-    )
-  }
-
   if (buildDocs == "true") {
     val docAsset: (String) -> File = {
       rootProject.layout.projectDirectory.file("docs/$it").asFile
@@ -582,7 +577,6 @@ tasks {
         listOf(
           dokkaHtml,
           dokkaHtmlMultiModule,
-          htmlDependencyReport,
         ),
       )
     }
@@ -668,8 +662,6 @@ tasks {
       ":packages:core:jvmTest",
       ":packages:base:jvmTest",
       ":packages:graalvm:test",
-      ":packages:serverless:test",
-      ":packages:embedded:test",
     )
   }
 
@@ -729,7 +721,6 @@ tasks {
       preMerge,
       precheck,
       detekt,
-      reports,
       withType(KotlinApiCompareTask::class),
     )
   }

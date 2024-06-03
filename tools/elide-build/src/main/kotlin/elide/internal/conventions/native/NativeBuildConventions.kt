@@ -13,8 +13,6 @@
 
 package elide.internal.conventions.native
 
-import io.micronaut.gradle.docker.MicronautDockerfile
-import io.micronaut.gradle.docker.NativeImageDockerfile
 import org.graalvm.buildtools.gradle.dsl.GraalVMExtension
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -149,7 +147,6 @@ internal fun Project.configureNativeBuild(
 
   // native samples have their dockerfiles configured automatically
   if (target == SAMPLE) {
-    configureNativeDocker()
     configureSampleRunTask()
   }
 }
@@ -172,30 +169,6 @@ private fun Project.getLauncherForNativeApp(toolchains: JavaToolchainService): P
         ),
       )
     }
-  }
-}
-
-private fun Project.configureNativeDocker() {
-  tasks.named("dockerfile", MicronautDockerfile::class.java).configure {
-    baseImage("${project.properties["elide.publish.repo.docker.tools"]}/base:latest")
-  }
-
-  tasks.named("optimizedDockerfile", MicronautDockerfile::class.java).configure {
-    baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
-  }
-
-  tasks.named("dockerfileNative", NativeImageDockerfile::class.java).configure {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-
-    baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
-    args("-H:+StaticExecutableWithDynamicLibC")
-  }
-
-  tasks.named("optimizedDockerfileNative", NativeImageDockerfile::class.java).configure {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-
-    baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
-    args("-H:+StaticExecutableWithDynamicLibC")
   }
 }
 

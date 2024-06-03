@@ -18,7 +18,21 @@ import java.nio.file.Path
 plugins {
   `cpp-library`
   `java-library`
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
+}
+
+elide {
+  checks {
+    spotless = false
+    checkstyle = false
+    detekt = false
+  }
+
+  publishing {
+    id = "transport-epoll"
+    name = "Elide Transport: EPoll"
+    description = "Packages native EPoll support for Elide/Netty."
+  }
 }
 
 java {
@@ -78,6 +92,15 @@ tasks.withType(LinkSharedLibrary::class.java).configureEach {
   linkerArgs.addAll(listOf(
     "-L$jdkLibPath",
   ))
+}
+
+tasks.compileJava {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "-nowarn",
+      "-Xlint:none",
+    )
+  })
 }
 
 tasks.withType(CreateStaticLibrary::class.java).configureEach {

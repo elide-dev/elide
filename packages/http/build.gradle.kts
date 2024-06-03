@@ -17,15 +17,13 @@ import elide.internal.conventions.publishing.publish
 plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 kotlin {
   sourceSets {
     val commonMain by getting
     val commonTest by getting
-    val defaultMain by creating { dependsOn(commonMain) }
-    val defaultTest by creating { dependsOn(commonTest) }
   }
 }
 
@@ -41,7 +39,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.Embedded
+    target = KotlinTarget.Default
     explicitApi = true
     splitJvmTargets = true
   }

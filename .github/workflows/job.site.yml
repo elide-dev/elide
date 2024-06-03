@@ -109,7 +109,6 @@ jobs:
             -Pelide.release=true
             -PbuildSamples=false
             -PbuildDocs=true
-            -PbuildDocsSite=true
             -Pversions.java.language=21
             -x test
             -x check
@@ -239,7 +238,6 @@ jobs:
             -Pelide.release=true \
             -PbuildSamples=false \
             -PbuildDocs=true \
-            -PbuildDocsSite=true \
             -Pversions.java.language=21 \
             --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/artifacts/app.manifest.pb http://localhost:8080 $PWD/site/docs/app/build/ssg-site.zip"
       - name: "Build: Assemble Site"

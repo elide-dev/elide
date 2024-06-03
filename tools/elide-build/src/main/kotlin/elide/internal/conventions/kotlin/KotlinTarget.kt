@@ -28,7 +28,7 @@ package elide.internal.conventions.kotlin
  * target = JsBrowser + JsNode
  * ```
  *
- * For KMP projects targeting every available platform, use the [KotlinTarget.All] property, which is computed lazily.
+ * For KMP projects targeting every available platform, use the [KotlinTarget.Default] property, which is computed lazily.
  */
 public sealed interface KotlinTarget {
   /** Kotlin Multiplatform target for the JavaScript backend, specifically browser platforms. */
@@ -88,7 +88,14 @@ public sealed interface KotlinTarget {
 
   public companion object {
     /** Lazy target containing every available platform. */
-    public val All: KotlinTarget by lazy {
+    public val Default: KotlinTarget by lazy {
+      Multiplatform(arrayOf(
+        JVM,
+      ))
+    }
+
+    /** Lazy target containing every available platform (in release mode). */
+    public val AllRelease: KotlinTarget by lazy {
       Multiplatform(arrayOf(
         JVM,
         JsBrowser,

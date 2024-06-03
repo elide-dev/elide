@@ -17,17 +17,7 @@
 )
 
 pluginManagement {
-  includeBuild("tools/elide-toolchains")
-
   repositories {
-    maven {
-      name = "pkgst-gradle"
-      url = uri("https://gradle.pkg.st")
-    }
-    maven {
-      name = "pkgst-maven"
-      url = uri("https://maven.pkg.st")
-    }
     maven {
       name = "oss-snapshots"
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
@@ -48,15 +38,20 @@ pluginManagement {
     maven {
       name = "gvm-plugin-snapshots"
       url = uri("https://raw.githubusercontent.com/graalvm/native-build-tools/snapshots")
+      content {
+        includeGroup("org.graalvm.buildtools")
+      }
     }
     gradlePluginPortal()
-    google()
     mavenCentral()
+    google()
   }
+
+  includeBuild("tools/elide-build")
 }
 
 plugins {
-  id("build.less") version ("1.0.0-rc2")
+  // id("build.less") version ("1.0.0-rc2")
   id("com.gradle.enterprise") version ("3.16.2")
   id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version ("1.12.1")
@@ -70,6 +65,7 @@ System.setProperty("elide.home", rootProject.projectDir.toString())
 
 val buildUuid: String by settings
 val buildPkl: String by settings
+val buildAuxImage: String by settings
 val buildlessApiKey: String by settings
 val enableSubstrate: String by settings
 
@@ -87,10 +83,6 @@ dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
 
   repositories {
-    maven {
-      name = "pkgst-maven"
-      url = uri("https://maven.pkg.st")
-    }
     maven {
       name = "jpms-modules"
       url = uri("https://jpms.pkg.st/repository")
@@ -201,6 +193,13 @@ if (enableSubstrate == "true") {
   }
 }
 
+// Auxiliary image builder.
+if (buildAuxImage == "true") {
+  include(
+    ":tools:auximage",
+  )
+}
+
 // Embedded languages.
 if (buildPkl == "true") {
   includeBuild("third_party/apple/pkl") {
@@ -223,15 +222,11 @@ if (buildPkl == "true") {
 // Build modules.
 include(
   ":packages:base",
-  ":packages:bom",
   ":packages:cli",
   ":packages:cli-bridge",
   ":packages:core",
-  ":packages:embedded",
   ":packages:engine",
-  ":packages:frontend",
   ":packages:graalvm",
-  ":packages:graalvm-js",
   ":packages:graalvm-ts",
   ":packages:graalvm-jvm",
   ":packages:graalvm-llvm",
@@ -240,11 +235,7 @@ include(
   ":packages:graalvm-rb",
   ":packages:graalvm-kt",
   ":packages:graalvm-java",
-  ":packages:graalvm-react",
   ":packages:http",
-  ":packages:model",
-  ":packages:nfi",
-  ":packages:platform",
   ":packages:proto:proto-core",
   ":packages:proto:proto-test",
   ":packages:proto:proto-capnp",
@@ -252,7 +243,6 @@ include(
   ":packages:proto:proto-protobuf",
   ":packages:runtime",
   ":packages:server",
-  ":packages:serverless",
   ":packages:ssr",
   ":packages:test",
   ":packages:sqlite",
@@ -261,32 +251,50 @@ include(
   ":packages:transport:transport-epoll",
   ":packages:transport:transport-kqueue",
   ":packages:transport:transport-uring",
-  ":packages:wasm",
-  ":tools:auximage",
-  ":tools:processor",
   ":tools:umbrella",
   ":tools:reports",
   ":tools:wrappers",
 )
 
+val buildDeprecated: String by settings
 val buildDocs: String by settings
+val buildEmbedded: String by settings
 val buildDocsModules: String by settings
-val buildDocsSite: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
 val buildBenchmarks: String by settings
 val buildRpc: String by settings
 val buildFlatbuffers: String by settings
 
-includeBuild("tools/elide-build")
-
 if (buildSamples == "true") {
   includeBuild("samples")
 }
+if (buildEmbedded == "true") {
+  include(
+    ":packages:embedded",
+  )
+}
 
-if (buildRpc == "true") include(":packages:rpc")
+if (buildRpc == "true") {
+  include(
+    ":packages:model",
+    ":packages:rpc",
+  )
+}
 
-if (buildFlatbuffers == "true") include(":packages:proto:proto-flatbuffers")
+if (buildDeprecated == "true") {
+  include(
+    ":tools:processor",
+    ":packages:graalvm-react",
+    ":packages:serverless",
+    ":packages:nfi",
+    ":packages:frontend",
+    ":packages:wasm",
+    ":packages:graalvm-js",
+    ":packages:platform",
+    ":packages:bom",
+  )
+}
 
 if (buildDocs == "true" && buildDocsModules == "true") {
   include(
@@ -297,15 +305,6 @@ if (buildDocs == "true" && buildDocsModules == "true") {
 
 if (buildPlugins == "true") {
   includeBuild("tools/plugin/gradle-plugin")
-}
-
-if (buildDocsSite == "true") {
-  include(
-    ":site:docs:content",
-    ":site:docs:ui",
-    ":site:docs:node",
-    ":site:docs:app",
-  )
 }
 
 if (buildBenchmarks == "true") {
@@ -324,26 +323,46 @@ gradleEnterprise {
 }
 
 val cachePush: String? by settings
-val isCI: Boolean = System.getenv("CI") != "true"
+// val isCI: Boolean = System.getenv("CI") != "true"
 
-buildless {
-  remoteCache {
-    enabled = true
+// buildless {
+//  remoteCache {
+//    enabled = true
+//
+//    // allow disabling pushing to the remote cache
+//    push.set(cachePush?.toBooleanStrictOrNull() ?: true)
+//  }
+//  localCache {
+//    enabled = true
+//  }
+// }
 
-    // allow disabling pushing to the remote cache
-    push.set(cachePush?.toBooleanStrictOrNull() ?: true)
+// buildCache {
+//  local {
+//    isEnabled = true
+//    directory = layout.rootDirectory.dir(".codebase/build-cache")
+//  }
+// }
+
+//
+// -- Begin Caching Tricks
+//
+
+val inertTasks = sortedSetOf("clean", "tasks", "projects")
+if (gradle.startParameter.taskNames.size == 1 && gradle.startParameter.taskNames.first() in inertTasks) {
+  // disable the build cache when cleaning because having it on is just silly
+  buildCache {
+    local.isEnabled = false
+    remote?.isEnabled = false
   }
-  localCache {
-    enabled = true
-  }
+
+  // force-disable
+  gradle.startParameter.isBuildCacheEnabled = false
 }
 
-buildCache {
-  local {
-    isEnabled = true
-    directory = layout.rootDirectory.dir(".codebase/build-cache")
-  }
-}
+//
+// -- End Caching Tricks
+//
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("GROOVY_COMPILATION_AVOIDANCE")

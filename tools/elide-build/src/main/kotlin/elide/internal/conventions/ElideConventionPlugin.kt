@@ -16,7 +16,6 @@ package elide.internal.conventions
 import com.adarshr.gradle.testlogger.TestLoggerPlugin
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.github.benmanes.gradle.versions.VersionsPlugin
-import dev.zacsweers.redacted.gradle.RedactedGradleSubplugin
 import io.gitlab.arturbosch.detekt.DetektPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -34,7 +33,6 @@ import elide.internal.conventions.archives.excludeDuplicateArchives
 import elide.internal.conventions.archives.reproducibleArchiveTasks
 import elide.internal.conventions.dependencies.configureDependencyLocking
 import elide.internal.conventions.dependencies.configureDependencyResolution
-import elide.internal.conventions.docker.useGoogleCredentialsForDocker
 import elide.internal.conventions.docs.DokkaConventionsPlugin
 import elide.internal.conventions.jvm.*
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
@@ -48,7 +46,6 @@ import elide.internal.conventions.publishing.configurePublishing
 import elide.internal.conventions.publishing.configurePublishingRepositories
 import elide.internal.conventions.publishing.configureSigning
 import elide.internal.conventions.publishing.configureSigstore
-import elide.internal.conventions.redacted.configureRedactedPlugin
 import elide.internal.conventions.tests.configureJacoco
 import elide.internal.conventions.tests.configureKover
 import elide.internal.conventions.tests.configureTestExecution
@@ -100,14 +97,6 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     // apply dependency security rules (verification, locking)
     configureDependencySecurity(conventions)
 
-    if (conventions.kotlin.requested && conventions.kotlin.redacted) {
-      // other plugins
-      plugins.apply(RedactedGradleSubplugin::class.java)
-
-      // configure the redacted compiler plugin
-      configureRedactedPlugin()
-    }
-
     // -- Conventions: Archives ---------------------------------------------------------------------------------------
     //
     maybeApplyConvention(conventions.archives) {
@@ -119,12 +108,6 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     //
     maybeApplyConvention(conventions.docs) {
       if (conventions.docs.enabled) plugins.apply(DokkaConventionsPlugin::class.java)
-    }
-
-    // -- Conventions: Containers -------------------------------------------------------------------------------------
-    //
-    maybeApplyConvention(conventions.docker) {
-      if (useGoogleCredentials) useGoogleCredentialsForDocker()
     }
 
     // -- Conventions: Kotlin -----------------------------------------------------------------------------------------

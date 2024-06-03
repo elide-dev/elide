@@ -17,16 +17,12 @@
 )
 
 import io.micronaut.gradle.MicronautRuntime
-import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
-import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import org.jetbrains.kotlin.gradle.utils.extendsFrom
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import elide.internal.conventions.kotlin.KotlinTarget
@@ -34,7 +30,6 @@ import elide.internal.conventions.kotlin.KotlinTarget
 plugins {
   java
   `java-library`
-  distribution
   publishing
   jacoco
   `jvm-test-suite`
@@ -44,45 +39,12 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.compose")
   kotlin("plugin.serialization")
-  id("io.micronaut.docker")
-  alias(libs.plugins.kover)
   alias(libs.plugins.buildConfig)
-  alias(libs.plugins.micronaut.application)
+  alias(libs.plugins.micronaut.minimal.application)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.micronaut.aot)
-  alias(libs.plugins.shadow)
   alias(libs.plugins.gradle.checksum)
-
-  id("elide.internal.conventions")
-}
-
-elide {
-  kotlin {
-    target = KotlinTarget.JVM
-    kotlinVersionOverride = "2.0"
-  }
-
-  docker {
-    useGoogleCredentials = true
-  }
-
-  jvm {
-    target = JVM_21
-  }
-
-  java {
-    configureModularity = false
-    includeJavadoc = false
-    includeSources = false
-  }
-
-  checks {
-    spotless = false
-  }
-
-  docs {
-    enabled = false
-  }
+  alias(libs.plugins.elide.conventions)
 }
 
 // Flags affecting this build script:
@@ -144,28 +106,6 @@ val moduleExclusions = listOf(
   "io.micronaut" to "micronaut-core-processor",
 )
 
-buildscript {
-  repositories {
-    maven("https://maven.pkg.st")
-    maven("https://gradle.pkg.st")
-    maven {
-      name = "elide-snapshots"
-      url = uri("https://maven.elide.dev")
-      content {
-        includeGroup("dev.elide")
-        includeGroup("org.capnproto")
-      }
-    }
-  }
-  dependencies {
-    classpath(libs.plugin.proguard)
-  }
-}
-
-val nativesRootTemplate: (String) -> String = { version ->
-  "/tmp/elide-runtime/v$version/native"
-}
-
 val jvmCompileArgs = listOfNotNull(
   "--enable-preview",
   "--add-modules=jdk.incubator.vector",
@@ -180,18 +120,7 @@ val jvmCompileArgs = listOfNotNull(
   "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
 ) else emptyList())
 
-val jvmRuntimeArgs = emptyList<String>()
-
-val nativeCompileJvmArgs = jvmCompileArgs.map {
-  "-J$it"
-}
-
-val jvmModuleArgs = listOf(
-  "--add-opens=java.base/java.io=ALL-UNNAMED",
-  "--add-opens=java.base/java.nio=ALL-UNNAMED",
-).plus(jvmCompileArgs).plus(jvmRuntimeArgs)
-
-val ktCompilerArgs = listOf(
+val ktCompilerArgs = mutableListOf(
   "-Xallow-unstable-dependencies",
   "-Xcontext-receivers",
   "-Xemit-jvm-type-annotations",
@@ -204,6 +133,47 @@ val ktCompilerArgs = listOf(
   // opt-in to Elide's delicate runtime API
   "-opt-in=elide.runtime.core.DelicateElideApi",
 )
+
+elide {
+  kotlin {
+    target = KotlinTarget.JVM
+    kotlinVersionOverride = "2.0"
+    customKotlinCompilerArgs = ktCompilerArgs
+  }
+
+  jvm {
+    target = JVM_21
+  }
+
+  java {
+    configureModularity = false
+    includeJavadoc = false
+    includeSources = false
+  }
+
+  checks {
+    spotless = false
+  }
+
+  docs {
+    enabled = false
+  }
+}
+
+val nativesRootTemplate: (String) -> String = { version ->
+  "/tmp/elide-runtime/v$version/native"
+}
+
+val jvmRuntimeArgs = emptyList<String>()
+
+val nativeCompileJvmArgs = jvmCompileArgs.map {
+  "-J$it"
+}
+
+val jvmModuleArgs = listOf(
+  "--add-opens=java.base/java.io=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio=ALL-UNNAMED",
+).plus(jvmCompileArgs).plus(jvmRuntimeArgs)
 
 val edgeJvmTarget = 22
 val edgeJavaVersion = JavaVersion.toVersion(edgeJvmTarget)
@@ -287,9 +257,6 @@ val jvmOnly: Configuration by configurations.creating {
   isCanBeConsumed = false
   isCanBeResolved = true
 }
-
-// Include JVM-only dependencies in the Shadow JAR.
-configurations.shadow.extendsFrom(configurations.named("jvmOnly"))
 
 dependencies {
   implementation(platform(libs.netty.bom))
@@ -513,126 +480,8 @@ val targetOs = when {
 val targetArch: String = System.getProperty("os.arch", "unknown")
 val targetTag = "$targetOs-$targetArch"
 
-distributions {
-  main {
-    distributionBaseName = "elide-jvm"
-    distributionClassifier = targetTag
-
-    contents {
-      from(
-        tasks.shadowJar,
-        tasks.createOptimizedStartScripts,
-        layout.projectDirectory.dir("packaging/content"),
-      )
-      exclude("*.iprof", "sources", "sources/**/*.*")
-    }
-  }
-
-  create("debug") {
-    distributionBaseName = "elide-debug"
-    distributionClassifier = targetTag
-
-    contents {
-      from(
-        tasks.nativeCompile,
-        layout.projectDirectory.dir("packaging/content"),
-      )
-      exclude("*.iprof", "sources", "sources/**/*.*")
-    }
-  }
-
-  create("opt") {
-    distributionBaseName = "elide"
-    distributionClassifier = targetTag
-
-    contents {
-      from(
-        tasks.nativeOptimizedCompile,
-        layout.projectDirectory.dir("packaging/content"),
-      )
-      exclude("*.iprof", "sources", "sources/**/*.*")
-    }
-  }
-}
-
-val optDistZip by tasks.getting(Zip::class)
-val optDistTar by tasks.getting(Tar::class) {
-  compression = Compression.GZIP
-}
-val debugDistZip by tasks.getting(Zip::class)
-val debugDistTar by tasks.getting(Tar::class) {
-  compression = Compression.GZIP
-}
-
 signing {
   isRequired = properties["enableSigning"] == "true"
-  sign(optDistZip, optDistTar, debugDistZip, debugDistTar)
-}
-
-tasks {
-  val distributionChecksums by registering(Checksum::class) {
-    group = "distribution"
-    description = "Generates checksums for the distribution archives"
-
-    dependsOn(
-      debugDistZip,
-      debugDistTar,
-      optDistZip,
-      optDistTar,
-    )
-    inputFiles.setFrom(
-      layout.buildDirectory.file("distributions/elide-$version-$targetTag.zip"),
-      layout.buildDirectory.file("distributions/elide-$version-$targetTag.tgz"),
-    )
-    outputDirectory = layout.buildDirectory.dir("distributions")
-    appendFileNameToChecksum = true
-    checksumAlgorithm = Checksum.Algorithm.SHA256
-    outputs.cacheIf { true }
-  }
-
-  val signOptDistZip by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-  val signOptDistTar by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-  val signDebugDistZip by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-  val signDebugDistTar by getting(Sign::class) {
-    dependsOn(distributionChecksums)
-  }
-
-  val dist by registering {
-    group = "distribution"
-    description = "Builds CLI distributions"
-
-    dependsOn(
-      // Distribution: Shadow JAR
-      shadowJar,
-
-      // Distribution: Optimized Binary
-      nativeOptimizedCompile,
-
-      // Distribution: Archives
-      assembleDist,
-      debugDistTar,
-      debugDistZip,
-      optDistTar,
-      optDistZip,
-
-      // Distribution: Archive Checksums & Signatures
-      distributionChecksums,
-      signOptDistZip,
-      signOptDistTar,
-      signOptDistZip,
-      signOptDistTar,
-    )
-  }
-
-  installDist {
-    duplicatesStrategy = EXCLUDE
-  }
 }
 
 /**
@@ -1500,13 +1349,8 @@ tasks {
     from(collectReachabilityMetadata)
   }
 
-  runnerJar {
-    duplicatesStrategy = EXCLUDE
-  }
-
   listOf(
     startScripts,
-    startShadowScripts,
     createOptimizedStartScripts,
   ).forEach {
     it.configure {
@@ -1518,7 +1362,6 @@ tasks {
     jar,
     optimizedJitJar,
     optimizedNativeJar,
-    shadowJar,
   ).forEach {
     it.configure {
       applyJarSettings()
@@ -1638,14 +1481,26 @@ tasks {
     dependsOn(decompressProfiles)
   }
 
-  dockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm22:latest"
-    buildStrategy = DockerBuildStrategy.DEFAULT
+  // Only built dists if specifically requested,
+  listOf(
+    distZip,
+    distTar,
+    optimizedDistZip,
+    optimizedDistTar,
+  ).forEach {
+    it.configure {
+      isEnabled = gradle.startParameter.taskNames.any { it.contains(name) }
+    }
   }
 
-  optimizedDockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm22:latest"
-    buildStrategy = DockerBuildStrategy.DEFAULT
+  // Only run native builds if specifically requested on the command line.
+  listOf(
+    nativeCompile,
+    nativeOptimizedCompile,
+  ).forEach {
+    it.configure {
+      isEnabled = gradle.startParameter.taskNames.any { it.contains(name) }
+    }
   }
 }
 
@@ -1659,27 +1514,7 @@ tasks.withType<KotlinCompile>().configureEach {
   }
 }
 
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
-  images = listOf(
-    "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:latest",
-  )
-}
-
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
-  images = listOf(
-    "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:opt-latest",
-  )
-}
-
 // CLI tool is native-only.
-
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
-  enabled = false
-}
-
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuild") {
-  enabled = false
-}
 
 configurations.all {
   globalExclusions.forEach {
@@ -1704,26 +1539,6 @@ if (enableJpms) {
   val compileKotlin: KotlinCompile by tasks
   val compileJava: JavaCompile by tasks
   compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)
-}
-
-afterEvaluate {
-  tasks.withType(KotlinJvmCompile::class.java).configureEach {
-    compilerOptions {
-      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
-      allWarningsAsErrors = true
-    }
-  }
-
-  listOf(
-    "buildLayers",
-    "optimizedBuildLayers",
-    "optimizedJitJarAll",
-    "shadowJar",
-  ).forEach {
-    tasks.named(it).configure {
-      doNotTrackState("too big for build cache")
-    }
-  }
 }
 
 if (!enableJna) configurations.all {

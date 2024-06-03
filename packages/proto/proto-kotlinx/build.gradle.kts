@@ -20,7 +20,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 val buildWasm = project.properties["buildWasm"] == "true"
@@ -33,7 +33,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Default
   }
 
   jvm {

@@ -101,12 +101,6 @@ else
 BUILD_ARGS += -PbuildSamples=false
 endif
 
-ifeq ($(SITE),yes)
-BUILD_ARGS += -PbuildDocsSite=true
-else
-BUILD_ARGS += -PbuildDocsSite=false
-endif
-
 ifeq ($(WASM),yes)
 BUILD_ARGS += -PbuildWasm=true -Pelide.build.kotlin.wasm.disable=false
 else
@@ -220,7 +214,6 @@ publish-substrate:
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=true \
-		-PbuildDocsSite=false \
 		-PenableSigning=$(SIGNING_ON) \
 		-PenableSigstore=$(SIGSTORE_ON) \
 		-Pelide.stamp=true \
@@ -241,7 +234,6 @@ publish-framework:
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=true \
-		-PbuildDocsSite=false \
 		-PenableSigning=$(SIGNING_ON) \
 		-PenableSigstore=$(SIGSTORE_ON) \
 		-Pelide.stamp=true \
@@ -262,7 +254,6 @@ publish-bom:
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=true \
-		-PbuildDocsSite=false \
 		-PenableSigning=$(SIGNING_ON) \
 		-PenableSigstore=$(SIGSTORE_ON) \
 		-Pelide.stamp=true \
@@ -299,7 +290,6 @@ cli:  ## Build the Elide command-line tool (native target).
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=false \
-		-PbuildDocsSite=false \
 		-Pelide.buildMode=$(BUILD_MODE) \
 		-x test \
 		$(_ARGS);
@@ -393,7 +383,7 @@ cli-install-local:
 	@echo ""; echo "Done. Testing CLI tool..."
 	$(CMD)elide --version
 
-clean: clean-docs clean-site  ## Clean build outputs and caches.
+clean: clean-docs  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
 	$(CMD)$(FIND) . -name .DS_Store -delete
@@ -404,10 +394,6 @@ clean: clean-docs clean-site  ## Clean build outputs and caches.
 clean-docs:  ## Clean documentation targets.
 	@echo "Cleaning docs..."
 	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS)) $(SITE_BUILD)/docs
-
-clean-site:  ## Clean site targets.
-	@echo "Cleaning site..."
-	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS)) $(SITE_BUILD)
 
 docs: $(DOCS) $(TARGET)/docs  ## Generate docs for all library modules.
 
@@ -427,8 +413,8 @@ model-update:  ## Update the proto model and re-build it.
 
 $(TARGET)/docs:
 	@echo "Generating docs..."
-	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc
-	$(CMD)$(GRADLE) docs dokkaHtmlMultiModule $(_ARGS) -PbuildDocs=true -PbuildDocsSite=false --no-configuration-cache -x htmlDependencyReport
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS))
+	$(CMD)$(GRADLE) docs dokkaHtmlMultiModule $(_ARGS) -PbuildDocs=true --no-configuration-cache -x htmlDependencyReport
 	@echo "Docs build complete."
 
 $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs
@@ -445,7 +431,7 @@ $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs
 
 api-check:  ## Check API/ABI compatibility with current changes.
 	$(info Checking ABI compatibility...)
-	$(CMD)$(GRADLE) apiCheck -PbuildDocsSite=false -PbuildSamples=false -PbuildDocs=false
+	$(CMD)$(GRADLE) apiCheck -PbuildSamples=false -PbuildDocs=false
 
 reports: $(REPORTS)  ## Generate reports for tests, coverage, etc.
 	@$(RM) -f $(SITE_BUILD)/reports/project/properties.txt
@@ -485,7 +471,6 @@ site: docs reports site-assets site/docs/app/build site/docs/app/build/ssg-site.
 site/docs/app/build:
 	@echo "Building Elide site..."
 	$(CMD)$(GRADLE) \
-		-PbuildDocsSite=true \
 		-PbuildDocs=true \
 		-PbuildSamples=false \
 		-Pversions.java.language=$(JVM) \
@@ -519,7 +504,6 @@ site/docs/app/build/ssg-site.zip: site/docs/app/build
 			-Pelide.release=true \
 			-PbuildSamples=false \
 			-PbuildDocs=false \
-			-PbuildDocsSite=false \
 			-Pversions.java.language=$(JVM) \
 			--args="--http --ignore-cert-errors --verbose --no-crawl $(PWD)/site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb https://localhost:8443 $(PWD)/site/docs/app/build/ssg-site.zip" \
 		&& echo "Finishing up..." \

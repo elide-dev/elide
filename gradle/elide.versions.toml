@@ -12,7 +12,7 @@
 #
 
 #
-# Elide: Version Catalog
+# Elide: Version Catalog (V5)
 #
 
 [versions]
@@ -50,7 +50,7 @@ consoleui = "0.0.13"
 crossword = "0.3.0"
 cyclonedx = "1.8.2"
 dekorate = "3.1.1"
-dependencyAnalysis = "1.31.0"
+dependencyAnalysis = "1.32.0"
 detekt = "1.23.6"
 diktat = "2.0.0"
 docker-plugin = "9.4.0"
@@ -127,7 +127,7 @@ kotlin-compile-testing = "1.5.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.0"
 kotlin-sdk = "2.0.0"
-kotlinpoet = "1.16.0"
+kotlinpoet = "1.17.0"
 kotlinx-abiValidator = "0.14.0"
 kotlinx-benchmark = "0.4.10"
 kotlinx-browser = "0.1"
@@ -137,7 +137,8 @@ kotlinx-datetime = "0.6.0"
 kotlinx-html = "0.11.0"
 kotlinx-io = "0.3.5"
 kotlinx-knit = "0.5.0"
-kotlinx-metadata-jvm = "0.5.0"
+kotlinx-metadata = "0.9.0"
+kotlinx-metadata-jvm = "0.6.0"
 kotlinx-nodejs = "0.0.7"
 kotlinx-serialization = "1.7.0-RC"
 kotlinx-wrappers-bom = "1.0.0-pre.754"
@@ -241,7 +242,7 @@ openrewrite-bom = "2.10.0"
 openrewrite-lib = "8.1.13"
 openrewrite-plugin = "6.12.0"
 oshi = "6.6.1"
-owasp = "9.1.0"
+owasp = "9.2.0"
 parallelGzip = "1.0.5"
 picnic = "0.7.0"
 picocli = "4.7.6"
@@ -273,7 +274,7 @@ soy = "2022-03-07"                                                # next: "2022-
 spdx = "0.8.0"
 spotless = "6.25.0"
 sqlcommenter = "2.1.1-elide"
-sqlite = "3.45.3.0"
+sqlite = "3.46.0.0"
 strikt = "0.34.1"
 swagger = "2.2.15"
 testLoggerPlugin = "4.0.0"
@@ -300,6 +301,7 @@ docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker-pl
 doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 cite = { id = "com.jakewharton.cite", version.ref = "cite" }
+elide-conventions = { id = "elide.internal.conventions" }
 flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers-plugin" }
 gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
 graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
@@ -331,10 +333,12 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
 micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-plugin" }
 micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-plugin" }
+micronaut-minimal-application = { id = "io.micronaut.minimal.application", version.ref = "micronaut-plugin" }
 micronaut-crac = { id = "io.micronaut.crac", version.ref = "micronaut-plugin" }
 micronaut-docker = { id = "io.micronaut.docker", version.ref = "micronaut-plugin" }
 micronaut-graalvm = { id = "io.micronaut.graalvm", version.ref = "micronaut-plugin" }
 micronaut-library = { id = "io.micronaut.library", version.ref = "micronaut-plugin" }
+micronaut-minimal-library = { id = "io.micronaut.minimal.library", version.ref = "micronaut-plugin" }
 micronaut-test-resources = { id = "io.micronaut.test-resources", version.ref = "micronaut-plugin" }
 mrjar = { id = "me.champeau.mrjar", version.ref = "mrjar" }
 nexusPublishing = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexusPublishing" }
@@ -812,7 +816,7 @@ plugin-proguard = { group = "com.guardsquare", name = "proguard-gradle", version
 plugin-protobuf = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "pluginProtobuf" }
 plugin-redacted = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin-gradle", version.ref = "redacted-plugin" }
 plugin-reflekt = { group = "org.jetbrains.reflekt", name = "reflekt-plugin", version.ref = "kotlin-sdk" }
-plugin-shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow-plugin" }
+plugin-shadow = { group = "com.github.johnrengelman", name = "shadow", version.ref = "shadow-plugin" }
 plugin-sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }
 plugin-sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }
 plugin-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }

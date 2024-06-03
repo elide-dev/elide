@@ -17,7 +17,7 @@ plugins {
   kotlin("jvm")
   id("com.google.devtools.ksp")
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

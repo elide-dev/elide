@@ -18,7 +18,7 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

@@ -16,15 +16,15 @@ import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
-  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
-  alias(libs.plugins.shadow)
+  id(libs.plugins.shadow.get().pluginId)
 
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.allopen")
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 // Enable LLVM use for Ruby.

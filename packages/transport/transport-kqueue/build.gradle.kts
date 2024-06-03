@@ -18,7 +18,7 @@ import java.nio.file.Path
 plugins {
   `cpp-library`
   `java-library`
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 java {
@@ -40,6 +40,12 @@ elide {
     id = "transport-kqueue"
     name = "Elide Transport: KQueue"
     description = "Packages native KQueue support for Elide/Netty."
+  }
+
+  checks {
+    spotless = false
+    checkstyle = false
+    detekt = false
   }
 }
 
@@ -101,6 +107,15 @@ tasks.withType(LinkSharedLibrary::class.java).configureEach {
   linkerArgs.addAll(listOf(
     "-Wl,-platform_version,macos,11.0,11.0",
   ))
+}
+
+tasks.compileJava {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "-nowarn",
+      "-Xlint:none",
+    )
+  })
 }
 
 tasks.withType(StripSymbols::class).configureEach {

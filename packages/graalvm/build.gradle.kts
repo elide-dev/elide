@@ -31,14 +31,14 @@ plugins {
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
-  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   id("org.graalvm.buildtools.native")
 
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 group = "dev.elide"
@@ -49,6 +49,7 @@ val oracleGvm = false
 val enableJpms = false
 val enableEdge = true
 val enableSqlite = true
+val enableBenchmarks = false
 val enableStaticJni = true
 val enableToolchains = true
 val enableTransportV2 = false
@@ -148,11 +149,13 @@ sourceSets {
       layout.projectDirectory.dir("src/main/java9")
     )
   }
-  val benchmarks by creating {
-    kotlin.srcDirs(
-      layout.projectDirectory.dir("src/benchmarks/kotlin"),
-      layout.projectDirectory.dir("src/main/kotlin"),
-    )
+  if (enableBenchmarks) {
+    val benchmarks by creating {
+      kotlin.srcDirs(
+        layout.projectDirectory.dir("src/benchmarks/kotlin"),
+        layout.projectDirectory.dir("src/main/kotlin"),
+      )
+    }
   }
 }
 
@@ -370,7 +373,7 @@ benchmark {
     }
   }
   targets {
-    register("benchmarks") {
+    if (enableBenchmarks) register("benchmarks") {
       this as JvmBenchmarkTarget
       jmhVersion = libs.versions.jmh.lib.get()
     }
@@ -391,23 +394,25 @@ micronaut {
   }
 }
 
-val benchmarksCompileClasspath: Configuration by configurations.getting {
-  extendsFrom(
-    configurations.compileClasspath.get(),
-  )
-}
+if (enableBenchmarks) {
+  val benchmarksCompileClasspath: Configuration by configurations.getting {
+    extendsFrom(
+      configurations.compileClasspath.get(),
+    )
+  }
 
-val benchmarksImplementation: Configuration by configurations.getting {
-  extendsFrom(
-    configurations.implementation.get(),
-    configurations.testImplementation.get(),
-  )
-}
-val benchmarksRuntimeOnly: Configuration by configurations.getting {
-  extendsFrom(
-    configurations.runtimeOnly.get(),
-    configurations.testRuntimeOnly.get()
-  )
+  val benchmarksImplementation: Configuration by configurations.getting {
+    extendsFrom(
+      configurations.implementation.get(),
+      configurations.testImplementation.get(),
+    )
+  }
+  val benchmarksRuntimeOnly: Configuration by configurations.getting {
+    extendsFrom(
+      configurations.runtimeOnly.get(),
+      configurations.testRuntimeOnly.get()
+    )
+  }
 }
 
 dependencies {

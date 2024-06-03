@@ -17,7 +17,7 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   id("java-platform")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

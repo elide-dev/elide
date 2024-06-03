@@ -23,5 +23,4 @@ compileKotlin
 --stacktrace
 -Pelide.ci=true
 -PbuildSamples=false
--PbuildDocsSite=false
 -PbuildDocs=false

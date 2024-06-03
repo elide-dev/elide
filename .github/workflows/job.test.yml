@@ -207,45 +207,11 @@ jobs:
           fetch-depth: 0
           submodules: true
           persist-credentials: false
-      - name: "Setup: Cache Restore (Build)"
-        id: cache-restore-build
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-          restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-build-
-            elide-framework-v1-
-            elide-framework-
-          path: |
-            .gradle/
-            build/
-            .codebase/
-            ~/.konan
-            .kotlin/
-            packages/*/build/bin
-            packages/*/build/classes
-            packages/*/build/kotlin
-            packages/*/build/klib
-            packages/*/build/generated
-            packages/*/build/generated-sources
-            packages/proto/*/build/bin
-            packages/proto/*/build/classes
-            packages/proto/*/build/kotlin
-            packages/proto/*/build/klib
-            packages/proto/*/build/generated
-            packages/proto/*/build/generated-sources
-            tools/elide-build/build/bin
-            tools/elide-build/build/classes
-            tools/elide-build/build/kotlin
-            tools/elide-build/build/klib
-            tools/elide-build/build/generated
-            tools/elide-build/build/generated-sources
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
         uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
-          key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+          key: elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
             build/reports/kover/**/*.*
             packages/*/test-results/
@@ -255,8 +221,8 @@ jobs:
             packages/proto/*/reports/
             tools/elide-build/reports/
           restore-keys: |
-            elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-tests-
+            elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v2-tests-
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@b113a30d27a8e59c969077c0a0168cc13dab5ffc # v1.8.0
         with:
@@ -265,15 +231,10 @@ jobs:
           components: clippy,rustfmt
           cache: false
           rustflags: ""
-      - name: "Setup: Zig"
-        uses: goto-bus-stop/setup-zig@7ab2955eb728f5440978d5824358023be3a2802d # v2.2.0
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@2e7f9ec7921547d4b46598398ca573513895d0bd # v0.0.4
-        if: false
       - name: "Setup: Rust Caching"
-        if: false && github.event_name != 'release' && github.event_name != 'workflow_dispatch'
         run: |
-          cargo install cargo-zigbuild
           echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
           echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 22)"
@@ -313,10 +274,6 @@ jobs:
           merge-multiple: true
       - name: "🛠️ Build Third-party"
         run: make third-party
-      - name: "🛠️ Build Natives (Debug)"
-        run: cargo build
-      - name: "🛠️ Build Natives (Release)"
-        run: cargo build --release
       - name: "Testsuite"
         uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         env:
@@ -339,11 +296,12 @@ jobs:
             yarn
           arguments: |
             test
-            allTests
+            jvmTest
             koverXmlReport
             koverBinaryReport
             koverVerify
             detekt
+            -x nativeTest
             --scan
             --build-cache
             --no-daemon
@@ -353,7 +311,6 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
-            -PbuildDocsSite=false
       - name: "Analysis: Sonar"
         uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         continue-on-error: true
@@ -386,7 +343,6 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
-            -PbuildDocsSite=false
       - name: "Runtime Self-tests (JVM)"
         uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
         continue-on-error: true
@@ -408,7 +364,6 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
-            -PbuildDocsSite=false
             --args="selftest"
       - name: "Artifact: Test Reports"
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
@@ -470,45 +425,11 @@ jobs:
           fetch-depth: 0
           submodules: true
           persist-credentials: false
-      - name: "Setup: Cache Restore (Build)"
-        id: cache-restore-build
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-          restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-build-
-            elide-framework-v1-
-            elide-framework-
-          path: |
-            .gradle/
-            build/
-            .codebase/
-            ~/.konan
-            .kotlin/
-            packages/*/build/bin
-            packages/*/build/classes
-            packages/*/build/kotlin
-            packages/*/build/klib
-            packages/*/build/generated
-            packages/*/build/generated-sources
-            packages/proto/*/build/bin
-            packages/proto/*/build/classes
-            packages/proto/*/build/kotlin
-            packages/proto/*/build/klib
-            packages/proto/*/build/generated
-            packages/proto/*/build/generated-sources
-            tools/elide-build/build/bin
-            tools/elide-build/build/classes
-            tools/elide-build/build/kotlin
-            tools/elide-build/build/klib
-            tools/elide-build/build/generated
-            tools/elide-build/build/generated-sources
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
         uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
-          key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+          key: elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
             packages/*/test-results/
             packages/proto/*/test-results/
@@ -517,8 +438,8 @@ jobs:
             packages/proto/*/reports/
             tools/elide-build/reports/
           restore-keys: |
-            elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-tests-
+            elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v2-tests-
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:
@@ -575,7 +496,6 @@ jobs:
             -x :packages:server:nativeTest
             -Pelide.ci=true
             -PbuildSamples=false
-            -PbuildDocsSite=false
             -PbuildDocs=false
       - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:

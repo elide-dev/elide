@@ -16,7 +16,7 @@ plugins {
   `java-library`
   kotlin("jvm")
   kotlin("plugin.serialization")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
   id(libs.plugins.graalvm.get().pluginId)
 }
 

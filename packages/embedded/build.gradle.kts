@@ -1,10 +1,10 @@
 plugins {
   kotlin("jvm")
   kotlin("plugin.atomicfu")
-  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.buildConfig)
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 /** Whether to enable Panama-based tests for the shared native binary. */

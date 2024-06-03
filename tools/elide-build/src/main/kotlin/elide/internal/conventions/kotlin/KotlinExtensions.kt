@@ -19,6 +19,7 @@ import org.gradle.api.internal.catalog.ExternalModuleDependencyFactory.Dependenc
 import org.gradle.kotlin.dsl.accessors.runtime.addDependencyTo
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import elide.internal.conventions.Constants.Kotlin
 
 /** A wrapper around the [KotlinMultiplatformExtension], used to configure [dependencies] in a KMP project. */
 public class DependenciesScope internal constructor(
@@ -78,7 +79,7 @@ public fun DependenciesScope.wasm(block: KotlinDependencyHandler.() -> Unit) {
   }
 }
 
-/** Configure dependencies for the `wasmJstest` source set. */
+/** Configure dependencies for the `wasmJsTest` source set. */
 public fun DependenciesScope.wasmTest(block: KotlinDependencyHandler.() -> Unit) {
   if (!project.isWasmDisabled()) {
     sourceSetDependencies("wasmJsTest", block)
@@ -106,12 +107,20 @@ public fun DependenciesScope.jsTest(block: KotlinDependencyHandler.() -> Unit) {
 
 /** Configure dependencies for the `nativeMain` source set. */
 public fun DependenciesScope.native(block: KotlinDependencyHandler.() -> Unit) {
-  sourceSetDependencies("nativeMain", block)
+  if (project.findProperty(Kotlin.KNATIVE) == "true") {
+    if (project.findProperty(Kotlin.BUILD_MODE) == "release" || project.findProperty(Kotlin.ALL_TARGETS) == "true") {
+      sourceSetDependencies("nativeMain", block)
+    }
+  }
 }
 
 /** Configure dependencies for the `nativeTest` source set. */
 public fun DependenciesScope.nativeTest(block: KotlinDependencyHandler.() -> Unit) {
-  sourceSetDependencies("nativeTest", block)
+  if (project.findProperty(Kotlin.KNATIVE) == "true") {
+    if (project.findProperty(Kotlin.BUILD_MODE) == "release" || project.findProperty(Kotlin.ALL_TARGETS) == "true") {
+      sourceSetDependencies("nativeTest", block)
+    }
+  }
 }
 
 /** Resolve and configure a Kotlin Source Set with the given [name][sourceSetName]. */
@@ -119,5 +128,6 @@ private inline fun DependenciesScope.sourceSetDependencies(
   sourceSetName: String,
   crossinline block: KotlinDependencyHandler.() -> Unit
 ) {
-  extension.sourceSets.getByName(sourceSetName).dependencies { block() }
+  if (extension.sourceSets.findByName(sourceSetName) != null)
+    extension.sourceSets.getByName(sourceSetName).dependencies { block() }
 }

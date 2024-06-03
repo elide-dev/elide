@@ -25,10 +25,10 @@ plugins {
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
 
-  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
   idea
 }
 
@@ -76,7 +76,6 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.Embedded
     atomicFu = true
     explicitApi = true
   }

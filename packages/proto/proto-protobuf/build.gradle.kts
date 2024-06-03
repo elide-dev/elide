@@ -23,7 +23,7 @@ plugins {
   kotlin("jvm")
   alias(libs.plugins.protobuf)
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

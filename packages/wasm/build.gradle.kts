@@ -18,7 +18,7 @@ import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   kotlin("multiplatform")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

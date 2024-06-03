@@ -16,9 +16,9 @@ import elide.internal.conventions.publishing.publish
 plugins {
   kotlin("jvm")
   kotlin("plugin.serialization")
-  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 group = "dev.elide"

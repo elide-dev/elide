@@ -18,7 +18,21 @@ import java.nio.file.Path
 plugins {
   `cpp-library`
   `java-library`
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
+}
+
+elide {
+  checks {
+    spotless = false
+    checkstyle = false
+    detekt = false
+  }
+
+  publishing {
+    id = "sqlite"
+    name = "Elide SQLite3"
+    description = "Packages native SQLite3 support for Elide."
+  }
 }
 
 library {
@@ -94,24 +108,67 @@ val jdkNativeIncludePath: Path = when {
   else -> error("Unsupported OS for native builds")
 }
 
+val buildAmalgamation by tasks.registering(Exec::class) {
+  executable = "make"
+  workingDir(rootProject.layout.projectDirectory)
+  argumentProviders.add(CommandLineArgumentProvider {
+    listOf("-C", "third_party", "sqlite")
+  })
+  outputs.upToDateWhen {
+    layout.buildDirectory.file("sqlite3/sqlite3.c").get().asFile.exists()
+  }
+}
+
+val checkBuilt by tasks.registering {
+  group = "build"
+  description = "Check if the SQLite3 amalgamation has been built"
+
+  doLast {
+    if (!amalgamationRoot.asFile.exists()) {
+      throw IllegalStateException("SQLite3 not available. Please run `git submodule update --init --recursive`")
+    }
+  }
+
+  outputs.upToDateWhen {
+    amalgamationRoot.file("sqlite3.c").asFile.exists()
+  }
+  dependsOn(buildAmalgamation)
+  mustRunAfter(buildAmalgamation)
+}
+
 val copyAmalgamation by tasks.registering(Copy::class) {
   group = "build"
   description = "Copy the SQLite3 amalgamation source"
 
+  dependsOn(buildAmalgamation, checkBuilt)
   from(amalgamationRoot) {
-    include("sqlite3.c")
+    include("sqlite3.c", "sqlite3.h")
   }
   into(layout.buildDirectory.dir("sqlite3"))
 
+  inputs.files(
+    amalgamationRoot.file("sqlite3.c"),
+    amalgamationRoot.file("sqlite3.h"),
+  )
   outputs.files(
     layout.buildDirectory.file("sqlite3/sqlite3.c"),
   )
+}
+
+tasks.compileJava {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "-nowarn",
+      "-Xlint:none",
+    )
+  })
 }
 
 tasks.withType(CppCompile::class) {
   group = "build"
   description = "Compile C/C++ sources"
   dependsOn(copyAmalgamation)
+  mustRunAfter(checkBuilt)
   val layoutSources = layout.projectDirectory.dir("src/main/cpp").asFileTree.matching {
     include("**/*.c", "**/*.h")
   }
@@ -123,6 +180,10 @@ tasks.withType(CppCompile::class) {
   source.from(layoutSources, sqliteSources)
   inputs.files(layoutSources, sqliteSources)
 
+  inputs.files(
+    layout.buildDirectory.file("sqlite3/sqlite3.c"),
+    layout.buildDirectory.file("sqlite3/sqlite3.h"),
+  )
   compilerArgs.addAll(listOf(
     "-x", "c",
     "-fPIC",

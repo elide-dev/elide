@@ -15,4 +15,3 @@ copyCoverageReports
 -Pelide.ci=true
 -PbuildSamples=false
 -PbuildDocs=false
--PbuildDocsSite=false

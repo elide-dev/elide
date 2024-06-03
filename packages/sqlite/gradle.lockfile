@@ -1,0 +1,14 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+org.graalvm.compiler:compiler:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.nativeimage:native-image-base:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.nativeimage:objectfile:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.nativeimage:pointsto:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.nativeimage:svm:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.sdk:collections:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.sdk:nativeimage:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.sdk:word:24.1.0-SNAPSHOT=compileClasspath
+org.graalvm.truffle:truffle-compiler:24.1.0-SNAPSHOT=compileClasspath
+org.slf4j:slf4j-api:2.0.13=compileClasspath
+empty=runtimeClasspath

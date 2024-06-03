@@ -72,6 +72,7 @@ BUF ?= $(shell which buf)
 JVM ?= 21
 SYSTEM ?= $(shell uname -s)
 JQ ?= $(shell which jq)
+BAZEL ?= $(shell which bazel)
 
 POSIX_FLAGS ?=
 GRADLE_OPTS ?=
@@ -656,4 +657,22 @@ help:  ## Show this help text ('make help').
 	$(info Elide:)
 	@grep -E '^[a-z1-9A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: all docs build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-jdk21 image-jdk22 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-runtime-jvm21 image-runtime-jvm21 image-native image-native-alpine
+# ---- Runtime submodule ---- #
+# Note: make sure the Git submodule is up to date by running `git submodule update [--init] runtime`
+
+runtime-build: # Build the JS runtime facade and the builtin modules bundle
+	@echo "Building JS runtime facade..."
+	$(CMD) cd runtime && $(BAZEL) build //...
+
+runtime-update: runtime-build # Rebuild and copy the JS runtime facade
+	@echo "Updating 'facade.js.gz'"
+	$(CMD) cp -fv ./runtime/bazel-bin/elide/runtime/js/runtime.bin.js \
+		./packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js
+	$(CMD) cd packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js && \
+		rm -fv facade.js.gz && \
+		gzip --best -k facade.js
+	@echo "Updating 'js.modules.tar.gz'"
+	$(CMD) cp -fv ./runtime/bazel-bin/elide/runtime/js/js.modules.tar.gz \
+	 ./packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/js.modules.tar.gz
+
+.PHONY: all docs build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-jdk21 image-jdk22 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-runtime-jvm21 image-runtime-jvm21 image-native image-native-alpine runtime-build runtime-update

@@ -54,7 +54,7 @@ importers:
         version: 3.0.1(esbuild@0.21.4)
       '@prettier/plugin-xml':
         specifier: 3.4.1
-        version: 3.4.1(prettier@3.2.5)
+        version: 3.4.1(prettier@3.3.0)
       '@types/google-protobuf':
         specifier: 3.15.12
         version: 3.15.12
@@ -86,20 +86,20 @@ importers:
         specifier: 11.0.0
         version: 11.0.0(jiti@1.21.0)(postcss@8.4.38)
       prettier:
-        specifier: 3.2.5
-        version: 3.2.5
+        specifier: 3.3.0
+        version: 3.3.0
       prettier-plugin-java:
         specifier: 2.6.0
         version: 2.6.0
       prettier-plugin-properties:
         specifier: 0.3.0
-        version: 0.3.0(prettier@3.2.5)
+        version: 0.3.0(prettier@3.3.0)
       prettier-plugin-sh:
         specifier: 0.14.0
-        version: 0.14.0(prettier@3.2.5)
+        version: 0.14.0(prettier@3.3.0)
       prettier-plugin-toml:
         specifier: 2.0.1
-        version: 2.0.1(prettier@3.2.5)
+        version: 2.0.1(prettier@3.3.0)
       readable-stream:
         specifier: 4.5.2
         version: 4.5.2
@@ -174,21 +174,6 @@ importers:
       express:
         specifier: ^4.19.2
         version: 4.19.2
-
-  tools/tsc:
-    dependencies:
-      '@typescript/vfs':
-        specifier: 1.5.1
-        version: 1.5.1
-      esbuild:
-        specifier: 0.21.4
-        version: 0.21.4
-      lz-string:
-        specifier: 1.5.0
-        version: 1.5.0
-      typescript:
-        specifier: 5.4.5
-        version: 5.4.5
 
 packages:
 
@@ -642,9 +627,6 @@ packages:
   '@typescript-eslint/visitor-keys@7.11.0':
     resolution: {integrity: sha512-7syYk4MzjxTEk0g/w3iqtgxnFQspDJfn6QKD36xMuuhTzjcxY7F8EmBLnALjVyaOF1/bVocu3bS/2/F7rXrveQ==, tarball: https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-7.11.0.tgz}
     engines: {node: ^18.18.0 || >=20.0.0}
-
-  '@typescript/vfs@1.5.1':
-    resolution: {integrity: sha512-yaTdEeMCc31H6wMIqMbf69n89xGQyYQr9hmPMmB4K5LonbefYuV+f9AR2Iuh6itm1+NLes8+BZf4il30BBR5Mw==, tarball: https://registry.npmjs.org/@typescript/vfs/-/vfs-1.5.1.tgz}
 
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==, tarball: https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.2.0.tgz}
@@ -1390,6 +1372,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==, tarball: https://registry.npmjs.org/glob/-/glob-7.2.3.tgz}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   global-directory@4.0.1:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==, tarball: https://registry.npmjs.org/global-directory/-/global-directory-4.0.1.tgz}
@@ -1491,6 +1474,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==, tarball: https://registry.npmjs.org/inflight/-/inflight-1.0.6.tgz}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==, tarball: https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz}
@@ -1707,10 +1691,6 @@ packages:
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==, tarball: https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz}
-    hasBin: true
-
-  lz-string@1.5.0:
-    resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==, tarball: https://registry.npmjs.org/lz-string/-/lz-string-1.5.0.tgz}
     hasBin: true
 
   markdown-extensions@2.0.0:
@@ -2275,6 +2255,11 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  prettier@3.3.0:
+    resolution: {integrity: sha512-J9odKxERhCQ10OC2yb93583f6UnYutOeiV5i0zEDS7UGTdUt0u+y8erxl3lBKvwo/JHyyoEdXjwp4dke9oyZ/g==, tarball: https://registry.npmjs.org/prettier/-/prettier-3.3.0.tgz}
+    engines: {node: '>=14'}
+    hasBin: true
+
   pretty-hrtime@1.0.3:
     resolution: {integrity: sha512-66hKPCr+72mlfiSjlEB1+45IjXSqvVAIy6mocupoww4tBFE9R9IhwwUGoI4G++Tc9Aq+2rxOt0RFU6gPcrte0A==, tarball: https://registry.npmjs.org/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz}
     engines: {node: '>= 0.8'}
@@ -2383,6 +2368,7 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==, tarball: https://registry.npmjs.org/rimraf/-/rimraf-3.0.2.tgz}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   run-parallel@1.2.0:
@@ -3113,10 +3099,10 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@prettier/plugin-xml@3.4.1(prettier@3.2.5)':
+  '@prettier/plugin-xml@3.4.1(prettier@3.3.0)':
     dependencies:
       '@xml-tools/parser': 1.0.11
-      prettier: 3.2.5
+      prettier: 3.3.0
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
@@ -3267,12 +3253,6 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.11.0
       eslint-visitor-keys: 3.4.3
-
-  '@typescript/vfs@1.5.1':
-    dependencies:
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
 
   '@ungap/structured-clone@1.2.0': {}
 
@@ -4489,8 +4469,6 @@ snapshots:
     dependencies:
       js-tokens: 4.0.0
 
-  lz-string@1.5.0: {}
-
   markdown-extensions@2.0.0: {}
 
   mdast-util-from-markdown@2.0.0:
@@ -5176,23 +5154,25 @@ snapshots:
       lodash: 4.17.21
       prettier: 3.2.5
 
-  prettier-plugin-properties@0.3.0(prettier@3.2.5):
+  prettier-plugin-properties@0.3.0(prettier@3.3.0):
     dependencies:
       dot-properties: 1.0.1
-      prettier: 3.2.5
+      prettier: 3.3.0
 
-  prettier-plugin-sh@0.14.0(prettier@3.2.5):
+  prettier-plugin-sh@0.14.0(prettier@3.3.0):
     dependencies:
       mvdan-sh: 0.10.1
-      prettier: 3.2.5
+      prettier: 3.3.0
       sh-syntax: 0.4.2
 
-  prettier-plugin-toml@2.0.1(prettier@3.2.5):
+  prettier-plugin-toml@2.0.1(prettier@3.3.0):
     dependencies:
       '@taplo/lib': 0.4.0-alpha.2
-      prettier: 3.2.5
+      prettier: 3.3.0
 
   prettier@3.2.5: {}
+
+  prettier@3.3.0: {}
 
   pretty-hrtime@1.0.3: {}
 

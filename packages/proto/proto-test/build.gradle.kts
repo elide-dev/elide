@@ -17,7 +17,7 @@ import elide.internal.conventions.kotlin.dependencies
 
 plugins {
   kotlin("multiplatform")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 val buildWasm = project.properties["buildWasm"] == "true"
@@ -32,7 +32,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Default
   }
 
   jvm {

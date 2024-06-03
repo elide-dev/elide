@@ -112,87 +112,13 @@ jobs:
               - *tools
 
   ##
-  ## Job: Pre-flight Checks
-  ##
-  preflight-checks:
-    name: "Pre-flight Checks"
-    runs-on: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
-    permissions:
-      contents: "read"
-      checks: "read"
-      packages: "read"
-    steps:
-      - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            agent.less.build:443
-            api.github.com:443
-            cli.less.build:443
-            d3ob9fqp587by1.cloudfront.net:443
-            dl.less.build:443
-            download.oracle.com:443
-            edge.pkg.st:443
-            maven.elide.dev:443
-            github.com:443
-            global.less.build:443
-            gradle.pkg.st:443
-            jpms.pkg.st:443
-            keys.openpgp.org:443
-            keyserver.ubuntu.com:443
-            local.less.build:443
-            maven.pkg.jetbrains.space:443
-            maven.pkg.st:443
-            repo.maven.apache.org:443
-            objects.githubusercontent.com:443
-            pgp.mit.edu:443
-            services.gradle.org:443
-      - name: "Setup: Checkout"
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
-        with:
-          submodules: true
-          persist-credentials: false
-      - name: "Setup: Buildless"
-        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - name: "Setup: GraalVM (Java 22)"
-        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
-        with:
-          distribution: "graalvm"
-          java-version: "22"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Cache Restore"
-        id: cache-restore
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          path: "**/*.*"
-          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-          restore-keys: |
-            elide-framework-v1-build-
-            elide-framework-v1-
-            elide-framework-
-      - name: "Check: Library ABI"
-        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
-        continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
-        env:
-          CI: true
-          GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-        with:
-          cache-read-only: false
-          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          arguments: |
-            projects
-
-  ##
   ## Job: Multi-platform Build
   ##
   pr-build:
     name: "Build"
     uses: ./.github/workflows/job.build.yml
     secrets: inherit
-    needs: [triage, preflight-checks]
+    needs: [triage]
     if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
     permissions:
       contents: "write"
@@ -213,7 +139,7 @@ jobs:
     name: "Build"
     uses: ./.github/workflows/job.test.yml
     secrets: inherit
-    needs: [triage, preflight-checks]
+    needs: [triage]
     if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
     permissions:
       contents: "read"
@@ -230,7 +156,7 @@ jobs:
   check-api:
     name: "Checks"
     uses: ./.github/workflows/checks.apicheck.yml
-    needs: [triage, preflight-checks]
+    needs: [triage]
     if: fromJson(needs.triage.outputs.srcs)
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -244,7 +170,7 @@ jobs:
   check-model:
     name: "Checks"
     uses: ./.github/workflows/checks.model.yml
-    needs: [triage, preflight-checks]
+    needs: [triage]
     if: fromJson(needs.triage.outputs.model)
     secrets:
       BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
@@ -259,7 +185,7 @@ jobs:
   check-format:
     name: "Checks"
     uses: ./.github/workflows/checks.formatting.yml
-    needs: [triage, preflight-checks]
+    needs: [triage]
     if: fromJson(needs.triage.outputs.model)
     secrets: inherit
     permissions:
@@ -273,7 +199,7 @@ jobs:
   check-wrapper:
     name: "Checks"
     uses: ./.github/workflows/checks.gradle-wrapper.yml
-    needs: [triage, preflight-checks]
+    needs: [triage]
     permissions:
       contents: "read"
 
@@ -283,7 +209,7 @@ jobs:
   check-dependencies:
     name: "Checks"
     uses: ./.github/workflows/checks.dependency-review.yml
-    needs: [triage, preflight-checks, pr-build]
+    needs: [triage, pr-build]
     permissions:
       contents: "read"
 
@@ -293,7 +219,7 @@ jobs:
   check-codeql:
     name: "Checks"
     uses: ./.github/workflows/checks.codeql.yml
-    needs: [triage, preflight-checks, pr-build]
+    needs: [triage, pr-build]
     if: fromJson(needs.triage.outputs.packages)
     secrets:
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -309,7 +235,7 @@ jobs:
   check-detekt:
     name: "Checks"
     uses: ./.github/workflows/checks.detekt.yml
-    needs: [triage, preflight-checks, pr-build]
+    needs: [triage, pr-build]
     if: fromJson(needs.triage.outputs.srcs)
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}

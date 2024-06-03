@@ -101,7 +101,7 @@ tasks.withType<KotlinCompile>().configureEach {
 dependencies {
   implementation(gradleApi())
 
-  // included plugins
+  // included plugins and dependencies
   implementation(libs.bouncycastle)
   implementation(libs.bouncycastle.util)
   implementation(libs.guava)
@@ -111,7 +111,6 @@ dependencies {
   implementation(libs.kotlinpoet)
   implementation(libs.okio)
   implementation(libs.plugin.detekt)
-  implementation(libs.plugin.docker)
   implementation(libs.plugin.dokka)
   implementation(libs.plugin.dokka.base)
   implementation(libs.plugin.dokka.versioning)
@@ -122,7 +121,7 @@ dependencies {
   implementation(libs.plugin.kotlin)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.ksp)
-  implementation(libs.plugin.redacted)
+  implementation(libs.plugin.shadow)
   implementation(libs.plugin.sigstore)
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.spotless)
@@ -138,7 +137,6 @@ dependencies {
   implementation(libs.plugin.kotlin.powerAssert)
   implementation(libs.plugin.kotlin.compose)
   implementation(libs.plugin.kotlin.jsObjects)
-  implementation(libs.plugin.kotlin.samWithReceiver)
   implementation(libs.plugin.kotlinx.serialization)
   implementation(libs.plugin.kotlinx.atomicfu)
 }

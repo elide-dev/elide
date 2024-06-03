@@ -19,7 +19,7 @@ plugins {
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {
@@ -30,7 +30,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Default
     explicitApi = true
   }
 }

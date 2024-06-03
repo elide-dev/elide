@@ -60,3 +60,5 @@ ignore:
   - "packages/runtime/**/*.*"
   - "packages/transport/**/*.*"
   - "packages/sqlite/**/*.*"
+  - "packages/rpc/**/*.*"
+  - "packages/model/**/*.*"

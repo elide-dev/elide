@@ -21,7 +21,7 @@ plugins {
   kotlin("kapt")
   kotlin("multiplatform")
   alias(libs.plugins.protobuf)
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {
@@ -32,7 +32,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Default
     explicitApi = true
     kapt = true
   }

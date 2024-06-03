@@ -14,7 +14,7 @@
 import elide.internal.conventions.kotlin.*
 
 plugins {
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
   kotlin("multiplatform")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
@@ -28,7 +28,7 @@ elide {
   }
 
   kotlin {
-    target = KotlinTarget.All
+    target = KotlinTarget.Default
     atomicFu = true
     explicitApi = true
   }
@@ -40,7 +40,7 @@ elide {
 
 kotlin {
   sourceSets {
-    val nativeMain by getting {
+    findByName("nativeMain")?.apply {
       dependencies {
         // fix: KT-64111. Remove when fixed.
         implementation(libs.kotlinx.atomicfu)

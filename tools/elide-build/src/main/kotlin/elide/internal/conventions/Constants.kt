@@ -163,6 +163,15 @@ public object Constants {
 
     /** Property: alternate switch for strictness. */
     const val STRICT_MODE_ALT = "elide.strict"
+
+    /** Property: whether to build for all targets. */
+    const val ALL_TARGETS = "elide.allTargets"
+
+    /** Property: whether to build Kotlin native targets. */
+    const val KNATIVE = "elide.kotlinNative"
+
+    /** Property: active build mode. */
+    const val BUILD_MODE = "elide.buildMode"
   }
 
   /** Build properties and other top-level constants. */

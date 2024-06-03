@@ -18,7 +18,7 @@ import java.nio.file.Path
 plugins {
   `cpp-library`
   `java-library`
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 library {
@@ -36,6 +36,12 @@ elide {
     id = "transport-unix"
     name = "Elide Transport: Unix"
     description = "Packages native common support for Unix-like operating systems."
+  }
+
+  checks {
+    spotless = false
+    checkstyle = false
+    detekt = false
   }
 }
 
@@ -81,6 +87,15 @@ tasks.withType(CppCompile::class.java).configureEach {
   if (HostManager.hostIsMac) {
     compilerArgs.add("-mmacosx-version-min=11.0")
   }
+}
+
+tasks.compileJava {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "-nowarn",
+      "-Xlint:none",
+    )
+  })
 }
 
 tasks.withType(LinkSharedLibrary::class.java).configureEach {

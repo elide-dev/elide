@@ -60,45 +60,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: "Setup: Cache Restore (Build)"
-        id: cache-restore-build
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-          restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-build-
-            elide-framework-v1-
-            elide-framework-
-          path: |
-            .gradle/
-            build/
-            .codebase/
-            ~/.konan
-            .kotlin/
-            packages/*/build/bin
-            packages/*/build/classes
-            packages/*/build/kotlin
-            packages/*/build/klib
-            packages/*/build/generated
-            packages/*/build/generated-sources
-            packages/proto/*/build/bin
-            packages/proto/*/build/classes
-            packages/proto/*/build/kotlin
-            packages/proto/*/build/klib
-            packages/proto/*/build/generated
-            packages/proto/*/build/generated-sources
-            tools/elide-build/build/bin
-            tools/elide-build/build/classes
-            tools/elide-build/build/kotlin
-            tools/elide-build/build/klib
-            tools/elide-build/build/generated
-            tools/elide-build/build/generated-sources
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore-test
         uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
-          key: elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+          key: elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
             packages/*/test-results/
             packages/proto/*/test-results/
@@ -107,8 +73,8 @@ jobs:
             packages/proto/*/reports/
             tools/elide-build/reports/
           restore-keys: |
-            elide-framework-v1-tests-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-tests-
+            elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-framework-v2-tests-
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:

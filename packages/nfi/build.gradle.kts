@@ -12,7 +12,7 @@
  */
 
 plugins {
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

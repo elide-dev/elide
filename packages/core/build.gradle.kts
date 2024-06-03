@@ -11,13 +11,10 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import elide.internal.conventions.kotlin.KotlinTarget
-import elide.internal.conventions.kotlin.common
-import elide.internal.conventions.kotlin.dependencies
-import elide.internal.conventions.kotlin.jvm
+import elide.internal.conventions.kotlin.*
 
 plugins {
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
   kotlin("multiplatform")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
@@ -32,7 +29,7 @@ elide {
 
   kotlin {
     atomicFu = true
-    target = KotlinTarget.All
+    target = KotlinTarget.Default
     explicitApi = true
   }
 }
@@ -40,6 +37,10 @@ elide {
 dependencies {
   common {
     implementation(libs.kotlinx.atomicfu)
+  }
+
+  commonTest {
+    implementation(kotlin("test"))
   }
 
   jvm {

@@ -30,6 +30,7 @@ import org.jetbrains.kotlin.noarg.gradle.NoArgExtension
 import org.jetbrains.kotlin.powerassert.gradle.PowerAssertGradleExtension
 import java.util.LinkedList
 import java.util.TreeSet
+import kotlinx.atomicfu.plugin.gradle.AtomicFUGradlePlugin
 import kotlinx.atomicfu.plugin.gradle.AtomicFUPluginExtension
 import elide.internal.conventions.Constants.Elide
 import elide.internal.conventions.Constants.Kotlin
@@ -110,12 +111,14 @@ internal fun Project.configureKotlinBuild(
 
   if (conventions.atomicFu) {
     apply(plugin = "kotlinx-atomicfu")
-
-    the<AtomicFUPluginExtension>().apply {
-      dependenciesVersion = null
-      transformJvm = true
-      transformJs = true
-      jvmVariant = "VH"
+    pluginManager.apply(AtomicFUGradlePlugin::class.java)
+    pluginManager.withPlugin("kotlinx-atomicfu") {
+      the<AtomicFUPluginExtension>().apply {
+        dependenciesVersion = null
+        transformJvm = true
+        transformJs = true
+        jvmVariant = "VH"
+      }
     }
   }
 

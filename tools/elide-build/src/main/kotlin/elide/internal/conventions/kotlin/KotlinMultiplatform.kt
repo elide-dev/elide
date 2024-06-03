@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import elide.internal.conventions.Constants.Kotlin
 import elide.internal.conventions.jvm.configureJavaModularity
 import elide.internal.conventions.kotlin.KotlinTarget.*
 
@@ -146,9 +147,17 @@ internal fun Project.configureKotlinMultiplatform(
     }
 
     // add native targets
-    if (Native in target || NativeEmbedded in target) registerNativeTargets(
+    val buildNativeEligible = (
+      findProperty(Kotlin.KNATIVE) == "true" ||
+      findProperty(Kotlin.BUILD_MODE) == "release"
+    )
+    val buildAllEligible = (
+      findProperty(Kotlin.ALL_TARGETS) == "true" ||
+      findProperty(Kotlin.BUILD_MODE) == "release"
+    )
+    if (buildNativeEligible && Native in target || NativeEmbedded in target) registerNativeTargets(
       this@configureKotlinMultiplatform,
-      all = Native in target,
+      all = Native in target && buildAllEligible,
     )
 
     // main host publication lock (for KMP projects targeting platforms without cross-compilation)
@@ -193,7 +202,7 @@ internal fun Project.configureKotlinMultiplatform(
           }
         }
       } else {
-        project.logger.warn("Unable to find non-JVM source set '$nonJvmSourceSet'.")
+        project.logger.debug("Unable to find non-JVM source set '$nonJvmSourceSet'.")
       }
     }
   }

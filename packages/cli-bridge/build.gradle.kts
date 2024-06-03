@@ -30,12 +30,11 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  alias(libs.plugins.kover)
   alias(libs.plugins.buildConfig)
-  alias(libs.plugins.shadow)
   alias(libs.plugins.gradle.checksum)
-
-  id("elide.internal.conventions")
+  id(libs.plugins.shadow.get().pluginId)
+  id(libs.plugins.kover.get().pluginId)
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {
@@ -53,4 +52,53 @@ elide {
 dependencies {
   api(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+}
+
+val isRelease = properties["elide.buildMode"] == "release"
+val nativeTargets = rootProject.layout.projectDirectory.dir("targets")
+val nativeDebugTargets = rootProject.layout.projectDirectory.dir("targets/debug")
+val nativeReleaseTargets = rootProject.layout.projectDirectory.dir("targets/release")
+
+private fun Exec.configureCargo(vararg extraArgs: String) {
+  standardOutput = System.out
+  executable = "cargo"
+  environment("FORCE_COLOR" to "true")
+  args("build", "--color=always", *extraArgs)
+}
+
+val buildNativeDebug by tasks.registering(Exec::class) {
+  group = "build"
+  description = "Build native Rust code via Cargo (debug)"
+  configureCargo()
+}
+
+val buildNativeRelease by tasks.registering(Exec::class) {
+  group = "build"
+  description = "Build native Rust code via Cargo (release)"
+  executable = "cargo"
+  configureCargo("--release")
+}
+
+val releaseNatives by tasks.registering {
+  outputs.dir(nativeReleaseTargets)
+  outputs.upToDateWhen {
+    nativeReleaseTargets.asFile.exists()
+  }
+}
+
+val debugNatives by tasks.registering {
+  outputs.dir(nativeDebugTargets)
+  outputs.upToDateWhen {
+    nativeDebugTargets.asFile.exists()
+  }
+}
+
+val nativeDeps = if (isRelease) releaseNatives else debugNatives
+
+tasks.jar {
+  dependsOn(nativeDeps)
+}
+
+tasks.build {
+  dependsOn(nativeDeps, tasks.jar)
 }

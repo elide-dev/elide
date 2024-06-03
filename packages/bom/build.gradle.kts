@@ -18,7 +18,7 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   id("version-catalog")
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

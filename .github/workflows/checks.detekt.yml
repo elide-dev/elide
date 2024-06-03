@@ -52,7 +52,7 @@ jobs:
         uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           disable-sudo: true
-          egress-policy: block
+          egress-policy: audit
           allowed-endpoints: >
             api.github.com:443
             download.oracle.com:443
@@ -62,45 +62,12 @@ jobs:
             gradle.pkg.st:443
             jpms.pkg.st:443
             maven.pkg.st:443
+            dl.less.build:443
       - name: "Setup: Checkout"
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: "Setup: Cache Restore (Build)"
-        id: cache-restore-build
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          key: elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-          restore-keys: |
-            elide-framework-v1-build-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v1-build-
-            elide-framework-v1-
-            elide-framework-
-          path: |
-            .gradle/
-            build/
-            .codebase/
-            ~/.konan
-            .kotlin/
-            packages/*/build/bin
-            packages/*/build/classes
-            packages/*/build/kotlin
-            packages/*/build/klib
-            packages/*/build/generated
-            packages/*/build/generated-sources
-            packages/proto/*/build/bin
-            packages/proto/*/build/classes
-            packages/proto/*/build/kotlin
-            packages/proto/*/build/klib
-            packages/proto/*/build/generated
-            packages/proto/*/build/generated-sources
-            tools/elide-build/build/bin
-            tools/elide-build/build/classes
-            tools/elide-build/build/kotlin
-            tools/elide-build/build/klib
-            tools/elide-build/build/generated
-            tools/elide-build/build/generated-sources
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
         with:

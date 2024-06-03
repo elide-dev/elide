@@ -21,7 +21,7 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.allopen")
 
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

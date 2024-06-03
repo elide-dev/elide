@@ -17,9 +17,6 @@ rootProject.name = "elide-internal-plugin"
 
 pluginManagement {
   repositories {
-    maven("https://gradle.pkg.st")
-    maven("https://maven.pkg.st")
-
     maven {
       name = "elide-snapshots"
       url = uri("https://maven.elide.dev")
@@ -29,6 +26,9 @@ pluginManagement {
         includeGroup("org.jetbrains.reflekt")
       }
     }
+    gradlePluginPortal()
+    mavenCentral()
+    google()
   }
 }
 
@@ -38,8 +38,6 @@ plugins {
 
 dependencyResolutionManagement {
   repositories {
-    maven("https://maven.pkg.st")
-    maven("https://gradle.pkg.st")
     maven {
       name = "elide-snapshots"
       url = uri("https://maven.elide.dev")
@@ -50,6 +48,8 @@ dependencyResolutionManagement {
         includeGroup("org.jetbrains.reflekt")
       }
     }
+    gradlePluginPortal()
+    mavenCentral()
     google()
   }
   

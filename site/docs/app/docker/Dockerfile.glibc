@@ -1,3 +1,0 @@
-FROM us-docker.pkg.dev/elide-fw/tools/runtime/native
-ADD app /app
-ENTRYPOINT ["/app"]

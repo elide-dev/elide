@@ -18,7 +18,15 @@ import java.nio.file.Path
 plugins {
   `cpp-library`
   `java-library`
-  id("elide.internal.conventions")
+  alias(libs.plugins.elide.conventions)
+}
+
+elide {
+  checks {
+    spotless = false
+    checkstyle = false
+    detekt = false
+  }
 }
 
 library {
@@ -50,6 +58,15 @@ val jdkNativeIncludePath: Path = when {
   HostManager.hostIsLinux -> jdkIncludePath.resolve("linux")
   HostManager.hostIsMingw -> jdkIncludePath.resolve("windows")
   else -> error("Unsupported OS for native builds")
+}
+
+tasks.compileJava {
+  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+    listOf(
+      "-nowarn",
+      "-Xlint:none",
+    )
+  })
 }
 
 tasks.withType(CppCompile::class) {

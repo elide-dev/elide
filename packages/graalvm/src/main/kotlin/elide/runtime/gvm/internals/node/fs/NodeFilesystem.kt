@@ -35,7 +35,6 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlin.coroutines.CoroutineContext
 import elide.annotations.Factory
 import elide.annotations.Singleton
-import elide.runtime.vfs.GuestVFS
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsError
@@ -52,14 +51,14 @@ import elide.runtime.intrinsics.js.node.NodeFilesystemPromiseAPI
 import elide.runtime.intrinsics.js.node.buffer.Buffer
 import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
+import elide.runtime.plugins.vfs.VfsListener
+import elide.runtime.vfs.GuestVFS
 import elide.vm.annotations.Polyglot
 
 // Installs the Node `fs` and `fs/promises` modules into the intrinsic bindings.
-@Intrinsic @Factory internal class NodeFilesystemModule : AbstractNodeBuiltinModule() {
+@Intrinsic @Factory internal class NodeFilesystemModule : AbstractNodeBuiltinModule(), VfsListener {
   /** VM filesystem manager. */
-  private val filesystem: GuestVFS by lazy {
-    HostVFS.acquireWritable()
-  }
+  private lateinit var filesystem: GuestVFS
 
   private val executor: ExecutorService by lazy {
     MoreExecutors.newDirectExecutorService()
@@ -79,6 +78,10 @@ import elide.vm.annotations.Polyglot
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = std
     bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = promises
+  }
+
+  override fun onVfsCreated(fileSystem: GuestVFS) {
+    filesystem = fileSystem
   }
 }
 

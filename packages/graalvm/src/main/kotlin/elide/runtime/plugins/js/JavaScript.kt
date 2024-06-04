@@ -51,6 +51,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
     enableOptions(
       "js.allow-eval",
+      "js.annex-b",
       "js.async-context",
       "js.async-iterator-helpers",
       "js.async-stack-traces",
@@ -79,7 +80,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     )
 
     disableOptions(
-      "js.annex-b",
       "js.console",
       "js.graal-builtin",
       "js.interop-complete-promises",
@@ -96,7 +96,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     setOptions(
       "js.charset" to config.charset.name(),
-      "js.commonjs-require-cwd" to config.npmConfig.modulesPath,
+      "js.commonjs-require-cwd" to (config.npmConfig.modulesPath?.ifBlank { null } ?: "."),
       "js.debug-property-name" to DEBUG_GLOBAL,
       "js.ecmascript-version" to config.language.symbol(),
       "js.function-constructor-cache-size" to FUNCTION_CONSTRUCTOR_CACHE_SIZE,

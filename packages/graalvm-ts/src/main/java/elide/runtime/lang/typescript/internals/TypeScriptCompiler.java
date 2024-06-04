@@ -27,20 +27,35 @@ import java.nio.file.Path;
 import java.util.zip.GZIPInputStream;
 import org.apache.commons.io.IOUtils;
 
-/** TBD. */
+/**
+ * TypeScript Compiler
+ *
+ * <p>Hosts the TypeScript Compiler (tsc) implementation for Elide's support for the TypeScript
+ * language (see {@link elide.runtime.lang.typescript.TypeScriptLanguage})
+ *
+ * <p>The TypeScript compiler is hosted in a dedicated JavaScript context, and leverages GraalJs to
+ * compile user code on-the-fly, either as primary inputs or as a loaded module.
+ */
 public class TypeScriptCompiler implements AutoCloseable {
   private static final String TYPESCRIPT_COMPILER_PATH =
       "/META-INF/elide/embedded/tools/tsc/typescript.js.gz";
   private static final Source TYPESCRIPT_COMPILER_SOURCE = createTypeScriptCompilerSource();
-  //  private static final Source TYPESCRIPT_TRANSPILE_FUNCTION_SOURCE =
-  // createTypeScriptTranspileFunctionSource();
   private final TruffleContext context;
   private final Object transpileFunction;
 
   public TypeScriptCompiler(Env env) {
-    this.context = env.newInnerContextBuilder("js").build();
+    context =
+        env.newInnerContextBuilder("js")
+            .allowIO(true) // must allow for import of modules during compilation
+            .option("js.annex-b", "true") // enable Annex B for compatibility with TypeScript
+            .option("js.ecmascript-version", "2021") // always use a modern ECMA spec
+            .option(
+                "js.commonjs-require", "true") // always enable `require()`, the compiler needs it
+            .option(
+                "js.commonjs-require-cwd", System.getProperty("user.dir")) // use cwd as import root
+            .build();
+
     transpileFunction = context.evalInternal(null, TYPESCRIPT_COMPILER_SOURCE);
-    //    transpileFunction = context.evalInternal(null, TYPESCRIPT_TRANSPILE_FUNCTION_SOURCE);
   }
 
   public String compileToString(CharSequence ts, String name) {

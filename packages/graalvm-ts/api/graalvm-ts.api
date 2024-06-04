@@ -5,6 +5,7 @@ public class elide/runtime/lang/typescript/TypeScriptLanguage : com/oracle/truff
 	public static final field MODULE_MIME_TYPE Ljava/lang/String;
 	public static final field NAME Ljava/lang/String;
 	public static final field TEXT_MIME_TYPE Ljava/lang/String;
+	public static final field TYPESCRIPT_VERSION Ljava/lang/String;
 	public fun <init> ()V
 	protected fun createContext (Lcom/oracle/truffle/api/TruffleLanguage$Env;)Lcom/oracle/truffle/js/runtime/JSRealm;
 	protected synthetic fun createContext (Lcom/oracle/truffle/api/TruffleLanguage$Env;)Ljava/lang/Object;

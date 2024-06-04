@@ -27,7 +27,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 ) {
   @Suppress("unused", "unused_parameter")
   private fun configureContext(builder: PolyglotContextBuilder) {
-    // nothing yet
+    // nothing at this time
   }
 
   public companion object Plugin : AbstractLanguagePlugin<TypeScriptConfig, TypeScript>() {

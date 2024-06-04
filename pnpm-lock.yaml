@@ -31,11 +31,11 @@ importers:
         specifier: 10.22.0
         version: 10.22.0
       react:
-        specifier: 19.0.0-beta-26f2496093-20240514
-        version: 19.0.0-beta-26f2496093-20240514
+        specifier: 19.0.0-rc.0
+        version: 19.0.0-rc.0
       react-dom:
-        specifier: 19.0.0-beta-26f2496093-20240514
-        version: 19.0.0-beta-26f2496093-20240514(react@19.0.0-beta-26f2496093-20240514)
+        specifier: 19.0.0-rc.0
+        version: 19.0.0-rc.0(react@19.0.0-rc.0)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -2127,13 +2127,13 @@ packages:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
     engines: {node: '>= 0.8'}
 
-  react-dom@19.0.0-beta-26f2496093-20240514:
-    resolution: {integrity: sha512-UvQ+K1l3DFQ34LDgfFSNuUGi9EC+yfE9tS6MdpNTd5fx7qC7KLfepfC/KpxWMQZ7JfE3axD4ZO6H4cBSpAZpqw==}
+  react-dom@19.0.0-rc.0:
+    resolution: {integrity: sha512-MhgN2RMYFUkZekkFbsXg9ycwEGaMBzATpTNvGGvWNA9BZZEkdzIL4pv7iDuZKn48YoGARk8ydu4S+Ehd8Yrc4g==, tarball: https://registry.npmjs.org/react-dom/-/react-dom-19.0.0-rc.0.tgz}
     peerDependencies:
-      react: 19.0.0-beta-26f2496093-20240514
+      react: 19.0.0-rc.0
 
-  react@19.0.0-beta-26f2496093-20240514:
-    resolution: {integrity: sha512-ZsU/WjNZ6GfzMWsq2DcGjElpV9it8JmETHm9mAJuOJNhuJcWJxt8ltCJabONFRpDFq1A/DP0d0KFj9CTJVM4VA==}
+  react@19.0.0-rc.0:
+    resolution: {integrity: sha512-8nrDCl5uE54FHeKqKrEO0TS+10bT4cxutJGb2okiJc0FHMQ6I3FeItaqly/1nbijlhSO3HmAVyPIexIQQWYAtQ==, tarball: https://registry.npmjs.org/react/-/react-19.0.0-rc.0.tgz}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.0:
@@ -2206,8 +2206,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  scheduler@0.25.0-beta-26f2496093-20240514:
-    resolution: {integrity: sha512-vDwOytLHFnA3SW2B1lNcbO+/qKVyLCX+KLpm+tRGNDsXpyxzRgkIaYGWmX+S70AJGchUHCtuqQ50GFeFgDbXUw==}
+  scheduler@0.25.0-rc.0:
+    resolution: {integrity: sha512-B3aSqMfoRkucM94MztZD1CyNyf68W9A3dL/TT453G6uNcxMBqGQ+rhFKyxNnWH/mfRHlGBr0tF0F472JCETH4g==, tarball: https://registry.npmjs.org/scheduler/-/scheduler-0.25.0-rc.0.tgz}
 
   semver@7.6.2:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
@@ -4791,12 +4791,12 @@ snapshots:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
 
-  react-dom@19.0.0-beta-26f2496093-20240514(react@19.0.0-beta-26f2496093-20240514):
+  react-dom@19.0.0-rc.0(react@19.0.0-rc.0):
     dependencies:
-      react: 19.0.0-beta-26f2496093-20240514
-      scheduler: 0.25.0-beta-26f2496093-20240514
+      react: 19.0.0-rc.0
+      scheduler: 0.25.0-rc.0
 
-  react@19.0.0-beta-26f2496093-20240514: {}
+  react@19.0.0-rc.0: {}
 
   read-cache@1.0.0:
     dependencies:
@@ -4881,7 +4881,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  scheduler@0.25.0-beta-26f2496093-20240514: {}
+  scheduler@0.25.0-rc.0: {}
 
   semver@7.6.2: {}
 

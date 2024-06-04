@@ -24,8 +24,12 @@ import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 
 /** Configuration DSL for the [Vfs] plugin. */
 @DelicateElideApi public class VfsConfig internal constructor(configuration: PolyglotEngineConfiguration) {
+
   /** Private mutable list of registered bundles. */
   private val bundles: MutableList<URI> = mutableListOf()
+
+  /** Internal list of listeners to be notified by the VFS. */
+  internal val listeners: MutableList<VfsListener> = mutableListOf()
 
   /** Internal list of bundles registered for use in the VFS. */
   internal val registeredBundles: List<URI> get() = bundles
@@ -51,6 +55,11 @@ import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
   /** Register a [bundle] to be added to the VFS on creation. */
   public fun include(bundle: URI) {
     bundles.add(bundle)
+  }
+
+  /** Register a [listener] for VFS events. */
+  public fun listener(listener: VfsListener) {
+    listeners.add(listener)
   }
 }
 

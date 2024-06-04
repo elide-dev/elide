@@ -10,10 +10,197 @@ plugins {
 /** Whether to enable Panama-based tests for the shared native binary. */
 val nativeTest = findProperty("elide.embedded.tests.native")?.toString()?.toBooleanStrictOrNull() == true
 
+val oracleGvm = false
+val jvmTarget = 21
+val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
+val cliVersion = if (stamp) {
+  libs.versions.elide.asProvider().get()
+} else {
+  "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
+}
+
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
+val isRelease = !quickbuild && (
+  project.properties["elide.release"] == "true" ||
+  project.properties["elide.buildMode"] == "release"
+)
+val isDebug = !isRelease && (
+  project.properties["elide.buildMode"] == "debug"
+)
+
+val nativesRootTemplate: (String) -> String = { version ->
+  "/tmp/elide-runtime/v$version/native"
+}
+
+val nativesPath = nativesRootTemplate(cliVersion)
+version = cliVersion
+
+val jvmCompileArgs = listOfNotNull(
+  "--enable-preview",
+  "--add-modules=jdk.incubator.vector",
+  "--enable-native-access=" + listOfNotNull("ALL-UNNAMED").joinToString(","),
+)
+
+val ktCompilerArgs = listOf(
+  "-Xallow-unstable-dependencies",
+  "-Xcontext-receivers",
+  "-Xemit-jvm-type-annotations",
+  "-Xlambdas=indy",
+  "-Xsam-conversions=indy",
+  "-Xjsr305=strict",
+  "-Xjvm-default=all",
+  "-Xjavac-arguments=${jvmCompileArgs.joinToString(",")}}",
+
+  // opt-in to Elide's delicate runtime API
+  "-opt-in=elide.runtime.core.DelicateElideApi",
+)
+
+val sharedLibArgs = sequenceOf(
+  "-march=compatibility",
+  "--enable-http",
+  "--enable-https",
+  "--enable-all-security-services",
+  "--macro:truffle-svm",
+  "-H:CStandard=C11",
+  "-H:+ReportExceptionStackTraces",
+  "-H:+UnlockExperimentalVMOptions",
+  "-H:-RemoveUnusedSymbols",
+  "-Delide.natives=$nativesPath",
+  "-J-Delide.natives=$nativesPath",
+  "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
+  "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
+  "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
+    "js",
+  ).joinToString(","),
+)
+
+val releaseArgs = sequenceOf(
+  "-O4",
+)
+
+val debugArgs = sequenceOf(
+  "-g",
+  "-H:+SourceLevelDebug",
+)
+
+val initializeAtRunTime = sequenceOf(
+  "elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
+  "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
+  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
+  "elide.runtime.intrinsics.server.http.netty.KQueueTransport",
+  "elide.runtime.intrinsics.server.http.netty.EpollTransport",
+  "elide.runtime.intrinsics.server.http.netty.IOUringTransport",
+  "elide.runtime.intrinsics.server.http.netty.NettyTransport",
+  "elide.runtime.intrinsics.server.http.netty.NettyTransport${'$'}Companion",
+  "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
+  "io.netty.buffer.AbstractReferenceCountedByteBuf",
+  "io.netty.buffer.PooledByteBufAllocator",
+  "io.netty.buffer.ByteBufAllocator",
+  "io.netty.buffer.ByteBufUtil",
+  "io.netty.buffer.AbstractReferenceCountedByteBuf",
+  "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
+  "io.netty.resolver.dns.DnsServerAddressStreamProviders${'$'}DefaultProviderHolder",
+  "io.netty.resolver.dns.DnsNameResolver",
+  "io.netty.resolver.HostsFileEntriesResolver",
+  "io.netty.resolver.dns.ResolvConf${'$'}ResolvConfLazy",
+  "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
+  "io.netty.handler.codec.http2.Http2CodecUtil",
+  "io.netty.handler.codec.http2.Http2ClientUpgradeCodec",
+  "io.netty.handler.codec.http2.Http2ConnectionHandler",
+  "io.netty.handler.codec.http2.DefaultHttp2FrameWriter",
+  "io.netty.incubator.channel.uring",
+  "io.netty.incubator.channel.uring.IOUringEventLoopGroup",
+  "io.netty.incubator.channel.uring.Native",
+  "io.netty.handler.codec.http.HttpObjectEncoder",
+  "io.netty.internal.tcnative.SSL",
+  "io.micronaut.core.util.KotlinUtils",
+  "io.micronaut.core.io.socket.SocketUtils",
+  "io.micronaut.core.type.RuntimeTypeInformation${'$'}LazyTypeInfo",
+  "io.micronaut.context.env.CachedEnvironment",
+  "io.micronaut.context.env.exp.RandomPropertyExpressionResolver",
+  "io.micronaut.context.env.exp.RandomPropertyExpressionResolver${'$'}LazyInit",
+  "com.sun.jna.platform.mac.CoreFoundation",
+  "com.sun.jna.Structure${'$'}FFIType",
+  "com.sun.jna.platform.mac.IOKit",
+  "com.sun.jna.platform.mac.IOKitUtil",
+  "com.sun.jna.platform.mac.SystemB",
+  "oshi.hardware.platform.linux",
+  "oshi.hardware.platform.mac",
+  "oshi.hardware.platform.mac.MacFirmware",
+  "oshi.hardware.platform.unix",
+  "oshi.hardware.platform.unix.aix",
+  "oshi.hardware.platform.unix.freebsd",
+  "oshi.hardware.platform.unix.openbsd",
+  "oshi.hardware.platform.unix.solaris",
+  "oshi.hardware.platform.windows",
+  "oshi.jna.platform.mac.IOKit",
+  "oshi.jna.platform.mac.SystemB",
+  "oshi.jna.platform.mac.SystemConfiguration",
+  "oshi.software.os",
+  "oshi.software.os.linux",
+  "oshi.software.os.linux.LinuxOperatingSystem",
+  "oshi.software.os.mac",
+  "oshi.software.os.mac.MacOperatingSystem",
+  "oshi.software.os.unix.aix",
+  "oshi.software.os.unix.aix.AixOperatingSystem",
+  "oshi.software.os.unix.freebsd",
+  "oshi.software.os.unix.freebsd.FreeBsdOperatingSystem",
+  "oshi.software.os.unix.openbsd",
+  "oshi.software.os.unix.openbsd.OpenBsdOperatingSystem",
+  "oshi.software.os.unix.solaris",
+  "oshi.software.os.unix.solaris.SolarisOperatingSystem",
+  "oshi.software.os.windows",
+  "oshi.software.os.windows.WindowsOperatingSystem",
+  "oshi.util.platform.linux.DevPath",
+  "oshi.util.platform.linux.ProcPath",
+  "oshi.util.platform.linux.SysPath",
+  "oshi.util.platform.mac.CFUtil",
+  "oshi.util.platform.mac.SmcUtil",
+  "oshi.util.platform.mac.SysctlUtil",
+  "oshi.util.platform.unix.freebsd.BsdSysctlUtil",
+  "oshi.util.platform.unix.freebsd.ProcstatUtil",
+  "oshi.util.platform.unix.openbsd.FstatUtil",
+  "oshi.util.platform.unix.openbsd.OpenBsdSysctlUtil",
+  "oshi.util.platform.unix.solaris.KstatUtil",
+)
+
+fun nativeImageArgs(release: Boolean = isRelease, debug: Boolean = isDebug): List<String> {
+  return sharedLibArgs.plus(listOf(
+    "--initialize-at-build-time=",
+  ).plus(initializeAtRunTime.joinToString(",").let {
+    if (it.isNotEmpty()) "--initialize-at-run-time=$it" else ""
+  })).plus(
+    when {
+      release -> releaseArgs
+      debug -> debugArgs
+      else -> sequenceOf()
+    }
+  ).toList()
+}
+
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(21))
-    vendor.set(JvmVendorSpec.GRAAL_VM)
+    languageVersion.set(JavaLanguageVersion.of(jvmTarget))
+    if (oracleGvm) {
+      vendor.set(JvmVendorSpec.matching("Oracle Corporation"))
+    } else {
+      vendor.set(JvmVendorSpec.GRAAL_VM)
+    }
+  }
+}
+
+elide {
+  kotlin {
+    explicitApi = true
+    powerAssert = false
+    customKotlinCompilerArgs = ktCompilerArgs.toMutableList()
+  }
+
+  checks {
+    spotless = false
   }
 }
 
@@ -26,15 +213,21 @@ kotlin {
   compilerOptions.freeCompilerArgs.add("-Xcontext-receivers")
 
   jvmToolchain {
-    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(21))
+    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(jvmTarget))
   }
 }
 
 dependencies {
   // elide
   implementation(projects.packages.base)
+  implementation(projects.packages.engine)
   implementation(projects.packages.graalvm)
   implementation(projects.packages.proto.protoProtobuf)
+
+  // language engines
+  implementation(libs.graalvm.js.language)
+  implementation(libs.graalvm.wasm.language)
+  implementation(projects.packages.graalvmTs)
 
   // micronaut
   implementation(mn.micronaut.core)
@@ -85,21 +278,9 @@ graalvmNative {
   binaries.named("main") {
     imageName = "libelide"
     sharedLibrary = true
-
-    quickBuild = true
+    quickBuild = quickbuild
     fallback = false
-
-    val initializeAtBuildTime = sequenceOf(
-      // SLF4J + Logback (used by static loggers)
-      "ch.qos.logback",
-      "org.slf4j.LoggerFactory",
-      // referenced by `elide.runtime.feature.js.JavaScriptFeature`
-      "elide.runtime.gvm.internals.GraalVMGuest",
-      // required by `io.micronaut.core.util.KotlinUtils`
-      "kotlin.coroutines.intrinsics.CoroutineSingletons"
-    ).map { "--initialize-at-build-time=$it" }
-
-    buildArgs.addAll(initializeAtBuildTime.toList())
+    buildArgs.addAll(nativeImageArgs())
   }
 }
 

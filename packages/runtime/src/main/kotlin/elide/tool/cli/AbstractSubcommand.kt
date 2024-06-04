@@ -551,7 +551,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     // build initial state
     val toolState = state() ?: materializeInitialState()
-    val ctx = context(state, coroutineContext)
+    val ctx = context(state, coroutineContext, this)
 
     @Suppress("UNCHECKED_CAST")
     initializeToolResources(toolState as State) {

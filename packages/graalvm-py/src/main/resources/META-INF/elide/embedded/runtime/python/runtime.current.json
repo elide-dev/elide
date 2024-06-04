@@ -1,7 +1,9 @@
 {
   "engine": "v4",
   "language": "PYTHON",
-  "vfs": [],
+  "vfs": [
+    { "name": "py.modules.tar.gz" }
+  ],
   "artifacts": [],
   "scripts": [
     { "path": "environment.py" }

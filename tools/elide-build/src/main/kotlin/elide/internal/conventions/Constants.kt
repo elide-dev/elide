@@ -92,6 +92,9 @@ public object Constants {
     /** Constant: default Kotlin SDK version if no other version is defined. */
     const val KOTLIN_SDK_PIN = "2.0.0"
 
+    /** Constant: pinned version of Kotlin Coroutines. */
+    const val COROUTINES = "1.9.0-RC"
+
     /** Constant: pinned version of AtomicFU. */
     const val ATOMICFU = "0.24.0"
 

@@ -46,7 +46,7 @@ internal object Statics {
   internal val args: AtomicReference<List<String>> = AtomicReference(emptyList())
 
   /** Main top-level tool. */
-  val base: AtomicReference<ElideTool> = AtomicReference()
+  val base: AtomicReference<Elide> = AtomicReference()
 
   val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`
   val out: PrintStream get() = delegatedOutStream.get() ?: System.out

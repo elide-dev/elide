@@ -13,11 +13,15 @@
 
 package elide.runtime.plugins.python
 
+import java.util.LinkedList
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
 
 @DelicateElideApi public class PythonConfig : AbstractLanguageConfig() {
+  /** Additional Python paths to load (i.e., `PYTHONPATH`). */
+  public var additionalPythonPaths: MutableList<String> = LinkedList()
+
   /** Apply init-time settings to a new [context]. */
   internal fun applyTo(context: PolyglotContext) {
     // register intrinsics

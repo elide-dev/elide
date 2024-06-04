@@ -21,13 +21,28 @@ js = ["oxc"]
 unsafe_code = "warn"
 dead_code = "allow"
 
+[build-dependencies]
+bindgen = "0.69.4"
+cargo-deb = "2.2.0"
+cargo-zigbuild = "0.18.4"
+cbindgen = "0.26.0"
+sccache = "0.8.1"
+wasm-bindgen = "0.2.92"
+wasm-bindgen-futures = "0.4.42"
+
 [dependencies]
+apr = "0.1.10"
 boring = "4.6.0"
+const_fn = "0.4"
 heapless = "0.8.0"
+inventory = "0.3"
 jni = "0.21.1"
 lazy_static = "1.4.0"
 oxc = { path = "../../third_party/oxc-project/oxc/crates/oxc", optional = true }
 polling = "3.7.0"
+portable-atomic = { version = "1", default-features = false }
+powerfmt = "0.2.0"
+pubgrub = "0.2.1"
 ruff = { path = "../../third_party/astral/ruff/crates/ruff", optional = true }
 ruff_diagnostics = { path = "../../third_party/astral/ruff/crates/ruff_diagnostics", optional = true }
 ruff_formatter = { path = "../../third_party/astral/ruff/crates/ruff_formatter", optional = true }
@@ -36,3 +51,5 @@ rusqlite = { version = "0.31.0", features = ["bundled"] }
 serde = { version = "1.0.203", features = ["derive"] }
 typeshare = "1.0.3"
 uv = { path = "../../third_party/astral/uv/crates/uv", optional = true }
+zerocopy = "0.7.34"
+

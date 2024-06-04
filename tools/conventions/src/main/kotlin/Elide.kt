@@ -39,8 +39,19 @@ object Elide {
   /** Compiler args to include in all Kotlin targets. */
   val compilerArgs = listOf(
     "-Xcontext-receivers",
+    "-Xinline-classes",
     "-Xskip-prerelease-check",
     "-Xexpect-actual-classes",
+
+    // Experimental
+    "-Xuse-k2",
+
+    // "-Xir-inliner",
+    // "-Xenhance-type-parameter-types-to-def-not-null",
+    // "-Xtype-enhancement-improvements-strict-mode",
+    // "-Xuse-fast-jar-file-system",
+    // "-Xenable-builder-inference",
+    // "-Xnew-inference",
   )
 
   /** Compiler args to include in Kotlin JVM targets. */
@@ -48,6 +59,7 @@ object Elide {
     "-no-stdlib",
     "-Xjvm-default=all",
     "-Xjsr305=strict",
+    "-Xjvm-enable-preview",
   ))
 
   /** Compiler args to include in Kotlin JVM targets (beta). */

@@ -13,8 +13,9 @@
 
 package elide.tool.cli
 
+import com.github.ajalt.clikt.core.CliktCommand
 import com.jakewharton.mosaic.MosaicScope
-import com.jakewharton.mosaic.runMosaic
+import com.jakewharton.mosaic.runMosaicBlocking
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -26,7 +27,7 @@ import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
 
 /** Abstract base for all Elide Tool commands, including the root command. */
-abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi where Context: CommandContext {
+abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), CommandApi where Context: CommandContext {
   companion object {
     /** Status of colorized / formatted output support. */
     internal val pretty: AtomicBoolean = AtomicBoolean(true)
@@ -56,10 +57,8 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
    * @param op Operation to wrap in a deferred context.
    * @return Deferred operation of type [R].
    */
-  suspend fun <R> deferred(op: suspend () -> R): Deferred<R> = coroutineScope {
-    async {
-      op.invoke()
-    }
+  inline fun <R> CoroutineScope.deferred(crossinline op: suspend () -> R): Deferred<R> = async {
+    op.invoke()
   }
 
   /**
@@ -94,7 +93,10 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
    * @param op Operation which implements this command.
    * @return Exit code.
    */
-  private fun execute(ctx: CoroutineContext, op: suspend Context.(CommandState) -> CommandResult): Int {
+  private inline fun execute(
+    ctx: CoroutineContext,
+    crossinline op: suspend Context.(CommandState) -> CommandResult,
+  ): Int {
     val exit = AtomicInteger(0)
     val logging = Statics.logging
     val options = CommandOptions.of(
@@ -117,26 +119,37 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
     logging.trace {
       "Built command state: \n$state"
     }
-    val commandCtx = context(state, ctx)
-    logging.trace {
-      "Built command context: \n$commandCtx"
-    }
 
-    // invoke and set exit code
-    logging.trace {
-      "Invoking command implementation"
-    }
-    runBlocking {
-      op.invoke(commandCtx, state).let { result ->
-        exit.set(when (result) {
-           is CommandResult.Success -> 0
-           is CommandResult.Error -> result.exitCode
-         }.also {
-          logging.trace {
-            "Command implementation returned exit code: $it"
-          }
-          commandResult.set(result)
-        })
+    runMosaicBlocking {
+      runCatching {
+        val commandCtx = context(state, ctx, this)
+        logging.trace {
+          "Built command context: \n$commandCtx"
+        }
+
+        // invoke and set exit code
+        logging.trace {
+          "Invoking command implementation"
+        }
+
+        op.invoke(commandCtx, state).let { result ->
+          exit.set(when (result) {
+            is CommandResult.Success -> 0
+            is CommandResult.Error -> result.exitCode
+          }.also {
+            logging.trace {
+              "Command implementation returned exit code: $it"
+            }
+            commandResult.set(result)
+          })
+        }
+      }.let {
+        if (it.isFailure) {
+          val err = it.exceptionOrNull()
+          val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
+          logging.error("Uncaught fatal exception", err ?: "(unknown)", stack)
+          exit.set(1)
+        }
       }
     }
 
@@ -145,23 +158,27 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
   }
 
   /**
+   * Execution entrypoint for this command as a suspending callable.
+   *
+   * @return Exit code from running the command.
+   */
+  suspend fun exec(args: Array<String>): Int = execute(Dispatchers.Main) {
+    invoke(it).also(commandResult::set)  // enter context and invoke
+  }
+
+  override fun run() {
+    call()
+  }
+
+  /**
    * Callable entrypoint for this command as a [Callable].
    *
    * @return Exit code from running the command.
    */
   override fun call(): Int {
-    return execute(Dispatchers.IO) {
+    return execute(Dispatchers.Main) {
       invoke(it).also(commandResult::set)  // enter context and invoke
     }
-  }
-
-  /**
-   * Callable entrypoint for this command as a [Runnable].
-   *
-   * The return value can be consulted by querying the [commandResult] or [exitCode].
-   */
-  override fun run() {
-    call()  // delegate to `call`
   }
 
   /**
@@ -174,22 +191,9 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
    * @param ctx Co-routine context to execute the command in.
    * @return Execution context to use for this command.
    */
-  open fun context(state: CommandState, ctx: CoroutineContext): Context {
+  open fun context(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope): Context {
     @Suppress("UNCHECKED_CAST")
-    return CommandContext.default(state, ctx) as Context
-  }
-
-  /**
-   * Start a Mosaic rich output session and run the provided [op].
-   *
-   * @param op Operation to run.
-   */
-  suspend inline fun <reified V> startMosaicSession(crossinline op: suspend MosaicScope.() -> V): V {
-    val container: AtomicReference<V> = AtomicReference(null)
-    runMosaic {
-      container.set(op.invoke(this))
-    }
-    return container.get()
+    return CommandContext.default(state, ctx, mosaic) as Context
   }
 
   /**

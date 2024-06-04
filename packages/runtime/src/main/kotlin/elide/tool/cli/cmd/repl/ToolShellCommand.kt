@@ -1644,7 +1644,7 @@ import elide.tool.project.ProjectManager
     }
 
     // configure support for guest languages
-    val versionProp = VERSION_INSTRINSIC_NAME to ElideTool.version()
+    val versionProp = VERSION_INSTRINSIC_NAME to Elide.version()
     val intrinsics = intrinsicsManager.resolver()
 
     // resolve entrypoint arguments

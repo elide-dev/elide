@@ -51,7 +51,7 @@ import elide.tool.project.ProjectManager
 
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val version = ElideTool.version()
+    val version = Elide.version()
     val engine = Engine.create()
     val workingRoot = workdir.workingRoot()
     val tempRoot = workdir.tmpDirectory()

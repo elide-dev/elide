@@ -22,6 +22,8 @@ public final class elide/runtime/plugins/python/Python$Plugin : elide/runtime/pl
 
 public final class elide/runtime/plugins/python/PythonConfig : elide/runtime/plugins/AbstractLanguageConfig {
 	public fun <init> ()V
+	public final fun getAdditionalPythonPaths ()Ljava/util/List;
+	public final fun setAdditionalPythonPaths (Ljava/util/List;)V
 }
 
 public final class elide/runtime/plugins/python/features/BouncyCastleFeature : org/graalvm/nativeimage/hosted/Feature {

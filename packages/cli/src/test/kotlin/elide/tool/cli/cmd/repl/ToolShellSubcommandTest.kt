@@ -27,7 +27,9 @@ import elide.tool.cli.cmd.repl.ToolShellCommand
 @TestCase class ToolShellSubcommandTest : AbstractSubtoolTest() {
   @Inject internal lateinit var shell: ToolShellCommand
 
-  override fun subcommand(): Runnable = shell
+  override fun subcommand(): Runnable = Runnable {
+    shell.call()
+  }
 
   override fun runCommand() {
     // inert (temporary)

@@ -51,7 +51,7 @@ import elide.tool.io.RuntimeWorkdirManager
 
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
-  name = ElideTool.TOOL_NAME,
+  name = Elide.TOOL_NAME,
   description = ["", "Manage, configure, and run polyglot applications with Elide"],
   mixinStandardHelpOptions = true,
   version = [ELIDE_TOOL_VERSION],
@@ -89,7 +89,7 @@ import elide.tool.io.RuntimeWorkdirManager
   ],
 )
 @Suppress("MemberVisibilityCanBePrivate")
-@Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
+@Context @Singleton class Elide : ToolCommandBase<CommandContext>() {
   companion object {
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"
@@ -184,39 +184,52 @@ import elide.tool.io.RuntimeWorkdirManager
       }
     }
 
+    private fun cleanup() {
+      // no-op
+    }
+
     /** CLI entrypoint and [args]. */
-    @JvmStatic fun main(args: Array<String>) {
+    @JvmStatic fun entry(args: Array<String>) {
       installStatics(args, System.getProperty("user.dir"))
-      exitProcess(exec(args))
+      val exitCode = try {
+        exec(args)
+      } finally {
+        cleanup()
+      }
+      exitProcess(exitCode)
     }
 
     /** @return Tool version. */
     @JvmStatic fun version(): String = ELIDE_TOOL_VERSION
 
     // Private execution entrypoint for customizing core Picocli settings.
-    @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext.builder().args(*args).start().use {
+    @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext
+      .builder()
+      .args(*args)
+      .start().use {
+      // store arguments statically, for later use
       Statics.args.set(args.toList())
-      CommandLine(ElideTool::class.java, MicronautFactory(it))
-        .setCommandName(TOOL_NAME)
-        .setResourceBundle(ResourceBundle.getBundle("ElideTool"))
-        .setAbbreviatedOptionsAllowed(true)
-        .setAbbreviatedSubcommandsAllowed(true)
-        .setCaseInsensitiveEnumValuesAllowed(true)
-        .setEndOfOptionsDelimiter("--")
-        .setExitCodeExceptionMapper(exceptionMapper)
-        .setPosixClusteredShortOptionsAllowed(true)
-        .setUsageHelpAutoWidth(true)
-        .setColorScheme(
-          Help.defaultColorScheme(
-            if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
-              System.getenv("NO_COLOR") != null) {
-              Help.Ansi.OFF
-            } else {
-              Help.Ansi.ON
-            },
-          ),
-        )
-        .execute(*args)
+
+      CommandLine(Elide::class.java, MicronautFactory(it))
+       .setCommandName(TOOL_NAME)
+       .setResourceBundle(ResourceBundle.getBundle("ElideTool"))
+       .setAbbreviatedOptionsAllowed(true)
+       .setAbbreviatedSubcommandsAllowed(true)
+       .setCaseInsensitiveEnumValuesAllowed(true)
+       .setEndOfOptionsDelimiter("--")
+       .setExitCodeExceptionMapper(exceptionMapper)
+       .setPosixClusteredShortOptionsAllowed(true)
+       .setUsageHelpAutoWidth(true)
+       .setColorScheme(
+         Help.defaultColorScheme(
+           if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
+             System.getenv("NO_COLOR") != null) {
+             Help.Ansi.OFF
+           } else {
+             Help.Ansi.ON
+           },
+         ),
+       ).execute(*args)
     }
 
     /** Configures the Micronaut binary. */
@@ -273,11 +286,11 @@ import elide.tool.io.RuntimeWorkdirManager
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     // proxy to the `shell` command for a naked run
     return beanContext.getBean(ToolShellCommand::class.java).apply {
-      srcfile?.let {
+      this@Elide.srcfile?.let {
         if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
           runnable = it
-          if (args?.isNotEmpty() == true) {
-            arguments = args!!
+          if (this@Elide.args?.isNotEmpty() == true) {
+            arguments = this@Elide.args!!
           }
         } else {
           languageHint = it
@@ -286,4 +299,9 @@ import elide.tool.io.RuntimeWorkdirManager
       call()
     }.commandResult.get()
   }
+}
+
+@Suppress("RedundantSuspendModifier")
+suspend fun main(args: Array<String>) {
+  Elide.entry(args)
 }

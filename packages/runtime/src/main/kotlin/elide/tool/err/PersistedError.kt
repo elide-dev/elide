@@ -22,7 +22,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.HostPlatform
-import elide.tool.cli.ElideTool
+import elide.tool.cli.Elide
 import elide.tool.cli.Statics
 import elide.tool.err.ErrorHandler.*
 import elide.tool.err.ErrorHandler.ErrorCoordinates.Companion.coordinates
@@ -87,10 +87,10 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
    * @param properties Properties active in the VM.
    */
   @Serializable @JvmRecord data class RuntimeInfo(
-    val version: String = ElideTool.version(),
-    val native: Boolean = ImageInfo.inImageCode(),
-    val env: Map<String, String> = capturedEnvVariables.associateWith { System.getenv(it) }.toSortedMap(),
-    val properties: Map<String, String> = System.getProperties().mapNotNull {
+      val version: String = Elide.version(),
+      val native: Boolean = ImageInfo.inImageCode(),
+      val env: Map<String, String> = capturedEnvVariables.associateWith { System.getenv(it) }.toSortedMap(),
+      val properties: Map<String, String> = System.getProperties().mapNotNull {
       try {
         it.key.toString() to it.value.toString()
       } catch (err: Throwable) {

@@ -15,6 +15,7 @@
 
 package elide.tool.cli.cmd.selftest
 
+import com.jakewharton.mosaic.runMosaic
 import io.micronaut.context.BeanContext
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -33,6 +34,7 @@ import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
+import elide.tool.cli.output.runCounter
 import elide.tool.cli.output.testRenderer
 import elide.tool.testing.*
 import elide.tool.testing.SelfTest.SelfTestContext
@@ -152,6 +154,15 @@ internal class SelfTestCommand @Inject constructor (
   )
   var summarize: Boolean = true
 
+  /** Run a basic output test and exit. */
+  @Option(
+    names = ["--basic"],
+    description = ["Basic output test"],
+    defaultValue = "false",
+    hidden = true,
+  )
+  var basic: Boolean = false
+
   /** Filter to apply to eligible tests. */
   @Option(
     names = ["--tests"],
@@ -211,6 +222,11 @@ internal class SelfTestCommand @Inject constructor (
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult = let { cmd ->
     output {
       appendLine("Running Elide self-tests...")
+    }
+
+    if (basic) {
+      runCounter()
+      return success()
     }
 
     val selftests = scanForTestCases()

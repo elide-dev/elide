@@ -28,11 +28,14 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
 import kotlinx.coroutines.test.runTest
+import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.AbstractDualTest.CodeGenerator
+import elide.runtime.plugins.vfs.VfsListener
+import elide.runtime.plugins.vfs.vfs
 import elide.vm.annotations.Polyglot
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
@@ -289,12 +292,16 @@ abstract class AbstractDualTest<Generator: CodeGenerator> {
     }
   }
 
+  /** A group of VFS listeners to be registered with the test engine. */
+  @Inject private lateinit var vfsListeners: List<VfsListener>
+
   /** A [PolyglotEngine] used to acquire context instances for testing, configurable trough [configureEngine]. */
   protected val engine: PolyglotEngine by lazy { PolyglotEngine(::configureEngine) }
 
   /** Configure the [engine] used to acquire contexts passed to [withContext]. */
   protected open fun configureEngine(config: PolyglotEngineConfiguration) {
-    // nothing by default
+    // register event listeners
+    vfs { vfsListeners.forEach(::listener) }
   }
 
   /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */

@@ -94,13 +94,7 @@ internal class SqliteModule : SQLiteAPI {
     private const val SQLITE3_LIBRARY: String = "sqlite"
 
     init {
-      // on SVM, we should load the library directly using our own tools; this is because sqlite3 may be built into the
-      // binary statically, and loaded via our own facilities at build-time.
-      if (ImageInfo.inImageCode()) NativeLibraries.resolve(SQLITE3_LIBRARY) {
-        org.sqlite.SQLiteJDBCLoader.initialize()
-      } else {
-        // otherwise, on JVM, we should load the library through regular SQLite3 JDBC mechanisms; this will unpack the
-        // library to a temporary location, load it, and then clean up after itself.
+      NativeLibraries.resolve(SQLITE3_LIBRARY) {
         org.sqlite.SQLiteJDBCLoader.initialize()
       }
     }

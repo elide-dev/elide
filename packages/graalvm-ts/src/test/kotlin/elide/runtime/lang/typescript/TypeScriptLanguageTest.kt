@@ -1,19 +1,24 @@
 package elide.runtime.lang.typescript
 
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.PolyglotAccess
 import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.io.IOAccess
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.*
 
 /** Basic tests for [TypeScriptLanguage]. */
 class TypeScriptLanguageTest {
-  private fun ctx(): Context = Context.newBuilder()
+  private val engine: Engine = Engine.newBuilder("js", "ts").build()
+  private fun ctx(): Context = Context.newBuilder("js", "ts")
     .allowInnerContextOptions(true)
     .allowPolyglotAccess(PolyglotAccess.ALL)
+    .allowIO(IOAccess.ALL)
     .allowExperimentalOptions(true)
     .allowValueSharing(true)
     .allowAllAccess(true)
+    .engine(engine)
     .build()
 
   private fun language() = TypeScriptLanguage()
@@ -39,6 +44,7 @@ class TypeScriptLanguageTest {
 
     val ctx = ctx()
     ctx.initialize("js")
+    ctx.initialize("ts")
     ctx.enter()
     val parsed = ctx.parse(jsSrc)
     ctx.leave()
@@ -61,7 +67,6 @@ class TypeScriptLanguageTest {
       assertNotNull(it)
     }
 
-    ctx.initialize("ts")
     ctx.enter()
     ctx.parse(src)
     ctx.leave()

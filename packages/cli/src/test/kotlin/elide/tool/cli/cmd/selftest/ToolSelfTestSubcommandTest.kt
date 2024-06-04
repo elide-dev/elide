@@ -25,7 +25,9 @@ import elide.tool.cli.cmd.info.ToolInfoCommand
 @Ignore @TestCase class ToolSelfTestSubcommandTest : AbstractSubtoolTest() {
   @Inject internal lateinit var selftest: SelfTestCommand
 
-  override fun subcommand(): Runnable = selftest
+  override fun subcommand(): Runnable = Runnable {
+    selftest.call()
+  }
 
   @Test fun testEntrypoint() {
     assertNotNull(selftest, "should be able to init and inject info subcommand")

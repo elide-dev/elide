@@ -52,16 +52,17 @@ import elide.tool.cli.state.CommandState
  * APIs provided here for rendering call into Mosaic. Mosaic's own functions can be imported and used, transparently, as
  * well. It's up to you.
  */
-sealed interface CommandContext : CoroutineScope {
+sealed interface CommandContext : CoroutineScope, MosaicScope {
   companion object {
     /** @return Default command context implementation. */
     @JvmStatic @Suppress("unused_parameter")
-    fun default(state: CommandState, ctx: CoroutineContext): CommandContext = object : DefaultCommandContext {
-      override val coroutineContext: CoroutineContext get() = ctx
-      override val logging: Logger get() = Statics.logging
-      override val serverLogging: Logger get() = Statics.serverLogger
-      override val accessLogging: Logger get() = Statics.serverLogger
-    }
+    fun default(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope): CommandContext =
+      object : DefaultCommandContext, MosaicScope by mosaic {
+        override val coroutineContext: CoroutineContext get() = ctx
+        override val logging: Logger get() = Statics.logging
+        override val serverLogging: Logger get() = Statics.serverLogger
+        override val accessLogging: Logger get() = Statics.serverLogger
+      }
   }
 
   /**

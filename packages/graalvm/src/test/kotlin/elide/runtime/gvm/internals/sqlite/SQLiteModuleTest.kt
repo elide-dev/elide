@@ -138,7 +138,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       ok(new Database());
     """
@@ -252,7 +252,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -276,7 +276,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -326,7 +326,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -370,7 +370,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -464,7 +464,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -495,7 +495,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok, throws } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -566,7 +566,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -603,7 +603,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       const db = new Database();
       ok(db);
@@ -833,7 +833,7 @@ import elide.testing.annotations.TestCase
     // language=JavaScript
     """
       const { ok } = require("node:assert");
-      const { Database } = require("sqlite");
+      const { Database } = require("elide:sqlite");
       ok(Database);
       ok(new Database());
       ok(new Database(""));
@@ -851,7 +851,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
           const { ok } = require("node:assert");
-          const { Database } = require("sqlite");
+          const { Database } = require("elide:sqlite");
           const db = new Database();
           ok(db);
           ok(db.$member);
@@ -884,7 +884,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
           const { ok } = require("node:assert");
-          const { Database } = require("sqlite");
+          const { Database } = require("elide:sqlite");
           const db = new Database();
           db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT);");
           const txn = db.transaction(() => {
@@ -953,7 +953,7 @@ import elide.testing.annotations.TestCase
       // language=JavaScript
       """
           const { ok, throws } = require("node:assert");
-          const { Database } = require("sqlite");
+          const { Database } = require("elide:sqlite");
           const db = new Database();
           ok(db);
           throws(() => db.prepare(null));
@@ -965,7 +965,7 @@ import elide.testing.annotations.TestCase
       // language=JavaScript
       """
           const { ok, throws } = require("node:assert");
-          const { Database } = require("sqlite");
+          const { Database } = require("elide:sqlite");
           const db = new Database();
           ok(db);
           throws(() => db.query(null));
@@ -974,4 +974,8 @@ import elide.testing.annotations.TestCase
         """
     }
   }.asStream()
+
+  @Test fun `should be able to require() builtin module at elide prefix`() {
+    require("elide:sqlite")
+  }
 }

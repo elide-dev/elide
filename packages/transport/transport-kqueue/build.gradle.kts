@@ -61,7 +61,7 @@ dependencies {
   jvmApi(libs.netty.transport)
   jvmApi(mn.netty.buffer)
   jvmApi(mn.netty.common)
-  implementation(projects.packages.transport.transportCommon)
+  jvmApi(projects.packages.transport.transportCommon)
 }
 
 val jdkHome: String = System.getenv("GRAALVM_HOME")?.ifBlank { null }
@@ -138,8 +138,7 @@ tasks.processResources {
     inputs.dir(libs)
 
     listOf(
-      "build/lib/main/release/shared",
-      "build/lib/main/release/static",
+      "build/lib/main/release",
     ).forEach {
       from(it) {
         exclude("**/stripped/**")

@@ -30,7 +30,7 @@ import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem.*
-import elide.tool.cli.ElideTool
+import elide.tool.cli.Elide
 import elide.tool.io.WorkdirManager.WorkdirHandle
 
 /** Main implementation of the runtime working directory manager. */
@@ -50,8 +50,8 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     private const val elideConfigDirectory = "elide"
     private const val configDirectory = ".config"
 
-    private val linuxCachesPath = "~/elide/caches/v${ElideTool.version()}"
-    private val darwinCachesPath = "/Library/caches/elide/v${ElideTool.version()}"
+    private val linuxCachesPath = "~/elide/caches/v${Elide.version()}"
+    private val darwinCachesPath = "/Library/caches/elide/v${Elide.version()}"
     private val projectAnchorFiles = sortedSetOf(
       ".git",
       "package.json",
@@ -67,14 +67,14 @@ internal class RuntimeWorkdirManager : WorkdirManager {
 
     @OptIn(DelicateElideApi::class)
     private val persistentTempPath = when (HostPlatform.resolve().os) {
-      DARWIN, LINUX -> File("$nixTempPath/v${ElideTool.version()}")
+      DARWIN, LINUX -> File("$nixTempPath/v${Elide.version()}")
         .toPath()
         .absolute()
 
       WINDOWS -> File((System.getenv("localappdata") ?: error("No local app data folder")))
         .resolve("Temp")
         .resolve("Elide")
-        .resolve("v${ElideTool.version()}")
+        .resolve("v${Elide.version()}")
         .toPath()
         .absolute()
     }
@@ -102,7 +102,7 @@ internal class RuntimeWorkdirManager : WorkdirManager {
   private fun currentSharedTempPrefix(): String {
     return StringBuilder().apply {
       append(runtimeDirPrefix)
-      append(ElideTool.version())
+      append(Elide.version())
     }.toString()
   }
 

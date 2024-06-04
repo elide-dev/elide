@@ -16,10 +16,10 @@ package elide.tool.cli.output
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Color.Companion.Black
 import com.jakewharton.mosaic.ui.Color.Companion.Green
 import com.jakewharton.mosaic.ui.Color.Companion.Red
@@ -31,6 +31,7 @@ import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
@@ -39,63 +40,86 @@ import elide.tool.cli.output.TestState.*
 import elide.tool.testing.TestInfo
 import elide.tool.testing.TestResult
 
-suspend fun testRenderer(
+suspend fun MosaicScope.runCounter() {
+  // TODO https://github.com/JakeWharton/mosaic/issues/3
+  var count by mutableIntStateOf(0)
+
+  setContent {
+    Text("The count is: $count")
+  }
+
+  for (i in 1..20) {
+    delay(250)
+    count = i
+  }
+}
+
+suspend fun MosaicScope.testRenderer(
   totalTests: Int,
   allTests: Flow<Pair<TestInfo, suspend () -> Deferred<TestResult>>>,
   workers: Int = 1,
-) = runMosaicBlocking {
+) {
   val start = System.currentTimeMillis()
   val candidates = ArrayDeque(allTests.toList(ArrayList()))
   val complete = mutableStateListOf<Test>()
   val tests = mutableStateListOf<Test>()
+  val errors = ArrayDeque<Throwable>()
 
-  repeat(workers) {
-    launch(start = UNDISPATCHED) {
-      while (true) {
-        val (info, candidateRunner) = candidates.removeFirstOrNull() ?: break
-        val index = Snapshot.withMutableSnapshot {
-          val nextIndex = tests.size
-          tests += Test(info.name, Running)
-          nextIndex
-        }
-
-        candidateRunner.invoke().await().let { result ->
-          // Flip a coin biased 60% to pass to produce the final state of the test.
-          tests[index] = when (result.effectiveResult.ok) {
-            true -> {
-              tests[index].copy(state = Pass, assertions = if (result.messages.isNotEmpty()) {
-                result.messages
-              } else emptyList())
+  coroutineScope {
+    repeat(workers) {
+      launch(start = UNDISPATCHED) {
+        while (true) {
+          try {
+            val (info, candidateRunner) = candidates.removeFirstOrNull() ?: break
+            val index = Snapshot.withMutableSnapshot {
+              val nextIndex = tests.size
+              tests += Test(info.name, Running)
+              nextIndex
             }
-            else -> {
-              val test = tests[index]
-              val failures = buildList {
-                when (val thr = result.err) {
-                  null -> add("Test failure (unknown)")
+
+            runCatching {
+              candidateRunner.invoke().await()
+            }.let { out ->
+              if (out.isFailure) out.exceptionOrNull()?.let {
+                errors.add(it)
+              } else out.getOrThrow().let { result ->
+                tests[index] = when (result.effectiveResult.ok) {
+                  true ->
+                    tests[index].copy(state = Pass, assertions = result.messages.ifEmpty { emptyList() })
                   else -> {
-                    val msg = "Error: ${thr.message} (of type '${thr::class.java.name}')"
-                    val errFmt = when (result.errOutput) {
-                      null -> msg
-                      else -> "$msg\n    ${result.errOutput}"
+                    val test = tests[index]
+                    val failures = buildList {
+                      when (val thr = result.err) {
+                        null -> add("Test failure (unknown)")
+                        else -> {
+                          val msg = "Error: ${thr.message} (of type '${thr::class.java.name}')"
+                          val errFmt = when (result.errOutput) {
+                            null -> msg
+                            else -> "$msg\n    ${result.errOutput}"
+                          }
+                          add(errFmt)
+                        }
+                      }
                     }
-                    add(errFmt)
+                    test.copy(state = Fail, failures = failures)
                   }
                 }
+                complete += tests[index]
               }
-              test.copy(state = Fail, failures = failures)
             }
+          } catch (err: Throwable) {
+            errors.add(err)
           }
-          complete += tests[index]
         }
       }
     }
-  }
 
-  setContent {
-    Column {
-      Log(complete)
-      Status(tests)
-      Summary(start, totalTests, tests)
+    setContent {
+      Column {
+        Log(complete)
+        Status(tests)
+        Summary(start, totalTests, tests)
+      }
     }
   }
 }
@@ -118,7 +142,7 @@ fun TestRow(test: Test) {
       modifier = Modifier
         .background(bg)
         .padding(horizontal = 1),
-      color = Black
+      color = Black,
     )
 
     if (test.path.contains("/")) {
@@ -164,8 +188,7 @@ fun Log(complete: SnapshotStateList<Test>) {
 
 @Composable
 fun Status(tests: List<Test>) {
-  val running by derivedStateOf { tests.filter { it.state == Running } }
-
+  val running = tests.filter { it.state == Running }
   if (running.isNotEmpty()) {
     for (test in running) {
       TestRow(test)
@@ -177,16 +200,16 @@ fun Status(tests: List<Test>) {
 
 @Composable
 private fun Summary(start: Long, totalTests: Int, tests: List<Test>) {
-  val counts by derivedStateOf { tests.groupingBy { it.state }.eachCount() }
+  val counts = tests.groupingBy { it.state }.eachCount()
   val failed = counts[Fail] ?: 0
   val passed = counts[Pass] ?: 0
   val running = counts[Running] ?: 0
-
-  var elapsed by remember { mutableStateOf(0) }
+  var elapsed by remember { mutableIntStateOf(0) }
 
   LaunchedEffect(Unit) {
     while (true) {
-      delay(1_000)
+      delay(500)
+
       Snapshot.withMutableSnapshot {
         elapsed++
       }
@@ -228,7 +251,7 @@ fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
 
   LaunchedEffect(Unit) {
     while (true) {
-      delay(500L)
+      delay(500)
 
       Snapshot.withMutableSnapshot {
         showRunning = !showRunning

@@ -73,7 +73,7 @@ val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
 val nativesType = if (isRelease) "release" else "debug"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
-val entrypoint = "elide.tool.cli.ElideTool"
+val entrypoint = "elide.tool.cli.ElideKt"
 
 val enablePkl = false
 val enableWasm = true
@@ -89,7 +89,7 @@ val enableToolchains = !hostIsLinux
 val enableFfm = hostIsLinux && System.getProperty("os.arch") == "amd64"
 val oracleGvm = false
 val enableEdge = true
-val enableStage = true
+val enableStage = false
 val enableNativeTransportV2 = true
 val enableDynamicPlugins = false
 val enableDeprecated = false
@@ -325,6 +325,7 @@ dependencies {
   kapt(libs.picocli.codegen)
   classpathExtras(mn.micronaut.core.processor)
 
+  api(libs.clikt)
   api(libs.picocli)
   api(libs.guava)
   api(projects.packages.base)
@@ -617,6 +618,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+JNIEnhancedErrorCodes",
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
+  "-H:+ParseRuntimeOptions",
   "-H:NativeLinkerOption=-L$nativesPath",
   "-Delide.staticJni=$enableStaticJni",
   "-J-Delide.staticJni=$enableStaticJni",

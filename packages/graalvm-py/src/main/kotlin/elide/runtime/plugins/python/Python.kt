@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.python
 
+import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.io.FileSystem
 import java.nio.file.Path
 import elide.runtime.core.DelicateElideApi
@@ -30,6 +31,11 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.vfs.LanguageVFS.LanguageVFSInfo
 import elide.runtime.vfs.registerLanguageVfs
 
+// Paths to prepend to Python's path before user-added paths, and after the system path.
+private val BUILTIN_PYTHON_PATHS = listOf(
+  "./__runtime__/python",  // prefix for injected built-in modules ("Elide modules")
+)
+
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
   private val resources: LanguagePluginManifest? = null,
@@ -41,6 +47,11 @@ import elide.runtime.vfs.registerLanguageVfs
     // run embedded initialization code
     if (resources != null) initializeEmbeddedScripts(context, resources)
   }
+
+  private fun renderPythonPath(): String = sequence {
+    yieldAll(BUILTIN_PYTHON_PATHS)
+    yieldAll(config.additionalPythonPaths)
+  }.joinToString(":")
 
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.disableOptions(
@@ -63,21 +74,24 @@ import elide.runtime.vfs.registerLanguageVfs
     builder.setOptions(
       "python.HPyBackend" to "nfi",
       "python.PosixModuleBackend" to "java",
+      "python.PythonPath" to renderPythonPath(),
     )
     config.resourcesPath?.let {
       builder.setOptions(
         "python.HPyBackend" to "nfi",
-        "python.PosixModuleBackend" to "native",
+        "python.PosixModuleBackend" to "java",
         "python.Sha3ModuleBackend" to "native",
       )
 
-      builder.setOptions(
-        "python.CoreHome" to "$it/python/python-home/lib/graalpy24.1",
-        "python.SysPrefix" to "$it/python/python-home/lib/graalpy24.1",
-        "python.StdLibHome" to "$it/python/python-home/lib/python3.11",
-        "python.CAPI" to "$it/python/python-home/lib/graalpy24.1",
-        "python.PythonHome" to "$it/python/python-home",
-      )
+      if (ImageInfo.inImageCode()) {
+        builder.setOptions(
+          "python.CoreHome" to "$it/python/python-home/lib/graalpy24.1",
+          "python.SysPrefix" to "$it/python/python-home/lib/graalpy24.1",
+          "python.StdLibHome" to "$it/python/python-home/lib/python3.11",
+          "python.CAPI" to "$it/python/python-home/lib/graalpy24.1",
+          "python.PythonHome" to "$it/python/python-home",
+        )
+      }
     }
 
     config.executable?.let {

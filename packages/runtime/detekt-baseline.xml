@@ -14,10 +14,11 @@
     <ID>FunctionParameterNaming:Statics.kt$Statics$`in`: InputStream</ID>
     <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
-    <ID>MagicNumber:ElideTool.kt$ElideTool$30</ID>
-    <ID>MagicNumber:Mosaic.kt$1_000</ID>
+    <ID>MagicNumber:Elide.kt$Elide$30</ID>
+    <ID>MagicNumber:Mosaic.kt$20</ID>
+    <ID>MagicNumber:Mosaic.kt$250</ID>
     <ID>MagicNumber:Mosaic.kt$40</ID>
-    <ID>MagicNumber:Mosaic.kt$500L</ID>
+    <ID>MagicNumber:Mosaic.kt$500</ID>
     <ID>MagicNumber:NativeUtil.kt$NativeUtil$8192</ID>
     <ID>MagicNumber:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$15</ID>
     <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$1000L</ID>
@@ -31,12 +32,12 @@
     <ID>ReturnCount:NativeSQLiteFeature.kt$NativeSQLiteFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: SortedSet&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
-    <ID>SpreadOperator:ElideTool.kt$ElideTool.Companion$(*args)</ID>
+    <ID>SpreadOperator:Elide.kt$Elide.Companion$(*args)</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields( NativeDB::class.java, "pointer", "busyHandler", "commitListener", "updateListener", "progressHandler", ))</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*this.fields(Function::class.java, "context", "value", "args"))</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$ioe: IOException</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
-    <ID>SwallowedException:ElideTool.kt$ElideTool.Companion$uoe: UnsupportedOperationException</ID>
+    <ID>SwallowedException:Elide.kt$Elide.Companion$uoe: UnsupportedOperationException</ID>
     <ID>SwallowedException:NativeEngine.kt$NativeEngine$err: Throwable</ID>
     <ID>SwallowedException:NativeUtil.kt$NativeUtil$thr: Throwable</ID>
     <ID>SwallowedException:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
@@ -51,6 +52,7 @@
     <ID>TooGenericExceptionCaught:AbstractToolCommand.kt$AbstractToolCommand$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:CommandTestRunner.kt$CommandTestRunner$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
+    <ID>TooGenericExceptionCaught:Mosaic.kt$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:NativeEngine.kt$NativeEngine$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:NativeUtil.kt$NativeUtil$e: Exception</ID>
     <ID>TooGenericExceptionCaught:NativeUtil.kt$NativeUtil$ex: Throwable</ID>
@@ -62,7 +64,8 @@
     <ID>TooGenericExceptionCaught:ToolShellCommand.kt$ToolShellCommand$ioe: Exception</ID>
     <ID>TooGenericExceptionThrown:NativeUtil.kt$NativeUtil$throw RuntimeException("An error occurred while getting the resources for $path", iox)</ID>
     <ID>TooManyFunctions:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
-    <ID>UnusedParameter:ElideTool.kt$ElideTool.Companion$win32: Boolean = false</ID>
+    <ID>UnusedParameter:AbstractToolCommand.kt$AbstractToolCommand$args: Array&lt;String></ID>
+    <ID>UnusedParameter:Elide.kt$Elide.Companion$win32: Boolean = false</ID>
     <ID>UnusedPrivateMember:NativeEngine.kt$NativeEngine$@JvmStatic private fun HostPlatform.loadNativeTooling(workdir: File, loader: ClassLoader)</ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>

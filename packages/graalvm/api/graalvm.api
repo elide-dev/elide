@@ -4754,6 +4754,7 @@ public final class elide/runtime/plugins/vfs/VfsConfig {
 	public final fun getLanguages ()Ljava/util/Set;
 	public final fun getWritable ()Z
 	public final fun include (Ljava/net/URI;)V
+	public final fun listener (Lelide/runtime/plugins/vfs/VfsListener;)V
 	public final fun setDeferred (Z)V
 	public final fun setLanguages (Ljava/util/Set;)V
 	public final fun setWritable (Z)V
@@ -4762,6 +4763,10 @@ public final class elide/runtime/plugins/vfs/VfsConfig {
 public final class elide/runtime/plugins/vfs/VfsConfigKt {
 	public static final fun include (Lelide/runtime/plugins/vfs/VfsConfig;Ljava/lang/String;)V
 	public static final fun include (Lelide/runtime/plugins/vfs/VfsConfig;Ljava/net/URL;)V
+}
+
+public abstract interface class elide/runtime/plugins/vfs/VfsListener {
+	public abstract fun onVfsCreated (Lelide/runtime/vfs/GuestVFS;)V
 }
 
 public final class elide/runtime/plugins/vfs/VfsPluginKt {

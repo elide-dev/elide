@@ -20,6 +20,7 @@ import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
 import kotlin.io.path.pathString
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.Settings
+import elide.runtime.vfs.GuestVFS
 
 /**
  * A hybrid [FileSystem] implementation using two layers: an in-memory [overlay], which takes priority for reads but
@@ -34,7 +35,7 @@ import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.Settings
 internal class HybridVfs private constructor(
   private val backing: FileSystem,
   private val overlay: FileSystem,
-) : FileSystem {
+) : GuestVFS {
   /**
    * Convert this path to one that can be used by the [overlay] vfs.
    *
@@ -44,6 +45,16 @@ internal class HybridVfs private constructor(
   private fun Path.forEmbedded(): Path {
     return overlay.parsePath(pathString)
   }
+
+  override val writable: Boolean get() = true
+  override val deletable: Boolean get() = true
+  override val virtual: Boolean get() = true
+  override val host: Boolean get() = true
+  override val compound: Boolean get() = true
+  override val supportsSymlinks: Boolean get() = true
+
+  override fun allowsHostFileAccess(): Boolean = true
+  override fun allowsHostSocketAccess(): Boolean = false
 
   override fun parsePath(uri: URI?): Path {
     return backing.parsePath(uri)
@@ -118,6 +129,10 @@ internal class HybridVfs private constructor(
 
     // if the in-memory vfs failed to read the file attributes, try using the host instead
     return backing.readAttributes(path, attributes, *options)
+  }
+
+  override fun close() {
+    // noop
   }
 
   companion object {

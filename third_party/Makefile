@@ -122,7 +122,7 @@ clean:
 		astral/uv/target \
 		oxc-project/oxc/target
 	$(RULE)-cd evanw/esbuild && $(MAKE) clean
-	$(RULE)-cd apple/pkl && $(GRADLE) clean
+	$(RULE)-cd apple/pkl && $(GRADLE) clean --no-daemon
 	$(RULE)-cd astral/ruff && $(CARGO) clean
 	$(RULE)-cd astral/uv && $(CARGO) clean
 	$(RULE)-cd oxc-project/oxc && $(CARGO) clean

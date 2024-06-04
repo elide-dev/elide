@@ -76,6 +76,7 @@ import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.DOTENV
 import elide.runtime.plugins.env.environment
+import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
@@ -601,6 +602,9 @@ import elide.tool.project.ProjectManager
 
   // Intrinsics manager
   @Inject internal lateinit var intrinsicsManager: IntrinsicsManager
+
+  // Event listeners for the vfs
+  @Inject internal lateinit var vfsListeners: List<VfsListener>
 
   // Server manager
   private val serverAgent: HttpServerAgent = HttpServerAgent()
@@ -1749,6 +1753,9 @@ import elide.tool.project.ProjectManager
           include(uri)
         }
       }
+
+      // register listeners
+      vfsListeners.forEach(::listener)
     }
   }
 

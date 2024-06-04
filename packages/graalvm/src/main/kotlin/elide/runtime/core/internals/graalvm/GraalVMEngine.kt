@@ -92,7 +92,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       .allowPolyglotAccess(PolyglotAccess.ALL)
       .allowValueSharing(true)
       .allowHostAccess(contextHostAccess)
-      .allowInnerContextOptions(false)
+      .allowInnerContextOptions(true)
       .allowCreateThread(true)
       .allowCreateProcess(true)  // @TODO(sgammon): needs policy enforcement
       .allowHostClassLoading(true)

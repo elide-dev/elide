@@ -28,6 +28,7 @@ import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 import elide.runtime.gvm.internals.vfs.HybridVfs
 import elide.runtime.gvm.vfs.HostVFS
 import elide.runtime.gvm.vfs.LanguageVFS
+import elide.runtime.vfs.GuestVFS
 import elide.runtime.vfs.languageVfsRegistry
 
 /**
@@ -68,8 +69,9 @@ import elide.runtime.vfs.languageVfsRegistry
       } else {
         acquireCompoundVfs(config.useHost, config.writable, config.deferred, config.registeredBundles, config.languages)
       }
-    }.let {
-      fileSystem = it
+    }.let { vfs ->
+      config.listeners.forEach { it.onVfsCreated(vfs) }
+      fileSystem = vfs
     }
   }
 
@@ -106,7 +108,7 @@ import elide.runtime.vfs.languageVfsRegistry
       writable: Boolean,
       deferred: Boolean,
       bundles: List<URI>,
-    ): FileSystem = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    ): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
       .setBundlePaths(bundles)
       .setReadOnly(!writable)
       .setDeferred(deferred)
@@ -126,7 +128,7 @@ import elide.runtime.vfs.languageVfsRegistry
       deferred: Boolean,
       bundles: List<URI>,
       languages: Set<GuestLanguage>
-    ): FileSystem {
+    ): GuestVFS {
       // create embedded vfs unconditionally
       val embedded = EmbeddedGuestVFSImpl.Builder.newBuilder()
         .setBundlePaths(bundles)

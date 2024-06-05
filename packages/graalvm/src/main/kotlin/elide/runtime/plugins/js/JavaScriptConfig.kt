@@ -42,8 +42,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
     /** Injected Elide API modules. */
     private val elideModules: MutableMap<String, String> = listOf(
       "sqlite",
-    ).associateWith {
-      "/__runtime__/$it"
+    ).flatMap { listOf(it, "elide:$it") }.associateWith {
+      val mod = if (!it.startsWith("elide:")) "elide:$it" else it
+      "/node_modules/$mod"
     }.toMutableMap()
 
     /** Core module replacement map. */

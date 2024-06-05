@@ -37,10 +37,7 @@ import elide.tool.project.ProjectManager
   hidden = true,
 )
 @Suppress("unused", "UnusedPrivateProperty")
-@Singleton internal class ToolLintCommand @Inject constructor (
-  private val projectManager: ProjectManager,
-  private val workdir: WorkdirManager,
-) : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal class ToolLintCommand : AbstractSubcommand<ToolState, CommandContext>() {
   /**
    * Tools to run with the current linter invocation; optional.
    *

@@ -23,10 +23,7 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.js.lang.JavaScriptLanguage;
 import com.oracle.truffle.js.runtime.JSEngine;
 import com.oracle.truffle.js.runtime.JSRealm;
-import elide.runtime.lang.typescript.internals.JSRealmPatcher;
-import elide.runtime.lang.typescript.internals.TypeScriptCompiler;
-import elide.runtime.lang.typescript.internals.TypeScriptFileTypeDetector;
-import elide.runtime.lang.typescript.internals.TypeScriptModuleLoader;
+
 import java.util.List;
 import org.graalvm.polyglot.SandboxPolicy;
 
@@ -102,7 +99,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     return wrapper.getCallTarget();
   }
 
-  private class TSRootNode extends RootNode {
+  private static class TSRootNode extends RootNode {
     private final RootNode delegate;
 
     protected TSRootNode(TruffleLanguage<?> language, RootNode delegate) {
@@ -112,8 +109,9 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
 
     @Override
     public Object execute(VirtualFrame frame) {
-      JSRealm realm = JSRealm.get(delegate);
-      JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
+      // @TODO(sgammon): causes restricted types to be reached
+      // JSRealm realm = JSRealm.get(delegate);
+      // JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
       return delegate.execute(frame);
     }
   }

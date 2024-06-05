@@ -60,7 +60,7 @@ elide {
 }
 
 val oracleGvm = false
-val enableEdge = true
+val enableEdge = false
 val enableToolchains = true
 val nativeArgs = listOfNotNull(
   "--shared",
@@ -134,6 +134,7 @@ dependencies {
 
   compileOnly(libs.graalvm.svm)
   if (oracleGvm) compileOnly(libs.graalvm.truffle.enterprise)
+  else compileOnly(libs.graalvm.truffle.runtime.svm)
 
   // Testing
   testImplementation(projects.packages.test)

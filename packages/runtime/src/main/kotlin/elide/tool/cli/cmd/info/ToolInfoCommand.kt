@@ -31,13 +31,13 @@ import elide.tool.project.ProjectManager
   description = ["Show info about the current app and environment"],
   mixinStandardHelpOptions = true,
 )
-@Singleton internal class ToolInfoCommand @Inject constructor(
-  private val projectManager: ProjectManager,
-  private val workdir: RuntimeWorkdirManager,
-) : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private fun Boolean.label(): String = if (this) "Yes" else "No"
   }
+
+  @Inject private lateinit var projectManager: ProjectManager
+  @Inject private lateinit var workdir: RuntimeWorkdirManager
 
   // Check if the library group at the name `group` was loaded.
   private fun libraryGroupLoaded(group: String): Boolean = NativeEngine.didLoad(group)

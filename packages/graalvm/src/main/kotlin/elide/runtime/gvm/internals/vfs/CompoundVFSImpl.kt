@@ -26,9 +26,6 @@ import elide.runtime.Logger
 import elide.runtime.vfs.GuestVFS
 import elide.runtime.vfs.LanguageVFS
 
-/**
- * TBD.
- */
 internal class CompoundVFSImpl private constructor (
   config: EffectiveGuestVFSConfig,
   private val primary: AbstractDelegateVFS<*>,

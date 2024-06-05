@@ -31,7 +31,6 @@ wasm-bindgen = "0.2.92"
 wasm-bindgen-futures = "0.4.42"
 
 [dependencies]
-apr = "0.1.10"
 boring = "4.6.0"
 const_fn = "0.4"
 heapless = "0.8.0"

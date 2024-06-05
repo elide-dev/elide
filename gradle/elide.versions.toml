@@ -198,7 +198,7 @@ micronaut-xml = "3.1.0"
 mockito-bom = "5.10.0"
 mockito-junit = "5.10.0"
 mordant = "2.4.0"
-mosaic = "0.13.0"
+mosaic = "0.12.0"
 mrjar = "0.1.1"
 msgpack = "0.9.4"
 netty = "4.1.110.Final"
@@ -810,6 +810,7 @@ plugin-kotlinx-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-
 plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover-plugin" }
 plugin-ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 plugin-micronaut = { group = "io.micronaut.gradle", name = "micronaut-gradle-plugin", version.ref = "micronaut-plugin" }
+plugin-mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
 plugin-nexusPublishing = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexusPublishing" }
 plugin-openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite-plugin" }
 plugin-proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }

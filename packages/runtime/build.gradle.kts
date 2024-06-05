@@ -613,11 +613,22 @@ val enabledFeatures = listOfNotNull(
 
 val linkerOptions: List<String> = listOfNotNull()
 
+val preinitializedContexts = listOfNotNull(
+  "js",
+  onlyIf(enablePkl, "pkl"),
+  onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
+  onlyIf(enablePreinitializeAll && enablePython, "python"),
+  onlyIf(enablePreinitializeAll && enableJvm, "java"),
+)
+
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
   // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner${'$'}CleanerThread.this${'$'}0",
+  // "-H:AbortOnMethodReachable=kotlinx.coroutines.CancellableContinuationImpl.getParentHandle",
   // "--trace-object-instantiation=com.sun.jna.internal.Cleaner",
+  // "--trace-object-instantiation=kotlinx.coroutines.CancellableContinuationImpl",
+  // "-H:AbortOnMethodReachable=java.util.concurrent.atomic.AtomicReferenceFieldUpdater.accessCheck",
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
   onlyIf(enableFfm, "-H:+ForeignAPISupport"),

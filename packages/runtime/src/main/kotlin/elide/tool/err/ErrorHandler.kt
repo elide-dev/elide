@@ -670,7 +670,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    * @param event Error event to process.
    * @return Advised error action strategy.
    */
-  suspend fun ErrorHandlerContext.handleError(event: ErrorEvent): ErrorActionStrategy
+  fun ErrorHandlerContext.handleError(event: ErrorEvent): ErrorActionStrategy
 
   /**
    * ## Handle Error
@@ -682,8 +682,8 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    * @param context Optional additional context for this error.
    * @return Error followup strategy to apply.
    */
-  fun handleError(error: Throwable, context: ErrorContext? = null): ErrorActionStrategy = runBlocking {
-    ErrorEvent.of(error, context).let { event ->
+  fun handleError(error: Throwable, context: ErrorContext? = null): ErrorActionStrategy {
+    return ErrorEvent.of(error, context).let { event ->
       Factory.create(
         this@ErrorHandler,
         event,

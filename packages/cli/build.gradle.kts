@@ -73,7 +73,7 @@ val entrypoint = "elide.tool.cli.ElideTool"
 
 val enablePkl = false
 val oracleGvm = false
-val enableEdge = true
+val enableEdge = false
 val enableWasm = true
 val enablePython = true
 val enableRuby = true

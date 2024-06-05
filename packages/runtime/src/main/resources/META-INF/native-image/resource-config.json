@@ -49,6 +49,8 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/ts/runtime.json.gz\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/embedded/tools/tsc/typescript.js.gz\\E"
+  }, {
     "pattern":"\\QMETA-INF/graalvm/org.graalvm.polyglot/version\\E"
   }, {
     "pattern":"\\QMETA-INF/graalvm/org.graalvm.truffle/version\\E"
@@ -792,6 +794,10 @@
     "pattern":"\\Qtruffleruby/core/weakmap.rb\\E"
   }, {
     "pattern":"\\Qtruffleruby/post-boot/post-boot.rb\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/nfc.nrm\\E"
   }, {

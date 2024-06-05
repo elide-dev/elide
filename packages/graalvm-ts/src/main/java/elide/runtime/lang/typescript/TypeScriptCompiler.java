@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.lang.typescript.internals;
+package elide.runtime.lang.typescript;
 
 import static com.oracle.truffle.api.TruffleLanguage.Env;
 
@@ -36,7 +36,7 @@ import org.apache.commons.io.IOUtils;
  * <p>The TypeScript compiler is hosted in a dedicated JavaScript context, and leverages GraalJs to
  * compile user code on-the-fly, either as primary inputs or as a loaded module.
  */
-public class TypeScriptCompiler implements AutoCloseable {
+class TypeScriptCompiler implements AutoCloseable {
   private static final String TYPESCRIPT_COMPILER_PATH =
       "/META-INF/elide/embedded/tools/tsc/typescript.js.gz";
   private static final Source TYPESCRIPT_COMPILER_SOURCE = createTypeScriptCompilerSource();

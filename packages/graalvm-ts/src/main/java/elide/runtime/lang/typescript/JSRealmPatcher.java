@@ -10,14 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.lang.typescript.internals;
+package elide.runtime.lang.typescript;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.js.runtime.JSRealm;
 import java.lang.reflect.Field;
 
-/** TBD. */
-public class JSRealmPatcher {
+class JSRealmPatcher {
   @CompilerDirectives.TruffleBoundary
   public static void setTSModuleLoader(JSRealm jsRealm, TypeScriptModuleLoader newModuleLoader) {
     try {

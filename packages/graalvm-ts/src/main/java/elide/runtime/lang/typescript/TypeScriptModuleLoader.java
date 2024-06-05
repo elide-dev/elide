@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.lang.typescript.internals;
+package elide.runtime.lang.typescript;
 
 import com.oracle.js.parser.ir.Module;
 import com.oracle.truffle.api.TruffleFile;
@@ -25,8 +25,7 @@ import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-/** TBD. */
-public class TypeScriptModuleLoader extends DefaultESModuleLoader {
+class TypeScriptModuleLoader extends DefaultESModuleLoader {
   private final TypeScriptCompiler tsCompiler;
 
   public TypeScriptModuleLoader(JSRealm realm, TypeScriptCompiler tsCompiler) {

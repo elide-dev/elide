@@ -18,31 +18,6 @@ public final class elide/runtime/lang/typescript/TypeScriptLanguageProvider : co
 	public fun <init> ()V
 }
 
-public class elide/runtime/lang/typescript/internals/JSRealmPatcher {
-	public fun <init> ()V
-	public static fun setTSModuleLoader (Lcom/oracle/truffle/js/runtime/JSRealm;Lelide/runtime/lang/typescript/internals/TypeScriptModuleLoader;)V
-}
-
-public class elide/runtime/lang/typescript/internals/TypeScriptCompiler : java/lang/AutoCloseable {
-	public fun <init> (Lcom/oracle/truffle/api/TruffleLanguage$Env;)V
-	public fun close ()V
-	public fun compileToNewSource (Ljava/lang/CharSequence;Ljava/lang/String;ZLjava/lang/String;)Lcom/oracle/truffle/api/source/Source;
-	public fun compileToString (Ljava/lang/CharSequence;Ljava/lang/String;)Ljava/lang/String;
-}
-
-public class elide/runtime/lang/typescript/internals/TypeScriptFileTypeDetector : com/oracle/truffle/api/TruffleFile$FileTypeDetector {
-	public fun <init> ()V
-	public fun findEncoding (Lcom/oracle/truffle/api/TruffleFile;)Ljava/nio/charset/Charset;
-	public fun findMimeType (Lcom/oracle/truffle/api/TruffleFile;)Ljava/lang/String;
-}
-
-public class elide/runtime/lang/typescript/internals/TypeScriptModuleLoader : com/oracle/truffle/js/runtime/objects/DefaultESModuleLoader {
-	public fun <init> (Lcom/oracle/truffle/js/runtime/JSRealm;Lelide/runtime/lang/typescript/internals/TypeScriptCompiler;)V
-	public fun loadModule (Lcom/oracle/truffle/api/source/Source;Lcom/oracle/truffle/js/runtime/objects/JSModuleData;)Lcom/oracle/truffle/js/runtime/objects/JSModuleRecord;
-	protected fun loadModuleFromUrl (Lcom/oracle/truffle/js/runtime/objects/ScriptOrModule;Lcom/oracle/js/parser/ir/Module$ModuleRequest;Lcom/oracle/truffle/api/TruffleFile;Ljava/lang/String;)Lcom/oracle/truffle/js/runtime/objects/JSModuleRecord;
-	public fun resolveImportedModule (Lcom/oracle/truffle/js/runtime/objects/ScriptOrModule;Lcom/oracle/js/parser/ir/Module$ModuleRequest;)Lcom/oracle/truffle/js/runtime/objects/JSModuleRecord;
-}
-
 public final class elide/runtime/plugins/typescript/TypeScript {
 	public static final field Plugin Lelide/runtime/plugins/typescript/TypeScript$Plugin;
 	public fun <init> (Lelide/runtime/plugins/typescript/TypeScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V

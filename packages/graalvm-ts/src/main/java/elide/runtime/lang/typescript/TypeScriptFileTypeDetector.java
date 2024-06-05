@@ -10,13 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.lang.typescript.internals;
+package elide.runtime.lang.typescript;
 
 import com.oracle.truffle.api.TruffleFile;
 import java.nio.charset.Charset;
 
-/** TBD. */
-public class TypeScriptFileTypeDetector implements TruffleFile.FileTypeDetector {
+class TypeScriptFileTypeDetector implements TruffleFile.FileTypeDetector {
   public String findMimeType(TruffleFile file) {
     String fileName = file.getName();
     if (fileName != null) {

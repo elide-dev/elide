@@ -350,6 +350,10 @@ val jvmOnly: Configuration by configurations.creating {
 }
 
 dependencies {
+  aotApplication(libs.graalvm.svm)
+  aotApplication(libs.graalvm.truffle.runtime.svm)
+  aotApplication(libs.graalvm.compiler)
+
   kapt(mn.micronaut.inject.java)
   kapt(libs.picocli.codegen)
   classpathExtras(mn.micronaut.core.processor)

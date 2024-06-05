@@ -14,7 +14,6 @@
 
 package elide.runtime.gvm.internals.sqlite
 
-import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyInstantiable

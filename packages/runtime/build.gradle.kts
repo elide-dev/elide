@@ -94,7 +94,7 @@ val enableNativeTransportV2 = true
 val enableDynamicPlugins = false
 val enableDeprecated = false
 val enableJit = true
-val enablePreinitializeAll = true
+val enablePreinitializeAll = false
 val enableTools = true
 val enableProguard = false
 val enableExperimental = false
@@ -113,7 +113,6 @@ val enableJna = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
 val glibcTarget = "glibc"
-val enableTruffleJson = enableEdge
 val dumpPointsTo = false
 
 val exclusions = listOfNotNull(
@@ -639,15 +638,11 @@ val commonNativeArgs = listOfNotNull(
   "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
   "-J-Dgraalvm.locatorDisabled=false",
   "-J-Dpolyglotimpl.DisableVersionChecks=true",
+  "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
-  "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
-    "js",
-    onlyIf(enablePkl, "pkl"),
-    onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
-    onlyIf(enablePreinitializeAll && enablePython, "python"),
-    onlyIf(enablePreinitializeAll && enableJvm, "java"),
-).joinToString(","),
-   onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
+  "-Dpolyglot.image-build-time.PreinitializeContexts=${preinitializedContexts.joinToString(",")}",
+  "-J-Dpolyglot.image-build-time.PreinitializeContexts=${preinitializedContexts.joinToString(",")}",
+  onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
   onlyIf(enablePgoSampling, "--pgo-sampling"),
   onlyIf(enablePgoInstrumentation && enablePgo, "-H:+BuildReportSamplerFlamegraph"),
 ).asSequence().plus(
@@ -657,7 +652,7 @@ val commonNativeArgs = listOfNotNull(
     "-H:CLibraryPath=$it"
   }
 ).plus(
-  listOf("-H:+UnlockExperimentalVMOptions").onlyIf(enableEdge)
+  listOf("-H:+UnlockExperimentalVMOptions")
 ).plus(
   commonGvmArgs.onlyIf(oracleGvm)
 ).plus(

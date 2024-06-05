@@ -423,6 +423,7 @@ google-cloud-bom = { group = "com.google.cloud", name = "libraries-bom", version
 google-cloud-nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud-native" }
 google-common-html-types-proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google-html-types" }
 google-common-html-types-types = { group = "com.google.common.html.types", name = "types", version.ref = "google-html-types" }
+graalvm-compiler = { group = "org.graalvm.compiler", name = "compiler", version.ref = "graalvm" }
 graalvm-espresso-hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm" }
 graalvm-espresso-language = { group = "org.graalvm.espresso", name = "espresso-language", version.ref = "graalvm" }
 graalvm-espresso-polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm" }

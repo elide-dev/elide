@@ -2411,6 +2411,10 @@
   "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
 },
 {
+  "name":"java.util.Arrays.ArrayList",
+  "methods":[{"name":"toString","parameterTypes":[] }]
+},
+{
   "name":"java.util.Base64$Decoder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
@@ -2419,6 +2423,10 @@
 },
 {
   "name":"java.util.Date"
+},
+{
+  "name":"java.util.LinkedHashMap",
+  "methods":[{"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"java.util.PropertyPermission",
@@ -2534,8 +2542,24 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"jdk.vm.ci.meta.ConstantPool",
+  "methods":[{"name":"lookupBootstrapMethodInvocation","parameterTypes":["int","int"] }, {"name":"lookupConstant","parameterTypes":["int","boolean"] }, {"name":"lookupMethod","parameterTypes":["int","int","jdk.vm.ci.meta.ResolvedJavaMethod"] }]
+},
+{
   "name":"kotlin.SafePublicationLazyImpl",
   "fields":[{"name":"_value"}]
+},
+{
+  "name":"kotlin.collections.AbstractCollection",
+  "methods":[{"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"kotlin.collections.AbstractMap",
+  "methods":[{"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"kotlin.collections.AbstractMutableList",
+  "methods":[{"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"kotlin.jvm.internal.DefaultConstructorMarker"

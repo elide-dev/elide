@@ -301,7 +301,6 @@ import elide.tool.io.RuntimeWorkdirManager
   }
 }
 
-@Suppress("RedundantSuspendModifier")
-suspend fun main(args: Array<String>) {
+fun main(args: Array<String>) {
   Elide.entry(args)
 }

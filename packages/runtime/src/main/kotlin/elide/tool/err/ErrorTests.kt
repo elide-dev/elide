@@ -44,7 +44,7 @@ import elide.tool.testing.TestContext
         guest = false,
         thread = Thread.currentThread(),
       )
-    )).join()
+    ))
   }
 }
 

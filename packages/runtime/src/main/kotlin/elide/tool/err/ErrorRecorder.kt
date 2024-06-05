@@ -13,7 +13,6 @@
 
 package elide.tool.err
 
-import kotlinx.coroutines.Job
 import elide.tool.err.ErrorHandler.ErrorEvent
 
 /**
@@ -30,7 +29,6 @@ interface ErrorRecorder {
    * provided, if available.
    *
    * @param event Error event which we are being asked to record.
-   * @return Job which concludes when the error has been safely recorded.
    */
-  suspend fun recordError(event: ErrorEvent): Job
+  fun recordError(event: ErrorEvent)
 }

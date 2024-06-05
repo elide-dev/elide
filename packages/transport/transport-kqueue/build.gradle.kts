@@ -138,7 +138,8 @@ tasks.processResources {
     inputs.dir(libs)
 
     listOf(
-      "build/lib/main/release",
+      "build/lib/main/release/static",
+      "build/lib/main/release/shared",
     ).forEach {
       from(it) {
         exclude("**/stripped/**")

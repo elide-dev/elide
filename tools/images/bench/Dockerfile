@@ -18,6 +18,7 @@ RUN groupadd elide \
     zlib1g \
     bash
 
+COPY entrypoint.sh /bin/entrypoint.sh
 USER dev
 
 RUN echo "Setting up Elide..." \
@@ -37,4 +38,4 @@ RUN which elide \
   && elide info \
   && echo "Elide container image ready."
 
-ENTRYPOINT ["bash", "/home/dev/elide/entrypoint.sh"]
+ENTRYPOINT ["bash", "/bin/entrypoint.sh"]

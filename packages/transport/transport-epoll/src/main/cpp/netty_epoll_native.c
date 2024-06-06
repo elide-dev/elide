@@ -951,6 +951,10 @@ JNIEXPORT jint Java_io_netty_channel_epoll_Native_timerFd(JNIEnv* env, jclass cl
     return netty_epoll_native_timerFd(env, clazz);
 }
 
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_epollBusyWait0(JNIEnv* env, jclass clazz, jint efd, jlong address, jint len) {
+    return netty_epoll_native_epollBusyWait0(env, clazz, efd, address, len);
+}
+
 JNIEXPORT jint Java_io_netty_channel_epoll_Native_epollWait(JNIEnv* env, jclass clazz, jint efd, jlong address, jint len, jint timeout) {
     return netty_epoll_native_epollWait(env, clazz, efd, address, len, timeout);
 }

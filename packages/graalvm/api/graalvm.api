@@ -4196,6 +4196,17 @@ public final class elide/runtime/intrinsics/js/typed/UUID$UUIDType : java/lang/E
 	public static fun values ()[Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 }
 
+public abstract interface class elide/runtime/intrinsics/server/http/ExpressResponseAPI {
+	public abstract fun append (Ljava/lang/String;Ljava/lang/String;)V
+	public static synthetic fun append$default (Lelide/runtime/intrinsics/server/http/ExpressResponseAPI;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun end ()V
+	public abstract fun get (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun send (ILorg/graalvm/polyglot/Value;)V
+	public abstract fun set (Ljava/lang/String;Ljava/lang/String;)V
+	public static synthetic fun set$default (Lelide/runtime/intrinsics/server/http/ExpressResponseAPI;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun status (I)V
+}
+
 public final class elide/runtime/intrinsics/server/http/HttpContext : java/util/Map, kotlin/jvm/internal/markers/KMutableMap, org/graalvm/polyglot/proxy/ProxyObject {
 	public fun clear ()V
 	public final fun containsKey (Ljava/lang/Object;)Z
@@ -4243,7 +4254,9 @@ public abstract interface class elide/runtime/intrinsics/server/http/HttpRequest
 	public abstract fun getUri ()Ljava/lang/String;
 }
 
-public abstract interface class elide/runtime/intrinsics/server/http/HttpResponse {
+public abstract interface class elide/runtime/intrinsics/server/http/HttpResponse : elide/runtime/intrinsics/server/http/ExpressResponseAPI {
+	public fun append (Ljava/lang/String;Ljava/lang/String;)V
+	public abstract fun header (Ljava/lang/String;Ljava/lang/String;)V
 	public abstract fun send (ILorg/graalvm/polyglot/Value;)V
 }
 

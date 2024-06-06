@@ -18,10 +18,17 @@ ok(typeof Elide.http !== "undefined", "please run with `elide serve`");
 const app = Elide.http;
 
 // register basic handler
-app.router.handle("GET", "/", (request, response) => {
+app.router.handle("GET", "/plaintext", (request, response) => {
   // respond using the captured path variables
-  response.send(200, `Hello, Elide!`);
+  response.send(200, `Hello, World!`);
 });
+
+// register json handler
+app.router.handle("GET", "/json", (request, response) => {
+  // respond using the captured path variables
+  response.send(200, JSON.stringify({ message: "Hello, World!" }));
+});
+
 
 // register a route handler
 app.router.handle("GET", "/hello/:name", (request, response, context) => {

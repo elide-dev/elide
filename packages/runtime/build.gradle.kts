@@ -76,6 +76,7 @@ buildscript {
 // - `elide.buildMode`: `dev`, `release`, `debug`
 // - `elide.targetOs`: `darwin`, `linux`, `windows`
 // - `elide.targetArch`: `amd64`, `arm64`
+// - `elide.march`: `native`, `compatibility`
 
 val quickbuild = (
   project.properties["elide.release"] != "true" ||
@@ -137,6 +138,8 @@ val enableSbom = oracleGvm
 val enableSbomStrict = false
 val glibcTarget = "glibc"
 val dumpPointsTo = false
+val defaultArchTarget = "compatibility"
+val elideBinaryArch = project.properties["elide.march"] as? String ?: defaultArchTarget
 
 val exclusions = listOfNotNull(
   // always exclude non-jpms jna
@@ -638,6 +641,7 @@ val commonNativeArgs = listOfNotNull(
   // Flags which should be dropped after fixes (Mosaic crash):
   "--report-unsupported-elements-at-runtime",
   // Common flags:
+  "-march=$elideBinaryArch",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -704,7 +708,6 @@ val commonNativeArgs = listOfNotNull(
 
 val debugFlags: List<String> = listOfNotNull(
   "--verbose",
-  "-march=compatibility",
   "-H:+SourceLevelDebug",
   "-H:-DeleteLocalSymbols",
   "-H:-RemoveUnusedSymbols",
@@ -1016,7 +1019,6 @@ val rerunAtRuntimeTest: List<String> = emptyList()
 val defaultPlatformArgs: List<String> = listOf()
 
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=compatibility",
   "--gc=serial",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
@@ -1031,7 +1033,6 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else emptyList())
 
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=compatibility",
   "--gc=serial",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
@@ -1052,7 +1053,6 @@ val darwinReleaseArgs = darwinOnlyArgs.toList()
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
-    "-march=compatibility",
     "-H:+StaticExecutableWithDynamicLibC",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",

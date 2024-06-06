@@ -48,8 +48,15 @@ library {
   )
 }
 
+val jvmApi: Configuration by configurations.creating {
+  isCanBeResolved = true
+  isCanBeConsumed = false
+}
+val apiElements: Configuration by configurations.getting { extendsFrom(jvmApi) }
+val compileClasspath: Configuration by configurations.getting { extendsFrom(jvmApi) }
+
 dependencies {
-  implementation(projects.packages.transport.transportCommon)
+  jvmApi(projects.packages.transport.transportCommon)
 }
 
 val jdkHome: String = System.getenv("GRAALVM_HOME")?.ifBlank { null }

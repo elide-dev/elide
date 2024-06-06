@@ -14,11 +14,14 @@ package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
+import io.netty.handler.codec.DateFormatter
 import io.netty.handler.codec.http.*
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.text.DateFormat
+import java.time.Instant
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
@@ -103,7 +106,7 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
   // Fills response headers expected by-spec.
   private fun fillResponseHeaders() {
     if (includeDefaults) {
-      headers.set(HttpHeaderNames.DATE, DateFormat.getInstance().format(System.currentTimeMillis()))
+      headers.set(HttpHeaderNames.DATE, DateFormatter.format(Date.from(Instant.now())))
     }
   }
 

@@ -785,6 +785,7 @@ testing-mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter",
 plugin-buf = { group = "com.parmet", name = "buf-gradle-plugin", version.ref = "pluginBuf" }
 plugin-buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin", version.ref = "buildconfig-plugin" }
 plugin-cite = { group = "com.jakewharton.cite", name = "cite-gradle-plugin", version.ref = "cite" }
+plugin-dependencyAnalysis = { group = "com.autonomousapps", name = "dependency-analysis-gradle-plugin", version.ref = "dependencyAnalysis" }
 plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 plugin-docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut-plugin" }
 plugin-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }

@@ -71,6 +71,9 @@ tasks.withType(CppCompile::class.java).configureEach {
   source.from(layout.projectDirectory.dir("src/main/cpp").asFileTree.matching { include("**/*.c") })
   onlyIf { HostManager.hostIsLinux }
 
+  macros["NETTY_BUILD_STATIC"] = "1"
+  macros["NETTY_BUILD_GRAALVM"] = "1"
+
   compilerArgs.addAll(listOf(
     "-x", "c",
     "-O3",

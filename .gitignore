@@ -36,3 +36,4 @@ packages/graalvm/test.mjs
 docs/reports/
 target
 kotlin-js-store/
+tools/images/bench/elide-edge.tgz

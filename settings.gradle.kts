@@ -253,7 +253,6 @@ include(
   ":packages:transport:transport-uring",
   ":tools:umbrella",
   ":tools:reports",
-  ":tools:wrappers",
 )
 
 val buildDeprecated: String by settings

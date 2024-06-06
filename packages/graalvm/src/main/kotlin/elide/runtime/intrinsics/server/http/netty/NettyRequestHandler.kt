@@ -47,7 +47,7 @@ import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
 
       // prepare the wrappers
       val request = NettyHttpRequest(message)
-      val response = NettyHttpResponse(channelContext)
+      val response = NettyHttpResponse(channelContext, includeDefaults = true)
       val context = HttpContext()
 
       // resolve the handler pipeline (or default to 'not found' if empty)

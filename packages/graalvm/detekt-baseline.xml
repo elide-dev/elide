@@ -6,6 +6,7 @@
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
     <ID>CyclomaticComplexMethod:CustomEvent.kt$CustomEvent$override fun getMember(key: String?): Any?</ID>
+    <ID>CyclomaticComplexMethod:NettyHttpResponse.kt$NettyHttpResponse$override fun getMember(key: String?): Any?</ID>
     <ID>CyclomaticComplexMethod:NodeEvents.kt$NodeEventsModuleFacade$@Polyglot override fun getMember(key: String): Any?</ID>
     <ID>CyclomaticComplexMethod:NodeOperatingSystem.kt$NodeOperatingSystem.ModuleBase$override fun getMember(key: String?): Any?</ID>
     <ID>CyclomaticComplexMethod:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>

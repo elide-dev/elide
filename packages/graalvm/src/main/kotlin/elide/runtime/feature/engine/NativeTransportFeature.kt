@@ -117,8 +117,8 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
         "transport-epoll",
         "netty_transport_native_epoll",
         "x86-64",
-        "META-INF/native/x86-64/libtransport-epoll.a",
-        "META-INF/native/x86-64/libtransport-epoll.so",
+        "META-INF/native/libtransport-epoll.a",  // @TODO: gradle doesn't support arm64 linux
+        "META-INF/native/libtransport-epoll.so",
         renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
       )
 
@@ -126,8 +126,8 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
         "transport-epoll",
         "netty_transport_native_epoll",
         "aarch64",
-        "META-INF/native/arm64/libtransport-epoll.a",
-        "META-INF/native/arm64/libtransport-epoll.so",
+        "META-INF/native/libtransport-epoll.a",
+        "META-INF/native/libtransport-epoll.so",
         renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
       )
 

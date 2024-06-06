@@ -80,7 +80,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
       builder.setOptions(
         "python.HPyBackend" to "nfi",
         "python.PosixModuleBackend" to "java",
-        "python.Sha3ModuleBackend" to "native",
       )
 
       if (ImageInfo.inImageCode()) {

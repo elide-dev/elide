@@ -29,7 +29,6 @@ app.router.handle("GET", "/json", (request, response) => {
   response.send(200, JSON.stringify({ message: "Hello, World!" }));
 });
 
-
 // register a route handler
 app.router.handle("GET", "/hello/:name", (request, response, context) => {
   // respond using the captured path variables

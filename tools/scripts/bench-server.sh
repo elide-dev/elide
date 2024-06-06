@@ -6,21 +6,20 @@ source ./tools/scripts/bench-common.sh
 ELIDE="$1"
 
 if [ ! -f "$ELIDE" ]; then
-    echo "Elide binary not found"
-    exit 2;
+  echo "Elide binary not found"
+  exit 2
 fi
 
-if [[ -x "$file" ]]
-then
-    # nothing
+if [[ -x "$file" ]]; then
+  # nothing
 else
-    echo "Elide binary is not executable"
-    exit 2;
+  echo "Elide binary is not executable"
+  exit 2
 fi
 
 VERSION=$("$ELIDE --version")
 
-echo "Starting server bench for Elide at version $VERSION";
+echo "Starting server bench for Elide at version $VERSION"
 
 # run the server
 "$ELIDE serve --javascript $SERVER_JS" &
@@ -34,6 +33,6 @@ hyperfine $HYPERFINE_ARGS "curl http://localhost:3000/plaintext"
 oha $OHA_ARGS http://localhost:3000/plaintext
 wrk $WRK_ARGS http://localhost:3000/plaintext
 
-echo "Halting JS server at PID $ELIDE_JS_SERVER_PID";
-kill -SIGINT "$ELIDE_JS_SERVER_PID";
-echo "Server bench done.";
+echo "Halting JS server at PID $ELIDE_JS_SERVER_PID"
+kill -SIGINT "$ELIDE_JS_SERVER_PID"
+echo "Server bench done."

@@ -1,3 +1,5 @@
+/*.js -linguist-detectable
+/*.mjs -linguist-detectable
 *.proto linguist-language=Protocol-Buffer linguist-detectable
 *.soy linguist-language=Closure-Templates linguist-detectable
 *.ts linguist-language=TypeScript linguist-detectable

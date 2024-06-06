@@ -16,6 +16,7 @@ package elide.runtime.gvm.internals.node.fs
 
 import com.google.common.util.concurrent.MoreExecutors
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.io.BufferedReader
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -76,8 +77,8 @@ import elide.vm.annotations.Polyglot
   @Singleton fun providePromises(): FilesystemPromiseAPI = promises
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = std
-    bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = promises
+    bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = ProxyExecutable { provideStd() }
+    bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = ProxyExecutable { providePromises() }
   }
 
   override fun onVfsCreated(fileSystem: GuestVFS) {

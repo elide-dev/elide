@@ -39,7 +39,7 @@ import elide.runtime.plugins.vfs.vfs
 import elide.vm.annotations.Polyglot
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
-abstract class AbstractDualTest<Generator: CodeGenerator> {
+abstract class AbstractDualTest<Generator : CodeGenerator> {
   companion object {
     @JvmStatic
     fun loadResource(path: String): String {
@@ -296,12 +296,22 @@ abstract class AbstractDualTest<Generator: CodeGenerator> {
   @Inject private lateinit var vfsListeners: List<VfsListener>
 
   /** A [PolyglotEngine] used to acquire context instances for testing, configurable trough [configureEngine]. */
-  protected val engine: PolyglotEngine by lazy { PolyglotEngine(::configureEngine) }
+  protected val engine: PolyglotEngine by lazy {
+    PolyglotEngine {
+      configureEngineBaseline(this) // shared configuration
+      configureEngine(this) // provided by implementations
+    }
+  }
+
+  /** Configure some base [config] options shared by all test cases, before calling [configureEngine]. */
+  private fun configureEngineBaseline(config: PolyglotEngineConfiguration) {
+    // register event listeners
+    config.vfs { vfsListeners.forEach(::listener) }
+  }
 
   /** Configure the [engine] used to acquire contexts passed to [withContext]. */
   protected open fun configureEngine(config: PolyglotEngineConfiguration) {
-    // register event listeners
-    vfs { vfsListeners.forEach(::listener) }
+    // nothing by default
   }
 
   /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
@@ -323,8 +333,8 @@ abstract class AbstractDualTest<Generator: CodeGenerator> {
 
   /** Single test execution within the scope of a guest VM. */
   inner class GuestTestExecution(
-      val factory: (PolyglotContext.() -> Unit) -> Unit,
-      val test: PolyglotContext.() -> Value?
+    val factory: (PolyglotContext.() -> Unit) -> Unit,
+    val test: PolyglotContext.() -> Value?
   ) {
     // Return value, if any.
     private val returnValue: AtomicReference<Value?> = AtomicReference(null)
@@ -337,8 +347,8 @@ abstract class AbstractDualTest<Generator: CodeGenerator> {
 
     /** After guest execution concludes, execute the provided [assertions] against the test context. */
     fun thenAssert(
-        allowFailure: Boolean = false,
-        assertions: (PolyglotContext.(GuestTestExecution) -> Unit)? = null,
+      allowFailure: Boolean = false,
+      assertions: (PolyglotContext.(GuestTestExecution) -> Unit)? = null,
     ) = factory {
       if (allowFailure) {
         failsWith<Throwable> {
@@ -414,7 +424,7 @@ abstract class AbstractDualTest<Generator: CodeGenerator> {
   }
 
   /** Proxy which wires together a dual-test execution (in the guest and on the host). */
-  abstract inner class DualTestExecutionProxy<T> where T: CodeGenerator {
+  abstract inner class DualTestExecutionProxy<T> where T : CodeGenerator {
     /**
      * Wire together the guest-side of a dual test.
      *

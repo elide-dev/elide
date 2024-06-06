@@ -12,6 +12,8 @@ gradle/verification* linguist-generated binary
 **/package-info.java -linguist-detectable linguist-generated
 samples/** -linguist-detectable
 tools/tsc/src/main/resources/META-INF/elide/embedded/tools/tsc/entry.mjs linguist-generated
+packages/sqlite/src/main/panama/** -linguist-detectable linguist-generated
+packages/transport/transport-*/src/main/panama/** -linguist-detectable linguist-generated
 packages/graalvm/src/test/resources/embedded/** -linguist-detectable linguist-generated
 packages/graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated
 packages/graalvm-react/src/main/node/** -linguist-detectable linguist-generated

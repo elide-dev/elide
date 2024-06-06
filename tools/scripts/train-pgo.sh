@@ -1,4 +1,4 @@
-#env bash
+#!/bin/env bash
 
 # Resolved Elide binary
 ELIDE="$1"

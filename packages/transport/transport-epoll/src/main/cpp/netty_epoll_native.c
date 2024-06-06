@@ -898,6 +898,118 @@ static void netty_epoll_native_JNI_OnUnload(JNIEnv* env) {
 // We build with -fvisibility=hidden so ensure we mark everything that needs to be visible with JNIEXPORT
 // https://mail.openjdk.java.net/pipermail/core-libs-dev/2013-February/014549.html
 
+#ifdef NETTY_BUILD_STATIC
+#ifdef NETTY_BUILD_GRAALVM
+
+// On GraalVM, in static build mode, we export each method directly.
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_registerUnix(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_registerUnix(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_offsetofEpollData(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_offsetofEpollData(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_epollCtlDel0(JNIEnv* env, jclass clazz, jint efd, jint fd) {
+    return netty_epoll_native_epollCtlDel0(env, clazz, efd, fd);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_epollCreate(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_epollCreate(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_recvmmsg0(JNIEnv* env, jclass clazz, jint fd, jboolean ipv6, jobjectArray packets, jint offset, jint len) {
+    return netty_epoll_native_recvmmsg0(env, clazz, fd, ipv6, packets, offset, len);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_recvmsg0(JNIEnv* env, jclass clazz, jint fd, jboolean ipv6, jobject packet) {
+    return netty_epoll_native_recvmsg0(env, clazz, fd, ipv6, packet);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_epollCtlAdd0(JNIEnv* env, jclass clazz, jint efd, jint fd, jint flags) {
+    return netty_epoll_native_epollCtlAdd0(env, clazz, efd, fd, flags);
+}
+
+JNIEXPORT void Java_io_netty_channel_epoll_Native_eventFdWrite(JNIEnv* env, jclass clazz, jint fd, jlong value) {
+    return netty_epoll_native_eventFdWrite(env, clazz, fd, value);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_eventFd(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_eventFd(env, clazz);
+}
+
+JNIEXPORT jboolean Java_io_netty_channel_epoll_Native_isSupportingUdpSegment(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_isSupportingUdpSegment(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_sendmmsg0(JNIEnv* env, jclass clazz, jint fd, jboolean ipv6, jobjectArray packets, jint offset, jint len) {
+    return netty_epoll_native_sendmmsg0(env, clazz, fd, ipv6, packets, offset, len);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_timerFd(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_timerFd(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_epollWait(JNIEnv* env, jclass clazz, jint efd, jlong address, jint len, jint timeout) {
+    return netty_epoll_native_epollWait(env, clazz, efd, address, len, timeout);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_epollCtlMod0(JNIEnv* env, jclass clazz, jint efd, jint fd, jint flags) {
+    return netty_epoll_native_epollCtlMod0(env, clazz, efd, fd, flags);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_Native_sizeofEpollEvent(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_sizeofEpollEvent(env, clazz);
+}
+
+JNIEXPORT jlong Java_io_netty_channel_epoll_Native_epollWait0(JNIEnv* env, jclass clazz, jint efd, jlong address, jint len, jint timerFd, jint tvSec, jint tvNsec, jlong millisThreshold) {
+    return netty_epoll_native_epollWait0(env, clazz, efd, address, len, timerFd, tvSec, tvNsec, millisThreshold);
+}
+
+JNIEXPORT jboolean Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_isSupportingSendmmsg(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_isSupportingSendmmsg(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_epollrdhup(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_epollrdhup(env, clazz);
+}
+
+JNIEXPORT jstring Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_kernelVersion(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_kernelVersion(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_epollout(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_epollout(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_tcpMd5SigMaxKeyLen(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_tcpMd5SigMaxKeyLen(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_epollet(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_epollet(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_epollerr(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_epollerr(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_epollin(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_epollin(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_tcpFastopenMode(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_tcpFastopenMode(env, clazz);
+}
+
+JNIEXPORT jboolean Java_io_netty_channel_epoll_NativeStaticallyReferencedJniMethods_isSupportingRecvmmsg(JNIEnv* env, jclass clazz) {
+    return netty_epoll_native_isSupportingRecvmmsg(env, clazz);
+}
+
+#endif
+#endif
+
 // Invoked by the JVM when statically linked
 JNIEXPORT jint JNI_OnLoad_netty_transport_native_epoll(JavaVM* vm, void* reserved) {
     return netty_jni_util_JNI_OnLoad(vm, reserved, "netty_transport_native_epoll", netty_epoll_native_JNI_OnLoad);

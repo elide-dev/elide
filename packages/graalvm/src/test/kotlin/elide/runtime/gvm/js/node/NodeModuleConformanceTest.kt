@@ -209,7 +209,7 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJs
 
     return object : ConformanceTestExecutionProxy() {
       override fun guest(guestOperation: JavaScript) {
-        val code = guestOperation.invoke(polyglotEngine)
+        val code = guestOperation.invoke(polyglotContext)
         dual.guest(guestOperation)
         runConformance(code)
       }

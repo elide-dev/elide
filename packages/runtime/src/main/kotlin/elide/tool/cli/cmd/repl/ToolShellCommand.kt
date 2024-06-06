@@ -1663,6 +1663,11 @@ import elide.tool.project.ProjectManager
           jsSettings.apply(this)
         }
 
+        WASM -> install(elide.runtime.plugins.wasm.Wasm) {
+          logging.debug("Configuring JS VM")
+          resourcesPath = GVM_RESOURCES
+        }
+
         TYPESCRIPT -> install(elide.runtime.plugins.typescript.TypeScript) {
           logging.debug("Configuring TypeScript support")
           resourcesPath = GVM_RESOURCES

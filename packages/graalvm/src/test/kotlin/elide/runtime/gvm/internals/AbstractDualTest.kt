@@ -298,15 +298,11 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
   /** A [PolyglotEngine] used to acquire context instances for testing, configurable trough [configureEngine]. */
   protected val engine: PolyglotEngine by lazy {
     PolyglotEngine {
-      configureEngineBaseline(this) // shared configuration
       configureEngine(this) // provided by implementations
-    }
-  }
 
-  /** Configure some base [config] options shared by all test cases, before calling [configureEngine]. */
-  private fun configureEngineBaseline(config: PolyglotEngineConfiguration) {
-    // register event listeners
-    config.vfs { vfsListeners.forEach(::listener) }
+      // register event listeners
+      vfs { vfsListeners.forEach(::listener) }
+    }
   }
 
   /** Configure the [engine] used to acquire contexts passed to [withContext]. */

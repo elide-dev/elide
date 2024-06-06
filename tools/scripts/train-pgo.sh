@@ -13,14 +13,14 @@ EXEC_WARMUPS=0
 EXEC_RUNS=25
 
 if [ ! -f "$ELIDE" ]; then
-    echo "Elide binary not found"
-    exit 2;
+  echo "Elide binary not found"
+  exit 2
 fi
 
-echo "Elide version:";
+echo "Elide version:"
 $ELIDE --version
 
-echo "Starting PGO warmup for Elide at version $VERSION";
+echo "Starting PGO warmup for Elide at version $VERSION"
 
 set -o xtrace
 
@@ -29,33 +29,33 @@ $ELIDE serve --javascript $SERVER_JS &
 set +o xtrace
 ELIDE_JS_SERVER_PID=$!
 
-echo "Using JS server at PID $ELIDE_JS_SERVER_PID";
-echo "Beginning server warmup...";
+echo "Using JS server at PID $ELIDE_JS_SERVER_PID"
+echo "Beginning server warmup..."
 
 set -o xtrace
 
 # server warmup
-hyperfine --command-name "server-plaintext" --warmup "$SERVER_WARMUPS" --runs "$SERVER_RUNS" $HYPERFINE_ARGS "curl http://localhost:3000/plaintext";
-hyperfine --command-name "server-json" --warmup "$SERVER_WARMUPS" --runs "$SERVER_RUNS" $HYPERFINE_ARGS "curl http://localhost:3000/json";
+hyperfine --command-name "server-plaintext" --warmup "$SERVER_WARMUPS" --runs "$SERVER_RUNS" $HYPERFINE_ARGS "curl http://localhost:3000/plaintext"
+hyperfine --command-name "server-json" --warmup "$SERVER_WARMUPS" --runs "$SERVER_RUNS" $HYPERFINE_ARGS "curl http://localhost:3000/json"
 
 set +o xtrace
 
-echo "Halting JS server at PID $ELIDE_JS_SERVER_PID";
-kill -SIGINT "$ELIDE_JS_SERVER_PID";
-echo "Finished server warmup. Beginning execution warmup...";
+echo "Halting JS server at PID $ELIDE_JS_SERVER_PID"
+kill -SIGINT "$ELIDE_JS_SERVER_PID"
+echo "Finished server warmup. Beginning execution warmup..."
 
 # javascript execution
-echo "- Warming up JavaScript...";
+echo "- Warming up JavaScript..."
 set -o xtrace
 hyperfine --command-name "execute-js" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --javascript ./tools/scripts/hello.js"
 set +o xtrace
-echo "- Warming up JS (sqlite)...";
+echo "- Warming up JS (sqlite)..."
 set -o xtrace
 hyperfine --command-name "execute-js-sqlite" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --javascript ./tools/scripts/sqlite.js"
 set +o xtrace
 
 # typescript execution
-echo "- Warming up TypeScript...";
+echo "- Warming up TypeScript..."
 set -o xtrace
 hyperfine --command-name "execute-ts" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --typescript ./tools/scripts/hello.ts"
 set +o xtrace
@@ -66,4 +66,4 @@ hyperfine --command-name "execute-py" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUN
 # ruby execution
 hyperfine --command-name "execute-rb" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --ruby ./tools/scripts/hello.rb"
 
-echo "Done.";
+echo "Done."

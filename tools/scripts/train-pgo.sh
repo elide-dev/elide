@@ -10,7 +10,7 @@ HYPERFINE_ARGS="--shell none"
 SERVER_WARMUPS=5000
 SERVER_RUNS=10000
 EXEC_WARMUPS=0
-EXEC_RUNS=25
+EXEC_RUNS=5
 
 if [ ! -f "$ELIDE" ]; then
   echo "Elide binary not found"
@@ -49,21 +49,26 @@ echo "- Warming up JavaScript..."
 set -o xtrace
 hyperfine --command-name "execute-js" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --javascript ./tools/scripts/hello.js"
 set +o xtrace
+cp -fv default.iprof js-exec.iprof
 echo "- Warming up JS (sqlite)..."
 set -o xtrace
 hyperfine --command-name "execute-js-sqlite" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --javascript ./tools/scripts/sqlite.js"
 set +o xtrace
+cp -fv default.iprof js-sqlite.iprof
 
 # typescript execution
 echo "- Warming up TypeScript..."
 set -o xtrace
 hyperfine --command-name "execute-ts" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --typescript ./tools/scripts/hello.ts"
 set +o xtrace
+cp -fv default.iprof js-typescript.iprof
 
 # python execution
 hyperfine --command-name "execute-py" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --python ./tools/scripts/hello.py"
+cp -fv default.iprof py-exec.iprof
 
 # ruby execution
 hyperfine --command-name "execute-rb" --warmup "$EXEC_WARMUPS" --runs "$EXEC_RUNS" $HYPERFINE_ARGS "$ELIDE run --ruby ./tools/scripts/hello.rb"
+cp -fv default.iprof rb-exec.iprof
 
 echo "Done."

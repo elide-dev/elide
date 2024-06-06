@@ -752,23 +752,22 @@ val experimentalFlags = listOf(
 )
 
 // CFlags for release mode.
-val releaseCFlags: List<String> = listOf()
+val releaseCFlags: List<String> = listOf(
+  "-flto",
+)
 
 // PGO profiles to specify in release mode.
 val profiles: List<String> = listOf(
-  "js-repl.iprof",
+  "js-exec.iprof",
   "js-serve.iprof",
-  "py-repl.iprof",
-  "python.iprof",
-  "ruby-repl.iprof",
-  "ruby.iprof",
-  "selftest.iprof"
+  "js-sqlite.iprof",
+  "js-typescript.iprof",
 )
 
 // GVM release flags
 val gvmReleaseFlags: List<String> = listOf(
   "-O4",
-)
+).onlyIf(!enablePgo)
 
 // Experimental C-compiler flags.
 val experimentalCFlags: List<String> = listOf(
@@ -777,9 +776,10 @@ val experimentalCFlags: List<String> = listOf(
 
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
-  "-O4",
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
+).plus(
+  listOf("-O4").onlyIf(!enablePgo)
 ).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",

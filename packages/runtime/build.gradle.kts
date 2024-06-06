@@ -682,7 +682,7 @@ val commonNativeArgs = listOfNotNull(
   "-J-Delide.nativeTransport.v2=${enableNativeTransportV2}",
   "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
   "-J-Dgraalvm.locatorDisabled=false",
-  "-J-Dpolyglotimpl.DisableVersionChecks=true",
+  "-J-Dpolyglotimpl.DisableVersionChecks=false",
   "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-Dpolyglot.image-build-time.PreinitializeContexts=${preinitializedContexts.joinToString(",")}",
@@ -721,7 +721,7 @@ val debugFlags: List<String> = listOfNotNull(
   // "-H:+ReportPerformedSubstitutions",
 ).plus(
   listOf("-g").onlyIf(hostIsLinux)
-)
+).onlyIf(isDebug)
 
 val experimentalFlags = listOf(
   "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
@@ -1161,8 +1161,8 @@ fun nativeCliImageArgs(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
   ).plus(
     when {
-      debug -> debugFlags
       release -> releaseFlags
+      debug -> debugFlags
       else -> emptyList()
     }
   ).plus(

@@ -14,6 +14,7 @@
     <ID>CyclomaticComplexMethod:URLIntrinsic.kt$URLIntrinsic.URLValue$override fun putMember(key: String?, value: Value?)</ID>
     <ID>CyclomaticComplexMethod:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
+    <ID>ForbiddenComment:NativeTransportFeature.kt$NativeTransportFeature$// @TODO: gradle doesn't support arm64 linux</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>

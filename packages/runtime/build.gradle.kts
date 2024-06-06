@@ -381,9 +381,6 @@ dependencies {
   implementation(libs.jline.terminal.jni)
   implementation(libs.jline.terminal.ffm)
   implementation(libs.jline.builtins)
-  implementation(libs.jline.graal) {
-    exclude(group = "org.slf4j", module = "slf4j-jdk14")
-  }
 
   // SQLite Engine
   if (enableSqlite) {
@@ -428,7 +425,6 @@ dependencies {
   // Logging
   api(libs.slf4j)
   api(libs.slf4j.jul)
-  api(libs.slf4j.log4j.bridge)
 
   // Console UI
   implementation(libs.magicProgress)

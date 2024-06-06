@@ -421,6 +421,9 @@ dependencies {
 
   // API Deps
   api(libs.jakarta.inject)
+  api(libs.guava)
+  api(libs.kotlinx.io)
+  api(mn.micronaut.core)
 
   // Modules
   api(projects.packages.base)
@@ -448,8 +451,6 @@ dependencies {
 
   // Compression
   implementation(libs.commons.compress)
-  implementation(libs.xz)
-  implementation(libs.zstd)
 
   // Micronaut
   runtimeOnly(mn.micronaut.graal)
@@ -490,11 +491,7 @@ dependencies {
 
   implementation(libs.protobuf.java)
   implementation(libs.protobuf.kotlin)
-  implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoProtobuf)
-  implementation(projects.packages.proto.protoKotlinx)
-  implementation(libs.capnproto.runtime)
-  // implementation(libs.capnproto.runtime.rpc)
 
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)

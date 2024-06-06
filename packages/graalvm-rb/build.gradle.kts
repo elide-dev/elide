@@ -117,6 +117,7 @@ fun ExternalModuleDependency.rubyExclusions() {
 }
 
 dependencies {
+  api(projects.packages.base)
   api(projects.packages.engine)
   implementation(libs.bundles.graalvm.ruby) { rubyExclusions() }
   implementation(libs.kotlinx.coroutines.core)

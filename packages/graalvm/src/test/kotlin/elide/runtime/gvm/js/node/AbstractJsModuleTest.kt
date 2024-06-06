@@ -16,7 +16,7 @@ package elide.runtime.gvm.js.node
 
 import org.graalvm.polyglot.Value
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotEngine
+import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
@@ -39,20 +39,25 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     // nothing
   }
 
-  protected val polyglotEngine by lazy {
-    PolyglotEngine {
-      install(JavaScript)
-      environment { configureEnvironment() }
-      vfs { configureVfs() }
-    }.acquire()
+  @OptIn(DelicateElideApi::class)
+  protected val polyglotContext by lazy {
+    engine.acquire()
   }
 
   open val supportsEsm: Boolean get() = true
   open val supportsCjs: Boolean get() = true
 
+  override fun configureEngine(config: PolyglotEngineConfiguration) {
+    config.apply {
+      install(JavaScript)
+      environment { configureEnvironment() }
+      vfs { configureVfs() }
+    }
+  }
+
   private fun beforeExec(bind: Boolean) {
     // install bindings under test, if directed
-    val target = polyglotEngine.bindings(JavaScript)
+    val target = polyglotContext.bindings(JavaScript)
 
     // prep intrinsic bindings under test
     val bindings = if (bind) {
@@ -72,7 +77,7 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
 
   protected fun require(module: String = moduleName, bind: Boolean = true): Value {
     beforeExec(bind)
-    return polyglotEngine.javascript(
+    return polyglotContext.javascript(
       // language=js
       """require("$module");"""
     )
@@ -82,7 +87,7 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     val modname = module.split(":").last()
     val modsymbol = if ("/" in modname) modname.split("/").first() else modname
     beforeExec(bind)
-    return polyglotEngine.javascript(
+    return polyglotContext.javascript(
       // language=js
       """
         import $modsymbol from "$modname";

@@ -33,7 +33,7 @@ import elide.runtime.vfs.registerLanguageVfs
 
 // Paths to prepend to Python's path before user-added paths, and after the system path.
 private val BUILTIN_PYTHON_PATHS = listOf(
-  "./__runtime__/python",  // prefix for injected built-in modules ("Elide modules")
+  "./__runtime__/python", // prefix for injected built-in modules ("Elide modules")
 )
 
 @DelicateElideApi public class Python(

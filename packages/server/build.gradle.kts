@@ -82,10 +82,20 @@ dependencies {
   // API Deps
   api(libs.jakarta.inject)
   api(libs.slf4j)
+  api(libs.guava)
+  api(mn.micronaut.core)
+  api(mn.micronaut.context)
+  api(mn.micronaut.http)
+  api(mn.micronaut.inject)
+  api(mn.reactive.streams)
+  api(libs.kotlinx.coroutines.core.jvm)
+  api(libs.kotlinx.html.jvm)
+  api(libs.kotlinx.serialization.core.jvm)
+  api(libs.protobuf.java)
+  api(projects.packages.proto.protoProtobuf)
 
   // Modules
   api(projects.packages.base)
-  api(projects.packages.core)
   api(projects.packages.ssr)
   api(projects.packages.graalvm)
 
@@ -94,71 +104,53 @@ dependencies {
   testAnnotationProcessor(mn.micronaut.inject.java)
 
   // General
-  implementation(libs.jackson.core)
-  implementation(libs.jackson.databind)
-  implementation(libs.jackson.module.kotlin)
-  implementation(mn.micronaut.jackson.databind)
-
-  implementation(projects.packages.proto.protoCore)
-  implementation(projects.packages.proto.protoProtobuf)
-  implementation(projects.packages.proto.protoKotlinx)
+  implementation(libs.graalvm.polyglot)
+  implementation(mn.reactor)
 
   // Crypto
   implementation(libs.bouncycastle)
-  implementation(libs.bouncycastle.pkix)
   implementation(libs.conscrypt)
-  implementation(libs.tink)
 
-  // Kotlin
-  implementation(libs.kotlinx.html.jvm)
-  implementation(libs.kotlinx.serialization.core.jvm)
+  // KotlinX
   implementation(libs.kotlinx.serialization.json.jvm)
-  implementation(libs.kotlinx.serialization.protobuf.jvm)
+  implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.guava)
+  implementation(libs.kotlinx.coroutines.reactor)
 
   // Kotlin Wrappers
   implementation(libs.kotlinx.wrappers.css)
 
   // Protocol Buffers
-  implementation(libs.protobuf.java)
   implementation(libs.protobuf.util)
   implementation(libs.protobuf.kotlin)
 
-  // Brotli
-  implementation(libs.brotli)
-  implementation(libs.brotli.native.osx)
-  implementation(libs.brotli.native.osx.amd64)
-  implementation(libs.brotli.native.osx.arm64)
-  implementation(libs.brotli.native.linux)
-  implementation(libs.brotli.native.linux.amd64)
-  implementation(libs.brotli.native.linux.arm64)
-  implementation(libs.brotli.native.windows)
-  implementation(libs.brotli.native.windows.amd64)
+  // Brotli (not in use yet)
+  //  implementation(libs.brotli)
+  //  implementation(libs.brotli.native.osx)
+  //  implementation(libs.brotli.native.osx.amd64)
+  //  implementation(libs.brotli.native.osx.arm64)
+  //  implementation(libs.brotli.native.linux)
+  //  implementation(libs.brotli.native.linux.amd64)
+  //  implementation(libs.brotli.native.linux.arm64)
+  //  implementation(libs.brotli.native.windows)
+  //  implementation(libs.brotli.native.windows.amd64)
 
   // Micronaut
-  implementation(mn.micronaut.http)
-  implementation(mn.micronaut.http.server)
-  implementation(mn.micronaut.http.server.netty)
-  implementation(mn.micronaut.context)
-  implementation(mn.micronaut.inject)
-  implementation(mn.micronaut.inject.java)
-  implementation(mn.micronaut.management)
-
-  // Coroutines
-  implementation(libs.kotlinx.coroutines.core)
-  implementation(libs.kotlinx.coroutines.core.jvm)
-  implementation(libs.kotlinx.coroutines.jdk9)
-  implementation(libs.kotlinx.coroutines.slf4j)
-  implementation(libs.kotlinx.coroutines.guava)
-  implementation(libs.kotlinx.coroutines.reactor)
-  implementation(libs.kotlinx.coroutines.reactive)
+  implementation(mn.micronaut.aop)
+  implementation(mn.micronaut.http.netty)
+  implementation(mn.micronaut.jackson.databind)
 
   // General
   implementation(libs.reactivestreams)
-  implementation(libs.google.common.html.types.types)
 
   // Runtime
   runtimeOnly(libs.jansi)
   runtimeOnly(mn.snakeyaml)
+  runtimeOnly(libs.jackson.core)
+  runtimeOnly(libs.jackson.databind)
+  runtimeOnly(libs.jackson.module.kotlin)
+  implementation(mn.micronaut.http.server)
+  implementation(mn.micronaut.http.server.netty)
 
   // Netty: Native
   implementation(libs.netty.tcnative)
@@ -196,11 +188,15 @@ dependencies {
   }
 
   // Testing
-  testImplementation(libs.truth)
+  testImplementation(projects.packages.test)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)
+  testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(mn.micronaut.test.junit5)
-  testImplementation(projects.packages.test)
+  testImplementation(mn.junit.jupiter.api)
+  testImplementation(mn.junit.jupiter.params)
+  testImplementation(mn.micronaut.test.core)
+  testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
 }
 

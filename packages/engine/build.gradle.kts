@@ -51,10 +51,7 @@ elide {
 
 dependencies {
   api(mn.micronaut.core)
-  api(projects.packages.core)
-  api(projects.packages.base)
   api(libs.graalvm.polyglot)
-  implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
 }

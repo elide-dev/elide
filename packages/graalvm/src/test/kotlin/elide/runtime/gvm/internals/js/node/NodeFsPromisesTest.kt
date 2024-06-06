@@ -21,9 +21,10 @@ import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `fs/promises` built-in module. */
 @TestCase internal class NodeFsPromisesTest : NodeModuleConformanceTest<NodeFilesystemModule>() {
-  override val moduleName: String get() = "fs/promises"
-  override fun provide(): NodeFilesystemModule = NodeFilesystemModule()
   @Inject lateinit var filesystem: NodeFilesystemModule
+
+  override val moduleName: String get() = "fs/promises"
+  override fun provide(): NodeFilesystemModule = filesystem
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false

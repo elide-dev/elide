@@ -32,9 +32,10 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
 /** Tests for Elide's implementation of the Node `fs` built-in module. */
 @TestCase internal class NodeFsTest : NodeModuleConformanceTest<NodeFilesystemModule>() {
-  override val moduleName: String get() = "fs"
-  override fun provide(): NodeFilesystemModule = NodeFilesystemModule()
   @Inject lateinit var filesystem: NodeFilesystemModule
+
+  override val moduleName: String get() = "fs"
+  override fun provide(): NodeFilesystemModule = filesystem
 
   private fun withTemp(op: (Path) -> Unit) {
     val temp = Files.createTempDirectory(

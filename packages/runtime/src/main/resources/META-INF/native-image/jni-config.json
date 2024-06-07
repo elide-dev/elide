@@ -406,6 +406,10 @@
   "methods":[{"name":"toString","parameterTypes":[] }]
 },
 {
+  "name":"java.lang.UnsatisfiedLinkError",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+},
+{
   "name":"java.lang.Void",
   "allDeclaredMethods":true,
   "allPublicMethods":true,

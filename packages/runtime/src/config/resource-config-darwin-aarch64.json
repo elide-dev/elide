@@ -10,7 +10,8 @@
       {"pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/native/libnetty_tcnative_osx_aarch_64.jnilib)\\E"},
       {"pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/nativelibnetty_tcnative_osx_aarch_64.dylib\\E"},
       {"pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib)\\E"},
-      {"pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/nativelibnetty_transport_native_kqueue_aarch_64.dylib\\E"}
+      {"pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/nativelibnetty_transport_native_kqueue_aarch_64.dylib\\E"},
+      {"pattern":"\\Qcom/sun/jna/darwin-aarch64/libjnidispatch.jnilib\\E"}
     ],
     "excludes": [
       {"pattern":"linux"},

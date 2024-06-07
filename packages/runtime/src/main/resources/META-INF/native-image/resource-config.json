@@ -553,8 +553,6 @@
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin\\E"
   }, {
-    "pattern":"\\Qcom/sun/jna/darwin-aarch64/libjnidispatch.jnilib\\E"
-  }, {
     "pattern":"\\Qgraalpy_versions\\E"
   }, {
     "pattern":"\\Qlogback-test.scmo\\E"
@@ -816,35 +814,17 @@
     "pattern":"jdk.jfr:\\Qjdk/jfr/internal/types/metadata.bin\\E"
   }],
   "excludes":[{
-    "pattern":".*\\.dll"
-  }, {
     "pattern":".*\\.proto"
-  }, {
-    "pattern":".*x86-64.*"
-  }, {
-    "pattern":".*x86.*"
-  }, {
-    "pattern":".*x86_64.*"
   }, {
     "pattern":"FreeBSD"
   }, {
     "pattern":"OpenBSD"
-  }, {
-    "pattern":"Win32"
-  }, {
-    "pattern":"Windows"
   }, {
     "pattern":"\\Qlicenses/"
   }, {
     "pattern":"freebsd"
   }, {
     "pattern":"openbsd"
-  }, {
-    "pattern":"win32"
-  }, {
-    "pattern":"windows"
-  }, {
-    "pattern":"x86"
   }]},
   "bundles":[{
     "name":"ElideTool",

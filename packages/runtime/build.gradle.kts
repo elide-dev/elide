@@ -133,7 +133,7 @@ val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enablePgoReport = true
-val enableJna = false
+val enableJna = true
 val enableSbom = oracleGvm
 val enableSbomStrict = false
 val glibcTarget = "glibc"
@@ -861,6 +861,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "com.sun.jna.platform.mac.IOKit",
   "com.sun.jna.platform.mac.IOKitUtil",
   "com.sun.jna.platform.mac.SystemB",
+  "com.sun.jna.platform.linux.Udev",
 
   // --- JLine -----
 
@@ -886,6 +887,8 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "oshi.jna.platform.mac.IOKit",
   "oshi.jna.platform.mac.SystemB",
   "oshi.jna.platform.mac.SystemConfiguration",
+  "oshi.jna.platform.linux.LinuxLibc",
+  "com.sun.jna.platform.linux.LibC",
   "oshi.software.os",
   "oshi.software.os.linux",
   "oshi.software.os.linux.LinuxOperatingSystem",

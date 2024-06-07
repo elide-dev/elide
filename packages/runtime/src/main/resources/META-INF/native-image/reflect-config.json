@@ -123,6 +123,10 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"com.github.ajalt.mordant.internal.jna.PosixLibC$winsize",
+  "allDeclaredFields":true
+},
+{
   "name":"com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "methods":[{"name":"removeFileSystemRunnable","parameterTypes":["java.net.URI"] }]
 },
@@ -205,6 +209,22 @@
   "allPublicConstructors":true,
   "fields":[{"name":"memory", "allowWrite":true}, {"name":"typeInfo"}],
   "methods":[{"name":"newInstance","parameterTypes":["java.lang.Class"] }, {"name":"newInstance","parameterTypes":["java.lang.Class","long"] }, {"name":"newInstance","parameterTypes":["java.lang.Class","com.sun.jna.Pointer"] }]
+},
+{
+  "name":"com.sun.jna.platform.linux.Udev$UdevContext",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.linux.Udev$UdevDevice",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.linux.Udev$UdevEnumerate",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.linux.Udev$UdevListEntry",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.jna.ptr.IntByReference",
@@ -2106,6 +2126,10 @@
   "fields":[{"name":"TYPE"}]
 },
 {
+  "name":"java.lang.Enum",
+  "methods":[{"name":"name","parameterTypes":[] }]
+},
+{
   "name":"java.lang.Exception"
 },
 {
@@ -2427,6 +2451,14 @@
 {
   "name":"java.util.LinkedHashMap",
   "methods":[{"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"java.util.Locale",
+  "allDeclaredClasses":true,
+  "methods":[{"name":"getDefault","parameterTypes":["java.util.Locale$Category"] }, {"name":"setDefault","parameterTypes":["java.util.Locale$Category","java.util.Locale"] }]
+},
+{
+  "name":"java.util.Locale$Category"
 },
 {
   "name":"java.util.PropertyPermission",
@@ -3044,6 +3076,18 @@
 {
   "name":"org.graalvm.polyglot.management.Management",
   "fields":[{"name":"ACCESS"}]
+},
+{
+  "name":"org.graalvm.shadowed.com.ibm.icu.impl.ICUCurrencyDisplayInfoProvider",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.graalvm.shadowed.com.ibm.icu.impl.ICUCurrencyMetaInfo",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.graalvm.shadowed.com.ibm.icu.number.LocalizedNumberFormatter",
+  "fields":[{"name":"callCountInternal"}]
 },
 {
   "name":"org.graalvm.shadowed.org.jcodings.provider.JCodingsProviderImpl"

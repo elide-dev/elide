@@ -3,9 +3,18 @@
     "interfaces":["com.github.ajalt.mordant.internal.jna.MacosLibC"]
   },
   {
+    "interfaces":["com.github.ajalt.mordant.internal.jna.PosixLibC"]
+  },
+  {
     "interfaces":["com.sun.jna.Callback"]
   },
   {
     "interfaces":["com.sun.jna.Library"]
+  },
+  {
+    "interfaces":["com.sun.jna.platform.linux.Udev"]
+  },
+  {
+    "interfaces":["oshi.jna.platform.linux.LinuxLibc"]
   }
 ]

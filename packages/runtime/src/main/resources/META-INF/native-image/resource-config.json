@@ -49,6 +49,8 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/ts/runtime.json.gz\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/wasm/runtime.json.gz\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/tools/tsc/typescript.js.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/graalvm/org.graalvm.polyglot/version\\E"
@@ -553,6 +555,8 @@
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin\\E"
   }, {
+    "pattern":"\\Qcom/sun/jna/linux-x86-64/libjnidispatch.so\\E"
+  }, {
     "pattern":"\\Qgraalpy_versions\\E"
   }, {
     "pattern":"\\Qlogback-test.scmo\\E"
@@ -567,7 +571,35 @@
   }, {
     "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/ICUConfig.properties\\E"
   }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/curr/en.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/curr/en_Latn.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/curr/en_US.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/curr/pool.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/curr/root.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/curr/supplementalData.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/en.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/en_US.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/numberingSystems.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/pnames.icu\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/pool.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/res_index.res\\E"
+  }, {
+    "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/root.res\\E"
+  }, {
     "pattern":"\\Qorg/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/uprops.icu\\E"
+  }, {
+    "pattern":"\\Qoshi.properties\\E"
   }, {
     "pattern":"\\Qtruffleruby/core/argf.rb\\E"
   }, {

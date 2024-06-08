@@ -649,7 +649,7 @@ val commonNativeArgs = listOfNotNull(
   "--install-exit-handlers",
   "--enable-url-protocols=jar",
   "--macro:truffle-svm",
-  "--enable-native-access=ALL-UNNAMED",
+  "--enable-native-access=com.sun.jna,ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -668,6 +668,10 @@ val commonNativeArgs = listOfNotNull(
   "-J-Delide.staticJni=$enableStaticJni",
   "-Delide.natives=$nativesPath",
   "-J-Delide.natives=$nativesPath",
+  "-Djna.library.path=$nativesPath",
+  "-J-Djna.library.path=$nativesPath",
+  "-Djna.boot.library.path=$nativesPath",
+  "-J-Djna.boot.library.path=$nativesPath",
   "-Dorg.sqlite.lib.path=$nativesPath",
   "-J-Dorg.sqlite.lib.path=$nativesPath",
   "-Dorg.sqlite.lib.exportPath=$nativesPath",
@@ -799,6 +803,8 @@ val releaseFlags: List<String> = listOf(
 
 val jvmDefs = mapOf(
   "elide.natives" to nativesPath,
+  "jna.library.path" to nativesPath,
+  "jna.boot.library.path" to nativesPath,
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
   "io.netty.allocator.type" to "unpooled",
   "io.netty.native.deleteLibAfterLoading" to "false",
@@ -857,6 +863,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   // --- JNA -----
 
+  "com.sun.jna.Native",
   "com.sun.jna.Structure${'$'}FFIType",
   "com.sun.jna.platform.mac.IOKit",
   "com.sun.jna.platform.mac.IOKitUtil",

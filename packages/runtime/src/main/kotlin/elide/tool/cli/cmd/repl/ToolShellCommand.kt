@@ -1107,10 +1107,11 @@ import elide.tool.project.ProjectManager
     advice: String? = null,
     internal: Boolean = false,
     stacktrace: Boolean = internal,
+    withCause: Boolean = true,
   ) {
+    if (exc !is PolyglotException) return
     val term = terminal.get()
     val reader = lineReader.get()
-    if (exc !is PolyglotException) return
 
     // begin calculating with source context
     val middlePrefix = "║ "
@@ -1146,6 +1147,16 @@ import elide.tool.project.ProjectManager
       val stackString = StringWriter()
       val stackPrinter = PrintWriter(stackString)
       exc.printStackTrace(stackPrinter)
+      when (val cause = exc.cause ?: if (exc.isHostException) exc.asHostException() else null) {
+        null -> {}
+        else -> if (withCause) {
+          stackString.append("\nCause stacktrace: ")
+          cause.printStackTrace(stackPrinter)
+        } else if (exc.isHostException) {
+          stackString.append("\nCause: ${cause.message}")
+          stackString.append("   Failed to gather stacktrace for host exception of type ${cause::class.simpleName}.")
+        }
+      }
       stackPrinter.flush()
       stackString.toString()
     } else {
@@ -1275,7 +1286,7 @@ import elide.tool.project.ProjectManager
 
       exc.isHostException || exc.message?.contains("HostException: ") == true -> displayFormattedError(
         exc,
-        exc.message ?: "An runtime error was thrown",
+        exc.message ?: "A runtime error was thrown",
         advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
         stacktrace = true,
         internal = true,

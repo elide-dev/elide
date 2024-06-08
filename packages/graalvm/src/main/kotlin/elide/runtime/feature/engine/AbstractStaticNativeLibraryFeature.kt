@@ -171,7 +171,9 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
       if (it.registerJni) (access as BeforeAnalysisAccessImpl).nativeLibraries.let { nativeLibraries ->
         when (it.type) {
           STATIC -> nativeLibraries.addStaticJniLibrary(it.name)
-          SHARED -> error("Dynamic native libraries not supported yet: $it")
+          SHARED -> if (it.registerJni) { /* Dynamic JNI libraries use JNI to load. */ } else {
+            nativeLibraries.addDynamicNonJniLibrary(it.name)
+          }
         }
       }
       if (it.eager) {

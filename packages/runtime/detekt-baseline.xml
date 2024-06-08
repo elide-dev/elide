@@ -10,7 +10,7 @@
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine()</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun beginInteractiveSession( languages: EnumSet&lt;GuestLanguage>, primaryLanguage: GuestLanguage, engine: PolyglotEngine, ctx: PolyglotContext, )</ID>
-    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun displayFormattedError( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, )</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun displayFormattedError( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, withCause: Boolean = true, )</ID>
     <ID>FunctionParameterNaming:Statics.kt$Statics$`in`: InputStream</ID>
     <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
@@ -29,12 +29,9 @@
     <ID>NestedBlockDepth:SelfTestCommand.kt$SelfTestCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>ObjectPropertyNaming:Statics.kt$Statics$val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
-    <ID>ReturnCount:NativeSQLiteFeature.kt$NativeSQLiteFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: SortedSet&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
     <ID>SpreadOperator:Elide.kt$Elide.Companion$(*args)</ID>
-    <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields( NativeDB::class.java, "pointer", "busyHandler", "commitListener", "updateListener", "progressHandler", ))</ID>
-    <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*this.fields(Function::class.java, "context", "value", "args"))</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$ioe: IOException</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
     <ID>SwallowedException:Elide.kt$Elide.Companion$uoe: UnsupportedOperationException</ID>

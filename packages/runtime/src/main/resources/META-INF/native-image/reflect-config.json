@@ -7420,5 +7420,117 @@
 {
   "name":"sun.security.x509.SubjectKeyIdentifierExtension",
   "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"oshi.jna.ByRef$CloseableSizeTByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"oshi.jna.ByRef$CloseableIntByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"oshi.jna.ByRef$CloseableLongByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"oshi.jna.ByRef$CloseableNativeLongByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.unix.LibCAPI$size_t",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFMutableDictionaryRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.IOKit$IOIterator",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.IOKit$IORegistryEntry",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFStringRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeID",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFIndex",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFDataRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
 }
 ]

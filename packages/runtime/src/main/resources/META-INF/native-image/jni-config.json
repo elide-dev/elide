@@ -71,7 +71,17 @@
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true,
-  "methods":[{"name":"dispose","parameterTypes":[] }, {"name":"fromNative","parameterTypes":["com.sun.jna.FromNativeConverter","java.lang.Object","java.lang.reflect.Method"] }, {"name":"fromNative","parameterTypes":["java.lang.Class","java.lang.Object"] }, {"name":"fromNative","parameterTypes":["java.lang.reflect.Method","java.lang.Object"] }, {"name":"nativeType","parameterTypes":["java.lang.Class"] }, {"name":"toNative","parameterTypes":["com.sun.jna.ToNativeConverter","java.lang.Object"] }]
+  "methods":[
+    {"name":"dispose","parameterTypes":[] },
+    {"name":"fromNative","parameterTypes":["com.sun.jna.FromNativeConverter","java.lang.Object","java.lang.reflect.Method"] },
+    {"name":"fromNative","parameterTypes":["java.lang.Class","java.lang.Object"] },
+    {"name":"fromNative","parameterTypes":["java.lang.reflect.Method","java.lang.Object"] },
+    {"name":"nativeType","parameterTypes":["java.lang.Class"] },
+    {"name":"toNative","parameterTypes":["com.sun.jna.ToNativeConverter","java.lang.Object"]},
+    {"name":"open","parameterTypes":["java.lang.String","java.lang.Integer"]},
+    {"name":"close","parameterTypes":["java.lang.Long"]},
+    {"name":"findSymbol","parameterTypes":["java.lang.Long","java.lang.String"]}
+  ]
 },
 {
   "name":"com.sun.jna.Native$ffi_callback",
@@ -154,6 +164,13 @@
 },
 {
   "name":"com.sun.jna.ptr.PointerByReference",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFStringRef",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,

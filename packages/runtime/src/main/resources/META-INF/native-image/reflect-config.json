@@ -2439,6 +2439,118 @@
   "methods":[{"name":"toString","parameterTypes":[] }]
 },
 {
+  "name": "tools.elide.vfs.Directory",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.Directory$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.File",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.File$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.Filesystem",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.Filesystem$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.Tree",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.Tree$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.TreeEntry",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.TreeEntry$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.Bundle",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.Bundle$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.BundleHeader",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.BundleHeader$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.BundleInfo",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name": "tools.elide.vfs.BundleInfo$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
   "name":"java.util.Base64$Decoder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,

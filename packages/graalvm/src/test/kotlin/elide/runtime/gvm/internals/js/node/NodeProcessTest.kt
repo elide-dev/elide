@@ -217,4 +217,26 @@ import elide.testing.annotations.TestCase
   @Test fun `stubbed exit should not exit the vm`() {
     stubbed.exit(0)
   }
+
+  @Test fun `process global should always be present`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const { ok } = require("node:assert");
+        ok(process);
+      """
+    }
+  }
+
+  @Test fun `process global should provide stdout and stderr`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const { ok } = require("node:assert");
+        ok(process);
+        ok(process.stdout);
+        ok(process.stderr);
+      """
+    }
+  }
 }

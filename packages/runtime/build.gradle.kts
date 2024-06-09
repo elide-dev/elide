@@ -761,7 +761,7 @@ val experimentalFlags = listOf(
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
   "-flto",
-)
+).onlyIf(!HostManager.hostIsMac)  // lto flag breaks macos builds
 
 // PGO profiles to specify in release mode.
 val profiles: List<String> = listOf(
@@ -813,7 +813,7 @@ val jvmDefs = mapOf(
   "java.net.preferIPv4Stack" to "true",
   "logback.statusListenerClass" to "ch.qos.logback.core.status.NopStatusListener",
   "networkaddress.cache.ttl" to "10",
-  "polyglotimpl.DisableVersionChecks" to "true",
+  "polyglotimpl.DisableVersionChecks" to "false",
   "user.country" to "US",
   "user.language" to "en",
   "org.sqlite.lib.path" to nativesPath,

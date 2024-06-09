@@ -376,12 +376,25 @@ internal class EmbeddedGuestVFSImpl private constructor (
     }
   }
 
+  private fun fixAttributeTypes(map: MutableMap<String, Any>): MutableMap<String, Any> {
+    return map.apply {
+      if (containsKey("ino")) {
+        val ino = this["ino"]
+        if (ino is Int) {
+          this["ino"] = ino.toLong()
+        }
+      }
+    }
+  }
+
   override fun readAttributes(path: Path, attributes: String, vararg options: LinkOption): MutableMap<String, Any> {
     return embeddedForPathOrFallBack(path, {
       super.readAttributes(path, attributes, *options)
     }) { fs, info ->
       inflatePath(path, fs, info)
-      fs.provider().readAttributes(path, attributes, *options)
+      fs.provider().readAttributes(path, attributes, *options).let {
+        fixAttributeTypes(it)
+      }
     }
   }
 

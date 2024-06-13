@@ -199,9 +199,12 @@ public class SQLiteJDBCLoader {
 
             // Set executable (x) flag to enable Java to load the native library
             var file = extractedLibFile.toFile();
-            file.setReadable(true);
-            file.setWritable(true, true);
-            file.setExecutable(true);
+            var didSetReadable = file.setReadable(true);
+            assert didSetReadable;
+            var didSetWritable = file.setWritable(true, true);
+            assert didSetWritable;
+            var didSetExecutable = file.setExecutable(true);
+            assert didSetExecutable;
 
             // Check whether the contents are properly copied from the resource folder
             {

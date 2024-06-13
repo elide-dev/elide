@@ -77,7 +77,7 @@
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, )</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, )</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields( NativeDB::class.java, "pointer", "busyHandler", "commitListener", "updateListener", "progressHandler", ))</ID>
-    <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*this.fields(Function::class.java, "context", "value", "args"))</ID>
+    <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields(Function::class.java, "context", "value", "args"))</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "aarch64", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "x86-64", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "aarch64", *kqueueImpls)</ID>

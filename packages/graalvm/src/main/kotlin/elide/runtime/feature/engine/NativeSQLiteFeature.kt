@@ -115,7 +115,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
     RuntimeJNIAccess.register(method(DB::class.java, "throwex", Integer.TYPE))
     RuntimeJNIAccess.register(method(NativeDB::class.java, "throwex", String::class.java))
     RuntimeJNIAccess.register(Function::class.java)
-    RuntimeJNIAccess.register(*this.fields(Function::class.java, "context", "value", "args"))
+    RuntimeJNIAccess.register(*fields(Function::class.java, "context", "value", "args"))
     RuntimeJNIAccess.register(method(Function::class.java, "xFunc"))
     RuntimeJNIAccess.register(Collation::class.java)
     RuntimeJNIAccess.register(method(

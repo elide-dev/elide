@@ -131,7 +131,7 @@ import elide.tool.project.ProjectManager
 
     // Whether to enable extended language plugins.
     private const val ENABLE_JVM = false
-    private const val ENABLE_RUBY = false
+    private const val ENABLE_RUBY = true
     private const val ENABLE_PYTHON = true
     private const val ENABLE_TYPESCRIPT = true
 
@@ -1684,15 +1684,15 @@ import elide.tool.project.ProjectManager
           resourcesPath = GVM_RESOURCES
         }
 
-        // RUBY -> ignoreNotInstalled {
-        //   install(elide.runtime.plugins.ruby.Ruby) {
-        //     logging.debug("Configuring Ruby VM")
-        //     resourcesPath = GVM_RESOURCES
-        //     executable = cmd
-        //     executableList = listOf(cmd).plus(args)
-        //     installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-        //   }
-        // }
+        RUBY -> ignoreNotInstalled {
+          install(elide.runtime.plugins.ruby.Ruby) {
+            logging.debug("Configuring Ruby VM")
+            resourcesPath = GVM_RESOURCES
+            executable = cmd
+            executableList = listOf(cmd).plus(args)
+            installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+          }
+        }
 
         PYTHON -> ignoreNotInstalled {
           install(elide.runtime.plugins.python.Python) {

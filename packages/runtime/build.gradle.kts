@@ -760,7 +760,7 @@ val releaseFlags: List<String> = listOf(
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
 ).plus(
-  listOf("-O4").onlyIf(!enablePgo)
+  listOf("-O1").onlyIf(!enablePgo)
 ).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",

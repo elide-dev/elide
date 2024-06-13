@@ -72,6 +72,77 @@ static jmethodID exp_msg = 0;
 
 static jclass bool_array_class = 0;
 
+jint loadStaticSqliteLib(JNIEnv *env) {
+    dbclass = (*env)->FindClass(env, "org/sqlite/core/NativeDB");
+    if (!dbclass) return JNI_ERR;
+    dbclass = (*env)->NewWeakGlobalRef(env, dbclass);
+    dbpointer = (*env)->GetFieldID(env, dbclass, "pointer", "J");
+    db_busyHandler = (*env)->GetFieldID(env, dbclass, "busyHandler", "J");
+    db_commitListener = (*env)->GetFieldID(env, dbclass, "commitListener", "J");
+    db_updateListener = (*env)->GetFieldID(env, dbclass, "updateListener", "J");
+    db_progressHandler = (*env)->GetFieldID(env, dbclass, "progressHandler", "J");
+    db_mth_onUpdate = (*env)->GetMethodID(env, dbclass, "onUpdate", "(ILjava/lang/String;Ljava/lang/String;J)V");
+    db_mth_onCommit = (*env)->GetMethodID(env, dbclass, "onCommit", "(Z)V");
+    mth_stringToUtf8ByteArray = (*env)->GetStaticMethodID(
+            env, dbclass, "stringToUtf8ByteArray", "(Ljava/lang/String;)[B");
+    mth_throwex = (*env)->GetMethodID(env, dbclass, "throwex", "()V");
+    mth_throwexcode = (*env)->GetMethodID(env, dbclass, "throwex", "(I)V");
+    mth_throwexmsg = (*env)->GetStaticMethodID(env, dbclass, "throwex", "(Ljava/lang/String;)V");
+
+    fclass = (*env)->FindClass(env, "org/sqlite/Function");
+    if (!fclass) return JNI_ERR;
+    fclass = (*env)->NewWeakGlobalRef(env, fclass);
+    func_context = (*env)->GetFieldID(env, fclass, "context", "J");
+    func_value = (*env)->GetFieldID(env, fclass, "value", "J");
+    func_args  = (*env)->GetFieldID(env, fclass, "args", "I");
+    fmethod = (*env)->GetMethodID(env, fclass, "xFunc", "()V");
+
+    cclass = (*env)->FindClass(env, "org/sqlite/Collation");
+    if (!cclass) return JNI_ERR;
+    cclass = (*env)->NewWeakGlobalRef(env, cclass);
+    mth_compare = (*env)->GetMethodID(env, cclass, "xCompare", "(Ljava/lang/String;Ljava/lang/String;)I");
+
+    aclass = (*env)->FindClass(env, "org/sqlite/Function$Aggregate");
+    if (!aclass) return JNI_ERR;
+    aclass = (*env)->NewWeakGlobalRef(env, aclass);
+    mth_aggr_xstep = (*env)->GetMethodID(env, aclass, "xStep", "()V");
+    mth_aggr_xfinal = (*env)->GetMethodID(env, aclass, "xFinal", "()V");
+    aclone = (*env)->GetMethodID(env, aclass, "clone", "()Ljava/lang/Object;");
+
+    wclass = (*env)->FindClass(env, "org/sqlite/Function$Window");
+    if (!wclass) return JNI_ERR;
+    wclass = (*env)->NewWeakGlobalRef(env, wclass);
+    w_mth_inverse = (*env)->GetMethodID(env, wclass, "xInverse", "()V");
+    w_mth_xvalue = (*env)->GetMethodID(env, wclass, "xValue", "()V");
+
+    pobserverclass = (*env)->FindClass(env, "org/sqlite/core/DB$ProgressObserver");
+    if(!pobserverclass) return JNI_ERR;
+    pobserverclass = (*env)->NewWeakGlobalRef(env, pobserverclass);
+    pobserver_mth_progress = (*env)->GetMethodID(env, pobserverclass, "progress", "(II)V");
+
+    phandleclass = (*env)->FindClass(env, "org/sqlite/ProgressHandler");
+    if(!phandleclass) return JNI_ERR;
+    phandleclass = (*env)->NewWeakGlobalRef(env, phandleclass);
+    phandle_mth_progress = (*env)->GetMethodID(env, phandleclass, "progress", "()I");
+
+    bhandleclass = (*env)->FindClass(env, "org/sqlite/BusyHandler");
+    if(!bhandleclass) return JNI_ERR;
+    bhandleclass = (*env)->NewWeakGlobalRef(env, bhandleclass);
+    bhandle_mth_callback = (*env)->GetMethodID(env, bhandleclass, "callback", "(I)I");
+
+    exclass = (*env)->FindClass(env, "java/lang/Throwable");
+    if(!exclass) return JNI_ERR;
+    exclass = (*env)->NewWeakGlobalRef(env, exclass);
+    exp_msg = (*env)->GetMethodID(
+            env, exclass, "toString", "()Ljava/lang/String;");
+
+    bool_array_class = (*env)->FindClass(env, "[Z");
+    if(!bool_array_class) return JNI_ERR;
+    bool_array_class = (*env)->NewWeakGlobalRef(env, bool_array_class);
+
+    return JNI_VERSION_1_8;
+}
+
 static void * toref(jlong value)
 {
     void * ret;
@@ -222,6 +293,10 @@ static void freeUtf8Bytes(char* bytes)
 
 static sqlite3 * gethandle(JNIEnv *env, jobject nativeDB)
 {
+    // sanity check: db pointer should not be `0`
+    if (dbpointer == 0) {
+      loadStaticSqliteLib(env);
+    }
     return (sqlite3 *)toref((*env)->GetLongField(env, nativeDB, dbpointer));
 }
 
@@ -433,86 +508,45 @@ int xCompare(void* context, int len1, const void* str1, int len2, const void* st
 
 // INITIALISATION ///////////////////////////////////////////////////
 
+#ifdef SQLITE_GVM_STATIC
+JNIEXPORT jint JNICALL JNI_OnLoad_sqlite(JavaVM *vm, void *reserved)
+#else
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
+#endif
 {
     JNIEnv* env = 0;
 
-    if (JNI_OK != (*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_2))
-        return JNI_ERR;
+    if (JNI_OK != (*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_2)) {
+      return JNI_ERR;
+    }
+    return loadStaticSqliteLib(env);
+}
 
-    dbclass = (*env)->FindClass(env, "org/sqlite/core/NativeDB");
-    if (!dbclass) return JNI_ERR;
-    dbclass = (*env)->NewWeakGlobalRef(env, dbclass);
-    dbpointer = (*env)->GetFieldID(env, dbclass, "pointer", "J");
-    db_busyHandler = (*env)->GetFieldID(env, dbclass, "busyHandler", "J");
-    db_commitListener = (*env)->GetFieldID(env, dbclass, "commitListener", "J");
-    db_updateListener = (*env)->GetFieldID(env, dbclass, "updateListener", "J");
-    db_progressHandler = (*env)->GetFieldID(env, dbclass, "progressHandler", "J");
-    db_mth_onUpdate = (*env)->GetMethodID(env, dbclass, "onUpdate", "(ILjava/lang/String;Ljava/lang/String;J)V");
-    db_mth_onCommit = (*env)->GetMethodID(env, dbclass, "onCommit", "(Z)V");
-    mth_stringToUtf8ByteArray = (*env)->GetStaticMethodID(
-            env, dbclass, "stringToUtf8ByteArray", "(Ljava/lang/String;)[B");
-    mth_throwex = (*env)->GetMethodID(env, dbclass, "throwex", "()V");
-    mth_throwexcode = (*env)->GetMethodID(env, dbclass, "throwex", "(I)V");
-    mth_throwexmsg = (*env)->GetStaticMethodID(env, dbclass, "throwex", "(Ljava/lang/String;)V");
+JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_isStatic(JavaVM *vm, void *reserved) {
+#ifdef SQLITE_GVM_STATIC
+  return JNI_TRUE;
+#else
+  return JNI_FALSE;
+#endif
+}
 
-    fclass = (*env)->FindClass(env, "org/sqlite/Function");
-    if (!fclass) return JNI_ERR;
-    fclass = (*env)->NewWeakGlobalRef(env, fclass);
-    func_context = (*env)->GetFieldID(env, fclass, "context", "J");
-    func_value = (*env)->GetFieldID(env, fclass, "value", "J");
-    func_args  = (*env)->GetFieldID(env, fclass, "args", "I");
-    fmethod = (*env)->GetMethodID(env, fclass, "xFunc", "()V");
+JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_initializeStatic(JavaVM *vm, void *reserved) {
+    JNIEnv* env = 0;
 
-    cclass = (*env)->FindClass(env, "org/sqlite/Collation");
-    if (!cclass) return JNI_ERR;
-    cclass = (*env)->NewWeakGlobalRef(env, cclass);
-    mth_compare = (*env)->GetMethodID(env, cclass, "xCompare", "(Ljava/lang/String;Ljava/lang/String;)I");
-
-    aclass = (*env)->FindClass(env, "org/sqlite/Function$Aggregate");
-    if (!aclass) return JNI_ERR;
-    aclass = (*env)->NewWeakGlobalRef(env, aclass);
-    mth_aggr_xstep = (*env)->GetMethodID(env, aclass, "xStep", "()V");
-    mth_aggr_xfinal = (*env)->GetMethodID(env, aclass, "xFinal", "()V");
-    aclone = (*env)->GetMethodID(env, aclass, "clone", "()Ljava/lang/Object;");
-
-    wclass = (*env)->FindClass(env, "org/sqlite/Function$Window");
-    if (!wclass) return JNI_ERR;
-    wclass = (*env)->NewWeakGlobalRef(env, wclass);
-    w_mth_inverse = (*env)->GetMethodID(env, wclass, "xInverse", "()V");
-    w_mth_xvalue = (*env)->GetMethodID(env, wclass, "xValue", "()V");
-
-    pobserverclass = (*env)->FindClass(env, "org/sqlite/core/DB$ProgressObserver");
-    if(!pobserverclass) return JNI_ERR;
-    pobserverclass = (*env)->NewWeakGlobalRef(env, pobserverclass);
-    pobserver_mth_progress = (*env)->GetMethodID(env, pobserverclass, "progress", "(II)V");
-
-    phandleclass = (*env)->FindClass(env, "org/sqlite/ProgressHandler");
-    if(!phandleclass) return JNI_ERR;
-    phandleclass = (*env)->NewWeakGlobalRef(env, phandleclass);
-    phandle_mth_progress = (*env)->GetMethodID(env, phandleclass, "progress", "()I");
-
-    bhandleclass = (*env)->FindClass(env, "org/sqlite/BusyHandler");
-    if(!bhandleclass) return JNI_ERR;
-    bhandleclass = (*env)->NewWeakGlobalRef(env, bhandleclass);
-    bhandle_mth_callback = (*env)->GetMethodID(env, bhandleclass, "callback", "(I)I");
-
-    exclass = (*env)->FindClass(env, "java/lang/Throwable");
-    if(!exclass) return JNI_ERR;
-    exclass = (*env)->NewWeakGlobalRef(env, exclass);
-    exp_msg = (*env)->GetMethodID(
-            env, exclass, "toString", "()Ljava/lang/String;");
-
-    bool_array_class = (*env)->FindClass(env, "[Z");
-    if(!bool_array_class) return JNI_ERR;
-    bool_array_class = (*env)->NewWeakGlobalRef(env, bool_array_class);
-
-    return JNI_VERSION_1_2;
+    if (JNI_OK != (*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_2)) {
+      return JNI_ERR;
+    }
+    return loadStaticSqliteLib(env);
 }
 
 // FINALIZATION
 
-JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
+#ifdef SQLITE_GVM_STATIC
+JNIEXPORT void JNICALL JNI_OnUnload_sqlite(JavaVM *vm, void *reserved)
+#else
+JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
+#endif
+{
     JNIEnv* env = 0;
 
     if (JNI_OK != (*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_2))
@@ -539,6 +573,11 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
     if (bool_array_class) (*env)->DeleteWeakGlobalRef(env, bool_array_class);
 }
 
+#ifdef SQLITE_GVM_STATIC
+JNIEXPORT void JNICALL Java_org_sqlite_core_NativeDB_unload(JavaVM *vm, void *reserved) {
+  JNI_OnUnload_sqlite(vm, reserved);
+}
+#endif
 
 // WRAPPERS for sqlite_* functions //////////////////////////////////
 

@@ -4,7 +4,7 @@ import org.sqlite.SQLiteJDBCLoader;
 
 public class LibraryLoaderUtil {
 
-    public static final String NATIVE_LIB_BASE_NAME = "sqlite";
+    public static final String NATIVE_LIB_BASE_NAME = "sqlitejdbc";
 
     /**
      * Get the OS-specific resource directory within the jar, where the relevant sqlitejdbc native
@@ -21,6 +21,7 @@ public class LibraryLoaderUtil {
     }
 
     public static boolean hasNativeLib(String path, String libraryName) {
-        return SQLiteJDBCLoader.class.getResource(path + "/" + libraryName) != null;
+        var trimmedLibName = libraryName.replace("jdbc", "");
+        return SQLiteJDBCLoader.class.getResource(path + "/" + trimmedLibName) != null;
     }
 }

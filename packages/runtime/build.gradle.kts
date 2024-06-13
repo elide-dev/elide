@@ -84,7 +84,7 @@ val enableLlvm = false
 val enableJvm = hostIsLinux
 val enableKotlin = false
 val enableSqlite = true
-val enableSqliteStatic = false
+val enableSqliteStatic = true
 val enableStaticJni = true
 val enableToolchains = false
 val enableFfm = hostIsLinux && System.getProperty("os.arch") == "amd64"
@@ -358,7 +358,6 @@ dependencies {
   // SQLite Engine
   if (enableSqlite) {
     implementation(projects.packages.sqlite)
-    testImplementation(libs.sqlite)
   }
 
   // GraalVM: Engines

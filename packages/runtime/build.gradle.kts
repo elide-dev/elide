@@ -16,7 +16,6 @@
   "UnstableApiUsage",
 )
 
-import com.jakewharton.mosaic.gradle.MosaicExtension
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
@@ -39,35 +38,13 @@ plugins {
 
   kotlin("jvm")
   kotlin("kapt")
-  // kotlin("plugin.compose")
+  kotlin("plugin.compose")
   kotlin("plugin.serialization")
   alias(libs.plugins.buildConfig)
   alias(libs.plugins.micronaut.minimal.application)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.micronaut.aot)
   alias(libs.plugins.elide.conventions)
-}
-
-buildscript {
-  repositories {
-    maven {
-      name = "elide-snapshots"
-      url = uri("https://maven.elide.dev")
-      content {
-        includeGroup("dev.elide")
-        includeGroup("org.capnproto")
-        includeGroup("com.jakewharton.mosaic")
-      }
-    }
-    maven {
-      url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-    }
-    mavenCentral()
-    google()
-  }
-  dependencies {
-    classpath(libs.plugin.mosaic)
-  }
 }
 
 // Flags affecting this build script:
@@ -239,10 +216,6 @@ val ktCompilerArgs = mutableListOf(
 
   // opt-in to Elide's delicate runtime API
   "-opt-in=elide.runtime.core.DelicateElideApi",
-
-  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic).
-  // Note: Re-enable this if the Kotlin version differs from what Compose/Mosaic expects.
-  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=2.0.0",
 )
 
 elide {
@@ -306,9 +279,6 @@ sourceSets {
     )
   }
 }
-
-apply(plugin = "com.jakewharton.mosaic")
-the<MosaicExtension>().kotlinCompilerPlugin = libs.androidx.compose.compiler.get().toString()
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 val cliVersion = if (stamp) {

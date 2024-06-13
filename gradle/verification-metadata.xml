@@ -212,6 +212,7 @@
          <trusted-key id="B829146841894118F8DCABF1E270B36858DB4EAE" group="^io[.]micronaut($|([.].*))" regex="true"/>
          <trusted-key id="B879179229681AD9E8D23A0812DC99973C2318FD" group="com.saveourtool.diktat"/>
          <trusted-key id="BDB5FA4FE719D787FB3D3197F6D4A1D411E9D1AE" group="^com[.]google($|([.].*))" regex="true"/>
+         <trusted-key id="BF273975F5851E0DDE3ABB7D8D5DB0BAA89FE87B" group="com.azure" name="azure-sdk-bom"/>
          <trusted-key id="C0612048F3393B80B22639B4F067A2FD751AE3E4" group="io.github.davidburstrom.contester" name="contester-breakpoint" version="0.2.0"/>
          <trusted-key id="C1CBA75EC9BD0BAF8061935459E05CE618187ED4" group="org.xerial" name="sqlite-jdbc" version="3.46.0.0"/>
          <trusted-key id="C59362A11366D431E292AA32075DEF3EF14F0793" group="com.moandjiezana.toml" name="toml4j" version="0.7.2"/>
@@ -835,6 +836,11 @@
       <component group="org.codehaus.groovy" name="groovy-bom" version="3.0.21">
          <artifact name="groovy-bom-3.0.21.pom">
             <pgp value="34441E504A937F43EB0DAEF96A65176A0FB1CD0B"/>
+         </artifact>
+      </component>
+      <component group="org.eclipse.jetty" name="jetty-bom" version="11.0.21">
+         <artifact name="jetty-bom-11.0.21.pom">
+            <pgp value="F254B35617DC255D9344BCFA873A8E86B4372146"/>
          </artifact>
       </component>
       <component group="org.fusesource" name="fusesource-pom" version="1.12">

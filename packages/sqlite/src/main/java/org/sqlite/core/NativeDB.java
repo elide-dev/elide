@@ -23,6 +23,8 @@ import org.sqlite.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 /** This class provides a thin JNI layer over the SQLite3 C API. */
 public final class NativeDB extends DB {
@@ -64,11 +66,22 @@ public final class NativeDB extends DB {
 
     // WRAPPER FUNCTIONS ////////////////////////////////////////////
 
+    private static final AtomicBoolean didInitialize = new AtomicBoolean(false);
+
     /** @see DB#_open(String, int) */
     @Override
     protected synchronized void _open(String file, int openFlags) throws SQLException {
+        if (!didInitialize.get()) {
+          didInitialize.compareAndExchange(false, true);
+          if (isStatic()) {
+            int apiVersion = initializeStatic();
+            assert apiVersion == 0x00010008;  // `JNI_VERSION_1_8`
+          }
+        }
         _open_utf8(stringToUtf8ByteArray(file), openFlags);
     }
+    private synchronized static native boolean isStatic();
+    private synchronized static native int initializeStatic();
 
     synchronized native void _open_utf8(byte[] fileUtf8, int openFlags) throws SQLException;
 

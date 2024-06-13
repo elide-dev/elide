@@ -24,7 +24,6 @@
 // --------------------------------------
 package org.sqlite;
 
-import org.graalvm.nativeimage.ImageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sqlite.util.LibraryLoaderUtil;
@@ -177,18 +176,13 @@ public class SQLiteJDBCLoader {
     private static boolean extractAndLoadLibraryFile(
             String libFolderForCurrentOS, String libraryFileName, String targetFolder)
             throws FileException {
-        String nativeLibraryFilePath = libFolderForCurrentOS + "/" + libraryFileName;
+        String nativeLibraryFilePath = libFolderForCurrentOS + "/" + libraryFileName.replace("jdbc", "");
         // Include architecture name in temporary filename in order to avoid conflicts
         // when multiple JVMs with different architectures running at the same time
         String extractedLckFileName = libraryFileName + LOCK_EXT;
 
         Path extractedLibFile = Paths.get(targetFolder, libraryFileName);
         Path extractedLckFile = Paths.get(targetFolder, extractedLckFileName);
-
-        if (Files.exists(extractedLibFile)) {
-            // already exists
-            return loadNativeLibrary(targetFolder, libraryFileName);
-        }
 
         try {
             // Extract a native library file into the target directory
@@ -283,7 +277,7 @@ public class SQLiteJDBCLoader {
 
     private static boolean loadNativeLibraryJdk() {
         try {
-            System.loadLibrary("sqlite");
+            System.loadLibrary(LibraryLoaderUtil.NATIVE_LIB_BASE_NAME);
             return true;
         } catch (UnsatisfiedLinkError e) {
             logger.trace("Failed to load native library through System.loadLibrary", e);
@@ -345,7 +339,7 @@ public class SQLiteJDBCLoader {
                     sqliteNativeLibraryPath,
                     () -> getTempDir().getAbsolutePath());
 
-            if (Files.exists(Paths.get(libTargetFolder))) {
+            if (!Files.exists(Paths.get(libTargetFolder))) {
               libTargetFolder = getTempDir().getAbsolutePath();
             }
 

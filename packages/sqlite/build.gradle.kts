@@ -180,6 +180,11 @@ tasks.withType(CppCompile::class) {
   source.from(layoutSources, sqliteSources)
   inputs.files(layoutSources, sqliteSources)
 
+  // enable static init mode
+  if (name.lowercase().contains("static")) {
+    macros["SQLITE_GVM_STATIC"] = "1"
+  }
+
   inputs.files(
     layout.buildDirectory.file("sqlite3/sqlite3.c"),
     layout.buildDirectory.file("sqlite3/sqlite3.h"),

@@ -90,7 +90,7 @@ private const val CONFIG_ATTR_READONLY: String = "readonly"
 internal class SqliteModule : SQLiteAPI {
   companion object {
     // Native library to load for SQLite support.
-    private const val SQLITE3_LIBRARY: String = "sqlite"
+    private const val SQLITE3_LIBRARY: String = "sqlitejdbc"
 
     init {
       NativeLibraries.resolve(SQLITE3_LIBRARY) {

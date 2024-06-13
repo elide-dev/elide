@@ -1,20 +1,5 @@
 [
   {
-    "interfaces":["com.github.ajalt.mordant.internal.jna.MacosLibC"]
-  },
-  {
-    "interfaces":["com.sun.jna.platform.mac.CoreFoundation"]
-  },
-  {
-    "interfaces":["com.sun.jna.platform.mac.IOKit"]
-  },
-  {
-    "interfaces":["com.sun.jna.platform.mac.SystemB"]
-  },
-  {
     "interfaces":["kotlin.jvm.functions.Function2"]
-  },
-  {
-    "interfaces":["oshi.jna.platform.mac.SystemB"]
   }
 ]

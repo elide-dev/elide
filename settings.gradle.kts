@@ -96,6 +96,7 @@ dependencyResolutionManagement {
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
+        includeGroup("net.java.dev.jna")
         includeGroup("org.jetbrains.reflekt")
         includeGroup("com.google.devtools.ksp")
         includeGroupAndSubgroups("org.graalvm")

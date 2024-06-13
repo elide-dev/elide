@@ -55,13 +55,6 @@ dependencies {
   api(projects.packages.engine)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvmJvm)
-  implementation(libs.kotlin.scripting.common)
-  implementation(libs.kotlin.scripting.dependencies)
-  implementation(libs.kotlin.scripting.dependencies.maven)
-  implementation(libs.kotlin.scripting.jvm)
-  implementation(libs.kotlin.scripting.jvm.host)
-  implementation(libs.kotlin.scripting.jvm.engine)
-  implementation(libs.kotlin.compiler.embedded)
 
   // Testing
   testImplementation(projects.packages.test)

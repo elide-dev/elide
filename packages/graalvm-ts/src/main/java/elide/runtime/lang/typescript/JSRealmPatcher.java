@@ -12,12 +12,10 @@
  */
 package elide.runtime.lang.typescript;
 
-import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.js.runtime.JSRealm;
 import java.lang.reflect.Field;
 
 class JSRealmPatcher {
-  @CompilerDirectives.TruffleBoundary
   public static void setTSModuleLoader(JSRealm jsRealm, TypeScriptModuleLoader newModuleLoader) {
     try {
       Field moduleLoaderField = JSRealm.class.getDeclaredField("moduleLoader");

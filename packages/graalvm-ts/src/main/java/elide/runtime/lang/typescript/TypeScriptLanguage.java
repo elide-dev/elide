@@ -23,6 +23,7 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.js.lang.JavaScriptLanguage;
 import com.oracle.truffle.js.runtime.JSEngine;
 import com.oracle.truffle.js.runtime.JSRealm;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.List;
 import org.graalvm.polyglot.SandboxPolicy;
 
@@ -61,19 +62,26 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   public static final String IMPLEMENTATION_NAME = "TypeScript";
   public static final String ID = "ts";
   public static final String TYPESCRIPT_VERSION = "5.4.5";
-  private TypeScriptCompiler tsCompiler;
+
+  @SuppressWarnings("java:S3077")
+  @CompilerDirectives.CompilationFinal private volatile TypeScriptCompiler tsCompiler = null;
+  private final AtomicBoolean compilerInitialized = new AtomicBoolean(false);
   private Env env;
 
   @Override
-  protected JSRealm createContext(Env env) {
+  protected JSRealm createContext(Env currentEnv) {
     CompilerAsserts.neverPartOfCompilation();
     var js = JavaScriptLanguage.getCurrentLanguage();
-    LanguageInfo jsInfo = env.getInternalLanguages().get("js");
-    env.initializeLanguage(jsInfo);
+    LanguageInfo jsInfo = currentEnv.getInternalLanguages().get("js");
+    currentEnv.initializeLanguage(jsInfo);
     var jsEnv = JavaScriptLanguage.getCurrentEnv();
+
+    if (!compilerInitialized.get()) {
+      compilerInitialized.compareAndSet(false, true);
+      tsCompiler = new TypeScriptCompiler(jsEnv);
+      env = jsEnv;
+    }
     var ctx = JSEngine.createJSContext(js, jsEnv);
-    tsCompiler = new TypeScriptCompiler(jsEnv);
-    this.env = jsEnv;
     var realm = ctx.createRealm(jsEnv);
     JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
     return realm;
@@ -98,7 +106,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     return wrapper.getCallTarget();
   }
 
-  private static class TSRootNode extends RootNode {
+  private class TSRootNode extends RootNode {
     private final RootNode delegate;
 
     protected TSRootNode(TruffleLanguage<?> language, RootNode delegate) {
@@ -106,11 +114,15 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
       this.delegate = delegate;
     }
 
+    @TruffleBoundary
+    private void setModuleLoader() {
+      JSRealm realm = JSRealm.get(delegate);
+      JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
+    }
+
     @Override
     public Object execute(VirtualFrame frame) {
-      // @TODO(sgammon): causes restricted types to be reached
-      // JSRealm realm = JSRealm.get(delegate);
-      // JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
+      setModuleLoader();
       return delegate.execute(frame);
     }
   }

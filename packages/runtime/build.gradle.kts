@@ -111,6 +111,7 @@ val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enablePgoReport = true
 val enableJna = true
+val enableJnaStatic = true
 val enableSbom = oracleGvm
 val enableSbomStrict = false
 val glibcTarget = "glibc"
@@ -411,6 +412,9 @@ dependencies {
     jvmOnly(libs.jna.jpms)
   } else {
     implementation(libs.jna.jpms)
+    if (enableJnaStatic) {
+      implementation(libs.jna.graalvm)
+    }
   }
 
   // Tests
@@ -580,6 +584,7 @@ val deprecatedNativeArgs = listOf(
 )
 
 val enabledFeatures = listOfNotNull(
+  "com.sun.jna.SubstrateStaticJNA",
   "elide.tool.feature.ToolingUmbrellaFeature",
   onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
 )

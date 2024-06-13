@@ -84,10 +84,10 @@ private val BUILTIN_PYTHON_PATHS = listOf(
 
       if (ImageInfo.inImageCode()) {
         builder.setOptions(
-          "python.CoreHome" to "$it/python/python-home/lib/graalpy24.1",
-          "python.SysPrefix" to "$it/python/python-home/lib/graalpy24.1",
-          "python.StdLibHome" to "$it/python/python-home/lib/python3.11",
-          "python.CAPI" to "$it/python/python-home/lib/graalpy24.1",
+          "python.CoreHome" to "$it/python/python-home/lib/graalpy24.0",
+          "python.SysPrefix" to "$it/python/python-home/lib/graalpy24.0",
+          "python.StdLibHome" to "$it/python/python-home/lib/python3.10",
+          "python.CAPI" to "$it/python/python-home/lib/graalpy24.0",
           "python.PythonHome" to "$it/python/python-home",
         )
       }

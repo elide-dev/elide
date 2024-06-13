@@ -41,7 +41,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
   override fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo> = if (STATIC_JNI) listOfNotNull(
     nativeLibrary(singular = libraryNamed(
-      "sqlite",
+      "sqlitejdbc",
       "org.sqlite.core.NativeDB",
     )),
   ) else emptyList()

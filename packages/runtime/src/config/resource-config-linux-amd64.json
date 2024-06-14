@@ -2,8 +2,7 @@
   "resources":{
     "includes": [
       {"pattern":"\\QMETA-INF/services/jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory\\E"},
-      {"pattern":"\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E"},
-      {"pattern":"\\Qcom/sun/jna/linux-x86-64/libjnidispatch.so\\E"}
+      {"pattern":"\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E"}
     ],
     "excludes": [
       {"pattern":"macos"},

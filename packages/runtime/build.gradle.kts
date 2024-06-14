@@ -130,9 +130,6 @@ val exclusions = listOfNotNull(
   // only include jline jni integration if ffm is disabled
   if (!enableFfm) null else libs.jline.terminal.jni,
 
-  // only include jline jna integration if jna is enabled and ffm is disabled
-  if (!enableFfm && enableJna) null else libs.jline.terminal.jna,
-
   // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
   if (enableKotlin) null else libs.kotlin.compiler.embedded,
 ).plus(listOf(
@@ -340,8 +337,11 @@ dependencies {
   api(projects.packages.base)
   api(libs.snakeyaml)
   api(mn.micronaut.inject)
-  implementation(libs.jansi)
-  implementation(libs.picocli.jansi.graalvm)
+  implementation(projects.packages.terminal)
+  implementation(libs.picocli.jansi.graalvm) {
+    exclude(group = "org.fusesource.jansi", module = "jansi")
+  }
+
   implementation(mn.micronaut.picocli)
   implementation(projects.packages.cliBridge)
   implementation(kotlin("stdlib-jdk8"))
@@ -353,10 +353,13 @@ dependencies {
   implementation(libs.jline.reader)
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
-  implementation(libs.jline.terminal.jansi)
   implementation(libs.jline.terminal.jni)
+  implementation(libs.jline.terminal.jna)
   implementation(libs.jline.terminal.ffm)
   implementation(libs.jline.builtins)
+  implementation(libs.jline.terminal.jansi) {
+    exclude(group = "org.fusesource.jansi", module = "jansi")
+  }
 
   // SQLite Engine
   if (enableSqlite) {
@@ -613,7 +616,7 @@ val commonNativeArgs = listOfNotNull(
   // "--verbose",
   // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner${'$'}CleanerThread.this${'$'}0",
   // "-H:AbortOnMethodReachable=kotlinx.coroutines.CancellableContinuationImpl.getParentHandle",
-  // "--trace-object-instantiation=com.sun.jna.internal.Cleaner",
+  "--trace-object-instantiation=com.sun.jna.internal.Cleaner${'$'}CleanerThread",
   // "--trace-object-instantiation=kotlinx.coroutines.CancellableContinuationImpl",
   // "-H:AbortOnMethodReachable=java.util.concurrent.atomic.AtomicReferenceFieldUpdater.accessCheck",
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
@@ -662,6 +665,10 @@ val commonNativeArgs = listOfNotNull(
   "-J-Dorg.sqlite.lib.exportPath=$nativesPath",
   "-Dio.netty.native.workdir=$nativesPath",
   "-J-Dio.netty.native.workdir=$nativesPath",
+  "-Dlibrary.jansi.path=$nativesPath",
+  "-J-Dlibrary.jansi.path=$nativesPath",
+  "-Dlibrary.jline.path=$nativesPath",
+  "-J-Dlibrary.jline.path=$nativesPath",
   "-Dio.netty.native.deleteLibAfterLoading=false",
   "-J-Dio.netty.native.deleteLibAfterLoading=false",
   "-J-Dio.netty.allocator.type=unpooled",
@@ -854,10 +861,18 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "com.sun.jna.platform.mac.SystemB",
   "com.sun.jna.platform.linux.Udev",
 
-  // --- JLine -----
+  // --- Jansi/JLine -----
 
   "org.jline.terminal.impl.jna.osx.OsXNativePty",
   "org.jline.terminal.impl.jna.linux.LinuxNativePty",
+  "org.jline.terminal.impl.jna.linux.LinuxNativePty${'$'}UtilLibrary",
+  "org.jline.terminal.impl.jna.solaris.SolarisNativePty",
+  "org.jline.terminal.impl.jna.freebsd.FreeBsdNativePty",
+  "org.jline.terminal.impl.jna.openbsd.OpenBsdNativePty",
+  "org.jline.nativ.Kernel32",
+  "org.fusesource.jansi.AnsiConsole",
+  "org.fusesource.jansi.internal.Kernel32",
+  "org.fusesource.jansi.io.WindowsAnsiProcessor",
 
   // --- JVM/JDK -----
 

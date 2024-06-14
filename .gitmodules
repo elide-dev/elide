@@ -28,3 +28,11 @@
 	path = third_party/sqlite
 	url = git@github.com:sqlite/sqlite.git
 	shallow = true
+[submodule "boringssl"]
+	path = third_party/google/boringssl
+	url = git@github.com:google/boringssl.git
+        shallow = true
+[submodule "apr"]
+	path = third_party/apache/apr
+	url = git@github.com:apache/apr.git
+        shallow = true

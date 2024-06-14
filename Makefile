@@ -17,7 +17,6 @@ VERSION ?= $(shell cat .version)
 export STRICT ?= yes
 export WASM ?= no
 export RELOCK ?= no
-export SITE ?= no
 DEFAULT_REPOSITORY ?= s3://elide-maven
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
@@ -66,8 +65,7 @@ PNPM ?= $(shell which pnpm)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
-SITE_BUILD ?= $(PWD)/build/site
-REPORTS ?= $(SITE_BUILD)/reports
+REPORTS ?=
 BUF ?= $(shell which buf)
 JVM ?= 21
 SYSTEM ?= $(shell uname -s)
@@ -79,7 +77,7 @@ GRADLE_OPTS ?=
 GRADLE_ARGS ?= -Pversions.java.language=$(JVM)
 BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
-DEP_HASH_ALGO ?= sha256,pgp
+DEP_HASH_ALGO ?= sha256,sha512,pgp
 ARGS ?=
 
 ifneq ($(REPOSITORY),$(DEFAULT_REPOSITORY))
@@ -108,7 +106,7 @@ BUILD_ARGS += -PbuildWasm=false -Pelide.build.kotlin.wasm.disable=true
 endif
 
 ifeq ($(RELOCK),yes)
-BUILD_ARGS += kotlinUpgradeYarnLock --write-verification-metadata $(DEP_HASH_ALGO) --export-keys --write-locks
+BUILD_ARGS += --write-verification-metadata $(DEP_HASH_ALGO) --write-locks
 endif
 
 ifeq ($(CI),yes)
@@ -195,9 +193,19 @@ DEPS ?= node_modules/ third-party umbrella
 
 all: build test docs
 
+setup: $(DEPS)
+
 build: $(DEPS)  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
 	$(CMD) $(GRADLE) build $(CLI_TASKS) $(GRADLE_OMIT) $(_ARGS)
+
+native: | build  ## Build Elide's native image target; use BUILD_MODE=release for a release binary.
+	$(info Building Elide native $(VERSION) ($(BUILD_MODE))...)
+ifeq ($(BUILD_MODE),release)
+	$(CMD) $(GRADLE) :packages:runtime:nativeOptimizedCompile $(_ARGS)
+else
+	$(CMD) $(GRADLE) :packages:runtime:nativeCompile $(_ARGS)
+endif
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
@@ -321,15 +329,34 @@ ifeq ($(RELEASE),yes)
 endif
 	$(CMD)$(MAKE) cli-install-local
 
-umbrella:  ## Build the native umbrella tooling library.
-	$(info Building tools/umbrella...)
-	$(CMD)$(CARGO) build --release --all-targets && $(CARGO) build --all-targets
+ifeq ($(BUILD_MODE),release)
+UMBRELLA_TARGET=release
+else
+UMBRELLA_TARGET=debug
+endif
 
-third-party: third_party/lib  ## Build all third-party embedded projects.
+UMBRELLA_TARGET_PATH = target/$(UMBRELLA_TARGET)
+
+umbrella: $(UMBRELLA_TARGET_PATH)  ## Build the native umbrella tooling library.
+
+$(UMBRELLA_TARGET_PATH):
+	$(info Building tools/umbrella...)
+ifeq ($(BUILD_MODE),release)
+	$(CMD)$(CARGO) build --release --all-targets
+else
+	$(CARGO) build --all-targets
+endif
+
+third-party: third_party/sqlite third_party/lib  ## Build all third-party embedded projects.
+
+third_party/sqlite:
+	@echo "Setting up submodules..."
+	$(CMD)$(GIT) submodule update --init --recursive
 
 third_party/lib:
 	@echo "Building third-party projects..."
-	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party all
+	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party -j`nproc`
+	$(CMD)mkdir third_party/lib
 	@echo ""
 
 cli-release-artifacts:
@@ -393,7 +420,7 @@ clean: clean-docs  ## Clean build outputs and caches.
 
 clean-docs:  ## Clean documentation targets.
 	@echo "Cleaning docs..."
-	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS)) $(SITE_BUILD)/docs
+	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS))
 
 docs: $(DOCS) $(TARGET)/docs  ## Generate docs for all library modules.
 
@@ -417,24 +444,11 @@ $(TARGET)/docs:
 	$(CMD)$(GRADLE) docs dokkaHtmlMultiModule $(_ARGS) -PbuildDocs=true --no-configuration-cache -x htmlDependencyReport
 	@echo "Docs build complete."
 
-$(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs
-	@echo "Assembling docs site..."
-	$(CMD)$(MKDIR) -p $(SITE_BUILD) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc
-	$(CMD)cd $(DOCS) \
-		&& $(RSYNC) -a$(strip $(POSIX_FLAGS)) --exclude="Makefile" --exclude="buf.work.yml" --exclude="README.md" "./" $(SITE_BUILD)/;
-	$(CMD)cd $(TARGET)/docs/kotlin/html \
-		&& $(RSYNC) -a$(strip $(POSIX_FLAGS)) ./* $(SITE_BUILD)/docs/kotlin/
-	$(CMD)cd packages/server/build/dokka \
-		&& $(MKDIR) $(SITE_BUILD)/docs/javadoc/server \
-		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/server/
-	@echo "Docs assemble complete."
-
 api-check:  ## Check API/ABI compatibility with current changes.
 	$(info Checking ABI compatibility...)
 	$(CMD)$(GRADLE) apiCheck -PbuildSamples=false -PbuildDocs=false
 
 reports: $(REPORTS)  ## Generate reports for tests, coverage, etc.
-	@$(RM) -f $(SITE_BUILD)/reports/project/properties.txt
 
 $(REPORTS):
 	@echo "Generating reports..."
@@ -452,68 +466,6 @@ $(REPORTS):
 	$(CMD)cd tools/reports/build/reports && $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(REPORTS)/
 	$(CMD)$(RM) -f docs/reports/project/properties.txt docs/reports/project/tasks.txt
 	@echo "Reports synced."
-
-site-assets: $(SITE_BUILD)/creative
-
-$(SITE_BUILD)/creative:
-	@echo "Copying site assets..."
-	$(CMD)$(MKDIR) -p $(SITE_BUILD)/creative/logo $(SITE_BUILD)/docs/kotlin/creative/logo/
-	$(CMD)cd creative/logo \
-		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(SITE_BUILD)/creative/logo/ \
-		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(SITE_BUILD)/docs/kotlin/creative/logo/
-
-SITE_PKG_ZIP ?= $(PWD)/
-
-site: docs reports site-assets site/docs/app/build site/docs/app/build/ssg-site.zip  ## Generate the static Elide website.
-	@echo "Assembling Elide site..."
-	$(CMD)-$(UNZIP) -o -d $(SITE_BUILD) $(PWD)/site/docs/app/build/ssg-site.zip
-
-site/docs/app/build:
-	@echo "Building Elide site..."
-	$(CMD)$(GRADLE) \
-		-PbuildDocs=true \
-		-PbuildSamples=false \
-		-Pversions.java.language=$(JVM) \
-		-x test \
-		-x check \
-		:site:docs:app:build
-
-ifeq ($(CI),yes)
-site/docs/app/build/ssg-site.zip:
-	@echo "Failed to locate Zip site output. Skipping."
-else
-site/docs/app/build/ssg-site.zip: site/docs/app/build
-	@echo "Starting Elide docs site for SSG build..."
-	$(CMD)$(RM) -fv server_pid.txt
-	-nohup $(GRADLE) \
-		--no-daemon \
-		:site:docs:app:run \
-		-Pelide.release=true \
-		-PbuildSamples=false \
-		-Pversions.java.language=$(JVM) \
-		> server_log.txt 2>&1 & \
-		echo $$! > server_pid.txt \
-		&& echo "Elide site server started at PID $(shell cat server_pid.txt)" \
-		&& echo "Waiting for server to be ready..." \
-		&& sleep 5 \
-		&& $(GRADLE) \
-			:packages:ssg:run \
-			--warning-mode=none \
-			--dependency-verification=lenient \
-			-Pelide.ci=true \
-			-Pelide.release=true \
-			-PbuildSamples=false \
-			-PbuildDocs=false \
-			-Pversions.java.language=$(JVM) \
-			--args="--http --ignore-cert-errors --verbose --no-crawl $(PWD)/site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb https://localhost:8443 $(PWD)/site/docs/app/build/ssg-site.zip" \
-		&& echo "Finishing up..." \
-		&& flush || echo "No flush needed." \
-		&& sleep 3 \
-		&& echo "Site SSG build complete.";
-	@echo "Killing server at PID $(shell cat server_pid.txt)..." \
-		&& sudo kill -9 `cat server_pid.txt` || echo "No process to kill." \
-		&& $(RM) -f server_pid.txt
-endif
 
 update-dep-hashes:
 	@echo "- Updating dependency hashes..."
@@ -659,4 +611,4 @@ runtime-update: runtime-build # Rebuild and copy the JS runtime facade
 	$(CMD) cp -fv ./runtime/bazel-bin/elide/runtime/js/js.modules.tar.gz \
 	 ./packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/js.modules.tar.gz
 
-.PHONY: all docs build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-jdk21 image-jdk22 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-runtime-jvm21 image-runtime-jvm21 image-native image-native-alpine runtime-build runtime-update
+.PHONY: all docs build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-jdk21 image-jdk22 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-runtime-jvm21 image-runtime-jvm21 image-native image-native-alpine runtime-build runtime-update third-party

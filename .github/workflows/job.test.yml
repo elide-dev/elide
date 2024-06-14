@@ -153,10 +153,12 @@ jobs:
       pull-requests: "write"
 
     steps:
+      - name: "Setup: Apt Dependencies"
+        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
-          disable-sudo: true
+          disable-sudo: false
           egress-policy: audit
           allowed-endpoints: >
             agent.less.build:443
@@ -272,8 +274,8 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "🛠️ Build Third-party"
-        run: make third-party
+      - name: "🛠️ Build Native"
+        run: make setup && cargo build
       - name: "Testsuite"
         uses: gradle/actions/setup-gradle@d9336dac04dea2507a617466bc058a3def92b18b # v3.4.0
         env:
@@ -415,10 +417,13 @@ jobs:
     runs-on: ${{ inputs.runner_large || 'ubuntu-latest-8-cores' }}
     if: inputs.native
     steps:
+      - name: "Setup: Apt Dependencies"
+        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
           egress-policy: audit
+          disable-sudo: false
       - name: "Setup: Checkout"
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
@@ -474,6 +479,8 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
+      - name: "🛠️ Build Native"
+        run: make setup && cargo build
       - name: "Run Tests (Native)"
         uses: gradle/actions/setup-gradle@d9336dac04dea2507a617466bc058a3def92b18b # v3.4.0
         continue-on-error: true

@@ -20,6 +20,8 @@ Or, from inside `third_party`, you can just run `make`.
 - [Astral][2] [Ruff][3]: Very fast linter for Python, written in Rust.
 - [Astral][2] [UV][4]: Very fast Python/PyPI dependency resolver and installer.
 - [SQLite][11]: Pinned version for Elide's use
+- [Google][12] [BoringSSL][13]: Google's fixed-up fork of OpenSSL.
+- [Apache][14] [APR (Apache Portable Runtime)][15]: Cross-platform runtime utilities
 
 [0]: https://apple.com
 [1]: https://github.com/apple/pkl
@@ -27,4 +29,8 @@ Or, from inside `third_party`, you can just run `make`.
 [3]: https://astral.sh/ruff
 [4]: https://github.com/astral-sh/uv
 [11]: https://sqlite.org
+[12]: https://google.com
+[13]: https://boringssl.googlesource.com/boringssl
+[14]: https://apache.org
+[15]: https://apr.apache.org/
 

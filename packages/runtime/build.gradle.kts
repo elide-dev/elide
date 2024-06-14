@@ -84,6 +84,7 @@ val enableLlvm = false
 val enableJvm = hostIsLinux
 val enableKotlin = false
 val enableSqlite = true
+val enableNativeCryptoV2 = true
 val enableSqliteStatic = true
 val enableStaticJni = true
 val enableToolchains = false
@@ -361,6 +362,9 @@ dependencies {
   if (enableSqlite) {
     implementation(projects.packages.sqlite)
   }
+  if (enableNativeCryptoV2) {
+    api(projects.packages.tcnative)
+  }
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
@@ -405,7 +409,9 @@ dependencies {
 
   runtimeOnly(mn.micronaut.graal)
   implementation(mn.netty.handler)
-  implementation(libs.netty.tcnative)
+  if (!enableNativeCryptoV2) {
+    implementation(libs.netty.tcnative)
+  }
 
   // JVM-only dependencies which are filtered for native builds.
   if (!enableJna) {
@@ -427,13 +433,15 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(mn.micronaut.test.junit5)
 
-  implementation(libs.netty.tcnative.boringssl.static)
-  implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-x86_64") })
-  implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-aarch_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+  if (!enableNativeCryptoV2) {
+    implementation(libs.netty.tcnative.boringssl.static)
+    implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-x86_64") })
+    implementation(variantOf(libs.netty.resolver.dns.native.macos) { classifier("osx-aarch_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+  }
 
   if (enableNativeTransportV2) {
     implementation(projects.packages.transport.transportEpoll)

@@ -248,6 +248,7 @@ include(
   ":packages:test",
   ":packages:sqlite",
   ":packages:tcnative",
+  ":packages:terminal",
   ":packages:transport:transport-common",
   ":packages:transport:transport-unix",
   ":packages:transport:transport-epoll",

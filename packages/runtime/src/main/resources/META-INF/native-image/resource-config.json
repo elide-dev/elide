@@ -11,18 +11,6 @@
   }, {
     "pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/nativelibnetty_resolver_dns_native_macos_aarch_64.dylib\\E"
   }, {
-    "pattern":"\\Q(netty_tcnative_linux_x86_64, META-INF/native/libnetty_tcnative_linux_x86_64.so)\\E"
-  }, {
-    "pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/native/libnetty_tcnative_osx_aarch_64.jnilib)\\E"
-  }, {
-    "pattern":"\\Q(netty_tcnative_osx_aarch_64, META-INF/nativelibnetty_tcnative_osx_aarch_64.dylib\\E"
-  }, {
-    "pattern":"\\Q(netty_transport_native_epoll_x86_64, META-INF/native/libnetty_transport_native_epoll_x86_64.so)\\E"
-  }, {
-    "pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib)\\E"
-  }, {
-    "pattern":"\\Q(netty_transport_native_kqueue_aarch_64, META-INF/nativelibnetty_transport_native_kqueue_aarch_64.dylib\\E"
-  }, {
     "pattern":"\\QElideTool.properties\\E"
   }, {
     "pattern":"\\QElideTool_en.properties\\E"
@@ -70,16 +58,6 @@
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
-  }, {
-    "pattern":"\\QMETA-INF/native/libnetty_tcnative_osx_aarch_64.dylib\\E"
-  }, {
-    "pattern":"\\QMETA-INF/native/libnetty_tcnative_osx_aarch_64.jnilib\\E"
-  }, {
-    "pattern":"\\QMETA-INF/native/libnetty_transport_native_io_uring_x86_64.so\\E"
-  }, {
-    "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.dylib\\E"
-  }, {
-    "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib\\E"
   }, {
     "pattern":"\\QMETA-INF/resources/darwin/aarch64/native.sha256\\E"
   }, {
@@ -564,10 +542,6 @@
     "pattern":"\\Qlogback-test.scmo\\E"
   }, {
     "pattern":"\\Qlogback.scmo\\E"
-  }, {
-    "pattern":"\\Qorg/fusesource/jansi/internal/native/Linux/x86_64/libjansi.so\\E"
-  }, {
-    "pattern":"\\Qorg/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib\\E"
   }, {
     "pattern":"\\Qorg/fusesource/jansi/jansi.properties\\E"
   }, {

@@ -7495,6 +7495,13 @@
   "allPublicConstructors":true
 },
 {
+  "name":"com.sun.jna.Native",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
   "name":"com.sun.jna.platform.unix.LibCAPI$size_t",
   "methods":[{"name":"<init>","parameterTypes":[] }],
   "allDeclaredMethods":true,
@@ -7568,6 +7575,14 @@
 },
 {
   "name":"com.sun.jna.platform.mac.CoreFoundation$CFDataRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"io.netty.incubator.channel.uring.IOUringServerSocketChannel",
   "methods":[{"name":"<init>","parameterTypes":[] }],
   "allDeclaredMethods":true,
   "allPublicMethods":true,

@@ -82,8 +82,12 @@ tasks.withType(CppCompile::class.java).configureEach {
   onlyIf { HostManager.hostIsMac }
   source.from(layout.projectDirectory.dir("src/main/cpp").asFileTree.matching { include("**/*.c") })
 
-  macros["NETTY_BUILD_STATIC"] = "1"
-  macros["NETTY_BUILD_GRAALVM"] = "1"
+  // enable static init mode
+  if (name.lowercase().contains("static")) {
+    macros["NETTY_BUILD_STATIC"] = "1"
+    macros["NETTY_BUILD_GRAALVM"] = "1"
+    macros["NETTY_GVM_STATIC"] = "1"
+  }
 
   compilerArgs.addAll(listOf(
     "-x", "c",

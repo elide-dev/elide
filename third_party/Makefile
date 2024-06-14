@@ -22,16 +22,22 @@ GO ?= $(shell which go)
 NPM ?= $(shell which npm)
 NPX ?= $(shell which npx)
 BUN ?= $(shell which bun)
+PWD ?= $(shell pwd)
+
 GRADLE ?= ./gradlew
+CMAKE ?= cmake
+
+CFLAGS_BASE ?=
 
 GRADLE_ARGS ?= -x test -x check
 LIBROOT ?= lib/
 
-JS_TOOLS ?= oxc esbuild
+NATIVE_TOOLS ?= sqlite boringssl apr
+JS_TOOLS ?= oxc
 PY_TOOLS ?= ruff uv
 LANGS ?= pkl
 
-REQUIRED ?= sqlite
+REQUIRED ?= sqlite boringssl apr
 
 ALL_LIBS ?= $(REQUIRED)
 
@@ -54,6 +60,42 @@ apple/pkl/build:
 	@echo "Building apple/pkl..."
 	$(RULE)cd apple/pkl && $(GRADLE) build $(GRADLE_ARGS)
 
+apr: apache/apr/.libs
+
+CFLAGS_APR ?="-fPIC -O3"
+CFLAGS_APR +=$(CFLAGS_BASE)
+
+apache/apr/.libs: google/boringssl/build
+	@echo ""
+	@echo "Building apache/apr..."
+	$(RULE)cd apache/apr && ./buildconf \
+		&& CFLAGS=$(CFLAGS_APR) ./configure \
+			--prefix=`pwd`/target \
+			--enable-shared \
+			--enable-static \
+			--enable-threads \
+			--enable-posix-shm \
+			--enable-sysv-shm \
+			--with-crypto \
+			--with-openssl=$(PWD)/google/boringssl \
+		&& CFLAGS=$(CFLAGS_APR) make -j`nproc` \
+		&& CFLAGS=$(CFLAGS_APR) make install
+
+clean-apr:
+	$(RULE)cd apache/apr && git clean -xdf
+
+boringssl: google/boringssl/build
+
+CFLAGS_BORINGSSL ?="-fPIC -O3"
+CFLAGS_BORINGSSL +=$(CFLAGS_BASE)
+
+google/boringssl/build:
+	@echo ""
+	@echo "Building google/boringssl..."
+	$(RULE)cd google/boringssl && mkdir build && cd build \
+		&& CFLAGS=$(CFLAGS_BORINGSSL) CXXFLAGS=$(CFLAGS_BORINGSSL) $(CMAKE) .. \
+		&& CFLAGS=$(CFLAGS_BORINGSSL) CXXFLAGS=$(CFLAGS_BORINGSSL) make -j`nproc`
+
 ruff: astral/ruff/target
 
 astral/ruff/target:
@@ -68,20 +110,6 @@ astral/uv/target:
 	@echo "Building astral/uv..."
 	$(RULE)cd astral/uv && $(CARGO) build
 
-esbuild: evanw/esbuild/esbuild
-
-evanw/esbuild/esbuild:
-	@echo ""
-	@echo "Building evanw/esbuild..."
-	$(RULE)cd evanw/esbuild && PWD="" $(MAKE) \
-		platform-wasm \
-		platform-neutral \
-		platform-darwin-x64 \
-		platform-darwin-arm64 \
-		platform-linux-x64 \
-		platform-linux-arm64 \
-		platform-win32-x64
-
 oxc: oxc-project/oxc/target
 
 oxc-project/oxc/target:
@@ -89,7 +117,7 @@ oxc-project/oxc/target:
 	@echo "Building oxc-project/oxc..."
 	$(RULE)cd oxc-project/oxc && $(CARGO) build
 
-SQLITE3_CONFIGURE ?= --enable-all --enable-memsys5 --enable-update-limit --enable-tempstore=yes --enable-debug
+SQLITE3_CONFIGURE ?=--enable-all --enable-memsys5 --enable-update-limit --enable-tempstore=yes --enable-debug
 
 sqlite: sqlite/sqlite3.c
 
@@ -104,7 +132,7 @@ sqlite/Makefile:
 sqlite/sqlite3.c: sqlite/Makefile
 	@echo ""
 	@echo "Building sqlite3 amalgamation..."
-	$(RULE)cd sqlite && $(MAKE) sqlite3.c
+	$(RULE)cd sqlite && $(MAKE) -j`nproc` sqlite3.c
 
 libroot: $(LIBROOT)
 
@@ -117,15 +145,18 @@ $(LIBROOT):
 clean:
 	$(info Cleaning third-party outputs...)
 	$(RULE)-rm -rf \
+		lib \
 		apple/pkl/build \
 		astral/ruff/target \
 		astral/uv/target \
-		oxc-project/oxc/target
-	$(RULE)-cd evanw/esbuild && $(MAKE) clean
-	$(RULE)-cd apple/pkl && $(GRADLE) clean --no-daemon
+		oxc-project/oxc/target \
+		apache/apr/target \
+		google/boringssl/build
 	$(RULE)-cd astral/ruff && $(CARGO) clean
 	$(RULE)-cd astral/uv && $(CARGO) clean
 	$(RULE)-cd oxc-project/oxc && $(CARGO) clean
 	$(RULE)-cd sqlite && $(MAKE) clean && rm -fv Makefile sqlite3.c
+	$(RULE)-cd google/boringssl && rm -fr build
+	$(RULE)-cd apache/apr && git clean -xdf
 
-.PHONY: all pkl ruff uv oxc esbuild libroot
+.PHONY: all pkl ruff uv oxc google libroot

@@ -14044,10 +14044,10 @@ public class netty_unix_util_h {
     public static int CLOCK_THREAD_CPUTIME_ID() {
         return CLOCK_THREAD_CPUTIME_ID;
     }
-    private static final int NETTY_JNI_UTIL_JNI_VERSION = (int)65542L;
+    private static final int NETTY_JNI_UTIL_JNI_VERSION = (int)0x00010008;
     /**
      * {@snippet lang=c :
-     * #define NETTY_JNI_UTIL_JNI_VERSION 65542
+     * #define NETTY_JNI_UTIL_JNI_VERSION 0x00010008
      * }
      */
     public static int NETTY_JNI_UTIL_JNI_VERSION() {

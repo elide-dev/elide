@@ -37,6 +37,12 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       "io.netty.channel.epoll.Native",
       "io.netty.channel.epoll.NativeStaticallyReferencedJniMethods",
     )
+
+    private val iouringImpls = arrayOf(
+      "io.netty.incubator.channel.uring.Native",
+      "io.netty.incubator.channel.uring.LinuxSocket",
+      "io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods",
+    )
   }
 
   override fun getDescription(): String = "Registers native transport libraries"
@@ -54,7 +60,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       name,
       *impl,
       builtin = true,
-      initializer = true,
+      initializer = false,  // @TODO(sgammon): support initializers properly
     )
   }
 

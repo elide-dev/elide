@@ -247,6 +247,7 @@ include(
   ":packages:ssr",
   ":packages:test",
   ":packages:sqlite",
+  ":packages:tcnative",
   ":packages:transport:transport-common",
   ":packages:transport:transport-unix",
   ":packages:transport:transport-epoll",

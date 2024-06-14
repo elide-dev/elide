@@ -27,7 +27,7 @@
     <ID>LargeClass:URLIntrinsicTest.kt$URLIntrinsicTest : AbstractJsIntrinsicTest</ID>
     <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$@Suppress("ReplaceGetOrSet") protected open fun testMapGeneric(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
     <ID>LongMethod:AbstractJsMapTest.kt$AbstractJsMapTest$protected open fun testMapMutable(prefix: String, factory: () -> MapLike): List&lt;DynamicTest></ID>
-    <ID>LongParameterList:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$( name: String, vararg layout: String, type: NativeLibType = STATIC, linkName: String = name, builtin: Boolean = true, registerJni: Boolean = true, registerPrefix: Boolean = builtin, eager: Boolean = false, absolutePath: Path? = null, initializer: Boolean = true, deps: List&lt;String> = emptyList(), )</ID>
+    <ID>LongParameterList:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$( name: String, vararg layout: String, type: NativeLibType = STATIC, linkName: String = name, builtin: Boolean = true, registerJni: Boolean = true, registerPrefix: Boolean = builtin, eager: Boolean = false, absolutePath: Path? = null, initializer: Boolean = false, deps: List&lt;String> = emptyList(), )</ID>
     <ID>LongParameterList:NativeLibraryFeature.kt$NativeLibraryFeature.NativeLibInfo.Companion$( name: String, vararg layout: String, type: NativeLibType = STATIC, linkName: String = name, prefix: Boolean, jni: Boolean, builtin: Boolean, eager: Boolean, absolutePath: Path?, initializer: Boolean, deps: List&lt;String>, )</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.DebugAdapterConfig$4711</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.InspectorConfig$4200</ID>
@@ -63,7 +63,6 @@
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
     <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
     <ID>ReturnCount:NativeConsoleFeature.kt$NativeConsoleFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
-    <ID>ReturnCount:NativeCryptoFeature.kt$NativeCryptoFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>ReturnCount:NativeSQLiteFeature.kt$NativeSQLiteFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>ReturnCount:NativeTransportFeature.kt$NativeTransportFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
@@ -76,7 +75,9 @@
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
     <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, )</ID>
+    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.natives")).resolve("libnetty_tcnative_linux_$archTag.a"), )</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, )</ID>
+    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.natives")).resolve("libnetty_tcnative_osx_$archTag.a"), )</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields( NativeDB::class.java, "pointer", "busyHandler", "commitListener", "updateListener", "progressHandler", ))</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields(Function::class.java, "context", "value", "args"))</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "aarch64", *epollImpls)</ID>
@@ -128,5 +129,6 @@
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$subject: String</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
+    <ID>UnusedPrivateProperty:NativeTransportFeature.kt$NativeTransportFeature.Companion$private val iouringImpls = arrayOf( "io.netty.incubator.channel.uring.Native", "io.netty.incubator.channel.uring.LinuxSocket", "io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods", )</ID>
   </CurrentIssues>
 </SmellBaseline>

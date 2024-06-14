@@ -127,6 +127,8 @@
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.js.runtime.Evaluator\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.llvm.runtime.config.ConfigurationFactory\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.EngineCacheSupport\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.FloodControlHandler\\E"

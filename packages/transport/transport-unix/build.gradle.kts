@@ -72,6 +72,11 @@ tasks.withType(CppCompile::class.java).configureEach {
   description = "Compile native code"
   source.from(layout.projectDirectory.dir("src/main/cpp").asFileTree.matching { include("**/*.c") })
 
+  // enable static init mode
+  if (name.lowercase().contains("static")) {
+    macros["NETTY_GVM_STATIC"] = "1"
+  }
+
   compilerArgs.addAll(listOf(
     "-x", "c",
     "-O3",

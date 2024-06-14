@@ -40,10 +40,10 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
   override fun getDescription(): String = "Registers native SQLite access"
 
   override fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo> = if (STATIC_JNI) listOfNotNull(
-    nativeLibrary(singular = libraryNamed(
-      "sqlitejdbc",
-      "org.sqlite.core.NativeDB",
-    )),
+    nativeLibrary(singular = libraryNamed("sqlitejdbc", "org.sqlite.core.NativeDB", deps = (
+      // on linux, we need to additionally link against the `math` library, which is at `libm`
+      if (Platform.includedIn(Platform.LINUX::class.java) && STATIC_JNI) listOf("m") else emptyList()
+    )))
   ) else emptyList()
 
   override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> {

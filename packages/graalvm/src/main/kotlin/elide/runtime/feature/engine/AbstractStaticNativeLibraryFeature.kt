@@ -44,6 +44,7 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     eager: Boolean = false,
     absolutePath: Path? = null,
     initializer: Boolean = true,
+    deps: List<String> = emptyList(),
   ): NativeLibInfo = NativeLibInfo.of(
     name,
     *layout,
@@ -55,6 +56,7 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     linkName = linkName,
     absolutePath = absolutePath,
     initializer = initializer,
+    deps = deps,
   )
 
   // Scan each provided JAR file system path (as a ZipFileSystem) for the resource at the provided path; when a match is
@@ -170,7 +172,7 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
       }
       if (it.registerJni) (access as BeforeAnalysisAccessImpl).nativeLibraries.let { nativeLibraries ->
         when (it.type) {
-          STATIC -> nativeLibraries.addStaticJniLibrary(it.name)
+          STATIC -> nativeLibraries.addStaticJniLibrary(it.name, *it.deps.toTypedArray())
           SHARED -> nativeLibraries.addDynamicNonJniLibrary(it.name)
         }
       }

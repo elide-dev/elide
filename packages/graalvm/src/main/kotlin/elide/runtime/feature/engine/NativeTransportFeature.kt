@@ -120,7 +120,14 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
         "META-INF/native/libtransport-epoll.a",  // @TODO: gradle doesn't support arm64 linux
         "META-INF/native/libtransport-epoll.so",
         renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
-      )
+      ).plus(access.unpackLibrary(
+        "transport-uring",
+        "netty_transport_native_io_uring",
+        "x86-64",
+        "META-INF/native/libtransport-uring.a",  // @TODO: gradle doesn't support arm64 linux
+        "META-INF/native/libtransport-uring.so",
+        renameTo = { "libnetty_transport_native_io_uring.${it.substringAfterLast(".")}" },
+      ))
 
       Platform.includedIn(Platform.LINUX_AARCH64::class.java) -> return access.unpackLibrary(
         "transport-epoll",
@@ -129,7 +136,14 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
         "META-INF/native/libtransport-epoll.a",
         "META-INF/native/libtransport-epoll.so",
         renameTo = { "libnetty_transport_native_epoll.${it.substringAfterLast(".")}" },
-      )
+      ).plus(access.unpackLibrary(
+        "transport-uring",
+        "netty_transport_native_io_uring",
+        "aarch64",
+        "META-INF/native/libtransport-uring.a",  // @TODO: gradle doesn't support arm64 linux
+        "META-INF/native/libtransport-uring.so",
+        renameTo = { "libnetty_transport_native_io_uring.${it.substringAfterLast(".")}" },
+      ))
 
       Platform.includedIn(Platform.DARWIN_AMD64::class.java) -> return access.unpackLibrary(
         "transport-kqueue",

@@ -15,9 +15,6 @@ package elide.runtime.feature
 import java.nio.file.Path
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
 
-/**
- * TBD.
- */
 public interface NativeLibraryFeature : FrameworkFeature {
   /** Types of linking for native libraries. */
   public enum class NativeLibType {
@@ -45,6 +42,7 @@ public interface NativeLibraryFeature : FrameworkFeature {
     val eager: Boolean,
     val absolutePath: Path?,
     val initializer: Boolean,
+    val deps: List<String>,
   ) {
     public companion object {
       @JvmStatic public fun of(
@@ -58,6 +56,7 @@ public interface NativeLibraryFeature : FrameworkFeature {
         eager: Boolean,
         absolutePath: Path?,
         initializer: Boolean,
+        deps: List<String>,
       ): NativeLibInfo = NativeLibInfo(
         name = name,
         prefix = layout.toList(),
@@ -69,6 +68,7 @@ public interface NativeLibraryFeature : FrameworkFeature {
         eager = eager,
         absolutePath = absolutePath,
         initializer = initializer,
+        deps = deps,
       )
     }
   }

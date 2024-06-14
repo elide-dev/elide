@@ -10,10 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+package elide.transport.uring;
 
-module elide.transport.kqueue {
-    requires elide.base;
+import elide.transport.api.NativeTransport;
 
-    provides elide.transport.api.NativeTransport
-        with elide.transport.kqueue.ElideKQueueTransport;
+/**
+ * Marker interface for the IOUring transport.
+ */
+public class ElideIOUringTransport implements NativeTransport {
+  private static final String NAME = "io_uring";
+
+  @Override
+  public String getName() {
+    return NAME;
+  }
 }

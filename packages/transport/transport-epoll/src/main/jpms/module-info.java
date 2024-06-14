@@ -12,9 +12,6 @@
  */
 
 module elide.transport.epoll {
-    requires kotlin.stdlib;
-    requires kotlinx.serialization.core;
-
     requires elide.base;
 
     provides elide.transport.api.NativeTransport

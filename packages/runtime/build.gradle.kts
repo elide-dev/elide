@@ -138,6 +138,7 @@ val exclusions = listOfNotNull(
   // disable netty native transports if our own transport libraries are in use
   libs.netty.transport.native.epoll,
   libs.netty.transport.native.kqueue,
+  libs.netty.transport.native.iouring,
 ).onlyIf(enableNativeTransportV2))
 
 // Java Launcher (GraalVM at either EA or LTS)
@@ -437,6 +438,7 @@ dependencies {
   if (enableNativeTransportV2) {
     implementation(projects.packages.transport.transportEpoll)
     implementation(projects.packages.transport.transportKqueue)
+    implementation(projects.packages.transport.transportUring)
     implementation(libs.netty.transport.native.classes.epoll)
     implementation(libs.netty.transport.native.classes.kqueue)
     implementation(libs.netty.transport.native.classes.iouring)
@@ -583,8 +585,8 @@ val deprecatedNativeArgs = listOf(
 )
 
 val enabledFeatures = listOfNotNull(
-  "com.sun.jna.SubstrateStaticJNA",
   "elide.tool.feature.ToolingUmbrellaFeature",
+  onlyIf(HostManager.hostIsMac, "com.sun.jna.SubstrateStaticJNA"),
   onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
 )
 
@@ -1037,6 +1039,7 @@ val darwinReleaseArgs = darwinOnlyArgs.toList()
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
+    "-H:NativeLinkerOption=-lm",
     "-H:+StaticExecutableWithDynamicLibC",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",

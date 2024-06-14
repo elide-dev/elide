@@ -77,8 +77,8 @@ static jclass bool_array_class = 0;
 
 void debugLog(const char * message) {
   if (debug_logs) {
-    fprintf(stderr, message);
-    fprintf(stderr, "\n");
+    fputs(message, stderr);
+    fputs("\n", stderr);
   }
 }
 
@@ -556,7 +556,7 @@ int xCompare(void* context, int len1, const void* str1, int len2, const void* st
 // INITIALISATION ///////////////////////////////////////////////////
 
 #ifdef SQLITE_GVM_STATIC
-JNIEXPORT jint JNICALL JNI_OnLoad_sqlite(JavaVM *vm, void *reserved)
+JNIEXPORT jint JNICALL JNI_OnLoad_sqlitejdbc(JavaVM *vm, void *reserved)
 #else
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 #endif
@@ -590,7 +590,7 @@ JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_initializeStatic(JNIEnv *en
 // FINALIZATION
 
 #ifdef SQLITE_GVM_STATIC
-JNIEXPORT void JNICALL JNI_OnUnload_sqlite(JavaVM *vm, void *reserved)
+JNIEXPORT void JNICALL JNI_OnUnload_sqlitejdbc(JavaVM *vm, void *reserved)
 #else
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 #endif
@@ -625,7 +625,7 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 
 #ifdef SQLITE_GVM_STATIC
 JNIEXPORT void JNICALL Java_org_sqlite_core_NativeDB_unload(JavaVM *vm, void *reserved) {
-  JNI_OnUnload_sqlite(vm, reserved);
+  JNI_OnUnload_sqlitejdbc(vm, reserved);
 }
 #endif
 

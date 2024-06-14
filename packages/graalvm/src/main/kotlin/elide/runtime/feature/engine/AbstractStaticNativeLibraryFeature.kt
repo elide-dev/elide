@@ -43,7 +43,7 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     registerPrefix: Boolean = builtin,
     eager: Boolean = false,
     absolutePath: Path? = null,
-    initializer: Boolean = true,
+    initializer: Boolean = false,
     deps: List<String> = emptyList(),
   ): NativeLibInfo = NativeLibInfo.of(
     name,

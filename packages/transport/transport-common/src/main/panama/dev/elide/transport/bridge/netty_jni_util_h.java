@@ -11270,10 +11270,10 @@ public class netty_jni_util_h {
     public static int JNI_EINVAL() {
         return JNI_EINVAL;
     }
-    private static final int NETTY_JNI_UTIL_JNI_VERSION = (int)65542L;
+    private static final int NETTY_JNI_UTIL_JNI_VERSION = (int)0x00010008;
     /**
      * {@snippet lang=c :
-     * #define NETTY_JNI_UTIL_JNI_VERSION 65542
+     * #define NETTY_JNI_UTIL_JNI_VERSION 0x00010008
      * }
      */
     public static int NETTY_JNI_UTIL_JNI_VERSION() {

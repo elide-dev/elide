@@ -170,6 +170,106 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.jna.CallbackProxy",
+  "methods":[{"name":"callback","parameterTypes":["java.lang.Object[]"] }]
+},
+{
+  "name":"com.sun.jna.Native",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFDataRef",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFIndex",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFMutableDictionaryRef",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFStringRef",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeID",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeRef",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.IOKit$IOIterator",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.mac.IOKit$IORegistryEntry",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.unix.LibCAPI$size_t",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.ptr.IntByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.ptr.PointerByReference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.management.GarbageCollectorMXBean",
   "queryAllPublicMethods":true
 },
@@ -1884,6 +1984,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.scheduling.processor.$ScheduledMethodProcessor$ApplicationEventListener$scheduleTasks1$Intercepted$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.scheduling.processor.$ScheduledMethodProcessor$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2366,118 +2470,6 @@
 {
   "name":"java.util.Arrays.ArrayList",
   "methods":[{"name":"toString","parameterTypes":[] }]
-},
-{
-  "name": "tools.elide.vfs.Directory",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.Directory$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.File",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.File$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.Filesystem",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.Filesystem$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.Tree",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.Tree$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.TreeEntry",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.TreeEntry$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.Bundle",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.Bundle$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.BundleHeader",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.BundleHeader$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.BundleInfo",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name": "tools.elide.vfs.BundleInfo$Builder",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
 },
 {
   "name":"java.util.Base64$Decoder",
@@ -7299,6 +7291,38 @@
   "methods":[{"name":"getInstance","parameterTypes":[] }]
 },
 {
+  "name":"oshi.jna.ByRef$CloseableIntByReference",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"oshi.jna.ByRef$CloseableLongByReference",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"oshi.jna.ByRef$CloseableNativeLongByReference",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"oshi.jna.ByRef$CloseableSizeTByReference",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"picocli.CommandLine$AutoHelpMixin",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
@@ -7463,119 +7487,112 @@
   "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
 },
 {
-  "name":"oshi.jna.ByRef$CloseableSizeTByReference",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Bundle",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"oshi.jna.ByRef$CloseableIntByReference",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Bundle$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"oshi.jna.ByRef$CloseableLongByReference",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.BundleHeader",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"oshi.jna.ByRef$CloseableNativeLongByReference",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.BundleHeader$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.Native",
+  "name":"tools.elide.vfs.BundleInfo",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.unix.LibCAPI$size_t",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.BundleInfo$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.CoreFoundation$CFMutableDictionaryRef",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Directory",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.IOKit$IOIterator",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Directory$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.IOKit$IORegistryEntry",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.File",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.CoreFoundation$CFStringRef",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.File$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeID",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Filesystem",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.CoreFoundation$CFIndex",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Filesystem$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Tree",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.CoreFoundation$CFTypeRef",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.Tree$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
-  "name":"com.sun.jna.platform.mac.CoreFoundation$CFDataRef",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "name":"tools.elide.vfs.TreeEntry",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"tools.elide.vfs.TreeEntry$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,

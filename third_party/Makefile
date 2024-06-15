@@ -15,6 +15,7 @@
 
 VERBOSE ?= no
 RELOCK ?= no
+CUSTOM_ZLIB ?= no
 
 TYPESCRIPT_VERSION = 5.5.0
 CARGO ?= $(shell which cargo)
@@ -52,6 +53,10 @@ PY_TOOLS ?= ruff uv
 LANGS ?= pkl
 
 REQUIRED ?= sqlite boringssl apr
+
+ifeq ($(CUSTOM_ZLIB),yes)
+REQUIRED += zlib
+endif
 
 ALL_LIBS ?= $(REQUIRED)
 
@@ -139,6 +144,26 @@ oxc-project/oxc/target:
 	@echo "Building oxc-project/oxc..."
 	$(RULE)cd oxc-project/oxc && $(CARGO) build
 
+CFLAGS_ZLIB ?=
+CFLAGS_ZLIB +=$(CFLAGS_BASE)
+LDFLAGS_ZLIB ?=
+LDFLAGS_ZLIB +=$(LDFLAGS_BASE)
+ZLIB_PREFIX = CFLAGS="$(CFLAGS_ZLIB)" LDFLAGS="$(LDFLAGS_ZLIB)"
+ZLIB_CONFIGURE ?= --const --prefix=`pwd`/target --static --64
+
+zlib: cloudflare/zlib/target
+
+zlib-clean:
+	$(RULE)cd cloudflare/zlib && $(MAKE) clean && git clean -xdf
+
+cloudflare/zlib/target:
+	@echo ""
+	@echo "Configuring zlib..."
+	$(RULE)cd cloudflare/zlib \
+		&& $(ZLIB_PREFIX) ./configure $(ZLIB_CONFIGURE) \
+		&& $(ZLIB_PREFIX) make -j`nproc` \
+		&& $(ZLIB_PREFIX) make install
+
 SQLITE3_CONFIGURE ?=--enable-all --enable-memsys5 --enable-update-limit --enable-tempstore=yes --enable-debug
 CFLAGS_SQLITE3 ?=
 CFLAGS_SQLITE3 +=$(CFLAGS_BASE)
@@ -173,7 +198,28 @@ gvm-ce-macos-aarch64:
 	@echo "Building GraalVM (macOS arm64)..."
 	$(RULE)cd oracle/graalvm/vm \
 		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64 build \
-		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64 graalvm-home
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64 graalvm-home > ../../../../.graalvm-home
+
+gvm-ce-linux-amd64:
+	@echo ""
+	@echo "Building GraalVM (Linux amd64)..."
+	$(RULE)cd oracle/graalvm/vm \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-linux-amd64 build \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-linux-amd64 graalvm-home > ../../../../.graalvm-home
+
+gvm-ce-linux-amd64-complete:
+	@echo ""
+	@echo "Building GraalVM (Linux amd64, with artifacts)..."
+	$(RULE)cd oracle/graalvm/vm \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-linux-amd64-complete build \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-linux-amd64-complete graalvm-home > ../../../../.graalvm-home
+
+gvm-ce-macos-aarch64-complete:
+	@echo ""
+	@echo "Building GraalVM (macOS arm64, with artifacts)..."
+	$(RULE)cd oracle/graalvm/vm \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64-complete build \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64-complete graalvm-home > ../../../../.graalvm-home
 
 libroot: $(LIBROOT)
 
@@ -208,5 +254,11 @@ clean:
 	$(RULE)-cd sqlite && $(MAKE) clean && rm -fv Makefile sqlite3.c
 	$(RULE)-cd google/boringssl && rm -fr build
 	$(RULE)-cd apache/apr && git clean -xdf
+	$(RULE)-cd cloudflare/zlib && make clean && git clean -xdf
+
+gvm-clean:
+	$(RULE)-cd oracle/graalvm/vm && $(GVM_BUILD_PREFIX) $(MX) clean
+
+distclean: clean gvm-clean
 
 .PHONY: all pkl ruff uv oxc google libroot

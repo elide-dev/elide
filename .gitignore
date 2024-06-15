@@ -38,3 +38,5 @@ target
 kotlin-js-store/
 tools/images/bench/elide-edge.tgz
 packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js
+/.graalvm-home
+/.java-home

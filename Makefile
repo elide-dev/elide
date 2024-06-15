@@ -25,7 +25,9 @@ SIGNING_KEY ?= F812016B
 REMOTE ?= no
 PUSH ?= no
 CHECK ?= yes
-CUSTOM_GVM ?= no
+
+# Flags that are exported to the third_party build.
+export CUSTOM_ZLIB ?= no
 
 # Flags that control this makefile, along with their defaults:
 #
@@ -46,6 +48,15 @@ CUSTOM_GVM ?= no
 # REMOTE ?= no
 # PUSH ?= no
 # CHECK ?= yes
+# CUSTOM_GVM ?= no
+# CUSTOM_JVM ?= no
+# CUSTOM_ZLIB ?= no
+# USE_GVM_AS_JVM ?= no
+# GVM_PROFILE ?= (default for os)
+
+export PATH
+export JAVA_HOME
+export GRAALVM_HOME
 
 GRADLE ?= ./gradlew
 RUSTUP ?= $(shell which rustup)
@@ -66,6 +77,10 @@ GZIP ?= $(shell which gzip)
 GPG2 ?= $(shell which gpg)
 PNPM ?= $(shell which pnpm)
 BAZEL ?= $(shell which bazel)
+NODE ?= $(shell which node)
+BUN ?= $(shell which bun)
+JAVA ?= $(shell which java)
+NATIVE_IMAGE ?= $(shell which native-image)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
@@ -77,6 +92,44 @@ JQ ?= $(shell which jq)
 BAZEL ?= $(shell which bazel)
 export PROJECT_ROOT ?= $(shell pwd)
 export ELIDE_ROOT ?= yes
+
+PATH := $(shell echo $$PATH)
+
+# Handle custom Java home path.
+CUSTOM_JVM ?= no
+JAVA_HOME ?= $(shell echo $$JAVA_HOME)
+GRAALVM_HOME ?= $(shell echo $$GRAALVM_HOME)
+
+ifneq ("$(wildcard ./.java-home)","")
+		$(info Using custom JVM...)
+    CUSTOM_JVM = $(shell cat .java-home)
+    JAVA_HOME = $(CUSTOM_JVM)
+    PATH := $(JAVA_HOME)/bin:$(PATH)
+    JAVA = $(JAVA_HOME)/bin/java
+endif
+
+# Handle custom GraalVM home path.
+CUSTOM_GVM ?= no
+USE_GVM_AS_JVM ?= no
+
+ifneq ("$(wildcard ./.graalvm-home)","")
+    $(info Using custom GraalVM...)
+    CUSTOM_GVM = $(shell cat .graalvm-home)
+    GRAALVM_HOME = $(CUSTOM_GVM)
+    NATIVE_IMAGE = $(GRAALVM_HOME)/bin/native-image
+ifeq ($(USE_GVM_AS_JVM),yes)
+		JAVA_HOME = $(GRAALVM_HOME)
+		PATH := $(GRAALVM_HOME)/bin:$(PATH)
+		JAVA = $(GRAALVM_HOME)/bin/java
+endif
+endif
+
+ifeq ($(SYSTEM),Darwin)
+export GVM_PROFILE ?= gvm-ce-macos-aarch64
+endif
+ifeq ($(SYSTEM),Linux)
+export GVM_PROFILE ?= gvm-ce-linux-amd64
+endif
 
 JS_FACADE_BIN ?= runtime/bazel-bin/elide/runtime/js/runtime.bin.js
 JS_FACADE_OUT ?= packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js
@@ -222,6 +275,8 @@ GRADLE_OMIT ?= $(OMIT_NATIVE)
 _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
 DEPS ?= node_modules/ third-party umbrella $(RUNTIME_GEN)
 
+GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$(PATH)"
+
 # ---- Targets ---- #
 
 all: build
@@ -230,24 +285,31 @@ setup: $(DEPS)  ## Setup development pre-requisites.
 
 build: $(DEPS)  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
-	$(CMD) $(GRADLE) build $(CLI_TASKS) $(GRADLE_OMIT) $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build $(CLI_TASKS) $(GRADLE_OMIT) $(_ARGS)
 
-native: | build  ## Build Elide's native image target; use BUILD_MODE=release for a release binary.
+native:  ## Build Elide's native image target; use BUILD_MODE=release for a release binary.
 	$(info Building Elide native $(VERSION) ($(BUILD_MODE))...)
 ifeq ($(BUILD_MODE),release)
-	$(CMD) $(GRADLE) :packages:runtime:nativeOptimizedCompile $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:runtime:nativeOptimizedCompile $(_ARGS)
 else
-	$(CMD) $(GRADLE) :packages:runtime:nativeCompile $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:runtime:nativeCompile $(_ARGS)
 endif
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
-	$(CMD)$(GRADLE) test check $(_ARGS)
-	$(CMD)$(GRADLE) :packages:cli:optimizedRun --args="selftest"
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test check $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:optimizedRun --args="selftest"
+
+gvm: .graalvm-home  ## Build a custom copy of GraalVM for use locally.
+	@echo "GraalVM is ready (profile: $(GVM_PROFILE))."
+
+.graalvm-home:
+	$(info Building GraalVM...)
+	$(CMD)$(MAKE) -C third_party $(GVM_PROFILE)
 
 publish-substrate:
 	$(info Publishing Elide Substrate "$(VERSION)"...)
-	$(CMD)$(GRADLE) \
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
 		publishSubstrate \
 		--no-daemon \
 		--warning-mode=none \
@@ -267,7 +329,7 @@ publish-substrate:
 
 publish-framework:
 	$(info Publishing Elide Framework "$(VERSION)"...)
-	$(CMD)$(GRADLE) \
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
 		publishElide \
 		--no-daemon \
 		--warning-mode=none \
@@ -287,7 +349,7 @@ publish-framework:
 
 publish-bom:
 	$(info Publishing Elide BOM "$(VERSION)"...)
-	$(CMD)$(GRADLE) \
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
 		publishBom \
 		--no-daemon \
 		--warning-mode=none \
@@ -326,7 +388,7 @@ clean-cli:  ## Clean built CLI targets.
 cli:  ## Build the Elide command-line tool (native target).
 	$(info Building Elide CLI tool...)
 	$(CMD)mkdir -p $(CLI_DISTPATH)
-	$(CMD)$(GRADLE) \
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
 		:packages:cli:$(NATIVE_TARGET_NAME) \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
@@ -446,7 +508,7 @@ clean: clean-docs  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
 	$(CMD)$(FIND) . -name .DS_Store -delete
-	$(CMD)$(GRADLE) clean cleanTest $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) clean cleanTest $(_ARGS)
 
 clean-docs:  ## Clean documentation targets.
 	@echo "Cleaning docs..."
@@ -471,18 +533,18 @@ model-update:  ## Update the proto model and re-build it.
 $(TARGET)/docs:
 	@echo "Generating docs..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS))
-	$(CMD)$(GRADLE) docs dokkaHtmlMultiModule $(_ARGS) -PbuildDocs=true --no-configuration-cache -x htmlDependencyReport
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) docs dokkaHtmlMultiModule $(_ARGS) -PbuildDocs=true --no-configuration-cache -x htmlDependencyReport
 	@echo "Docs build complete."
 
 api-check:  ## Check API/ABI compatibility with current changes.
 	$(info Checking ABI compatibility...)
-	$(CMD)$(GRADLE) apiCheck -PbuildSamples=false -PbuildDocs=false
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) apiCheck -PbuildSamples=false -PbuildDocs=false
 
 reports: $(REPORTS)  ## Generate reports for tests, coverage, etc.
 
 $(REPORTS):
 	@echo "Generating reports..."
-	$(CMD)$(GRADLE) \
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
 		:reports \
 		:tools:reports:reports \
 		-x nativeCompile \
@@ -499,7 +561,7 @@ $(REPORTS):
 
 update-dep-hashes:
 	@echo "- Updating dependency hashes..."
-	$(CMD)$(GRADLE) \
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
 		-Pversions.java.language=$(JVM) \
 		--write-verification-metadata $(DEP_HASH_ALGO)
 	@echo "Dependency hashes updated."
@@ -509,7 +571,7 @@ update-dep-locks:
 	$(CMD)$(YARN)
 	@echo ""
 	@echo "- Updating dependency locks (gradle)..."
-	$(CMD)$(GRADLE) resolveAndLockAll --write-locks
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) resolveAndLockAll --write-locks
 	@echo "Dependency locks updated."
 
 update-deps:  ## Perform interactive dependency upgrades across Yarn and Gradle.
@@ -520,11 +582,11 @@ update-deps:  ## Perform interactive dependency upgrades across Yarn and Gradle.
 
 update-jsdeps:  ## Interactively update Yarn dependencies.
 	@echo "Running interactive update for Gradle..."
-	$(CMD)$(GRADLE) upgrade-gradle
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) upgrade-gradle
 
 update-jdeps:  ## Interactively update Gradle dependencies.
 	@echo "Running interactive update for Gradle..."
-	$(CMD)$(GRADLE) upgrade-gradle
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) upgrade-gradle
 
 relock-deps:  ## Update dependency locks and hashes across Yarn and Gradle.
 	@echo "Relocking dependencies..."
@@ -614,13 +676,16 @@ distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops chang
 	$(CMD)$(MAKE) -C third_party clean
 	$(CMD)$(CARGO) clean
 	$(CMD)cd runtime && $(BAZEL) clean
-	$(CMD)$(RM) -fr node_modules
+	$(CMD)$(RM) -fr node_modules .graalvm-home .java-home
 	@echo "" && echo "Cleaning caches..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) kotlin-js-store .buildstate.tar.gz .dev node_modules target
 	@echo "" && echo "Cleaning runtime facade..."
 	$(CMD)-cd runtime && $(BAZEL) clean --expunge
+	@echo "" && echo "Dist-cleaning third-party code..."
+	$(CMD)$(MAKE) -C third_party distclean
+	@echo "Dist-clean complete."
 
-forceclean: forceclean  ## DANGER: Clean, distclean, and clear untracked files.
+forceclean: distclean  ## DANGER: Clean, distclean, and clear untracked files.
 	@echo "Resetting codebase..."
 	$(CMD)$(GIT) reset --hard
 	@echo "Cleaning untracked files..."
@@ -629,6 +694,62 @@ forceclean: forceclean  ## DANGER: Clean, distclean, and clear untracked files.
 help:  ## Show this help text ('make help').
 	$(info Elide:)
 	@grep -E '^[a-z1-9A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+info:  ## Show info about the current codebase and toolchain.
+	@echo "Elide version: $(VERSION)"
+	@echo "Build mode: $(BUILD_MODE)"
+	@echo "JVM target: $(JVM)"
+	@echo "Java Home: $(JAVA_HOME)"
+	@echo "GraalVM Home: $(GRAALVM_HOME)"
+	@echo "" && echo "---- Toolchain --------------------------------------------"
+	@echo "- Java: $(JAVA)"
+	@echo "- Native Image: $(NATIVE_IMAGE)"
+	@echo "- Rust: $(RUSTUP)"
+	@echo "- Cargo: $(CARGO)"
+	@echo "- Yarn: $(YARN)"
+	@echo "- Bazel: $(BAZEL)"
+	@echo "- Buf: $(BUF)"
+	@echo "- Node: $(NODE)"
+	@echo "- PNPM: $(PNPM)"
+	@echo "" && echo "---- Toolchain Versions -----------------------------------"
+	@echo "Java:"
+	$(CMD)$(JAVA) --version
+	@echo ""
+	@echo "Native Image:"
+	$(CMD)$(NATIVE_IMAGE) --version
+	@echo ""
+	@echo "Rustup:"
+	$(CMD)$(RUSTUP) --version
+	@echo ""
+	@echo "Cargo:"
+	$(CMD)$(CARGO) --version
+	@echo ""
+	@echo "Yarn:"
+	$(CMD)$(YARN) --version
+	@echo ""
+	@echo "Bazel:"
+	$(CMD)$(BAZEL) --version
+	@echo ""
+	@echo "Buf:"
+	$(CMD)$(BUF) --version
+	@echo ""
+	@echo "Node:"
+	$(CMD)$(NODE) --version
+	@echo ""
+	@echo "PNPM:"
+	$(CMD)$(PNPM) --version
+	@echo "" && echo "---- OS Info ----------------------------------------------"
+	@echo "- System: $(SYSTEM)"
+	@echo "- Kernel: $(shell uname -r)"
+	@echo "- Hostname: $(shell hostname)"
+	@echo "" && echo "---- Environment ------------------------------------------"
+	@echo "- PATH: $(shell echo $$PATH)"
+	@echo "- CC: $(shell echo $$CC)"
+	@echo "- CFLAGS: $(shell echo $$CFLAGS)"
+	@echo "- LDFLAGS: $(shell echo $$LDFLAGS)"
+	@echo "- CPPFLAGS: $(shell echo $$CPPFLAGS)"
+	@echo "- JAVA_HOME: $(shell echo $$JAVA_HOME)"
+	@echo "- GRAALVM_HOME: $(shell echo $$GRAALVM_HOME)"
 
 # ---- Runtime submodule ---- #
 # Note: make sure the Git submodule is up to date by running `git submodule update [--init] runtime`

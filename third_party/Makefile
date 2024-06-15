@@ -22,8 +22,10 @@ GO ?= $(shell which go)
 NPM ?= $(shell which npm)
 NPX ?= $(shell which npx)
 BUN ?= $(shell which bun)
+MX ?= $(shell which mx)
 PWD ?= $(shell pwd)
 RELEASE ?= no
+LABS_JDK ?= labsjdk-ce-latest-24+1-jvmci-b01
 
 GRADLE ?= ./gradlew
 CMAKE ?= cmake
@@ -158,6 +160,20 @@ sqlite/sqlite3.c: sqlite/Makefile
 	@echo ""
 	@echo "Building sqlite3 amalgamation..."
 	$(RULE)cd sqlite && $(SQLITE3_PREFIX) $(MAKE) -j`nproc` sqlite3.c
+
+GVM_BUILD_PREFIX ?= JAVA_HOME="$$HOME/.mx/jdks/$(LABS_JDK)"
+
+gvm-fetch-labsjdk:
+	@echo ""
+	@echo "Fetching labs JDK..."
+	$(RULE)cd oracle/graalvm/vm && yes Y | $(MX) fetch-jdk --strip-contents-home labsjdk-ce-latest
+
+gvm-ce-macos-aarch64:
+	@echo ""
+	@echo "Building GraalVM (macOS arm64)..."
+	$(RULE)cd oracle/graalvm/vm \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64 build \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64 graalvm-home
 
 libroot: $(LIBROOT)
 

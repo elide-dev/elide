@@ -39,3 +39,7 @@
 [submodule "zlib"]
 	path = third_party/cloudflare/zlib
 	url = git@github.com:cloudflare/zlib.git
+[submodule "graalvm"]
+	path = third_party/oracle/graalvm
+	url = git@github.com:oracle/graal.git
+	shallow = true

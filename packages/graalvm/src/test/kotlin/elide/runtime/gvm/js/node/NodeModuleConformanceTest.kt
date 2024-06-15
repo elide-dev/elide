@@ -118,10 +118,8 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJs
       renderedStdin.replace("  $capturedStdinLine |", "→ $capturedStdinLine |")
     }
 
-    assertEquals(
-      0,
-      process.exitValue(),
-      StringBuilder().apply {
+    if (process.exitValue() != 0) {
+      val message = buildString {
         appendLine(
           """Node.js conformance test failed with exit code ${process.exitValue()}.
 
@@ -136,8 +134,10 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJs
           ${output.split("\n").drop(1).joinToString("\n") { "          $it" }}
         """.trimIndent(),
         )
-      }.toString(),
-    )
+      }
+
+      throw AssertionError(message)
+    }
     assertNotNull(
       output,
       "Node.js conformance test failed with no output",

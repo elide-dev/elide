@@ -24,6 +24,8 @@ SAMPLES ?= no
 SIGNING_KEY ?= F812016B
 REMOTE ?= no
 PUSH ?= no
+CHECK ?= yes
+CUSTOM_GVM ?= no
 
 # Flags that control this makefile, along with their defaults:
 #
@@ -43,6 +45,7 @@ PUSH ?= no
 # SIGNING_KEY ?= "F812016B"
 # REMOTE ?= no
 # PUSH ?= no
+# CHECK ?= yes
 
 GRADLE ?= ./gradlew
 RUSTUP ?= $(shell which rustup)
@@ -62,6 +65,7 @@ BZIP2 ?= $(shell which bzip2)
 GZIP ?= $(shell which gzip)
 GPG2 ?= $(shell which gpg)
 PNPM ?= $(shell which pnpm)
+BAZEL ?= $(shell which bazel)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
@@ -71,6 +75,18 @@ JVM ?= 21
 SYSTEM ?= $(shell uname -s)
 JQ ?= $(shell which jq)
 BAZEL ?= $(shell which bazel)
+export PROJECT_ROOT ?= $(shell pwd)
+export ELIDE_ROOT ?= yes
+
+JS_FACADE_BIN ?= runtime/bazel-bin/elide/runtime/js/runtime.bin.js
+JS_FACADE_OUT ?= packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js
+JS_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/js/js.modules.tar.gz
+JS_MODULE_OUT ?= packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/js.modules.tar.gz
+
+PY_FACADE_BIN ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/preamble.py
+PY_FACADE_OUT ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/preamble.py
+PY_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/python/py.modules.tar.gz
+PY_MODULE_OUT ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/py.modules.tar.gz
 
 POSIX_FLAGS ?=
 GRADLE_OPTS ?=
@@ -121,10 +137,15 @@ ifeq ($(SCAN),yes)
 BUILD_ARGS += --scan
 endif
 
-CLI_TASKS ?= :packages:cli:installDist
+CLI_TASKS ?=
+
+ifeq ($(CHECK),yes)
+CLI_TASKS += check
+endif
 
 ifeq ($(RELEASE),yes)
 BUILD_MODE ?= release
+BAZEL_MODE ?= opt
 SIGNING ?= yes
 SIGSTORE ?= yes
 NATIVE_TARGET_NAME ?= nativeOptimizedCompile
@@ -132,7 +153,13 @@ CLI_DISTPATH ?= ./packages/cli/build/dist/release
 BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true -Pelide.release=true -Pelide.strict=true
 CLI_RELEASE_TARGETS ?= cli-local cli-release-artifacts
 else
+ifeq ($(BUILD_MODE),debug)
+BUILD_MODE ?= debug
+BAZEL_MODE ?= debug
+else
 BUILD_MODE ?= dev
+BAZEL_MODE ?= fastbuild
+endif
 CLI_DISTPATH ?= ./packages/cli/build/dist/debug
 NATIVE_TARGET_NAME ?= nativeCompile
 CLI_RELEASE_TARGETS ?= cli-local
@@ -185,15 +212,21 @@ else
 CMD ?= $(RULE)
 endif
 
+ifeq ($(CUSTOM_GVM),yes)
+# setup a custom JVM prefix for graalvm (coming soon)
+endif
+
+RUNTIME_GEN = $(JS_FACADE_OUT) $(JS_MODULE_OUT) $(PY_FACADE_OUT) $(PY_MODULE_OUT)
+
 GRADLE_OMIT ?= $(OMIT_NATIVE)
 _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
-DEPS ?= node_modules/ third-party umbrella
+DEPS ?= node_modules/ third-party umbrella $(RUNTIME_GEN)
 
 # ---- Targets ---- #
 
-all: build test docs
+all: build
 
-setup: $(DEPS)
+setup: $(DEPS)  ## Setup development pre-requisites.
 
 build: $(DEPS)  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
@@ -355,8 +388,7 @@ third_party/sqlite:
 
 third_party/lib:
 	@echo "Building third-party projects..."
-	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party -j`nproc`
-	$(CMD)mkdir third_party/lib
+	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party -j`nproc` && mkdir -p third_party/lib
 	@echo ""
 
 cli-release-artifacts:
@@ -414,13 +446,11 @@ clean: clean-docs  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
 	$(CMD)$(FIND) . -name .DS_Store -delete
-	$(CMD)$(MAKE) -C third_party clean
-	$(CMD)$(CARGO) clean
 	$(CMD)$(GRADLE) clean cleanTest $(_ARGS)
 
 clean-docs:  ## Clean documentation targets.
 	@echo "Cleaning docs..."
-	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS))
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS))
 
 docs: $(DOCS) $(TARGET)/docs  ## Generate docs for all library modules.
 
@@ -580,8 +610,15 @@ node_modules/:
 	$(CMD)$(PNPM) install --strict-peer-dependencies --frozen-lockfile
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
-	@echo "Cleaning caches..."
-	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) kotlin-js-store .buildstate.tar.gz
+	@echo "" && echo "Cleaning dependencies..."
+	$(CMD)$(MAKE) -C third_party clean
+	$(CMD)$(CARGO) clean
+	$(CMD)cd runtime && $(BAZEL) clean
+	$(CMD)$(RM) -fr node_modules
+	@echo "" && echo "Cleaning caches..."
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) kotlin-js-store .buildstate.tar.gz .dev node_modules target
+	@echo "" && echo "Cleaning runtime facade..."
+	$(CMD)-cd runtime && $(BAZEL) clean --expunge
 
 forceclean: forceclean  ## DANGER: Clean, distclean, and clear untracked files.
 	@echo "Resetting codebase..."
@@ -596,19 +633,33 @@ help:  ## Show this help text ('make help').
 # ---- Runtime submodule ---- #
 # Note: make sure the Git submodule is up to date by running `git submodule update [--init] runtime`
 
-runtime-build: # Build the JS runtime facade and the builtin modules bundle
-	@echo "Building JS runtime facade..."
-	$(CMD) cd runtime && $(BAZEL) build //...
+runtime: runtime/WORKSPACE runtime/bazel-bin $(RUNTIME_GEN) ## Build and update the JS runtime if needed.
 
-runtime-update: runtime-build # Rebuild and copy the JS runtime facade
-	@echo "Updating 'facade.js.gz'"
-	$(CMD) cp -fv ./runtime/bazel-bin/elide/runtime/js/runtime.bin.js \
-		./packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js
-	$(CMD) cd packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js && \
-		rm -fv facade.js.gz && \
+runtime/WORKSPACE:
+	@echo "Setting up submodules..."
+	$(CMD)$(GIT) submodule update --init --recursive
+
+runtime-build: runtime/bazel-bin ## Build the JS runtime facade and the builtin modules bundle
+
+$(RUNTIME_GEN): runtime/bazel-bin
+
+runtime/bazel-bin:
+	@echo "" && echo "Building runtime facades..."
+	$(CMD)cd runtime && $(BAZEL) build -c $(BAZEL_MODE) //...
+	$(CMD)$(MAKE) runtime-update-copy
+
+runtime-update: runtime-build $(RUNTIME_GEN) ## Rebuild and copy the JS runtime facade
+
+runtime-update-copy:
+	@echo "" && echo "Updating runtime artifacts..."
+	@echo "- Updating 'facade.js.gz'"
+	$(CMD)cp -f$(POSIX_FLAGS) $(JS_FACADE_BIN) $(JS_FACADE_OUT)
+	$(CMD)cd packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js && \
+		rm -f$(POSIX_FLAGS) facade.js.gz && \
 		gzip --best -k facade.js
-	@echo "Updating 'js.modules.tar.gz'"
-	$(CMD) cp -fv ./runtime/bazel-bin/elide/runtime/js/js.modules.tar.gz \
-	 ./packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/js.modules.tar.gz
+	@echo "- Updating 'js.modules.tar.gz'"
+	$(CMD)cp -f$(POSIX_FLAGS) $(JS_MODULE_BIN) $(JS_MODULE_OUT)
+	@echo "- Updating 'py.modules.tar.gz'"
+	$(CMD)cp -f$(POSIX_FLAGS) $(PY_MODULE_BIN) $(PY_MODULE_OUT)
 
-.PHONY: all docs build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-jdk21 image-jdk22 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-runtime-jvm21 image-runtime-jvm21 image-native image-native-alpine runtime-build runtime-update third-party
+.PHONY: all docs build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-jdk21 image-jdk22 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-runtime-jvm21 image-runtime-jvm21 image-native image-native-alpine runtime runtime-build runtime-update third-party

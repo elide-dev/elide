@@ -561,11 +561,11 @@ val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
 val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 
 val stagedNativeArgs: List<String> = listOfNotNull(
-  "-H:+LayeredBaseImageAnalysis",
   "-H:+RemoveUnusedSymbols",
 
   onlyIf(oracleGvm, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
 
+  onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
   onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
   onlyIf(enableExperimental, "-H:+ProfileConstantObjects"),
   onlyIf(enableExperimental, "-H:+ProfileLockElimination"),
@@ -582,12 +582,12 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   onlyIf(enableExperimental, "-H:InlinedCompilerNodeLimit=10000"),
 
   // Breakages
-//  "-H:+LSRAOptimization",
-//  "-H:+LIRProfileMethods",
-//  "-H:+LIRProfileMoves",
-//  "-H:+UseExperimentalReachabilityAnalysis",  // not supported by truffle feature
-//  "-H:+UseReachabilityMethodSummaries",  // not supported by truffle feature
-//  "-H:+VMContinuations",  // not supported with runtime compilation
+  // "-H:+LSRAOptimization",
+  // "-H:+LIRProfileMethods",
+  // "-H:+LIRProfileMoves",
+  // "-H:+UseExperimentalReachabilityAnalysis",  // not supported by truffle feature
+  // "-H:+UseReachabilityMethodSummaries",  // not supported by truffle feature
+  // "-H:+VMContinuations",  // not supported with runtime compilation
 )
 
 val deprecatedNativeArgs = listOf(

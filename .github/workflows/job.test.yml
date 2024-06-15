@@ -274,6 +274,8 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
+      - name: "Build Environment"
+        run: make info
       - name: "🛠️ Build Native"
         run: make setup && cargo build
       - name: "Testsuite"

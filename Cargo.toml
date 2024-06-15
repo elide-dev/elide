@@ -13,4 +13,4 @@ lto = "thin"
 debug = "full"        # always ship debug symbols
 incremental = true
 codegen-units = 256
-target-cpu = "native"
+

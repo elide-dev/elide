@@ -185,7 +185,7 @@ val copyLibAprLibrary by tasks.registering(Copy::class) {
     val libTail = if (HostManager.hostIsMac) "dylib" else "so"
 
   from(libaprBuildRoot) {
-    include("libapr-2.0.a", "libapr-2.a", "libapr-2.so.0.0.0")
+    include("libapr-2.0.a", "libapr-2.a", "libapr-2.so.0.0.0", "libapr-2.0.dylib")
     rename {
       (if (it == "libapr-2.so.0.0.0") "libapr-2.$libTail" else it).replace("-2.0.", "-2.")
     }
@@ -216,7 +216,6 @@ val copyBoringSslLibrary by tasks.registering(Copy::class) {
   }
   from(boringsslHeaders) {
     include("**/*.h")
-    exclude("openssl/")
     exclude("openssl/pki")
     exclude("openssl/experimental")
   }
@@ -310,8 +309,8 @@ tasks.withType(LinkSharedLibrary::class.java).configureEach {
     "-L${libaprBuildPath.asFile.path}",
     "-lcrypto",
     "-lssl",
-  ).plus(if (!HostManager.hostIsLinux) listOf(
     "-lapr-2",
+  ).plus(if (!HostManager.hostIsLinux) listOf(
     "-liconv",
   ) else listOf(
     "-L/usr/lib",

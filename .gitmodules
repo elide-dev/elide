@@ -36,3 +36,6 @@
 	path = third_party/apache/apr
 	url = git@github.com:apache/apr.git
         shallow = true
+[submodule "zlib"]
+	path = third_party/cloudflare/zlib
+	url = git@github.com:cloudflare/zlib.git

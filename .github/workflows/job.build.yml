@@ -273,6 +273,8 @@ jobs:
               args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
+      - name: "Build Environment"
+        run: make info
       - name: "🛠️ Build Natives"
         run: make setup && cargo build
       - name: "🛠️ Build Packages"

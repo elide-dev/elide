@@ -22,6 +22,8 @@ Or, from inside `third_party`, you can just run `make`.
 - [SQLite][11]: Pinned version for Elide's use
 - [Google][12] [BoringSSL][13]: Google's fixed-up fork of OpenSSL.
 - [Apache][14] [APR (Apache Portable Runtime)][15]: Cross-platform runtime utilities
+- [Cloudflare][16]'s fork of [zlib][17]: Fast compression library
+- [Oracle][18] [GraalVM][19]: Used for edge-builds of Elide
 
 [0]: https://apple.com
 [1]: https://github.com/apple/pkl
@@ -33,4 +35,8 @@ Or, from inside `third_party`, you can just run `make`.
 [13]: https://boringssl.googlesource.com/boringssl
 [14]: https://apache.org
 [15]: https://apr.apache.org/
+[16]: https://cloudflare.com
+[17]: https://github.com/cloudflare/zlib
+[18]: https://oracle.com
+[19]: https://graalvm.org
 

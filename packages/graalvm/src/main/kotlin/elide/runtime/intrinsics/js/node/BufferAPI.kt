@@ -23,25 +23,54 @@ import elide.vm.annotations.Polyglot
 
 /**
  * ## Node API: Buffer
+ * 
+ * Defines the types and members of the Node.js `buffer` built-in module.
+ * 
+ * @see BufferAPI.Blob
+ * @see BufferAPI.File
  */
 @API public interface BufferAPI : NodeAPI {
+  /**
+   * Implements the `Blob` type from the Node.js `buffer` built-in module. Blobs are read-only chunks of byte data which
+   * can be used to derive buffers, strings, and other objects.
+   */
   @DelicateElideApi @Implementable public interface Blob {
+    /** The content type of this Blob. Note that this value is informative only. */
     @get:Polyglot public val type: String?
 
+    /** Size in bytes of this blob. */
     @get:Polyglot public val size: Int
 
+    /**
+     * Returns a promise which resolves with a JavaScript `ArrayBuffer` object containing a copy of this blob's data.
+     */
     @Polyglot public fun arrayBuffer(): JsPromise<PolyglotValue>
 
+    /**
+     * Returns a copy of this blob between the requested indices, and optionally with a different [type].
+     */
     @Polyglot public fun slice(start: Int? = null, end: Int? = null, type: String? = null): Blob
 
+    /**
+     * Returns a promise which resolves with the result of decoding this blob's data as a UTF-8 string.
+     */
     @Polyglot public fun text(): JsPromise<String>
 
+    /**
+     * Returns a stream that can be used to read the contents of this blob.
+     */
     @Polyglot public fun stream(): ReadableStream
   }
 
+  /**
+   * Implements the `File` class from the Node.js `buffer` built-in module. This type is basically a specialized
+   * [Blob] with additional [fileName] and [lastModified] fields.
+   */
   @DelicateElideApi public interface File : Blob {
+    /** The name of the file. */
     @get:Polyglot public val file: String
 
+    /** An epoch timestamp indicating the last modification to this file. */
     @get:Polyglot public val lastModified: Long
   }
 

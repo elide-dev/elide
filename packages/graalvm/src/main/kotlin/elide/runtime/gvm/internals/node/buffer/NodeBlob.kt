@@ -24,14 +24,33 @@ import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.node.BufferAPI
 import elide.vm.annotations.Polyglot
 
+/**
+ * Implements the `Blob` type from the Node.js `buffer` built-in module. Blobs are read-only chunks of byte data which
+ * can be used to derive buffers, strings, and other objects.
+ */
 @DelicateElideApi @Implementable internal open class NodeBlob internal constructor(
   val bytes: ByteArray,
   @Polyglot override val type: String?
 ) : BufferAPI.Blob {
+  /** Creates a new empty buffer. */
   @Polyglot constructor() : this(sources = null, options = null)
 
+  /**
+   * Creates a new buffer filled by concatenating the provider [sources]. The [sources] object must have array elements
+   * of a supported type, namely [buffers][PolyglotValue.hasBufferElements], or objects with a `buffer` member with the
+   * same effect.
+   */
   @Polyglot constructor(sources: PolyglotValue) : this(sources, options = null)
 
+  /**
+   * Creates a new buffer filled by concatenating the provider [sources]. The [sources] object must have array elements
+   * of a supported type, namely [buffers][PolyglotValue.hasBufferElements], or objects with a `buffer` member with the
+   * same effect.
+   * 
+   * The `options` object can be used to specify the content [type] of the blob by setting the `type` property to a
+   * string value. If the `endings` property is set to `"native"`, all line endings in the sources will be converted
+   * to the format of the current platform.
+   */
   @Polyglot constructor(sources: PolyglotValue?, options: PolyglotValue?) : this(
     bytes = makeBlobBytes(sources, options),
     type = NewBlobOptions.type(options),
@@ -55,21 +74,41 @@ import elide.vm.annotations.Polyglot
     return ReadableStream.wrap(bytes)
   }
 
+  /** Helper object used to extract values from constructor option structs. */
   protected object NewBlobOptions {
+    /**
+     * Reads the `endings` property from the given [options] object if it exists, returning `true` if its value is the
+     * string 'native', and false in every other case.
+     */
     fun nativeEndings(options: PolyglotValue?): Boolean {
       return options?.getMember("endings")?.asString() == "native"
     }
 
+    /**
+     * Reads the value of the `type` property from the given [options] object if it exists, returning `null` otherwise.
+     */
     fun type(options: PolyglotValue?): String? {
       return options?.getMember("type")?.asString()
     }
   }
 
   protected companion object {
+    /**
+     * Name of a property commonly exposed by objects that wrap buffers (e.g. typed arrays), used to coerce a value
+     * into a buffer (by using its wrapped buffer value instead) if it does not have buffer elements itself.
+     */
     private const val BUFFER_MEMBER_KEY = "buffer"
 
+    /** Simple Regular Expression used to detect line endings in source strings. */
     private val LineEndRegex = Regex("\r?\n")
 
+    /**
+     * Construct a [ByteArray] by concatenating all the [sources]. If the [options] object requests platform-specific
+     * line endings, they will replace all line endings present in the source values.
+     * 
+     * The [sources] value must have array elements of a supported type (buffer-like or exposing a `buffer` property),
+     * or this operation will fail with an exception.
+     */
     @JvmStatic @DelicateElideApi protected fun makeBlobBytes(
       sources: PolyglotValue? = null,
       options: PolyglotValue? = null
@@ -86,6 +125,11 @@ import elide.vm.annotations.Polyglot
       return bytes
     }
 
+    /**
+     * Read from a string or buffer-like [source] into an [out] stream, optionally replacing line endings with a
+     * platform-specific sequence. This method supports strings, buffers, typed arrays, data views, and blobs as
+     * sources.
+     */
     private fun readSource(source: PolyglotValue, out: OutputStream, nativeLineEndings: Boolean) = when {
       // a String is the most used source in code samples and the simplest to support
       source.isString -> readStringSource(source, out, nativeLineEndings)
@@ -99,6 +143,10 @@ import elide.vm.annotations.Polyglot
       else -> throw IllegalArgumentException("Invalid source type")
     }
 
+    /**
+     * Read a guest string [source] to an output stream, optionally replacing line endings with a platform-specific
+     * sequence. If the value [is not a string][PolyglotValue.isString], an exception will be thrown.
+     */
     private fun readStringSource(source: PolyglotValue, out: OutputStream, nativeLineEndings: Boolean) {
       val string = if (!nativeLineEndings) source.asString()
       else source.asString().replace(LineEndRegex, System.lineSeparator())
@@ -106,12 +154,21 @@ import elide.vm.annotations.Polyglot
       out.write(string.toByteArray(Charsets.UTF_8))
     }
 
+    /**
+     * Read a guest buffer [source] to an output stream, optionally replacing line endings with a platform-specific
+     * sequence. If the value [is not a buffer][PolyglotValue.hasBufferElements], an exception will be thrown.
+     */
     private fun readBufferSource(source: PolyglotValue, out: OutputStream) {
       val bytes = ByteArray(source.bufferSize.toInt())
       source.readBuffer(/*byteOffset = */ 0, bytes, /*destinationOffset = */ 0, bytes.size)
       out.write(bytes)
     }
 
+    /**
+     * Read a guest object [source] to an output stream, optionally replacing line endings with a platform-specific
+     * sequence. The value must have a 'buffer' member with [buffer elements][PolyglotValue.hasBufferElements], or
+     * an exception will be thrown.
+     */
     private fun readObjectSource(source: PolyglotValue, out: OutputStream) {
       // requires a 'buffer' member, which has buffer elements, so we can just 'readBufferSource' with it
       val buffer = source.getMember(BUFFER_MEMBER_KEY) ?: throw IllegalArgumentException(
@@ -121,6 +178,11 @@ import elide.vm.annotations.Polyglot
       readBufferSource(buffer, out)
     }
 
+    /**
+     * Read a guest blob [source] to an output stream, optionally replacing line endings with a platform-specific
+     * sequence. The value must be a [host object][PolyglotValue.isHostObject] of type [NodeBlob], otherwise this
+     * operation will fail.
+     */
     private fun readBlobSource(source: PolyglotValue, out: OutputStream) {
       // try to force a conversion but use a meaningful message on failure
       val blob = runCatching { source.asHostObject<NodeBlob>() }.getOrNull() ?: throw IllegalArgumentException(

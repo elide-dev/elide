@@ -953,17 +953,6 @@ public synthetic class elide/runtime/gvm/internals/node/asserts/$NodeAssertStric
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public synthetic class elide/runtime/gvm/internals/node/buffer/$NodeBufferIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
-	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
 public synthetic class elide/runtime/gvm/internals/node/buffer/$NodeBufferModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2760,6 +2749,27 @@ public abstract interface class elide/runtime/intrinsics/js/node/AssertStrictAPI
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun atob (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public abstract fun btoa (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public abstract fun isAscii (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isUtf8 (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun resolveObjectUrl (Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public abstract fun transcode (Lorg/graalvm/polyglot/Value;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI$Blob {
+	public abstract fun arrayBuffer ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun getSize ()I
+	public abstract fun getType ()Ljava/lang/String;
+	public abstract fun slice (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/BufferAPI$Blob;
+	public static synthetic fun slice$default (Lelide/runtime/intrinsics/js/node/BufferAPI$Blob;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/BufferAPI$Blob;
+	public abstract fun stream ()Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun text ()Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI$File : elide/runtime/intrinsics/js/node/BufferAPI$Blob {
+	public abstract fun getFile ()Ljava/lang/String;
+	public abstract fun getLastModified ()J
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ChildProcessAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -3076,17 +3086,10 @@ public abstract interface class elide/runtime/intrinsics/js/node/buffer/Blob {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer : java/io/Serializable, org/graalvm/polyglot/proxy/ProxyArray, org/graalvm/polyglot/proxy/ProxyInstantiable, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyObject {
-	public static final field Companion Lelide/runtime/intrinsics/js/node/buffer/Buffer$Companion;
-	public static fun alloc (ILjava/lang/Boolean;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static fun empty ()Lelide/runtime/intrinsics/js/node/buffer/Buffer;
 	public abstract fun getLength ()I
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public fun hasMember (Ljava/lang/String;)Z
-	public static fun mutable (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static fun mutable ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static fun of (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static fun of ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 }
 
@@ -3126,16 +3129,6 @@ public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$B
 	public abstract fun getPoolSize ()I
 	public abstract fun isBuffer (Ljava/lang/Object;)Z
 	public abstract fun isEncoding (Ljava/lang/String;)Z
-}
-
-public final class elide/runtime/intrinsics/js/node/buffer/Buffer$Companion {
-	public final fun alloc (ILjava/lang/Boolean;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun alloc$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$Companion;ILjava/lang/Boolean;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public final fun empty ()Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public final fun mutable (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public final fun mutable ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public final fun of (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public final fun of ([B)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
 }
 
 public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptions {

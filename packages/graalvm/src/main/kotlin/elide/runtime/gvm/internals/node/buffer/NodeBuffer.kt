@@ -13,6 +13,7 @@
 package elide.runtime.gvm.internals.node.buffer
 
 import org.graalvm.polyglot.Value
+import java.nio.charset.Charset
 import java.util.*
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -89,23 +90,23 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
         // no more bytes expected, begin new character
         0 -> expected = when {
           // single-byte character (0xxx xxxx)
-          (byte shr 7) == 0 -> 0
+          (byte shr UTF8_PREFIX_1B_OFFSET) == UTF8_PREFIX_1B -> 0
 
           // two-byte character (110x xxxx)
-          (byte shr 5) == 0x06 -> 1
+          (byte shr UTF8_PREFIX_2B_OFFSET) == UTF8_PREFIX_2B -> 1
 
           // three-byte character (1110 xxxx)
-          (byte shr 4) == 0x0E -> 2
+          (byte shr UTF8_PREFIX_3B_OFFSET) == UTF8_PREFIX_3B -> 2
 
-          // four-byte character (1111 0xxx >> 3)
-          (byte shr 3) == 0x1E -> 3
+          // four-byte character (1111 0xxx)
+          (byte shr UTF8_PREFIX_4B_OFFSET) == UTF8_PREFIX_4B -> 3
 
           else -> return false // invalid UTF-8 sequence
         }
 
         // multi-byte character, each byte after the first starts with 10xxxxxx
         else -> {
-          if (byte shr 6 != 2) return false
+          if (byte shr UTF8_PREFIX_MULTIBYTE_OFFSET != UTF8_PREFIX_MULTIBYTE) return false
           expected--
         }
       }
@@ -119,6 +120,15 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
   }
 
   override fun transcode(source: Value, fromEnc: String, toEnc: String): Value {
+    val buffer = coerceIntoBuffer(source)
+    val bytes = ByteArray(buffer.bufferSize.toInt())
+
+    buffer.readBuffer(0L, bytes, 0, bytes.size)
+    val text = bytes.toString(Charset.forName(fromEnc))
+
+    val result = text.toByteArray(Charset.forName(toEnc))
+
+    // TODO(@darvld): there must be a way to create a 'Buffer' from the host
     TODO("Not yet implemented")
   }
 
@@ -137,5 +147,37 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
     }
 
     error("Unable to read buffer elements from the specified value.")
+  }
+
+  private companion object {
+    /** Single-byte character bit prefix (0xxx xxxx) */
+    private const val UTF8_PREFIX_1B = 0
+
+    /** Number of discarded bits when checking UTF-8 validity for 1-byte characters. */
+    private const val UTF8_PREFIX_1B_OFFSET = 7
+
+    /** Two-byte character bit prefix (110x xxxx) */
+    private const val UTF8_PREFIX_2B = 0x06
+
+    /** Number of discarded bits when checking UTF-8 validity for 2-byte characters. */
+    private const val UTF8_PREFIX_2B_OFFSET = 5
+
+    /** Three-byte character bit prefix (1110 xxxx) */
+    private const val UTF8_PREFIX_3B = 0x0E
+
+    /** Number of discarded bits when checking UTF-8 validity for 3-byte characters. */
+    private const val UTF8_PREFIX_3B_OFFSET = 4
+
+    /** Four-byte character bit prefix (1111 0xxx) */
+    private const val UTF8_PREFIX_4B = 0x1E
+
+    /** Number of discarded bits when checking UTF-8 validity for 4-byte characters. */
+    private const val UTF8_PREFIX_4B_OFFSET = 3
+
+    /** Prefix used by follow-up bytes in a multibyte character (10xxxxxx). */
+    private const val UTF8_PREFIX_MULTIBYTE = 2
+
+    /** Number of discarded bits when checking UTF-8 validity of follow-up bytes in multibyte characters. */
+    private const val UTF8_PREFIX_MULTIBYTE_OFFSET = 6
   }
 }

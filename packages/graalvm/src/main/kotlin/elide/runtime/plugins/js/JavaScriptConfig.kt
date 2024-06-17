@@ -15,6 +15,7 @@ package elide.runtime.plugins.js
 import java.nio.charset.Charset
 import java.time.ZoneId
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
@@ -39,6 +40,12 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   }
 
   public inner class BuiltInModulesConfig {
+    private val closed: AtomicBoolean = AtomicBoolean(false)
+
+    internal fun finalize() {
+      closed.set(true)
+    }
+
     /** Injected Elide API modules. */
     private val elideModules: MutableMap<String, String> = listOf(
       "sqlite",
@@ -109,6 +116,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
 
     /** Replace the specified built-in CommonJS [module] with a module at the [replacementPath]. */
     public fun replaceModule(module: String, replacementPath: String) {
+      if (!closed.get()) error("Cannot replace module after modules have been finalized")
       moduleReplacements[module] = replacementPath
     }
   }
@@ -122,7 +130,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   /** Whether to enable source-maps support, which enhances stack-traces, logs, and other system features. */
   public var sourceMaps: Boolean = true
 
-  /**  Whether to enable V8 compatibility mode. This is not recommended for most users. */
+  /**  Whether to enable V8 compatibility mode. */
   public var v8: Boolean = true
 
   /** Enable WASM support and related bindings. Defaults to `true`; only active where supported. */

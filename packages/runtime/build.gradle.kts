@@ -579,6 +579,8 @@ val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 
 val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+RemoveUnusedSymbols",
+  "-H:+ParseRuntimeOptions",
+  "-H:+JNIEnhancedErrorCodes",
   onlyIf(oracleGvm, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
   onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
@@ -672,10 +674,8 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-H:+ReportExceptionStackTraces",
-  "-H:+JNIEnhancedErrorCodes",
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
-  "-H:+ParseRuntimeOptions",
   "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
   "-H:NativeLinkerOption=-L$nativesPath",
   "-Delide.staticJni=$enableStaticJni",

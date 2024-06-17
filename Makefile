@@ -766,7 +766,7 @@ $(RUNTIME_GEN): runtime/bazel-bin
 
 runtime/bazel-bin:
 	@echo "" && echo "Building runtime facades..."
-	$(CMD)cd runtime && $(BAZEL) build -c $(BAZEL_MODE) //...
+	$(CMD)cd runtime && $(BAZEL) build -c $(BAZEL_MODE) //elide/runtime/js/... //elide/runtime/python/...
 	$(CMD)$(MAKE) runtime-update-copy
 
 runtime-update: runtime-build $(RUNTIME_GEN) ## Rebuild and copy the JS runtime facade

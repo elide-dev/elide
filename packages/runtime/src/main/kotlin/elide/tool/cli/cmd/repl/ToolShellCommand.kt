@@ -1840,84 +1840,86 @@ import elide.tool.project.ProjectManager
       activeProject.set(prj)
     }
 
-    withContext {
-      // activate interactive behavior
-      interactive.compareAndSet(false, true)
+    engine.unwrap().use {
+      withContext {
+        // activate interactive behavior
+        interactive.compareAndSet(false, true)
 
-      // warn about experimental status, as applicable
-      if (verbose && experimentalLangs.isNotEmpty()) {
-        logging.warn(
-          "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
-                  "considered experimental.",
-        )
-      }
-
-      when (val scriptTargetOrCode = runnable) {
-        // run in interactive mode
-        null, "-" -> if (useStdin || runnable == "-") {
-          // consume from stdin
-          primaryLang.invoke(null).let { lang ->
-            input.buffer.use { buffer ->
-              readExecuteCode(
-                "from stdin",
-                langs,
-                lang,
-                it,
-                Source.create(lang.symbol, buffer.readText()),
-              )
-            }
-          }
-        } else if (!serveMode()) {
-          logging.debug("Beginning interactive guest session")
-          beginInteractiveSession(
-            langs,
-            primaryLang.invoke(null),
-            engine,
-            it,
+        // warn about experimental status, as applicable
+        if (verbose && experimentalLangs.isNotEmpty()) {
+          logging.warn(
+            "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
+                    "considered experimental.",
           )
-        } else {
-          logging.error("To run a server, pass a file, or code via stdin or `-c`")
         }
 
-        // run a script as a file, or perhaps a string literal
-        else -> if (executeLiteral) {
-          logging.trace("Interpreting runnable parameter as code")
-          executeSingleStatement(
-            langs,
-            primaryLang.invoke(null),
-            it,
-            scriptTargetOrCode,
-          )
-        } else {
-          // no literal execution flag = we need to parse `runnable` as a file path
-          logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
-          File(scriptTargetOrCode).let { scriptFile ->
-            primaryLang.invoke(scriptFile).let { lang ->
-              logging.debug("Beginning script execution")
-              readExecuteCode(
-                scriptFile.name,
-                langs,
-                lang,
-                it,
-                readExecutableScript(
+        when (val scriptTargetOrCode = runnable) {
+          // run in interactive mode
+          null, "-" -> if (useStdin || runnable == "-") {
+            // consume from stdin
+            primaryLang.invoke(null).let { lang ->
+              input.buffer.use { buffer ->
+                readExecuteCode(
+                  "from stdin",
                   langs,
                   lang,
-                  scriptFile,
-                ),
-              )
+                  it,
+                  Source.create(lang.symbol, buffer.readText()),
+                )
+              }
+            }
+          } else if (!serveMode()) {
+            logging.debug("Beginning interactive guest session")
+            beginInteractiveSession(
+              langs,
+              primaryLang.invoke(null),
+              engine,
+              it,
+            )
+          } else {
+            logging.error("To run a server, pass a file, or code via stdin or `-c`")
+          }
+
+          // run a script as a file, or perhaps a string literal
+          else -> if (executeLiteral) {
+            logging.trace("Interpreting runnable parameter as code")
+            executeSingleStatement(
+              langs,
+              primaryLang.invoke(null),
+              it,
+              scriptTargetOrCode,
+            )
+          } else {
+            // no literal execution flag = we need to parse `runnable` as a file path
+            logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
+            File(scriptTargetOrCode).let { scriptFile ->
+              primaryLang.invoke(scriptFile).let { lang ->
+                logging.debug("Beginning script execution")
+                readExecuteCode(
+                  scriptFile.name,
+                  langs,
+                  lang,
+                  it,
+                  readExecutableScript(
+                    langs,
+                    lang,
+                    scriptFile,
+                  ),
+                )
+              }
             }
           }
         }
       }
-    }
 
-    // don't exit if we have a running server
-    if (serverRunning.get()) {
-      // wait for all tasks to arrive
-      logging.debug("Waiting for long-lived tasks to arrive")
-      phaser.get().arriveAndAwaitAdvance()
-      logging.debug("Exiting")
+      // don't exit if we have a running server
+      if (serverRunning.get()) {
+        // wait for all tasks to arrive
+        logging.debug("Waiting for long-lived tasks to arrive")
+        phaser.get().arriveAndAwaitAdvance()
+        logging.debug("Exiting")
+      }
+      return success()
     }
-    return success()
   }
 }

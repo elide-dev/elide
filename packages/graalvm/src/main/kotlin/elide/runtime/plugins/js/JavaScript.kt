@@ -65,7 +65,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       append("require('node:$name');")
     }
   }.toString(), "__elide-internal-module-import_$name.mjs").apply {
-    cached(false)
+    cached(true)
     interactive(false)
     internal(true)
   }.build()

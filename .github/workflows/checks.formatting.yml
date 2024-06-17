@@ -111,7 +111,7 @@ jobs:
       - name: "Analysis: Formatting (Prettier)"
         run: pnpm run prettier --check .
       - name: "Analysis: Formatting (Spotless)"
-        uses: gradle/actions/setup-gradle@d9336dac04dea2507a617466bc058a3def92b18b # v3.4.0
+        uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         continue-on-error: ${{ inputs.ignore_failures }}
         env:
           CI: true

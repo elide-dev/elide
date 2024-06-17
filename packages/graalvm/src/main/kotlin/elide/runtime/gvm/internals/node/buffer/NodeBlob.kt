@@ -14,6 +14,8 @@
 package elide.runtime.gvm.internals.node.buffer
 
 import org.graalvm.polyglot.HostAccess.Implementable
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
@@ -31,7 +33,7 @@ import elide.vm.annotations.Polyglot
 @DelicateElideApi @Implementable internal open class NodeBlob internal constructor(
   val bytes: ByteArray,
   @Polyglot override val type: String?
-) : BufferAPI.Blob {
+) : BufferAPI.Blob, ProxyObject {
   /** Creates a new empty buffer. */
   @Polyglot constructor() : this(sources = null, options = null)
 
@@ -46,7 +48,7 @@ import elide.vm.annotations.Polyglot
    * Creates a new buffer filled by concatenating the provider [sources]. The [sources] object must have array elements
    * of a supported type, namely [buffers][PolyglotValue.hasBufferElements], or objects with a `buffer` member with the
    * same effect.
-   * 
+   *
    * The `options` object can be used to specify the content [type] of the blob by setting the `type` property to a
    * string value. If the `endings` property is set to `"native"`, all line endings in the sources will be converted
    * to the format of the current platform.
@@ -72,6 +74,33 @@ import elide.vm.annotations.Polyglot
 
   @Polyglot override fun stream(): ReadableStream {
     return ReadableStream.wrap(bytes)
+  }
+
+  override fun getMemberKeys(): Any {
+    return members
+  }
+
+  override fun hasMember(key: String): Boolean {
+    return members.binarySearch(key) >= 0
+  }
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "arrayBuffer" -> ProxyExecutable { arrayBuffer() }
+    "size" -> size
+
+    "slice" -> ProxyExecutable {
+      slice(it.getOrNull(0)?.asInt(), it.getOrNull(1)?.asInt(), it.getOrNull(2)?.asString())
+    }
+
+    "stream" -> ProxyExecutable { stream() }
+    "text" -> ProxyExecutable { text() }
+    "type" -> type
+
+    else -> null
+  }
+
+  override fun putMember(key: String?, value: PolyglotValue?) {
+    throw UnsupportedOperationException("Cannot modify 'Blob' object")
   }
 
   /** Helper object used to extract values from constructor option structs. */
@@ -102,10 +131,20 @@ import elide.vm.annotations.Polyglot
     /** Simple Regular Expression used to detect line endings in source strings. */
     private val LineEndRegex = Regex("\r?\n")
 
+    /** Static, sorted array of members visible to guest code. */
+    private val members = arrayOf(
+      "arrayBuffer",
+      "size",
+      "slice",
+      "stream",
+      "text",
+      "type",
+    ).apply { sort() }
+
     /**
      * Construct a [ByteArray] by concatenating all the [sources]. If the [options] object requests platform-specific
      * line endings, they will replace all line endings present in the source values.
-     * 
+     *
      * The [sources] value must have array elements of a supported type (buffer-like or exposing a `buffer` property),
      * or this operation will fail with an exception.
      */

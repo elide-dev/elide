@@ -615,6 +615,11 @@ val enabledFeatures = listOfNotNull(
   onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
 )
 
+val enabledSecurityProviders = listOfNotNull(
+  "org.bouncycastle.jce.provider.BouncyCastleProvider",
+  "org.conscrypt.OpenSSLProvider",
+)
+
 val linkerOptions: List<String> = listOfNotNull()
 
 val preinitializedContexts = listOfNotNull(
@@ -630,7 +635,6 @@ val commonNativeArgs = listOfNotNull(
   // "--verbose",
   // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner${'$'}CleanerThread.this${'$'}0",
   // "-H:AbortOnMethodReachable=kotlinx.coroutines.CancellableContinuationImpl.getParentHandle",
-  "--trace-object-instantiation=com.sun.jna.internal.Cleaner${'$'}CleanerThread",
   // "--trace-object-instantiation=kotlinx.coroutines.CancellableContinuationImpl",
   // "-H:AbortOnMethodReachable=java.util.concurrent.atomic.AtomicReferenceFieldUpdater.accessCheck",
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
@@ -664,6 +668,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:+ParseRuntimeOptions",
+  "-H:+AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
   "-H:NativeLinkerOption=-L$nativesPath",
   "-Delide.staticJni=$enableStaticJni",
   "-J-Delide.staticJni=$enableStaticJni",

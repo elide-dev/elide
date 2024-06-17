@@ -104,6 +104,7 @@ val enableEmbeddedResources = false
 val enableResourceFilter = false
 val enableAuxCache = false
 val enableJpms = false
+val enableConscrypt = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
 val enableG1 = false
@@ -617,7 +618,7 @@ val enabledFeatures = listOfNotNull(
 
 val enabledSecurityProviders = listOfNotNull(
   "org.bouncycastle.jce.provider.BouncyCastleProvider",
-  "org.conscrypt.OpenSSLProvider",
+  onlyIf(enableConscrypt, "org.conscrypt.OpenSSLProvider"),
 )
 
 val linkerOptions: List<String> = listOfNotNull()

@@ -156,7 +156,6 @@ import elide.tool.io.RuntimeWorkdirManager
     // Install static classes/perform static initialization.
     private fun installStatics(args: Array<String>, cwd: String?) {
       ProcessManager.initializeStatic(args, cwd ?: "")
-      Security.insertProviderAt(org.bouncycastle.jce.provider.BouncyCastleProvider(), 0)
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
       initializeNatives()

@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ConsoleAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val CONSOLE_MODULE_SYMBOL = "__Elide_node_console__"
+private const val CONSOLE_MODULE_SYMBOL = "node_console"
 
 // Installs the Node console module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeConsoleModule : AbstractNodeBuiltinModule() {

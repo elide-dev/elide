@@ -19,7 +19,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.InspectorPromisesAPI
 
 // Symbol where the internal module implementation is installed.
-private const val INSPECTOR_PROMISES_MODULE_SYMBOL: String = "__Elide_node_inspector_promises__"
+private const val INSPECTOR_PROMISES_MODULE_SYMBOL: String = "node_inspector_promises"
 
 // Installs the Node inspector module into the intrinsic bindings.
 @Intrinsic internal class NodeInspectorPromisesModule : AbstractNodeBuiltinModule() {

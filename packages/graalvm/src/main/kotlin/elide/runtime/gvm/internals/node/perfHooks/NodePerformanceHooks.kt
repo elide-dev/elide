@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.PerformanceHooksAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val PERFORMANCE_HOOKS_MODULE_SYMBOL = "__Elide_node_perf_hooks__"
+private const val PERFORMANCE_HOOKS_MODULE_SYMBOL = "node_perf_hooks"
 
 // Installs the Node performance hooks module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodePerformanceHooksModule : AbstractNodeBuiltinModule() {

@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.DatagramAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val DATAGRAM_MODULE_SYMBOL = "__Elide_node_dgram__"
+private const val DATAGRAM_MODULE_SYMBOL = "node_dgram"
 
 // Installs the Node dgram module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeDatagramModule : AbstractNodeBuiltinModule() {

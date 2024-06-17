@@ -26,8 +26,6 @@ internal class CompoundIntrinsicsResolver private constructor (
     @JvmStatic fun of(list: List<IntrinsicsResolver>): CompoundIntrinsicsResolver = CompoundIntrinsicsResolver(list)
   }
 
-  /** @inheritDoc */
-  override fun resolve(language: GuestLanguage): Set<GuestIntrinsic> = resolvers.flatMap {
-    it.resolve(language)
-  }.toSet()
+  override fun generate(language: GuestLanguage, internals: Boolean): Sequence<GuestIntrinsic> =
+    resolvers.asSequence().flatMap { it.resolve(language) }
 }

@@ -23,10 +23,9 @@ import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Resolves installed guest intrinsics via the JVM service loader mechanism. */
 @Context @Singleton @Infrastructure internal class ServiceIntrinsicsResolver : IntrinsicsResolver {
-  /** @inheritDoc */
-  override fun resolve(language: GuestLanguage): Set<GuestIntrinsic> = ServiceLoader.load(
+  override fun generate(language: GuestLanguage, internals: Boolean): Sequence<GuestIntrinsic> = ServiceLoader.load(
     GuestIntrinsic::class.java
-  ).filter {
+  ).asSequence().filter {
     it.supports(language)
-  }.toSet()
+  }
 }

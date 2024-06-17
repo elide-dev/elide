@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 @file:Suppress("unused")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.intrinsics.js.url
 
@@ -19,10 +20,12 @@ import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
 import org.jetbrains.annotations.VisibleForTesting
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseJsMultiMap
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseMutableJsMultiMap
 import elide.runtime.intrinsics.GuestIntrinsic
@@ -258,14 +261,14 @@ private fun IURLSearchParams.pluckMember(key: String): Any {
 
 /** Implements an intrinsic for the `URLSearchParams` global defined by the WhatWG URL Specification. */
 @Suppress("RedundantVisibilityModifier")
-@Intrinsic(URLSearchParamsIntrinsic.GLOBAL_URL_SEARCH_PARAMS)
+@Intrinsic(URLSearchParamsIntrinsic.GLOBAL_URL_SEARCH_PARAMS, internal = false)
 internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   internal companion object {
     /** Global where the `URL` constructor is mounted. */
     const val GLOBAL_URL_SEARCH_PARAMS = "URLSearchParams"
 
     // JS symbol for the `URLSearchParams` constructor.
-    private val URL_SEARCH_PARAMS_SYMBOL = GLOBAL_URL_SEARCH_PARAMS.asJsSymbol()
+    private val URL_SEARCH_PARAMS_SYMBOL = GLOBAL_URL_SEARCH_PARAMS.asPublicJsSymbol()
   }
 
   /**

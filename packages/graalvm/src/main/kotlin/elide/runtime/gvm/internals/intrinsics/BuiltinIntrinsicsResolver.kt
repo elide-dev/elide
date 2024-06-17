@@ -29,7 +29,7 @@ import elide.runtime.intrinsics.IntrinsicsResolver
   @Inject lateinit var intrinsics: Collection<GuestIntrinsic>
 
   /** @inheritDoc */
-  override fun resolve(language: GuestLanguage): Set<GuestIntrinsic> = intrinsics.filter {
-    it.supports(language)
-  }.toSet()
+  override fun generate(language: GuestLanguage, internals: Boolean): Sequence<GuestIntrinsic> = intrinsics
+    .asSequence()
+    .filter { it.supports(language) }
 }

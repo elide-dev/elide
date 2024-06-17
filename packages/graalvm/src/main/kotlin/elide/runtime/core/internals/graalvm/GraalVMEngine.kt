@@ -19,6 +19,7 @@ import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotAccess
+import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.Proxy
 import java.io.InputStream
 import java.io.OutputStream
@@ -29,12 +30,10 @@ import kotlin.io.path.Path
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.core.*
-import elide.runtime.core.EngineLifecycleEvent.EngineCreated
-import elide.runtime.core.EngineLifecycleEvent.EngineInitialized
+import elide.runtime.core.EngineLifecycleEvent.*
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
 import elide.runtime.core.extensions.disableOption
-import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
@@ -54,6 +53,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   private val config: GraalVMConfiguration,
   private val engine: Engine,
 ) : PolyglotEngine {
+
   /** Select an [EnvironmentAccess] configuration from the [HostAccess] settings for this engine. */
   private fun HostAccess.toEnvAccess(): EnvironmentAccess? = when (this) {
     ALLOW_ENV, ALLOW_ALL -> EnvironmentAccess.INHERIT
@@ -67,7 +67,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
    * encapsulation provided by the core API; it should be used only in select cases where accessing the GraalVM engine
    * directly is less complex than implementing a new abstraction for the desired feature.
    */
-  internal fun unwrap(): Engine {
+  override fun unwrap(): Engine {
     return engine
   }
 
@@ -94,13 +94,13 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       .allowHostAccess(contextHostAccess)
       .allowInnerContextOptions(true)
       .allowCreateThread(true)
-      .allowCreateProcess(true)  // @TODO(sgammon): needs policy enforcement
+      .allowCreateProcess(true)
       .allowHostClassLoading(true)
       .allowNativeAccess(true)
       .engine(engine)
 
     // allow plugins to customize the context on creation
-    lifecycle.emit(EngineLifecycleEvent.ContextCreated, builder)
+    lifecycle.emit(ContextCreated, builder)
 
     // mount application entrypoint arguments for each language
     config.arguments.let {

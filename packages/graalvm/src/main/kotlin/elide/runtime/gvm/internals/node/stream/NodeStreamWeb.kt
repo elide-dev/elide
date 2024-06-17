@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.WebStreamsAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val STREAM_WEB_MODULE_SYMBOL = "__Elide_node_stream_web__"
+private const val STREAM_WEB_MODULE_SYMBOL = "node_stream_web"
 
 // Installs the Node stream module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeStreamWebModule : AbstractNodeBuiltinModule() {

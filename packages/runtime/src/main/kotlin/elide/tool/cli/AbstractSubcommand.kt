@@ -500,7 +500,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   protected fun resolvePolyglotContext(): PolyglotContext {
     logging.debug("Resolving context for current thread")
 
-    // already intialized on the current thread
+    // already initialized on the current thread
     contextHandle.get()?.let { cached ->
       logging.debug("Reusing cached context for current thread")
       return cached
@@ -510,9 +510,6 @@ import org.graalvm.polyglot.Engine as VMEngine
     logging.debug("No cached context found for current thread, acquiring new context")
     return engine.acquire().also { created ->
       contextHandle.set(created)
-
-      // always explicitly enter the context on the current thread
-      created.enter()
     }
   }
 
@@ -571,15 +568,22 @@ import org.graalvm.polyglot.Engine as VMEngine
     logging.debug("Acquiring context for CLI tool")
     with(resolvePolyglotContext()) {
       logging.debug("Context acquired")
-      runCatching(block).onFailure { cause ->
-        // it's not a known tool error, log it
-        if (cause !is AbstractToolError) logging.error(
-          "Uncaught exception within VM context. Please catch and handle all VM execution exceptions.",
-          cause,
-        )
+      use {
+        enter()
+        try {
+          runCatching(block).onFailure { cause ->
+            // it's not a known tool error, log it
+            if (cause !is AbstractToolError) logging.error(
+              "Uncaught exception within VM context. Please catch and handle all VM execution exceptions.",
+              cause,
+            )
 
-        // always rethrow
-        throw cause
+            // always rethrow
+            throw cause
+          }
+        } finally {
+          leave()
+        }
       }
     }
   }
@@ -688,16 +692,10 @@ import org.graalvm.polyglot.Engine as VMEngine
    */
   protected open fun initialize(): List<AutoCloseable> = emptyList()
 
-  /**
-   * TBD.
-   */
   protected open fun state(): State? = null
 
   /** Configure the [PolyglotEngine] that will be used to acquire contexts used by the [withContext] function. */
   protected open fun PolyglotEngineConfiguration.configureEngine(): Unit = Unit
 
-  /**
-   * TBD.
-   */
   protected abstract suspend fun CommandContext.invoke(state: ToolContext<State>): CommandResult
 }

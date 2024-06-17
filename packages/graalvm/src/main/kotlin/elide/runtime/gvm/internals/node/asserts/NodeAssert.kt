@@ -46,7 +46,7 @@ import elide.runtime.intrinsics.js.node.asserts.AssertionError
 import elide.vm.annotations.Polyglot
 
 // Symbol where the internal module implementation is installed.
-private const val ASSERT_MODULE_SYMBOL: String = "__Elide_node_assert__"
+private const val ASSERT_MODULE_SYMBOL: String = "node_assert"
 
 // Installs the Node assert module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeAssertModule : AbstractNodeBuiltinModule() {

@@ -10,16 +10,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.internals.intrinsics.js.crypto
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.security.SecureRandom
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.typed.UUIDValue
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.Crypto.Companion.MAX_RANDOM_BYTES_SIZE
@@ -44,8 +48,8 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, ProxyObject, AbstractJsIntrins
     /** Injected name of the Base64 global. */
     const val GLOBAL_CRYPTO = "crypto"
 
-    /** Base64 symbol. */
-    private val CRYPTO_SYMBOL = GLOBAL_CRYPTO.asJsSymbol()
+    /** Crypto symbol. */
+    private val CRYPTO_SYMBOL = GLOBAL_CRYPTO.asPublicJsSymbol()
   }
 
   // Lazy-initialized secure random generator.

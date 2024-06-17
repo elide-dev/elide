@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.internals.intrinsics.js.console
 
 import io.micronaut.core.annotation.ReflectiveAccess
@@ -20,9 +22,10 @@ import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.JavaScriptConsole
 import elide.vm.annotations.Polyglot
@@ -35,21 +38,21 @@ import org.graalvm.polyglot.Value as GuestValue
  * system, with each corresponding log level. See method documentation for more info.
  */
 @ReflectiveAccess
-@Intrinsic(global = ConsoleIntrinsic.GLOBAL_CONSOLE)
+@Intrinsic(global = ConsoleIntrinsic.GLOBAL_CONSOLE, internal = false)
 internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   internal companion object {
     // Global name of the JS console intrinsic.
     const val GLOBAL_CONSOLE = "Console"
 
-    /** Base64 symbol. */
-    private val CONSOLE_SYMBOL = GLOBAL_CONSOLE.asJsSymbol()
+    /** Console symbol (class). */
+    private val CONSOLE_SYMBOL = GLOBAL_CONSOLE.asPublicJsSymbol()
 
     // Name of the primary console logger.
-    const val loggerName = "gvm:js.console"
+    private const val LOGGER_NAME: String = "gvm:js.console"
   }
 
   // Logger which receives console calls.
-  private val logging: Logger = Logging.named(loggerName)
+  private val logging: Logger = Logging.named(LOGGER_NAME)
 
   // Whether to intercept logs.
   private val intercept: AtomicBoolean = AtomicBoolean(false)
@@ -72,7 +75,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param obj Object to format.
    * @return Formatted value to emit, or the original object if no formatting was applied.
    */
-  @Suppress("unused", "UNUSED_PARAMETER")
+  @Suppress("unused")
   internal fun formatMetaObject(obj: GuestValue): Any = obj
 
   /**

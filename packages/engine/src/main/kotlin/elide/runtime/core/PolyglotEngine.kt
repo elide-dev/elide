@@ -13,6 +13,7 @@
 package elide.runtime.core
 
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Engine
 
 /**
  * The Polyglot Engine is responsible for creating new [PolyglotContext] instances, as well as triggering
@@ -25,6 +26,9 @@ import org.graalvm.polyglot.Context
  */
 @DelicateElideApi
 public interface PolyglotEngine {
+  /** @return The underlying GraalVM engine. */
+  public fun unwrap(): Engine
+
   /** Acquire a new [PolyglotContext]. The returned context has all plugins applied on creation. */
   public fun acquire(cfg: Context.Builder.() -> Unit = {}): PolyglotContext
 }

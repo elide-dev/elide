@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.DNSAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val DNS_MODULE_SYMBOL = "__Elide_node_dns__"
+private const val DNS_MODULE_SYMBOL = "node_dns"
 
 // Installs the Node `dns` module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeDNSModule : AbstractNodeBuiltinModule() {

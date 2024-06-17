@@ -189,7 +189,7 @@ private val moduleMembers = arrayOf(
  */
 internal object NodeOperatingSystem {
   /** Primordial symbol where the OS API implementation is installed. */
-  internal const val SYMBOL: String = "__Elide_node_os__"
+  internal const val SYMBOL: String = "node_os"
 
   internal abstract class ModuleBase : ProxyObject, OperatingSystemAPI {
     override fun getMemberKeys(): Array<String> = moduleMembers

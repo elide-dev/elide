@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.HTTPSAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val HTTPS_MODULE_SYMBOL = "__Elide_node_https__"
+private const val HTTPS_MODULE_SYMBOL = "node_https"
 
 // Installs the Node `https` module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeHttpsModule : AbstractNodeBuiltinModule() {

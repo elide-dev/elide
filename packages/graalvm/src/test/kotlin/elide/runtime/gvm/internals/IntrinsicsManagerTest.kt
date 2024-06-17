@@ -33,8 +33,8 @@ import elide.runtime.intrinsics.GuestIntrinsic
   }
 
   @Test fun testResolveIntrinsics() {
-    val resolved = manager.resolver().resolve(GraalVMGuest.JAVASCRIPT)
+    val resolved = manager.resolver().resolve(GraalVMGuest.JAVASCRIPT, internals = true)
     assertNotNull(resolved, "should not get `null` from intrinsics resolver")
-    assertTrue(resolved.isNotEmpty(), "resolved set of intrinsics should not be empty")
+    assertTrue(resolved.toList().isNotEmpty(), "resolved set of intrinsics should not be empty")
   }
 }

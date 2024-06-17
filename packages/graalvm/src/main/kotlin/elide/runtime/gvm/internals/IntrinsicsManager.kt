@@ -16,16 +16,25 @@ package elide.runtime.gvm.internals
 import elide.annotations.Context
 import elide.annotations.Singleton
 import elide.runtime.gvm.internals.intrinsics.CompoundIntrinsicsResolver
+import elide.runtime.intrinsics.IntrinsicCriteria
 import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Resolves intrinsics for use with guest VMs. */
 @Suppress("MnInjectionPoints")
 @Context @Singleton public class IntrinsicsManager (resolvers: List<IntrinsicsResolver>) {
   private val compound = CompoundIntrinsicsResolver.of(resolvers)
+  private val filters: MutableList<IntrinsicCriteria> = mutableListOf()
 
   /** Resolver stub. */
-  internal inner class GlobalResolver: IntrinsicsResolver by compound
+  internal inner class GlobalResolver(private val criteria: IntrinsicCriteria): IntrinsicsResolver by compound {
+    override fun criteria(allowInternal: Boolean): IntrinsicCriteria {
+      return criteria
+    }
+  }
+
+  // Global symbol resolver.
+  private val globalResolver = GlobalResolver(IntrinsicCriteria.all(filters))
 
   /** @return Global resolver stub. */
-  public fun resolver(): IntrinsicsResolver = GlobalResolver()
+  public fun resolver(): IntrinsicsResolver = globalResolver
 }

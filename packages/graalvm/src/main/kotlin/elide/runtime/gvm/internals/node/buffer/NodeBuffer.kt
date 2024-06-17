@@ -151,6 +151,7 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
     return moduleMembers.binarySearch(key) >= 0
   }
 
+  @Suppress("MagicNumber")
   override fun getMember(key: String?): Any? = when (key) {
     "atob" -> ProxyExecutable { atob(it.singleOrNull() ?: error("Expected exactly 1 argument for 'atob'")) }
     "btoa" -> ProxyExecutable { btoa(it.singleOrNull() ?: error("Expected exactly 1 argument for 'btoa'")) }

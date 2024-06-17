@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.Option
 import picocli.CommandLine.ScopeType
+import java.util.*
 import kotlin.properties.Delegates
 import elide.tool.cli.Statics
 
@@ -87,4 +88,22 @@ import elide.tool.cli.Statics
     scope = ScopeType.INHERIT,
   )
   var pretty: Boolean = true
+
+  /** System options to apply. */
+  @Option(
+    names = ["-D", "--define"],
+    mapFallbackValue = Option.NULL_VALUE,
+    scope = ScopeType.INHERIT,
+    hidden = true,
+  )
+  lateinit var systemProperties: Map<String, Optional<String>>
+
+  /** Internal runtime options to apply. */
+  @Option(
+    names = ["-XX"],
+    mapFallbackValue = Option.NULL_VALUE,
+    scope = ScopeType.INHERIT,
+    hidden = true,
+  )
+  lateinit var internalOptions: Map<String, Optional<String>>
 }

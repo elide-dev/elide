@@ -97,6 +97,11 @@ import elide.tool.io.RuntimeWorkdirManager
     // Maps exceptions to process exit codes.
     private val exceptionMapper = DefaultErrorHandler.acquire()
 
+    // Properties which cannot be set by users.
+    private val blocklistedProperties = sortedSetOf(
+      "elide.js.vm.enableStreams",
+    )
+
     @JvmStatic private fun initializeNatives() {
       // load natives
       NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
@@ -162,6 +167,19 @@ import elide.tool.io.RuntimeWorkdirManager
         // no-op
       }
 
+      // set system-level properties passed via command line (this must be done early)
+      val sysPropArgs = args.filter { it.startsWith("-D") }
+      sysPropArgs.forEach { arg ->
+        val parts = arg.split("=", limit = 2)
+        val key = parts.first().substring(2)
+        if (blocklistedProperties.contains(key)) {
+          throw IllegalArgumentException("Cannot set blocklisted property: $key")
+        }
+        val value = parts.getOrNull(1) ?: ""
+        System.setProperty(key, value)
+      }
+
+      // prep runner and exec
       val os = HostPlatform.resolve().os
       val isWindows = os == OperatingSystem.WINDOWS
 
@@ -190,7 +208,9 @@ import elide.tool.io.RuntimeWorkdirManager
 
     /** CLI entrypoint and [args]. */
     @JvmStatic fun entry(args: Array<String>) {
+      // load and install libraries
       installStatics(args, System.getProperty("user.dir"))
+
       val exitCode = try {
         exec(args)
       } finally {
@@ -208,9 +228,6 @@ import elide.tool.io.RuntimeWorkdirManager
       .eagerInitAnnotated(Eager::class.java)
       .args(*args)
       .start().use {
-      // store arguments statically, for later use
-      Statics.args.set(args.toList())
-
       CommandLine(Elide::class.java, MicronautFactory(it))
        .setCommandName(TOOL_NAME)
        .setResourceBundle(ResourceBundle.getBundle("ElideTool"))

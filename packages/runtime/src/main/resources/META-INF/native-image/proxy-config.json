@@ -13,5 +13,8 @@
   },
   {
     "interfaces":["oshi.jna.platform.mac.SystemB"]
+  },
+  {
+    "interfaces":["kotlin.jvm.functions.Function2"]
   }
 ]

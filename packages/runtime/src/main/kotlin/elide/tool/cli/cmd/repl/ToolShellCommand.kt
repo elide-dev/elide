@@ -76,6 +76,7 @@ import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.DOTENV
 import elide.runtime.plugins.env.environment
+import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
@@ -89,7 +90,6 @@ import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectInfo
 import elide.tool.project.ProjectManager
-
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
@@ -607,6 +607,9 @@ import elide.tool.project.ProjectManager
   // Intrinsics manager
   @Inject internal lateinit var intrinsicsManager: IntrinsicsManager
 
+  // Event listeners for the vfs
+  @Inject internal lateinit var vfsListeners: List<VfsListener>
+
   // Server manager
   private val serverAgent: HttpServerAgent = HttpServerAgent()
 
@@ -829,6 +832,7 @@ import elide.tool.project.ProjectManager
     )
 
     logging.trace("Code chunk built. Evaluating")
+    ctx.enter()
     val result = try {
       ctx.evaluate(source)
     } catch (exc: PolyglotException) {
@@ -843,6 +847,8 @@ import elide.tool.project.ProjectManager
 
         else -> throw throwable
       }
+    } finally {
+      ctx.leave()
     }
     logging.trace("Code chunk evaluation complete")
     return result
@@ -1770,6 +1776,9 @@ import elide.tool.project.ProjectManager
           include(uri)
         }
       }
+
+      // register listeners
+      vfsListeners.forEach(::listener)
     }
   }
 

@@ -205,6 +205,7 @@ import elide.tool.io.RuntimeWorkdirManager
     // Private execution entrypoint for customizing core Picocli settings.
     @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext
       .builder()
+      .eagerInitAnnotated(Eager::class.java)
       .args(*args)
       .start().use {
       // store arguments statically, for later use

@@ -338,6 +338,11 @@ dependencies {
   api(libs.snakeyaml)
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
+
+  if (oracleGvm) {
+    api(":tools:auximage")
+  }
+
   implementation(libs.picocli.jansi.graalvm) {
     exclude(group = "org.fusesource.jansi", module = "jansi")
   }
@@ -562,9 +567,7 @@ val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 
 val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+RemoveUnusedSymbols",
-
   onlyIf(oracleGvm, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
-
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
   onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
   onlyIf(enableExperimental, "-H:+ProfileConstantObjects"),
@@ -801,6 +804,7 @@ val releaseFlags: List<String> = listOf(
 
 val jvmDefs = mapOf(
   "elide.natives" to nativesPath,
+  "elide.graalvm.ee" to oracleGvm.toString(),
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
@@ -1514,6 +1518,7 @@ tasks {
 
   named("run", JavaExec::class).configure {
     dependsOn(ensureNatives)
+    if (enableToolchains) javaLauncher = gvmLauncher
 
     jvmDefs.forEach {
       systemProperty(it.key, it.value)

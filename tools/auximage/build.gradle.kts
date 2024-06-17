@@ -13,6 +13,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 
 plugins {
+  application
   `java-library`
   kotlin("jvm")
   kotlin("plugin.serialization")
@@ -42,6 +43,7 @@ val enableJvm = false
 val enableLlvm = false
 val edgeJvmTarget = 22
 val ltsJvmTarget = 21
+val enableToolchains = true
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)
 val selectedJvmTarget = if (enableEdge) edgeJvmTarget else ltsJvmTarget
@@ -59,8 +61,24 @@ val gvmCompiler = javaToolchains.compilerFor {
   vendor.set(jvmType)
 }
 
+application {
+  mainClass = "elide.tools.auximage.MainKt"
+}
+
 dependencies {
   implementation(projects.packages.base)
+  implementation(projects.packages.engine)
+  implementation(projects.packages.graalvm)
+  implementation(projects.packages.graalvmTs)
+
+  // Native Libraries
+  implementation(projects.packages.sqlite)
+  implementation(projects.packages.tcnative)
+  implementation(projects.packages.terminal)
+  implementation(projects.packages.transport.transportEpoll)
+  implementation(projects.packages.transport.transportKqueue)
+  implementation(projects.packages.transport.transportUring)
+
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
@@ -120,7 +138,7 @@ tasks {
     javaLauncher = gvmLauncher
   }
 
-  val run: TaskProvider<Exec> by registering(Exec::class) {
+  val auximage: TaskProvider<Exec> by registering(Exec::class) {
     group = "Execution"
     description = "Run the auxiliary image generator tool."
     dependsOn(nativeCompile)
@@ -128,18 +146,67 @@ tasks {
   }
 }
 
+val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
+val nativeVersion = if (stamp) {
+  libs.versions.elide.asProvider().get()
+} else {
+  "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
+}
+
+val nativesRootTemplate: (String) -> String = { version ->
+  "/tmp/elide-runtime/v$version/native"
+}
+
+val nativesPath = nativesRootTemplate(nativeVersion)
+
+val initializeAtBuildTime = listOf(
+  "com.google.common.jimfs.SystemJimfsFileSystemProvider",
+  "com.google.common.collect.MapMakerInternalMap",
+  "com.google.common.base.Equivalence${'$'}Equals",
+  "com.google.common.collect.MapMakerInternalMap${'$'}1",
+  "com.google.common.collect.MapMakerInternalMap${'$'}EntrySet",
+  "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueSegment",
+  "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueEntry${'$'}Helper",
+  "elide.runtime.lang.typescript.TypeScriptLanguageProvider",
+)
+
 fun nativeImageArgs(): List<String> = listOf(
   "-O1",
   "-J-Xmx24g",
-  "--gc=epsilon",
-  "-Dpolyglotimpl.DisableVersionChecks=true",
-  "-J-Dpolyglotimpl.DisableVersionChecks=true",
-  "--initialize-at-build-time=",
+  "--gc=serial",
   "--exclude-config", "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
   "-H:+AuxiliaryEngineCache",
   "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
   "-H:ReservedAuxiliaryImageBytes=1073741824",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.jni=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
+  "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+  "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-Delide.staticJni=true",
+  "-J-Delide.staticJni=true",
+  "-H:NativeLinkerOption=-L$nativesPath",
+  "-Delide.natives=$nativesPath",
+  "-J-Delide.natives=$nativesPath",
+  "-Djna.library.path=$nativesPath",
+  "-J-Djna.library.path=$nativesPath",
+  "-Djna.boot.library.path=$nativesPath",
+  "-J-Djna.boot.library.path=$nativesPath",
+  "-Dorg.sqlite.lib.path=$nativesPath",
+  "-J-Dorg.sqlite.lib.path=$nativesPath",
+  "-Dorg.sqlite.lib.exportPath=$nativesPath",
+  "-J-Dorg.sqlite.lib.exportPath=$nativesPath",
+  "-Dio.netty.native.workdir=$nativesPath",
+  "-J-Dio.netty.native.workdir=$nativesPath",
+  "-Dlibrary.jansi.path=$nativesPath",
+  "-J-Dlibrary.jansi.path=$nativesPath",
+  "-Dlibrary.jline.path=$nativesPath",
+  "-J-Dlibrary.jline.path=$nativesPath",
+  "--initialize-at-build-time=${initializeAtBuildTime.joinToString(",")}",
 )
 
 graalvmNative {
@@ -150,12 +217,12 @@ graalvmNative {
   binaries {
     named("main") {
       mainClass = entrypoint
-      //javaLauncher = gvmLauncher
       fallback = false
       sharedLibrary = false
       richOutput = true
       imageName = "auximage"
       buildArgs(nativeImageArgs())
+      if (enableToolchains) javaLauncher = gvmLauncher
     }
   }
 }

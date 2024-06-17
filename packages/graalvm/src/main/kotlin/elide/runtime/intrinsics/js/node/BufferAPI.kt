@@ -64,11 +64,11 @@ import elide.vm.annotations.Polyglot
 
   /**
    * Implements the `File` class from the Node.js `buffer` built-in module. This type is basically a specialized
-   * [Blob] with additional [fileName] and [lastModified] fields.
+   * [Blob] with additional [name] and [lastModified] fields.
    */
   @DelicateElideApi public interface File : Blob {
     /** The name of the file. */
-    @get:Polyglot public val file: String
+    @get:Polyglot public val name: String
 
     /** An epoch timestamp indicating the last modification to this file. */
     @get:Polyglot public val lastModified: Long

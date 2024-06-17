@@ -223,7 +223,7 @@ if (buildPkl == "true") {
 // Build modules.
 include(
   ":packages:base",
-  ":packages:cli",
+  // ":packages:cli",
   ":packages:cli-bridge",
   ":packages:core",
   ":packages:engine",

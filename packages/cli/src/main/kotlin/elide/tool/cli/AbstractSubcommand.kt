@@ -476,9 +476,6 @@ import org.graalvm.polyglot.Engine as VMEngine
     logging.debug("No cached context found for current thread, acquiring new context")
     return engine.acquire().also { created ->
       contextHandle.set(created)
-
-      // always explicitly enter the context on the current thread
-      created.enter()
     }
   }
 

@@ -466,7 +466,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   protected fun resolvePolyglotContext(): PolyglotContext {
     logging.debug("Resolving context for current thread")
 
-    // already intialized on the current thread
+    // already initialized on the current thread
     contextHandle.get()?.let { cached ->
       logging.debug("Reusing cached context for current thread")
       return cached

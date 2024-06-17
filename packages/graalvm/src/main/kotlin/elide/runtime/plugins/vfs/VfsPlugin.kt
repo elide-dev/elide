@@ -18,8 +18,7 @@ import java.net.URI
 import java.util.*
 import elide.runtime.Logging
 import elide.runtime.core.*
-import elide.runtime.core.EngineLifecycleEvent.ContextCreated
-import elide.runtime.core.EngineLifecycleEvent.EngineCreated
+import elide.runtime.core.EngineLifecycleEvent.*
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.gvm.internals.vfs.AbstractDelegateVFS
@@ -70,9 +69,13 @@ import elide.runtime.vfs.languageVfsRegistry
         acquireCompoundVfs(config.useHost, config.writable, config.deferred, config.registeredBundles, config.languages)
       }
     }.let { vfs ->
-      config.listeners.forEach { it.onVfsCreated(vfs) }
+      onVfsReady(vfs)
       fileSystem = vfs
     }
+  }
+
+  private fun onVfsReady(vfs: GuestVFS) {
+    config.listeners.forEach { it.onVfsCreated(vfs) }
   }
 
   /** Configure a context builder to use a custom [fileSystem]. */
@@ -99,7 +102,6 @@ import elide.runtime.vfs.languageVfsRegistry
       // subscribe to lifecycle events
       scope.lifecycle.on(EngineCreated, instance::onEngineCreated)
       scope.lifecycle.on(ContextCreated, instance::configureContext)
-
       return instance
     }
 

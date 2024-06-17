@@ -125,6 +125,9 @@ val exclusions = listOfNotNull(
   // always exclude non-jpms jna
   libs.jna.asProvider(),
 
+  // always exclude the jline native lib; we provide it ourselves
+  libs.jline.native,
+
   // prefer jpms jna when enabled
   if (enableJna) null else libs.jna.jpms,
 
@@ -138,6 +141,10 @@ val exclusions = listOfNotNull(
   libs.netty.transport.native.epoll,
   libs.netty.transport.native.kqueue,
   libs.netty.transport.native.iouring,
+
+  // disable netty's exotic libs which don't have static jni support yet
+  libs.netty.resolver.dns.native.macos,
+  libs.netty.incubator.codec.http3,
 ).onlyIf(enableNativeTransportV2))
 
 // Java Launcher (GraalVM at either EA or LTS)
@@ -340,7 +347,7 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
 
-  if (oracleGvm) {
+  if (oracleGvm && enableAuxCache) {
     api(":tools:auximage")
   }
 

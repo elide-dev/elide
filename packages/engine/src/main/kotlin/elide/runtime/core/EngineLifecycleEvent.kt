@@ -46,4 +46,10 @@ public sealed interface EngineLifecycleEvent<@Suppress("unused") T> {
    * received after [ContextCreated], once the context has been built, allowing plugins to run guest init code.
    */
   public data object ContextInitialized : EngineLifecycleEvent<PolyglotContext>
+
+  /**
+   * Lifecycle event triggered when a [PolyglotContext] is "finalized," after configuration, construction, and all
+   * other steps have been performed; when this event is run, the context has not yet been sealed.
+   */
+  public data object ContextFinalized : EngineLifecycleEvent<PolyglotContext>
 }

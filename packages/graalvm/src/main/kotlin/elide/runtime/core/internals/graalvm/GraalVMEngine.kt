@@ -111,11 +111,46 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       }
     }
 
-    // build the context and notify event listeners
-    val context = GraalVMContext(finalizer.invoke(builder.apply { cfg.invoke(builder) }))
-    lifecycle.emit(EngineLifecycleEvent.ContextInitialized, context)
+    // build the context, notify event listeners, and finalize
+    return GraalVMContext(finalizer.invoke(builder.apply { cfg.invoke(builder) })).also { ctx->
+      lifecycle.emit(ContextInitialized, ctx)
+    }.finalizeContext()
+  }
 
-    return context
+  // Finalize a suite of bindings for a given language (or the main polyglot bindings).
+  private fun finalizeBindings(bindings: Value) {
+    if (bindings.hasMembers()) {
+      bindings.memberKeys.parallelStream().forEach {
+        if (it.startsWith(INTERNAL_PREFIX) || knownInternalMembers.contains(it)) {
+          if (bindings.hasMember(it)) bindings.removeMember(it)
+        }
+      }
+    }
+  }
+
+  // Finalize a context before execution of guest code.
+  private fun doFinalize(ctx: GraalVMContext) = ctx.apply {
+    if (EXPERIMENTAL_DROP_INTERNALS) {
+      val polyglot = context.polyglotBindings
+      finalizeBindings(polyglot)
+      config.languages.forEach { lang ->
+        val bindings = context.getBindings(lang.languageId)
+        finalizeBindings(bindings)
+      }
+    }
+  }
+
+  // Prepare a context for final use by guest code; this involves revoking access to primordials, etc.
+  private fun GraalVMContext.finalizeContext(): GraalVMContext = apply {
+    try {
+      context.enter()
+
+      // emit context finalization
+      lifecycle.emit(ContextFinalized, this)
+      doFinalize(this)
+    } finally {
+      context.leave()
+    }
   }
 
   override fun acquire(cfg: Builder.() -> Unit): PolyglotContext {
@@ -123,6 +158,15 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   internal companion object {
+    @JvmStatic private val defaultAuxPath = System.getProperty("elide.natives")
+      ?: error("Please specify natives path at `elide.natives`")
+    private const val INTERNAL_PREFIX = "__Elide"
+
+    // Names of known-internal members which are yanked before guest code is executed.
+    private val knownInternalMembers = sortedSetOf(
+      "primordials",
+    )
+
     /** Stubbed output stream. */
     private object StubbedOutputStream : OutputStream() {
       override fun write(b: Int): Unit = error("Cannot write to stubbed stream from inside a guest VM.")
@@ -163,14 +207,14 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       override fun close() = Unit
     }
 
-    /** Whether to enable Enterprise features. */
-    private const val ENABLE_ENTERPRISE = false
-
     /** Whether to enable VM isolates. */
-    private const val ENABLE_ISOLATES = ENABLE_ENTERPRISE
+    private const val ENABLE_ISOLATES = false
 
     /** Whether to enable the auxiliary cache. */
     private const val ENABLE_AUX_CACHE = false
+
+    /** Whether to drop internals from the polyglot context before finalization completes. */
+    private val EXPERIMENTAL_DROP_INTERNALS = System.getProperty("elide.experimental.dropInternals") == "true"
 
     /** Whether the runtime is built as a native image. */
     private val isNativeImage = ImageInfo.inImageCode()

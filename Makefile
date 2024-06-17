@@ -754,7 +754,7 @@ info:  ## Show info about the current codebase and toolchain.
 # ---- Runtime submodule ---- #
 # Note: make sure the Git submodule is up to date by running `git submodule update [--init] runtime`
 
-runtime: runtime/WORKSPACE runtime/bazel-bin $(RUNTIME_GEN) ## Build and update the JS runtime if needed.
+runtime: runtime/WORKSPACE $(RUNTIME_GEN) ## Build and update the JS runtime if needed.
 
 runtime/WORKSPACE:
 	@echo "Setting up submodules..."

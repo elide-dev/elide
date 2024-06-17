@@ -547,6 +547,7 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+    systemProperty("elide.natives", nativesPath)
     systemProperty("elide.js.vm.enableStreams", "true")
     if (enableToolchains) javaLauncher = gvmLauncher
   }

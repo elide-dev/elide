@@ -159,7 +159,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
   internal companion object {
     @JvmStatic private val defaultAuxPath = System.getProperty("elide.natives")
-      ?: error("Please specify natives path at `elide.natives`")
     private const val INTERNAL_PREFIX = "__Elide"
 
     // Names of known-internal members which are yanked before guest code is executed.
@@ -239,7 +238,9 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
      * for registered plugins.
      */
     fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
+      val nativesPath = System.getProperty("elide.natives")?.ifBlank { null } ?: defaultAuxPath
       val languages = configuration.languages.map { it.languageId }.toTypedArray()
+
       val builder = Engine.newBuilder(*languages).apply {
         useSystemProperties(false)
         allowExperimentalOptions(true)
@@ -289,23 +290,21 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
         // isolate options
         if (ENABLE_ISOLATES) {
-          disableOption("engine.SpawnIsolate")
+          option("engine.SpawnIsolate", "js")
           option("engine.UntrustedCodeMitigation", "none")
           option("engine.MaxIsolateMemory", "2GB")
         }
 
-        // if we're running in a native image, enabled the code compile cache
-        if (useAuxCache) {
-          option("engine.PreinitializeContexts", "js")
-          option("engine.CacheCompile", "hot")
-          if (ENABLE_ENTERPRISE) {
-            enableOption("engine.CachePreinitializeContext")
-          }
+        if (useAuxCache && nativesPath != null) {
+          // if we're running in a native image, enabled the code compile cache
+          // option("engine.PreinitializeContexts", "js")
+          // option("engine.CacheCompile", "hot")
+          option("engine.TraceCache", "true")
+          disableOption("engine.CachePreinitializeContext")
 
-          val pid = ProcessHandle.current().pid()
           option(
             "engine.Cache",
-            Path("/", "tmp", "elide-$pid.vmcache").toAbsolutePath().toString(),
+            Path(nativesPath).resolve("elide-img.bin").toAbsolutePath().toString(),
           )
         }
       }

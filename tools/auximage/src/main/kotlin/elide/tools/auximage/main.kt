@@ -17,17 +17,36 @@ import kotlin.system.exitProcess
 /** Entrypoint for the aux-image generator tool. */
 suspend fun main(args: Array<String>) {
   if (args.isEmpty()) {
-    println("Usage: auximage <lang> <output> <sources...>")
+    println("Usage: auximage <build|check> <lang> <output> <sources...>")
     exitProcess(1)
-  } else AuxImageGenerator.generate(AuxImageParams.fromArgs(args)).let {
-    when (it) {
-      is AuxImageResult.Success -> {
-        println("Successfully generated auxiliary image at ${it.path}")
+  } else AuxImageParams.fromArgs(args).let { params ->
+    // initialize engine and context parameters
+    AuxImageGenerator.initialize(params)
+    when (params.action) {
+      AuxImageAction.BUILD -> AuxImageGenerator.generate(params).let {
+        when (it) {
+          is AuxImageResult.Success -> {
+            println("Successfully generated auxiliary image at ${it.path}")
+          }
+
+          is AuxImageResult.Failure -> {
+            println("Failed to generate auxiliary image: ${it.message}")
+            exitProcess(1)
+          }
+        }
       }
 
-      is AuxImageResult.Failure -> {
-        println("Failed to generate auxiliary image: ${it.message}")
-        exitProcess(1)
+      AuxImageAction.CHECK -> AuxImageGenerator.check(params).let {
+        when (it) {
+          is AuxImageResult.Success -> {
+            println("Auxiliary image is valid")
+          }
+
+          is AuxImageResult.Failure -> {
+            println("Auxiliary image is invalid: ${it.message}")
+            exitProcess(1)
+          }
+        }
       }
     }
   }

@@ -1275,6 +1275,24 @@ public synthetic class elide/runtime/gvm/internals/node/fs/$NodeFilesystemModule
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public synthetic class elide/runtime/gvm/internals/node/fs/$VfsInitializerListener$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/node/fs/VfsInitializerListener : elide/runtime/plugins/vfs/VfsListener, java/util/function/Supplier {
+	public fun <init> ()V
+	public fun get ()Lelide/runtime/vfs/GuestVFS;
+	public synthetic fun get ()Ljava/lang/Object;
+	public fun onVfsCreated (Lelide/runtime/vfs/GuestVFS;)V
+}
+
 public synthetic class elide/runtime/gvm/internals/node/http/$NodeHttpModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2175,6 +2193,7 @@ public final class elide/runtime/intrinsics/ElideBindings {
 public abstract interface class elide/runtime/intrinsics/GuestIntrinsic {
 	public abstract fun displayName ()Ljava/lang/String;
 	public abstract fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
+	public fun isInternal ()Z
 	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
 	public fun supports (Lelide/runtime/gvm/GuestLanguage;)Z
 }
@@ -2191,8 +2210,22 @@ public final class elide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindi
 	public static final fun wrap (Ljava/util/Map;)Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;
 }
 
+public abstract interface class elide/runtime/intrinsics/IntrinsicCriteria {
+	public static final field Companion Lelide/runtime/intrinsics/IntrinsicCriteria$Companion;
+	public static fun all (Ljava/util/List;)Lelide/runtime/intrinsics/IntrinsicCriteria;
+	public abstract fun filter (Lelide/runtime/intrinsics/GuestIntrinsic;)Z
+}
+
+public final class elide/runtime/intrinsics/IntrinsicCriteria$Companion {
+	public final fun all (Ljava/util/List;)Lelide/runtime/intrinsics/IntrinsicCriteria;
+}
+
 public abstract interface class elide/runtime/intrinsics/IntrinsicsResolver {
-	public abstract fun resolve (Lelide/runtime/gvm/GuestLanguage;)Ljava/util/Set;
+	public fun criteria (Z)Lelide/runtime/intrinsics/IntrinsicCriteria;
+	public fun defaultCriteria (Z)Lelide/runtime/intrinsics/IntrinsicCriteria;
+	public abstract fun generate (Lelide/runtime/gvm/GuestLanguage;Z)Lkotlin/sequences/Sequence;
+	public fun resolve (Lelide/runtime/gvm/GuestLanguage;)Lkotlin/sequences/Sequence;
+	public fun resolve (Lelide/runtime/gvm/GuestLanguage;Z)Lkotlin/sequences/Sequence;
 }
 
 public abstract interface class elide/runtime/intrinsics/Symbol : elide/core/api/Symbolic {
@@ -4656,9 +4689,9 @@ public final class elide/runtime/plugins/env/Environment$Plugin : elide/runtime/
 }
 
 public final class elide/runtime/plugins/js/ExtensionsKt {
-	public static final fun javascript (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;ZLjava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static final fun javascript (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;ZLjava/lang/String;ZZZLjava/net/URI;Z)Lorg/graalvm/polyglot/Value;
 	public static final fun javascript (Lelide/runtime/core/PolyglotContext;Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
-	public static synthetic fun javascript$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun javascript$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;ZLjava/lang/String;ZZZLjava/net/URI;ZILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
 }
 
 public final class elide/runtime/plugins/js/JavaScript {

@@ -16,6 +16,7 @@
     <ID>CyclomaticComplexMethod:URLIntrinsic.kt$URLIntrinsic.URLValue$override fun putMember(key: String?, value: Value?)</ID>
     <ID>CyclomaticComplexMethod:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
+    <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:NativeTransportFeature.kt$NativeTransportFeature$// @TODO: gradle doesn't support arm64 linux</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
@@ -108,6 +109,7 @@
     <ID>ThrowsCount:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
     <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
+    <ID>TooGenericExceptionCaught:JavaScript.kt$JavaScript$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
     <ID>TooGenericExceptionCaught:NodeStream.kt$AbstractReadable$e: Throwable</ID>
@@ -123,6 +125,7 @@
     <ID>TooManyFunctions:NodeOperatingSystem.kt$NodeOperatingSystem$BaseOS : ModuleBaseOperatingSystemAPIProxyObject</ID>
     <ID>TooManyFunctions:NodeStream.kt$AbstractReadable&lt;T> : AbstractStreamReadable</ID>
     <ID>TooManyFunctions:Readable.kt$Readable : StatefulStreamEventEmitterEventTargetProxyObjectProxyIterable</ID>
+    <ID>UnusedParameter:GraalVMContext.kt$GraalVMContext$options: EvaluationOptions</ID>
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$ctx: QueryTemplateContext? = null</ID>
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$position: Int = -1</ID>
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$soFar: Int = -1</ID>

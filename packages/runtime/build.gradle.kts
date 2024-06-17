@@ -668,7 +668,7 @@ val commonNativeArgs = listOfNotNull(
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:+ParseRuntimeOptions",
-  "-H:+AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
+  "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
   "-H:NativeLinkerOption=-L$nativesPath",
   "-Delide.staticJni=$enableStaticJni",
   "-J-Delide.staticJni=$enableStaticJni",

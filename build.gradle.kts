@@ -159,7 +159,7 @@ java {
 dependencies {
   // Kover: Coverage Reporting
   kover(projects.packages.base)
-  kover(projects.packages.cli)
+  // kover(projects.packages.cli)
   kover(projects.packages.core)
   kover(projects.packages.graalvm)
   kover(projects.packages.graalvmJava)
@@ -355,7 +355,7 @@ apiValidation {
 
   ignoredProjects +=
     listOf(
-      "cli",
+      // "cli",
       "cli-bridge",
       "runtime",
       "sqlite",

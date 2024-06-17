@@ -2768,8 +2768,8 @@ public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI$Blob 
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI$File : elide/runtime/intrinsics/js/node/BufferAPI$Blob {
-	public abstract fun getFile ()Ljava/lang/String;
 	public abstract fun getLastModified ()J
+	public abstract fun getName ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ChildProcessAPI : elide/runtime/intrinsics/js/node/NodeAPI {

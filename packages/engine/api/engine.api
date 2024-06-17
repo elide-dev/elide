@@ -15,6 +15,13 @@ public final class elide/runtime/core/EngineLifecycleEvent$ContextCreated : elid
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class elide/runtime/core/EngineLifecycleEvent$ContextFinalized : elide/runtime/core/EngineLifecycleEvent {
+	public static final field INSTANCE Lelide/runtime/core/EngineLifecycleEvent$ContextFinalized;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/runtime/core/EngineLifecycleEvent$ContextInitialized : elide/runtime/core/EngineLifecycleEvent {
 	public static final field INSTANCE Lelide/runtime/core/EngineLifecycleEvent$ContextInitialized;
 	public fun equals (Ljava/lang/Object;)Z
@@ -160,11 +167,34 @@ public abstract interface class elide/runtime/core/PolyglotContext {
 	public abstract fun bindings (Lelide/runtime/core/GuestLanguage;)Lorg/graalvm/polyglot/Value;
 	public static synthetic fun bindings$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
 	public abstract fun enter ()V
-	public abstract fun evaluate (Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
+	public fun evaluate (Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
+	public abstract fun evaluate (Lorg/graalvm/polyglot/Source;Lelide/runtime/core/PolyglotContext$EvaluationOptions;)Lorg/graalvm/polyglot/Value;
+	public fun evaluate (Lorg/graalvm/polyglot/Source;Z)Lorg/graalvm/polyglot/Value;
 	public abstract fun get-HY--Dws (Ljava/lang/String;)Ljava/lang/Object;
 	public abstract fun leave ()V
 	public abstract fun parse (Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
 	public abstract fun set-HRLGfaQ (Ljava/lang/String;Ljava/lang/Object;)Z
+}
+
+public abstract interface class elide/runtime/core/PolyglotContext$EvaluationOptions {
+	public static final field Companion Lelide/runtime/core/PolyglotContext$EvaluationOptions$Companion;
+	public abstract fun getInternals ()Z
+	public static fun of (Z)Lelide/runtime/core/PolyglotContext$EvaluationOptions;
+}
+
+public final class elide/runtime/core/PolyglotContext$EvaluationOptions$Companion {
+	public final fun of (Z)Lelide/runtime/core/PolyglotContext$EvaluationOptions;
+}
+
+public final class elide/runtime/core/PolyglotContext$EvaluationOptionsData : java/lang/Record, elide/runtime/core/PolyglotContext$EvaluationOptions {
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;
+	public static synthetic fun copy$default (Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;ZILjava/lang/Object;)Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getInternals ()Z
+	public fun hashCode ()I
+	public fun internals ()Z
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/core/PolyglotContextElement {
@@ -182,15 +212,16 @@ public final class elide/runtime/core/PolyglotContextElement {
 }
 
 public final class elide/runtime/core/PolyglotContextKt {
-	public static final fun evaluate (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;Z)Lorg/graalvm/polyglot/Value;
-	public static synthetic fun evaluate$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
-	public static final fun parse (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;Z)Lorg/graalvm/polyglot/Value;
-	public static synthetic fun parse$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+	public static final fun evaluate (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;ZZZLjava/net/URI;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun evaluate$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;ZZZLjava/net/URI;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+	public static final fun parse (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;ZZZLjava/net/URI;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun parse$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;Ljava/lang/String;ZZZLjava/net/URI;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
 }
 
 public abstract interface class elide/runtime/core/PolyglotEngine {
 	public abstract fun acquire (Lkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotContext;
 	public static synthetic fun acquire$default (Lelide/runtime/core/PolyglotEngine;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/core/PolyglotContext;
+	public abstract fun unwrap ()Lorg/graalvm/polyglot/Engine;
 }
 
 public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/runtime/core/PluginRegistry {

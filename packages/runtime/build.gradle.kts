@@ -1217,9 +1217,13 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
-      classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
       if (enableToolchains) javaLauncher = gvmLauncher
+      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
+      classpath = files(
+        tasks.optimizedNativeJar,
+        configurations.nativeImageClasspath,
+        configurations.runtimeClasspath,
+      )
     }
 
     named("optimized") {
@@ -1227,9 +1231,13 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
-      classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
       if (enableToolchains) javaLauncher = gvmLauncher
+      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
+      classpath = files(
+        tasks.optimizedNativeJar,
+        configurations.nativeImageClasspath,
+        configurations.runtimeClasspath,
+      )
     }
 
     named("test") {

@@ -75,6 +75,7 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
     return true
   }
 
+  @Suppress("MagicNumber", "ReturnCount")
   override fun isUtf8(input: Value): Boolean {
     val buffer = coerceIntoBuffer(input)
     val bufferSize = buffer.bufferSize
@@ -120,15 +121,7 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
   }
 
   override fun transcode(source: Value, fromEnc: String, toEnc: String): Value {
-    val buffer = coerceIntoBuffer(source)
-    val bytes = ByteArray(buffer.bufferSize.toInt())
-
-    buffer.readBuffer(0L, bytes, 0, bytes.size)
-    val text = bytes.toString(Charset.forName(fromEnc))
-
-    val result = text.toByteArray(Charset.forName(toEnc))
-
-    // TODO(@darvld): there must be a way to create a 'Buffer' from the host
+    // blocked until creating 'Buffer' instances from the host is available
     TODO("Not yet implemented")
   }
 

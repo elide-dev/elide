@@ -597,6 +597,13 @@ val deprecatedNativeArgs = listOf(
 
 val enabledFeatures = listOfNotNull(
   "elide.tool.feature.ToolingUmbrellaFeature",
+  "elide.runtime.feature.engine.NativeSQLiteFeature",
+  "elide.runtime.feature.engine.NativeTransportFeature",
+  "elide.runtime.feature.engine.NativeConsoleFeature",
+  onlyIf(oracleGvm, "com.oracle.svm.enterprise.truffle.EnterpriseTruffleFeature"),
+  onlyIf(oracleGvm, "com.oracle.truffle.runtime.enterprise.EnableEnterpriseFeature"),
+  onlyIf(oracleGvm && enableExperimental, "com.oracle.svm.enterprise.truffle.PolyglotIsolateGuestFeature"),
+  onlyIf(oracleGvm && enableExperimental, "com.oracle.svm.enterprise.truffle.PolyglotIsolateHostFeature"),
   onlyIf(HostManager.hostIsMac, "com.sun.jna.SubstrateStaticJNA"),
   onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
 )

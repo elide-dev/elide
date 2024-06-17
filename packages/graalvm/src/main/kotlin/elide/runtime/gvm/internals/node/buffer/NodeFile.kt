@@ -21,19 +21,19 @@ import elide.runtime.intrinsics.js.node.BufferAPI
 import elide.vm.annotations.Polyglot
 
 /**
- * Implements the `File` class from the Node.js `buffer` built-in module. This class is basically a specialized [Blob]
- * with [fileName] and [lastModified] fields.
+ * Implements the `File` class from the Node.js `buffer` built-in module. This class is basically a specialized
+ * [NodeBlob] with [name] and [lastModified] fields.
  */
 @DelicateElideApi internal class NodeFile private constructor(
   bytes: ByteArray,
   type: String?,
-  @Polyglot override val file: String,
+  @Polyglot override val name: String,
   @Polyglot override val lastModified: Long,
 ) : NodeBlob(bytes, type), BufferAPI.File, ProxyObject {
   /**
-   * Create a new [File] with the given [sources] and [fileName], using default options. The [sources] value must have
-   * array elements of the supported type, meaning each item should either have buffer elements, or expose a `buffer`
-   * property that does. The [fileName] must be a string value.
+   * Create a new [NodeFile] with the given [sources] and [fileName], using default options. The [sources] value must
+   * have array elements of the supported type, meaning each item should either have buffer elements, or expose a
+   * `buffer` property that does. The [fileName] must be a string value.
    */
   @Polyglot constructor(sources: PolyglotValue, fileName: PolyglotValue) : this(
     sources = sources,
@@ -42,7 +42,7 @@ import elide.vm.annotations.Polyglot
   )
 
   /**
-   * Create a new [File] with the given [sources], [fileName], and options. The [sources] value must have array
+   * Create a new [NodeFile] with the given [sources], [fileName], and options. The [sources] value must have array
    * elements of the supported type, meaning each item should either have buffer elements, or expose a `buffer`
    * property that does. The [fileName] must be a string value.
    *
@@ -52,7 +52,7 @@ import elide.vm.annotations.Polyglot
   @Polyglot constructor(sources: PolyglotValue, fileName: PolyglotValue, options: PolyglotValue?) : this(
     bytes = makeBlobBytes(sources, options),
     type = NewBlobOptions.type(options),
-    file = fileName.asString(),
+    name = fileName.asString(),
     lastModified = NewFileOptions.lastModified(options),
   )
 
@@ -65,7 +65,7 @@ import elide.vm.annotations.Polyglot
   }
 
   override fun getMember(key: String?): Any? = when (key) {
-    "name" -> file
+    "name" -> name
     "lastModified" -> size
     else -> super.getMember(key)
   }

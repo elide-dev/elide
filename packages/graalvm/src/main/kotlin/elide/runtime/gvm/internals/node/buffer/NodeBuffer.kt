@@ -13,7 +13,8 @@
 package elide.runtime.gvm.internals.node.buffer
 
 import org.graalvm.polyglot.Value
-import java.nio.charset.Charset
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.*
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -49,7 +50,7 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
 }
 
 // Module facade which satisfies the built-in `Buffer` module.
-@Singleton internal class NodeBufferModuleFacade : BufferAPI {
+@Singleton internal class NodeBufferModuleFacade : BufferAPI, ProxyObject {
   override fun atob(data: Value): String {
     val base64 = if (data.isString) data.asString() else data.toString()
     val bytes = Base64.getDecoder().decode(base64)
@@ -142,6 +143,37 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
     error("Unable to read buffer elements from the specified value.")
   }
 
+  override fun getMemberKeys(): Any {
+    return moduleMembers
+  }
+
+  override fun hasMember(key: String): Boolean {
+    return moduleMembers.binarySearch(key) >= 0
+  }
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "atob" -> ProxyExecutable { atob(it.singleOrNull() ?: error("Expected exactly 1 argument for 'atob'")) }
+    "btoa" -> ProxyExecutable { btoa(it.singleOrNull() ?: error("Expected exactly 1 argument for 'btoa'")) }
+    "isAscii" -> ProxyExecutable { isAscii(it.singleOrNull() ?: error("Expected exactly 1 argument for 'isAscii'")) }
+    "isUtf8" -> ProxyExecutable { isUtf8(it.singleOrNull() ?: error("Expected exactly 1 argument for 'isUtf8'")) }
+
+    "transcode" -> ProxyExecutable {
+      if (it.size != 3) error("Expected exactly 1 argument for 'transcode'")
+      transcode(it[0], it[1].asString(), it[2].asString())
+    }
+
+    "resolveObjectUrl" -> ProxyExecutable {
+      val id = it.singleOrNull()?.asString() ?: error("Expected exactly 1 argument for 'isUtf8'")
+      resolveObjectUrl(id)
+    }
+
+    else -> null
+  }
+
+  override fun putMember(key: String?, value: Value?) {
+    throw UnsupportedOperationException("Cannot modify 'buffer' module")
+  }
+
   private companion object {
     /** Single-byte character bit prefix (0xxx xxxx) */
     private const val UTF8_PREFIX_1B = 0
@@ -172,5 +204,15 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
 
     /** Number of discarded bits when checking UTF-8 validity of follow-up bytes in multibyte characters. */
     private const val UTF8_PREFIX_MULTIBYTE_OFFSET = 6
+
+    /** Static list of members exposed to guest code. */
+    private val moduleMembers = arrayOf(
+      "atob",
+      "btoa",
+      "isAscii",
+      "isUtf8",
+      "transcode",
+      "resolveObjectUrl",
+    ).apply { sort() }
   }
 }

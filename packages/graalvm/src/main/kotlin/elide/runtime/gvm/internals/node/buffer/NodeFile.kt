@@ -13,6 +13,7 @@
 
 package elide.runtime.gvm.internals.node.buffer
 
+import org.graalvm.polyglot.proxy.ProxyObject
 import kotlinx.datetime.Clock
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
@@ -28,7 +29,7 @@ import elide.vm.annotations.Polyglot
   type: String?,
   @Polyglot override val file: String,
   @Polyglot override val lastModified: Long,
-) : NodeBlob(bytes, type), BufferAPI.File {
+) : NodeBlob(bytes, type), BufferAPI.File, ProxyObject {
   /**
    * Create a new [File] with the given [sources] and [fileName], using default options. The [sources] value must have
    * array elements of the supported type, meaning each item should either have buffer elements, or expose a `buffer`
@@ -44,7 +45,7 @@ import elide.vm.annotations.Polyglot
    * Create a new [File] with the given [sources], [fileName], and options. The [sources] value must have array
    * elements of the supported type, meaning each item should either have buffer elements, or expose a `buffer`
    * property that does. The [fileName] must be a string value.
-   * 
+   *
    * The [options] object may specify a `type` property with a string value to set the [type] field, and a
    * `lastModified` property with a numeric value to set the [lastModified] field.
    */
@@ -55,6 +56,24 @@ import elide.vm.annotations.Polyglot
     lastModified = NewFileOptions.lastModified(options),
   )
 
+  override fun getMemberKeys(): Any {
+    return members
+  }
+
+  override fun hasMember(key: String): Boolean {
+    return members.binarySearch(key) >= 0
+  }
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "name" -> file
+    "lastModified" -> size
+    else -> super.getMember(key)
+  }
+
+  override fun putMember(key: String?, value: PolyglotValue?) {
+    throw UnsupportedOperationException("Cannot modify 'File' object")
+  }
+
   /** Helper object used to extract fields from constructor options. */
   private object NewFileOptions {
     /**
@@ -64,5 +83,19 @@ import elide.vm.annotations.Polyglot
     fun lastModified(options: PolyglotValue?): Long {
       return options?.getMember("lastModified")?.asLong() ?: Clock.System.now().toEpochMilliseconds()
     }
+  }
+
+  private companion object {
+    /** Static, sorted array of members visible to guest code, including those inherited from [NodeBlob]. */
+    private val members = arrayOf(
+      "arrayBuffer",
+      "size",
+      "slice",
+      "stream",
+      "text",
+      "type",
+      "name",
+      "lastModified",
+    ).apply { sort() }
   }
 }

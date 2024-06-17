@@ -103,10 +103,15 @@ public abstract class AbstractGVMScript protected constructor (
   }
 
   // Build a `Source` object from an input stream.
-  private fun sourceFromStream(stream: InputStream, type: ExecutableScript.ScriptType): Source = type.charset().let {
+  private fun sourceFromStream(
+    stream: InputStream,
+    type: ExecutableScript.ScriptType,
+    internals: Boolean = false,
+  ): Source = type.charset().let {
     Source.newBuilder(language.symbol, stream.bufferedReader(it), source.filename)
       .interactive(false)
-      .cached(true)  // @TODO(sgammon): needs attention for HMR
+      .cached(true)
+      .internal(internals)
       .encoding(it)
       .build()
   }
@@ -136,7 +141,7 @@ public abstract class AbstractGVMScript protected constructor (
         source.isEmbedded -> AbstractGVMScript::class.java.getResourceAsStream("/" + source.path).use { stream ->
           sourceContent.set(sourceFromStream(stream ?: error(
             "Failed to locate embedded script resource: '/${source.path}'"
-          ), type()))
+          ), type(), internals = source.path.contains("__runtime__/")))
         }
 
         source.isFile -> File(source.path).apply {

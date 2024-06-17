@@ -201,7 +201,7 @@ public class PathBuf private constructor (override val style: PathStyle, private
  */
 internal object NodePaths {
   /** Primordial symbol where the paths API implementation is installed. */
-  internal const val SYMBOL: String = "__Elide_node_path__"
+  internal const val SYMBOL: String = "node_path"
 
   /**
    * ## Base Paths

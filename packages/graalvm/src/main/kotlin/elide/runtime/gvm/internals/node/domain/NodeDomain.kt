@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.DomainAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val DOMAIN_MODULE_SYMBOL = "__Elide_node_domain__"
+private const val DOMAIN_MODULE_SYMBOL = "node_domain"
 
 // Installs the Node `domain` module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeDomainModule : AbstractNodeBuiltinModule() {

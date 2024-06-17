@@ -38,7 +38,7 @@ import elide.runtime.intrinsics.js.node.buffer.Buffer
 import elide.runtime.intrinsics.js.node.stream.*
 
 // Internal symbol where the Node built-in module is installed.
-private const val STREAM_MODULE_SYMBOL = "__Elide_node_stream__"
+private const val STREAM_MODULE_SYMBOL = "node_stream"
 
 // Installs the Node stream module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeStreamModule : AbstractNodeBuiltinModule() {

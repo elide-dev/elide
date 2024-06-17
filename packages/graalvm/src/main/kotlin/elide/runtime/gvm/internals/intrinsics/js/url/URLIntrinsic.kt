@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.internals.intrinsics.js.url
 
 import org.graalvm.polyglot.Value
@@ -19,12 +21,14 @@ import java.io.Serializable
 import java.net.URI
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.Blob
 import elide.runtime.intrinsics.js.File
@@ -36,14 +40,14 @@ import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Value as GuestValue
 import java.net.URI as NativeURL
 
-/** Implements an intrinsic for the `URL` global defined by the WhatWG URL Specification. */
-@Intrinsic internal class URLIntrinsic : AbstractJsIntrinsic() {
-  internal companion object {
-    /** Global where the `URL` constructor is mounted. */
-    private const val GLOBAL_URL = "URL"
+/** Global where the `URL` constructor is mounted. */
+private const val GLOBAL_URL = "URL"
 
+/** Implements an intrinsic for the `URL` global defined by the WhatWG URL Specification. */
+@Intrinsic(GLOBAL_URL, internal = false) internal class URLIntrinsic : AbstractJsIntrinsic() {
+  internal companion object {
     // `URL` class symbol.
-    private val URL_SYMBOL = GLOBAL_URL.asJsSymbol()
+    private val URL_SYMBOL = GLOBAL_URL.asPublicJsSymbol()
 
     // Resolve a known protocol for the provided URI, or `null`.
     @JvmStatic private fun knownProtocol(target: NativeURL): KnownProtocol? = when (val scheme = target.scheme) {

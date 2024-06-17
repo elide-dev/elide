@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.WorkerAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val WORKER_MODULE_SYMBOL = "__Elide_node_worker__"
+private const val WORKER_MODULE_SYMBOL = "node_worker"
 
 // Installs the Node worker module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeWorkerModule : AbstractNodeBuiltinModule() {

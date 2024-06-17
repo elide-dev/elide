@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ChildProcessAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val CHILD_PROCESS_MODULE_SYMBOL = "__Elide_node_child_process__"
+private const val CHILD_PROCESS_MODULE_SYMBOL = "node_child_process"
 
 // Installs the Node child process module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeChildProcessModule : AbstractNodeBuiltinModule() {

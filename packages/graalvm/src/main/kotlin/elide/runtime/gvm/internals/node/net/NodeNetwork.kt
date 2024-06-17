@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.NetAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val NET_MODULE_SYMBOL = "__Elide_node_net__"
+private const val NET_MODULE_SYMBOL = "node_net"
 
 // Installs the Node `net` module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeNetworkModule : AbstractNodeBuiltinModule() {

@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.StringDecoderAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val STRING_DECODER_MODULE_SYMBOL = "__Elide_node_string_decoder__"
+private const val STRING_DECODER_MODULE_SYMBOL = "node_string_decoder"
 
 // Installs the Node string decoder module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeStringDecoderModule : AbstractNodeBuiltinModule() {

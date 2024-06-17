@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.AssertStrictAPI
 
 // Symbol where the internal module implementation is installed.
-private const val ASSERT_STRICT_MODULE_SYMBOL: String = "__Elide_node_assert_strict__"
+private const val ASSERT_STRICT_MODULE_SYMBOL: String = "node_assert_strict"
 
 // Installs the Node assert module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeAssertStrictModule : AbstractNodeBuiltinModule() {

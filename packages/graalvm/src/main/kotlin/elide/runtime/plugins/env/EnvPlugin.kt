@@ -93,7 +93,7 @@ import elide.vm.annotations.Polyglot
   /** Identifier for the [Environment] plugin, which provides isolated application environment. */
   public companion object Plugin : EnginePlugin<EnvConfig, Environment> {
     /** Binding path for the env container. */
-    private const val APP_ENV_BIND_PATH = "__Elide_app_env__"
+    private const val APP_ENV_BIND_PATH = "app_env"
 
     override val key: Key<Environment> = Key("Environment")
 

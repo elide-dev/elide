@@ -63,10 +63,10 @@ import org.sqlite.SQLiteConfig as RawConfig
 import java.sql.Statement as SqlStatement
 
 // Symbol where the internal module implementation is installed.
-private const val SQLITE_MODULE_SYMBOL: String = "__Elide_sqlite__"
+private const val SQLITE_MODULE_SYMBOL: String = "sqlite"
 
 // Symbol where the database class is installed.
-private const val SQLITE_DATABASE_SYMBOL: String = "__Elide_sqlite_Database__"
+private const val SQLITE_DATABASE_SYMBOL: String = "sqlite_Database"
 
 // Token for creating in-memory SQLite databases.
 private const val SQLITE_IN_MEMORY_TOKEN: String = ":memory:"

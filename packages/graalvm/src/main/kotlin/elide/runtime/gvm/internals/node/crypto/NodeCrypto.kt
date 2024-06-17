@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.CryptoAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val CRYPTO_MODULE_SYMBOL = "__Elide_node_crypto__"
+private const val CRYPTO_MODULE_SYMBOL = "node_crypto"
 
 // Installs the Node crypto module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeCryptoModule : AbstractNodeBuiltinModule() {

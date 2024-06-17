@@ -41,7 +41,7 @@ import elide.runtime.intrinsics.js.node.events.EventListener
 import elide.vm.annotations.Polyglot
 
 // Internal symbol where the Node built-in module is installed.
-private const val EVENTS_MODULE_SYMBOL = "__Elide_node_events__"
+private const val EVENTS_MODULE_SYMBOL = "node_events"
 
 // Maximum number of listeners to set as a default value.
 private const val DEFAULT_DEFAULT_MAX_LISTENERS = 10

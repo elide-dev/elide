@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ZlibAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val ZLIB_MODULE_SYMBOL = "__Elide_node_zlib__"
+private const val ZLIB_MODULE_SYMBOL = "node_zlib"
 
 // Installs the Node zlib module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeZlibModule : AbstractNodeBuiltinModule() {

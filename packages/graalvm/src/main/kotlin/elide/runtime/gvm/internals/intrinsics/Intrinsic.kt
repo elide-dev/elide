@@ -41,4 +41,5 @@ import elide.runtime.gvm.internals.GraalVMGuest
 internal annotation class Intrinsic(
   val global: String = "",
   val language: GraalVMGuest = GraalVMGuest.JAVASCRIPT,
+  val internal: Boolean = true,
 )

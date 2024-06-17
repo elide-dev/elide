@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ClusterAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val CLUSTER_MODULE_SYMBOL = "__Elide_node_cluster__"
+private const val CLUSTER_MODULE_SYMBOL = "node_cluster"
 
 // Installs the Node cluster module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeClusterModule : AbstractNodeBuiltinModule() {

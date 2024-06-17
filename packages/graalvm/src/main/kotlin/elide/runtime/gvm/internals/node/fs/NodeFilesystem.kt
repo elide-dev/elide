@@ -30,10 +30,13 @@ import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 import java.util.*
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Supplier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlin.coroutines.CoroutineContext
+import elide.annotations.Eager
 import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
@@ -56,22 +59,29 @@ import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.vfs.GuestVFS
 import elide.vm.annotations.Polyglot
 
-// Installs the Node `fs` and `fs/promises` modules into the intrinsic bindings.
-@Intrinsic @Factory internal class NodeFilesystemModule : AbstractNodeBuiltinModule(), VfsListener {
-  /** VM filesystem manager. */
-  private lateinit var filesystem: GuestVFS
+// Listener bean for VFS init.
+@Singleton @Eager public class VfsInitializerListener : VfsListener, Supplier<GuestVFS> {
+  private val filesystem: AtomicReference<GuestVFS> = AtomicReference()
 
+  override fun onVfsCreated(fileSystem: GuestVFS) {
+    filesystem.set(fileSystem)
+  }
+
+  override fun get(): GuestVFS {
+    return filesystem.get() ?: error("VFS not yet initialized")
+  }
+}
+
+// Installs the Node `fs` and `fs/promises` modules into the intrinsic bindings.
+@Intrinsic @Factory internal class NodeFilesystemModule (
+  private val vfs: VfsInitializerListener,
+) : AbstractNodeBuiltinModule() {
   private val executor: ExecutorService by lazy {
     MoreExecutors.newDirectExecutorService()
   }
 
-  private val std: FilesystemAPI by lazy {
-    NodeFilesystem.createStd(executor, filesystem)
-  }
-
-  private val promises: FilesystemPromiseAPI by lazy {
-    NodeFilesystem.createPromises(executor, filesystem)
-  }
+  private val std: FilesystemAPI by lazy { NodeFilesystem.createStd(executor, vfs.get()) }
+  private val promises: FilesystemPromiseAPI by lazy { NodeFilesystem.createPromises(executor, vfs.get()) }
 
   @Singleton fun provideStd(): FilesystemAPI = std
   @Singleton fun providePromises(): FilesystemPromiseAPI = promises
@@ -80,20 +90,13 @@ import elide.vm.annotations.Polyglot
     bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = ProxyExecutable { provideStd() }
     bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = ProxyExecutable { providePromises() }
   }
-
-  override fun onVfsCreated(fileSystem: GuestVFS) {
-    filesystem = fileSystem
-  }
 }
 
 // Implements the Node built-in filesystem modules.
 internal object NodeFilesystem {
-  internal const val SYMBOL_STD: String = "__Elide_node_fs__"
-  internal const val SYMBOL_PROMISES: String = "__Elide_node_fs_promises__"
-
-  private val directExecutor by lazy {
-    MoreExecutors.newDirectExecutorService()
-  }
+  internal const val SYMBOL_STD: String = "node_fs"
+  internal const val SYMBOL_PROMISES: String = "node_fs_promises"
+  private val directExecutor by lazy { MoreExecutors.newDirectExecutorService() }
 
   /** @return Host-only implementation of the `fs` module. */
   fun createStd(): FilesystemAPI = NodeFilesystemProxy(directExecutor, HostVFS.acquireWritable())

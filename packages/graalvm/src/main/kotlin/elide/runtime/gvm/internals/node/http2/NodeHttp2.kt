@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.HTTP2API
 
 // Internal symbol where the Node built-in module is installed.
-private const val HTTP2_MODULE_SYMBOL = "__Elide_node_http2__"
+private const val HTTP2_MODULE_SYMBOL = "node_http2"
 
 // Installs the Node `http2` module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeHttp2Module : AbstractNodeBuiltinModule() {

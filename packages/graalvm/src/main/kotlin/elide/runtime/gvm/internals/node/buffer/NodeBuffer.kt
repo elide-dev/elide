@@ -26,10 +26,10 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.BufferAPI
 
 /** Internal symbol where the bindings for the 'buffer' module are installed. */
-private const val BUFFER_MODULE_SYMBOL_ROOT = "__Elide_node_buffer__"
+private const val BUFFER_MODULE_SYMBOL_ROOT = "node_buffer"
 
 /** Symbol at which the main module intrinsic is installed. */
-private const val BUFFER_MODULE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}module"
+private const val BUFFER_MODULE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_module"
 
 /** Symbol at which the [NodeBlob] class is installed. */
 private const val BLOB_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}Blob"

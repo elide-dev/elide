@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.DiagnosticsChannelAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val DIAGNOSTICS_CHANNEL_MODULE_SYMBOL = "__Elide_node_diagnostics_channel__"
+private const val DIAGNOSTICS_CHANNEL_MODULE_SYMBOL = "node_diagnostics_channel"
 
 // Installs the Node `diagnostics_channel` module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeDiagnosticsChannelModule : AbstractNodeBuiltinModule() {

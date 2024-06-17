@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ReadlineAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val READLINE_MODULE_SYMBOL = "__Elide_node_readline__"
+private const val READLINE_MODULE_SYMBOL = "node_readline"
 
 // Installs the Node readline module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeReadlineModule : AbstractNodeBuiltinModule() {

@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.StreamConsumersAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val STREAM_CONSUMERS_MODULE_SYMBOL = "__Elide_node_stream_consumers__"
+private const val STREAM_CONSUMERS_MODULE_SYMBOL = "node_stream_consumers"
 
 // Installs the Node stream consumers module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeStreamConsumersModule : AbstractNodeBuiltinModule() {

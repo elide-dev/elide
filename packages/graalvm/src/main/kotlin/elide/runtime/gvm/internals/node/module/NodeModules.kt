@@ -21,7 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ModuleAPI
 
 // Internal symbol where the Node built-in module is installed.
-private const val MODULE_MODULE_SYMBOL = "__Elide_node_module__"
+private const val MODULE_MODULE_SYMBOL = "node_module"
 
 // Installs the Node `module` module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeModulesModule : AbstractNodeBuiltinModule() {

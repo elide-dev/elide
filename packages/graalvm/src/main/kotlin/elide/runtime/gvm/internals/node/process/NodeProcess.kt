@@ -30,6 +30,7 @@ import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ProcessAPI
 import elide.runtime.intrinsics.js.node.process.*
@@ -37,7 +38,8 @@ import elide.runtime.plugins.env.EnvConfig
 import elide.vm.annotations.Polyglot
 
 // Installs the Node process module into the intrinsic bindings.
-@Intrinsic @Factory internal class NodeProcessModule @Inject constructor (
+@Intrinsic(NodeProcess.PUBLIC_SYMBOL, internal = false)
+@Factory internal class NodeProcessModule @Inject constructor (
   private val envConfig: EnvConfig? = null,
 ) : AbstractNodeBuiltinModule() {
   @Singleton fun provide(): ProcessAPI = if (envConfig == null) NodeProcess.obtain() else NodeProcess.create(
@@ -50,7 +52,7 @@ import elide.vm.annotations.Polyglot
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[NodeProcess.SYMBOL.asJsSymbol()] = singleton
-    bindings[NodeProcess.PUBLIC_SYMBOL.asJsSymbol()] = singleton
+    bindings[NodeProcess.PUBLIC_SYMBOL.asPublicJsSymbol()] = singleton
   }
 }
 
@@ -241,7 +243,7 @@ private class EnvironmentAccessMediator(private val access: EnvAccessor): Proces
  * # Node Process API
  */
 internal object NodeProcess {
-  internal const val SYMBOL: String = "__Elide_node_process__"
+  internal const val SYMBOL: String = "node_process"
   internal const val PUBLIC_SYMBOL: String = "process"
 
   // Implements the Node process module for a host environment.

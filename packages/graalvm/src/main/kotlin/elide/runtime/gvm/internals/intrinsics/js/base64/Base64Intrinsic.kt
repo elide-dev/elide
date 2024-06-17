@@ -17,10 +17,12 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.core.encoding.base64.DefaultBase64
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.JavaScriptBase64
 import elide.vm.annotations.Polyglot
@@ -44,9 +46,6 @@ internal class Base64Intrinsic : JavaScriptBase64, ProxyObject, AbstractJsIntrin
 
     /** Injected name of the `atob` intrinsic. */
     private const val GLOBAL_ATOB = "atob"
-
-    /** Base64 symbol. */
-    private val BASE64_SYMBOL = GLOBAL_BASE64.asJsSymbol()
   }
 
   /** @inheritDoc */
@@ -56,25 +55,25 @@ internal class Base64Intrinsic : JavaScriptBase64, ProxyObject, AbstractJsIntrin
 
   /** @inheritDoc */
   @ReflectiveAccess
-  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String): String =
+  @Polyglot @Intrinsic(global = GLOBAL_BTOA, internal = false) override fun encode(input: String): String =
     encode(input, false)
 
   /** @inheritDoc */
   @ReflectiveAccess
-  @Polyglot @Intrinsic(global = GLOBAL_ATOB) override fun decode(input: String): String =
+  @Polyglot @Intrinsic(global = GLOBAL_ATOB, internal = false) override fun decode(input: String): String =
     DefaultBase64.decodeToString(input)
 
   /** @inheritDoc */
-  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
+  @OptIn(DelicateElideApi::class) override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `Base64`
-    bindings[BASE64_SYMBOL] = this
+    bindings[GLOBAL_BASE64.asPublicJsSymbol()] = this
 
     // mount `atob`
-    bindings[GLOBAL_ATOB.asJsSymbol()] = ProxyExecutable {
+    bindings[GLOBAL_ATOB.asPublicJsSymbol()] = ProxyExecutable {
       return@ProxyExecutable decode(it.firstOrNull()?.asString() ?: error("Cannot decode $it as string"))
     }
     // mount `btoa`
-    bindings[GLOBAL_BTOA.asJsSymbol()] = ProxyExecutable {
+    bindings[GLOBAL_BTOA.asPublicJsSymbol()] = ProxyExecutable {
       return@ProxyExecutable encode(it.firstOrNull()?.asString() ?: error("Cannot decode $it as string"))
     }
   }

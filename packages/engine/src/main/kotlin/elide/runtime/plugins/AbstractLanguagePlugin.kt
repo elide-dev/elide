@@ -197,7 +197,8 @@ import elide.runtime.plugins.bindings.Bindings
           this,
           script.bufferedReader().use { it.readText() },
           name = source.path.split("/").last(),
-          internal = true,
+          internals = true,
+          cached = true,
         )
       } catch (err: RuntimeException) {
         if (System.getProperty("elide.strict") == "true") {

@@ -24,17 +24,25 @@ import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 /**
  * # Guest Intrinsic
  *
- * Applied to all intrinsic classes which are implemented for a guest language, in addition to various annotations which
+ * Applied to all intrinsic classes that are implemented for a guest language, in addition to various annotations which
  * designate the use context of a given implementation.
  */
 public interface GuestIntrinsic {
   /**
-   * TBD.
+   * ## Intrinsic Bindings
+   *
+   * Binds a well-known [Symbol] to some value within the context of guest-capable code; note that registered symbols
+   * are not necessarily exposed publicly (this depends on the language and symbol).
+   *
+   * Symbols which are registered for non-public use are made available for "internal"-marked sources only.
    */
   public interface IntrinsicBindings : Map<Symbol, Any>
 
   /**
-   * TBD.
+   * ## Intrinsic Bindings (Mutable)
+   *
+   * Extends the base [IntrinsicBindings] type with mutability; typically used during context materialization, after
+   * which language bindings are frozen and immutable.
    */
   public interface MutableIntrinsicBindings : IntrinsicBindings, MutableMap<Symbol, Any>, ProxyObject {
     /** factory for creating empty bindings. */
@@ -102,6 +110,9 @@ public interface GuestIntrinsic {
     }
   }
 
+  /** Indicate whether this symbol is considered runtime-internal. */
+  public val isInternal: Boolean get() = true
+
   /**
    * Indicate the language which this intrinsic is intended to be used with.
    *
@@ -131,7 +142,9 @@ public interface GuestIntrinsic {
   public fun install(bindings: MutableIntrinsicBindings)
 
   /**
-   * TBD.
+   * Return the display name of this intrinsic; this is typically the [Symbol] bound to the value.
+   *
+   * @return Display name of this guest-intrinsic symbol.
    */
   public fun displayName(): String
 }

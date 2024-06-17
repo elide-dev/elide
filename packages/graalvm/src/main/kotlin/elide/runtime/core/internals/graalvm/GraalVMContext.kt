@@ -17,6 +17,7 @@ import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import java.util.concurrent.ConcurrentHashMap
 import elide.runtime.core.*
+import elide.runtime.core.PolyglotContext.EvaluationOptions
 
 /**
  * An implementation of the [PolyglotContext] interface wrapping a GraalVM context.
@@ -25,7 +26,7 @@ import elide.runtime.core.*
   /** Thread-safe mutable map holding this context's elements. */
   private val elements: MutableMap<PolyglotContextElement<*>, Any?> = ConcurrentHashMap()
 
-  private fun resolveCustomEvaluator(source: Source): GuestLanguageEvaluator? {
+  private fun resolveCustomEvaluator(source: Source, options: EvaluationOptions): GuestLanguageEvaluator? {
     return get(GuestLanguageEvaluator.contextElementFor(source.language))?.takeIf { it.accepts(source) }
   }
 
@@ -42,9 +43,9 @@ import elide.runtime.core.*
     return resolveCustomParser(source)?.parse(source, this) ?: context.parse(source)
   }
 
-  override fun evaluate(source: Source): PolyglotValue {
+  override fun evaluate(source: Source, options: EvaluationOptions): PolyglotValue {
     // prefer using a registered evaluator for this language, default to using the context
-    return resolveCustomEvaluator(source)?.evaluate(source, this) ?: context.eval(source)
+    return resolveCustomEvaluator(source, options)?.evaluate(source, this) ?: context.eval(source)
   }
 
   override fun enter() {

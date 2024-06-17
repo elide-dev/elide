@@ -381,7 +381,11 @@ dependencies {
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
   compileOnly(libs.graalvm.svm)
-  if (oracleGvm) compileOnly(libs.graalvm.truffle.enterprise)
+
+  if (oracleGvm) {
+    implementation(libs.graalvm.js.isolate)
+    nativeImageClasspath(libs.graalvm.truffle.enterprise)
+  }
 
   // GraalVM: Dynamic Language Engines
   if (enableDynamicPlugins) {

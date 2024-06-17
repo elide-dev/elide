@@ -97,19 +97,22 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
       val stream = scanForResource(jar, candidate) ?: continue
       stream.use {
         val target = Path(nativesPath)
-          .resolve(renameTo?.let { Path(it.invoke(candidate)) } ?: Path(candidate).fileName.let {
-            val filename = it.fileName
-            val dylibName = filename.toString().replace(".jnilib", ".dylib")
-            val parent = it.parent
-            if (parent != null) it.parent.resolve(dylibName)
-            else it.resolveSibling(dylibName)
-          })
+          .resolve(
+            renameTo?.let { Path(it.invoke(candidate)) } ?: Path(candidate).fileName.let {
+              val filename = it.fileName
+              val dylibName = filename.toString().replace(".jnilib", ".dylib")
+              val parent = it.parent
+              if (parent != null) it.parent.resolve(dylibName)
+              else it.resolveSibling(dylibName)
+            },
+          )
           .toFile()
 
         val exists = target.exists()
         val size = if (exists) Files.size(target.toPath()) else -1
 
         if (!exists || size != stream.available().toLong()) {
+          target.parentFile?.let { if (!it.exists()) it.mkdirs() }
           target.outputStream().use { it.write(stream.readBytes()) }
         }
         cbk?.invoke()

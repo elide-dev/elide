@@ -1,3 +1,10 @@
+public class elide/runtime/lang/typescript/TypeScriptCompiler : java/lang/AutoCloseable {
+	public fun close ()V
+	public fun compileToNewSource (Ljava/lang/CharSequence;Ljava/lang/String;ZLjava/lang/String;)Lcom/oracle/truffle/api/source/Source;
+	public fun compileToString (Ljava/lang/CharSequence;Ljava/lang/String;)Ljava/lang/String;
+	public static fun obtain (Lcom/oracle/truffle/api/TruffleLanguage$Env;)Lelide/runtime/lang/typescript/TypeScriptCompiler;
+}
+
 public class elide/runtime/lang/typescript/TypeScriptLanguage : com/oracle/truffle/api/TruffleLanguage {
 	public static final field APPLICATION_MIME_TYPE Ljava/lang/String;
 	public static final field ID Ljava/lang/String;
@@ -32,5 +39,12 @@ public final class elide/runtime/plugins/typescript/TypeScript$Plugin : elide/ru
 
 public final class elide/runtime/plugins/typescript/TypeScriptConfig : elide/runtime/plugins/AbstractLanguageConfig {
 	public fun <init> ()V
+}
+
+public final class elide/runtime/typescript/TypeScriptFeature : org/graalvm/nativeimage/hosted/Feature {
+	public fun <init> ()V
+	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
+	public fun getDescription ()Ljava/lang/String;
+	public fun getURL ()Ljava/lang/String;
 }
 

@@ -2628,6 +2628,28 @@ public abstract interface class elide/runtime/intrinsics/js/URLSearchParams : el
 	public abstract fun sort ()V
 }
 
+public synthetic class elide/runtime/intrinsics/js/err/$TypeErrorIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/intrinsics/js/err/$ValueErrorIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public abstract interface class elide/runtime/intrinsics/js/err/AbstractJsException {
 }
 
@@ -2683,30 +2705,52 @@ public final class elide/runtime/intrinsics/js/err/RangeError$Factory : elide/ru
 public abstract interface class elide/runtime/intrinsics/js/err/Stacktrace {
 }
 
-public abstract class elide/runtime/intrinsics/js/err/TypeError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException {
+public class elide/runtime/intrinsics/js/err/TypeError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException, org/graalvm/polyglot/proxy/ProxyObject {
 	public static final field Factory Lelide/runtime/intrinsics/js/err/TypeError$Factory;
-	public fun <init> ()V
+	protected fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/err/Error;)V
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/err/Error;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getCause ()Lelide/runtime/intrinsics/js/err/Error;
+	public synthetic fun getCause ()Ljava/lang/Throwable;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getMessage ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
 }
 
-public final class elide/runtime/intrinsics/js/err/TypeError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory {
+public final class elide/runtime/intrinsics/js/err/TypeError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory, org/graalvm/polyglot/proxy/ProxyInstantiable {
 	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
 	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
-public abstract class elide/runtime/intrinsics/js/err/ValueError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException {
+public class elide/runtime/intrinsics/js/err/ValueError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException, org/graalvm/polyglot/proxy/ProxyObject {
 	public static final field Factory Lelide/runtime/intrinsics/js/err/ValueError$Factory;
-	public fun <init> ()V
+	protected fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/err/Error;)V
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/err/Error;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getCause ()Lelide/runtime/intrinsics/js/err/Error;
+	public synthetic fun getCause ()Ljava/lang/Throwable;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getMessage ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
 }
 
-public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory {
+public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory, org/graalvm/polyglot/proxy/ProxyInstantiable {
 	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/express/Express : elide/runtime/intrinsics/js/ServerAgent {
@@ -4705,7 +4749,6 @@ public final class elide/runtime/plugins/js/ExtensionsKt {
 public final class elide/runtime/plugins/js/JavaScript {
 	public static final field Plugin Lelide/runtime/plugins/js/JavaScript$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lelide/runtime/plugins/env/Environment;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun getWasmSupported$graalvm ()Z
 }
 
 public final class elide/runtime/plugins/js/JavaScript$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {

@@ -219,7 +219,8 @@ internal class NodeAssert : AssertAPI {
         }
       }
 
-      else -> error("Unrecognized value type: $value")
+      // Otherwise, this is an exotic type, which is assumed not to be falsy.
+      else -> true
 
     }.also { condition ->
       if (condition == reverse) throw assertionError(message ?: OK_EXPECTATION)

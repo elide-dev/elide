@@ -2,6 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>ForbiddenComment:AbstractLanguageConfig.kt$AbstractLanguageConfig$// @TODO: don't unconditionally mount all members</ID>
     <ID>ReturnCount:Version.kt$Version$public override operator fun compareTo(other: Version): Int</ID>
     <ID>TooGenericExceptionThrown:AbstractLanguagePlugin.kt$AbstractLanguagePlugin$throw Exception("Failed to resolve language resources with key $manifestKey for language $languageId", cause)</ID>
   </CurrentIssues>

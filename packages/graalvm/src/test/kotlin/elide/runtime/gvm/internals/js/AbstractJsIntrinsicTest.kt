@@ -27,6 +27,7 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.AbstractDualTest.JavaScript
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
+import elide.runtime.gvm.internals.intrinsics.js.base64.Base64Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.node.asserts.NodeAssertModule
 import elide.runtime.gvm.internals.node.asserts.NodeAssertStrictModule
@@ -73,6 +74,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindPrimordials: Boolean,
       bindAssert: Boolean,
       bindConsole: Boolean,
+      bindBase64: Boolean,
       op: JavaScript,
   ): GuestValue {
     // resolve the script
@@ -89,6 +91,9 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       }
       if (bindConsole && !target.any { it.key.symbol.contains("console") }) {
         ConsoleIntrinsic().install(binding)
+      }
+      if (bindBase64 && !target.any { it.key.symbol.contains("Base64") }) {
+        Base64Intrinsic().install(binding)
       }
       target
     } else {
@@ -177,6 +182,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindPrimordials = true,
       bindAssert = true,
       bindConsole = true,
+      bindBase64 = true,
       op,
     )
   }
@@ -198,6 +204,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindPrimordials = true,
       bindAssert = true,
       bindConsole = true,
+      bindBase64 = true,
       guest,
     )
   }
@@ -214,6 +221,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
           bindPrimordials = true,
           bindAssert = true,
           bindConsole = true,
+          bindBase64 = true,
           guestOperation,
         )
       }.doesNotFail()
@@ -226,6 +234,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
           bindPrimordials = true,
           bindAssert = true,
           bindConsole = true,
+          bindBase64 = true,
           guestOperation,
         )
       }

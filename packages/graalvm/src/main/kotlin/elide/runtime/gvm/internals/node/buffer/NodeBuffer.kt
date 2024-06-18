@@ -32,10 +32,10 @@ private const val BUFFER_MODULE_SYMBOL_ROOT = "node_buffer"
 private const val BUFFER_MODULE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_module"
 
 /** Symbol at which the [NodeBlob] class is installed. */
-private const val BLOB_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}Blob"
+private const val BLOB_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_Blob"
 
 /** Symbol at which the [NodeBlob] class is installed. */
-private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}File"
+private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_File"
 
 // Installs the Node `buffer` built-in module.
 @Intrinsic internal class NodeBufferModule : AbstractNodeBuiltinModule() {

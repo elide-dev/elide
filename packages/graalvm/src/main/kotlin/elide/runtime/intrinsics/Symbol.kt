@@ -22,4 +22,14 @@ public interface Symbol : Symbolic<String> {
    * TBD.
    */
   public override val symbol: String
+
+  /**
+   * TBD.
+   */
+  public val internalSymbol: String
+
+  /**
+   * TBD.
+   */
+  public val isInternal: Boolean
 }

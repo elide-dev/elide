@@ -15,10 +15,14 @@
 package elide.runtime.gvm.js.node
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyHashMap
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.runtime.gvm.internals.node.asserts.NodeAssertModule
+import elide.runtime.gvm.internals.node.asserts.NodeAssertStrictModule
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.runtime.plugins.env.EnvConfig
@@ -55,24 +59,66 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     }
   }
 
-  private fun beforeExec(bind: Boolean) {
+  private fun beforeExec(bind: Boolean, bindAssert: Boolean = true, bindConsole: Boolean = true) {
     // install bindings under test, if directed
     val target = polyglotContext.bindings(JavaScript)
 
     // prep intrinsic bindings under test
-    val bindings = if (bind) {
+    val langBindings = if (bind) {
       val group = HashMap<Symbol, Any>()
       val binding = GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(group)
-      ConsoleIntrinsic().install(binding)
       provide().install(binding)
+      if (bindConsole && !group.any { it.key.symbol.contains("console") }) {
+        ConsoleIntrinsic().install(binding)
+      }
+      if (bindAssert && !group.any { it.key.symbol.contains("assert") }) {
+        NodeAssertModule().install(binding)
+        NodeAssertStrictModule().install(binding)
+      }
       group
     } else {
       emptyMap()
     }
 
-    bindings.forEach {
-      target.putMember(it.key.symbol, it.value)
+    // prep internal bindings
+    val internalBindings: MutableMap<String, Any?> = mutableMapOf()
+    langBindings.forEach {
+      if (it.key.isInternal) {
+        internalBindings[it.key.internalSymbol] = it.value
+      }
     }
+
+    // install bindings under test (public only so far)
+    for (binding in langBindings) {
+      if (binding.key.isInternal) {
+        continue
+      }
+      target.putMember(binding.key.symbol, binding.value)
+    }
+
+    // shim primordials
+    val primordialsProxy = object: ProxyObject, ProxyHashMap {
+      override fun getMemberKeys(): Array<String> = internalBindings.keys.toTypedArray()
+      override fun hasMember(key: String?): Boolean = key != null && key in internalBindings
+      override fun hasHashEntry(key: Value?): Boolean = key != null && key.asString() in internalBindings
+      override fun getHashSize(): Long = internalBindings.size.toLong()
+      override fun getHashEntriesIterator(): Any = internalBindings.entries.iterator()
+      override fun putMember(key: String?, value: Value?) {
+        // no-op
+      }
+      override fun putHashEntry(key: Value?, value: Value?) {
+        // no-op
+      }
+
+      override fun getMember(key: String?): Any? = when (key) {
+        null -> null
+        else -> internalBindings[key]
+      }
+
+      override fun getHashValue(key: Value?): Any? = getMember(key?.asString())
+    }
+
+    target.putMember("primordials", primordialsProxy)
   }
 
   protected fun require(module: String = moduleName, bind: Boolean = true): Value {

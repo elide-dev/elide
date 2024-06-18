@@ -45,10 +45,10 @@ import elide.runtime.intrinsics.Symbol
   constructor(name: String, internal: Boolean = true) : this(name to internal)
 
   /** Indicate whether this symbol is "internal," in which case, it should not be provided to user code. */
-  internal val isInternal: Boolean get() = data.second
+  override val isInternal: Boolean get() = data.second
 
-  /** Describes the "internal symbol" name, made available via the primordials object. */
-  internal val internalSymbol: String get() = data.first
+  /** Describes the "internal symbol" name, made available via the primordial object. */
+  override val internalSymbol: String get() = data.first
 
   override val symbol: String get() = isInternal.let {
     checkSymbol(it, if (it) internalSymbol(data.first) else data.first)

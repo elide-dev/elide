@@ -70,7 +70,7 @@ public open class ValueError protected constructor(
   override val cause: Error? = null,
 ) : AbstractJsException, ProxyObject, Error() {
   /** @inheritDoc */
-  override val name: String get() = "ValueError"
+  override val name: String get() = "NativeValueError"
   override fun getMemberKeys(): Array<String> = VALUE_ERROR_MEMBERS_AND_PROPS
   override fun hasMember(key: String?): Boolean = key != null && key in VALUE_ERROR_MEMBERS_AND_PROPS
   override fun putMember(key: String?, value: Value?) { /* no-op */ }

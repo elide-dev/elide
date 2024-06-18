@@ -13,9 +13,15 @@
 
 package elide.runtime.feature.js
 
+import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import elide.annotations.internal.VMFeature
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotEngine
+import elide.runtime.core.internals.graalvm.GraalVMConfiguration
+import elide.runtime.core.internals.graalvm.GraalVMEngine
 import elide.runtime.feature.EngineFeature
 import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.plugins.js.JavaScript
 
 /** GraalVM feature which enables reflection required for the Elide JavaScript guest runtime. */
 @VMFeature internal class JavaScriptFeature : EngineFeature(GraalVMGuest.JAVASCRIPT) {
@@ -71,4 +77,12 @@ import elide.runtime.gvm.internals.GraalVMGuest
   override fun registeredPackages(): List<String> = packages
 
   override fun registeredIntrinsics(): List<String> = intrinsics
+
+  @OptIn(DelicateElideApi::class)
+  override fun beforeAnalysis(access: BeforeAnalysisAccess) {
+    super.beforeAnalysis(access)
+    PolyglotEngine {
+      install(JavaScript)
+    }
+  }
 }

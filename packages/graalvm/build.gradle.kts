@@ -430,6 +430,8 @@ dependencies {
   api(projects.packages.core)
   api(projects.packages.ssr)
   api(projects.packages.engine)
+  api(projects.packages.graalvmTs)
+  api(projects.packages.graalvmWasm)
 
   // Kotlin / KotlinX
   implementation(kotlin("stdlib"))

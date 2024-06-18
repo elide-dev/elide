@@ -242,11 +242,11 @@ import elide.tool.project.ProjectManager
       EnumSet.noneOf(GuestLanguage::class.java).apply {
         add(JS)
         add(WASM)
-        if (ENABLE_TYPESCRIPT) add(TYPESCRIPT)
-        if (ENABLE_PYTHON) add(PYTHON)
-        if (ENABLE_RUBY) add(RUBY)
-        if (ENABLE_JVM) add(JVM)
-        if (ENABLE_JVM) add(KOTLIN)
+        if (ENABLE_TYPESCRIPT || typescript) add(TYPESCRIPT)
+        if (ENABLE_PYTHON || python) add(PYTHON)
+        if (ENABLE_RUBY || ruby) add(RUBY)
+        if (ENABLE_JVM || jvm || kotlin) add(JVM)
+        if (ENABLE_JVM || kotlin) add(KOTLIN)
       }
     }
 

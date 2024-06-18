@@ -12,6 +12,9 @@
  */
 package elide.runtime.plugins
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyHashMap
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
@@ -23,6 +26,10 @@ import elide.runtime.core.PolyglotContext
  * @see AbstractLanguagePlugin
  */
 @DelicateElideApi public abstract class AbstractLanguageConfig {
+  public companion object {
+    private const val EXPERIMENTAL_SECURE_INTERNALS = true
+  }
+
   /** Mutable counterpart to [intrinsicBindings]. */
   private val mutableBindings: MutableMap<String, Any> = mutableMapOf()
 
@@ -55,7 +62,55 @@ import elide.runtime.core.PolyglotContext
    */
   @DelicateElideApi protected fun applyBindings(context: PolyglotContext, language: GuestLanguage? = null) {
     with(context.bindings(language)) {
-      intrinsicBindings.forEach { entry -> putMember(entry.key, entry.value) }
+      val internals = HashMap<String, Any>()
+
+      intrinsicBindings.forEach { entry ->
+        // @TODO: don't unconditionally mount all members
+        val isInternal = entry.key.startsWith("__Elide")
+        if (!EXPERIMENTAL_SECURE_INTERNALS || !isInternal) {
+          putMember(entry.key, entry.value)
+        }
+        if (isInternal) {
+          internals[entry.key.removePrefix("__Elide_").removeSuffix("__")] = entry.value
+        }
+      }
+
+      // mount internals at `primordials`
+      val internalKeys = internals.keys.toTypedArray()
+      putMember("primordials", object: ProxyObject, ProxyHashMap {
+        override fun getMemberKeys(): Array<String> = internalKeys
+        override fun hasMember(key: String?): Boolean = key != null && key in internalKeys
+        override fun hasHashEntry(key: Value?): Boolean = key != null && key.asString() in internalKeys
+        override fun getHashSize(): Long = internalKeys.size.toLong()
+
+        override fun putMember(key: String?, value: Value?) {
+          // no-op
+        }
+
+        override fun putHashEntry(key: Value?, value: Value?) {
+          // no-op
+        }
+
+        override fun removeMember(key: String?): Boolean {
+          return false // not supported
+        }
+
+        override fun removeHashEntry(key: Value?): Boolean {
+          return false // not supported
+        }
+
+        override fun getMember(key: String?): Any? = when (key) {
+          null -> null
+          else -> internals[key]
+        }
+
+        override fun getHashValue(key: Value?): Any? = when (key) {
+          null -> null
+          else -> internals[key.asString()]
+        }
+
+        override fun getHashEntriesIterator(): Any = internals.iterator()
+      })
     }
   }
 }

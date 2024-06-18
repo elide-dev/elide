@@ -21,7 +21,7 @@ import elide.vm.annotations.Polyglot
 /**
  * # Node API: Path
  *
- * Describes a "path object," as specified by the Node JS "Path" built-in module. Path objects carry information about a
+ * Describes a "path object," as specified by the Node.js "Path" built-in module. Path objects carry information about a
  * parsed path, or allow the user to specify path information in a structured way. Certain methods in the Path API can
  * accept an object of this type.
  */

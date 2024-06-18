@@ -237,19 +237,6 @@ import elide.tool.project.ProjectManager
     )
     internal var llvm: Boolean = false
 
-    // Calculated and cached suite of supported languages loaded into the VM space.
-    private val langs: EnumSet<GuestLanguage> by lazy {
-      EnumSet.noneOf(GuestLanguage::class.java).apply {
-        add(JS)
-        add(WASM)
-        if (ENABLE_TYPESCRIPT || typescript) add(TYPESCRIPT)
-        if (ENABLE_PYTHON || python) add(PYTHON)
-        if (ENABLE_RUBY || ruby) add(RUBY)
-        if (ENABLE_JVM || jvm || kotlin) add(JVM)
-        if (ENABLE_JVM || kotlin) add(KOTLIN)
-      }
-    }
-
     private fun maybeMatchLanguagesByAlias(
       first: String?,
       second: String?,
@@ -321,8 +308,24 @@ import elide.tool.project.ProjectManager
       }
     }
 
+    private val tsAliases = setOf("ts", "typescript")
+    private val pyAliases = setOf("py", "python")
+    private val rbAliases = setOf("rb", "ruby")
+    private val jvmAliases = setOf("jvm", "java")
+    private val ktAliases = setOf("kt", "kotlin")
+
     // Resolve the specified language.
-    internal fun resolve(project: ProjectInfo? = null): EnumSet<GuestLanguage> = langs
+    internal fun resolve(project: ProjectInfo? = null, alias: String? = null): EnumSet<GuestLanguage> {
+      return EnumSet.noneOf(GuestLanguage::class.java).apply {
+        add(JS)
+        add(WASM)
+        if (ENABLE_TYPESCRIPT && (typescript || (alias != null && tsAliases.contains(alias)))) add(TYPESCRIPT)
+        if (ENABLE_PYTHON && (python || (alias != null && pyAliases.contains(alias)))) add(PYTHON)
+        if (ENABLE_RUBY && (ruby || (alias != null && rbAliases.contains(alias)))) add(RUBY)
+        if (ENABLE_JVM && (jvm || kotlin || (alias != null && jvmAliases.contains(alias)))) add(JVM)
+        if (ENABLE_JVM && (kotlin || (alias != null && ktAliases.contains(alias)))) add(KOTLIN)
+      }
+    }
   }
 
   /** Specifies settings for the Chrome DevTools inspector. */
@@ -1627,7 +1630,7 @@ import elide.tool.project.ProjectManager
     if (debug) debugger.apply(this)
     inspector.apply(this)
 
-    val requiresIo = language.resolve(project).let {
+    val requiresIo = language.resolve(project, languageHint).let {
       it.contains(PYTHON) || it.contains(RUBY)
     }
 

@@ -50,6 +50,9 @@ import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.util.UUID
 
+// Maps `<id>:<path>` to a cached bundle entry.
+private val bundleCache: MutableMap<String, Pair<ArchiveEntry, ByteArray>> = HashMap()
+
 /**
  * # VFS: Embedded.
  *
@@ -219,16 +222,16 @@ internal class EmbeddedGuestVFSImpl private constructor (
     Files.createDirectories(path)
   }
 
-  private fun lazyInflateBundleData(
-    path: Path,
-    fs: FileSystem,
+  private fun getOrBuildBundleCacheEntry(
     info: VfsFileInfo,
     bundle: BundleInfo,
-  ): Path {
-    val size = info.info.size
+  ): Pair<ArchiveEntry, InputStream> {
+    val cached = bundleCache["${bundle.id}:${info.path}"]
+    if (cached != null) {
+      return cached.first to cached.second.inputStream()
+    }
     val bundlePath = bundle.location
     val bundleType = bundle.type
-
     val absoluted = if (bundlePath.startsWith("/")) bundlePath else "/$bundlePath"
     val bundleStreamData = requireNotNull(EmbeddedGuestVFSImpl::class.java.getResourceAsStream(absoluted)) {
       "Failed to resolve bundle data for deferred VFS file '${info.path}'"
@@ -240,25 +243,50 @@ internal class EmbeddedGuestVFSImpl private constructor (
       BundleFormat.TARBALL_GZIP -> TarArchiveInputStream(GZIPInputStream(bundleStreamData))
       BundleFormat.ZIP -> ZipArchiveInputStream(bundleStreamData)
     }
+    var found: ArchiveEntry? = null
+    var foundBytes: ByteArray? = null
 
-    // @TODO(sgammon): somehow seek directly to entry instead of looping here
-    var entry: ArchiveEntry? = bundleStream.nextEntry
-    while (entry != null) {
-      if (entry.name == info.path) break
-      entry = bundleStream.nextEntry
+    bundleStream.use {
+      var entry: ArchiveEntry? = bundleStream.nextEntry
+
+      while (entry != null) {
+        if (!entry.isDirectory) {
+          assert(bundleStream.canReadEntryData(entry)) { "Bundle '${bundle.location}' cannot read entry '${info.path}'" }
+          val bytes = bundleStream.readBytes()
+          bundleCache["${bundle.id}:${entry.name}"] = entry to bytes
+          if (entry.name == info.path) {
+            found = entry
+            foundBytes = bytes
+          }
+        }
+        entry = bundleStream.nextEntry
+      }
     }
 
-    requireNotNull(entry) { "Failed to resolve entry for VFS file '${info.path}' in bundle '${bundle.location}'" }
-    require(bundleStream.canReadEntryData(entry)) { "Bundle '${bundle.location}' cannot read entry '${info.path}'" }
-    require(entry.size == size) { "Size mismatch for VFS file '${info.path}' in bundle '${bundle.location}'" }
+    // run a manual gc after building the index
+    assert(found != null) { "Failed to resolve entry for VFS file '${info.path}' in bundle '${bundle.location}'" }
+    return try {
+      found!! to foundBytes!!.inputStream()
+    } finally {
+      System.gc()
+    }
+  }
 
+  private fun lazyInflateBundleData(
+    path: Path,
+    fs: FileSystem,
+    info: VfsFileInfo,
+    bundle: BundleInfo,
+  ): Path {
+    val size = info.info.size
+
+    val (entry, bundleStream) = getOrBuildBundleCacheEntry(info, bundle)
     val filedata = BufferedInputStream(bundleStream, size.toInt()).use {
       it.readBytes()
     }
-    require(filedata.size == size.toInt()) {
+    assert(filedata.size == size.toInt()) {
       "Size mismatch for VFS file '${info.path}' in bundle '${bundle.location}'"
     }
-
     writeFileToMemoryFS(
       entry,
       fs,

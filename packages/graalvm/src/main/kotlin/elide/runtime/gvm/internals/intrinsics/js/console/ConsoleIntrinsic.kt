@@ -201,21 +201,16 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
     logging.log(level, serializedArgs.map(this::formatLogComponent))
   }
 
-  /** @inheritDoc */
   @Polyglot override fun log(vararg args: Any?) = handleLog(LogLevel.DEBUG, args)
-
-  /** @inheritDoc */
   @Polyglot override fun info(vararg args: Any?) = handleLog(LogLevel.INFO, args)
-
-  /** @inheritDoc */
   @Polyglot override fun warn(vararg args: Any?) = handleLog(LogLevel.WARN, args)
-
-  /** @inheritDoc */
   @Polyglot override fun error(vararg args: Any?) = handleLog(LogLevel.ERROR, args)
 
-  /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    // bind self to `console`
+    // bind self to `Console` class symbol
     bindings[CONSOLE_SYMBOL] = this
+
+    // bind self to `console` global
+    bindings["console".asPublicJsSymbol()] = this
   }
 }

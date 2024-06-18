@@ -72,7 +72,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
   @Synchronized private fun finalizeContext(context: PolyglotContext) {
     config.builtinModulesConfig.finalize()
-    if (EXPERIMENTAL_MODULE_PRELOADING && !modulesInitialized.get()) {
+    if (EXPERIMENTAL_MODULE_PRELOADING && !modulesInitialized.get() && shouldPreloadModules) {
       modulesInitialized.compareAndSet(false, true)
       config.builtinModulesConfig.replacements().keys.asSequence().flatMap {
         if (it.startsWith("elide:")) it.removePrefix("elide:").let { modname ->
@@ -207,6 +207,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "__ElideDebug__"
+    private val shouldPreloadModules = System.getProperty("elide.js.preloadModules") != "false"
 
     override val languageId: String = JS_LANGUAGE_ID
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)

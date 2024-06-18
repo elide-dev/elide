@@ -120,7 +120,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   // Finalize a suite of bindings for a given language (or the main polyglot bindings).
   private fun finalizeBindings(bindings: Value) {
     if (bindings.hasMembers()) {
-      bindings.memberKeys.parallelStream().forEach {
+      bindings.memberKeys.forEach {
         if (it.startsWith(INTERNAL_PREFIX) || knownInternalMembers.contains(it)) {
           if (bindings.hasMember(it)) bindings.removeMember(it)
         }
@@ -130,7 +130,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
   // Finalize a context before execution of guest code.
   private fun doFinalize(ctx: GraalVMContext) = ctx.apply {
-    if (EXPERIMENTAL_DROP_INTERNALS) {
+    if (EXPERIMENTAL_DROP_INTERNALS && shouldDropInternals) {
       val polyglot = context.polyglotBindings
       finalizeBindings(polyglot)
       config.languages.forEach { lang ->
@@ -213,7 +213,10 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     private const val ENABLE_AUX_CACHE = false
 
     /** Whether to drop internals from the polyglot context before finalization completes. */
-    private val EXPERIMENTAL_DROP_INTERNALS = System.getProperty("elide.experimental.dropInternals") == "true"
+    private const val EXPERIMENTAL_DROP_INTERNALS = true
+
+    /** Whether internal symbols should be withheld from guest code. */
+    private val shouldDropInternals = System.getProperty("elide.internals") != "true"
 
     /** Whether the runtime is built as a native image. */
     private val isNativeImage = ImageInfo.inImageCode()

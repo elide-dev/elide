@@ -187,13 +187,13 @@ import elide.runtime.plugins.bindings.Bindings
    */
   @Suppress("TooGenericExceptionCaught")
   protected fun initializeEmbeddedScripts(context: PolyglotContext, resources: LanguagePluginManifest) {
-    resources.scripts.forEach { source ->
-      // read the script from resources
-      val script = AbstractLanguagePlugin::class.java.getResourceAsStream(source.path)
-        ?: error("Failed to load embedded resource: $source")
+    try {
+      context.enter()
+      resources.scripts.forEach { source ->
+        // read the script from resources
+        val script = AbstractLanguagePlugin::class.java.getResourceAsStream(source.path)
+          ?: error("Failed to load embedded resource: $source")
 
-      try {
-        context.enter()
         context.evaluate(
           this,
           script.bufferedReader().use { it.readText() },
@@ -201,13 +201,13 @@ import elide.runtime.plugins.bindings.Bindings
           internals = true,
           cached = true,
         )
-      } catch (err: RuntimeException) {
-        if (System.getProperty("elide.strict") == "true") {
-          throw IllegalStateException("Embedded init evaluation failed. This is a bug in Elide.", err)
-        }
-      } finally {
-        context.leave()
       }
+    } catch (err: RuntimeException) {
+      if (System.getProperty("elide.strict") == "true") {
+        throw IllegalStateException("Embedded init evaluation failed. This is a bug in Elide.", err)
+      }
+    } finally {
+      context.leave()
     }
   }
 

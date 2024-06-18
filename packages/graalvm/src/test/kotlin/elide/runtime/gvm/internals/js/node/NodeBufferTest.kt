@@ -91,7 +91,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Ignore @Test fun `isAscii() compliance (valid)`() = conforms {
+  @Test fun `isAscii() compliance (valid)`() = conforms {
     // requires guest types unavailable in the host
   }.guest {
     // language=javascript
@@ -107,7 +107,7 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Ignore @Test fun `isAscii() compliance (invalid)`() = conforms {
+  @Test fun `isAscii() compliance (invalid)`() = conforms {
     // requires guest types unavailable in the host
   }.guest {
     // language=javascript
@@ -123,7 +123,7 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Ignore @Test fun `isUtf8() compliance (valid)`() = conforms {
+  @Ignore("Broken at PR-1034") @Test fun `isUtf8() compliance (valid)`() = conforms {
     // requires guest types unavailable in the host
   }.guest {
     // language=javascript
@@ -136,7 +136,7 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Ignore @Test fun `isUtf8() compliance (invalid)`() = conforms {
+  @Test fun `isUtf8() compliance (invalid)`() = conforms {
     // requires guest types unavailable in the host
   }.guest {
     // language=javascript
@@ -216,7 +216,7 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Ignore @Test fun `File compliance`() = conforms {
+  @Ignore("Broken at PR-1034") @Test fun `File compliance`() = conforms {
     // all tests require guest code
   }.guest {
     // language=javascript

@@ -89,6 +89,19 @@ private val pathMemberKeys = arrayOf(
   "win32",
 )
 
+// Member keys of a path buffer object.
+private val pathBufMemberKeys = arrayOf(
+  "base",
+  "dir",
+  "ext",
+  "isAbsolute",
+  "join",
+  "length",
+  "name",
+  "root",
+  "toString",
+)
+
 // Private path utilities.
 internal object PathUtils {
   @JvmStatic fun activePathStyle(osName: String? = System.getProperty("os.name")): PathStyle {
@@ -113,7 +126,10 @@ private fun sepFor(style: PathStyle): String = when (style) {
  *
  * Implements a Node-style [PathIntrinsic] with a Kotlin multi-platform [Path] object.
  */
-public class PathBuf private constructor (override val style: PathStyle, private val path: KotlinPath) : PathIntrinsic {
+public class PathBuf private constructor (
+  override val style: PathStyle,
+  private val path: KotlinPath,
+) : PathIntrinsic, ProxyObject {
   override fun toKotlinPath(): KotlinPath = path
   override fun toJavaPath(): JavaPath = JavaPath.of(stringRepr)
   override fun copy(): PathIntrinsic = PathBuf(style, KotlinPath(stringRepr))
@@ -187,6 +203,29 @@ public class PathBuf private constructor (override val style: PathStyle, private
   }
 
   @Polyglot override fun hashCode(): Int = path.hashCode()
+
+  override fun putMember(key: String?, value: Value?) { /* no-op */ }
+  override fun removeMember(key: String?): Boolean = false
+  override fun getMemberKeys(): Array<String> = pathBufMemberKeys
+  override fun hasMember(key: String?): Boolean = key != null && key in pathBufMemberKeys
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "base" -> base
+    "dir" -> dir
+    "ext" -> ext
+    "isAbsolute" -> isAbsolute
+    "join" -> ProxyExecutable { args ->
+      when (args.size) {
+        0 -> ""
+        else -> join(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())
+      }
+    }
+    "length" -> length
+    "name" -> name
+    "root" -> root
+    "toString" -> ProxyExecutable { toString() }
+    else -> null
+  }
 }
 
 // Installs the Node paths module into the intrinsic bindings.

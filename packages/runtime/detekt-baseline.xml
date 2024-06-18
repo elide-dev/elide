@@ -3,6 +3,11 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ComplexCondition:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$(base != null &amp;&amp; (base.parentFile == null || base.absolutePath == "/")) || files.isEmpty()</ID>
+    <ID>ComplexCondition:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$ENABLE_JVM &amp;&amp; (jvm || kotlin || (alias != null &amp;&amp; jvmAliases.contains(alias)))</ID>
+    <ID>ComplexCondition:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$ENABLE_JVM &amp;&amp; (kotlin || (alias != null &amp;&amp; ktAliases.contains(alias)))</ID>
+    <ID>ComplexCondition:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$ENABLE_PYTHON &amp;&amp; (python || (alias != null &amp;&amp; pyAliases.contains(alias)))</ID>
+    <ID>ComplexCondition:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$ENABLE_RUBY &amp;&amp; (ruby || (alias != null &amp;&amp; rbAliases.contains(alias)))</ID>
+    <ID>ComplexCondition:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$ENABLE_TYPESCRIPT &amp;&amp; (typescript || (alias != null &amp;&amp; tsAliases.contains(alias)))</ID>
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _logger: Logger</ID>
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _settings: ToolState.OutputSettings = _state.output</ID>
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _state: State</ID>
@@ -11,6 +16,7 @@
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun beginInteractiveSession( languages: EnumSet&lt;GuestLanguage>, primaryLanguage: GuestLanguage, engine: PolyglotEngine, ctx: PolyglotContext, )</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun displayFormattedError( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, withCause: Boolean = true, )</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$internal fun resolve(project: ProjectInfo? = null, alias: String? = null): EnumSet&lt;GuestLanguage></ID>
     <ID>FunctionParameterNaming:Statics.kt$Statics$`in`: InputStream</ID>
     <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
@@ -30,7 +36,7 @@
     <ID>ObjectPropertyNaming:Statics.kt$Statics$val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
     <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
-    <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: SortedSet&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
+    <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: Array&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
     <ID>SpreadOperator:Elide.kt$Elide.Companion$(*args)</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$ioe: IOException</ID>
     <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
@@ -63,10 +69,8 @@
     <ID>TooManyFunctions:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>UnusedParameter:AbstractToolCommand.kt$AbstractToolCommand$args: Array&lt;String></ID>
     <ID>UnusedParameter:Elide.kt$Elide.Companion$win32: Boolean = false</ID>
-    <ID>UnusedPrivateMember:NativeEngine.kt$NativeEngine$@JvmStatic private fun HostPlatform.loadNativeTooling(workdir: File, loader: ClassLoader)</ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
-    <ID>UnusedPrivateProperty:RuntimeWorkdirManager.kt$RuntimeWorkdirManager.Companion$private const val tempDir = "temp"</ID>
     <ID>VariableNaming:AbstractScriptEngineFactory.kt$AbstractScriptEngineFactory.PolyglotContext$private val `in`: PolyglotReader</ID>
     <ID>VariableNaming:ToolShellCommand.kt$ToolShellCommand.InspectorConfig$/** Specifies whether the inspector should suspend for internal (facade) sources. */ @Option( names = ["--inspect:internal"], description = ["Specifies whether the inspector should suspend for internal (facade) sources"], defaultValue = "false", hidden = false, ) internal var `internal`: Boolean = false</ID>
   </CurrentIssues>

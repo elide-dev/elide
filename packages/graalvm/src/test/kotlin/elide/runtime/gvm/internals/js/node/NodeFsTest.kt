@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 @file:OptIn(DelicateElideApi::class)
+@file:Suppress("JSCheckFunctionSignatures", "JSUnresolvedReference")
 
 package elide.runtime.gvm.internals.js.node
 
@@ -23,7 +24,9 @@ import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
+import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.intrinsics.js.node.WritableFilesystemAPI
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.fs.WriteFileOptions
@@ -32,10 +35,16 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
 /** Tests for Elide's implementation of the Node `fs` built-in module. */
 @TestCase internal class NodeFsTest : NodeModuleConformanceTest<NodeFilesystemModule>() {
-  @Inject lateinit var filesystem: NodeFilesystemModule
+  val filesystem: NodeFilesystemModule by lazy {
+    provide()
+  }
 
   override val moduleName: String get() = "fs"
-  override fun provide(): NodeFilesystemModule = filesystem
+  override fun provide(): NodeFilesystemModule = NodeFilesystemModule(
+    VfsInitializerListener().also {
+      it.onVfsCreated(EmbeddedGuestVFS.empty())
+    }
+  )
 
   private fun withTemp(op: (Path) -> Unit) {
     val temp = Files.createTempDirectory(
@@ -185,18 +194,16 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { exists } = require("node:fs");
-          ok(exists);
+          test(exists).isNotNull();
           let callbackDispatched = false;
           let doesExist = null;
-
           exists("$samplePath", (does) => {
             callbackDispatched = true;
             doesExist = does;
           });
-          equal(callbackDispatched, true);
-          equal(doesExist, true);
+          test(callbackDispatched).shouldBeTrue();
+          test(doesExist).shouldBeTrue();
         """
       }
     }
@@ -221,13 +228,11 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { existsSync } = require("node:fs");
-          ok(existsSync);
-          ok(existsSync("$samplePath"));
-          equal(existsSync("$samplePath"), true);
-          ok(!existsSync("$missingPath"));
-          equal(existsSync("$missingPath"), false);
+          test(existsSync).isNotNull();
+          test(existsSync("$samplePath")).isNotNull();
+          test(existsSync("$samplePath")).shouldBeTrue();
+          test(existsSync("$missingPath")).shouldBeFalse();
         """
       }
     }
@@ -248,9 +253,8 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { exists } = require("node:fs");
-          ok(exists);
+          test(exists).isNotNull();
           let callbackDispatched = false;
           let doesExist = null;
 
@@ -258,8 +262,8 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
             callbackDispatched = true;
             doesExist = does;
           });
-          equal(callbackDispatched, true);
-          equal(doesExist, true);
+          test(callbackDispatched).shouldBeTrue();
+          test(doesExist).shouldBeTrue();
         """
       }
     }
@@ -280,10 +284,9 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { existsSync } = require("node:fs");
-          ok(existsSync);
-          equal(existsSync("$samplePath"), true);
+          test(existsSync).isNotNull();
+          test(existsSync("$samplePath")).shouldBeTrue();
         """
       }
     }
@@ -304,16 +307,15 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { access } = require("node:fs");
-          ok(access);
+          test(access).isNotNull();
           let callbackDispatched = false;
           let fileErr = null;
           access("$samplePath", (err) => {
             fileErr = err || null;
           });
-          equal(callbackDispatched, true);
-          equal(fileErr, null);
+          test(callbackDispatched).shouldBeFalse();
+          test(fileErr).isNull();
         """
       }
     }
@@ -332,10 +334,9 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, doesNotThrow } = require("node:assert");
           const { accessSync } = require("node:fs");
-          ok(accessSync);
-          doesNotThrow(() => accessSync("$samplePath"));
+          test(accessSync).isNotNull();
+          test(() => accessSync("$samplePath")).doesNotFail();
         """
       }
     }
@@ -359,9 +360,8 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { readFile } = require("node:fs");
-          ok(readFile);
+          test(readFile).isNotNull();
           let callbackDispatched = false;
           let fileErr = null;
           let fileData = null;
@@ -371,10 +371,10 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
             fileErr = null;
             fileData = data;
           });
-          equal(callbackDispatched, true);
-          equal(fileErr, null);
-          ok(typeof fileData === 'string');
-          equal(fileData, "Hello, world!");
+          test(callbackDispatched).shouldBeTrue();
+          test(fileErr).isNull();
+          test(typeof fileData === 'string').shouldBeTrue();
+          test(fileData).isEqualTo("Hello, world!");
         """
       }
     }
@@ -396,11 +396,10 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }.guest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { readFileSync } = require("node:fs");
-          ok(readFileSync);
-          ok(readFileSync("$samplePath", { encoding: 'utf-8' }));
-          equal(readFileSync("$samplePath", { encoding: 'utf-8' }), "Hello, world!");
+          test(readFileSync).isNotNull();
+          test(readFileSync("$samplePath", { encoding: 'utf-8' })).isNotNull();
+          test(readFileSync("$samplePath", { encoding: 'utf-8' })).isEqualTo("Hello, world!");
         """
       }
     }
@@ -425,17 +424,16 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       executeGuest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { mkdir } = require("node:fs");
-          ok(mkdir);
+          test(mkdir).isNotNull();
           let created = false;
           let mkdirError = null;
           mkdir("$samplePath2", (err) => {
             created = !err;
             mkdirError = err ? err : mkdirError;
           });
-          equal(created, true);
-          equal(mkdirError, null);
+          test(created).shouldBeTrue();
+          test(mkdirError).isNull();
         """
       }.doesNotFail()
 
@@ -463,10 +461,10 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       executeGuest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
-          const { mkdirSync } = require("node:fs");
-          ok(mkdirSync);
-          equal(mkdirSync("$samplePath2"), "$samplePath2");
+          const { mkdirSync, existsSync } = require("node:fs");
+          test(mkdirSync).isNotNull();
+          mkdirSync("$samplePath2");
+          test(existsSync("$samplePath2")).shouldBeTrue();
         """
       }.doesNotFail()
 
@@ -493,14 +491,13 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       executeGuest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { writeFile } = require("node:fs");
-          ok(writeFile);
+          test(writeFile).isNotNull();
           let writeErr = null;
           writeFile("$samplePath2", "Hello, world!", (err) => {
             writeErr = err || null;
           });
-          equal(writeErr, null);
+          test(writeErr).isNull();
         """
       }.doesNotFail()
 
@@ -543,14 +540,13 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       executeGuest {
         // language=javascript
         """
-          const { ok, equal } = require("node:assert");
           const { writeFile } = require("node:fs");
-          ok(writeFile);
+          test(writeFile).isNotNull();
           let writeErr = null;
           writeFile("$samplePath2", "Hello, world!", { encoding: 'utf-8' }, (err) => {
             writeErr = err || null;
           });
-          equal(writeErr, null);
+          test(writeErr).isNull();
         """
       }.doesNotFail()
 
@@ -579,9 +575,8 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       executeGuest {
         // language=javascript
         """
-          const { ok } = require("node:assert");
           const { writeFileSync } = require("node:fs");
-          ok(writeFileSync);
+          test(writeFileSync).isNotNull();
           writeFileSync("$samplePath2", "Hello, world!")
         """
       }.doesNotFail()
@@ -620,9 +615,8 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       executeGuest {
         // language=javascript
         """
-          const { ok } = require("node:assert");
           const { writeFileSync } = require("node:fs");
-          ok(writeFileSync);
+          test(writeFileSync).isNotNull();
           writeFileSync("$samplePath2", "Hello, world!", { encoding: 'utf-8' });
         """
       }.doesNotFail()

@@ -12,6 +12,38 @@
  */
 package elide.runtime.intrinsics.js.err
 
+import org.graalvm.polyglot.HostAccess.Implementable
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyObject
+import java.io.PrintWriter
+import java.io.StringWriter
+import elide.annotations.Singleton
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.vm.annotations.Polyglot
+
+// Public symbol for a `TypeError`.
+private const val TYPE_ERROR_SYMBOL = "TypeError"
+
+// Members and properties of a `TypeError`.
+private val TYPE_ERROR_MEMBERS_AND_PROPS = arrayOf(
+  "name",
+  "message",
+  "stack",
+)
+
+// Installs `TypeError` into the environment.
+@Intrinsic @Singleton internal class TypeErrorIntrinsic : AbstractJsIntrinsic() {
+  @OptIn(DelicateElideApi::class)
+  override fun install(bindings: MutableIntrinsicBindings) {
+    bindings[TYPE_ERROR_SYMBOL.asPublicJsSymbol()] = TypeError.Factory
+  }
+}
+
 /**
  * # JavaScript: Type Error
  *
@@ -29,8 +61,32 @@ package elide.runtime.intrinsics.js.err
  * @see AbstractJsException for the host base interface type of all JavaScript exceptions.
  * @see Error for the top-most guest-exposed base class for all JavaScript errors.
  */
-public abstract class TypeError : AbstractJsException, Error() {
-  override val name: String get() = "TypeError"
+@Implementable
+public open class TypeError protected constructor (
+  @get:Polyglot override val message: String,
+  @get:Polyglot override val cause: Error? = null,
+) : ProxyObject, AbstractJsException, Error() {
+
+  @get:Polyglot override val name: String get() = "TypeError"
+  override fun getMemberKeys(): Array<String> = TYPE_ERROR_MEMBERS_AND_PROPS
+  override fun hasMember(key: String?): Boolean = key != null && key in TYPE_ERROR_MEMBERS_AND_PROPS
+  override fun putMember(key: String?, value: Value?) { /* no-op */ }
+  override fun removeMember(key: String?): Boolean = false
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "name" -> name
+    "message" -> message
+    "stack" -> {
+      // generate stacktrace
+      val string = StringWriter()
+      PrintWriter(string).use {
+        printStackTrace()
+      }
+      string.toString()
+    }
+
+    else -> null
+  }
 
   /**
    * ## Factory: `TypeError`
@@ -38,22 +94,22 @@ public abstract class TypeError : AbstractJsException, Error() {
    * Public factory for [TypeError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJsException.ErrorFactory<TypeError> {
+  public companion object Factory: AbstractJsException.ErrorFactory<TypeError>, ProxyInstantiable {
+    override fun newInstance(vararg arguments: Value?): Any {
+      return create(
+        arguments.getOrNull(0)?.asString() ?: ""
+      )
+    }
+
     override fun create(error: Throwable): TypeError {
-      return object : TypeError() {
-        override val message: String get() = error.message ?: "An error occurred"
-      }
+      return TypeError(error.message ?: "An error occurred")
     }
 
     override fun create(message: String, cause: Throwable?): TypeError {
-      return object : TypeError() {
-        override val message: String get() = message
-        override val cause: Error? get() = if (cause != null) {
-          create(cause)
-        } else {
-          null
-        }
-      }
+      return TypeError(message, if (cause == null) null else object: Error() {
+        override val message: String get() = cause.message ?: ""
+        override val name: String get() = cause::class.java.simpleName
+      })
     }
   }
 }

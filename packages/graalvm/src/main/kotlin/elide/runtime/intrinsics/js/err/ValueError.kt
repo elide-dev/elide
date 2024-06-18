@@ -12,6 +12,37 @@
  */
 package elide.runtime.intrinsics.js.err
 
+import org.graalvm.polyglot.HostAccess.Implementable
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyObject
+import java.io.PrintWriter
+import java.io.StringWriter
+import elide.annotations.Singleton
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+
+// Public symbol for a `ValueError`.
+private const val VALUE_ERROR_SYMBOL = "ValueError"
+
+// Members and properties of a `ValueError`.
+private val VALUE_ERROR_MEMBERS_AND_PROPS = arrayOf(
+  "name",
+  "message",
+  "stack",
+)
+
+// Installs `ValueError` into the environment.
+@Intrinsic @Singleton internal class ValueErrorIntrinsic : AbstractJsIntrinsic() {
+  @OptIn(DelicateElideApi::class)
+  override fun install(bindings: MutableIntrinsicBindings) {
+    bindings[VALUE_ERROR_SYMBOL.asPublicJsSymbol()] = ValueError.Factory
+  }
+}
+
 /**
  * # JavaScript: `ValueError`
  *
@@ -33,9 +64,30 @@ package elide.runtime.intrinsics.js.err
  * @see AbstractJsException for the host base interface type of all JavaScript exceptions.
  * @see Error for the top-most guest-exposed base class for all JavaScript errors.
  */
-public abstract class ValueError : AbstractJsException, Error() {
+@Implementable
+public open class ValueError protected constructor(
+  override val message: String,
+  override val cause: Error? = null,
+) : AbstractJsException, ProxyObject, Error() {
   /** @inheritDoc */
   override val name: String get() = "ValueError"
+  override fun getMemberKeys(): Array<String> = VALUE_ERROR_MEMBERS_AND_PROPS
+  override fun hasMember(key: String?): Boolean = key != null && key in VALUE_ERROR_MEMBERS_AND_PROPS
+  override fun putMember(key: String?, value: Value?) { /* no-op */ }
+  override fun removeMember(key: String?): Boolean = false
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "name" -> name
+    "message" -> message
+    "stack" -> {
+      val sw = StringWriter()
+      PrintWriter(sw).use {
+        printStackTrace()
+      }
+      sw.toString()
+    }
+    else -> null
+  }
 
   /**
    * ## Factory: `ValueError`
@@ -43,22 +95,23 @@ public abstract class ValueError : AbstractJsException, Error() {
    * Public factory for [ValueError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJsException.ErrorFactory<ValueError> {
+  public companion object Factory: AbstractJsException.ErrorFactory<ValueError>, ProxyInstantiable {
+    override fun newInstance(vararg arguments: Value?): Any {
+      return create(arguments[0]?.asString() ?: "An error occurred")
+    }
+
     override fun create(error: Throwable): ValueError {
-      return object : ValueError() {
-        override val message: String get() = error.message ?: "An error occurred"
-      }
+      return ValueError(error.message ?: "An error occurred", object : Error() {
+        override val message: String get() = error.message ?: ""
+        override val name: String get() = error::class.java.simpleName
+      })
     }
 
     override fun create(message: String, cause: Throwable?): ValueError {
-      return object : ValueError() {
-        override val message: String get() = message
-        override val cause: Error? get() = if (cause != null) {
-          create(cause)
-        } else {
-          null
-        }
-      }
+      return ValueError(message, if (cause == null) null else object: Error() {
+        override val message: String get() = cause.message ?: ""
+        override val name: String get() = cause::class.java.simpleName
+      })
     }
   }
 }

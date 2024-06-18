@@ -14,6 +14,7 @@ package elide.runtime.lang.typescript;
 
 import static com.oracle.truffle.api.TruffleLanguage.Env;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.TruffleContext;
 import com.oracle.truffle.api.interop.ArityException;
 import com.oracle.truffle.api.interop.InteropLibrary;
@@ -36,26 +37,48 @@ import org.apache.commons.io.IOUtils;
  * <p>The TypeScript compiler is hosted in a dedicated JavaScript context, and leverages GraalJs to
  * compile user code on-the-fly, either as primary inputs or as a loaded module.
  */
-class TypeScriptCompiler implements AutoCloseable {
+public class TypeScriptCompiler implements AutoCloseable {
   private static final String TYPESCRIPT_COMPILER_PATH =
       "/META-INF/elide/embedded/tools/tsc/typescript.js.gz";
-  private static final Source TYPESCRIPT_COMPILER_SOURCE = createTypeScriptCompilerSource();
+  private static final Source TYPESCRIPT_COMPILER_SOURCE = Source
+          .newBuilder("js", getTypeScriptCompilerCode(), "typescript.js")
+          .mimeType("application/javascript")
+          .cached(true)
+          .encoding(StandardCharsets.UTF_8)
+          .canonicalizePath(true)
+          .interactive(false)
+          .internal(true)
+          .build();
+
+  @CompilerDirectives.CompilationFinal private static TypeScriptCompiler COMPILER_SINGLETON;
   private final TruffleContext context;
   private final Object transpileFunction;
 
-  public TypeScriptCompiler(Env env) {
-    context =
-        env.newInnerContextBuilder("js")
+  private static void initializeCompiler(Env env) {
+    var context = env.newInnerContextBuilder("js")
             .allowIO(true) // must allow for import of modules during compilation
             .option("js.annex-b", "true") // enable Annex B for compatibility with TypeScript
             .option("js.ecmascript-version", "2021") // always use a modern ECMA spec
             .option(
-                "js.commonjs-require", "true") // always enable `require()`, the compiler needs it
+                    "js.commonjs-require", "true") // always enable `require()`, the compiler needs it
             .option(
-                "js.commonjs-require-cwd", System.getProperty("user.dir")) // use cwd as import root
+                    "js.commonjs-require-cwd", System.getProperty("user.dir")) // use cwd as import root
             .build();
 
-    transpileFunction = context.evalInternal(null, TYPESCRIPT_COMPILER_SOURCE);
+    var compiler = context.evalInternal(null, TYPESCRIPT_COMPILER_SOURCE);
+    COMPILER_SINGLETON = new TypeScriptCompiler(context, compiler);
+  }
+
+  public static TypeScriptCompiler obtain(Env env) {
+    if (COMPILER_SINGLETON == null) {
+      initializeCompiler(env);
+    }
+    return COMPILER_SINGLETON;
+  }
+
+  private TypeScriptCompiler(TruffleContext ctx, Object transpiler) {
+    context = ctx;
+    transpileFunction = transpiler;
   }
 
   public String compileToString(CharSequence ts, String name) {
@@ -86,35 +109,6 @@ class TypeScriptCompiler implements AutoCloseable {
       }
     }
   }
-
-  private static Source createTypeScriptCompilerSource() {
-    return Source.newBuilder("js", getTypeScriptCompilerCode(), "typescript.js")
-        .mimeType("application/javascript")
-        //            .cached(true)
-        //            .encoding(StandardCharsets.UTF_8)
-        //            .canonicalizePath(true)
-        //            .interactive(false)
-        //            .internal(true)
-        .build();
-  }
-
-  //  private static Source createTypeScriptTranspileFunctionSource() {
-  //    String function = """
-  //        (code, fileName) => ts.transpile(code, {
-  //          module: "ESNext",
-  //          inlineSourceMap: true,
-  //          inlineSources: true,
-  //        }, fileName);
-  //        """;
-  //    return Source
-  //            .newBuilder("js", function, "typescript-transpile.js")
-  //            .mimeType("application/javascript")
-  ////            .cached(true)
-  ////            .interactive(false)
-  ////            .internal(true)
-  ////            .encoding(StandardCharsets.UTF_8)
-  //            .build();
-  //  }
 
   private static String getTypeScriptCompilerCode() {
     try (var stream = TypeScriptCompiler.class.getResourceAsStream(TYPESCRIPT_COMPILER_PATH)) {

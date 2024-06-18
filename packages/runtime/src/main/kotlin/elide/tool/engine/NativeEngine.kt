@@ -12,7 +12,6 @@
  */
 package elide.tool.engine
 
-import io.netty.channel.unix.Unix
 import io.netty.util.internal.PlatformDependent
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ProcessProperties
@@ -36,13 +35,14 @@ import elide.tool.io.WorkdirManager
  * Provides utilities for loading native portions of Elide early in the boot lifecycle.
  */
 object NativeEngine {
-  private const val loadEager = true
+  private const val loadEager = false
   private const val DEFAULT_NATIVES_PATH = "META-INF/native/"
   private val transportEngine: AtomicReference<String> = AtomicReference("nio")
   private val nativeTransportAvailable: AtomicBoolean = AtomicBoolean(false)
   private val errHolder: AtomicReference<Throwable?> = AtomicReference(null)
   private val missingLibraries: MutableSet<NativeLibInfo> = ConcurrentSkipListSet()
   private val nativeLibraryGroups: MutableMap<String, Boolean> = ConcurrentSkipListMap()
+  private val staticJniMode: Boolean = System.getProperty("elide.staticJni") == "true"
 
   internal fun transportEngine(): Pair<String, Boolean> = transportEngine.get() to nativeTransportAvailable.get()
 
@@ -210,11 +210,11 @@ object NativeEngine {
     workdir,
     linux = { listOf(
       nettyNative("transport", "transport_native_epoll", os),
-      nettyNative("transport", "quiche_linux", os),
+      // nettyNative("transport", "quiche_linux", os),
     ) },
     darwin = { listOf(
-      nettyNative("transport", "resolver_dns_native_macos", os),
-      nettyNative("transport", "quiche_osx", os),
+      // nettyNative("transport", "resolver_dns_native_macos", os),
+      // nettyNative("transport", "quiche_osx", os),
       nettyNative("transport", "transport_native_kqueue", os),
     ) },
   )
@@ -234,11 +234,14 @@ object NativeEngine {
 
   // Load natives from the CWD while it is swapped in.
   @JvmStatic private fun loadAllNatives(platform: HostPlatform, natives: File, loader: ClassLoader) = platform.apply {
+    // in static JNI mode, we don't do any of this anymore
+    if (!staticJniMode) return@apply
+
     // trigger load of native libs
     val loadNatives: () -> Unit = {
       loadNativeCrypto(natives, loader)
       loadNativeTransport(natives, loader)
-//      loadNativeTooling(natives, loader)
+      loadNativeTooling(natives, loader)
     }
 
     try {
@@ -262,9 +265,6 @@ object NativeEngine {
 
         // on darwin, we prefer `kqueue`
         DARWIN -> {{
-          // force `Unix` classes to load first
-          @Suppress("DEPRECATION") assert(!Unix.isAvailable())
-
           // then force-load libraries
           loadNatives()
 
@@ -293,8 +293,6 @@ object NativeEngine {
    * @param extraProps Extra VM properties to set.
    */
   @JvmStatic fun load(workdir: WorkdirManager, extraProps: List<Pair<String, String>>) {
-    val tmp = workdir.tmpDirectory()
-    val tmpPath = tmp.absolutePath
     val natives = workdir.nativesDirectory()
     val nativesPath = natives.absolutePath
     val platform = HostPlatform.resolve()
@@ -303,31 +301,15 @@ object NativeEngine {
       else -> ":"
     }
     val libraryPath = System.getProperty("java.library.path", "")
-    val execPath = if (!ImageInfo.inImageCode()) null else {
-      Path(ProcessProperties.getExecutableName())
-    }
 
     // sanity check: exec path should exist, then convert it into a suite of lib exec paths
-    val libExecPaths = (if (execPath != null) {
-      if (!Files.exists(execPath)) error("Executable path does not exist: $execPath")
-      if (Files.isDirectory(execPath)) {
-        execPath.resolve("resources")
-      } else {
-        // if it's a binary, we need the peer directory
-        execPath.parent.resolve("resources")
-      }
-    } else {
-      // with no exec path, use the current working directory
-      Path(System.getProperty("user.dir")?.ifBlank { null } ?: error("No working directory"))
-    }).let { resolvedExecPrefix ->
-      listOf(
-        resolvedExecPrefix,
-        resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.1"),
-        resolvedExecPrefix.resolve("llvm/libsulong-native"),
-        resolvedExecPrefix.resolve("ruby/ruby-home"),
-      )
-    }
-
+    val resolvedExecPrefix = Path(System.getProperty("user.dir"))
+    val libExecPaths = listOf(
+      resolvedExecPrefix,
+      resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.0"),
+      resolvedExecPrefix.resolve("llvm/libsulong-native"),
+      resolvedExecPrefix.resolve("ruby/ruby-home"),
+    )
     val javaLibraryPath = System.getenv("JAVA_HOME")?.ifBlank { null }?.let {
       Path(it).resolve("lib")
     }
@@ -350,7 +332,6 @@ object NativeEngine {
 
     listOf(
       "java.library.path" to libPath,
-      "io.netty.tmpdir" to tmpPath,
       "io.netty.native.workdir" to nativesPath,
     ).plus(extraProps).forEach {
       System.setProperty(it.first, it.second)

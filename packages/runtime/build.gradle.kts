@@ -828,6 +828,7 @@ val releaseFlags: List<String> = listOf(
 val jvmDefs = mapOf(
   "elide.natives" to nativesPath,
   "elide.graalvm.ee" to oracleGvm.toString(),
+  "elide.staticJni" to "true",
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),

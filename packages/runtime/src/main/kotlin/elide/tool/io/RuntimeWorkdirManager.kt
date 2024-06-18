@@ -41,7 +41,6 @@ internal class RuntimeWorkdirManager : WorkdirManager {
 
   internal companion object {
     private const val nativesDir = "native"
-    private const val tempDir = "temp"
     private const val cachesDir = "caches"
     private const val flightRecorderDir = "blackbox"
     private const val nixTempPath = "/tmp/elide-runtime"
@@ -52,7 +51,7 @@ internal class RuntimeWorkdirManager : WorkdirManager {
 
     private val linuxCachesPath = "~/elide/caches/v${Elide.version()}"
     private val darwinCachesPath = "/Library/caches/elide/v${Elide.version()}"
-    private val projectAnchorFiles = sortedSetOf(
+    private val projectAnchorFiles = arrayOf(
       ".git",
       "package.json",
       "pkg.elide.yml",
@@ -66,17 +65,19 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     )
 
     @OptIn(DelicateElideApi::class)
-    private val persistentTempPath = when (HostPlatform.resolve().os) {
-      DARWIN, LINUX -> File("$nixTempPath/v${Elide.version()}")
-        .toPath()
-        .absolute()
+    private val persistentTempPath by lazy {
+      when (HostPlatform.resolve().os) {
+        DARWIN, LINUX -> File("$nixTempPath/v${Elide.version()}")
+          .toPath()
+          .absolute()
 
-      WINDOWS -> File((System.getenv("localappdata") ?: error("No local app data folder")))
-        .resolve("Temp")
-        .resolve("Elide")
-        .resolve("v${Elide.version()}")
-        .toPath()
-        .absolute()
+        WINDOWS -> File((System.getenv("localappdata") ?: error("No local app data folder")))
+          .resolve("Temp")
+          .resolve("Elide")
+          .resolve("v${Elide.version()}")
+          .toPath()
+          .absolute()
+      }
     }
 
     /** @return Created or acquired [RuntimeWorkdirManager] singleton. */
@@ -93,10 +94,10 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     @Context @Singleton override fun get(): RuntimeWorkdirManager = acquire()
   }
 
-  private val active: AtomicBoolean = AtomicBoolean(true)
-  private val initialized: AtomicBoolean = AtomicBoolean(false)
-  private val rootDirectory: AtomicReference<File> = AtomicReference(null)
-  private val tempDirectory: AtomicReference<File> = AtomicReference(null)
+  @Volatile private var active: Boolean = true
+  @Volatile private var initialized: Boolean = false
+  @Volatile private lateinit var rootDirectory: Path
+  @Volatile private lateinit var tempDirectory: Path
   private val handleCache: SortedMap<File, WorkdirHandle> = ConcurrentSkipListMap()
 
   private fun currentSharedTempPrefix(): String {
@@ -171,29 +172,28 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     write,
   )
 
-  private fun initializeTemporaryWorkdir(): File = synchronized(this) {
-    if (initialized.get()) return tempDirectory.get()
-    initialized.compareAndSet(false, true)
-    tempDirectory.compareAndSet(null, Files.createTempDirectory(currentSharedTempPrefix()).toFile())
-    rootDirectory.compareAndSet(null, Files.createDirectories(persistentTempPath).toFile())
-    rootDirectory.get()
+  private fun initializeTemporaryWorkdir(): Path = synchronized(this) {
+    if (initialized) return tempDirectory
+    initialized = true
+    Files.createDirectories(persistentTempPath).also {
+      rootDirectory = it
+    }
   }
 
-  private fun obtainWorkdir(): File = if (initialized.get()) {
-    rootDirectory.get()
-  } else initializeTemporaryWorkdir()
+  private fun obtainWorkdir(): Path =
+    if (initialized) rootDirectory else initializeTemporaryWorkdir()
 
   private fun workSubdir(
     name: String,
     temporary: Boolean = true,
     lazy: Boolean = false,
-  ): File = obtainWorkdir().resolve(name).apply {
+  ): Path = obtainWorkdir().resolve(name).apply {
     prepareDirectory(this, temporary, lazy)
   }
 
   // Find the nearest parent directory to `cwd` with one of the provided `files` present.
   private fun nearestDirectoryWithAnyOfTheseFiles(
-    files: SortedSet<String>,
+    files: Array<String>,
     base: File? = null,
     depth: Int? = null,
   ): File? {
@@ -225,40 +225,38 @@ internal class RuntimeWorkdirManager : WorkdirManager {
   )
 
   private fun prepareDirectory(
-    target: File,
+    target: Path,
     temporary: Boolean = true,
     lazy: Boolean = false,
     exists: Boolean = false,
-  ): File = target.apply {
+  ): Path = target.apply {
     if (temporary) {
-      deleteOnExit()
+      toFile().deleteOnExit()
     }
     if (!lazy && !exists && !target.exists()) {
-      Files.createDirectories(toPath())
+      Files.createDirectories(this)
     }
   }
 
   // Require the workdir manager to be active for the provided operation.
   private inline fun <R> requireActive(op: () -> R): R {
-    require(active.get()) {
-      "Cannot use runtime temporary directory resources after the manager has closed"
-    }
+    assert(active) { "Cannot use runtime temporary directory resources after the manager has closed" }
     return op.invoke()
   }
 
   // Handle the `~` symbol in path references.
   @OptIn(DelicateElideApi::class)
-  private fun userDir(path: String): String {
+  private fun userDir(path: String): Path {
     if (path.startsWith("~")) {
-      return path.replace("~", when (HostPlatform.resolve().os) {
+      return Path.of(path.replace("~", when (HostPlatform.resolve().os) {
         DARWIN, LINUX -> "/home/${System.getProperty("user.name")}"
         else -> error("Windows paths should not use `~`")
-      })
+      }))
     }
-    return path
+    return Path.of(path)
   }
 
-  // Native libraries directory.
+  // Native library directory.
   private val nativesDirectory by lazy {
     workSubdir(nativesDir, temporary = false, lazy = false)
   }
@@ -266,7 +264,8 @@ internal class RuntimeWorkdirManager : WorkdirManager {
   // Temporary (delete-on-exit) directory.
   private val temporaryDirectory by lazy {
     obtainWorkdir()
-    prepareDirectory(tempDirectory.get(), temporary = true, lazy = true)
+    tempDirectory = Files.createTempDirectory(currentSharedTempPrefix())
+    prepareDirectory(tempDirectory, temporary = true, lazy = true)
   }
 
   // Persistent flight recorder/error recording directory.
@@ -298,8 +297,8 @@ internal class RuntimeWorkdirManager : WorkdirManager {
   @OptIn(DelicateElideApi::class)
   private val cachesDirectory by lazy {
     when (HostPlatform.resolve().os) {
-      DARWIN -> prepareDirectory(File(userDir(darwinCachesPath)), temporary = false, lazy = true)
-      LINUX -> prepareDirectory(File(userDir(linuxCachesPath)), temporary = false, lazy = true)
+      DARWIN -> prepareDirectory(userDir(darwinCachesPath), temporary = false, lazy = true)
+      LINUX -> prepareDirectory(userDir(linuxCachesPath), temporary = false, lazy = true)
       else -> workSubdir(cachesDir, temporary = false, lazy = true)
     }
   }
@@ -313,26 +312,26 @@ internal class RuntimeWorkdirManager : WorkdirManager {
   }
 
   override fun workingRoot(): File = requireActive {
-    obtainWorkdir()
+    obtainWorkdir().toFile()
   }
 
   override fun nativesDirectory(): WorkdirHandle = requireActive {
-    nativesDirectory.toHandle()
+    nativesDirectory.toFile().toHandle()
   }
 
   override fun tmpDirectory(create: Boolean): WorkdirHandle = requireActive {
-    temporaryDirectory.toHandle()
+    temporaryDirectory.toFile().toHandle()
   }
 
   override fun flightRecorderDirectory(create: Boolean): WorkdirHandle = requireActive {
-    flightRecorderDirectory.toHandle()
+    flightRecorderDirectory.toFile().toHandle()
   }
 
   override fun cacheDirectory(create: Boolean): WorkdirHandle = requireActive {
-    cachesDirectory.toHandle()
+    cachesDirectory.toFile().toHandle()
   }
 
   override fun close() {
-    active.compareAndSet(false, true)
+    active = false
   }
 }

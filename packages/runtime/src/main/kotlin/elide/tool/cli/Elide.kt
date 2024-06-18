@@ -318,6 +318,6 @@ import elide.tool.io.RuntimeWorkdirManager
   }
 }
 
-fun main(args: Array<String>) {
+suspend fun main(args: Array<String>) {
   Elide.entry(args)
 }

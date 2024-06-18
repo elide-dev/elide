@@ -191,8 +191,7 @@ public interface PolyglotContext {
    * @param source The guest code to be executed.
    * @return The result of evaluating the [source].
    */
-  public fun evaluate(source: Source): PolyglotValue =
-    evaluate(source, internals = true)
+  public fun evaluate(source: Source): PolyglotValue = evaluate(source, internals = true)
 
   /**
    * Explicitly enter the context in the current thread. This can reduce the overhead when using [evaluate] repeatedly.

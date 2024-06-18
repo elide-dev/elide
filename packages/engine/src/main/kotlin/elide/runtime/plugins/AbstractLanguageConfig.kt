@@ -77,7 +77,7 @@ import elide.runtime.core.PolyglotContext
 
       // mount internals at `primordials`
       val internalKeys = internals.keys.toTypedArray()
-      putMember("primordials", object: ProxyObject, ProxyHashMap {
+      putMember("primordials", object : ProxyObject, ProxyHashMap {
         override fun getMemberKeys(): Array<String> = internalKeys
         override fun hasMember(key: String?): Boolean = key != null && key in internalKeys
         override fun hasHashEntry(key: Value?): Boolean = key != null && key.asString() in internalKeys

@@ -682,6 +682,8 @@ val commonNativeArgs = listOfNotNull(
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
   "-H:NativeLinkerOption=-L$nativesPath",
+  "-Delide.strict=true",
+  "-J-Delide.strict=true",
   "-Delide.staticJni=$enableStaticJni",
   "-J-Delide.staticJni=$enableStaticJni",
   "-Delide.natives=$nativesPath",
@@ -826,6 +828,7 @@ val releaseFlags: List<String> = listOf(
 ).flatten()).toList()
 
 val jvmDefs = mapOf(
+  "elide.strict" to "true",
   "elide.natives" to nativesPath,
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.staticJni" to "true",

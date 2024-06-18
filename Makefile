@@ -136,8 +136,8 @@ JS_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/js/js.modules.tar
 JS_MODULE_OUT ?= packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/js.modules.tar
 
 PY_FACADE_BIN ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/preamble.py
-PY_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/python/py.modules.tar.gz
-PY_MODULE_OUT ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/py.modules.tar.gz
+PY_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/python/py.modules.tar
+PY_MODULE_OUT ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/py.modules.tar
 
 POSIX_FLAGS ?=
 GRADLE_OPTS ?=

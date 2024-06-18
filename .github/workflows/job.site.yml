@@ -53,7 +53,7 @@ jobs:
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3.3.0
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
+        uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           distribution: "graalvm"
           java-version: 22
@@ -171,7 +171,7 @@ jobs:
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3.3.0
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
+        uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           components: "native-image,js,wasm"
           distribution: "graalvm"

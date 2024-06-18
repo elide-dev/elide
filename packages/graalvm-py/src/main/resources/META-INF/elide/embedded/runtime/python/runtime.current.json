@@ -2,7 +2,7 @@
   "engine": "v4",
   "language": "PYTHON",
   "vfs": [
-    { "name": "py.modules.tar.gz" }
+    { "name": "py.modules.tar" }
   ],
   "artifacts": [],
   "scripts": [

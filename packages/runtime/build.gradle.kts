@@ -201,11 +201,15 @@ val jvmCompileArgs = listOfNotNull(
   "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
 ) else emptyList())
 
-val jvmRuntimeArgs = emptyList<String>()
+val jvmRuntimeArgs = listOf(
+  "-XX:ParallelGCThreads=2",
+  "-XX:ConcGCThreads=2",
+  "-XX:ReservedCodeCacheSize=512m",
+)
 
-val nativeCompileJvmArgs = jvmCompileArgs.map {
+val nativeCompileJvmArgs = listOf<String>().plus(jvmCompileArgs.map {
   "-J$it"
-}
+})
 
 val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
@@ -726,6 +730,8 @@ val commonNativeArgs = listOfNotNull(
   listOf("--debug-attach").onlyIf(nativeImageBuildDebug)
 ).plus(
   linkerOptions
+).plus(
+  nativeCompileJvmArgs
 ).toList()
 
 val debugFlags: List<String> = listOfNotNull(
@@ -839,6 +845,10 @@ val jvmDefs = mapOf(
   "org.sqlite.lib.exportPath" to nativesPath,
   "io.netty.native.workdir" to nativesPath,
   "io.netty.native.deleteLibAfterLoading" to false.toString(),
+  "java.util.concurrent.ForkJoinPool.common.parallelism" to "4",
+  "java.util.concurrent.ForkJoinPool.common.maximumSpares" to "128",
+  // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
+  // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
 )
 
 val hostedRuntimeOptions = mapOf(
@@ -888,6 +898,15 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "com.sun.jna.platform.mac.IOKitUtil",
   "com.sun.jna.platform.mac.SystemB",
   "com.sun.jna.platform.linux.Udev",
+
+  // --- Self-tests -----
+
+  "elide.tool.engine.JsEngineTest",
+  "elide.tool.engine.JsEngineTest${'$'}Definition",
+  "elide.tool.engine.PythonEngineTest",
+  "elide.tool.engine.PythonEngineTest${'$'}Definition",
+  "elide.tool.engine.RubyEngineTest",
+  "elide.tool.engine.RubyEngineTest${'$'}Definition",
 
   // --- Jansi/JLine -----
 
@@ -1057,7 +1076,6 @@ val defaultPlatformArgs: List<String> = listOf()
 
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--gc=serial",
-  "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",

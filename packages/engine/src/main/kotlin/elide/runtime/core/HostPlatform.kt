@@ -63,16 +63,16 @@ import elide.runtime.core.HostPlatform.OperatingSystem.*
 
     /** Parse a generic OS name, such as the value obtained from the 'os.name' system property. */
     public fun parseOperatingSystem(name: String): OperatingSystem = when {
-      name.contains("linux") -> OperatingSystem.LINUX
-      name.contains("windows") -> OperatingSystem.WINDOWS
-      name.contains("mac") || name.contains("darwin") -> OperatingSystem.DARWIN
+      name == "linux" -> LINUX
+      name == "windows" -> WINDOWS
+      name == "darwin" || name == "mac os x" -> DARWIN
       else -> error("Unrecognized Operating System family: $name")
     }
 
     /** Parse a generic architecture name, such as the value obtained from the 'os.arch' system property. */
     public fun parseArchitecture(name: String): Architecture = when {
-      name.contains("x86_64") || name.contains("amd64") -> Architecture.AMD64
-      name.contains("arm64") || name.contains("aarch64") -> Architecture.ARM64
+      name == "x86_64" || name == "x86-64" || name == "amd64" -> Architecture.AMD64
+      name == "arm64" || name == "aarch64" -> Architecture.ARM64
       else -> error("Unrecognized architecture: $name")
     }
 

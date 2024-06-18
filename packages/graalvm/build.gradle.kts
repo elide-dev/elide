@@ -544,13 +544,14 @@ val testBase: Configuration by configurations.creating
 tasks {
   test {
     maxHeapSize = "2G"
-    maxParallelForks = 4
+    maxParallelForks = 2
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.internals", "true")
     systemProperty("elide.natives", nativesPath)
     systemProperty("elide.js.preloadModules", "false")
     systemProperty("elide.js.vm.enableStreams", "true")
+    systemProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4")
     if (enableToolchains) javaLauncher = gvmLauncher
   }
 

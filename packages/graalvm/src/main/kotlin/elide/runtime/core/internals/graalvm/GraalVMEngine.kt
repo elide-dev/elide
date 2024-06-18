@@ -27,6 +27,8 @@ import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
 import kotlin.io.path.Path
+import kotlin.math.max
+import kotlin.math.min
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.core.*
@@ -271,6 +273,26 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
           "engine.OSR",
         )
 
+        // set number of compiler threads
+        option(
+          "engine.CompilerThreads",
+          min(max(Runtime.getRuntime().availableProcessors() / 4, 8), 2).toString(),
+        )
+
+        // jit compile on second root call
+        option(
+          "engine.Mode",
+          "latency",
+        )
+        option(
+          "engine.FirstTierMinInvokeThreshold",
+          "2",
+        )
+        option(
+          "engine.LastTierCompilationThreshold",
+          "2000",
+        )
+
         configuration.hostRuntime.on(GVM_23.andLower()) {
           enableOptions("engine.InlineAcrossTruffleBoundary")
         }
@@ -296,8 +318,8 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
         // isolate options
         if (ENABLE_ISOLATES) {
-          option("engine.SpawnIsolate", "js")
           option("engine.UntrustedCodeMitigation", "none")
+          option("engine.SpawnIsolate", "js")
           option("engine.MaxIsolateMemory", "2GB")
         }
 

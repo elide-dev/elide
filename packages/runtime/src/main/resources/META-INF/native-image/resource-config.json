@@ -29,8 +29,6 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/wasm/runtime.json.gz\\E"
   }, {
-    "pattern":"\\QMETA-INF/elide/embedded/tools/tsc/typescript.js.gz\\E"
-  }, {
     "pattern":"\\QMETA-INF/graalvm/org.graalvm.polyglot/version\\E"
   }, {
     "pattern":"\\QMETA-INF/graalvm/org.graalvm.truffle/version\\E"
@@ -524,8 +522,6 @@
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___HAM_EGGS.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin\\E"
-  }, {
-    "pattern":"\\Qcom/sun/jna/linux-x86-64/libjnidispatch.so\\E"
   }, {
     "pattern":"\\Qgraalpy_versions\\E"
   }, {

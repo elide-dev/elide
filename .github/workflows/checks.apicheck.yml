@@ -101,7 +101,7 @@ jobs:
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
       - name: "Setup: GraalVM (Java 22)"
-        uses: graalvm/setup-graalvm@2f25c0caae5b220866f732832d5e3e29ff493338 # v1.2.1
+        uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           distribution: "graalvm"
           java-version: 22

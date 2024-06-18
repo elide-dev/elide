@@ -131,7 +131,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   public var sourceMaps: Boolean = true
 
   /**  Whether to enable V8 compatibility mode. */
-  public var v8: Boolean = true
+  public var v8: Boolean = false
 
   /** Enable WASM support and related bindings. Defaults to `true`; only active where supported. */
   public var wasm: Boolean = true

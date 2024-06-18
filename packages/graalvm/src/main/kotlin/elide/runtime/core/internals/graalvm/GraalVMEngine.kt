@@ -122,13 +122,11 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   // Finalize a suite of bindings for a given language (or the main polyglot bindings).
   private fun finalizeBindings(bindings: Value) {
     if (bindings.hasMembers()) {
-      bindings.memberKeys.forEach {
-        if (knownInternalMembers.contains(it)) {
-          try {
-            bindings.removeMember(it)
-          } catch (uoe: UnsupportedOperationException) {
-            // ignore
-          }
+      knownInternalMembers.forEach {
+        try {
+          bindings.removeMember(it)
+        } catch (uoe: UnsupportedOperationException) {
+          // ignore
         }
       }
     }

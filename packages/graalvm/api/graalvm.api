@@ -1540,7 +1540,7 @@ public synthetic class elide/runtime/gvm/internals/node/path/$NodePathsModule$De
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/gvm/internals/node/path/PathBuf : elide/runtime/intrinsics/js/node/path/Path {
+public final class elide/runtime/gvm/internals/node/path/PathBuf : elide/runtime/intrinsics/js/node/path/Path, org/graalvm/polyglot/proxy/ProxyObject {
 	public static final field Companion Lelide/runtime/gvm/internals/node/path/PathBuf$Companion;
 	public synthetic fun <init> (Lelide/runtime/gvm/internals/node/path/PathStyle;Lkotlinx/io/files/Path;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun charAt (I)C
@@ -1560,15 +1560,21 @@ public final class elide/runtime/gvm/internals/node/path/PathBuf : elide/runtime
 	public fun getDir ()Ljava/lang/String;
 	public fun getExt ()Ljava/lang/String;
 	public fun getLength ()I
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
 	public fun getRoot ()Ljava/lang/String;
 	public fun getStyle ()Lelide/runtime/gvm/internals/node/path/PathStyle;
+	public fun hasMember (Ljava/lang/String;)Z
 	public fun hashCode ()I
 	public fun isAbsolute ()Z
 	public fun join (Ljava/lang/Iterable;)Ljava/lang/String;
 	public fun join (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
 	public fun join ([Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
 	public final fun length ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
 	public fun split ()Lkotlin/sequences/Sequence;
 	public fun subSequence (II)Ljava/lang/CharSequence;
 	public fun toJavaPath ()Ljava/nio/file/Path;
@@ -2229,7 +2235,9 @@ public abstract interface class elide/runtime/intrinsics/IntrinsicsResolver {
 }
 
 public abstract interface class elide/runtime/intrinsics/Symbol : elide/core/api/Symbolic {
+	public abstract fun getInternalSymbol ()Ljava/lang/String;
 	public abstract fun getSymbol ()Ljava/lang/String;
+	public abstract fun isInternal ()Z
 }
 
 public abstract interface class elide/runtime/intrinsics/js/Blob {

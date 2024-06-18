@@ -59,10 +59,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     if (name.startsWith("elide:")) {
       val modname = name.removePrefix("elide:")
       append("import '$modname';")
-      append("require('$modname');")
     } else {
       append("import 'node:$name';")
-      append("require('node:$name');")
     }
   }.toString(), "__elide-internal-module-import_$name.mjs").apply {
     cached(true)
@@ -108,13 +106,10 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
     enableOptions(
       "js.allow-eval",
-      "js.async-context",
-      "js.async-iterator-helpers",
-      "js.async-stack-traces",
-      "js.atomics-wait-async",
-      "js.bind-member-functions",
+      "js.atomics",
       "js.class-fields",
       "js.direct-byte-buffer",
+      "js.global-property",
       "js.error-cause",
       "js.foreign-hash-properties",
       "js.foreign-object-prototype",
@@ -130,11 +125,17 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.temporal",
       "js.top-level-await",
       // Experimental:
+      "js.async-context",
+      "js.async-iterator-helpers",
+      "js.async-stack-traces",
       "js.annex-b",
-      "js.atomics",
+      "js.atomics-wait-async",
+      "js.bind-member-functions",
       "js.esm-eval-returns-exports",
       "js.scope-optimization",
+      "js.string-lazy-substrings",
       "js.shadow-realm",
+      "js.zone-rules-based-time-zones",
     )
 
     disableOptions(
@@ -174,7 +175,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.v8-intrinsics" to config.v8,
     )
 
-    if (config.wasm && wasmSupported) enableOptions(
+    if (config.wasm) enableOptions(
       "wasm.BulkMemoryAndRefTypes",
       "wasm.Memory64",
       "wasm.UseUnsafeMemory",
@@ -211,10 +212,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     override val languageId: String = JS_LANGUAGE_ID
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
-
-    @JvmStatic internal val wasmSupported by lazy {
-      Engine.create().languages.containsKey("wasm")
-    }
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
       configureLanguageSupport(scope)

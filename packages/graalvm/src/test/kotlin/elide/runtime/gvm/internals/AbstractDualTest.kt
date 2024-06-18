@@ -83,64 +83,55 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
   /** Interface returned by assertions for further customization. */
   interface TestContext {
     /** Perform a truth assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun shouldBeTrue(message: String? = null)
+    @Polyglot fun shouldBeTrue(message: String? = null)
 
     /** Perform a truth assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun shouldBeTrue() = shouldBeTrue(null)
+    @Polyglot fun shouldBeTrue() = shouldBeTrue(null)
 
     /** Perform a false assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun shouldBeFalse(message: String? = null)
+    @Polyglot fun shouldBeFalse(message: String? = null)
 
     /** Perform a false assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun shouldBeFalse() = shouldBeFalse(null)
+    @Polyglot fun shouldBeFalse() = shouldBeFalse(null)
 
     /** Perform a not-null assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun isNotNull() = isNotNull(null)
+    @Polyglot fun isNotNull() = isNotNull(null)
 
     /** Perform a not-null assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun isNotNull(message: String?)
+    @Polyglot fun isNotNull(message: String?)
 
     /** Perform a null assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun isNull() = isNull(null)
+    @Polyglot fun isNull() = isNull(null)
 
     /** Perform a null assertion on the held value, or display [message] as an error (or a default message). */
-    @Polyglot
-    fun isNull(message: String?)
+    @Polyglot fun isNull(message: String?)
 
     /** Perform an equality assertion between the held value and the [other] value. */
-    @Polyglot
-    fun isEqualTo(other: Any?) = isEqualTo(other, null)
+    @Polyglot fun isEqualTo(other: Any?) = isEqualTo(other, null)
 
     /** Perform an equality assertion between the held value and the [other] value. */
-    @Polyglot
-    fun isEqualTo(other: Any?, message: String?)
+    @Polyglot fun isEqualTo(other: Any?, message: String?)
 
     /** Perform an in-equality assertion between the held value and the [other] value. */
-    @Polyglot
-    fun isNotEqualTo(other: Any?) = isNotEqualTo(other, null)
+    @Polyglot fun isNotEqualTo(other: Any?) = isNotEqualTo(other, null)
 
     /** Perform an in-equality assertion between the held value and the [other] value. */
-    @Polyglot
-    fun isNotEqualTo(other: Any?, message: String? = null)
+    @Polyglot fun isNotEqualTo(other: Any?, message: String? = null)
 
     /** Perform a failure assertion on the held value, which is expected to be a function. */
-    @Polyglot
-    fun fails() = fails(null)
+    @Polyglot fun fails() = fails(null)
 
     /** Perform a failure assertion on the held value, which is expected to be a function. */
-    @Polyglot
-    fun fails(message: String? = null)
+    @Polyglot fun fails(message: String? = null)
+
+    /** Perform a non-failure assertion on the held value, which is expected to be a function. */
+    @Polyglot fun doesNotFail() = doesNotFail(null)
+
+    /** Perform a non-failure assertion on the held value, which is expected to be a function. */
+    @Polyglot fun doesNotFail(message: String? = null)
 
     /** Execute a [shouldBeTrue] assertion on the held value (syntactic sugar). */
-    @Polyglot
-    fun message(message: String) = shouldBeTrue(message)
+    @Polyglot fun message(message: String) = shouldBeTrue(message)
   }
 
   /** Base interface for a guest assertion type. */
@@ -175,8 +166,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       }
     }
 
-    @Polyglot
-    override fun shouldBeTrue(message: String?) = executeTest {
+    @Polyglot override fun shouldBeTrue(message: String?) = executeTest {
       val boolValue = when (val value = assertion.value) {
         is Boolean -> value
         is Value -> if (value.isBoolean) {
@@ -195,8 +185,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       )
     }
 
-    @Polyglot
-    override fun shouldBeFalse(message: String?) = executeTest {
+    @Polyglot override fun shouldBeFalse(message: String?) = executeTest {
       val boolValue = when (val value = assertion.value) {
         is Boolean -> value
         is Value -> if (value.isBoolean) {
@@ -215,8 +204,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       )
     }
 
-    @Polyglot
-    override fun isNotNull(message: String?) = executeTest {
+    @Polyglot override fun isNotNull(message: String?) = executeTest {
       val possiblyNull = when (val value = assertion.value) {
         null -> null
         is Value -> if (value.isNull) {
@@ -228,8 +216,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       Assertions.assertNotNull(possiblyNull, message ?: "expected guest value to be non-null (got `$possiblyNull`)")
     }
 
-    @Polyglot
-    override fun isNull(message: String?) = executeTest {
+    @Polyglot override fun isNull(message: String?) = executeTest {
       val possiblyNull = when (val value = assertion.value) {
         null -> null
         is Value -> if (value.isNull) {
@@ -241,8 +228,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       Assertions.assertNull(possiblyNull, message ?: "expected guest value to be null (got `$possiblyNull`)")
     }
 
-    @Polyglot
-    override fun isEqualTo(other: Any?, message: String?) = executeTest {
+    @Polyglot override fun isEqualTo(other: Any?, message: String?) = executeTest {
       Assertions.assertEquals(
         other,
         assertion.value,
@@ -250,8 +236,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       )
     }
 
-    @Polyglot
-    override fun isNotEqualTo(other: Any?, message: String?) = executeTest {
+    @Polyglot override fun isNotEqualTo(other: Any?, message: String?) = executeTest {
       Assertions.assertNotEquals(
         assertion.value,
         other,
@@ -259,8 +244,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       )
     }
 
-    @Polyglot
-    override fun fails(message: String?) {
+    @Polyglot override fun fails(message: String?) {
       val executable = when (val value = assertion.value) {
         is Value -> if (value.canExecute()) {
           { value.executeVoid() }
@@ -285,6 +269,37 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
         else -> error("Expected guest value for failure test, but got: '$value'")
       }
       expectFail.set(true)
+      if (!message.isNullOrBlank()) this.message.set(message)
+      executeTest {
+        executable.invoke()
+      }
+    }
+
+    @Polyglot override fun doesNotFail(message: String?) {
+      val executable = when (val value = assertion.value) {
+        is Value -> if (value.canExecute()) {
+          { value.executeVoid() }
+        } else error(
+          "Guest value is not executable, cannot execute failure test",
+        )
+
+        is Runnable -> {
+          { value.run() }
+        }
+
+        is Callable<*> -> {
+          { value.call() }
+        }
+
+        is Function<*, *> -> {
+          val args: Array<Any> = emptyArray()
+          val callable = value as Function<Array<Any>, Any>
+          { callable.apply(args) }
+        }
+
+        else -> error("Expected guest value for failure test, but got: '$value'")
+      }
+      expectFail.set(false)
       if (!message.isNullOrBlank()) this.message.set(message)
       executeTest {
         executable.invoke()

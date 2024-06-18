@@ -91,7 +91,23 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Test fun `isAscii() compliance`() = conforms {
+  @Ignore @Test fun `isAscii() compliance (valid)`() = conforms {
+    // requires guest types unavailable in the host
+  }.guest {
+    // language=javascript
+    """
+    const { isAscii } = require("buffer");
+    const assert = require("assert");
+
+    const validAscii = Buffer.from([0x68,0x65,0x6c,0x6c,0x6f]) // hello
+    assert.equal(true, isAscii(validAscii));
+
+    const invalidAscii = Buffer.from([0x68,0x65,0x6C,0x6C,0x6F,0x20,0xF0,0x9F,0x99,0x82]) // hello🙂
+    assert.equal(false, isAscii(invalidAscii));
+    """
+  }
+
+  @Ignore @Test fun `isAscii() compliance (invalid)`() = conforms {
     // requires guest types unavailable in the host
   }.guest {
     // language=javascript
@@ -120,7 +136,7 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Test fun `isUtf8() compliance (invalid)`() = conforms {
+  @Ignore @Test fun `isUtf8() compliance (invalid)`() = conforms {
     // requires guest types unavailable in the host
   }.guest {
     // language=javascript

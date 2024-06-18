@@ -193,6 +193,7 @@ import elide.runtime.plugins.bindings.Bindings
         ?: error("Failed to load embedded resource: $source")
 
       try {
+        context.enter()
         context.evaluate(
           this,
           script.bufferedReader().use { it.readText() },
@@ -204,6 +205,8 @@ import elide.runtime.plugins.bindings.Bindings
         if (System.getProperty("elide.strict") == "true") {
           throw IllegalStateException("Embedded init evaluation failed. This is a bug in Elide.", err)
         }
+      } finally {
+        context.leave()
       }
     }
   }

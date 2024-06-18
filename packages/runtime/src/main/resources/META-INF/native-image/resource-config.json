@@ -1,16 +1,6 @@
 {
   "resources":{
   "includes":[{
-    "pattern":"\\Q(netty_quiche_linux_x86_64, META-INF/native/libnetty_quiche_linux_x86_64.so)\\E"
-  }, {
-    "pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/native/libnetty_quiche_osx_aarch_64.jnilib)\\E"
-  }, {
-    "pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/nativelibnetty_quiche_osx_aarch_64.dylib\\E"
-  }, {
-    "pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/native/libnetty_resolver_dns_native_macos_aarch_64.jnilib)\\E"
-  }, {
-    "pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/nativelibnetty_resolver_dns_native_macos_aarch_64.dylib\\E"
-  }, {
     "pattern":"\\QElideTool.properties\\E"
   }, {
     "pattern":"\\QElideTool_en.properties\\E"

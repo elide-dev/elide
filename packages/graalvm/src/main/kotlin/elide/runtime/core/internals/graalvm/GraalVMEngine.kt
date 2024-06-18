@@ -121,8 +121,12 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   private fun finalizeBindings(bindings: Value) {
     if (bindings.hasMembers()) {
       bindings.memberKeys.forEach {
-        if (it.startsWith(INTERNAL_PREFIX) || knownInternalMembers.contains(it)) {
-          if (bindings.hasMember(it)) bindings.removeMember(it)
+        if (knownInternalMembers.contains(it)) {
+          try {
+            bindings.removeMember(it)
+          } catch (uoe: UnsupportedOperationException) {
+            // ignore
+          }
         }
       }
     }
@@ -159,7 +163,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
   internal companion object {
     @JvmStatic private val defaultAuxPath = System.getProperty("elide.natives")
-    private const val INTERNAL_PREFIX = "__Elide"
 
     // Names of known-internal members which are yanked before guest code is executed.
     private val knownInternalMembers = sortedSetOf(

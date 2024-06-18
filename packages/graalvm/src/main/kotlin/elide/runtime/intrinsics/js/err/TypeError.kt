@@ -27,7 +27,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.vm.annotations.Polyglot
 
 // Public symbol for a `TypeError`.
-private const val TYPE_ERROR_SYMBOL = "TypeError"
+private const val TYPE_ERROR_SYMBOL = "NativeTypeError"
 
 // Members and properties of a `TypeError`.
 private val TYPE_ERROR_MEMBERS_AND_PROPS = arrayOf(

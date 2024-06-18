@@ -91,6 +91,12 @@ import elide.tool.io.RuntimeWorkdirManager
 @Suppress("MemberVisibilityCanBePrivate")
 @Context @Singleton class Elide : ToolCommandBase<CommandContext>() {
   companion object {
+    init {
+      SLF4JBridgeHandler.removeHandlersForRootLogger()
+      SLF4JBridgeHandler.install()
+      initializeNatives()
+    }
+
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"
 
@@ -156,10 +162,6 @@ import elide.tool.io.RuntimeWorkdirManager
     // Install static classes/perform static initialization.
     private fun installStatics(args: Array<String>, cwd: String?) {
       ProcessManager.initializeStatic(args, cwd ?: "")
-      SLF4JBridgeHandler.removeHandlersForRootLogger()
-      SLF4JBridgeHandler.install()
-      initializeNatives()
-
       if (ImageInfo.inImageCode()) try {
         ProcessProperties.setArgumentVectorProgramName("elide")
       } catch (uoe: UnsupportedOperationException) {

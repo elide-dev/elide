@@ -333,6 +333,7 @@ public final class elide/runtime/gvm/cfg/LanguageDefaults {
 }
 
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
+	public static final field Companion Lelide/runtime/plugins/AbstractLanguageConfig$Companion;
 	public fun <init> ()V
 	protected final fun applyBindings (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
 	public static synthetic fun applyBindings$default (Lelide/runtime/plugins/AbstractLanguageConfig;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)V
@@ -344,6 +345,9 @@ public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public final fun setExecutable (Ljava/lang/String;)V
 	public final fun setExecutableList (Ljava/util/List;)V
 	public final fun setResourcesPath (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/plugins/AbstractLanguageConfig$Companion {
 }
 
 public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runtime/core/EnginePlugin, elide/runtime/core/GuestLanguage {

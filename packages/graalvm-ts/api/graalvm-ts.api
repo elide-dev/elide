@@ -45,6 +45,5 @@ public final class elide/runtime/typescript/TypeScriptFeature : org/graalvm/nati
 	public fun <init> ()V
 	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
 	public fun getDescription ()Ljava/lang/String;
-	public fun getURL ()Ljava/lang/String;
 }
 

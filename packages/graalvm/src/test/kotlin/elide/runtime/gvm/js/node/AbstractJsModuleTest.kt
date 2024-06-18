@@ -19,6 +19,7 @@ import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.gvm.internals.intrinsics.js.base64.Base64Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.gvm.internals.node.asserts.NodeAssertModule
@@ -59,7 +60,12 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     }
   }
 
-  private fun beforeExec(bind: Boolean, bindAssert: Boolean = true, bindConsole: Boolean = true) {
+  private fun beforeExec(
+    bind: Boolean,
+    bindAssert: Boolean = true,
+    bindConsole: Boolean = true,
+    bindBase64: Boolean = true,
+  ) {
     // install bindings under test, if directed
     val target = polyglotContext.bindings(JavaScript)
 
@@ -68,6 +74,9 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
       val group = HashMap<Symbol, Any>()
       val binding = GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(group)
       provide().install(binding)
+      if (bindBase64 && !group.any { it.key.symbol.contains("Base64") }) {
+        Base64Intrinsic().install(binding)
+      }
       if (bindConsole && !group.any { it.key.symbol.contains("console") }) {
         ConsoleIntrinsic().install(binding)
       }

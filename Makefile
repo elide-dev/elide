@@ -132,6 +132,9 @@ export GVM_PROFILE ?= gvm-ce-linux-amd64
 endif
 
 JS_FACADE_BIN ?= runtime/bazel-bin/elide/runtime/js/runtime.bin.js
+JS_FACADE_OUT ?= packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js
+JS_POLYFILLS_BIN ?= runtime/bazel-bin/elide/runtime/js/polyfills/polyfills.min.js
+JS_POLYFILLS_OUT ?= packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/polyfills.js
 JS_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/js/js.modules.tar
 JS_MODULE_OUT ?= packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/js.modules.tar
 
@@ -771,6 +774,10 @@ runtime-update: runtime-build $(RUNTIME_GEN) ## Rebuild and copy the JS runtime 
 
 runtime-update-copy:
 	@echo "" && echo "Updating runtime artifacts..."
+	@echo "- Updating 'facade.js'"
+	$(CMD)cp -f$(POSIX_FLAGS) $(JS_FACADE_BIN) $(JS_FACADE_OUT)
+	@echo "- Updating 'polyfills.js'"
+	$(CMD)cp -f$(POSIX_FLAGS) $(JS_POLYFILLS_BIN) $(JS_POLYFILLS_OUT)
 	@echo "- Updating 'js.modules.tar'"
 	$(CMD)cp -f$(POSIX_FLAGS) $(JS_MODULE_BIN) $(JS_MODULE_OUT)
 	@echo "- Updating 'py.modules.tar.'"

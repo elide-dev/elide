@@ -26,6 +26,7 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.Value.asValue
 import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyHashMap
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.math.BigInteger
 import java.util.*
@@ -38,6 +39,7 @@ import elide.annotations.Singleton
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.JsException
@@ -48,12 +50,22 @@ import elide.vm.annotations.Polyglot
 // Symbol where the internal module implementation is installed.
 private const val ASSERT_MODULE_SYMBOL: String = "node_assert"
 
+// Symbol where the assertion error type is installed.
+private const val ASSERTION_ERROR_SYMBOL: String = "AssertionError"
+
 // Installs the Node assert module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeAssertModule : AbstractNodeBuiltinModule() {
   @Singleton fun provide(): AssertAPI = NodeAssert.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[ASSERT_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[ASSERTION_ERROR_SYMBOL.asJsSymbol()] = ProxyInstantiable {
+      val messageOrErr = it.getOrNull(0)
+      when {
+        messageOrErr != null -> NodeAssertionError(messageOrErr)
+        else -> NodeAssertionError()
+      }
+    }
   }
 }
 
@@ -74,6 +86,24 @@ internal class NodeAssertionError (
   companion object {
     private const val DEFAULT_MESSAGE: String = "Failed assertion"
     private const val DEFAULT_OPERATOR: String = "=="
+
+    @JvmStatic fun renderMessage(
+      operation: String,
+      actualValue: Optional<Any>,
+      expectedValue: Optional<Any>,
+    ): String = StringBuilder().apply {
+      append("Expected $operation value")
+      append(" '")
+      append(expectedValue.orElse(null) ?: "undefined")
+      append("', but got: ")
+      val value = actualValue.orElse(null)
+      if (value == null) append("null")
+      else {
+        append("'")
+        append(value)
+        append("'")
+      }
+    }.toString()
 
     @JvmStatic @JvmOverloads fun of(
       message: Any? = null,
@@ -103,14 +133,15 @@ private const val OK_EXPECTATION = "Expected value to be truthy"
 private fun assertionError(
   message: Any?,
   isGenerated: Boolean = false,
-  actualValue: Optional<Any>? = null,
-  expectedValue: Optional<Any>? = null,
-  operatorValue: String? = null
+  actualValue: Optional<Any> = empty(),
+  expectedValue: Optional<Any> = empty(),
+  operatorValue: String? = null,
+  operation: String = "check",
 ): NodeAssertionError = NodeAssertionError.of(
-  message,
+  message ?: NodeAssertionError.renderMessage(operation, actualValue, expectedValue),
   isGenerated,
-  actualValue ?: empty(),
-  expectedValue ?: empty(),
+  actualValue,
+  expectedValue,
   operatorValue
 )
 

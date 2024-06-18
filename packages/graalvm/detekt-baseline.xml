@@ -15,6 +15,7 @@
     <ID>CyclomaticComplexMethod:SqliteModule.kt$SqliteDatabaseProxy$override fun getMember(key: String?): Any?</ID>
     <ID>CyclomaticComplexMethod:URLIntrinsic.kt$URLIntrinsic.URLValue$override fun putMember(key: String?, value: Value?)</ID>
     <ID>CyclomaticComplexMethod:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
+    <ID>ExplicitGarbageCollectionCall:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$gc()</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:NativeTransportFeature.kt$NativeTransportFeature$// @TODO: gradle doesn't support arm64 linux</ID>
@@ -38,6 +39,8 @@
     <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptType$5</ID>
     <ID>MagicNumber:FetchResponse.kt$FetchResponse$200</ID>
     <ID>MagicNumber:FetchResponse.kt$FetchResponse$299</ID>
+    <ID>MagicNumber:GraalVMEngine.kt$GraalVMEngine.Companion$4</ID>
+    <ID>MagicNumber:GraalVMEngine.kt$GraalVMEngine.Companion$8</ID>
     <ID>MagicNumber:HttpServerConfig.kt$HttpServerConfig$65535</ID>
     <ID>MagicNumber:JsProxy.kt$JsProxy.PropertyProxy$3</ID>
     <ID>MagicNumber:NettyRequestHandler.kt$NettyRequestHandler$404</ID>
@@ -50,6 +53,7 @@
     <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
     <ID>MatchingDeclarationName:Types.kt$GuestHandlerFunction</ID>
     <ID>MatchingDeclarationName:VfsPlugin.kt$Vfs</ID>
+    <ID>MaxLineLength:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$assert(bundleStream.canReadEntryData(entry)) { "Bundle '${bundle.location}' cannot read entry '${info.path}'" }</ID>
     <ID>MaxLineLength:JsConcurrentMap.kt$JsConcurrentMap.Factory$*</ID>
     <ID>MaxLineLength:JsMutableMultiMap.kt$JsMutableMultiMap.Factory$@JvmStatic override</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
@@ -98,6 +102,7 @@
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *rest)</ID>
     <ID>SwallowedException:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$fnf: FileNotFoundException</ID>
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
+    <ID>SwallowedException:GraalVMEngine.kt$GraalVMEngine$uoe: UnsupportedOperationException</ID>
     <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>
     <ID>SwallowedException:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
     <ID>SwallowedException:NodeProcess.kt$NodeProcess.NodeProcessModuleImpl$uoe: UnsupportedOperationException</ID>

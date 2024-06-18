@@ -40,8 +40,8 @@ import org.apache.commons.io.IOUtils;
 public class TypeScriptCompiler implements AutoCloseable {
   private static final String TYPESCRIPT_COMPILER_PATH =
       "/META-INF/elide/embedded/tools/tsc/typescript.js.gz";
-  private static final Source TYPESCRIPT_COMPILER_SOURCE = Source
-          .newBuilder("js", getTypeScriptCompilerCode(), "typescript.js")
+  private static final Source TYPESCRIPT_COMPILER_SOURCE =
+      Source.newBuilder("js", getTypeScriptCompilerCode(), "typescript.js")
           .mimeType("application/javascript")
           .cached(true)
           .encoding(StandardCharsets.UTF_8)
@@ -55,14 +55,15 @@ public class TypeScriptCompiler implements AutoCloseable {
   private final Object transpileFunction;
 
   private static void initializeCompiler(Env env) {
-    var context = env.newInnerContextBuilder("js")
+    var context =
+        env.newInnerContextBuilder("js")
             .allowIO(true) // must allow for import of modules during compilation
             .option("js.annex-b", "true") // enable Annex B for compatibility with TypeScript
             .option("js.ecmascript-version", "2021") // always use a modern ECMA spec
             .option(
-                    "js.commonjs-require", "true") // always enable `require()`, the compiler needs it
+                "js.commonjs-require", "true") // always enable `require()`, the compiler needs it
             .option(
-                    "js.commonjs-require-cwd", System.getProperty("user.dir")) // use cwd as import root
+                "js.commonjs-require-cwd", System.getProperty("user.dir")) // use cwd as import root
             .build();
 
     var compiler = context.evalInternal(null, TYPESCRIPT_COMPILER_SOURCE);

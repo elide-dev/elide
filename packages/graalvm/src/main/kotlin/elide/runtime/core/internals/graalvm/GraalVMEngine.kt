@@ -76,7 +76,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
   private fun createContext(cfg: Builder.() -> Unit, finalizer: Builder.() -> Context = { build() }): GraalVMContext {
     val contextHostAccess = PolyglotHostAccess.newBuilder(PolyglotHostAccess.ALL)
-      .allowImplementations(Proxy::class.java)
+      .allowImplementationsAnnotatedBy(PolyglotHostAccess.Implementable::class.java)
       .allowAccessAnnotatedBy(PolyglotHostAccess.Export::class.java)
       .allowArrayAccess(true)
       .allowBufferAccess(true)
@@ -221,6 +221,9 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     /** Whether internal symbols should be withheld from guest code. */
     private val shouldDropInternals = System.getProperty("elide.internals") != "true"
 
+    /** Whether to enable output/input stream access by guest languages (by default). */
+    private val enableStreams = System.getProperty("elide.js.vm.enableStreams", "false")
+
     /** Whether the runtime is built as a native image. */
     private val isNativeImage = ImageInfo.inImageCode()
 
@@ -252,7 +255,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
         allowExperimentalOptions(true)
 
         // stub streams
-        if (System.getProperty("elide.js.vm.enableStreams", "false") != "true") {
+        if (enableStreams != "true") {
           `in`(StubbedInputStream)
           out(StubbedOutputStream)
           err(StubbedOutputStream)

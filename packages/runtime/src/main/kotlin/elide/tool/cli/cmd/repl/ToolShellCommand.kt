@@ -821,6 +821,7 @@ import elide.tool.project.ProjectManager
     val chunk = Source.newBuilder(primaryLanguage.engine, code, origin)
       .interactive(false)
       .internal(false)
+      .cached(true)
 
     val source = if (literal) {
       chunk.buildLiteral()
@@ -1489,6 +1490,7 @@ import elide.tool.project.ProjectManager
     return Source.newBuilder(targetLang.symbol, script)
       .encoding(StandardCharsets.UTF_8)
       .internal(false)
+      .cached(true)
       .build()
   }
 

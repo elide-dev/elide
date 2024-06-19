@@ -24,6 +24,7 @@
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this will need normalization for non-unix test runs</ID>
+    <ID>ForbiddenComment:TypeError.kt$// @TODO: deprecate and replace with type mapping</ID>
     <ID>ImplicitDefaultLocale:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$String.format( "%d.%d.%d.%d", (bits and 0x0000000000ff000000L) shr 24, (bits and 0x0000000000ff0000L) shr 16, (bits and 0x0000000000ff00L) shr 8, bits and 0xffL, )</ID>
     <ID>IteratorNotThrowingNoSuchElementException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$&lt;no name provided> : Iterator</ID>
     <ID>IteratorNotThrowingNoSuchElementException:JsIterator.kt$JsIterator&lt;T> : IteratorProxyIteratorProxyIterable</ID>
@@ -138,6 +139,7 @@
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$soFar: Int = -1</ID>
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$subject: String</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
+    <ID>UnusedPrivateMember:HttpServerAgent.kt$HttpServerAgent.Companion$private fun resolveLanguage(source: Source): GuestLanguage</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
     <ID>UnusedPrivateProperty:NativeTransportFeature.kt$NativeTransportFeature.Companion$private val iouringImpls = arrayOf( "io.netty.incubator.channel.uring.Native", "io.netty.incubator.channel.uring.LinuxSocket", "io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods", )</ID>
   </CurrentIssues>

@@ -194,17 +194,19 @@ import elide.runtime.plugins.bindings.Bindings
         val script = AbstractLanguagePlugin::class.java.getResourceAsStream(source.path)
           ?: error("Failed to load embedded resource: $source")
 
-        context.evaluate(
-          this,
-          script.bufferedReader().use { it.readText() },
-          name = source.path.split("/").last(),
-          internals = true,
-          cached = true,
-        )
-      }
-    } catch (err: RuntimeException) {
-      if (System.getProperty("elide.strict") == "true") {
-        throw IllegalStateException("Embedded init evaluation failed. This is a bug in Elide.", err)
+        try {
+          context.evaluate(
+            this,
+            script.bufferedReader().use { it.readText() },
+            name = source.path.split("/").last(),
+            internals = true,
+            cached = true,
+          )
+        } catch (err: RuntimeException) {
+          if (System.getProperty("elide.strict") == "true") {
+            throw IllegalStateException("Embedded init evaluation failed. This is a bug in Elide.", err)
+          }
+        }
       }
     } finally {
       context.leave()

@@ -210,6 +210,7 @@ import elide.tool.io.RuntimeWorkdirManager
     /** CLI entrypoint and [args]. */
     @JvmStatic fun entry(args: Array<String>) {
       // load and install libraries
+      Statics.args.set(args.toList())
       installStatics(args, System.getProperty("user.dir"))
 
       val exitCode = try {
@@ -320,6 +321,6 @@ import elide.tool.io.RuntimeWorkdirManager
   }
 }
 
-suspend fun main(args: Array<String>) {
+fun main(args: Array<String>) {
   Elide.entry(args)
 }

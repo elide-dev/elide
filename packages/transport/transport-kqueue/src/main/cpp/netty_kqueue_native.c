@@ -550,6 +550,11 @@ JNIEXPORT void JNI_OnUnload_netty_transport_native_kqueue(JavaVM* vm, void* rese
 }
 
 #ifndef NETTY_BUILD_STATIC
+JNIEXPORT jint Java_io_netty_channel_kqueue_Native_registerUnix(JNIEnv* env, jclass clazz) {
+    register_unix_called = 1;
+    return netty_unix_register(env, staticPackagePrefix);
+}
+
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     return netty_jni_util_JNI_OnLoad(vm, reserved, "netty_transport_native_kqueue", netty_kqueue_native_JNI_OnLoad);
 }

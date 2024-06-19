@@ -7605,5 +7605,8 @@
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
+},
+{
+  "name":"io.netty.channel.kqueue.Native"
 }
 ]

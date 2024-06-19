@@ -11,9 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-const { ok } = require("node:assert");
-ok(typeof Elide.http !== "undefined", "please run with `elide serve`");
-
 // access the built-in HTTP server engine
 const app = Elide.http;
 

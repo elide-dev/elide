@@ -38,16 +38,18 @@ final class Native {
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(Native.class);
 
     static {
-        // Preload all classes that will be used in the OnLoad(...) function of JNI to eliminate the possiblity of a
-        // class-loader deadlock. This is a workaround for https://github.com/netty/netty/issues/11209.
+      // Preload all classes that will be used in the OnLoad(...) function of JNI to eliminate the possiblity of a
+      // class-loader deadlock. This is a workaround for https://github.com/netty/netty/issues/11209.
 
-        // This needs to match all the classes that are loaded via NETTY_JNI_UTIL_LOAD_CLASS or looked up via
-        // NETTY_JNI_UTIL_FIND_CLASS.
-        ClassInitializerUtil.tryLoadClasses(Native.class,
-                // netty_kqueue_bsdsocket
-                PeerCredentials.class, DefaultFileRegion.class, FileChannel.class, java.io.FileDescriptor.class
-        );
+      // This needs to match all the classes that are loaded via NETTY_JNI_UTIL_LOAD_CLASS or looked up via
+      // NETTY_JNI_UTIL_FIND_CLASS.
+      ClassInitializerUtil.tryLoadClasses(Native.class,
+              // netty_kqueue_bsdsocket
+              PeerCredentials.class, DefaultFileRegion.class, FileChannel.class, java.io.FileDescriptor.class
+      );
+    }
 
+    public static void initializeStatic() {
         try {
             // First, try calling a side-effect free JNI method to see if the library was already
             // loaded by the application.

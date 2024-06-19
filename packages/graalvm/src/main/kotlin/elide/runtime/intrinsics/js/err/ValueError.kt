@@ -24,8 +24,9 @@ import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.vm.annotations.Polyglot
 
-// Public symbol for a `ValueError`.
+// Internal symbol for a `ValueError`.
 private const val VALUE_ERROR_SYMBOL = "ValueError"
 
 // Members and properties of a `ValueError`.
@@ -36,10 +37,11 @@ private val VALUE_ERROR_MEMBERS_AND_PROPS = arrayOf(
 )
 
 // Installs `ValueError` into the environment.
-@Intrinsic @Singleton internal class ValueErrorIntrinsic : AbstractJsIntrinsic() {
+@Intrinsic(VALUE_ERROR_SYMBOL, internal = false)
+@Singleton internal class ValueErrorIntrinsic : AbstractJsIntrinsic() {
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[VALUE_ERROR_SYMBOL.asPublicJsSymbol()] = ValueError.Factory
+    bindings[VALUE_ERROR_SYMBOL.asPublicJsSymbol()] = ValueError::class.java
   }
 }
 
@@ -69,7 +71,13 @@ public open class ValueError protected constructor(
   override val message: String,
   override val cause: Error? = null,
 ) : AbstractJsException, ProxyObject, Error() {
-  /** @inheritDoc */
+
+  // Guest-value-only constructor.
+  @Polyglot public constructor(value: Value?): this(value?.asString() ?: "An error occurred", null)
+
+  // Empty constructor.
+  @Polyglot public constructor(): this("An error occurred", null)
+
   override val name: String get() = "NativeValueError"
   override fun getMemberKeys(): Array<String> = VALUE_ERROR_MEMBERS_AND_PROPS
   override fun hasMember(key: String?): Boolean = key != null && key in VALUE_ERROR_MEMBERS_AND_PROPS

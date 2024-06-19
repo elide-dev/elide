@@ -22,6 +22,7 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.BufferAPI
 
@@ -32,10 +33,10 @@ private const val BUFFER_MODULE_SYMBOL_ROOT = "node_buffer"
 private const val BUFFER_MODULE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_module"
 
 /** Symbol at which the [NodeBlob] class is installed. */
-private const val BLOB_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_Blob"
+private const val BLOB_SYMBOL = "Blob"
 
 /** Symbol at which the [NodeBlob] class is installed. */
-private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_File"
+private const val FILE_SYMBOL = "File"
 
 // Installs the Node `buffer` built-in module.
 @Intrinsic internal class NodeBufferModule : AbstractNodeBuiltinModule() {
@@ -44,8 +45,8 @@ private const val FILE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_File"
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[BUFFER_MODULE_SYMBOL.asJsSymbol()] = facade
-    bindings[BLOB_SYMBOL.asJsSymbol()] = NodeBlob::class.java
-    bindings[FILE_SYMBOL.asJsSymbol()] = NodeFile::class.java
+    bindings[BLOB_SYMBOL.asPublicJsSymbol()] = NodeBlob::class.java
+    bindings[FILE_SYMBOL.asPublicJsSymbol()] = NodeFile::class.java
   }
 }
 

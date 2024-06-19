@@ -59,8 +59,10 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     if (name.startsWith("elide:")) {
       val modname = name.removePrefix("elide:")
       append("import '$modname';")
+      append("require('$modname');")
     } else {
       append("import 'node:$name';")
+      append("require('node:$name');")
     }
   }.toString(), "__elide-internal-module-import_$name.mjs").apply {
     cached(true)
@@ -72,28 +74,18 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     config.builtinModulesConfig.finalize()
     if (EXPERIMENTAL_MODULE_PRELOADING && !modulesInitialized.get() && shouldPreloadModules) {
       modulesInitialized.compareAndSet(false, true)
-      config.builtinModulesConfig.replacements().keys.asSequence().flatMap {
-        if (it.startsWith("elide:")) it.removePrefix("elide:").let { modname ->
-          sequenceOf(
-            it to "node_modules/elide:$modname/$modname.cjs",
-            it to "node_modules/elide:$modname/$modname.mjs",
-          )
-        } else sequenceOf(
-          it to "__runtime__/$it/$it.cjs",
-          it to "__runtime__/$it/$it.mjs",
-        )
-      }.let { mods ->
+      config.builtinModulesConfig.replacements().keys.asSequence().let { mods ->
         try {
           val logDebug = logging.isEnabled(DEBUG)
           context.enter()
-          mods.forEach { (name, path) ->
-            if (logDebug) logging.debug("Preloading JS module '$name' from '$path'")
+          mods.forEach { name ->
+            if (logDebug) logging.debug("Preloading JS module '$name'")
 
             try {
               context.evaluate(generateImports(name))
             } catch (err: Throwable) {
               // log but otherwise ignore
-              logging.error("Failed to preload module '$name' from '$path'", err)
+              logging.error("Failed to preload module '$name'", err)
             }
           }
         } finally {

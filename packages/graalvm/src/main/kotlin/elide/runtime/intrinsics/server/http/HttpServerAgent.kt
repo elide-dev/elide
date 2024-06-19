@@ -16,6 +16,7 @@ import org.graalvm.polyglot.Source
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
+import elide.runtime.gvm.internals.intrinsics.installElideBuiltin
 import elide.runtime.intrinsics.ElideBindings
 import elide.runtime.intrinsics.server.http.internal.HandlerRegistry
 import elide.runtime.intrinsics.server.http.internal.NoopServerEngine
@@ -82,7 +83,7 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     // handlers; this differs from thread-local initialization in that the router
     // also constructs a shared handler pipeline that does not require references
     acquireContext().apply {
-      installEngine(engine, entrypoint)
+      installEngine(engine)
       evaluate(entrypoint).also {
         // automatically start if requested
         if (config.autoStart) engine.start()
@@ -106,7 +107,7 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     // inject the registry into the context to allow guest code to register handlers,
     // this is required for correct initialization of the registry since thread-local
     // references to each handler are required
-    context.installEngine(NoopServerEngine(NettyServerConfig(), registry), entrypoint)
+    installEngine(NoopServerEngine(NettyServerConfig(), registry))
     context.evaluate(entrypoint)
   }
 
@@ -115,8 +116,8 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     internal const val ENGINE_BIND_PATH: String = "Elide.http"
 
     /** Install a server [engine] at the standard [ENGINE_BIND_PATH] in this context. */
-    private fun PolyglotContext.installEngine(engine: HttpServerEngine, entrypoint: Source) {
-      ElideBindings.install(ENGINE_BIND_PATH, engine, this, resolveLanguage(entrypoint))
+    private fun installEngine(engine: HttpServerEngine) {
+      installElideBuiltin("http", engine)
     }
 
     // TODO(@darvld): use a cleaner approach here

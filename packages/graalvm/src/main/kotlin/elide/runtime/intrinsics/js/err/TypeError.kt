@@ -18,16 +18,7 @@ import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.PrintWriter
 import java.io.StringWriter
-import elide.annotations.Singleton
-import elide.runtime.core.DelicateElideApi
-import elide.runtime.gvm.internals.intrinsics.Intrinsic
-import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
-import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.vm.annotations.Polyglot
-
-// Public symbol for a `TypeError`.
-private const val TYPE_ERROR_SYMBOL = "NativeTypeError"
 
 // Members and properties of a `TypeError`.
 private val TYPE_ERROR_MEMBERS_AND_PROPS = arrayOf(
@@ -36,13 +27,13 @@ private val TYPE_ERROR_MEMBERS_AND_PROPS = arrayOf(
   "stack",
 )
 
+// @TODO: deprecate and replace with type mapping
 // Installs `TypeError` into the environment.
-@Intrinsic @Singleton internal class TypeErrorIntrinsic : AbstractJsIntrinsic() {
-  @OptIn(DelicateElideApi::class)
-  override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[TYPE_ERROR_SYMBOL.asPublicJsSymbol()] = TypeError.Factory
-  }
-}
+//@Intrinsic @Singleton internal class TypeErrorIntrinsic : AbstractJsIntrinsic() {
+//  override fun install(bindings: MutableIntrinsicBindings) {
+//    bindings[TYPE_ERROR_SYMBOL.asJsSymbol()] = TypeError::class.java
+//  }
+//}
 
 /**
  * # JavaScript: Type Error
@@ -61,11 +52,19 @@ private val TYPE_ERROR_MEMBERS_AND_PROPS = arrayOf(
  * @see AbstractJsException for the host base interface type of all JavaScript exceptions.
  * @see Error for the top-most guest-exposed base class for all JavaScript errors.
  */
-@Implementable
 public open class TypeError protected constructor (
   @get:Polyglot override val message: String,
-  @get:Polyglot override val cause: Error? = null,
+  @get:Polyglot override val cause: Error?,
 ) : ProxyObject, AbstractJsException, Error() {
+
+  // String-only constructor.
+  public constructor(message: String?): this(message ?: "An error occurred", null)
+
+  // Guest-value-only constructor.
+  public constructor(value: Value?): this(value?.asString() ?: "An error occurred", null)
+
+  // Empty constructor.
+  public constructor(): this("An error occurred", null)
 
   @get:Polyglot override val name: String get() = "TypeError"
   override fun getMemberKeys(): Array<String> = TYPE_ERROR_MEMBERS_AND_PROPS

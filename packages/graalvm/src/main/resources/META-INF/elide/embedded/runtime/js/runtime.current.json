@@ -7,8 +7,7 @@
   "artifacts": [],
   "image": {},
   "scripts": [
-    { "path": "polyfills.js" },
-    { "path": "facade.js" }
+    { "path": "polyfills.js" }
   ],
   "bundles": [
     { "path": "js.modules.tar" }

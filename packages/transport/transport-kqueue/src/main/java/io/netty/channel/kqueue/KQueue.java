@@ -33,6 +33,7 @@ public final class KQueue {
         } else {
             FileDescriptor kqueueFd = null;
             try {
+                Native.initializeStatic();
                 kqueueFd = Native.newKQueue();
             } catch (Throwable t) {
                 cause = t;

@@ -35,7 +35,6 @@ import elide.tool.io.WorkdirManager
  * Provides utilities for loading native portions of Elide early in the boot lifecycle.
  */
 object NativeEngine {
-  private const val loadEager = false
   private const val DEFAULT_NATIVES_PATH = "META-INF/native/"
   private val transportEngine: AtomicReference<String> = AtomicReference("nio")
   private val nativeTransportAvailable: AtomicBoolean = AtomicBoolean(false)
@@ -135,9 +134,11 @@ object NativeEngine {
       // `netty_transport_native_epoll` ...
       append(name)
 
-      // `netty_transport_native_epoll_linux-x86_64` ...
-      append("_")
-      append(arch)
+      if (!staticJniMode) {
+        // `netty_transport_native_epoll_linux-x86_64` ...
+        append("_")
+        append(arch)
+      }
     }
   }
 
@@ -188,7 +189,11 @@ object NativeEngine {
     }.let {
       when (val target = (it?.invoke() ?: default?.invoke())) {
         null -> {}
-        else -> ensureLoadableFromNatives(group, target, workdir, loader, forceLoad)
+        else -> ensureLoadableFromNatives(group, target, workdir, loader, forceLoad).also { didLoad ->
+          if (Statics.logging.isEnabled(DEBUG)) {
+            Statics.logging.debug("Native library group $group (loaded=$didLoad)")
+          }
+        }
       }
     }
   }
@@ -235,13 +240,17 @@ object NativeEngine {
   // Load natives from the CWD while it is swapped in.
   @JvmStatic private fun loadAllNatives(platform: HostPlatform, natives: File, loader: ClassLoader) = platform.apply {
     // in static JNI mode, we don't do any of this anymore
-    if (!staticJniMode) return@apply
-
-    // trigger load of native libs
-    val loadNatives: () -> Unit = {
-      loadNativeCrypto(natives, loader)
-      loadNativeTransport(natives, loader)
-      loadNativeTooling(natives, loader)
+    val loadNatives: () -> Unit = if (staticJniMode) {
+      // nothing to load
+      {
+        loadNativeTransport(natives, loader)
+      }
+    } else {
+      // trigger load of native libs
+      {
+        loadNativeCrypto(natives, loader)
+        loadNativeTooling(natives, loader)
+      }
     }
 
     try {
@@ -337,9 +346,8 @@ object NativeEngine {
       System.setProperty(it.first, it.second)
     }
 
-    if (loadEager) {
-      loadAllNatives(platform, natives.toFile(), this::class.java.classLoader)
-    }
+    // load all required native libs for current platform
+    loadAllNatives(platform, natives.toFile(), this::class.java.classLoader)
 
     // fix: account for static jni
     if (ImageInfo.inImageCode()) listOf(

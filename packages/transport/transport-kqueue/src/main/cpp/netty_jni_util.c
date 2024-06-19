@@ -89,9 +89,20 @@ jint netty_jni_util_register_natives(JNIEnv* env, const char* packagePrefix, con
 
     NETTY_JNI_UTIL_PREPEND(packagePrefix, className, nettyClassName, done);
 
+    if ((*env)->ExceptionCheck(env) == JNI_TRUE) {
+      fprintf(stderr, "NETTY_JNI: Pending exception; cannot register natives\n");
+      (*env)->ExceptionDescribe(env);
+    }
     jclass nativeCls = (*env)->FindClass(env, nettyClassName);
+    if ((*env)->ExceptionCheck(env) == JNI_TRUE) {
+      fprintf(stderr, "NETTY_JNI: Pending exception after `FindClass`; cannot register natives\n");
+      (*env)->ExceptionDescribe(env);
+    }
+
     if (nativeCls != NULL) {
         retValue = (*env)->RegisterNatives(env, nativeCls, methods, numMethods);
+    } else {
+      fprintf(stderr, "NETTY_JNI: Failed to find class %s\n", nettyClassName);
     }
 done:
     free(nettyClassName);

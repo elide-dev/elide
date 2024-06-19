@@ -131,6 +131,7 @@ enum class GuestLanguage (
     /** @return Language based on the provided ID, or `null`. */
     internal fun resolveFromEngine(id: String): GuestLanguage? = when (id) {
       JS.engine -> JS
+      TYPESCRIPT.engine -> TYPESCRIPT
       PYTHON.engine -> PYTHON
       RUBY.engine -> RUBY
       JVM.engine -> JVM

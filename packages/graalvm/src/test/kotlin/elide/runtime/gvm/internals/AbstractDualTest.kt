@@ -16,6 +16,7 @@
 package elide.runtime.gvm.internals
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.context.BeanContext
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
@@ -307,8 +308,8 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
     }
   }
 
-  /** A group of VFS listeners to be registered with the test engine. */
-  @Inject private lateinit var vfsListeners: List<VfsListener>
+  /** Micronaut injection context. */
+  @Inject private lateinit var beanContext: BeanContext
 
   /** A [PolyglotEngine] used to acquire context instances for testing, configurable trough [configureEngine]. */
   protected val engine: PolyglotEngine by lazy {
@@ -316,6 +317,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
       configureEngine(this) // provided by implementations
 
       // register event listeners
+      val vfsListeners = beanContext.getBeansOfType(VfsListener::class.java)
       vfs { vfsListeners.forEach(::listener) }
     }
   }

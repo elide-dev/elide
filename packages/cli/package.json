@@ -1,6 +1,6 @@
 {
   "name": "@elide-dev/elide",
-  "version": "1.0.0-alpha9",
+  "version": "1.0.0-alpha10",
   "description": "Elide polyglot application runtime",
   "homepage": "https://elide.dev",
   "license": "(MIT OR Apache-2.0)",
@@ -17,7 +17,7 @@
   ],
   "repository": "github:elide-dev/elide",
   "config": {
-    "elideVersion": "1.0.0-alpha9"
+    "elideVersion": "1.0.0-alpha10"
   },
   "author": {
     "name": "Sam Gammon",

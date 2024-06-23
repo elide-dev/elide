@@ -1,6 +1,6 @@
 [versions]
-elide = "1.0.0-alpha9"
-elideTools = "1.0.0-alpha9"
+elide = "1.0.0-alpha10"
+elideTools = "1.0.0-alpha10"
 ksp = "2.0.0-1.0.21"
 detekt = "1.23.6"
 kotlin = "2.0.0"

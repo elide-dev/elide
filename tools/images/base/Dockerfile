@@ -6,7 +6,7 @@ FROM ubuntu:${UBUNTU_VERSION}${UBUNTU_HASH}
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base"
 LABEL org.opencontainers.image.description="Base image for Elide apps and tools"
-LABEL org.opencontainers.image.version=v1.0.0-alpha9
+LABEL org.opencontainers.image.version=v1.0.0-alpha10
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=ubuntu:${UBUNTU_VERSION}
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/base/Dockerfile

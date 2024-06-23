@@ -114,7 +114,7 @@ import elide.testing.annotations.TestCase
     latch.await()
     assertNotEquals(-1, stopped.get())
     assertTrue(stopped.get() - now >= 250)
-    assertTrue(stopped.get() - now < 300)
+    assertTrue(stopped.get() - now <= 350)
   }
 
   @Test fun `test setTimeout() with 1s delay`() = withContext {

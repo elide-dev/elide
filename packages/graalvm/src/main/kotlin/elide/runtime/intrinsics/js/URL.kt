@@ -36,7 +36,7 @@ private val URL_PROPS = arrayOf(
 )
 
 /**
- * # JavaScript: URL
+ * # URL
  *
  * The `URL` class is universally supported across JavaScript engines and browser implementations, and behaves similarly
  * in each case; it is used for parsing well-formed URLs and extracting their constituent parts.

@@ -1,6 +1,6 @@
 ARG BASE_IMAGE=base/alpine
 ARG BASE_VERSION=""
-ARG BASE_HASH="@sha256:12fdc4a7dcaff65582d516b7564c8cec9b51b424e4ca5fbc67214f8adda6fb4c"
+ARG BASE_HASH="@sha256:40f914496cdbebe42fb944c58685da2d2cb626b1d4e2da2a66edc847a674ec81"
 
 FROM ghcr.io/elide-dev/base/alpine${BASE_VERSION}${BASE_HASH}
 

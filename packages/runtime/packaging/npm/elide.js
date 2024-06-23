@@ -13,7 +13,7 @@
 
 "use strict";
 
-const version = "1.0.0-alpha9";
+const version = "1.0.0-alpha10";
 
 const os = require("os");
 const fs = require("fs");

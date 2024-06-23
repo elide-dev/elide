@@ -51,8 +51,8 @@ private val DEFAULT_JS_CHARSET: Charset = Charsets.UTF_8
 // Installs encoder intrinsics.
 @Intrinsic(internal = false) internal class JsEncodingIntrinsics : AbstractJsIntrinsic() {
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[TEXT_ENCODER_SYMBOL_NAME.asPublicJsSymbol()] = TextEncoder::class.java
-    bindings[TEXT_DECODER_SYMBOL_NAME.asPublicJsSymbol()] = TextDecoder::class.java
+    bindings[TEXT_ENCODER_SYMBOL_NAME.asPublicJsSymbol()] = TextEncoder.Factory
+    bindings[TEXT_DECODER_SYMBOL_NAME.asPublicJsSymbol()] = TextDecoder.Factory
   }
 }
 

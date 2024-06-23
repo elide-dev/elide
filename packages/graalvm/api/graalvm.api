@@ -616,6 +616,140 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$B
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/codec/$JsEncodingIntrinsics$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract class elide/runtime/gvm/internals/intrinsics/js/codec/JsEncoderUtility {
+	public synthetic fun <init> (Lkotlin/Pair;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected final fun getCharset-El_YLqU ()Lkotlin/Pair;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/JsEncoding : elide/core/api/Symbolic, java/lang/CharSequence, java/lang/Comparable {
+	public static final field Companion Lelide/runtime/gvm/internals/intrinsics/js/codec/JsEncoding$Companion;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/runtime/gvm/internals/intrinsics/js/codec/JsEncoding;
+	public final fun charAt (I)C
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun compareTo-gvPQzfA (Lkotlin/Pair;)I
+	public static fun compareTo-gvPQzfA (Lkotlin/Pair;Lkotlin/Pair;)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public fun get (I)C
+	public static fun get-impl (Lkotlin/Pair;I)C
+	public static final fun getCharset-impl (Lkotlin/Pair;)Ljava/nio/charset/Charset;
+	public fun getLength ()I
+	public static fun getLength-impl (Lkotlin/Pair;)I
+	public fun getSymbol ()Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public static fun getSymbol-impl (Lkotlin/Pair;)Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public synthetic fun length ()I
+	public fun subSequence (II)Ljava/lang/CharSequence;
+	public static fun subSequence-impl (Lkotlin/Pair;II)Ljava/lang/CharSequence;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/JsEncoding$Companion : elide/core/api/Symbolic$SealedResolver {
+	public final fun getASCII-El_YLqU ()Lkotlin/Pair;
+	public final fun getDEFAULT-El_YLqU ()Lkotlin/Pair;
+	public final fun getISO_8859_1-El_YLqU ()Lkotlin/Pair;
+	public final fun getUTF_8-El_YLqU ()Lkotlin/Pair;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve-O3OV1fc (Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;)Lkotlin/Pair;
+	public final fun resolve-O3OV1fc (Ljava/lang/String;)Lkotlin/Pair;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field ASCII Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+	public static final field Companion Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding$Companion;
+	public static final field ISO_8859_1 Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+	public static final field UTF_8 Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+	public static fun values ()[Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/runtime/gvm/internals/intrinsics/js/codec/SupportedJsEncoding;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder : elide/runtime/gvm/internals/intrinsics/js/codec/JsEncoderUtility, elide/runtime/intrinsics/js/encoding/TextDecoder {
+	public static final field Factory Lelide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder$Factory;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;)V
+	public synthetic fun <init> (Lkotlin/Pair;Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lkotlin/Pair;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun decode (Ljava/io/InputStream;)Ljava/lang/String;
+	public fun decode (Ljava/nio/ByteBuffer;)Ljava/lang/String;
+	public fun decode (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;)Ljava/lang/String;
+	public fun decode (Ljava/nio/channels/ReadableByteChannel;)Ljava/lang/String;
+	public fun decode (Lorg/graalvm/polyglot/Value;Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;)Ljava/lang/String;
+	public fun decode ([B)Ljava/lang/String;
+	public fun getEncoding ()Ljava/lang/String;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getOptions ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder$DecodeOptions {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder$DecodeOptions;
+	public static final fun defaults ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public static final fun of (Z)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public static synthetic fun of$default (ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder$Factory : elide/runtime/intrinsics/js/encoding/TextDecoder$Factory {
+	public fun create ()Lelide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder;
+	public synthetic fun create ()Lelide/runtime/intrinsics/js/encoding/EncodingUtility;
+	public fun create (Ljava/lang/String;)Lelide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder;
+	public synthetic fun create (Ljava/lang/String;)Lelide/runtime/intrinsics/js/encoding/TextDecoder;
+	public fun create (Ljava/lang/String;Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;)Lelide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder;
+	public synthetic fun create (Ljava/lang/String;Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;)Lelide/runtime/intrinsics/js/encoding/TextDecoder;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder$Options {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/intrinsics/js/codec/TextDecoder$Options;
+	public static final fun defaults ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public static final fun of (ZZ)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public static synthetic fun of$default (ZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/TextEncoder : elide/runtime/gvm/internals/intrinsics/js/codec/JsEncoderUtility, elide/runtime/intrinsics/js/encoding/TextEncoder {
+	public static final field Factory Lelide/runtime/gvm/internals/intrinsics/js/codec/TextEncoder$Factory;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Lkotlin/Pair;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun encode (Ljava/lang/String;)[B
+	public fun encodeInto (Ljava/lang/String;Ljava/io/OutputStream;)V
+	public fun encodeInto (Ljava/lang/String;Ljava/nio/ByteBuffer;)V
+	public fun encodeInto (Ljava/lang/String;Ljava/nio/channels/WritableByteChannel;)V
+	public fun encodeInto (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun encodeInto (Ljava/lang/String;[B)V
+	public fun getEncoding ()Ljava/lang/String;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/codec/TextEncoder$Factory : elide/runtime/intrinsics/js/encoding/TextEncoder$Factory {
+	public fun create ()Lelide/runtime/gvm/internals/intrinsics/js/codec/TextEncoder;
+	public synthetic fun create ()Lelide/runtime/intrinsics/js/encoding/EncodingUtility;
+	public fun create (Lorg/graalvm/polyglot/Value;)Lelide/runtime/gvm/internals/intrinsics/js/codec/TextEncoder;
+	public synthetic fun create (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/EncodingUtility;
+}
+
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2646,6 +2780,116 @@ public abstract interface class elide/runtime/intrinsics/js/URLSearchParams : el
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public fun hasMember (Ljava/lang/String;)Z
 	public abstract fun sort ()V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/encoding/EncodingUtility : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun getEncoding ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/encoding/EncodingUtility$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public abstract fun create ()Lelide/runtime/intrinsics/js/encoding/EncodingUtility;
+	public abstract fun create (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/EncodingUtility;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/encoding/TextDecoder : elide/runtime/intrinsics/js/encoding/EncodingUtility {
+	public fun decode ()Ljava/lang/String;
+	public abstract fun decode (Ljava/io/InputStream;)Ljava/lang/String;
+	public abstract fun decode (Ljava/nio/ByteBuffer;)Ljava/lang/String;
+	public abstract fun decode (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;)Ljava/lang/String;
+	public abstract fun decode (Ljava/nio/channels/ReadableByteChannel;)Ljava/lang/String;
+	public fun decode (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public abstract fun decode (Lorg/graalvm/polyglot/Value;Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;)Ljava/lang/String;
+	public fun decode (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public abstract fun decode ([B)Ljava/lang/String;
+	public static synthetic fun decode$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;ILjava/lang/Object;)Ljava/lang/String;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public abstract fun getOptions ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions : java/lang/Record {
+	public static final field Companion Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions$Companion;
+	public synthetic fun <init> (ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public static final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public fun hashCode ()I
+	public static final fun of (Z)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public final fun stream ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public final fun of (Z)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions$Companion;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+}
+
+public final class elide/runtime/intrinsics/js/encoding/TextDecoder$Defaults {
+	public static final field DEFAULT_DECODE_STREAM Z
+	public static final field DEFAULT_FATAL Z
+	public static final field DEFAULT_IGNORE_BOM Z
+	public static final field INSTANCE Lelide/runtime/intrinsics/js/encoding/TextDecoder$Defaults;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/encoding/TextDecoder$Factory : elide/runtime/intrinsics/js/encoding/EncodingUtility$Factory {
+	public abstract fun create (Ljava/lang/String;)Lelide/runtime/intrinsics/js/encoding/TextDecoder;
+	public abstract fun create (Ljava/lang/String;Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;)Lelide/runtime/intrinsics/js/encoding/TextDecoder;
+	public synthetic fun create (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/EncodingUtility;
+	public fun create (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder;
+	public fun create (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/intrinsics/js/encoding/TextDecoder$Options : java/lang/Record {
+	public static final field Companion Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options$Companion;
+	public synthetic fun <init> (ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun copy (ZZ)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;ZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun fatal ()Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public static final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public fun hashCode ()I
+	public final fun ignoreBOM ()Z
+	public static final fun of (ZZ)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/encoding/TextDecoder$Options$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public final fun of (ZZ)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options$Companion;ZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/encoding/TextEncoder : elide/runtime/intrinsics/js/encoding/EncodingUtility {
+	public abstract fun encode (Ljava/lang/String;)[B
+	public fun encode (Lorg/graalvm/polyglot/Value;)[B
+	public abstract fun encodeInto (Ljava/lang/String;Ljava/io/OutputStream;)V
+	public abstract fun encodeInto (Ljava/lang/String;Ljava/nio/ByteBuffer;)V
+	public abstract fun encodeInto (Ljava/lang/String;Ljava/nio/channels/WritableByteChannel;)V
+	public abstract fun encodeInto (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun encodeInto (Ljava/lang/String;[B)V
+	public fun encodeInto (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public abstract interface class elide/runtime/intrinsics/js/encoding/TextEncoder$Factory : elide/runtime/intrinsics/js/encoding/EncodingUtility$Factory {
 }
 
 public synthetic class elide/runtime/intrinsics/js/err/$ValueErrorIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

@@ -197,7 +197,7 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
           arguments: |
-            :packages:cli:nativeCompile
+            :packages:runtime:nativeCompile
             -Prelease=false
             -PbuildMode=dev
             --scan
@@ -337,8 +337,8 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
           arguments: |
-            :packages:cli:nativeOptimizedCompile
-            :packages:cli:dist
+            :packages:runtime:nativeOptimizedCompile
+            :packages:runtime:dist
             -Prelease=true
             -PbuildMode=release
             --scan

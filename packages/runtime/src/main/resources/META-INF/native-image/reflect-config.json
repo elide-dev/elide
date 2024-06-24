@@ -182,6 +182,22 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.jna.platform.linux.Udev$UdevContext",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.linux.Udev$UdevDevice",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.linux.Udev$UdevEnumerate",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.platform.linux.Udev$UdevListEntry",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
@@ -353,11 +369,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"elide.runtime.gvm.internals.intrinsics.$ElideIntrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"elide.runtime.gvm.internals.intrinsics.$ServiceIntrinsicsResolver$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.runtime.gvm.internals.intrinsics.js.base64.$Base64Intrinsic$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.intrinsics.js.codec.$JsEncodingIntrinsics$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -534,6 +558,10 @@
 },
 {
   "name":"elide.runtime.gvm.internals.node.fs.$NodeFilesystemModule$ProvideStd0$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.gvm.internals.node.fs.$VfsInitializerListener$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -766,6 +794,10 @@
 },
 {
   "name":"elide.runtime.gvm.ruby.cfg.$RubyRuntimeConfig$Definition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.runtime.intrinsics.js.err.$ValueErrorIntrinsic$Definition",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2053,6 +2085,9 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.netty.channel.kqueue.Native"
+},
+{
   "name":"io.netty.channel.unix.DatagramSocketAddress"
 },
 {
@@ -2064,6 +2099,14 @@
 },
 {
   "name":"io.netty.channel.unix.PeerCredentials"
+},
+{
+  "name":"io.netty.incubator.channel.uring.IOUringServerSocketChannel",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.netty.internal.tcnative.CertificateCallback"
@@ -7597,16 +7640,5 @@
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
-},
-{
-  "name":"io.netty.incubator.channel.uring.IOUringServerSocketChannel",
-  "methods":[{"name":"<init>","parameterTypes":[] }],
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name":"io.netty.channel.kqueue.Native"
 }
 ]

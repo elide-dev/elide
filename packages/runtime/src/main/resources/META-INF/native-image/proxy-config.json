@@ -3,6 +3,12 @@
     "interfaces":["com.github.ajalt.mordant.internal.jna.MacosLibC"]
   },
   {
+    "interfaces":["com.github.ajalt.mordant.internal.jna.PosixLibC"]
+  },
+  {
+    "interfaces":["com.sun.jna.platform.linux.Udev"]
+  },
+  {
     "interfaces":["com.sun.jna.platform.mac.CoreFoundation"]
   },
   {
@@ -12,9 +18,12 @@
     "interfaces":["com.sun.jna.platform.mac.SystemB"]
   },
   {
-    "interfaces":["oshi.jna.platform.mac.SystemB"]
+    "interfaces":["kotlin.jvm.functions.Function2"]
   },
   {
-    "interfaces":["kotlin.jvm.functions.Function2"]
+    "interfaces":["oshi.jna.platform.linux.LinuxLibc"]
+  },
+  {
+    "interfaces":["oshi.jna.platform.mac.SystemB"]
   }
 ]

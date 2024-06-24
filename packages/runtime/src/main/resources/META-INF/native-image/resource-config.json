@@ -11,6 +11,8 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.modules.tar.gz\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.modules.tar\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.runtime.tar.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/polyfills.js\\E"
@@ -522,6 +524,8 @@
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___HAM_EGGS.bin\\E"
   }, {
     "pattern":"\\Qcom/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin\\E"
+  }, {
+    "pattern":"\\Qcom/sun/jna/linux-x86-64/libjnidispatch.so\\E"
   }, {
     "pattern":"\\Qgraalpy_versions\\E"
   }, {

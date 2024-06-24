@@ -36,8 +36,8 @@ ASMFLAGS_BASE ?=-Wa,--noexecstack
 LDFLAGS_BASE ?=
 
 ifeq ($(RELEASE),yes)
-CFLAGS_BASE += -O3 -flto=thin
-LDFLAGS_BASE += -flto=thin
+CFLAGS_BASE += -O3 -flto
+LDFLAGS_BASE += -flto
 endif
 
 ifeq ($(BUILD_MODE),debug)

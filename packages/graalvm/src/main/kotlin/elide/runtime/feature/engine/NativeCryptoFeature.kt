@@ -119,7 +119,6 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       "META-INF/native/linux/amd64/libapr-2.so",
       "META-INF/native/linux/amd64/libapr-2.a",
       "META-INF/native/linux/amd64/libcrypto.a",
-      "META-INF/native/linux/amd64/libdecrepit.a",
       "META-INF/native/linux/amd64/libssl.a",
       "META-INF/native/linux/amd64/shared/libtcnative.so",
       "META-INF/native/linux/amd64/static/libtcnative.a",

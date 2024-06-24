@@ -51,7 +51,7 @@ pluginManagement {
 }
 
 plugins {
-  // id("build.less") version ("1.0.0-rc2")
+  id("build.less") version ("1.0.0-rc2")
   id("com.gradle.enterprise") version ("3.16.2")
   id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version ("1.12.1")
@@ -242,6 +242,8 @@ include(
   ":packages:proto:proto-capnp",
   ":packages:proto:proto-kotlinx",
   ":packages:proto:proto-protobuf",
+  ":packages:platform",
+  ":packages:bom",
   ":packages:runtime",
   ":packages:server",
   ":packages:ssr",
@@ -265,7 +267,6 @@ val buildDocsModules: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
 val buildBenchmarks: String by settings
-val buildRpc: String by settings
 val buildFlatbuffers: String by settings
 
 if (buildSamples == "true") {
@@ -274,34 +275,6 @@ if (buildSamples == "true") {
 if (buildEmbedded == "true") {
   include(
     ":packages:embedded",
-  )
-}
-
-if (buildRpc == "true") {
-  include(
-    ":packages:model",
-    ":packages:rpc",
-  )
-}
-
-if (buildDeprecated == "true") {
-  include(
-    ":tools:processor",
-    ":packages:graalvm-react",
-    ":packages:serverless",
-    ":packages:nfi",
-    ":packages:frontend",
-    ":packages:wasm",
-    ":packages:graalvm-js",
-    ":packages:platform",
-    ":packages:bom",
-  )
-}
-
-if (buildDocs == "true" && buildDocsModules == "true") {
-  include(
-    ":docs:architecture",
-    ":docs:guide",
   )
 }
 
@@ -325,26 +298,27 @@ gradleEnterprise {
 }
 
 val cachePush: String? by settings
-// val isCI: Boolean = System.getenv("CI") != "true"
+val isCI: Boolean = System.getenv("CI") != "true"
+val enableRemoteCache: String? by settings
 
-// buildless {
-//  remoteCache {
-//    enabled = true
-//
-//    // allow disabling pushing to the remote cache
-//    push.set(cachePush?.toBooleanStrictOrNull() ?: true)
-//  }
-//  localCache {
-//    enabled = true
-//  }
-// }
+buildless {
+  remoteCache {
+    enabled = enableRemoteCache == "true"
 
-// buildCache {
-//  local {
-//    isEnabled = true
-//    directory = layout.rootDirectory.dir(".codebase/build-cache")
-//  }
-// }
+    // allow disabling pushing to the remote cache
+    push.set(cachePush?.toBooleanStrictOrNull() ?: true)
+  }
+  localCache {
+    enabled = true
+  }
+}
+
+buildCache {
+  local {
+    isEnabled = true
+    directory = layout.rootDirectory.dir(".codebase/build-cache")
+  }
+}
 
 //
 // -- Begin Caching Tricks

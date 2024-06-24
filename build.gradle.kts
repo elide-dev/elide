@@ -97,7 +97,6 @@ val enableOwasp: String? by properties
 
 val buildSamples: String by properties
 val buildDocs: String by properties
-val buildRpc: String by properties
 val buildDeprecated: String by properties
 val buildEmbedded: String by properties
 val buildAuxImage: String by properties
@@ -177,10 +176,6 @@ dependencies {
   kover(projects.packages.ssr)
   kover(projects.packages.test)
 
-  if (buildRpc == "true") {
-    kover(project(":packages:rpc"))
-    kover(project(":packages:model"))
-  }
   if (buildDeprecated == "true") {
     kover(project(":packages:wasm"))
     kover(project(":packages:serverless"))

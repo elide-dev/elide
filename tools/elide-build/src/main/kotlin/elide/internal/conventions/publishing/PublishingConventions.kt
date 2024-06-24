@@ -118,10 +118,12 @@ internal fun Project.configurePublishingRepositories() {
 
         if (project.findProperty(Publishing.MAVEN_AUTH_REQUIRED).toString().toBoolean()) {
           if (elideRepoUrl.toString().contains("s3://")) {
-//            credentials(AwsCredentials::class.java) {
-//              accessKey awsCredentials.AWSAccessKeyId
-//              secretKey awsCredentials.AWSSecretKey
-//            }
+            credentials(AwsCredentials::class.java) {
+              accessKey = (project.properties[Credentials.MAVEN_USER] as? String
+                ?: System.getenv(Credentials.PUBLISH_USER))?.ifBlank { null }
+              secretKey = (project.properties[Credentials.MAVEN_PASSWORD] as? String
+                ?: System.getenv(Credentials.PUBLISH_TOKEN))?.ifBlank { null }
+            }
           } else {
             credentials {
               username = (project.properties[Credentials.MAVEN_USER] as? String

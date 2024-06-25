@@ -1805,7 +1805,7 @@ import elide.tool.project.ProjectManager
 
     // resolve the language to use
     val project = projectConfigJob.await()
-    val langs = language.resolve(project)
+    val langs = language.resolve(project, alias = languageHint)
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     val supportedEnginesAndLangs = supported.flatMap { listOf(it.first.engine, it.first.id) }.toSortedSet()
 

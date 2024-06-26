@@ -48,7 +48,7 @@ importers:
         version: 1.8.3
       '@commitlint/cli':
         specifier: 19.3.0
-        version: 19.3.0(@types/node@20.14.8)(typescript@5.5.2)
+        version: 19.3.0(@types/node@20.14.9)(typescript@5.5.2)
       '@commitlint/config-conventional':
         specifier: 19.2.2
         version: 19.2.2
@@ -62,8 +62,8 @@ importers:
         specifier: 3.15.12
         version: 3.15.12
       '@types/node':
-        specifier: 20.14.8
-        version: 20.14.8
+        specifier: 20.14.9
+        version: 20.14.9
       '@typescript-eslint/eslint-plugin':
         specifier: 7.14.1
         version: 7.14.1(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.5.2))(eslint@8.57.0)(typescript@5.5.2)
@@ -72,7 +72,7 @@ importers:
         version: 7.14.1(eslint@8.57.0)(typescript@5.5.2)
       commitlint:
         specifier: 19.3.0
-        version: 19.3.0(@types/node@20.14.8)(typescript@5.5.2)
+        version: 19.3.0(@types/node@20.14.9)(typescript@5.5.2)
       esbuild:
         specifier: 0.21.5
         version: 0.21.5
@@ -529,8 +529,8 @@ packages:
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==, tarball: https://registry.npmjs.org/@types/ms/-/ms-0.7.34.tgz}
 
-  '@types/node@20.14.8':
-    resolution: {integrity: sha512-DO+2/jZinXfROG7j7WKFn/3C6nFwxy2lLpgLjEXJz+0XKphZlTLJ14mo8Vfg8X5BWN6XjyESXq+LcYdT7tR3bA==, tarball: https://registry.npmjs.org/@types/node/-/node-20.14.8.tgz}
+  '@types/node@20.14.9':
+    resolution: {integrity: sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==, tarball: https://registry.npmjs.org/@types/node/-/node-20.14.9.tgz}
 
   '@types/unist@2.0.10':
     resolution: {integrity: sha512-IfYcSBWE3hLpBg8+X2SEa8LVkJdJEkT2Ese2aaLs3ptGdVtABxndrMaxuFlQ1qdFf9Q5rDvDpxI3WwgvKFAsQA==, tarball: https://registry.npmjs.org/@types/unist/-/unist-2.0.10.tgz}
@@ -2610,11 +2610,11 @@ snapshots:
 
   '@chevrotain/utils@11.0.3': {}
 
-  '@commitlint/cli@19.3.0(@types/node@20.14.8)(typescript@5.5.2)':
+  '@commitlint/cli@19.3.0(@types/node@20.14.9)(typescript@5.5.2)':
     dependencies:
       '@commitlint/format': 19.3.0
       '@commitlint/lint': 19.2.2
-      '@commitlint/load': 19.2.0(@types/node@20.14.8)(typescript@5.5.2)
+      '@commitlint/load': 19.2.0(@types/node@20.14.9)(typescript@5.5.2)
       '@commitlint/read': 19.2.1
       '@commitlint/types': 19.0.3
       execa: 8.0.1
@@ -2661,7 +2661,7 @@ snapshots:
       '@commitlint/rules': 19.0.3
       '@commitlint/types': 19.0.3
 
-  '@commitlint/load@19.2.0(@types/node@20.14.8)(typescript@5.5.2)':
+  '@commitlint/load@19.2.0(@types/node@20.14.9)(typescript@5.5.2)':
     dependencies:
       '@commitlint/config-validator': 19.0.3
       '@commitlint/execute-rule': 19.0.0
@@ -2669,7 +2669,7 @@ snapshots:
       '@commitlint/types': 19.0.3
       chalk: 5.3.0
       cosmiconfig: 9.0.0(typescript@5.5.2)
-      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.14.8)(cosmiconfig@9.0.0(typescript@5.5.2))(typescript@5.5.2)
+      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.14.9)(cosmiconfig@9.0.0(typescript@5.5.2))(typescript@5.5.2)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -2896,7 +2896,7 @@ snapshots:
 
   '@types/conventional-commits-parser@5.0.0':
     dependencies:
-      '@types/node': 20.14.8
+      '@types/node': 20.14.9
 
   '@types/debug@4.1.12':
     dependencies:
@@ -2922,7 +2922,7 @@ snapshots:
 
   '@types/ms@0.7.34': {}
 
-  '@types/node@20.14.8':
+  '@types/node@20.14.9':
     dependencies:
       undici-types: 5.26.5
 
@@ -3247,9 +3247,9 @@ snapshots:
 
   commander@7.2.0: {}
 
-  commitlint@19.3.0(@types/node@20.14.8)(typescript@5.5.2):
+  commitlint@19.3.0(@types/node@20.14.9)(typescript@5.5.2):
     dependencies:
-      '@commitlint/cli': 19.3.0(@types/node@20.14.8)(typescript@5.5.2)
+      '@commitlint/cli': 19.3.0(@types/node@20.14.9)(typescript@5.5.2)
       '@commitlint/types': 19.0.3
     transitivePeerDependencies:
       - '@types/node'
@@ -3289,9 +3289,9 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig-typescript-loader@5.0.0(@types/node@20.14.8)(cosmiconfig@9.0.0(typescript@5.5.2))(typescript@5.5.2):
+  cosmiconfig-typescript-loader@5.0.0(@types/node@20.14.9)(cosmiconfig@9.0.0(typescript@5.5.2))(typescript@5.5.2):
     dependencies:
-      '@types/node': 20.14.8
+      '@types/node': 20.14.9
       cosmiconfig: 9.0.0(typescript@5.5.2)
       jiti: 1.21.6
       typescript: 5.5.2

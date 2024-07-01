@@ -1,4 +1,4 @@
-import { run, bench, group, baseline } from "mitata"
+import { baseline, bench, group, run } from "mitata"
 
 // deno
 // import { ... } from 'npm:mitata';

@@ -29,5 +29,4 @@ import elide.annotations.API
  * @see SQLiteTransaction SQLite Transaction API
  * @see SQLitePrimitiveType SQLite Data Types
  */
-@API @ReflectiveAccess public interface SQLiteAPI {
-}
+@API @ReflectiveAccess public interface SQLiteAPI

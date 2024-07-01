@@ -1,3 +1,0 @@
-language = "C"
-includes = ["jni.h", "jni_md.h"]
-

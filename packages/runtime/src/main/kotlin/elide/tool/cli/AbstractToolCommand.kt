@@ -13,9 +13,8 @@
 
 package elide.tool.cli
 
-import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.BaseCliktCommand
 import com.jakewharton.mosaic.MosaicScope
-import com.jakewharton.mosaic.runMosaicBlocking
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -26,8 +25,36 @@ import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
 
+/** Root base for all commands, which defines the structure of interaction with Clikt. */
+abstract class CliCommandInvocation<Context> :
+  BaseCliktCommand<CliCommandInvocation<Context>>(name = "elide")
+  where Context: CommandContext {
+  /**
+   * ## Entrypoint
+   *
+   * Defines the main command entrypoint for CLI implementations which are naturally suspending; this method should only
+   * be called when the suspension context reaches to the root (`main`) entrypoint of the application.
+   *
+   * @receiver Prepared [CommandContext] implementation for this command run
+   */
+  abstract suspend fun enter(): CommandResult
+
+  /**
+   * ## Entrypoint
+   *
+   * Defines the main command entrypoint for CLI implementations which are naturally suspending; this method should only
+   * be called when the suspension context reaches to the root (`main`) entrypoint of the application.
+   *
+   * @receiver Prepared [CommandContext] implementation for this command run
+   */
+  fun enterBlocking(): CommandResult = runBlocking { enter() }
+}
+
 /** Abstract base for all Elide Tool commands, including the root command. */
-abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), CommandApi where Context: CommandContext {
+abstract class AbstractToolCommand<Context>:
+  Callable<Int>,
+  CliCommandInvocation<Context>(),
+  CommandApi where Context: CommandContext {
   companion object {
     /** Status of colorized / formatted output support. */
     internal val pretty: AtomicBoolean = AtomicBoolean(true)
@@ -96,7 +123,7 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), Comm
   private inline fun execute(
     ctx: CoroutineContext,
     crossinline op: suspend Context.(CommandState) -> CommandResult,
-  ): Int {
+  ): CommandResult {
     val exit = AtomicInteger(0)
     val logging = Statics.logging
     val options = CommandOptions.of(
@@ -120,9 +147,9 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), Comm
       "Built command state: \n$state"
     }
 
-    runMosaicBlocking {
+    runBlocking {
       runCatching {
-        val commandCtx = context(state, ctx, this)
+        val commandCtx = context(state, ctx)
         logging.trace {
           "Built command context: \n$commandCtx"
         }
@@ -152,9 +179,7 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), Comm
         }
       }
     }
-
-    // return exit code
-    return exit.get()
+    return commandResult.get()
   }
 
   /**
@@ -162,12 +187,8 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), Comm
    *
    * @return Exit code from running the command.
    */
-  suspend fun exec(args: Array<String>): Int = execute(Dispatchers.Main) {
+  suspend fun exec(args: Array<String>): CommandResult = execute(Dispatchers.Default) {
     invoke(it).also(commandResult::set)  // enter context and invoke
-  }
-
-  override fun run() {
-    call()
   }
 
   /**
@@ -176,9 +197,9 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), Comm
    * @return Exit code from running the command.
    */
   override fun call(): Int {
-    return execute(Dispatchers.Main) {
+    return execute(Dispatchers.Default) {
       invoke(it).also(commandResult::set)  // enter context and invoke
-    }
+    }.exitCode
   }
 
   /**
@@ -191,15 +212,18 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), Comm
    * @param ctx Co-routine context to execute the command in.
    * @return Execution context to use for this command.
    */
-  open fun context(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope): Context {
+  open fun context(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope? = null): Context {
     @Suppress("UNCHECKED_CAST")
-    return CommandContext.default(state, ctx, mosaic) as Context
+    (return when (mosaic) {
+      null -> CommandContext.default(state, ctx) as Context
+      else -> CommandContext.default(state, ctx, mosaic) as Context
+    })
   }
 
   /**
    * Run the implementation for this command.
    *
-   * This method is overridden by sub-classes in order to implement the actual command logic. The receiver [Context] is
+   * This method is overridden by subclasses in order to implement the actual command logic. The receiver [Context] is
    * created by the [context] function, and this entrypoint is called, by the [call] method, by the outer framework.
    *
    * @receiver Execution context for this command.
@@ -207,4 +231,8 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CliktCommand(), Comm
    * @return Command execution result.
    */
   abstract suspend fun Context.invoke(state: CommandState): CommandResult
+
+  override suspend fun enter(): CommandResult = execute(Dispatchers.Default) {
+    invoke(it).also(commandResult::set)  // enter context and invoke
+  }
 }

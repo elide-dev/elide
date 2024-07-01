@@ -60,6 +60,7 @@ import javax.script.ScriptEngineManager
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import kotlin.math.max
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.LogLevel
@@ -127,7 +128,6 @@ import elide.tool.project.ProjectManager
     private const val TOOL_LOGGER_NAME: String = "tool"
     private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
-    private const val CONFIG_PATH_USR = "~/.elide"
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
     // Whether to enable extended language plugins.
@@ -154,11 +154,6 @@ import elide.tool.project.ProjectManager
       "kotlin" to "jvm",
       "kt" to "jvm",
     )
-
-    init {
-      // loadLanguageExtensionMaybe("python")
-      // loadLanguageExtensionMaybe("ruby")
-    }
   }
 
   /** [SystemRegistryImpl] that filters for special REPL commands. */
@@ -1105,8 +1100,15 @@ import elide.tool.project.ProjectManager
 
       // otherwise, resolve from seen statements
       else -> {
-        ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
-        (errorBase + 1) to ctxLines
+        if (allSeenStatements.isNotEmpty()) {
+          ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
+          (errorBase + 1) to ctxLines
+        } else when (val target = runnable?.ifBlank { null }) {
+          null -> (errorBase + 1) to emptyList()
+          else -> {
+            TODO("not yet implemented: context from error in file")
+          }
+        }
       }
     }
   }
@@ -1133,8 +1135,8 @@ import elide.tool.project.ProjectManager
     val stopContextPrefix = "$stopPrefix%lineNum┊ %lineText"
 
     val (startingLineNumber, errorContext) = errorContextLines(exc)
-    val startLine = exc.sourceLocation?.startLine ?: 0
-    val endLine = exc.sourceLocation?.endLine ?: 0
+    val startLine = startingLineNumber + max((exc.sourceLocation?.startLine ?: 0) - 1, 0)
+    val endLine = startingLineNumber + max((exc.sourceLocation?.endLine ?: 0) - 1, 0)
     val lineDigits = endLine.toString().length
 
     val errRange = startLine..endLine

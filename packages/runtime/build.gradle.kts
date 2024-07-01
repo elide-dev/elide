@@ -74,7 +74,7 @@ val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
 val nativesType = if (isRelease) "release" else "debug"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
-val entrypoint = "elide.tool.cli.ElideKt"
+val entrypoint = "elide.tool.cli.MainKt"
 
 val enablePkl = false
 val enableWasm = true
@@ -84,13 +84,16 @@ val enableLlvm = false
 val enableJvm = hostIsLinux
 val enableKotlin = false
 val enableSqlite = true
-val enableNativeCryptoV2 = true
+val enableCustomCompiler = false
+val enableNativeCryptoV2 = false  // @TODO broken by new compiler settings
 val enableSqliteStatic = true
 val enableStaticJni = true
 val enableToolchains = false
 val enableFfm = hostIsLinux && System.getProperty("os.arch") == "amd64"
 val oracleGvm = false
-val enableEdge = false
+val oracleGvmLibs = oracleGvm
+val enableMosaic = false
+val enableEdge = true
 val enableStage = false
 val enableNativeTransportV2 = true
 val enableDynamicPlugins = false
@@ -306,6 +309,9 @@ val languagePluginPaths = if (!enableDynamicPlugins) emptyList() else listOf(
   project(":packages:$module").layout.buildDirectory.dir("native/nativeSharedCompile").get().asFile.path
 }
 
+val targetPath = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}")
+val targetLibs = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}/lib")
+val targetHeaders = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}/include")
 val nativesPath = nativesRootTemplate(cliVersion)
 val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
@@ -351,7 +357,7 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
 
-  if (oracleGvm && enableAuxCache) {
+  if (oracleGvm && oracleGvmLibs && enableAuxCache) {
     api(":tools:auximage")
   }
 
@@ -383,7 +389,7 @@ dependencies {
     implementation(projects.packages.sqlite)
   }
   if (enableNativeCryptoV2) {
-    api(projects.packages.tcnative)
+    api(project(":packages:tcnative"))
   }
 
   // GraalVM: Engines
@@ -394,7 +400,7 @@ dependencies {
   api(libs.graalvm.js.language)
   compileOnly(libs.graalvm.svm)
 
-  if (oracleGvm) {
+  if (oracleGvm && oracleGvmLibs) {
     implementation(libs.graalvm.js.isolate)
     nativeImageClasspath(libs.graalvm.truffle.enterprise)
   }
@@ -488,7 +494,7 @@ dependencies {
     implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-aarch_64") })
   }
 
-  if (oracleGvm && !enableEdge) {
+  if (oracleGvm && oracleGvmLibs && !enableEdge) {
     if (enableExperimental && hostIsLinux) {
       api(libs.graalvm.truffle.nfi.panama)
     }
@@ -573,6 +579,12 @@ private fun <T> List<T>.onlyIf(flag: Boolean): List<T> = if (flag) this else emp
  * --------- Build: CLI Native Image
  */
 
+// Compiler environment
+val cCompiler: String? = System.getenv("CC")
+val cFlags: String? = System.getenv("CFLAGS")
+val cxxCompiler: String? = System.getenv("CXX")
+val cxxFlags: String? = System.getenv("CXXFLAGS")
+
 val commonGvmArgs = listOfNotNull(
   "-H:+UseCompressedReferences",
   onlyIf(enableBuildReport, "-H:+BuildReport"),
@@ -617,12 +629,15 @@ val deprecatedNativeArgs = listOf(
 )
 
 val enabledFeatures = listOfNotNull(
+  "elide.tool.engine.MacLinkageFeature",
   "elide.tool.feature.ToolingUmbrellaFeature",
   "elide.runtime.feature.engine.NativeSQLiteFeature",
   "elide.runtime.feature.engine.NativeTransportFeature",
   "elide.runtime.feature.engine.NativeConsoleFeature",
-  onlyIf(oracleGvm, "com.oracle.svm.enterprise.truffle.EnterpriseTruffleFeature"),
-  onlyIf(oracleGvm, "com.oracle.truffle.runtime.enterprise.EnableEnterpriseFeature"),
+  "elide.runtime.feature.python.PythonFeature",
+  onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),
+  onlyIf(oracleGvm && oracleGvmLibs, "com.oracle.svm.enterprise.truffle.EnterpriseTruffleFeature"),
+  onlyIf(oracleGvm && oracleGvmLibs, "com.oracle.truffle.runtime.enterprise.EnableEnterpriseFeature"),
   onlyIf(oracleGvm && enableExperimental, "com.oracle.svm.enterprise.truffle.PolyglotIsolateGuestFeature"),
   onlyIf(oracleGvm && enableExperimental, "com.oracle.svm.enterprise.truffle.PolyglotIsolateHostFeature"),
   onlyIf(HostManager.hostIsMac, "com.sun.jna.SubstrateStaticJNA"),
@@ -633,8 +648,6 @@ val enabledSecurityProviders = listOfNotNull(
   "org.bouncycastle.jce.provider.BouncyCastleProvider",
   onlyIf(enableConscrypt, "org.conscrypt.OpenSSLProvider"),
 )
-
-val linkerOptions: List<String> = listOfNotNull()
 
 val preinitializedContexts = listOfNotNull(
   "js",
@@ -651,6 +664,7 @@ val commonNativeArgs = listOfNotNull(
   // "-H:AbortOnMethodReachable=kotlinx.coroutines.CancellableContinuationImpl.getParentHandle",
   // "--trace-object-instantiation=kotlinx.coroutines.CancellableContinuationImpl",
   // "-H:AbortOnMethodReachable=java.util.concurrent.atomic.AtomicReferenceFieldUpdater.accessCheck",
+  onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
   onlyIf(enableFfm, "-H:+ForeignAPISupport"),
@@ -681,13 +695,17 @@ val commonNativeArgs = listOfNotNull(
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
-  "-H:NativeLinkerOption=-L$nativesPath",
+  "-H:NativeLinkerOption=-L$targetLibs",
   "-Delide.strict=true",
   "-J-Delide.strict=true",
   "-Delide.js.vm.enableStreams=true",
   "-J-Delide.js.vm.enableStreams=true",
+  "-Delide.mosaic=$enableMosaic",
+  "-J-Delide.mosaic=$enableMosaic",
   "-Delide.staticJni=$enableStaticJni",
   "-J-Delide.staticJni=$enableStaticJni",
+  "-Delide.target=$targetPath",
+  "-J-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
   "-J-Delide.natives=$nativesPath",
   "-Djna.library.path=$nativesPath",
@@ -732,8 +750,6 @@ val commonNativeArgs = listOfNotNull(
   commonGvmArgs.onlyIf(oracleGvm)
 ).plus(
   listOf("--debug-attach").onlyIf(nativeImageBuildDebug)
-).plus(
-  linkerOptions
 ).plus(
   nativeCompileJvmArgs
 ).toList()
@@ -786,6 +802,17 @@ val experimentalFlags = listOf(
   "-H:+VectorPolynomialIntrinsics",
 )
 
+// C compiler flags which are always included.
+val commonCFlags: List<String> = listOf(
+  "-DELIDE",
+  "-I$targetHeaders",
+)
+
+// Linker flags which are always included.
+val commonLinkerOptions: List<String> = listOf(
+  "-L$targetLibs",
+)
+
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
   "-flto",
@@ -814,7 +841,7 @@ val releaseFlags: List<String> = listOf(
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
 ).plus(
-  listOf("-O1").onlyIf(!enablePgo)
+  listOf("-O3").onlyIf(!enablePgo)
 ).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -832,7 +859,9 @@ val releaseFlags: List<String> = listOf(
 val jvmDefs = mapOf(
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
+  "elide.target" to targetPath.asFile.path,
   "elide.graalvm.ee" to oracleGvm.toString(),
+  "elide.mosaic" to enableMosaic.toString(),
   "elide.staticJni" to "true",
   "elide.js.vm.enableStreams" to "true",
   "jna.library.path" to nativesPath,
@@ -1176,17 +1205,18 @@ fun nativeCliImageArgs(
     .plus(stagedNativeArgs.onlyIf(enableStage))
     .plus(jvmCompileArgs)
     .plus(pklArgs.onlyIf(enablePkl))
-    .plus(StringBuilder().apply {
-      append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
-      append(File.pathSeparator)
-      append(nativesPath)
-      append(File.pathSeparator)
-      languagePluginPaths.forEach {
-        append(it)
-        append(File.pathSeparator)
-      }
-      append(System.getProperty("java.library.path", ""))
-    }.toString().let {
+    .plus(listOf(
+      rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
+      rootProject.layout.projectDirectory.dir("target/$nativesType/lib").asFile.path,
+    ).plus(
+      languagePluginPaths
+    ).plus(
+      System.getProperty("java.library.path", "")
+        .split(File.pathSeparator)
+        .filter { it.isNotEmpty() }
+    ).distinct().joinToString(
+      File.pathSeparator
+    ).let {
       listOf(
         "-Djava.library.path=$it",
         "-J-Djava.library.path=$it",
@@ -1219,6 +1249,10 @@ fun nativeCliImageArgs(
     jvmDefs.map { "-D${it.key}=${it.value}" },
   ).plus(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
+  ).plus(
+    commonCFlags.map { "--native-compiler-options=$it" }
+  ).plus(
+    commonLinkerOptions.map { "-H:NativeLinkerOption=$it" }
   ).plus(
     when {
       release -> releaseFlags
@@ -1598,7 +1632,6 @@ tasks {
       "java.library.path",
       listOf(
         umbrellaNativesPath,
-        nativesPath,
       ).plus(
         languagePluginPaths.map {
           it.toString()

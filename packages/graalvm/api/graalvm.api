@@ -2156,6 +2156,28 @@ public final class elide/runtime/gvm/internals/sqlite/SQLiteDriverOptions : java
 	public fun toString ()Ljava/lang/String;
 }
 
+public synthetic class elide/runtime/gvm/internals/testing/$ElideTestingModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/testing/$ElideTestingModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2282,8 +2304,6 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 	public final fun component7 ()Ljava/lang/Boolean;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/nio/file/Path;
-	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBundle ()Ljava/util/List;
@@ -2854,8 +2874,6 @@ public final class elide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOption
 	public static final field Companion Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions$Companion;
 	public synthetic fun <init> (ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
-	public final fun copy (Z)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
 	public static final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
@@ -2893,8 +2911,6 @@ public final class elide/runtime/intrinsics/js/encoding/TextDecoder$Options : ja
 	public synthetic fun <init> (ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()Z
-	public final fun copy (ZZ)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;ZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun fatal ()Z
 	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
@@ -4863,6 +4879,40 @@ public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteTransactor
 }
 
 public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteType {
+}
+
+public final synthetic class elide/runtime/intrinsics/testing/$TestingAPI$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/intrinsics/testing/$TestingAPI$TestGraphNode$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI {
+	public fun describe (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite;
+	public fun describe (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite;
+	public abstract fun expect (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Assertion;
+	public fun suite (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite;
+	public abstract fun suite (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite;
+	public fun test (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test;
+	public abstract fun test (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test;
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Assertion : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
 }
 
 public final class elide/runtime/plugins/debug/Debug {

@@ -1,6 +1,16 @@
+.venv
 README.md
 build
 coverage
+crates
+**/*.js
+**/*.ts
+**/*.mjs
+**/*.mts
+**/*.cjs
+**/*.cts
+**/*.json
+**/*.css
 docs/*.html
 docs/**/*.html
 docs/*.js

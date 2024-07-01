@@ -7,6 +7,13 @@
          <ignored-key id="369424FC98F3F6EC" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="6A1E81B00431AB9D" reason="Key couldn't be downloaded from any key server"/>
       </ignored-keys>
+      <trusted-artifacts>
+         <trust group="org.jetbrains.kotlin" reason="Ships own metadata"/>
+         <trust group="org.jetbrains.kotlinx" reason="Ships own metadata"/>
+         <trust group="org.gradle" reason="Part of Gradle"/>
+         <trust group="org.nodejs" reason="Node.js ships own metadata"/>
+         <trust group="org.codehaus.groovy" reason="Part of Gradle"/>
+      </trusted-artifacts>
       <trusted-keys>
          <trusted-key id="015479E1055341431B4545AB72475FD306B9CAB7" group="com.googlecode.javaewah" name="JavaEWAH" version="1.2.3"/>
          <trusted-key id="019082BC00E0324E2AEF4CF00D3B328562A119A7" group="org.openjdk.jmh"/>

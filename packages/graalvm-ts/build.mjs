@@ -11,9 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import esbuild from "esbuild";
+import esbuild from "esbuild"
 
-export const mode = "esm";
+export const mode = "esm"
 
 async function buildTypescriptEntrypoint() {
   await esbuild.build({
@@ -24,10 +24,10 @@ async function buildTypescriptEntrypoint() {
     platform: "neutral",
     external: ["fs", "node:fs", "path", "node:path", "os", "node:os", "inspector", "node:inspector"],
     mainFields: ["module", "main"],
-  });
+  })
 
-  console.info("TypeScript entrypoint build complete.");
+  console.info("TypeScript entrypoint build complete.")
 }
 
-console.info("Building TypeScript entrypoint...");
-await buildTypescriptEntrypoint();
+console.info("Building TypeScript entrypoint...")
+await buildTypescriptEntrypoint()

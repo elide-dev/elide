@@ -4,17 +4,7 @@
   "description": "Elide polyglot application runtime",
   "homepage": "https://elide.dev",
   "license": "(MIT OR Apache-2.0)",
-  "keywords": [
-    "runtime",
-    "js",
-    "ts",
-    "polyglot",
-    "server",
-    "framework",
-    "kotlin",
-    "javascript",
-    "typescript"
-  ],
+  "keywords": ["runtime", "js", "ts", "polyglot", "server", "framework", "kotlin", "javascript", "typescript"],
   "repository": "github:elide-dev/elide",
   "config": {
     "elideVersion": "1.0.0-alpha10"
@@ -26,17 +16,8 @@
   "bugs": {
     "url": "https://github.com/elide-dev/elide/issues"
   },
-  "os": [
-    "darwin",
-    "linux",
-    "windows"
-  ],
-  "cpu": [
-    "x64",
-    "arm64"
-  ],
-  "files": [
-    "elide.sh"
-  ],
+  "os": ["darwin", "linux", "windows"],
+  "cpu": ["x64", "arm64"],
+  "files": ["elide.sh"],
   "bin": "./elide.sh"
 }

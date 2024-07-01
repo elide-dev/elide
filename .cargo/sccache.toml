@@ -1,6 +1,6 @@
 [cache.disk]
 dir = "/tmp/.cache/sccache"
-size = 7516192768 # 7 GiBytes
+size = 7516192768           # 7 GiBytes
 
 [cache.disk.preprocessor_cache_mode]
 use_preprocessor_cache_mode = true
@@ -9,5 +9,3 @@ use_ctime_for_stat = true
 ignore_time_macros = false
 skip_system_headers = false
 hash_working_directory = true
-
-

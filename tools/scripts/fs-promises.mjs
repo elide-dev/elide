@@ -1,6 +1,6 @@
 import { ok } from "node:assert"
-import path from "node:path"
 import fs from "node:fs/promises"
+import path from "node:path"
 
 const joined = path.resolve(path.join(".", "README.md"))
 

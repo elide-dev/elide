@@ -11,14 +11,12 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-"use strict"
-
 const version = "1.0.0-alpha10"
 
-const os = require("os")
-const fs = require("fs")
-const path = require("path")
-const spawn = require("child_process").spawn
+const os = require("node:os")
+const fs = require("node:fs")
+const path = require("node:path")
+const spawn = require("node:child_process").spawn
 const wget = require("node-wget")
 
 function getNativeBinary() {
@@ -51,7 +49,7 @@ function getNativeBinary() {
 
 function downloadBinary(target, os, arch, andThen) {
   const url = `https://dl.elide.dev/cli/v1/snapshot/${os}-${arch}/${version}/elide.gz`
-  console.log(`Downloading Elide (url: $url)...`)
+  console.log("Downloading Elide (url: $url)...")
   wget(
     {
       url,
@@ -74,7 +72,9 @@ function spawnBinary(binary, args) {
   process.on("SIGINT", shutdown)
   process.on("SIGTERM", shutdown)
 
-  ps.on("close", e => (process.exitCode = e))
+  ps.on("close", e => {
+    process.exitCode = e
+  })
 }
 
 function main(args) {

@@ -16,12 +16,12 @@ const app = Elide.http
 
 // register basic handler
 app.router.handle("GET", "/", (request, response) => {
-  response.send(200, `Hello, Elide!`)
+  response.send(200, "Hello, Elide!")
 })
 
 // register plaintext bench handler
 app.router.handle("GET", "/plaintext", (request, response) => {
-  response.send(200, `Hello, World!`)
+  response.send(200, "Hello, World!")
 })
 
 // register json bench handler

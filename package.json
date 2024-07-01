@@ -37,7 +37,7 @@
     "google-protobuf": "3.21.2",
     "jszip": "3.10.1",
     "postcss": "8.4.38",
-    "preact": "10.22.0",
+    "preact": "10.22.1",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
     "typescript": "5.5.2",

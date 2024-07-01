@@ -16,7 +16,7 @@
 package elide.runtime
 
 /** Describes the interface for loggers shared across platforms. */
-public actual interface Logger {
+public actual interface Logger : org.slf4j.Logger {
   /**
    * Indicate whether the provided [level] is enabled for the current logger.
    *

@@ -27,6 +27,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.LinkedList
 import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
 import elide.runtime.feature.NativeLibraryFeature
 import elide.runtime.feature.NativeLibraryFeature.*
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.SHARED
@@ -91,7 +92,9 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     renameTo: ((String) -> String)? = null,
     cbk: (() -> Unit)? = null,
   ): List<UnpackedNative> {
-    val nativesPath = requireNotNull(System.getProperty("elide.natives")?.ifBlank { null })
+    val nativesPath = requireNotNull(System.getProperty("elide.target")?.ifBlank { null }).let {
+      Path(it).resolve("lib").absolutePathString()
+    }
     val unpacked: LinkedList<UnpackedNative> = LinkedList()
     for (candidate in path) {
       val stream = scanForResource(jar, candidate) ?: continue

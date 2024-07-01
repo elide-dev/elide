@@ -4,50 +4,85 @@ version = "0.1.0"
 edition = '2021'
 workspace = "../.."
 publish = false
+license = "MIT"
 
 [lib]
 name = "umbrella"
 crate-type = ["lib", "staticlib", "cdylib"]
 
 [features]
-default = ["jvm"]
-jvm = ["jni/default", "jni/invocation"]
-python = ["uv"]
+default = ["lib", "all", "entry"]
+all = ["js", "python", "jvm"]
+js = ["orogene"]
+jvm = []
+lib = ["jni/default"]
+entry = ["jni/invocation"]
+python = ["ruff"]
 ruby = []
 wasm = []
-js = ["oxc"]
+biome = [
+  "biome_diagnostics",
+  "biome_diagnostics_categories",
+  "biome_diagnostics_macros",
+  "biome_formatter",
+  "biome_css_formatter",
+  "biome_json_formatter",
+  "biome_js_formatter",
+  "biome_markup",
+  "biome_console",
+  "biome_suppression",
+  "biome_unicode_table",
+]
+experimental = [
+  "oxc",
+  "biome",
+  "ruby",
+  "biome",
+  "uv",
+]
 
 [lints.rust]
-unsafe_code = "warn"
+unsafe_code = "forbid"
 dead_code = "allow"
 
-[build-dependencies]
-bindgen = "0.69.4"
-cargo-deb = "2.2.0"
-cargo-zigbuild = "0.18.4"
-cbindgen = "0.26.0"
-sccache = "0.8.1"
-wasm-bindgen = "0.2.92"
-wasm-bindgen-futures = "0.4.42"
-
 [dependencies]
-const_fn = "0.4"
-heapless = "0.8.0"
-inventory = "0.3"
-jni = "0.21.1"
-lazy_static = "1.4.0"
-oxc = { path = "../../third_party/oxc-project/oxc/crates/oxc", optional = true }
-polling = "3.7.0"
-portable-atomic = { version = "1", default-features = false }
-powerfmt = "0.2.0"
-pubgrub = "0.2.1"
-ruff = { path = "../../third_party/astral/ruff/crates/ruff", optional = true }
-ruff_diagnostics = { path = "../../third_party/astral/ruff/crates/ruff_diagnostics", optional = true }
-ruff_formatter = { path = "../../third_party/astral/ruff/crates/ruff_formatter", optional = true }
-ruff_linter = { path = "../../third_party/astral/ruff/crates/ruff_linter", optional = true }
-rusqlite = { version = "0.31.0", features = ["bundled"] }
-serde = { version = "1.0.203", features = ["derive"] }
-typeshare = "1.0.3"
-uv = { path = "../../third_party/astral/uv/crates/uv", optional = true }
-zerocopy = "0.7.34"
+## Local
+substrate = { workspace = true }
 
+## Compile
+anyhow = { workspace = true }
+#boring = { workspace = true }
+clap = { workspace = true, features = ["derive", "string", "wrap_help"] }
+colored = { workspace = true }
+java_native = { workspace = true }
+jni = { workspace = true, default-features = false }
+jni-sys = { workspace = true }
+miette = { workspace = true }
+mimalloc = { workspace = true }
+serde = { workspace = true }
+tikv-jemallocator = { workspace = true }
+tokio = { workspace = true }
+typeshare = { workspace = true }
+
+## Orogene
+orogene = { workspace = true, optional = true }
+
+## Oxc
+oxc = { workspace = true, optional = true }
+
+## Astral
+ruff = { workspace = true, optional = true }
+uv = { workspace = true, optional = true }
+
+## Biome
+biome_console = { workspace = true, optional = true }
+biome_css_formatter = { workspace = true, optional = true }
+biome_diagnostics = { workspace = true, optional = true }
+biome_diagnostics_categories = { workspace = true, optional = true }
+biome_diagnostics_macros = { workspace = true, optional = true }
+biome_formatter = { workspace = true, optional = true }
+biome_js_formatter = { workspace = true, optional = true }
+biome_json_formatter = { workspace = true, optional = true }
+biome_markup = { workspace = true, optional = true }
+biome_suppression = { workspace = true, optional = true }
+biome_unicode_table = { workspace = true, optional = true }

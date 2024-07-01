@@ -1,0 +1,200 @@
+[graph]
+targets = [
+    # The triple can be any string, but only the target triples built in to
+    # rustc (as of 1.40) can be checked against actual config expressions
+    #"x86_64-unknown-linux-musl",
+    # You can also specify which target_features you promise are enabled for a
+    # particular target. target_features are currently not validated against
+    # the actual valid features supported by the target architecture.
+    #{ triple = "wasm32-unknown-unknown", features = ["atomics"] },
+]
+
+all-features = false
+no-default-features = false
+
+[output]
+feature-depth = 1
+
+[advisories]
+ignore = []
+
+[licenses]
+confidence-threshold = 0.8
+exceptions = []
+
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "WTFPL",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0-1.0",
+    "ISC",
+    "0BSD",
+    "Unicode-DFS-2016",
+    "BSL-1.0",
+    "PSF-2.0",
+    "OpenSSL",
+]
+
+[[licenses.clarify]]
+crate = "libcst"
+expression = "MIT AND PSF-2.0"
+license-files = [ { path = "LICENSE", hash = 0x32ab1ee7 } ]
+
+[[licenses.clarify]]
+crate = "libcst_derive"
+expression = "MIT AND PSF-2.0"
+license-files = [ { path = "LICENSE", hash = 0x32ab1ee7 } ]
+
+[[licenses.clarify]]
+crate = "ring"
+expression = "OpenSSL"
+license-files = [ { path = "LICENSE", hash = 0xbd0eed23 } ]
+
+[[licenses.clarify]]
+crate = "ruff_text_size"
+expression = "MIT"
+license-files = [ { path = "../../LICENSE", hash = 0x94cb9197 } ]
+
+[[licenses.clarify]]
+crate = "uv-auth"
+expression = "MIT AND Apache-2.0"
+license-files = [
+  { path = "../../LICENSE-MIT", hash = 0x94cb9197 },
+  { path = "../../LICENSE-APACHE", hash = 0x94cb9197 },
+]
+
+[[licenses.clarify]]
+crate = "uv-client"
+expression = "MIT AND Apache-2.0"
+license-files = [
+  { path = "../../LICENSE-MIT", hash = 0x94cb9197 },
+  { path = "../../LICENSE-APACHE", hash = 0x94cb9197 },
+]
+
+[[licenses.clarify]]
+crate = "uv-macros"
+expression = "MIT AND Apache-2.0"
+license-files = [
+  { path = "../../LICENSE-MIT", hash = 0x94cb9197 },
+  { path = "../../LICENSE-APACHE", hash = 0x94cb9197 },
+]
+
+[[licenses.clarify]]
+crate = "uv-normalize"
+expression = "MIT AND Apache-2.0"
+license-files = [
+  { path = "../../LICENSE-MIT", hash = 0x94cb9197 },
+  { path = "../../LICENSE-APACHE", hash = 0x94cb9197 },
+]
+
+[licenses.private]
+ignore = false
+registries = []
+
+[bans]
+multiple-versions = "deny"
+wildcards = "allow"
+highlight = "all"
+workspace-default-features = "allow"
+external-default-features = "allow"
+
+# List of crates to allow
+allow = [
+    #"ansi_term@0.11.0",
+    #{ crate = "ansi_term@0.11.0", reason = "you can specify a reason it is allowed" },
+]
+
+# List of crates to deny
+deny = [
+    #"ansi_term@0.11.0",
+    #{ crate = "ansi_term@0.11.0", reason = "you can specify a reason it is banned" },
+    # Wrapper crates can optionally be specified to allow the crate when it
+    # is a direct dependency of the otherwise banned crate
+    #{ crate = "ansi_term@0.11.0", wrappers = ["this-crate-directly-depends-on-ansi_term"] },
+]
+
+# List of features to allow/deny
+# Each entry the name of a crate and a version range. If version is
+# not specified, all versions will be matched.
+
+[[bans.features]]
+crate = "async-std"
+
+# Features to not allow
+deny = [
+  "tokio2",
+  "tokio3",
+]
+
+# Features to allow
+allow = [
+  "tokio1",
+  "async-global-executor",
+]
+
+[[bans.features]]
+crate = "reqwest"
+
+# Features to not allow
+deny = [
+  "default-tls",
+  "native-tls",
+  "native-tls-alpn",
+  "native-tls-vendored",
+  "dep:native-tls-crate",
+  "dep:tokio-native-tls",
+]
+
+# Features to allow
+allow = [
+    "rustls",
+    "__rustls",
+    "__tls",
+    "hyper-rustls",
+    "rustls",
+    "rustls-pemfile",
+    "rustls-tls-webpki-roots",
+    "tokio-rustls",
+    "webpki-roots",
+]
+
+# Certain crates/versions that will be skipped when doing duplicate detection.
+skip = [
+  { crate = "windows", reason = "not building for windows yet" },
+  { crate = "windows-core" },
+  { crate = "windows-sys" },
+  { crate = "windows-targets" },
+  { crate = "windows_aarch64_gnullvm" },
+  { crate = "windows_aarch64_msvc" },
+  { crate = "windows_i686_gnu" },
+  { crate = "windows_i686_msvc" },
+  { crate = "windows_x86_64_gnu" },
+  { crate = "windows_x86_64_gnullvm" },
+  { crate = "windows_x86_64_msvc" },
+  { crate = "winreg" },
+]
+
+# Similarly to `skip` allows you to skip certain crates during duplicate
+# detection. Unlike skip, it also includes the entire tree of transitive
+# dependencies starting at the specified crate, up to a certain depth, which is
+# by default infinite.
+skip-tree = [
+    #"ansi_term@0.11.0", # will be skipped along with _all_ of its direct and transitive dependencies
+    #{ crate = "ansi_term@0.11.0", depth = 20 },
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+
+allow-git = [
+  "https://github.com/charliermarsh/rs-async-zip?rev=1dcb40cfe1bf5325a6fd4bfcf9894db40241f585",
+]
+
+[sources.allow-org]
+github = ["elide-dev", "elide-tools"]
+

@@ -20,6 +20,7 @@ export RELOCK ?= no
 DEFAULT_REPOSITORY ?= s3://elide-maven
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
+JVM ?= 22
 SAMPLES ?= no
 SIGNING_KEY ?= F812016B
 REMOTE ?= no
@@ -81,17 +82,24 @@ NODE ?= $(shell which node)
 BUN ?= $(shell which bun)
 JAVA ?= $(shell which java)
 NATIVE_IMAGE ?= $(shell which native-image)
-PWD ?= $(shell pwd)
+export ELIDE_ROOT ?= $(shell pwd)
+PWD ?= $(ELIDE_ROOT)
 TARGET ?= $(PWD)/build
+DIST ?= $(PWD)/target
 DOCS ?= $(PWD)/docs
 REPORTS ?=
 BUF ?= $(shell which buf)
-JVM ?= 21
 SYSTEM ?= $(shell uname -s)
 JQ ?= $(shell which jq)
 BAZEL ?= $(shell which bazel)
 export PROJECT_ROOT ?= $(shell pwd)
 export ELIDE_ROOT ?= yes
+
+ifeq ($(RELEASE),yes)
+export TARGET_ROOT ?= $(ELIDE_ROOT)/target/release
+else
+export TARGET_ROOT ?= $(ELIDE_ROOT)/target/debug
+endif
 
 PATH := $(shell echo $$PATH)
 
@@ -169,6 +177,10 @@ else
 BUILD_ARGS += -PbuildSamples=false
 endif
 
+ifeq ($(NATIVE),yes)
+BUILD_ARGS += -Pelide.march=native
+endif
+
 ifeq ($(WASM),yes)
 BUILD_ARGS += -PbuildWasm=true -Pelide.build.kotlin.wasm.disable=false
 else
@@ -234,14 +246,14 @@ endif
 OMIT_NATIVE ?= -x nativeCompile -x nativeTest -x nativeOptimizedCompile
 
 ifneq ($(NATIVE),)
-ifneq ($(NATIVE),no)
-BUILD_ARGS += $(patsubst %,-d %,$(NATIVE_TASKS))
+ifeq ($(NATIVE),no)
+BUILD_ARGS += $(patsubst %,-x %,$(NATIVE_TASKS))
 OMIT_NATIVE =
 else
 ifeq ($(RELEASE),yes)
-CLI_TASKS += :packages:cli:nativeOptimizedCompile -Pelide.buildMode=release -Pelide.release=true -PenableSigning=true -PbuildDocs=true
+CLI_TASKS += :packages:runtime:nativeOptimizedCompile -Pelide.buildMode=release -Pelide.release=true -PenableSigning=true -PbuildDocs=true
 else
-CLI_TASKS += :packages:cli:nativeCompile
+CLI_TASKS += :packages:runtime:nativeCompile
 endif
 endif
 endif
@@ -276,7 +288,7 @@ GRADLE_OMIT ?= $(OMIT_NATIVE)
 _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
 DEPS ?= node_modules/ third-party umbrella $(RUNTIME_GEN)
 
-GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$(PATH)"
+GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$(PATH)" CC="" CXX="" CFLAGS="" LDFLAGS=""
 
 # ---- Targets ---- #
 
@@ -284,7 +296,12 @@ all: build
 
 setup: $(DEPS)  ## Setup development pre-requisites.
 
-build: $(DEPS)  ## Build the main library, and code-samples if SAMPLES=yes.
+symlinks:
+	$(CMD)rm -f $(ELIDE_ROOT)/target/lib $(ELIDE_ROOT)/target/include
+	$(CMD)ln -s $(TARGET_ROOT)/lib $(ELIDE_ROOT)/target/lib
+	$(CMD)ln -s $(TARGET_ROOT)/include $(ELIDE_ROOT)/target/include
+
+build: $(DEPS) symlinks  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build $(CLI_TASKS) $(GRADLE_OMIT) $(_ARGS)
 
@@ -299,7 +316,7 @@ endif
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test check $(_ARGS)
-	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:optimizedRun --args="selftest"
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:runtime:optimizedRun --args="selftest"
 
 gvm: .graalvm-home  ## Build a custom copy of GraalVM for use locally.
 	@echo "GraalVM is ready (profile: $(GVM_PROFILE))."
@@ -390,7 +407,7 @@ cli:  ## Build the Elide command-line tool (native target).
 	$(info Building Elide CLI tool...)
 	$(CMD)mkdir -p $(CLI_DISTPATH)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
-		:packages:cli:$(NATIVE_TARGET_NAME) \
+		:packages:runtime:$(NATIVE_TARGET_NAME) \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=false \
@@ -447,10 +464,12 @@ third-party: third_party/sqlite third_party/lib  ## Build all third-party embedd
 
 third_party/sqlite:
 	@echo "Setting up submodules..."
+	$(CMD)mkdir -p $(TARGET_ROOT)
 	$(CMD)$(GIT) submodule update --init --recursive
 
 third_party/lib:
 	@echo "Building third-party projects..."
+	$(CMD)mkdir -p $(TARGET_ROOT)
 	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party -j`nproc` && mkdir -p third_party/lib
 	@echo ""
 

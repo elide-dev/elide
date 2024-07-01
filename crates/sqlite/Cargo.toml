@@ -1,0 +1,19 @@
+[package]
+name = "sqlite"
+edition = "2021"
+license = "MIT"
+workspace = "../.."
+
+[lib]
+name = "sqlitejdbc2"
+crate-type = ["lib", "staticlib", "cdylib"]
+
+[dependencies]
+java_native = { workspace = true }
+jni = { workspace = true, default-features = false }
+jni-sys = { workspace = true }
+libsqlite3-sys = { workspace = true }
+
+[build-dependencies]
+pkg-config = "0.3.30"
+vcpkg = "0.2.15"

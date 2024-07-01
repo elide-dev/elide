@@ -21,7 +21,7 @@ androidx-compose = "1.5.13-dev-k2.0.0-RC1-50f08dfa4b4"
 arrow = "1.2.0"
 asciidata = "1.4.0"
 assertk = "0.28.1"
-atomicfu = "0.24.0"
+atomicfu = "0.25.0"
 auto-common = "1.2.2"
 auto-factory = "1.0.1"
 auto-service = "1.1.1"
@@ -35,7 +35,7 @@ byteunits = "0.9.1"
 caffeine = "3.1.8"
 capnproto = "0.1.16"
 cite = "0.2.0"
-clikt = "4.4.0"
+clikt = "4.4.0.20-SNAPSHOT"
 closure = "v20221004"
 closure-stylesheets = "1.5.0"
 commons-codec = "1.17.0"
@@ -43,7 +43,7 @@ commons-compress = "1.26.2"
 commons-csv = "1.10.0"
 commons-io = "2.16.1"
 commons-pool = "2.11.1"
-compose = "1.5.7.1"
+compose-plugin = "1.6.11"
 confundus = "1.0.0"
 conscrypt = "2.5.2"
 consoleui = "0.0.13"
@@ -71,19 +71,19 @@ github-api = "1.321"
 google-api-common = "2.30.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
-graalvm = "24.0.1"
+graalvm = "24.2.0-SNAPSHOT"
 graalvm-metadata = "0.3.8"
-graalvm-pin = "24.0.1"
+graalvm-pin = "24.2.0-SNAPSHOT"
 graalvm-plugin = "0.10.2"
 graalvm-stable = "24.0.1"
-graalvm-svm-driver = "24.0.1"
+graalvm-svm-driver = "24.2.0-SNAPSHOT"
 gradleChecksum = "1.4.0"
 gradleCommonCustomUserData = "1.12.1"
 gradleTestRetry = "1.5.9"
 grpc-java = "1.62.2"
 grpc-kotlin = "1.4.1"
 grpc-web = "1.4.2"
-guava = "33.2.0-jre"
+guava = "33.2.1-jre"
 h2 = "2.2.224"
 hamcrest-core = "2.2"
 hamcrest-junit = "2.0.0.0"
@@ -92,7 +92,7 @@ hikari = "4.0.3"
 hoplite = "2.7.5"
 inquirer = "0.1.0"
 j4rs = "0.19.0"
-jackson = "2.17.0"
+jackson = "2.17.1"
 jacoco = "0.8.11"
 jakarta = "2.0.1"
 jakarta-annotation-api = "2.1.1"
@@ -126,7 +126,7 @@ kotest-plugin = "0.8.18"
 kotlin-compile-testing = "1.5.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.0"
-kotlin-sdk = "2.0.0"
+kotlin-sdk = "2.0.20-Beta1"
 kotlinpoet = "1.17.0"
 kotlinx-abiValidator = "0.14.0"
 kotlinx-benchmark = "0.4.10"
@@ -138,9 +138,9 @@ kotlinx-html = "0.11.0"
 kotlinx-io = "0.4.0"
 kotlinx-knit = "0.5.0"
 kotlinx-metadata = "0.9.0"
-kotlinx-metadata-jvm = "0.6.0"
+kotlinx-metadata-jvm = "0.9.0"
 kotlinx-nodejs = "0.0.7"
-kotlinx-serialization = "1.7.0"
+kotlinx-serialization = "1.7.1"
 kotlinx-wrappers-bom = "1.0.0-pre.754"
 kotlinx-wrappers-browser = "1.0.0-pre.754"
 kotlinx-wrappers-cesium = "1.114.0-pre.754"
@@ -255,7 +255,7 @@ pluginPublish = "1.2.1"
 postgres = "42.5.1"
 proguard = "7.4.2"
 projectreactor = "2023.0.5"
-projectreactor-core = "3.6.0"
+projectreactor-core = "3.6.7"
 projectreactor-netty = "1.1.13"
 protobuf = "3.25.2"
 protobufJavalite = "3.0.0"
@@ -281,7 +281,7 @@ swagger = "2.2.15"
 testLoggerPlugin = "4.0.0"
 testcontainers = "1.17.6"
 tink = "1.13.0"
-truth = "1.4.2"
+truth = "1.4.3"
 turbine = "1.1.0"
 versionCatalogUpdate = "0.8.4"
 versionCheck = "0.51.0"
@@ -310,6 +310,7 @@ gradle-checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChec
 gradle-commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version.ref = "gradleCommonCustomUserData" }
 gradle-testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
 gradle-wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrapperUpgrade" }
+jetbrains-compose = { id = "org.jetbrains.compose" }
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }
 jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }
@@ -362,7 +363,6 @@ versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionChe
 
 [libraries]
 aedile-core = { group = "com.sksamuel.aedile", name = "aedile-core", version.ref = "aedile" }
-androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "androidx-compose" }
 arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
@@ -789,6 +789,7 @@ testing-mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter",
 plugin-buf = { group = "com.parmet", name = "buf-gradle-plugin", version.ref = "pluginBuf" }
 plugin-buildConfig = { group = "com.github.gmazzo.buildconfig", name = "plugin", version.ref = "buildconfig-plugin" }
 plugin-cite = { group = "com.jakewharton.cite", name = "cite-gradle-plugin", version.ref = "cite" }
+plugin-compose = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "compose-plugin" }
 plugin-dependencyAnalysis = { group = "com.autonomousapps", name = "dependency-analysis-gradle-plugin", version.ref = "dependencyAnalysis" }
 plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 plugin-docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut-plugin" }

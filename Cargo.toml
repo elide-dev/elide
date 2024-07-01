@@ -1,15 +1,134 @@
+# Nightly:
+# cargo-features = ["metabuild", "edition2024", "profile-rustflags", "codegen-backend"]
+
 [workspace]
 resolver = "2"
-members = ["tools/umbrella"]
-exclude = ["third_party"]
+members = [ "crates/*","tools/umbrella"]
+exclude = ["third_party", "runtime", "crates/sqlite"]
+
+[workspace.package]
+license = "MIT"
 
 [profile.dev]
 opt-level = 0
+lto = "thin"
+strip = true
+incremental = true
+codegen-units = 1
 overflow-checks = false
+split-debuginfo = "unpacked"
 
 [profile.release]
 opt-level = 3
 lto = "thin"
-debug = "full"      # always ship debug symbols
-incremental = true
-codegen-units = 256
+strip = true
+incremental = false
+codegen-units = 1
+
+[patch.crates-io]
+## Version Pins / Overrides
+async-std = { git = "https://github.com/elide-tools/async-std", rev = "0802b3439e42167825359567cffeb35f0f4525af" }
+base64 = { git = "https://github.com/elide-tools/rust-base64", rev = "e14400697453bcc85997119b874bc03d9601d0af" }
+cacache = { git = "https://github.com/elide-tools/cacache-rs", rev = "93f2020d6ccb119b09b01e10f4ad98f6586cb79c" }
+charset = { git = "https://github.com/elide-tools/charset", rev = "62cb8a4f42bf43df7c654da073d106de777252b7" }
+chic = { git = "https://github.com/elide-tools/chic", rev = "a69a935636126d8d758e3952484347ee4cdcee62" }
+libcst = { git = "https://github.com/elide-tools/libcst", rev = "a2dff05ebfd5ccebfa6a57ac4417cccea5a33515" }
+reqwest = { git = "https://github.com/elide-tools/reqwest", rev = "cc6b9a9b198033ac3d8161871627a4787cef3aec" }
+rkyv = { git = "https://github.com/elide-tools/rkyv", rev = "7b883203b216fcfc594077a5785555d2b52061c9" }
+ssri = { git = "https://github.com/elide-tools/ssri-rs", rev = "015e101918b6664cbae4c38c6b122db2e76bf9d0" }
+jni = { git = "https://github.com/elide-tools/jni-rs", rev = "b8ec9b0c717833a640de835ab1d91577bfbd6300" }
+
+## Astral Patches
+pep508_rs = { git = "https://github.com/elide-dev/uv", rev = "7c3eb5e431d1fe392f71a21b03e8b6da70f7b451" }
+pep440_rs = { git = "https://github.com/elide-dev/uv", rev = "7c3eb5e431d1fe392f71a21b03e8b6da70f7b451" }
+
+[patch."https://github.com/astral-sh/pubgrub"]
+pubgrub = { git = "https://github.com/elide-tools/pubgrub", rev = "8fd8d1370302508991e1b39ec936c363d582ee4c" }
+
+[workspace.dependencies]
+## Local
+core = { path = "crates/core" }
+deps = { path = "crates/deps" }
+entry = { path = "crates/entry" }
+model = { path = "crates/model" }
+sqlite = { path = "crates/sqlite" }
+substrate = { path = "crates/substrate" }
+
+## Dependencies
+anyhow = { version = "1.0.80" }
+argfile = { version = "0.2.0" }
+bindgen = { version = "0.69.4" }
+#boring = { version = "4.7.0" }
+clap = { version = "4.5.3", features = ["derive"] }
+colored = { version = "2.1.0" }
+const_fn = { version = "0.4" }
+futures = { version = "0.3.24", default-features = false }
+heapless = { version = "0.8.0", features = ["portable-atomic"] }
+java_native = { git = "https://github.com/elide-tools/jni-macros", rev = "7dc95cc2d7534761d0b16899dcda9e7729bdb89d" }
+jni = { version = "0.21.1", default-features = false, features = [] }
+jni-sys = { version = "0.4.0" }
+jni-utils = { version = "0.1.1" }
+lazy_static = { version = "1.5.0" }
+maven-toolbox = { version = "0.0.3" }
+miette = { version = "7.2.0", features = ["fancy", "supports-hyperlinks"] }
+mimalloc = { version = "0.1.43" }
+mvn = { version = "0.2.0" }
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "c8dc2a63e67b0984beccfee2b2fa74990bfa9e15" }
+portable-atomic = { version = "1", default-features = false }
+powerfmt = { version = "0.2.0", default-features = false }
+pubgrub = "0.2.1"
+rkyv = { version = "0.7.44", default-features = false }
+rusqlite = { version = "0.31.0", default-features = false }
+sccache = { version = "0.8.1", default-features = false, features = [
+  "dist-client",
+  "gha",
+  "redis",
+  "s3",
+] }
+serde = { version = "1.0.203", default-features = false }
+sentry = { version = "0.34.0" }
+libsqlite3-sys = { version = "0.28.0", default-features = false, features = [
+  "loadable_extension",
+  "openssl-sys",
+] }
+tikv-jemallocator = { version = "0.5.4", default-features = false }
+tokio = { version = "1", default-features = false, features = [
+  "fs",
+  "io-util",
+  "macros",
+  "process",
+  "rt-multi-thread",
+  "sync",
+] }
+tokio-uring = { version = "0.5.0" }
+toml = { version = "0.8.14", default-features = false }
+trauma = { version = "2.2.5" }
+typeshare = { version = "1.0.3" }
+wild = { version = "2" }
+
+## Biome
+biome_console = "0.5.7"
+biome_css_formatter = "0.5.7"
+biome_diagnostics = "0.5.7"
+biome_diagnostics_categories = "0.5.7"
+biome_diagnostics_macros = "0.5.7"
+biome_formatter = "0.5.7"
+biome_js_formatter = "0.5.7"
+biome_json_formatter = "0.5.7"
+biome_markup = "0.5.7"
+biome_suppression = "0.5.7"
+biome_unicode_table = "0.5.7"
+
+## Oxc
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "ea30aecb676e5cf4e1b24647d5198e36b39cc22b", default-features = false, features = [
+  #
+] }
+
+## Uv
+uv = { git = "https://github.com/elide-dev/uv", rev = "f068af78f779f4ea3f6629b63ebef39ddc1cf3e3" }
+
+## Ruff
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "902f4b913f4eaefa8845232cb2b7bd10368f9faa", default-features = false, features = [
+  "check",
+  "format",
+] }

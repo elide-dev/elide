@@ -14,9 +14,7 @@ package elide.tool.engine
 
 import io.netty.util.internal.PlatformDependent
 import org.graalvm.nativeimage.ImageInfo
-import org.graalvm.nativeimage.ProcessProperties
 import java.io.File
-import java.nio.file.Files
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
@@ -305,10 +303,7 @@ object NativeEngine {
     val natives = workdir.nativesDirectory()
     val nativesPath = natives.absolutePath
     val platform = HostPlatform.resolve()
-    val separator = when (HostPlatform.resolve().os) {
-      HostPlatform.OperatingSystem.WINDOWS -> ";"
-      else -> ":"
-    }
+    val separator = File.separator
     val libraryPath = System.getProperty("java.library.path", "")
 
     // sanity check: exec path should exist, then convert it into a suite of lib exec paths
@@ -336,7 +331,7 @@ object NativeEngine {
 
         // java's library path
         if (javaLibraryPath != null) add(javaLibraryPath.absolutePathString())
-      }.joinToString(separator)
+      }.distinct().joinToString(separator)
     } else libraryPath
 
     listOf(

@@ -1,7 +1,7 @@
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
 import * as tsvfs from "@typescript/vfs"
 import ts from "typescript"
-import { readFileSync } from "fs"
-import { join } from "path"
 
 const getLib = name => {
   const lib = dirname(require.resolve("typescript"))
@@ -9,7 +9,7 @@ const getLib = name => {
 }
 
 const addLib = (name, map) => {
-  map.set("/" + name, getLib(name))
+  map.set(`/${name}`, getLib(name))
 }
 
 const createDefaultMap2015 = () => {
@@ -30,9 +30,9 @@ const createDefaultMap2015 = () => {
 
 function compile(fsMap, compilerOptions) {
   const baseMap = createDefaultMap2015()
-  fsMap.keys.forEach(key => {
+  for (const key of fsMap.keys) {
     baseMap.set(key, fsMap.get(key))
-  })
+  }
 
   const system = tsvfs.createSystem(fsMap)
   const host = tsvfs.createVirtualCompilerHost(system, compilerOptions, ts)
@@ -47,17 +47,17 @@ function compile(fsMap, compilerOptions) {
 
   const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
 
-  allDiagnostics.forEach(diagnostic => {
+  for (const diagnostic of allDiagnostics) {
     if (diagnostic.file) {
-      let { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
-      let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
+      const { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
+      const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
       console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`)
     } else {
       console.log(ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"))
     }
-  })
+  }
 
-  let exitCode = emitResult.emitSkipped ? 1 : 0
+  const exitCode = emitResult.emitSkipped ? 1 : 0
   console.log(`Process exiting with code '${exitCode}'.`)
   return exitCode
 }

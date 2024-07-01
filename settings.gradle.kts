@@ -158,6 +158,10 @@ dependencyResolutionManagement {
         includeGroup("org.jetbrains.compose.compiler")
       }
     }
+    maven {
+      name = "sonatype-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
     mavenCentral()
     google()
   }
@@ -249,8 +253,10 @@ include(
   ":packages:ssr",
   ":packages:test",
   ":packages:sqlite",
-  ":packages:tcnative",
+  // @TODO: Broken.
+  // ":packages:tcnative",
   ":packages:terminal",
+  ":packages:tooling",
   ":packages:transport:transport-common",
   ":packages:transport:transport-unix",
   ":packages:transport:transport-epoll",

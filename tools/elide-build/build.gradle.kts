@@ -108,7 +108,6 @@ dependencies {
   implementation(libs.h2)
   implementation(libs.jgit)
   implementation(libs.json)
-  implementation(libs.kotlinpoet)
   implementation(libs.okio)
   implementation(libs.plugin.detekt)
   implementation(libs.plugin.dokka)
@@ -130,7 +129,11 @@ dependencies {
   implementation(libs.protobuf.java)
   implementation(libs.protobuf.util)
 
+  // jetbrains
+  implementation(libs.plugin.compose)
+
   // embedded Kotlin plugins
+  implementation(libs.kotlinx.metadata.jvm)
   implementation(libs.plugin.kotlin.atomicfu)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)

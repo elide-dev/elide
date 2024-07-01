@@ -76,13 +76,12 @@ import org.graalvm.polyglot.Engine as VMEngine
     private val _stderr = System.err
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
-    private val _engine = VMEngine.create()
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
       val logging = Statics.logging
       logging.trace("Retrieving supported guest languages")
-      return _engine.languages.values.mapNotNull {
+      return VMEngine.create().languages.values.mapNotNull {
         val supported = GuestLanguage.resolveFromEngine(it.id)
         if (supported == null) {
           logging.debug("Language '${it.name}' not supported for CLI use: no support in Elide")
@@ -548,7 +547,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     // build initial state
     val toolState = state() ?: materializeInitialState()
-    val ctx = context(state, coroutineContext, this)
+    val ctx = context(state, coroutineContext)
 
     @Suppress("UNCHECKED_CAST")
     initializeToolResources(toolState as State) {

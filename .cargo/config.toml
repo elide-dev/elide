@@ -1,0 +1,23 @@
+[build]
+rustflags = [
+  # Enables access to unstable options.
+  "-Zunstable-options",
+
+  # Assigns alignment with macOS build flags in `third_party`; for equivalence to `-mbranch-protection-standard`,
+  # see: https://developer.arm.com/documentation/102433/0200/Applying-these-techniques-to-real-code
+  "-Zbranch-protection=bti,pac-ret",
+
+  # Selects LLD as the linker on Darwin.
+  "-Clinker-flavor=darwin-lld-cc",
+]
+
+[env]
+INCLUDE = { value = "target/include", relative = true }
+LIB = { value = "target/lib", relative = true }
+#SQLITE3_STATIC = { value = "1" }
+#BORING_BSSL_PATH = { value = "third_party/google/boringssl", relative = true }
+#BORING_BSSL_INCLUDE_PATH = { value = "target/include", relative = true }
+#OPENSSL_LIB_DIR = { value = "target/lib", relative = true }
+#OPENSSL_INCLUDE_DIR = { value = "target/include", relative = true }
+SQLITE3_LIB_DIR = { value = "target/lib", relative = true }
+SQLITE3_INCLUDE_DIR = { value = "target/include", relative = true }

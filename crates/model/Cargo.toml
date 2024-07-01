@@ -1,0 +1,11 @@
+[package]
+name = "model"
+edition = "2021"
+license = "MIT"
+workspace = "../.."
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+serde = { workspace = true }

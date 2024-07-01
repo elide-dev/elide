@@ -20,12 +20,7 @@
   "workspaces": [
     "packages/base",
     "packages/core",
-    "packages/frontend",
     "packages/graalvm",
-    "packages/graalvm-js",
-    "packages/graalvm-react",
-    "packages/model",
-    "packages/rpc",
     "packages/test",
     "packages/cli",
     "tools/scripts",

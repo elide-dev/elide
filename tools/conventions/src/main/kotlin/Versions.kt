@@ -38,5 +38,5 @@ object Versions {
   const val grpc = "1.62.2"
 
   /** GraalVM version. */
-  const val graalvm = "24.0.1"
+  const val graalvm = "24.2.0-SNAPSHOT"
 }

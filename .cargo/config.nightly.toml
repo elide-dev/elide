@@ -1,0 +1,14 @@
+[build]
+# See main config for docs on each flag.
+rustflags = [
+  "-Zunstable-options",
+  "-Zbranch-protection=bti,pac-ret",
+  "-Zbuild-std",
+]
+
+[unstable]
+build-std = ["core", "alloc", "test", "proc_macro"]
+
+[env]
+BORING_BSSL_PATH = { value = "third_party/google/boringssl", relative = true }
+BORING_BSSL_INCLUDE_PATH = { value = "third_party/google/boringssl/install/include", relative = true }

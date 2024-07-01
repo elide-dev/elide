@@ -1,0 +1,8 @@
+[package]
+name = "entry"
+edition = "2021"
+license = "MIT"
+workspace = "../.."
+
+[[bin]]
+name = "elide"

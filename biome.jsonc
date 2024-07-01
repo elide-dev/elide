@@ -1,0 +1,44 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "files": {
+    "ignore": [
+      "target",
+      "build",
+      "docs",
+      "creative",
+      "runtime",
+      "samples",
+      "third_party",
+      "benchmarks",
+      "tools/plugin/gradle-plugin",
+      "packages/uuid",
+      "packages/*/src/*/resources/META-INF/native-image/*.json",
+      "packages/*/src/*/resources/META-INF/native-image/dev/elide/*/*.json",
+      "packages/*/src/*/resources/META-INF/native-image/dev.elide/*/*.json",
+      "packages/server/src/test/resources/manifests/app.assets.pb.json",
+      "packages/graalvm/src/test/resources/META-INF/elide/embedded/harness.js"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "trailingCommas": "all",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "asNeeded"
+    }
+  }
+}

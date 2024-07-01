@@ -3,7 +3,7 @@
 
 [workspace]
 resolver = "2"
-members = [ "crates/*","tools/umbrella"]
+members = ["crates/*", "tools/umbrella"]
 exclude = ["third_party", "runtime", "crates/sqlite"]
 
 [workspace.package]
@@ -79,18 +79,10 @@ powerfmt = { version = "0.2.0", default-features = false }
 pubgrub = "0.2.1"
 rkyv = { version = "0.7.44", default-features = false }
 rusqlite = { version = "0.31.0", default-features = false }
-sccache = { version = "0.8.1", default-features = false, features = [
-  "dist-client",
-  "gha",
-  "redis",
-  "s3",
-] }
+sccache = { version = "0.8.1", default-features = false, features = ["dist-client", "gha", "redis", "s3"] }
 serde = { version = "1.0.203", default-features = false }
 sentry = { version = "0.34.0" }
-libsqlite3-sys = { version = "0.28.0", default-features = false, features = [
-  "loadable_extension",
-  "openssl-sys",
-] }
+libsqlite3-sys = { version = "0.28.0", default-features = false, features = ["loadable_extension", "openssl-sys"] }
 tikv-jemallocator = { version = "0.5.4", default-features = false }
 tokio = { version = "1", default-features = false, features = [
   "fs",

@@ -1,10 +1,6 @@
 [build]
 # See main config for docs on each flag.
-rustflags = [
-  "-Zunstable-options",
-  "-Zbranch-protection=bti,pac-ret",
-  "-Zbuild-std",
-]
+rustflags = ["-Zunstable-options", "-Zbranch-protection=bti,pac-ret", "-Zbuild-std"]
 
 [unstable]
 build-std = ["core", "alloc", "test", "proc_macro"]

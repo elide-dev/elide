@@ -1,5 +1,12 @@
 [build]
-rustflags = []
+rustflags = [
+  # Enables access to unstable options.
+  "-Zunstable-options",
+
+  # Assigns alignment with macOS build flags in `third_party`; for equivalence to `-mbranch-protection-standard`,
+  # see: https://developer.arm.com/documentation/102433/0200/Applying-these-techniques-to-real-code
+  "-Zbranch-protection=bti,pac-ret",
+]
 
 [env]
 INCLUDE = { value = "target/include", relative = true }

@@ -12,6 +12,7 @@
  */
 package elide.runtime.feature.engine
 
+import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
@@ -199,17 +200,29 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
             *tcnative,
             builtin = true,
             initializer = true,
-            absolutePath = Path(System.getProperty("elide.natives")).resolve("libnetty_tcnative_osx_$archTag.a"),
+            absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_osx_$archTag.a"),
           ),
           linux = libraryNamed(
             "netty_tcnative_linux_$archTag",
             *tcnative,
             builtin = true,
             initializer = true,
-            absolutePath = Path(System.getProperty("elide.natives")).resolve("libnetty_tcnative_linux_$archTag.a"),
+            absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_linux_$archTag.a"),
           ),
         )
       )
+    }
+  }
+
+  override fun beforeAnalysis(access: BeforeAnalysisAccess) {
+    super.beforeAnalysis(access)
+    listOf(
+      "apr-2",
+      "crypto",
+      "ssl",
+      "sqlite3",
+    ).forEach {
+      (access as BeforeAnalysisAccessImpl).nativeLibraries.addStaticJniLibrary(it)
     }
   }
 }

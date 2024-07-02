@@ -83,7 +83,7 @@ sccache = { version = "0.8.1", default-features = false, features = ["dist-clien
 serde = { version = "1.0.203", default-features = false }
 sentry = { version = "0.34.0" }
 libsqlite3-sys = { version = "0.28.0", default-features = false, features = ["loadable_extension", "openssl-sys"] }
-tikv-jemallocator = { version = "0.5.4", default-features = false }
+tikv-jemallocator = { version = "0.5.4", default-features = false, features = ["disable_initial_exec_tls"] }
 tokio = { version = "1", default-features = false, features = [
   "fs",
   "io-util",

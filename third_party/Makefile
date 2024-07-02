@@ -192,7 +192,11 @@ clean-apr:
 
 boringssl: google/boringssl/build
 
-CMAKE_BORINGSSL ?= -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_LINKER=$(LD) -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON $(EXTRA_CMAKE_FLAGS)
+CMAKE_BORINGSSL ?= -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_LINKER=$(LD) $(EXTRA_CMAKE_FLAGS)
+ifeq ($(OS),Darwin)
+CMAKE_BORINGSSL += -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+endif
+
 CFLAGS_BORINGSSL ?=
 CFLAGS_BORINGSSL +=$(CFLAGS_BASE)
 LDFLAGS_BORINGSSL ?=
@@ -232,7 +236,13 @@ $(ZLIB_TARGET):
 
 SQLITE3_CONFIGURE ?=--enable-all --enable-memsys5 --enable-update-limit --enable-tempstore=yes --enable-debug
 CFLAGS_SQLITE3 ?=
-CFLAGS_SQLITE3 +=$(CFLAGS_BASE) $(CFLAGS_LTO) $(CFLAGS_BASE_STRICT) -std=c18 -Wno-array-bounds -Wno-format-nonliteral -Wno-array-bounds-pointer-arithmetic -Wno-assign-enum -Wno-implicit-fallthrough -Wno-tautological-constant-in-range-compare
+
+ifeq ($(OS),Darwin)
+CFLAGS_SQLITE3 +=$(CFLAGS_BASE) $(CFLAGS_BASE_STRICT) -Wno-array-bounds -Wno-format-nonliteral -Wno-array-bounds-pointer-arithmetic -Wno-assign-enum -Wno-implicit-fallthrough -Wno-tautological-constant-in-range-compare
+else
+CFLAGS_SQLITE3 +=$(CFLAGS_BASE)
+endif
+
 LDFLAGS_SQLITE3 ?=
 LDFLAGS_SQLITE3 +=$(LDFLAGS_BASE)
 

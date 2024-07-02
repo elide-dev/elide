@@ -1,0 +1,9 @@
+[package]
+name = "deps"
+edition = "2021"
+license = "MIT"
+workspace = "../.."
+
+[lib]
+crate-type = ["cdylib", "lib"]
+

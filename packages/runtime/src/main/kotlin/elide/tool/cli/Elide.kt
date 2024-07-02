@@ -26,9 +26,7 @@ import org.graalvm.nativeimage.ProcessProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
-import java.security.Security
 import java.util.*
-import kotlin.system.exitProcess
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
@@ -40,9 +38,8 @@ import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
-import elide.tool.cli.cmd.lint.ToolLintCommand
+import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
-import elide.tool.cli.cmd.selftest.SelfTestCommand
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
@@ -59,10 +56,9 @@ import elide.tool.io.RuntimeWorkdirManager
   subcommands = [
     ToolInfoCommand::class,
     ToolDiscordCommand::class,
-    ToolLintCommand::class,
+    ToolInvokeCommand::class,
     HelpCommand::class,
     ToolShellCommand::class,
-    SelfTestCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
           "   ______     __         __     _____     ______%n" +
@@ -160,7 +156,7 @@ import elide.tool.io.RuntimeWorkdirManager
     }
 
     // Install static classes/perform static initialization.
-    private fun installStatics(args: Array<String>, cwd: String?) {
+    fun installStatics(args: Array<String>, cwd: String?) {
       ProcessManager.initializeStatic(args, cwd ?: "")
       if (ImageInfo.inImageCode()) try {
         ProcessProperties.setArgumentVectorProgramName("elide")
@@ -208,17 +204,18 @@ import elide.tool.io.RuntimeWorkdirManager
     }
 
     /** CLI entrypoint and [args]. */
-    @JvmStatic fun entry(args: Array<String>) {
+    @JvmStatic fun entry(args: Array<String>): Int = try {
       // load and install libraries
       Statics.args.set(args.toList())
       installStatics(args, System.getProperty("user.dir"))
+      exec(args)
+    } finally {
+      cleanup()
+    }
 
-      val exitCode = try {
-        exec(args)
-      } finally {
-        cleanup()
-      }
-      exitProcess(exitCode)
+    /** Unwind and clean up shared resources on exit. */
+    @JvmStatic @Synchronized fun close() {
+      // nothing yet
     }
 
     /** @return Tool version. */
@@ -319,8 +316,4 @@ import elide.tool.io.RuntimeWorkdirManager
       call()
     }.commandResult.get()
   }
-}
-
-fun main(args: Array<String>) {
-  Elide.entry(args)
 }

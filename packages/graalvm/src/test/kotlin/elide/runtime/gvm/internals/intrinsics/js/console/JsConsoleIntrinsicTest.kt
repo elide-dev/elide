@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("JSUnresolvedVariable")
 @file:OptIn(DelicateElideApi::class)
 
@@ -27,6 +26,7 @@ import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.LogLevel
 import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
@@ -47,8 +47,9 @@ import elide.testing.annotations.TestCase
 
   @BeforeEach
   fun mockLogger() {
+    val stub = Logging.named("stubbed")
     loggerBuffer.get().clear()
-    loggerFacade.set(object : Logger {
+    loggerFacade.set(object : Logger, org.slf4j.Logger by stub {
       override fun isEnabled(level: LogLevel): Boolean = true
 
       override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {

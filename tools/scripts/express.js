@@ -11,18 +11,18 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-const app = express();
-const port = 3000;
+const app = express()
+const port = 3000
 
 app.get("/hello", (req, res) => {
-  res.send("Hello!");
-});
+  res.send("Hello!")
+})
 
 app.get("/hello/:name", (req, res) => {
-  const name = req.params.name;
-  console.log(`said hello to name: ${req.params.name}`);
-});
+  const name = req.params.name
+  console.log(`said hello to name: ${req.params.name}`)
+})
 
 app.listen(port, () => {
-  console.info(`Listening on port ${port}`);
-});
+  console.info(`Listening on port ${port}`)
+})

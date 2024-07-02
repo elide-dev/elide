@@ -86,13 +86,14 @@ dependencies {
   compileOnly(libs.graalvm.svm)
 }
 
+val isRelease = properties["elide.buildMode"] == "release"
+val targetType = if (isRelease) "release" else "debug"
 val boringsslRoot = rootProject.layout.projectDirectory.dir("third_party/google/boringssl")
 val boringsslBuildRoot = rootProject.layout.projectDirectory.dir("third_party/google/boringssl/build")
-val boringsslHeaders = rootProject.layout.projectDirectory.dir("third_party/google/boringssl/include")
-
 val libaprRoot = rootProject.layout.projectDirectory.dir("third_party/apache/apr")
-val libaprBuildRoot = rootProject.layout.projectDirectory.dir("third_party/apache/apr/target/lib")
-val libaprHeaders = rootProject.layout.projectDirectory.dir("third_party/apache/apr/target/include")
+val targetHeaders = rootProject.layout.projectDirectory.dir("target/$targetType/include")
+val libaprHeaders = rootProject.layout.projectDirectory.dir("target/$targetType/include/apr-2")
+val targetLibs = rootProject.layout.projectDirectory.dir("target/$targetType/lib")
 
 val jdkHome: String = System.getenv("GRAALVM_HOME")?.ifBlank { null }
   ?: System.getenv("JAVA_HOME")?.ifBlank { null }
@@ -177,64 +178,6 @@ val checkBuilt by tasks.registering {
   mustRunAfter(buildBoringSsl, buildLibApr)
 }
 
-val copyLibAprLibrary by tasks.registering(Copy::class) {
-  group = "build"
-  description = "Copy APR libraries"
-
-  dependsOn(buildLibApr, checkBuilt)
-    val libTail = if (HostManager.hostIsMac) "dylib" else "so"
-
-  from(libaprBuildRoot) {
-    include("libapr-2.0.a", "libapr-2.a", "libapr-2.so.0.0.0", "libapr-2.0.dylib")
-    rename {
-      (if (it == "libapr-2.so.0.0.0") "libapr-2.$libTail" else it).replace("-2.0.", "-2.")
-    }
-  }
-  from(libaprHeaders) {
-    include("**/*.h")
-  }
-  into(layout.buildDirectory.dir("libapr"))
-
-  inputs.files(
-    libaprBuildRoot.file("libapr-2.a"),
-    libaprBuildRoot.file("libapr-2.0.$libTail"),
-  )
-  outputs.files(
-    layout.buildDirectory.file("libapr/libapr-2.a"),
-    layout.buildDirectory.file("libapr/libapr-2.0.$libTail"),
-  )
-}
-
-val copyBoringSslLibrary by tasks.registering(Copy::class) {
-  group = "build"
-  description = "Copy the BoringSSL built library"
-
-  dependsOn(buildBoringSsl, checkBuilt)
-
-  from(boringsslBuildRoot) {
-    include("libssl.a", "libcrypto.a", "libdecrepit.a")
-  }
-  from(boringsslHeaders) {
-    include("**/*.h")
-    exclude("openssl/pki")
-    exclude("openssl/experimental")
-  }
-  into(layout.buildDirectory.dir("boringssl"))
-
-  inputs.files(
-    boringsslBuildRoot.file("libssl.a"),
-    boringsslBuildRoot.file("libcrypto.a"),
-    boringsslBuildRoot.file("libdecrepit.a"),
-    boringsslHeaders.file("openssl/bio.h"),
-  )
-  outputs.files(
-    layout.buildDirectory.file("boringssl/libssl.a"),
-    layout.buildDirectory.file("boringssl/libcrypto.a"),
-    layout.buildDirectory.file("boringssl/libdecrepit.a"),
-    layout.buildDirectory.file("boringssl/openssl/bio.h"),
-  )
-}
-
 tasks.compileJava {
   options.compilerArgumentProviders.add(CommandLineArgumentProvider {
     listOf(
@@ -247,30 +190,14 @@ tasks.compileJava {
 tasks.withType(CppCompile::class) {
   group = "build"
   description = "Compile C/C++ sources"
-  dependsOn(copyBoringSslLibrary, copyLibAprLibrary)
   mustRunAfter(checkBuilt)
 
   val layoutSources = layout.projectDirectory.dir("src/main/cpp").asFileTree.matching {
     include("**/*.c", "**/*.h")
   }
-  val boringsslBuildPath = layout.buildDirectory.dir("boringssl").get()
-  val boringsslLibs = boringsslBuildPath.asFileTree.matching {
-    include("**/*.a")
-  }
-  val boringsslHeaders = boringsslBuildPath.asFileTree.matching {
-    include("**/*.h")
-  }
-  val libaprBuildPath = layout.buildDirectory.dir("libapr").get()
-  val libaprLibs = libaprBuildPath.asFileTree.matching {
-    include("**/*.a")
-  }
-  val libaprHeaders = libaprBuildPath.asFileTree.matching {
-    include("**/*.h")
-  }
-
   macros.putAll(libMacros)
-  source.from(layoutSources, boringsslHeaders, libaprHeaders)
-  inputs.files(layoutSources, boringsslLibs, libaprLibs)
+  source.from(layoutSources)
+  inputs.files(layoutSources)
 
   // enable static init mode
   if (name.lowercase().contains("static")) {
@@ -278,19 +205,13 @@ tasks.withType(CppCompile::class) {
     macros["TCN_BUILD_STATIC"] = "1"
   }
 
-  inputs.files(
-    layout.buildDirectory.file("boringssl/libssl.a"),
-    layout.buildDirectory.file("boringssl/libcrypto.a"),
-    layout.buildDirectory.file("boringssl/libdecrepit.a"),
-  )
   compilerArgs.addAll(listOf(
     "-x", "c",
     "-fPIC",
     "-I$jdkIncludePath",
     "-I$jdkNativeIncludePath",
-    "-I${boringsslBuildPath.asFile.path}",
-    "-I${libaprBuildPath.asFile.path}",
-    "-I${libaprBuildPath.asFile.path}/apr-2",
+    "-I${targetHeaders.asFile.path}",
+    "-I${libaprHeaders.asFile.path}",
   ).plus(if (!HostManager.hostIsLinux) emptyList() else listOf(
     "-I/usr/include",
   )))
@@ -305,8 +226,7 @@ tasks.withType(LinkSharedLibrary::class.java).configureEach {
 
   linkerArgs.addAll(listOf(
     "-L$jdkLibPath",
-    "-L${boringsslBuildPath.asFile.path}",
-    "-L${libaprBuildPath.asFile.path}",
+    "-L${targetLibs.asFile.path}",
     "-lcrypto",
     "-lssl",
     "-lapr-2",
@@ -331,8 +251,6 @@ tasks.build {
 
 tasks.processResources {
   val libs = layout.buildDirectory.dir("lib/main/release")
-  val bsslLibs = layout.buildDirectory.dir("boringssl")
-  val aprLibs = layout.buildDirectory.dir("libapr")
   val compiles = tasks.withType(CppCompile::class)
   val linkages = tasks.withType(LinkSharedLibrary::class)
   val stripped = tasks.withType(StripSymbols::class)
@@ -340,8 +258,6 @@ tasks.processResources {
   dependsOn(compiles, linkages, stripped, statics)
 
   inputs.dir(libs)
-  inputs.dir(bsslLibs)
-  inputs.dir(aprLibs)
 
   val arch = System.getProperty("os.arch")
     .replace("-", "_")
@@ -350,14 +266,21 @@ tasks.processResources {
     .replace(" ", "-")
     .lowercase()
 
-  from(bsslLibs) {
-    exclude("**/stripped/**")
-    exclude("**/*.h")
-    into("META-INF/native/$osName/$arch/")
-  }
-  from(aprLibs) {
-    exclude("**/stripped/**")
-    exclude("**/*.h")
+  from(targetLibs) {
+    include(
+      "libssl.a",
+      "libssl.so",
+      "libssl.dylib",
+      "libcrypto.a",
+      "libcrypto.solib",
+      "libcrypto.dylib",
+      "libdecrepit.a",
+      "libdecrepit.so",
+      "libdecrepit.dylib",
+      "libapr-2.a",
+      "libapr-2.so",
+      "libapr-2.dylib",
+    )
     into("META-INF/native/$osName/$arch/")
   }
 

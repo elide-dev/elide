@@ -10,6 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+#![forbid(unsafe_code, unsafe_op_in_unsafe_fn)]
 use serde::Serialize;
 
 #[typeshare::typeshare]
@@ -47,7 +48,7 @@ pub struct DiagnosticTimings {
 
 #[derive(Clone, Hash, Eq, PartialEq, Debug, Serialize)]
 pub struct DiagnosticSuite {
-    pub maxSeverity: Severity,
+    pub max_severity: Severity,
     pub notes: Vec<DiagnosticNote>,
     pub timings: DiagnosticTimings,
 }
@@ -55,6 +56,6 @@ pub struct DiagnosticSuite {
 #[derive(Clone, Hash, Eq, PartialEq, Debug, Serialize)]
 pub struct DiagnosticResult {
     pub success: bool,
-    pub exitCode: i32,
+    pub exit_code: i32,
     pub diagnostics: Vec<DiagnosticSuite>,
 }

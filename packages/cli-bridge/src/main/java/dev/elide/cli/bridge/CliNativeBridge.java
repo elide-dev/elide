@@ -32,6 +32,15 @@ public class CliNativeBridge {
   /** Return the version string for a tool. */
   public static native String toolVersion(String toolName);
 
+  /** Run the Ruff entrypoint. */
+  public static native int runRuff(String[] args);
+
+  /** Run the Orogene entrypoint. */
+  public static native int runOrogene(String[] args);
+
+  /** Run the Uv entrypoint. */
+  public static native int runUv(String[] args);
+
   static {
     System.loadLibrary("umbrella");
   }

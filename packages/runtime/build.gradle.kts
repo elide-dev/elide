@@ -85,7 +85,7 @@ val enableJvm = hostIsLinux
 val enableKotlin = false
 val enableSqlite = true
 val enableCustomCompiler = false
-val enableNativeCryptoV2 = false  // @TODO broken by new compiler settings
+val enableNativeCryptoV2 = true
 val enableSqliteStatic = true
 val enableStaticJni = true
 val enableToolchains = false
@@ -151,7 +151,7 @@ val exclusions = listOfNotNull(
 ).onlyIf(enableNativeTransportV2))
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 23
+val edgeJvmTarget = 22
 val ltsJvmTarget = 21
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)

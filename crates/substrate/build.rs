@@ -17,14 +17,16 @@ fn main() {
   // decide if we are on darwin
   let target = env::var("TARGET").unwrap();
   let os = if target.contains("darwin") { "darwin" } else { "linux" };
-  let arch = if target.contains("x86_64") { "x86_64" } else { "aarch64" };
+  let arch = if target.contains("x86_64") { "amd64" } else { "aarch64" };
 
   // formulate lib paths
   let lib_path = format!("{}/lib", gvm_home);
+  let lib_path_server = format!("{}/lib/server", gvm_home);
   let lib_path_native = format!("{}/lib/svm/clibraries/{}-{}", gvm_home, os, arch);
 
   // add lib paths
   println!("cargo:rustc-link-search={}", lib_path);
+  println!("cargo:rustc-link-search={}", lib_path_server);
   println!("cargo:rustc-link-search={}", lib_path_native);
 
   // link against `libjvm`

@@ -253,8 +253,7 @@ include(
   ":packages:ssr",
   ":packages:test",
   ":packages:sqlite",
-  // @TODO: Broken.
-  // ":packages:tcnative",
+  ":packages:tcnative",
   ":packages:terminal",
   ":packages:tooling",
   ":packages:transport:transport-common",

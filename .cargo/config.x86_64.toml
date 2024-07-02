@@ -1,5 +1,11 @@
 [build]
-rustflags = []
+rustflags = [
+  # Enables access to unstable options.
+  "-Zunstable-options",
+
+  # Enables Control-Flow Enforcement (CET) on x86 architectures.
+  "-Zcf-protection=full",
+]
 
 [env]
 INCLUDE = { value = "target/include", relative = true }

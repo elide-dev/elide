@@ -35,6 +35,7 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
     registerJni = true,
     builtin = true,
     eager = true,
+    deps = listOf("ssl", "crypto", "apr-2"),
   ))
 
   private fun loadUmbrella() {

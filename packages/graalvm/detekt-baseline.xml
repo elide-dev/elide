@@ -83,9 +83,9 @@
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
     <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, )</ID>
-    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.natives")).resolve("libnetty_tcnative_linux_$archTag.a"), )</ID>
+    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_linux_$archTag.a"), )</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, )</ID>
-    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.natives")).resolve("libnetty_tcnative_osx_$archTag.a"), )</ID>
+    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_osx_$archTag.a"), )</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields( NativeDB::class.java, "pointer", "busyHandler", "commitListener", "updateListener", "progressHandler", ))</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields(Function::class.java, "context", "value", "args"))</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "aarch64", *epollImpls)</ID>

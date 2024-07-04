@@ -15,6 +15,7 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
+  kotlin("kapt")
   kotlin("plugin.serialization")
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
@@ -54,4 +55,23 @@ dependencies {
   api(libs.graalvm.polyglot)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+
+  testApi(projects.packages.base)
+  testApi(projects.packages.graalvm)
+  testAnnotationProcessor(mn.micronaut.inject.java)
+}
+
+val testInternals by configurations.registering {
+  extendsFrom(configurations.testImplementation.get())
+  isCanBeConsumed = true
+  isCanBeResolved = false
+}
+
+val testJar by tasks.registering(Jar::class) {
+  archiveBaseName.set("engine-test")
+  from(sourceSets.test.get().output)
+}
+
+artifacts {
+  add(testInternals.name, testJar)
 }

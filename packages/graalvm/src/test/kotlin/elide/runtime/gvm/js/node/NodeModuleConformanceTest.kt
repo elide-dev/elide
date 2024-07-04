@@ -201,10 +201,10 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJs
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun conforms(op: () -> Unit): ConformanceTestExecutionProxy = conforms(true, op)
+  protected fun conforms(op: suspend () -> Unit): ConformanceTestExecutionProxy = conforms(true, op)
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun conforms(bind: Boolean, op: () -> Unit): ConformanceTestExecutionProxy {
+  protected fun conforms(bind: Boolean, op: suspend () -> Unit): ConformanceTestExecutionProxy {
     val dual = dual(bind, op)
 
     return object : ConformanceTestExecutionProxy() {

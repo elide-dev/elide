@@ -194,22 +194,14 @@ import elide.vm.annotations.Polyglot
    * Reads the contents of a file at the specified path; provides the results or an error to the callback. This variant
    * accepts a polyglot [Value].
    *
+   * Note: If the final [cbk] parameter is `null`, [options] will be inferred as the callback, and so must be executable
+   * in this case.
+   *
    * @param path The path to the file to read.
    * @param options The options to use for the file read operation.
    * @param callback The callback to provide the results or an error.
    */
-  @Polyglot public fun readFile(path: Value, options: Value, callback: ReadFileCallback)
-
-  /**
-   * ## Method: `fs.readFile`
-   *
-   * Reads the contents of a file at the specified path; provides the results or an error to the callback. This variant
-   * accepts a polyglot [Value].
-   *
-   * @param path The path to the file to read.
-   * @param callback The callback to provide the results or an error.
-   */
-  @Polyglot public fun readFile(path: Value, callback: ReadFileCallback)
+  @Polyglot public fun readFile(path: Value, options: Value?, callback: ReadFileCallback? = null)
 
   /**
    * ## Method: `fs.readFile`
@@ -441,6 +433,89 @@ import elide.vm.annotations.Polyglot
     path: Path,
     options: MkdirOptions = MkdirOptions.DEFAULTS,
   ): String?
+
+  /**
+   * ## Method: `fs.copyFile`
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path, using the given [mode] (if specified)
+   * as modifiers for the copy operation; default value for [mode] is `0`.
+   *
+   * [callback] is dispatched once the copy operation completes.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @param mode The mode to use for the copy operation.
+   * @param callback The callback to provide the results or an error.
+   */
+  public fun copyFile(src: Path, dest: Path, mode: Int = 0, callback: ((Throwable?) -> Unit)? = null)
+
+  /**
+   * ## Method: `fs.copyFile`
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path, using the given [mode] (if specified)
+   * as modifiers for the copy operation; default value for [mode] is `0`.
+   *
+   * [callback] is dispatched once the copy operation completes.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @param mode The mode to use for the copy operation.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun copyFile(src: Value, dest: Value, mode: Value?, callback: Value)
+
+  /**
+   * ## Method: `fs.copyFile`
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path.
+   * [callback] is dispatched once the copy operation completes.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @param callback The callback to provide the results or an error.
+   */
+  @Polyglot public fun copyFile(src: Value, dest: Value, callback: Value)
+
+  /**
+   * ## Method: `fs.copyFileSync`
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path, using the given [mode] (if specified)
+   * as modifiers for the copy operation; default value for [mode] is `0`.
+   *
+   * [callback] is dispatched once the copy operation completes.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @param mode The mode to use for the copy operation.
+   * @param callback The callback to provide the results or an error.
+   */
+  public fun copyFileSync(src: Path, dest: Path, mode: Int = 0)
+
+  /**
+   * ## Method: `fs.copyFileSync`
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path, using the given [mode] (if specified)
+   * as modifiers for the copy operation; default value for [mode] is `0`.
+   *
+   * This method operates synchronously.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @param mode The mode to use for the copy operation.
+   */
+  @Polyglot public fun copyFileSync(src: Value, dest: Value, mode: Value?)
+
+  /**
+   * ## Method: `fs.copyFileSync`
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path.
+   *
+   * This method operates synchronously.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   */
+  @Polyglot public fun copyFileSync(src: Value, dest: Value)
 }
 
 /**

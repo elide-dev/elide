@@ -87,7 +87,11 @@ public object JavaScript {
     @JvmStatic public val EMPTY: ExecutionInputs = ExecutionInputs.EMPTY
 
     /**
-     * TBD.
+     * Build HTTP request state and render property inputs for an embedded SSR render cycle.
+     *
+     * @param state Request state.
+     * @param props Render properties.
+     * @return Request execution inputs.
      */
     @JvmStatic public fun <S: Any> requestState(
       state: RequestState,

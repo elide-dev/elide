@@ -437,8 +437,10 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
   implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.coroutines.core.jvm)
+  implementation(libs.kotlinx.coroutines.guava)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
   implementation(libs.kotlinx.collections.immutable)
@@ -506,6 +508,7 @@ dependencies {
   }
 
   // Testing
+  testApi(project(":packages:engine", configuration = "testInternals"))
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)

@@ -17,6 +17,7 @@ import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
+import kotlinx.coroutines.test.runTest
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
@@ -85,8 +86,8 @@ ctx: PolyglotContext,
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Ruby> {
-    op.invoke()
+  override fun dual(bind: Boolean, op: suspend () -> Unit): DualTestExecutionProxy<Ruby> {
+    runTest { op.invoke() }
     return object : DualTestExecutionProxy<Ruby>() {
       override fun guest(guestOperation: Ruby) = GuestTestExecution(::withContext) {
         executeGuestInternal(

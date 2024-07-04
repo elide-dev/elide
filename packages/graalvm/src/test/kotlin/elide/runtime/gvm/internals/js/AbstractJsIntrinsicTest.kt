@@ -19,9 +19,11 @@ import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
+import kotlinx.coroutines.test.runTest
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
@@ -210,8 +212,12 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<JavaScript> {
-    op.invoke()
+  override fun dual(bind: Boolean, op: suspend () -> Unit): DualTestExecutionProxy<JavaScript> {
+    runTest {
+      assertDoesNotThrow {
+        op.invoke()
+      }
+    }
     return object : DualTestExecutionProxy<JavaScript>() {
       override fun guest(guestOperation: JavaScript) = GuestTestExecution(::withContext) {
         executeGuestInternal(

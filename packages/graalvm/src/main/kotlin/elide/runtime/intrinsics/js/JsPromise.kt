@@ -12,13 +12,18 @@
  */
 package elide.runtime.intrinsics.js
 
+import com.google.common.util.concurrent.ListenableFuture
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Future
 import java.util.function.Supplier
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.guava.asDeferred
+import elide.runtime.gvm.GuestExecutor
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Companion.spawn
+import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Companion.latched
 import elide.vm.annotations.Polyglot
 
 private const val THEN_SYMBOL = "then"
@@ -31,9 +36,14 @@ private val jsPromiseKeys = arrayOf(
 )
 
 /**
+ * @return [Deferred] version of this future.
+ */
+public inline fun <reified T> JsPromise<T>.deferred(): Deferred<T> = asDeferred()
+
+/**
  * TBD.
  */
-public interface JsPromise<T> : ProxyObject {
+public interface JsPromise<T> : ListenableFuture<T>, ProxyObject {
   /**
    * TBD.
    */
@@ -71,15 +81,19 @@ public interface JsPromise<T> : ProxyObject {
   }
 
   public companion object {
-    @JvmStatic public fun <T> of(latch: CountDownLatch, producer: Supplier<T>): JsPromise<T> =
-      JsPromiseImpl.of(latch, producer)
-
-    @JvmStatic public fun <T> of(producer: Supplier<T>): JsPromise<T> = JsPromiseImpl.of(producer)
-
-    @JvmStatic public fun <T> of(promise: Future<T>): JsPromise<T> = JsPromiseImpl.of(promise)
+    @JvmStatic public fun <T> GuestExecutor.of(latch: CountDownLatch, producer: Supplier<T>): JsPromise<T> =
+      latched(latch) { producer.get() }
 
     @JvmStatic public fun <T> resolved(value: T): JsPromise<T> = JsPromiseImpl.resolved(value)
 
     @JvmStatic public fun <T> rejected(err: Throwable): JsPromise<T> = JsPromiseImpl.rejected(err)
+
+    @JvmStatic public fun <T> wrap(promise: ListenableFuture<T>): JsPromise<T> = JsPromiseImpl.wrap(
+      promise,
+    )
+
+    @JvmStatic public fun <T> GuestExecutor.of(fn: () -> T): JsPromise<T> = spawn { fn() }
+
+    @JvmStatic public fun <T> GuestExecutor.of(supplier: Supplier<T>): JsPromise<T> = spawn { supplier.get() }
   }
 }

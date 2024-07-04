@@ -10,23 +10,29 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:OptIn(DelicateElideApi::class)
-@file:Suppress("JSCheckFunctionSignatures", "JSUnresolvedReference")
+@file:Suppress("JSCheckFunctionSignatures", "JSUnresolvedReference", "JSDeprecatedSymbols", "LargeClass")
 
 package elide.runtime.gvm.internals.js.node
 
+import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
+import java.nio.file.AccessMode.*
 import java.nio.file.Files
-import java.nio.file.Path
+import java.nio.file.attribute.PosixFilePermission.*
 import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Function
 import kotlin.test.*
 import elide.annotations.Inject
-import elide.runtime.core.DelicateElideApi
+import elide.runtime.gvm.GuestExecutorProvider
+import elide.runtime.gvm.internals.node.fs.FilesystemConstants
 import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
 import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
+import elide.runtime.intrinsics.js.err.AbstractJsException
+import elide.runtime.intrinsics.js.err.Error
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.node.WritableFilesystemAPI
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.fs.WriteFileOptions
@@ -34,8 +40,10 @@ import elide.testing.annotations.TestCase
 import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
 /** Tests for Elide's implementation of the Node `fs` built-in module. */
-@TestCase internal class NodeFsTest : NodeModuleConformanceTest<NodeFilesystemModule>() {
-  val filesystem: NodeFilesystemModule by lazy {
+@TestCase internal class NodeFsTest : AbstractNodeFsTest<NodeFilesystemModule>() {
+  @Inject private lateinit var execProvider: GuestExecutorProvider
+
+  private val filesystem: NodeFilesystemModule by lazy {
     provide()
   }
 
@@ -43,25 +51,9 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
   override fun provide(): NodeFilesystemModule = NodeFilesystemModule(
     VfsInitializerListener().also {
       it.onVfsCreated(EmbeddedGuestVFS.empty())
-    }
+    },
+    execProvider,
   )
-
-  private fun withTemp(op: (Path) -> Unit) {
-    val temp = Files.createTempDirectory(
-      Path.of(System.getProperty("java.io.tmpdir")),
-      "elide-test-"
-    )
-    val fileOf = temp.toFile()
-    var didError = false
-    try {
-      op(temp)
-    } catch (ioe: Throwable) {
-      didError = true
-      throw ioe
-    } finally {
-      if (!didError) fileOf.deleteRecursively()
-    }
-  }
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false
@@ -299,12 +291,22 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       Files.write(samplePath, "Hello, world!".toByteArray())
       assertTrue(Files.exists(samplePath), "should have written file")
       assertEquals("Hello, world!", Files.readString(samplePath))
+      fs.access(NodePath.from(samplePath)) { err ->
+        assertNull(err)
+      }
+      fs.access(
+        Value.asValue(NodePath.from(samplePath).toString()),
+        Value.asValue(FilesystemConstants.R_OK),
+        Value.asValue(Function { err: AbstractJsException? -> assertNull(err) }))
 
-      dual {
-        fs.access(NodePath.from(samplePath)) { err ->
-          assertNull(err)
-        }
-      }.guest {
+      assertThrows<TypeError> {
+        fs.access(
+          Value.asValue(NodePath.from(samplePath).toString()),
+          Value.asValue(FilesystemConstants.R_OK),
+          Value.asValue(true))
+      }
+
+      executeGuest {
         // language=javascript
         """
           const { access } = require("node:fs");
@@ -312,12 +314,183 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
           let callbackDispatched = false;
           let fileErr = null;
           access("$samplePath", (err) => {
+            callbackDispatched = true;
+            fileErr = err || null;
+          });
+          test(callbackDispatched).shouldBeTrue();
+          test(fileErr).isNull();
+        """
+      }
+      executeGuest {
+        // language=javascript
+        """
+          const { access, constants } = require("node:fs");
+          test(access).isNotNull();
+          let callbackDispatched = false;
+          let fileErr = null;
+          access("$samplePath", constants.R_OK, (err) => {
+            callbackDispatched = true;
+            fileErr = err || null;
+          });
+          test(callbackDispatched).shouldBeTrue();
+          test(fileErr).isNull();
+        """
+      }
+    }
+  }
+
+  @Test fun `access() should fail with invalid callback type`() = withTemp { tmp ->
+    filesystem.provideStd().let {
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+      executeGuest {
+        // language=javascript
+        """
+          const { access } = require("node:fs");
+          test(access).isNotNull();
+          test(() => access("$samplePath", true)).fails();
+        """
+      }
+      executeGuest {
+        // language=javascript
+        """
+          const { access, constants } = require("node:fs");
+          test(access).isNotNull();
+          test(() => access("$samplePath", constants.R_OK, true)).fails();
+        """
+      }
+    }
+  }
+
+  @Test fun `access() with text file and mode as READ`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      dual {
+        fs.access(NodePath.from(samplePath), mode = READ) { err ->
+          assertNull(err)
+        }
+        fs.access(
+          Value.asValue(samplePath.toString()),
+          Value.asValue(FilesystemConstants.R_OK),
+          Value.asValue({ err: Any? -> assertNull(err) }))
+      }.guest {
+        // language=javascript
+        """
+          const { access, constants } = require("node:fs");
+          test(access).isNotNull();
+          let callbackDispatched = false;
+          let fileErr = null;
+          access("$samplePath", constants.R_OK, (err) => {
             fileErr = err || null;
           });
           test(callbackDispatched).shouldBeFalse();
           test(fileErr).isNull();
         """
       }
+    }
+  }
+
+  @Test fun `access() with text file and mode as WRITE`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      dual {
+        fs.access(NodePath.from(samplePath), mode = WRITE) { err ->
+          assertNull(err)
+        }
+      }.guest {
+        // language=javascript
+        """
+          const { access, constants } = require("node:fs");
+          test(access).isNotNull();
+          let callbackDispatched = false;
+          let fileErr = null;
+          access("$samplePath", constants.W_OK, (err) => {
+            fileErr = err || null;
+          });
+          test(callbackDispatched).shouldBeFalse();
+          test(fileErr).isNull();
+        """
+      }
+    }
+  }
+
+  @Test fun `access() with text file and mode as EXECUTE`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      assertFalse(Files.isExecutable(samplePath), "sample path should not be executable at first")
+
+      // should not be executable at first
+      fs.access(NodePath.from(samplePath), mode = EXECUTE) { err ->
+        assertNotNull(err)
+      }
+
+      // make it executable
+      Files.getPosixFilePermissions(samplePath).let { perms ->
+        Files.setPosixFilePermissions(samplePath, perms + OWNER_EXECUTE)
+      }
+      assertTrue(Files.isExecutable(samplePath), "path should now be executable")
+
+      // now it should be executable
+      fs.access(NodePath.from(samplePath), mode = EXECUTE) { err ->
+        assertNull(err)
+      }
+    }
+  }
+
+  @Test fun `access() with text file and mode failure`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      // remove read access from self
+      val perms = Files.getPosixFilePermissions(samplePath)
+      Files.setPosixFilePermissions(samplePath, setOf(
+        OWNER_WRITE,
+        OWNER_EXECUTE,
+      ))
+
+      dual {
+        fs.access(NodePath.from(samplePath), mode = READ) { err ->
+          assertNotNull(err)
+        }
+      }.guest {
+        // language=javascript
+        """
+          const { access, constants } = require("node:fs");
+          test(access).isNotNull();
+          let callbackDispatched = false;
+          let fileErr = null;
+          access("$samplePath", constants.R_OK, (err) => {
+            fileErr = err || null;
+          });
+          test(callbackDispatched).shouldBeFalse();
+          test(fileErr).isNotNull();
+        """
+      }
+
+      // restore perms and delete
+      Files.setPosixFilePermissions(samplePath, perms)
+      Files.delete(samplePath)
     }
   }
 
@@ -331,6 +504,7 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
       dual {
         assertDoesNotThrow { fs.accessSync(NodePath.from(samplePath)) }
+        assertDoesNotThrow { fs.accessSync(Value.asValue(NodePath.from(samplePath).toString())) }
       }.guest {
         // language=javascript
         """
@@ -339,6 +513,91 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
           test(() => accessSync("$samplePath")).doesNotFail();
         """
       }
+    }
+  }
+
+  @Test fun `accessSync() with text file and mode as READ`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      dual {
+        assertDoesNotThrow { fs.accessSync(NodePath.from(samplePath), READ) }
+        assertDoesNotThrow {
+          fs.accessSync(
+            Value.asValue(NodePath.from(samplePath).toString()),
+            Value.asValue(FilesystemConstants.R_OK),
+          )
+        }
+      }.guest {
+        // language=javascript
+        """
+          const { accessSync, constants } = require("node:fs");
+          test(accessSync).isNotNull();
+          test(() => accessSync("$samplePath", constants.R_OK)).doesNotFail();
+        """
+      }
+    }
+  }
+
+  @Test fun `accessSync() with text file and mode as WRITE`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      dual {
+        assertDoesNotThrow { fs.accessSync(NodePath.from(samplePath), WRITE) }
+        assertDoesNotThrow {
+          fs.accessSync(
+            Value.asValue(NodePath.from(samplePath).toString()),
+            Value.asValue(FilesystemConstants.W_OK),
+          )
+        }
+      }.guest {
+        // language=javascript
+        """
+          const { accessSync, constants } = require("node:fs");
+          test(accessSync).isNotNull();
+          test(() => accessSync("$samplePath", constants.W_OK)).doesNotFail();
+        """
+      }
+
+      // remove read abilities by owner
+      val perms = Files.getPosixFilePermissions(samplePath)
+      Files.setPosixFilePermissions(samplePath, setOf(
+        OWNER_WRITE,
+        OWNER_EXECUTE,
+      ))
+
+      assertFalse(Files.isReadable(samplePath), "should not be able to read file after read perms revoked")
+
+      assertThrows<Error> {
+        fs.accessSync(NodePath.from(samplePath), READ)
+      }
+      assertThrows<Error> {
+        fs.accessSync(
+          Value.asValue(NodePath.from(samplePath).toString()),
+          Value.asValue(FilesystemConstants.R_OK),
+        )
+      }
+
+      executeGuest {
+        // language=javascript
+        """
+          const { accessSync, constants } = require("node:fs");
+          test(accessSync).isNotNull();
+          test(() => accessSync("$samplePath", constants.R_OK)).fails();
+        """
+      }
+
+      // response perms
+      Files.setPosixFilePermissions(samplePath, perms)
     }
   }
 
@@ -352,6 +611,13 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
       dual {
         fs.readFile(NodePath.from(samplePath), ReadFileOptions(encoding = "utf8")) { err, data ->
+          assertNull(err)
+          assertNotNull(data)
+          assertIs<String>(data)
+          assertEquals("Hello, world!", data)
+        }
+
+        fs.readFile(Value.asValue(samplePath.toString()), Value.asValue(null)) { err, data ->
           assertNull(err)
           assertNotNull(data)
           assertIs<String>(data)
@@ -380,6 +646,47 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
     }
   }
 
+  @Test fun `readFile() with text file with default encoding`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      dual {
+        fs.readFile(NodePath.from(samplePath)) { err, data ->
+          assertNull(err)
+          assertNotNull(data)
+          assertIs<String>(data)
+          assertEquals("Hello, world!", data)
+        }
+      }.guest {
+        // language=javascript
+        """
+          const { readFile } = require("node:fs");
+          test(readFile).isNotNull();
+          let callbackDispatched = false;
+          let fileErr = null;
+          let fileData = null;
+
+          readFile("$samplePath", (err, data) => {
+            callbackDispatched = true;
+            fileErr = null;
+            fileData = data;
+          });
+          test(callbackDispatched).shouldBeTrue("callback must be dispatched");
+          test(fileErr).isNull();
+          const fileDataType = typeof fileData;
+          test(typeof fileData === 'string').shouldBeTrue(
+            'returned file data should be of type `string` but was `' + fileDataType + '`'
+          );
+          test(fileData).isEqualTo("Hello, world!");
+        """
+      }
+    }
+  }
+
   @Test fun `readFileSync() with text file`() = withTemp { tmp ->
     filesystem.provideStd().let { fs ->
       // write a file
@@ -400,6 +707,31 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
           test(readFileSync).isNotNull();
           test(readFileSync("$samplePath", { encoding: 'utf-8' })).isNotNull();
           test(readFileSync("$samplePath", { encoding: 'utf-8' })).isEqualTo("Hello, world!");
+        """
+      }
+    }
+  }
+
+  @Test fun `readFileSync() with text file and default encoding`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      // write a file
+      val samplePath = tmp.resolve("some-file.txt").toAbsolutePath()
+      Files.write(samplePath, "Hello, world!".toByteArray())
+      assertTrue(Files.exists(samplePath), "should have written file")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+
+      dual {
+        assertEquals(
+          "Hello, world!",
+          assertDoesNotThrow { fs.readFileSync(NodePath.from(samplePath), ReadFileOptions(encoding = "utf8")) }
+        )
+      }.guest {
+        // language=javascript
+        """
+          const { readFileSync } = require("node:fs");
+          test(readFileSync).isNotNull();
+          test(readFileSync("$samplePath")).isNotNull();
+          test(readFileSync("$samplePath")).isEqualTo("Hello, world!");
         """
       }
     }
@@ -571,6 +903,15 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
       assertTrue(Files.exists(samplePath), "file should exist after creation")
       assertEquals("Hello, world!", Files.readString(samplePath))
+      Files.delete(samplePath)
+
+      assertDoesNotThrow {
+        fs.writeFileSync(Value.asValue(NodePath.from(samplePath).toString()), Value.asValue("Hello, world!"))
+      }
+
+      assertTrue(Files.exists(samplePath), "file should exist after creation")
+      assertEquals("Hello, world!", Files.readString(samplePath))
+      Files.delete(samplePath)
 
       executeGuest {
         // language=javascript
@@ -624,6 +965,206 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       assertTrue(Files.exists(samplePath2))
       assertTrue(Files.isRegularFile(samplePath2))
       assertEquals("Hello, world!", Files.readString(samplePath2))
+    }
+  }
+
+  @Test fun `copyFile() with valid file`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val srcPath = tmp.resolve("some-file.txt").toAbsolutePath()
+      val destPath = tmp.resolve("some-file-2.txt").toAbsolutePath()
+      Files.writeString(srcPath, "Hello, world!", StandardCharsets.UTF_8)
+
+      assertTrue(Files.exists(srcPath), "src file should not exist before creation")
+      assertFalse(Files.exists(destPath), "dest file should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.copyFile(NodePath.from(srcPath), NodePath.from(destPath)) {
+        assertNull(it, "copy file operation should not fail")
+      }
+      assertTrue(Files.exists(destPath), "file should exist after creation")
+      assertEquals("Hello, world!", Files.readString(destPath))
+
+      Files.delete(destPath)
+      assertFalse(Files.exists(destPath), "file should not exist before guest test")
+
+      executeGuest {
+        // language=javascript
+        """
+          const { copyFile } = require("node:fs");
+          test(copyFile).isNotNull();
+          let fsErr = null;
+          let didDispatch = false;
+          copyFile("$srcPath", "$destPath", (err) => {
+            fsErr = err || null;
+            didDispatch = true;
+          });
+          test(fsErr).isNull();
+          test(didDispatch).shouldBeTrue();
+        """
+      }.doesNotFail()
+
+      assertTrue(Files.exists(destPath))
+      assertTrue(Files.isRegularFile(destPath))
+      assertEquals("Hello, world!", Files.readString(destPath))
+    }
+  }
+
+  @Test fun `copyFileSync() with valid file`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val srcPath = tmp.resolve("some-file.txt").toAbsolutePath()
+      val destPath = tmp.resolve("some-file-2.txt").toAbsolutePath()
+      Files.writeString(srcPath, "Hello, world!", StandardCharsets.UTF_8)
+
+      assertTrue(Files.exists(srcPath), "src file should exist before creation")
+      assertFalse(Files.exists(destPath), "dest file should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.copyFileSync(NodePath.from(srcPath), NodePath.from(destPath))
+      assertTrue(Files.exists(destPath), "file should exist after creation")
+      assertEquals("Hello, world!", Files.readString(destPath))
+
+      Files.delete(destPath)
+      assertFalse(Files.exists(destPath), "file should not exist before guest test")
+
+      fs.copyFileSync(
+        Value.asValue(NodePath.from(srcPath).toString()),
+        Value.asValue(NodePath.from(destPath).toString()))
+
+      assertTrue(Files.exists(destPath), "dest file should exist after another copy")
+      assertEquals("Hello, world!", Files.readString(destPath))
+
+      Files.delete(destPath)
+      assertFalse(Files.exists(destPath), "file should not exist before guest test")
+
+      executeGuest {
+        // language=javascript
+        """
+          const { copyFileSync } = require("node:fs");
+          test(copyFileSync).isNotNull();
+          copyFileSync("$srcPath", "$destPath");
+        """
+      }.doesNotFail()
+
+      assertTrue(Files.exists(destPath))
+      assertTrue(Files.isRegularFile(destPath))
+      assertEquals("Hello, world!", Files.readString(destPath))
+    }
+  }
+
+  @Test fun `copyFile() with valid file and non-overwrite`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val srcPath = tmp.resolve("some-file.txt").toAbsolutePath()
+      val destPath = tmp.resolve("some-file-2.txt").toAbsolutePath()
+      Files.writeString(srcPath, "Hello, world!", StandardCharsets.UTF_8)
+      Files.writeString(destPath, "Should not overwrite", StandardCharsets.UTF_8)
+
+      assertTrue(Files.exists(srcPath), "src file should exist before creation")
+      assertTrue(Files.exists(destPath), "dest file should exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.copyFile(NodePath.from(srcPath), NodePath.from(destPath), mode = FilesystemConstants.COPYFILE_EXCL) {
+        assertNotNull(it, "copy operation should fail due to non-overwrite")
+      }
+      assertTrue(Files.exists(destPath), "file should exist after creation")
+      assertEquals("Should not overwrite", Files.readString(destPath))
+
+      executeGuest {
+        // language=javascript
+        """
+          const { copyFile, constants } = require("node:fs");
+          test(copyFile).isNotNull();
+          let fsErr = null;
+          let didDispatch = false;
+          copyFile("$srcPath", "$destPath", constants.COPYFILE_EXCL, (err) => {
+            fsErr = err || null;
+            didDispatch = true;
+          });
+          test(fsErr).isNotNull();
+          test(didDispatch).shouldBeTrue();
+        """
+      }.doesNotFail()
+
+      assertTrue(Files.exists(destPath))
+      assertTrue(Files.isRegularFile(destPath))
+      assertEquals("Should not overwrite", Files.readString(destPath))
+    }
+  }
+
+  @Test fun `copyFileSync() with valid file and non-overwrite`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val srcPath = tmp.resolve("some-file.txt").toAbsolutePath()
+      val destPath = tmp.resolve("some-file-2.txt").toAbsolutePath()
+      Files.writeString(srcPath, "Hello, world!", StandardCharsets.UTF_8)
+      Files.writeString(destPath, "Should not overwrite", StandardCharsets.UTF_8)
+
+      assertTrue(Files.exists(srcPath), "src file should exist before creation")
+      assertTrue(Files.exists(destPath), "dest file should exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      assertThrows<Throwable> {
+        fs.copyFileSync(NodePath.from(srcPath), NodePath.from(destPath), mode = FilesystemConstants.COPYFILE_EXCL)
+      }
+      assertTrue(Files.exists(destPath), "file should exist after creation")
+      assertEquals("Should not overwrite", Files.readString(destPath))
+
+      executeGuest {
+        // language=javascript
+        """
+          const { copyFileSync, constants } = require("node:fs");
+          test(copyFileSync).isNotNull();
+          test(() => { copyFileSync("$srcPath", "$destPath", constants.COPYFILE_EXCL) }).fails();
+        """
+      }.doesNotFail()
+
+      assertTrue(Files.exists(destPath))
+      assertTrue(Files.isRegularFile(destPath))
+      assertEquals("Should not overwrite", Files.readString(destPath))
+    }
+  }
+
+  @Test fun `copyFile() with missing file`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val srcPath = tmp.resolve("some-file-missing.txt").toAbsolutePath()
+      val destPath = tmp.resolve("some-file-2.txt").toAbsolutePath()
+
+      assertFalse(Files.exists(srcPath), "src file should not exist before creation")
+      assertFalse(Files.exists(destPath), "dest file should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.copyFile(NodePath.from(srcPath), NodePath.from(destPath)) {
+        assertNotNull(it, "copy file operation should fail")
+      }
+      assertFalse(Files.exists(destPath), "dest file should exist after error")
+
+      executeGuest {
+        // language=javascript
+        """
+          const { copyFile } = require("node:fs");
+          test(copyFile).isNotNull();
+          copyFile("$srcPath", "$destPath", (err) => {
+            test(err).isNotNull()
+          })
+        """
+      }.doesNotFail()
+    }
+  }
+
+  @Test fun `copyFileSync() with missing file`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val srcPath = tmp.resolve("some-file-missing.txt").toAbsolutePath()
+      val destPath = tmp.resolve("some-file-2.txt").toAbsolutePath()
+
+      assertFalse(Files.exists(srcPath), "src file should not exist before creation")
+      assertFalse(Files.exists(destPath), "dest file should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      assertThrows<Throwable> {
+        fs.copyFileSync(NodePath.from(srcPath), NodePath.from(destPath))
+      }
+      assertFalse(Files.exists(destPath), "dest file should exist after error")
+
+      executeGuest {
+        // language=javascript
+        """
+          const { copyFileSync } = require("node:fs");
+          test(copyFileSync).isNotNull();
+          test(() => { copyFileSync("$srcPath", "$destPath") }).fails();
+        """
+      }.doesNotFail()
     }
   }
 }

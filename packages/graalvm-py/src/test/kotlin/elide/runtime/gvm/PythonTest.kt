@@ -16,6 +16,7 @@ package elide.runtime.gvm
 import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.test.runTest
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
@@ -32,7 +33,7 @@ abstract class PythonTest : AbstractDualTest<AbstractDualTest.Python>() {
   }
 
   @Suppress("SameParameterValue")
-  private fun executeGuestInternal(ctx: PolyglotContext, bindUtils: Boolean, op: Python,): Value {
+  private fun executeGuestInternal(ctx: PolyglotContext, bindUtils: Boolean, op: Python): Value {
     // resolve the script
     val script = op.invoke(ctx)
 
@@ -71,8 +72,8 @@ abstract class PythonTest : AbstractDualTest<AbstractDualTest.Python>() {
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Python> {
-    op.invoke()
+  override fun dual(bind: Boolean, op: suspend () -> Unit): DualTestExecutionProxy<Python> {
+    runTest { op.invoke() }
     return object : DualTestExecutionProxy<Python>() {
       override fun guest(guestOperation: Python) = GuestTestExecution(::withContext) {
         executeGuestInternal(

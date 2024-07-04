@@ -455,9 +455,9 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun dual(op: () -> Unit): DualTestExecutionProxy<Generator> =
+  protected fun dual(op: suspend () -> Unit): DualTestExecutionProxy<Generator> =
     dual(true, op)
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected abstract fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<Generator>
+  protected abstract fun dual(bind: Boolean, op: suspend () -> Unit): DualTestExecutionProxy<Generator>
 }

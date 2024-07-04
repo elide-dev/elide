@@ -70,6 +70,7 @@ import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
+import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.intrinsics.server.http.HttpServerAgent
@@ -1294,13 +1295,24 @@ import elide.tool.project.ProjectManager
         "${language.label} syntax is incomplete",
       )
 
-      exc.isHostException || exc.message?.contains("HostException: ") == true -> displayFormattedError(
-        exc,
-        exc.message ?: "A runtime error was thrown",
-        advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
-        stacktrace = true,
-        internal = true,
-      )
+      exc.isHostException || exc.message?.contains("HostException: ") == true -> {
+        when (exc.asHostException()) {
+          // guest error thrown from host-side logic
+          is GuestError -> displayFormattedError(
+            exc,
+            exc.message ?: "An error was thrown",
+            stacktrace = !interactive.get(),
+          )
+
+          else -> displayFormattedError(
+            exc,
+            exc.message ?: "A runtime error was thrown",
+            advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
+            stacktrace = true,
+            internal = true,
+          )
+        }
+      }
 
       exc.isGuestException -> displayFormattedError(
         exc,

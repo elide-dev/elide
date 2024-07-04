@@ -163,6 +163,7 @@ dependencies {
   testImplementation(mn.micronaut.test.core)
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
+  testApi(project(":packages:engine", configuration = "testInternals"))
 }
 
 tasks {

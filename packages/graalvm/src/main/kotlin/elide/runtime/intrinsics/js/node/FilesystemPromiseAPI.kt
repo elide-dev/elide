@@ -249,8 +249,7 @@ import elide.vm.annotations.Polyglot
    * @param options The options to use for the file write operation.
    * @return A promise which resolves with no value upon success.
    */
-  @Polyglot
-  public fun writeFile(path: Path, data: StringOrBuffer, options: WriteFileOptions? = null): JsPromise<Unit>
+  @Polyglot public fun writeFile(path: Path, data: StringOrBuffer, options: WriteFileOptions? = null): JsPromise<Unit>
 
   /**
    * ## Method: `fs.mkdir`
@@ -298,6 +297,50 @@ import elide.vm.annotations.Polyglot
    *   `recursive` is `true`.
    */
   @Polyglot public fun mkdir(path: Path, options: MkdirOptions? = null): JsPromise<StringOrBuffer>
+
+  /**
+   * ## Method: `fs.copyFile`
+   *
+   * Asynchronously copies a file using host-side types.
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path; the returned promise is resolved once
+   * the copy operation completes.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @param mode Copy mode constant to apply.
+   * @return Upon success, fulfills with `undefined`; otherwise, rejects with an error.
+   */
+  public fun copyFile(src: Path, dest: Path, mode: Int? = null): JsPromise<Value>
+
+  /**
+   * ## Method: `fs.copyFile`
+   *
+   * Asynchronously copies a file.
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path; the returned promise is resolved once
+   * the copy operation completes.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @return Upon success, fulfills with `undefined`; otherwise, rejects with an error.
+   */
+  @Polyglot public fun copyFile(src: Value, dest: Value): JsPromise<Value>
+
+  /**
+   * ## Method: `fs.copyFile`
+   *
+   * Asynchronously copies a file.
+   *
+   * Copies the contents at the provided [src] path to the provided [dest] path; the returned promise is resolved once
+   * the copy operation completes.
+   *
+   * @param src The source path to copy from.
+   * @param dest The destination path to copy to.
+   * @param mode The mode to use for the copy operation.
+   * @return Upon success, fulfills with `undefined`; otherwise, rejects with an error.
+   */
+  @Polyglot public fun copyFile(src: Value, dest: Value, mode: Int): JsPromise<Value>
 }
 
 /**

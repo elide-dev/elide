@@ -155,21 +155,6 @@ public object NodeStdlib {
   public val events: EventsAPI by lazy { NodeEventsModuleFacade.obtain() }
 
   /**
-   * ## `fs`
-   *
-   * Provides access to a compliant implementation of the Node File System API, at the built-in module name `fs`.
-   */
-  public val fs: FilesystemAPI by lazy { NodeFilesystem.createStd() }
-
-  /**
-   * ## `fs/promises`
-   *
-   * Provides access to a compliant implementation of the Node File System Promises API, at the built-in module name
-   * `fs/promises`.
-   */
-  public val fsPromises: FilesystemPromiseAPI by lazy { NodeFilesystem.createPromises() }
-
-  /**
    * ## `http`
    *
    * Provides access to a compliant implementation of the Node HTTP API, at the built-in module name `http`.

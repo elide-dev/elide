@@ -143,6 +143,7 @@ dependencies {
   kaptTest(mn.micronaut.inject.java)
   testImplementation(projects.packages.test)
   testImplementation(projects.packages.graalvm)
+  testApi(project(":packages:engine", configuration = "testInternals"))
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 

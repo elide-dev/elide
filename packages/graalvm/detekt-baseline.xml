@@ -95,6 +95,7 @@
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("netty_transport_native_epoll", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("netty_transport_native_kqueue", *kqueueImpls)</ID>
     <ID>SpreadOperator:NodeEvents.kt$BoundEventListener$(*args)</ID>
+    <ID>SpreadOperator:NodeFilesystem.kt$(src.toJavaPath(), dest.toJavaPath(), *copyOpts(mode))</ID>
     <ID>SpreadOperator:NodePaths.kt$NodePaths.BasePaths$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
     <ID>SpreadOperator:NodePaths.kt$PathBuf$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
     <ID>SpreadOperator:SQLiteTransactor.kt$SQLiteTransactor$(*args)</ID>

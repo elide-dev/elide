@@ -142,6 +142,24 @@ public final class elide/runtime/feature/engine/NativeSQLiteFeature : elide/runt
 	public fun unpackNatives (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
 }
 
+public synthetic class elide/runtime/gvm/$GuestExecutorFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/$GuestExecutorFactory$Executor0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public abstract class elide/runtime/gvm/DeveloperScript : elide/runtime/gvm/ExecutableScript {
 	public fun <init> ()V
 }
@@ -221,6 +239,27 @@ public final class elide/runtime/gvm/ExecutionInputs$Companion {
 public final class elide/runtime/gvm/ExecutionInputs$Empty : elide/runtime/gvm/ExecutionInputs {
 	public static final field INSTANCE Lelide/runtime/gvm/ExecutionInputs$Empty;
 	public fun allInputs ()[Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/gvm/GuestError {
+}
+
+public final class elide/runtime/gvm/GuestExecution {
+	public static final field INSTANCE Lelide/runtime/gvm/GuestExecution;
+	public final fun direct ()Lelide/runtime/gvm/GuestExecutor;
+	public final fun workStealing ()Lelide/runtime/gvm/GuestExecutor;
+}
+
+public abstract interface class elide/runtime/gvm/GuestExecutor : com/google/common/util/concurrent/ListeningExecutorService, kotlin/coroutines/CoroutineContext {
+	public abstract fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
+}
+
+public final class elide/runtime/gvm/GuestExecutor$DefaultImpls {
+	public static fun plus (Lelide/runtime/gvm/GuestExecutor;Lkotlin/coroutines/CoroutineContext;)Lkotlin/coroutines/CoroutineContext;
+}
+
+public abstract interface class elide/runtime/gvm/GuestExecutorProvider {
+	public abstract fun executor ()Lelide/runtime/gvm/GuestExecutor;
 }
 
 public abstract interface class elide/runtime/gvm/GuestLanguage {
@@ -1038,8 +1077,6 @@ public final class elide/runtime/gvm/internals/node/NodeStdlib {
 	public final fun getDnsPromises ()Lelide/runtime/intrinsics/js/node/DNSPromisesAPI;
 	public final fun getDomain ()Lelide/runtime/intrinsics/js/node/DomainAPI;
 	public final fun getEvents ()Lelide/runtime/intrinsics/js/node/EventsAPI;
-	public final fun getFs ()Lelide/runtime/intrinsics/js/node/FilesystemAPI;
-	public final fun getFsPromises ()Lelide/runtime/intrinsics/js/node/FilesystemPromiseAPI;
 	public final fun getHttp ()Lelide/runtime/intrinsics/js/node/HTTPAPI;
 	public final fun getHttp2 ()Lelide/runtime/intrinsics/js/node/HTTP2API;
 	public final fun getHttps ()Lelide/runtime/intrinsics/js/node/HTTPSAPI;
@@ -2606,7 +2643,7 @@ public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorResult : org
 	public fun removeMember (Ljava/lang/String;)Z
 }
 
-public abstract interface class elide/runtime/intrinsics/js/JsPromise : org/graalvm/polyglot/proxy/ProxyObject {
+public abstract interface class elide/runtime/intrinsics/js/JsPromise : com/google/common/util/concurrent/ListenableFuture, org/graalvm/polyglot/proxy/ProxyObject {
 	public static final field Companion Lelide/runtime/intrinsics/js/JsPromise$Companion;
 	public abstract fun catch (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun catch (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -2614,9 +2651,9 @@ public abstract interface class elide/runtime/intrinsics/js/JsPromise : org/graa
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public fun hasMember (Ljava/lang/String;)Z
-	public static fun of (Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static fun of (Ljava/util/concurrent/Future;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static fun of (Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Lelide/runtime/gvm/GuestExecutor;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public static fun rejected (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -2624,14 +2661,16 @@ public abstract interface class elide/runtime/intrinsics/js/JsPromise : org/graa
 	public abstract fun then (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static synthetic fun then$default (Lelide/runtime/intrinsics/js/JsPromise;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static synthetic fun then$default (Lelide/runtime/intrinsics/js/JsPromise;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun wrap (Lcom/google/common/util/concurrent/ListenableFuture;)Lelide/runtime/intrinsics/js/JsPromise;
 }
 
 public final class elide/runtime/intrinsics/js/JsPromise$Companion {
-	public final fun of (Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
-	public final fun of (Ljava/util/concurrent/Future;)Lelide/runtime/intrinsics/js/JsPromise;
-	public final fun of (Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Lelide/runtime/gvm/GuestExecutor;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun rejected (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun wrap (Lcom/google/common/util/concurrent/ListenableFuture;)Lelide/runtime/intrinsics/js/JsPromise;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/JsSymbol {
@@ -2912,16 +2951,23 @@ public abstract interface class elide/runtime/intrinsics/js/err/AbstractJsExcept
 	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 }
 
-public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeException, elide/runtime/intrinsics/js/err/AbstractJsException {
+public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeException, elide/runtime/gvm/GuestError, elide/runtime/intrinsics/js/err/AbstractJsException, org/graalvm/polyglot/proxy/ProxyObject {
 	public fun <init> ()V
+	public fun <init> ([Lkotlin/Pair;)V
 	public fun getCause ()Lelide/runtime/intrinsics/js/err/Error;
 	public synthetic fun getCause ()Ljava/lang/Throwable;
 	public fun getColumnNumber ()Ljava/lang/Integer;
+	public fun getErrno ()Ljava/lang/Integer;
 	public fun getFileName ()Ljava/lang/String;
 	public fun getLineNumber ()Ljava/lang/Integer;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
 	public abstract fun getMessage ()Ljava/lang/String;
 	public abstract fun getName ()Ljava/lang/String;
 	public final fun getStackTrace ()Lelide/runtime/intrinsics/js/err/Stacktrace;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/err/JsError {
@@ -3179,9 +3225,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/FilesystemAPI {
 	public abstract fun existsSync (Lelide/runtime/intrinsics/js/node/path/Path;)Z
 	public abstract fun existsSync (Lorg/graalvm/polyglot/Value;)Z
 	public abstract fun readFile (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;)V
-	public abstract fun readFile (Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function2;)V
 	public abstract fun readFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function2;)V
 	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun readFile$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
 	public abstract fun readFileSync (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;)Ljava/lang/Object;
 	public abstract fun readFileSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 	public static synthetic fun readFileSync$default (Lelide/runtime/intrinsics/js/node/FilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;ILjava/lang/Object;)Ljava/lang/Object;
@@ -3379,6 +3425,14 @@ public abstract interface class elide/runtime/intrinsics/js/node/WorkerAPI : eli
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesystemAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun copyFile (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/path/Path;ILkotlin/jvm/functions/Function1;)V
+	public abstract fun copyFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun copyFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun copyFile$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/path/Path;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public abstract fun copyFileSync (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/path/Path;I)V
+	public abstract fun copyFileSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun copyFileSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun copyFileSync$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/path/Path;IILjava/lang/Object;)V
 	public abstract fun mkdir (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/MkdirOptions;Lkotlin/jvm/functions/Function1;)V
 	public abstract fun mkdir (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun mkdir (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
@@ -3402,6 +3456,10 @@ public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesys
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesystemPromiseAPI {
+	public abstract fun copyFile (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/path/Path;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun copyFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun copyFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;I)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun copyFile$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemPromiseAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/path/Path;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun mkdir (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/MkdirOptions;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun mkdir (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun mkdir (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;

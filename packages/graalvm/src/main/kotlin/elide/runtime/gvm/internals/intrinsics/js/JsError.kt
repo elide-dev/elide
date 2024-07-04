@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js
 
+import org.graalvm.polyglot.Value
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 import elide.runtime.intrinsics.js.err.*
@@ -31,17 +32,68 @@ import elide.runtime.intrinsics.js.err.*
   }
 
   /**
+   * Manufacture a generic JavaScript error with the provided [msg] and optional [cause].
+   *
+   * @param msg Message to enclose for the error.
+   * @param errno Optional error number to include.
+   * @param extraProps Extra properties to mount on the error.
+   * @return Constructed JS exception type.
+   */
+  fun of(
+    msg: String,
+    errno: Int? = null,
+    vararg extraProps: Pair<String, Any>,
+  ): Error = object : Error(extraProps.map { it.first to Value.asValue(it.second) }.toTypedArray()) {
+    override val message: String get() = msg
+    override val errno: Int? get() = errno
+    override val name: String get() = cause?.javaClass?.simpleName ?: "Error"
+  }
+
+  /**
+   * Manufacture a generic JavaScript error with the provided [msg] and optional [cause].
+   *
+   * @param msg Message to enclose for the error.
+   * @param cause Caught error to wrap, if any.
+   * @param errno Optional error number to include.
+   * @param extraProps Extra properties to mount on the error.
+   * @return Constructed JS exception type.
+   */
+  fun of(
+    msg: String,
+    cause: Throwable?,
+    errno: Int? = null,
+    vararg extraProps: Pair<String, Any>,
+  ): Error = object : Error(extraProps.map { it.first to Value.asValue(it.second) }.toTypedArray()) {
+    override val message: String get() = msg
+    override val errno: Int? get() = errno
+    override val name: String get() = cause?.javaClass?.simpleName ?: "Error"
+  }
+
+  /**
+   * Manufacture a generic JavaScript error with the provided [msg] and optional [cause].
+   *
+   * @param msg Message to enclose for the error.
+   * @param cause Caught error to wrap, if any.
+   * @return Constructed JS exception type.
+   */
+  @Suppress("NOTHING_TO_INLINE")
+  inline fun error(
+    msg: String,
+    cause: Throwable? = null,
+    errno: Int? = null,
+    vararg extraProps: Pair<String, Any>,
+  ): Nothing = throw of(msg, cause, errno = errno, *extraProps)
+
+  /**
    * Wrap a caught [throwable] in a JavaScript error; if no error type is specified, a [ValueError] will be raised.
    *
    * @param throwable Caught error to wrap.
    * @return Constructed JS exception type.
    */
-  fun wrap(throwable: Throwable, type: KClass<out Error>? = null): Error {
-    return if (type == null) {
-      wrapped(throwable, TypeError::class)
-    } else {
-      wrapped(throwable, type)
-    }
+  fun wrap(throwable: Throwable, type: KClass<out Error>? = null): Error = if (type == null) {
+    wrapped(throwable, TypeError::class)
+  } else {
+    wrapped(throwable, type)
   }
 
   /**

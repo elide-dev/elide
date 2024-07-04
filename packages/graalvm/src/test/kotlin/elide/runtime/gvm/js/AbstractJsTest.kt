@@ -22,6 +22,7 @@ import org.intellij.lang.annotations.Language
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.test.runTest
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
@@ -301,8 +302,8 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy<JavaScript> {
-    op.invoke()
+  override fun dual(bind: Boolean, op: suspend () -> Unit): DualTestExecutionProxy<JavaScript> {
+    runTest { op.invoke() }
 
     return object : JsDualTestExecutionProxy() {
       override fun guest(esm: Boolean, guestOperation: JavaScript) =

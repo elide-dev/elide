@@ -94,7 +94,7 @@ val oracleGvm = false
 val oracleGvmLibs = oracleGvm
 val enableMosaic = false
 val enableEdge = true
-val enableStage = false
+val enableStage = true
 val enableNativeTransportV2 = true
 val enableDynamicPlugins = false
 val enableDeprecated = false
@@ -103,6 +103,7 @@ val enablePreinitializeAll = false
 val enableTools = true
 val enableProguard = false
 val enableExperimental = false
+val enableExperimentalLlvmBackend = false
 val enableEmbeddedResources = false
 val enableResourceFilter = false
 val enableAuxCache = false
@@ -598,6 +599,7 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+ParseRuntimeOptions",
   "-H:+JNIEnhancedErrorCodes",
   onlyIf(oracleGvm, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
+  onlyIf(enableExperimentalLlvmBackend, "-H:CompilerBackend=llvm"),
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
   onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
   onlyIf(enableExperimental, "-H:+ProfileConstantObjects"),

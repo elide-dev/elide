@@ -267,7 +267,7 @@ sqlite/sqlite3.c: sqlite/Makefile
 		&& $(SQLITE3_PREFIX) $(MAKE) -j`nproc` sqlite3.c \
 		&& $(SQLITE3_PREFIX) $(MAKE) install
 
-GVM_BUILD_PREFIX ?= JAVA_HOME="$$HOME/.mx/jdks/$(LABS_JDK)"
+GVM_BUILD_PREFIX ?= JAVA_HOME="$$HOME/.mx/jdks/$(LABS_JDK)/Contents/Home"
 
 gvm-fetch-labsjdk:
 	@echo ""
@@ -301,6 +301,22 @@ gvm-ce-macos-aarch64-complete:
 	$(RULE)cd oracle/graalvm/vm \
 		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64-complete build \
 		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-darwin-aarch64-complete graalvm-home > ../../../../.graalvm-home
+
+gvm-ce-llvm:
+	@echo ""
+	@echo "Building GraalVM (LLVM)..."
+	$(RULE)cd oracle/graalvm/vm \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-llvm build \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env ce-llvm graalvm-home > ../../../../.graalvm-home
+
+gvm-ce-macos-aarch64-llvm:
+	@echo ""
+	@echo "Building GraalVM (macOS arm64, LLVM)..."
+	$(RULE)cd oracle/graalvm/vm \
+		&& cp -fv $(ELIDE_ROOT)/third_party/graalvm-ce-darwin-aarch64-llvm \
+			$(ELIDE_ROOT)/third_party/oracle/graalvm/vm/mx.vm/graalvm-ce-darwin-aarch64-llvm \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env graalvm-ce-darwin-aarch64-llvm build \
+		&& $(GVM_BUILD_PREFIX) $(MX) --env graalvm-ce-darwin-aarch64-llvm graalvm-home > ../../../../.graalvm-home
 
 libroot: $(LIBROOT)
 

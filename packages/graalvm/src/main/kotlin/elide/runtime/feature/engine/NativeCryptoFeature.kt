@@ -133,7 +133,6 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       "META-INF/native/linux/aarch64/libapr-2.so",
       "META-INF/native/linux/aarch64/libapr-2.a",
       "META-INF/native/linux/aarch64/libcrypto.a",
-      "META-INF/native/linux/aarch64/libdecrepit.a",
       "META-INF/native/linux/aarch64/libssl.a",
       "META-INF/native/linux/aarch64/shared/libtcnative.so",
       "META-INF/native/linux/aarch64/static/libtcnative.a",
@@ -147,7 +146,6 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       "META-INF/native/macos/amd64/libapr-2.dylib",
       "META-INF/native/macos/amd64/libapr-2.a",
       "META-INF/native/macos/amd64/libcrypto.a",
-      "META-INF/native/macos/amd64/libdecrepit.a",
       "META-INF/native/macos/amd64/libssl.a",
       "META-INF/native/macos/amd64/shared/libtcnative.dylib",
       "META-INF/native/macos/amd64/static/libtcnative.a",
@@ -161,7 +159,6 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       "META-INF/native/macos/aarch64/libapr-2.dylib",
       "META-INF/native/macos/aarch64/libapr-2.a",
       "META-INF/native/macos/aarch64/libcrypto.a",
-      "META-INF/native/macos/aarch64/libdecrepit.a",
       "META-INF/native/macos/aarch64/libssl.a",
       "META-INF/native/macos/aarch64/shared/libtcnative.dylib",
       "META-INF/native/macos/aarch64/static/libtcnative.a",
@@ -216,13 +213,18 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
     super.beforeAnalysis(access)
+
     listOf(
-      "apr-2",
-      "crypto",
-      "ssl",
-      "sqlite3",
-    ).forEach {
-      (access as BeforeAnalysisAccessImpl).nativeLibraries.addStaticJniLibrary(it)
+      "apr-2" to arrayOf("ssl", "crypto"),
+      "crypto" to arrayOf(),
+      "ssl" to arrayOf("crypto"),
+      "sqlite3" to arrayOf(),
+    ).forEach { (lib, deps) ->
+      // even though these are not JNI libraries, we need to add them as JNI libraries, so that they are emitted as
+      // static archives to be included in the final binary.
+      //
+      // this is probably a bug in graalvm.
+      (access as BeforeAnalysisAccessImpl).nativeLibraries.addStaticJniLibrary(lib, *deps)
     }
   }
 }

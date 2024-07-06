@@ -44,7 +44,7 @@ import elide.tool.cli.*
         templateParam to type,
 
         // set the `version` of the current tool
-        versionParam to ElideTool.version(),
+        versionParam to Elide.version(),
       ).map {
         "${it.key}=${it.value}"
       }.joinToString("&")

@@ -13,15 +13,9 @@
 
 package elide.tool.err
 
-import io.micronaut.context.annotation.Replaces
 import java.util.concurrent.atomic.AtomicReference
-import jakarta.inject.Provider
-import elide.annotations.Context
-import elide.annotations.Factory
-import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.server.runtime.jvm.UncaughtExceptionHandler
 import elide.tool.err.ErrorHandler.*
 
 /** Default universal error handler, with support for Elide's [ErrorRecorder]. */
@@ -46,12 +40,12 @@ internal class DefaultErrorHandler private constructor (
   }
 
   /** Provides an injection factory for resolving the singleton [DefaultErrorHandler]. */
-  @Factory class DefaultErrorHandlerProvider : Provider<DefaultErrorHandler> {
-    @Replaces(UncaughtExceptionHandler::class)
-    @Context @Singleton override fun get(): DefaultErrorHandler = acquire()
-  }
+//  @Factory class DefaultErrorHandlerProvider : Provider<DefaultErrorHandler> {
+//    @Replaces(UncaughtExceptionHandler::class)
+//    @Context @Singleton override fun get(): DefaultErrorHandler = acquire()
+//  }
 
-  override suspend fun ErrorHandlerContext.handleError(event: ErrorEvent): ErrorActionStrategy {
+  override fun ErrorHandlerContext.handleError(event: ErrorEvent): ErrorActionStrategy {
     return default().also {
       recorder.recordError(event)
     }

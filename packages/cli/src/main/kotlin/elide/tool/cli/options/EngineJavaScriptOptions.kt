@@ -16,7 +16,7 @@ package elide.tool.cli.options
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Option
-import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
+//import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.plugins.js.JavaScriptConfig
 import elide.runtime.plugins.js.JavaScriptVersion
@@ -42,12 +42,12 @@ import elide.runtime.plugins.js.JavaScriptVersion
   internal var strict: Boolean = true
 
   /** Whether to activate JS strict mode. */
-  @Option(
-    names = ["--js:ecma"],
-    description = ["ECMA standard to use for JavaScript."],
-    defaultValue = "ES2022",
-  )
-  internal var ecma: JsLanguageLevel = JsLanguageLevel.ES2023
+//  @Option(
+//    names = ["--js:ecma"],
+//    description = ["ECMA standard to use for JavaScript."],
+//    defaultValue = "ES2022",
+//  )
+//  internal var ecma: JsLanguageLevel = JsLanguageLevel.ES2023
 
   /** Whether to activate NPM support. */
   @Option(
@@ -75,7 +75,7 @@ import elide.runtime.plugins.js.JavaScriptVersion
 
   /** Apply these settings to the configuration for the JavaScript runtime plugin. */
   internal fun apply(config: JavaScriptConfig) {
-    config.language = JavaScriptVersion.valueOf(ecma.name)
+//    config.language = JavaScriptVersion.valueOf(ecma.name)
     config.wasm = wasm
   }
 }

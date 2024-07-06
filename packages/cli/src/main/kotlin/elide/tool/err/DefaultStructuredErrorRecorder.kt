@@ -66,12 +66,10 @@ internal class DefaultStructuredErrorRecorder private constructor (
     }
   }
 
-  override suspend fun recordError(event: ErrorEvent): Job = withContext(Dispatchers.IO) {
-    async {
-      // build error record
-      PersistedError.create(event).apply {
-        writeErrorToTempDir(workdirManager.flightRecorderDirectory().toFile())
-      }
+  override fun recordError(event: ErrorEvent) {
+    // build error record
+    PersistedError.create(event).apply {
+      writeErrorToTempDir(workdirManager.flightRecorderDirectory().toFile())
     }
   }
 }

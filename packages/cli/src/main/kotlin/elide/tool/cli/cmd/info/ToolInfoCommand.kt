@@ -16,6 +16,7 @@ package elide.tool.cli.cmd.info
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.Engine
 import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.tool.cli.*
@@ -30,20 +31,27 @@ import elide.tool.project.ProjectManager
   description = ["Show info about the current app and environment"],
   mixinStandardHelpOptions = true,
 )
-@Singleton internal class ToolInfoCommand @Inject constructor(
-  private val projectManager: ProjectManager,
-  private val workdir: RuntimeWorkdirManager,
-) : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private fun Boolean.label(): String = if (this) "Yes" else "No"
   }
 
+  @Inject private lateinit var projectManager: ProjectManager
+  @Inject private lateinit var workdir: RuntimeWorkdirManager
+
   // Check if the library group at the name `group` was loaded.
   private fun libraryGroupLoaded(group: String): Boolean = NativeEngine.didLoad(group)
 
+  @Option(
+    names = ["--all", "-a"],
+    hidden = true,
+    description = ["Show all info, including internal debug information"],
+  )
+  internal var showAll: Boolean = false
+
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val version = ElideTool.version()
+    val version = Elide.version()
     val engine = Engine.create()
     val workingRoot = workdir.workingRoot()
     val tempRoot = workdir.tmpDirectory()
@@ -70,15 +78,23 @@ import elide.tool.project.ProjectManager
       }
     }
 
+    val allInfo = if (!showAll) null else StringBuilder().apply {
+      // nothing yet
+    }
+
     output {
+      val (transportEngine, _) = NativeEngine.transportEngine()
       appendLine("Elide v${version} (${ElideCLITool.ELIDE_RELEASE_TYPE})")
       appendLine("Engine: ${engine.implementationName} v${engine.version}")
       appendLine("Platform: $operatingMode")
       appendLine("Languages: " + engine.languages.keys.joinToString(", "))
       appendLine()
       appendLine("Native:")
+      appendLine("- Console: ${libraryGroupLoaded("console").label()}")
       appendLine("- Crypto: ${libraryGroupLoaded("crypto").label()}")
-      appendLine("- Transport: ${libraryGroupLoaded("transport").label()}")
+      appendLine("- SQLite: ${libraryGroupLoaded("sqlite").label()}")
+      appendLine("- Tools: ${libraryGroupLoaded("tools").label()}")
+      appendLine("- Transport: ${libraryGroupLoaded("transport").label()} (${transportEngine})")
       appendLine()
       appendLine("Paths: ")
       appendLine("- Working Root: ${workingRoot.absolutePath}")
@@ -88,6 +104,10 @@ import elide.tool.project.ProjectManager
       if (projectBlock.isNotBlank()) {
         appendLine()
         append(projectBlock)
+      }
+      if (allInfo != null) {
+        appendLine()
+        appendLine(allInfo)
       }
     }
     return success()

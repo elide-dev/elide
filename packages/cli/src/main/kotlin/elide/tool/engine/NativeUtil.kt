@@ -27,9 +27,7 @@ import elide.tool.cli.Statics
 /** Utilities for loading and copied native libraries, inspired by Netty. */
 internal object NativeUtil {
   // Logger to use for warnings when unpacking native support libraries.
-  @JvmStatic private val logger: Logger by lazy {
-    Statics.logging
-  }
+  @JvmStatic private val logger: Logger by lazy { Statics.logging }
 
   // Close an IO resource quietly, ignoring any exceptions.
   @JvmStatic private fun closeQuietly(c: Closeable?) {
@@ -47,15 +45,13 @@ internal object NativeUtil {
     val maybeShaded = NativeLibraryLoader::class.java.getName()
     // Use ! instead of . to avoid shading utilities from modifying the string
     val expected = "io!netty!util!internal!NativeLibraryLoader".replace('!', '.')
-    if (!maybeShaded.endsWith(expected)) {
-      throw UnsatisfiedLinkError(
-        String.format(
-          "Could not find prefix added to %s to get %s. When shading, only adding a "
-                  + "package prefix is supported",
-          expected, maybeShaded,
-        ),
-      )
-    }
+    if (!maybeShaded.endsWith(expected)) throw UnsatisfiedLinkError(
+      String.format(
+        "Could not find prefix added to %s to get %s. When shading, only adding a "
+                + "package prefix is supported",
+        expected, maybeShaded,
+      ),
+    )
     return maybeShaded.substring(0, maybeShaded.length - expected.length)
       .replace("_", "_1")
       .replace('.', '_')
@@ -64,11 +60,7 @@ internal object NativeUtil {
   // Calculate/retrieve a URL for an embedded native library resource.
   @JvmStatic private fun getResource(path: String, loader: ClassLoader?): URL? {
     val urls: Enumeration<URL> = try {
-      if (loader == null) {
-        ClassLoader.getSystemResources(path)
-      } else {
-        loader.getResources(path)
-      }
+      if (loader == null) ClassLoader.getSystemResources(path) else loader.getResources(path)
     } catch (iox: IOException) {
       throw RuntimeException("An error occurred while getting the resources for $path", iox)
     }
@@ -83,18 +75,15 @@ internal object NativeUtil {
 
   // Try to load the native library named `libName`.
   @JvmStatic private fun loadNativeLibrary(libName: String, absolute: Boolean) {
-    if (absolute) {
-      System.load(libName)
-    } else {
-      System.loadLibrary(libName)
-    }
+    if (absolute) System.load(libName) else System.loadLibrary(libName)
   }
 
   @JvmStatic private fun loadLibrary(name: String, absolute: Boolean): Boolean {
     var suppressed: Throwable? = null
     return try {
       suppressed = try {
-        loadNativeLibrary(name, absolute) // Fallback to local helper class.
+        // fallback to local helper class
+        loadNativeLibrary(name, absolute)
         logger.debug("Successfully loaded the library {}", name)
         null
       } catch (nsme: NoSuchMethodError) {

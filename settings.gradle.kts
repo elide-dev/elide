@@ -227,7 +227,7 @@ if (buildPkl == "true") {
 // Build modules.
 include(
   ":packages:base",
-  // ":packages:cli",
+  ":packages:cli",
   ":packages:cli-bridge",
   ":packages:core",
   ":packages:engine",
@@ -248,7 +248,6 @@ include(
   ":packages:proto:proto-protobuf",
   ":packages:platform",
   ":packages:bom",
-  ":packages:runtime",
   ":packages:server",
   ":packages:ssr",
   ":packages:test",

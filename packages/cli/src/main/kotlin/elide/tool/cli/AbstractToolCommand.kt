@@ -13,9 +13,8 @@
 
 package elide.tool.cli
 
+import com.github.ajalt.clikt.core.BaseCliktCommand
 import com.jakewharton.mosaic.MosaicScope
-import com.jakewharton.mosaic.runMosaic
-import com.jakewharton.mosaic.runMosaicBlocking
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -26,8 +25,36 @@ import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
 
+/** Root base for all commands, which defines the structure of interaction with Clikt. */
+abstract class CliCommandInvocation<Context> :
+  BaseCliktCommand<CliCommandInvocation<Context>>(name = "elide")
+  where Context: CommandContext {
+  /**
+   * ## Entrypoint
+   *
+   * Defines the main command entrypoint for CLI implementations which are naturally suspending; this method should only
+   * be called when the suspension context reaches to the root (`main`) entrypoint of the application.
+   *
+   * @receiver Prepared [CommandContext] implementation for this command run
+   */
+  abstract suspend fun enter(): CommandResult
+
+  /**
+   * ## Entrypoint
+   *
+   * Defines the main command entrypoint for CLI implementations which are naturally suspending; this method should only
+   * be called when the suspension context reaches to the root (`main`) entrypoint of the application.
+   *
+   * @receiver Prepared [CommandContext] implementation for this command run
+   */
+  fun enterBlocking(): CommandResult = runBlocking { enter() }
+}
+
 /** Abstract base for all Elide Tool commands, including the root command. */
-abstract class AbstractToolCommand<Context>: Callable<Int>, CommandApi where Context: CommandContext {
+abstract class AbstractToolCommand<Context>:
+  Callable<Int>,
+  CliCommandInvocation<Context>(),
+  CommandApi where Context: CommandContext {
   companion object {
     /** Status of colorized / formatted output support. */
     internal val pretty: AtomicBoolean = AtomicBoolean(true)
@@ -57,10 +84,8 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CommandApi where Con
    * @param op Operation to wrap in a deferred context.
    * @return Deferred operation of type [R].
    */
-  suspend fun <R> deferred(op: suspend () -> R): Deferred<R> = coroutineScope {
-    async {
-      op.invoke()
-    }
+  inline fun <R> CoroutineScope.deferred(crossinline op: suspend () -> R): Deferred<R> = async {
+    op.invoke()
   }
 
   /**
@@ -98,7 +123,7 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CommandApi where Con
   private inline fun execute(
     ctx: CoroutineContext,
     crossinline op: suspend Context.(CommandState) -> CommandResult,
-  ): Int {
+  ): CommandResult {
     val exit = AtomicInteger(0)
     val logging = Statics.logging
     val options = CommandOptions.of(
@@ -121,31 +146,49 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CommandApi where Con
     logging.trace {
       "Built command state: \n$state"
     }
-    val commandCtx = context(state, ctx)
-    logging.trace {
-      "Built command context: \n$commandCtx"
-    }
 
-    // invoke and set exit code
-    logging.trace {
-      "Invoking command implementation"
-    }
-    runMosaicBlocking {
-      op.invoke(commandCtx, state).let { result ->
-        exit.set(when (result) {
-           is CommandResult.Success -> 0
-           is CommandResult.Error -> result.exitCode
-         }.also {
-          logging.trace {
-            "Command implementation returned exit code: $it"
-          }
-          commandResult.set(result)
-        })
+    runBlocking {
+      runCatching {
+        val commandCtx = context(state, ctx)
+        logging.trace {
+          "Built command context: \n$commandCtx"
+        }
+
+        // invoke and set exit code
+        logging.trace {
+          "Invoking command implementation"
+        }
+
+        op.invoke(commandCtx, state).let { result ->
+          exit.set(when (result) {
+            is CommandResult.Success -> 0
+            is CommandResult.Error -> result.exitCode
+          }.also {
+            logging.trace {
+              "Command implementation returned exit code: $it"
+            }
+            commandResult.set(result)
+          })
+        }
+      }.let {
+        if (it.isFailure) {
+          val err = it.exceptionOrNull()
+          val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
+          logging.error("Uncaught fatal exception", err ?: "(unknown)", stack)
+          exit.set(1)
+        }
       }
     }
+    return commandResult.get()
+  }
 
-    // return exit code
-    return exit.get()
+  /**
+   * Execution entrypoint for this command as a suspending callable.
+   *
+   * @return Exit code from running the command.
+   */
+  suspend fun exec(args: Array<String>): CommandResult = execute(Dispatchers.Default) {
+    invoke(it).also(commandResult::set)  // enter context and invoke
   }
 
   /**
@@ -154,9 +197,9 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CommandApi where Con
    * @return Exit code from running the command.
    */
   override fun call(): Int {
-    return execute(Dispatchers.Main) {
+    return execute(Dispatchers.Default) {
       invoke(it).also(commandResult::set)  // enter context and invoke
-    }
+    }.exitCode
   }
 
   /**
@@ -169,15 +212,18 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CommandApi where Con
    * @param ctx Co-routine context to execute the command in.
    * @return Execution context to use for this command.
    */
-  open fun context(state: CommandState, ctx: CoroutineContext): Context {
+  open fun context(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope? = null): Context {
     @Suppress("UNCHECKED_CAST")
-    return CommandContext.default(state, ctx) as Context
+    (return when (mosaic) {
+      null -> CommandContext.default(state, ctx) as Context
+      else -> CommandContext.default(state, ctx, mosaic) as Context
+    })
   }
 
   /**
    * Run the implementation for this command.
    *
-   * This method is overridden by sub-classes in order to implement the actual command logic. The receiver [Context] is
+   * This method is overridden by subclasses in order to implement the actual command logic. The receiver [Context] is
    * created by the [context] function, and this entrypoint is called, by the [call] method, by the outer framework.
    *
    * @receiver Execution context for this command.
@@ -185,4 +231,8 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, CommandApi where Con
    * @return Command execution result.
    */
   abstract suspend fun Context.invoke(state: CommandState): CommandResult
+
+  override suspend fun enter(): CommandResult = execute(Dispatchers.Default) {
+    invoke(it).also(commandResult::set)  // enter context and invoke
+  }
 }

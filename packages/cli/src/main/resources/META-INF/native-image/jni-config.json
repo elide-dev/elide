@@ -3,6 +3,9 @@
   "name":"[B"
 },
 {
+  "name":"[J"
+},
+{
   "name":"[Lcom.sun.management.internal.DiagnosticCommandArgumentInfo;"
 },
 {
@@ -12,12 +15,68 @@
   "name":"[Ljava.lang.String;"
 },
 {
-  "name":"com.apple.eawt._AppEventHandler",
-  "methods":[{"name":"handleNativeNotification","parameterTypes":["int"] }]
+  "name":"[Z"
 },
 {
-  "name":"com.apple.eawt._AppMenuBarHandler",
-  "methods":[{"name":"initMenuStates","parameterTypes":["boolean","boolean","boolean","boolean"] }]
+  "name":"[[J"
+},
+{
+  "name":"com.sun.jna.Callback"
+},
+{
+  "name":"com.sun.jna.CallbackReference",
+  "methods":[{"name":"getCallback","parameterTypes":["java.lang.Class","com.sun.jna.Pointer","boolean"] }, {"name":"getFunctionPointer","parameterTypes":["com.sun.jna.Callback","boolean"] }, {"name":"getNativeString","parameterTypes":["java.lang.Object","boolean"] }, {"name":"initializeThread","parameterTypes":["com.sun.jna.Callback","com.sun.jna.CallbackReference$AttachOptions"] }]
+},
+{
+  "name":"com.sun.jna.CallbackReference$AttachOptions"
+},
+{
+  "name":"com.sun.jna.FromNativeConverter",
+  "methods":[{"name":"nativeType","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.IntegerType",
+  "fields":[{"name":"value"}]
+},
+{
+  "name":"com.sun.jna.JNIEnv"
+},
+{
+  "name":"com.sun.jna.Native",
+  "methods":[{"name":"dispose","parameterTypes":[] }, {"name":"fromNative","parameterTypes":["com.sun.jna.FromNativeConverter","java.lang.Object","java.lang.reflect.Method"] }, {"name":"fromNative","parameterTypes":["java.lang.Class","java.lang.Object"] }, {"name":"fromNative","parameterTypes":["java.lang.reflect.Method","java.lang.Object"] }, {"name":"nativeType","parameterTypes":["java.lang.Class"] }, {"name":"toNative","parameterTypes":["com.sun.jna.ToNativeConverter","java.lang.Object"] }, {"name":"writeBytes","parameterTypes":["com.sun.jna.Pointer","long","long","byte[]","int","int"] }]
+},
+{
+  "name":"com.sun.jna.Native$ffi_callback",
+  "methods":[{"name":"invoke","parameterTypes":["long","long","long"] }]
+},
+{
+  "name":"com.sun.jna.NativeMapped",
+  "methods":[{"name":"toNative","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.Pointer",
+  "fields":[{"name":"peer"}],
+  "methods":[{"name":"<init>","parameterTypes":["long"] }]
+},
+{
+  "name":"com.sun.jna.PointerType",
+  "fields":[{"name":"pointer"}]
+},
+{
+  "name":"com.sun.jna.Structure",
+  "fields":[{"name":"memory"}, {"name":"typeInfo"}],
+  "methods":[{"name":"autoRead","parameterTypes":[] }, {"name":"autoWrite","parameterTypes":[] }, {"name":"getTypeInfo","parameterTypes":[] }, {"name":"newInstance","parameterTypes":["java.lang.Class","long"] }]
+},
+{
+  "name":"com.sun.jna.Structure$ByValue"
+},
+{
+  "name":"com.sun.jna.Structure$FFIType$FFITypes",
+  "fields":[{"name":"ffi_type_double"}, {"name":"ffi_type_float"}, {"name":"ffi_type_longdouble"}, {"name":"ffi_type_pointer"}, {"name":"ffi_type_sint16"}, {"name":"ffi_type_sint32"}, {"name":"ffi_type_sint64"}, {"name":"ffi_type_sint8"}, {"name":"ffi_type_uint16"}, {"name":"ffi_type_uint32"}, {"name":"ffi_type_uint64"}, {"name":"ffi_type_uint8"}, {"name":"ffi_type_void"}]
+},
+{
+  "name":"com.sun.jna.WString",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"com.sun.management.internal.DiagnosticCommandArgumentInfo",
@@ -26,6 +85,17 @@
 {
   "name":"com.sun.management.internal.DiagnosticCommandInfo",
   "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","java.util.List"] }]
+},
+{
+  "name":"dev.elide.cli.bridge.CliNativeBridge",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"elide.tool.cli.ElideKt",
+  "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
 },
 {
   "name":"elide.tool.cli.ElideTool",
@@ -39,23 +109,6 @@
   "fields":[{"name":"file"}, {"name":"transferred"}]
 },
 {
-  "name":"io.netty.channel.epoll.LinuxSocket"
-},
-{
-  "name":"io.netty.channel.epoll.Native"
-},
-{
-  "name":"io.netty.channel.epoll.NativeDatagramPacketArray$NativeDatagramPacket",
-  "fields":[{"name":"count"}, {"name":"memoryAddress"}, {"name":"recipientAddr"}, {"name":"recipientAddrLen"}, {"name":"recipientPort"}, {"name":"recipientScopeId"}, {"name":"segmentSize"}, {"name":"senderAddr"}, {"name":"senderAddrLen"}, {"name":"senderPort"}, {"name":"senderScopeId"}]
-},
-{
-  "name":"io.netty.channel.epoll.NativeStaticallyReferencedJniMethods",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
   "name":"io.netty.channel.kqueue.BsdSocket"
 },
 {
@@ -66,13 +119,6 @@
 },
 {
   "name":"io.netty.channel.kqueue.Native"
-},
-{
-  "name":"io.netty.channel.kqueue.NativeStaticallyReferencedJniMethods",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
 },
 {
   "name":"io.netty.channel.unix.Buffer"
@@ -102,6 +148,15 @@
   "name":"io.netty.channel.unix.Socket"
 },
 {
+  "name":"io.netty.incubator.channel.uring.LinuxSocket"
+},
+{
+  "name":"io.netty.incubator.channel.uring.Native"
+},
+{
+  "name":"io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods"
+},
+{
   "name":"io.netty.internal.tcnative.Buffer"
 },
 {
@@ -116,12 +171,7 @@
   "name":"io.netty.internal.tcnative.Library"
 },
 {
-  "name":"io.netty.internal.tcnative.NativeStaticallyReferencedJniMethods",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "methods":[{"name":"sslOpCipherServerPreference","parameterTypes":[] }]
+  "name":"io.netty.internal.tcnative.NativeStaticallyReferencedJniMethods"
 },
 {
   "name":"io.netty.internal.tcnative.SSL"
@@ -149,10 +199,6 @@
   "fields":[{"name":"complete"}, {"name":"returnValue"}]
 },
 {
-  "name":"java.awt.event.InputEvent",
-  "methods":[{"name":"getButtonDownMasks","parameterTypes":[] }]
-},
-{
   "name":"java.io.FileDescriptor",
   "fields":[{"name":"fd"}]
 },
@@ -161,21 +207,37 @@
 },
 {
   "name":"java.lang.Boolean",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["boolean"] }, {"name":"getBoolean","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.Byte",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["byte"] }]
 },
 {
   "name":"java.lang.Character",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["char"] }]
 },
 {
   "name":"java.lang.Class",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"getClassLoader","parameterTypes":[] }, {"name":"getComponentType","parameterTypes":[] }]
 },
 {
@@ -184,7 +246,11 @@
 },
 {
   "name":"java.lang.Double",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["double"] }]
 },
 {
@@ -192,7 +258,11 @@
 },
 {
   "name":"java.lang.Float",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["float"] }]
 },
 {
@@ -200,12 +270,20 @@
 },
 {
   "name":"java.lang.Integer",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["int"] }]
 },
 {
   "name":"java.lang.Long",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["long"] }]
 },
 {
@@ -223,16 +301,28 @@
 },
 {
   "name":"java.lang.Short",
-  "fields":[{"name":"TYPE"}, {"name":"value"}],
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[{"name":"TYPE"}, {"name":"value", "allowWrite":true}],
   "methods":[{"name":"<init>","parameterTypes":["short"] }]
 },
 {
   "name":"java.lang.String",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":["byte[]"] }, {"name":"<init>","parameterTypes":["byte[]","java.lang.String"] }, {"name":"getBytes","parameterTypes":[] }, {"name":"getBytes","parameterTypes":["java.lang.String"] }, {"name":"lastIndexOf","parameterTypes":["int"] }, {"name":"substring","parameterTypes":["int"] }, {"name":"toCharArray","parameterTypes":[] }]
 },
 {
   "name":"java.lang.System",
-  "methods":[{"name":"getProperty","parameterTypes":["java.lang.String"] }, {"name":"load","parameterTypes":["java.lang.String"] }, {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }]
+  "methods":[{"name":"getProperty","parameterTypes":["java.lang.String"] }, {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }]
+},
+{
+  "name":"java.lang.Throwable",
+  "methods":[{"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"java.lang.UnsatisfiedLinkError",
@@ -240,10 +330,18 @@
 },
 {
   "name":"java.lang.Void",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "fields":[{"name":"TYPE"}]
 },
 {
   "name":"java.lang.reflect.Method",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"getParameterTypes","parameterTypes":[] }, {"name":"getReturnType","parameterTypes":[] }]
 },
 {
@@ -255,15 +353,27 @@
 },
 {
   "name":"java.nio.Buffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "fields":[{"name":"limit"}, {"name":"position"}],
   "methods":[{"name":"limit","parameterTypes":[] }, {"name":"position","parameterTypes":[] }]
 },
 {
   "name":"java.nio.ByteBuffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"array","parameterTypes":[] }, {"name":"arrayOffset","parameterTypes":[] }]
 },
 {
   "name":"java.nio.CharBuffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"array","parameterTypes":[] }, {"name":"arrayOffset","parameterTypes":[] }]
 },
 {
@@ -271,22 +381,42 @@
 },
 {
   "name":"java.nio.DoubleBuffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"array","parameterTypes":[] }, {"name":"arrayOffset","parameterTypes":[] }]
 },
 {
   "name":"java.nio.FloatBuffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"array","parameterTypes":[] }, {"name":"arrayOffset","parameterTypes":[] }]
 },
 {
   "name":"java.nio.IntBuffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"array","parameterTypes":[] }, {"name":"arrayOffset","parameterTypes":[] }]
 },
 {
   "name":"java.nio.LongBuffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"array","parameterTypes":[] }, {"name":"arrayOffset","parameterTypes":[] }]
 },
 {
   "name":"java.nio.ShortBuffer",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
   "methods":[{"name":"array","parameterTypes":[] }, {"name":"arrayOffset","parameterTypes":[] }]
 },
 {
@@ -301,141 +431,46 @@
   "name":"jdk.internal.loader.ClassLoaders$AppClassLoader"
 },
 {
-  "name":"jdk.internal.loader.Loader"
-},
-{
   "name":"org.fusesource.jansi.internal.CLibrary",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"HAVE_ISATTY"}, {"name":"HAVE_TTYNAME"}, {"name":"LIBRARY", "allowWrite":true}, {"name":"STDERR_FILENO"}, {"name":"STDIN_FILENO"}, {"name":"STDOUT_FILENO"}, {"name":"TCSADRAIN"}, {"name":"TCSAFLUSH"}, {"name":"TCSANOW"}, {"name":"TIOCGETA"}, {"name":"TIOCGETD"}, {"name":"TIOCGWINSZ"}, {"name":"TIOCSETA"}, {"name":"TIOCSETD"}, {"name":"TIOCSWINSZ"}],
-  "methods":[{"name":"access$000","parameterTypes":[] }, {"name":"init","parameterTypes":[] }, {"name":"ioctl","parameterTypes":["int","long","org.fusesource.jansi.internal.CLibrary$WinSize"] }, {"name":"ioctl","parameterTypes":["int","long","int[]"] }, {"name":"isatty","parameterTypes":["int"] }, {"name":"openpty","parameterTypes":["int[]","int[]","byte[]","org.fusesource.jansi.internal.CLibrary$Termios","org.fusesource.jansi.internal.CLibrary$WinSize"] }, {"name":"tcgetattr","parameterTypes":["int","org.fusesource.jansi.internal.CLibrary$Termios"] }, {"name":"tcsetattr","parameterTypes":["int","int","org.fusesource.jansi.internal.CLibrary$Termios"] }, {"name":"ttyname","parameterTypes":["int"] }]
+  "fields":[{"name":"HAVE_ISATTY"}, {"name":"HAVE_TTYNAME"}, {"name":"TCSADRAIN"}, {"name":"TCSAFLUSH"}, {"name":"TCSANOW"}, {"name":"TIOCGETA"}, {"name":"TIOCGETD"}, {"name":"TIOCGWINSZ"}, {"name":"TIOCSETA"}, {"name":"TIOCSETD"}, {"name":"TIOCSWINSZ"}]
 },
 {
-  "name":"org.fusesource.jansi.internal.CLibrary$Termios",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"c_cc"}, {"name":"c_cflag"}, {"name":"c_iflag"}, {"name":"c_ispeed"}, {"name":"c_lflag"}, {"name":"c_oflag"}, {"name":"c_ospeed"}],
-  "methods":[{"name":"init","parameterTypes":[] }]
+  "name":"org.sqlite.BusyHandler",
+  "methods":[{"name":"callback","parameterTypes":["int"] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.CLibrary$WinSize",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"ws_col"}, {"name":"ws_row"}, {"name":"ws_xpixel"}, {"name":"ws_ypixel"}],
-  "methods":[{"name":"init","parameterTypes":[] }]
+  "name":"org.sqlite.Collation",
+  "methods":[{"name":"xCompare","parameterTypes":["java.lang.String","java.lang.String"] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.Kernel32",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"BACKGROUND_BLUE"}, {"name":"BACKGROUND_GREEN"}, {"name":"BACKGROUND_INTENSITY"}, {"name":"BACKGROUND_RED"}, {"name":"COMMON_LVB_GRID_HORIZONTAL"}, {"name":"COMMON_LVB_GRID_LVERTICAL"}, {"name":"COMMON_LVB_GRID_RVERTICAL"}, {"name":"COMMON_LVB_LEADING_BYTE"}, {"name":"COMMON_LVB_REVERSE_VIDEO"}, {"name":"COMMON_LVB_TRAILING_BYTE"}, {"name":"COMMON_LVB_UNDERSCORE"}, {"name":"FOREGROUND_BLUE"}, {"name":"FOREGROUND_GREEN"}, {"name":"FOREGROUND_INTENSITY"}, {"name":"FOREGROUND_RED"}, {"name":"FORMAT_MESSAGE_FROM_SYSTEM"}, {"name":"INVALID_HANDLE_VALUE"}, {"name":"LIBRARY", "allowWrite":true}, {"name":"STD_ERROR_HANDLE"}, {"name":"STD_INPUT_HANDLE"}, {"name":"STD_OUTPUT_HANDLE"}],
-  "methods":[{"name":"CloseHandle","parameterTypes":["long"] }, {"name":"FillConsoleOutputAttribute","parameterTypes":["long","short","int","org.fusesource.jansi.internal.Kernel32$COORD","int[]"] }, {"name":"FillConsoleOutputCharacterW","parameterTypes":["long","char","int","org.fusesource.jansi.internal.Kernel32$COORD","int[]"] }, {"name":"FlushConsoleInputBuffer","parameterTypes":["long"] }, {"name":"FormatMessageW","parameterTypes":["int","long","int","int","byte[]","int","long[]"] }, {"name":"GetConsoleMode","parameterTypes":["long","int[]"] }, {"name":"GetConsoleOutputCP","parameterTypes":[] }, {"name":"GetConsoleScreenBufferInfo","parameterTypes":["long","org.fusesource.jansi.internal.Kernel32$CONSOLE_SCREEN_BUFFER_INFO"] }, {"name":"GetLastError","parameterTypes":[] }, {"name":"GetNumberOfConsoleInputEvents","parameterTypes":["long","int[]"] }, {"name":"GetStdHandle","parameterTypes":["int"] }, {"name":"PeekConsoleInputW","parameterTypes":["long","long","int","int[]"] }, {"name":"ReadConsoleInputW","parameterTypes":["long","long","int","int[]"] }, {"name":"ScrollConsoleScreenBuffer","parameterTypes":["long","org.fusesource.jansi.internal.Kernel32$SMALL_RECT","org.fusesource.jansi.internal.Kernel32$SMALL_RECT","org.fusesource.jansi.internal.Kernel32$COORD","org.fusesource.jansi.internal.Kernel32$CHAR_INFO"] }, {"name":"SetConsoleCursorPosition","parameterTypes":["long","org.fusesource.jansi.internal.Kernel32$COORD"] }, {"name":"SetConsoleMode","parameterTypes":["long","int"] }, {"name":"SetConsoleOutputCP","parameterTypes":["int"] }, {"name":"SetConsoleTextAttribute","parameterTypes":["long","short"] }, {"name":"SetConsoleTitle","parameterTypes":["java.lang.String"] }, {"name":"WaitForSingleObject","parameterTypes":["long","int"] }, {"name":"WriteConsoleW","parameterTypes":["long","char[]","int","int[]","long"] }, {"name":"_getch","parameterTypes":[] }, {"name":"access$000","parameterTypes":[] }, {"name":"free","parameterTypes":["long"] }, {"name":"init","parameterTypes":[] }, {"name":"malloc","parameterTypes":["long"] }, {"name":"readConsoleInputHelper","parameterTypes":["long","int","boolean"] }, {"name":"readConsoleKeyInput","parameterTypes":["long","int","boolean"] }]
+  "name":"org.sqlite.Function",
+  "fields":[{"name":"args"}, {"name":"context"}, {"name":"value"}],
+  "methods":[{"name":"xFunc","parameterTypes":[] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.Kernel32$CHAR_INFO",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"attributes"}, {"name":"unicodeChar"}],
-  "methods":[{"name":"init","parameterTypes":[] }]
+  "name":"org.sqlite.Function$Aggregate",
+  "methods":[{"name":"clone","parameterTypes":[] }, {"name":"xFinal","parameterTypes":[] }, {"name":"xStep","parameterTypes":[] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.Kernel32$CONSOLE_SCREEN_BUFFER_INFO",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"attributes"}, {"name":"cursorPosition"}, {"name":"maximumWindowSize"}, {"name":"size"}, {"name":"window"}],
-  "methods":[{"name":"init","parameterTypes":[] }, {"name":"windowHeight","parameterTypes":[] }, {"name":"windowWidth","parameterTypes":[] }]
+  "name":"org.sqlite.Function$Window",
+  "methods":[{"name":"xInverse","parameterTypes":[] }, {"name":"xValue","parameterTypes":[] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.Kernel32$COORD",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"x"}, {"name":"y"}],
-  "methods":[{"name":"copy","parameterTypes":[] }, {"name":"init","parameterTypes":[] }]
+  "name":"org.sqlite.ProgressHandler",
+  "methods":[{"name":"progress","parameterTypes":[] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.Kernel32$FOCUS_EVENT_RECORD",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"setFocus"}],
-  "methods":[{"name":"init","parameterTypes":[] }]
+  "name":"org.sqlite.core.DB",
+  "methods":[{"name":"onCommit","parameterTypes":["boolean"] }, {"name":"onUpdate","parameterTypes":["int","java.lang.String","java.lang.String","long"] }, {"name":"throwex","parameterTypes":[] }, {"name":"throwex","parameterTypes":["int"] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.Kernel32$INPUT_RECORD",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"FOCUS_EVENT"}, {"name":"KEY_EVENT"}, {"name":"MENU_EVENT"}, {"name":"MOUSE_EVENT"}, {"name":"SIZEOF"}, {"name":"WINDOW_BUFFER_SIZE_EVENT"}, {"name":"eventType"}, {"name":"focusEvent"}, {"name":"keyEvent"}, {"name":"menuEvent"}, {"name":"mouseEvent"}, {"name":"windowBufferSizeEvent"}],
-  "methods":[{"name":"init","parameterTypes":[] }, {"name":"memmove","parameterTypes":["org.fusesource.jansi.internal.Kernel32$INPUT_RECORD","long","long"] }]
+  "name":"org.sqlite.core.DB$ProgressObserver",
+  "methods":[{"name":"progress","parameterTypes":["int","int"] }]
 },
 {
-  "name":"org.fusesource.jansi.internal.Kernel32$KEY_EVENT_RECORD",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"CAPSLOCK_ON"}, {"name":"ENHANCED_KEY"}, {"name":"LEFT_ALT_PRESSED"}, {"name":"LEFT_CTRL_PRESSED"}, {"name":"NUMLOCK_ON"}, {"name":"RIGHT_ALT_PRESSED"}, {"name":"RIGHT_CTRL_PRESSED"}, {"name":"SCROLLLOCK_ON"}, {"name":"SHIFT_PRESSED"}, {"name":"SIZEOF"}, {"name":"controlKeyState"}, {"name":"keyCode"}, {"name":"keyDown"}, {"name":"repeatCount"}, {"name":"scanCode"}, {"name":"uchar"}],
-  "methods":[{"name":"init","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
-},
-{
-  "name":"org.fusesource.jansi.internal.Kernel32$MENU_EVENT_RECORD",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"commandId"}],
-  "methods":[{"name":"init","parameterTypes":[] }]
-},
-{
-  "name":"org.fusesource.jansi.internal.Kernel32$MOUSE_EVENT_RECORD",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"CAPSLOCK_ON"}, {"name":"DOUBLE_CLICK"}, {"name":"ENHANCED_KEY"}, {"name":"FROM_LEFT_1ST_BUTTON_PRESSED"}, {"name":"FROM_LEFT_2ND_BUTTON_PRESSED"}, {"name":"FROM_LEFT_3RD_BUTTON_PRESSED"}, {"name":"FROM_LEFT_4TH_BUTTON_PRESSED"}, {"name":"LEFT_ALT_PRESSED"}, {"name":"LEFT_CTRL_PRESSED"}, {"name":"MOUSE_HWHEELED"}, {"name":"MOUSE_MOVED"}, {"name":"MOUSE_WHEELED"}, {"name":"NUMLOCK_ON"}, {"name":"RIGHTMOST_BUTTON_PRESSED"}, {"name":"RIGHT_ALT_PRESSED"}, {"name":"RIGHT_CTRL_PRESSED"}, {"name":"SCROLLLOCK_ON"}, {"name":"SHIFT_PRESSED"}, {"name":"SIZEOF"}, {"name":"buttonState"}, {"name":"controlKeyState"}, {"name":"eventFlags"}, {"name":"mousePosition"}],
-  "methods":[{"name":"init","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
-},
-{
-  "name":"org.fusesource.jansi.internal.Kernel32$SMALL_RECT",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"bottom"}, {"name":"left"}, {"name":"right"}, {"name":"top"}],
-  "methods":[{"name":"copy","parameterTypes":[] }, {"name":"height","parameterTypes":[] }, {"name":"init","parameterTypes":[] }, {"name":"width","parameterTypes":[] }]
-},
-{
-  "name":"org.fusesource.jansi.internal.Kernel32$WINDOW_BUFFER_SIZE_RECORD",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "fields":[{"name":"SIZEOF"}, {"name":"size"}],
-  "methods":[{"name":"init","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
-},
-{
-  "name":"sun.awt.AWTAutoShutdown",
-  "methods":[{"name":"notifyToolkitThreadBusy","parameterTypes":[] }, {"name":"notifyToolkitThreadFree","parameterTypes":[] }]
-},
-{
-  "name":"sun.lwawt.macosx.LWCToolkit",
-  "methods":[{"name":"installToolkitThreadInJava","parameterTypes":[] }]
+  "name":"org.sqlite.core.NativeDB",
+  "fields":[{"name":"busyHandler"}, {"name":"commitListener"}, {"name":"pointer"}, {"name":"progressHandler"}, {"name":"updateListener"}],
+  "methods":[{"name":"stringToUtf8ByteArray","parameterTypes":["java.lang.String"] }, {"name":"throwex","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"sun.management.VMManagementImpl",

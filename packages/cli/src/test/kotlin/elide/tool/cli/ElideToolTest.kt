@@ -36,7 +36,7 @@ import elide.testing.annotations.TestCase
     .resolve("scripts")
     .toAbsolutePath()
 
-  @Inject lateinit var tool: ElideTool
+  @Inject lateinit var tool: Elide
 
   @Test fun testEntrypoint() {
     assertNotNull(tool, "should be able to init and inject entrypoint")
@@ -44,13 +44,13 @@ import elide.testing.annotations.TestCase
 
   @Test fun testEntrypointHelp() {
     assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(ElideTool::class.java, "--help"))
+      assertEquals(0, PicocliRunner.execute(Elide::class.java, "--help"))
     }
   }
 
   @Test fun testEntrypointVersion() {
     assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(ElideTool::class.java, "--version"))
+      assertEquals(0, PicocliRunner.execute(Elide::class.java, "--version"))
     }
   }
 
@@ -58,7 +58,7 @@ import elide.testing.annotations.TestCase
     assertDoesNotThrow {
       assertEquals(
         0,
-        PicocliRunner.execute(ElideTool::class.java, "run", "-c", "'console.log(\"Hello!\");'"),
+        PicocliRunner.execute(Elide::class.java, "run", "-c", "'console.log(\"Hello!\");'"),
       )
     }
   }
@@ -72,7 +72,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         0,
         // `elide tools/scripts/hello.js`
-        PicocliRunner.execute(ElideTool::class.java, scriptPath.toString()),
+        PicocliRunner.execute(Elide::class.java, scriptPath.toString()),
       )
     }
   }
@@ -86,7 +86,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         0,
         // `elide tools/scripts/hello.py`
-        PicocliRunner.execute(ElideTool::class.java, scriptPath.toString()),
+        PicocliRunner.execute(Elide::class.java, scriptPath.toString()),
       )
     }
   }
@@ -100,7 +100,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         0,
         // `elide run tools/scripts/hello.js`
-        PicocliRunner.execute(ElideTool::class.java, "run", scriptPath.toString()),
+        PicocliRunner.execute(Elide::class.java, "run", scriptPath.toString()),
       )
     }
   }
@@ -114,7 +114,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         0,
         // `elide run tools/scripts/hello.py`
-        PicocliRunner.execute(ElideTool::class.java, "run", scriptPath.toString()),
+        PicocliRunner.execute(Elide::class.java, "run", scriptPath.toString()),
       )
     }
   }
@@ -128,7 +128,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         0,
         // `elide run --javascript tools/scripts/hello.js`
-        PicocliRunner.execute(ElideTool::class.java, "run", "--javascript", scriptPath.toString()),
+        PicocliRunner.execute(Elide::class.java, "run", "--javascript", scriptPath.toString()),
       )
     }
   }
@@ -142,7 +142,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         0,
         // `elide run --python tools/scripts/hello.py`
-        PicocliRunner.execute(ElideTool::class.java, "run", "--python", scriptPath.toString()),
+        PicocliRunner.execute(Elide::class.java, "run", "--python", scriptPath.toString()),
       )
     }
   }
@@ -156,7 +156,7 @@ import elide.testing.annotations.TestCase
       assertEquals(
         0,
         // `elide python tools/scripts/hello.py`
-        PicocliRunner.execute(ElideTool::class.java, "python", scriptPath.toString()),
+        PicocliRunner.execute(Elide::class.java, "python", scriptPath.toString()),
       )
     }
   }
@@ -165,7 +165,7 @@ import elide.testing.annotations.TestCase
     assertDoesNotThrow {
       assertEquals(
         0,
-        PicocliRunner.execute(ElideTool::class.java, "run", "--javascript", "-c", "'console.log(\"Hello!\");'"),
+        PicocliRunner.execute(Elide::class.java, "run", "--javascript", "-c", "'console.log(\"Hello!\");'"),
       )
     }
   }
@@ -174,7 +174,7 @@ import elide.testing.annotations.TestCase
     assertDoesNotThrow {
       assertEquals(
         0,
-        PicocliRunner.execute(ElideTool::class.java, "run", "--python", "-c", "'print(\"Hello!\")'"),
+        PicocliRunner.execute(Elide::class.java, "run", "--python", "-c", "'print(\"Hello!\")'"),
       )
     }
   }

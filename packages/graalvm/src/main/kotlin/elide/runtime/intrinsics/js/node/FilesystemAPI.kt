@@ -482,12 +482,9 @@ import elide.vm.annotations.Polyglot
    * Copies the contents at the provided [src] path to the provided [dest] path, using the given [mode] (if specified)
    * as modifiers for the copy operation; default value for [mode] is `0`.
    *
-   * [callback] is dispatched once the copy operation completes.
-   *
    * @param src The source path to copy from.
    * @param dest The destination path to copy to.
    * @param mode The mode to use for the copy operation.
-   * @param callback The callback to provide the results or an error.
    */
   public fun copyFileSync(src: Path, dest: Path, mode: Int = 0)
 

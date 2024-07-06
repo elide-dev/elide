@@ -60,6 +60,7 @@ import javax.script.ScriptEngineManager
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import kotlin.math.max
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.LogLevel
@@ -70,6 +71,7 @@ import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
+import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.intrinsics.server.http.HttpServerAgent
@@ -90,7 +92,6 @@ import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectInfo
 import elide.tool.project.ProjectManager
-
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
@@ -127,13 +128,12 @@ import elide.tool.project.ProjectManager
     private const val TOOL_LOGGER_NAME: String = "tool"
     private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
-    private const val CONFIG_PATH_USR = "~/.elide"
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
     // Whether to enable extended language plugins.
     private const val ENABLE_JVM = false
-    private const val ENABLE_RUBY = false
-    private const val ENABLE_PYTHON = false
+    private const val ENABLE_RUBY = true
+    private const val ENABLE_PYTHON = true
     private const val ENABLE_TYPESCRIPT = true
 
     private val logging: Logger by lazy {
@@ -233,19 +233,6 @@ import elide.tool.project.ProjectManager
     )
     internal var llvm: Boolean = false
 
-    // Calculated and cached suite of supported languages loaded into the VM space.
-    private val langs: EnumSet<GuestLanguage> by lazy {
-      EnumSet.noneOf(GuestLanguage::class.java).apply {
-        add(JS)
-        add(WASM)
-        if (ENABLE_TYPESCRIPT) add(TYPESCRIPT)
-        if (ENABLE_PYTHON) add(PYTHON)
-        if (ENABLE_RUBY) add(RUBY)
-        if (ENABLE_JVM) add(JVM)
-        if (ENABLE_JVM) add(KOTLIN)
-      }
-    }
-
     private fun maybeMatchLanguagesByAlias(
       first: String?,
       second: String?,
@@ -317,8 +304,24 @@ import elide.tool.project.ProjectManager
       }
     }
 
+    private val tsAliases = setOf("ts", "typescript")
+    private val pyAliases = setOf("py", "python")
+    private val rbAliases = setOf("rb", "ruby")
+    private val jvmAliases = setOf("jvm", "java")
+    private val ktAliases = setOf("kt", "kotlin")
+
     // Resolve the specified language.
-    internal fun resolve(project: ProjectInfo? = null): EnumSet<GuestLanguage> = langs
+    internal fun resolve(project: ProjectInfo? = null, alias: String? = null): EnumSet<GuestLanguage> {
+      return EnumSet.noneOf(GuestLanguage::class.java).apply {
+        add(JS)
+        add(WASM)
+        if (ENABLE_TYPESCRIPT && (typescript || (alias != null && tsAliases.contains(alias)))) add(TYPESCRIPT)
+        if (ENABLE_PYTHON && (python || (alias != null && pyAliases.contains(alias)))) add(PYTHON)
+        if (ENABLE_RUBY && (ruby || (alias != null && rbAliases.contains(alias)))) add(RUBY)
+        if (ENABLE_JVM && (jvm || kotlin || (alias != null && jvmAliases.contains(alias)))) add(JVM)
+        if (ENABLE_JVM && (kotlin || (alias != null && ktAliases.contains(alias)))) add(KOTLIN)
+      }
+    }
   }
 
   /** Specifies settings for the Chrome DevTools inspector. */
@@ -803,17 +806,18 @@ import elide.tool.project.ProjectManager
 
   // Execute a single chunk of code, or literal statement.
   @Suppress("SameParameterValue") private fun executeOneChunk(
-      languages: EnumSet<GuestLanguage>,
-      primaryLanguage: GuestLanguage,
-      ctx: PolyglotContext,
-      origin: String,
-      code: String,
-      interactive: Boolean = false,
-      literal: Boolean = false,
+    languages: EnumSet<GuestLanguage>,
+    primaryLanguage: GuestLanguage,
+    ctx: PolyglotContext,
+    origin: String,
+    code: String,
+    interactive: Boolean = false,
+    literal: Boolean = false,
   ): Value {
     val chunk = Source.newBuilder(primaryLanguage.engine, code, origin)
       .interactive(false)
       .internal(false)
+      .cached(true)
 
     val source = if (literal) {
       chunk.buildLiteral()
@@ -828,6 +832,7 @@ import elide.tool.project.ProjectManager
     )
 
     logging.trace("Code chunk built. Evaluating")
+    ctx.enter()
     val result = try {
       ctx.evaluate(source)
     } catch (exc: PolyglotException) {
@@ -842,6 +847,8 @@ import elide.tool.project.ProjectManager
 
         else -> throw throwable
       }
+    } finally {
+      ctx.leave()
     }
     logging.trace("Code chunk evaluation complete")
     return result
@@ -849,10 +856,10 @@ import elide.tool.project.ProjectManager
 
   // Execute a single chunk of code as a literal statement.
   private fun executeSingleStatement(
-      languages: EnumSet<GuestLanguage>,
-      primaryLanguage: GuestLanguage,
-      ctx: PolyglotContext,
-      code: String,
+    languages: EnumSet<GuestLanguage>,
+    primaryLanguage: GuestLanguage,
+    ctx: PolyglotContext,
+    code: String,
   ) {
     if (serveMode()) {
       serverRunning.set(true)
@@ -1093,8 +1100,15 @@ import elide.tool.project.ProjectManager
 
       // otherwise, resolve from seen statements
       else -> {
-        ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
-        (errorBase + 1) to ctxLines
+        if (allSeenStatements.isNotEmpty()) {
+          ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
+          (errorBase + 1) to ctxLines
+        } else when (val target = runnable?.ifBlank { null }) {
+          null -> (errorBase + 1) to emptyList()
+          else -> {
+            TODO("not yet implemented: context from error in file")
+          }
+        }
       }
     }
   }
@@ -1106,10 +1120,11 @@ import elide.tool.project.ProjectManager
     advice: String? = null,
     internal: Boolean = false,
     stacktrace: Boolean = internal,
+    withCause: Boolean = true,
   ) {
+    if (exc !is PolyglotException) return
     val term = terminal.get()
     val reader = lineReader.get()
-    if (exc !is PolyglotException) return
 
     // begin calculating with source context
     val middlePrefix = "║ "
@@ -1120,8 +1135,8 @@ import elide.tool.project.ProjectManager
     val stopContextPrefix = "$stopPrefix%lineNum┊ %lineText"
 
     val (startingLineNumber, errorContext) = errorContextLines(exc)
-    val startLine = exc.sourceLocation?.startLine ?: 0
-    val endLine = exc.sourceLocation?.endLine ?: 0
+    val startLine = startingLineNumber + max((exc.sourceLocation?.startLine ?: 0) - 1, 0)
+    val endLine = startingLineNumber + max((exc.sourceLocation?.endLine ?: 0) - 1, 0)
     val lineDigits = endLine.toString().length
 
     val errRange = startLine..endLine
@@ -1145,6 +1160,16 @@ import elide.tool.project.ProjectManager
       val stackString = StringWriter()
       val stackPrinter = PrintWriter(stackString)
       exc.printStackTrace(stackPrinter)
+      when (val cause = exc.cause ?: if (exc.isHostException) exc.asHostException() else null) {
+        null -> {}
+        else -> if (withCause) {
+          stackString.append("\nCause stacktrace: ")
+          cause.printStackTrace(stackPrinter)
+        } else if (exc.isHostException) {
+          stackString.append("\nCause: ${cause.message}")
+          stackString.append("   Failed to gather stacktrace for host exception of type ${cause::class.simpleName}.")
+        }
+      }
       stackPrinter.flush()
       stackString.toString()
     } else {
@@ -1272,13 +1297,24 @@ import elide.tool.project.ProjectManager
         "${language.label} syntax is incomplete",
       )
 
-      exc.isHostException || exc.message?.contains("HostException: ") == true -> displayFormattedError(
-        exc,
-        exc.message ?: "An runtime error was thrown",
-        advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
-        stacktrace = true,
-        internal = true,
-      )
+      exc.isHostException || exc.message?.contains("HostException: ") == true -> {
+        when (exc.asHostException()) {
+          // guest error thrown from host-side logic
+          is GuestError -> displayFormattedError(
+            exc,
+            exc.message ?: "An error was thrown",
+            stacktrace = !interactive.get(),
+          )
+
+          else -> displayFormattedError(
+            exc,
+            exc.message ?: "A runtime error was thrown",
+            advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
+            stacktrace = true,
+            internal = true,
+          )
+        }
+      }
 
       exc.isGuestException -> displayFormattedError(
         exc,
@@ -1468,6 +1504,7 @@ import elide.tool.project.ProjectManager
     return Source.newBuilder(targetLang.symbol, script)
       .encoding(StandardCharsets.UTF_8)
       .internal(false)
+      .cached(true)
       .build()
   }
 
@@ -1504,11 +1541,11 @@ import elide.tool.project.ProjectManager
 
   // Read an executable script, and then execute the script; if it's a server, delegate to `readStartServer`.
   private fun readExecuteCode(
-      label: String,
-      languages: EnumSet<GuestLanguage>,
-      primaryLanguage: GuestLanguage,
-      ctx: PolyglotContext,
-      source: Source,
+    label: String,
+    languages: EnumSet<GuestLanguage>,
+    primaryLanguage: GuestLanguage,
+    ctx: PolyglotContext,
+    source: Source,
   ) {
     if (serveMode()) readStartServer(
       label,
@@ -1609,7 +1646,7 @@ import elide.tool.project.ProjectManager
     if (debug) debugger.apply(this)
     inspector.apply(this)
 
-    val requiresIo = language.resolve(project).let {
+    val requiresIo = language.resolve(project, languageHint).let {
       it.contains(PYTHON) || it.contains(RUBY)
     }
 
@@ -1643,7 +1680,7 @@ import elide.tool.project.ProjectManager
     }
 
     // configure support for guest languages
-    val versionProp = VERSION_INSTRINSIC_NAME to ElideTool.version()
+    val versionProp = VERSION_INSTRINSIC_NAME to Elide.version()
     val intrinsics = intrinsicsManager.resolver()
 
     // resolve entrypoint arguments
@@ -1660,6 +1697,11 @@ import elide.tool.project.ProjectManager
           executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
           jsSettings.apply(this)
+        }
+
+        WASM -> install(elide.runtime.plugins.wasm.Wasm) {
+          logging.debug("Configuring JS VM")
+          resourcesPath = GVM_RESOURCES
         }
 
         TYPESCRIPT -> install(elide.runtime.plugins.typescript.TypeScript) {
@@ -1777,7 +1819,7 @@ import elide.tool.project.ProjectManager
 
     // resolve the language to use
     val project = projectConfigJob.await()
-    val langs = language.resolve(project)
+    val langs = language.resolve(project, alias = languageHint)
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     val supportedEnginesAndLangs = supported.flatMap { listOf(it.first.engine, it.first.id) }.toSortedSet()
 
@@ -1817,84 +1859,86 @@ import elide.tool.project.ProjectManager
       activeProject.set(prj)
     }
 
-    withContext {
-      // activate interactive behavior
-      interactive.compareAndSet(false, true)
+    engine.unwrap().use {
+      withContext {
+        // activate interactive behavior
+        interactive.compareAndSet(false, true)
 
-      // warn about experimental status, as applicable
-      if (verbose && experimentalLangs.isNotEmpty()) {
-        logging.warn(
-          "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
-                  "considered experimental.",
-        )
-      }
-
-      when (val scriptTargetOrCode = runnable) {
-        // run in interactive mode
-        null, "-" -> if (useStdin || runnable == "-") {
-          // consume from stdin
-          primaryLang.invoke(null).let { lang ->
-            input.buffer.use { buffer ->
-              readExecuteCode(
-                "from stdin",
-                langs,
-                lang,
-                it,
-                Source.create(lang.symbol, buffer.readText()),
-              )
-            }
-          }
-        } else if (!serveMode()) {
-          logging.debug("Beginning interactive guest session")
-          beginInteractiveSession(
-            langs,
-            primaryLang.invoke(null),
-            engine,
-            it,
+        // warn about experimental status, as applicable
+        if (verbose && experimentalLangs.isNotEmpty()) {
+          logging.warn(
+            "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
+                    "considered experimental.",
           )
-        } else {
-          logging.error("To run a server, pass a file, or code via stdin or `-c`")
         }
 
-        // run a script as a file, or perhaps a string literal
-        else -> if (executeLiteral) {
-          logging.trace("Interpreting runnable parameter as code")
-          executeSingleStatement(
-            langs,
-            primaryLang.invoke(null),
-            it,
-            scriptTargetOrCode,
-          )
-        } else {
-          // no literal execution flag = we need to parse `runnable` as a file path
-          logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
-          File(scriptTargetOrCode).let { scriptFile ->
-            primaryLang.invoke(scriptFile).let { lang ->
-              logging.debug("Beginning script execution")
-              readExecuteCode(
-                scriptFile.name,
-                langs,
-                lang,
-                it,
-                readExecutableScript(
+        when (val scriptTargetOrCode = runnable) {
+          // run in interactive mode
+          null, "-" -> if (useStdin || runnable == "-") {
+            // consume from stdin
+            primaryLang.invoke(null).let { lang ->
+              input.buffer.use { buffer ->
+                readExecuteCode(
+                  "from stdin",
                   langs,
                   lang,
-                  scriptFile,
-                ),
-              )
+                  it,
+                  Source.create(lang.symbol, buffer.readText()),
+                )
+              }
+            }
+          } else if (!serveMode()) {
+            logging.debug("Beginning interactive guest session")
+            beginInteractiveSession(
+              langs,
+              primaryLang.invoke(null),
+              engine,
+              it,
+            )
+          } else {
+            logging.error("To run a server, pass a file, or code via stdin or `-c`")
+          }
+
+          // run a script as a file, or perhaps a string literal
+          else -> if (executeLiteral) {
+            logging.trace("Interpreting runnable parameter as code")
+            executeSingleStatement(
+              langs,
+              primaryLang.invoke(null),
+              it,
+              scriptTargetOrCode,
+            )
+          } else {
+            // no literal execution flag = we need to parse `runnable` as a file path
+            logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
+            File(scriptTargetOrCode).let { scriptFile ->
+              primaryLang.invoke(scriptFile).let { lang ->
+                logging.debug("Beginning script execution")
+                readExecuteCode(
+                  scriptFile.name,
+                  langs,
+                  lang,
+                  it,
+                  readExecutableScript(
+                    langs,
+                    lang,
+                    scriptFile,
+                  ),
+                )
+              }
             }
           }
         }
       }
-    }
 
-    // don't exit if we have a running server
-    if (serverRunning.get()) {
-      // wait for all tasks to arrive
-      logging.debug("Waiting for long-lived tasks to arrive")
-      phaser.get().arriveAndAwaitAdvance()
-      logging.debug("Exiting")
+      // don't exit if we have a running server
+      if (serverRunning.get()) {
+        // wait for all tasks to arrive
+        logging.debug("Waiting for long-lived tasks to arrive")
+        phaser.get().arriveAndAwaitAdvance()
+        logging.debug("Exiting")
+      }
+      return success()
     }
-    return success()
   }
 }

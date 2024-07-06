@@ -158,7 +158,7 @@ java {
 dependencies {
   // Kover: Coverage Reporting
   kover(projects.packages.base)
-  // kover(projects.packages.cli)
+  kover(projects.packages.cli)
   kover(projects.packages.core)
   kover(projects.packages.graalvm)
   kover(projects.packages.graalvmJava)
@@ -171,7 +171,6 @@ dependencies {
   kover(projects.packages.proto.protoCore)
   kover(projects.packages.proto.protoKotlinx)
   kover(projects.packages.proto.protoProtobuf)
-  kover(projects.packages.runtime)
   kover(projects.packages.server)
   kover(projects.packages.ssr)
   kover(projects.packages.test)
@@ -350,9 +349,8 @@ apiValidation {
 
   ignoredProjects +=
     listOf(
-      // "cli",
+      "cli",
       "cli-bridge",
-      "runtime",
       "sqlite",
       "transport",
       "transport-common",

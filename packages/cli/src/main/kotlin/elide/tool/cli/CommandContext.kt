@@ -56,12 +56,23 @@ sealed interface CommandContext : CoroutineScope {
   companion object {
     /** @return Default command context implementation. */
     @JvmStatic @Suppress("unused_parameter")
-    fun default(state: CommandState, ctx: CoroutineContext): CommandContext = object : DefaultCommandContext {
-      override val coroutineContext: CoroutineContext get() = ctx
-      override val logging: Logger get() = Statics.logging
-      override val serverLogging: Logger get() = Statics.serverLogger
-      override val accessLogging: Logger get() = Statics.serverLogger
-    }
+    fun default(state: CommandState, ctx: CoroutineContext): CommandContext =
+      object : DefaultCommandContext {
+        override val coroutineContext: CoroutineContext get() = ctx
+        override val logging: Logger get() = Statics.logging
+        override val serverLogging: Logger get() = Statics.serverLogger
+        override val accessLogging: Logger get() = Statics.serverLogger
+      }
+
+    /** @return Default command context implementation. */
+    @JvmStatic @Suppress("unused_parameter")
+    fun default(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope): CommandContext =
+      object : DefaultCommandContext, MosaicScope by mosaic {
+        override val coroutineContext: CoroutineContext get() = ctx
+        override val logging: Logger get() = Statics.logging
+        override val serverLogging: Logger get() = Statics.serverLogger
+        override val accessLogging: Logger get() = Statics.serverLogger
+      }
   }
 
   /**

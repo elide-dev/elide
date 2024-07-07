@@ -300,7 +300,7 @@ RUNTIME_GEN = $(JS_MODULE_OUT) $(PY_FACADE_OUT) $(PY_MODULE_OUT)
 
 GRADLE_OMIT ?= $(OMIT_NATIVE)
 _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
-DEPS ?= node_modules/ third-party umbrella $(RUNTIME_GEN)
+DEPS ?= node_modules/ third-party umbrella
 
 GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$(PATH)" CC="" CXX="" CFLAGS="" LDFLAGS=""
 

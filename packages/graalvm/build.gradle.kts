@@ -15,10 +15,9 @@
   "UnstableApiUsage",
   "unused",
   "DSL_SCOPE_VIOLATION",
-  "UNUSED_VARIABLE",
-  "COMPATIBILITY_WARNING",
 )
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import kotlinx.benchmark.gradle.benchmark
 import elide.internal.conventions.kotlin.KotlinTarget
@@ -47,7 +46,7 @@ version = rootProject.version as String
 val nativesType = "debug"
 val oracleGvm = false
 val enableJpms = false
-val enableEdge = false
+val enableEdge = true
 val enableSqlite = true
 val enableBenchmarks = false
 val enableStaticJni = true
@@ -91,6 +90,11 @@ elide {
     publish("maven") {
       from(components["kotlin"])
     }
+  }
+
+  jvm {
+    alignVersions = true
+    target = JvmTarget.JVM_21
   }
 
   java {
@@ -138,8 +142,6 @@ allOpen {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
   if (enableJpms) modularity.inferModulePath = true
 }
 
@@ -365,7 +367,7 @@ graalvmNative {
   }
 }
 
-benchmark {
+if (enableBenchmarks) benchmark {
   configurations {
     named("main") {
       warmups = 10
@@ -557,6 +559,18 @@ tasks {
     systemProperty("elide.js.preloadModules", "false")
     systemProperty("elide.js.vm.enableStreams", "true")
     systemProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4")
+    systemProperty("java.library.path", StringBuilder().apply {
+      append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+      append(File.pathSeparator)
+      append(nativesPath)
+      System.getProperty("java.library.path", "").let {
+        if (it.isNotEmpty()) {
+          append(File.pathSeparator)
+          append(it)
+        }
+      }
+    }.toString())
+
     if (enableToolchains) javaLauncher = gvmLauncher
   }
 

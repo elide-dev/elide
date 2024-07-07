@@ -4,9 +4,9 @@ import io.micronaut.context.annotation.Requires
 import elide.annotations.Eager
 import elide.annotations.Factory
 import elide.annotations.Singleton
-import elide.runtime.gvm.GuestExecution
-import elide.runtime.gvm.GuestExecutor
-import elide.runtime.gvm.GuestExecutorProvider
+import elide.runtime.exec.GuestExecution
+import elide.runtime.exec.GuestExecutor
+import elide.runtime.exec.GuestExecutorProvider
 
 /**
  * Guest Test Executor Factory

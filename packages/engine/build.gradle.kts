@@ -52,12 +52,14 @@ elide {
 
 dependencies {
   api(mn.micronaut.core)
+  api(projects.packages.base)
   api(libs.graalvm.polyglot)
+  api(libs.kotlinx.coroutines.core)
+  api(libs.guava)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
 
   testApi(projects.packages.base)
-  testApi(projects.packages.graalvm)
   testAnnotationProcessor(mn.micronaut.inject.java)
 }
 

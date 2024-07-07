@@ -29,7 +29,6 @@ import org.sqlite.util.LibraryLoaderUtil
 import org.sqlite.util.OSInfo
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
-import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
 /** Mounts the SQLite native library via static JNI. */
 @VMFeature public class NativeSQLiteFeature : AbstractStaticNativeLibraryFeature() {
@@ -45,51 +44,6 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       if (Platform.includedIn(Platform.LINUX::class.java) && STATIC_JNI) listOf("m") else emptyList()
     )))
   ) else emptyList()
-
-  override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> {
-    when {
-      Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> return access.unpackLibrary(
-          "sqlite",
-          "sqlite",
-          "x86-64",
-          "META-INF/native/static/linux/x86-64/libsqlite.a",
-          "META-INF/native/shared/linux/x86-64/libsqlite.so",
-          renameTo = { "libsqlitejdbc.${it.substringAfterLast(".")}" },
-        )
-
-        "aarch64", "arm64" -> return access.unpackLibrary(
-          "sqlite",
-          "sqlite",
-          "x86-64",
-          "META-INF/native/static/linux/arm64/libsqlite.a",
-          "META-INF/native/shared/linux/arm64/libsqlite.so",
-          renameTo = { "libsqlitejdbc.${it.substringAfterLast(".")}" },
-        )
-      }
-
-      Platform.includedIn(Platform.DARWIN::class.java) -> when (System.getProperty("os.arch")) {
-        "x86_64", "amd64" -> return access.unpackLibrary(
-          "sqlite",
-          "sqlite",
-          "x86-64",
-          "META-INF/native/static/macos/x86-64/libsqlite.a",
-          "META-INF/native/shared/macos/x86-64/libsqlite.dylib",
-          renameTo = { "libsqlitejdbc.${it.substringAfterLast(".")}" },
-        )
-
-        "aarch64", "arm64" -> return access.unpackLibrary(
-          "sqlite",
-          "sqlite",
-          "x86-64",
-          "META-INF/native/static/macos/arm64/libsqlite.a",
-          "META-INF/native/shared/macos/arm64/libsqlite.dylib",
-          renameTo = { "libsqlitejdbc.${it.substringAfterLast(".")}" },
-        )
-      }
-    }
-    return emptyList()
-  }
 
   private fun onDbReachable() {
     RuntimeJNIAccess.register(NativeDB::class.java)

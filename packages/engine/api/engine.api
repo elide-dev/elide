@@ -320,6 +320,42 @@ public final class elide/runtime/core/lib/NativeLibraries {
 	public static synthetic fun resolve$default (Lelide/runtime/core/lib/NativeLibraries;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 }
 
+public synthetic class elide/runtime/exec/$GuestExecutorFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/exec/$GuestExecutorFactory$Executor0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/exec/GuestExecution {
+	public static final field INSTANCE Lelide/runtime/exec/GuestExecution;
+	public final fun direct ()Lelide/runtime/exec/GuestExecutor;
+	public final fun workStealing ()Lelide/runtime/exec/GuestExecutor;
+}
+
+public abstract interface class elide/runtime/exec/GuestExecutor : com/google/common/util/concurrent/ListeningExecutorService, kotlin/coroutines/CoroutineContext {
+	public abstract fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
+}
+
+public final class elide/runtime/exec/GuestExecutor$DefaultImpls {
+	public static fun plus (Lelide/runtime/exec/GuestExecutor;Lkotlin/coroutines/CoroutineContext;)Lkotlin/coroutines/CoroutineContext;
+}
+
+public abstract interface class elide/runtime/exec/GuestExecutorProvider {
+	public abstract fun executor ()Lelide/runtime/exec/GuestExecutor;
+}
+
 public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
 }
 

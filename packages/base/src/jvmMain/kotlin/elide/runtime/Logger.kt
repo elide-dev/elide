@@ -47,7 +47,7 @@ public actual interface Logger : org.slf4j.Logger {
    * @param message Set of messages to log in this entry.
    */
   public actual fun trace(vararg message: Any) {
-    this.log(LogLevel.TRACE, message.toList())
+    log(LogLevel.TRACE, message.toList())
   }
 
   /**

@@ -12,11 +12,9 @@
 */
 @file:Suppress("UnstableApiUsage")
 
-import org.jetbrains.kotlin.konan.target.HostManager
-import java.nio.file.Path
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-  `cpp-library`
   `java-library`
   alias(libs.plugins.elide.conventions)
 }
@@ -28,84 +26,14 @@ elide {
     detekt = false
   }
 
-  publishing {
-    id = "transport-epoll"
-    name = "Elide Transport: EPoll"
-    description = "Packages native EPoll support for Elide/Netty."
+  jvm {
+    alignVersions = true
+    target = JvmTarget.JVM_21
   }
 }
-
-java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
-}
-
-library {
-  linkage = listOf(Linkage.STATIC, Linkage.SHARED)
-
-  targetMachines = listOf(
-    machines.linux.x86_64,
-  )
-}
-
-val jvmApi: Configuration by configurations.creating {
-  isCanBeResolved = true
-  isCanBeConsumed = false
-}
-val apiElements: Configuration by configurations.getting { extendsFrom(jvmApi) }
-val compileClasspath: Configuration by configurations.getting { extendsFrom(jvmApi) }
 
 dependencies {
-  jvmApi(projects.packages.transport.transportCommon)
-}
-
-val jdkHome: String = System.getenv("GRAALVM_HOME")?.ifBlank { null }
-  ?: System.getenv("JAVA_HOME")?.ifBlank { null }
-  ?: System.getProperty("java.home")
-
-val jdkHomePath: Path = Path.of(jdkHome)
-val jdkLibPath: Path = jdkHomePath.resolve("lib")
-val jdkIncludePath: Path = jdkHomePath.resolve("include")
-val jdkNativeIncludePath: Path = when {
-  HostManager.hostIsMac -> jdkIncludePath.resolve("darwin")
-  HostManager.hostIsLinux -> jdkIncludePath.resolve("linux")
-  else -> error("Unsupported OS for kqueue")
-}
-
-tasks.withType(CppCompile::class.java).configureEach {
-  group = "build"
-  description = "Compile shared library"
-  source.from(layout.projectDirectory.dir("src/main/cpp").asFileTree.matching { include("**/*.c") })
-  onlyIf { HostManager.hostIsLinux }
-
-  // enable static init mode
-  if (name.lowercase().contains("static")) {
-    macros["NETTY_BUILD_STATIC"] = "1"
-    macros["NETTY_BUILD_GRAALVM"] = "1"
-    macros["NETTY_GVM_STATIC"] = "1"
-  }
-
-  compilerArgs.addAll(listOf(
-    "-x", "c",
-    "-O3",
-    "-fPIC",
-    "-Werror",
-    "-fno-omit-frame-pointer",
-    "-Wunused-variable",
-    "-fvisibility=hidden",
-    "-I$jdkIncludePath",
-    "-I$jdkNativeIncludePath",
-  ))
-}
-
-tasks.withType(LinkSharedLibrary::class.java).configureEach {
-  group = "build"
-  description = "Link shared library"
-  onlyIf { HostManager.hostIsLinux }
-
-  linkerArgs.addAll(listOf(
-    "-L$jdkLibPath",
-  ))
+  api(projects.packages.transport.transportCommon)
 }
 
 tasks.compileJava {
@@ -115,40 +43,4 @@ tasks.compileJava {
       "-Xlint:none",
     )
   })
-}
-
-tasks.withType(CreateStaticLibrary::class.java).configureEach {
-  group = "build"
-  description = "Create static library"
-  onlyIf { HostManager.hostIsLinux }
-}
-
-tasks.withType(StripSymbols::class.java).configureEach {
-  onlyIf { HostManager.hostIsLinux }
-}
-
-tasks.processResources {
-  val resources = layout.projectDirectory.dir("src/main/resources")
-  val libs = layout.buildDirectory.dir("lib/main/release")
-  val compiles = tasks.withType(CppCompile::class)
-  val linkages = tasks.withType(LinkSharedLibrary::class)
-  val stripped = tasks.withType(StripSymbols::class)
-  val statics = tasks.withType(CreateStaticLibrary::class)
-  dependsOn(compiles, linkages, stripped, statics)
-
-  inputs.dir(resources)
-
-  if (HostManager.hostIsLinux) {
-    inputs.dir(libs)
-
-    listOf(
-      "build/lib/main/release/shared",
-      "build/lib/main/release/static",
-    ).forEach {
-      from(it) {
-        exclude("**/stripped/**")
-        into("META-INF/native/")
-      }
-    }
-  }
 }

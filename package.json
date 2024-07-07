@@ -2,7 +2,7 @@
   "name": "@elide-dev/framework",
   "version": "1.0.0-alpha10",
   "private": true,
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.2.0",
   "lint-staged": {
     "not-packages/*": "pnpm exec prettier --ignore-unknown"
   },
@@ -13,7 +13,9 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "workspaces": [
     "packages/base",
@@ -26,14 +28,14 @@
   ],
   "dependencies": {
     "browserslist": "4.23.1",
-    "cssnano": "7.0.3",
+    "cssnano": "7.0.4",
     "google-protobuf": "3.21.2",
     "jszip": "3.10.1",
     "postcss": "8.4.39",
     "preact": "10.22.1",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
-    "typescript": "5.5.2",
+    "typescript": "5.5.3",
     "web-streams-polyfill": "3.3.3"
   },
   "devDependencies": {
@@ -43,11 +45,11 @@
     "@mdx-js/esbuild": "3.0.1",
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
-    "@types/node": "20.14.9",
-    "@typescript-eslint/eslint-plugin": "7.14.1",
+    "@types/node": "20.14.10",
+    "@typescript-eslint/eslint-plugin": "7.15.0",
     "@typescript-eslint/parser": "7.15.0",
     "commitlint": "19.3.0",
-    "esbuild": "0.22.0",
+    "esbuild": "0.23.0",
     "eslint": "8.57.0",
     "husky": "9.0.11",
     "lint-staged": "15.2.7",

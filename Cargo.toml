@@ -1,10 +1,23 @@
+#
+# Copyright (c) 2024 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
 # Nightly:
 # cargo-features = ["metabuild", "edition2024", "profile-rustflags", "codegen-backend"]
 
 [workspace]
 resolver = "2"
 members = ["crates/*", "tools/umbrella"]
-exclude = ["third_party", "runtime", "crates/sqlite"]
+exclude = ["third_party", "runtime"]
 
 [workspace.package]
 license = "MIT"
@@ -47,18 +60,22 @@ pubgrub = { git = "https://github.com/elide-tools/pubgrub", rev = "8fd8d13703025
 
 [workspace.dependencies]
 ## Local
+builder = { path = "crates/builder" }
 core = { path = "crates/core" }
 deps = { path = "crates/deps" }
 entry = { path = "crates/entry" }
 model = { path = "crates/model" }
 sqlite = { path = "crates/sqlite" }
 substrate = { path = "crates/substrate" }
+terminal = { path = "crates/terminal" }
+transport = { path = "crates/transport" }
 
 ## Dependencies
 anyhow = { version = "1.0.80" }
 argfile = { version = "0.2.0" }
 bindgen = { version = "0.69.4" }
-#boring = { version = "4.7.0" }
+boring = { version = "4.7.0" }
+cc = { version = "1.0.104" }
 clap = { version = "4.5.3", features = ["derive"] }
 colored = { version = "2.1.0" }
 const_fn = { version = "0.4" }
@@ -74,6 +91,7 @@ miette = { version = "7.2.0", features = ["fancy", "supports-hyperlinks"] }
 mimalloc = { version = "0.1.43" }
 mvn = { version = "0.2.0" }
 orogene = { git = "https://github.com/elide-dev/orogene", rev = "c8dc2a63e67b0984beccfee2b2fa74990bfa9e15" }
+pkg-config = { version = "0.3.30" }
 portable-atomic = { version = "1", default-features = false }
 powerfmt = { version = "0.2.0", default-features = false }
 pubgrub = "0.2.1"
@@ -96,6 +114,7 @@ tokio-uring = { version = "0.5.0" }
 toml = { version = "0.8.14", default-features = false }
 trauma = { version = "2.2.5" }
 typeshare = { version = "1.0.3" }
+vcpkg = { version = "0.2.15" }
 wild = { version = "2" }
 
 ## Biome

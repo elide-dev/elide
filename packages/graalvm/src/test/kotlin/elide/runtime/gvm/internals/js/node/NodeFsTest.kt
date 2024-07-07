@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
 import kotlin.test.*
 import elide.annotations.Inject
-import elide.runtime.gvm.GuestExecutorProvider
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.node.fs.FilesystemConstants
 import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
 import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
@@ -447,9 +447,24 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
       }
       assertTrue(Files.isExecutable(samplePath), "path should now be executable")
 
-      // now it should be executable
-      fs.access(NodePath.from(samplePath), mode = EXECUTE) { err ->
-        assertNull(err)
+      dual {
+        // now it should be executable
+        fs.access(NodePath.from(samplePath), mode = EXECUTE) { err ->
+          assertNull(err)
+        }
+      }.guest {
+        // language=javascript
+        """
+          const { access, constants } = require("node:fs");
+          test(access).isNotNull();
+          let callbackDispatched = false;
+          let fileErr = null;
+          access("$samplePath", constants.X_OK, (err) => {
+            fileErr = err || null;
+          });
+          test(callbackDispatched).shouldBeFalse();
+          test(fileErr).isNull();
+        """
       }
     }
   }

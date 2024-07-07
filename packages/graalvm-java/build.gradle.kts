@@ -58,6 +58,8 @@ dependencies {
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.engine)
   testImplementation(projects.packages.graalvm)
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
+  testImplementation(project(":packages:engine", configuration = "testInternals"))
 }

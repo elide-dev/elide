@@ -12,26 +12,34 @@
 	url = https://github.com/elide-dev/pkl.git
 	shallow = true
 	branch = edge
+	ignore = dirty
 [submodule "sqlite"]
 	path = third_party/sqlite
 	url = git@github.com:sqlite/sqlite.git
 	shallow = true
+	ignore = dirty
 [submodule "boringssl"]
 	path = third_party/google/boringssl
 	url = git@github.com:google/boringssl.git
         shallow = true
+	ignore = dirty
 [submodule "apr"]
 	path = third_party/apache/apr
 	url = git@github.com:apache/apr.git
         shallow = true
+	ignore = dirty
 [submodule "zlib"]
 	path = third_party/cloudflare/zlib
 	url = git@github.com:cloudflare/zlib.git
 	shallow = true
+	ignore = dirty
 [submodule "graalvm"]
 	path = third_party/oracle/graalvm
 	url = git@github.com:oracle/graal.git
 	shallow = true
+	ignore = dirty
 [submodule "zlib-upstream"]
 	path = third_party/madler/zlib
 	url = git@github.com:madler/zlib.git
+	ignore = dirty
+

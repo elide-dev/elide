@@ -26,6 +26,8 @@ SIGNING_KEY ?= F812016B
 REMOTE ?= no
 PUSH ?= no
 CHECK ?= yes
+BUILD_STDLIB ?= no
+MACOS_MIN_VERSION ?= 12.3
 
 # Flags that are exported to the third_party build.
 export CUSTOM_ZLIB ?= no
@@ -54,6 +56,7 @@ export CUSTOM_ZLIB ?= no
 # CUSTOM_ZLIB ?= no
 # USE_GVM_AS_JVM ?= no
 # GVM_PROFILE ?= (default for os)
+# BUILD_STDLIB ?= yes
 
 export PATH
 export JAVA_HOME
@@ -92,8 +95,19 @@ BUF ?= $(shell which buf)
 SYSTEM ?= $(shell uname -s)
 JQ ?= $(shell which jq)
 BAZEL ?= $(shell which bazel)
+OS ?= $(shell uname -s)
+UNAME_P := $(shell uname -p)
+ARCH := $(shell uname -m)
+
 export PROJECT_ROOT ?= $(shell pwd)
 export ELIDE_ROOT ?= yes
+
+# Exports for `third_party` Makefile.
+RELEASE ?= no
+NATIVE ?= no
+export RELEASE
+export NATIVE
+export MACOS_MIN_VERSION
 
 ifeq ($(RELEASE),yes)
 export TARGET_ROOT ?= $(ELIDE_ROOT)/target/release
@@ -297,6 +311,7 @@ all: build
 setup: $(DEPS)  ## Setup development pre-requisites.
 
 symlinks:
+	@echo "Mounting native layer (mode '$(BUILD_MODE)')..."
 	$(CMD)rm -f $(ELIDE_ROOT)/target/lib $(ELIDE_ROOT)/target/include
 	$(CMD)ln -s $(TARGET_ROOT)/lib $(ELIDE_ROOT)/target/lib
 	$(CMD)ln -s $(TARGET_ROOT)/include $(ELIDE_ROOT)/target/include
@@ -455,10 +470,49 @@ umbrella: $(UMBRELLA_TARGET_PATH)  ## Build the native umbrella tooling library.
 $(UMBRELLA_TARGET_PATH):
 	$(info Building tools/umbrella...)
 ifeq ($(BUILD_MODE),release)
-	$(CMD)$(CARGO) build --release --all-targets
+	$(CMD)$(CARGO) build --release
 else
-	$(CARGO) build --all-targets
+	$(CARGO) build
 endif
+
+ifeq ($(OS),Darwin)
+ifeq ($(ARCH),arm64)
+RUSTC_TARGET=aarch64-apple-darwin
+else
+RUSTC_TARGET=x86_64-apple-darwin
+endif
+else
+ifeq ($(OS),Linux)
+ifeq ($(ARCH),arm64)
+RUSTC_TARGET=armv7-unknown-linux-gnueabihf
+else
+RUSTC_TARGET=x86_64-unknown-linux-gnu
+endif
+else
+RUSTC_TARGET=$(OS)-$(ARCH)
+endif
+endif
+
+ifeq ($(RELEASE),yes)
+CARGO_FLAGS += --release
+endif
+
+clean-natives:  ## Clean local native targets.
+	@echo "Cleaning native targets..."
+	$(CMD)$(CARGO) clean
+	$(CMD)rm -fr target
+	$(CMD)$(MAKE) -C third_party clean
+
+natives:  ## Rebuild natives (C/C++ and Rust).
+	$(CMD)$(MAKE) -C third_party clean
+	@echo "" && echo "Building natives (mode: $(RELEASE), native: $(NATIVE))..."
+	$(CMD)make -C third_party RELEASE=$(RELEASE) NATIVE=$(NATIVE)
+	$(CMD)$(MAKE) symlinks RELEASE=$(RELEASE)
+	@echo "" && echo "Building Rust stdlib (mode: $(RELEASE), native: $(NATIVE))..."
+ifeq ($(BUILD_STDLIB),yes)
+	$(CMD)$(CARGO) run +nightly -Zbuild-std --target $(RUSTC_TARGET)
+endif
+	$(CMD)$(CARGO) build $(CARGO_FLAGS)
 
 third-party: third_party/sqlite third_party/lib  ## Build all third-party embedded projects.
 

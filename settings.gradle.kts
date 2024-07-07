@@ -226,6 +226,15 @@ if (buildPkl == "true") {
 
 // Build modules.
 include(
+  ":crates:builder",
+  ":crates:core",
+  ":crates:deps",
+  ":crates:entry",
+  ":crates:model",
+  ":crates:sqlite",
+  ":crates:substrate",
+  ":crates:terminal",
+  ":crates:transport",
   ":packages:base",
   ":packages:cli",
   ":packages:cli-bridge",
@@ -256,7 +265,6 @@ include(
   ":packages:terminal",
   ":packages:tooling",
   ":packages:transport:transport-common",
-  ":packages:transport:transport-unix",
   ":packages:transport:transport-epoll",
   ":packages:transport:transport-kqueue",
   ":packages:transport:transport-uring",

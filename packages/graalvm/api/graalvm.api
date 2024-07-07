@@ -139,25 +139,6 @@ public final class elide/runtime/feature/engine/NativeSQLiteFeature : elide/runt
 	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
 	public fun getDescription ()Ljava/lang/String;
 	public fun nativeLibs (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
-	public fun unpackNatives (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
-}
-
-public synthetic class elide/runtime/gvm/$GuestExecutorFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public synthetic class elide/runtime/gvm/$GuestExecutorFactory$Executor0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public abstract class elide/runtime/gvm/DeveloperScript : elide/runtime/gvm/ExecutableScript {
@@ -242,24 +223,6 @@ public final class elide/runtime/gvm/ExecutionInputs$Empty : elide/runtime/gvm/E
 }
 
 public abstract interface class elide/runtime/gvm/GuestError {
-}
-
-public final class elide/runtime/gvm/GuestExecution {
-	public static final field INSTANCE Lelide/runtime/gvm/GuestExecution;
-	public final fun direct ()Lelide/runtime/gvm/GuestExecutor;
-	public final fun workStealing ()Lelide/runtime/gvm/GuestExecutor;
-}
-
-public abstract interface class elide/runtime/gvm/GuestExecutor : com/google/common/util/concurrent/ListeningExecutorService, kotlin/coroutines/CoroutineContext {
-	public abstract fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
-}
-
-public final class elide/runtime/gvm/GuestExecutor$DefaultImpls {
-	public static fun plus (Lelide/runtime/gvm/GuestExecutor;Lkotlin/coroutines/CoroutineContext;)Lkotlin/coroutines/CoroutineContext;
-}
-
-public abstract interface class elide/runtime/gvm/GuestExecutorProvider {
-	public abstract fun executor ()Lelide/runtime/gvm/GuestExecutor;
 }
 
 public abstract interface class elide/runtime/gvm/GuestLanguage {
@@ -2671,9 +2634,9 @@ public abstract interface class elide/runtime/intrinsics/js/JsPromise : com/goog
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public fun hasMember (Ljava/lang/String;)Z
-	public static fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
-	public static fun of (Lelide/runtime/gvm/GuestExecutor;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Lelide/runtime/exec/GuestExecutor;Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Lelide/runtime/exec/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun of (Lelide/runtime/exec/GuestExecutor;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public static fun rejected (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -2685,9 +2648,9 @@ public abstract interface class elide/runtime/intrinsics/js/JsPromise : com/goog
 }
 
 public final class elide/runtime/intrinsics/js/JsPromise$Companion {
-	public final fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
-	public final fun of (Lelide/runtime/gvm/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
-	public final fun of (Lelide/runtime/gvm/GuestExecutor;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Lelide/runtime/exec/GuestExecutor;Ljava/util/concurrent/CountDownLatch;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Lelide/runtime/exec/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun of (Lelide/runtime/exec/GuestExecutor;Lkotlin/jvm/functions/Function0;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun rejected (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun wrap (Lcom/google/common/util/concurrent/ListenableFuture;)Lelide/runtime/intrinsics/js/JsPromise;

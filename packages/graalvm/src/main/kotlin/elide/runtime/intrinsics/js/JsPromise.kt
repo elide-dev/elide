@@ -20,7 +20,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.function.Supplier
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
-import elide.runtime.gvm.GuestExecutor
+import elide.runtime.exec.GuestExecutor
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Companion.spawn
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Companion.latched

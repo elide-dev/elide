@@ -103,6 +103,7 @@ val enableTools = true
 val enableProguard = false
 val enableExperimental = false
 val enableExperimentalLlvmBackend = false
+val enableExperimentalLlvmEdge = false
 val enableEmbeddedResources = false
 val enableResourceFilter = false
 val enableAuxCache = false
@@ -660,6 +661,25 @@ val preinitializedContexts = listOfNotNull(
   onlyIf(enablePreinitializeAll && enableJvm, "java"),
 )
 
+val experimentalLlvmEdgeArgs = listOfNotNull(
+  "-H:-CheckToolchain",
+).plus(listOfNotNull(
+  "-fuse-ld=lld",
+  "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+  "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+  "-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib",
+  "-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
+  "-F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
+  "-Wno-nullability-completeness",
+  "-Wno-deprecated-declarations",
+  "-Wno-availability",
+  "-Wno-unknown-warning-option",
+  "-framework CoreFoundation",
+  "-framework CFNetwork",
+).map {
+  "--native-compiler-options=$it"
+})
+
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
@@ -809,6 +829,8 @@ val experimentalFlags = listOf(
 val commonCFlags: List<String> = listOf(
   "-DELIDE",
   "-I$targetHeaders",
+).plus(
+  System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
 )
 
 // Linker flags which are always included.
@@ -1264,6 +1286,8 @@ fun nativeCliImageArgs(
     }
   ).plus(
     nativeOverrideArgs
+  ).plus(
+    experimentalLlvmEdgeArgs.onlyIf(enableExperimentalLlvmEdge)
   ).plus(listOf(
     // at the end: resource configuration for this OS and arch. default configuration is already implied.
     "-H:ResourceConfigurationFiles=${platformConfig()}",

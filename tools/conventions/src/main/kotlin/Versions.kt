@@ -32,7 +32,7 @@ object Versions {
   const val protobuf = "3.25.2"
 
   /** Guava version. */
-  const val guava = "33.2.0-jre"
+  const val guava = "33.2.1-jre"
 
   /** gRPC version. */
   const val grpc = "1.62.2"

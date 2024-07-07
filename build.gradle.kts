@@ -357,7 +357,6 @@ apiValidation {
       "transport-kqueue",
       "transport-epoll",
       "transport-uring",
-      "transport-unix",
       "proto",
       "reports",
     ).plus(

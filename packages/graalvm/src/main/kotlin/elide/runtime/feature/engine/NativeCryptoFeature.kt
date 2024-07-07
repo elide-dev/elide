@@ -26,7 +26,6 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
     private const val STATIC_JNI = true
     private const val PROVIDED = "provided"
     private const val BORINGSSL_STATIC_JAR: String = "netty-tcnative-boringssl-static"
-    private const val TCNATIVE_JAR: String = "tcnative"
     private const val ARCH_PROP: String = "os.arch"
     private const val OS_PROP: String = "os.name"
 
@@ -110,64 +109,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
     // no support on this platform
     else -> emptyList()
-  } else when {
-    /* Static JNI */
-
-    Platform.includedIn(Platform.LINUX_AMD64::class.java) -> access.unpackLibrary(
-      TCNATIVE_JAR,
-      "netty_tcnative_linux_x86_64",
-      "x86-64",
-      "META-INF/native/linux/amd64/libapr-2.so",
-      "META-INF/native/linux/amd64/libapr-2.a",
-      "META-INF/native/linux/amd64/libcrypto.a",
-      "META-INF/native/linux/amd64/libssl.a",
-      "META-INF/native/linux/amd64/shared/libtcnative.so",
-      "META-INF/native/linux/amd64/static/libtcnative.a",
-      renameTo = ::renameNativeCryptoLib,
-    )
-
-    Platform.includedIn(Platform.LINUX_AARCH64::class.java) -> access.unpackLibrary(
-      TCNATIVE_JAR,
-      "netty_tcnative_linux_aarch64",
-      "aarch64",
-      "META-INF/native/linux/aarch64/libapr-2.so",
-      "META-INF/native/linux/aarch64/libapr-2.a",
-      "META-INF/native/linux/aarch64/libcrypto.a",
-      "META-INF/native/linux/aarch64/libssl.a",
-      "META-INF/native/linux/aarch64/shared/libtcnative.so",
-      "META-INF/native/linux/aarch64/static/libtcnative.a",
-      renameTo = ::renameNativeCryptoLib,
-    )
-
-    Platform.includedIn(Platform.DARWIN_AMD64::class.java) -> access.unpackLibrary(
-      TCNATIVE_JAR,
-      "netty_tcnative_osx_x86_64",
-      "x86-64",
-      "META-INF/native/macos/amd64/libapr-2.dylib",
-      "META-INF/native/macos/amd64/libapr-2.a",
-      "META-INF/native/macos/amd64/libcrypto.a",
-      "META-INF/native/macos/amd64/libssl.a",
-      "META-INF/native/macos/amd64/shared/libtcnative.dylib",
-      "META-INF/native/macos/amd64/static/libtcnative.a",
-      renameTo = ::renameNativeCryptoLib,
-    )
-
-    Platform.includedIn(Platform.DARWIN_AARCH64::class.java) -> access.unpackLibrary(
-      TCNATIVE_JAR,
-      "netty_tcnative_osx_aarch64",
-      "aarch64",
-      "META-INF/native/macos/aarch64/libapr-2.dylib",
-      "META-INF/native/macos/aarch64/libapr-2.a",
-      "META-INF/native/macos/aarch64/libcrypto.a",
-      "META-INF/native/macos/aarch64/libssl.a",
-      "META-INF/native/macos/aarch64/shared/libtcnative.dylib",
-      "META-INF/native/macos/aarch64/static/libtcnative.a",
-      renameTo = ::renameNativeCryptoLib,
-    )
-
-    // no support on this platform
-    else -> emptyList()
-  }
+  } else emptyList()  // static JNI unpacks no libraries now
 
   override fun nativeLibs(access: BeforeAnalysisAccess) = when (val arch = System.getProperty(ARCH_PROP)) {
     "x86_64", "amd64" -> "x86_64"
@@ -193,18 +135,18 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       true -> listOf(
         nativeLibrary(
           darwin = libraryNamed(
-            "netty_tcnative_osx_$archTag",
+            "transport",
             *tcnative,
             builtin = true,
             initializer = true,
-            absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_osx_$archTag.a"),
+            absolutePath = Path(System.getProperty("elide.target")).resolve("libtransport.a"),
           ),
           linux = libraryNamed(
-            "netty_tcnative_linux_$archTag",
+            "transport",
             *tcnative,
             builtin = true,
             initializer = true,
-            absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_linux_$archTag.a"),
+            absolutePath = Path(System.getProperty("elide.target")).resolve("libtransport.a"),
           ),
         )
       )

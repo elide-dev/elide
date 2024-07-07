@@ -277,7 +277,7 @@ jobs:
       - name: "Build Environment"
         run: make info
       - name: "🛠️ Build Natives"
-        run: make setup && cargo build
+        run: make setup symlinks && cargo build
       - name: "🛠️ Build Packages"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         id: gradlebuild

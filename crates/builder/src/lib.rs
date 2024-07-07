@@ -308,8 +308,7 @@ pub fn setup_cc() -> Build {
         .define("ELIDE", "1")
         .define("ELIDE_GVM_STATIC", "1")
         .define("HAVE_OPENSSL", "1")
-        .define("HAVE_USLEEP", "1")
-        .define("_FORTIFY_SOURCE", "3");
+        .define("HAVE_USLEEP", "1");
 
     // add base includes
     build.includes(include_paths(None).iter().map(|s| s.as_str()));

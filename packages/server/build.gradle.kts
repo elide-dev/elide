@@ -11,8 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import org.apache.tools.ant.taskdefs.condition.Os
-
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish

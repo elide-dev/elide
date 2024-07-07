@@ -18,12 +18,10 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import org.graalvm.polyglot.Value
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import java.util.function.Supplier
 import kotlinx.coroutines.runBlocking
-import elide.runtime.gvm.GuestExecutor
+import elide.runtime.exec.GuestExecutor
 import elide.runtime.intrinsics.js.JsPromise
 import elide.vm.annotations.Polyglot
 

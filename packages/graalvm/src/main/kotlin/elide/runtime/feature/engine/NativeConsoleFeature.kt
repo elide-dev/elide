@@ -16,7 +16,6 @@ import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import elide.annotations.internal.VMFeature
-import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
 /** Registers native library for Jansi. */
 @VMFeature internal class NativeConsoleFeature : AbstractStaticNativeLibraryFeature() {
@@ -34,7 +33,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
   override fun nativeLibs(access: BeforeAnalysisAccess) = listOf(
     libraryNamed(
-      "terminal",
+      "umbrella",
       "org.fusesource.jansi.internal.CLibrary",
       "org.fusesource_jansi_internal_Kernel32",
       "org.jline.nativ.JLineLibrary",
@@ -43,59 +42,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
     ),
   )
 
-  override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> = if (STATIC_JNI) when {
-    /* Static JNI */
-
-    Platform.includedIn(Platform.LINUX_AMD64::class.java) -> access.unpackLibrary(
-      "terminal",
-      "terminal",
-      "x86-64",
-      "META-INF/native/linux/amd64/shared/libterminal.so",
-      "META-INF/native/linux/amd64/static/libterminal.a",
-    )
-
-    Platform.includedIn(Platform.LINUX_AARCH64::class.java) -> access.unpackLibrary(
-      "terminal",
-      "terminal",
-      "aarch64",
-      "META-INF/native/linux/aarch64/shared/libterminal.so",
-      "META-INF/native/linux/aarch64/static/libterminal.a",
-    )
-
-    Platform.includedIn(Platform.DARWIN_AMD64::class.java) -> access.unpackLibrary(
-      "terminal",
-      "terminal",
-      "x86-64",
-      "META-INF/native/macos/amd64/shared/libterminal.dylib",
-      "META-INF/native/macos/amd64/static/libterminal.a",
-    )
-
-    Platform.includedIn(Platform.DARWIN_AARCH64::class.java) -> access.unpackLibrary(
-      "terminal",
-      "terminal",
-      "aarch64",
-      "META-INF/native/macos/aarch64/shared/libterminal.dylib",
-      "META-INF/native/macos/aarch64/static/libterminal.a",
-    )
-
-    Platform.includedIn(Platform.WINDOWS_AMD64::class.java) -> access.unpackLibrary(
-      "terminal",
-      "terminal",
-      "x86-64",
-      "META-INF/native/windows/amd64/shared/terminal.dll",
-      "META-INF/native/windows/amd64/static/terminal.lib",
-    )
-
-    Platform.includedIn(Platform.WINDOWS_AARCH64::class.java) -> access.unpackLibrary(
-      "terminal",
-      "terminal",
-      "x86-64",
-      "META-INF/native/windows/aarch64/shared/terminal.dll",
-      "META-INF/native/windows/aarch64/static/terminal.lib",
-    )
-
-    else -> error("Unsupported OS: ${System.getProperty("os.name")}")
-  } else when {
+  override fun unpackNatives(access: BeforeAnalysisAccess) = if (STATIC_JNI) emptyList() else when {
     /* Dynamic JNI */
 
     Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {

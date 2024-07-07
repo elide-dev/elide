@@ -38,8 +38,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import elide.annotations.Eager
 import elide.annotations.Factory
 import elide.annotations.Singleton
-import elide.runtime.gvm.GuestExecutor
-import elide.runtime.gvm.GuestExecutorProvider
+import elide.runtime.exec.GuestExecutor
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsError
@@ -239,9 +239,9 @@ private fun doCopyFileGuest(src: Path, dest: Path, mode: Int, callback: Value?):
 
 // Implements common baseline functionality for the Node filesystem modules.
 internal abstract class FilesystemBase (
-    protected val exec: GuestExecutor,
-    protected val fs: GuestVFS,
-    protected val dispatcher: CoroutineDispatcher = exec.dispatcher,
+  protected val exec: GuestExecutor,
+  protected val fs: GuestVFS,
+  protected val dispatcher: CoroutineDispatcher = exec.dispatcher,
 ) {
   protected fun resolvePath(operation: String, path: Value): Path = when {
     path.isString -> NodeStdlib.path.parse(path.asString())
@@ -260,11 +260,9 @@ internal abstract class FilesystemBase (
 
   private fun constantToAccessMode(constant: Int = FilesystemConstants.F_OK): AccessMode {
     return when (constant) {
-      FilesystemConstants.F_OK,
-      FilesystemConstants.R_OK -> READ
       FilesystemConstants.W_OK -> WRITE
       FilesystemConstants.X_OK -> EXECUTE
-      else -> JsError.error("Unknown constant passed to `fs` access: $constant")
+      else -> READ
     }
   }
 

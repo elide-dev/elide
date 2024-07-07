@@ -42,6 +42,9 @@ use std::ffi::{c_void, OsStr};
 use std::sync::OnceLock;
 use tokio::runtime::Runtime;
 
+pub use transport;
+pub use terminal;
+
 #[cfg(feature = "orogene")]
 use orogene::Orogene;
 
@@ -66,7 +69,7 @@ use crate::tools::UV_INFO;
 
 mod diagnostics;
 mod tools;
-mod transport;
+mod nativetransport;
 
 /// Obtain a mapping of tool names to their respective `ToolInfo`.
 fn tool_map() -> &'static HashMap<&'static str, &'static ToolInfo> {

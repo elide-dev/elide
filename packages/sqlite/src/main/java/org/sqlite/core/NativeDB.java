@@ -78,12 +78,12 @@ public final class NativeDB extends DB {
             assert apiVersion == 0x00010008;  // `JNI_VERSION_1_8`
           }
         }
-        _open_utf8(stringToUtf8ByteArray(file), openFlags);
+      openUtf8(stringToUtf8ByteArray(file), openFlags);
     }
     private synchronized static native boolean isStatic();
     private synchronized static native int initializeStatic();
 
-    synchronized native void _open_utf8(byte[] fileUtf8, int openFlags) throws SQLException;
+    synchronized native void openUtf8(byte[] fileUtf8, int openFlags) throws SQLException;
 
     /** @see DB#_close() */
     @Override

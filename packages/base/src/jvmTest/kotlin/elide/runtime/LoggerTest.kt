@@ -15,9 +15,37 @@ package elide.runtime
 
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.Test
+import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 
 /** Tests for acquiring [Logger] instances on the JVM. */
 class LoggerTest {
+  @Test fun testLoggerAsSlf4j() {
+    val logger = Logging.of(LoggerTest::class)
+    assertIs<org.slf4j.Logger>(logger)
+    val openLogger: org.slf4j.Logger = logger
+    assertDoesNotThrow {
+      openLogger.trace("Here is a string trace log")
+    }
+    assertDoesNotThrow {
+      openLogger.debug("Here is a string debug log")
+    }
+    assertDoesNotThrow {
+      openLogger.info("Here is a string info log")
+    }
+    assertDoesNotThrow {
+      openLogger.warn("Here is a string warn log")
+    }
+    assertDoesNotThrow {
+      openLogger.error("Here is a string error log")
+    }
+    assertNotNull(openLogger.isTraceEnabled)
+    assertNotNull(openLogger.isDebugEnabled)
+    assertNotNull(openLogger.isInfoEnabled)
+    assertNotNull(openLogger.isWarnEnabled)
+    assertNotNull(openLogger.isErrorEnabled)
+  }
+
   @Test fun testLogLevelTrace() {
     val logger = Logging.of(LoggerTest::class)
     assertDoesNotThrow {
@@ -35,7 +63,7 @@ class LoggerTest {
     }
     assertDoesNotThrow {
       logger.trace(
-        "Here is a string trace log with context",
+        "Here is a string trace log with context {}",
         5
       )
     }
@@ -119,7 +147,7 @@ class LoggerTest {
     }
     assertDoesNotThrow {
       logger.warn(
-        "Here is a string warn log with context",
+        "Here is a string warn log with context {}",
         5
       )
     }
@@ -171,6 +199,27 @@ class LoggerTest {
       logger.error {
         "Here is an error log which uses a producer"
       }
+    }
+  }
+
+  @Test fun testFormatSpecialTypes() {
+    val logger = Logging.of(LoggerTest::class)
+    assertDoesNotThrow {
+      logger.log(
+        LogLevel.INFO,
+        listOf(
+          Throwable("Here is an exception")
+        )
+      )
+    }
+    assertDoesNotThrow {
+      logger.log(
+        LogLevel.INFO,
+        listOf(
+          Throwable("Here is an exception"),
+          "Here is a message"
+        )
+      )
     }
   }
 }

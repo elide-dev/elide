@@ -18,10 +18,9 @@ RELOCK ?= no
 CUSTOM_ZLIB ?= no
 NATIVE ?= no
 RELEASE ?= no
-
 USE_NINJA ?= yes
-
 ELIDE_ROOT ?= $(realpath $(shell pwd)/..)
+MACOS_MIN_VERSION ?= 12.3
 
 ifeq ($(RELEASE),yes)
 TARGET_ROOT ?= $(ELIDE_ROOT)/target/release
@@ -59,19 +58,22 @@ CMAKE_INSTALL = $(NINJA) install
 endif
 endif
 
+ifeq ($(OS),Darwin)
+EXTRA_CMAKE_FLAGS += -DCMAKE_OSX_SYSROOT=macosx -DCMAKE_OSX_DEPLOYMENT_TARGET=$(MACOS_MIN_VERSION)
+endif
+
 GRADLE ?= ./gradlew
 
 CFLAGS_BASE_ALL ?=-g -O2 -fPIC -fPIE -fno-omit-frame-pointer -DELIDE -DHAVE_OPENSSL -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS $(CFLAGS)
-CFLAGS_BASE_STRICT ?= -Werror
+CFLAGS_BASE_STRICT ?= -Werror -fsanitize=bounds -fsanitize-undefined-trap-on-error
 
 CFLAGS_BASE_GCC ?=$(CFLAGS_BASE_ALL)
 CFLAGS_BASE_GCC += -Wall -Wextra -Wpedantic -Wformat=2 -Wformat-overflow=2 -Wformat-truncation=2 -Wformat-security -Wnull-dereference -Wstack-protector -Wtrampolines -Walloca -Wvla -Warray-bounds=2 -Wimplicit-fallthrough=3 -Wtraditional-conversion -Wshift-overflow=2 -Wcast-qual -Wstringop-overflow=4 -Wconversion -Warith-conversion -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wformat-signedness -Wshadow -Wstrict-overflow=4 -Wundef -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wstack-usage=1000000 -Wcast-align=strict
-CFLAGS_BASE_GCC += -fstack-protector-strong -fstack-clash-protection -fsanitize=bounds -fsanitize-undefined-trap-on-error -fhardened -fstrict-flex-arrays=3 -fno-delete-null-pointer-checks -fno-strict-overflow -fno-strict-aliasing -ftrivial-auto-var-init=zero -fexceptions
+CFLAGS_BASE_GCC += -fstack-protector-strong -fstack-clash-protection -fhardened -fstrict-flex-arrays=3 -fno-delete-null-pointer-checks -fno-strict-overflow -fno-strict-aliasing -fexceptions
 CFLAGS_BASE_GCC += -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code
 
 CFLAGS_BASE_CLANG ?=$(CFLAGS_BASE_ALL)
-#CFLAGS_BASE_CLANG += -Walloca -Wformat=2 -Wformat-security -Wnull-dereference -Wstack-protector -Wvla -Warray-bounds -Warray-bounds-pointer-arithmetic -Wassign-enum -Wformat-type-confusion -Widiomatic-parentheses -Wimplicit-fallthrough -Wloop-analysis -Wpointer-arith -Wshift-sign-overflow -Wtautological-constant-in-range-compare -Wthread-safety -Wthread-safety-beta -Werror=implicit -Werror=incompatible-pointer-types -Werror=int-conversion
-#CFLAGS_BASE_CLANG += -fstack-protector-strong -fsanitize=bounds -fsanitize-undefined-trap-on-error -fstrict-flex-arrays=2 -fno-delete-null-pointer-checks -fno-strict-overflow -fno-strict-aliasing -ftrivial-auto-var-init=zero -fexceptions
+CFLAGS_BASE_CLANG += -fstack-protector-strong -fno-delete-null-pointer-checks -fno-strict-overflow -fno-strict-aliasing -fexceptions
 
 ifeq ($(CC),gcc)
   CFLAGS_BASE += $(CFLAGS_BASE_GCC)
@@ -105,10 +107,14 @@ else
 CMAKE_BUILD_TYPE ?= Debug
 endif
 
+ifeq ($(OS),Darwin)
+CFLAGS_BASE += -mmacosx-version-min=$(MACOS_MIN_VERSION)
+endif
+
 ifeq ($(NATIVE),yes)
 ifeq ($(OS),Darwin)
 ifeq ($(UNAME_P),arm)
-CFLAGS_BASE += -march=armv8-a+crypto+crc -mtune=native -D__ARM_NEON -D__ARM_FEATURE_AES -D__ARM_FEATURE_SHA2
+CFLAGS_BASE += -march=armv8-a+crypto+crc+simd -mtune=native -D__ARM_NEON -D__ARM_FEATURE_AES -D__ARM_FEATURE_SHA2
 else
 CFLAGS_BASE += -march=native -mtune=native
 endif
@@ -212,10 +218,15 @@ google/boringssl/build:
 		&& $(BORINGSSL_PREFIX) $(CMAKE) $(CMAKE_BORINGSSL) -DCMAKE_INSTALL_PREFIX=$(TARGET_ROOT) .. \
 		&& $(BORINGSSL_PREFIX) $(CMAKE_BUILD) \
 		&& $(BORINGSSL_PREFIX) $(CMAKE_INSTALL) \
-		&& ./ssl_test
+		&& ./ssl_test \
+		&& echo "Mounting BoringSSL libs..." \
+		&& mkdir -p $(TARGET_ROOT)/lib/boringssl \
+		&& cd .. \
+		&& cp -fr ./build $(TARGET_ROOT)/lib/boringssl/ \
+		&& echo "BoringSSL is ready."
 
 CFLAGS_ZLIB ?=
-CFLAGS_ZLIB +=$(CFLAGS_BASE) $(CFLAGS_BASE_STRICT) -std=c18
+CFLAGS_ZLIB +=$(CFLAGS_BASE) $(CFLAGS_BASE_STRICT) -std=c11
 LDFLAGS_ZLIB ?=
 LDFLAGS_ZLIB +=$(LDFLAGS_BASE)
 ZLIB_PREFIX = CC="$(CC)" CXX="$(CXX)" LD="$(LD)" CFLAGS="$(CFLAGS_ZLIB)" LDFLAGS="$(LDFLAGS_ZLIB)"
@@ -232,15 +243,41 @@ $(ZLIB_TARGET):
 	$(RULE)cd $(ZLIB_SRC) \
 		&& $(ZLIB_PREFIX) ./configure $(ZLIB_CONFIGURE) \
 		&& $(ZLIB_PREFIX) make -j`nproc` \
-		&& $(ZLIB_PREFIX) make install
+		&& $(ZLIB_PREFIX) make install \
+		&& cp -fv $(TARGET_ROOT)/lib/libz* $(TARGET_ROOT)
 
 SQLITE3_CONFIGURE ?=--enable-all --enable-memsys5 --enable-update-limit --enable-tempstore=yes --enable-debug
-CFLAGS_SQLITE3 ?=
+CFLAGS_SQLITE3 ?=$(CFLAGS_BASE)
+
+SQLITE3_SETTINGS += -DSQLITE_CORE=1 \
+	-DSQLITE_DEFAULT_FILE_PERMISSIONS=0666 \
+	-DSQLITE_DEFAULT_MEMSTATUS=0 \
+	-DSQLITE_DISABLE_PAGECACHE_OVERFLOW_STATS=1 \
+	-DSQLITE_ENABLE_API_ARMOR=1 \
+	-DSQLITE_ENABLE_COLUMN_METADATA=1 \
+	-DSQLITE_ENABLE_DBSTAT_VTAB=1 \
+	-DSQLITE_ENABLE_FTS3=1 \
+	-DSQLITE_ENABLE_FTS3_PARENTHESIS=1 \
+	-DSQLITE_ENABLE_FTS5=1 \
+	-DSQLITE_ENABLE_LOAD_EXTENSION=1 \
+	-DSQLITE_ENABLE_MATH_FUNCTIONS=1 \
+	-DSQLITE_ENABLE_RTREE=1 \
+	-DSQLITE_ENABLE_STAT4=1 \
+	-DSQLITE_HAVE_ISNAN=1 \
+	-DSQLITE_MAX_ATTACHED=125 \
+	-DSQLITE_MAX_COLUMN=32767 \
+	-DSQLITE_MAX_FUNCTION_ARG=127 \
+	-DSQLITE_MAX_LENGTH=2147483647 \
+	-DSQLITE_MAX_MMAP_SIZE=1099511627776 \
+	-DSQLITE_MAX_PAGE_COUNT=4294967294 \
+	-DSQLITE_MAX_SQL_LENGTH=1073741824 \
+	-DSQLITE_MAX_VARIABLE_NUMBER=250000 \
+	-DSQLITE_THREADSAFE=1
 
 ifeq ($(OS),Darwin)
-CFLAGS_SQLITE3 +=$(CFLAGS_BASE) $(CFLAGS_BASE_STRICT) -Wno-array-bounds -Wno-format-nonliteral -Wno-array-bounds-pointer-arithmetic -Wno-assign-enum -Wno-implicit-fallthrough -Wno-tautological-constant-in-range-compare
+CFLAGS_SQLITE3 +=$(CFLAGS_BASE) -Wno-array-bounds -Wno-format-nonliteral -Wno-array-bounds-pointer-arithmetic -Wno-assign-enum -Wno-implicit-fallthrough -Wno-tautological-constant-in-range-compare $(SQLITE3_SETTINGS)
 else
-CFLAGS_SQLITE3 +=$(CFLAGS_BASE)
+CFLAGS_SQLITE3 +=
 endif
 
 LDFLAGS_SQLITE3 ?=
@@ -265,7 +302,8 @@ sqlite/sqlite3.c: sqlite/Makefile
 	$(RULE)cd sqlite \
 		&& $(SQLITE3_PREFIX) $(MAKE) -j`nproc` \
 		&& $(SQLITE3_PREFIX) $(MAKE) -j`nproc` sqlite3.c \
-		&& $(SQLITE3_PREFIX) $(MAKE) install
+		&& $(SQLITE3_PREFIX) $(MAKE) install \
+		&& cp -fv $(TARGET_ROOT)/lib/libsqlite* $(TARGET_ROOT)
 
 GVM_BUILD_PREFIX ?= JAVA_HOME="$$HOME/.mx/jdks/$(LABS_JDK)/Contents/Home"
 

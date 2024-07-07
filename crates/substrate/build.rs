@@ -1,47 +1,28 @@
-use std::env;
-use std::path::PathBuf;
+/*
+ * Copyright (c) 2024 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
+use builder::{build_bindings, cargo_lib_metadata};
 
 fn main() {
-  // resolve java home / gvm home variables
-  let gvm_home_var = env::var("GRAALVM_HOME");
-  let java_home = env::var("JAVA_HOME");
-
-  // resolve java home as gvm home if needed
-  if gvm_home_var.is_err() && java_home.is_err() {
-    panic!("Please set the GRAALVM_HOME or JAVA_HOME environment variable");
-  }
-  let gvm_home_val = gvm_home_var.unwrap_or_default();
-  let java_home = java_home.unwrap_or_default();
-  let gvm_home = if gvm_home_val.is_empty() { java_home } else { gvm_home_val };
-
-  // decide if we are on darwin
-  let target = env::var("TARGET").unwrap();
-  let os = if target.contains("darwin") { "darwin" } else { "linux" };
-  let arch = if target.contains("x86_64") { "amd64" } else { "aarch64" };
-
-  // formulate lib paths
-  let lib_path = format!("{}/lib", gvm_home);
-  let lib_path_server = format!("{}/lib/server", gvm_home);
-  let lib_path_native = format!("{}/lib/svm/clibraries/{}-{}", gvm_home, os, arch);
-
-  // add lib paths
-  println!("cargo:rustc-link-search={}", lib_path);
-  println!("cargo:rustc-link-search={}", lib_path_server);
-  println!("cargo:rustc-link-search={}", lib_path_native);
-
-  // link against `libjvm`
+  // link against lib jvm
+  cargo_lib_metadata(None);
   println!("cargo:rustc-link-lib=jvm");
 
   // generate rust bindings
   let bindings = bindgen::Builder::default()
-          .header("headers/substrate.h")
-          .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-          .generate()
-          .expect("Unable to generate bindings");
+          .header("headers/substrate.h");
 
-  let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-
-  bindings
-          .write_to_file(out_path.join("libjvm.rs"))
-          .expect("Couldn't write bindings!");
+  build_bindings(
+    "libjvm.rs",
+    bindings);
 }

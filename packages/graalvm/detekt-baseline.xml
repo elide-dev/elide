@@ -6,7 +6,6 @@
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
     <ID>CyclomaticComplexMethod:ConsoleIntrinsic.kt$ConsoleIntrinsic$internal fun formatLogComponent(arg: Any?): Any</ID>
     <ID>CyclomaticComplexMethod:CustomEvent.kt$CustomEvent$override fun getMember(key: String?): Any?</ID>
-    <ID>CyclomaticComplexMethod:NativeConsoleFeature.kt$NativeConsoleFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>CyclomaticComplexMethod:NettyHttpResponse.kt$NettyHttpResponse$override fun getMember(key: String?): Any?</ID>
     <ID>CyclomaticComplexMethod:NodeEvents.kt$NodeEventsModuleFacade$@Polyglot override fun getMember(key: String): Any?</ID>
     <ID>CyclomaticComplexMethod:NodeOperatingSystem.kt$NodeOperatingSystem.ModuleBase$override fun getMember(key: String?): Any?</ID>
@@ -19,7 +18,6 @@
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:JsEncoding.kt$TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
-    <ID>ForbiddenComment:NativeTransportFeature.kt$NativeTransportFeature$// @TODO: gradle doesn't support arm64 linux</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
@@ -71,8 +69,6 @@
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
     <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
-    <ID>ReturnCount:NativeSQLiteFeature.kt$NativeSQLiteFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
-    <ID>ReturnCount:NativeTransportFeature.kt$NativeTransportFeature$override fun unpackNatives(access: BeforeAnalysisAccess): List&lt;UnpackedNative></ID>
     <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$(it.name, *it.deps.toTypedArray())</ID>
@@ -83,18 +79,16 @@
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
     <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, )</ID>
-    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_linux_$archTag.a"), )</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, )</ID>
-    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.target")).resolve("libnetty_tcnative_osx_$archTag.a"), )</ID>
+    <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "transport", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.target")).resolve("libtransport.a"), )</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$(lib, *deps)</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields( NativeDB::class.java, "pointer", "busyHandler", "commitListener", "updateListener", "progressHandler", ))</ID>
     <ID>SpreadOperator:NativeSQLiteFeature.kt$NativeSQLiteFeature$(*fields(Function::class.java, "context", "value", "args"))</ID>
+    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$( "umbrella", *impl, builtin = true, )</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "aarch64", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "x86-64", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "aarch64", *kqueueImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "x86-64", *kqueueImpls)</ID>
-    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("netty_transport_native_epoll", *epollImpls)</ID>
-    <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("netty_transport_native_kqueue", *kqueueImpls)</ID>
     <ID>SpreadOperator:NodeEvents.kt$BoundEventListener$(*args)</ID>
     <ID>SpreadOperator:NodeFilesystem.kt$(src.toJavaPath(), dest.toJavaPath(), *copyOpts(mode))</ID>
     <ID>SpreadOperator:NodePaths.kt$NodePaths.BasePaths$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
@@ -143,7 +137,7 @@
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$subject: String</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
     <ID>UnusedPrivateMember:HttpServerAgent.kt$HttpServerAgent.Companion$private fun resolveLanguage(source: Source): GuestLanguage</ID>
+    <ID>UnusedPrivateMember:NativeCryptoFeature.kt$NativeCryptoFeature$private fun renameNativeCryptoLib(lib: String): String</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
-    <ID>UnusedPrivateProperty:NativeTransportFeature.kt$NativeTransportFeature.Companion$private val iouringImpls = arrayOf( "io.netty.incubator.channel.uring.Native", "io.netty.incubator.channel.uring.LinuxSocket", "io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods", )</ID>
   </CurrentIssues>
 </SmellBaseline>

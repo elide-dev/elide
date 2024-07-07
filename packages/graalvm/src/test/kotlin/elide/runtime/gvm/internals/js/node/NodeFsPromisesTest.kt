@@ -19,7 +19,7 @@ import java.nio.file.Files
 import kotlinx.coroutines.guava.asDeferred
 import kotlin.test.*
 import elide.annotations.Inject
-import elide.runtime.gvm.GuestExecutorProvider
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
 import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS

@@ -274,16 +274,14 @@ pub fn target_arch() -> TargetArch {
 }
 
 /// Common C flags applied to all builds which use this builder interface.
-const common_c_flags: [&str; 10] = [
+const common_c_flags: [&str; 8] = [
     "-O3",
     "-fno-omit-frame-pointer",
     "-fstack-protector-strong",
     "-fstack-clash-protection",
-    "-fstrict-flex-arrays=2",
     "-fno-delete-null-pointer-checks",
     "-fno-strict-overflow",
     "-fno-strict-aliasing",
-    "-ftrivial-auto-var-init=zero",
     "-fexceptions",
 ];
 

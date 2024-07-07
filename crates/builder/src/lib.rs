@@ -455,6 +455,9 @@ pub fn build_bindings(lib_name: &str, builder: Builder) {
     let os = target_os();
     let jvm_include = format!("{}/include", gvm_home);
     let jvm_include_native = format!("{}/include/{}", gvm_home, os.as_str());
+    let profile = var("PROFILE").unwrap();
+    let target_headers_gen = root_project_path(format!("target/{}/include", profile).as_str());
+    let target_headers_profile = root_project_path(format!("target/{}/include", profile).as_str());
     let project_headers = project_path("headers");
 
     let bindings = builder
@@ -462,6 +465,8 @@ pub fn build_bindings(lib_name: &str, builder: Builder) {
         .clang_arg(format!("-I{}", jvm_include))
         .clang_arg(format!("-I{}", jvm_include_native))
         .clang_arg(format!("-I{}", project_headers))
+        .clang_arg(format!("-I{}", target_headers_gen))
+        .clang_arg(format!("-I{}", target_headers_profile))
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");

@@ -253,7 +253,7 @@ pub fn target_arch() -> TargetArch {
 }
 
 /// Common C flags applied to all builds which use this builder interface.
-const common_c_flags: [&'static str; 10] = [
+const common_c_flags: [&str; 10] = [
   "-O3",
   "-fno-omit-frame-pointer",
   "-fstack-protector-strong",
@@ -267,7 +267,7 @@ const common_c_flags: [&'static str; 10] = [
 ];
 
 /// Common ASM flags applied to all builds which use this builder interface.
-const common_asm_flags: [&'static str; 1] = [
+const common_asm_flags: [&str; 1] = [
   "--noexecstack",
 ];
 

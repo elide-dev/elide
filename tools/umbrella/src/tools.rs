@@ -31,10 +31,10 @@ pub struct ToolInfo {
 }
 
 // Library version of the tooling layer.
-pub static LIB_VERSION: &'static str = "0.1.0";
+pub static LIB_VERSION: &str = "0.1.0";
 
 // API version of the tooling layer.
-pub static API_VERSION: &'static str = "v1";
+pub static API_VERSION: &str = "v1";
 
 #[cfg(feature = "uv")]
 pub static UV_INFO: ToolInfo = ToolInfo {

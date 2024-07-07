@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-#![feature(exit_status_error)]
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, improper_ctypes)]
 #![forbid(unsafe_code, dead_code)]
 
@@ -413,16 +412,22 @@ pub fn build_dual_cc(
     shared_lib.flag(flag);
   }
 
-  shared_lib
+  match shared_lib
           .get_compiler()
           .to_command()
           .args([shared_flag, "-o"])
           .arg(outpath)
           .args(&objects)
-          .status()
-          .unwrap()
-          .exit_ok()
-          .expect(format!("Failed to compile shared library {}", shared_lib_name).as_str());
+          .status() {
+    Ok(_) => {
+      // nothing to do
+    }
+
+    Err(e) => {
+      // crash
+      panic!("Failed to compile shared library {}; error: {}", shared_lib_name, e);
+    }
+  }
 }
 
 /// Execute a consistent C bind-gen environment.

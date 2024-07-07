@@ -40,7 +40,6 @@ fn main() {
         .flag("-Wno-sign-compare")
         .flag("-Wno-sign-conversion")
         .flag("-Wno-strict-prototypes")
-        .flag("-Wno-extra-semi")
         .flag("-Wno-gnu-pointer-arith");
 
     build

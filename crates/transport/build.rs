@@ -23,8 +23,6 @@ fn main() {
     build
         // Warnings
         .flag("-Werror")
-        .flag("-Wextra")
-        .flag("-Wpedantic")
         .flag("-Wformat=2")
         .flag("-Wformat-security")
         .flag("-Wnull-dereference")

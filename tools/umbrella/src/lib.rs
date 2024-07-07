@@ -117,7 +117,7 @@ fn run_ruff_entry(args: Vec<std::ffi::OsString>) -> ExitStatus {
         eprintln!("  {} {cause}", "Cause:".bold());
       }
     }
-    ExitStatus::Error.into()
+    ExitStatus::Error
   })
 }
 
@@ -171,7 +171,7 @@ mod tests {
 
 // -- Entrypoint Functions
 fn all_supported_tools() -> Vec<&'static str> {
-    tool_map().keys().map(|&x| x).collect()
+    tool_map().keys().copied().collect()
 }
 
 // -- JNI Aliases
@@ -214,10 +214,10 @@ pub fn supportedTools<'local>(
 }
 
 #[jni("dev.elide.cli.bridge.CliNativeBridge")]
-pub fn relatesTo<'local>(
+pub fn relatesTo(
     mut env: JNIEnv,
     _class: JClass,
-    tool: JString<'local>,
+    tool: JString<'_>,
 ) -> jobjectArray {
   let input: String = env
           .get_string(&tool)
@@ -232,7 +232,7 @@ pub fn relatesTo<'local>(
           .new_object_array(1, "java/lang/String", env.new_string("").unwrap())
           .unwrap();
 
-  tool.language.iter().enumerate().for_each(|(_i, lang)| {
+  tool.language.iter().for_each(|lang| {
     let tool = env.new_string(lang).unwrap();
     env.set_object_array_element(&array, 0, tool).unwrap();
   });
@@ -241,10 +241,10 @@ pub fn relatesTo<'local>(
 }
 
 #[jni("dev.elide.cli.bridge.CliNativeBridge")]
-pub fn toolVersion<'local>(
+pub fn toolVersion(
     mut env: JNIEnv,
     _class: JClass,
-    tool: JString<'local>,
+    tool: JString<'_>,
 ) -> jstring {
     let input: String = env
         .get_string(&tool)
@@ -276,7 +276,7 @@ fn decode_tool_args(mut env: JNIEnv, args: JObjectArray) -> Vec<std::ffi::OsStri
 
     // insert into the arg vec
     tool_args.insert(arg_i as usize, arg_os_str.to_os_string());
-    arg_i = arg_i + 1;
+    arg_i += 1;
   }
   tool_args
 }
@@ -317,7 +317,7 @@ pub fn runUv<'local>(env: JNIEnv<'local>, _class: JClass<'local>, args: JObjectA
 #[cfg(not(feature = "uv"))]
 #[jni("dev.elide.cli.bridge.CliNativeBridge")]
 pub fn runUv<'local>(_env: JNIEnv<'local>, _class: JClass<'local>, _args: JObjectArray<'local>) -> jint {
-  return -1
+  -1
 }
 
 #[cfg(feature = "biome")]
@@ -329,12 +329,12 @@ pub fn runBiomeFmt<'local>(_env: JNIEnv<'local>, _class: JClass<'local>, _args: 
 #[cfg(not(feature = "biome"))]
 #[jni("dev.elide.cli.bridge.CliNativeBridge")]
 pub fn runBiomeFmt<'local>(_env: JNIEnv<'local>, _class: JClass<'local>, _args: JObjectArray<'local>) -> jint {
-  return -1
+  -1
 }
 
 #[on_load(umbrella)]
 pub fn on_load<'local>(_vm: JavaVM, _: c_void) -> jint {
-  return JNI_VERSION_21;
+  JNI_VERSION_21
 }
 
 #[on_unload(umbrella)]

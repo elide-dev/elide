@@ -297,7 +297,6 @@ pub fn setup_cc() -> Build {
 
     build
         // Defines & Compiler Settings
-        .std("c11")
         .pic(true)
         .static_flag(true)
         .shared_flag(true)

@@ -12,64 +12,54 @@
  */
 
 use bindgen::Builder;
-use builder::{build_bindings, build_dual_cc, header_file, setup_cc, src_file, target_os, TargetOs};
+use builder::{
+    build_bindings, build_dual_cc, header_file, setup_cc, src_file, target_os, TargetOs,
+};
 
 fn main() {
-  // decide if we are on darwin
-  let os = target_os();
-  let mut build = setup_cc();
+    // decide if we are on darwin
+    let os = target_os();
+    let mut build = setup_cc();
 
-  build
-          // Warnings
-          .flag("-Werror")
-          .flag("-Wno-unused-parameter")
-          .flag("-Wno-unused-command-line-argument")
-          .flag("-Wno-sign-compare")
+    build
+        // Warnings
+        .flag("-Werror")
+        .flag("-Wno-unused-parameter")
+        .flag("-Wno-unused-command-line-argument")
+        .flag("-Wno-sign-compare")
+        // Sources: Jansi & JLine
+        .file(src_file("clibrary.c"))
+        .file(src_file("jansi.c"))
+        .file(src_file("jansi_isatty.c"))
+        .file(src_file("jansi_structs.c"))
+        .file(src_file("jansi_ttyname.c"))
+        .file(src_file("jlinenative.c"))
+        .file(src_file("terminaljni.c"));
 
-          // Sources: Jansi & JLine
-          .file(src_file("clibrary.c"))
-          .file(src_file("jansi.c"))
-          .file(src_file("jansi_isatty.c"))
-          .file(src_file("jansi_structs.c"))
-          .file(src_file("jansi_ttyname.c"))
-          .file(src_file("jlinenative.c"))
-          .file(src_file("terminaljni.c"));
+    let bindings_builder: Builder = match os {
+        TargetOs::Darwin => Builder::default()
+            .header(header_file("jansi.h"))
+            .header(header_file("jansi_structs.h"))
+            .header(header_file("jlinenative.h")),
 
-  let bindings_builder: Builder = match os {
-    TargetOs::Darwin => {
-      Builder::default()
-              .header(header_file("jansi.h"))
-              .header(header_file("jansi_structs.h"))
-              .header(header_file("jlinenative.h"))
-    }
+        TargetOs::Linux => Builder::default()
+            .header(header_file("jansi.h"))
+            .header(header_file("jansi_structs.h"))
+            .header(header_file("jlinenative.h")),
 
-    TargetOs::Linux => {
-      Builder::default()
-              .header(header_file("jansi.h"))
-              .header(header_file("jansi_structs.h"))
-              .header(header_file("jlinenative.h"))
-    }
+        TargetOs::Windows => {
+            build
+                // Windows C Sources
+                .file(src_file("kernel32.c"));
 
-    TargetOs::Windows => {
-      build
-              // Windows C Sources
-              .file(src_file("kernel32.c"));
+            Builder::default()
+                .header(header_file("jansi.h"))
+                .header(header_file("jansi_structs.h"))
+                .header(header_file("jlinenative.h"))
+        }
+    };
 
-      Builder::default()
-              .header(header_file("jansi.h"))
-              .header(header_file("jansi_structs.h"))
-              .header(header_file("jlinenative.h"))
-    }
-  };
+    build_dual_cc(build, "terminalcore", "terminal", None, None);
 
-  build_dual_cc(
-    build,
-    "terminalcore",
-    "terminal",
-    None,
-    None);
-
-  build_bindings(
-    "libterminal.rs",
-    bindings_builder);
+    build_bindings("libterminal.rs", bindings_builder);
 }

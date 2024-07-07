@@ -11,7 +11,13 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, improper_ctypes, dead_code)]
+#![allow(
+    non_snake_case,
+    non_camel_case_types,
+    non_upper_case_globals,
+    improper_ctypes,
+    dead_code
+)]
 #![forbid(unsafe_code)]
 
 include!(concat!(env!("OUT_DIR"), "/libsqlitejdbc.rs"));

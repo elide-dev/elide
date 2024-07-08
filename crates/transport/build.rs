@@ -21,8 +21,9 @@ fn main() {
     let mut build = setup_cc();
 
     build
+        // Compiler Settings
+        .std("gnu99")
         // Warnings
-        .flag("-Werror")
         .flag("-Wformat=2")
         .flag("-Wformat-security")
         .flag("-Wnull-dereference")
@@ -34,11 +35,9 @@ fn main() {
         .flag("-Wswitch-enum")
         .flag("-Wno-switch-default")
         .flag("-Wno-unused-parameter")
-        .flag("-Wno-unused-command-line-argument")
         .flag("-Wno-sign-compare")
         .flag("-Wno-sign-conversion")
-        .flag("-Wno-strict-prototypes")
-        .flag("-Wno-gnu-pointer-arith");
+        .flag("-Wno-strict-prototypes");
 
     build
         // Defines & Compiler Settings

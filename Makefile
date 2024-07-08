@@ -505,10 +505,10 @@ clean-natives:  ## Clean local native targets.
 
 natives:  ## Rebuild natives (C/C++ and Rust).
 	$(CMD)$(MAKE) -C third_party clean
-	@echo "" && echo "Building natives (mode: $(RELEASE), native: $(NATIVE))..."
+	@echo "" && echo "Building natives (mode: $(BUILD_MODE), native: $(NATIVE))..."
 	$(CMD)make -C third_party RELEASE=$(RELEASE) NATIVE=$(NATIVE)
 	$(CMD)$(MAKE) symlinks RELEASE=$(RELEASE)
-	@echo "" && echo "Building Rust stdlib (mode: $(RELEASE), native: $(NATIVE))..."
+	@echo "" && echo "Building Rust stdlib (mode: $(BUILD_MODE), native: $(NATIVE))..."
 ifeq ($(BUILD_STDLIB),yes)
 	$(CMD)$(CARGO) run +nightly -Zbuild-std --target $(RUSTC_TARGET)
 endif

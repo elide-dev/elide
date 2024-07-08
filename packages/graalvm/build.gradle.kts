@@ -61,7 +61,7 @@ val javacArgs = listOf(
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 23
+val edgeJvmTarget = 24
 val ltsJvmTarget = 21
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)

@@ -32,10 +32,10 @@ import javax.inject.Inject
 private const val USE_CUSTOM_TOOLCHAINS = true
 
 // Latest Oracle GVM version ("GraalVM Enterprise").
-private val latestOracleGvmVersion = "23.0.0-ea.09" to JavaVersion.VERSION_23
+private val latestOracleGvmVersion = "24.0.0-ea.02" to JavaVersion.VERSION_24
 
 // Latest GraalVM Community Edition version.
-private val latestGraalVmCeVersion = "24.1.0-dev-20240522_2207" to JavaVersion.VERSION_23
+private val latestGraalVmCeVersion = "24.2.0-dev-20240706_0026" to JavaVersion.VERSION_24
 
 // Release track for a given JDK toolchain.
 @Suppress("unused") private enum class ReleaseTrack {
@@ -163,7 +163,7 @@ private val oracleDownloadUrl = DownloadLink { gvm, platform ->
 
 private val gvmCeDownloadUrl = DownloadLink { gvm, platform ->
   val platformCe = platform.replace("x64", "amd64")
-  "https://github.com/graalvm/graalvm-ce-dev-builds/releases/download/$gvm/graalvm-community-java23-${platformCe}-dev.tar.gz"
+  "https://github.com/graalvm/graalvm-ce-dev-builds/releases/download/$gvm/graalvm-community-java24-${platformCe}-dev.tar.gz"
 }
 
 private fun linkFor(type: ReleaseType, gvm: String, platform: String): String {

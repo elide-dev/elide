@@ -45,6 +45,7 @@ version = rootProject.version as String
 
 val nativesType = "debug"
 val oracleGvm = false
+val oracleGvmLibs = oracleGvm
 val enableJpms = false
 val enableEdge = true
 val enableSqlite = true
@@ -503,7 +504,7 @@ dependencies {
   api(libs.graalvm.js.language)
   compileOnly(libs.graalvm.svm)
 
-  if (oracleGvm) {
+  if (oracleGvmLibs) {
     api(libs.graalvm.polyglot.js)
   } else {
     api(libs.graalvm.polyglot.js.community)
@@ -511,6 +512,8 @@ dependencies {
 
   // Testing
   testApi(project(":packages:engine", configuration = "testInternals"))
+  testApi(libs.graalvm.truffle.api)
+  testApi(libs.graalvm.truffle.runtime)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
@@ -552,6 +555,7 @@ tasks {
   test {
     maxHeapSize = "2G"
     maxParallelForks = 2
+
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.internals", "true")

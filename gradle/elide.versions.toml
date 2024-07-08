@@ -498,6 +498,7 @@ graalvm-truffle-nfi-native-linux-aarch64 = { group = "org.graalvm.truffle", name
 graalvm-truffle-nfi-native-linux-amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-amd64", version.ref = "graalvm-stable" }
 graalvm-truffle-nfi-panama = { group = "org.graalvm.truffle", name = "truffle-nfi-panama", version.ref = "graalvm" }
 graalvm-truffle-processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm" }
+graalvm-truffle-runtime = { group = "org.graalvm.truffle", name = "truffle-runtime", version.ref = "graalvm" }
 graalvm-truffle-runtime-svm = { group = "org.graalvm.nativeimage", name = "truffle-runtime-svm", version.ref = "graalvm" }
 graalvm-wasm-language = { group = "org.graalvm.wasm", name = "wasm-language", version.ref = "graalvm" }
 grpc-api = { group = "io.grpc", name = "grpc-api", version.ref = "grpc-java" }

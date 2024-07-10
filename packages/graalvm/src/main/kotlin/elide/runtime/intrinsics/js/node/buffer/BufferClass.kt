@@ -1,5 +1,6 @@
 package elide.runtime.intrinsics.js.node.buffer
 
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 
@@ -8,7 +9,7 @@ import elide.runtime.core.PolyglotValue
  * instances via "static" methods. A single instance of this class should be injected into a guest context to act as
  * the `Buffer` symbol itself.
  */
-@DelicateElideApi public interface BufferClass {
+@DelicateElideApi public interface BufferClass : ProxyInstantiable {
   /**
    * The size of the internal pool used for unsafe buffers. This value has no effect in the host implementation as NIO
    * buffers with a managed pool are used instead.

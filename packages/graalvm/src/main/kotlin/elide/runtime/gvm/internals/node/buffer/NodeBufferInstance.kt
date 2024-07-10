@@ -270,7 +270,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       value.isNumber -> fillWith(value.asLong().toByte(), start, length)
 
       // strings are encoded (by default in UTF-8)
-      value.isString -> fillWith(NodeEncodingHelper.encode(value.asString(), encoding), start, length)
+      value.isString -> fillWith(NodeBufferEncoding.encode(value.asString(), encoding), start, length)
 
       // otherwise it could be a Buffer or Uint8Array
       else -> value.whenBufferOrView(
@@ -298,7 +298,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     }
 
     if (value.isString) {
-      val bytes = NodeEncodingHelper.encode(value.asString(), encoding)
+      val bytes = NodeBufferEncoding.encode(value.asString(), encoding)
       return search(byteOffset ?: 0, bytes.size) { bytes[it] }
     }
 
@@ -323,7 +323,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     }
 
     if (value.isString) {
-      val bytes = NodeEncodingHelper.encode(value.asString(), encoding)
+      val bytes = NodeBufferEncoding.encode(value.asString(), encoding)
       return invertedSearch(byteOffset ?: (length - 1), bytes.size) { bytes[it] }
     }
 
@@ -444,7 +444,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
   override fun toString(encoding: String?, start: Int?, end: Int?): String {
     val bytes = getBytes(start ?: 0, end ?: length)
-    return NodeEncodingHelper.decode(bytes, encoding)
+    return NodeBufferEncoding.decode(bytes, encoding)
   }
 
   override fun keys(): PolyglotValue {

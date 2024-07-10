@@ -23,4 +23,12 @@ internal object NodeEncodingHelper {
     val charset = encoding?.let { Charset.forName(it) } ?: Charsets.UTF_8
     return bytes.toString(charset)
   }
+
+  internal fun isSupported(encoding: String): Boolean {
+    TODO("Not yet implemented")
+  }
+
+  internal fun byteLength(string: String, encoding: String?): Int {
+    TODO("Not yet implemented")
+  }
 }

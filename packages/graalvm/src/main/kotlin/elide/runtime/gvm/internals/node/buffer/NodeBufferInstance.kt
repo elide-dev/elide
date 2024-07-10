@@ -236,7 +236,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
    * Fill the segment of the buffer of [length] starting at [offset] with [bytes]. If the segment is longer than the
    * source then the [bytes] will be looped until no more fill is needed.
    */
-  protected open fun fillWith(bytes: ByteArray, offset: Int, length: Int) {
+  internal open fun fillWith(bytes: ByteArray, offset: Int, length: Int) {
     // repeat the source bytes until the length is reached
     for (i in 0 until length) setByte(i + offset, bytes[i % bytes.size])
   }
@@ -245,7 +245,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
    * Fill the segment of the buffer of [length] starting at [offset] with [bytes]. If the segment is longer than the
    * source then the [bytes] will be looped until no more fill is needed.
    */
-  protected open fun fillWith(bytes: GuestBytes, offset: Int, length: Int, targetOffset: Int) {
+  internal open fun fillWith(bytes: GuestBytes, offset: Int, length: Int, targetOffset: Int) {
     // repeat the source bytes until the length is reached
     val bytesSize = bytes.size
     for (i in 0 until length) setByte(i + offset, bytes[i % bytesSize])
@@ -255,7 +255,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
    * Fill the segment of the buffer of [length] starting at [offset] with [bytes]. If the segment is longer than the
    * source then the [bytes] will be looped until no more fill is needed.
    */
-  protected open fun fillWith(bytes: NodeHostBuffer, offset: Int, length: Int) {
+  internal open fun fillWith(bytes: NodeHostBuffer, offset: Int, length: Int) {
     // repeat the source bytes until the length is reached
     val bytesSize = bytes.length
     for (i in 0 until length) setByte(i + offset, bytes.byteBuffer[i % bytesSize])

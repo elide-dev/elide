@@ -31,6 +31,12 @@ import elide.runtime.core.PolyglotValue
     return value.getMember(MEMBER_LENGTH).asInt()
   }
 
+  operator fun component1(): GuestBytes = bytes()
+  
+  operator fun component2(): Int = byteOffset()
+
+  operator fun component3(): Int = byteSize()
+
   companion object {
     /** Member name for the backing buffer value. */
     private const val MEMBER_BUFFER = "buffer"

@@ -31,7 +31,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
   }
 
   override fun byteLength(string: String, encoding: String?): Int {
-    return NodeEncodingHelper.byteLength(string, encoding)
+    return NodeBufferEncoding.byteLength(string, encoding)
   }
 
   override fun compare(buf1: PolyglotValue, buf2: PolyglotValue): Int {
@@ -104,7 +104,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
   override fun from(source: PolyglotValue, offset: Int?, length: Int?, encoding: String?): BufferInstance {
     if (source.isString) {
-      val bytes = NodeEncodingHelper.encode(source.asString(), encoding)
+      val bytes = NodeBufferEncoding.encode(source.asString(), encoding)
       return NodeHostBuffer.allocate(bytes.size).apply { fillWith(bytes, 0, bytes.size) }
     }
 
@@ -146,7 +146,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
   }
 
   override fun isEncoding(encoding: String): Boolean {
-    return NodeEncodingHelper.isSupported(encoding)
+    return NodeBufferEncoding.isSupported(encoding)
   }
 
   override fun newInstance(vararg arguments: Value?): Any {

@@ -199,7 +199,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
   /* -- Write -- */
 
   override fun write(string: String, offset: Int?, length: Int?, encoding: String?) {
-    val bytes = NodeEncodingHelper.encode(string, encoding)
+    val bytes = NodeBufferEncoding.encode(string, encoding)
     val start = offset ?: 0
     val size = length ?: bytes.size.coerceAtMost(this.length - start)
 

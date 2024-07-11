@@ -45,6 +45,25 @@ pub fn root_project_path(path: &str) -> String {
     folder_path.join(path).to_str().unwrap().to_string()
 }
 
+/// Build a path to a third-party project.
+///
+/// # Arguments
+///
+/// * `name` - The name of the project.
+pub fn third_party_project(name: &str) -> String {
+    root_project_path(format!("third_party/{}", name).as_str())
+}
+
+/// Build a path to a third-party source file.
+///
+/// # Arguments
+///
+/// * `project` - The name of the project.
+/// * `path` - The path to the source file.
+pub fn third_party_src_file(project: &str, path: &str) -> String {
+    root_project_path(format!("third_party/{}/{}", project, path).as_str())
+}
+
 /// Build a path to a project resource.
 ///
 /// # Arguments
@@ -331,7 +350,7 @@ pub fn setup_cc() -> Build {
         "release" => build
             // Release-only Flags
             .define("ELIDE_RELEASE", "1")
-            .flag("-flto=thin"),
+            .flag("-flto"),
 
         _ => &mut build,
     };
@@ -457,6 +476,7 @@ pub fn build_bindings(lib_name: &str, builder: Builder) {
     let profile = var("PROFILE").unwrap();
     let target_headers_gen = root_project_path(format!("target/{}/include", profile).as_str());
     let target_headers_profile = root_project_path(format!("target/{}/include", profile).as_str());
+    let target_headers_apr = root_project_path(format!("target/{}/include/apr-2", profile).as_str());
     let project_headers = project_path("headers");
 
     let bindings = builder
@@ -466,6 +486,7 @@ pub fn build_bindings(lib_name: &str, builder: Builder) {
         .clang_arg(format!("-I{}", project_headers))
         .clang_arg(format!("-I{}", target_headers_gen))
         .clang_arg(format!("-I{}", target_headers_profile))
+        .clang_arg(format!("-I{}", target_headers_apr))
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");

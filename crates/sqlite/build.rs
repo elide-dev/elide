@@ -12,22 +12,10 @@
  */
 
 use bindgen::Builder;
-use builder::{build_bindings, build_dual_cc, header_file, setup_cc, src_file};
+use builder::{build_bindings, build_dual_cc, header_file, setup_cc, src_file, third_party_project, third_party_src_file};
 
 fn main() {
     let mut build = setup_cc();
-
-    // link against `libjvm` and backing `sqlite3`, which should be in the lib path
-    println!("cargo:rustc-link-lib=static=sqlite3");
-
-    build
-        // Warnings
-        .flag("-Werror")
-        .flag("-Wno-unused-variable")
-        .flag("-Wno-unused-parameter")
-        .flag("-Wno-unused-command-line-argument")
-        .flag("-Wno-deprecated-declarations")
-        .flag("-Wno-implicit-function-declaration");
 
     build
         // Defines & Compiler Settings
@@ -59,16 +47,15 @@ fn main() {
 
     build
         // Source Files
-        .file(src_file("NativeDB.c"));
-
-    let extra_cflags = vec!["-lsqlite3"];
+        .file(src_file("NativeDB.c"))
+        .file(third_party_src_file("sqlite", "sqlite3.c"));
 
     build_dual_cc(
         build,
         "sqlitejdbccore",
         "sqlitejdbc",
         None,
-        Some(extra_cflags),
+        None,
     );
 
     build_bindings(

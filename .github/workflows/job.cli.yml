@@ -215,21 +215,21 @@ jobs:
           popd;
           echo "Binary compressed.";
       - name: "Artifacts: Debug Binary (Unix)"
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug.xz
       - name: "Artifacts: Debug Binary (Windows)"
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug
       - name: "Artifacts: Dashboard Dump"
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         if: success()
         with:
           name: cli-debug-report-${{ matrix.tag }}
@@ -349,7 +349,7 @@ jobs:
             -PbuildSamples=false
             -PbuildDocs=false
       - name: "Artifacts: Release Binary"
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         if: success()
         with:
           name: cli-release-${{ matrix.tag }}

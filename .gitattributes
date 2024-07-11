@@ -1,5 +1,5 @@
-/*.js -linguist-detectable
-/*.mjs -linguist-detectable
+/*.js
+/*.mjs
 *.proto linguist-language=Protocol-Buffer linguist-detectable
 *.soy linguist-language=Closure-Templates linguist-detectable
 *.ts linguist-language=TypeScript linguist-detectable
@@ -11,7 +11,7 @@
 *.lock linguist-generated binary
 pnpm-lock.yaml linguist-generated binary
 gradle/verification* linguist-generated binary
-**/package-info.java -linguist-detectable linguist-generated
+**/package-info.java linguist-detectable linguist-generated
 samples/** -linguist-detectable
 tools/plugin/**/*.* -linguist-detectable
 tools/scripts/*.* -linguist-detectable
@@ -30,3 +30,4 @@ docs/* linguist-documentation -linguist-detectable linguist-generated
 tools/plugin/gradle-plugin/plugin-build/plugin/src/model/java -linguist-detectable linguist-generated
 tools/plugin/gradle-plugin/plugin-build/plugin/src/model/kotlin -linguist-detectable linguist-generated
 tools/plugin/gradle-plugin/plugin-build/plugin/src/main/proto -linguist-detectable linguist-generated
+*.rs linguist-detectable

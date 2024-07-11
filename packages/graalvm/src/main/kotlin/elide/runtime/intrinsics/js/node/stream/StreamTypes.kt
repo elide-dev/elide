@@ -12,8 +12,6 @@
  */
 package elide.runtime.intrinsics.js.node.stream
 
-import elide.runtime.intrinsics.js.node.buffer.Buffer
-
 /**
  * ## Node: [String], [Buffer], or any.
  *

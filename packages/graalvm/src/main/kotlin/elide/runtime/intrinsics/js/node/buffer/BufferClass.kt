@@ -1,6 +1,7 @@
 package elide.runtime.intrinsics.js.node.buffer
 
 import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 
@@ -9,7 +10,7 @@ import elide.runtime.core.PolyglotValue
  * instances via "static" methods. A single instance of this class should be injected into a guest context to act as
  * the `Buffer` symbol itself.
  */
-@DelicateElideApi public interface BufferClass : ProxyInstantiable {
+@DelicateElideApi public interface BufferClass : ProxyInstantiable, ProxyObject {
   /**
    * The size of the internal pool used for unsafe buffers. This value has no effect in the host implementation as NIO
    * buffers with a managed pool are used instead.
@@ -41,9 +42,11 @@ import elide.runtime.core.PolyglotValue
   public fun allocUnsafeSlow(size: Int): BufferInstance
 
   /**
-   * Returns the length of a [string] when converted to bytes using the given [encoding] (defaults to UTF-8).
+   * Returns the length of a [string] when converted to bytes using the given [encoding] (defaults to UTF-8). Note that
+   * per the Node.js API documentation, [string] may also be a `Buffer`, `ArrayBuffer`, `DataView`, or `TypedArray`, in
+   * which case the value of the `byteLength` property is returned instead.
    */
-  public fun byteLength(string: String, encoding: String?): Int
+  public fun byteLength(string: PolyglotValue, encoding: String?): Int
 
   /**
    * Compare two instances of Buffer or UInt8Array.

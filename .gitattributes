@@ -1,8 +1,4 @@
-/*.js -linguist-detectable
-/*.mjs -linguist-detectable
 *.proto linguist-language=Protocol-Buffer linguist-detectable
-*.soy linguist-language=Closure-Templates linguist-detectable
-*.ts linguist-language=TypeScript linguist-detectable
 *.build linguist-language=Starlark -linguist-detectable
 *.owl linguist-language=Web-Ontology-Language
 *.BUILD -linguist-detectable
@@ -11,22 +7,50 @@
 *.lock linguist-generated binary
 pnpm-lock.yaml linguist-generated binary
 gradle/verification* linguist-generated binary
-**/package-info.java -linguist-detectable linguist-generated
-samples/** -linguist-detectable
-tools/plugin/**/*.* -linguist-detectable
-tools/scripts/*.* -linguist-detectable
 tools/bench/*/*.* -linguist-detectable
-tools/tsc/src/main/resources/META-INF/elide/embedded/tools/tsc/entry.mjs linguist-generated
-packages/sqlite/src/main/panama/** -linguist-detectable linguist-generated
-packages/transport/transport-*/src/main/panama/** -linguist-detectable linguist-generated
-packages/graalvm/src/test/resources/embedded/** -linguist-detectable linguist-generated
-packages/graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated
-packages/graalvm/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js -linguist-detectable linguist-generated
-packages/cli/packaging/npm/elide.js -linguist-detectable
-packages/graalvm-react/src/main/node/** -linguist-detectable linguist-generated
-packages/graalvm-react/src/main/node/*.js -linguist-detectable linguist-generated
 docs linguist-documentation -linguist-detectable linguist-generated
 docs/* linguist-documentation -linguist-detectable linguist-generated
-tools/plugin/gradle-plugin/plugin-build/plugin/src/model/java -linguist-detectable linguist-generated
-tools/plugin/gradle-plugin/plugin-build/plugin/src/model/kotlin -linguist-detectable linguist-generated
-tools/plugin/gradle-plugin/plugin-build/plugin/src/main/proto -linguist-detectable linguist-generated
+.devcontainer/*.json linguist-language=JSON-with-Comments
+
+# Generated/Tooling
+packages/graalvm-ts/build.mjs -linguist-detectable
+packages/graalvm-ts/src/main/js/entry.mjs -linguist-detectable
+packages/graalvm/src/test/resources/META-INF/elide/embedded/harness.js -linguist-detectable linguist-generated
+packages/graalvm/src/test/resources/META-INF/elide/embedded/simple.js -linguist-detectable
+tools/scripts/intrinsics/deno.js -linguist-detectable
+tools/scripts/intrinsics/http.js -linguist-detectable
+
+# Java: Don't count JPMS modules, protos, or any other generated or irrelevant code
+packages/**/package-info.java -linguist-detectable
+packages/**/**/module-info.java -linguist-detectable
+packages/proto/*/src/*/java/**/*.java -linguist-detectable linguist-generated
+
+# Vendored: SQLite, TCNative, and Transport JNI Overlays
+packages/sqlite/src/main/java/** linguist-vendored
+packages/tcnative/src/main/java/** linguist-vendored
+packages/transport/*/src/main/java/** linguist-vendored
+packages/terminal/src/main/java/** linguist-vendored
+
+# Vendored: C JNI code
+crates/**/*.c linguist-vendored
+crates/**/*.h linguist-vendored
+
+# Ignore: Samples & Tools
+/*.js -linguist-detectable
+/*.mjs -linguist-detectable
+/*.sh -linguist-detectable
+tools/**/*.sh -linguist-detectable
+Makefile -linguist-detectable
+third_party/Makefile -linguist-detectable
+samples/** -linguist-detectable
+tools/umbrella/**/*.rs linguist-detectable
+tools/**/*.sh -linguist-detectable
+tools/plugin/gradle-plugin/** -linguist-detectable
+tools/scripts/** -linguist-detecetable
+tools/images/** -linguist-detectable
+packages/*/packaging/* -linguist-detectable
+packages/*/packaging/** -linguist-detectable
+.github/** -linguist-detectable
+.devcontainer/Dockerfile -linguist-detectable
+.devcontainer/*/Dockerfile -linguist-detectable
+

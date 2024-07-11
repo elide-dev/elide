@@ -1171,6 +1171,7 @@ val darwinReleaseArgs = darwinOnlyArgs.toList()
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
     "-H:NativeLinkerOption=-lm",
+    "-H:NativeLinkerOption=-lstdc++",
     "-H:+StaticExecutableWithDynamicLibC",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",

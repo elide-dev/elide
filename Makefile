@@ -329,9 +329,9 @@ endif
 native:  ## Build Elide's native image target; use BUILD_MODE=release for a release binary.
 	$(info Building Elide native $(VERSION) ($(BUILD_MODE))...)
 ifeq ($(BUILD_MODE),release)
-	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:runtime:nativeOptimizedCompile $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:nativeOptimizedCompile $(_ARGS)
 else
-	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:runtime:nativeCompile $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:nativeCompile $(_ARGS)
 endif
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.

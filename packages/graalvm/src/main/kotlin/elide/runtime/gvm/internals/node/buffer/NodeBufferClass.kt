@@ -1,6 +1,7 @@
 package elide.runtime.gvm.internals.node.buffer
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
@@ -30,8 +31,16 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     return NodeHostBuffer.allocate(size)
   }
 
-  override fun byteLength(string: String, encoding: String?): Int {
-    return NodeBufferEncoding.byteLength(string, encoding)
+  override fun byteLength(string: PolyglotValue, encoding: String?): Int {
+    // in a twisted joke about API design, the argument *explicitly* named 'string', in the method
+    // used *to calculate the byte size for encoded text*, can also be a non-string type; brilliant
+    if (string.isString) return NodeBufferEncoding.byteLength(string.asString(), encoding)
+
+    // accepted non-string types simply return their own byte length (buffers and typed arrays)
+    if (string.hasMembers()) string.getMember("byteLength")?.asInt()?.let { return it }
+
+    // unsupported type
+    throw typeError("Unknown type for argument 'string', expected string, Buffer, ArrayBuffer, or TypedArray")
   }
 
   override fun compare(buf1: PolyglotValue, buf2: PolyglotValue): Int {
@@ -97,7 +106,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     val bufferSize = length?.coerceAtMost(maxLength) ?: maxLength
 
     val buffer = NodeHostBuffer.allocate(bufferSize)
-    buffer.fillWith(bytes, 0, bufferSize, offset ?: 0)
+    buffer.fillWith(bytes, 0, bufferSize, sourceOffset + (offset ?: 0))
 
     return buffer
   }
@@ -151,5 +160,107 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
   override fun newInstance(vararg arguments: Value?): Any {
     error("Buffer constructors are deprecated, use the static factory methods instead")
+  }
+
+  override fun getMemberKeys(): Any {
+    return staticMembers
+  }
+
+  override fun hasMember(key: String?): Boolean {
+    if (key == null) return false
+    return staticMembers.binarySearch(key) >= 0
+  }
+
+  override fun getMember(key: String?): Any = when (key) {
+    "alloc" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.alloc takes 1 to 3 arguments, but received none")
+      alloc(size = args[0].asInt(), fill = args.getOrNull(1), encoding = args.getOrNull(2)?.asString())
+    }
+
+    "allocUnsafe" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.allocUnsafe takes 1 argument, but received none")
+      allocUnsafe(args[0].asInt())
+    }
+
+    "allocUnsafeSlow" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.allocUnsafeSlow takes 1 argument, but received none")
+      allocUnsafe(args[0].asInt())
+    }
+
+    "byteLength" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.byteLength takes 1 or 2 arguments, but received none")
+      byteLength(string = args[0], encoding = args.getOrNull(1)?.asString())
+    }
+
+    "compare" -> ProxyExecutable { args ->
+      if (args.size < 2) error("Buffer.compare takes 2 arguments, but received ${args.size}")
+      compare(args[0], args[1])
+    }
+
+    "concat" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.byteLength takes 1 or 2 arguments, but received none")
+      concat(list = args[0], totalLength = args.getOrNull(1)?.asInt())
+    }
+
+    "copyBytesFrom" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.copyBytesFrom takes 1 to 3 arguments, but received none")
+      copyBytesFrom(view = args[0], offset = args.getOrNull(1)?.asInt(), length = args.getOrNull(2)?.asInt())
+    }
+
+    "from" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.byteLength takes 1 to 3 arguments, but received none")
+
+      // Buffer.from has 4 different overloads with very different semantics, but at most they
+      // have 3 arguments (source + offset + length); in two of those overloads the second argument
+      // can be an encoding (a string value), and one of them also allows it to be an offset instead,
+      // so we disambiguate based on the type manually
+      val offsetOrEncoding = args.getOrNull(1)
+
+      from(
+        source = args[0],
+        offset = offsetOrEncoding?.takeIf { it.isNumber }?.asInt(),
+        encoding = offsetOrEncoding?.takeIf { it.isString }?.asString(),
+        length = args.getOrNull(2)?.asInt(),
+      )
+    }
+
+    "isBuffer" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.copyBytesFrom takes 1 argument, but received none")
+      isBuffer(args[0])
+    }
+
+    "isEncoding" -> ProxyExecutable { args ->
+      if (args.isEmpty()) error("Buffer.isEncoding takes 1 argument, but received none")
+      isEncoding(args[0].asString())
+    }
+
+    "poolSize" -> poolSize
+    
+    null -> error("Cannot retrieve member with null key")
+    else -> error("Unknown member 'Buffer.$key'")
+  }
+
+  override fun putMember(key: String?, value: Value?) {
+    error("Modifying the Buffer prototype is not allowed")
+  }
+
+  override fun removeMember(key: String?): Boolean {
+    error("Modifying the Buffer prototype is not allowed")
+  }
+
+  private companion object {
+    private val staticMembers = arrayOf(
+      "alloc",
+      "allocUnsafe",
+      "allocUnsafeSlow",
+      "byteLength",
+      "compare",
+      "concat",
+      "copyBytesFrom",
+      "from",
+      "isBuffer",
+      "isEncoding",
+      "poolSize",
+    ).also { it.sort() }
   }
 }

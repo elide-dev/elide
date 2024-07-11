@@ -265,9 +265,9 @@ BUILD_ARGS += $(patsubst %,-x %,$(NATIVE_TASKS))
 OMIT_NATIVE =
 else
 ifeq ($(RELEASE),yes)
-CLI_TASKS += :packages:runtime:nativeOptimizedCompile -Pelide.buildMode=release -Pelide.release=true -PenableSigning=true -PbuildDocs=true
+CLI_TASKS += :packages:cli:nativeOptimizedCompile -Pelide.buildMode=release -Pelide.release=true -PenableSigning=true -PbuildDocs=true
 else
-CLI_TASKS += :packages:runtime:nativeCompile
+CLI_TASKS += :packages:cli:nativeCompile
 endif
 endif
 endif
@@ -337,7 +337,7 @@ endif
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test check $(_ARGS)
-	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:runtime:optimizedRun --args="selftest"
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:optimizedRun --args="selftest"
 
 gvm: .graalvm-home  ## Build a custom copy of GraalVM for use locally.
 	@echo "GraalVM is ready (profile: $(GVM_PROFILE))."
@@ -428,7 +428,7 @@ cli:  ## Build the Elide command-line tool (native target).
 	$(info Building Elide CLI tool...)
 	$(CMD)mkdir -p $(CLI_DISTPATH)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) \
-		:packages:runtime:$(NATIVE_TARGET_NAME) \
+		:packages:cli:$(NATIVE_TARGET_NAME) \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=false \

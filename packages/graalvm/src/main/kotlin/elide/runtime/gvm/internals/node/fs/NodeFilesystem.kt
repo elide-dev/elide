@@ -40,6 +40,7 @@ import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.gvm.GuestExecutor
 import elide.runtime.gvm.GuestExecutorProvider
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsError
@@ -55,7 +56,7 @@ import elide.runtime.intrinsics.js.node.FilesystemAPI
 import elide.runtime.intrinsics.js.node.FilesystemPromiseAPI
 import elide.runtime.intrinsics.js.node.NodeFilesystemAPI
 import elide.runtime.intrinsics.js.node.NodeFilesystemPromiseAPI
-import elide.runtime.intrinsics.js.node.buffer.Buffer
+import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.runtime.plugins.vfs.VfsListener
@@ -131,7 +132,7 @@ internal object FilesystemConstants {
 }
 
 // Context for a file write operation with managed state.
-internal interface FileWriterContext {
+@OptIn(DelicateElideApi::class) internal interface FileWriterContext {
   companion object {
     @JvmStatic fun of(path: java.nio.file.Path, encoding: Charset?, channel: WritableByteChannel): FileWriterContext {
       return object : FileWriterContext {
@@ -158,7 +159,7 @@ internal interface FileWriterContext {
   fun writeString(data: String): Int = writeBytes(data.toByteArray(encoding ?: StandardCharsets.UTF_8))
 
   /** Write a buffer to the channel. */
-  fun writeBuffer(data: Buffer) {
+  fun writeBuffer(data: BufferInstance) {
     TODO("Binary write not implemented: fs.writeFileSync(Value, ...) (Node API)")
   }
 
@@ -167,18 +168,19 @@ internal interface FileWriterContext {
     when (data) {
       is ByteArray -> writeBytes(data)
       is String -> writeString(data)
-      is Buffer -> writeBuffer(data)
+      is BufferInstance -> writeBuffer(data)
       else -> JsError.error("Unknown type passed to `fs` writeFile: $data")
     }
   }
 }
 
 // Convert a file data input value to a raw byte array suitable for reading or writing.
+@OptIn(DelicateElideApi::class)
 internal fun guestToStringOrBuffer(value: Any?, encoding: Charset = StandardCharsets.UTF_8): ByteArray = when (value) {
   null -> throw JsError.valueError("Cannot read or write `null` as file data")
   is ByteArray -> value
   is String -> value.toByteArray(encoding)
-  is Buffer -> TODO("Node buffers are not supported for filesystem operations yet")
+  is BufferInstance -> TODO("Node buffers are not supported for filesystem operations yet")
 
   is Value -> when {
     value.isNull -> throw JsError.valueError("Cannot read or write `null` as file data")
@@ -238,6 +240,7 @@ private fun doCopyFileGuest(src: Path, dest: Path, mode: Int, callback: Value?):
 }
 
 // Implements common baseline functionality for the Node filesystem modules.
+@OptIn(DelicateElideApi::class)
 internal abstract class FilesystemBase (
     protected val exec: GuestExecutor,
     protected val fs: GuestVFS,

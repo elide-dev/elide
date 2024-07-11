@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import elide.annotations.Factory
 import elide.annotations.Singleton
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsError
@@ -34,7 +35,7 @@ import elide.runtime.gvm.internals.node.events.StandardEventName
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.StreamAPI
-import elide.runtime.intrinsics.js.node.buffer.Buffer
+import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 import elide.runtime.intrinsics.js.node.stream.*
 
 // Internal symbol where the Node built-in module is installed.
@@ -689,6 +690,7 @@ internal class WrappedInputStream private constructor (
 }
 
 // Implementation of a wrapped/proxied `OutputStream` as a Node `Writable`.
+@OptIn(DelicateElideApi::class)
 internal class WrappedOutputStream private constructor (backing: OutputStream) :
   Writable,
   AbstractWritable<WrappedOutputStream>() {
@@ -714,7 +716,7 @@ internal class WrappedOutputStream private constructor (backing: OutputStream) :
     return when (chunk) {
       is ByteArray -> chunk to chunk.size
       is String -> chunk.toByteArray(encoding.get() ?: StandardCharsets.UTF_8) to chunk.length
-      is Buffer -> TODO("Node buffers are not supported for writes to other buffers yet")
+      is BufferInstance -> TODO("Node buffers are not supported for writes to other buffers yet")
 
       is Value -> when {
         chunk.isString -> bufferChunkForWrite(chunk.asString())

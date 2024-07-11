@@ -309,6 +309,7 @@ GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$
 all: build
 
 setup: $(DEPS)  ## Setup development pre-requisites.
+	$(MAKE) symlinks RELEASE=$(RELEASE)
 
 symlinks:
 	@echo "Mounting native layer (mode '$(BUILD_MODE)')..."
@@ -318,6 +319,11 @@ symlinks:
 
 build: $(DEPS) symlinks  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
+ifeq ($(BUILD_MODE),release)
+	$(CMD)$(CARGO) build --release
+else
+	$(CARGO) build
+endif
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build $(CLI_TASKS) $(GRADLE_OMIT) $(_ARGS)
 
 native:  ## Build Elide's native image target; use BUILD_MODE=release for a release binary.

@@ -747,6 +747,42 @@ JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved) {
 // ------------------------------------------------
 //
 
+JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_registerUnix(JNIEnv* env, jclass clazz) {
+  return netty_io_uring_registerUnix(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_createFile(JNIEnv *env, jclass class, jstring filename) {
+  return netty_create_file(env, class, filename);
+}
+
+JNIEXPORT jobjectArray Java_io_netty_incubator_channel_uring_Native_ioUringSetup(JNIEnv *env, jclass clazz, jint entries) {
+  return netty_io_uring_setup(env, clazz, entries);
+}
+
+JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_ioUringEnter(JNIEnv *env, jclass class1, jint ring_fd, jint to_submit,
+                                 jint min_complete, jint flags) {
+  return netty_io_uring_enter(env, class1, ring_fd, to_submit, min_complete, flags);
+}
+
+JNIEXPORT void Java_io_netty_incubator_channel_uring_Native_ioUringExit(JNIEnv *env, jclass clazz,
+        jlong submissionQueueArrayAddress, jint submissionQueueRingEntries, jlong submissionQueueRingAddress, jint submissionQueueRingSize,
+        jlong completionQueueRingAddress, jint completionQueueRingSize, jint ringFd) {
+  netty_io_uring_ring_buffer_exit(
+    env, clazz,
+    submissionQueueArrayAddress, submissionQueueRingEntries, submissionQueueRingAddress, submissionQueueRingSize,
+    completionQueueRingAddress, completionQueueRingSize, ringFd);
+}
+
+JNIEXPORT void Java_io_netty_incubator_channel_uring_Native_eventFdWrite(JNIEnv* env, jclass clazz, jint fd, jlong value) {
+  netty_io_uring_eventFdWrite(env, clazz, fd, value);
+}
+
+JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_blockingEventFd(JNIEnv* env, jclass clazz) {
+  return netty_epoll_native_blocking_event_fd(env, clazz);
+}
+
+//
+
 JNIEXPORT jint Java_io_netty_incubator_channel_uring_NativeStaticallyReferencedJniMethods_sockNonblock(JNIEnv* env, jclass clazz) {
   return netty_io_uring_sockNonblock(env, clazz);
 }
@@ -930,8 +966,6 @@ JNIEXPORT jbyte Java_io_netty_incubator_channel_uring_NativeStaticallyReferenced
 JNIEXPORT jbyte Java_io_netty_incubator_channel_uring_NativeStaticallyReferencedJniMethods_ioringOpClose(JNIEnv* env, jclass clazz) {
   return netty_io_uring_ioringOpClose(env, clazz);
 }
-
-//
 
 JNIEXPORT jbyte Java_io_netty_incubator_channel_uring_NativeStaticallyReferencedJniMethods_ioringOpSendmsg(JNIEnv* env, jclass clazz) {
   return netty_io_uring_ioringOpSendmsg(env, clazz);

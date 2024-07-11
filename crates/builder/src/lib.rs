@@ -25,6 +25,89 @@ use std::env;
 use std::env::var;
 use std::env::var_os;
 use std::path::{Path, PathBuf};
+use std::process::Command;
+
+/// Internal function which runs a Makefile command, possibly against a sub-directory.
+fn do_makefile_run(subdir: Option<&str>, command_line: &str) {
+    let env_make = var("MAKE").unwrap_or_else(|_| "make".to_string());
+    let mut command = Command::new(env_make);
+    let root_project_path = root_project_path("Makefile");
+    let root_subpath = match subdir {
+        Some(subdir) => format!("{}/{}", root_project_path, subdir),
+        None => root_project_path,
+    };
+    command.arg("-f").arg("Makefile");
+    command.arg("-C").arg(root_subpath);
+    command.arg(command_line);
+    let status = command.status().expect("Failed to execute make");
+    assert!(status.success());
+}
+
+/// Run a Makefile command in the project root.
+pub fn makefile_run(command_line: &str) {
+    do_makefile_run(None, command_line);
+}
+
+/// Run a Makefile command in the project root.
+pub fn makefile_sub_run(subdir: &str, command_line: &str) {
+    do_makefile_run(Some(subdir), command_line);
+}
+
+/// Run a closure if the provided path exists.
+pub fn if_exists(path: &str, closure: impl FnOnce()) {
+    if Path::new(path).exists() {
+        closure();
+    }
+}
+
+/// Run a closure if the provided path does not exist.
+pub fn if_not_exists(path: &str, closure: impl FnOnce()) {
+    if !Path::new(path).exists() {
+        closure();
+    }
+}
+
+/// Run a command in the project root.
+pub fn root_project_run(command: &str, command_line: &str, message: &str) {
+    let status = Command::new(command)
+        .arg(command_line)
+        .status()
+        .expect(message);
+    assert!(status.success());
+}
+
+/// Make sure the Elide codebase and build environment is setup properly.
+pub fn setup(closure: impl FnOnce()) {
+    let profile = var("PROFILE").unwrap();
+    let profile_val = profile.as_str();
+    let cmd_args = match profile_val {
+        "release" => "RELEASE=yes",
+        _ => "RELEASE=no",
+    };
+
+    // we need to update submodules if they cannot be found on-disk
+    if_not_exists(&root_project_path("third_party/sqlite/Makefile"), || {
+        root_project_run("git", "submodule update --init --recursive", "Updating submodules");
+    });
+
+    // we need to install node modules if they are not present
+    if_not_exists(&root_project_path("node_modules"), || {
+        root_project_run("pnpm", "install", "Installing Node modules");
+    });
+
+    // we need to build third-party libs if they are not built
+    if_not_exists(&root_project_path("target/lib"), || {
+        makefile_run(format!("third-party {}", cmd_args).as_str());
+    });
+
+    // run project-specific setup tasks
+    closure();
+}
+
+/// Make sure the Elide codebase and build environment is setup properly; this variant uses no callback.
+pub fn ensure_setup() {
+    setup(|| {});
+}
 
 /// Build a path to a root project resource.
 ///

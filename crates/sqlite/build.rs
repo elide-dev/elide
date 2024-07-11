@@ -12,10 +12,46 @@
  */
 
 use bindgen::Builder;
-use builder::{build_bindings, build_dual_cc, header_file, setup_cc, src_file, third_party_project, third_party_src_file};
+use builder::{build_bindings, build_dual_cc, header_file, if_not_exists, makefile_sub_run, setup, setup_cc, src_file, third_party_project, third_party_src_file};
 
 fn main() {
+    let profile = std::env::var("PROFILE").unwrap();
+    let profile_val = profile.as_str();
+    let cmd_args = match profile_val {
+        "release" => "RELEASE=yes",
+        _ => "RELEASE=no",
+    };
+
+    setup(|| {
+        // we need to build the sqlite amalgamation if it is not present
+        if_not_exists(third_party_src_file("sqlite", "sqlite3.c").as_str(), || {
+            makefile_sub_run("third_party", format!("sqlite {}", cmd_args).as_str());
+        });
+    });
+
     let mut build = setup_cc();
+
+    let sqlite_path = third_party_project("sqlite");
+    let sqlite_include = format!("-I{}", sqlite_path);
+    let binding = sqlite_include.clone();
+    let extra_args = vec![
+        binding.as_str(),
+    ];
+
+    build
+        // Build Hardening & Warning Suppression
+        .flag("-w")
+        .flag("-fPIC")
+        .flag("-fstack-protector-strong")
+        .flag_if_supported("-fstack-clash-protection")
+        .flag_if_supported("-fhardened")
+        .flag_if_supported("-Wl,-z,relro,-z,now")
+        .flag_if_supported("-Wl,-z,noexecstack")
+        .flag_if_supported("-Wl,-z,separate-code")
+        .flag_if_supported("-Wa,--noexecstack");
+
+    build
+        .flag(sqlite_include.clone());
 
     build
         // Defines & Compiler Settings
@@ -50,16 +86,19 @@ fn main() {
         .file(src_file("NativeDB.c"))
         .file(third_party_src_file("sqlite", "sqlite3.c"));
 
+
     build_dual_cc(
         build,
         "sqlitejdbccore",
         "sqlitejdbc",
-        None,
-        None,
+        Some(extra_args.clone()),
+        Some(extra_args.clone()),
     );
 
     build_bindings(
         "libsqlitejdbc.rs",
-        Builder::default().header(header_file("NativeDB.h")),
+        Builder::default()
+            .clang_arg(sqlite_include.clone())
+            .header(header_file("NativeDB.h")),
     )
 }

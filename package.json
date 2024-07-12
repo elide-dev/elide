@@ -55,7 +55,7 @@
     "lint-staged": "15.2.7",
     "postcss-cli": "11.0.0",
     "prettier": "3.3.2",
-    "prettier-plugin-java": "2.6.0",
+    "prettier-plugin-java": "2.6.4",
     "prettier-plugin-properties": "0.3.0",
     "prettier-plugin-sh": "0.14.0",
     "prettier-plugin-toml": "2.0.1",

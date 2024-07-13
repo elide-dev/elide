@@ -25,6 +25,7 @@ import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.BufferAPI
+import elide.runtime.intrinsics.js.node.buffer.BufferClass
 
 /** Internal symbol where the bindings for the 'buffer' module are installed. */
 private const val BUFFER_MODULE_SYMBOL_ROOT = "node_buffer"
@@ -38,6 +39,9 @@ private const val BLOB_SYMBOL = "Blob"
 /** Symbol at which the [NodeBlob] class is installed. */
 private const val FILE_SYMBOL = "File"
 
+/** Symbol at which the [NodeBlob] class is installed. */
+private const val BUFFER_TYPE_SYMBOL = "Buffer"
+
 // Installs the Node `buffer` built-in module.
 @Intrinsic internal class NodeBufferModule : AbstractNodeBuiltinModule() {
   @Inject lateinit var facade: NodeBufferModuleFacade
@@ -47,6 +51,10 @@ private const val FILE_SYMBOL = "File"
     bindings[BUFFER_MODULE_SYMBOL.asJsSymbol()] = facade
     bindings[BLOB_SYMBOL.asPublicJsSymbol()] = NodeBlob::class.java
     bindings[FILE_SYMBOL.asPublicJsSymbol()] = NodeFile::class.java
+
+    // A single NodeBufferClass instance acts as meta-object for the `Buffer` type;
+    // it will also be exposed as part of the `node:buffer` module by guest init code
+    bindings[BUFFER_TYPE_SYMBOL.asPublicJsSymbol()] = NodeBufferClass()
   }
 }
 

@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.python
 
+import com.oracle.graal.python.PythonLanguage
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.io.FileSystem
 import java.nio.file.Path
@@ -46,6 +47,16 @@ private val BUILTIN_PYTHON_PATHS = listOf(
 
     // run embedded initialization code
     if (resources != null) initializeEmbeddedScripts(context, resources)
+  }
+
+  private fun resolveGraalPythonVersions(): Pair<String, String> {
+    val langVersion = PythonLanguage.VERSION
+    val graalvmMajor = PythonLanguage.GRAALVM_MAJOR
+    val graalvmMinor = PythonLanguage.GRAALVM_MINOR
+
+    // `3.11.2` → `3.11`
+    val parsedLangVersion = langVersion.split(".").slice(0..1).joinToString(".")
+    return parsedLangVersion to "${graalvmMajor}.${graalvmMinor}"
   }
 
   private fun renderPythonPath(): String = sequence {
@@ -83,11 +94,13 @@ private val BUILTIN_PYTHON_PATHS = listOf(
       )
 
       if (ImageInfo.inImageCode()) {
+        val (pythonVersion, graalPyVersion) = resolveGraalPythonVersions()
+
         builder.setOptions(
-          "python.CoreHome" to "$it/python/python-home/lib/graalpy24.0",
-          "python.SysPrefix" to "$it/python/python-home/lib/graalpy24.0",
-          "python.StdLibHome" to "$it/python/python-home/lib/python3.10",
-          "python.CAPI" to "$it/python/python-home/lib/graalpy24.0",
+          "python.CoreHome" to "$it/python/python-home/lib/graalpy$graalPyVersion",
+          "python.SysPrefix" to "$it/python/python-home/lib/graalpy$graalPyVersion",
+          "python.StdLibHome" to "$it/python/python-home/lib/python$pythonVersion",
+          "python.CAPI" to "$it/python/python-home/lib/graalpy$graalPyVersion",
           "python.PythonHome" to "$it/python/python-home",
         )
       }

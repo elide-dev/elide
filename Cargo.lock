@@ -548,6 +548,7 @@ dependencies = [
  "libabort",
  "panic-abort",
  "simdutf",
+ "smartstring",
  "uuid",
 ]
 
@@ -1283,9 +1284,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.1.3"
+version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18e2d530f35b40a84124146478cd16f34225306a8441998836466a2e2961c950"
+checksum = "9711f33475c22aab363b05564a17d7b789bf3dfec5ebabb586adee56f0e271b5"
 dependencies = [
  "jobserver",
  "libc",
@@ -1856,6 +1857,7 @@ dependencies = [
 name = "deps"
 version = "1.0.0-alpha11-SNAPSHOT"
 dependencies = [
+ "base",
  "model",
  "pubgrub 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "purl",
@@ -5821,9 +5823,9 @@ checksum = "1c107b6f4780854c8b126e228ea8869f4d7b71260f962fefb57b996b8959ba6b"
 
 [[package]]
 name = "security-framework"
-version = "2.11.0"
+version = "2.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c627723fd09706bacdb5cf41499e95098555af3c3c29d014dc3c458ef6be11c0"
+checksum = "897b2245f0b511c87893af39b033e5ca9cce68824c4d7e7630b5a1d339658d02"
 dependencies = [
  "bitflags 2.6.0",
  "core-foundation",
@@ -5834,9 +5836,9 @@ dependencies = [
 
 [[package]]
 name = "security-framework-sys"
-version = "2.11.0"
+version = "2.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "317936bbbd05227752583946b9e66d7ce3b489f84e11a94a510b4437fef407d7"
+checksum = "75da29fe9b9b08fe9d6b22b5b4bcbc75d8db3aa31e639aa56bb62e9d46bfceaf"
 dependencies = [
  "core-foundation-sys",
  "libc",
@@ -6061,9 +6063,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with"
-version = "3.8.3"
+version = "3.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e73139bc5ec2d45e6c5fd85be5a46949c1c39a4c18e56915f5eb4c12f975e377"
+checksum = "69cecfa94848272156ea67b2b1a53f20fc7bc638c4a46d2f8abde08f05f4b857"
 dependencies = [
  "serde",
  "serde_derive",
@@ -6072,9 +6074,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with_macros"
-version = "3.8.3"
+version = "3.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b80d3d6b56b64335c0180e5ffde23b3c5e08c14c585b51a15bd0e95393f46703"
+checksum = "a8fee4991ef4f274617a51ad4af30519438dacb2f56ac773b08a1922ff743350"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -6213,7 +6215,9 @@ version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3fb72c633efbaa2dd666986505016c32c3044395ceaf881518399d2f4127ee29"
 dependencies = [
+ "arbitrary",
  "autocfg",
+ "serde",
  "static_assertions",
  "version_check",
 ]
@@ -7047,13 +7051,18 @@ dependencies = [
  "clap",
  "colored",
  "console-subscriber",
+ "deps",
+ "entry",
  "java_native",
  "jni",
  "jni-sys",
  "miette 7.2.0",
  "mimalloc",
+ "model",
  "orogene",
  "oxc",
+ "project",
+ "protocol",
  "ruff",
  "serde",
  "sqlite",

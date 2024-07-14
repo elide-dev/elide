@@ -64,6 +64,9 @@ export CUSTOM_ZLIB ?= no
 # GVM_PROFILE ?= (default for os)
 # BUILD_STDLIB ?= yes
 
+LINUX_PKGS ?= libtool-bin tclsh build-essential git curl automake autoconf pkg-config
+MACOS_PKGS ?= automake autoconf libtool pkg-config tcl-tk git curl
+
 export PATH
 export JAVA_HOME
 export GRAALVM_HOME
@@ -328,6 +331,13 @@ GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$
 # ---- Targets ---- #
 
 all: build
+
+dependency-packages:  ## Print the suite of dependencies to install for this OS.
+ifeq ($(OS),Darwin)
+	@printf "$(MACOS_PKGS)"
+else
+	@printf "$(LINUX_PKGS)"
+endif
 
 setup: $(DEPS)  ## Setup development pre-requisites.
 	$(MAKE) symlinks RELEASE=$(RELEASE)

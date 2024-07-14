@@ -1855,6 +1855,16 @@ dependencies = [
 [[package]]
 name = "deps"
 version = "1.0.0-alpha11-SNAPSHOT"
+dependencies = [
+ "model",
+ "pubgrub 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "purl",
+ "semver",
+ "serde",
+ "toml 0.8.14",
+ "toml_edit",
+ "typeshare",
+]
 
 [[package]]
 name = "deranged"
@@ -4444,6 +4454,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.71",
+ "unicase",
 ]
 
 [[package]]
@@ -4453,6 +4464,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "90fcb95eef784c2ac79119d1dd819e162b5da872ce6f3c3abe1e8ca1c082f72b"
 dependencies = [
  "siphasher",
+ "unicase",
 ]
 
 [[package]]
@@ -4615,8 +4627,11 @@ name = "project"
 version = "1.0.0-alpha11-SNAPSHOT"
 dependencies = [
  "builder",
+ "model",
+ "serde",
  "toml 0.8.14",
  "toml_edit",
+ "typeshare",
 ]
 
 [[package]]
@@ -4741,6 +4756,16 @@ dependencies = [
 [[package]]
 name = "pubgrub"
 version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cdd14552ad5f5d743a323c10d576f26822a044355d6601f377d813ece46f38fd"
+dependencies = [
+ "rustc-hash 1.1.0",
+ "thiserror",
+]
+
+[[package]]
+name = "pubgrub"
+version = "0.2.1"
 source = "git+https://github.com/elide-tools/pubgrub?rev=8fd8d1370302508991e1b39ec936c363d582ee4c#8fd8d1370302508991e1b39ec936c363d582ee4c"
 dependencies = [
  "indexmap 2.2.6",
@@ -4748,6 +4773,20 @@ dependencies = [
  "priority-queue",
  "rustc-hash 2.0.0",
  "thiserror",
+]
+
+[[package]]
+name = "purl"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c14fe28c8495f7eaf77a6e6106966f95211c0a2404b9da50d248fc32af3a3f14"
+dependencies = [
+ "hex",
+ "percent-encoding",
+ "phf",
+ "smartstring",
+ "thiserror",
+ "unicase",
 ]
 
 [[package]]
@@ -6167,6 +6206,17 @@ name = "smallvec"
 version = "1.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
+
+[[package]]
+name = "smartstring"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3fb72c633efbaa2dd666986505016c32c3044395ceaf881518399d2f4127ee29"
+dependencies = [
+ "autocfg",
+ "static_assertions",
+ "version_check",
+]
 
 [[package]]
 name = "smawk"
@@ -7741,7 +7791,7 @@ dependencies = [
  "pep508_rs 0.6.0 (git+https://github.com/elide-dev/uv?rev=f068af78f779f4ea3f6629b63ebef39ddc1cf3e3)",
  "petgraph",
  "platform-tags",
- "pubgrub",
+ "pubgrub 0.2.1 (git+https://github.com/elide-tools/pubgrub?rev=8fd8d1370302508991e1b39ec936c363d582ee4c)",
  "pypi-types",
  "requirements-txt",
  "rkyv",

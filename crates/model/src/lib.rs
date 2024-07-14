@@ -11,7 +11,10 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+#![feature(test)]
+#![feature(const_option)]
 #![feature(const_trait_impl)]
+#![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
 /// Build-time constants describing active Elide features.
 pub mod features;
@@ -20,6 +23,7 @@ pub mod features;
 pub mod lang;
 
 use serde::{Deserialize, Serialize};
+use typeshare::typeshare;
 
 // Constants used for OS identification.
 const DARWIN: &str = "darwin";
@@ -35,7 +39,8 @@ const DEBUG: &str = "debug";
 const RELEASE: &str = "release";
 
 /// Enumerates the types of build profiles which Elide supports.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[typeshare]
 pub enum BuildMode {
   Debug,
   Release,
@@ -59,7 +64,8 @@ impl BuildMode {
 }
 
 /// Enumerates supported operating systems.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[typeshare]
 pub enum OperatingSystem {
   Darwin,
   Linux,
@@ -87,7 +93,8 @@ impl OperatingSystem {
 }
 
 /// Enumerates supported target architectures.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[typeshare]
 pub enum Architecture {
   Amd64,
   Arm64, // alias for aarch64 on applicable platforms
@@ -113,7 +120,8 @@ impl Architecture {
 /// Host Info.
 ///
 /// Describes information about the host which Elide was built for; this information is assembled at compile-time.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[typeshare]
 pub struct HostInfo {
   /// Operating system of the host.
   pub os: OperatingSystem,
@@ -125,7 +133,8 @@ pub struct HostInfo {
 /// Rust Info.
 ///
 /// Describes information about the Rust compiler used to build Elide; this information is assembled at compile-time.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[typeshare]
 pub struct RustInfo {
   /// Version of the Rust compiler used to build Elide.
   pub version: &'static str,
@@ -138,7 +147,8 @@ pub struct RustInfo {
 ///
 /// Compile-time information about the current build of Elide, including the active version, target, engines, build
 /// profile, and so on.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[typeshare]
 pub struct ElideInfo {
   /// Current version string for Elide.
   pub version: &'static str,

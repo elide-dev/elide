@@ -11,17 +11,13 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-pub fn add(left: u64, right: u64) -> u64 {
-  left + right
-}
+#![feature(test)]
+#![feature(const_option)]
+#![feature(const_trait_impl)]
+#![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
-#[cfg(test)]
-mod tests {
-  use super::*;
+/// Provides structural definitions for handling dependencies.
+pub mod model;
 
-  #[test]
-  fn it_works() {
-    let result = add(2, 2);
-    assert_eq!(result, 4);
-  }
-}
+/// Provides structural definitions for dependency catalogs.
+pub mod catalog;

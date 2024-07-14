@@ -12,15 +12,19 @@
  */
 
 use serde::{Deserialize, Serialize};
+use typeshare::typeshare;
 
 /// Enumerates known Elide features which can be controlled at build-time.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Ord, PartialOrd, Eq)]
+#[typeshare]
 pub enum Feature {
+  /// Baseline feature set which is always active.
   Baseline,
 }
 
 /// Describes metadata relating to a specific `Feature`.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Ord, PartialOrd, Eq)]
+#[typeshare]
 pub struct FeatureInfo {
   /// CRC32 of the feature's name; used as its ID.
   pub id: u32,

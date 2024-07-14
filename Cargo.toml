@@ -133,11 +133,13 @@ powerfmt = { version = "0.2.0", default-features = false }
 prost = { version = "0.13.1" }
 prost-build = { version = "0.13.1" }
 prost-types = { version = "0.13.1" }
-pubgrub = "0.2.1"
+pubgrub = { version = "0.2.1" }
+purl = { version = "0.1.3" }
 rkyv = { version = "0.7.44", default-features = false }
 rusqlite = { version = "0.31.0", default-features = false }
 rustc_version = { version = "0.4.0" }
 sccache = { version = "0.8.1", default-features = false, features = ["dist-client", "gha", "redis", "s3"] }
+semver = { version = "1.0.23" }
 sentry = { version = "0.34.0" }
 serde = { version = "1.0.203", default-features = false }
 simdutf = { version = "0.4.17" }

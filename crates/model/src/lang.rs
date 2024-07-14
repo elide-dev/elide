@@ -12,9 +12,11 @@
  */
 
 use serde::{Deserialize, Serialize};
+use typeshare::typeshare;
 
 /// Enumerates Elide's supported language runtimes.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, PartialOrd, Ord, Eq)]
+#[typeshare]
 pub enum LanguageEngine {
   /// Elide's JavaScript engine, powered by GraalJs.
   JavaScript,
@@ -36,7 +38,8 @@ pub enum LanguageEngine {
 }
 
 /// Enumerates Elide's supported language dialects; dialects each map to a single `LanguageEngine`.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, PartialOrd, Ord, Eq)]
+#[typeshare]
 pub enum LanguageDialect {
   /// ECMA-compliant JavaScript.
   JavaScript,

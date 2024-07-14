@@ -22,8 +22,11 @@ version = "1.0.0-alpha11-SNAPSHOT"
 crate-type = ["lib"]
 
 [dependencies]
+model = { workspace = true }
+serde = { workspace = true }
 toml = { workspace = true }
 toml_edit = { workspace = true }
+typeshare = { workspace = true }
 
 [build-dependencies]
 builder = { workspace = true }

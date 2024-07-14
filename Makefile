@@ -13,32 +13,53 @@
 # Makefile: Elide
 #
 
+# Build Configuration
+# ---------------------------------------------------------------------------------------------------------------------
 VERSION ?= $(shell cat .version)
-export STRICT ?= yes
-export WASM ?= no
-export RELOCK ?= no
-DEFAULT_REPOSITORY ?= s3://elide-maven
-REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
 JVM ?= 22
+RELEASE ?= no
 SAMPLES ?= no
 SIGNING_KEY ?= F812016B
 REMOTE ?= no
 PUSH ?= no
 CHECK ?= yes
 NATIVE ?= no
+COVERAGE ?= yes
 BUILD_NATIVE_IMAGE ?= no
 BUILD_STDLIB ?= no
 RELEASE ?= no
 MACOS_MIN_VERSION ?= 12.3
 ENABLE_CCACHE ?= yes
 ENABLE_SCCACHE ?= yes
+CUSTOM_JVM ?= no
+export STRICT ?= yes
+export WASM ?= no
+export RELOCK ?= no
+DEFAULT_REPOSITORY ?= s3://elide-maven
+REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
 # Flags that are exported to the third_party build.
 export CUSTOM_ZLIB ?= no
 
+# Required tools for build:
+# ---------------------------------------------------------------------------------------------------------------------
+# - Bash
+# - Git
+# - Rust
+# - Java & GraalVM
+# - Node.js & Yarn
+# - Bazel
+# - Buf
+# - jq
+
+# Optional tools for build:
+# ---------------------------------------------------------------------------------------------------------------------
+# - ccache
+# - sccache
+
 # Flags that control this makefile, along with their defaults:
-#
+# ---------------------------------------------------------------------------------------------------------------------
 # DEBUG ?= no
 # STRICT ?= yes
 # RELEASE ?= no
@@ -64,14 +85,25 @@ export CUSTOM_ZLIB ?= no
 # GVM_PROFILE ?= (default for os)
 # BUILD_STDLIB ?= yes
 
+
+# Required packages for build:
+# ---------------------------------------------------------------------------------------------------------------------
+
 LINUX_PKGS ?= libtool-bin tclsh build-essential git curl automake autoconf pkg-config
 MACOS_PKGS ?= automake autoconf libtool pkg-config tcl-tk git curl
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Key Environment Variables
 
 export PATH
 export JAVA_HOME
 export GRAALVM_HOME
 
+# ---------------------------------------------------------------------------------------------------------------------
+# Tools
+
 GRADLE ?= ./gradlew
+BASH ?= $(shell which bash)
 RUSTUP ?= $(shell which rustup)
 CCACHE ?= $(shell which ccache)
 SCCACHE ?= $(shell which sccache)
@@ -96,16 +128,23 @@ NODE ?= $(shell which node)
 BUN ?= $(shell which bun)
 JAVA ?= $(shell which java)
 NATIVE_IMAGE ?= $(shell which native-image)
+BUF ?= $(shell which buf)
+JQ ?= $(shell which jq)
+BAZEL ?= $(shell which bazel)
+RUSTC ?= $(shell which rustc)
+CARGO ?= $(shell which cargo)
+LLVM_COV ?= $(shell which llvm-cov)
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Build State/Environment
+
 export ELIDE_ROOT ?= $(shell pwd)
 PWD ?= $(ELIDE_ROOT)
 TARGET ?= $(PWD)/build
 DIST ?= $(PWD)/target
 DOCS ?= $(PWD)/docs
 REPORTS ?=
-BUF ?= $(shell which buf)
 SYSTEM ?= $(shell uname -s)
-JQ ?= $(shell which jq)
-BAZEL ?= $(shell which bazel)
 OS ?= $(shell uname -s)
 UNAME_P := $(shell uname -p)
 ARCH := $(shell uname -m)
@@ -132,8 +171,6 @@ endif
 endif
 
 # Exports for `third_party` Makefile.
-RELEASE ?= no
-NATIVE ?= no
 export RELEASE
 export NATIVE
 export MACOS_MIN_VERSION
@@ -147,7 +184,6 @@ endif
 PATH := $(shell echo $$PATH)
 
 # Handle custom Java home path.
-CUSTOM_JVM ?= no
 JAVA_HOME ?= $(shell echo $$JAVA_HOME)
 GRAALVM_HOME ?= $(shell echo $$GRAALVM_HOME)
 
@@ -328,7 +364,20 @@ DEPS ?= node_modules/ third-party umbrella
 
 GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$(PATH)" CC="" CXX="" CFLAGS="" LDFLAGS=""
 
-# ---- Targets ---- #
+ifeq ($(RELEASE),yes)
+EXTRA_RUSTC_FLAGS ?=
+else
+ifeq ($(COVERAGE),yes)
+EXTRA_RUSTC_FLAGS ?=-Cinstrument-coverage
+endif
+endif
+
+ifneq ($(EXTRA_RUSTC_FLAGS),)
+RUSTC_FLAGS = "$(RUSTC_FLAGS) $(EXTRA_RUSTC_FLAGS)"
+endif
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Targets
 
 all: build
 
@@ -364,6 +413,20 @@ ifeq ($(BUILD_MODE),release)
 else
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:nativeCompile $(_ARGS)
 endif
+
+natives-test:  ## Run Cargo and native tests, optionally buildin coverage if COVERAGE=yes.
+ifeq ($(COVERAGE),yes)
+	$(info Running native tests (+coverage)...)
+	$(CMD)$(BASH) ./tools/scripts/cargo-test-coverage.sh \
+		&& $(BASH) ./tools/scripts/cargo-coverage-report.sh
+else
+	$(info Running native tests...)
+	$(CMD)$(CARGO) test
+endif
+
+natives-coverage:  ## Show the current native coverage report; only run if `natives-test` is run first.
+	$(info Opening coverage report...)
+	$(CMD)$(BASH) ./tools/scripts/cargo-coverage-show.sh
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
@@ -812,11 +875,12 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo "" && echo "---- Toolchain --------------------------------------------"
 	@echo "- Java: $(JAVA)"
 	@echo "- Native Image: $(NATIVE_IMAGE)"
-	@echo "- Rust: $(RUSTUP)"
+	@echo "- Rust: $(RUSTC)"
 	@echo "- Cargo: $(CARGO)"
 	@echo "- Yarn: $(YARN)"
 	@echo "- Bazel: $(BAZEL)"
 	@echo "- Buf: $(BUF)"
+	@echo "- Bun: $(BUN)"
 	@echo "- Node: $(NODE)"
 	@echo "- PNPM: $(PNPM)"
 	@echo "" && echo "---- Toolchain Versions -----------------------------------"
@@ -826,8 +890,8 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo "Native Image:"
 	$(CMD)$(NATIVE_IMAGE) --version
 	@echo ""
-	@echo "Rustup:"
-	$(CMD)$(RUSTUP) --version
+	@echo "Rust:"
+	$(CMD)$(RUSTC) --version
 	@echo ""
 	@echo "Cargo:"
 	$(CMD)$(CARGO) --version
@@ -837,6 +901,11 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo ""
 	@echo "Bazel:"
 	$(CMD)$(BAZEL) --version
+ifneq ($(BUN),)
+	@echo ""
+	@echo "Bun:"
+	$(CMD)$(BUN) --version
+endif
 	@echo ""
 	@echo "Buf:"
 	$(CMD)$(BUF) --version
@@ -858,6 +927,18 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo "- CPPFLAGS: $(shell echo $$CPPFLAGS)"
 	@echo "- JAVA_HOME: $(shell echo $$JAVA_HOME)"
 	@echo "- GRAALVM_HOME: $(shell echo $$GRAALVM_HOME)"
+	@echo "- RUSTFLAGS: $(shell echo $$RUSTFLAGS)"
+	@echo "" && echo "---- Utilities --------------------------------------------"
+	@echo "- BASH: $(BASH)"
+	@echo "- BUF: $(BUF)"
+	@echo "- GPG2: $(GPG2)"
+	@echo "- JQ: $(JQ)"
+	@echo "- LLVM_COV: $(LLVM_COV)"
+	@echo "- TAR: $(TAR)"
+	@echo "- UNZIP: $(UNZIP)"
+	@echo "- XZ: $(XZ)"
+	@echo "- ZIP: $(ZIP)"
+	@echo "- ZSTD: $(ZSTD)"
 
 # ---- Runtime submodule ---- #
 # Note: make sure the Git submodule is up to date by running `git submodule update [--init] runtime`

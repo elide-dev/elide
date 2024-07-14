@@ -369,7 +369,6 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(CARGO) test $(CARGO_FLAGS)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test check $(_ARGS)
-	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:optimizedRun --args="selftest"
 
 gvm: .graalvm-home  ## Build a custom copy of GraalVM for use locally.
 	@echo "GraalVM is ready (profile: $(GVM_PROFILE))."

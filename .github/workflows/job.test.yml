@@ -277,9 +277,11 @@ jobs:
           merge-multiple: true
       - name: "Build Environment"
         run: make info
-      - name: "🛠️ Build Native"
+      - name: "🛠️ Build: Natives"
         run: make setup symlinks && cargo build
-      - name: "Testsuite"
+      - name: "👨‍🔬️ Test: Natives"
+        run: make natives-test COVERAGE=yes
+      - name: "👨‍🔬 Test: Runtime"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         env:
           CI: true

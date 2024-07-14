@@ -430,7 +430,7 @@ natives-coverage:  ## Show the current native coverage report; only run if `nati
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
-	$(CMD)$(CARGO) test $(CARGO_FLAGS)
+	$(CMD)$(MAKE) natives-test
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test check $(_ARGS)
 
 gvm: .graalvm-home  ## Build a custom copy of GraalVM for use locally.

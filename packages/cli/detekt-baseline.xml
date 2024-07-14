@@ -76,8 +76,13 @@
     <ID>TopLevelPropertyNaming:main.kt$// Whether to enable the experimental V2 entrypoint through Clikt. private const val enableCliEntryV2 = false</ID>
     <ID>UnusedParameter:AbstractToolCommand.kt$AbstractToolCommand$args: Array&lt;String></ID>
     <ID>UnusedParameter:Elide.kt$Elide.Companion$win32: Boolean = false</ID>
+    <ID>UnusedParameter:NativeEngine.kt$NativeEngine$extraProps: List&lt;Pair&lt;String, String>></ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val javaLibraryPath = System.getenv("JAVA_HOME")?.ifBlank { null }?.let { Path(it).resolve("lib") }</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val libExecPaths = listOf( resolvedExecPrefix, resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.0"), resolvedExecPrefix.resolve("llvm/libsulong-native"), resolvedExecPrefix.resolve("ruby/ruby-home"), )</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val libraryPath = System.getProperty("java.library.path", "")</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val nativesPath = natives.absolutePath</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
     <ID>VariableNaming:AbstractScriptEngineFactory.kt$AbstractScriptEngineFactory.PolyglotContext$private val `in`: PolyglotReader</ID>

@@ -1,35 +1,43 @@
 {
-  "resources":{
+  "resources": {
     "includes": [
-      {"pattern":"\\QMETA-INF/services/jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory\\E"},
-      {"pattern":"\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E"},
-      {"pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/native/libnetty_quiche_osx_aarch_64.jnilib)\\E"},
-      {"pattern":"\\Q(netty_quiche_osx_aarch_64, META-INF/nativelibnetty_quiche_osx_aarch_64.dylib\\E"},
-      {"pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/native/libnetty_resolver_dns_native_macos_aarch_64.jnilib)\\E"},
-      {"pattern":"\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/nativelibnetty_resolver_dns_native_macos_aarch_64.dylib\\E"}
+      { "pattern": "\\QMETA-INF/services/jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory\\E" },
+      { "pattern": "\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E" },
+      { "pattern": "\\Q(netty_quiche_osx_aarch_64, META-INF/native/libnetty_quiche_osx_aarch_64.jnilib)\\E" },
+      { "pattern": "\\Q(netty_quiche_osx_aarch_64, META-INF/nativelibnetty_quiche_osx_aarch_64.dylib\\E" },
+      {
+        "pattern": "\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/native/libnetty_resolver_dns_native_macos_aarch_64.jnilib)\\E"
+      },
+      {
+        "pattern": "\\Q(netty_resolver_dns_native_macos_aarch_64, META-INF/nativelibnetty_resolver_dns_native_macos_aarch_64.dylib\\E"
+      }
     ],
     "excludes": [
-      {"pattern":"linux"},
-      {"pattern":"Linux"},
-      {"pattern":"windows"},
-      {"pattern":"Windows"},
-      {"pattern":"win32"},
-      {"pattern":"Win32"},
-      {"pattern":".*\\.dll"},
-      {"pattern":".*\\.so"},
-      {"pattern":"x86_64"},
-      {"pattern":"x86-64"},
-      {"pattern":"amd64"}
+      { "pattern": "linux" },
+      { "pattern": "Linux" },
+      { "pattern": "windows" },
+      { "pattern": "Windows" },
+      { "pattern": "win32" },
+      { "pattern": "Win32" },
+      { "pattern": ".*\\.dll" },
+      { "pattern": ".*\\.so" },
+      { "pattern": "x86_64" },
+      { "pattern": "x86-64" },
+      { "pattern": "amd64" }
     ]
   },
-  "bundles":[{
-    "name":"ElideTool",
-    "locales":["en-US"]
-  }, {
-    "name":"sun.awt.resources.awt",
-    "classNames":["sun.awt.resources.awt"]
-  }, {
-    "name":"sun.awt.resources.awtosx",
-    "classNames":["sun.awt.resources.awtosx"]
-  }]
+  "bundles": [
+    {
+      "name": "ElideTool",
+      "locales": ["en-US"]
+    },
+    {
+      "name": "sun.awt.resources.awt",
+      "classNames": ["sun.awt.resources.awt"]
+    },
+    {
+      "name": "sun.awt.resources.awtosx",
+      "classNames": ["sun.awt.resources.awtosx"]
+    }
+  ]
 }

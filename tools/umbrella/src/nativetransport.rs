@@ -15,7 +15,7 @@ use serde::Serialize;
 #[typeshare::typeshare]
 #[derive(Clone, Hash, Eq, PartialEq, Debug, Serialize)]
 enum TransportMode {
-    EPOLL,
-    KQUEUE,
-    URING,
+  Epoll,
+  Kqueue,
+  Uring,
 }

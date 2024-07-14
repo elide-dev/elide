@@ -2267,6 +2267,8 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 	public final fun component7 ()Ljava/lang/Boolean;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/nio/file/Path;
+	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBundle ()Ljava/util/List;
@@ -2837,6 +2839,8 @@ public final class elide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOption
 	public static final field Companion Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions$Companion;
 	public synthetic fun <init> (ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
 	public static final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/encoding/TextDecoder$DecodeOptions;
@@ -2874,6 +2878,8 @@ public final class elide/runtime/intrinsics/js/encoding/TextDecoder$Options : ja
 	public synthetic fun <init> (ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()Z
+	public final fun copy (ZZ)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;ZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun fatal ()Z
 	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/encoding/TextDecoder$Options;

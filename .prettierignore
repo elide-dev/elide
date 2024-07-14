@@ -71,3 +71,5 @@ detekt-baseline.xml
 tools/images/*/Dockerfile
 tools/umbrella
 third_party
+fuzz/fuzz_targets/
+biome.jsonc

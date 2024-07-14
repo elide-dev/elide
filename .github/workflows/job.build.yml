@@ -241,10 +241,8 @@ jobs:
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@1fbea72663f6d4c03efaab13560c8a24cfd2a7cc # v1.9.0
         with:
-          toolchain: stable
-          target: wasm32-wasi
+          toolchain: nightly
           components: clippy,rustfmt
-          cache: false
           rustflags: ""
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@89e9040de88b577a072e3760aaf59f585da083af # v0.0.5

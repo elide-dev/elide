@@ -24,6 +24,7 @@
 // --------------------------------------
 package org.sqlite;
 
+import org.graalvm.nativeimage.ImageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sqlite.util.LibraryLoaderUtil;
@@ -300,6 +301,20 @@ public class SQLiteJDBCLoader {
         }
         logger.trace("Loading SQLite native library");
 
+        if (ImageInfo.inImageCode() && ImageInfo.isExecutable()) {
+          // try loading as the umbrella library first
+          try {
+            System.loadLibrary("umbrella");
+
+            // if we get this far, we should return and mark it as loaded
+            extracted = true;
+            return;
+          } catch (Throwable err) {
+            // we ignore this error because the library could be provided at `libsqlitejdbc` as well
+            logger.trace("SQLite could not be loaded via umbrella lib");
+          }
+        }
+
         // As a first step, try loading through System.loadLibrary
         if (loadNativeLibraryJdk()) {
           logger.trace("SQLite loaded via JNI (attempt 1)");
@@ -374,7 +389,8 @@ public class SQLiteJDBCLoader {
         extracted = false;
         throw new NativeLibraryNotFoundException(
                 String.format(
-                        "No native library found for os.name=%s, os.arch=%s, paths=[%s]",
+                        "No native library found for name '%s', os.name=%s, os.arch=%s, paths=[%s]",
+                        sqliteNativeLibraryName,
                         OSInfo.getOSName(),
                         OSInfo.getArchName(),
                         StringUtils.join(triedPaths, File.pathSeparator)));

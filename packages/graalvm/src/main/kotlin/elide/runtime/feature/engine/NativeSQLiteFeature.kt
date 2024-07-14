@@ -29,20 +29,32 @@ import org.sqlite.util.LibraryLoaderUtil
 import org.sqlite.util.OSInfo
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
+import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
 
 /** Mounts the SQLite native library via static JNI. */
 @VMFeature public class NativeSQLiteFeature : AbstractStaticNativeLibraryFeature() {
   private companion object {
     private const val STATIC_JNI = true
+    private const val LIBMATH = "m"
+    private const val SQLITE_LIB = "sqlite3"
+    private const val SQLITEJDBC_LIB = "sqlitejdbc"
+    private const val NATIVE_DB = "org.sqlite.core.NativeDB"
   }
 
   override fun getDescription(): String = "Registers native SQLite access"
 
   override fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo> = if (STATIC_JNI) listOfNotNull(
-    nativeLibrary(singular = libraryNamed("sqlitejdbc", "org.sqlite.core.NativeDB", deps = (
-      // on linux, we need to additionally link against the `math` library, which is at `libm`
-      if (Platform.includedIn(Platform.LINUX::class.java) && STATIC_JNI) listOf("m") else emptyList()
-    )))
+    nativeLibrary(singular = libraryNamed(
+      SQLITE_LIB,
+      registerJni = false,
+      type = STATIC,
+    )),
+    nativeLibrary(singular = libraryNamed(SQLITEJDBC_LIB, NATIVE_DB, type = STATIC, deps = (
+      listOf(SQLITE_LIB).plus(
+        // on linux, we need to additionally link against the `math` library, which is at `libm`
+        if (Platform.includedIn(Platform.LINUX::class.java) && STATIC_JNI) listOf(LIBMATH) else emptyList()
+      )
+    ))),
   ) else emptyList()
 
   private fun onDbReachable() {

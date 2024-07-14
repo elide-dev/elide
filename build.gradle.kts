@@ -350,7 +350,6 @@ apiValidation {
   ignoredProjects +=
     listOf(
       "cli",
-      "cli-bridge",
       "sqlite",
       "transport",
       "transport-common",

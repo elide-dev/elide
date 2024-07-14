@@ -156,8 +156,16 @@ sourceSets {
     val benchmarks by creating {
       kotlin.srcDirs(
         layout.projectDirectory.dir("src/benchmarks/kotlin"),
-        layout.projectDirectory.dir("src/main/kotlin"),
       )
+    }
+  }
+}
+
+if (enableBenchmarks) kotlin {
+  sourceSets {
+    val main by getting
+    val benchmarks by getting {
+      dependsOn(main)
     }
   }
 }
@@ -371,8 +379,8 @@ graalvmNative {
 if (enableBenchmarks) benchmark {
   configurations {
     named("main") {
-      warmups = 10
-      iterations = 5
+      warmups = 3
+      iterations = 2
     }
   }
   targets {
@@ -403,7 +411,6 @@ if (enableBenchmarks) {
       configurations.compileClasspath.get(),
     )
   }
-
   val benchmarksImplementation: Configuration by configurations.getting {
     extendsFrom(
       configurations.implementation.get(),
@@ -415,6 +422,11 @@ if (enableBenchmarks) {
       configurations.runtimeOnly.get(),
       configurations.testRuntimeOnly.get()
     )
+  }
+
+  dependencies {
+    // Benchmarks
+    benchmarksRuntimeOnly(libs.kotlinx.benchmark.runtime)
   }
 }
 
@@ -630,5 +642,21 @@ tasks {
 
   artifacts {
     add("testBase", testJar)
+  }
+}
+
+if (enableBenchmarks) afterEvaluate {
+  tasks.named("benchmarksBenchmark", JavaExec::class) {
+    systemProperty("java.library.path", StringBuilder().apply {
+      append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+      append(File.pathSeparator)
+      append(nativesPath)
+      System.getProperty("java.library.path", "").let {
+        if (it.isNotEmpty()) {
+          append(File.pathSeparator)
+          append(it)
+        }
+      }
+    }.toString())
   }
 }

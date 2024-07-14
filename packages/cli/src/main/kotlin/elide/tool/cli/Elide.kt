@@ -25,7 +25,11 @@ import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ProcessProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
-import picocli.CommandLine.*
+import picocli.CommandLine.Command
+import picocli.CommandLine.Help
+import picocli.CommandLine.Option
+import picocli.CommandLine.Parameters
+import picocli.CommandLine.ScopeType
 import java.util.*
 import elide.annotations.Context
 import elide.annotations.Eager

@@ -20,7 +20,7 @@ version = "1.0.0-alpha11-SNAPSHOT"
 
 [lib]
 name = "sqlitejdbc"
-crate-type = ["lib", "staticlib"]
+crate-type = ["lib", "staticlib", "cdylib"]
 
 [dependencies]
 java_native = { workspace = true }
@@ -32,4 +32,4 @@ builder = { workspace = true }
 bindgen = { workspace = true }
 pkg-config = { workspace = true }
 vcpkg = { workspace = true }
-cc = { workspace = true }
+cc = { workspace = true, features = ["parallel"] }

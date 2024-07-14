@@ -182,6 +182,10 @@ private fun platformConfig(type: String = "resource"): String {
   }
 }
 
+val rootPath: String = rootProject.layout.projectDirectory.asFile.path
+val thirdPartyPath: String = rootProject.layout.projectDirectory.dir("third_party").asFile.path
+val sqliteLibPath: String = rootProject.layout.projectDirectory.dir("third_party/sqlite/install/lib").asFile.path
+
 val nativesRootTemplate: (String) -> String = { version ->
   "/tmp/elide-runtime/v$version/native"
 }
@@ -311,8 +315,6 @@ val languagePluginPaths = if (!enableDynamicPlugins) emptyList() else listOf(
 }
 
 val targetPath = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}")
-val targetLibs = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}/lib")
-val targetHeaders = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}/include")
 val nativesPath = nativesRootTemplate(cliVersion)
 val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
@@ -367,7 +369,6 @@ dependencies {
   }
 
   implementation(mn.micronaut.picocli)
-  implementation(projects.packages.cliBridge)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.bouncycastle)
@@ -718,7 +719,6 @@ val commonNativeArgs = listOfNotNull(
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
-  "-H:NativeLinkerOption=-L$targetLibs",
   "-Delide.strict=true",
   "-J-Delide.strict=true",
   "-Delide.js.vm.enableStreams=true",
@@ -727,6 +727,8 @@ val commonNativeArgs = listOfNotNull(
   "-J-Delide.mosaic=$enableMosaic",
   "-Delide.staticJni=$enableStaticJni",
   "-J-Delide.staticJni=$enableStaticJni",
+  "-Delide.root=$rootPath",
+  "-J-Delide.root=$rootPath",
   "-Delide.target=$targetPath",
   "-J-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
@@ -828,14 +830,13 @@ val experimentalFlags = listOf(
 // C compiler flags which are always included.
 val commonCFlags: List<String> = listOf(
   "-DELIDE",
-  "-I$targetHeaders",
 ).plus(
   System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
 )
 
 // Linker flags which are always included.
 val commonLinkerOptions: List<String> = listOf(
-  "-L$targetLibs",
+  "-L$sqliteLibPath",
 )
 
 // CFlags for release mode.
@@ -885,6 +886,7 @@ val jvmDefs = mapOf(
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
   "elide.target" to targetPath.asFile.path,
+  "elide.root" to rootPath,
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.mosaic" to enableMosaic.toString(),
   "elide.staticJni" to "true",
@@ -926,6 +928,9 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(!enableSqliteStatic, "org.sqlite.core.NativeDB"),
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.KQueueEventLoop"),
+
+  "dev.elide.cli.bridge.CliNativeBridge",
+  onlyIf(HostManager.hostIsLinux, "elide.runtime.gvm.internals.sqlite.SqliteModule"),
 
   "java.awt.Desktop",
   "java.awt.Toolkit",
@@ -972,6 +977,10 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   // --- Jansi/JLine -----
 
+  "org.jline.nativ.JLineLibrary",
+  "org.jline.nativ.CLibrary",
+  "org.jline.nativ.CLibrary${'$'}WinSize",
+  "org.jline.nativ.CLibrary${'$'}Termios",
   "org.jline.terminal.impl.jna.osx.OsXNativePty",
   "org.jline.terminal.impl.jna.linux.LinuxNativePty",
   "org.jline.terminal.impl.jna.linux.LinuxNativePty${'$'}UtilLibrary",
@@ -1171,7 +1180,11 @@ val darwinReleaseArgs = darwinOnlyArgs.toList()
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
     "-H:NativeLinkerOption=-lm",
+    "-H:NativeLinkerOption=-lssl",
+    "-H:NativeLinkerOption=-lcrypto",
+    "-H:NativeLinkerOption=-lsqlite3",
     "-H:NativeLinkerOption=-lstdc++",
+    "-H:NativeLinkerOption=-L$sqliteLibPath",
     "-H:+StaticExecutableWithDynamicLibC",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
@@ -1194,7 +1207,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx24g",
+  "-J-Xmx48g",
 ))
 
 val linuxGvmReleaseFlags = listOf(
@@ -1232,8 +1245,8 @@ fun nativeCliImageArgs(
     .plus(jvmCompileArgs)
     .plus(pklArgs.onlyIf(enablePkl))
     .plus(listOf(
-      rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
-      rootProject.layout.projectDirectory.dir("target/$nativesType/lib").asFile.path,
+      targetPath,
+      sqliteLibPath,
     ).plus(
       languagePluginPaths
     ).plus(

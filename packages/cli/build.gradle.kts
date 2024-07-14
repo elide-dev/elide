@@ -933,6 +933,8 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.KQueueEventLoop"),
 
+  "dev.elide.cli.bridge.CliNativeBridge",
+
   "java.awt.Desktop",
   "java.awt.Toolkit",
   "sun.awt.X11.MotifDnDConstants",
@@ -978,6 +980,10 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   // --- Jansi/JLine -----
 
+  "org.jline.nativ.JLineLibrary",
+  "org.jline.nativ.CLibrary",
+  "org.jline.nativ.CLibrary${'$'}WinSize",
+  "org.jline.nativ.CLibrary${'$'}Termios",
   "org.jline.terminal.impl.jna.osx.OsXNativePty",
   "org.jline.terminal.impl.jna.linux.LinuxNativePty",
   "org.jline.terminal.impl.jna.linux.LinuxNativePty${'$'}UtilLibrary",
@@ -1177,7 +1183,11 @@ val darwinReleaseArgs = darwinOnlyArgs.toList()
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
     "-H:NativeLinkerOption=-lm",
+    "-H:NativeLinkerOption=-lssl",
+    "-H:NativeLinkerOption=-lcrypto",
+    "-H:NativeLinkerOption=-lsqlite3",
     "-H:NativeLinkerOption=-lstdc++",
+    "-H:NativeLinkerOption=-L$sqliteLibPath",
     "-H:+StaticExecutableWithDynamicLibC",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",

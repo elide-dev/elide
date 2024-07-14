@@ -38,14 +38,6 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
     deps = listOf("ssl", "crypto", "apr-2", "sqlite3", "sqlitejdbc"),
   ))
 
-  private fun loadUmbrella() {
-    // force-load the library
-    System.loadLibrary("umbrella")
-    require(CliNativeBridge.apiVersion() == CliNativeBridge.VERSION_V1) {
-      "Native bridge version mismatch"
-    }
-  }
-
   private fun registerJniCalls() {
     register(dev.elide.cli.bridge.CliNativeBridge::class.java)
   }
@@ -53,6 +45,5 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
     super.beforeAnalysis(access)
     registerJniCalls()
-    loadUmbrella()
   }
 }

@@ -18,7 +18,7 @@ rustflags = [
   "tokio_unstable",
 
   # Enforce completely position-independent executables.
-  "-Crelocation-model=pie",
+  "-Crelocation-model=pic",
 ]
 
 [env]

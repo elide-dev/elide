@@ -164,7 +164,6 @@ typeshare = { version = "1.0.3" }
 uuid = { version = "1.10.0", default-features = false, features = [
   "arbitrary",
   "fast-rng",
-  "macro-diagnostics",
   "serde",
   "v4",
   "v7",

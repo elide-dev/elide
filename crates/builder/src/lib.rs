@@ -417,7 +417,7 @@ pub fn target_arch() -> TargetArch {
 }
 
 /// Common C flags applied to all builds which use this builder interface.
-const common_c_flags: [&str; 8] = [
+const common_c_flags: [&str; 10] = [
   "-O3",
   "-fPIC",
   "-fPIE",
@@ -561,11 +561,6 @@ pub fn build_dual_cc(
     TargetOs::Linux => "so",
     TargetOs::Windows => "dll",
   };
-  let shared_flag = match os {
-    TargetOs::Darwin => "-dynamiclib",
-    TargetOs::Linux => "-shared",
-    TargetOs::Windows => "-shared",
-  };
 
   let outpath = out_dir.join(format!("lib{}.{}", shared_lib_name, lib_tail));
 
@@ -579,7 +574,7 @@ pub fn build_dual_cc(
   match shared_lib
     .get_compiler()
     .to_command()
-    .args([shared_flag, "-o"])
+    .arg("-o")
     .arg(outpath)
     .args(&objects)
     .status()

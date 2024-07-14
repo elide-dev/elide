@@ -13,6 +13,7 @@ crate-type = ["lib", "staticlib", "cdylib"]
 [features]
 default = ["lib", "all", "entry"]
 all = ["js", "python", "jvm"]
+diag = []
 js = ["orogene"]
 jvm = []
 lib = ["jni/default"]
@@ -42,11 +43,11 @@ experimental = [
 ]
 
 [lints.rust]
-unsafe_code = "forbid"
 dead_code = "allow"
 
 [dependencies]
 ## Local
+base = { workspace = true }
 substrate = { workspace = true }
 sqlite = { workspace = true }
 terminal = { workspace = true }
@@ -54,8 +55,9 @@ transport = { workspace = true }
 
 ## Compile
 anyhow = { workspace = true }
-#boring = { workspace = true }
+bytemuck = { workspace = true }
 clap = { workspace = true, features = ["derive", "string", "wrap_help"] }
+console-subscriber = { workspace = true }
 colored = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
@@ -89,3 +91,6 @@ biome_json_formatter = { workspace = true, optional = true }
 biome_markup = { workspace = true, optional = true }
 biome_suppression = { workspace = true, optional = true }
 biome_unicode_table = { workspace = true, optional = true }
+
+[build-dependencies]
+builder = { workspace = true }

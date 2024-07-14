@@ -26,8 +26,13 @@ SIGNING_KEY ?= F812016B
 REMOTE ?= no
 PUSH ?= no
 CHECK ?= yes
+NATIVE ?= no
+BUILD_NATIVE_IMAGE ?= no
 BUILD_STDLIB ?= no
+RELEASE ?= no
 MACOS_MIN_VERSION ?= 12.3
+ENABLE_CCACHE ?= yes
+ENABLE_SCCACHE ?= yes
 
 # Flags that are exported to the third_party build.
 export CUSTOM_ZLIB ?= no
@@ -39,6 +44,7 @@ export CUSTOM_ZLIB ?= no
 # RELEASE ?= no
 # JVMDEBUG ?= no
 # NATIVE ?= no
+# BUILD_NATIVE_IMAGE ?= no
 # CI ?= no
 # DRY ?= no
 # SCAN ?= no
@@ -64,6 +70,8 @@ export GRAALVM_HOME
 
 GRADLE ?= ./gradlew
 RUSTUP ?= $(shell which rustup)
+CCACHE ?= $(shell which ccache)
+SCCACHE ?= $(shell which sccache)
 CARGO ?= $(shell which cargo)
 YARN ?= $(shell which yarn)
 RM ?= $(shell which rm)
@@ -101,6 +109,24 @@ ARCH := $(shell uname -m)
 
 export PROJECT_ROOT ?= $(shell pwd)
 export ELIDE_ROOT ?= yes
+
+ifeq ($(ENABLE_SCCACHE),yes)
+ifeq ($(SCCACHE),)
+ENABLE_SCCACHE = no
+else
+CACHE_MODE = sccache
+endif
+endif
+
+ifeq ($(CACHE_MODE),)
+ifeq ($(ENABLE_CCACHE),yes)
+ifeq ($(CCACHE),)
+ENABLE_CCACHE = no
+else
+CACHE_MODE = ccache
+endif
+endif
+endif
 
 # Exports for `third_party` Makefile.
 RELEASE ?= no
@@ -259,16 +285,11 @@ endif
 
 OMIT_NATIVE ?= -x nativeCompile -x nativeTest -x nativeOptimizedCompile
 
-ifneq ($(NATIVE),)
-ifeq ($(NATIVE),no)
-BUILD_ARGS += $(patsubst %,-x %,$(NATIVE_TASKS))
-OMIT_NATIVE =
-else
+ifeq ($(BUILD_NATIVE_IMAGE),yes)
 ifeq ($(RELEASE),yes)
 CLI_TASKS += :packages:cli:nativeOptimizedCompile -Pelide.buildMode=release -Pelide.release=true -PenableSigning=true -PbuildDocs=true
 else
 CLI_TASKS += :packages:cli:nativeCompile
-endif
 endif
 endif
 
@@ -336,6 +357,7 @@ endif
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
+	$(CMD)$(CARGO) test $(CARGO_FLAGS)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test check $(_ARGS)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:optimizedRun --args="selftest"
 
@@ -473,7 +495,7 @@ UMBRELLA_TARGET_PATH = target/$(UMBRELLA_TARGET)
 
 umbrella: $(UMBRELLA_TARGET_PATH)  ## Build the native umbrella tooling library.
 
-$(UMBRELLA_TARGET_PATH):
+$(UMBRELLA_TARGET_PATH): third_party/lib
 	$(info Building tools/umbrella...)
 ifeq ($(BUILD_MODE),release)
 	$(CMD)$(CARGO) build --release
@@ -509,15 +531,12 @@ clean-natives:  ## Clean local native targets.
 	$(CMD)rm -fr target
 	$(CMD)$(MAKE) -C third_party clean
 
-natives:  ## Rebuild natives (C/C++ and Rust).
-	$(CMD)$(MAKE) -C third_party clean
-	@echo "" && echo "Building natives (mode: $(BUILD_MODE), native: $(NATIVE))..."
-	$(CMD)make -C third_party RELEASE=$(RELEASE) NATIVE=$(NATIVE)
-	$(CMD)$(MAKE) symlinks RELEASE=$(RELEASE)
-	@echo "" && echo "Building Rust stdlib (mode: $(BUILD_MODE), native: $(NATIVE))..."
+natives: $(DEPS)  ## Rebuild natives (C/C++ and Rust).
 ifeq ($(BUILD_STDLIB),yes)
+	@echo "" && echo "Building Rust stdlib (mode: $(BUILD_MODE), native: $(NATIVE))..."
 	$(CMD)$(CARGO) run +nightly -Zbuild-std --target $(RUSTC_TARGET)
 endif
+	@echo "" && echo "Building Elide crates..."
 	$(CMD)$(CARGO) build $(CARGO_FLAGS)
 
 third-party: third_party/sqlite third_party/lib  ## Build all third-party embedded projects.
@@ -530,7 +549,7 @@ third_party/sqlite:
 third_party/lib:
 	@echo "Building third-party projects..."
 	$(CMD)mkdir -p $(TARGET_ROOT)
-	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party -j`nproc` && mkdir -p third_party/lib
+	$(CMD)$(MAKE) RELOCK=$(RELOCK) -C third_party && mkdir -p third_party/lib
 	@echo ""
 
 cli-release-artifacts:

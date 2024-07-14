@@ -24,7 +24,7 @@ license = "MIT"
 
 [profile.dev]
 opt-level = 0
-strip = true
+strip = false
 incremental = true
 codegen-units = 1
 overflow-checks = false
@@ -33,9 +33,16 @@ split-debuginfo = "unpacked"
 [profile.release]
 opt-level = 3
 lto = true
-strip = true
+strip = false
 incremental = false
 codegen-units = 1
+
+[profile.dev.package.builder]
+opt-level = 3
+incremental = false
+codegen-units = 1
+overflow-checks = false
+split-debuginfo = "unpacked"
 
 [patch.crates-io]
 ## Version Pins / Overrides
@@ -59,11 +66,13 @@ pubgrub = { git = "https://github.com/elide-tools/pubgrub", rev = "8fd8d13703025
 
 [workspace.dependencies]
 ## Local
+base = { path = "crates/base" }
 builder = { path = "crates/builder" }
-core = { path = "crates/core" }
 deps = { path = "crates/deps" }
 entry = { path = "crates/entry" }
 model = { path = "crates/model" }
+project = { path = "crates/project" }
+protocol = { path = "crates/protocol" }
 sqlite = { path = "crates/sqlite" }
 substrate = { path = "crates/substrate" }
 terminal = { path = "crates/terminal" }
@@ -71,13 +80,36 @@ transport = { path = "crates/transport" }
 
 ## Dependencies
 anyhow = { version = "1.0.80" }
+arbitrary = { version = "1", features = ["derive"] }
 argfile = { version = "0.2.0" }
+base64 = { version = "0.22.1", default-features = false, features = ["alloc"] }
+base64-simd = { version = "0.8.0" }
 bindgen = { version = "0.69.4" }
 boring = { version = "4.7.0" }
-cc = { version = "1.0.104" }
+build_const = { version = "0.2.2", default-features = false }
+bytes = { version = "1.6.0" }
+bytemuck = { version = "1.16.1", features = [
+  "derive",
+  "extern_crate_std",
+  "nightly_stdsimd",
+  "nightly_float",
+  "nightly_portable_simd",
+  "aarch64_simd",
+] }
+capnp = { version = "0.19.6" }
+capnpc = { version = "0.19.0" }
+capnp-futures = { version = "0.19.0" }
+capnp-rpc = { version = "0.19.2" }
+cc = { version = "1.0.104", features = ["parallel"] }
 clap = { version = "4.5.3", features = ["derive"] }
 colored = { version = "2.1.0" }
+console-subscriber = { version = "0.3.0" }
 const_fn = { version = "0.4" }
+const_format = { version = "0.2.32" }
+const-crc32-nostd = { version = "1.3.1" }
+const_panic = { version = "0.2.8" }
+crc32fast = { version = "1.4.2", default-features = false, features = ["nightly"] }
+crc64fast = { version = "1.1.0", features = ["pmull"] }
 futures = { version = "0.3.24", default-features = false }
 heapless = { version = "0.8.0", features = ["portable-atomic"] }
 java_native = { git = "https://github.com/elide-tools/jni-macros", rev = "7dc95cc2d7534761d0b16899dcda9e7729bdb89d" }
@@ -85,34 +117,58 @@ jni = { version = "0.21.1", default-features = false, features = [] }
 jni-sys = { version = "0.4.0" }
 jni-utils = { version = "0.1.1" }
 lazy_static = { version = "1.5.0" }
+libabort = { version = "0.1.8", features = ["libc"] }
+libloading = { version = "0.8.4" }
+libsqlite3-sys = { version = "0.29.0", default-features = false, features = ["loadable_extension", "openssl-sys"] }
 maven-toolbox = { version = "0.0.3" }
 miette = { version = "7.2.0", features = ["fancy", "supports-hyperlinks"] }
 mimalloc = { version = "0.1.43" }
 mvn = { version = "0.2.0" }
 orogene = { git = "https://github.com/elide-dev/orogene", rev = "c8dc2a63e67b0984beccfee2b2fa74990bfa9e15" }
+panic-abort = { version = "0.3.2" }
+panic-halt = { version = "0.2.0" }
 pkg-config = { version = "0.3.30" }
 portable-atomic = { version = "1", default-features = false }
 powerfmt = { version = "0.2.0", default-features = false }
+prost = { version = "0.13.1" }
+prost-build = { version = "0.13.1" }
+prost-types = { version = "0.13.1" }
 pubgrub = "0.2.1"
 rkyv = { version = "0.7.44", default-features = false }
 rusqlite = { version = "0.31.0", default-features = false }
+rustc_version = { version = "0.4.0" }
 sccache = { version = "0.8.1", default-features = false, features = ["dist-client", "gha", "redis", "s3"] }
-serde = { version = "1.0.203", default-features = false }
 sentry = { version = "0.34.0" }
-libsqlite3-sys = { version = "0.28.0", default-features = false, features = ["loadable_extension", "openssl-sys"] }
+serde = { version = "1.0.203", default-features = false }
+simdutf = { version = "0.4.17" }
 tikv-jemallocator = { version = "0.5.4", default-features = false, features = ["disable_initial_exec_tls"] }
 tokio = { version = "1", default-features = false, features = [
   "fs",
   "io-util",
+  "io-std",
   "macros",
   "process",
   "rt-multi-thread",
   "sync",
+  "signal",
+  "signal-hook-registry",
+  "tracing",
 ] }
 tokio-uring = { version = "0.5.0" }
 toml = { version = "0.8.14", default-features = false }
+toml_edit = { version = "0.22.15" }
 trauma = { version = "2.2.5" }
 typeshare = { version = "1.0.3" }
+uuid = { version = "1.10.0", default-features = false, features = [
+  "arbitrary",
+  "fast-rng",
+  "macro-diagnostics",
+  "serde",
+  "v4",
+  "v7",
+  "v8",
+  "zerocopy",
+] }
 vcpkg = { version = "0.2.15" }
 wild = { version = "2" }
 

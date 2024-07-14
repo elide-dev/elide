@@ -92,9 +92,7 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
     renameTo: ((String) -> String)? = null,
     cbk: (() -> Unit)? = null,
   ): List<UnpackedNative> {
-    val nativesPath = requireNotNull(System.getProperty("elide.target")?.ifBlank { null }).let {
-      Path(it).resolve("lib").absolutePathString()
-    }
+    val nativesPath = requireNotNull(System.getProperty("elide.target")?.ifBlank { null })
     val unpacked: LinkedList<UnpackedNative> = LinkedList()
     for (candidate in path) {
       val stream = scanForResource(jar, candidate) ?: continue
@@ -171,15 +169,22 @@ public abstract class AbstractStaticNativeLibraryFeature : NativeLibraryFeature 
       if (it.builtin) {
         libSupport.preregisterUninitializedBuiltinLibrary(it.linkName)
       }
-      if (it.registerPrefix) {
-        it.prefix.forEach { prefix ->
-          platformLibs.addBuiltinPkgNativePrefix(prefix.replace(".", "_"))
-        }
-      }
       if (it.registerJni) (access as BeforeAnalysisAccessImpl).nativeLibraries.let { nativeLibraries ->
+        if (it.registerPrefix) {
+          it.prefix.forEach { prefix ->
+            platformLibs.addBuiltinPkgNativePrefix(prefix.replace(".", "_"))
+          }
+        }
         when (it.type) {
           STATIC -> nativeLibraries.addStaticJniLibrary(it.name, *it.deps.toTypedArray())
           SHARED -> nativeLibraries.addDynamicNonJniLibrary(it.name)
+        }
+      } else {
+        (access as BeforeAnalysisAccessImpl).nativeLibraries.let { nativeLibraries ->
+          when (it.type) {
+            STATIC -> nativeLibraries.addStaticNonJniLibrary(it.name, *it.deps.toTypedArray())
+            SHARED -> nativeLibraries.addDynamicNonJniLibrary(it.name)
+          }
         }
       }
       if (it.eager) {

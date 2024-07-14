@@ -12,8 +12,8 @@
  */
 
 module elide.core {
-    requires java.base;
     requires kotlin.stdlib;
+    requires jdk.incubator.vector;
 
     exports elide.core.api;
     exports elide.core.annotations;

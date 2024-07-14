@@ -182,6 +182,10 @@ private fun platformConfig(type: String = "resource"): String {
   }
 }
 
+val rootPath: String = rootProject.layout.projectDirectory.asFile.path
+val thirdPartyPath: String = rootProject.layout.projectDirectory.dir("third_party").asFile.path
+val sqliteLibPath: String = rootProject.layout.projectDirectory.dir("third_party/sqlite/install/lib").asFile.path
+
 val nativesRootTemplate: (String) -> String = { version ->
   "/tmp/elide-runtime/v$version/native"
 }
@@ -367,7 +371,6 @@ dependencies {
   }
 
   implementation(mn.micronaut.picocli)
-  implementation(projects.packages.cliBridge)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.bouncycastle)
@@ -727,6 +730,8 @@ val commonNativeArgs = listOfNotNull(
   "-J-Delide.mosaic=$enableMosaic",
   "-Delide.staticJni=$enableStaticJni",
   "-J-Delide.staticJni=$enableStaticJni",
+  "-Delide.root=$rootPath",
+  "-J-Delide.root=$rootPath",
   "-Delide.target=$targetPath",
   "-J-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
@@ -885,6 +890,7 @@ val jvmDefs = mapOf(
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
   "elide.target" to targetPath.asFile.path,
+  "elide.root" to rootPath,
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.mosaic" to enableMosaic.toString(),
   "elide.staticJni" to "true",
@@ -1232,8 +1238,8 @@ fun nativeCliImageArgs(
     .plus(jvmCompileArgs)
     .plus(pklArgs.onlyIf(enablePkl))
     .plus(listOf(
-      rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path,
-      rootProject.layout.projectDirectory.dir("target/$nativesType/lib").asFile.path,
+      targetPath,
+      sqliteLibPath,
     ).plus(
       languagePluginPaths
     ).plus(

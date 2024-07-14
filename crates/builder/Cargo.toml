@@ -22,5 +22,7 @@ version = "1.0.0-alpha11-SNAPSHOT"
 crate-type = ["lib"]
 
 [dependencies]
-cc = { workspace = true }
+base = { workspace = true }
+model = { workspace = true }
+cc = { workspace = true, features = ["parallel"] }
 bindgen = { workspace = true }

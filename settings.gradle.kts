@@ -127,17 +127,6 @@ dependencyResolutionManagement {
       }
     }
     maven {
-      name = "wasm-dev"
-      url = uri("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
-      content {
-        includeGroup("io.ktor")
-        includeGroup("org.jetbrains.compose")
-        includeGroup("org.jetbrains.compose.compiler")
-        includeGroup("org.jetbrains.kotlin")
-        includeGroup("org.jetbrains.kotlinx")
-      }
-    }
-    maven {
       name = "compose-dev"
       url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
       content {
@@ -226,50 +215,51 @@ if (buildPkl == "true") {
 
 // Build modules.
 include(
+  ":crates:base",
   ":crates:builder",
-  ":crates:core",
   ":crates:deps",
   ":crates:entry",
   ":crates:model",
+  ":crates:project",
+  ":crates:protocol",
   ":crates:sqlite",
   ":crates:substrate",
   ":crates:terminal",
   ":crates:transport",
   ":packages:base",
+  ":packages:bom",
   ":packages:cli",
-  ":packages:cli-bridge",
   ":packages:core",
   ":packages:engine",
   ":packages:graalvm",
-  ":packages:graalvm-ts",
+  ":packages:graalvm-java",
   ":packages:graalvm-jvm",
+  ":packages:graalvm-kt",
   ":packages:graalvm-llvm",
-  ":packages:graalvm-wasm",
   ":packages:graalvm-py",
   ":packages:graalvm-rb",
-  ":packages:graalvm-kt",
-  ":packages:graalvm-java",
+  ":packages:graalvm-ts",
+  ":packages:graalvm-wasm",
   ":packages:http",
-  ":packages:proto:proto-core",
-  ":packages:proto:proto-test",
+  ":packages:platform",
   ":packages:proto:proto-capnp",
+  ":packages:proto:proto-core",
   ":packages:proto:proto-kotlinx",
   ":packages:proto:proto-protobuf",
-  ":packages:platform",
-  ":packages:bom",
+  ":packages:proto:proto-test",
   ":packages:server",
-  ":packages:ssr",
-  ":packages:test",
   ":packages:sqlite",
+  ":packages:ssr",
   ":packages:tcnative",
   ":packages:terminal",
+  ":packages:test",
   ":packages:tooling",
   ":packages:transport:transport-common",
   ":packages:transport:transport-epoll",
   ":packages:transport:transport-kqueue",
   ":packages:transport:transport-uring",
-  ":tools:umbrella",
   ":tools:reports",
+  ":tools:umbrella",
 )
 
 val buildDeprecated: String by settings

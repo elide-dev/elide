@@ -17,6 +17,7 @@ import com.github.ajalt.clikt.core.PrintHelpMessage
 import com.github.ajalt.clikt.parsers.CommandLineParser
 import com.github.ajalt.clikt.parsers.flatten
 import com.jakewharton.mosaic.runMosaic
+import dev.elide.cli.bridge.CliNativeBridge
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import picocli.CommandLine
@@ -92,6 +93,11 @@ private suspend inline fun runInner(args: Array<String>): Int = when (enableCliE
   } ?: 1
 }
 
+// Perform early startup initialization tasks.
+private fun initialize() {
+  CliNativeBridge.initialize()
+}
+
 /**
  * Main entrypoint for Elide on the command line.
  *
@@ -101,6 +107,10 @@ private suspend inline fun runInner(args: Array<String>): Int = when (enableCliE
  * @param args Arguments to run with.
  */
 suspend fun main(args: Array<String>) = try {
+  // perform early init
+  initialize()
+
+  // run the entrypoint
   runEntry {
     exitCode.set(try {
       runInner(args)

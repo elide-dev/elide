@@ -24,6 +24,7 @@
 // --------------------------------------
 package org.sqlite;
 
+import org.graalvm.nativeimage.ImageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sqlite.util.LibraryLoaderUtil;
@@ -299,6 +300,20 @@ public class SQLiteJDBCLoader {
           return;
         }
         logger.trace("Loading SQLite native library");
+
+        if (ImageInfo.inImageCode() && ImageInfo.isExecutable()) {
+          // try loading as the umbrella library first
+          try {
+            System.loadLibrary("umbrella");
+
+            // if we get this far, we should return and mark it as loaded
+            extracted = true;
+            return;
+          } catch (Throwable err) {
+            // we ignore this error because the library could be provided at `libsqlitejdbc` as well
+            logger.trace("SQLite could not be loaded via umbrella lib");
+          }
+        }
 
         // As a first step, try loading through System.loadLibrary
         if (loadNativeLibraryJdk()) {

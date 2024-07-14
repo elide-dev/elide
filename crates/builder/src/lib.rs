@@ -419,6 +419,8 @@ pub fn target_arch() -> TargetArch {
 /// Common C flags applied to all builds which use this builder interface.
 const common_c_flags: [&str; 8] = [
   "-O3",
+  "-fPIC",
+  "-fPIE",
   "-fno-omit-frame-pointer",
   "-fstack-protector-strong",
   "-fstack-clash-protection",

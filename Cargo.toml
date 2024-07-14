@@ -143,6 +143,7 @@ semver = { version = "1.0.23" }
 sentry = { version = "0.34.0" }
 serde = { version = "1.0.203", default-features = false }
 simdutf = { version = "0.4.17" }
+smartstring = { version = "1.0.1", default-features = false }
 tikv-jemallocator = { version = "0.5.4", default-features = false, features = ["disable_initial_exec_tls"] }
 tokio = { version = "1", default-features = false, features = [
   "fs",

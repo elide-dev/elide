@@ -13,8 +13,6 @@
 
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
-extern crate alloc;
-
 use base64::{
   engine::general_purpose::STANDARD as BASE64_STANDARD,
   engine::general_purpose::STANDARD_NO_PAD as BASE64_STANDARD_NOPAD,
@@ -24,8 +22,14 @@ use base64::{
 };
 
 #[cfg(feature = "alloc")]
-use alloc::string::String;
-use alloc::vec::Vec;
+extern crate alloc;
+
+#[cfg(feature = "alloc")]
+use {
+  crate::prelude::*,
+  alloc::string::String as StdString,
+  alloc::vec::Vec,
+};
 
 #[cfg(feature = "simd")]
 use base64_simd::{
@@ -147,10 +151,10 @@ pub fn base64_std_encode_string_sync(input: &[u8], padding: bool) -> String {
   let mut outvec = Vec::new();
   base64_encode_sync(input, &mut outvec, padding, false);
   #[cfg(not(feature = "unsafe"))]
-  let out = String::from_utf8(outvec).expect("base64 encoding failed");
+  let out = StdString::from_utf8(outvec).expect("base64 encoding failed");
   #[cfg(feature = "unsafe")]
-  let out = unsafe { String::from_utf8_unchecked(outvec) };
-  out
+  let out = unsafe { StdString::from_utf8_unchecked(outvec) };
+  out.into()
 }
 
 /// Encode a byte slice to a base64 output string; this variant uses standard Base64, with optional padding.
@@ -193,10 +197,10 @@ pub fn base64_url_encode_string_sync(input: &[u8], padding: bool) -> String {
   let mut outvec = Vec::new();
   base64_encode_sync(input, &mut outvec, padding, true);
   #[cfg(not(feature = "unsafe"))]
-  let out = String::from_utf8(outvec).expect("base64 encoding failed");
+  let out = StdString::from_utf8(outvec).expect("base64 encoding failed");
   #[cfg(feature = "unsafe")]
-  let out = unsafe { String::from_utf8_unchecked(outvec) };
-  out
+  let out = unsafe { StdString::from_utf8_unchecked(outvec) };
+  out.into()
 }
 
 /// Encode a byte slice to a base64 output string; this variant uses URL-safe Base64, with optional padding.
@@ -276,10 +280,10 @@ pub fn base64_std_encode_string_simd(input: &[u8], padding: bool) -> String {
   let b64out = Base64Out::from_slice(&mut outvec);
   base64_encode_simd(input, b64out, padding, false);
   #[cfg(not(feature = "unsafe"))]
-  let out = String::from_utf8(outvec).expect("base64 encoding failed");
+  let out = StdString::from_utf8(outvec).expect("base64 encoding failed");
   #[cfg(feature = "unsafe")]
-  let out = unsafe { String::from_utf8_unchecked(outvec) };
-  out
+  let out = unsafe { StdString::from_utf8_unchecked(outvec) };
+  out.into()
 }
 
 /// Encode a byte slice to a base64 output string using SIMD instructions, if available; this variant uses standard
@@ -353,10 +357,10 @@ pub fn base64_url_encode_string_simd(input: &[u8], padding: bool) -> String {
   let b64out = Base64Out::from_slice(&mut outvec);
   base64_encode_simd(input, b64out, padding, true);
   #[cfg(not(feature = "unsafe"))]
-  let out = String::from_utf8(outvec).expect("base64 encoding failed");
+  let out = StdString::from_utf8(outvec).expect("base64 encoding failed");
   #[cfg(feature = "unsafe")]
-  let out = unsafe { String::from_utf8_unchecked(outvec) };
-  out
+  let out = unsafe { StdString::from_utf8_unchecked(outvec) };
+  out.into()
 }
 
 #[cfg(test)]

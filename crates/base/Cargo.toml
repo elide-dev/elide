@@ -39,4 +39,5 @@ crc64fast = { workspace = true }
 libabort = { workspace = true }
 panic-abort = { workspace = true }
 simdutf = { workspace = true }
+smartstring = { workspace = true, default-features = false, features = ["arbitrary"] }
 uuid = { workspace = true }

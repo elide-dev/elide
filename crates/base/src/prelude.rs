@@ -11,34 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-#![no_std]
-#![feature(test)]
-#![feature(const_option)]
-#![feature(const_trait_impl)]
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
-extern crate alloc;
+use smartstring::alias::{String as SmartString};
 
-/// Base64 encoding and decoding.
-pub mod b64;
-
-/// CRC32 checksums.
-pub mod crc;
-
-/// SHA-type hashing.
-pub mod sha;
-
-/// UTF-N operations.
-pub mod utf;
-
-/// Hexadecimal encoding and decoding.
-pub mod hex;
-
-/// UUID generation and parsing.
-pub mod uuid;
-
-/// Random number generation.
-pub mod rng;
-
-/// Rust module prelude.
-pub mod prelude;
+/// Alias main standard `String` to `SmartString`.
+pub type String = SmartString;

@@ -18,6 +18,8 @@
 #  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under the License.
 
+import polyglot
+
 # noinspection PyPep8Naming
 class _Elide_ApplicationEnvironment(object):
 
@@ -27,9 +29,9 @@ class _Elide_ApplicationEnvironment(object):
     __virtual_env = {}
 
     def __init__(self):
-        import polyglot
         data = polyglot.import_value("__Elide_app_env__")
-        self.__app_environ = {x: data[x] for x in data}
+        if data is not None:
+          self.__app_environ = {x: data[x] for x in data}
 
     def contains_key(self, item):
         return item in self.__app_environ or item in self.__virtual_env
@@ -82,7 +84,6 @@ class _Elide_ApplicationEnvironment(object):
     def install(cls):
         """Install the monkey-patched environment handler."""
         cls.__patch(cls.__singleton())
-
 
 # Install unconditionally.
 _Elide_ApplicationEnvironment.install()

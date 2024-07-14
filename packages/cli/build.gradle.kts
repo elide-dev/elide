@@ -837,6 +837,7 @@ val commonCFlags: List<String> = listOf(
 // Linker flags which are always included.
 val commonLinkerOptions: List<String> = listOf(
   "-L$sqliteLibPath",
+  "-lsqlite3",
 )
 
 // CFlags for release mode.
@@ -1696,6 +1697,24 @@ tasks {
       configurations.runtimeClasspath,
       jvmOnly,
     )
+  }
+
+  test {
+    jvmDefs.forEach {
+      systemProperty(it.key, it.value)
+    }
+
+    systemProperty("java.library.path", StringBuilder().apply {
+      append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+      append(File.pathSeparator)
+      append(nativesPath)
+      System.getProperty("java.library.path", "").let {
+        if (it.isNotEmpty()) {
+          append(File.pathSeparator)
+          append(it)
+        }
+      }
+    }.toString())
   }
 
   optimizedRun {

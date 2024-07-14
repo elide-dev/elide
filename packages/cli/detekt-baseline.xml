@@ -32,6 +32,7 @@
     <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$40</ID>
     <ID>MatchingDeclarationName:SanityTests.kt$SanitySelfTest : SelfTest</ID>
     <ID>MaxLineLength:ToolShellCommand.kt$ToolShellCommand$" or: elide @|bold,fg(cyan) run|shell|serve|start|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]"</ID>
+    <ID>NestedBlockDepth:main.kt$private suspend inline fun runInner(args: Array&lt;String>): Int</ID>
     <ID>ObjectPropertyNaming:Statics.kt$Statics$val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
     <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
@@ -73,7 +74,6 @@
     <ID>TooManyFunctions:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val jsHint = "package.json"</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val pyHint = "requirements.txt"</ID>
-    <ID>TopLevelPropertyNaming:main.kt$// Whether to enable the experimental V2 entrypoint through Clikt. private const val enableCliEntryV2 = false</ID>
     <ID>UnusedParameter:AbstractToolCommand.kt$AbstractToolCommand$args: Array&lt;String></ID>
     <ID>UnusedParameter:Elide.kt$Elide.Companion$win32: Boolean = false</ID>
     <ID>UnusedParameter:NativeEngine.kt$NativeEngine$extraProps: List&lt;Pair&lt;String, String>></ID>

@@ -69,9 +69,6 @@ abstract class AbstractToolCommand<Context>:
     internal val quiet: AtomicBoolean = AtomicBoolean(false)
   }
 
-  // Initialization state.
-  private val initialized: AtomicBoolean = AtomicBoolean(false)
-
   /** Observed exit code value; defaults to `0`. */
   override val commandResult: AtomicReference<CommandResult> = AtomicReference(CommandResult.Success)
 
@@ -176,6 +173,7 @@ abstract class AbstractToolCommand<Context>:
           val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
           logging.error("Uncaught fatal exception", err ?: "(unknown)", stack)
           exit.set(1)
+          if (err != null) throw err
         }
       }
     }

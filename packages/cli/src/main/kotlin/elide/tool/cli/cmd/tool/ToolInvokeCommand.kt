@@ -354,7 +354,7 @@ private enum class ToolAction (
     }
 
     // decode instruction alias and resolve it to an action
-    val instruction = commandSpec.commandLine().parent.parseResult.originalArgs().firstOrNull() ?: DEFAULT_ACTION
+    val instruction = commandSpec?.commandLine()?.parent?.parseResult?.originalArgs()?.firstOrNull() ?: DEFAULT_ACTION
     val action = ToolAction.resolve(instruction)
     val isAutoToolsMode = tools.isEmpty() || tools.firstOrNull() == AUTO_SYMBOL
     val selectedTools = (if (isAutoToolsMode) resolveTools() else resolveApplicable(

@@ -251,7 +251,7 @@ import elide.tool.project.ProjectManager
 
     // Resolve the primary interactive language.
     internal fun primary(
-      spec: CommandSpec,
+      spec: CommandSpec?,
       langs: EnumSet<GuestLanguage>,
       project: ProjectInfo?,
       languageHint: String?,
@@ -277,7 +277,7 @@ import elide.tool.project.ProjectManager
       val explicitlySelectedLanguagesBySet = Sets.intersection(language ?: emptySet(), langs)
 
       // language by alias
-      val candidateArgs = spec.commandLine()?.parseResult?.originalArgs()
+      val candidateArgs = spec?.commandLine()?.parseResult?.originalArgs()
       val languageHintMatch = langs.firstOrNull { it.id == languageHint }
       val candidateByName = languageHintMatch ?: maybeMatchLanguagesByAlias(
         candidateArgs?.firstOrNull(),

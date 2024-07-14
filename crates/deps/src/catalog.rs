@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+use base::prelude::*;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 

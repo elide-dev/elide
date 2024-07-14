@@ -10,14 +10,3 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
-#![feature(test)]
-#![feature(const_option)]
-#![feature(const_trait_impl)]
-#![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
-
-/// Structural representation of Elide project configuration.
-pub mod config;
-
-/// Routines for parsing and manipulating current project configuration.
-pub mod current;

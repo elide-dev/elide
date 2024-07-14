@@ -48,9 +48,14 @@ dead_code = "allow"
 [dependencies]
 ## Local
 base = { workspace = true }
+deps = { workspace = true }
+entry = { workspace = true }
 substrate = { workspace = true }
 sqlite = { workspace = true }
 terminal = { workspace = true }
+model = { workspace = true }
+project = { workspace = true }
+protocol = { workspace = true }
 transport = { workspace = true }
 
 ## Compile

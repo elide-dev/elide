@@ -23,6 +23,7 @@ crate-type = ["lib"]
 
 [dependencies]
 ## Local
+base = { workspace = true }
 model = { workspace = true }
 
 ## Crates

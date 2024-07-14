@@ -33,6 +33,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import elide.runtime.Logger
@@ -345,7 +346,7 @@ import org.graalvm.polyglot.Engine as VMEngine
    *
    * @see createEngine
    */
-  protected val engine: PolyglotEngine by lazy(::createEngine)
+  protected val engine: AtomicReference<PolyglotEngine> = AtomicReference()
 
   /** Controller for tool output. */
   protected lateinit var out: OutputController
@@ -384,9 +385,9 @@ import org.graalvm.polyglot.Engine as VMEngine
    *
    * @return A new, exclusive [PolyglotEngine] instance.
    */
-  private fun createEngine(): PolyglotEngine = PolyglotEngine {
+  private fun createEngine(langs: EnumSet<GuestLanguage>): PolyglotEngine = PolyglotEngine {
     // allow subclasses to customize the engine
-    configureEngine()
+    configureEngine(langs)
   }
 
   // Build an initial `ToolState` instance from the main tool.
@@ -456,13 +457,20 @@ import org.graalvm.polyglot.Engine as VMEngine
     )
   }
 
+  @Synchronized protected fun resolveEngine(langs: EnumSet<GuestLanguage>): PolyglotEngine {
+    return when (val ready = engine.get()) {
+      null -> createEngine(langs).also { engine.set(it) }
+      else -> ready
+    }
+  }
+
   /**
    * Resolve a thread-local [PolyglotContext], acquiring a new one from the [engine] if necessary. That the returned
    * context _must not_ be shared with other threads to avoid exceptions related to concurrent usage.
    *
    * Subclasses should prefer [withContext] as it provides a limited scope in which the context can be used.
    */
-  protected fun resolvePolyglotContext(): PolyglotContext {
+  protected fun resolvePolyglotContext(langs: EnumSet<GuestLanguage>): PolyglotContext {
     logging.debug("Resolving context for current thread")
 
     // already initialized on the current thread
@@ -473,7 +481,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     // not initialized yet, acquire a new one and store it
     logging.debug("No cached context found for current thread, acquiring new context")
-    return engine.acquire().also { created ->
+    return resolveEngine(langs).acquire().also { created ->
       contextHandle.set(created)
     }
   }
@@ -529,9 +537,9 @@ import org.graalvm.polyglot.Engine as VMEngine
    * The first invocation of this method will cause the [engine] to be initialized, triggering the
    * [configureEngine] event.
    */
-  protected open fun withContext(block: (PolyglotContext) -> Unit) {
+  protected open fun withContext(langs: EnumSet<GuestLanguage>, block: (PolyglotContext) -> Unit) {
     logging.debug("Acquiring context for CLI tool")
-    with(resolvePolyglotContext()) {
+    with(resolvePolyglotContext(langs)) {
       logging.debug("Context acquired")
       use {
         enter()
@@ -660,7 +668,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   protected open fun state(): State? = null
 
   /** Configure the [PolyglotEngine] that will be used to acquire contexts used by the [withContext] function. */
-  protected open fun PolyglotEngineConfiguration.configureEngine(): Unit = Unit
+  protected open fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet<GuestLanguage>): Unit = Unit
 
   protected abstract suspend fun CommandContext.invoke(state: ToolContext<State>): CommandResult
 }

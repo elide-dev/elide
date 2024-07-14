@@ -1646,9 +1646,8 @@ import elide.tool.project.ProjectManager
     if (debug) debugger.apply(this)
     inspector.apply(this)
 
-    val requiresIo = language.resolve(project, languageHint).let {
-      it.contains(PYTHON) || it.contains(RUBY)
-    }
+    val resolved = language.resolve(project, languageHint)
+    val requiresIo = resolved.let { it.contains(PYTHON) || it.contains(RUBY) }
 
     // configure host access rules
     hostAccess = when {
@@ -1687,7 +1686,7 @@ import elide.tool.project.ProjectManager
     val cmd = ProcessHandle.current().info().command().orElse("elide")
     val args = Statics.args.get() ?: emptyList()
 
-    (language ?: LanguageSelector()).resolve().forEach { lang ->
+    resolved.forEach { lang ->
       when (lang) {
         // Primary Engines
         JS -> install(elide.runtime.plugins.js.JavaScript) {

@@ -389,7 +389,8 @@ public class SQLiteJDBCLoader {
         extracted = false;
         throw new NativeLibraryNotFoundException(
                 String.format(
-                        "No native library found for os.name=%s, os.arch=%s, paths=[%s]",
+                        "No native library found for name '%s', os.name=%s, os.arch=%s, paths=[%s]",
+                        sqliteNativeLibraryName,
                         OSInfo.getOSName(),
                         OSInfo.getArchName(),
                         StringUtils.join(triedPaths, File.pathSeparator)));

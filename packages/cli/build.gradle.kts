@@ -315,8 +315,6 @@ val languagePluginPaths = if (!enableDynamicPlugins) emptyList() else listOf(
 }
 
 val targetPath = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}")
-val targetLibs = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}/lib")
-val targetHeaders = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}/include")
 val nativesPath = nativesRootTemplate(cliVersion)
 val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
@@ -721,7 +719,6 @@ val commonNativeArgs = listOfNotNull(
   "-H:+AddAllCharsets",
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
-  "-H:NativeLinkerOption=-L$targetLibs",
   "-Delide.strict=true",
   "-J-Delide.strict=true",
   "-Delide.js.vm.enableStreams=true",
@@ -833,14 +830,13 @@ val experimentalFlags = listOf(
 // C compiler flags which are always included.
 val commonCFlags: List<String> = listOf(
   "-DELIDE",
-  "-I$targetHeaders",
 ).plus(
   System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
 )
 
 // Linker flags which are always included.
 val commonLinkerOptions: List<String> = listOf(
-  "-L$targetLibs",
+  "-L$sqliteLibPath",
 )
 
 // CFlags for release mode.
@@ -934,6 +930,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.KQueueEventLoop"),
 
   "dev.elide.cli.bridge.CliNativeBridge",
+  onlyIf(HostManager.hostIsLinux, "elide.runtime.gvm.internals.sqlite.SqliteModule"),
 
   "java.awt.Desktop",
   "java.awt.Toolkit",
@@ -1210,7 +1207,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx24g",
+  "-J-Xmx48g",
 ))
 
 val linuxGvmReleaseFlags = listOf(

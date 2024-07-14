@@ -1674,6 +1674,7 @@ tasks {
       "java.library.path",
       listOf(
         umbrellaNativesPath,
+        sqliteLibPath,
       ).plus(
         languagePluginPaths.map {
           it.toString()
@@ -1700,21 +1701,48 @@ tasks {
   }
 
   test {
+    if (enableToolchains) javaLauncher = gvmLauncher
+
     jvmDefs.forEach {
       systemProperty(it.key, it.value)
     }
 
-    systemProperty("java.library.path", StringBuilder().apply {
-      append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
-      append(File.pathSeparator)
-      append(nativesPath)
-      System.getProperty("java.library.path", "").let {
-        if (it.isNotEmpty()) {
-          append(File.pathSeparator)
-          append(it)
+    systemProperty(
+      "micronaut.environments",
+      "dev",
+    )
+    jvmDefs.map {
+      systemProperty(it.key, it.value)
+    }
+    systemProperty(
+      "org.graalvm.language.ruby.home",
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "org.graalvm.language.python.home",
+      layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
+    )
+    systemProperty(
+      "elide.natives",
+      nativesPath,
+    )
+    systemProperty(
+      "java.library.path",
+      listOf(
+        umbrellaNativesPath,
+        sqliteLibPath,
+      ).plus(
+        languagePluginPaths.map {
+          it.toString()
         }
-      }
-    }.toString())
+      ).plus(
+        System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
+          it.isNotEmpty()
+        }
+      ).joinToString(
+        File.pathSeparator
+      )
+    )
   }
 
   optimizedRun {
@@ -1741,6 +1769,7 @@ tasks {
       listOf(
         umbrellaNativesPath,
         nativesPath,
+        sqliteLibPath,
       ).plus(
         System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
           it.isNotEmpty()

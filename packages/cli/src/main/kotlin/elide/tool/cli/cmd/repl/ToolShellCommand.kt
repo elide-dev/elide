@@ -1700,7 +1700,7 @@ import elide.tool.project.ProjectManager
         }
 
         WASM -> install(elide.runtime.plugins.wasm.Wasm) {
-          logging.debug("Configuring JS VM")
+          logging.debug("Configuring WASM VM")
           resourcesPath = GVM_RESOURCES
         }
 

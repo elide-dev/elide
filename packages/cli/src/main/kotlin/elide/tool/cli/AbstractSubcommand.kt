@@ -15,7 +15,6 @@ package elide.tool.cli
 
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
-import com.oracle.svm.util.ReflectionUtil
 import lukfor.progress.TaskServiceBuilder
 import lukfor.progress.executors.ITaskExecutor
 import lukfor.progress.tasks.ITaskRunnable
@@ -40,7 +39,6 @@ import elide.runtime.Logger
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
-import elide.runtime.plugins.api.NativePluginAPI
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.state.CommandState

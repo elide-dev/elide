@@ -12,7 +12,7 @@
  */
 
 /**
- * Elide Runtime + Framework
+ * Elide Runtime
  */
 
 import io.gitlab.arturbosch.detekt.Detekt

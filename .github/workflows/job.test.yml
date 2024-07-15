@@ -269,7 +269,7 @@ jobs:
         if: false
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: Node"
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: 22
       - name: "Setup: PNPM"
@@ -531,7 +531,7 @@ jobs:
         if: false
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: Node"
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: 22
       - name: "Setup: PNPM"

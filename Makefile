@@ -429,8 +429,7 @@ test: $(DEPS)  ## Run the library testsuite, and code-sample tests if SAMPLES=ye
 	$(CMD)$(MAKE) natives-test
 	@#we need the debug libs for the tests, which do not produce them; so we re-build them here, but with flags aligned to
 	@#what coverage would add, to avoid a significant invalidation and re-build.
-	$(CMD)RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p sqlite \
-		&& RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p umbrella
+	$(CMD)RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p sqlite
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test $(_ARGS) -x detekt -x spotlessCheck -x apiCheck
 
 check: $(DEPS)  ## Build all targets, run all tests, run all checks.

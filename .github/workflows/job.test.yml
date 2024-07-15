@@ -265,12 +265,21 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: LLVM 18"
-        uses: KyleMayes/install-llvm-action@82fd451e4380968e8336eefc5b8b9292a619de01 # v2.0.3
-        with:
-          version: "18.1"
-          env: true
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 18 all
+          export LLVM_PATH=/usr/lib/llvm-18
+          export PATH="$LLVM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
+          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
+          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
+          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
+          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
+          echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Dependencies"
         run: |
+          cargo install cargo-fuzz cargo-insta rustfilt
           pnpm install -g yarn@1.22.19
           python -m pip install uv
           echo "Setting up venv..."
@@ -312,7 +321,6 @@ jobs:
       - name: "👨‍🔬 Test: Runtime"
         run: |
           cargo build -p sqlite
-          cargo build -p umbrella
           ./gradlew \
             test \
             jvmTest \
@@ -381,6 +389,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/reports/kover/merged/xml/report.xml
+          exclude: target
           name: elide
           flags: jvm,lib
           fail_ci_if_error: false
@@ -390,17 +399,9 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./target/coverage-report.lcov
-          name: elide
+          name: elide-native
           flags: native
-          fail_ci_if_error: false
-          verbose: true
-      - name: "Report: Codecov (Plugin)"
-        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./tools/plugin/gradle-plugin/plugin-build/plugin/build/reports/kover/xml/report.xml
-          name: plugin-gradle
-          flags: jvm,plugin,gradle
+          disable_search: true
           fail_ci_if_error: false
           verbose: true
       - name: "Artifact: Caches"

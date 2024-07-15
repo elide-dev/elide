@@ -135,6 +135,10 @@ RUSTC ?= $(shell which rustc)
 CARGO ?= $(shell which cargo)
 LLVM_COV ?= $(shell which llvm-cov)
 LLVM_PROFDATA ?= $(shell which llvm-profdata)
+LLVM_CONFIG ?= $(shell which llvm-config)
+CLANG ?= $(shell which clang)
+LLD ?= $(shell which lld)
+BOLT ?= $(shell which llvm-bolt)
 PYTHON ?= $(shell which python)
 RUFF ?= $(shell which ruff)
 RUBY ?= $(shell which ruby)
@@ -438,10 +442,12 @@ test: $(DEPS)  ## Run the library testsuite, and code-sample tests if SAMPLES=ye
 check: $(DEPS)  ## Build all targets, run all tests, run all checks.
 	$(info Running testsuite...)
 	$(CMD)$(MAKE) natives-test
+	$(CMD)RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p sqlite
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build test check $(_ARGS)
-	@echo "" && echo "Running formatter checks..."
 	$(CMD)$(PNPM) run prettier --check .
+	$(CMD)$(PNPM) biome format .
 	$(CMD)$(PNPM) biome check .
+	$(CMD)$(CARGO) fmt -- --check
 	$(CMD)$(RUFF) check packages
 
 format:  ## Alias for `make fmt`.
@@ -906,6 +912,9 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo "- Node: $(NODE)"
 	@echo "- Rust: $(RUSTC)"
 	@echo "- Cargo: $(CARGO)"
+	@echo "- Clang: $(CLANG)"
+	@echo "- LLD: $(LLD)"
+	@echo "- Bolt: $(BOLT)"
 	@echo "- Yarn: $(YARN)"
 	@echo "- Bazel: $(BAZEL)"
 	@echo "- Buf: $(BUF)"
@@ -918,22 +927,30 @@ info:  ## Show info about the current codebase and toolchain.
 	$(CMD)$(NATIVE_IMAGE) --version
 	@echo ""
 	@echo "Python:"
-	$(CMD)$(PYTHON) --version
+	$(CMD)-$(PYTHON) --version
 	@echo ""
 	@echo "Ruby:"
-	$(CMD)$(RUBY) --version
+	$(CMD)-$(RUBY) --version
 	@echo ""
 	@echo "Rust:"
-	$(CMD)$(RUSTC) --version
+	$(CMD)-$(RUSTC) --version
 	@echo ""
 	@echo "Cargo:"
-	$(CMD)$(CARGO) --version
+	$(CMD)-$(CARGO) --version
 	@echo ""
+	@echo "Clang:"
+	$(CMD)-$(CLANG) --version
+	@echo ""
+	@echo "LLD:"
+	$(CMD)-$(LLD) --version
+	@echo ""
+	@echo "Bolt:"
+	$(CMD)-$(BOLT) --version
 	@echo "Yarn:"
-	$(CMD)$(YARN) --version
+	$(CMD)-$(YARN) --version
 	@echo ""
 	@echo "Bazel:"
-	$(CMD)$(BAZEL) --version
+	$(CMD)-$(BAZEL) --version
 ifneq ($(BUN),)
 	@echo ""
 	@echo "Bun:"
@@ -955,6 +972,7 @@ endif
 	@echo "- JQ: $(JQ)"
 	@echo "- LLVM_COV: $(LLVM_COV)"
 	@echo "- LLVM_PROFDATA: $(LLVM_PROFDATA)"
+  @echo "- LLVM_CONFIG: $(LLVM_CONFIG)"
 	@echo "- TAR: $(TAR)"
 	@echo "- UNZIP: $(UNZIP)"
 	@echo "- XZ: $(XZ)"

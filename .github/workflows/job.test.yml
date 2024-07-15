@@ -303,7 +303,7 @@ jobs:
       - name: "Build Environment"
         run: make info CI=yes 2>&1 | tee build-info.txt
       - name: "👨‍🔬️ Test: All Targets"
-        run: make natives-test COVERAGE=yes CI=yes
+        run: make third-party natives-test COVERAGE=yes CI=yes
       - name: "👨‍🔬 Test: Runtime"
         run: |
           cargo build -p sqlite

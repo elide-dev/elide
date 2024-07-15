@@ -134,6 +134,9 @@ BAZEL ?= $(shell which bazel)
 RUSTC ?= $(shell which rustc)
 CARGO ?= $(shell which cargo)
 LLVM_COV ?= $(shell which llvm-cov)
+PYTHON ?= $(shell which python)
+RUFF ?= $(shell which ruff)
+RUBY ?= $(shell which ruby)
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Build State/Environment
@@ -431,12 +434,27 @@ natives-coverage:  ## Show the current native coverage report; only run if `nati
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(MAKE) natives-test
+	$(CMD)$(CARGO) build -p sqlite && $(CARGO) build -p umbrella
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test $(_ARGS) -x detekt -x spotlessCheck -x apiCheck
 
 check:  ## Build all targets, run all tests, run all checks.
 	$(info Running testsuite...)
 	$(CMD)$(MAKE) natives-test
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build test check $(_ARGS)
+	@echo "" && echo "Running formatter checks..."
+	$(CMD)$(PNPM) run prettier --check .
+	$(CMD)$(PNPM) biome check .
+	$(CMD)$(RUFF) check packages
+
+format:  ## Alias for `make fmt`.
+	$(CMD)$(MAKE) fmt
+
+fmt:  ## Run all formatter tools.
+	$(info Running formatters...)
+	$(CMD)$(CARGO) fmt
+	$(CMD)$(PNPM) run prettier --write .
+	$(CMD)$(PNPM) biome format --write .
+	$(CMD)$(RUFF) format packages
 
 gvm: .graalvm-home  ## Build a custom copy of GraalVM for use locally.
 	@echo "GraalVM is ready (profile: $(GVM_PROFILE))."
@@ -877,16 +895,22 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo "JVM target: $(JVM)"
 	@echo "Java Home: $(JAVA_HOME)"
 	@echo "GraalVM Home: $(GRAALVM_HOME)"
+	@echo "" && echo "---- OS Info ----------------------------------------------"
+	@echo "- System: $(SYSTEM)"
+	@echo "- Kernel: $(shell uname -r)"
+	@echo "- Hostname: $(shell hostname)"
 	@echo "" && echo "---- Toolchain --------------------------------------------"
 	@echo "- Java: $(JAVA)"
 	@echo "- Native Image: $(NATIVE_IMAGE)"
+	@echo "- Python: $(PYTHON)"
+	@echo "- Ruby: $(RUBY)"
+	@echo "- Bun: $(BUN)"
+	@echo "- Node: $(NODE)"
 	@echo "- Rust: $(RUSTC)"
 	@echo "- Cargo: $(CARGO)"
 	@echo "- Yarn: $(YARN)"
 	@echo "- Bazel: $(BAZEL)"
 	@echo "- Buf: $(BUF)"
-	@echo "- Bun: $(BUN)"
-	@echo "- Node: $(NODE)"
 	@echo "- PNPM: $(PNPM)"
 	@echo "" && echo "---- Toolchain Versions -----------------------------------"
 	@echo "Java:"
@@ -894,6 +918,12 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo ""
 	@echo "Native Image:"
 	$(CMD)$(NATIVE_IMAGE) --version
+	@echo ""
+	@echo "Python:"
+	$(CMD)$(PYTHON) --version
+	@echo ""
+	@echo "Ruby:"
+	$(CMD)$(RUBY) --version
 	@echo ""
 	@echo "Rust:"
 	$(CMD)$(RUSTC) --version
@@ -920,19 +950,6 @@ endif
 	@echo ""
 	@echo "PNPM:"
 	$(CMD)$(PNPM) --version
-	@echo "" && echo "---- OS Info ----------------------------------------------"
-	@echo "- System: $(SYSTEM)"
-	@echo "- Kernel: $(shell uname -r)"
-	@echo "- Hostname: $(shell hostname)"
-	@echo "" && echo "---- Environment ------------------------------------------"
-	@echo "- PATH: $(shell echo $$PATH)"
-	@echo "- CC: $(shell echo $$CC)"
-	@echo "- CFLAGS: $(shell echo $$CFLAGS)"
-	@echo "- LDFLAGS: $(shell echo $$LDFLAGS)"
-	@echo "- CPPFLAGS: $(shell echo $$CPPFLAGS)"
-	@echo "- JAVA_HOME: $(shell echo $$JAVA_HOME)"
-	@echo "- GRAALVM_HOME: $(shell echo $$GRAALVM_HOME)"
-	@echo "- RUSTFLAGS: $(shell echo $$RUSTFLAGS)"
 	@echo "" && echo "---- Utilities --------------------------------------------"
 	@echo "- BASH: $(BASH)"
 	@echo "- BUF: $(BUF)"
@@ -944,6 +961,17 @@ endif
 	@echo "- XZ: $(XZ)"
 	@echo "- ZIP: $(ZIP)"
 	@echo "- ZSTD: $(ZSTD)"
+	@echo "" && echo "---- Environment ------------------------------------------"
+	@echo "- CC: $(shell echo $$CC)"
+	@echo "- CXX: $(shell echo $$CXX)"
+	@echo "- LD: $(shell echo $$LD)"
+	@echo "- CFLAGS: $(shell echo $$CFLAGS)"
+	@echo "- LDFLAGS: $(shell echo $$LDFLAGS)"
+	@echo "- CPPFLAGS: $(shell echo $$CPPFLAGS)"
+	@echo "- JAVA_HOME: $(shell echo $$JAVA_HOME)"
+	@echo "- GRAALVM_HOME: $(shell echo $$GRAALVM_HOME)"
+	@echo "- RUSTFLAGS: $(shell echo $$RUSTFLAGS)"
+	@echo "- PATH: $(shell echo $$PATH)"
 
 # ---- Runtime submodule ---- #
 # Note: make sure the Git submodule is up to date by running `git submodule update [--init] runtime`

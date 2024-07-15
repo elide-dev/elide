@@ -256,6 +256,10 @@ jobs:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Python (3.12)"
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+        with:
+          python-version: 3.12
       - name: "Setup: Buildless"
         if: false  # temporarily disabled
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
@@ -270,10 +274,16 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-      - name: "Setup: Yarn"
-        run: pnpm install -g yarn@1.22.19
+      - name: "Setup: Dependencies"
+        run: |
+          pnpm install -g yarn@1.22.19
+          python -m pip install uv
+          uv venv
+          uv pip install -e .[dev]
+          . .venv/bin/activate
+          echo PATH=$PATH >> $GITHUB_ENV
       - name: "Build Environment"
-        run: make info
+        run: make info 2>&1 | tee build-info.txt
       - name: "🛠️ Build Natives"
         run: make setup symlinks && cargo build
       - name: "🛠️ Build Packages"
@@ -319,6 +329,7 @@ jobs:
         with:
           name: elide-framework
           path: |
+            build-info.txt
             build/libs/**/*.*
             packages/*/build/libs/*.*
             packages/proto/*/build/libs/*.*

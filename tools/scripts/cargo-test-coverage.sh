@@ -13,10 +13,11 @@
 # License for the specific language governing permissions and limitations under the License.
 #
 
+export RUSTFLAGS="-C instrument-coverage"
+export LLVM_PROFILE_FILE="$(pwd)/target/profiles/default_%m_%p.profraw"
+
 rm -fr target/profiles \
-  && RUSTFLAGS="-C instrument-coverage" \
-    LLVM_PROFILE_FILE="$(pwd)/target/profiles/default_%m_%p.profraw" \
-    cargo test --tests \
+  && cargo test --tests \
   && llvm-profdata merge \
     -sparse target/profiles/*.profraw \
     -o target/profiles/elide-rust.profdata \

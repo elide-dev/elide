@@ -8,41 +8,72 @@ The following guide should help you get started and submit a PR.
 Follow the directions in the main [README](../README.md). You will need a recent copy of GraalVM for Java 20, and several other components.
 Once you have these installed, you can try the `Makefile`:
 
+### Notable tasks
+
+- `make info`: Show build environment
+- `make build`: Build all targets
+- `make test`: Build all targets, run all tests
+- `make check`: Build all targets, run all tests, run all checks
+- `make native`: Build the native binary for the CLI
+- `make natives`: Rebuild native dependencies
+- `make help`: Show all make tasks
+
+### All tasks
+
 ```
 $ make help
 Elide:
 api-check                      Check API/ABI compatibility with current changes.
 build                          Build the main library, and code-samples if SAMPLES=yes.
+check                          Build all targets, run all tests, run all checks.
 clean-cli                      Clean built CLI targets.
 clean-docs                     Clean documentation targets.
-clean-site                     Clean site targets.
+clean-natives                  Clean local native targets.
 clean                          Clean build outputs and caches.
 cli-local                      Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
 cli-release                    Build an Elide command-line release.
 cli                            Build the Elide command-line tool (native target).
+dependency-packages            Print the suite of dependencies to install for this OS.
 distclean                      DANGER: Clean and remove any persistent caches. Drops changes.
 docs                           Generate docs for all library modules.
+fmt                            Run all formatter tools.
 forceclean                     DANGER: Clean, distclean, and clear untracked files.
+format                         Alias for `make fmt`.
+gvm                            Build a custom copy of GraalVM for use locally.
 help                           Show this help text ('make help').
 image-base-alpine              Build base Alpine image.
 image-base                     Build base Ubuntu image.
 image-gvm17                    Build GVM17 builder image.
+image-gvm21                    Build GVM21 builder image.
+image-gvm22                    Build GVM22 builder image.
 image-jdk17                    Build JDK17 builder image.
+image-jdk21                    Build JDK21 builder image.
+image-jdk22                    Build JDK20 builder image.
 image-native-alpine            Build native Alpine base image.
 image-native                   Build native Ubuntu base image.
 image-runtime-jvm17            Build runtime GVM17 builder image.
+image-runtime-jvm21            Build runtime GVM21 builder image.
+image-runtime-jvm22            Build runtime GVM22 builder image.
 images                         Build all Docker images.
+info                           Show info about the current codebase and toolchain.
 model-update                   Update the proto model and re-build it.
 model                          Build proto model targets.
+native                         Build Elide's native image target; use BUILD_MODE=release for a release binary.
+natives-coverage               Show the current native coverage report; only run if `natives-test` is run first.
+natives-test                   Run Cargo and native tests, optionally buildin coverage if COVERAGE=yes.
+natives                        Rebuild natives (C/C++ and Rust).
 publish                        Publish a new version of all Elide packages.
 release                        Perform a full release, including publishing to Maven Central and the Elide repository.
 relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
 reports                        Generate reports for tests, coverage, etc.
+runtime-build                  Build the JS runtime facade and the builtin modules bundle
+runtime-update                 Rebuild and copy the JS runtime facade
+runtime                        Build and update the JS runtime if needed.
 serve-docs                     Serve documentation locally.
-serve-site                     Serve Elide site locally.
-site                           Generate the static Elide website.
+setup                          Setup development pre-requisites.
 test                           Run the library testsuite, and code-sample tests if SAMPLES=yes.
 third-party                    Build all third-party embedded projects.
+umbrella                       Build the native umbrella tooling library.
 update-deps                    Perform interactive dependency upgrades across Yarn and Gradle.
 update-jdeps                   Interactively update Gradle dependencies.
 update-jsdeps                  Interactively update Yarn dependencies.

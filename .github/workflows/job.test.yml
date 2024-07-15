@@ -246,14 +246,10 @@ jobs:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - id: "auth"
-        name: "Setup: Authorize Service Account"
-        uses: google-github-actions/auth@55bd3a7c6e2ae7cf1877fd1ccb9d54c0503c457c # v2.1.2
+      - name: "Setup: Python (3.12)"
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
-          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
-          create_credentials_file: true
-          export_environment_variables: true
-          cleanup_credentials: true
+          python-version: 3.12
       - name: "Setup: Buildless"
         if: false
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
@@ -268,15 +264,21 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-      - name: "Setup: Yarn"
-        run: pnpm install -g yarn@1.22.19
+      - name: "Setup: Dependencies"
+        run: |
+          pnpm install -g yarn@1.22.19
+          python -m pip install uv
+          uv venv
+          uv pip install -e .[dev]
+          . .venv/bin/activate
+          echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         continue-on-error: true
         with:
           merge-multiple: true
       - name: "Build Environment"
-        run: make info
+        run: make info 2>&1 | tee build-info.txt
       - name: "🛠️ Build: Natives"
         run: make setup symlinks && cargo build
       - name: "👨‍🔬️ Test: Natives"
@@ -350,33 +352,12 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
-      - name: "Runtime Self-tests (JVM)"
-        uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
-        continue-on-error: true
-        env:
-          CI: true
-          TEST_EXCEPTIONS: true
-          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-        with:
-          cache-read-only: true
-          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          dependency-graph: disabled
-          arguments: |
-            optimizedRun
-            --scan
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -x apiCheck
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -PbuildDocs=false
-            --args="selftest"
-      - name: "Artifact: Test Reports"
+      - name: "Artifact: Reports"
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: test-reports-jvm
           path: |
+            build-info.txt
             target/coverage-report.lcov
             target/coverage-report.json
             **/build/reports/jacoco/test/jacocoTestReport.xml
@@ -488,8 +469,6 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-      - name: "Setup: Yarn"
-        run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         continue-on-error: true

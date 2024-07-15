@@ -39,8 +39,8 @@ pub fn parse_config_file(path: Arc<PathBuf>) -> Result<ProjectConfig, ConfigErr>
   let buf = path.to_path_buf();
 
   // read file contents
-  let contents = std::fs::read_to_string(&buf).map_err(|err| ConfigErr::IoErr(err))?;
-  let parsed: ProjectConfig = toml::from_str(&*contents).map_err(|_| ConfigErr::ParseErr)?;
+  let contents = std::fs::read_to_string(&buf).map_err(ConfigErr::IoErr)?;
+  let parsed: ProjectConfig = toml::from_str(&contents).map_err(|_| ConfigErr::ParseErr)?;
   Ok(parsed)
 }
 
@@ -81,7 +81,7 @@ pub fn locate_config_file(seed: Option<Arc<PathBuf>>) -> Option<PathBuf> {
 /// The parsed project configuration as a `Result`.
 pub fn resolve_config(seed: Option<Arc<PathBuf>>) -> Result<Option<ProjectConfig>, ConfigErr> {
   match locate_config_file(seed) {
-    Some(path) => parse_config_file(Arc::new(path)).and_then(|config| Ok(Some(config))),
+    Some(path) => parse_config_file(Arc::new(path)).map(Some),
     None => Ok(None),
   }
 }

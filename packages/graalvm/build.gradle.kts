@@ -564,6 +564,8 @@ dependencies {
 val testBase: Configuration by configurations.creating
 
 tasks {
+  checkNatives(test, build)
+
   test {
     maxHeapSize = "2G"
     maxParallelForks = 2

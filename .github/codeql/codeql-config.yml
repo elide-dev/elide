@@ -2,12 +2,14 @@ name: "CodeQL"
 
 languages:
   - javascript-typescript
+  - java-kotlin
 
 queries:
   - uses: security-and-quality
 
 paths:
   - packages
+  - crates
 
 paths-ignore:
   - .codebase

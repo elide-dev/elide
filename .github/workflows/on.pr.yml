@@ -45,6 +45,7 @@ jobs:
       changes: ${{ steps.extract_branch.outputs.changes }}
       branch: ${{ steps.extract_branch.outputs.branch }}
       base: ${{ steps.filter.outputs.base }}
+      natives: ${{ steps.filter.outputs.natives }}
       devcontainer: ${{ steps.filter.outputs.base }}
       model: ${{ steps.filter.outputs.model }}
       packages: ${{ steps.filter.outputs.packages }}
@@ -110,6 +111,13 @@ jobs:
               - *model
               - *packages
               - *tools
+            natives: &natives
+              - *base
+              - "crates"
+              - "crates/*"
+              - "crates/**/*.*"
+              - "third_party/Makefile"
+              - "third_party/*/**/*.*"
 
   ##
   ## Job: Multi-platform Build
@@ -186,12 +194,23 @@ jobs:
     name: "Checks"
     uses: ./.github/workflows/checks.formatting.yml
     needs: [triage]
-    if: fromJson(needs.triage.outputs.model)
+    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.natives) || fromJson(needs.triage.outputs.srcs)
     secrets: inherit
     permissions:
       contents: "read"
     with:
       ignore_failures: ${{ contains(github.event.pull_request.labels.*.name, 'ci:fmt-ignore') }}
+
+  ##
+  ## Job: Clippy Check
+  ##
+  check-clippy:
+    name: "Checks"
+    uses: ./.github/workflows/checks.clippy.yml
+    needs: [triage]
+    if: fromJson(needs.triage.outputs.natives)
+    permissions:
+      contents: "read"
 
   ##
   ## Job: Check for Wrapper
@@ -208,6 +227,7 @@ jobs:
   ##
   check-dependencies:
     name: "Checks"
+    if: github.event.pull_request.draft == false
     uses: ./.github/workflows/checks.dependency-review.yml
     needs: [triage, pr-build]
     permissions:
@@ -218,9 +238,9 @@ jobs:
   ##
   check-codeql:
     name: "Checks"
+    if: github.event.pull_request.draft == false && fromJson(needs.triage.outputs.packages)
     uses: ./.github/workflows/checks.codeql.yml
     needs: [triage, pr-build]
-    if: fromJson(needs.triage.outputs.packages)
     secrets:
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -234,9 +254,9 @@ jobs:
   ##
   check-detekt:
     name: "Checks"
+    if: github.event.pull_request.draft == false && fromJson(needs.triage.outputs.srcs)
     uses: ./.github/workflows/checks.detekt.yml
     needs: [triage, pr-build]
-    if: fromJson(needs.triage.outputs.srcs)
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}

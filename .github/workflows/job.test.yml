@@ -377,6 +377,8 @@ jobs:
         with:
           name: test-reports-jvm
           path: |
+            target/coverage-report.lcov
+            target/coverage-report.json
             **/build/reports/jacoco/test/jacocoTestReport.xml
             **/build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml
             **/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
@@ -390,6 +392,15 @@ jobs:
           files: ./build/reports/kover/merged/xml/report.xml
           name: elide
           flags: jvm,lib
+          fail_ci_if_error: false
+          verbose: true
+      - name: "Report: Codecov (Native)"
+        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./target/coverage-report.lcov
+          name: elide
+          flags: native
           fail_ci_if_error: false
           verbose: true
       - name: "Report: Codecov (Plugin)"

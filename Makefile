@@ -424,7 +424,7 @@ natives-coverage:  ## Show the current native coverage report; only run if `nati
 	$(info Opening coverage report...)
 	$(CMD)$(BASH) ./tools/scripts/cargo-coverage-show.sh
 
-test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
+test: $(DEPS)  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(MAKE) natives-test
 	@#we need the debug libs for the tests, which do not produce them; so we re-build them here, but with flags aligned to
@@ -433,7 +433,7 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 		&& RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p umbrella
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test $(_ARGS) -x detekt -x spotlessCheck -x apiCheck
 
-check:  ## Build all targets, run all tests, run all checks.
+check: $(DEPS)  ## Build all targets, run all tests, run all checks.
 	$(info Running testsuite...)
 	$(CMD)$(MAKE) natives-test
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build test check $(_ARGS)

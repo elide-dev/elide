@@ -694,7 +694,7 @@ cli-install-local:
 	@echo ""; echo "Done. Testing CLI tool..."
 	$(CMD)elide --version
 
-clean: clean-docs  ## Clean build outputs and caches.
+clean: clean-docs clean-natives  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
 	$(CMD)$(FIND) . -name .DS_Store -delete

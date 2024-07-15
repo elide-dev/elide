@@ -363,7 +363,7 @@ RUNTIME_GEN = $(JS_MODULE_OUT) $(PY_FACADE_OUT) $(PY_MODULE_OUT)
 
 GRADLE_OMIT ?= $(OMIT_NATIVE)
 _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
-DEPS ?= node_modules/ third-party umbrella
+DEPS ?= node_modules/ third-party
 
 GRADLE_PREFIX ?= JAVA_HOME="$(JAVA_HOME)" GRAALVM_HOME="$(GRAALVM_HOME)" PATH="$(PATH)" CC="" CXX="" CFLAGS="" LDFLAGS=""
 
@@ -392,15 +392,8 @@ else
 endif
 
 setup: $(DEPS)  ## Setup development pre-requisites.
-	$(MAKE) symlinks RELEASE=$(RELEASE)
 
-symlinks:
-	@echo "Mounting native layer (mode '$(BUILD_MODE)')..."
-	$(CMD)rm -f $(ELIDE_ROOT)/target/lib $(ELIDE_ROOT)/target/include
-	$(CMD)ln -s $(TARGET_ROOT)/lib $(ELIDE_ROOT)/target/lib
-	$(CMD)ln -s $(TARGET_ROOT)/include $(ELIDE_ROOT)/target/include
-
-build: $(DEPS) symlinks  ## Build the main library, and code-samples if SAMPLES=yes.
+build: $(DEPS)  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
 ifeq ($(BUILD_MODE),release)
 	$(CMD)$(CARGO) build --release
@@ -434,7 +427,10 @@ natives-coverage:  ## Show the current native coverage report; only run if `nati
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(MAKE) natives-test
-	$(CMD)$(CARGO) build -p sqlite && $(CARGO) build -p umbrella
+	@#we need the debug libs for the tests, which do not produce them; so we re-build them here, but with flags aligned to
+	@#what coverage would add, to avoid a significant invalidation and re-build.
+	$(CMD)RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p sqlite \
+		&& RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p umbrella
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test $(_ARGS) -x detekt -x spotlessCheck -x apiCheck
 
 check:  ## Build all targets, run all tests, run all checks.

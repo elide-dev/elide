@@ -62,4 +62,3 @@ llvm-cov export \
   --Xdemangler=rustfilt \
   -sources crates \
   > target/coverage-report.json
-

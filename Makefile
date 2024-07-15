@@ -134,6 +134,7 @@ BAZEL ?= $(shell which bazel)
 RUSTC ?= $(shell which rustc)
 CARGO ?= $(shell which cargo)
 LLVM_COV ?= $(shell which llvm-cov)
+LLVM_PROFDATA ?= $(shell which llvm-profdata)
 PYTHON ?= $(shell which python)
 RUFF ?= $(shell which ruff)
 RUBY ?= $(shell which ruby)
@@ -953,6 +954,7 @@ endif
 	@echo "- GPG2: $(GPG2)"
 	@echo "- JQ: $(JQ)"
 	@echo "- LLVM_COV: $(LLVM_COV)"
+	@echo "- LLVM_PROFDATA: $(LLVM_PROFDATA)"
 	@echo "- TAR: $(TAR)"
 	@echo "- UNZIP: $(UNZIP)"
 	@echo "- XZ: $(XZ)"

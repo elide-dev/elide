@@ -264,6 +264,11 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: LLVM 18"
+        uses: KyleMayes/install-llvm-action@82fd451e4380968e8336eefc5b8b9292a619de01 # v2.0.3
+        with:
+          version: "18.1"
+          env: true
       - name: "Setup: Dependencies"
         run: |
           pnpm install -g yarn@1.22.19
@@ -280,11 +285,6 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "Setup: LLVM 18"
-        uses: KyleMayes/install-llvm-action@82fd451e4380968e8336eefc5b8b9292a619de01 # v2.0.3
-        with:
-          version: "18.1"
-          env: true
       - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         env:

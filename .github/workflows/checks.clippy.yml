@@ -26,7 +26,7 @@ env:
 
 jobs:
   cargo-clippy:
-    name: Cargo Clippy
+    name: Clippy
     runs-on: ubuntu-latest
     continue-on-error: true
     permissions:

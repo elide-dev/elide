@@ -268,8 +268,11 @@ jobs:
         run: |
           pnpm install -g yarn@1.22.19
           python -m pip install uv
+          echo "Setting up venv..."
           uv venv
-          uv pip install -e .[dev]
+          echo "Installing dependencies via Pip..."
+          uv pip install -r requirements.txt
+          echo "Activating venv..."
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Artifacts"

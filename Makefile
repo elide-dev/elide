@@ -431,6 +431,8 @@ test: $(DEPS)  ## Run the library testsuite, and code-sample tests if SAMPLES=ye
 	@#what coverage would add, to avoid a significant invalidation and re-build.
 	$(CMD)RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p sqlite
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test $(_ARGS) -x detekt -x spotlessCheck -x apiCheck
+	@#since we are running using instrumented code, profiles may be written; delete them after running tests
+	$(CMD)-$(FIND) ./packages -name "*.profraw" -delete
 
 check: $(DEPS)  ## Build all targets, run all tests, run all checks.
 	$(info Running testsuite...)

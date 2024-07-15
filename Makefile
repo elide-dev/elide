@@ -431,7 +431,12 @@ natives-coverage:  ## Show the current native coverage report; only run if `nati
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(MAKE) natives-test
-	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test check $(_ARGS)
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) test $(_ARGS) -x detekt -x spotlessCheck -x apiCheck
+
+check:  ## Build all targets, run all tests, run all checks.
+	$(info Running testsuite...)
+	$(CMD)$(MAKE) natives-test
+	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build test check $(_ARGS)
 
 gvm: .graalvm-home  ## Build a custom copy of GraalVM for use locally.
 	@echo "GraalVM is ready (profile: $(GVM_PROFILE))."

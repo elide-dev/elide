@@ -35,17 +35,17 @@ pub struct GradlePluginDefinition {}
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[typeshare]
 pub struct GradleLibraryDefinition {
-    /// Describes a full Maven coordinate.
-    pub module: Option<String>,
+  /// Describes a full Maven coordinate.
+  pub module: Option<String>,
 
-    /// Describes the group portion of a Maven coordinate.
-    pub group: Option<String>,
+  /// Describes the group portion of a Maven coordinate.
+  pub group: Option<String>,
 
-    /// Describes the name portion of a Maven coordinate.
-    pub name: Option<String>,
+  /// Describes the name portion of a Maven coordinate.
+  pub name: Option<String>,
 
-    /// Describes the declared version info for the dependency.
-    pub version: Option<GradleVersionInfo>,
+  /// Describes the declared version info for the dependency.
+  pub version: Option<GradleVersionInfo>,
 }
 
 /// Describes the top-level structure of a Gradle-style dependency catalog.

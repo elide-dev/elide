@@ -13,7 +13,7 @@
 
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
-use smartstring::alias::{String as SmartString};
+use smartstring::alias::String as SmartString;
 
 /// Alias main standard `String` to `SmartString`.
 pub type String = SmartString;

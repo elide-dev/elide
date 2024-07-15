@@ -56,7 +56,7 @@ private val BUILTIN_PYTHON_PATHS = listOf(
 
     // `3.11.2` → `3.11`
     val parsedLangVersion = langVersion.split(".").slice(0..1).joinToString(".")
-    return parsedLangVersion to "${graalvmMajor}.${graalvmMinor}"
+    return parsedLangVersion to "$graalvmMajor.$graalvmMinor"
   }
 
   private fun renderPythonPath(): String = sequence {

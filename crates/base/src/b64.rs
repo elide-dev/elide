@@ -25,11 +25,7 @@ use base64::{
 extern crate alloc;
 
 #[cfg(feature = "alloc")]
-use {
-  crate::prelude::*,
-  alloc::string::String as StdString,
-  alloc::vec::Vec,
-};
+use {crate::prelude::*, alloc::string::String as StdString, alloc::vec::Vec};
 
 #[cfg(feature = "simd")]
 use base64_simd::{

@@ -282,11 +282,7 @@ jobs:
           uv pip install -e .[dev]
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
-      - name: "Build Environment"
-        run: make info 2>&1 | tee build-info.txt
-      - name: "🛠️ Build Natives"
-        run: make setup symlinks && cargo build
-      - name: "🛠️ Build Packages"
+      - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}
@@ -307,22 +303,28 @@ jobs:
             notifications
             wrapper
             yarn
-          arguments: |
-            assemble
-            compileKotlin
-            -x check
-            -x test
-            -x jvmTest
-            -x jsTest
-            -x jsBrowserTest
-            --scan
-            --build-cache
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            --stacktrace
-            -Pelide.ci=true
-            -PbuildSamples=false
+      - name: "Build Environment"
+        run: make info 2>&1 | tee build-info.txt
+      - name: "🛠️ Build Packages"
+        run: |
+          make setup
+
+          ./gradlew \
+            assemble \
+            compileKotlin \
+            -x check \
+            -x test \
+            -x jvmTest \
+            -x jsTest \
+            -x jsBrowserTest \
+            --scan \
+            --build-cache \
+            --no-daemon \
+            --warning-mode=none \
+            --dependency-verification=lenient \
+            --stacktrace \
+            -Pelide.ci=true \
+            -PbuildSamples=false \
             -PbuildDocs=false
       - name: "Artifact: Build Outputs"
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3

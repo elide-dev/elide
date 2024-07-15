@@ -277,13 +277,7 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "Build Environment"
-        run: make info 2>&1 | tee build-info.txt
-      - name: "🛠️ Build: Natives"
-        run: make setup symlinks && cargo build
-      - name: "👨‍🔬️ Test: Natives"
-        run: make natives-test COVERAGE=yes
-      - name: "👨‍🔬 Test: Runtime"
+      - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         env:
           CI: true
@@ -303,22 +297,30 @@ jobs:
             notifications
             wrapper
             yarn
-          arguments: |
-            test
-            jvmTest
-            koverXmlReport
-            koverBinaryReport
-            koverVerify
-            detekt
-            -x nativeTest
-            --scan
-            --build-cache
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -x apiCheck
-            -Pelide.ci=true
-            -PbuildSamples=false
+      - name: "Build Environment"
+        run: make info CI=yes 2>&1 | tee build-info.txt
+      - name: "👨‍🔬️ Test: All Targets"
+        run: make natives-test COVERAGE=yes CI=yes
+      - name: "👨‍🔬 Test: Runtime"
+        run: |
+          cargo build -p sqlite
+          cargo build -p umbrella
+          ./gradlew \
+            test \
+            jvmTest \
+            koverXmlReport \
+            koverBinaryReport \
+            koverVerify \
+            detekt \
+            -x nativeTest \
+            --scan \
+            --build-cache \
+            --no-daemon \
+            --warning-mode=none \
+            --dependency-verification=lenient \
+            -x apiCheck \
+            -Pelide.ci=true \
+            -PbuildSamples=false \
             -PbuildDocs=false
       - name: "Analysis: Sonar"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2

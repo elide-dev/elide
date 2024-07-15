@@ -18,18 +18,20 @@
 #  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under the License.
 
+import polyglot
+
+
 # noinspection PyPep8Naming
 class _Elide_ApplicationEnvironment(object):
-
     """Handler for resolving application-level environment, and withholding system environment, as needed."""
 
     __app_environ = {}
     __virtual_env = {}
 
     def __init__(self):
-        import polyglot
         data = polyglot.import_value("__Elide_app_env__")
-        self.__app_environ = {x: data[x] for x in data}
+        if data is not None:
+            self.__app_environ = {x: data[x] for x in data}
 
     def contains_key(self, item):
         return item in self.__app_environ or item in self.__virtual_env
@@ -53,9 +55,16 @@ class _Elide_ApplicationEnvironment(object):
         return "Environ(%s)" % ", ".join(self.all_keys())
 
     def __dir__(self):
-        return (
-            ["get", "contains_key", "all_keys", "__getitem__", "__setitem__", "__repr__", "__contains__", "__dir__"]
-        )
+        return [
+            "get",
+            "contains_key",
+            "all_keys",
+            "__getitem__",
+            "__setitem__",
+            "__repr__",
+            "__contains__",
+            "__dir__",
+        ]
 
     def get(self, item, default=None):
         if item in self:
@@ -66,6 +75,7 @@ class _Elide_ApplicationEnvironment(object):
     def __patch(cls, singleton):
         """Patch the OS environment component, if it has not been patched yet."""
         import os
+
         if not getattr(cls, "_patched", False):
             os.environ = singleton
             setattr(cls, "_patched", True)

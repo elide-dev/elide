@@ -76,15 +76,22 @@ private fun List<String>.filterExistsInLayout(layout: Directory): String? {
 }
 
 private fun SonarExtension.configureSonarForProject(conventions: ElideBuildExtension, project: Project) {
+  // skip unrelated projects
+  if (project.path.contains("crates")) {
+    isSkipProject = true
+    return
+  }
+
   // cancel if skipped or non-kotlin/non java
   if ((!conventions.kotlin.requested && !conventions.java.requested) || !conventions.checks.sonar) return
   val target = conventions.kotlin.target
   val isJvm = target != null && JVM in target
   val isMultiplatform = target != null && (Native in target || KotlinTarget.Embedded == target)
   val isJavascript = target != null && (JsNode in target || JsBrowser in target)
-  val projectPath = project.projectDir.relativeTo(project.rootDir).toPath().toString()
+  val projectPath = project.projectDir.absolutePath
 
   properties {
+    property("sonar.verbose", "true")
     when {
       isMultiplatform -> {
         project.logger.lifecycle("Configuring Sonar Kotlin/MPP for project: ${project.name}")
@@ -94,9 +101,7 @@ private fun SonarExtension.configureSonarForProject(conventions: ElideBuildExten
         property("sonar.junit.reportsPath", "build/test-results/jvmTest/")
         property("sonar.coverage.jacoco.xmlReportPaths", listOf(
           "$projectPath/build/reports/kover/report.xml",
-          "build/reports/kover/report.xml",
           "$projectPath/build/reports/jacoco/test/jacocoTestReport.xml",
-          "build/reports/jacoco/test/jacocoTestReport.xml",
         ).joinToString(","))
       }
 
@@ -104,6 +109,7 @@ private fun SonarExtension.configureSonarForProject(conventions: ElideBuildExten
         project.logger.lifecycle("Configuring Sonar Kotlin/JS for project: ${project.name}")
         property("sonar.sources", "src/jsMain/kotlin")
         property("sonar.tests", "src/jsTest/kotlin")
+        property("sonar.java.binaries", "build/classes/kotlin/js/main")
         property("sonar.coverage.jacoco.xmlReportPaths", "$projectPath/build/reports/kover/report.xml")
       }
 
@@ -111,19 +117,24 @@ private fun SonarExtension.configureSonarForProject(conventions: ElideBuildExten
         project.logger.lifecycle("Configuring Sonar Kotlin/JVM for project: ${project.name}")
         jvmSrcs.filterExistsInLayout(project.layout.projectDirectory)?.let { property("sonar.sources", it) }
         jvmTestSrcs.filterExistsInLayout(project.layout.projectDirectory)?.let { property("sonar.tests", it) }
-        property("sonar.java.binaries", "build/classes/kotlin/main")
+
+        (listOf(
+          "classes/kotlin/main",
+          "classes/java/main",
+          "classes/kotlin/jvm/main",
+        ).find {
+          project.layout.buildDirectory.dir(it).get().asFile.exists()
+        } ?: error("Failed to resolve `sonar.java.binaries` for project at '${project.path}'")).let { binPath ->
+          property("sonar.java.binaries", "build/$binPath")
+        }
+
         property("sonar.junit.reportsPath", "build/test-results/test/")
         property("sonar.coverage.jacoco.xmlReportPaths", listOf(
           "$projectPath/build/reports/kover/report.xml",
-          "build/reports/kover/report.xml",
           "$projectPath/build/reports/kover/xml/coverage.xml",
-          "build/reports/kover/xml/coverage.xml",
           "$projectPath/build/reports/jacoco/test/jacocoTestReport.xml",
-          "build/reports/jacoco/test/jacocoTestReport.xml",
           "$projectPath/build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-          "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
           "$projectPath/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-          "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
         ).joinToString(","))
       }
 

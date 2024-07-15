@@ -204,7 +204,10 @@ import elide.runtime.plugins.bindings.Bindings
           )
         } catch (err: RuntimeException) {
           if (System.getProperty("elide.strict") == "true") {
-            throw IllegalStateException("Embedded init evaluation failed. This is a bug in Elide.", err)
+            throw IllegalStateException(
+              "Embedded init evaluation failed at unit '${source.path}'. This is a bug in Elide.",
+              err,
+            )
           }
         }
       }

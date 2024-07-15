@@ -251,7 +251,7 @@ import elide.tool.project.ProjectManager
 
     // Resolve the primary interactive language.
     internal fun primary(
-      spec: CommandSpec,
+      spec: CommandSpec?,
       langs: EnumSet<GuestLanguage>,
       project: ProjectInfo?,
       languageHint: String?,
@@ -277,7 +277,7 @@ import elide.tool.project.ProjectManager
       val explicitlySelectedLanguagesBySet = Sets.intersection(language ?: emptySet(), langs)
 
       // language by alias
-      val candidateArgs = spec.commandLine()?.parseResult?.originalArgs()
+      val candidateArgs = spec?.commandLine()?.parseResult?.originalArgs()
       val languageHintMatch = langs.firstOrNull { it.id == languageHint }
       val candidateByName = languageHintMatch ?: maybeMatchLanguagesByAlias(
         candidateArgs?.firstOrNull(),
@@ -311,7 +311,7 @@ import elide.tool.project.ProjectManager
     private val ktAliases = setOf("kt", "kotlin")
 
     // Resolve the specified language.
-    internal fun resolve(project: ProjectInfo? = null, alias: String? = null): EnumSet<GuestLanguage> {
+    internal fun resolveLangs(project: ProjectInfo? = null, alias: String? = null): EnumSet<GuestLanguage> {
       return EnumSet.noneOf(GuestLanguage::class.java).apply {
         add(JS)
         add(WASM)
@@ -919,7 +919,7 @@ import elide.tool.project.ProjectManager
 
   // Build a highlighting manager for use by the line reader.
   private fun buildHighlighter(language: GuestLanguage, jnanorc: Path): Pair<SystemHighlighter, SyntaxHighlighter> {
-    logging.debug("Building highlighter with config path '$jnanorc'")
+    logging.debug("Building highlighter with config path '{}'", jnanorc)
     val commandHighlighter = SyntaxHighlighter.build(jnanorc, "COMMAND")
     val argsHighlighter = SyntaxHighlighter.build(jnanorc, "ARGS")
     val langHighlighter = SyntaxHighlighter.build(jnanorc, syntaxHighlightName(language))
@@ -992,7 +992,7 @@ import elide.tool.project.ProjectManager
     val jnanorcDir = rootPath.resolve("nanorc")
     val jnanorcFile = Paths.get(userHome, "jnanorc").toFile()
 
-    logging.debug("Checking nanorc root at path '${jnanorcFile.toPath()}'")
+    logging.debug("Checking nanorc root at path '{}'", jnanorcFile.toPath())
     var jnanocDirReady = false
     if (!jnanorcDir.exists()) {
       logging.debug("Nano config directory does not exist. Creating...")
@@ -1023,7 +1023,7 @@ import elide.tool.project.ProjectManager
         "ts.nanorc",
       ).parallelStream().forEach {
         val target = jnanorcDir.resolve(it)
-        logging.debug("- Initializing syntax file '$it' ($target)")
+        logging.debug("- Initializing syntax file '{}' ({})", it, target)
         if (target.exists()) {
           logging.debug("Syntax file '$it' already exists. Skipping...")
           return@forEach
@@ -1046,7 +1046,7 @@ import elide.tool.project.ProjectManager
       }
     }
 
-    logging.debug("Checking syntax config at path '${jnanorcFile.toPath()}'")
+    logging.debug("Checking syntax config at path '{}'", jnanorcFile.toPath())
     if (!jnanorcFile.exists()) {
       logging.debug("Syntax config does not exist. Writing...")
       FileWriter(jnanorcFile).use { fw ->
@@ -1524,13 +1524,19 @@ import elide.tool.project.ProjectManager
   )
 
   // Read an executable script, and then execute the script and keep it started as a server.
-  private fun readStartServer(label: String, language: GuestLanguage, ctx: PolyglotContext, source: Source) {
+  private fun readStartServer(
+    label: String,
+    langs: EnumSet<GuestLanguage>,
+    language: GuestLanguage,
+    ctx: PolyglotContext,
+    source: Source,
+  ) {
     try {
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
       // initialize the server intrinsic and run using the provided source
-      serverAgent.run(entrypoint = source, acquireContext = ::resolvePolyglotContext)
+      serverAgent.run(entrypoint = source) { resolvePolyglotContext(langs) }
       phaser.get().register()
 
       serverRunning.set(true)
@@ -1549,6 +1555,7 @@ import elide.tool.project.ProjectManager
   ) {
     if (serveMode()) readStartServer(
       label,
+      languages,
       primaryLanguage,
       ctx,
       source,
@@ -1637,18 +1644,15 @@ import elide.tool.project.ProjectManager
     }
   }
 
-  override fun PolyglotEngineConfiguration.configureEngine() {
+  override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet<GuestLanguage>) {
     // grab project configurations, if available
     val project = activeProject.get()
-    if (project != null) logging.debug("Resolved project info: $project")
+    if (project != null) logging.debug("Resolved project info: {}", project)
 
     // conditionally apply debugging settings
     if (debug) debugger.apply(this)
     inspector.apply(this)
-
-    val requiresIo = language.resolve(project, languageHint).let {
-      it.contains(PYTHON) || it.contains(RUBY)
-    }
+    val requiresIo = langs.let { it.contains(PYTHON) || it.contains(RUBY) }
 
     // configure host access rules
     hostAccess = when {
@@ -1687,7 +1691,7 @@ import elide.tool.project.ProjectManager
     val cmd = ProcessHandle.current().info().command().orElse("elide")
     val args = Statics.args.get() ?: emptyList()
 
-    (language ?: LanguageSelector()).resolve().forEach { lang ->
+    langs.forEach { lang ->
       when (lang) {
         // Primary Engines
         JS -> install(elide.runtime.plugins.js.JavaScript) {
@@ -1700,7 +1704,7 @@ import elide.tool.project.ProjectManager
         }
 
         WASM -> install(elide.runtime.plugins.wasm.Wasm) {
-          logging.debug("Configuring JS VM")
+          logging.debug("Configuring WASM VM")
           resourcesPath = GVM_RESOURCES
         }
 
@@ -1761,7 +1765,7 @@ import elide.tool.project.ProjectManager
     // configure VFS with user-specified bundles
     vfs {
       deferred = true
-      languages.addAll(language.resolve(project))
+      languages.addAll(langs)
 
       // resolve the file-system bundles to use
       val userBundles = filesystems.mapNotNull { checkFsBundle(it) }
@@ -1779,19 +1783,19 @@ import elide.tool.project.ProjectManager
         } else {
           // make sure the file can be read
           val file = try {
-            logging.trace("Checking bundle at URI '$uri'")
+            logging.trace("Checking bundle at URI '{}'", uri)
             File(uri)
           } catch (err: IOException) {
             throw ShellError.BUNDLE_NOT_FOUND.asError()
           }
 
-          logging.trace("Checking existence of '$uri'")
+          logging.trace("Checking existence of '{}'", uri)
           if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
 
-          logging.trace("Checking readability of '$uri'")
+          logging.trace("Checking readability of '{}'", uri)
           if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
 
-          logging.debug("Mounting guest filesystem at URI: '$uri'")
+          logging.debug("Mounting guest filesystem at URI: '{}'", uri)
           include(uri)
         }
       }
@@ -1819,9 +1823,9 @@ import elide.tool.project.ProjectManager
 
     // resolve the language to use
     val project = projectConfigJob.await()
-    val langs = language.resolve(project, alias = languageHint)
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     val supportedEnginesAndLangs = supported.flatMap { listOf(it.first.engine, it.first.id) }.toSortedSet()
+    val langs = language.resolveLangs(project, languageHint)
 
     // make sure each requested language is supported
     langs.forEach {
@@ -1859,8 +1863,8 @@ import elide.tool.project.ProjectManager
       activeProject.set(prj)
     }
 
-    engine.unwrap().use {
-      withContext {
+    resolveEngine(langs).unwrap().use {
+      withContext(langs) {
         // activate interactive behavior
         interactive.compareAndSet(false, true)
 
@@ -1892,7 +1896,7 @@ import elide.tool.project.ProjectManager
             beginInteractiveSession(
               langs,
               primaryLang.invoke(null),
-              engine,
+              engine.get(),
               it,
             )
           } else {

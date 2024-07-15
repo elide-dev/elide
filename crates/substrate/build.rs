@@ -14,12 +14,11 @@
 use builder::{build_bindings, cargo_lib_metadata};
 
 fn main() {
-    // link against lib jvm
-    cargo_lib_metadata(None);
-    println!("cargo:rustc-link-lib=jvm");
+  // link against lib jvm
+  cargo_lib_metadata(None);
 
-    // generate rust bindings
-    let bindings = bindgen::Builder::default().header("headers/substrate.h");
+  // generate rust bindings
+  let bindings = bindgen::Builder::default().header("headers/substrate.h");
 
-    build_bindings("libjvm.rs", bindings);
+  build_bindings("libjvm", "libjvm.rs", bindings);
 }

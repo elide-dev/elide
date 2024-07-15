@@ -90,7 +90,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.0.20-Beta1"
+    const val KOTLIN_SDK_PIN = "2.0.10-RC"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.9.0-RC"
@@ -233,7 +233,6 @@ public object Constants {
       "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
       "-Xsuppress-version-warnings",
-      "-Xconsistent-data-class-copy-visibility",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */

@@ -53,4 +53,3 @@ packages/*/packaging/** -linguist-detectable
 .github/** -linguist-detectable
 .devcontainer/Dockerfile -linguist-detectable
 .devcontainer/*/Dockerfile -linguist-detectable
-

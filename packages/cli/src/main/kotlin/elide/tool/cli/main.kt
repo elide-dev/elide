@@ -17,6 +17,7 @@ import com.github.ajalt.clikt.core.PrintHelpMessage
 import com.github.ajalt.clikt.parsers.CommandLineParser
 import com.github.ajalt.clikt.parsers.flatten
 import com.jakewharton.mosaic.runMosaic
+import dev.elide.cli.bridge.CliNativeBridge
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import picocli.CommandLine
@@ -30,7 +31,7 @@ import elide.annotations.Eager
 private val enableMosaic = System.getProperty("elide.mosaic").toBoolean()
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
-private const val enableCliEntryV2 = false
+private val ENABLE_CLI_ENTRY_V2 = System.getenv("ELIDE_EXPERIMENTAL")?.ifBlank { null } != null
 
 // Whether to exist after completion.
 val exitOnComplete: AtomicBoolean = AtomicBoolean(true)
@@ -40,9 +41,6 @@ val exitCode: AtomicInteger = AtomicInteger(0)
 
 // Unhandled error that caused exit, if any.
 val unhandledExc: AtomicReference<Throwable> = AtomicReference(null)
-
-// Singleton entrypoint for Elide.
-private val SINGLETON by lazy { Elide() }
 
 // Read the old entrypoint factory.
 private fun sorryIHaveToFactory(args: Array<String>): CommandLine = ApplicationContext
@@ -58,38 +56,50 @@ private suspend inline fun runEntry(crossinline fn: suspend () -> Unit) = when (
 }
 
 // Run the Clikt or regular entrypoint.
-private suspend inline fun runInner(args: Array<String>): Int = when (enableCliEntryV2) {
+private suspend inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI_ENTRY_V2) {
   false -> Elide.entry(args)
-  true -> runCatching {
-    Elide.installStatics(args, System.getProperty("user.dir"))
-    CommandLineParser
-      .parse(SINGLETON, args.toList().also { Statics.args.set(it) })
-  }.onFailure {
-    println("Failed to parse arguments: ${it.message}")
-    it.printStackTrace()
-  }.getOrNull()?.let { command ->
-    try {
-      command.invocation
-        .flatten()
-        .first()
-        .command
-        .enter()
-        .exitCode
-    } catch (err: PrintHelpMessage) {
-      try {
-        sorryIHaveToFactory(args).usage(System.out)
-      } catch (err: Throwable) {
-        println("Failed to print help message: ${err.message}")
-        err.printStackTrace()
-        exitProcess(1)
+  true -> ApplicationContext
+    .builder()
+    .eagerInitAnnotated(Eager::class.java)
+    .args(*args).start().use { applicationContext ->
+      MicronautFactory(applicationContext).use { factory ->
+        runCatching {
+          Elide.installStatics(args, System.getProperty("user.dir"))
+          CommandLineParser
+            .parse(factory.create(Elide::class.java), args.toList().also { Statics.args.set(it) })
+        }.onFailure {
+          println("Failed to parse arguments: ${it.message}")
+          it.printStackTrace()
+        }.getOrNull()?.let { command ->
+          try {
+            val cmd = command.invocation
+              .flatten()
+              .first()
+              .command
+
+            cmd.enter().exitCode
+          } catch (err: PrintHelpMessage) {
+            try {
+              sorryIHaveToFactory(args).usage(System.out)
+            } catch (err: Throwable) {
+              println("Failed to print help message: ${err.message}")
+              err.printStackTrace()
+              exitProcess(1)
+            }
+            0
+          } catch (err: RuntimeException) {
+            println("Uncaught error while running command: ${err.message}")
+            err.printStackTrace()
+            1
+          }
+        } ?: 1
       }
-      0
-    } catch (err: RuntimeException) {
-      println("Uncaught error while running command: ${err.message}")
-      err.printStackTrace()
-      1
     }
-  } ?: 1
+}
+
+// Perform early startup initialization tasks.
+private fun initialize() {
+  CliNativeBridge.initialize()
 }
 
 /**
@@ -101,6 +111,10 @@ private suspend inline fun runInner(args: Array<String>): Int = when (enableCliE
  * @param args Arguments to run with.
  */
 suspend fun main(args: Array<String>) = try {
+  // perform early init
+  initialize()
+
+  // run the entrypoint
   runEntry {
     exitCode.set(try {
       runInner(args)

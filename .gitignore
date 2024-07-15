@@ -41,3 +41,4 @@ tools/images/bench/elide-edge.tgz
 /.graalvm-home
 /.java-home
 /third_party/oracle/graaljs
+*.profraw

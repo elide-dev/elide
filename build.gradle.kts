@@ -15,12 +15,6 @@
  * Elide Runtime + Framework
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-)
-
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
@@ -37,9 +31,11 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
-import org.owasp.dependencycheck.reporting.ReportGenerator.Format.*
+import org.owasp.dependencycheck.reporting.ReportGenerator.Format.HTML
+import org.owasp.dependencycheck.reporting.ReportGenerator.Format.SARIF
 import java.util.Properties
-import kotlinx.kover.gradle.plugin.dsl.*
+import kotlinx.kover.gradle.plugin.dsl.GroupingEntityType
+import kotlinx.kover.gradle.plugin.dsl.MetricType
 import kotlinx.validation.KotlinApiCompareTask
 import elide.internal.conventions.project.Projects
 
@@ -250,19 +246,21 @@ spotless {
 //
 sonar {
   properties {
+    property("sonar.verbose", "true")
     property("sonar.projectKey", "elide-dev_v3")
     property("sonar.organization", "elide-dev")
     property("sonar.host.url", "https://sonarcloud.io")
     property("sonar.dynamicAnalysis", "reuseReports")
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
+    property("sonar.java.enablePreview", "true")
     property("sonar.sourceEncoding", "UTF-8")
     property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
 
     listOf(
       "sonar.java.checkstyle.reportPaths" to "build/reports/checkstyle/main.xml",
       "sonar.java.pmd.reportPaths" to "build/reports/pmd/main.xml",
-      "sonar.kotlin.detekt.reportPaths" to "build/reports/detekt/detekt.xml",
+      "sonar.sarifReportPaths" to "reports/detekt/detekt.sarif",
       "sonar.kotlin.ktlint.reportPaths" to "",
       "sonar.kotlin.diktat.reportPaths" to "",
     ).filter { it.second.isNotBlank() }.forEach {
@@ -350,7 +348,6 @@ apiValidation {
   ignoredProjects +=
     listOf(
       "cli",
-      "cli-bridge",
       "sqlite",
       "transport",
       "transport-common",
@@ -429,7 +426,7 @@ plugins.withType(YarnPlugin::class.java) {
 //
 configure<DependencyCheckExtension> {
   // Top-level settings
-  format = listOf(HTML).joinToString(",") { it.toString() }
+  format = listOf(HTML, SARIF).joinToString(",") { it.toString() }
   scanBuildEnv = true
   scanDependencies = true
   autoUpdate = true
@@ -690,7 +687,7 @@ tasks {
   // --- Task: Sonar
   //
   sonar.configure {
-    dependsOn(
+    mustRunAfter(
       detekt,
       koverBinaryReport,
       koverXmlReport,

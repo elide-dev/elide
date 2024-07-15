@@ -14,10 +14,11 @@
 import elide.internal.conventions.kotlin.*
 
 plugins {
-  alias(libs.plugins.elide.conventions)
   kotlin("multiplatform")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
+  alias(libs.plugins.kotlinx.plugin.benchmark)
+  alias(libs.plugins.elide.conventions)
 }
 
 elide {

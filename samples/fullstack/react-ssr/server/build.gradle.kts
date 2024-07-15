@@ -14,7 +14,7 @@ import tools.elide.assets.ManifestFormat
 plugins {
   kotlin("jvm")
   kotlin("kapt")
-  kotlin("plugin.serialization") version "2.0.20-Beta1"
+  kotlin("plugin.serialization") version "2.0.10-RC"
   id("dev.elide.buildtools.plugin")
   id("io.micronaut.application")
   id("io.micronaut.docker")

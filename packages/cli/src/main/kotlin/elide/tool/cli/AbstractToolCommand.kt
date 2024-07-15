@@ -174,8 +174,10 @@ abstract class AbstractToolCommand<Context>:
         if (it.isFailure) {
           val err = it.exceptionOrNull()
           val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
-          logging.error("Uncaught fatal exception", err ?: "(unknown)", stack)
+          val label = err ?: "(unknown)"
+          logging.error("Uncaught fatal exception: $label\n$stack")
           exit.set(1)
+          if (err != null) throw err
         }
       }
     }

@@ -12,11 +12,11 @@
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _settings: ToolState.OutputSettings = _state.output</ID>
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _state: State</ID>
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.ToolExecutionContextImpl$private val _state: T</ID>
-    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine()</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet&lt;GuestLanguage>)</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun beginInteractiveSession( languages: EnumSet&lt;GuestLanguage>, primaryLanguage: GuestLanguage, engine: PolyglotEngine, ctx: PolyglotContext, )</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun displayFormattedError( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, withCause: Boolean = true, )</ID>
-    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$internal fun resolve(project: ProjectInfo? = null, alias: String? = null): EnumSet&lt;GuestLanguage></ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand.LanguageSelector$internal fun resolveLangs(project: ProjectInfo? = null, alias: String? = null): EnumSet&lt;GuestLanguage></ID>
     <ID>FunctionParameterNaming:Statics.kt$Statics$`in`: InputStream</ID>
     <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
@@ -32,6 +32,7 @@
     <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$40</ID>
     <ID>MatchingDeclarationName:SanityTests.kt$SanitySelfTest : SelfTest</ID>
     <ID>MaxLineLength:ToolShellCommand.kt$ToolShellCommand$" or: elide @|bold,fg(cyan) run|shell|serve|start|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]"</ID>
+    <ID>NestedBlockDepth:main.kt$private suspend inline fun runInner(args: Array&lt;String>): Int</ID>
     <ID>ObjectPropertyNaming:Statics.kt$Statics$val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
     <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
@@ -73,11 +74,15 @@
     <ID>TooManyFunctions:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val jsHint = "package.json"</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val pyHint = "requirements.txt"</ID>
-    <ID>TopLevelPropertyNaming:main.kt$// Whether to enable the experimental V2 entrypoint through Clikt. private const val enableCliEntryV2 = false</ID>
     <ID>UnusedParameter:AbstractToolCommand.kt$AbstractToolCommand$args: Array&lt;String></ID>
     <ID>UnusedParameter:Elide.kt$Elide.Companion$win32: Boolean = false</ID>
+    <ID>UnusedParameter:NativeEngine.kt$NativeEngine$extraProps: List&lt;Pair&lt;String, String>></ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val javaLibraryPath = System.getenv("JAVA_HOME")?.ifBlank { null }?.let { Path(it).resolve("lib") }</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val libExecPaths = listOf( resolvedExecPrefix, resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.0"), resolvedExecPrefix.resolve("llvm/libsulong-native"), resolvedExecPrefix.resolve("ruby/ruby-home"), )</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val libraryPath = System.getProperty("java.library.path", "")</ID>
+    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val nativesPath = natives.absolutePath</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
     <ID>VariableNaming:AbstractScriptEngineFactory.kt$AbstractScriptEngineFactory.PolyglotContext$private val `in`: PolyglotReader</ID>

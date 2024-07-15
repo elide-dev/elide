@@ -1,0 +1,5 @@
+version = 1
+
+[project]
+name = "elide"
+version = "1.0.0-alpha11-SNAPSHOT"

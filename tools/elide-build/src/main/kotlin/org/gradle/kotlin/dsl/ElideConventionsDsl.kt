@@ -14,9 +14,62 @@
 package org.gradle.kotlin.dsl
 
 import org.gradle.api.Project
+import org.gradle.api.tasks.TaskProvider
+import org.jetbrains.kotlin.konan.target.HostManager
+import java.nio.file.Files
+import java.nio.file.Path
 import elide.internal.conventions.ElideBuildExtension
 import elide.internal.conventions.ElideConventionPlugin
 
+public fun Project.checkNatives(vararg needs: TaskProvider<*>, enforce: Boolean = true) {
+  val quickbuild = (
+    project.properties["elide.release"] != "true" ||
+    project.properties["elide.buildMode"] == "dev"
+  )
+  val isRelease = !quickbuild && (
+    project.properties["elide.release"] == "true" ||
+    project.properties["elide.buildMode"] == "release"
+  )
+  val checkNative by tasks.registering {
+    group = "build"
+    description = "Check native libraries required for build/test"
+    doFirst {
+      val targetRoot = Path.of(
+        rootProject.layout.projectDirectory.dir("target").asFile.path
+      ).resolve(if (isRelease) "release" else "debug")
+
+      val sqliteLibRoot = rootProject.layout.projectDirectory.dir("third_party/sqlite/install/lib").asFile.toPath()
+      val ext = when {
+        HostManager.hostIsMingw -> "dll"
+        HostManager.hostIsMac -> "dylib"
+        else -> "so"
+      }
+      val sqliteLib = targetRoot.resolve("libsqlitejdbc.$ext")
+
+      listOf(
+        targetRoot,
+        sqliteLib,
+        sqliteLibRoot,
+      ).forEach {
+        if (!Files.exists(it)) {
+          val isThirdParty = it.toString().contains("third_party")
+          val advice = if (isThirdParty) {
+            "Please build third-party natives with 'make natives'."
+          } else {
+            "Please build Elide's native layer with 'make natives' or 'cargo build'."
+          }
+
+          error(
+            "Required path does not exist: '$it'. $advice"
+          )
+        }
+      }
+    }
+  }
+  if (enforce) {
+    needs.forEach { it.configure { dependsOn(checkNative) } }
+  }
+}
 
 public fun Project.elide(block: ElideBuildExtension.() -> Unit) {
   plugins.getPlugin(ElideConventionPlugin::class.java).applyElideConventions(this, block)

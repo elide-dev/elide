@@ -49,7 +49,6 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
   }
 
   project.tasks.withType(Detekt::class) detekt@{
-    finalizedBy(detektMergeSarif, detektMergeXml)
     reports.sarif.required = true
     reports.xml.required = true
     reports.sarif.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.sarif"))
@@ -65,6 +64,9 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
   }
   project.tasks.withType(DetektCreateBaselineTask::class) detekt@{
     jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
+  }
+  project.tasks.withType(Detekt::class) detektReports@{
+    finalizedBy(detektMergeSarif, detektMergeXml)
   }
 }
 

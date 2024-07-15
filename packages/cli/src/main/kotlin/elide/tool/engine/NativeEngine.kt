@@ -318,29 +318,6 @@ object NativeEngine {
       Path(it).resolve("lib")
     }
 
-    val libPath = if (!libraryPath.contains("/elide-runtime")) {
-      libraryPath.split(separator).toMutableList().apply {
-        // elide's natives path
-        add(0, nativesPath)
-
-        // any given override path
-        System.getProperty("elide.natives")?.let { add(1, it) }
-
-        // bundled library paths
-        addAll(libExecPaths.map { it.absolutePathString() })
-
-        // java's library path
-        if (javaLibraryPath != null) add(javaLibraryPath.absolutePathString())
-      }.distinct().joinToString(separator)
-    } else libraryPath
-
-    listOf(
-      "java.library.path" to libPath,
-      "io.netty.native.workdir" to nativesPath,
-    ).plus(extraProps).forEach {
-      System.setProperty(it.first, it.second)
-    }
-
     // load all required native libs for current platform
     loadAllNatives(platform, natives.toFile(), this::class.java.classLoader)
 

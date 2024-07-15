@@ -188,6 +188,8 @@ public final class elide/runtime/core/PolyglotContext$EvaluationOptions$Companio
 
 public final class elide/runtime/core/PolyglotContext$EvaluationOptionsData : java/lang/Record, elide/runtime/core/PolyglotContext$EvaluationOptions {
 	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;
+	public static synthetic fun copy$default (Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;ZILjava/lang/Object;)Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getInternals ()Z
 	public fun hashCode ()I

@@ -87,6 +87,12 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 22
+      - name: "Setup: GraalVM (Java 22)"
+        uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
+        with:
+          distribution: "graalvm"
+          java-version: "22"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
@@ -96,21 +102,13 @@ jobs:
               args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
-      - name: "Setup: GraalVM (Java 22)"
-        uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
+      - name: "Setup: Rust"
+        uses: actions-rust-lang/setup-rust-toolchain@1fbea72663f6d4c03efaab13560c8a24cfd2a7cc # v1.9.0
         with:
-          distribution: "graalvm"
-          java-version: 22
-          check-for-updates: false
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Artifacts"
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
-        continue-on-error: true
-        with:
-          merge-multiple: true
-      - name: "Analysis: Formatting (Prettier)"
-        run: pnpm run prettier --check .
-      - name: "Analysis: Formatting (Spotless)"
+          toolchain: nightly
+          components: clippy,rustfmt
+          rustflags: "-Dwarnings"
+      - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         continue-on-error: ${{ inputs.ignore_failures }}
         env:
@@ -120,7 +118,20 @@ jobs:
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          arguments: |
-            spotlessCheck
-            -x nativeCompile
+      - name: "Setup: Artifacts"
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        continue-on-error: true
+        with:
+          merge-multiple: true
+      - name: "Analysis: Formatting (Prettier)"
+        run: pnpm run prettier --check .
+      - name: "Analysis: Formatting (Biome)"
+        run: pnpm biome check .
+      - name: "Analysis: Formatting (Cargo)"
+        run: cargo fmt -- --check
+      - name: "Analysis: Formatting (Spotless)"
+        run: |
+          ./gradlew \
+            spotlessCheck \
+            -x nativeCompile \
             -x nativeOptimizedCompile

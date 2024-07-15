@@ -48,3 +48,17 @@ dependencies {
     api(libs.jetbrains.annotations)
   }
 }
+
+tasks.named("jvmTest", Test::class) {
+  systemProperty("java.library.path", StringBuilder().apply {
+    append(rootProject.layout.projectDirectory.dir("target/debug").asFile.path)
+    append(File.pathSeparator)
+    append(rootProject.layout.projectDirectory.dir("target/release").asFile.path)
+    System.getProperty("java.library.path", "").let {
+      if (it.isNotEmpty()) {
+        append(File.pathSeparator)
+        append(it)
+      }
+    }
+  }.toString())
+}

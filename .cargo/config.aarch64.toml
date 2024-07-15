@@ -14,7 +14,8 @@
 [build]
 rustflags = [
   # Enable Tokio unstable.
-  "--cfg tokio_unstable",
+  "--cfg",
+  "tokio_unstable",
 
   # Enables access to unstable options.
   "-Zunstable-options",

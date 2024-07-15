@@ -407,7 +407,7 @@ else
 endif
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build $(CLI_TASKS) $(GRADLE_OMIT) $(_ARGS)
 
-native:  ## Build Elide's native image target; use BUILD_MODE=release for a release binary.
+native: $(DEPS)  ## Build Elide's native image target; use BUILD_MODE=release for a release binary.
 	$(info Building Elide native $(VERSION) ($(BUILD_MODE))...)
 ifeq ($(BUILD_MODE),release)
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:nativeOptimizedCompile $(_ARGS)
@@ -415,7 +415,7 @@ else
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) :packages:cli:nativeCompile $(_ARGS)
 endif
 
-natives-test:  ## Run Cargo and native tests, optionally buildin coverage if COVERAGE=yes.
+natives-test: $(DEPS)  ## Run Cargo and native tests, optionally buildin coverage if COVERAGE=yes.
 ifeq ($(COVERAGE),yes)
 	$(info Running native tests (+coverage)...)
 	$(CMD)$(BASH) ./tools/scripts/cargo-test-coverage.sh \
@@ -444,6 +444,7 @@ check: $(DEPS)  ## Build all targets, run all tests, run all checks.
 	$(CMD)$(MAKE) natives-test
 	$(CMD)RUSTFLAGS="-C instrument-coverage" $(CARGO) build -p sqlite
 	$(CMD)$(GRADLE_PREFIX) $(GRADLE) build test check $(_ARGS)
+	$(CMD)$(CARGO) clippy
 	$(CMD)$(PNPM) run prettier --check .
 	$(CMD)$(PNPM) biome format .
 	$(CMD)$(PNPM) biome check .
@@ -592,7 +593,7 @@ endif
 
 UMBRELLA_TARGET_PATH = target/$(UMBRELLA_TARGET)
 
-umbrella: $(UMBRELLA_TARGET_PATH)  ## Build the native umbrella tooling library.
+umbrella: third-party $(UMBRELLA_TARGET_PATH)  ## Build the native umbrella tooling library.
 
 $(UMBRELLA_TARGET_PATH): third_party/lib
 	$(info Building tools/umbrella...)

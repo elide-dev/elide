@@ -14,7 +14,8 @@
 [build]
 rustflags = [
   # Enable Tokio unstable.
-  "--cfg tokio_unstable",
+  "--cfg",
+  "tokio_unstable",
 
   # Use clang to drive linking via linker plugins, with lld as the linker. Wire in the linker script which fixes LTO
   # arguments via linker plugins.

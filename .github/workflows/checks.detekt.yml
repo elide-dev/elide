@@ -82,7 +82,7 @@ jobs:
           merge-multiple: true
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-      - name: "Analysis: Detekt"
+      - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         continue-on-error: true
         env:
@@ -92,9 +92,11 @@ jobs:
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          arguments: |
-            detekt
-            -x nativeCompile
+      - name: "Analysis: Detekt"
+        run: |
+          ./gradlew \
+            detekt \
+            -x nativeCompile \
             -x nativeOptimizedCompile
       - name: "Report: SARIF Upload"
         uses: github/codeql-action/upload-sarif@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.11

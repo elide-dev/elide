@@ -19,6 +19,12 @@ rustflags = [
 
   # Enforce completely position-independent executables.
   "-Crelocation-model=pic",
+
+  # Enables access to unstable options.
+  "-Zunstable-options",
+
+  # Enable multithreaded compiler frontend.
+  "-Zthreads=8",
 ]
 
 [env]

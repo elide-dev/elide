@@ -323,10 +323,13 @@ jobs:
       - name: "Build Environment"
         run: make info 2>&1 | tee build-info.txt
       - name: "🛠️ Build Packages"
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
         run: |
-          make setup
-
-          ./gradlew \
+          make setup natives -j`nproc` && ./gradlew \
             assemble \
             compileKotlin \
             -x check \
@@ -353,15 +356,6 @@ jobs:
             packages/*/build/libs/*.*
             packages/proto/*/build/libs/*.*
             tools/elide-build/build/**/*.*
-      - name: "Artifact: Reports"
-        if: failure() || success()
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
-        with:
-          name: build-reports-${{ matrix.os }}-latest-gvm-latest
-          path: |
-            build/reports/**/*.*
-            packages/*/build/reports/**/*.*
-            packages/proto/*/build/reports/**/*.*
       - name: "Artifact: Provenance Subject"
         id: hash
         if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}

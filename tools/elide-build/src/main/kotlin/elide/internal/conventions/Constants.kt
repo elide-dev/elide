@@ -233,7 +233,6 @@ public object Constants {
       "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
       "-Xsuppress-version-warnings",
-      "-Xconsistent-data-class-copy-visibility",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */

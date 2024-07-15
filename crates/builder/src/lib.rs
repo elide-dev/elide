@@ -338,12 +338,12 @@ pub const fn gvm_home() -> &'static str {
 
   if gvm_home_var.is_none() && java_home.is_none() {
     panic!("Please set the GRAALVM_HOME or JAVA_HOME environment variable");
-  }
-
-  if gvm_home_var.is_none() {
-    env!("JAVA_HOME")
   } else {
-    env!("GRAALVM_HOME")
+    if let Some(gvm_home) = gvm_home_var {
+      gvm_home
+    } else {
+      env!("JAVA_HOME")
+    }
   }
 }
 

@@ -153,8 +153,6 @@ jobs:
       pull-requests: "write"
 
     steps:
-      - name: "Setup: Apt Dependencies"
-        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
@@ -201,6 +199,21 @@ jobs:
             services.gradle.org:443
             sonarcloud.io:443
             storage.googleapis.com:443
+      - name: "Setup: Apt Dependencies"
+        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
+      - name: "Setup: LLVM 18"
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 18 all
+          export LLVM_PATH=/usr/lib/llvm-18
+          export PATH="$LLVM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
+          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
+          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
+          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
+          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
+          echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Clear Tooling Cache"
         run: rm -rf /opt/hostedtoolcache
       - name: "Setup: Checkout"
@@ -214,7 +227,7 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
-          key: elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+          key: elide-framework-v2-tests-${{ github.sha }}
           path: |
             build/reports/kover/**/*.*
             packages/*/test-results/
@@ -223,6 +236,8 @@ jobs:
             packages/*/reports/
             packages/proto/*/reports/
             tools/elide-build/reports/
+            third_party/google/boringssl/build
+            third_party/sqlite/.libs
           restore-keys: |
             elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-framework-v2-tests-
@@ -264,19 +279,6 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-      - name: "Setup: LLVM 18"
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 18 all
-          export LLVM_PATH=/usr/lib/llvm-18
-          export PATH="$LLVM_PATH/bin:$PATH"
-          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
-          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
-          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
-          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
-          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
-          echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Dependencies"
         run: |
           cargo install cargo-fuzz cargo-insta rustfilt
@@ -316,14 +318,20 @@ jobs:
             yarn
       - name: "Build Environment"
         run: make info CI=yes 2>&1 | tee build-info.txt
-      - name: "👨‍🔬️ Test: All Targets"
-        run: make third-party natives-test COVERAGE=yes CI=yes
+      - name: "👨‍🔬️ Test: Native"
+        run: make third-party natives-test COVERAGE=yes CI=yes -j`nproc`
       - name: "👨‍🔬 Test: Runtime"
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
         run: |
           cargo build -p sqlite
           ./gradlew \
             test \
             jvmTest \
+            allTests \
             koverXmlReport \
             koverBinaryReport \
             koverVerify \
@@ -331,45 +339,29 @@ jobs:
             -x nativeTest \
             --scan \
             --build-cache \
-            --no-daemon \
             --warning-mode=none \
             --dependency-verification=lenient \
             -x apiCheck \
+            -x spotlessCheck \
             -Pelide.ci=true \
-            -PbuildSamples=false \
             -PbuildDocs=false
       - name: "Analysis: Sonar"
-        uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
         continue-on-error: true
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
-        with:
-          cache-read-only: true
-          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          dependency-graph: disabled
-          gradle-home-cache-includes: binaryen
-            caches
-            jdks
-            native
-            native-build-tools
-            nodejs
-            notifications
-            wrapper
-            yarn
-          arguments: |
-            sonar
-            --scan
-            --build-cache
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -x apiCheck
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -PbuildDocs=false
+        run: |
+          ./gradlew \
+              sonar \
+              --scan \
+              --build-cache \
+              --warning-mode=none \
+              --dependency-verification=lenient \
+              -x apiCheck \
+              -Pelide.ci=true \
+              -PbuildDocs=false
       - name: "Artifact: Reports"
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
@@ -425,25 +417,83 @@ jobs:
     runs-on: ${{ inputs.runner_large || 'ubuntu-latest-8-cores' }}
     if: inputs.native
     steps:
-      - name: "Setup: Apt Dependencies"
-        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
-          egress-policy: audit
           disable-sudo: false
+          egress-policy: audit
+          allowed-endpoints: >
+            agent.less.build:443
+            static.rust-lang.org:443
+            androidx.dev:443
+            api.codecov.io:443
+            api.foojay.io:443
+            api.github.com:443
+            cli.codecov.io:443
+            cli.less.build:443
+            d3ob9fqp587by1.cloudfront.net:443
+            dc.services.visualstudio.com:443
+            dl.google.com:443
+            dl.less.build:443
+            download-cdn.jetbrains.com:443
+            download.jetbrains.com:443
+            download.oracle.com:443
+            ea6ne4j2sb.execute-api.eu-central-1.amazonaws.com:443
+            edge.pkg.st:443
+            maven.elide.dev:443
+            github.com:22
+            github.com:443
+            global.less.build:443
+            gradle.pkg.st:443
+            jpms.pkg.st:443
+            keys.openpgp.org:443
+            keyserver.ubuntu.com:443
+            local.less.build:443
+            maven.pkg.jetbrains.space:443
+            maven.pkg.st:443
+            nodejs.org:443
+            npm.pkg.st:443
+            objects.githubusercontent.com:443
+            pgp.mit.edu:443
+            registry.npmjs.org:443
+            repo.maven.apache.org:443
+            sc-cleancode-sensorcache-eu-central-1-prod.s3.amazonaws.com:443
+            scanner.sonarcloud.io:443
+            scans-in.gradle.com:443
+            services.gradle.org:443
+            sonarcloud.io:443
+            storage.googleapis.com:443
+      - name: "Setup: Apt Dependencies"
+        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
+      - name: "Setup: LLVM 18"
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 18 all
+          export LLVM_PATH=/usr/lib/llvm-18
+          export PATH="$LLVM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
+          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
+          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
+          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
+          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
+          echo PATH=$PATH >> $GITHUB_ENV
+      - name: "Setup: Clear Tooling Cache"
+        run: rm -rf /opt/hostedtoolcache
       - name: "Setup: Checkout"
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
           submodules: true
           persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
         uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
-          key: elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+          key: elide-framework-v2-tests-${{ github.sha }}
           path: |
+            build/reports/kover/**/*.*
             packages/*/test-results/
             packages/proto/*/test-results/
             tools/elide-build/test-results/
@@ -453,22 +503,33 @@ jobs:
           restore-keys: |
             elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-framework-v2-tests-
+      - name: "Setup: Rust"
+        uses: actions-rust-lang/setup-rust-toolchain@1fbea72663f6d4c03efaab13560c8a24cfd2a7cc # v1.9.0
+        with:
+          toolchain: nightly
+          target: wasm32-wasi
+          components: clippy,rustfmt
+          cache: false
+          rustflags: ""
+      - name: "Setup: SCCache"
+        uses: mozilla-actions/sccache-action@89e9040de88b577a072e3760aaf59f585da083af # v0.0.5
+      - name: "Setup: Rust Caching"
+        run: |
+          echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
+          echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 22)"
         uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           distribution: "graalvm"
           java-version: "22"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Buildless"
-        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - id: "auth"
-        name: "Setup: Authorize Service Account"
-        uses: google-github-actions/auth@55bd3a7c6e2ae7cf1877fd1ccb9d54c0503c457c # v2.1.2
+      - name: "Setup: Python (3.12)"
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
-          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
-          create_credentials_file: true
-          export_environment_variables: true
-          cleanup_credentials: true
+          python-version: 3.12
+      - name: "Setup: Buildless"
+        if: false
+        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: Node"
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
@@ -476,41 +537,70 @@ jobs:
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
-          version: "9.0.2"
+          version: "9.2.0"
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Dependencies"
+        run: |
+          cargo install cargo-fuzz cargo-insta rustfilt
+          pnpm install -g yarn@1.22.19
+          python -m pip install uv
+          echo "Setting up venv..."
+          uv venv
+          echo "Installing dependencies via Pip..."
+          uv pip install -r requirements.txt
+          echo "Activating venv..."
+          . .venv/bin/activate
+          echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "🛠️ Build Native"
-        run: make setup && cargo build
-      - name: "Run Tests (Native)"
+      - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
-        continue-on-error: true
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
-          arguments: |
-            nativeTest
-            check
-            jacocoTestReport
-            --scan
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -x apiCheck
-            -x :packages:server:nativeTest
-            -Pelide.ci=true
-            -PbuildSamples=false
+          gradle-home-cache-includes: binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+      - name: "Build Environment"
+        run: make info CI=yes 2>&1 | tee build-info.txt
+      - name: "🛠️ Build Native"
+        run: make setup && cargo build
+      - name: "Run Tests (Native)"
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+        run: |
+          ./gradlew \
+            nativeTest \
+            check \
+            jacocoTestReport \
+            --scan \
+            --no-daemon \
+            --warning-mode=none \
+            --dependency-verification=lenient \
+            -x apiCheck \
+            -x :packages:server:nativeTest \
+            -Pelide.ci=true \
             -PbuildDocs=false
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+      - name: "Artifact: Reports"
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: test-reports-native
           path: |

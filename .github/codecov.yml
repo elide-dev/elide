@@ -73,3 +73,4 @@ ignore:
   - "packages/cli-bridge/**/*.*"
   - "packages/graalvm-ts/src/main/java/elide/runtime/lang/typescript/TypeScriptModuleLoader.java"
   - "packages/graalvm-ts/src/main/java/elide/runtime/lang/typescript/TypeScriptFileTypeDetector.java"
+  - "crates/sqlite/src/lib.rs"

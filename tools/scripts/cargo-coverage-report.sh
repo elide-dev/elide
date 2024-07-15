@@ -61,4 +61,5 @@ llvm-cov export \
   --instr-profile=./target/profiles/elide-rust.profdata \
   --Xdemangler=rustfilt \
   -sources crates \
-  > target/coverage-report.lcov
+  > target/coverage-report.json
+

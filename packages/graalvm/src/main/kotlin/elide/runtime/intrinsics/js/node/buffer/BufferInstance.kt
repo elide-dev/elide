@@ -1,5 +1,7 @@
 package elide.runtime.intrinsics.js.node.buffer
 
+import com.oracle.truffle.js.runtime.BigInt
+import com.oracle.truffle.js.runtime.builtins.JSNumber
 import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.core.DelicateElideApi
@@ -122,7 +124,7 @@ import elide.runtime.core.PolyglotValue
   /**
    * Read an 8-bit unsigned integer from the buffer, optionally at an offset.
    */
-  public fun readUInt8(offset: Int?): Byte = readInt8(offset)
+  public fun readUInt8(offset: Int?): Int = readInt8(offset).toUByte().toInt()
 
   /**
    * Write an 8-bit signed integer to the buffer at an offset.
@@ -144,7 +146,7 @@ import elide.runtime.core.PolyglotValue
   /**
    * Read a 16-bit unsigned integer from the buffer using the Big Endian byte order, optionally at an offset.
    */
-  public fun readUInt16BE(offset: Int?): Short = readInt16BE(offset)
+  public fun readUInt16BE(offset: Int?): Int = readInt16BE(offset).toUShort().toInt()
 
   /**
    * Read a 16-bit integer from the buffer using the Little Endian byte order, optionally at an offset.
@@ -154,7 +156,7 @@ import elide.runtime.core.PolyglotValue
   /**
    * Read a 16-bit unsigned integer from the buffer using the Little Endian byte order, optionally at an offset.
    */
-  public fun readUInt16LE(offset: Int?): Short = readInt16LE(offset)
+  public fun readUInt16LE(offset: Int?): Int = readInt16LE(offset).toUShort().toInt()
 
   /**
    * Write an 16-bit signed integer to the buffer at an offset using Big Endian order.
@@ -186,7 +188,7 @@ import elide.runtime.core.PolyglotValue
   /**
    * Read a 32-bit unsigned integer from the buffer using the Big Endian byte order, optionally at an offset.
    */
-  public fun readUInt32BE(offset: Int?): Int = readInt32BE(offset)
+  public fun readUInt32BE(offset: Int?): Long = readInt32BE(offset).toUInt().toLong()
 
   /**
    * Read a 32-bit integer from the buffer using the Little Endian byte order, optionally at an offset.
@@ -196,7 +198,7 @@ import elide.runtime.core.PolyglotValue
   /**
    * Read a 32-bit unsigned integer from the buffer using the Little Endian byte order, optionally at an offset.
    */
-  public fun readUInt32LE(offset: Int?): Int = readInt32LE(offset)
+  public fun readUInt32LE(offset: Int?): Long = readInt32LE(offset).toUInt().toLong()
 
   /**
    * Write an 32-bit signed integer to the buffer at an offset using Big Endian order.
@@ -228,7 +230,7 @@ import elide.runtime.core.PolyglotValue
   /**
    * Read a 64-bit unsigned integer from the buffer using the Big Endian byte order, optionally at an offset.
    */
-  public fun readBigUInt64BE(offset: Int?): Long = readBigInt64BE(offset)
+  public fun readBigUInt64BE(offset: Int?): BigInt = BigInt.valueOfUnsigned(readBigInt64BE(offset))
 
   /**
    * Read a 64-bit integer from the buffer using the Little Endian byte order, optionally at an offset.
@@ -238,7 +240,7 @@ import elide.runtime.core.PolyglotValue
   /**
    * Read a 64-bit unsigned integer from the buffer using the Little Endian byte order, optionally at an offset.
    */
-  public fun readBigUInt64LE(offset: Int?): Long = readBigInt64LE(offset)
+  public fun readBigUInt64LE(offset: Int?): BigInt = BigInt.valueOfUnsigned(readBigInt64LE(offset))
 
   /**
    * Write an 64-bit signed integer to the buffer at an offset using Big Endian order.
@@ -266,25 +268,25 @@ import elide.runtime.core.PolyglotValue
    * Read an integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Big Endian byte order,
    * at the given [offset].
    */
-  public fun readIntBE(offset: Int, byteLength: Int): Long
+  public fun readIntBE(offset: Int, byteLength: Int): Int
 
   /**
    * Read an unsigned integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Big Endian
    * byte order, at the given [offset].
    */
-  public fun readUIntBE(offset: Int, byteLength: Int): Long = readIntBE(offset, byteLength)
+  public fun readUIntBE(offset: Int, byteLength: Int): Long = readIntBE(offset, byteLength).toUInt().toLong()
 
   /**
    * Read an integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Little Endian byte
    * order, at the given [offset].
    */
-  public fun readIntLE(offset: Int, byteLength: Int): Long
+  public fun readIntLE(offset: Int, byteLength: Int): Int
 
   /**
    * Read an unsigned integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Little Endian
    * byte order, at the given [offset].
    */
-  public fun readUIntLE(offset: Int, byteLength: Int): Long = readIntLE(offset, byteLength)
+  public fun readUIntLE(offset: Int, byteLength: Int): Long = readIntLE(offset, byteLength).toUInt().toLong()
 
   /**
    * WRite an integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Big Endian byte order,

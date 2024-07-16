@@ -54,7 +54,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     // The semantics of the indexing operator in the Node Buffer type
     // indicate that out-of-bound indices return 'undefined'
     return if (index < 0 || index > length) Undefined.instance
-    else byteBuffer[index.toInt()]
+    else byteBuffer[index.toInt()].toUByte().toInt()
   }
 
   override fun set(index: Long, value: Value?) {
@@ -93,7 +93,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     byteBuffer.position(srcPos).limit(srcLimit)
     target.byteBuffer.position(dstPos).limit(dstLimit)
 
-    return comp
+    return comp.coerceIn(-1, 1)
   }
 
   override fun copyTo(target: NodeHostBuffer, targetStart: Int, targetEnd: Int, sourceStart: Int, sourceEnd: Int): Int {
@@ -185,11 +185,11 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       .also { byteBuffer.order(ByteOrder.BIG_ENDIAN) }
   }
 
-  override fun readIntBE(offset: Int, byteLength: Int): Long {
+  override fun readIntBE(offset: Int, byteLength: Int): Int {
     return readVarInt(offset, byteLength) { i -> byteBuffer[offset + i] }
   }
 
-  override fun readIntLE(offset: Int, byteLength: Int): Long {
+  override fun readIntLE(offset: Int, byteLength: Int): Int {
     return readVarInt(offset, byteLength) { i -> byteBuffer[offset + (byteLength - i)] }
   }
 

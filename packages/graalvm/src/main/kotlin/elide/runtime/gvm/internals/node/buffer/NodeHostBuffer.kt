@@ -185,12 +185,12 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       .also { byteBuffer.order(ByteOrder.BIG_ENDIAN) }
   }
 
-  override fun readIntBE(offset: Int, byteLength: Int): Int {
+  override fun readIntBE(offset: Int, byteLength: Int): Long {
     return readVarInt(offset, byteLength) { i -> byteBuffer[offset + i] }
   }
 
-  override fun readIntLE(offset: Int, byteLength: Int): Int {
-    return readVarInt(offset, byteLength) { i -> byteBuffer[offset + (byteLength - i)] }
+  override fun readIntLE(offset: Int, byteLength: Int): Long {
+    return readVarInt(offset, byteLength) { i -> byteBuffer[offset + (byteLength - i - 1)] }
   }
 
   override fun readFloatBE(offset: Int?): Float {

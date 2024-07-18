@@ -404,15 +404,18 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
    * corresponding to the i-th byte of the integer; this allows both little-endian and big-endian implementations to
    * use the same helper.
    */
-  protected inline fun readVarInt(offset: Int, byteLength: Int, getByte: (Int) -> Byte): Int {
+  protected inline fun readVarInt(offset: Int, byteLength: Int, getByte: (Int) -> Byte): Long {
     if (offset + byteLength > length)
       throw JsError.rangeError("Cannot read $byteLength-byte integer, out of range for buffer length $length")
 
     if (byteLength <= 0 || byteLength > 6)
       throw JsError.rangeError("Number of bytes to read must be between 1 and 6, received $byteLength")
 
-    var value = 0
-    for (i in 0 until byteLength) value = (value shl 8) + (getByte(i) and 0xFF.toByte())
+    var value = 0L
+    for (i in 0 until byteLength) {
+      val b = getByte(i)
+      value = (value shl 8) + (b and 0xFF.toByte())
+    }
 
     return value
   }

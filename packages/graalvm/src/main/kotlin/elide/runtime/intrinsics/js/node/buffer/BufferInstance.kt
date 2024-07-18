@@ -268,25 +268,29 @@ import elide.runtime.core.PolyglotValue
    * Read an integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Big Endian byte order,
    * at the given [offset].
    */
-  public fun readIntBE(offset: Int, byteLength: Int): Int
+  public fun readIntBE(offset: Int, byteLength: Int): Long
 
   /**
    * Read an unsigned integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Big Endian
    * byte order, at the given [offset].
    */
-  public fun readUIntBE(offset: Int, byteLength: Int): Long = readIntBE(offset, byteLength).toUInt().toLong()
+  public fun readUIntBE(offset: Int, byteLength: Int): Long {
+    return readIntBE(offset, byteLength) and ((1 shl (8 * byteLength)) - 1).toLong()
+  }
 
   /**
    * Read an integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Little Endian byte
    * order, at the given [offset].
    */
-  public fun readIntLE(offset: Int, byteLength: Int): Int
+  public fun readIntLE(offset: Int, byteLength: Int): Long
 
   /**
    * Read an unsigned integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Little Endian
    * byte order, at the given [offset].
    */
-  public fun readUIntLE(offset: Int, byteLength: Int): Long = readIntLE(offset, byteLength).toUInt().toLong()
+  public fun readUIntLE(offset: Int, byteLength: Int): Long {
+    return readIntLE(offset, byteLength) and ((1 shl (8 * byteLength)) - 1).toLong()
+  }
 
   /**
    * WRite an integer with the specified [byteLength] (in bytes, up to 6 bytes/48 bits) using the Big Endian byte order,

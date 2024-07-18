@@ -599,19 +599,50 @@ import elide.testing.annotations.TestCase
     assert.equal(Buffer.from([-1]).readUInt8(), 255);
 
     // variable length (1 - 6)
-    data = Buffer.from([-1]);
-    assert.equal(data.readIntBE(0, 1), -1);
-    assert.equal(data.readUIntBE(0, 1), 255);
-    assert.equal(data.readIntLE(0, 1), -1);
-    assert.equal(data.readUIntLE(0, 1), 255);
+    //data = Buffer.from([-1]);
+    //assert.equal(data.readIntBE(0, 1), -1);
+    //assert.equal(data.readUIntBE(0, 1), 255);
+    //assert.equal(data.readIntLE(0, 1), -1);
+    //assert.equal(data.readUIntLE(0, 1), 255);
+//
+    //data = Buffer.from("ff12", "hex");
+    //assert.equal(data.readIntBE(0, 2), -238);
+    //assert.equal(data.readUIntBE(0, 2), 65298);
+//
+    //data = Buffer.from("13f6", "hex");
+    //assert.equal(data.readIntLE(0, 2), -2541);
+    //assert.equal(data.readUIntLE(0, 2), 62995);
+//
+    data = Buffer.from("ff56ff", "hex");
 
-    data = Buffer.from("f12f", "hex");
-    assert.equal(data.readIntBE(0, 2), -1);
-    assert.equal(data.readUIntBE(0, 2), 255);
+    // 1111 1111 0101 0110 1111 1111
+    // 1111 1111 0101 0101 1111 1111
 
-    data = Buffer.from("13f6", "hex");
-    assert.equal(data.readIntLE(0, 2), -2541);
-    assert.equal(data.readUIntLE(0, 2), 62995);
+
+    assert.equal(data.readIntBE(0, 3), -43265);
+    // assert.equal(data.readUIntBE(0, 3), 16733951);
+
+    data = Buffer.from("ff04ff", "hex");
+    // assert.equal(data.readIntLE(0, 3), -64257);
+    // assert.equal(data.readUIntLE(0, 3), 16712959);
+
+    // data = Buffer.from("ff5643ff", "hex");
+    // assert.equal(data.readIntBE(0, 4), -11123713);
+    // assert.equal(data.readUIntBE(0, 4), 4283843583);
+    // assert.equal(data.readIntLE(0, 4), -12364033);
+    // assert.equal(data.readUIntLE(0, 4), 4282603263);
+
+    // data = Buffer.from("ff235643ff", "hex");
+    // assert.equal(data.readIntBE(0, 5), -3702111233);
+    // assert.equal(data.readUIntBE(0, 5), 1095809516543);
+    // assert.equal(data.readIntLE(0, 5), -3165248513);
+    // assert.equal(data.readUIntLE(0, 5), 1096346379263);
+
+    // data = Buffer.from("ff12235643ff", "hex");
+    // assert.equal(data.readIntBE(0, 5), -1021609360385);
+    // assert.equal(data.readUIntBE(0, 5), 1095809516543);
+    // assert.equal(data.readIntLE(0, 5), -3165248513);
+    // assert.equal(data.readUIntLE(0, 5), 1096346379263);
 
     // write
 

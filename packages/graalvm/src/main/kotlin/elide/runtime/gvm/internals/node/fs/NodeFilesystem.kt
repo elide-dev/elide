@@ -99,6 +99,21 @@ private const val DEFAULT_COPY_MODE: Int = 0
   }
 }
 
+/**
+ * Resolve a charset from a string encoding value.
+ *
+ * @param encoding The encoding string to resolve.
+ * @return The resolved charset.
+ */
+internal fun resolveEncodingString(encoding: String): Charset = when (encoding.trim().lowercase()) {
+  "utf8", "utf-8" -> Charsets.UTF_8
+  "utf16", "utf-16" -> Charsets.UTF_16
+  "utf32", "utf-32" -> Charsets.UTF_32
+  "ascii" -> Charsets.US_ASCII
+  "latin1", "binary" -> Charsets.ISO_8859_1
+  else -> JsError.error("Unknown encoding passed to `fs` readFile: $encoding")
+}
+
 // Implements the Node built-in filesystem modules.
 internal object NodeFilesystem {
   internal const val SYMBOL_STD: String = "node_fs"
@@ -317,15 +332,6 @@ internal abstract class FilesystemBase (
     return if (encoding == null) null else resolveEncodingString(
       encoding as? String ?: JsError.error("Unknown encoding passed to `fs` readFile: $encoding")
     )
-  }
-
-  private fun resolveEncodingString(encoding: String): Charset = when (encoding.trim().lowercase()) {
-    "utf8", "utf-8" -> Charsets.UTF_8
-    "utf16", "utf-16" -> Charsets.UTF_16
-    "utf32", "utf-32" -> Charsets.UTF_32
-    "ascii" -> Charsets.US_ASCII
-    "latin1", "binary" -> Charsets.ISO_8859_1
-    else -> JsError.error("Unknown encoding passed to `fs` readFile: $encoding")
   }
 
   private fun checkFileExists(path: java.nio.file.Path) {

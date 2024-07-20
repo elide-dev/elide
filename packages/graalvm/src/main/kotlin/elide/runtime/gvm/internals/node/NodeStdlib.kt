@@ -15,7 +15,6 @@ package elide.runtime.gvm.internals.node
 import elide.runtime.gvm.internals.node.asserts.NodeAssert
 import elide.runtime.gvm.internals.node.asserts.NodeAssertStrict
 import elide.runtime.gvm.internals.node.buffer.NodeBufferModuleFacade
-import elide.runtime.gvm.internals.node.childProcess.NodeChildProcess
 import elide.runtime.gvm.internals.node.cluster.NodeCluster
 import elide.runtime.gvm.internals.node.console.NodeConsole
 import elide.runtime.gvm.internals.node.crypto.NodeCrypto
@@ -25,7 +24,6 @@ import elide.runtime.gvm.internals.node.dns.NodeDNS
 import elide.runtime.gvm.internals.node.dns.NodeDNSPromises
 import elide.runtime.gvm.internals.node.domain.NodeDomain
 import elide.runtime.gvm.internals.node.events.NodeEventsModuleFacade
-import elide.runtime.gvm.internals.node.fs.NodeFilesystem
 import elide.runtime.gvm.internals.node.http.NodeHttp
 import elide.runtime.gvm.internals.node.http2.NodeHttp2
 import elide.runtime.gvm.internals.node.https.NodeHttps
@@ -78,14 +76,6 @@ public object NodeStdlib {
    * Provides access to a compliant implementation of the Node Buffer API, at the built-in module name `buffer`.
    */
   public val buffer: BufferAPI by lazy { NodeBufferModuleFacade() }
-
-  /**
-   * ## `child_process`
-   *
-   * Provides access to a compliant implementation of the Node Child Process API, at the built-in module name
-   * `child_process`.
-   */
-  public val childProcess: ChildProcessAPI by lazy { NodeChildProcess.obtain() }
 
   /**
    * ## `cluster`

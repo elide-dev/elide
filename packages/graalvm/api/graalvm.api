@@ -1030,7 +1030,6 @@ public final class elide/runtime/gvm/internals/node/NodeStdlib {
 	public final fun getAssert ()Lelide/runtime/intrinsics/js/node/AssertAPI;
 	public final fun getAssertStrict ()Lelide/runtime/intrinsics/js/node/AssertStrictAPI;
 	public final fun getBuffer ()Lelide/runtime/intrinsics/js/node/BufferAPI;
-	public final fun getChildProcess ()Lelide/runtime/intrinsics/js/node/ChildProcessAPI;
 	public final fun getCluster ()Lelide/runtime/intrinsics/js/node/ClusterAPI;
 	public final fun getConsole ()Lelide/runtime/intrinsics/js/node/ConsoleAPI;
 	public final fun getCrypto ()Lelide/runtime/intrinsics/js/node/CryptoAPI;
@@ -1149,6 +1148,130 @@ public synthetic class elide/runtime/gvm/internals/node/childProcess/$NodeChildP
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessFailure : java/lang/RuntimeException {
+	public fun <init> (I)V
+	public final fun getExitCode ()I
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessHandle : elide/runtime/intrinsics/js/node/childProcess/ChildProcess, elide/runtime/intrinsics/js/node/events/EventEmitter, elide/runtime/intrinsics/js/node/events/EventTarget, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/gvm/internals/node/childProcess/ChildProcessHandle$Companion;
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun addListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun close ()V
+	public fun disconnect ()V
+	public fun dispatchEvent (Lelide/runtime/intrinsics/js/node/events/Event;)Z
+	public fun emit (Ljava/lang/String;[Ljava/lang/Object;)Z
+	public fun eventNames ()Ljava/util/List;
+	public fun getChannel ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessChannel;
+	public fun getConnected ()Z
+	public fun getExitCode ()Ljava/lang/Integer;
+	public fun getKilled ()Z
+	public fun getMaxListeners ()I
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getPid ()J
+	public fun getSignalCode ()Ljava/lang/String;
+	public fun getStderr-kPiaYOY ()Ljava/io/InputStream;
+	public fun getStdin-eFD2a6I ()Ljava/io/OutputStream;
+	public fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessIOChannels;
+	public fun getStdout-kPiaYOY ()Ljava/io/InputStream;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun kill (Ljava/lang/String;)V
+	public fun listenerCount (Ljava/lang/String;)I
+	public fun listeners (Ljava/lang/String;)Ljava/util/List;
+	public static final fun live$graalvm (Ljava/lang/Process;Lelide/runtime/gvm/internals/node/childProcess/PendingCallResult;)Lelide/runtime/gvm/internals/node/childProcess/ChildProcessHandle;
+	public fun off (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun on (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public fun on (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
+	public fun once (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun once (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun prependListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun prependListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun prependOnceListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun prependOnceListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun rawListeners (Ljava/lang/String;)Ljava/util/List;
+	public fun ref ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessChannel;
+	public fun removeAllListeners ()V
+	public fun removeAllListeners (Ljava/lang/String;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun removeListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+	public fun send (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Z
+	public fun setMaxListeners (I)V
+	public fun unref ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessChannel;
+	public fun wait ()I
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessHandle$Companion {
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessSyncHandle : elide/runtime/intrinsics/js/node/childProcess/ChildProcessSync, org/graalvm/polyglot/proxy/ProxyObject {
+	public synthetic fun <init> (Ljava/lang/ProcessHandle;Lelide/runtime/gvm/internals/node/childProcess/CallResult;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getError ()Lelide/runtime/intrinsics/js/err/JsError;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getOutput ()Lelide/runtime/intrinsics/js/node/childProcess/LazyProcessOutput;
+	public fun getPid ()J
+	public fun getSignal ()Ljava/lang/String;
+	public fun getStatus ()Ljava/lang/Integer;
+	public fun getStderr-kPiaYOY ()Ljava/io/InputStream;
+	public fun getStdout-kPiaYOY ()Ljava/io/InputStream;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static final fun of (Ljava/lang/ProcessHandle;Lelide/runtime/gvm/internals/node/childProcess/CallResult;)Lelide/runtime/gvm/internals/node/childProcess/ChildProcessSyncHandle;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessTimeout : java/lang/RuntimeException {
+	public fun <init> ()V
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ProcessInputStream : elide/runtime/gvm/internals/node/childProcess/ProcessStream, java/lang/AutoCloseable {
+	public static final synthetic fun box-impl (Ljava/io/OutputStream;)Lelide/runtime/gvm/internals/node/childProcess/ProcessInputStream;
+	public fun close ()V
+	public static fun close-impl (Ljava/io/OutputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/io/OutputStream;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/io/OutputStream;Ljava/io/OutputStream;)Z
+	public static final fun from-rCg8aOQ (Ljava/io/OutputStream;)Ljava/io/OutputStream;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/io/OutputStream;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/io/OutputStream;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/io/OutputStream;
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ProcessOutputStream : elide/runtime/gvm/internals/node/childProcess/ProcessStream, java/lang/AutoCloseable {
+	public static final synthetic fun box-impl (Ljava/io/InputStream;)Lelide/runtime/gvm/internals/node/childProcess/ProcessOutputStream;
+	public fun close ()V
+	public static fun close-impl (Ljava/io/InputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/io/InputStream;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/io/InputStream;Ljava/io/InputStream;)Z
+	public static final fun from-LWeueoM (Ljava/io/InputStream;)Ljava/io/InputStream;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/io/InputStream;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/io/InputStream;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/io/InputStream;
+}
+
+public abstract interface class elide/runtime/gvm/internals/node/childProcess/StandardStreamsProvider {
+	public fun stderr ()Ljava/io/OutputStream;
+	public fun stdin ()Ljava/io/InputStream;
+	public fun stdout ()Ljava/io/OutputStream;
 }
 
 public synthetic class elide/runtime/gvm/internals/node/cluster/$NodeClusterModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
@@ -3146,6 +3269,13 @@ public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI$File 
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ChildProcessAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun exec (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ChildProcess;
+	public abstract fun execFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ChildProcess;
+	public abstract fun execFileSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public abstract fun execSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public abstract fun fork (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ChildProcess;
+	public abstract fun spawn (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ChildProcess;
+	public abstract fun spawnSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ChildProcessSync;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ClusterAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -3556,6 +3686,288 @@ public abstract interface class elide/runtime/intrinsics/js/node/buffer/BufferIn
 	public fun writeUInt8 (ILjava/lang/Integer;)I
 	public fun writeUIntBE (JII)I
 	public fun writeUIntLE (JII)I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/childProcess/ChildProcess : elide/runtime/intrinsics/js/node/childProcess/ProcessChannel, elide/runtime/intrinsics/js/node/events/EventEmitter, elide/runtime/intrinsics/js/node/events/EventTarget {
+	public abstract fun disconnect ()V
+	public abstract fun getChannel ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessChannel;
+	public abstract fun getConnected ()Z
+	public abstract fun getExitCode ()Ljava/lang/Integer;
+	public abstract fun getKilled ()Z
+	public abstract fun getPid ()J
+	public abstract fun getSignalCode ()Ljava/lang/String;
+	public abstract fun getStderr-kPiaYOY ()Ljava/io/InputStream;
+	public abstract fun getStdin-eFD2a6I ()Ljava/io/OutputStream;
+	public abstract fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessIOChannels;
+	public abstract fun getStdout-kPiaYOY ()Ljava/io/InputStream;
+	public abstract fun kill (Ljava/lang/String;)V
+	public abstract fun wait ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/childProcess/ChildProcessSync {
+	public abstract fun getError ()Lelide/runtime/intrinsics/js/err/JsError;
+	public abstract fun getOutput ()Lelide/runtime/intrinsics/js/node/childProcess/LazyProcessOutput;
+	public abstract fun getPid ()J
+	public abstract fun getSignal ()Ljava/lang/String;
+	public abstract fun getStatus ()Ljava/lang/Integer;
+	public abstract fun getStderr-kPiaYOY ()Ljava/io/InputStream;
+	public abstract fun getStdout-kPiaYOY ()Ljava/io/InputStream;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Z
+	public final fun component2 ()Lelide/runtime/intrinsics/js/URL;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun component6 ()Ljava/lang/Integer;
+	public final fun component7 ()Ljava/lang/Integer;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()I
+	public final fun copy (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public fun cwdString ()Ljava/lang/String;
+	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
+	public fun encoding ()Ljava/lang/String;
+	public fun env ()Ljava/util/Map;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public synthetic fun getCwdString ()Ljava/lang/String;
+	public synthetic fun getEncoding ()Ljava/lang/String;
+	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getShell ()Ljava/lang/String;
+	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public synthetic fun getTimeout ()Ljava/lang/Integer;
+	public final fun gid ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public final fun killSignal ()Ljava/lang/String;
+	public final fun maxBuffer ()I
+	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public fun shell ()Ljava/lang/String;
+	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun timeout ()Ljava/lang/Integer;
+	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun toString ()Ljava/lang/String;
+	public final fun uid ()Ljava/lang/Integer;
+	public final fun windowsHide ()Z
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()I
+	public final fun component12 ()Ljava/lang/String;
+	public final fun component13 ()Z
+	public final fun component2 ()Lelide/runtime/intrinsics/js/URL;
+	public final fun component3 ()Ljava/lang/Object;
+	public final fun component4 ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/Integer;
+	public final fun component8 ()Ljava/lang/Integer;
+	public final fun component9 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public fun cwdString ()Ljava/lang/String;
+	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
+	public fun encoding ()Ljava/lang/String;
+	public fun env ()Ljava/util/Map;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public synthetic fun getCwdString ()Ljava/lang/String;
+	public synthetic fun getEncoding ()Ljava/lang/String;
+	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getShell ()Ljava/lang/String;
+	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public synthetic fun getTimeout ()Ljava/lang/Integer;
+	public final fun gid ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public final fun input ()Ljava/lang/Object;
+	public final fun killSignal ()Ljava/lang/String;
+	public final fun maxBuffer ()I
+	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public fun shell ()Ljava/lang/String;
+	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun timeout ()Ljava/lang/Integer;
+	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun toString ()Ljava/lang/String;
+	public final fun uid ()Ljava/lang/Integer;
+	public final fun windowsHide ()Z
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/childProcess/LazyProcessOutput {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+	public abstract fun getCwdString ()Ljava/lang/String;
+	public abstract fun getEncoding ()Ljava/lang/String;
+	public abstract fun getEnv ()Ljava/util/Map;
+	public abstract fun getShell ()Ljava/lang/String;
+	public abstract fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public abstract fun getTimeout ()Ljava/lang/Integer;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/childProcess/ProcessChannel {
+	public abstract fun ref ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessChannel;
+	public abstract fun send (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun unref ()Lelide/runtime/intrinsics/js/node/childProcess/ProcessChannel;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/childProcess/ProcessIOChannels {
+	public abstract fun getStderr-kPiaYOY ()Ljava/io/InputStream;
+	public abstract fun getStdin-eFD2a6I ()Ljava/io/OutputStream;
+	public abstract fun getStdout-kPiaYOY ()Ljava/io/InputStream;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Z
+	public final fun component2 ()Lelide/runtime/intrinsics/js/URL;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun component6 ()Ljava/lang/Integer;
+	public final fun component7 ()Ljava/lang/Integer;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()I
+	public final fun copy (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public fun cwdString ()Ljava/lang/String;
+	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
+	public fun encoding ()Ljava/lang/String;
+	public fun env ()Ljava/util/Map;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public synthetic fun getCwdString ()Ljava/lang/String;
+	public synthetic fun getEncoding ()Ljava/lang/String;
+	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getShell ()Ljava/lang/String;
+	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public synthetic fun getTimeout ()Ljava/lang/Integer;
+	public final fun gid ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public final fun killSignal ()Ljava/lang/String;
+	public final fun maxBuffer ()I
+	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public fun shell ()Ljava/lang/String;
+	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun timeout ()Ljava/lang/Integer;
+	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun toString ()Ljava/lang/String;
+	public final fun uid ()Ljava/lang/Integer;
+	public final fun windowsHide ()Z
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()I
+	public final fun component12 ()Ljava/lang/String;
+	public final fun component13 ()Z
+	public final fun component2 ()Lelide/runtime/intrinsics/js/URL;
+	public final fun component3 ()Ljava/lang/Object;
+	public final fun component4 ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/Integer;
+	public final fun component8 ()Ljava/lang/Integer;
+	public final fun component9 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public fun cwdString ()Ljava/lang/String;
+	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
+	public fun encoding ()Ljava/lang/String;
+	public fun env ()Ljava/util/Map;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public synthetic fun getCwdString ()Ljava/lang/String;
+	public synthetic fun getEncoding ()Ljava/lang/String;
+	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getShell ()Ljava/lang/String;
+	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public synthetic fun getTimeout ()Ljava/lang/Integer;
+	public final fun gid ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public final fun input ()Ljava/lang/Object;
+	public final fun killSignal ()Ljava/lang/String;
+	public final fun maxBuffer ()I
+	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public fun shell ()Ljava/lang/String;
+	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun timeout ()Ljava/lang/Integer;
+	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun toString ()Ljava/lang/String;
+	public final fun uid ()Ljava/lang/Integer;
+	public final fun windowsHide ()Z
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/StdioConfig {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun applyTo (Ljava/lang/ProcessBuilder;)Ljava/lang/ProcessBuilder;
+	public final fun copy (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun hashCode ()I
+	public static final fun inherit ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public static final fun pipe ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/StdioConfig$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public final fun inherit ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public final fun pipe ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/StdioSymbols {
+	public static final field IGNORE Ljava/lang/String;
+	public static final field INHERIT Ljava/lang/String;
+	public static final field INSTANCE Lelide/runtime/intrinsics/js/node/childProcess/StdioSymbols;
+	public static final field PIPE Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptions {

@@ -19,6 +19,9 @@
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:JsEncoding.kt$TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
+    <ID>ForbiddenComment:NodeChildProcess.kt$// @TODO: needs enforcement of perms</ID>
+    <ID>ForbiddenComment:NodeChildProcess.kt$NodeChildProcess$// @TODO: rewire so this doesn't involve unwrapping a future, even though the future is immediate</ID>
+    <ID>ForbiddenComment:NodeChildProcess.kt$NodeChildProcessModule$// @TODO: access to cohesive standard streams</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
@@ -44,6 +47,7 @@
     <ID>MagicNumber:HttpServerConfig.kt$HttpServerConfig$65535</ID>
     <ID>MagicNumber:JsProxy.kt$JsProxy.PropertyProxy$3</ID>
     <ID>MagicNumber:NettyRequestHandler.kt$NettyRequestHandler$404</ID>
+    <ID>MagicNumber:NodeChildProcess.kt$ChildProcessHandle$3</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.Companion$65535</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL$3</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL.Companion$31</ID>

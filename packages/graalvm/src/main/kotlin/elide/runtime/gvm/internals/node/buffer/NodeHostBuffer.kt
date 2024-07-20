@@ -54,7 +54,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     // The semantics of the indexing operator in the Node Buffer type
     // indicate that out-of-bound indices return 'undefined'
     return if (index < 0 || index > length) Undefined.instance
-    else byteBuffer[index.toInt()]
+    else byteBuffer[index.toInt()].toUByte().toInt()
   }
 
   override fun set(index: Long, value: Value?) {
@@ -93,7 +93,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     byteBuffer.position(srcPos).limit(srcLimit)
     target.byteBuffer.position(dstPos).limit(dstLimit)
 
-    return comp
+    return comp.coerceIn(-1, 1)
   }
 
   override fun copyTo(target: NodeHostBuffer, targetStart: Int, targetEnd: Int, sourceStart: Int, sourceEnd: Int): Int {
@@ -189,8 +189,16 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     return readVarInt(offset, byteLength) { i -> byteBuffer[offset + i] }
   }
 
+  override fun readUIntBE(offset: Int, byteLength: Int): Long {
+    return readVarInt(offset, byteLength, signed = false) { i -> byteBuffer[offset + i] }
+  }
+
   override fun readIntLE(offset: Int, byteLength: Int): Long {
-    return readVarInt(offset, byteLength) { i -> byteBuffer[offset + (byteLength - i)] }
+    return readVarInt(offset, byteLength) { i -> byteBuffer[offset + (byteLength - i - 1)] }
+  }
+
+  override fun readUIntLE(offset: Int, byteLength: Int): Long {
+    return readVarInt(offset, byteLength, signed = false) { i -> byteBuffer[offset + (byteLength - i - 1)] }
   }
 
   override fun readFloatBE(offset: Int?): Float {
@@ -213,12 +221,13 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
   /* -- Write -- */
 
-  override fun write(string: String, offset: Int?, length: Int?, encoding: String?) {
+  override fun write(string: String, offset: Int?, length: Int?, encoding: String?): Int {
     val bytes = NodeBufferEncoding.encode(string, encoding)
     val start = offset ?: 0
     val size = length ?: bytes.size.coerceAtMost(this.length - start)
 
     byteBuffer.put(start, bytes, 0, size)
+    return size
   }
 
   override fun writeInt8(value: Byte, offset: Int?): Int {

@@ -138,14 +138,13 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     },
     onView = { view ->
       val targetBaseOffset = view.byteOffset()
-      val sourceOffset = sourceStart ?: 0
       val bytes = view.bytes()
 
       compareUsing(
         targetStart = targetBaseOffset + (targetStart ?: 0),
         targetEnd = targetBaseOffset + (targetEnd ?: view.byteSize()),
-        sourceStart = sourceOffset,
-        sourceEnd = sourceEnd ?: (sourceOffset + this.size).toInt(),
+        sourceStart = sourceStart ?: 0,
+        sourceEnd = sourceEnd ?: this.length,
         readTarget = { bytes[it] },
       )
     },
@@ -248,7 +247,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
   internal open fun fillWith(bytes: GuestBytes, offset: Int, length: Int, targetOffset: Int) {
     // repeat the source bytes until the length is reached
     val bytesSize = bytes.size
-    for (i in 0 until length) setByte(i + offset, bytes[i % bytesSize])
+    for (i in 0 until length) setByte(i + offset, bytes[targetOffset + i % bytesSize])
   }
 
   /**
@@ -267,7 +266,9 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
     when {
       // numbers are coerced into Byte
-      value.isNumber -> fillWith(value.asLong().toByte(), start, length)
+      value.isNumber -> {
+        fillWith(value.asLong().toByte(), start, length)
+      }
 
       // strings are encoded (by default in UTF-8)
       value.isString -> fillWith(NodeBufferEncoding.encode(value.asString(), encoding), start, length)
@@ -318,7 +319,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
   override fun lastIndexOf(value: PolyglotValue, byteOffset: Int?, encoding: String?): Int {
     if (value.isNumber) {
       val byteValue = value.asLong().toByte()
-      for (i in (byteOffset ?: 0) until length) if (getByte(length - i) == byteValue) return i
+      for (i in (byteOffset ?: (length - 1)) downTo 0) if (getByte(i) == byteValue) return i
       return -1
     }
 
@@ -353,16 +354,20 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       if (length - current < subjectLength) return -1
 
       // attempt to match the entire subject
+      var found = true
       for (i in 0 until subjectLength) {
-        if (getByte(current + i) != readSubject(i)) break
-        return current
+        if (getByte(current + i) != readSubject(i)) {
+          found = false
+          break
+        }
       }
 
       // no match, try again with increased offset
-      current++
+      if (found) return current
+      else current++
     }
 
-    return current
+    return -1
   }
 
   /**
@@ -378,16 +383,20 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       if (current < subjectLength - 1) return -1
 
       // attempt to match the entire subject
+      var found = true
       for (i in 0 until subjectLength) {
-        if (getByte(current - i) != readSubject(subjectLength - i)) break
-        return current
+        if (getByte(current - i) != readSubject(subjectLength - i - 1)) {
+          found = false
+          break
+        }
       }
 
       // no match, try again with increased offset
-      current--
+      if (found) return current - (subjectLength - 1)
+      else current--
     }
 
-    return current - subjectLength
+    return -1
   }
 
   /**
@@ -395,12 +404,22 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
    * corresponding to the i-th byte of the integer; this allows both little-endian and big-endian implementations to
    * use the same helper.
    */
-  protected inline fun readVarInt(offset: Int, byteLength: Int, getByte: (Int) -> Byte): Long {
-    if (offset + byteLength >= length) throw JsError.rangeError("Out of range")
-    if (byteLength <= 0 || byteLength > 6) throw JsError.rangeError("Out of range")
+  protected inline fun readVarInt(offset: Int, byteLength: Int, signed: Boolean = true, getByte: (Int) -> Byte): Long {
+    if (offset + byteLength > length)
+      throw JsError.rangeError("Cannot read $byteLength-byte integer, out of range for buffer length $length")
+
+    if (byteLength <= 0 || byteLength > 6)
+      throw JsError.rangeError("Number of bytes to read must be between 1 and 6, received $byteLength")
 
     var value = 0L
-    for (i in 0 until byteLength) value = (value shl 8) + (getByte(i) and 0xFF.toByte())
+    for (i in 0 until byteLength) {
+      value = (value shl 8) or (getByte(i).toLong() and 0xFF)
+    }
+
+    if (signed && (value and (1L shl (byteLength * 8 - 1)) != 0L)) {
+      // check for sign bit and fill all leading bits with 1 if negative
+      value = value or (Long.MAX_VALUE shl (byteLength * 8))
+    }
 
     return value
   }
@@ -682,24 +701,26 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       }
     }
 
+    // note that in the following methods we use a lossy conversion between BigInteger and Long;
+    // this is intentional as these methods only accept 64-bit integers
     "writeBigInt64BE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeBigInt64BE(args[0].asLong(), args.getOrNull(1)?.asInt())
+      writeBigInt64BE(args[0].asBigInteger().toLong(), args.getOrNull(1)?.asInt())
     }
 
     "writeBigInt64LE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeBigInt64LE(args[0].asLong(), args.getOrNull(1)?.asInt())
+      writeBigInt64LE(args[0].asBigInteger().toLong(), args.getOrNull(1)?.asInt())
     }
 
     "writeBigUInt64BE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeBigUInt64BE(args[0].asLong(), args.getOrNull(1)?.asInt())
+      writeBigUInt64BE(args[0].asBigInteger().toLong(), args.getOrNull(1)?.asInt())
     }
 
     "writeBigUInt64LE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeBigUInt64LE(args[0].asLong(), args.getOrNull(1)?.asInt())
+      writeBigUInt64LE(args[0].asBigInteger().toLong(), args.getOrNull(1)?.asInt())
     }
 
     "writeDoubleBE" -> ProxyExecutable { args ->
@@ -759,27 +780,27 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
     "writeUInt8" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeUInt8(args[0].asByte(), args.getOrNull(1)?.asInt())
+      writeUInt8(args[0].asInt(), args.getOrNull(1)?.asInt())
     }
 
     "writeUInt16BE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeUInt16BE(args[0].asShort(), args.getOrNull(1)?.asInt())
+      writeUInt16BE(args[0].asInt(), args.getOrNull(1)?.asInt())
     }
 
     "writeUInt16LE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeUInt16LE(args[0].asShort(), args.getOrNull(1)?.asInt())
+      writeUInt16LE(args[0].asInt(), args.getOrNull(1)?.asInt())
     }
 
     "writeUInt32BE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeUInt32BE(args[0].asInt(), args.getOrNull(1)?.asInt())
+      writeUInt32BE(args[0].asLong(), args.getOrNull(1)?.asInt())
     }
 
     "writeUInt32LE" -> ProxyExecutable { args ->
       check(args.isNotEmpty()) { "Expected at least one argument" }
-      writeUInt32LE(args[0].asInt(), args.getOrNull(1)?.asInt())
+      writeUInt32LE(args[0].asLong(), args.getOrNull(1)?.asInt())
     }
 
     "writeUIntBE" -> ProxyExecutable { args ->

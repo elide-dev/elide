@@ -56,7 +56,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     // The semantics of the indexing operator in the Node Buffer type
     // indicate that out-of-bound indices return 'undefined'
     return if (mappedIndex < 0 || mappedIndex > length) Undefined.instance
-    else buffer.readBufferByte(mappedIndex)
+    else buffer.readBufferByte(mappedIndex).toUByte().toInt()
   }
 
   override fun set(index: Long, value: Value?) {
@@ -176,8 +176,16 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     return readVarInt(offset, byteLength) { i -> getByte(offset + i) }
   }
 
+  override fun readUIntBE(offset: Int, byteLength: Int): Long {
+    return readVarInt(offset, byteLength, signed = false) { i -> getByte(offset + i) }
+  }
+
   override fun readIntLE(offset: Int, byteLength: Int): Long {
     return readVarInt(offset, byteLength) { i -> getByte(offset + (byteLength - i)) }
+  }
+
+  override fun readUIntLE(offset: Int, byteLength: Int): Long {
+    return readVarInt(offset, byteLength, signed = false) { i -> getByte(offset + (byteLength - i)) }
   }
 
   override fun readFloatBE(offset: Int?): Float {
@@ -198,12 +206,13 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
   /* -- Write -- */
 
-  override fun write(string: String, offset: Int?, length: Int?, encoding: String?) {
+  override fun write(string: String, offset: Int?, length: Int?, encoding: String?): Int {
     val bytes = NodeBufferEncoding.encode(string, encoding)
     val start = offset ?: 0
     val size = length ?: bytes.size.coerceAtMost(this.length - start)
 
     for (i in 0 until size) setByte(start + i, bytes[i])
+    return size
   }
 
   override fun writeInt8(value: Byte, offset: Int?): Int {

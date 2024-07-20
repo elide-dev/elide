@@ -59,9 +59,12 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       ?: throw typeError("Expected operand to be a Buffer or UInt8Array")
 
     var comp = 0
-    for (i in 0 until minOf(size1, size2)) comp = bytes1[offset1 + i].compareTo(bytes2[offset2 + i])
-    comp = if (comp != 0) comp else size1.compareTo(size2)
+    for (i in 0 until minOf(size1, size2)) {
+      comp = bytes1[offset1 + i].compareTo(bytes2[offset2 + i])
+      if (comp != 0) break
+    }
 
+    comp = if (comp != 0) comp else size1.compareTo(size2)
     return comp.coerceIn(-1, 1)
   }
 
@@ -74,9 +77,9 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     for (i in 0 until list.arraySize) {
       val element = list.getArrayElement(i)
 
-      combinedSourceLength += GuestBufferView.tryFrom(element)?.byteSize()
-        ?: element.asBufferOrNull()?.length
-                ?: throw typeError("Expected source elements to be Buffer or UInt8Array")
+      combinedSourceLength += element.asBufferOrNull()?.length
+        ?: GuestBufferView.tryFrom(element)?.byteSize()
+        ?: throw typeError("Expected source elements to be Buffer or UInt8Array")
     }
 
     val bufferSize = totalLength?.coerceAtMost(combinedSourceLength) ?: combinedSourceLength
@@ -86,12 +89,11 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     var filled = 0
     for (i in 0 until list.arraySize) {
       val element = list.getArrayElement(i)
-      val elementSize = GuestBufferView.tryFrom(element)?.byteSize()
-        ?: element.asBufferOrNull()?.length
+      val elementSize = element.asBufferOrNull()?.length
+        ?: GuestBufferView.tryFrom(element)?.byteSize()
         ?: throw typeError("Expected source elements to be Buffer or UInt8Array")
 
-
-      buffer.fill(element, filled, (filled + elementSize).coerceAtMost(bufferSize - filled))
+      buffer.fill(element, filled, filled + elementSize.coerceAtMost(bufferSize - filled))
       filled += elementSize
     }
 
@@ -120,21 +122,21 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     source.asBufferOrNull()?.let { sourceBuffer ->
       val buffer = NodeHostBuffer.allocate(sourceBuffer.length)
 
-      if (sourceBuffer is NodeHostBuffer) buffer.fillWith(buffer, 0, buffer.length)
+      if (sourceBuffer is NodeHostBuffer) buffer.fillWith(sourceBuffer, 0, buffer.length)
       else buffer.fillWith(GuestBytes(sourceBuffer.buffer), 0, buffer.length, sourceBuffer.byteOffset)
 
       return buffer
     }
 
     GuestBufferView.tryFrom(source)?.let { (bytes, sourceOffset, sourceLength) ->
-      val buffer = NodeHostBuffer.allocate(sourceLength)
-      buffer.fillWith(bytes, 0, sourceLength, sourceOffset)
+      val buffer = NodeHostBuffer.allocate(length ?: (sourceLength - (offset ?: 0)))
+      buffer.fillWith(bytes, 0, buffer.length, sourceOffset + (offset ?: 0))
 
       return buffer
     }
 
     if (source.hasBufferElements()) {
-      val buffer = NodeHostBuffer.allocate(source.bufferSize.toInt())
+      val buffer = NodeHostBuffer.allocate(length ?: (source.bufferSize.toInt() - (offset ?: 0)))
       buffer.fillWith(GuestBytes(source), 0, buffer.length, offset ?: 0)
 
       return buffer
@@ -235,7 +237,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     }
 
     "poolSize" -> poolSize
-    
+
     null -> error("Cannot retrieve member with null key")
     else -> error("Unknown member 'Buffer.$key'")
   }

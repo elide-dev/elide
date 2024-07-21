@@ -3467,53 +3467,95 @@ public abstract interface class elide/runtime/intrinsics/js/node/asserts/Asserti
 	public abstract fun getOperator ()Ljava/lang/String;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/buffer/Blob {
-}
-
-public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer : java/io/Serializable, org/graalvm/polyglot/proxy/ProxyArray, org/graalvm/polyglot/proxy/ProxyInstantiable, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyObject {
-	public abstract fun getLength ()I
-	public synthetic fun getMemberKeys ()Ljava/lang/Object;
-	public fun getMemberKeys ()[Ljava/lang/String;
-	public fun hasMember (Ljava/lang/String;)Z
-	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-}
-
-public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors {
-	public abstract fun create (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun create (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors;Lorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-}
-
-public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories : elide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities {
-	public abstract fun alloc (ILorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun alloc$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;ILorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun allocUnsafe (I)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun allocUnsafeSlow (I)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun from (Lelide/runtime/intrinsics/js/node/buffer/Buffer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun from (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun from (Lorg/graalvm/polyglot/Value;ILjava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun from (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun from ([Ljava/lang/Byte;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;Lorg/graalvm/polyglot/Value;ILjava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-}
-
-public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferStatics : elide/runtime/intrinsics/js/node/buffer/Buffer$BufferConstructors, elide/runtime/intrinsics/js/node/buffer/Buffer$BufferFactories {
-}
-
-public abstract interface class elide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities {
-	public abstract fun byteLength (Ljava/lang/String;Ljava/lang/String;)I
-	public static synthetic fun byteLength$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)I
-	public abstract fun compare (Lelide/runtime/intrinsics/js/node/buffer/Buffer;Lelide/runtime/intrinsics/js/node/buffer/Buffer;)I
-	public abstract fun concat ([Lelide/runtime/intrinsics/js/node/buffer/Buffer;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun concat$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities;[Lelide/runtime/intrinsics/js/node/buffer/Buffer;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public abstract fun copyBytesFrom (Lelide/runtime/intrinsics/js/node/buffer/Buffer;II)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
-	public static synthetic fun copyBytesFrom$default (Lelide/runtime/intrinsics/js/node/buffer/Buffer$BufferUtilities;Lelide/runtime/intrinsics/js/node/buffer/Buffer;IIILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/Buffer;
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/BufferClass : org/graalvm/polyglot/proxy/ProxyInstantiable, org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun alloc (ILorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public static synthetic fun alloc$default (Lelide/runtime/intrinsics/js/node/buffer/BufferClass;ILorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun allocUnsafe (I)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun allocUnsafeSlow (I)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun byteLength (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)I
+	public abstract fun compare (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)I
+	public abstract fun concat (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public static synthetic fun concat$default (Lelide/runtime/intrinsics/js/node/buffer/BufferClass;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun copyBytesFrom (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public static synthetic fun copyBytesFrom$default (Lelide/runtime/intrinsics/js/node/buffer/BufferClass;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun from (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/buffer/BufferClass;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
 	public abstract fun getPoolSize ()I
-	public abstract fun isBuffer (Ljava/lang/Object;)Z
+	public abstract fun isBuffer (Lorg/graalvm/polyglot/Value;)Z
 	public abstract fun isEncoding (Ljava/lang/String;)Z
+	public abstract fun setPoolSize (I)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/buffer/BufferInstance : org/graalvm/polyglot/proxy/ProxyArray, org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun compare (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)I
+	public static synthetic fun compare$default (Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)I
+	public abstract fun copy (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)I
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)I
+	public abstract fun entries ()Lorg/graalvm/polyglot/Value;
+	public abstract fun fill (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public static synthetic fun fill$default (Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun getBuffer ()Lorg/graalvm/polyglot/Value;
+	public abstract fun getByteOffset ()I
+	public abstract fun getLength ()I
+	public abstract fun indexOf (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/String;)I
+	public static synthetic fun indexOf$default (Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)I
+	public abstract fun keys ()Lorg/graalvm/polyglot/Value;
+	public abstract fun lastIndexOf (Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/String;)I
+	public static synthetic fun lastIndexOf$default (Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;Lorg/graalvm/polyglot/Value;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)I
+	public abstract fun readBigInt64BE (Ljava/lang/Integer;)J
+	public abstract fun readBigInt64LE (Ljava/lang/Integer;)J
+	public fun readBigUInt64BE (Ljava/lang/Integer;)Lcom/oracle/truffle/js/runtime/BigInt;
+	public fun readBigUInt64LE (Ljava/lang/Integer;)Lcom/oracle/truffle/js/runtime/BigInt;
+	public abstract fun readDoubleBE (Ljava/lang/Integer;)D
+	public abstract fun readDoubleLE (Ljava/lang/Integer;)D
+	public abstract fun readFloatBE (Ljava/lang/Integer;)F
+	public abstract fun readFloatLE (Ljava/lang/Integer;)F
+	public abstract fun readInt16BE (Ljava/lang/Integer;)S
+	public abstract fun readInt16LE (Ljava/lang/Integer;)S
+	public abstract fun readInt32BE (Ljava/lang/Integer;)I
+	public abstract fun readInt32LE (Ljava/lang/Integer;)I
+	public abstract fun readInt8 (Ljava/lang/Integer;)B
+	public abstract fun readIntBE (II)J
+	public abstract fun readIntLE (II)J
+	public fun readUInt16BE (Ljava/lang/Integer;)I
+	public fun readUInt16LE (Ljava/lang/Integer;)I
+	public fun readUInt32BE (Ljava/lang/Integer;)J
+	public fun readUInt32LE (Ljava/lang/Integer;)J
+	public fun readUInt8 (Ljava/lang/Integer;)I
+	public abstract fun readUIntBE (II)J
+	public abstract fun readUIntLE (II)J
+	public abstract fun subarray (Ljava/lang/Integer;Ljava/lang/Integer;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public static synthetic fun subarray$default (Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun swap16 ()Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun swap32 ()Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun swap64 ()Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;
+	public abstract fun toJSON ()Lorg/graalvm/polyglot/Value;
+	public abstract fun toString (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)Ljava/lang/String;
+	public abstract fun values ()Lorg/graalvm/polyglot/Value;
+	public abstract fun write (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)I
+	public static synthetic fun write$default (Lelide/runtime/intrinsics/js/node/buffer/BufferInstance;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)I
+	public abstract fun writeBigInt64BE (JLjava/lang/Integer;)I
+	public abstract fun writeBigInt64LE (JLjava/lang/Integer;)I
+	public fun writeBigUInt64BE (JLjava/lang/Integer;)I
+	public fun writeBigUInt64LE (JLjava/lang/Integer;)I
+	public abstract fun writeDoubleBE (DLjava/lang/Integer;)I
+	public abstract fun writeDoubleLE (DLjava/lang/Integer;)I
+	public abstract fun writeFloatBE (FLjava/lang/Integer;)I
+	public abstract fun writeFloatLE (FLjava/lang/Integer;)I
+	public abstract fun writeInt16BE (SLjava/lang/Integer;)I
+	public abstract fun writeInt16LE (SLjava/lang/Integer;)I
+	public abstract fun writeInt32BE (ILjava/lang/Integer;)I
+	public abstract fun writeInt32LE (ILjava/lang/Integer;)I
+	public abstract fun writeInt8 (BLjava/lang/Integer;)I
+	public abstract fun writeIntBE (JII)I
+	public abstract fun writeIntLE (JII)I
+	public fun writeUInt16BE (ILjava/lang/Integer;)I
+	public fun writeUInt16LE (ILjava/lang/Integer;)I
+	public fun writeUInt32BE (JLjava/lang/Integer;)I
+	public fun writeUInt32LE (JLjava/lang/Integer;)I
+	public fun writeUInt8 (ILjava/lang/Integer;)I
+	public fun writeUIntBE (JII)I
+	public fun writeUIntLE (JII)I
 }
 
 public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptions {

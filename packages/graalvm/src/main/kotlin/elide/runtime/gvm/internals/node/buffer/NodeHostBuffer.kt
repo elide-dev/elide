@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package elide.runtime.gvm.internals.node.buffer
 
 import com.oracle.truffle.js.runtime.objects.Undefined
@@ -16,7 +18,9 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
  * The backing buffer's position and limit are assumed to remain constant and should therefore not be modified in any
  * case; doing so will cause unspecified behavior.
  */
-@DelicateElideApi internal class NodeHostBuffer private constructor(
+@DelicateElideApi
+@Suppress("TooManyFunctions")
+internal class NodeHostBuffer private constructor(
   internal val byteBuffer: ByteBuffer
 ) : NodeBufferInstance() {
   /**

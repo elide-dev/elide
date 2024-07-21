@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber", "TooManyFunctions")
+
 package elide.runtime.gvm.internals.node.buffer
 
 import com.oracle.truffle.js.runtime.objects.Undefined

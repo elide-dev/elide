@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package elide.runtime.gvm.internals.node.buffer
 
 import org.graalvm.polyglot.Value
@@ -114,11 +116,6 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
   }
 
   override fun from(source: PolyglotValue, offset: Int?, length: Int?, encoding: String?): BufferInstance {
-    if (source.isString) {
-      val bytes = NodeBufferEncoding.encode(source.asString(), encoding)
-      return NodeHostBuffer.allocate(bytes.size).apply { fillWith(bytes, 0, bytes.size) }
-    }
-
     source.asBufferOrNull()?.let { sourceBuffer ->
       val buffer = NodeHostBuffer.allocate(sourceBuffer.length)
 
@@ -135,21 +132,26 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
       return buffer
     }
 
-    if (source.hasBufferElements()) {
-      val buffer = NodeHostBuffer.allocate(length ?: (source.bufferSize.toInt() - (offset ?: 0)))
-      buffer.fillWith(GuestBytes(source), 0, buffer.length, offset ?: 0)
+    return when {
+      source.isString -> {
+        val bytes = NodeBufferEncoding.encode(source.asString(), encoding)
+        NodeHostBuffer.allocate(bytes.size).apply { fillWith(bytes, 0, bytes.size) }
+      }
 
-      return buffer
+      source.hasBufferElements() -> {
+        val buffer = NodeHostBuffer.allocate(length ?: (source.bufferSize.toInt() - (offset ?: 0)))
+        buffer.fillWith(GuestBytes(source), 0, buffer.length, offset ?: 0)
+        buffer
+      }
+
+      source.hasArrayElements() -> {
+        val buffer = NodeHostBuffer.allocate(source.arraySize.toInt())
+        for (i in 0 until buffer.length) buffer.byteBuffer.put(i, source.getArrayElement(i.toLong()).asLong().toByte())
+        buffer
+      }
+
+      else -> throw typeError("Unexpected source type: expected string, int[], Buffer, UInt8Array, or ArrayBuffer")
     }
-
-    if (source.hasArrayElements()) {
-      val buffer = NodeHostBuffer.allocate(source.arraySize.toInt())
-      for (i in 0 until buffer.length) buffer.byteBuffer.put(i, source.getArrayElement(i.toLong()).asLong().toByte())
-
-      return buffer
-    }
-
-    throw typeError("Unexpected source type: expected string, int[], Buffer, UInt8Array, or ArrayBuffer")
   }
 
   override fun isBuffer(obj: PolyglotValue): Boolean {
@@ -173,6 +175,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     return staticMembers.binarySearch(key) >= 0
   }
 
+  @Suppress("CyclomaticComplexMethod")
   override fun getMember(key: String?): Any = when (key) {
     "alloc" -> ProxyExecutable { args ->
       if (args.isEmpty()) error("Buffer.alloc takes 1 to 3 arguments, but received none")

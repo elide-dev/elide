@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package elide.runtime.gvm.internals.node.buffer
 
 import org.graalvm.polyglot.Value
@@ -5,7 +7,6 @@ import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyIterable
 import org.graalvm.polyglot.proxy.ProxyObject
-import kotlin.experimental.and
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.internals.intrinsics.js.JsError
@@ -16,7 +17,9 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
  * A base implementation for the Node.js [BufferInstance] API, serving as a template for Buffer instances without
  * specifying the backing `ArrayBuffer` value.
  */
-@DelicateElideApi internal sealed class NodeBufferInstance : BufferInstance, ProxyObject {
+@DelicateElideApi
+@Suppress("TooManyFunctions")
+internal sealed class NodeBufferInstance : BufferInstance, ProxyObject {
   /** Attempts to interpret this value as a [NodeBufferInstance] and unwrap it, returning `null` on failure. */
   protected fun PolyglotValue.asBufferInstance(): NodeBufferInstance? {
     return if (isProxyObject) runCatching { asProxyObject<NodeBufferInstance>() }.getOrNull()
@@ -291,19 +294,25 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
   /* ------- IndexOf ------- */
 
-  override fun indexOf(value: PolyglotValue, byteOffset: Int?, encoding: String?): Int {
-    if (value.isNumber) {
+  override fun indexOf(value: PolyglotValue, byteOffset: Int?, encoding: String?): Int = when {
+    value.isNumber -> {
       val byteValue = value.asLong().toByte()
-      for (i in (byteOffset ?: 0) until length) if (getByte(i) == byteValue) return i
-      return -1
+      var index = -1
+
+      for (i in (byteOffset ?: 0) until length) if (getByte(i) == byteValue) {
+        index = i
+        break
+      }
+
+      index
     }
 
-    if (value.isString) {
+    value.isString -> {
       val bytes = NodeBufferEncoding.encode(value.asString(), encoding)
-      return search(byteOffset ?: 0, bytes.size) { bytes[it] }
+      search(byteOffset ?: 0, bytes.size) { bytes[it] }
     }
 
-    return value.whenBufferOrView(
+    else -> value.whenBufferOrView(
       onBuffer = { other ->
         search(byteOffset ?: 0, other.length) { other.getByte(it) }
       },
@@ -316,19 +325,25 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     )
   }
 
-  override fun lastIndexOf(value: PolyglotValue, byteOffset: Int?, encoding: String?): Int {
-    if (value.isNumber) {
+  override fun lastIndexOf(value: PolyglotValue, byteOffset: Int?, encoding: String?): Int = when {
+    value.isNumber -> {
       val byteValue = value.asLong().toByte()
-      for (i in (byteOffset ?: (length - 1)) downTo 0) if (getByte(i) == byteValue) return i
-      return -1
+      var index = -1
+
+      for (i in (byteOffset ?: (length - 1)) downTo 0) if (getByte(i) == byteValue) {
+        index = i
+        break
+      }
+
+      index
     }
 
-    if (value.isString) {
+    value.isString -> {
       val bytes = NodeBufferEncoding.encode(value.asString(), encoding)
-      return invertedSearch(byteOffset ?: (length - 1), bytes.size) { bytes[it] }
+      invertedSearch(byteOffset ?: (length - 1), bytes.size) { bytes[it] }
     }
 
-    return value.whenBufferOrView(
+    else -> value.whenBufferOrView(
       onBuffer = { other ->
         invertedSearch(byteOffset ?: (length - 1), other.length) { other.getByte(it) }
       },
@@ -497,6 +512,7 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     return instanceMembers.binarySearch(key) >= 0
   }
 
+  @Suppress("LongMethod", "CyclomaticComplexMethod")
   override fun getMember(key: String?): Any = when (key) {
     "buffer" -> this.buffer
     "byteOffset" -> this.byteOffset

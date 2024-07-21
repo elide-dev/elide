@@ -29,7 +29,9 @@ import elide.testing.annotations.TestCase
 
 /** Tests for [Buffer]. */
 @DelicateElideApi
-@TestCase internal class NodeBufferTest : NodeModuleConformanceTest<NodeBufferModule>() {
+@TestCase
+@Suppress("LargeClass")
+internal class NodeBufferTest : NodeModuleConformanceTest<NodeBufferModule>() {
   @Inject internal lateinit var buffer: BufferAPI
   @Inject internal lateinit var module: NodeBufferModule
 
@@ -454,7 +456,9 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Test fun `Buffer (instance members)`() = conforms {
+  @Test
+  @Suppress("LongMethod")
+  fun `Buffer (instance members)`() = conforms {
 
   }.guest {
     """

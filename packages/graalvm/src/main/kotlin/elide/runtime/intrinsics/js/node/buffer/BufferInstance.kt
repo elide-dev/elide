@@ -16,7 +16,9 @@ import elide.runtime.core.PolyglotValue
  * All Buffer operations are performed using the backing array buffer, however it is up to the implementation to define
  * the nature of the backing buffer itself (e.g. it could be a NIO `ByteBuffer`).
  */
-@DelicateElideApi public interface BufferInstance : ProxyArray, ProxyObject {
+@DelicateElideApi
+@Suppress("TooManyFunctions")
+public interface BufferInstance : ProxyArray, ProxyObject {
   /**
    * Returns the backing `ArrayBuffer` for this buffer instance. The [byteOffset] indicates the index of this backing
    * value at which the view represented by this Buffer begins.

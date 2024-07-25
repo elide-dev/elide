@@ -78,6 +78,7 @@ mod tests {
     assert_eq!(signal, Signal::Stop);
   }
 
+  #[cfg(target_os = "macos")]
   #[test]
   fn test_subproc_killwith_sigkill() {
     // start a subprocess calling into `sleep`
@@ -100,6 +101,7 @@ mod tests {
     assert!(System::new_all().process(Pid::from(pid as usize)).is_none());
   }
 
+  #[cfg(target_os = "macos")]
   #[test]
   fn test_subproc_killwith_sigterm() {
     // start a subprocess calling into `sleep`

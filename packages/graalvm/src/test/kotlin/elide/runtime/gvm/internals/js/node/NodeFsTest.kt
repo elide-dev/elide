@@ -29,6 +29,7 @@ import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.node.fs.FilesystemConstants
 import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
 import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
+import elide.runtime.gvm.internals.node.path.NodePathsModule
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.Error
@@ -41,6 +42,7 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
 /** Tests for Elide's implementation of the Node `fs` built-in module. */
 @TestCase internal class NodeFsTest : AbstractNodeFsTest<NodeFilesystemModule>() {
+  @Inject private lateinit var path: NodePathsModule
   @Inject private lateinit var execProvider: GuestExecutorProvider
 
   private val filesystem: NodeFilesystemModule by lazy {
@@ -49,6 +51,7 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
   override val moduleName: String get() = "fs"
   override fun provide(): NodeFilesystemModule = NodeFilesystemModule(
+    path,
     VfsInitializerListener().also {
       it.onVfsCreated(EmbeddedGuestVFS.empty())
     },

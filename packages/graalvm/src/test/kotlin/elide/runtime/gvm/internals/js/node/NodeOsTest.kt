@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:OptIn(DelicateElideApi::class)
+@file:Suppress("NodeCoreCodingAssistance")
 
 package elide.runtime.gvm.internals.js.node
 
@@ -26,7 +26,6 @@ import jakarta.inject.Inject
 import kotlin.streams.asStream
 import kotlin.test.*
 import kotlin.test.Test
-import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.node.os.NodeOperatingSystem
 import elide.runtime.gvm.internals.node.os.NodeOperatingSystemModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
@@ -35,7 +34,6 @@ import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `os` built-in module. */
 @TestCase
-@Disabled("Not supported for native testing yet: needs static JNA support")
 internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>() {
   override val moduleName: String get() = "os"
   override fun provide(): NodeOperatingSystemModule = NodeOperatingSystemModule()

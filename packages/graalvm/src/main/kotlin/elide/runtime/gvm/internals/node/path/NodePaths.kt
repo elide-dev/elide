@@ -230,6 +230,10 @@ public class PathBuf private constructor (
 
 // Installs the Node paths module into the intrinsic bindings.
 @Intrinsic internal class NodePathsModule : AbstractNodeBuiltinModule() {
+  private val instance = NodePaths.create()
+
+  val paths: PathAPI get() = instance
+
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[SYMBOL.asJsSymbol()] = NodePaths.create()
   }

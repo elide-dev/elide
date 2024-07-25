@@ -18,7 +18,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.*
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.NodeStdlib
 import elide.runtime.gvm.internals.node.events.EventAware
 import elide.runtime.gvm.internals.node.events.NodeEventsModule
 import elide.runtime.gvm.internals.node.events.NodeEventsModuleFacade
@@ -62,7 +61,6 @@ import elide.testing.annotations.TestCase
 
   @Test fun testEventsApiSingleton() {
     assertSame(NodeEventsModuleFacade.obtain(), NodeEventsModuleFacade.obtain())
-    assertSame(NodeStdlib.events, NodeEventsModuleFacade.obtain())
     assertNotSame(NodeEventsModuleFacade.obtain(), NodeEventsModuleFacade.create())
   }
 

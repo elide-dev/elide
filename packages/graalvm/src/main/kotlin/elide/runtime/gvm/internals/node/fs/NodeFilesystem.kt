@@ -46,16 +46,13 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Companion.spawn
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
-import elide.runtime.gvm.internals.node.NodeStdlib
+import elide.runtime.gvm.internals.node.path.NodePathsModule
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.Error
 import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.node.FilesystemAPI
-import elide.runtime.intrinsics.js.node.FilesystemPromiseAPI
-import elide.runtime.intrinsics.js.node.NodeFilesystemAPI
-import elide.runtime.intrinsics.js.node.NodeFilesystemPromiseAPI
+import elide.runtime.intrinsics.js.node.*
 import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
@@ -79,15 +76,16 @@ private const val DEFAULT_COPY_MODE: Int = 0
 
 // Installs the Node `fs` and `fs/promises` modules into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeFilesystemModule (
+  private val pathModule: NodePathsModule,
   private val vfs: VfsInitializerListener,
   private val executorProvider: GuestExecutorProvider,
 ) : AbstractNodeBuiltinModule() {
   private val std: FilesystemAPI by lazy {
-    NodeFilesystem.createStd(executorProvider.executor(), vfs.get())
+    NodeFilesystem.createStd(executorProvider.executor(), pathModule.paths, vfs.get())
   }
 
   private val promises: FilesystemPromiseAPI by lazy {
-    NodeFilesystem.createPromises(executorProvider.executor(), vfs.get())
+    NodeFilesystem.createPromises(executorProvider.executor(), pathModule.paths, vfs.get())
   }
 
   @Singleton fun provideStd(): FilesystemAPI = std
@@ -122,14 +120,21 @@ internal object NodeFilesystem {
   /** @return Instance of the `fs` module. */
   fun createStd(
     exec: GuestExecutor,
+    path: PathAPI,
     filesystem: GuestVFS
-  ): FilesystemAPI = NodeFilesystemProxy(exec, filesystem)
+  ): FilesystemAPI = NodeFilesystemProxy(
+    path,
+    exec,
+    filesystem,
+  )
 
   /** @return Instance of the `fs/promises` module. */
   fun createPromises(
     exec: GuestExecutor,
+    path: PathAPI,
     filesystem: GuestVFS
   ): FilesystemPromiseAPI = NodeFilesystemPromiseProxy(
+    path,
     exec,
     filesystem
   )
@@ -257,12 +262,13 @@ private fun doCopyFileGuest(src: Path, dest: Path, mode: Int, callback: Value?):
 // Implements common baseline functionality for the Node filesystem modules.
 @OptIn(DelicateElideApi::class)
 internal abstract class FilesystemBase (
+  protected val path: PathAPI,
   protected val exec: GuestExecutor,
   protected val fs: GuestVFS,
   protected val dispatcher: CoroutineDispatcher = exec.dispatcher,
 ) {
   protected fun resolvePath(operation: String, path: Value): Path = when {
-    path.isString -> NodeStdlib.path.parse(path.asString())
+    path.isString -> this.path.parse(path.asString())
     else -> JsError.error("Unknown type passed to `fs` $operation: ${path.asString()}")
   }
 
@@ -455,7 +461,9 @@ internal abstract class FilesystemBase (
 }
 
 // Implements the Node `fs` module.
-internal class NodeFilesystemProxy (exec: GuestExecutor, fs: GuestVFS) : NodeFilesystemAPI, FilesystemBase(exec, fs) {
+internal class NodeFilesystemProxy (path: PathAPI, exec: GuestExecutor, fs: GuestVFS) :
+  NodeFilesystemAPI,
+  FilesystemBase(path, exec, fs) {
   @Polyglot override fun access(path: Value, callback: Value) {
     if (
       !callback.canExecute() &&
@@ -751,8 +759,9 @@ internal class NodeFilesystemProxy (exec: GuestExecutor, fs: GuestVFS) : NodeFil
 }
 
 // Implements the Node `fs/promises` module.
-private class NodeFilesystemPromiseProxy (executor: GuestExecutor, fs: GuestVFS)
-  : NodeFilesystemPromiseAPI, FilesystemBase(executor, fs) {
+private class NodeFilesystemPromiseProxy (path: PathAPI, executor: GuestExecutor, fs: GuestVFS)
+  : NodeFilesystemPromiseAPI,
+    FilesystemBase(path, executor, fs) {
   @Polyglot override fun readFile(path: Value): JsPromise<StringOrBuffer> =
     readFile(resolvePath("readFile", path), ReadFileOptions.DEFAULTS)
 

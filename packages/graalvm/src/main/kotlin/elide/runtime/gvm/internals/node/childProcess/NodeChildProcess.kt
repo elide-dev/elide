@@ -36,8 +36,6 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
 import java.util.function.Supplier
-import kotlinx.atomicfu.AtomicBoolean
-import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.runBlocking
 import elide.annotations.Factory
 import elide.annotations.Singleton
@@ -92,7 +90,6 @@ private const val NO_ENCODING = ChildProcessDefaults.ENCODING
     override fun stderr(): OutputStream? = System.err
   }
 
-  // @TODO: access to cohesive standard streams
   @Singleton internal fun provide(): ChildProcessAPI = NodeChildProcess.obtain(
     filesystem,
     executorProvider,
@@ -173,13 +170,6 @@ internal sealed interface ChildProcessExecution<T> where T: ProcOptions {
   companion object {
     @JvmStatic fun of(command: String, args: LinkedList<String>, options: ProcOptions): CommandExec<ProcOptions> =
       CommandExec(command, args, options)
-
-    @JvmStatic fun withInput(
-      command: String,
-      args: LinkedList<String>,
-      options: ProcOptions,
-      stdin: ProcessInputStream,
-    ): CommandExec<ProcOptions> = CommandExec(command, args, options, stdin)
   }
 }
 
@@ -201,14 +191,6 @@ internal sealed interface ChildProcessExecution<T> where T: ProcOptions {
       args: LinkedList<String>,
       options: ProcOptions,
     ): FileExec<ProcOptions> = FileExec(path, command, args, options)
-
-    @JvmStatic fun withInput(
-      path: Path,
-      command: String,
-      args: LinkedList<String>,
-      options: ProcOptions,
-      stdin: ProcessInputStream,
-    ): FileExec<ProcOptions> = FileExec(path, command, args, options, stdin)
   }
 }
 
@@ -468,7 +450,6 @@ private inline fun <T: ProcOptions> ChildProcessExecution<T>.toProcBuilder(): Pr
     options.cwdString?.let { directory(File(it)) }
 
     // apply environment
-    // @TODO: needs enforcement of perms
     options.env?.let { env ->
       when {
         env.isEmpty() -> environment().clear()
@@ -545,20 +526,18 @@ public class ChildProcessTimeout : RuntimeException("Child process call timed ou
 
 // Tracks child process terminal/exit conditions.
 private class ChildProcessTermination {
-  private val exited: AtomicBoolean = atomic(false)
   @Volatile var exitCode: Int = -1
   @Volatile var exitSignal: String = ""
 
+  // Whether the process has closed.
+  val closed: Boolean get() = exitCode != -1 || exitSignal.isNotEmpty()
+
   fun exited(code: Int) {
-    if (exited.compareAndSet(expect = false, update = true)) {
-      EXIT_CODE_UPDATER.set(this, code)
-    }
+    EXIT_CODE_UPDATER.set(this, code)
   }
 
   fun signal(signal: String) {
-    if (exited.compareAndSet(expect = false, update = true)) {
-      EXIT_SIGNAL_UPDATER.set(this, signal)
-    }
+    EXIT_SIGNAL_UPDATER.set(this, signal)
   }
 
   private companion object {
@@ -622,12 +601,13 @@ public class ChildProcessHandle private constructor (
   private val result: AtomicReference<CallResult<*>> = AtomicReference(null),
   private val termination: ChildProcessTermination = ChildProcessTermination(),
 ) : ProxyObject, ChildProcess, EventEmitter by evented, EventTarget by evented {
+  @Volatile private var didKill: Boolean = false
   @get:Polyglot override val pid: Long get() = proc.pid()
   @get:Polyglot override val stdin: ProcessInputStream? get() = pending.execution.stdin
   @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.execution.stdout
   @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.execution.stderr
-  @get:Polyglot override val exitCode: Int? get() = termination.exitCode
-  @get:Polyglot override val signalCode: String? get() = termination.exitSignal
+  @get:Polyglot override val exitCode: Int? get() = termination.exitCode.takeIf { it != -1 }
+  @get:Polyglot override val signalCode: String? get() = termination.exitSignal.takeIf { it != "" }
   @Polyglot override fun wait(): Int = proc.waitFor().also { termination.exited(it) }
 
   @get:Polyglot override val stdio: ProcessIOChannels
@@ -637,15 +617,28 @@ public class ChildProcessHandle private constructor (
       @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.execution.stderr
     }
 
-  @get:Polyglot override val connected: Boolean
-    get() = TODO("Not yet implemented: `ChildProcessHandle.connected`")
+  @get:Polyglot override val connected: Boolean get() = !termination.closed
+
   @get:Polyglot override val channel: ProcessChannel
     get() = TODO("Not yet implemented: `ChildProcessHandle.channel`")
-  @get:Polyglot override val killed: Boolean
-    get() = TODO("Not yet implemented: `ChildProcessHandle.killed`")
 
+  @get:Polyglot override val killed: Boolean get() = didKill
+
+  @Suppress("TooGenericExceptionCaught")
   @Polyglot override fun kill(signal: String) {
-    TODO("Not yet implemented: `ChildProcessHandle.kill`")
+    try {
+      ChildProcessNative.killWith(pid.toInt(), signal)
+      termination.signal(signal)
+      didKill = true
+      result.set(CallResult.build(
+        pending.execution,
+        ExitResult.success(),
+        pending.execution.stdout,
+        pending.execution.stderr,
+      ))
+    } catch (e: Throwable) {
+      throw JsError.valueError("Failed to send signal to process: ${e.message}", e)
+    }
   }
 
   @Polyglot override fun disconnect() {
@@ -839,31 +832,9 @@ internal class NodeChildProcess (
   private val filesystem: Optional<Supplier<NodeFilesystemModule>>,
   private val standardStreams: StandardStreamsProvider,
   private val executorProvider: GuestExecutorProvider
-) : ChildProcessAPI, AutoCloseable {
-  // Whether we are accepting tasks (i.e., not closed).
-  @Volatile private var open: Int = 1
-
+) : ChildProcessAPI {
   // Obtained executor for child-process operations.
   private val executor by lazy { executorProvider.executor() }
-
-  // In-flight operations.
-  private val inflight = ConcurrentSkipListMap<CommandExec<*>, Future<CallResult<*>>>()
-
-  override fun close() {
-    if (open != 1) return
-    OPEN_UPDATER.set(this, 0)
-    try {
-      inflight.values.forEach { it.cancel(true) }
-    } finally {
-      inflight.clear()
-    }
-  }
-
-  // Enforce that the child-process subsystem has not been closed.
-  private inline fun <reified R> withOpen(crossinline block: () -> R): R {
-    assert(open == 1) { "Child process module is closed" }
-    return block()
-  }
 
   // Underlying implementation to spawn a subprocess synchronously; used from all sync implementations, performing
   // blocking on behalf of the call-site.
@@ -874,16 +845,15 @@ internal class NodeChildProcess (
 
   // Host-side internal method which performs a synchronous child-process call, on top of `callAsync`; this method is
   // used by guest-side calls like `execSync`.
-  @VisibleForTesting fun hostExecSync(command: String, options: ExecSyncOptions): StringOrBuffer? = withOpen {
+  @VisibleForTesting fun hostExecSync(command: String, options: ExecSyncOptions): StringOrBuffer? {
     val (cmd, args) = tokenizeCommand(command)
-    unwrapSyncToStringOrBuffer(callSync(CommandExec.of(cmd, args, options)).second, options)
+    return unwrapSyncToStringOrBuffer(callSync(CommandExec.of(cmd, args, options)).second, options)
   }
 
   @Polyglot override fun spawn(command: Value, args: Value?, options: Value?): ChildProcess {
     if (!command.isString) throw JsError.typeError("The command argument must be a string")
     val (cmd, finalizedArgs) = tokenizeCommand(command.asString(), args)
     val opts = SpawnOptions.from(options)
-    // @TODO: rewire so this doesn't involve unwrapping a future, even though the future is immediate
     val (handle, result) = callAsync(executor, CommandExec.of(cmd, finalizedArgs, opts), wait = false).get()
     return ChildProcessHandle.live(handle, result as PendingCallResult<*>)
   }
@@ -892,7 +862,6 @@ internal class NodeChildProcess (
     if (!command.isString) throw JsError.typeError("The command argument must be a string")
     val (cmd, finalizedArgs) = tokenizeCommand(command.asString())
     val opts = ExecOptions.from(options)
-    // @TODO: rewire so this doesn't involve unwrapping a future, even though the future is immediate
     val (handle, result) = callAsync(executor, CommandExec.of(cmd, finalizedArgs, opts), wait = false).get()
     return ChildProcessHandle.live(handle, result as PendingCallResult<*>)
   }
@@ -900,7 +869,6 @@ internal class NodeChildProcess (
   @Polyglot override fun execFile(file: Value, args: Value?, options: Value?, callback: Value?): ChildProcess {
     val (_, cmd, finalizedArgs) = prepareFileExec(file, args)
     val opts = ExecOptions.from(options)
-    // @TODO: rewire so this doesn't involve unwrapping a future, even though the future is immediate
     val (handle, result) = callAsync(executor, CommandExec.of(cmd, finalizedArgs, opts), wait = false).get()
     return ChildProcessHandle.live(handle, result as PendingCallResult<*>)
   }
@@ -917,26 +885,21 @@ internal class NodeChildProcess (
     return ChildProcessSyncHandle.of(handle.toHandle(), result)
   }
 
-  @Polyglot override fun execSync(command: Value, options: Value?): StringOrBuffer? = withOpen {
+  @Polyglot override fun execSync(command: Value, options: Value?): StringOrBuffer? {
     if (!command.isString) throw JsError.typeError("The command argument must be a string")
     val (cmd, args) = tokenizeCommand(command.asString())
     val opts = ExecSyncOptions.from(options)
-    unwrapSyncToStringOrBuffer(callSync(CommandExec.of(cmd, args, opts)).second, opts)
+    return unwrapSyncToStringOrBuffer(callSync(CommandExec.of(cmd, args, opts)).second, opts)
   }
 
-  @Polyglot override fun execFileSync(file: Value, args: Value?, options: Value?): StringOrBuffer? = withOpen {
+  @Polyglot override fun execFileSync(file: Value, args: Value?, options: Value?): StringOrBuffer? {
     val (path, cmd, finalizedArgs) = prepareFileExec(file, args)
     val opts = ExecSyncOptions.from(options)
-    unwrapSyncToStringOrBuffer(callSync(FileExec.of(path, cmd, finalizedArgs, opts)).second, opts)
+    return unwrapSyncToStringOrBuffer(callSync(FileExec.of(path, cmd, finalizedArgs, opts)).second, opts)
   }
 
   /** Factory methods for creating and obtaining instances of [NodeChildProcess]. */
   internal companion object {
-    // Updater for open state.
-    private val OPEN_UPDATER = AtomicIntegerFieldUpdater.newUpdater(
-      NodeChildProcess::class.java,
-      NodeChildProcess::open.name)
-
     // Child process manager singleton.
     private val SINGLETON = AtomicReference<NodeChildProcess>(null)
 

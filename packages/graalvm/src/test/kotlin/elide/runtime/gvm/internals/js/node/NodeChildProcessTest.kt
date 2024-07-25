@@ -11,13 +11,16 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 @file:OptIn(DelicateElideApi::class)
+@file:Suppress("LongMethod", "LargeClass")
 
 package elide.runtime.gvm.internals.js.node
 
+import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.Value.asValue
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.stream.Stream
 import kotlin.streams.asStream
@@ -70,6 +73,268 @@ import elide.testing.annotations.TestCase
     assertEquals(0, exit)
     val result = proc.inputStream.bufferedReader().readText()
     assertEquals("hello\n", result)
+  }
+
+
+  // Test an options type used by the `child_process` module.
+  private suspend inline fun <reified T: ProcOptions> SequenceScope<DynamicTest>.testProcOptionsType(
+    crossinline optionsFromGuest: (Value) -> T,
+    crossinline assertDefaults: (T, Set<String>) -> Unit,
+  ) {
+    // encoding
+    yield(dynamicTest("from invalid type") {
+      executeGuest {
+        // language=JavaScript
+        """
+            5
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertThrows<TypeError> { optionsFromGuest(value) }
+      }
+    })
+
+    // cwd string
+    yield(dynamicTest("cwd (string)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({cwd: '/some/path'})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertNotNull(options.cwdString)
+        assertEquals("/some/path", options.cwdString)
+        assertDefaults(options, setOf("cwdString", "cwdUrl"))
+      }
+    })
+
+    // encoding
+    yield(dynamicTest("encoding") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({encoding: 'utf-8'})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertEquals("utf-8", options.encoding)
+        assertDefaults(options, setOf("encoding"))
+      }
+    })
+
+    // shell
+    yield(dynamicTest("shell") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({shell: 'bash'})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertEquals("bash", options.shell)
+        assertDefaults(options, setOf("shell"))
+      }
+    })
+
+    // shell (invalid type)
+    yield(dynamicTest("shell (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({shell: 5})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertDefaults(options, emptySet())
+      }
+    })
+
+    // uid
+    if (T::class == ExecOptions::class) yield(dynamicTest("uid") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({uid: 1001})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertIs<ExecOptions>(options)
+        assertEquals(1001, options.uid)
+        assertDefaults(options, setOf("uid"))
+      }
+    })
+
+    // uid (invalid type)
+    yield(dynamicTest("uid (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({uid: true})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertDefaults(options, emptySet())
+      }
+    })
+
+    // gid
+    if (T::class == ExecOptions::class) yield(dynamicTest("gid") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({gid: 1001})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertIs<ExecOptions>(options)
+        assertEquals(1001, options.gid)
+        assertDefaults(options, setOf("gid"))
+      }
+    })
+
+    // gid (invalid type)
+    yield(dynamicTest("gid (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({gid: true})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertDefaults(options, emptySet())
+      }
+    })
+
+    // timeout
+    yield(dynamicTest("timeout") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({timeout: 3000})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertEquals(3000, options.timeout)
+        assertDefaults(options, setOf("timeout"))
+      }
+    })
+
+    // timeout (invalid type)
+    yield(dynamicTest("timeout (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({timeout: true})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertDefaults(options, emptySet())
+      }
+    })
+
+    // kill signal
+    if (T::class == ExecOptions::class) yield(dynamicTest("killSignal") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({killSignal: "sample"})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertIs<ExecOptions>(options)
+        assertEquals("sample", options.killSignal)
+        assertDefaults(options, setOf("killSignal"))
+      }
+    })
+
+    // kill signal (invalid type)
+    yield(dynamicTest("killSignal (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({killSignal: true})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertDefaults(options, emptySet())
+      }
+    })
+
+    // env
+    yield(dynamicTest("env") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({env: {TEST: "hello"}})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertNotNull(options.env)
+        assertTrue(options.env!!.isNotEmpty())
+        assertEquals("hello", options.env!!["TEST"])
+        assertDefaults(options, setOf("env"))
+      }
+    })
+
+    // env (null)
+    yield(dynamicTest("env (null)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({env: null})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertNull(options.env)
+        assertDefaults(options, setOf("env"))
+      }
+    })
+
+    // env (empty)
+    yield(dynamicTest("env (empty)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({env: {}})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertNotNull(options.env)
+        assertTrue(options.env!!.isEmpty())
+        assertDefaults(options, setOf("env"))
+      }
+    })
   }
 
   @TestFactory fun `execSync - options properties`(): Stream<DynamicTest> = sequence {
@@ -132,6 +397,23 @@ import elide.testing.annotations.TestCase
     yield(dynamicTest("settings should default from guest `null`") {
       assertEquals(assertNotNull(defaults), ExecSyncOptions.from(asValue(null)))
     })
+  }.asStream()
+
+  @TestFactory fun `execSync - options properties from guest`(): Stream<DynamicTest> = sequence {
+    testProcOptionsType<ExecSyncOptions>({ ExecSyncOptions.from(it) }) { options, skip ->
+      if ("uid" !in skip) assertNull(options.uid)
+      if ("gid" !in skip) assertNull(options.gid)
+      if ("cwdUrl" !in skip) assertNull(options.cwdUrl)
+      if ("cwdString" !in skip) assertNull(options.cwdString)
+      if ("shell" !in skip) assertNull(options.shell)
+      if ("env" !in skip) assertNull(options.env)
+      if ("timeout" !in skip) assertNull(options.timeout)
+      if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
+      assertNotEquals(ExecSyncOptions.of(), options)
+      assertEquals(options, options)
+      assertEquals(options, options.copy())
+      assertNotNull(options.toString())
+    }
   }.asStream()
 
   @Test fun `execSync - should reject unbalanced double quotes`() {
@@ -388,6 +670,11 @@ import elide.testing.annotations.TestCase
 
   // ---
 
+  @Test fun `spawnSync - invalid command type`() {
+    assertThrows<TypeError> { childProc().spawnSync(asValue(true), null, null) }
+    assertThrows<TypeError> { childProc().spawnSync(asValue(5), null, null) }
+  }
+
   @TestFactory fun `spawnSync - options properties`(): Stream<DynamicTest> = sequence {
     val defaults = SpawnSyncOptions.DEFAULTS
 
@@ -448,6 +735,23 @@ import elide.testing.annotations.TestCase
     yield(dynamicTest("settings should default from guest `null`") {
       assertEquals(assertNotNull(defaults), SpawnSyncOptions.from(asValue(null)))
     })
+  }.asStream()
+
+  @TestFactory fun `spawnSync - options properties from guest`(): Stream<DynamicTest> = sequence {
+    testProcOptionsType<SpawnSyncOptions>({ SpawnSyncOptions.from(it) }) { options, skip ->
+      if ("uid" !in skip) assertNull(options.uid)
+      if ("gid" !in skip) assertNull(options.gid)
+      if ("cwdUrl" !in skip) assertNull(options.cwdUrl)
+      if ("cwdString" !in skip) assertNull(options.cwdString)
+      if ("shell" !in skip) assertNull(options.shell)
+      if ("env" !in skip) assertNull(options.env)
+      if ("timeout" !in skip) assertNull(options.timeout)
+      if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
+      assertNotEquals(SpawnSyncOptions.of(), options)
+      assertEquals(options, options)
+      assertEquals(options, options.copy())
+      assertNotNull(options.toString())
+    }
   }.asStream()
 
   @Test fun `spawnSync - host simple process spawn`() {
@@ -543,6 +847,11 @@ import elide.testing.annotations.TestCase
 
   // ---
 
+  @Test fun `exec - invalid command type`() {
+    assertThrows<TypeError> { childProc().exec(asValue(true), null, null) }
+    assertThrows<TypeError> { childProc().exec(asValue(5), null, null) }
+  }
+
   @TestFactory fun `exec - options properties`(): Stream<DynamicTest> = sequence {
     val defaults = ExecOptions.DEFAULTS
 
@@ -602,6 +911,23 @@ import elide.testing.annotations.TestCase
     })
   }.asStream()
 
+  @TestFactory fun `exec - options properties from guest`(): Stream<DynamicTest> = sequence {
+    testProcOptionsType<ExecOptions>({ ExecOptions.from(it) }) { options, skip ->
+      if ("uid" !in skip) assertNull(options.uid)
+      if ("gid" !in skip) assertNull(options.gid)
+      if ("cwdUrl" !in skip) assertNull(options.cwdUrl)
+      if ("cwdString" !in skip) assertNull(options.cwdString)
+      if ("shell" !in skip) assertNull(options.shell)
+      if ("env" !in skip) assertNull(options.env)
+      if ("timeout" !in skip) assertNull(options.timeout)
+      if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
+      assertNotEquals(ExecOptions.of(), options)
+      assertEquals(options, options)
+      assertEquals(options, options.copy())
+      assertNotNull(options.toString())
+    }
+  }.asStream()
+
   @Test fun `exec - host simple process spawn`() {
     val result = assertNotNull(childProc().exec(asValue("echo hello"), null, null))
     assertIs<ChildProcess>(result)
@@ -639,6 +965,11 @@ import elide.testing.annotations.TestCase
   }
 
   // ---
+
+  @Test fun `spawn - invalid command type`() {
+    assertThrows<TypeError> { childProc().spawn(asValue(true), null, null) }
+    assertThrows<TypeError> { childProc().spawn(asValue(5), null, null) }
+  }
 
   @TestFactory fun `spawn - options properties`(): Stream<DynamicTest> = sequence {
     val defaults = SpawnOptions.DEFAULTS
@@ -699,6 +1030,23 @@ import elide.testing.annotations.TestCase
     })
   }.asStream()
 
+  @TestFactory fun `spawn - options properties from guest`(): Stream<DynamicTest> = sequence {
+    testProcOptionsType<SpawnOptions>({ SpawnOptions.from(it) }) { options, skip ->
+      if ("uid" !in skip) assertNull(options.uid)
+      if ("gid" !in skip) assertNull(options.gid)
+      if ("cwdUrl" !in skip) assertNull(options.cwdUrl)
+      if ("cwdString" !in skip) assertNull(options.cwdString)
+      if ("shell" !in skip) assertNull(options.shell)
+      if ("env" !in skip) assertNull(options.env)
+      if ("timeout" !in skip) assertNull(options.timeout)
+      if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
+      assertNotEquals(SpawnOptions.of(), options)
+      assertEquals(options, options)
+      assertEquals(options, options.copy())
+      assertNotNull(options.toString())
+    }
+  }.asStream()
+
   @Test fun `spawn - host simple process spawn`() {
     val result = assertNotNull(childProc().spawn(asValue("echo hello"), null, null))
     assertIs<ChildProcess>(result)
@@ -727,6 +1075,50 @@ import elide.testing.annotations.TestCase
       asValue("echo"),
       asValue(arrayOf("hello")),
       asValue(SpawnOptions.of(encoding = "utf8", shell = "bash"))))
+    assertIs<ChildProcess>(result)
+    assertNotNull(result.pid)
+    assertNotEquals(0, result.pid)
+    assertTrue(result.pid > 0)
+    val exit = assertNotNull(result.wait())
+    assertEquals(0, exit)
+  }
+
+  // ---
+
+  @Test fun `execFile - host simple process spawn`() {
+    val result = assertNotNull(childProc().execFile(
+      asValue(pathToBin),
+      asValue(arrayOf("hello")),
+      null,
+      null))
+    assertIs<ChildProcess>(result)
+    assertNotNull(result.pid)
+    assertNotEquals(0, result.pid)
+    assertTrue(result.pid > 0)
+    val exit = assertNotNull(result.wait())
+    assertEquals(0, exit)
+  }
+
+  @Test fun `execFile - host simple process spawn with utf8`() {
+    val result = assertNotNull(childProc().execFile(
+      asValue(pathToBin),
+      asValue(arrayOf("hello")),
+      asValue(ExecOptions.of(encoding = "utf8")),
+      null))
+    assertIs<ChildProcess>(result)
+    assertNotNull(result.pid)
+    assertNotEquals(0, result.pid)
+    assertTrue(result.pid > 0)
+    val exit = assertNotNull(result.wait())
+    assertEquals(0, exit)
+  }
+
+  @Test fun `execFile - with shell enabled as 'bash'`() {
+    val result = assertNotNull(childProc().execFile(
+      asValue(pathToBin),
+      asValue(arrayOf("hello")),
+      asValue(ExecOptions.of(encoding = "utf8", shell = "bash")),
+      null))
     assertIs<ChildProcess>(result)
     assertNotNull(result.pid)
     assertNotEquals(0, result.pid)

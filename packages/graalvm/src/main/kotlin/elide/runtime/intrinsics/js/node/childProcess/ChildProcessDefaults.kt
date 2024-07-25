@@ -12,6 +12,9 @@
  */
 package elide.runtime.intrinsics.js.node.childProcess
 
+import org.graalvm.polyglot.Value
+import elide.runtime.gvm.internals.intrinsics.js.JsError
+
 /**
  * ## Child Process: Defaults
  *
@@ -33,4 +36,20 @@ internal object ChildProcessDefaults {
 
   /** Whether to hide the spawned process on Windows platforms. Inert on other platforms. */
   const val WINDOWS_HIDE: Boolean = false
+
+  // Decode a guest value as an environment map.
+  fun decodeEnvMap(value: Value): Map<String, String>? = when {
+    value.isNull -> null
+    value.hasMembers() -> {
+      val members = value.memberKeys
+      val envMap = mutableMapOf<String, String>()
+      for (key in members) {
+        val member = value.getMember(key)
+        envMap[key] = member.asString()
+      }
+      envMap
+    }
+    value.isHostObject -> value.asHostObject()
+    else -> throw JsError.typeError("Invalid type provided as `env` in child process options")
+  }
 }

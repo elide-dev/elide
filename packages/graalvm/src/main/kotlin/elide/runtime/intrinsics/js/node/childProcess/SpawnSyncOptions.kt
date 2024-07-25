@@ -17,6 +17,7 @@ import elide.annotations.API
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.node.ChildProcessAPI
+import elide.runtime.intrinsics.js.node.childProcess.ChildProcessDefaults.decodeEnvMap
 import elide.runtime.intrinsics.js.node.childProcess.SpawnSyncDefaults.ENCODING
 import elide.runtime.intrinsics.js.node.childProcess.SpawnSyncDefaults.KILL_SIGNAL
 import elide.runtime.intrinsics.js.node.childProcess.SpawnSyncDefaults.MAX_BUFFER_DEFAULT
@@ -122,14 +123,14 @@ private object SpawnSyncDefaults {
         other.isHostObject -> other.asHostObject()
         other.hasMembers() -> SpawnSyncOptions(
           stdio = StdioConfig.from(other.getMember("stdio")),
-          cwdString = other.getMember("cwdString")?.takeIf { it.isString }?.asString(),
-          cwdUrl = other.getMember("cwdUrl")?.takeIf { it.isHostObject }?.asHostObject(),
+          cwdString = other.getMember("cwd")?.takeIf { it.isString }?.asString(),
+          cwdUrl = other.getMember("cwd")?.takeIf { it.isHostObject }?.asHostObject(),
           input = other.getMember("input")?.takeIf { it.isHostObject }?.asHostObject(),
-          env = other.getMember("env")?.takeIf { it.isHostObject }?.asHostObject(),
+          env = other.getMember("env")?.takeIf { !it.isNull }?.let { decodeEnvMap(it) },
           shell = other.getMember("shell")?.takeIf { it.isString }?.asString(),
           uid = other.getMember("uid")?.takeIf { it.isNumber }?.asInt(),
           gid = other.getMember("gid")?.takeIf { it.isNumber }?.asInt(),
-          timeoutSeconds = other.getMember("timeoutSeconds")?.takeIf { it.isNumber }?.asInt(),
+          timeoutSeconds = other.getMember("timeout")?.takeIf { it.isNumber }?.asInt(),
           killSignal = other.getMember("killSignal")?.takeIf { it.isString }?.asString(),
           maxBuffer = other.getMember("maxBuffer")?.takeIf { it.isNumber }?.asInt() ?: MAX_BUFFER_DEFAULT,
           encoding = other.getMember("encoding")?.takeIf { it.isString }?.asString() ?: "buffer",

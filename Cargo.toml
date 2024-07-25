@@ -71,6 +71,7 @@ builder = { path = "crates/builder" }
 deps = { path = "crates/deps" }
 entry = { path = "crates/entry" }
 model = { path = "crates/model" }
+posix = { path = "crates/posix" }
 project = { path = "crates/project" }
 protocol = { path = "crates/protocol" }
 sqlite = { path = "crates/sqlite" }
@@ -144,6 +145,7 @@ sentry = { version = "0.34.0" }
 serde = { version = "1.0.203", default-features = false }
 simdutf = { version = "0.4.17" }
 smartstring = { version = "1.0.1", default-features = false }
+sysinfo = { version = "0.30.13" }
 tikv-jemallocator = { version = "0.5.4", default-features = false, features = ["disable_initial_exec_tls"] }
 tokio = { version = "1", default-features = false, features = [
   "fs",

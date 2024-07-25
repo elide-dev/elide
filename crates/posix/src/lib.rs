@@ -38,6 +38,7 @@ fn kill_with_signal(pid: u32, signal: &str) -> i8 {
   if let Some(process) = s.process(Pid::from(pid as usize)) {
     let signal = resolve_signal(signal);
     if process.kill_with(signal).is_none() {
+      process.wait();
       return -2;
     }
     return 0;
@@ -78,7 +79,6 @@ mod tests {
     assert_eq!(signal, Signal::Stop);
   }
 
-  #[cfg(target_os = "macos")]
   #[test]
   fn test_subproc_killwith_sigkill() {
     // start a subprocess calling into `sleep`
@@ -98,10 +98,15 @@ mod tests {
     assert_eq!(result, 0);
 
     // make sure child is not running anymore
-    assert!(System::new_all().process(Pid::from(pid as usize)).is_none());
+    #[cfg(target_os = "macos")]
+    {
+      let proc = System::new_all();
+      let reproc = proc.process(Pid::from(pid as usize));
+      let is_none = reproc.is_none();
+      assert!(is_none);
+    }
   }
 
-  #[cfg(target_os = "macos")]
   #[test]
   fn test_subproc_killwith_sigterm() {
     // start a subprocess calling into `sleep`
@@ -121,6 +126,12 @@ mod tests {
     assert_eq!(result, 0);
 
     // make sure child is not running anymore
-    assert!(System::new_all().process(Pid::from(pid as usize)).is_none());
+    #[cfg(target_os = "macos")]
+    {
+      let proc = System::new_all();
+      let reproc = proc.process(Pid::from(pid as usize));
+      let is_none = reproc.is_none();
+      assert!(is_none);
+    }
   }
 }

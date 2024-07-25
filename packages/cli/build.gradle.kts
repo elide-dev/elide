@@ -117,7 +117,7 @@ val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enablePgoReport = true
 val enableJna = true
-val enableJnaStatic = true
+val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
 val glibcTarget = "glibc"
@@ -890,7 +890,7 @@ val jvmDefs = mapOf(
   "elide.root" to rootPath,
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.mosaic" to enableMosaic.toString(),
-  "elide.staticJni" to "true",
+  "elide.staticJni" to enableJnaStatic.toString(),
   "elide.js.vm.enableStreams" to "true",
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,

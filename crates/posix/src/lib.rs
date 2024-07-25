@@ -98,7 +98,6 @@ mod tests {
     assert_eq!(result, 0);
 
     // make sure child is not running anymore
-    #[cfg(target_os = "macos")]
     {
       let proc = System::new_all();
       let reproc = proc.process(Pid::from(pid as usize));
@@ -126,7 +125,6 @@ mod tests {
     assert_eq!(result, 0);
 
     // make sure child is not running anymore
-    #[cfg(target_os = "macos")]
     {
       let proc = System::new_all();
       let reproc = proc.process(Pid::from(pid as usize));

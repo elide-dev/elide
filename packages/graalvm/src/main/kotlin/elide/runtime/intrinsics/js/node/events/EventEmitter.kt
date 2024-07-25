@@ -103,7 +103,7 @@ import elide.vm.annotations.Polyglot
    * @param args The arguments to pass to the listeners.
    * @return `true` if the event had listeners, `false` otherwise.
    */
-  @Polyglot public fun emit(eventName: String, vararg args: Any): Boolean
+  @Polyglot public fun emit(eventName: String, vararg args: Any?): Boolean
 
   /**
    * Returns an array listing the events for which the emitter has registered listeners.

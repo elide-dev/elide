@@ -78,6 +78,15 @@ private const val CHILD_PROCESS_CLASS_SYMBOL = "NodeChildProcess"
 // Symbol indicating a no-encoding return.
 private const val NO_ENCODING = ChildProcessDefaults.ENCODING
 
+// Names of events which are emitted for/upon `ChildProcess` objects.
+private object ChildProcessEvents {
+  const val CLOSE = "close"
+  const val DISCONNECT = "disconnect"
+  const val ERROR = "error"
+  const val EXIT = "exit"
+  const val MESSAGE = "message"
+}
+
 // Installs the Node child process module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeChildProcessModule (
   private val filesystem: Optional<Supplier<NodeFilesystemModule>>,
@@ -628,16 +637,22 @@ public class ChildProcessHandle private constructor (
     try {
       ChildProcessNative.killWith(pid.toInt(), signal)
       termination.signal(signal)
-      didKill = true
-      result.set(CallResult.build(
-        pending.execution,
-        ExitResult.success(),
-        pending.execution.stdout,
-        pending.execution.stderr,
-      ))
     } catch (e: Throwable) {
       throw JsError.valueError("Failed to send signal to process: ${e.message}", e)
     }
+
+    didKill = true
+    result.set(CallResult.build(
+      pending.execution,
+      ExitResult.success(),
+      pending.execution.stdout,
+      pending.execution.stderr,
+    ))
+    emit(
+      ChildProcessEvents.EXIT,
+      exitCode,
+      signalCode,
+    )
   }
 
   @Polyglot override fun disconnect() {

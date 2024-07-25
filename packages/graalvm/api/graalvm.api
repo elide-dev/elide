@@ -1025,43 +1025,6 @@ public final synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$R
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final class elide/runtime/gvm/internals/node/NodeStdlib {
-	public static final field INSTANCE Lelide/runtime/gvm/internals/node/NodeStdlib;
-	public final fun getAssert ()Lelide/runtime/intrinsics/js/node/AssertAPI;
-	public final fun getAssertStrict ()Lelide/runtime/intrinsics/js/node/AssertStrictAPI;
-	public final fun getBuffer ()Lelide/runtime/intrinsics/js/node/BufferAPI;
-	public final fun getCluster ()Lelide/runtime/intrinsics/js/node/ClusterAPI;
-	public final fun getConsole ()Lelide/runtime/intrinsics/js/node/ConsoleAPI;
-	public final fun getCrypto ()Lelide/runtime/intrinsics/js/node/CryptoAPI;
-	public final fun getDgram ()Lelide/runtime/intrinsics/js/node/DatagramAPI;
-	public final fun getDiagnosticsChannel ()Lelide/runtime/intrinsics/js/node/DiagnosticsChannelAPI;
-	public final fun getDns ()Lelide/runtime/intrinsics/js/node/DNSAPI;
-	public final fun getDnsPromises ()Lelide/runtime/intrinsics/js/node/DNSPromisesAPI;
-	public final fun getDomain ()Lelide/runtime/intrinsics/js/node/DomainAPI;
-	public final fun getEvents ()Lelide/runtime/intrinsics/js/node/EventsAPI;
-	public final fun getHttp ()Lelide/runtime/intrinsics/js/node/HTTPAPI;
-	public final fun getHttp2 ()Lelide/runtime/intrinsics/js/node/HTTP2API;
-	public final fun getHttps ()Lelide/runtime/intrinsics/js/node/HTTPSAPI;
-	public final fun getInspector ()Lelide/runtime/intrinsics/js/node/InspectorAPI;
-	public final fun getModule ()Lelide/runtime/intrinsics/js/node/ModuleAPI;
-	public final fun getNet ()Lelide/runtime/intrinsics/js/node/NetAPI;
-	public final fun getOs ()Lelide/runtime/intrinsics/js/node/OperatingSystemAPI;
-	public final fun getPath ()Lelide/runtime/intrinsics/js/node/PathAPI;
-	public final fun getPerfHooks ()Lelide/runtime/intrinsics/js/node/PerformanceHooksAPI;
-	public final fun getProcess ()Lelide/runtime/intrinsics/js/node/ProcessAPI;
-	public final fun getQuerystring ()Lelide/runtime/intrinsics/js/node/QuerystringAPI;
-	public final fun getReadline ()Lelide/runtime/intrinsics/js/node/ReadlineAPI;
-	public final fun getReadlinePromises ()Lelide/runtime/intrinsics/js/node/ReadlinePromisesAPI;
-	public final fun getStream ()Lelide/runtime/intrinsics/js/node/StreamAPI;
-	public final fun getStreamConsumers ()Lelide/runtime/intrinsics/js/node/StreamConsumersAPI;
-	public final fun getStreamPromises ()Lelide/runtime/intrinsics/js/node/StreamPromisesAPI;
-	public final fun getStringDecoder ()Lelide/runtime/intrinsics/js/node/StringDecoderAPI;
-	public final fun getTest ()Lelide/runtime/intrinsics/js/node/TestAPI;
-	public final fun getWebstream ()Lelide/runtime/intrinsics/js/node/WebStreamsAPI;
-	public final fun getWorker ()Lelide/runtime/intrinsics/js/node/WorkerAPI;
-	public final fun getZlib ()Lelide/runtime/intrinsics/js/node/ZlibAPI;
-}
-
 public synthetic class elide/runtime/gvm/internals/node/asserts/$NodeAssertModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

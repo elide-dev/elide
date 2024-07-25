@@ -42,15 +42,15 @@ fn kill_with_signal(pid: u32, signal: &str) -> i8 {
     }
     return 0;
   }
-  return -1;
+  -1
 }
 
 #[jni("elide.runtime.gvm.internals.node.childProcess.ChildProcessNative")]
 pub fn killWith(mut env: JNIEnv, _class: JClass, pid: jint, signal: JString<'_>) -> jint {
   let signal_name: String = env
-          .get_string(&signal)
-          .expect("failed to decode signal name")
-          .into();
+    .get_string(&signal)
+    .expect("failed to decode signal name")
+    .into();
   let ipid = pid as u32;
   kill_with_signal(ipid, signal_name.as_str()).into()
 }
@@ -104,9 +104,9 @@ mod tests {
   fn test_subproc_killwith_sigterm() {
     // start a subprocess calling into `sleep`
     let child = std::process::Command::new("sleep")
-            .arg("60")
-            .spawn()
-            .expect("failed to start subprocess");
+      .arg("60")
+      .spawn()
+      .expect("failed to start subprocess");
 
     // get the pid of the subprocess
     let pid = child.id();

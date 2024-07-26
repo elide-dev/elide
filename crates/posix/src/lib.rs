@@ -46,7 +46,10 @@ fn kill_with_signal(pid: u32, signal: &str) -> i8 {
 
 #[jni("elide.runtime.gvm.internals.node.childProcess.ChildProcessNative")]
 pub fn killWith(mut env: JNIEnv, _class: JClass, pid: jint, signal: JString<'_>) -> jint {
-  let signal_name: String = env.get_string(&signal).expect("failed to decode signal name").into();
+  let signal_name: String = env
+    .get_string(&signal)
+    .expect("failed to decode signal name")
+    .into();
   kill_with_signal(pid as u32, signal_name.as_str()).into()
 }
 

@@ -3677,7 +3677,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/childProcess/Ch
 	public abstract fun getStdout-kPiaYOY ()Ljava/io/InputStream;
 }
 
-public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/IdentityProcOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -3702,21 +3702,27 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions : j
 	public synthetic fun getCwdString ()Ljava/lang/String;
 	public synthetic fun getEncoding ()Ljava/lang/String;
 	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getGid ()Ljava/lang/Integer;
+	public synthetic fun getKillSignal ()Ljava/lang/String;
+	public synthetic fun getMaxBuffer ()Ljava/lang/Integer;
 	public synthetic fun getShell ()Ljava/lang/String;
 	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public synthetic fun getTimeout ()Ljava/lang/Integer;
-	public final fun gid ()Ljava/lang/Integer;
+	public synthetic fun getTimeoutSeconds ()Ljava/lang/Integer;
+	public synthetic fun getUid ()Ljava/lang/Integer;
+	public synthetic fun getWindowsHide ()Ljava/lang/Boolean;
+	public fun gid ()Ljava/lang/Integer;
 	public fun hashCode ()I
-	public final fun killSignal ()Ljava/lang/String;
-	public final fun maxBuffer ()I
+	public fun killSignal ()Ljava/lang/String;
+	public fun maxBuffer ()Ljava/lang/Integer;
 	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
 	public fun shell ()Ljava/lang/String;
 	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public fun timeout ()Ljava/lang/Integer;
-	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun timeoutSeconds ()Ljava/lang/Integer;
 	public fun toString ()Ljava/lang/String;
-	public final fun uid ()Ljava/lang/Integer;
-	public final fun windowsHide ()Z
+	public fun uid ()Ljava/lang/Integer;
+	public fun windowsHide ()Ljava/lang/Boolean;
 }
 
 public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions$Companion {
@@ -3726,7 +3732,7 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions$Com
 	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
 }
 
-public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/IdentityProcOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -3753,22 +3759,28 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions
 	public synthetic fun getCwdString ()Ljava/lang/String;
 	public synthetic fun getEncoding ()Ljava/lang/String;
 	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getGid ()Ljava/lang/Integer;
+	public synthetic fun getKillSignal ()Ljava/lang/String;
+	public synthetic fun getMaxBuffer ()Ljava/lang/Integer;
 	public synthetic fun getShell ()Ljava/lang/String;
 	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public synthetic fun getTimeout ()Ljava/lang/Integer;
-	public final fun gid ()Ljava/lang/Integer;
+	public synthetic fun getTimeoutSeconds ()Ljava/lang/Integer;
+	public synthetic fun getUid ()Ljava/lang/Integer;
+	public synthetic fun getWindowsHide ()Ljava/lang/Boolean;
+	public fun gid ()Ljava/lang/Integer;
 	public fun hashCode ()I
 	public final fun input ()Ljava/lang/Object;
-	public final fun killSignal ()Ljava/lang/String;
-	public final fun maxBuffer ()I
+	public fun killSignal ()Ljava/lang/String;
+	public fun maxBuffer ()Ljava/lang/Integer;
 	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
 	public fun shell ()Ljava/lang/String;
 	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public fun timeout ()Ljava/lang/Integer;
-	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun timeoutSeconds ()Ljava/lang/Integer;
 	public fun toString ()Ljava/lang/String;
-	public final fun uid ()Ljava/lang/Integer;
-	public final fun windowsHide ()Z
+	public fun uid ()Ljava/lang/Integer;
+	public fun windowsHide ()Ljava/lang/Boolean;
 }
 
 public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion {
@@ -3778,6 +3790,11 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions
 	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/childProcess/IdentityProcOptions : elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+	public abstract fun getGid ()Ljava/lang/Integer;
+	public abstract fun getUid ()Ljava/lang/Integer;
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/childProcess/LazyProcessOutput {
 }
 
@@ -3785,9 +3802,13 @@ public abstract interface class elide/runtime/intrinsics/js/node/childProcess/Pr
 	public abstract fun getCwdString ()Ljava/lang/String;
 	public abstract fun getEncoding ()Ljava/lang/String;
 	public abstract fun getEnv ()Ljava/util/Map;
+	public abstract fun getKillSignal ()Ljava/lang/String;
+	public abstract fun getMaxBuffer ()Ljava/lang/Integer;
 	public abstract fun getShell ()Ljava/lang/String;
 	public abstract fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public abstract fun getTimeout ()Ljava/lang/Integer;
+	public abstract fun getTimeoutSeconds ()Ljava/lang/Integer;
+	public abstract fun getWindowsHide ()Ljava/lang/Boolean;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/childProcess/ProcessChannel {
@@ -3802,7 +3823,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/childProcess/Pr
 	public abstract fun getStdout-kPiaYOY ()Ljava/io/InputStream;
 }
 
-public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/IdentityProcOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -3827,21 +3848,27 @@ public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions : 
 	public synthetic fun getCwdString ()Ljava/lang/String;
 	public synthetic fun getEncoding ()Ljava/lang/String;
 	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getGid ()Ljava/lang/Integer;
+	public synthetic fun getKillSignal ()Ljava/lang/String;
+	public synthetic fun getMaxBuffer ()Ljava/lang/Integer;
 	public synthetic fun getShell ()Ljava/lang/String;
 	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public synthetic fun getTimeout ()Ljava/lang/Integer;
-	public final fun gid ()Ljava/lang/Integer;
+	public synthetic fun getTimeoutSeconds ()Ljava/lang/Integer;
+	public synthetic fun getUid ()Ljava/lang/Integer;
+	public synthetic fun getWindowsHide ()Ljava/lang/Boolean;
+	public fun gid ()Ljava/lang/Integer;
 	public fun hashCode ()I
-	public final fun killSignal ()Ljava/lang/String;
-	public final fun maxBuffer ()I
+	public fun killSignal ()Ljava/lang/String;
+	public fun maxBuffer ()Ljava/lang/Integer;
 	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
 	public fun shell ()Ljava/lang/String;
 	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public fun timeout ()Ljava/lang/Integer;
-	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun timeoutSeconds ()Ljava/lang/Integer;
 	public fun toString ()Ljava/lang/String;
-	public final fun uid ()Ljava/lang/Integer;
-	public final fun windowsHide ()Z
+	public fun uid ()Ljava/lang/Integer;
+	public fun windowsHide ()Ljava/lang/Boolean;
 }
 
 public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions$Companion {
@@ -3851,7 +3878,7 @@ public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions$Co
 	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
 }
 
-public final class elide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/ProcOptions {
+public final class elide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/IdentityProcOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -3878,22 +3905,28 @@ public final class elide/runtime/intrinsics/js/node/childProcess/SpawnSyncOption
 	public synthetic fun getCwdString ()Ljava/lang/String;
 	public synthetic fun getEncoding ()Ljava/lang/String;
 	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getGid ()Ljava/lang/Integer;
+	public synthetic fun getKillSignal ()Ljava/lang/String;
+	public synthetic fun getMaxBuffer ()Ljava/lang/Integer;
 	public synthetic fun getShell ()Ljava/lang/String;
 	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public synthetic fun getTimeout ()Ljava/lang/Integer;
-	public final fun gid ()Ljava/lang/Integer;
+	public synthetic fun getTimeoutSeconds ()Ljava/lang/Integer;
+	public synthetic fun getUid ()Ljava/lang/Integer;
+	public synthetic fun getWindowsHide ()Ljava/lang/Boolean;
+	public fun gid ()Ljava/lang/Integer;
 	public fun hashCode ()I
 	public final fun input ()Ljava/lang/Object;
-	public final fun killSignal ()Ljava/lang/String;
-	public final fun maxBuffer ()I
+	public fun killSignal ()Ljava/lang/String;
+	public fun maxBuffer ()Ljava/lang/Integer;
 	public static final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
 	public fun shell ()Ljava/lang/String;
 	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public fun timeout ()Ljava/lang/Integer;
-	public final fun timeoutSeconds ()Ljava/lang/Integer;
+	public fun timeoutSeconds ()Ljava/lang/Integer;
 	public fun toString ()Ljava/lang/String;
-	public final fun uid ()Ljava/lang/Integer;
-	public final fun windowsHide ()Z
+	public fun uid ()Ljava/lang/Integer;
+	public fun windowsHide ()Ljava/lang/Boolean;
 }
 
 public final class elide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions$Companion {
@@ -3931,6 +3964,9 @@ public final class elide/runtime/intrinsics/js/node/childProcess/StdioSymbols {
 	public static final field INHERIT Ljava/lang/String;
 	public static final field INSTANCE Lelide/runtime/intrinsics/js/node/childProcess/StdioSymbols;
 	public static final field PIPE Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptions {

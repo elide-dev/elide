@@ -19,9 +19,6 @@
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:JsEncoding.kt$TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
-    <ID>ForbiddenComment:NodeChildProcess.kt$// @TODO: needs enforcement of perms</ID>
-    <ID>ForbiddenComment:NodeChildProcess.kt$NodeChildProcess$// @TODO: rewire so this doesn't involve unwrapping a future, even though the future is immediate</ID>
-    <ID>ForbiddenComment:NodeChildProcess.kt$NodeChildProcessModule$// @TODO: access to cohesive standard streams</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
@@ -38,20 +35,12 @@
     <ID>LongParameterList:NativeLibraryFeature.kt$NativeLibraryFeature.NativeLibInfo.Companion$( name: String, vararg layout: String, type: NativeLibType = STATIC, linkName: String = name, prefix: Boolean, jni: Boolean, builtin: Boolean, eager: Boolean, absolutePath: Path?, initializer: Boolean, deps: List&lt;String>, )</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.DebugAdapterConfig$4711</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.InspectorConfig$4200</ID>
-    <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptSource$3</ID>
-    <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptType$5</ID>
     <ID>MagicNumber:FetchResponse.kt$FetchResponse$200</ID>
     <ID>MagicNumber:FetchResponse.kt$FetchResponse$299</ID>
-    <ID>MagicNumber:GraalVMEngine.kt$GraalVMEngine.Companion$4</ID>
-    <ID>MagicNumber:GraalVMEngine.kt$GraalVMEngine.Companion$8</ID>
     <ID>MagicNumber:HttpServerConfig.kt$HttpServerConfig$65535</ID>
-    <ID>MagicNumber:JsProxy.kt$JsProxy.PropertyProxy$3</ID>
     <ID>MagicNumber:NettyRequestHandler.kt$NettyRequestHandler$404</ID>
-    <ID>MagicNumber:NodeChildProcess.kt$ChildProcessHandle$3</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.Companion$65535</ID>
-    <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL$3</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL.Companion$31</ID>
-    <ID>MagicNumber:URLSearchParamsIntrinsic.kt$0x7F</ID>
     <ID>MatchingDeclarationName:AbstractJSException.kt$AbstractJsException</ID>
     <ID>MatchingDeclarationName:DebugPlugin.kt$Debug</ID>
     <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
@@ -93,7 +82,6 @@
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "x86-64", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "aarch64", *kqueueImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "x86-64", *kqueueImpls)</ID>
-    <ID>SpreadOperator:NodeEvents.kt$BoundEventListener$(*args)</ID>
     <ID>SpreadOperator:NodeFilesystem.kt$(src.toJavaPath(), dest.toJavaPath(), *copyOpts(mode))</ID>
     <ID>SpreadOperator:NodePaths.kt$NodePaths.BasePaths$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
     <ID>SpreadOperator:NodePaths.kt$PathBuf$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
@@ -129,7 +117,6 @@
     <ID>TooManyFunctions:AbstractDelegateVFS.kt$AbstractDelegateVFS&lt;VFS> : GuestVFSAbstractBaseVFS</ID>
     <ID>TooManyFunctions:BaseMutableJsMultiMap.kt$BaseMutableJsMultiMap&lt;K: Any, V> : BaseJsMultiMapMutableMapMutableMultiMapLike</ID>
     <ID>TooManyFunctions:CompoundVFSImpl.kt$CompoundVFSImpl : AbstractBaseVFS</ID>
-    <ID>TooManyFunctions:NodeEvents.kt$EventAwareRelay : EventAware</ID>
     <ID>TooManyFunctions:NodeFilesystem.kt$NodeFilesystemProxy : NodeFilesystemAPIFilesystemBase</ID>
     <ID>TooManyFunctions:NodeOperatingSystem.kt$NodeOperatingSystem$BaseOS : ModuleBaseOperatingSystemAPIProxyObject</ID>
     <ID>TooManyFunctions:NodeStream.kt$AbstractReadable&lt;T> : AbstractStreamReadable</ID>

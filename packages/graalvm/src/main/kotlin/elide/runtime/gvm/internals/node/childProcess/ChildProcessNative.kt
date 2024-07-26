@@ -20,7 +20,15 @@ package elide.runtime.gvm.internals.node.childProcess
  */
 internal object ChildProcessNative {
   init {
-    System.loadLibrary("umbrella")
+    try {
+      System.loadLibrary("umbrella")
+    } catch (err: Throwable) {
+      try {
+        System.loadLibrary("posix")
+      } catch (err: Throwable) {
+        throw err
+      }
+    }
   }
 
   /**

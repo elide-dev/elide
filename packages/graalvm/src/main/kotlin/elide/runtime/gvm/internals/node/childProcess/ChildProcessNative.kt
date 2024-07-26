@@ -19,10 +19,6 @@ package elide.runtime.gvm.internals.node.childProcess
  * by operating system.
  */
 internal object ChildProcessNative {
-  init {
-    System.loadLibrary("umbrella")
-  }
-
   /**
    * ## Kill with Signal
    *

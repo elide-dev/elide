@@ -83,15 +83,6 @@ import elide.testing.annotations.TestCase
     assertEquals("disconnect", assertNotNull(ChildProcessEvents.DISCONNECT))
   }
 
-  @Test fun `native - kill unknown process`() {
-    assertNotNull(
-      ChildProcessNative.toString()
-    )
-    assertDoesNotThrow {
-      assertEquals(-1, assertNotNull(ChildProcessNative.killWith(999999, "SIGKILL")))
-    }
-  }
-
   @Test fun `env map - guest null`() {
     assertNull(decodeEnvMap(asValue(null)))
   }

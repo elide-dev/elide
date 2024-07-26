@@ -19,6 +19,10 @@ package elide.runtime.gvm.internals.node.childProcess
  * by operating system.
  */
 internal object ChildProcessNative {
+  init {
+    System.loadLibrary("umbrella")
+  }
+
   /**
    * ## Kill with Signal
    *
@@ -29,5 +33,5 @@ internal object ChildProcessNative {
    * @param signal The signal to send to the process.
    * @return The return value of the signal operation.
    */
-  internal external fun killWith(pid: Int, signal: String): Int
+  @JvmStatic @JvmName("killWith") internal external fun killWith(pid: Int, signal: String): Int
 }

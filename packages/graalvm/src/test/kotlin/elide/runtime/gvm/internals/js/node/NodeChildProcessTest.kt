@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 @file:OptIn(DelicateElideApi::class)
-@file:Suppress("LongMethod", "LargeClass")
+@file:Suppress("LongMethod", "LargeClass", "JSUnresolvedReference", "JSUnusedLocalSymbols")
 
 package elide.runtime.gvm.internals.js.node
 
@@ -28,6 +28,8 @@ import kotlin.streams.asStream
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.gvm.internals.node.childProcess.ChildProcessEvents
+import elide.runtime.gvm.internals.node.childProcess.ChildProcessNative
 import elide.runtime.gvm.internals.node.childProcess.NodeChildProcess
 import elide.runtime.gvm.internals.node.childProcess.NodeChildProcessModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
@@ -67,6 +69,24 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(childProcess, "should be able to inject host-side `child_process` module")
+  }
+
+  @Test fun `child process event names`() {
+    assertNotNull(ChildProcessEvents.toString())
+    assertEquals("close", assertNotNull(ChildProcessEvents.CLOSE))
+    assertEquals("exit", assertNotNull(ChildProcessEvents.EXIT))
+    assertEquals("error", assertNotNull(ChildProcessEvents.ERROR))
+    assertEquals("message", assertNotNull(ChildProcessEvents.MESSAGE))
+    assertEquals("disconnect", assertNotNull(ChildProcessEvents.DISCONNECT))
+  }
+
+  @Test fun `native - kill unknown process`() {
+    assertNotNull(
+      ChildProcessNative.toString()
+    )
+    assertDoesNotThrow {
+      assertEquals(-1, assertNotNull(ChildProcessNative.killWith(999999, "SIGKILL")))
+    }
   }
 
   @Test fun `env map - guest null`() {
@@ -1036,6 +1056,28 @@ import elide.testing.annotations.TestCase
     assertTrue(result.pid > 0)
     val exit = assertNotNull(result.wait())
     assertEquals(0, exit)
+  }
+
+  @Test fun `exec - host simple process spawn with callback`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const fn = (err) => {
+          if (err) throw err;
+        };
+        fn;
+      """
+    }.thenAssert {
+      val cbk = assertNotNull(it.returnValue())
+      assertTrue(cbk.canExecute())
+      val result = assertNotNull(childProc().exec(asValue("echo hello"), null, cbk))
+      assertIs<ChildProcess>(result)
+      assertNotNull(result.pid)
+      assertNotEquals(0, result.pid)
+      assertTrue(result.pid > 0)
+      val exit = assertNotNull(result.wait())
+      assertEquals(0, exit)
+    }
   }
 
   @Test fun `exec - host simple process spawn with utf8`() {

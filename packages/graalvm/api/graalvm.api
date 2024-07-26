@@ -3947,6 +3947,7 @@ public final class elide/runtime/intrinsics/js/node/childProcess/StdioConfig {
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public fun hashCode ()I
+	public static final fun ignore ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public static final fun inherit ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public static final fun pipe ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public fun toString ()Ljava/lang/String;
@@ -3955,6 +3956,7 @@ public final class elide/runtime/intrinsics/js/node/childProcess/StdioConfig {
 public final class elide/runtime/intrinsics/js/node/childProcess/StdioConfig$Companion {
 	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public final fun ignore ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public final fun inherit ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 	public final fun pipe ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
 }

@@ -62,9 +62,9 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
  * @property stderr Standard error mode.
  */
 @API public data class StdioConfig(
-  internal val stdin: Any? = null,
-  internal val stdout: Any? = null,
-  internal val stderr: Any? = null,
+  internal val stdin: Any = PIPE,
+  internal val stdout: Any = PIPE,
+  internal val stderr: Any = PIPE,
 ) {
 
 
@@ -93,26 +93,6 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
       { redirectError(Redirect.INHERIT) })
   }
 
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (javaClass != other?.javaClass) return false
-
-    other as StdioConfig
-
-    if (stdin != other.stdin) return false
-    if (stdout != other.stdout) return false
-    if (stderr != other.stderr) return false
-
-    return true
-  }
-
-  override fun hashCode(): Int {
-    var result = stdin?.hashCode() ?: 0
-    result = 31 * result + (stdout?.hashCode() ?: 0)
-    result = 31 * result + (stderr?.hashCode() ?: 0)
-    return result
-  }
-
   public companion object {
     /** Default standard I/O configuration. */
     public val DEFAULTS: StdioConfig = StdioConfig(PIPE, PIPE, PIPE)
@@ -135,15 +115,23 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
     /** @return Standard I/O configuration that sets all modes to `ignore`. */
     @JvmStatic public fun ignore(): StdioConfig = StdioConfig(IGNORE, IGNORE, IGNORE)
 
-    private fun extractModeOrValue(value: Value): Any? = when {
-      value.isNumber -> value.asInt()
+    // Extract a stdio mode symbol or fallback to using the value itself.
+    private fun extractModeOrValue(value: Value): Any = when {
+      // we accept special string tokens like `pipe`
       value.isString -> when (val token = value.asString()) {
         PIPE -> PIPE
         INHERIT -> INHERIT
         IGNORE -> IGNORE
         else -> throw JsError.valueError("Invalid stdio configuration token: $token")
       }
-      else -> value
+
+      // we accept file descriptor numbers
+      value.isNumber -> if (!value.fitsInInt())
+        throw JsError.valueError("Invalid file descriptor: $value")
+      else
+        value.asInt()
+
+      else -> throw JsError.valueError("Invalid stdio configuration token or file: $value")
     }
 
     /** @return Standard I/O configuration derived from a guest value. */
@@ -175,6 +163,13 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
         // if the array is "short," we apply partially, aligned with the same streams.
         // if the array is "long," we apply fully, ignoring any extra elements.
         other.hasArrayElements() -> when (other.arraySize) {
+          // configuration for `stdin`, `stdout`, and `stderr`
+          3L -> StdioConfig(
+            extractModeOrValue(other.getArrayElement(0)),
+            extractModeOrValue(other.getArrayElement(1)),
+            extractModeOrValue(other.getArrayElement(2)),
+          )
+
           // just a configuration for `stdin`
           1L -> StdioConfig(
             extractModeOrValue(other.getArrayElement(0)),
@@ -186,15 +181,11 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
             extractModeOrValue(other.getArrayElement(1)),
           )
 
-          // configuration for `stdin`, `stdout`, and `stderr`
-          3L -> StdioConfig(
-            extractModeOrValue(other.getArrayElement(0)),
-            extractModeOrValue(other.getArrayElement(1)),
-            extractModeOrValue(other.getArrayElement(2)),
-          )
+          // use defaults for an empty array
+          0L -> DEFAULTS
 
           // anything else is a failure
-          else -> throw JsError.typeError("Invalid stdio configuration: $other")
+          else -> throw JsError.valueError("Invalid stdio configuration: $other")
         }
 
         // otherwise, unrecognized

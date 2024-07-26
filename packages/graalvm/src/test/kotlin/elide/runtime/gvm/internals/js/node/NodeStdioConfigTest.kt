@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2024 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 @file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.js.node
@@ -11,6 +23,7 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.js.AbstractJsTest
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.node.childProcess.StdioConfig
 import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols
@@ -222,6 +235,108 @@ import elide.testing.annotations.TestCase
       val parsed = assertNotNull(assertDoesNotThrow { StdioConfig.from(spec) })
       assertNotEquals(defaults, parsed)
       assertEquals(ignore, parsed)
+    }
+  }
+
+  @Test fun testCreateFromGuestArrayEmpty() {
+    val defaults = StdioConfig.DEFAULTS
+
+    executeGuest {
+      // language=JavaScript
+      """
+        export const sample = []
+      """
+    }.thenAssert {
+      val spec = assertNotNull(it.returnValue()?.getMember("sample"))
+      val parsed = assertNotNull(assertDoesNotThrow { StdioConfig.from(spec) })
+      assertEquals(defaults, parsed)
+    }
+  }
+
+  @Test fun testCreateFromGuestArrayOneEntry() {
+    val defaults = StdioConfig.DEFAULTS
+
+    executeGuest {
+      // language=JavaScript
+      """
+        export const sample = ['inherit']
+      """
+    }.thenAssert {
+      val spec = assertNotNull(it.returnValue()?.getMember("sample"))
+      val parsed = assertNotNull(assertDoesNotThrow { StdioConfig.from(spec) })
+      assertNotEquals(defaults, parsed)
+      assertEquals("inherit", parsed.stdin)
+      assertEquals("pipe", parsed.stdout)
+      assertEquals("pipe", parsed.stderr)
+    }
+  }
+
+  @Test fun testCreateFromGuestArrayTwoEntries() {
+    val defaults = StdioConfig.DEFAULTS
+
+    executeGuest {
+      // language=JavaScript
+      """
+        export const sample = ['inherit', 'inherit']
+      """
+    }.thenAssert {
+      val spec = assertNotNull(it.returnValue()?.getMember("sample"))
+      val parsed = assertNotNull(assertDoesNotThrow { StdioConfig.from(spec) })
+      assertNotEquals(defaults, parsed)
+      assertEquals("inherit", parsed.stdin)
+      assertEquals("inherit", parsed.stdout)
+      assertEquals("pipe", parsed.stderr)
+    }
+  }
+
+  @Test fun testCreateFromGuestArrayTooManyEntries() {
+    executeGuest {
+      // language=JavaScript
+      """
+        export const sample = ['inherit', 'inherit', 'inherit', 'inherit']
+      """
+    }.thenAssert {
+      val spec = assertNotNull(it.returnValue()?.getMember("sample"))
+      assertThrows<ValueError> { StdioConfig.from(spec) }
+    }
+  }
+
+  @Test fun testCreateFromGuestInvalidType() {
+    executeGuest {
+      // language=JavaScript
+      """
+        export const sample = false
+      """
+    }.thenAssert {
+      val spec = assertNotNull(it.returnValue()?.getMember("sample"))
+      assertThrows<TypeError> { StdioConfig.from(spec) }
+    }
+  }
+
+  @Test fun testCreateFromGuestArrayIntegers() {
+    executeGuest {
+      // language=JavaScript
+      """
+        export const sample = [0, 1, 2]
+      """
+    }.thenAssert {
+      val spec = assertNotNull(it.returnValue()?.getMember("sample"))
+      val stdio = assertNotNull(assertDoesNotThrow { StdioConfig.from(spec) })
+      assertEquals(0, stdio.stdin)
+      assertEquals(1, stdio.stdout)
+      assertEquals(2, stdio.stderr)
+    }
+  }
+
+  @Test fun testCreateFromGuestArrayInvalid() {
+    executeGuest {
+      // language=JavaScript
+      """
+        export const sample = [false, true, NaN]
+      """
+    }.thenAssert {
+      val spec = assertNotNull(it.returnValue()?.getMember("sample"))
+      assertThrows<ValueError> { StdioConfig.from(spec) }
     }
   }
 }

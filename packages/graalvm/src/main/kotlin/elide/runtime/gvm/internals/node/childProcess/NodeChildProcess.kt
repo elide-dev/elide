@@ -25,6 +25,7 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import org.jetbrains.annotations.VisibleForTesting
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
@@ -79,7 +80,7 @@ private const val CHILD_PROCESS_CLASS_SYMBOL = "NodeChildProcess"
 private const val NO_ENCODING = ChildProcessDefaults.ENCODING
 
 // Names of events which are emitted for/upon `ChildProcess` objects.
-private data object ChildProcessEvents {
+internal data object ChildProcessEvents {
   const val CLOSE = "close"
   const val DISCONNECT = "disconnect"
   const val ERROR = "error"
@@ -206,26 +207,26 @@ internal sealed interface ChildProcessExecution<T> where T: ProcOptions {
 private typealias ExitCode = UInt
 
 // Describes an exit code paired with a failure signal: processes that fail (but never exit) are modeled here.
-@JvmInline internal value class ExitResult(private val exit: Pair<Boolean?, ExitCode>) {
+@JvmInline internal value class ExitResult(private val exit: Triple<Boolean?, Boolean, ExitCode?>) {
   // Exit code of the process.
-  val code: ExitCode get() = exit.second
+  val code: ExitCode? get() = exit.third
 
   // Success flag of the process.
   val success: Boolean get() = exit.first ?: false
 
   // Success flag of the process.
-  val didTimeout: Boolean get() = exit.first ?: false
+  val didTimeout: Boolean get() = exit.second
 
   // Companion object for exit result construction.
   companion object {
     // Construct a successful exit result.
-    fun success(): ExitResult = ExitResult(true to 0u)
+    fun success(): ExitResult = ExitResult(Triple(true, false, 0u))
 
     // Construct a failed (timed out) exit result.
-    fun timeout(): ExitResult = ExitResult(false to 1u)
+    fun timeout(): ExitResult = ExitResult(Triple(false, true, 1u))
 
     // Construct a failed exit result.
-    fun failure(code: ExitCode): ExitResult = ExitResult(false to code)
+    fun failure(code: ExitCode): ExitResult = ExitResult(Triple(true, false, code))
   }
 }
 
@@ -249,6 +250,7 @@ internal sealed interface CallResult<T> where T: ProcOptions {
     @JvmStatic fun <T: ProcOptions> build(
       exec: ChildProcessExecution<T>,
       exitResult: ExitResult,
+      stdin: ProcessInputStream?,
       stdout: ProcessOutputStream?,
       stderr: ProcessOutputStream?,
     ): CallResult<T> {
@@ -259,6 +261,7 @@ internal sealed interface CallResult<T> where T: ProcOptions {
         // if we have streams at all, we affix them
         stdout != null || stderr != null -> StreamsResult(
           exitResult to exec,
+          stdin,
           stdout,
           stderr,
         )
@@ -285,20 +288,33 @@ internal class PendingCallResult<T> private constructor (
   companion object {
     // Create an in-flight call result, which holds onto a future to produce the actual `CallResult<T>` later on; in the
     // meantime, streams and process information are still available.
-    @JvmStatic fun <T: ProcOptions> inFlight(exec: ChildProcessExecution<T>): CallResult<T> {
+    @JvmStatic fun <T: ProcOptions> inFlight(
+      exec: ChildProcessExecution<T>,
+      stdin: ProcessInputStream?,
+      stdout: ProcessOutputStream?,
+      stderr: ProcessOutputStream?,
+    ): CallResult<T> {
       // attach to a pending call result
-      return PendingCallResult(exec)
+      return PendingCallResult(
+        exec,
+        stdin,
+        stdout,
+        stderr,
+      )
     }
   }
 }
 
 // Required interface for call result implementations which provide resulting streams.
 private sealed interface StreamsCallResult<T>: CallResult<T> where T: ProcOptions {
+  // Obtain the standard input stream for this call result.
+  fun stdin(): ProcessInputStream?
+
   // Obtain the standard output stream for this call result.
-  fun stdout(): ProcessOutputStream
+  fun stdout(): ProcessOutputStream?
 
   // Obtain the standard error stream for this call result.
-  fun stderr(): ProcessOutputStream
+  fun stderr(): ProcessOutputStream?
 }
 
 // Describes a call result which does not carry any streams.
@@ -314,6 +330,7 @@ private sealed interface StreamsCallResult<T>: CallResult<T> where T: ProcOption
 // Describes a call result which carries raw (untransformed) streams.
 @JvmRecord private data class StreamsResult<T>(
   private val result: Pair<ExitResult, ChildProcessExecution<T>>,
+  private val stdin: ProcessInputStream? = null,
   private val stdout: ProcessOutputStream? = null,
   private val stderr: ProcessOutputStream? = null,
 ): StreamsCallResult<T> where T: ProcOptions {
@@ -321,8 +338,9 @@ private sealed interface StreamsCallResult<T>: CallResult<T> where T: ProcOption
   override val success: Boolean get() = result.first.success
   override val exit: ExitResult get() = result.first
   override val outputStreamsAvailable: Pair<Boolean, Boolean> get() = (stdout != null) to (stderr != null)
-  override fun stdout(): ProcessOutputStream = requireNotNull(stdout) { "Requested `stdout`, but none available" }
-  override fun stderr(): ProcessOutputStream = requireNotNull(stdout) { "Requested `stderr`, but none available" }
+  override fun stdin(): ProcessInputStream? = stdin
+  override fun stdout(): ProcessOutputStream? = stdout
+  override fun stderr(): ProcessOutputStream? = stdout
 }
 
 // Using a `CommandExecution`, perform a call asynchronously using `callAsync`, and then block based on the assigned
@@ -510,7 +528,7 @@ private fun <T: ProcOptions> unwrapSyncToStringOrBuffer(result: CallResult<T>, o
     is PendingCallResult<*> -> error("Invalid state: Pending call result for sync operation")
     is NoStreamsResult -> null
     is StreamsResult -> result.outputStreamsAvailable.let { (stdoutAvailable, _) ->
-      if (stdoutAvailable) result.stdout().readToStringOrBuffer(opts) else null
+      if (stdoutAvailable) result.stdout()?.readToStringOrBuffer(opts) else null
     }
   }
 }
@@ -645,6 +663,7 @@ public class ChildProcessHandle private constructor (
     result.set(CallResult.build(
       pending.execution,
       ExitResult.success(),
+      pending.execution.stdin,
       pending.execution.stdout,
       pending.execution.stderr,
     ))
@@ -787,8 +806,29 @@ private inline fun <T: ProcOptions> callAsync(
     executor.submit<Pair<Process, CallResult<T>>> {
       runBlocking(executor.dispatcher) {
         builder.start().let { proc ->
+          val stdin: ProcessInputStream? = when {
+            // in `stdin=PIPE` mode, we should obtain it and attach
+            exec.options.stdio.stdin == PIPE -> ProcessInputStream.from(requireNotNull(proc.outputStream))
+            else -> null
+          }
+          val stdout: ProcessOutputStream? = when {
+            // in `stdout=PIPE` mode, we should read until it yields, and decode in the configured encoding.
+            exec.options.stdio.stdout == PIPE -> ProcessOutputStream.from(requireNotNull(proc.inputStream))
+            else -> null
+          }
+          val stderr: ProcessOutputStream? = when {
+            // in `stderr=PIPE` mode, we should read until it yields, and decode in the configured encoding.
+            exec.options.stdio.stderr == PIPE -> ProcessOutputStream.from(requireNotNull(proc.errorStream))
+            else -> null
+          }
+
           if (!wait) {
-            proc to PendingCallResult.inFlight(exec)
+            proc to PendingCallResult.inFlight(
+              exec,
+              stdin,
+              stdout,
+              stderr,
+            )
           } else {
             val result = runCatching {
               when (val timeout = exec.options.timeout) {
@@ -810,19 +850,10 @@ private inline fun <T: ProcOptions> callAsync(
                 assert(exitCode > 0) { "Cannot have negative exit code" }
               })
             }
-            val stdout: ProcessOutputStream? = when {
-              // in `stdout=PIPE` mode, we should read until it yields, and decode in the configured encoding.
-              exec.options.stdio.stdout == PIPE -> ProcessOutputStream.from(requireNotNull(proc.inputStream))
-              else -> null
-            }
-            val stderr: ProcessOutputStream? = when {
-              // in `stderr=PIPE` mode, we should read until it yields, and decode in the configured encoding.
-              exec.options.stdio.stderr == PIPE -> ProcessOutputStream.from(requireNotNull(proc.errorStream))
-              else -> null
-            }
             proc to CallResult.build(
               exec,
               exitResult,
+              stdin,
               stdout,
               stderr,
             )
@@ -876,8 +907,19 @@ internal class NodeChildProcess (
     if (!command.isString) throw JsError.typeError("The command argument must be a string")
     val (cmd, finalizedArgs) = tokenizeCommand(command.asString())
     val opts = ExecOptions.from(options)
-    val (handle, result) = callAsync(executor, CommandExec.of(cmd, finalizedArgs, opts), wait = false).get()
-    return ChildProcessHandle.live(handle, result as PendingCallResult<*>)
+    return try {
+      val (handle, result) = callAsync(executor, CommandExec.of(cmd, finalizedArgs, opts), wait = false).get()
+      val proc = ChildProcessHandle.live(handle, result as PendingCallResult<*>)
+      if (callback != null && callback.canExecute()) {
+        callback.executeVoid(null, proc.stdout, proc.stderr)
+      }
+      proc
+    } catch (err: IOException) {
+      if (callback != null && callback.canExecute()) {
+        callback.executeVoid(JsError.of("Failed to launch process", cause = err))
+      }
+      throw err
+    }
   }
 
   @Polyglot override fun execFile(file: Value, args: Value?, options: Value?, callback: Value?): ChildProcess {

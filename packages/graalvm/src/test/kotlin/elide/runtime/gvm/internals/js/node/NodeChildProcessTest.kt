@@ -23,6 +23,7 @@ import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.stream.Stream
+import kotlinx.datetime.Clock
 import kotlin.reflect.full.isSubclassOf
 import kotlin.streams.asStream
 import kotlin.test.*
@@ -1132,6 +1133,40 @@ import elide.testing.annotations.TestCase
   @Test fun `spawn - invalid command type`() {
     assertThrows<TypeError> { childProc().spawn(asValue(true), null, null) }
     assertThrows<TypeError> { childProc().spawn(asValue(5), null, null) }
+  }
+
+  @Test fun `spawn - with timeout which does not trigger`() {
+    val now = Clock.System.now()
+    val proc = assertNotNull(childProc().spawn(
+      asValue("sleep"),
+      asValue(arrayOf("3")),
+      asValue(SpawnOptions.of(timeoutSeconds = 10))))
+
+    val spawnTime = Clock.System.now() - now
+    assertTrue(spawnTime < 2.seconds)
+    assertNotNull(proc.pid)
+    assertNotEquals(0, proc.pid)
+    assertNotNull(proc.stdout)
+    assertNotNull(proc.stdin)
+    assertNotNull(proc.stderr)
+    assertEquals(0, proc.wait())
+  }
+
+  @Test fun `spawn - with timeout which triggers`() {
+    val now = Clock.System.now()
+    val proc = assertNotNull(childProc().spawn(
+      asValue("sleep"),
+      asValue(arrayOf("3")),
+      asValue(SpawnOptions.of(timeoutSeconds = 10))))
+
+    val spawnTime = Clock.System.now() - now
+    assertTrue(spawnTime < 2.seconds)
+    assertNotNull(proc.pid)
+    assertNotEquals(0, proc.pid)
+    assertNotNull(proc.stdout)
+    assertNotNull(proc.stdin)
+    assertNotNull(proc.stderr)
+    assertEquals(0, proc.wait())
   }
 
   @TestFactory fun `spawn - options properties`(): Stream<DynamicTest> = sequence {

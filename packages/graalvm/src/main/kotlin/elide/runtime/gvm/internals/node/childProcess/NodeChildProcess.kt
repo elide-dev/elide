@@ -26,7 +26,6 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import org.jetbrains.annotations.VisibleForTesting
 import java.io.File
-import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
@@ -278,14 +277,16 @@ internal sealed interface CallResult<T> where T: ProcOptions {
 // Pending `Future<CallResult<T>>` type for async process spawn.
 internal class PendingCallResult<T> private constructor (
   override val execution: ChildProcessExecution<T>,
-  private val stdin: ProcessInputStream? = execution.stdin,
-  private val stdout: ProcessOutputStream? = execution.stdout,
-  private val stderr: ProcessOutputStream? = execution.stderr,
-) : CallResult<T> where T: ProcOptions {
-
+  private val stdin: ProcessInputStream?,
+  private val stdout: ProcessOutputStream?,
+  private val stderr: ProcessOutputStream?,
+) : StreamsCallResult<T> where T: ProcOptions {
   override val exit: ExitResult? get() = null
   override val success: Boolean get() = false
   override val outputStreamsAvailable: Pair<Boolean, Boolean> get() = (stdout != null) to (stderr != null)
+  override fun stdin(): ProcessInputStream? = stdin
+  override fun stdout(): ProcessOutputStream? = stdout
+  override fun stderr(): ProcessOutputStream? = stderr
 
   companion object {
     // Create an in-flight call result, which holds onto a future to produce the actual `CallResult<T>` later on; in the
@@ -295,15 +296,12 @@ internal class PendingCallResult<T> private constructor (
       stdin: ProcessInputStream?,
       stdout: ProcessOutputStream?,
       stderr: ProcessOutputStream?,
-    ): CallResult<T> {
-      // attach to a pending call result
-      return PendingCallResult(
-        exec,
-        stdin,
-        stdout,
-        stderr,
-      )
-    }
+    ): CallResult<T> = PendingCallResult(
+      exec,
+      stdin,
+      stdout,
+      stderr,
+    )
   }
 }
 
@@ -639,18 +637,18 @@ public class ChildProcessHandle private constructor (
 ) : ProxyObject, ChildProcess, EventEmitter by evented, EventTarget by evented {
   @Volatile private var didKill: Boolean = false
   @get:Polyglot override val pid: Long get() = proc.pid()
-  @get:Polyglot override val stdin: ProcessInputStream? get() = pending.execution.stdin
-  @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.execution.stdout
-  @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.execution.stderr
   @get:Polyglot override val exitCode: Int? get() = termination.exitCode.takeIf { it != -1 }
   @get:Polyglot override val signalCode: String? get() = termination.exitSignal.takeIf { it != "" }
+  @get:Polyglot override val stdin: ProcessInputStream? get() = pending.stdin()
+  @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.stdout()
+  @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.stderr()
   @Polyglot override fun wait(): Int = proc.waitFor().also { termination.exited(it) }
 
   @get:Polyglot override val stdio: ProcessIOChannels
     get() = object: ProcessIOChannels {
-      @get:Polyglot override val stdin: ProcessInputStream? get() = pending.execution.stdin
-      @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.execution.stdout
-      @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.execution.stderr
+      @get:Polyglot override val stdin: ProcessInputStream? get() = pending.stdin()
+      @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.stdout()
+      @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.stderr()
     }
 
   @get:Polyglot override val connected: Boolean get() = !termination.closed
@@ -673,9 +671,9 @@ public class ChildProcessHandle private constructor (
     result.set(CallResult.build(
       pending.execution,
       ExitResult.success(),
-      pending.execution.stdin,
-      pending.execution.stdout,
-      pending.execution.stderr,
+      pending.stdin(),
+      pending.stdout(),
+      pending.stderr(),
     ))
     emit(
       ChildProcessEvents.EXIT,
@@ -736,8 +734,13 @@ public class ChildProcessHandle private constructor (
   }
 
   public companion object {
-    @JvmStatic internal fun live(handle: Process, pending: PendingCallResult<*>): ChildProcessHandle =
-      ChildProcessHandle(handle, pending)
+    @JvmStatic internal fun live(
+      handle: Process,
+      pending: PendingCallResult<*>,
+    ): ChildProcessHandle = ChildProcessHandle(
+      handle,
+      pending,
+    )
   }
 }
 

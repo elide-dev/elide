@@ -1113,7 +1113,12 @@ public synthetic class elide/runtime/gvm/internals/node/childProcess/$NodeChildP
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessFailure : java/lang/RuntimeException {
+public abstract class elide/runtime/gvm/internals/node/childProcess/ChildProcessException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessFailure : elide/runtime/gvm/internals/node/childProcess/ChildProcessException {
 	public fun <init> (I)V
 	public final fun getExitCode ()I
 }
@@ -1197,7 +1202,7 @@ public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessSyn
 	public fun removeMember (Ljava/lang/String;)Z
 }
 
-public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessTimeout : java/lang/RuntimeException {
+public final class elide/runtime/gvm/internals/node/childProcess/ChildProcessTimeout : elide/runtime/gvm/internals/node/childProcess/ChildProcessException {
 	public fun <init> ()V
 }
 
@@ -3781,6 +3786,8 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions
 	public fun toString ()Ljava/lang/String;
 	public fun uid ()Ljava/lang/Integer;
 	public fun windowsHide ()Ljava/lang/Boolean;
+	public final fun withTimeout-LRDsOJo (J)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public final fun withTimeoutSeconds-WZ4Q5Ns (I)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
 }
 
 public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion {

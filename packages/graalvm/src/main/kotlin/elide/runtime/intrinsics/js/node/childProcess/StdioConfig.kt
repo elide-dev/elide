@@ -25,7 +25,7 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
  *
  * Symbolic names used for different [StdioConfig] operating modes; see each mode for behavior documentation.
  */
-@API public object StdioSymbols {
+@API public data object StdioSymbols {
   /**
    * ## Mode: Pipe
    *

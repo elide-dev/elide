@@ -79,7 +79,7 @@ private const val CHILD_PROCESS_CLASS_SYMBOL = "NodeChildProcess"
 private const val NO_ENCODING = ChildProcessDefaults.ENCODING
 
 // Names of events which are emitted for/upon `ChildProcess` objects.
-private object ChildProcessEvents {
+private data object ChildProcessEvents {
   const val CLOSE = "close"
   const val DISCONNECT = "disconnect"
   const val ERROR = "error"

@@ -24,7 +24,7 @@ import elide.runtime.intrinsics.js.node.childProcess.ExecDefaults.MAX_BUFFER_DEF
 import elide.runtime.intrinsics.js.node.childProcess.ExecDefaults.WINDOWS_HIDE
 
 // Default values used in `exec`.
-private object ExecDefaults {
+internal data object ExecDefaults {
   // Default encoding token to use.
   const val ENCODING: String = ChildProcessDefaults.ENCODING
 
@@ -65,14 +65,14 @@ private object ExecDefaults {
   public val cwdUrl: URL? = null,
   override val env: Map<String, String>? = null,
   override val shell: String? = null,
-  public val uid: Int? = null,
-  public val gid: Int? = null,
-  public val timeoutSeconds: Int? = null,
-  public val killSignal: String? = KILL_SIGNAL,
-  public val maxBuffer: Int = MAX_BUFFER_DEFAULT,
+  override val uid: Int? = null,
+  override val gid: Int? = null,
+  override val timeoutSeconds: Int? = null,
+  override val killSignal: String? = KILL_SIGNAL,
+  override val maxBuffer: Int = MAX_BUFFER_DEFAULT,
   override val encoding: String? = ENCODING,
-  public val windowsHide: Boolean = WINDOWS_HIDE,
-): ProcOptions {
+  override val windowsHide: Boolean = WINDOWS_HIDE,
+): IdentityProcOptions {
   override val timeout: Int? get() = timeoutSeconds
   override val stdio: StdioConfig get() = StdioConfig.DEFAULTS
 

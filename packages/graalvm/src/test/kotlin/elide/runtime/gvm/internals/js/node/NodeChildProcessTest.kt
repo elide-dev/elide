@@ -23,6 +23,7 @@ import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.stream.Stream
+import kotlin.reflect.full.isSubclassOf
 import kotlin.streams.asStream
 import kotlin.test.*
 import elide.annotations.Inject
@@ -33,6 +34,7 @@ import elide.runtime.gvm.js.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.node.ChildProcessAPI
 import elide.runtime.intrinsics.js.node.childProcess.*
+import elide.runtime.intrinsics.js.node.childProcess.ChildProcessDefaults.decodeEnvMap
 import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.IGNORE
 import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.INHERIT
 import elide.testing.annotations.TestCase
@@ -67,6 +69,39 @@ import elide.testing.annotations.TestCase
     assertNotNull(childProcess, "should be able to inject host-side `child_process` module")
   }
 
+  @Test fun `env map - guest null`() {
+    assertNull(decodeEnvMap(asValue(null)))
+  }
+
+  @Test fun `env map - empty host type`() {
+    val map = emptyMap<String, String>()
+    val decoded = assertNotNull(decodeEnvMap(asValue(map)))
+    assertTrue(decoded.isEmpty())
+  }
+
+  @Test fun `env map - non-empty host type`() {
+    val map = mapOf("EXAMPLE" to "hello")
+    val decoded = assertNotNull(decodeEnvMap(asValue(map)))
+    assertTrue(decoded.isNotEmpty())
+    assertEquals("hello", decoded["EXAMPLE"])
+  }
+
+  @Test fun `env map - invalid host type`() {
+    assertThrows<TypeError> { decodeEnvMap(asValue(false)) }
+  }
+
+  @Test fun `env map - invalid guest type`() {
+    val value = executeGuest {
+      // language=JavaScript
+      """
+        5
+      """.trimIndent()
+    }.thenAssert {
+      val value = assertNotNull(it.returnValue())
+      assertThrows<TypeError> { decodeEnvMap(value) }
+    }
+  }
+
   @Test fun `sanity - process spawn`() {
     val proc = ProcessBuilder(listOf("echo", "hello")).start()
     val exit = proc.waitFor()
@@ -75,13 +110,11 @@ import elide.testing.annotations.TestCase
     assertEquals("hello\n", result)
   }
 
-
-  // Test an options type used by the `child_process` module.
+  // Test option objects used by the `child_process` module.
   private suspend inline fun <reified T: ProcOptions> SequenceScope<DynamicTest>.testProcOptionsType(
     crossinline optionsFromGuest: (Value) -> T,
     crossinline assertDefaults: (T, Set<String>) -> Unit,
   ) {
-    // encoding
     yield(dynamicTest("from invalid type") {
       executeGuest {
         // language=JavaScript
@@ -111,6 +144,21 @@ import elide.testing.annotations.TestCase
       }
     })
 
+    yield(dynamicTest("cwd (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({cwd: true})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertNull(options.cwdString)
+        assertDefaults(options, emptySet())
+      }
+    })
+
     // encoding
     yield(dynamicTest("encoding") {
       executeGuest {
@@ -124,6 +172,21 @@ import elide.testing.annotations.TestCase
         val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
         assertEquals("utf-8", options.encoding)
         assertDefaults(options, setOf("encoding"))
+      }
+    })
+
+    yield(dynamicTest("encoding (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({encoding: true})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
+        assertDefaults(options, emptySet())
       }
     })
 
@@ -159,7 +222,7 @@ import elide.testing.annotations.TestCase
     })
 
     // uid
-    if (T::class == ExecOptions::class) yield(dynamicTest("uid") {
+    if (T::class.isSubclassOf(IdentityProcOptions::class)) yield(dynamicTest("uid") {
       executeGuest {
         // language=JavaScript
         """
@@ -169,14 +232,14 @@ import elide.testing.annotations.TestCase
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
         val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
-        assertIs<ExecOptions>(options)
+        assertIs<IdentityProcOptions>(options)
         assertEquals(1001, options.uid)
         assertDefaults(options, setOf("uid"))
       }
     })
 
     // uid (invalid type)
-    yield(dynamicTest("uid (invalid type)") {
+    if (T::class.isSubclassOf(IdentityProcOptions::class)) yield(dynamicTest("uid (invalid type)") {
       executeGuest {
         // language=JavaScript
         """
@@ -191,7 +254,7 @@ import elide.testing.annotations.TestCase
     })
 
     // gid
-    if (T::class == ExecOptions::class) yield(dynamicTest("gid") {
+    if (T::class.isSubclassOf(IdentityProcOptions::class)) yield(dynamicTest("gid") {
       executeGuest {
         // language=JavaScript
         """
@@ -201,14 +264,14 @@ import elide.testing.annotations.TestCase
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
         val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
-        assertIs<ExecOptions>(options)
+        assertIs<IdentityProcOptions>(options)
         assertEquals(1001, options.gid)
         assertDefaults(options, setOf("gid"))
       }
     })
 
     // gid (invalid type)
-    yield(dynamicTest("gid (invalid type)") {
+    if (T::class.isSubclassOf(IdentityProcOptions::class)) yield(dynamicTest("gid (invalid type)") {
       executeGuest {
         // language=JavaScript
         """
@@ -335,10 +398,45 @@ import elide.testing.annotations.TestCase
         assertDefaults(options, setOf("env"))
       }
     })
+
+    // maxBuffer
+    yield(dynamicTest("maxBuffer") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({maxBuffer: 1000})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertNotNull(options.maxBuffer)
+        assertEquals(1000, options.maxBuffer)
+        assertDefaults(options, setOf("maxBuffer"))
+      }
+    })
+
+    // maxBuffer (invalid type)
+    yield(dynamicTest("maxBuffer (invalid type)") {
+      executeGuest {
+        // language=JavaScript
+        """
+            ({maxBuffer: true})
+        """.trimIndent()
+      }.thenAssert {
+        val value = assertNotNull(it.returnValue())
+        assertTrue(value.hasMembers())
+        val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
+        assertNotNull(options.maxBuffer)
+        assertEquals(ChildProcessDefaults.MAX_BUFFER_DEFAULT, options.maxBuffer)
+        assertDefaults(options, emptySet())
+      }
+    })
   }
 
   @TestFactory fun `execSync - options properties`(): Stream<DynamicTest> = sequence {
     val defaults = ExecSyncOptions.DEFAULTS
+    assertNotNull(ExecSyncDefaults.toString())
 
     // defaults
     yield(dynamicTest("default should stringify without error") {
@@ -677,6 +775,7 @@ import elide.testing.annotations.TestCase
 
   @TestFactory fun `spawnSync - options properties`(): Stream<DynamicTest> = sequence {
     val defaults = SpawnSyncOptions.DEFAULTS
+    assertNotNull(SpawnSyncDefaults.toString())
 
     // defaults
     yield(dynamicTest("default should stringify without error") {
@@ -854,6 +953,7 @@ import elide.testing.annotations.TestCase
 
   @TestFactory fun `exec - options properties`(): Stream<DynamicTest> = sequence {
     val defaults = ExecOptions.DEFAULTS
+    assertNotNull(ExecDefaults.toString())
 
     // defaults
     yield(dynamicTest("default should stringify without error") {
@@ -973,6 +1073,7 @@ import elide.testing.annotations.TestCase
 
   @TestFactory fun `spawn - options properties`(): Stream<DynamicTest> = sequence {
     val defaults = SpawnOptions.DEFAULTS
+    assertNotNull(SpawnDefaults.toString())
 
     // defaults
     yield(dynamicTest("default should stringify without error") {

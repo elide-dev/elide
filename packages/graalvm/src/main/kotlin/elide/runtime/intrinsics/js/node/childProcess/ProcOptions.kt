@@ -50,6 +50,27 @@ import elide.annotations.API
   public val encoding: String?
 
   /**
+   * ## Kill Signal
+   *
+   * Signal which is preferred for use when killing this process.
+   */
+  public val killSignal: String?
+
+  /**
+   * ## Timeout (Integer)
+   *
+   * Timeout, in seconds, after which the process should no longer be allowed to live.
+   */
+  public val timeoutSeconds: Int?
+
+  /**
+   * ## Max Buffer
+   *
+   * Maximum buffer size for process outputs; a reasonable default is provided.
+   */
+  public val maxBuffer: Int?
+
+  /**
    * ## Standard I/O Configuration
    *
    * Specifies configurations for I/O streams for a process operation.
@@ -65,4 +86,11 @@ import elide.annotations.API
    * An empty map can be provided to force an empty environment.
    */
   public val env: Map<String, String>?
+
+  /**
+   * ## Hide on Windows
+   *
+   * Whether to hide the process window for this process, if running on Windows; inert on all other platforms.
+   */
+  public val windowsHide: Boolean?
 }

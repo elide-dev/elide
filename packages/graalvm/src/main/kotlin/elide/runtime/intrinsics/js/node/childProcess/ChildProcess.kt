@@ -102,7 +102,7 @@ import elide.runtime.intrinsics.js.node.events.EventTarget
    *
    * @param signal Signal to use to kill the process.
    */
-  public fun kill(signal: String)
+  public fun kill(signal: String? = null)
 
   /**
    * ## Disconnect

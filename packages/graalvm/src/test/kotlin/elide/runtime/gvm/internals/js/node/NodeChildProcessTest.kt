@@ -22,6 +22,8 @@ import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.stream.Stream
 import kotlinx.datetime.Clock
 import kotlin.reflect.full.isSubclassOf
@@ -45,7 +47,7 @@ import elide.testing.annotations.TestCase
 
 /** Testing for Node's built-in `child_process` module. */
 @TestCase internal class NodeChildProcessTest : NodeModuleConformanceTest<NodeChildProcessModule>() {
-  private val pathToBin = "/bin/echo"
+  private val pathToBin = arrayOf("", "bin", "echo").joinToString("/")
   @Inject internal lateinit var childProcess: ChildProcessAPI
   @Inject internal lateinit var module: NodeChildProcessModule
 
@@ -82,6 +84,23 @@ import elide.testing.annotations.TestCase
     assertEquals("disconnect", assertNotNull(ChildProcessEvents.DISCONNECT))
   }
 
+  @Test fun `standard streams provider`() {
+    (object: StandardStreamsProvider {}).let {
+      assertNull(it.stdin())
+      assertNull(it.stdout())
+      assertNull(it.stderr())
+    }
+    (object: StandardStreamsProvider {
+      override fun stderr(): OutputStream? = System.err
+      override fun stdin(): InputStream? = System.`in`
+      override fun stdout(): OutputStream? = System.out
+    }).let {
+      assertNotNull(it.stdin())
+      assertNotNull(it.stdout())
+      assertNotNull(it.stderr())
+    }
+  }
+
   @Test fun `env map - guest null`() {
     assertNull(decodeEnvMap(asValue(null)))
   }
@@ -104,11 +123,11 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `env map - invalid guest type`() {
-    val value = executeGuest {
+    executeGuest {
       // language=JavaScript
       """
         5
-      """.trimIndent()
+      """
     }.thenAssert {
       val value = assertNotNull(it.returnValue())
       assertThrows<TypeError> { decodeEnvMap(value) }
@@ -133,7 +152,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             5
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertThrows<TypeError> { optionsFromGuest(value) }
@@ -146,7 +165,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({cwd: '/some/path'})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -162,7 +181,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({cwd: true})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -178,7 +197,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({encoding: 'utf-8'})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -193,7 +212,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({encoding: true})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -209,7 +228,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({shell: 'bash'})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -225,7 +244,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({shell: 5})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -240,7 +259,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({uid: 1001})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -257,7 +276,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({uid: true})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -272,7 +291,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({gid: 1001})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -289,7 +308,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({gid: true})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -304,12 +323,12 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({timeout: 3000})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
         val options = assertNotNull(assertDoesNotThrow { optionsFromGuest(value) })
-        assertEquals(3000, options.timeout)
+        assertEquals(3000, options.timeout?.inWholeMilliseconds)
         assertDefaults(options, setOf("timeout"))
       }
     })
@@ -320,7 +339,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({timeout: true})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -335,7 +354,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({killSignal: "sample"})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -352,7 +371,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({killSignal: true})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -367,7 +386,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({env: {TEST: "hello"}})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -385,7 +404,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({env: null})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -401,7 +420,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({env: {}})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -418,7 +437,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({maxBuffer: 1000})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -435,7 +454,7 @@ import elide.testing.annotations.TestCase
         // language=JavaScript
         """
             ({maxBuffer: true})
-        """.trimIndent()
+        """
       }.thenAssert {
         val value = assertNotNull(it.returnValue())
         assertTrue(value.hasMembers())
@@ -519,8 +538,8 @@ import elide.testing.annotations.TestCase
       if ("shell" !in skip) assertNull(options.shell)
       if ("env" !in skip) assertNull(options.env)
       if ("timeout" !in skip) assertNull(options.timeout)
+      if ("killSignal" !in skip) assertNotNull(options.killSignal)
       if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
-      assertNotEquals(ExecSyncOptions.of(), options)
       assertEquals(options, options)
       assertEquals(options, options.copy())
       assertNotNull(options.toString())
@@ -651,7 +670,7 @@ import elide.testing.annotations.TestCase
     """
       const { execSync } = require("node:child_process");
       execSync("echo hello");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execSync - guest simple process spawn`() = executeGuest {
@@ -659,7 +678,7 @@ import elide.testing.annotations.TestCase
     """
       const { execSync } = require("node:child_process");
       execSync("echo hello", {});
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execSync - guest simple process spawn with utf8`() = executeGuest {
@@ -668,7 +687,7 @@ import elide.testing.annotations.TestCase
       const { execSync } = require("node:child_process");
       const result = execSync("echo hello", { encoding: "utf8" });
       test(result).equals("hello\n");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execSync - guest simple process with double quoted args`() = executeGuest {
@@ -677,7 +696,7 @@ import elide.testing.annotations.TestCase
       const { execSync } = require("node:child_process");
       const result = execSync(`echo "hello world"`, { encoding: "utf8" });
       test(result).equals("hello world\n");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execSync - guest simple process with single quoted args`() = executeGuest {
@@ -686,7 +705,7 @@ import elide.testing.annotations.TestCase
       const { execSync } = require("node:child_process");
       const result = execSync(`echo 'hello world'`, { encoding: "utf8" });
       test(result).equals("hello world\n");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   // ---
@@ -751,7 +770,7 @@ import elide.testing.annotations.TestCase
     """
       const { execFileSync } = require("node:child_process");
       execFileSync("$pathToBin", ["hello"]);
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execFileSync - guest simple process spawn`() = executeGuest {
@@ -759,7 +778,7 @@ import elide.testing.annotations.TestCase
     """
       const { execFileSync } = require("node:child_process");
       execFileSync("$pathToBin", ["hello"], {});
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execFileSync - guest simple process spawn with and utf8`() = executeGuest {
@@ -768,7 +787,7 @@ import elide.testing.annotations.TestCase
       const { execFileSync } = require("node:child_process");
       const result = execFileSync("$pathToBin", ["hello"], { encoding: "utf8" });
       test(result).equals("hello\n");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execFileSync - guest simple process spawn with and utf8 and bash as shell`() = executeGuest {
@@ -777,7 +796,7 @@ import elide.testing.annotations.TestCase
       const { execFileSync } = require("node:child_process");
       const result = execFileSync("$pathToBin", ["hello"], { encoding: "utf8", shell: "bash" });
       test(result).equals("hello\n");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execFileSync - guest simple process spawn with no args and utf8`() = executeGuest {
@@ -786,7 +805,7 @@ import elide.testing.annotations.TestCase
       const { execFileSync } = require("node:child_process");
       const result = execFileSync("$pathToBin", { encoding: "utf8" });
       test(result).equals("\n");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `execFileSync - guest simple process spawn with no args and utf8 and bash as shell`() = executeGuest {
@@ -795,7 +814,7 @@ import elide.testing.annotations.TestCase
       const { execFileSync } = require("node:child_process");
       const result = execFileSync("$pathToBin", { encoding: "utf8", shell: "bash" });
       test(result).equals("\n");
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   // ---
@@ -878,7 +897,6 @@ import elide.testing.annotations.TestCase
       if ("env" !in skip) assertNull(options.env)
       if ("timeout" !in skip) assertNull(options.timeout)
       if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
-      assertNotEquals(SpawnSyncOptions.of(), options)
       assertEquals(options, options)
       assertEquals(options, options.copy())
       assertNotNull(options.toString())
@@ -896,6 +914,38 @@ import elide.testing.annotations.TestCase
     assertTrue(result.pid > 0)
     val exitCode = assertNotNull(result.status)
     assertEquals(0, exitCode)
+  }
+
+  @Test fun `spawnSync - simple process spawn result`() {
+    val result = assertNotNull(childProc().spawnSync(
+      asValue("echo"),
+      asValue(arrayOf("hello")),
+      asValue(SpawnSyncOptions.DEFAULTS.copy(encoding = "utf8"))))
+
+    assertIs<ChildProcessSync>(result)
+    assertNotNull(result.pid)
+    assertNotEquals(0, result.pid)
+    assertNotNull(result.stdout)
+    assertNotNull(result.stderr)
+    assertEquals(0, result.status)
+    assertNull(result.signal)
+  }
+
+  @Test fun `spawnSync - consume from spawned stdout`() {
+    val opts = SpawnSyncOptions.DEFAULTS.copy(encoding = "utf8")
+    val result = assertNotNull(childProc().spawnSync(
+      asValue("echo"),
+      asValue(arrayOf("hello")),
+      asValue(opts)))
+
+    assertIs<ChildProcessSync>(result)
+    assertNotNull(result.pid)
+    assertNotEquals(0, result.pid)
+    assertNotNull(result.stdout)
+    assertNotNull(result.stderr)
+    assertEquals(0, result.status)
+    assertNull(result.signal)
+    assertEquals("hello\n", result.stdout!!.readToStringOrBuffer(opts))
   }
 
   @Test fun `spawnSync - host simple process spawn with utf8`() {
@@ -929,7 +979,7 @@ import elide.testing.annotations.TestCase
     """
       const { spawnSync } = require("node:child_process");
       spawnSync("echo", ["hello"]);
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `spawnSync - guest simple process spawn`() = executeGuest {
@@ -937,7 +987,7 @@ import elide.testing.annotations.TestCase
     """
       const { spawnSync } = require("node:child_process");
       spawnSync("echo", ["hello"], {});
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `spawnSync - guest simple process spawn with and utf8`() = executeGuest {
@@ -946,7 +996,7 @@ import elide.testing.annotations.TestCase
       const { spawnSync } = require("node:child_process");
       const result = spawnSync("echo", ["hello"], { encoding: "utf8" });
       test(result.pid).isNotNull();
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `spawnSync - guest simple process spawn with and utf8 and bash as shell`() = executeGuest {
@@ -955,7 +1005,7 @@ import elide.testing.annotations.TestCase
       const { spawnSync } = require("node:child_process");
       const result = spawnSync("echo", ["hello"], { encoding: "utf8", shell: "bash" });
       test(result.pid).isNotNull();
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `spawnSync - guest simple process spawn with no args and utf8`() = executeGuest {
@@ -964,7 +1014,7 @@ import elide.testing.annotations.TestCase
       const { spawnSync } = require("node:child_process");
       const result = spawnSync("echo", { encoding: "utf8" });
       test(result.pid).isNotNull();
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   @Test fun `spawnSync - guest simple process spawn with no args and utf8 and bash as shell`() = executeGuest {
@@ -973,7 +1023,7 @@ import elide.testing.annotations.TestCase
       const { spawnSync } = require("node:child_process");
       const result = spawnSync("echo", { encoding: "utf8", shell: "bash" });
       test(result.pid).isNotNull();
-    """.trimIndent()
+    """
   }.doesNotFail()
 
   // ---
@@ -1053,7 +1103,6 @@ import elide.testing.annotations.TestCase
       if ("env" !in skip) assertNull(options.env)
       if ("timeout" !in skip) assertNull(options.timeout)
       if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
-      assertNotEquals(ExecOptions.of(), options)
       assertEquals(options, options)
       assertEquals(options, options.copy())
       assertNotNull(options.toString())
@@ -1139,15 +1188,36 @@ import elide.testing.annotations.TestCase
     assertNotNull(proc.stdout)
     assertNotNull(proc.stdin)
     assertNotNull(proc.stderr)
-    assertEquals(0, proc.wait())
   }
 
   @Test fun `spawn - with timeout which triggers`() {
     val now = Clock.System.now()
     val proc = assertNotNull(childProc().spawn(
       asValue("sleep"),
-      asValue(arrayOf("3")),
+      asValue(arrayOf("30")),
       asValue(SpawnOptions.of(timeoutSeconds = 10))))
+
+    val spawnTime = Clock.System.now() - now
+    assertTrue(spawnTime < 2.seconds)
+    assertNull(proc.exitCode)
+    assertNull(proc.signalCode)
+    assertFalse(proc.killed)
+    assertNotNull(proc.pid)
+    assertNotEquals(0, proc.pid)
+    assertNotNull(proc.stdout)
+    assertNotNull(proc.stdin)
+    assertNotNull(proc.stderr)
+    assertThrows<ChildProcessTimeout> {
+      assertEquals(0, proc.wait())
+    }
+  }
+
+  @Test fun `spawn - start and then manually kill`() {
+    val now = Clock.System.now()
+    val proc = assertNotNull(childProc().spawn(
+      asValue("sleep"),
+      asValue(arrayOf("30")),
+      asValue(null)))
 
     val spawnTime = Clock.System.now() - now
     assertTrue(spawnTime < 2.seconds)
@@ -1156,7 +1226,7 @@ import elide.testing.annotations.TestCase
     assertNotNull(proc.stdout)
     assertNotNull(proc.stdin)
     assertNotNull(proc.stderr)
-    assertEquals(0, proc.wait())
+    assertDoesNotThrow { proc.kill() }
   }
 
   @TestFactory fun `spawn - options properties`(): Stream<DynamicTest> = sequence {
@@ -1229,7 +1299,6 @@ import elide.testing.annotations.TestCase
       if ("env" !in skip) assertNull(options.env)
       if ("timeout" !in skip) assertNull(options.timeout)
       if ("encoding" !in skip) assertEquals(ChildProcessDefaults.ENCODING, options.encoding)
-      assertNotEquals(SpawnOptions.of(), options)
       assertEquals(options, options)
       assertEquals(options, options.copy())
       assertNotNull(options.toString())

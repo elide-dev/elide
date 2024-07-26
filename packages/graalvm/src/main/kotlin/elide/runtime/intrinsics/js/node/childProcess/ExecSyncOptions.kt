@@ -14,6 +14,8 @@ package elide.runtime.intrinsics.js.node.childProcess
 
 import org.graalvm.polyglot.Value
 import kotlin.time.Duration
+import kotlin.time.DurationUnit.MILLISECONDS
+import kotlin.time.toDuration
 import elide.annotations.API
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.URL
@@ -71,19 +73,16 @@ internal data object ExecSyncDefaults {
   override val shell: String? = null,
   override val uid: Int? = null,
   override val gid: Int? = null,
-  override val timeoutSeconds: Int? = null,
-  override val killSignal: String? = KILL_SIGNAL,
+  override val timeout: Duration? = null,
+  override val killSignal: String = KILL_SIGNAL,
   override val maxBuffer: Int = MAX_BUFFER_DEFAULT,
   override val encoding: String? = ENCODING,
   override val windowsHide: Boolean = WINDOWS_HIDE,
 ): IdentityProcOptions {
-  override val timeout: Int? get() = timeoutSeconds
+  override val timeoutSeconds: Long? get() = timeout?.inWholeSeconds
 
   /** @return Copy of these options with [value] applied as a timeout, in seconds. */
-  public fun withTimeoutSeconds(value: UInt): ExecSyncOptions = copy(timeoutSeconds = value.toInt())
-
-  /** @return Copy of these options with [value] applied as a timeout, in seconds. */
-  public fun withTimeout(value: Duration): ExecSyncOptions = withTimeoutSeconds(value.inWholeSeconds.toUInt())
+  public fun withTimeout(value: Duration): ExecSyncOptions = copy(timeout = value)
 
   /** Factories and other helpers for [ExecSyncOptions]. */
   public companion object {
@@ -102,7 +101,7 @@ internal data object ExecSyncDefaults {
       uid: Int? = null,
       gid: Int? = null,
       timeoutSeconds: Int? = null,
-      killSignal: String? = KILL_SIGNAL,
+      killSignal: String = KILL_SIGNAL,
       maxBuffer: Int = MAX_BUFFER_DEFAULT,
       encoding: String = ENCODING,
       windowsHide: Boolean = WINDOWS_HIDE,
@@ -115,7 +114,7 @@ internal data object ExecSyncDefaults {
       shell = shell,
       uid = uid,
       gid = gid,
-      timeoutSeconds = timeoutSeconds,
+      timeout = timeoutSeconds?.toDuration(MILLISECONDS),
       killSignal = killSignal,
       maxBuffer = maxBuffer,
       encoding = encoding,
@@ -138,8 +137,8 @@ internal data object ExecSyncDefaults {
           shell = other.getMember("shell")?.takeIf { it.isString }?.asString(),
           uid = other.getMember("uid")?.takeIf { it.isNumber }?.asInt(),
           gid = other.getMember("gid")?.takeIf { it.isNumber }?.asInt(),
-          timeoutSeconds = other.getMember("timeout")?.takeIf { it.isNumber }?.asInt(),
-          killSignal = other.getMember("killSignal")?.takeIf { it.isString }?.asString(),
+          timeout = other.getMember("timeout")?.takeIf { it.isNumber }?.asInt()?.toDuration(MILLISECONDS),
+          killSignal = other.getMember("killSignal")?.takeIf { it.isString }?.asString() ?: KILL_SIGNAL,
           maxBuffer = other.getMember("maxBuffer")?.takeIf { it.isNumber }?.asInt() ?: MAX_BUFFER_DEFAULT,
           encoding = other.getMember("encoding")?.takeIf { it.isString }?.asString() ?: "buffer",
           windowsHide = other.getMember("windowsHide")?.takeIf { it.isBoolean }?.asBoolean() ?: false,

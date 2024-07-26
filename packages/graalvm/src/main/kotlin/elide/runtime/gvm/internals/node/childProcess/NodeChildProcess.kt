@@ -32,7 +32,7 @@ import java.nio.file.Files
 import java.util.LinkedList
 import java.util.Optional
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit.SECONDS
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
@@ -255,9 +255,6 @@ internal sealed interface CallResult<T> where T: ProcOptions {
       stdout: ProcessOutputStream?,
       stderr: ProcessOutputStream?,
     ): CallResult<T> {
-      // otherwise, if we reach here, the process finished with a non-zero exit code; in synchronous mode, we
-      // need to throw an exception to the caller.
-      // throw ChildProcessFailure(proc.exitValue())
       return when {
         // if we have streams at all, we affix them
         stdout != null || stderr != null -> StreamsResult(
@@ -350,7 +347,7 @@ private inline fun <T: ProcOptions> ChildProcessExecution<T>.callAndBlock(
 ): Pair<Process, CallResult<T>> = callAsync(this).let { fut ->
   when (val timeout = options.timeout) {
     null -> fut.get()
-    else -> fut.get(timeout.toLong(), SECONDS)
+    else -> fut.get(timeout.inWholeMilliseconds, MILLISECONDS)
   }
 }
 
@@ -559,7 +556,7 @@ public class ChildProcessFailure(public val exitCode: Int)
 public class ChildProcessTimeout : ChildProcessException("Child process call timed out")
 
 // Tracks child process terminal/exit conditions.
-private class ChildProcessTermination {
+internal class ChildProcessTermination {
   @Volatile var exitCode: Int = -1
   @Volatile var exitSignal: String = ""
 
@@ -607,6 +604,27 @@ private val CHILD_PROCESS_HANDLE_PROPS_AND_METHODS = arrayOf(
 )
 
 /**
+ * ## Abstract Child Process Handle
+ *
+ * Implements common base functionality for handles which address child processes; there are two implementations of this
+ * base provided by Elide:
+ *
+ * - [ChildProcessHandle]: Async-capable child process handle, which needs to address things like standard streams,
+ *   signals, and so on; created for a live process.
+ * - [ChildProcessSyncHandle]: Synchronous child process handle, which is typically created for a process which has
+ *   already closed or otherwise been terminated.
+ *
+ *  @param events Override the event manager to use for this process handle
+ */
+public abstract class AbstractChildProcessHandle internal constructor (
+  result: CallResult<*>? = null,
+  private val events: EventAware = EventAware.create(),
+) : EventEmitter by events, EventTarget by events {
+  internal val result: AtomicReference<CallResult<*>> = AtomicReference(result)
+  internal val termination: ChildProcessTermination = ChildProcessTermination()
+}
+
+/**
  * ## Node API: Child Process
  *
  * Object returned from async process spawn/exec methods which provide access to the underlying child process; the
@@ -631,10 +649,7 @@ private val CHILD_PROCESS_HANDLE_PROPS_AND_METHODS = arrayOf(
 public class ChildProcessHandle private constructor (
   private val proc: Process,
   private val pending: PendingCallResult<*>,
-  private val evented: EventAware = EventAware.create(),
-  private val result: AtomicReference<CallResult<*>> = AtomicReference(null),
-  private val termination: ChildProcessTermination = ChildProcessTermination(),
-) : ProxyObject, ChildProcess, EventEmitter by evented, EventTarget by evented {
+) : ProxyObject, ChildProcess, AbstractChildProcessHandle() {
   @Volatile private var didKill: Boolean = false
   @get:Polyglot override val pid: Long get() = proc.pid()
   @get:Polyglot override val exitCode: Int? get() = termination.exitCode.takeIf { it != -1 }
@@ -642,7 +657,15 @@ public class ChildProcessHandle private constructor (
   @get:Polyglot override val stdin: ProcessInputStream? get() = pending.stdin()
   @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.stdout()
   @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.stderr()
-  @Polyglot override fun wait(): Int = proc.waitFor().also { termination.exited(it) }
+  @Polyglot override fun wait(): Int = when (val timeout = pending.execution.options.timeout) {
+    null -> proc.waitFor()
+    else -> proc.waitFor(timeout.inWholeMilliseconds, MILLISECONDS).let {
+      if (!proc.isAlive) proc.exitValue() else {
+        kill("SIGKILL")
+        throw ChildProcessTimeout()
+      }
+    }
+  }
 
   @get:Polyglot override val stdio: ProcessIOChannels
     get() = object: ProcessIOChannels {
@@ -659,10 +682,10 @@ public class ChildProcessHandle private constructor (
   @get:Polyglot override val killed: Boolean get() = didKill
 
   @Suppress("TooGenericExceptionCaught")
-  @Polyglot override fun kill(signal: String) {
+  @Polyglot override fun kill(signal: String?): Unit = (signal ?: pending.execution.options.killSignal).let {
     try {
-      ChildProcessNative.killWith(pid.toInt(), signal)
-      termination.signal(signal)
+      ChildProcessNative.killWith(pid.toInt(), it)
+      termination.signal(it)
     } catch (e: Throwable) {
       throw JsError.valueError("Failed to send signal to process: ${e.message}", e)
     }
@@ -772,17 +795,24 @@ private val CHILD_PROCESS_SYNC_HANDLE_PROPS_AND_METHODS = arrayOf(
  */
 public class ChildProcessSyncHandle private constructor (
   private val handle: ProcessHandle,
-  private val result: CallResult<*>,
-) : ProxyObject, ChildProcessSync {
+  result: CallResult<ProcOptions>,
+) : ProxyObject, ChildProcessSync, AbstractChildProcessHandle(result) {
   @get:Polyglot override val pid: Long get() = handle.pid()
-  @get:Polyglot override val status: Int? get() = result.exit?.code?.toInt()
-  @get:Polyglot override val stdout: ProcessOutputStream? get() = result.execution.stdout
-  @get:Polyglot override val stderr: ProcessOutputStream? get() = result.execution.stderr
+  @get:Polyglot override val status: Int? get() = result.get()?.exit?.code?.toInt()
+  @get:Polyglot override val signal: String? get() = termination.exitSignal.takeIf { it.isNotEmpty() }
+  @get:Polyglot override val stdout: ProcessOutputStream? get() = when (val out = result.get()) {
+    is StreamsCallResult<*> -> out.stdout()
+    else -> null
+  }
+
+  @get:Polyglot override val stderr: ProcessOutputStream? get() = when (val out = result.get()) {
+    is StreamsCallResult<*> -> out.stderr()
+    else -> null
+  }
 
   @get:Polyglot override val output: LazyProcessOutput
     get() = TODO("Not yet implemented: `ChildProcessSyncHandle.output`")
-  @get:Polyglot override val signal: String?
-    get() = TODO("Not yet implemented: `ChildProcessSyncHandle.signal`")
+
   @get:Polyglot override val error: elide.runtime.intrinsics.js.err.JsError?
     get() = TODO("Not yet implemented: `ChildProcessSyncHandle.error`")
 
@@ -846,7 +876,7 @@ private inline fun <T: ProcOptions> callAsync(
             val result = runCatching {
               when (val timeout = exec.options.timeout) {
                 null -> proc.waitFor()
-                else -> proc.waitFor(timeout.toLong(), SECONDS).let { returned ->
+                else -> proc.waitFor(timeout.inWholeMilliseconds, MILLISECONDS).let { returned ->
                   when (returned) {
                     false -> throw ChildProcessTimeout()
                     true -> proc.exitValue()
@@ -875,7 +905,7 @@ private inline fun <T: ProcOptions> callAsync(
     }.let { fut ->
       when (val timeout = exec.options.timeout) {
         null -> fut
-        else -> withTimeout(fut, timeout.toLong(), SECONDS, executor)
+        else -> withTimeout(fut, timeout.inWholeMilliseconds, MILLISECONDS, executor)
       }
     }
   }

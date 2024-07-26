@@ -12,6 +12,7 @@
  */
 package elide.runtime.intrinsics.js.node.childProcess
 
+import kotlin.time.Duration
 import elide.annotations.API
 
 /**
@@ -33,7 +34,7 @@ import elide.annotations.API
    *
    * Provides a timeout value for a process operation, in seconds.
    */
-  public val timeout: Int?
+  public val timeout: Duration?
 
   /**
    * ## Shell
@@ -54,14 +55,14 @@ import elide.annotations.API
    *
    * Signal which is preferred for use when killing this process.
    */
-  public val killSignal: String?
+  public val killSignal: String
 
   /**
    * ## Timeout (Integer)
    *
    * Timeout, in seconds, after which the process should no longer be allowed to live.
    */
-  public val timeoutSeconds: Int?
+  public val timeoutSeconds: Long?
 
   /**
    * ## Max Buffer

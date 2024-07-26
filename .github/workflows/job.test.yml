@@ -327,7 +327,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         run: |
-          cargo build -p sqlite
+          cargo build;
           ./gradlew \
             test \
             jvmTest \

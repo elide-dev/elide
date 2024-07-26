@@ -14,6 +14,7 @@ package elide.runtime.exec
 
 import com.google.common.util.concurrent.ListeningExecutorService
 import java.util.concurrent.Executor
+import java.util.concurrent.ScheduledExecutorService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlin.coroutines.CoroutineContext
@@ -47,7 +48,7 @@ import kotlin.coroutines.CoroutineContext
  *
  * Co-routine scope may be enclosed to provide context for host-side execution.
  */
-public interface GuestExecutor : ListeningExecutorService, CoroutineContext {
+public interface GuestExecutor : ListeningExecutorService, ScheduledExecutorService, CoroutineContext {
   /** @return The co-routine dispatcher scope/context to use. */
   public val dispatcher: CoroutineDispatcher
 }

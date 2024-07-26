@@ -22,8 +22,10 @@ import elide.annotations.Inject
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
 import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
+import elide.runtime.gvm.internals.node.path.NodePathsModule
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.intrinsics.js.deferred
+import elide.runtime.intrinsics.js.node.PathAPI
 import elide.runtime.intrinsics.js.node.WritableFilesystemPromiseAPI
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.path.Path
@@ -31,6 +33,7 @@ import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `fs/promises` built-in module. */
 @TestCase internal class NodeFsPromisesTest : AbstractNodeFsTest<NodeFilesystemModule>() {
+  @Inject private lateinit var path: NodePathsModule
   @Inject private lateinit var execProvider: GuestExecutorProvider
 
   private val filesystem: NodeFilesystemModule by lazy {
@@ -39,6 +42,7 @@ import elide.testing.annotations.TestCase
 
   override val moduleName: String get() = "fs/promises"
   override fun provide(): NodeFilesystemModule = NodeFilesystemModule(
+    path,
     VfsInitializerListener().also {
       it.onVfsCreated(EmbeddedGuestVFS.empty())
     },

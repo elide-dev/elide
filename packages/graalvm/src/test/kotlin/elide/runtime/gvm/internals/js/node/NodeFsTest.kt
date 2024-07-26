@@ -15,6 +15,9 @@
 package elide.runtime.gvm.internals.js.node
 
 import org.graalvm.polyglot.Value
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
@@ -23,16 +26,21 @@ import java.nio.file.Files
 import java.nio.file.attribute.PosixFilePermission.*
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
+import java.util.stream.Stream
+import kotlin.streams.asStream
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.node.fs.FilesystemConstants
 import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
 import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
+import elide.runtime.gvm.internals.node.fs.resolveEncodingString
+import elide.runtime.gvm.internals.node.path.NodePathsModule
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.Error
 import elide.runtime.intrinsics.js.err.TypeError
+import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.node.WritableFilesystemAPI
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.fs.WriteFileOptions
@@ -41,6 +49,7 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
 /** Tests for Elide's implementation of the Node `fs` built-in module. */
 @TestCase internal class NodeFsTest : AbstractNodeFsTest<NodeFilesystemModule>() {
+  @Inject private lateinit var path: NodePathsModule
   @Inject private lateinit var execProvider: GuestExecutorProvider
 
   private val filesystem: NodeFilesystemModule by lazy {
@@ -49,6 +58,7 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
 
   override val moduleName: String get() = "fs"
   override fun provide(): NodeFilesystemModule = NodeFilesystemModule(
+    path,
     VfsInitializerListener().also {
       it.onVfsCreated(EmbeddedGuestVFS.empty())
     },
@@ -161,6 +171,57 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
   @Test override fun testInjectable() {
     assertNotNull(filesystem, "should be able to inject host-side filesystem module")
   }
+
+  @Test fun testUnknownEncoding() {
+    assertThrows<ValueError> { resolveEncodingString("unknown") }
+  }
+
+  @TestFactory fun testEncodingStrings(): Stream<DynamicTest> = sequence {
+    listOf(
+      // ASCII
+      "ASCII" to Charsets.US_ASCII,
+      "ascii" to Charsets.US_ASCII,
+      "AsCiI" to Charsets.US_ASCII,
+      "us-ascii" to Charsets.US_ASCII,
+      "US-ASCII" to Charsets.US_ASCII,
+      "Us-AsCiI" to Charsets.US_ASCII,
+      "usascii" to Charsets.US_ASCII,
+      // UTF-8
+      "utf-8" to Charsets.UTF_8,
+      "UTF-8" to Charsets.UTF_8,
+      "UtF-8" to Charsets.UTF_8,
+      "utf8" to Charsets.UTF_8,
+      "UTF8" to Charsets.UTF_8,
+      "UtF8" to Charsets.UTF_8,
+      // UTF-16
+      "utf-16" to Charsets.UTF_16,
+      "UTF-16" to Charsets.UTF_16,
+      "UtF-16" to Charsets.UTF_16,
+      "utf16" to Charsets.UTF_16,
+      "UTF16" to Charsets.UTF_16,
+      "UtF16" to Charsets.UTF_16,
+      // UTF-32
+      "utf-32" to Charsets.UTF_32,
+      "UTF-32" to Charsets.UTF_32,
+      "UtF-32" to Charsets.UTF_32,
+      "utf32" to Charsets.UTF_32,
+      "UTF32" to Charsets.UTF_32,
+      "UtF32" to Charsets.UTF_32,
+      // ISO-8859-1
+      "latin1" to Charsets.ISO_8859_1,
+      "LATIN1" to Charsets.ISO_8859_1,
+      "LaTiN1" to Charsets.ISO_8859_1,
+      "binary" to Charsets.ISO_8859_1,
+      "Binary" to Charsets.ISO_8859_1,
+      "BINARY" to Charsets.ISO_8859_1,
+      "bInArY" to Charsets.ISO_8859_1,
+    ).forEach { (label, expected) ->
+      yield(dynamicTest("'$label'") {
+        val encoding = assertNotNull(resolveEncodingString(label))
+        assertEquals(expected, encoding, "label '$label' should yield encoding '$expected'")
+      })
+    }
+  }.asStream()
 
   @Test fun `exists() with text file`() = withTemp { tmp ->
     filesystem.provideStd().let { fs ->

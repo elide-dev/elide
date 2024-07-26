@@ -26,8 +26,10 @@ import java.util.stream.Stream
 import kotlin.reflect.full.isSubclassOf
 import kotlin.streams.asStream
 import kotlin.test.*
+import kotlin.time.Duration.Companion.seconds
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.gvm.internals.node.childProcess.*
 import elide.runtime.gvm.internals.node.childProcess.ChildProcessEvents
 import elide.runtime.gvm.internals.node.childProcess.ChildProcessNative
 import elide.runtime.gvm.internals.node.childProcess.NodeChildProcess
@@ -533,6 +535,25 @@ import elide.testing.annotations.TestCase
       assertNotNull(options.toString())
     }
   }.asStream()
+
+  @Test fun `execSync - run with timeout which does not trigger`() {
+    val result = assertNotNull(childProc().hostExecSync("echo hello", ExecSyncOptions.DEFAULTS
+      .withTimeout(5.seconds)
+      .copy(encoding = "utf8")))
+
+    assertIs<String>(result)
+    assertEquals("hello\n", result)
+  }
+
+  @Test fun `execSync - run with timeout which triggers`() {
+    assertThrows<ChildProcessTimeout> {
+      assertNotNull(childProc().hostExecSync("sleep 5", ExecSyncOptions.DEFAULTS
+        .withTimeout(2.seconds)
+        .copy(encoding = "utf8")))
+    }.let { exception ->
+      assertNotNull(exception.message)
+    }
+  }
 
   @Test fun `execSync - should reject unbalanced double quotes`() {
     assertThrows<Throwable> {

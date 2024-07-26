@@ -20,6 +20,7 @@
 
 package elide.runtime.gvm.internals.node.childProcess
 
+import com.google.common.util.concurrent.Futures.withTimeout
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
@@ -31,6 +32,7 @@ import java.io.OutputStream
 import java.nio.file.Files
 import java.util.LinkedList
 import java.util.Optional
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit.SECONDS
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater
 import java.util.concurrent.atomic.AtomicReference
@@ -534,6 +536,14 @@ private fun <T: ProcOptions> unwrapSyncToStringOrBuffer(result: CallResult<T>, o
 }
 
 /**
+ * ## Child Process Exception
+ *
+ * Base exception type for exceptions which can occur when launching or interacting with child processes.
+ */
+public abstract class ChildProcessException(message: String, cause: Throwable? = null) :
+  RuntimeException(message, cause)
+
+/**
  * ## Child Process Failure
  *
  * Thrown when a synchronously launched child process fails with a non-zero exit code.
@@ -541,14 +551,14 @@ private fun <T: ProcOptions> unwrapSyncToStringOrBuffer(result: CallResult<T>, o
  * @property exitCode Exit code of the child process.
  */
 public class ChildProcessFailure(public val exitCode: Int)
-  : RuntimeException("Child process failed with exit code $exitCode")
+  : ChildProcessException("Child process failed with exit code $exitCode")
 
 /**
  * ## Child Process Timeout
  *
  * Thrown when a child process which was spawned or executed through the Node API times out.
  */
-public class ChildProcessTimeout : RuntimeException("Child process call timed out")
+public class ChildProcessTimeout : ChildProcessException("Child process call timed out")
 
 // Tracks child process terminal/exit conditions.
 private class ChildProcessTermination {
@@ -843,9 +853,8 @@ private inline fun <T: ProcOptions> callAsync(
             }
 
             // obtain an exit code, or `null` if the process was canceled and didn't terminate.
-            val exitResult = when (val exitCode = result.getOrNull()) {
+            val exitResult = when (val exitCode = result.getOrThrow()) {
               0 -> ExitResult.success()
-              null -> ExitResult.timeout()
               else -> ExitResult.failure(exitCode.toUInt().also {
                 assert(exitCode > 0) { "Cannot have negative exit code" }
               })
@@ -859,6 +868,11 @@ private inline fun <T: ProcOptions> callAsync(
             )
           }
         }
+      }
+    }.let { fut ->
+      when (val timeout = exec.options.timeout) {
+        null -> fut
+        else -> withTimeout(fut, timeout.toLong(), SECONDS, executor)
       }
     }
   }
@@ -892,7 +906,14 @@ internal class NodeChildProcess (
   // used by guest-side calls like `execSync`.
   @VisibleForTesting fun hostExecSync(command: String, options: ExecSyncOptions): StringOrBuffer? {
     val (cmd, args) = tokenizeCommand(command)
-    return unwrapSyncToStringOrBuffer(callSync(CommandExec.of(cmd, args, options)).second, options)
+    return try {
+      unwrapSyncToStringOrBuffer(callSync(CommandExec.of(cmd, args, options)).second, options)
+    } catch (exe: ExecutionException) {
+      when (val cause = exe.cause ?: exe) {
+        is ChildProcessTimeout, is ChildProcessFailure -> throw cause
+        else -> throw JsError.of("Failed to launch process", cause = cause)
+      }
+    }
   }
 
   @Polyglot override fun spawn(command: Value, args: Value?, options: Value?): ChildProcess {
@@ -914,9 +935,9 @@ internal class NodeChildProcess (
         callback.executeVoid(null, proc.stdout, proc.stderr)
       }
       proc
-    } catch (err: IOException) {
+    } catch (err: ChildProcessException) {
       if (callback != null && callback.canExecute()) {
-        callback.executeVoid(JsError.of("Failed to launch process", cause = err))
+        callback.executeVoid(JsError.of(err.message ?: "Failed to launch child process", cause = err))
       }
       throw err
     }

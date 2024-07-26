@@ -13,6 +13,7 @@
 package elide.runtime.intrinsics.js.node.childProcess
 
 import org.graalvm.polyglot.Value
+import kotlin.time.Duration
 import elide.annotations.API
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.URL
@@ -77,6 +78,12 @@ internal data object ExecSyncDefaults {
   override val windowsHide: Boolean = WINDOWS_HIDE,
 ): IdentityProcOptions {
   override val timeout: Int? get() = timeoutSeconds
+
+  /** @return Copy of these options with [value] applied as a timeout, in seconds. */
+  public fun withTimeoutSeconds(value: UInt): ExecSyncOptions = copy(timeoutSeconds = value.toInt())
+
+  /** @return Copy of these options with [value] applied as a timeout, in seconds. */
+  public fun withTimeout(value: Duration): ExecSyncOptions = withTimeoutSeconds(value.inWholeSeconds.toUInt())
 
   /** Factories and other helpers for [ExecSyncOptions]. */
   public companion object {

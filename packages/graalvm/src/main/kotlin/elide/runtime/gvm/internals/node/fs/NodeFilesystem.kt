@@ -107,9 +107,9 @@ internal fun resolveEncodingString(encoding: String): Charset = when (encoding.t
   "utf8", "utf-8" -> Charsets.UTF_8
   "utf16", "utf-16" -> Charsets.UTF_16
   "utf32", "utf-32" -> Charsets.UTF_32
-  "ascii" -> Charsets.US_ASCII
+  "ascii", "us-ascii", "usascii" -> Charsets.US_ASCII
   "latin1", "binary" -> Charsets.ISO_8859_1
-  else -> JsError.error("Unknown encoding passed to `fs` readFile: $encoding")
+  else -> throw JsError.valueError("Unknown encoding passed to `fs` readFile: $encoding")
 }
 
 // Implements the Node built-in filesystem modules.

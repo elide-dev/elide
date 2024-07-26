@@ -32,7 +32,6 @@ import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.node.childProcess.*
 import elide.runtime.gvm.internals.node.childProcess.ChildProcessEvents
-import elide.runtime.gvm.internals.node.childProcess.ChildProcessNative
 import elide.runtime.gvm.internals.node.childProcess.NodeChildProcess
 import elide.runtime.gvm.internals.node.childProcess.NodeChildProcessModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest

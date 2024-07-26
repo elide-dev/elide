@@ -66,6 +66,8 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
   internal val stdout: Any? = null,
   internal val stderr: Any? = null,
 ) {
+
+
   /**
    * Apply this standard I/O configuration to a given [ProcessBuilder].
    *
@@ -74,7 +76,7 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
   public fun applyTo(processBuilder: ProcessBuilder): ProcessBuilder = processBuilder.apply {
     applyToStream(
       stdin,
-      { redirectInput(Redirect.DISCARD) },
+      { /* not applicable to inputs */ },
       { redirectInput(Redirect.PIPE) },
       { redirectInput(Redirect.INHERIT) })
 
@@ -89,6 +91,26 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
       { redirectError(Redirect.DISCARD) },
       { redirectError(Redirect.PIPE) },
       { redirectError(Redirect.INHERIT) })
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as StdioConfig
+
+    if (stdin != other.stdin) return false
+    if (stdout != other.stdout) return false
+    if (stderr != other.stderr) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = stdin?.hashCode() ?: 0
+    result = 31 * result + (stdout?.hashCode() ?: 0)
+    result = 31 * result + (stderr?.hashCode() ?: 0)
+    return result
   }
 
   public companion object {
@@ -110,19 +132,34 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
     /** @return Standard I/O configuration that sets all modes to `inherit`. */
     @JvmStatic public fun inherit(): StdioConfig = StdioConfig(INHERIT, INHERIT, INHERIT)
 
+    /** @return Standard I/O configuration that sets all modes to `ignore`. */
+    @JvmStatic public fun ignore(): StdioConfig = StdioConfig(IGNORE, IGNORE, IGNORE)
+
+    private fun extractModeOrValue(value: Value): Any? = when {
+      value.isNumber -> value.asInt()
+      value.isString -> when (val token = value.asString()) {
+        PIPE -> PIPE
+        INHERIT -> INHERIT
+        IGNORE -> IGNORE
+        else -> throw JsError.valueError("Invalid stdio configuration token: $token")
+      }
+      else -> value
+    }
+
     /** @return Standard I/O configuration derived from a guest value. */
     @Suppress("MagicNumber")
-    @JvmStatic public fun from(other: Value?): StdioConfig = when (val cfg = other) {
+    @JvmStatic public fun from(other: Value?): StdioConfig = when (other) {
       null -> DEFAULTS
       else -> when {
         // foreign `null`: equivalent to host `null`
-        cfg.isNull -> DEFAULTS
+        other.isNull -> DEFAULTS
 
         // foreign string: interpret as a stdio configuration token
-        cfg.isString -> when (val token = cfg.asString()) {
+        other.isString -> when (val token = other.asString()) {
           PIPE -> pipe()
           INHERIT -> inherit()
-          else -> throw JsError.typeError("Invalid stdio configuration token: $token")
+          IGNORE -> ignore()
+          else -> throw JsError.valueError("Invalid stdio configuration token: $token")
         }
 
         // foreign array: positional stdio configuration
@@ -137,26 +174,31 @@ import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
         //
         // if the array is "short," we apply partially, aligned with the same streams.
         // if the array is "long," we apply fully, ignoring any extra elements.
-        cfg.hasArrayElements() -> when (cfg.arraySize) {
+        other.hasArrayElements() -> when (other.arraySize) {
           // just a configuration for `stdin`
-          1L -> StdioConfig(cfg.getArrayElement(0))
+          1L -> StdioConfig(
+            extractModeOrValue(other.getArrayElement(0)),
+          )
 
           // configuration for `stdin` and `stdout`
-          2L -> StdioConfig(cfg.getArrayElement(0), cfg.getArrayElement(1))
+          2L -> StdioConfig(
+            extractModeOrValue(other.getArrayElement(0)),
+            extractModeOrValue(other.getArrayElement(1)),
+          )
 
           // configuration for `stdin`, `stdout`, and `stderr`
           3L -> StdioConfig(
-            cfg.getArrayElement(0),
-            cfg.getArrayElement(1),
-            cfg.getArrayElement(2),
+            extractModeOrValue(other.getArrayElement(0)),
+            extractModeOrValue(other.getArrayElement(1)),
+            extractModeOrValue(other.getArrayElement(2)),
           )
 
           // anything else is a failure
-          else -> throw JsError.typeError("Invalid stdio configuration: $cfg")
+          else -> throw JsError.typeError("Invalid stdio configuration: $other")
         }
 
         // otherwise, unrecognized
-        else -> throw JsError.typeError("Invalid stdio configuration: $cfg")
+        else -> throw JsError.typeError("Invalid stdio configuration: $other")
       }
     }
   }

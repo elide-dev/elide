@@ -37,10 +37,8 @@ fn kill_with_signal(pid: u32, signal: &str) -> i8 {
   let s = System::new_all();
   if let Some(process) = s.process(Pid::from(pid as usize)) {
     let signal = resolve_signal(signal);
-    if process.kill_with(signal).is_none() {
-      process.wait();
-      return -2;
-    }
+    process.kill_with(signal).expect("failed to kill process");
+    process.wait();
     return 0;
   }
   -1
@@ -48,12 +46,8 @@ fn kill_with_signal(pid: u32, signal: &str) -> i8 {
 
 #[jni("elide.runtime.gvm.internals.node.childProcess.ChildProcessNative")]
 pub fn killWith(mut env: JNIEnv, _class: JClass, pid: jint, signal: JString<'_>) -> jint {
-  let signal_name: String = env
-    .get_string(&signal)
-    .expect("failed to decode signal name")
-    .into();
-  let ipid = pid as u32;
-  kill_with_signal(ipid, signal_name.as_str()).into()
+  let signal_name: String = env.get_string(&signal).expect("failed to decode signal name").into();
+  kill_with_signal(pid as u32, signal_name.as_str()).into()
 }
 
 // add tests block
@@ -77,6 +71,18 @@ mod tests {
   fn test_resolve_signal_sigstop() {
     let signal = resolve_signal("SIGSTOP");
     assert_eq!(signal, Signal::Stop);
+  }
+
+  #[test]
+  fn test_resolve_signal_unknown() {
+    let signal = resolve_signal("unknown");
+    assert_eq!(signal, Signal::Kill);
+  }
+
+  #[test]
+  fn test_subproc_invalid_pid() {
+    let result = kill_with_signal(999999, "SIGKILL");
+    assert_eq!(result, -1);
   }
 
   #[test]

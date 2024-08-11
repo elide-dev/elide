@@ -29,6 +29,7 @@ import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
+import java.rmi.RemoteException
 import java.util.LinkedList
 import java.util.Optional
 import java.util.concurrent.ExecutionException
@@ -37,11 +38,17 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
 import java.util.function.Supplier
+import kotlinx.atomicfu.AtomicRef
+import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.io.path.absolutePathString
 import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.exec.GuestExecutor
 import elide.runtime.exec.GuestExecutorProvider
+import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsError
@@ -52,17 +59,8 @@ import elide.runtime.gvm.internals.node.fs.resolveEncodingString
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.node.ChildProcessAPI
-import elide.runtime.intrinsics.js.node.childProcess.ChildProcess
+import elide.runtime.intrinsics.js.node.childProcess.*
 import elide.runtime.intrinsics.js.node.childProcess.ChildProcessDefaults
-import elide.runtime.intrinsics.js.node.childProcess.ChildProcessSync
-import elide.runtime.intrinsics.js.node.childProcess.ExecOptions
-import elide.runtime.intrinsics.js.node.childProcess.ExecSyncOptions
-import elide.runtime.intrinsics.js.node.childProcess.LazyProcessOutput
-import elide.runtime.intrinsics.js.node.childProcess.ProcOptions
-import elide.runtime.intrinsics.js.node.childProcess.ProcessChannel
-import elide.runtime.intrinsics.js.node.childProcess.ProcessIOChannels
-import elide.runtime.intrinsics.js.node.childProcess.SpawnOptions
-import elide.runtime.intrinsics.js.node.childProcess.SpawnSyncOptions
 import elide.runtime.intrinsics.js.node.childProcess.StdioSymbols.PIPE
 import elide.runtime.intrinsics.js.node.events.EventTarget
 import elide.runtime.intrinsics.js.node.events.EventEmitter
@@ -89,6 +87,9 @@ internal data object ChildProcessEvents {
   const val MESSAGE = "message"
 }
 
+// IPC server.
+private val globalIpcServer by lazy { InterElideIPCServer() }
+
 // Installs the Node child process module into the intrinsic bindings.
 @Intrinsic @Factory internal class NodeChildProcessModule (
   private val filesystem: Optional<Supplier<NodeFilesystemModule>>,
@@ -101,10 +102,13 @@ internal data object ChildProcessEvents {
   }
 
   @Singleton internal fun provide(): ChildProcessAPI = NodeChildProcess.obtain(
+    { globalIpcServer },
     filesystem,
     executorProvider,
     defaultStandardStreams,
   )
+
+  @Singleton internal fun ipcServer(): InterElideIPCServer = globalIpcServer
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[CHILD_PROCESS_MODULE_SYMBOL.asJsSymbol()] = provide()
@@ -650,6 +654,9 @@ public class ChildProcessHandle private constructor (
   private val proc: Process,
   private val pending: PendingCallResult<*>,
 ) : ProxyObject, ChildProcess, AbstractChildProcessHandle() {
+  // Bound IPC channel for this process handle, if available.
+  private val liveIpcChannel: AtomicRef<InterElideIPCClient?> = atomic(null)
+
   @Volatile private var didKill: Boolean = false
   @get:Polyglot override val pid: Long get() = proc.pid()
   @get:Polyglot override val exitCode: Int? get() = termination.exitCode.takeIf { it != -1 }
@@ -657,6 +664,9 @@ public class ChildProcessHandle private constructor (
   @get:Polyglot override val stdin: ProcessInputStream? get() = pending.stdin()
   @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.stdout()
   @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.stderr()
+  @get:Polyglot override val connected: Boolean get() = !termination.closed
+  @get:Polyglot override val channel: ProcessChannel? get() = liveIpcChannel.value
+  @get:Polyglot override val killed: Boolean get() = didKill
   @Polyglot override fun wait(): Int = when (val timeout = pending.execution.options.timeout) {
     null -> proc.waitFor()
     else -> proc.waitFor(timeout.inWholeMilliseconds, MILLISECONDS).let {
@@ -673,13 +683,6 @@ public class ChildProcessHandle private constructor (
       @get:Polyglot override val stdout: ProcessOutputStream? get() = pending.stdout()
       @get:Polyglot override val stderr: ProcessOutputStream? get() = pending.stderr()
     }
-
-  @get:Polyglot override val connected: Boolean get() = !termination.closed
-
-  @get:Polyglot override val channel: ProcessChannel
-    get() = TODO("Not yet implemented: `ChildProcessHandle.channel`")
-
-  @get:Polyglot override val killed: Boolean get() = didKill
 
   @Suppress("TooGenericExceptionCaught")
   @Polyglot override fun kill(signal: String?): Unit = (signal ?: pending.execution.options.killSignal).let {
@@ -717,8 +720,12 @@ public class ChildProcessHandle private constructor (
     TODO("Not yet implemented: `ChildProcessHandle.unref`")
   }
 
-  @Polyglot override fun send(message: Value, sendHandle: Value?, options: Value?, callback: Value?): Boolean {
-    TODO("Not yet implemented: `ChildProcessHandle.send`")
+  @Polyglot override fun send(message: Value, sendHandle: Value?, options: Value?, callback: Value?): Boolean =
+    channel?.send(message, sendHandle, options, callback) ?: false
+
+  // Bind an IPC channel established for this child process. Internal use only.
+  internal fun bindChannel(channel: InterElideIPCClient) {
+    liveIpcChannel.value = channel
   }
 
   override fun getMemberKeys(): Array<String> = CHILD_PROCESS_HANDLE_PROPS_AND_METHODS
@@ -757,6 +764,7 @@ public class ChildProcessHandle private constructor (
   }
 
   public companion object {
+    // Create a handle for a live process.
     @JvmStatic internal fun live(
       handle: Process,
       pending: PendingCallResult<*>,
@@ -813,8 +821,8 @@ public class ChildProcessSyncHandle private constructor (
   @get:Polyglot override val output: LazyProcessOutput
     get() = TODO("Not yet implemented: `ChildProcessSyncHandle.output`")
 
-  @get:Polyglot override val error: elide.runtime.intrinsics.js.err.JsError?
-    get() = TODO("Not yet implemented: `ChildProcessSyncHandle.error`")
+  // @TODO(sgammon): not yet implemented
+  @get:Polyglot override val error: elide.runtime.intrinsics.js.err.JsError? get() = null
 
   override fun getMemberKeys(): Array<String> = CHILD_PROCESS_SYNC_HANDLE_PROPS_AND_METHODS
   override fun hasMember(key: String?): Boolean = key != null && key in CHILD_PROCESS_SYNC_HANDLE_PROPS_AND_METHODS
@@ -911,6 +919,12 @@ private inline fun <T: ProcOptions> callAsync(
   }
 }
 
+// Decide whether to start the RMI IPC server at initialization-time; this is governed by the presence of special-cased
+// environment variables, which communicate to an Elide process which parent process is spawning it.
+private fun shouldStartIpcAtInit(): Boolean = System.getenv().let { env ->
+  return env.containsKey("ELIDE_PARENT_PID")
+}
+
 /**
  * # Node API: `child_process`
  *
@@ -921,12 +935,21 @@ private inline fun <T: ProcOptions> callAsync(
  * @TODO: enforcement of sub-process permissions
  */
 internal class NodeChildProcess (
+  private val ipcSupplier: Supplier<InterElideIPCServer>,
   private val filesystem: Optional<Supplier<NodeFilesystemModule>>,
   private val standardStreams: StandardStreamsProvider,
   private val executorProvider: GuestExecutorProvider
 ) : ChildProcessAPI {
   // Obtained executor for child-process operations.
   private val executor by lazy { executorProvider.executor() }
+
+  init {
+    Dispatchers.IO.dispatch(EmptyCoroutineContext) {
+      if (shouldStartIpcAtInit()) {
+        ipcSupplier.get().initialize()
+      }
+    }
+  }
 
   // Underlying implementation to spawn a subprocess synchronously; used from all sync implementations, performing
   // blocking on behalf of the call-site.
@@ -984,7 +1007,32 @@ internal class NodeChildProcess (
   }
 
   @Polyglot override fun fork(modulePath: Value, args: Value?, options: Value?): ChildProcess {
-    TODO("Not yet implemented: `NodeChildProcess.fork`")
+    val self = ProcessHandle.current()
+    val mgr = ProcessManager.acquire()
+    val binpath = mgr.binpath() ?: throw JsError.wrap(IllegalStateException("Cannot `fork`: no bin-path is available"))
+
+    // we need to trigger a subprocess against the current binary, and include an injected env variable for the child to
+    // notice how it is being spawned, and open an IPC channel back to the parent.
+    val (handle, result) = CommandExec.of(
+      binpath.absolutePathString(),
+      LinkedList(),
+      ForkOptions.from(self, options),
+    ).let { spec ->
+      callAsync(executor, spec).get()
+    }
+
+    // now, we need to obtain an IPC client for this process.
+    val client = try {
+      InterElideIPCClient.connect(handle.pid())
+    } catch (err: RemoteException) {
+      handle.destroy()
+      throw JsError.of("Failed to establish IPC channel with forked process", cause = err)
+    }
+
+    // finally, we need to inform the process result of the new channel, and return to the caller.
+    return ChildProcessHandle.live(handle, result as PendingCallResult<*>).also { proc ->
+      proc.bindChannel(client)
+    }
   }
 
   @Polyglot override fun spawnSync(command: Value, args: Value?, options: Value?): ChildProcessSync {
@@ -1015,12 +1063,19 @@ internal class NodeChildProcess (
 
     /** @return Singleton instance of the [NodeChildProcess] module; it is initialized if not yet available. */
     internal fun obtain(
+      ipcSupplier: Supplier<InterElideIPCServer>,
       fs: Optional<Supplier<NodeFilesystemModule>>,
       executorProvider: GuestExecutorProvider,
       standardStreams: StandardStreamsProvider,
     ): NodeChildProcess = SINGLETON.get().let {
       when (it) {
-        null -> NodeChildProcess(fs, standardStreams, executorProvider).also { childProc -> SINGLETON.set(childProc) }
+        null -> NodeChildProcess(
+          ipcSupplier,
+          fs,
+          standardStreams,
+          executorProvider,
+        ).also { childProc -> SINGLETON.set(childProc) }
+
         else -> it
       }
     }

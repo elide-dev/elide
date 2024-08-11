@@ -486,13 +486,14 @@ public abstract interface class elide/runtime/gvm/internals/ProcessManager {
 	public static final field Companion Lelide/runtime/gvm/internals/ProcessManager$Companion;
 	public static fun acquire ()Lelide/runtime/gvm/internals/ProcessManager;
 	public abstract fun arguments ()[Ljava/lang/String;
-	public static fun initializeStatic ([Ljava/lang/String;Ljava/lang/String;)V
+	public abstract fun binpath ()Ljava/nio/file/Path;
+	public static fun initializeStatic (Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)V
 	public abstract fun workingDirectory ()Ljava/lang/String;
 }
 
 public final class elide/runtime/gvm/internals/ProcessManager$Companion {
 	public final fun acquire ()Lelide/runtime/gvm/internals/ProcessManager;
-	public final fun initializeStatic ([Ljava/lang/String;Ljava/lang/String;)V
+	public final fun initializeStatic (Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public synthetic class elide/runtime/gvm/internals/intrinsics/$BuiltinIntrinsicsResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
@@ -1092,6 +1093,17 @@ public synthetic class elide/runtime/gvm/internals/node/buffer/$NodeBufferModule
 }
 
 public synthetic class elide/runtime/gvm/internals/node/childProcess/$NodeChildProcessModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/node/childProcess/$NodeChildProcessModule$IpcServer$graalvm1$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
@@ -3800,6 +3812,69 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
 	public final fun of (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
 	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions$Companion;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/ForkOptions : java/lang/Record, elide/runtime/intrinsics/js/node/childProcess/IdentityProcOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions$Companion;
+	public synthetic fun <init> (Ljava/lang/ProcessHandle;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ZLkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun argv0 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Z
+	public final fun component12-FghU774 ()Lkotlin/time/Duration;
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()I
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component16 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/runtime/intrinsics/js/URL;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Z
+	public final fun component6 ()Ljava/util/Map;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/Integer;
+	public final fun component9 ()Ljava/lang/Integer;
+	public final fun copy-4Q5ldY8 (Ljava/lang/ProcessHandle;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ZLkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
+	public static synthetic fun copy-4Q5ldY8$default (Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;Ljava/lang/ProcessHandle;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ZLkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
+	public fun cwdString ()Ljava/lang/String;
+	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
+	public final fun detached ()Z
+	public fun encoding ()Ljava/lang/String;
+	public fun env ()Ljava/util/Map;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Ljava/lang/ProcessHandle;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
+	public synthetic fun getCwdString ()Ljava/lang/String;
+	public synthetic fun getEncoding ()Ljava/lang/String;
+	public synthetic fun getEnv ()Ljava/util/Map;
+	public synthetic fun getGid ()Ljava/lang/Integer;
+	public synthetic fun getKillSignal ()Ljava/lang/String;
+	public synthetic fun getMaxBuffer ()Ljava/lang/Integer;
+	public synthetic fun getShell ()Ljava/lang/String;
+	public synthetic fun getStdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public synthetic fun getTimeout-FghU774 ()Lkotlin/time/Duration;
+	public synthetic fun getTimeoutSeconds ()Ljava/lang/Long;
+	public synthetic fun getUid ()Ljava/lang/Integer;
+	public synthetic fun getWindowsHide ()Ljava/lang/Boolean;
+	public fun gid ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun killSignal ()Ljava/lang/String;
+	public fun maxBuffer ()Ljava/lang/Integer;
+	public static final fun of (Ljava/lang/ProcessHandle;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZZ)Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
+	public final fun serialization ()Ljava/lang/String;
+	public fun shell ()Ljava/lang/String;
+	public fun stdio ()Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;
+	public fun timeout ()Lkotlin/time/Duration;
+	public fun timeoutSeconds ()Ljava/lang/Long;
+	public fun toString ()Ljava/lang/String;
+	public fun uid ()Ljava/lang/Integer;
+	public fun windowsHide ()Ljava/lang/Boolean;
+	public final fun windowsVerbatimArguments ()Z
+}
+
+public final class elide/runtime/intrinsics/js/node/childProcess/ForkOptions$Companion {
+	public final fun from (Ljava/lang/ProcessHandle;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
+	public final fun of (Ljava/lang/ProcessHandle;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZZ)Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
+	public static synthetic fun of$default (Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions$Companion;Ljava/lang/ProcessHandle;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ForkOptions;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/childProcess/IdentityProcOptions : elide/runtime/intrinsics/js/node/childProcess/ProcOptions {

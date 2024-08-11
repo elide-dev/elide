@@ -44,7 +44,7 @@ import elide.runtime.intrinsics.js.node.events.EventTarget
    *
    * Channel used to communicate with the underlying process.
    */
-  public val channel: ProcessChannel
+  public val channel: ProcessChannel?
 
   /**
    * ## Standard Input

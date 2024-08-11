@@ -160,8 +160,8 @@ import elide.tool.io.RuntimeWorkdirManager
     }
 
     // Install static classes/perform static initialization.
-    fun installStatics(args: Array<String>, cwd: String?) {
-      ProcessManager.initializeStatic(args, cwd ?: "")
+    fun installStatics(bin: String, args: Array<String>, cwd: String?) {
+      ProcessManager.initializeStatic(bin, args, cwd ?: "")
       if (ImageInfo.inImageCode()) try {
         ProcessProperties.setArgumentVectorProgramName("elide")
       } catch (uoe: UnsupportedOperationException) {
@@ -211,7 +211,9 @@ import elide.tool.io.RuntimeWorkdirManager
     @JvmStatic fun entry(args: Array<String>): Int = try {
       // load and install libraries
       Statics.args.set(args.toList())
-      installStatics(args, System.getProperty("user.dir"))
+
+      val binPath = ProcessHandle.current().info().command().orElse(null)
+      installStatics(binPath, args, System.getProperty("user.dir"))
       exec(args)
     } finally {
       cleanup()

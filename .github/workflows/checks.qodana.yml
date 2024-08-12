@@ -84,7 +84,7 @@ jobs:
             -x nativeCompile
             -x nativeOptimizedCompile
       - name: "Analysis: Qodana Scan"
-        uses: JetBrains/qodana-action@9a71424636be05dccc139d34e7248de96fd15d9c # main
+        uses: JetBrains/qodana-action@de7e42641f2fcc61d7afd991a850c97d308cb610 # main
         continue-on-error: true
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}

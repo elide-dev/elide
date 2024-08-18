@@ -319,7 +319,7 @@ jobs:
       - name: "Build Environment"
         run: make info CI=yes 2>&1 | tee build-info.txt
       - name: "👨‍🔬️ Test: Native"
-        run: make third-party natives-test COVERAGE=yes CI=yes -j`nproc`
+        run: make third-party natives-test COVERAGE=no CI=yes -j`nproc`
       - name: "👨‍🔬 Test: Runtime"
         env:
           CI: true

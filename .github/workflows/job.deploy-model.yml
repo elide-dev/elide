@@ -51,7 +51,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@35c243d7f2a909b1d4e40399b348a7fdab27d78d # v1.34.0
+        uses: bufbuild/buf-setup-action@2dbfb63c8b0cc4f1707ba5dd23017e998a25b2f0 # v1.40.1
         with:
           github_token: ${{ github.token }}
       - name: "Push: BSR"

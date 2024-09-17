@@ -27,7 +27,7 @@
   "dependencies": {
     "browserslist": "4.23.1",
     "cssnano": "7.0.4",
-    "google-protobuf": "3.21.2",
+    "google-protobuf": "3.21.4",
     "jszip": "3.10.1",
     "postcss": "8.4.39",
     "preact": "10.22.1",

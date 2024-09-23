@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("DataClassPrivateConstructor")
+@file:Suppress("DataClassPrivateConstructor", "TooManyFunctions")
 
 package elide.runtime.gvm.internals.node.events
 
@@ -191,7 +191,7 @@ private data class BoundEventListener private constructor(
   }
 
   // Dispatch an event, accounting for self-removing listeners.
-  fun dispatch(type: String, args: Array<out Any?>) {
+  @Suppress("SpreadOperator") fun dispatch(type: String, args: Array<out Any?>) {
     try {
       listener.handleEvent(*args)
     } finally {
@@ -427,7 +427,7 @@ private class EventAwareRelay (
     )
   }
 
-  @Polyglot override fun emit(eventName: String, vararg args: Any): Boolean {
+  @Polyglot override fun emit(eventName: String, vararg args: Any?): Boolean {
     if (eventName.isEmpty() || eventName.isBlank())
       throw JsError.valueError("Event type must be a non-empty string")
     var didExecute = false

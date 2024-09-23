@@ -346,7 +346,7 @@ public final class elide/runtime/exec/GuestExecution {
 	public final fun workStealing ()Lelide/runtime/exec/GuestExecutor;
 }
 
-public abstract interface class elide/runtime/exec/GuestExecutor : com/google/common/util/concurrent/ListeningExecutorService, kotlin/coroutines/CoroutineContext {
+public abstract interface class elide/runtime/exec/GuestExecutor : com/google/common/util/concurrent/ListeningExecutorService, java/util/concurrent/ScheduledExecutorService, kotlin/coroutines/CoroutineContext {
 	public abstract fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
 }
 

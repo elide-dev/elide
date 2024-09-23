@@ -50,12 +50,13 @@ dead_code = "allow"
 base = { workspace = true }
 deps = { workspace = true }
 entry = { workspace = true }
-substrate = { workspace = true }
-sqlite = { workspace = true }
-terminal = { workspace = true }
 model = { workspace = true }
+posix = { workspace = true }
 project = { workspace = true }
 protocol = { workspace = true }
+sqlite = { workspace = true }
+substrate = { workspace = true }
+terminal = { workspace = true }
 transport = { workspace = true }
 
 ## Compile

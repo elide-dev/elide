@@ -35,19 +35,12 @@
     <ID>LongParameterList:NativeLibraryFeature.kt$NativeLibraryFeature.NativeLibInfo.Companion$( name: String, vararg layout: String, type: NativeLibType = STATIC, linkName: String = name, prefix: Boolean, jni: Boolean, builtin: Boolean, eager: Boolean, absolutePath: Path?, initializer: Boolean, deps: List&lt;String>, )</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.DebugAdapterConfig$4711</ID>
     <ID>MagicNumber:DebugConfig.kt$DebugConfig.InspectorConfig$4200</ID>
-    <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptSource$3</ID>
-    <ID>MagicNumber:ExecutableScript.kt$ExecutableScript.ScriptType$5</ID>
     <ID>MagicNumber:FetchResponse.kt$FetchResponse$200</ID>
     <ID>MagicNumber:FetchResponse.kt$FetchResponse$299</ID>
-    <ID>MagicNumber:GraalVMEngine.kt$GraalVMEngine.Companion$4</ID>
-    <ID>MagicNumber:GraalVMEngine.kt$GraalVMEngine.Companion$8</ID>
     <ID>MagicNumber:HttpServerConfig.kt$HttpServerConfig$65535</ID>
-    <ID>MagicNumber:JsProxy.kt$JsProxy.PropertyProxy$3</ID>
     <ID>MagicNumber:NettyRequestHandler.kt$NettyRequestHandler$404</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.Companion$65535</ID>
-    <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL$3</ID>
     <ID>MagicNumber:URLIntrinsic.kt$URLIntrinsic.ParsedURL.Companion$31</ID>
-    <ID>MagicNumber:URLSearchParamsIntrinsic.kt$0x7F</ID>
     <ID>MatchingDeclarationName:AbstractJSException.kt$AbstractJsException</ID>
     <ID>MatchingDeclarationName:DebugPlugin.kt$Debug</ID>
     <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
@@ -68,6 +61,7 @@
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
+    <ID>RethrowCaughtException:ChildProcessNative.kt$ChildProcessNative$throw err</ID>
     <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
     <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
@@ -89,7 +83,6 @@
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "x86-64", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "aarch64", *kqueueImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "x86-64", *kqueueImpls)</ID>
-    <ID>SpreadOperator:NodeEvents.kt$BoundEventListener$(*args)</ID>
     <ID>SpreadOperator:NodeFilesystem.kt$(src.toJavaPath(), dest.toJavaPath(), *copyOpts(mode))</ID>
     <ID>SpreadOperator:NodePaths.kt$NodePaths.BasePaths$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
     <ID>SpreadOperator:NodePaths.kt$PathBuf$(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())</ID>
@@ -114,6 +107,7 @@
     <ID>ThrowsCount:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
     <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
+    <ID>TooGenericExceptionCaught:ChildProcessNative.kt$ChildProcessNative$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:JavaScript.kt$JavaScript$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
@@ -125,7 +119,6 @@
     <ID>TooManyFunctions:AbstractDelegateVFS.kt$AbstractDelegateVFS&lt;VFS> : GuestVFSAbstractBaseVFS</ID>
     <ID>TooManyFunctions:BaseMutableJsMultiMap.kt$BaseMutableJsMultiMap&lt;K: Any, V> : BaseJsMultiMapMutableMapMutableMultiMapLike</ID>
     <ID>TooManyFunctions:CompoundVFSImpl.kt$CompoundVFSImpl : AbstractBaseVFS</ID>
-    <ID>TooManyFunctions:NodeEvents.kt$EventAwareRelay : EventAware</ID>
     <ID>TooManyFunctions:NodeFilesystem.kt$NodeFilesystemProxy : NodeFilesystemAPIFilesystemBase</ID>
     <ID>TooManyFunctions:NodeOperatingSystem.kt$NodeOperatingSystem$BaseOS : ModuleBaseOperatingSystemAPIProxyObject</ID>
     <ID>TooManyFunctions:NodeStream.kt$AbstractReadable&lt;T> : AbstractStreamReadable</ID>

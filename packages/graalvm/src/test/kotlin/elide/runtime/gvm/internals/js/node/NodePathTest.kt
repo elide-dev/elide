@@ -21,7 +21,6 @@ import java.nio.file.Paths
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.gvm.internals.node.NodeStdlib
 import elide.runtime.gvm.internals.node.path.*
 import elide.runtime.gvm.internals.node.path.PathStyle.POSIX
 import elide.runtime.gvm.internals.node.path.PathStyle.WIN32
@@ -70,7 +69,6 @@ fun PathAPI.testExtname(parsed: PathIntrinsic): String? {
 
   @Test override fun testInjectable() {
     assertNotNull(paths)
-    assertNotNull(NodeStdlib.path, "should be able to obtain `path` via `NodeStdlib`")
   }
 
   // Path module should not be injected globally.
@@ -94,12 +92,6 @@ fun PathAPI.testExtname(parsed: PathIntrinsic): String? {
     assertNotNull(NodePaths.create())
     assertNotNull(NodePaths.create(POSIX))
     assertNotNull(NodePaths.create(WIN32))
-  }
-
-  @Test fun `should be able to obtain the path module lazily`() {
-    assertNotNull(NodeStdlib.path)
-    assertNotNull(NodeStdlib.path)
-    assertSame(NodeStdlib.path, NodeStdlib.path)
   }
 
   @Test fun `parsed path equals should behave reasonably`(): Unit = unixPaths().let {

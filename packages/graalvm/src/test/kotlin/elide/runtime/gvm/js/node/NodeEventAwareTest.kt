@@ -479,4 +479,11 @@ import elide.testing.annotations.TestCase
     aware.dispatchEvent(CustomEvent("arbitraryEventName"))
     assertTrue(seenCallTwo)
   }
+
+  @Test fun testEmitInvalidEventName() {
+    val aware = EventAware.create()
+    assertThrows<ValueError> { aware.emit("") }
+    assertThrows<ValueError> { aware.emit(" ") }
+    assertThrows<ValueError> { aware.emit("  ") }
+  }
 }

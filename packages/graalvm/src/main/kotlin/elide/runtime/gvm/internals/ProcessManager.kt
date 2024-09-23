@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm.internals
 
+import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 
 /**
@@ -25,6 +26,15 @@ import java.util.concurrent.atomic.AtomicReference
  * used to mock these values.
  */
 public interface ProcessManager {
+  /**
+   * ## Bin Path
+   *
+   * Retrieve the path to the currently executing Elide binary.
+   *
+   * @return Binary path
+   */
+  public fun binpath(): Path?
+
   /**
    * ## Arguments
    *
@@ -48,7 +58,11 @@ public interface ProcessManager {
     private val initialized: AtomicReference<Boolean> = AtomicReference(false)
     private val args: AtomicReference<Array<String>> = AtomicReference(emptyArray())
     private val workingDir: AtomicReference<String> = AtomicReference("")
+    private val binaryPath: AtomicReference<Path> = AtomicReference(null)
+
     private val facade = object : ProcessManager {
+      override fun binpath(): Path? = binaryPath.get()
+
       override fun arguments(): Array<String> {
         return args.get()
       }
@@ -63,11 +77,16 @@ public interface ProcessManager {
      *
      * Initialize process manager state. This entrypoint should ONLY be used from actual entrypoints; DO NOT call this
      * method under test circumstances.
+     *
+     * @param bin Binary path
+     * @param arguments Arguments
+     * @param workingDirectory Working directory
      */
-    @JvmStatic public fun initializeStatic(arguments: Array<String>, workingDirectory: String) {
+    @JvmStatic public fun initializeStatic(bin: String, arguments: Array<String>, workingDirectory: String) {
       require(initialized.compareAndSet(false, true)) { "Process manager already initialized" }
       args.set(arguments)
       workingDir.set(workingDirectory)
+      binaryPath.set(Path.of(bin))
     }
 
     /**

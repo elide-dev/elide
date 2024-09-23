@@ -220,6 +220,7 @@ include(
   ":crates:deps",
   ":crates:entry",
   ":crates:model",
+  ":crates:posix",
   ":crates:project",
   ":crates:protocol",
   ":crates:sqlite",

@@ -97,7 +97,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@35c243d7f2a909b1d4e40399b348a7fdab27d78d # v1.34.0
+        uses: bufbuild/buf-setup-action@e7628ee2d941d14dc87d468ed93bdb35c2f7bfea # v1.44.0
         with:
           github_token: ${{ github.token }}
       - name: "Check: Buf Lint"
@@ -134,7 +134,7 @@ jobs:
         with:
           persist-credentials: false
       - name: "Setup: Buf"
-        uses: bufbuild/buf-setup-action@35c243d7f2a909b1d4e40399b348a7fdab27d78d # v1.34.0
+        uses: bufbuild/buf-setup-action@e7628ee2d941d14dc87d468ed93bdb35c2f7bfea # v1.44.0
         with:
           github_token: ${{ github.token }}
       - name: "Check: Buf Breaking"

@@ -241,7 +241,7 @@ jobs:
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
         continue-on-error: ${{ fromJson(matrix.labs) }}
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
         with:
           arguments: |
             --no-daemon
@@ -353,7 +353,7 @@ jobs:
 
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
         continue-on-error: true
         with:
           arguments: |

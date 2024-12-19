@@ -147,7 +147,7 @@ Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering 
 
 ```properties
 // gradle.properties
-elideVersion = 1.0.0-alpha10
+elideVersion = 1.0.0-alpha11
 ```
 
 ```kotlin

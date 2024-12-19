@@ -193,7 +193,7 @@ jobs:
         uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           distribution: "graalvm"
-          java-version: "22"
+          java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
@@ -241,7 +241,7 @@ jobs:
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
         continue-on-error: ${{ fromJson(matrix.labs) }}
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
         with:
           arguments: |
             --no-daemon
@@ -305,7 +305,7 @@ jobs:
         uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           distribution: "graalvm"
-          java-version: "22"
+          java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
@@ -353,7 +353,7 @@ jobs:
 
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
         continue-on-error: true
         with:
           arguments: |

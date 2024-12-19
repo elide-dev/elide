@@ -47,7 +47,7 @@ pluginManagement {
 
 plugins {
   id("com.gradle.enterprise") version("3.16.2")
-  id("io.micronaut.platform.catalog") version (extra.properties["micronautVersion"] as String)
+  id("io.micronaut.platform.catalog") version (extra.properties["micronautCatalogVersion"] as String)
 }
 
 dependencyResolutionManagement {

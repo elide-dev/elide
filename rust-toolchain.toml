@@ -17,5 +17,4 @@ targets = [
 
   # WASM/WASI
   "wasm32-unknown-unknown",
-  "wasm32-wasi",
 ]

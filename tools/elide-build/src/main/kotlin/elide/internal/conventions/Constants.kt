@@ -90,16 +90,16 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.0.10-RC"
+    const val KOTLIN_SDK_PIN = "2.1.0"
 
     /** Constant: pinned version of Kotlin Coroutines. */
-    const val COROUTINES = "1.9.0-RC"
+    const val COROUTINES = "1.9.0"
 
     /** Constant: pinned version of AtomicFU. */
-    const val ATOMICFU = "0.24.0"
+    const val ATOMICFU = "0.26.1"
 
     /** Constant: pinned version of BouncyCastle. */
-    const val BOUNCYCASTLE = "1.78.1"
+    const val BOUNCYCASTLE = "1.79"
 
     /** Constant: pinned version of Groovy. */
     const val GROOVY = "4.0.18"
@@ -153,10 +153,10 @@ public object Constants {
     const val JLINE = "3.26.1"
 
     /** Okio version. */
-    const val OKIO = "3.7.0"
+    const val OKIO = "3.7.1"
 
     /** GraalVM version. */
-    const val GRAALVM = "24.2.0-SNAPSHOT"
+    const val GRAALVM = "24.1.1"
   }
 
   /** Kotlin conventions. */
@@ -233,6 +233,7 @@ public object Constants {
       "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
       "-Xsuppress-version-warnings",
+      // "-Xconsistent-data-class-copy-visibility",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */
@@ -257,7 +258,6 @@ public object Constants {
       listOf(
         "-Xallow-unstable-dependencies",
         "-Xemit-jvm-type-annotations",
-        "-Xuse-kapt4",
       ),
     )
 

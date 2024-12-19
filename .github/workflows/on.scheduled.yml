@@ -161,7 +161,7 @@ jobs:
         uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           distribution: "graalvm"
-          java-version: "22"
+          java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Python (3.12)"
         uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
@@ -207,7 +207,7 @@ jobs:
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}
         env:

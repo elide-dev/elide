@@ -1,9 +1,9 @@
 [versions]
 elide = "1.0.0-alpha10"
 elideTools = "1.0.0-alpha10"
-ksp = "2.0.0-1.0.21"
+ksp = "2.1.0-1.0.29"
 detekt = "1.23.6"
-kotlin = "2.0.10-RC"
+kotlin = "2.1.0"
 kotlin_dsl = "4.0.7"
 kotlinx_coroutines = "1.8.0"
 kotlinx_collections = "0.3.5"

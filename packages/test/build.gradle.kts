@@ -50,8 +50,8 @@ kotlin {
 
 dependencies {
   jvm {
-    api(kotlin("stdlib-jdk8"))
-    api(kotlin("test-junit5"))
+    api(libs.kotlin.stdlib.jdk8)
+    api(libs.kotlin.test.junit5)
     api(libs.jakarta.inject)
     api(libs.kotlinx.coroutines.test)
     api(libs.kotlinx.coroutines.jdk9)

@@ -51,11 +51,10 @@ pluginManagement {
 }
 
 plugins {
-  id("build.less") version ("1.0.0-rc2")
   id("com.gradle.enterprise") version ("3.16.2")
   id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version ("1.12.1")
-  id("io.micronaut.platform.catalog") version (extra.properties["micronautVersion"] as String)
+  id("io.micronaut.platform.catalog") version (extra.properties["micronautCatalogVersion"] as String)
   id("elide.toolchains.jvm")
 }
 
@@ -66,7 +65,6 @@ System.setProperty("elide.home", rootProject.projectDir.toString())
 val buildUuid: String by settings
 val buildPkl: String by settings
 val buildAuxImage: String by settings
-val buildlessApiKey: String by settings
 val enableSubstrate: String by settings
 
 toolchainManagement {
@@ -300,28 +298,7 @@ gradleEnterprise {
   }
 }
 
-val cachePush: String? by settings
 val isCI: Boolean = System.getenv("CI") != "true"
-val enableRemoteCache: String? by settings
-
-buildless {
-  remoteCache {
-    enabled = enableRemoteCache == "true"
-
-    // allow disabling pushing to the remote cache
-    push.set(cachePush?.toBooleanStrictOrNull() ?: true)
-  }
-  localCache {
-    enabled = true
-  }
-}
-
-buildCache {
-  local {
-    isEnabled = true
-    directory = layout.rootDirectory.dir(".codebase/build-cache")
-  }
-}
 
 //
 // -- Begin Caching Tricks

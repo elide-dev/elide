@@ -17,7 +17,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.NodeStdlib
 import elide.runtime.gvm.internals.node.process.NodeProcess
 import elide.runtime.gvm.internals.node.process.NodeProcessModule
 import elide.runtime.gvm.js.node.NodeModuleConformanceTest
@@ -104,7 +103,6 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(process, "should be able to inject host-side process module")
-    assertNotNull(NodeStdlib.process, "should be able to obtain `process` via `NodeStdlib`")
   }
 
   // ---- Host

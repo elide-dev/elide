@@ -15,7 +15,7 @@ package elide.runtime.exec
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import io.micronaut.context.annotation.Requires
-import java.util.concurrent.Executors
+import java.util.concurrent.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlin.coroutines.CoroutineContext
@@ -52,24 +52,67 @@ import elide.annotations.Singleton
  *
  * @see [GuestExecutor] main `GuestExecutor` interface.
  */
+@Suppress("DuplicatedCode")
 public object GuestExecution {
   // Direct executor instance, which invokes the target operation within the calling thread, blocking until completion.
   private val directExecutor: GuestExecutor by lazy {
+    val followup = MoreExecutors.listeningDecorator(Executors.newSingleThreadScheduledExecutor())
     val exec = MoreExecutors.newDirectExecutorService()
     val dispatcher = exec.asCoroutineDispatcher()
+
     object : GuestExecutor, ListeningExecutorService by exec, CoroutineContext by dispatcher {
       override val dispatcher: CoroutineDispatcher get() = dispatcher
+
+      override fun schedule(command: Runnable, delay: Long, unit: TimeUnit): ScheduledFuture<*> =
+        followup.schedule(command, delay, unit)
+
+      override fun <V : Any?> schedule(callable: Callable<V>, delay: Long, unit: TimeUnit): ScheduledFuture<V> =
+        followup.schedule(callable, delay, unit)
+
+      override fun scheduleAtFixedRate(
+        command: Runnable,
+        initialDelay: Long,
+        period: Long,
+        unit: TimeUnit
+      ): ScheduledFuture<*> = followup.scheduleAtFixedRate(command, initialDelay, period, unit)
+
+      override fun scheduleWithFixedDelay(
+        command: Runnable,
+        initialDelay: Long,
+        delay: Long,
+        unit: TimeUnit
+      ): ScheduledFuture<*> = followup.scheduleWithFixedDelay(command, initialDelay, delay, unit)
     }
   }
 
   // Work-stealing executor instance with context-aware scheduling.
-  private val workStealingExecutor: GuestExecutor by lazy {
-    val exec = MoreExecutors.listeningDecorator(
-      Executors.newWorkStealingPool()
-    )
+  private val parallelExecutor: GuestExecutor by lazy {
+    val scheduled = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors())
+    val exec = MoreExecutors.listeningDecorator(scheduled)
     val dispatcher = exec.asCoroutineDispatcher()
+
     object : GuestExecutor, ListeningExecutorService by exec, CoroutineContext by dispatcher {
       override val dispatcher: CoroutineDispatcher get() = dispatcher
+
+      override fun schedule(command: Runnable, delay: Long, unit: TimeUnit): ScheduledFuture<*> =
+        scheduled.schedule(command, delay, unit)
+
+      override fun <V : Any?> schedule(callable: Callable<V>, delay: Long, unit: TimeUnit): ScheduledFuture<V> =
+        scheduled.schedule(callable, delay, unit)
+
+      override fun scheduleAtFixedRate(
+        command: Runnable,
+        initialDelay: Long,
+        period: Long,
+        unit: TimeUnit
+      ): ScheduledFuture<*> = scheduled.scheduleAtFixedRate(command, initialDelay, period, unit)
+
+      override fun scheduleWithFixedDelay(
+        command: Runnable,
+        initialDelay: Long,
+        delay: Long,
+        unit: TimeUnit
+      ): ScheduledFuture<*> = scheduled.scheduleWithFixedDelay(command, initialDelay, delay, unit)
     }
   }
 
@@ -77,5 +120,5 @@ public object GuestExecution {
   public fun direct(): GuestExecutor = directExecutor
 
   /** @return Work-stealing executor implementation, with parallelism set to the active number of CPUs. */
-  public fun workStealing(): GuestExecutor = workStealingExecutor
+  public fun workStealing(): GuestExecutor = parallelExecutor
 }

@@ -35,7 +35,7 @@ private const val USE_CUSTOM_TOOLCHAINS = true
 private val latestOracleGvmVersion = "24.0.0-ea.02" to JavaVersion.VERSION_24
 
 // Latest GraalVM Community Edition version.
-private val latestGraalVmCeVersion = "24.2.0-dev-20240706_0026" to JavaVersion.VERSION_24
+private val latestGraalVmCeVersion = "24.2.0-dev-20241213_1237" to JavaVersion.VERSION_24
 
 // Release track for a given JDK toolchain.
 @Suppress("unused") private enum class ReleaseTrack {

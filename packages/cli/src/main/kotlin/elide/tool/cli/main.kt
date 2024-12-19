@@ -64,7 +64,14 @@ private suspend inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI
     .args(*args).start().use { applicationContext ->
       MicronautFactory(applicationContext).use { factory ->
         runCatching {
-          Elide.installStatics(args, System.getProperty("user.dir"))
+          val procInfo = ProcessHandle.current().info()
+          val cmd = procInfo.command().orElse("elide")
+
+          Elide.installStatics(
+            cmd,
+            args,
+            System.getProperty("user.dir"),
+          )
           CommandLineParser
             .parse(factory.create(Elide::class.java), args.toList().also { Statics.args.set(it) })
         }.onFailure {

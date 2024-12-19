@@ -267,7 +267,6 @@ internal fun Project.configureKotlinBuild(
         correctErrorTypes = true
         keepJavacAnnotationProcessors = true
         includeCompileClasspath = false
-        inheritedAnnotations = true
       }
       afterEvaluate {
         tasks.withType(KotlinJvmCompile::class.java).configureEach {

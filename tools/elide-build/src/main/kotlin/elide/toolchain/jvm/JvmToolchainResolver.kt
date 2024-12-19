@@ -29,7 +29,7 @@ import java.util.Optional
 import javax.inject.Inject
 
 // Whether to enable the custom toolchain resolver.
-private const val USE_CUSTOM_TOOLCHAINS = true
+private const val USE_CUSTOM_TOOLCHAINS = false
 
 // Latest Oracle GVM version ("GraalVM Enterprise").
 private val latestOracleGvmVersion = "24.0.0-ea.02" to JavaVersion.VERSION_24

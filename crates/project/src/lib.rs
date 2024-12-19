@@ -12,7 +12,6 @@
  */
 
 #![feature(test)]
-#![feature(const_option)]
 #![feature(const_trait_impl)]
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 

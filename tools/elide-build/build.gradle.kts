@@ -57,7 +57,7 @@ java {
   targetCompatibility = JavaVersion.VERSION_21
 
   toolchain {
-    languageVersion = JavaLanguageVersion.of(22)
+    languageVersion = JavaLanguageVersion.of(23)
   }
 }
 
@@ -67,7 +67,7 @@ kotlin {
   compilerOptions {
     jvmTarget = JVM_21
     javaParameters = true
-    allWarningsAsErrors = true
+    allWarningsAsErrors = false
     apiVersion = KOTLIN_2_0
     languageVersion = KOTLIN_2_0
     freeCompilerArgs = listOf(

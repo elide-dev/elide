@@ -179,7 +179,7 @@ RUN echo "Preparing dev root..." \
   && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup toolchain install nightly" \
   && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup default nightly" \
   && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup target add wasm32-unknown-unknown" \
-  && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup target add wasm32-wasi" \
+  && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup target add wasm32-wasip1" \
   && echo "Codespace image ready."
 
 ENV GRADLE_HOME="/opt/gradle/gradle" \

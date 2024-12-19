@@ -24,7 +24,6 @@ pub use model::{Architecture as TargetArch, OperatingSystem as TargetOs};
 
 use bindgen::Builder;
 use cc::Build;
-use std::env;
 use std::env::var;
 use std::env::var_os;
 use std::path::{Path, PathBuf};

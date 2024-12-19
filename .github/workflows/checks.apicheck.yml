@@ -104,7 +104,7 @@ jobs:
         uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1.2.2
         with:
           distribution: "graalvm"
-          java-version: 22
+          java-version: 23
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Artifacts"
@@ -112,8 +112,8 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "Analysis: API Check"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+      - name: "Setup: Gradle"
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
         continue-on-error: ${{ inputs.ignore_failures }}
         env:
           CI: true
@@ -122,8 +122,9 @@ jobs:
         with:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          arguments: |
-            apiCheck
-            -x test
-            -x nativeCompile
+      - name: "Analysis: API Check"
+        run: |
+          ./gradlew apiCheck \
+            -x test \
+            -x nativeCompile \
             -x nativeOptimizedCompile

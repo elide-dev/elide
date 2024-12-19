@@ -93,7 +93,7 @@ extensions.configure<kotlinx.kover.gradle.plugin.dsl.KoverReportExtension> {
 configurations.all {
   resolutionStrategy.eachDependency {
     if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
-      useVersion(kotlinVersion ?: "2.0.10-RC")
+      useVersion(kotlinVersion ?: "2.1.0")
       because("pin kotlin stdlib")
     }
   }

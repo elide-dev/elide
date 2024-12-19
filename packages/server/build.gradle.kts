@@ -156,11 +156,9 @@ dependencies {
   testImplementation(libs.truth.proto)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(mn.micronaut.test.junit5)
-  testImplementation(mn.junit.jupiter.api)
-  testImplementation(mn.junit.jupiter.params)
+  testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.junit.jupiter.params)
   testImplementation(mn.micronaut.test.core)
-  testImplementation(kotlin("test"))
-  testImplementation(kotlin("test-junit5"))
   testApi(project(":packages:engine", configuration = "testInternals"))
 }
 

@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 #![feature(test)]
-#![feature(const_option)]
 #![feature(const_trait_impl)]
 #![allow(non_snake_case)]
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]

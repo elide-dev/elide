@@ -46,6 +46,24 @@ name: CLI
         type: string
         default: ubuntu-latest
 
+      ## Input: Runner (Large)
+      runner_large:
+        description: "Runner (Large)"
+        type: string
+        default: ubuntu-latest-8-cores
+
+      ## Input: Runner (Large, macOS)
+      runner_large_macos:
+        description: "Runner (Large, macOS)"
+        type: string
+        default: macos-13-xl
+
+      ## Input: Runner (Large, Windows)
+      runner_large_windows:
+        description: "Runner (Large, Windows)"
+        type: string
+        default: windows-latest-8-cores
+
   workflow_call:
     inputs:
       native:

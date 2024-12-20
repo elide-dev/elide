@@ -345,7 +345,7 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "Build: CLI (Native/Release)"
+      - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
         env:
           CI: true
@@ -354,17 +354,19 @@ jobs:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
-          arguments: |
-            :packages:cli:nativeOptimizedCompile
-            :packages:cli:dist
-            -Prelease=true
-            -PbuildMode=release
-            --scan
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -Pelide.ci=true
-            -PbuildSamples=false
+      - name: "Build: CLI (Native/Release)"
+        run: |
+          ./gradlew \
+            :packages:cli:nativeOptimizedCompile \
+            :packages:cli:dist \
+            -Prelease=true \
+            -PbuildMode=release \
+            --scan \
+            --no-daemon \
+            --warning-mode=none \
+            --dependency-verification=lenient \
+            -Pelide.ci=true \
+            -PbuildSamples=false \
             -PbuildDocs=false
       - name: "Artifacts: Release Binary"
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4

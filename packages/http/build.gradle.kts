@@ -12,7 +12,6 @@
  */
 
 import elide.internal.conventions.kotlin.*
-import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("multiplatform")
@@ -32,10 +31,6 @@ elide {
     id = "http"
     name = "Elide HTTP"
     description = "Cross-platform HTTP utilities and wrappers."
-
-    publish("maven") {
-      from(components["kotlin"])
-    }
   }
 
   kotlin {
@@ -50,7 +45,6 @@ elide {
 }
 
 group = "dev.elide"
-version = rootProject.version as String
 
 dependencies {
   common {

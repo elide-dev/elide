@@ -54,9 +54,6 @@ dependencies {
     api(projects.packages.base)
     api(projects.packages.graalvm)
 
-    // Kotlin.
-    api(kotlin("stdlib"))
-
     // Google: Protocol Buffers, Guava, GAX, gRPC.
     api(libs.guava)
     api(libs.protobuf.java)

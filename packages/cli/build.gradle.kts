@@ -645,7 +645,7 @@ val enabledFeatures = listOfNotNull(
   onlyIf(oracleGvm && oracleGvmLibs, "com.oracle.truffle.runtime.enterprise.EnableEnterpriseFeature"),
   onlyIf(oracleGvm && enableExperimental, "com.oracle.svm.enterprise.truffle.PolyglotIsolateGuestFeature"),
   onlyIf(oracleGvm && enableExperimental, "com.oracle.svm.enterprise.truffle.PolyglotIsolateHostFeature"),
-  onlyIf(HostManager.hostIsMac, "com.sun.jna.SubstrateStaticJNA"),
+  onlyIf(enableJnaStatic && HostManager.hostIsMac, "com.sun.jna.SubstrateStaticJNA"),
   onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
 )
 

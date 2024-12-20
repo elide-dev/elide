@@ -41,33 +41,35 @@ elide {
 val libraries = listOf(
   "base",
   "core",
-  "frontend",
+  "embedded",
+  "engine",
   "graalvm",
   "graalvm-java",
-  "graalvm-js",
   "graalvm-jvm",
   "graalvm-kt",
   "graalvm-llvm",
   "graalvm-py",
   "graalvm-rb",
-  "graalvm-react",
   "graalvm-ts",
   "graalvm-wasm",
   "http",
-  "model",
-  "nfi",
   "platform",
   "proto-capnp",
   "proto-core",
   "proto-kotlinx",
   "proto-protobuf",
-  "rpc",
+  "proto-test",
   "server",
-  "serverless",
+  "sqlite",
   "ssr",
+  "terminal",
   "test",
+  "transport-common",
+  "transport-epoll",
+  "transport-kqueue",
+  "transport-unix",
+  "transport-uring",
   "uuid",
-  "wasm",
 )
 
 // Peer modules.
@@ -86,31 +88,29 @@ val versionAliases = mapOf(
 )
 
 // Kotlin plugin targets.
-val kotlinPlugins = listOf(
-  "redakt",
-)
+val kotlinPlugins: List<String> = emptyList()
 
 catalog {
   versionCatalog {
     // map Elide versions
-    version("elide.framework", libs.versions.elide.asProvider().get())
+    version("framework", libs.versions.elide.asProvider().get())
 
     // map each peer version
     peers.forEach { alias, (_, version) -> version(alias, version.get()) }
     versionAliases.forEach { (alias, version) -> version(alias, version.get()) }
 
     // define the BOM (this module)
-    library("elide.bom", Elide.GROUP, "bom").versionRef("elide.framework")
+    library("bom", Elide.GROUP, "bom").versionRef("framework")
 
     // define Elide library aliases
     libraries.forEach { libName ->
-      library("elide.$libName", Elide.GROUP, "elide-$libName").versionRef("elide.framework")
+      library(libName, Elide.GROUP, "elide-$libName").versionRef("framework")
     }
 
     // define Elide plugin aliases
     kotlinPlugins.forEach { pluginName ->
-      library("elide.plugins.$pluginName", Elide.SUBSTRATE_GROUP, "$pluginName-plugin")
-        .versionRef("elide.framework")
+      library("plugins.$pluginName", Elide.SUBSTRATE_GROUP, "$pluginName-plugin")
+        .versionRef("framework")
     }
 
     // define peer library aliases

@@ -167,7 +167,7 @@ internal fun Project.configureKotlinBuild(
       javaParameters.set(true)
     }
 
-    val kotlinCArgs = freeCompilerArgs.get().plus(when (target) {
+    val kotlinCArgs = when (target) {
       JVM -> if (enableKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
       JsBrowser, JsNode -> Elide.JsCompilerArgs
       is Multiplatform, Native, NativeEmbedded, WASM, WASI -> when {
@@ -176,7 +176,9 @@ internal fun Project.configureKotlinBuild(
 
         else -> Elide.KmpCompilerArgs
       }
-    }).plus(conventions.customKotlinCompilerArgs).toList()
+    }.plus(conventions.customKotlinCompilerArgs).toList()
+
+    freeCompilerArgs.convention(kotlinCArgs)
 
     val currentSuite = TreeSet(freeCompilerArgs.get())
     val additions = LinkedList<String>()

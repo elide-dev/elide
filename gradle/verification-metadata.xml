@@ -13,6 +13,7 @@
          <trust group="org.jetbrains.kotlin" reason="Ships own metadata"/>
          <trust group="org.jetbrains.kotlinx" reason="Ships own metadata"/>
          <trust group="org.nodejs" reason="Node.js ships own metadata"/>
+         <trust group="org.hdrhistogram" reason="Part of annotation processors"/>
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="2E2010F8A7FF4A41" reason="Key couldn't be downloaded from any key server"/>

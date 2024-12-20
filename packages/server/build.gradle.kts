@@ -57,7 +57,6 @@ elide {
 }
 
 group = "dev.elide"
-version = rootProject.version as String
 
 micronaut {
   version = libs.versions.micronaut.lib.get()

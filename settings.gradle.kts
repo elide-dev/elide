@@ -256,6 +256,7 @@ include(
   ":packages:transport:transport-common",
   ":packages:transport:transport-epoll",
   ":packages:transport:transport-kqueue",
+  ":packages:transport:transport-unix",
   ":packages:transport:transport-uring",
   ":tools:reports",
   ":tools:umbrella",

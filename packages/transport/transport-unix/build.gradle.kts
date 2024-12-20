@@ -12,6 +12,8 @@
 */
 @file:Suppress("UnstableApiUsage")
 
+import elide.internal.conventions.publishing.publish
+
 plugins {
   `java-library`
   alias(libs.plugins.elide.conventions)
@@ -23,10 +25,25 @@ elide {
     checkstyle = false
     detekt = false
   }
+
+  publishing {
+    id = "transport-unix"
+    name = "Elide Transport: Unix Commons"
+    description = "Netty native transport support code for Unix-like platforms."
+
+    publish("maven") {
+      from(components["java"])
+    }
+  }
 }
 
 dependencies {
   implementation(projects.packages.transport.transportCommon)
+}
+
+java {
+  withSourcesJar()
+  withJavadocJar()
 }
 
 tasks.compileJava {

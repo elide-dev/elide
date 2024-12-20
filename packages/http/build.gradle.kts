@@ -32,10 +32,6 @@ elide {
     id = "http"
     name = "Elide HTTP"
     description = "Cross-platform HTTP utilities and wrappers."
-
-    publish("maven") {
-      from(components["kotlin"])
-    }
   }
 
   kotlin {
@@ -50,7 +46,6 @@ elide {
 }
 
 group = "dev.elide"
-version = rootProject.version as String
 
 dependencies {
   common {

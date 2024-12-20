@@ -22,7 +22,7 @@ plugins {
 }
 
 val currentPlatform = StringBuilder().apply {
-  append(System.getProperty("os.name").lowercase())
+  append(System.getProperty("os.name").lowercase().replace("mac os x", "macos"))
   append("-")
   append(System.getProperty("os.arch").lowercase())
 }.toString()

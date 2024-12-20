@@ -131,8 +131,6 @@ buildscript {
     classpath(libs.okio)
     classpath(libs.owasp)
     classpath(libs.plugin.kotlinx.atomicfu)
-    classpath(libs.protobuf.java)
-    classpath(libs.protobuf.util)
 
     if (hasProperty("elide.pluginMode") && properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${properties["elide.pluginVersion"] as String}")

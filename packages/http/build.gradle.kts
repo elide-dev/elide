@@ -12,7 +12,6 @@
  */
 
 import elide.internal.conventions.kotlin.*
-import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("multiplatform")

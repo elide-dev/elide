@@ -214,17 +214,6 @@ jobs:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
-          arguments: |
-            :packages:cli:nativeCompile
-            -Prelease=false
-            -PbuildMode=dev
-            --scan
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -PbuildDocs=false
       - name: "Build: CLI (Native/Debug)"
         run: |
           ./gradlew \

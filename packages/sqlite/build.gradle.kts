@@ -13,17 +13,35 @@
 @file:Suppress("UnstableApiUsage")
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.konan.target.HostManager
+import elide.internal.conventions.publishing.publish
 
 plugins {
   `java-library`
   alias(libs.plugins.elide.conventions)
 }
 
+val currentPlatform = StringBuilder().apply {
+  append(System.getProperty("os.name").lowercase())
+  append("-")
+  append(System.getProperty("os.arch").lowercase())
+}.toString()
+
 elide {
   checks {
     spotless = false
     checkstyle = false
     detekt = false
+  }
+
+  publishing {
+    id = "sqlite"
+    name = "Elide SQLite"
+    description = "Supporting code for SQLite use within the context of Elide guest VMs"
+
+    publish("sqlite") {
+      from(components["java"])
+    }
   }
 
   jvm {
@@ -37,6 +55,72 @@ dependencies {
   compileOnly(libs.graalvm.svm)
 }
 
+val buildModeStr = (findProperty("elide.buildMode") as? String)?.ifBlank { null } ?: "debug"
+val buildMode = when (buildModeStr) {
+  "dev", "debug" -> "debug"
+  "release" -> "release"
+  else -> error("Unsupported build mode: '$buildModeStr'")
+}
+val libPostfix = when {
+  HostManager.hostIsMac -> "dylib"
+  HostManager.hostIsLinux -> "so"
+  HostManager.hostIsMingw -> "dll"
+  else -> error("Unsupported host platform")
+}
+val libPrefix = when {
+  HostManager.hostIsMac -> "lib"
+  HostManager.hostIsLinux -> "lib"
+  HostManager.hostIsMingw -> ""
+  else -> error("Unsupported host platform")
+}
+val sqliteJdbcLibName = StringBuilder().apply {
+  append(libPrefix)
+  append("sqlite")
+  append("jdbc")
+  append(".")
+  append(libPostfix)
+}
+val platformLibFileName = StringBuilder().apply {
+  append(libPrefix)
+  append("sqlite")
+  append("jdbc")
+  append("-")
+  append(currentPlatform)
+  append(".")
+  append(libPostfix)
+}.toString()
+
+val sqliteJdbcLib = rootProject
+  .layout
+  .projectDirectory
+  .file("target/$buildMode/$sqliteJdbcLibName")
+
+val checkNative by tasks.registering {
+  doFirst {
+    if (!sqliteJdbcLib.asFile.exists()) {
+      throw IllegalStateException("SQLite JDBC native library not found at '$sqliteJdbcLib'")
+    }
+  }
+}
+
+val copyNative by tasks.registering(Copy::class) {
+  dependsOn(checkNative)
+  from(sqliteJdbcLib) {
+    rename { platformLibFileName }
+  }
+  into(layout.buildDirectory.dir("native-libs"))
+  inputs.file(sqliteJdbcLib)
+  outputs.file(layout.buildDirectory.file("native-libs/$platformLibFileName"))
+}
+
+val mountNative by tasks.registering(Copy::class) {
+  dependsOn(copyNative)
+  from(layout.buildDirectory.dir("native-libs"))
+  into(layout.buildDirectory.dir("resources/main/META-INF/native"))
+  inputs.file(layout.buildDirectory.file("native-libs/$platformLibFileName"))
+  outputs.file(layout.buildDirectory.file("resources/main/META-INF/native/$platformLibFileName"))
+}
+
 tasks.compileJava {
   options.compilerArgumentProviders.add(CommandLineArgumentProvider {
     listOf(
@@ -44,4 +128,13 @@ tasks.compileJava {
       "-Xlint:none",
     )
   })
+}
+
+tasks.processResources {
+  dependsOn(mountNative)
+}
+
+tasks.jar {
+  archiveClassifier = currentPlatform
+  dependsOn(checkNative)
 }

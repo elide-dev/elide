@@ -81,13 +81,13 @@ dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
 
   repositories {
-    maven {
-      name = "jpms-modules"
-      url = uri("https://jpms.pkg.st/repository")
-      content {
-        includeGroup("dev.javamodules")
-      }
-    }
+//    maven {
+//      name = "jpms-modules"
+//      url = uri("https://jpms.pkg.st/repository")
+//      content {
+//        includeGroup("dev.javamodules")
+//      }
+//    }
     maven {
       name = "elide-snapshots"
       url = uri("https://maven.elide.dev")
@@ -156,9 +156,9 @@ dependencyResolutionManagement {
     create("libs") {
       from(files("./gradle/elide.versions.toml"))
     }
-    create("attic") {
-      from("dev.javamodules:jpms-catalog:1.0.9")
-    }
+//    create("attic") {
+//      from("dev.javamodules:jpms-catalog:1.0.9")
+//    }
   }
 }
 

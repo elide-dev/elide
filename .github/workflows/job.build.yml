@@ -194,7 +194,7 @@ jobs:
       - name: "Setup: Apt Dependencies"
         run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@0d381219ddf674d61a7572ddd19d7941e271515c # v2.9.0
+        uses: step-security/harden-runner@c95a14d0e5bab51a9f56296a4eb0e416910cd350 # v2.10.3
         with:
           disable-sudo: false
           egress-policy: audit

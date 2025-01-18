@@ -71,7 +71,9 @@ val isDebug = !isRelease && (
 val hostIsLinux = HostManager.hostIsLinux
 val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
-val nativesType = if (isRelease) "release" else "debug"
+// @TODO: debug release crashes with crate natives
+// val nativesType = if (isRelease) "release" else "debug"
+val nativesType = "debug"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
 val entrypoint = "elide.tool.cli.MainKt"
 
@@ -79,9 +81,9 @@ val enablePkl = false
 val enableWasm = true
 val enablePython = true
 val enableRuby = true
-val enableLlvm = false
-val enableJvm = hostIsLinux
-val enableKotlin = false
+val enableLlvm = true
+val enableJvm = true
+val enableKotlin = true
 val enableSqlite = true
 val enableCustomCompiler = false
 val enableNativeCryptoV2 = true
@@ -116,7 +118,7 @@ val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enablePgoReport = true
-val enableJna = true
+val enableJna = false
 val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
@@ -315,7 +317,7 @@ val languagePluginPaths = if (!enableDynamicPlugins) emptyList() else listOf(
   project(":packages:$module").layout.buildDirectory.dir("native/nativeSharedCompile").get().asFile.path
 }
 
-val targetPath = rootProject.layout.projectDirectory.dir("target/${if (isRelease) "release" else "debug"}")
+val targetPath = rootProject.layout.projectDirectory.dir("target/$nativesType")
 val nativesPath = nativesRootTemplate(cliVersion)
 val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
@@ -721,46 +723,28 @@ val commonNativeArgs = listOfNotNull(
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
   "-Delide.strict=true",
-  "-J-Delide.strict=true",
   "-Delide.js.vm.enableStreams=true",
-  "-J-Delide.js.vm.enableStreams=true",
   "-Delide.mosaic=$enableMosaic",
-  "-J-Delide.mosaic=$enableMosaic",
   "-Delide.staticJni=$enableStaticJni",
-  "-J-Delide.staticJni=$enableStaticJni",
   "-Delide.root=$rootPath",
-  "-J-Delide.root=$rootPath",
   "-Delide.target=$targetPath",
-  "-J-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
-  "-J-Delide.natives=$nativesPath",
   "-Djna.library.path=$nativesPath",
-  "-J-Djna.library.path=$nativesPath",
   "-Djna.boot.library.path=$nativesPath",
-  "-J-Djna.boot.library.path=$nativesPath",
   "-Dorg.sqlite.lib.path=$nativesPath",
-  "-J-Dorg.sqlite.lib.path=$nativesPath",
   "-Dorg.sqlite.lib.exportPath=$nativesPath",
-  "-J-Dorg.sqlite.lib.exportPath=$nativesPath",
   "-Dio.netty.native.workdir=$nativesPath",
-  "-J-Dio.netty.native.workdir=$nativesPath",
   "-Dlibrary.jansi.path=$nativesPath",
-  "-J-Dlibrary.jansi.path=$nativesPath",
   "-Dlibrary.jline.path=$nativesPath",
-  "-J-Dlibrary.jline.path=$nativesPath",
   "-Dio.netty.native.deleteLibAfterLoading=false",
-  "-J-Dio.netty.native.deleteLibAfterLoading=false",
-  "-J-Dio.netty.allocator.type=unpooled",
-  "-R:MaxDirectMemorySize=256M",
+  "-Dio.netty.allocator.type=adaptive",
+  "-R:MaxDirectMemorySize=32G",
   "-Delide.nativeTransport.v2=${enableNativeTransportV2}",
-  "-J-Delide.nativeTransport.v2=${enableNativeTransportV2}",
-  "-J-Dtruffle.TrustAllTruffleRuntimeProviders=true",
-  "-J-Dgraalvm.locatorDisabled=false",
-  "-J-Dpolyglotimpl.DisableVersionChecks=false",
+  "-Dtruffle.TrustAllTruffleRuntimeProviders=true",
+  "-Dgraalvm.locatorDisabled=false",
+  "-Dpolyglotimpl.DisableVersionChecks=false",
   "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
-  "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-Dpolyglot.image-build-time.PreinitializeContexts=${preinitializedContexts.joinToString(",")}",
-  "-J-Dpolyglot.image-build-time.PreinitializeContexts=${preinitializedContexts.joinToString(",")}",
   onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
   onlyIf(enablePgoSampling, "--pgo-sampling"),
   onlyIf(enablePgoInstrumentation && enablePgo, "-H:+BuildReportSamplerFlamegraph"),
@@ -896,7 +880,7 @@ val jvmDefs = mapOf(
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
-  "io.netty.allocator.type" to "unpooled",
+  "io.netty.allocator.type" to "adaptive",
   "io.netty.native.deleteLibAfterLoading" to "false",
   "io.netty.native.detectNativeLibraryDuplicates" to "false",
   "io.netty.native.tryPatchShadedId" to "false",
@@ -930,6 +914,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(!enableSqliteStatic, "org.sqlite.core.NativeDB"),
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.KQueueEventLoop"),
+  "org.fusesource.jansi.internal.CLibrary",
 
   "dev.elide.cli.bridge.CliNativeBridge",
   onlyIf(HostManager.hostIsLinux, "elide.runtime.gvm.internals.sqlite.SqliteModule"),
@@ -1104,7 +1089,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   "com.jakewharton.mosaic.PlatformKt",
 
-  // --- JLine -----
+  // --- JLine/Jansi -----
 
   "org.jline.nativ.Kernel32",
   "org.jline.nativ.Kernel32${'$'}CHAR_INFO",
@@ -1118,6 +1103,21 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "org.jline.nativ.Kernel32${'$'}MOUSE_EVENT_RECORD",
   "org.jline.nativ.Kernel32${'$'}SMALL_RECT",
   "org.jline.nativ.Kernel32${'$'}WINDOW_BUFFER_SIZE_RECORD",
+  "org.fusesource.jansi.internal.CLibrary",
+  "org.fusesource.jansi.internal.CLibrary${'$'}WinSize",
+  "org.fusesource.jansi.internal.CLibrary${'$'}Termios",
+  "org.fusesource.jansi.internal.Kernel32",
+  "org.fusesource.jansi.internal.Kernel32${'$'}CHAR_INFO",
+  "org.fusesource.jansi.internal.Kernel32${'$'}CONSOLE_SCREEN_BUFFER_INFO",
+  "org.fusesource.jansi.internal.Kernel32${'$'}COORD",
+  "org.fusesource.jansi.internal.Kernel32${'$'}FOCUS_EVENT_RECORD",
+  "org.fusesource.jansi.internal.Kernel32${'$'}INPUT_EVENT_RECORD",
+  "org.fusesource.jansi.internal.Kernel32${'$'}INPUT_RECORD",
+  "org.fusesource.jansi.internal.Kernel32${'$'}KEY_EVENT_RECORD",
+  "org.fusesource.jansi.internal.Kernel32${'$'}MENU_EVENT_RECORD",
+  "org.fusesource.jansi.internal.Kernel32${'$'}MOUSE_EVENT_RECORD",
+  "org.fusesource.jansi.internal.Kernel32${'$'}SMALL_RECT",
+  "org.fusesource.jansi.internal.Kernel32${'$'}WINDOW_BUFFER_SIZE_RECORD",
 
   // --- Elide -----
 
@@ -1170,7 +1170,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx48g",
+  "-J-Xmx18g",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:+AuxiliaryEngineCache",
 ) else emptyList())
@@ -1209,7 +1209,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx48g",
+  "-J-Xmx22g",
 ))
 
 val linuxGvmReleaseFlags = listOf(
@@ -1260,7 +1260,6 @@ fun nativeCliImageArgs(
     ).let {
       listOf(
         "-Djava.library.path=$it",
-        "-J-Djava.library.path=$it",
       )
     }
   ).plus(
@@ -1712,9 +1711,6 @@ tasks {
       "micronaut.environments",
       "dev",
     )
-    jvmDefs.map {
-      systemProperty(it.key, it.value)
-    }
     systemProperty(
       "org.graalvm.language.ruby.home",
       layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),

@@ -56,11 +56,13 @@ dependencies {
 }
 
 val buildModeStr = (findProperty("elide.buildMode") as? String)?.ifBlank { null } ?: "debug"
-val buildMode = when (buildModeStr) {
-  "dev", "debug" -> "debug"
-  "release" -> "release"
-  else -> error("Unsupported build mode: '$buildModeStr'")
-}
+// val buildMode = when (buildModeStr) {
+//   "dev", "debug" -> "debug"
+//   "release" -> "release"
+//   else -> error("Unsupported build mode: '$buildModeStr'")
+// }
+// @TODO: build mode fixes
+val buildMode = "debug"
 val libPostfix = when {
   HostManager.hostIsMac -> "dylib"
   HostManager.hostIsLinux -> "so"

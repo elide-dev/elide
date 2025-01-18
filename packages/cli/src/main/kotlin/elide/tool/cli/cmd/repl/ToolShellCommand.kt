@@ -1104,10 +1104,9 @@ import elide.tool.project.ProjectManager
           ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
           (errorBase + 1) to ctxLines
         } else when (val target = runnable?.ifBlank { null }) {
+          // @TODO implement
           null -> (errorBase + 1) to emptyList()
-          else -> {
-            TODO("not yet implemented: context from error in file")
-          }
+          else -> (-1) to emptyList()
         }
       }
     }
@@ -1713,48 +1712,48 @@ import elide.tool.project.ProjectManager
           resourcesPath = GVM_RESOURCES
         }
 
-        RUBY -> ignoreNotInstalled {
-          install(elide.runtime.plugins.ruby.Ruby) {
-            logging.debug("Configuring Ruby VM")
-            resourcesPath = GVM_RESOURCES
-            executable = cmd
-            executableList = listOf(cmd).plus(args)
-            installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-          }
-        }
+         RUBY -> ignoreNotInstalled {
+           install(elide.runtime.plugins.ruby.Ruby) {
+             logging.debug("Configuring Ruby VM")
+             resourcesPath = GVM_RESOURCES
+             executable = cmd
+             executableList = listOf(cmd).plus(args)
+             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+           }
+         }
 
-        PYTHON -> ignoreNotInstalled {
-          install(elide.runtime.plugins.python.Python) {
-            logging.debug("Configuring Python VM")
-            installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-            resourcesPath = GVM_RESOURCES
-            executable = cmd
-            executableList = listOf(cmd).plus(args)
-          }
-        }
+         PYTHON -> ignoreNotInstalled {
+           install(elide.runtime.plugins.python.Python) {
+             logging.debug("Configuring Python VM")
+             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+             resourcesPath = GVM_RESOURCES
+             executable = cmd
+             executableList = listOf(cmd).plus(args)
+           }
+         }
 
         // Secondary Engines: JVM
-//        JVM -> ignoreNotInstalled {
-//          install(elide.runtime.plugins.jvm.Jvm) {
-//            logging.debug("Configuring JVM")
-//            multithreading = false
-//          }
-//
-//          install(elide.runtime.plugins.java.Java) {
-//            logging.debug("Configuring Java")
-//          }
-//        }
+        JVM -> ignoreNotInstalled {
+          install(elide.runtime.plugins.jvm.Jvm) {
+            logging.debug("Configuring JVM")
+            multithreading = false
+          }
+
+          install(elide.runtime.plugins.java.Java) {
+            logging.debug("Configuring Java")
+          }
+        }
 
         GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
 
-//        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
-//          val classpathDir = workdir.cacheDirectory()
-//            .resolve("elide-kotlin-runtime")
-//            .absolutePath
-//
-//          logging.debug("Configuring Kotlin with classpath root $classpathDir")
-//          guestClasspathRoot = classpathDir
-//        }
+        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
+          val classpathDir = workdir.cacheDirectory()
+            .resolve("elide-kotlin-runtime")
+            .absolutePath
+
+          logging.debug("Configuring Kotlin with classpath root $classpathDir")
+          guestClasspathRoot = classpathDir
+        }
 
         SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
 

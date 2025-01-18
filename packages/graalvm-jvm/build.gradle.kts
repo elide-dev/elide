@@ -58,6 +58,7 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.graalvm.espresso.hotswap)
   implementation(libs.graalvm.espresso.language)
+  implementation(libs.graalvm.espresso.resources.jdk21)
   implementation(libs.graalvm.truffle.nfi.libffi)
   implementation(libs.graalvm.espresso.polyglot)
 

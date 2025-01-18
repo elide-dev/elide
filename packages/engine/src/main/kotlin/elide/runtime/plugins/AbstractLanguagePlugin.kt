@@ -157,7 +157,10 @@ import elide.runtime.plugins.bindings.Bindings
       )
     }.getOrElse { cause ->
       // rethrow with a more meaningful message
-      throw Exception("Failed to resolve language resources with key $manifestKey for language $languageId", cause)
+      throw IllegalStateException(
+        "Failed to resolve language resources with key $manifestKey for language $languageId",
+        cause,
+      )
     }
 
   /**

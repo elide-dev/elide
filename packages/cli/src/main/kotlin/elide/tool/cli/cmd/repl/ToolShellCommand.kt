@@ -131,7 +131,7 @@ import elide.tool.project.ProjectManager
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
     // Whether to enable extended language plugins.
-    private const val ENABLE_JVM = false
+    private const val ENABLE_JVM = true
     private const val ENABLE_RUBY = true
     private const val ENABLE_PYTHON = true
     private const val ENABLE_TYPESCRIPT = true

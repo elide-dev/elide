@@ -83,7 +83,6 @@ import elide.runtime.plugins.llvm.LLVM
       configureLanguageSupport(scope)
 
       // apply the configuration and create the plugin instance
-      scope.configuration.getOrInstall(LLVM)
       val config = JvmConfig().apply(configuration)
       configureSharedBindings(scope, config)
 

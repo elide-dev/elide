@@ -92,7 +92,7 @@ val enableStaticJni = true
 val enableToolchains = false
 val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64"
 val forceFfm = false
-val oracleGvm = false
+val oracleGvm = true
 val oracleGvmLibs = oracleGvm
 val enableMosaic = false
 val enableEdge = true
@@ -114,7 +114,7 @@ val enableJpms = false
 val enableConscrypt = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
-val enableG1 = false
+val enableG1 = oracleGvm
 val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false

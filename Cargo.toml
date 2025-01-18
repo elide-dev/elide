@@ -17,25 +17,28 @@
 [workspace]
 resolver = "2"
 members = ["crates/*", "tools/umbrella"]
-exclude = ["third_party", "runtime"]
+exclude = ["crates/build", "third_party", "runtime"]
 
 [workspace.package]
 license = "MIT"
 
 [profile.dev]
-opt-level = 0
+opt-level = 3
+lto = false
 strip = false
-incremental = true
+debug = true
+incremental = false
 codegen-units = 1
-overflow-checks = false
 split-debuginfo = "unpacked"
 
 [profile.release]
 opt-level = 3
-lto = true
+lto = false
 strip = false
+debug = true
 incremental = false
 codegen-units = 1
+split-debuginfo = "unpacked"
 
 [profile.dev.package.builder]
 opt-level = 3

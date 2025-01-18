@@ -7593,6 +7593,20 @@
   "allPublicConstructors":true
 },
 {
+  "name":"tools.elide.vfs.File$FileFingerprint",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"tools.elide.vfs.File$FileFingerprint$Builder",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
   "name":"tools.elide.vfs.File$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,

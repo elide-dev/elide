@@ -10,6 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
+@file:Suppress("SpreadOperator")
+
 package elide.runtime.feature.engine
 
 import org.graalvm.nativeimage.Platform
@@ -27,6 +30,7 @@ import org.sqlite.core.NativeDB
 import org.sqlite.jdbc3.JDBC3DatabaseMetaData
 import org.sqlite.util.LibraryLoaderUtil
 import org.sqlite.util.OSInfo
+import java.sql.DriverManager
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
@@ -36,7 +40,6 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
   private companion object {
     private const val STATIC_JNI = true
     private const val LIBMATH = "m"
-    private const val SQLITE_LIB = "sqlite3"
     private const val SQLITEJDBC_LIB = "sqlitejdbc"
     private const val NATIVE_DB = "org.sqlite.core.NativeDB"
   }
@@ -44,20 +47,15 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
   override fun getDescription(): String = "Registers native SQLite access"
 
   override fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo> = if (STATIC_JNI) listOfNotNull(
-    nativeLibrary(singular = libraryNamed(
-      SQLITE_LIB,
-      registerJni = false,
-      type = STATIC,
-    )),
     nativeLibrary(singular = libraryNamed(SQLITEJDBC_LIB, NATIVE_DB, type = STATIC, deps = (
-      listOf(SQLITE_LIB).plus(
         // on linux, we need to additionally link against the `math` library, which is at `libm`
         if (Platform.includedIn(Platform.LINUX::class.java) && STATIC_JNI) listOf(LIBMATH) else emptyList()
-      )
     ))),
   ) else emptyList()
 
   private fun onDbReachable() {
+    val driver = DriverManager.getDriver("jdbc:sqlite:memory:")
+    requireNotNull(driver) { "Failed to resolve SQLite driver at build-time" }
     RuntimeJNIAccess.register(NativeDB::class.java)
     RuntimeJNIAccess.register(*fields(
       NativeDB::class.java,

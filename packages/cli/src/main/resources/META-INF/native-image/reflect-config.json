@@ -3172,10 +3172,8 @@
   "name":"org.graalvm.wasm.WasmLanguageProvider"
 },
 {
-  "name":"org.robolectric.Robolectric"
-},
-{
-  "name":"org.sqlite.JDBC"
+  "name":"org.sqlite.JDBC",
+  "allPublicConstructors": true
 },
 {
   "name":"org.truffleruby.RubyLanguageProvider"

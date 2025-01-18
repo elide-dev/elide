@@ -109,12 +109,13 @@ val enableExperimentalLlvmBackend = false
 val enableExperimentalLlvmEdge = false
 val enableEmbeddedResources = false
 val enableResourceFilter = false
-val enableAuxCache = false
+val enableAuxCache = true
+val enableAuxCacheTool = false
 val enableJpms = false
 val enableConscrypt = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
-val enableG1 = oracleGvm
+val enableG1 = oracleGvm && !enableAuxCache
 val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
@@ -365,7 +366,7 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
 
-  if (oracleGvm && oracleGvmLibs && enableAuxCache) {
+  if (oracleGvm && oracleGvmLibs && enableAuxCache && enableAuxCacheTool) {
     api(":tools:auximage")
   }
 
@@ -641,7 +642,6 @@ val deprecatedNativeArgs = listOf(
 val enabledFeatures = listOfNotNull(
   "elide.tool.engine.MacLinkageFeature",
   "elide.tool.feature.ToolingUmbrellaFeature",
-  "elide.runtime.feature.engine.NativeSQLiteFeature",
   "elide.runtime.feature.engine.NativeTransportFeature",
   "elide.runtime.feature.engine.NativeConsoleFeature",
   "elide.runtime.feature.python.PythonFeature",

@@ -69,7 +69,13 @@ fn main() {
         .file(src_file("netty_io_uring_native.c"))
         .file(src_file("syscall.c"));
 
-      Builder::default().header("headers/netty_jni_util.h")
+      Builder::default()
+              .header("headers/netty_jni_util.h")
+              .header(header_file("netty_epoll_linuxsocket.h"))
+              .header(header_file("netty_epoll_vmsocket.h"))
+              .header(header_file("netty_io_uring.h"))
+              .header(header_file("netty_io_uring_linuxsocket.h"))
+              .header(header_file("ssl.h"))
     }
 
     TargetOs::Windows => Builder::default().header("headers/netty_jni_util.h"),
@@ -108,5 +114,9 @@ fn main() {
     Some(shared_cflags),
   );
 
-  build_bindings("transport", "libtransport.rs", bindings_builder);
+  build_bindings(
+    "transport",
+    "libtransport.rs",
+    bindings_builder,
+  );
 }

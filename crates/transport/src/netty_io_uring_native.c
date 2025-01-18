@@ -721,8 +721,7 @@ static void netty_iouring_native_JNI_OnUnload(JNIEnv* env) {
 
 // Invoked by the JVM when statically linked
 JNIEXPORT jint JNI_OnLoad_netty_transport_native_io_uring(JavaVM* vm, void* reserved) {
-    jint ret = netty_jni_util_JNI_OnLoad(vm, reserved, LIBRARYNAME, netty_iouring_native_JNI_OnLoad);
-    return ret;
+    return netty_jni_util_JNI_OnLoad(vm, reserved, LIBRARYNAME, netty_iouring_native_JNI_OnLoad);
 }
 
 // Invoked by the JVM when statically linked
@@ -746,6 +745,18 @@ JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved) {
 //
 // ------------------------------------------------
 //
+
+JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_ioUringProbe(JNIEnv *env, jclass clazz, jint ring_fd, jintArray ops) {
+  return netty_io_uring_probe(env, clazz, ring_fd, ops);
+}
+
+JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_kernelVersion(JNIEnv* env, jclass clazz) {
+  return netty_io_uring_kernel_version(env, clazz);
+}
+
+JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_cmsghdrData(JNIEnv* env, jclass clazz, jlong cmsghdrAddr) {
+  return netty_io_uring_cmsghdrData(env, clazz, cmsghdrAddr);
+}
 
 JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_registerUnix(JNIEnv* env, jclass clazz) {
   return netty_io_uring_registerUnix(env, clazz);
@@ -780,8 +791,6 @@ JNIEXPORT void Java_io_netty_incubator_channel_uring_Native_eventFdWrite(JNIEnv*
 JNIEXPORT jint Java_io_netty_incubator_channel_uring_Native_blockingEventFd(JNIEnv* env, jclass clazz) {
   return netty_epoll_native_blocking_event_fd(env, clazz);
 }
-
-//
 
 JNIEXPORT jint Java_io_netty_incubator_channel_uring_NativeStaticallyReferencedJniMethods_sockNonblock(JNIEnv* env, jclass clazz) {
   return netty_io_uring_sockNonblock(env, clazz);

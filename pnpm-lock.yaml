@@ -55,6 +55,9 @@ importers:
       '@mdx-js/esbuild':
         specifier: 3.1.0
         version: 3.1.0(acorn@8.14.0)(esbuild@0.24.0)
+      '@mitata/counters':
+        specifier: 0.0.8
+        version: 0.0.8
       '@prettier/plugin-xml':
         specifier: 3.4.1
         version: 3.4.1(prettier@3.4.2)
@@ -85,6 +88,9 @@ importers:
       lint-staged:
         specifier: 15.2.11
         version: 15.2.11
+      mitata:
+        specifier: 1.0.30
+        version: 1.0.30
       postcss-cli:
         specifier: 11.0.0
         version: 11.0.0(jiti@2.4.2)(postcss@8.4.49)
@@ -492,6 +498,9 @@ packages:
 
   '@mdx-js/mdx@3.1.0':
     resolution: {integrity: sha512-/QxEhPAvGwbQmy1Px8F899L5Uc2KZ6JtXwlCgJmjSTBedwOZkByYcBG4GceIGPXRDsmfxhHazuS+hlOShRLeDw==}
+
+  '@mitata/counters@0.0.8':
+    resolution: {integrity: sha512-f11w0Y1ETFlarDP7CePj8Z+y8Gv5Ax4gMxWsEwrqh0kH/YIY030Ezx5SUJeQg0YPTZ2OHKGcLG1oGJbIqHzaJA==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1727,6 +1736,9 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
+  mitata@1.0.30:
+    resolution: {integrity: sha512-zefhVHdXznlD92aojkn7sZ+ZUzvbG8vmFvLllIHZZoUwGlO+YMqMbnA3tcutwe/yAVdkL5/3z65isEfvdomoJQ==}
+
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
 
@@ -2861,6 +2873,8 @@ snapshots:
     transitivePeerDependencies:
       - acorn
       - supports-color
+
+  '@mitata/counters@0.0.8': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -4411,6 +4425,8 @@ snapshots:
       brace-expansion: 2.0.1
 
   minimist@1.2.8: {}
+
+  mitata@1.0.30: {}
 
   ms@2.0.0: {}
 

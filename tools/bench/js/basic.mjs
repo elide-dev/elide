@@ -28,4 +28,4 @@ await run({
   colors: true, // enable/disable colors (default: true)
   min_max: true, // enable/disable min/max column (default: true)
   percentiles: true, // enable/disable percentiles column (default: true)
-});
+})

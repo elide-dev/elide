@@ -596,7 +596,7 @@ val cxxFlags: String? = System.getenv("CXXFLAGS")
 
 val commonGvmArgs = listOfNotNull(
   "-H:+UseCompressedReferences",
-  onlyIf(enableBuildReport, "-H:+BuildReport"),
+  onlyIf(enableBuildReport, "--emit=build-report"),
 ).onlyIf(oracleGvm)
 
 val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
@@ -606,7 +606,7 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+RemoveUnusedSymbols",
   "-H:+ParseRuntimeOptions",
   "-H:+JNIEnhancedErrorCodes",
-  onlyIf(oracleGvm, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
+  onlyIf(oracleGvm && enableAuxCache, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
   onlyIf(enableExperimentalLlvmBackend, "-H:CompilerBackend=llvm"),
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
   onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
@@ -1152,7 +1152,8 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-Delide.vm.engine.preinitialize=false",
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList())).plus(if (oracleGvm && enableAuxCache) listOf(
+) else emptyList())).plus(if (oracleGvm) listOf(
+  // disabled on windows
   "-H:-AuxiliaryEngineCache",
 ) else emptyList())
 
@@ -1183,22 +1184,21 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=-lsqlite3",
     "-H:NativeLinkerOption=-lstdc++",
     "-H:NativeLinkerOption=-L$sqliteLibPath",
-    "-H:+StaticExecutableWithDynamicLibC",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
+    "--static-nolibc",
   ),
 ).plus(
   if (enableG1) listOf(
     "--gc=G1",
-    "-H:+UseG1GC",
     "-H:-AuxiliaryEngineCache",
     "-Delide.vm.engine.preinitialize=false",
   ) else listOf(
     "--gc=serial",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
-  ).plus(if (oracleGvm && enableAuxCache) listOf(
+  ).plus(if (oracleGvm && enableAuxCache && !enableG1) listOf(
     "-H:+AuxiliaryEngineCache",
     "-Delide.vm.engine.preinitialize=true",
   ) else emptyList())
@@ -1252,7 +1252,9 @@ fun nativeCliImageArgs(
       System.getProperty("java.library.path", "")
         .split(File.pathSeparator)
         .filter { it.isNotEmpty() }
-    ).distinct().joinToString(
+    ).distinct().plus(listOf(
+      targetPath,
+    )).joinToString(
       File.pathSeparator
     ).let {
       listOf(

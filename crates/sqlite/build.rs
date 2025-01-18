@@ -93,7 +93,8 @@ fn main() {
 
   build
     // Source Files
-    .file(src_file("NativeDB.c"));
+    .file(src_file("NativeDB.c"))
+    .file(third_party_src_file("sqlite", "sqlite3.c"));
 
   build_dual_cc(
     build,

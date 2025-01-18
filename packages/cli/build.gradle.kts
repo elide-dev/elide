@@ -120,6 +120,7 @@ val enableJna = true
 val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
+val jniDebug = false
 val glibcTarget = "glibc"
 val dumpPointsTo = false
 val defaultArchTarget = "compatibility"
@@ -1743,6 +1744,12 @@ tasks {
         File.pathSeparator
       )
     )
+    if (jniDebug) {
+      jvmArgs(
+        "-verbose:jni",
+        "-Xlog:library=trace",
+      )
+    }
   }
 
   optimizedRun {

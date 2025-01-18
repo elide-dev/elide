@@ -60,6 +60,8 @@ public class SQLiteJDBCLoader {
 
     private static final String LOCK_EXT = ".lck";
     private static boolean extracted = false;
+    private static final boolean loadBaseLibrary = false;
+    private static final String nativeBaseLibraryName = "sqlite3";
 
     /**
      * Loads SQLite native JDBC library.
@@ -289,6 +291,55 @@ public class SQLiteJDBCLoader {
         }
     }
 
+    private static boolean loadFromPaths(
+            String[] paths,
+            String basename,
+            String libname,
+            boolean strict,
+            boolean system) {
+      String sqliteNativeLibraryPath = System.getProperty("org.sqlite.lib.path");
+      var hasExplicitPath = sqliteNativeLibraryPath != null && !sqliteNativeLibraryPath.isEmpty();
+      var count = paths.length + (hasExplicitPath ? 1 : 0);
+      var allSearchPaths = new ArrayList<String>(count);
+      if (hasExplicitPath) {
+        allSearchPaths.add(sqliteNativeLibraryPath);
+      }
+      allSearchPaths.addAll(Arrays.asList(paths));
+      for (String path : allSearchPaths) {
+        var effective = Path.of(path, libname);
+        if (Files.exists(effective)) {
+          if (loadNativeLibrary(path, libname)) {
+            logger.trace("Loaded library '{}' from path {}", libname, path);
+            return true;
+          }
+        }
+      }
+
+      // attempt to load from the system path instead
+      if (system) {
+        try {
+          System.loadLibrary(basename);
+          return true;
+        } catch (UnsatisfiedLinkError err) {
+          logger.trace("Failed last-resort fallback to system path for lib {}", basename);
+          if (strict) {
+            throw err;
+          }
+        }
+      }
+      return false;
+    }
+
+    private static boolean loadSqliteBaseLibrary() {
+      return loadFromPaths(
+        System.getProperty("java.library.path", "").split(File.pathSeparator),
+        nativeBaseLibraryName,
+        System.mapLibraryName(nativeBaseLibraryName),
+        true,
+        true
+      );
+    }
+
     /**
      * Loads SQLite native library using given path and name of the library.
      *
@@ -300,6 +351,11 @@ public class SQLiteJDBCLoader {
           return;
         }
         logger.trace("Loading SQLite native library");
+
+        // load sqlite3 first
+        if (loadBaseLibrary) {
+          loadSqliteBaseLibrary();
+        }
 
         if (ImageInfo.inImageCode() && ImageInfo.isExecutable()) {
           // try loading as the umbrella library first
@@ -315,6 +371,26 @@ public class SQLiteJDBCLoader {
           }
         }
 
+        List<String> triedPaths = new LinkedList<>();
+
+        // Try loading library from org.sqlite.lib.path library path */
+        String sqliteNativeLibraryPath = System.getProperty("org.sqlite.lib.path");
+        String sqliteNativeLibraryName = System.getProperty("org.sqlite.lib.name");
+        if (sqliteNativeLibraryName == null) {
+          sqliteNativeLibraryName = LibraryLoaderUtil.getNativeLibName();
+        }
+        logger.trace("SQLite library name: {}", sqliteNativeLibraryName);
+        logger.trace("SQLite library path: {}", sqliteNativeLibraryPath);
+
+        // next, try our proprietary paths
+        var libPaths = System.getProperty("java.library.path").split(File.pathSeparator);
+        if (!loadFromPaths(libPaths, "sqlitejdbc", sqliteNativeLibraryName, false, false)) {
+          triedPaths.addAll(Arrays.asList(libPaths));
+        } else {
+          extracted = true;
+          return;
+        }
+
         // As a first step, try loading through System.loadLibrary
         if (loadNativeLibraryJdk()) {
           logger.trace("SQLite loaded via JNI (attempt 1)");
@@ -323,17 +399,6 @@ public class SQLiteJDBCLoader {
         } else {
           logger.trace("SQLite library failed to load statically; proceeding to resolution");
         }
-
-        List<String> triedPaths = new LinkedList<>();
-
-        // Try loading library from org.sqlite.lib.path library path */
-        String sqliteNativeLibraryPath = System.getProperty("org.sqlite.lib.path");
-        String sqliteNativeLibraryName = System.getProperty("org.sqlite.lib.name");
-        if (sqliteNativeLibraryName == null) {
-            sqliteNativeLibraryName = LibraryLoaderUtil.getNativeLibName();
-        }
-        logger.trace("SQLite library name: {}", sqliteNativeLibraryName);
-        logger.trace("SQLite library path: {}", sqliteNativeLibraryPath);
 
         if (sqliteNativeLibraryPath != null) {
             if (loadNativeLibrary(sqliteNativeLibraryPath, sqliteNativeLibraryName)) {

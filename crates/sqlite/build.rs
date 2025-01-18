@@ -44,10 +44,8 @@ fn main() {
 
   let sqlite_path = third_party_project("sqlite/install");
   let sqlite_include = format!("-I{}/include", sqlite_path);
-  let sqlite_libpath = format!("-L{}/lib", sqlite_path);
-  let libpath_binding = sqlite_libpath.clone();
   let include_binding = sqlite_include.clone();
-  let extra_args = vec![include_binding.as_str(), libpath_binding.as_str()];
+  let extra_args = vec![include_binding.as_str()];
 
   build
     // Build Hardening & Warning Suppression
@@ -111,7 +109,4 @@ fn main() {
       .clang_arg(sqlite_include.clone())
       .header(header_file("NativeDB.h")),
   );
-
-  println!("cargo::rustc-link-lib=static=sqlite3");
-  println!("cargo::rustc-link-lib=dylib=sqlite3");
 }

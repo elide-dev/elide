@@ -23,6 +23,7 @@ enum class GuestLanguage (
   internal val extensions: List<String> = emptyList(),
   internal val mimeTypes: List<String> = emptyList(),
   internal val dependsOn: List<GuestLanguage> = emptyList(),
+  internal val executionMode: ExecutionMode = ExecutionMode.SOURCE_DIRECT,
   internal val secondary: Boolean = dependsOn.isNotEmpty(),
 ) : elide.runtime.gvm.GuestLanguage, elide.runtime.core.GuestLanguage {
   /** Interactive JavaScript VM. */
@@ -49,6 +50,7 @@ enum class GuestLanguage (
     id = ENGINE_LLVM,
     formalName = "LLVM",
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("bc"),
   ),
 
@@ -74,6 +76,7 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     formalName = "JVM",
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("class"),
     mimeTypes = emptyList(),
   ),
@@ -83,6 +86,7 @@ enum class GuestLanguage (
     id = "java",
     formalName = "JVM",
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("java"),
     mimeTypes = emptyList(),
   ),
@@ -93,6 +97,7 @@ enum class GuestLanguage (
     formalName = "Kotlin",
     engine = ENGINE_JVM,
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("kt", "kts"),
     dependsOn = listOf(JVM),
   ),
@@ -104,6 +109,7 @@ enum class GuestLanguage (
     formalName = "Groovy",
     experimental = true,
     extensions = listOf("groovy"),
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     dependsOn = listOf(JVM),
   ),
 
@@ -114,6 +120,7 @@ enum class GuestLanguage (
     formalName = "Scala",
     experimental = true,
     extensions = listOf("scala"),
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     dependsOn = listOf(JVM),
   ),
 

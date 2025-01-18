@@ -576,6 +576,19 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /**
+   * Run a [block] of code using a [PolyglotContext] accessor factory, configured by the current [engine]. The context
+   * is guaranteed to be exclusive to the accessor caller thread, but it may be reused after this operation completes.
+   *
+   * The first invocation of this method will cause the [engine] to be initialized, triggering the
+   * [configureEngine] event.
+   */
+  protected open fun withDeferredContext(langs: EnumSet<GuestLanguage>, block: (() -> PolyglotContext) -> Unit) {
+    block.invoke {
+      resolvePolyglotContext(langs)
+    }
+  }
+
+  /**
    * ## Output Controller
    *
    * Create a wrapped [OutputController] which can manage receiving and emitting output from the sub-command implemented

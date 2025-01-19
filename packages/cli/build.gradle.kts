@@ -705,7 +705,7 @@ val commonNativeArgs = listOfNotNull(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
-  "--enable-url-protocols=http,https,file,jar",
+  "--enable-url-protocols=http,https,jar",
   "-H:+UnlockExperimentalVMOptions",
   onlyIf(enableJna, "--enable-native-access=com.sun.jna,ALL-UNNAMED") ?: "--enable-native-access=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
@@ -816,10 +816,7 @@ val commonCFlags: List<String> = listOf(
 )
 
 // Linker flags which are always included.
-val commonLinkerOptions: List<String> = listOf(
-  "-L$sqliteLibPath",
-  "-lsqlite3",
-)
+val commonLinkerOptions: List<String> = listOf()
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
@@ -900,6 +897,34 @@ val hostedRuntimeOptions = mapOf(
   "IncludeLocales" to "en",
 )
 
+val initializeAtBuildtime: List<String> = listOf(
+  "ch.qos.logback",
+  "com.google.common",
+  "com.google.protobuf",
+  "elide",
+  "elide.tool",
+  "elide.tool.cli.Elide",
+  "elide.tool.cli.cmd.tool.EmbeddedTool${'$'}Companion",
+  "elide.runtime",
+  "elide.runtime.lang.typescript",
+  "elide.runtime.gvm",
+  "elide.runtime.gvm.internals",
+  "elide.runtime.gvm.internals.sqlite",
+  "elide.runtime.gvm.internals.sqlite.SqliteModule",
+  "com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls",
+  "tools.elide",
+  "java.sql",
+  "kotlin",
+  "kotlinx.atomicfu",
+  "kotlinx.serialization",
+  "org.fusesource",
+  "org.jline",
+  "org.slf4j",
+  "org.sqlite",
+  "oshi",
+  "sun.awt.resources.awt",
+)
+
 val initializeAtBuildTimeTest: List<String> = listOf(
   "org.junit.platform.launcher.core.LauncherConfig",
   "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
@@ -912,8 +937,11 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.KQueueEventLoop"),
   "org.fusesource.jansi.internal.CLibrary",
 
+  // @TODO: seal this into formal config
+  "elide.tool.err.ErrorHandler${'$'}ErrorContext",
+  // @TODO: build-time linkage here
   "dev.elide.cli.bridge.CliNativeBridge",
-  onlyIf(HostManager.hostIsLinux, "elide.runtime.gvm.internals.sqlite.SqliteModule"),
+  //onlyIf(HostManager.hostIsLinux, "elide.runtime.gvm.internals.sqlite.SqliteModule"),
 
   "java.awt.Desktop",
   "java.awt.Toolkit",
@@ -1044,6 +1072,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "kotlin.random.Random${'$'}Default",
   "kotlin.random.RandomKt",
   "kotlin.random.jdk8.PlatformThreadLocalRandom",
+  "org.jetbrains.kotlin",
 
   // --- Netty -----
 
@@ -1181,9 +1210,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=-lm",
     "-H:NativeLinkerOption=-lssl",
     "-H:NativeLinkerOption=-lcrypto",
-    "-H:NativeLinkerOption=-lsqlite3",
     "-H:NativeLinkerOption=-lstdc++",
-    "-H:NativeLinkerOption=-L$sqliteLibPath",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
@@ -1263,9 +1290,9 @@ fun nativeCliImageArgs(
     }
   ).plus(
     jvmCompileArgs.map { "-J$it" },
-  ).plus(listOf(
-      "--initialize-at-build-time="
-  )).plus(
+  ).plus(
+    initializeAtBuildtime.map { "--initialize-at-build-time=$it" }
+  ).plus(
     initializeAtRuntime.map { "--initialize-at-run-time=$it" }
   ).plus(
     when (platform) {

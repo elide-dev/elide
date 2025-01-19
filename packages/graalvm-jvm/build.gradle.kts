@@ -53,7 +53,6 @@ elide {
 
 dependencies {
   api(projects.packages.engine)
-  api(projects.packages.graalvmLlvm)
   api(libs.graalvm.polyglot.java.community)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.graalvm.espresso.hotswap)

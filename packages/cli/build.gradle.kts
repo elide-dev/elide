@@ -90,7 +90,8 @@ val enableNativeCryptoV2 = true
 val enableSqliteStatic = true
 val enableStaticJni = true
 val enableToolchains = false
-val enableFfm = hostIsLinux && System.getProperty("os.arch") == "amd64"
+val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64"
+val forceFfm = false
 val oracleGvm = false
 val oracleGvmLibs = oracleGvm
 val enableMosaic = false
@@ -139,7 +140,7 @@ val exclusions = listOfNotNull(
   if (enableJna) null else libs.jna.jpms,
 
   // only include jline jni integration if ffm is disabled
-  if (!enableFfm) null else libs.jline.terminal.jni,
+  if (enableFfm && forceFfm) libs.jline.terminal.jni else null,
 
   // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
   if (enableKotlin) null else libs.kotlin.compiler.embedded,
@@ -204,6 +205,7 @@ val jvmCompileArgs = listOfNotNull(
     "ALL-UNNAMED",
   ).joinToString(","),
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
@@ -687,10 +689,6 @@ val experimentalLlvmEdgeArgs = listOfNotNull(
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
-  // "-H:AbortOnFieldReachable=com.sun.jna.internal.Cleaner${'$'}CleanerThread.this${'$'}0",
-  // "-H:AbortOnMethodReachable=kotlinx.coroutines.CancellableContinuationImpl.getParentHandle",
-  // "--trace-object-instantiation=kotlinx.coroutines.CancellableContinuationImpl",
-  // "-H:AbortOnMethodReachable=java.util.concurrent.atomic.AtomicReferenceFieldUpdater.accessCheck",
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
@@ -707,9 +705,9 @@ val commonNativeArgs = listOfNotNull(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
-  "--enable-url-protocols=jar",
-  "--macro:truffle-svm",
-  "--enable-native-access=com.sun.jna,ALL-UNNAMED",
+  "--enable-url-protocols=http,https,file,jar",
+  "-H:+UnlockExperimentalVMOptions",
+  onlyIf(enableJna, "--enable-native-access=com.sun.jna,ALL-UNNAMED") ?: "--enable-native-access=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -754,8 +752,6 @@ val commonNativeArgs = listOfNotNull(
   }.map {
     "-H:CLibraryPath=$it"
   }
-).plus(
-  listOf("-H:+UnlockExperimentalVMOptions")
 ).plus(
   commonGvmArgs.onlyIf(oracleGvm)
 ).plus(
@@ -1210,6 +1206,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
   "-J-Xmx12g",
 ) else listOf(
   "-J-Xmx22g",
+  "--parallelism=12",
 ))
 
 val linuxGvmReleaseFlags = listOf(

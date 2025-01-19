@@ -1782,7 +1782,7 @@ private typealias ContextAccessor = () -> PolyglotContext
          }
 
         // Secondary Engines: JVM
-        /*JVM -> ignoreNotInstalled {
+        JVM -> ignoreNotInstalled {
           install(elide.runtime.plugins.jvm.Jvm) {
             logging.debug("Configuring JVM")
             multithreading = !langs.contains(JS)
@@ -1804,7 +1804,7 @@ private typealias ContextAccessor = () -> PolyglotContext
           guestClasspathRoot = classpathDir
         }
 
-        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")*/
+        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
 
         // Secondary engines: LLVM
         LLVM -> install(elide.runtime.plugins.llvm.LLVM) {

@@ -1733,7 +1733,7 @@ import elide.tool.project.ProjectManager
          }
 
         // Secondary Engines: JVM
-        JVM -> ignoreNotInstalled {
+        /*JVM -> ignoreNotInstalled {
           install(elide.runtime.plugins.jvm.Jvm) {
             logging.debug("Configuring JVM")
             multithreading = false
@@ -1755,7 +1755,7 @@ import elide.tool.project.ProjectManager
           guestClasspathRoot = classpathDir
         }
 
-        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")*/
 
         else -> {}
       }

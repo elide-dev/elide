@@ -33,7 +33,7 @@ jobs:
       contents: read
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@0d381219ddf674d61a7572ddd19d7941e271515c # v2.9.0
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
         with:
           disable-sudo: true
           egress-policy: audit

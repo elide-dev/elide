@@ -70,7 +70,7 @@ public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
     public const val DEFAULT_SOURCEMAPS: Boolean = true
 
     /** Default enablement of V8 compatibility shims. */
-    public const val DEFAULT_V8_COMPAT: Boolean = false
+    public const val DEFAULT_V8_COMPAT: Boolean = true
 
     /** Default enablement of WASM support, where available. */
     public const val DEFAULT_WASM: Boolean = true

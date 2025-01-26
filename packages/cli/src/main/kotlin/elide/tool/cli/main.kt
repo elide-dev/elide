@@ -117,7 +117,7 @@ private fun initialize() {
  *
  * @param args Arguments to run with.
  */
-suspend fun main(args: Array<String>) = try {
+suspend fun main(args: Array<String>): Unit = try {
   // perform early init
   initialize()
 

@@ -72,9 +72,7 @@ val isDebug = !isRelease && (
 val hostIsLinux = HostManager.hostIsLinux
 val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
-// @TODO: debug release crashes with crate natives
-// val nativesType = if (isRelease) "release" else "debug"
-val nativesType = "debug"
+val nativesType = if (isRelease) "release" else "debug"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
 val entrypoint = "elide.tool.cli.MainKt"
 
@@ -722,6 +720,7 @@ val commonNativeArgs = listOfNotNull(
   "--enable-https",
   "--install-exit-handlers",
   "--enable-url-protocols=http,https,jar",
+  "--color=always",
   "-H:+UnlockExperimentalVMOptions",
   "-H:-ReduceImplicitExceptionStackTraceInformation",
   onlyIf(enableJna, "--enable-native-access=com.sun.jna,ALL-UNNAMED") ?: "--enable-native-access=ALL-UNNAMED",
@@ -958,7 +957,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   // @TODO: seal this into formal config
   "elide.tool.err.ErrorHandler${'$'}ErrorContext",
   // @TODO: build-time linkage here
-  "dev.elide.cli.bridge.CliNativeBridge",
+  //"dev.elide.cli.bridge.CliNativeBridge",
   //onlyIf(HostManager.hostIsLinux, "elide.runtime.gvm.internals.sqlite.SqliteModule"),
 
   // pkl needs this
@@ -1296,6 +1295,7 @@ fun nativeCliImageArgs(
   target: String = glibcTarget,
   debug: Boolean = isDebug,
   test: Boolean = false,
+  sharedLib: Boolean = false,
   release: Boolean = isRelease,
 ): List<String> =
   commonNativeArgs.asSequence()
@@ -1401,7 +1401,6 @@ graalvmNative {
       sharedLibrary = false
       if (enableToolchains) javaLauncher = gvmLauncher
 
-      // we handle classpath stuff manually
       classpath = files(
         tasks.optimizedNativeJar,
         configurations.nativeImageClasspath,
@@ -1410,6 +1409,26 @@ graalvmNative {
 
       // compute main compile args
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
+    }
+
+    create("shared") {
+      imageName = "libelidemain"
+      sharedLibrary = true
+      quickBuild = quickbuild
+      fallback = false
+      if (enableToolchains) javaLauncher = gvmLauncher
+
+      classpath = files(
+        tasks.optimizedNativeJar,
+        configurations.nativeImageClasspath,
+        configurations.runtimeClasspath,
+      )
+
+      buildArgs.addAll(nativeCliImageArgs(
+        debug = quickbuild,
+        sharedLib = true,
+        release = !quickbuild,
+        platform = targetOs))
     }
 
     named("optimized") {
@@ -1755,7 +1774,12 @@ tasks {
       )
     )
 
-    jvmArgs(jvmModuleArgs)
+    jvmArgs(jvmModuleArgs.plus(
+      listOf(
+        "-verbose:jni",
+        "-Xlog:library=trace",
+      ).onlyIf(jniDebug)
+    ))
 
     standardInput = System.`in`
     standardOutput = System.out

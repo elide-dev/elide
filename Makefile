@@ -797,7 +797,7 @@ serve-docs:  ## Serve documentation locally.
 		&& open http://localhost:8000 \
 		&& python3 -m http.server
 
-IMAGES ?= image-base image-base-alpine image-gvm21 image-gvm22 image-jdk17 image-jdk21 image-jdk22 image-runtime-jvm21 image-runtime-jvm22 image-native image-native-alpine
+IMAGES ?= image-base image-base-alpine image-gvm21 image-gvm23 image-jdk17 image-jdk21 image-jdk23 image-runtime-jvm21 image-runtime-jvm23 image-native image-native-alpine
 
 images: $(IMAGES)  ## Build all Docker images.
 	@echo "All Docker images built."
@@ -826,6 +826,10 @@ image-gvm22:  ## Build GVM22 builder image.
 	@echo "Building image 'gvm22'..."
 	$(CMD)$(MAKE) -C tools/images/gvm22 PUSH=$(PUSH) REMOTE=$(REMOTE)
 
+image-gvm23:  ## Build GVM23 builder image.
+	@echo "Building image 'gvm23'..."
+	$(CMD)$(MAKE) -C tools/images/gvm23 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
 image-jdk17:  ## Build JDK17 builder image.
 	@echo "Building image 'jdk17'..."
 	$(CMD)$(MAKE) -C tools/images/jdk17 PUSH=$(PUSH) REMOTE=$(REMOTE)
@@ -838,25 +842,33 @@ image-jdk21:  ## Build JDK21 builder image.
 	@echo "Building image 'jdk21'..."
 	$(CMD)$(MAKE) -C tools/images/jdk21 PUSH=$(PUSH) REMOTE=$(REMOTE)
 
-image-jdk22:  ## Build JDK20 builder image.
+image-jdk22:  ## Build JDK22 builder image.
 	@echo "Building image 'jdk22'..."
 	$(CMD)$(MAKE) -C tools/images/jdk22 PUSH=$(PUSH) REMOTE=$(REMOTE)
 
-image-runtime-jvm17:  ## Build runtime GVM17 builder image.
-	@echo "Building image 'gvm17'..."
+image-jdk23:  ## Build JDK23 builder image.
+	@echo "Building image 'jdk23'..."
+	$(CMD)$(MAKE) -C tools/images/jdk23 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-runtime-jvm17:  ## Build runtime JVM17 image.
+	@echo "Building image 'runtime-jvm17'..."
 	$(CMD)$(MAKE) -C tools/images/runtime-jvm17 PUSH=$(PUSH) REMOTE=$(REMOTE)
 
-image-runtime-jvm20:  ## Build runtime GVM20 builder image.
-	@echo "Building image 'gvm20'..."
+image-runtime-jvm20:  ## Build runtime JVM20 image.
+	@echo "Building image 'runtime-jvm20'..."
 	$(CMD)$(MAKE) -C tools/images/runtime-jvm20 PUSH=$(PUSH) REMOTE=$(REMOTE)
 
-image-runtime-jvm21:  ## Build runtime GVM21 builder image.
-	@echo "Building image 'gvm21'..."
+image-runtime-jvm21:  ## Build runtime JVM21 image.
+	@echo "Building image 'runtime-jvm21'..."
 	$(CMD)$(MAKE) -C tools/images/runtime-jvm21 PUSH=$(PUSH) REMOTE=$(REMOTE)
 
-image-runtime-jvm22:  ## Build runtime GVM22 builder image.
-	@echo "Building image 'gvm22'..."
+image-runtime-jvm22:  ## Build runtime JVM22 image.
+	@echo "Building image 'runtime-jvm22'..."
 	$(CMD)$(MAKE) -C tools/images/runtime-jvm22 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-runtime-jvm23:  ## Build runtime JVM23 image.
+	@echo "Building image 'runtime-jvm23'..."
+	$(CMD)$(MAKE) -C tools/images/runtime-jvm23 PUSH=$(PUSH) REMOTE=$(REMOTE)
 
 image-native:  ## Build native Ubuntu base image.
 	@echo "Building image 'native'..."

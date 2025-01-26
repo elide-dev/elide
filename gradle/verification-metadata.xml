@@ -5,6 +5,7 @@
       <verify-signatures>true</verify-signatures>
       <trusted-artifacts>
          <trust file="kotlinpoet-jvm-1.18.0.module"/>
+         <trust group="org.pkl-lang" reason="Forked and verified"/>
          <trust group="org.apache" reason="Part of Gradle"/>
          <trust group="org.codehaus.groovy" reason="Part of Gradle"/>
          <trust group="org.gradle" reason="Part of Gradle"/>
@@ -14,6 +15,12 @@
          <trust group="org.jetbrains.kotlinx" reason="Ships own metadata"/>
          <trust group="org.nodejs" reason="Node.js ships own metadata"/>
          <trust group="org.hdrhistogram" reason="Part of annotation processors"/>
+         <trust group="com.github.javaparser" reason="Verified as part of Pkl"/>
+         <trust group="org.organicdesign" name="Paguro" reason="Verified as part of Pkl"/>
+         <trust group="org.msgpack" name="msgpack-core" reason="Verified as part of Pkl"/>
+         <trust group="com.google.code.gson" name="gson" reason="Verified as part of Pkl"/>
+         <trust group="org.snakeyaml" name="snakeyaml-engine" reason="Verified as part of Pkl"/>
+         <trust group="com.tunnelvisionlabs" reason="Verified as part of Pkl"/>
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="2E2010F8A7FF4A41" reason="Key couldn't be downloaded from any key server"/>

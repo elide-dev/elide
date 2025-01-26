@@ -1,6 +1,6 @@
-import { existsSync } from "node:fs"
-import { join, dirname } from "node:path"
 import { spawn } from "node:child_process"
+import { existsSync } from "node:fs"
+import { dirname, join } from "node:path"
 
 const binName = "hakuna"
 const thisFile = import.meta.filename

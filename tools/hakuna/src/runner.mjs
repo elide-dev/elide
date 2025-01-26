@@ -1,4 +1,4 @@
-import { join, resolve, normalize } from "node:path"
+import { join, normalize, resolve } from "node:path"
 
 const args = process.argv.slice(2)
 

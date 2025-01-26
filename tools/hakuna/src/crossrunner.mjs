@@ -1,9 +1,9 @@
+import { spawnSync } from "node:child_process"
+import { existsSync } from "node:fs"
+import { basename } from "node:path"
 import { Command } from "commander"
 import { sync as which } from "which"
 import pkgInfo from "../package.json"
-import { existsSync } from "node:fs"
-import { basename } from "node:path"
-import { spawnSync } from "node:child_process"
 
 const resolvedBinMap = {}
 const runtimeKeyMap = {}

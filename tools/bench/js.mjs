@@ -1,4 +1,4 @@
-import { resolve, normalize, join } from "node:path"
+import { join, normalize, resolve } from "node:path"
 import { run } from "mitata"
 
 const allBenchmarks = ["basic", "sqlite"].map(name => {

@@ -22,7 +22,8 @@
     "packages/test",
     "packages/cli",
     "tools/scripts",
-    "tools/plugin/gradle-plugin"
+    "tools/plugin/gradle-plugin",
+    "tools/hakuna"
   ],
   "dependencies": {
     "browserslist": "4.24.4",

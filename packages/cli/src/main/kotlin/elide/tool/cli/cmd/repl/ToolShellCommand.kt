@@ -1477,7 +1477,13 @@ private typealias ContextAccessor = () -> PolyglotContext
   }
 
   // Read an executable script file and return it as a `File` and a `Source`.
-  private fun readExecutableScript(languages: EnumSet<GuestLanguage>, language: GuestLanguage, script: File): Source {
+  @Suppress("ThrowsCount")
+  private fun readExecutableScript(
+    supportedLangs: EnumSet<GuestLanguage>,
+    languages: EnumSet<GuestLanguage>,
+    language: GuestLanguage,
+    script: File,
+  ): Source {
     logging.debug("Reading executable user script at path '${script.path}' (language: ${language.id})")
     if (!script.exists()) {
       logging.debug("Script file does not exist")
@@ -1499,8 +1505,8 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
 
     // type check: first, check file extension
-    val allowedMimeTypes = languages.flatMap { it.mimeTypes }.toSortedSet()
-    val allowedExtensions = languages.flatMap { it.extensions }.toSortedSet()
+    val allowedMimeTypes = supportedLangs.flatMap { it.mimeTypes }.toSortedSet()
+    val allowedExtensions = supportedLangs.flatMap { it.extensions }.toSortedSet()
     val openMimeMode = languages.any { it.mimeTypes.isEmpty() }
 
     // @TODO(sgammon): less searching here
@@ -1519,7 +1525,7 @@ private typealias ContextAccessor = () -> PolyglotContext
       }
     } else {
       logging.trace("Script check: File extension matches")
-      languages.find {
+      supportedLangs.find {
         it.extensions.contains(script.extension)
       }
     }
@@ -1878,6 +1884,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     val project = projectConfigJob.await()
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     val supportedEnginesAndLangs = supported.flatMap { listOf(it.first.engine, it.first.id) }.toSortedSet()
+    val allSupportedLangs = EnumSet.copyOf(supported.map { it.first }.toSortedSet())
     val langs = language.resolveLangs(project, languageHint)
 
     // make sure each requested language is supported
@@ -1893,14 +1900,17 @@ private typealias ContextAccessor = () -> PolyglotContext
       // JS engine, so that it can apply relevant options.
       System.setProperty("vm.interactive", "true")
     }
-    val experimentalLangs = langs.filter {
+    val experimentalLangs = allSupportedLangs.filter {
       it.experimental && !it.suppressExperimentalWarning
     }
+    val onByDefaultLangs = EnumSet.copyOf(allSupportedLangs.filter {
+      it.onByDefault
+    })
     val primaryLang: (File?) -> GuestLanguage = { target ->
       resolvePrimaryLanguage(
         project,
         language,
-        langs,
+        allSupportedLangs,
         when {
           // can't guess the language of a script from `stdin`
           useStdin || executeLiteral -> null
@@ -1916,8 +1926,8 @@ private typealias ContextAccessor = () -> PolyglotContext
       activeProject.set(prj)
     }
 
-    resolveEngine(langs).unwrap().use {
-      withDeferredContext(langs) {
+    resolveEngine(onByDefaultLangs).unwrap().use {
+      withDeferredContext(onByDefaultLangs) {
         // activate interactive behavior
         interactive.compareAndSet(false, true)
 
@@ -1933,7 +1943,7 @@ private typealias ContextAccessor = () -> PolyglotContext
           // run in interactive mode
           null, "-" -> if (useStdin || runnable == "-") {
             // consume from stdin
-            primaryLang.invoke(null).let { lang ->
+            primaryLang(null).let { lang ->
               input.buffer.use { buffer ->
                 executeSource(
                   "from stdin",
@@ -1948,7 +1958,7 @@ private typealias ContextAccessor = () -> PolyglotContext
             logging.debug("Beginning interactive guest session")
             beginInteractiveSession(
               langs,
-              primaryLang.invoke(null),
+              primaryLang(null),
               engine.get(),
               it,
             )
@@ -1961,7 +1971,7 @@ private typealias ContextAccessor = () -> PolyglotContext
             logging.trace("Interpreting runnable parameter as code")
             executeSingleStatement(
               langs,
-              primaryLang.invoke(null),
+              primaryLang(null),
               it,
               scriptTargetOrCode,
             )
@@ -1978,6 +1988,7 @@ private typealias ContextAccessor = () -> PolyglotContext
                     lang,
                     it,
                     readExecutableScript(
+                      allSupportedLangs,
                       langs,
                       lang,
                       scriptFile,

@@ -77,7 +77,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Ignore @Test fun testRootEntrypointExecutePyFile() {
+  @Test fun testRootEntrypointExecutePyFile() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -105,7 +105,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Ignore @Test fun testRootEntrypointExecutePyFileWithRun() {
+  @Test fun testRootEntrypointExecutePyFileWithRun() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -133,7 +133,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  @Ignore @Test fun testRootEntrypointExecutePyFileExplicit() {
+  @Test fun testRootEntrypointExecutePyFileExplicit() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))

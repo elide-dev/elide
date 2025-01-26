@@ -1079,8 +1079,10 @@ private typealias ContextAccessor = () -> PolyglotContext
 
   // Redirect logging calls to JLine for output.
   private fun redirectLoggingToJLine(lineReader: LineReader) {
-    val rootLogger = LoggerFactory.getLogger(TOOL_LOGGER_NAME) as ch.qos.logback.classic.Logger
-    val current = rootLogger.getAppender(TOOL_LOGGER_APPENDER) as ConsoleAppender<ILoggingEvent>
+    val rootLogger = LoggerFactory.getLogger(TOOL_LOGGER_NAME) as? ch.qos.logback.classic.Logger
+      ?: return
+    val current = rootLogger.getAppender(TOOL_LOGGER_APPENDER) as? ConsoleAppender<ILoggingEvent>
+      ?: return
     val ctx = current.context
     val appender = JLineLogbackAppender(ctx, lineReader)
     rootLogger.detachAndStopAllAppenders()

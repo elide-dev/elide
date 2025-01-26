@@ -12,7 +12,7 @@ async function getSqlite() {
       cachedSqlite = sqlite
       Database = sqlite.Database
     } else {
-      const sqlite = require("elide:sqlite")
+      const sqlite = require("sqlite")
       cachedSqlite = sqlite
       Database = sqlite.Database
     }

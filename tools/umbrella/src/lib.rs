@@ -112,9 +112,10 @@ fn tool_map() -> &'static HashMap<&'static str, &'static ToolInfo> {
   })
 }
 
+static RUNTIME: OnceLock<Runtime> = OnceLock::new();
+
 /// Obtain the active Tokio runtime; if one is not already initialized, a new one will be created.
 fn obtain_runtime() -> &'static Runtime {
-  static RUNTIME: OnceLock<Runtime> = OnceLock::new();
   RUNTIME.get_or_init(|| {
     tokio::runtime::Builder::new_multi_thread()
       .enable_all()
@@ -144,7 +145,7 @@ fn run_ruff_entry(args: Vec<std::ffi::OsString>) -> ExitStatus {
 }
 
 #[cfg(feature = "orogene")]
-fn run_oro_with_args(args: Vec<std::ffi::OsString>) -> Result<()> {
+pub fn run_oro_with_args(args: Vec<std::ffi::OsString>) -> Result<()> {
   let cmd = Command::new("orogene");
   let again = Orogene::augment_args(cmd);
 

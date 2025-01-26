@@ -17,7 +17,6 @@
   non_upper_case_globals,
   improper_ctypes
 )]
-#![feature(const_trait_impl)]
 #![forbid(unsafe_code, dead_code)]
 
 pub use model::{Architecture as TargetArch, OperatingSystem as TargetOs};

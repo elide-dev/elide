@@ -1,5 +1,6 @@
 [toolchain]
-channel = "nightly"
+version = "1.84.0"
+channel = "stable"
 profile = "default"
 
 components = ["cargo", "clippy", "rust-analyzer", "rust-src", "rust-std", "rustc", "rustfmt"]
@@ -14,7 +15,4 @@ targets = [
   # Darwin
   "aarch64-apple-darwin",
   "x86_64-apple-darwin",
-
-  # WASM/WASI
-  "wasm32-unknown-unknown",
 ]

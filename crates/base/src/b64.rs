@@ -361,17 +361,11 @@ pub fn base64_url_encode_string_simd(input: &[u8], padding: bool) -> String {
 
 #[cfg(test)]
 mod tests {
-  extern crate test;
   use super::*;
-  use test::Bencher;
 
   const HELLO_WORLD: &[u8] = b"Hello, world!";
   const HELLO_WORLD_B64_STD_PAD: &str = "SGVsbG8sIHdvcmxkIQ==";
   const HELLO_WORLD_B64_STD_NOPAD: &str = "SGVsbG8sIHdvcmxkIQ";
-  const MEDIUM_RANDOM_TEXT_ENCODED_LENGTH: usize = 164;
-  const MEDIUM_RANDOM_TEXT: &[u8] = b"Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-  const LONG_RANDOM_TEXT_ENCODED_LENGTH: usize = 592;
-  const LONG_RANDOM_TEXT: &[u8] = b"Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
   #[test]
   #[cfg(feature = "alloc")]
@@ -410,67 +404,6 @@ mod tests {
     assert_eq!(base64_std_encode_string_sync(b"foo", true), "Zm9v");
   }
 
-  #[bench]
-  #[cfg(feature = "alloc")]
-  fn b64_std_encode_padded_sync_string_short(b: &mut Bencher) {
-    b.iter(|| base64_std_encode_string_sync(b"Hello, world!", true));
-  }
-
-  #[bench]
-  fn b64_std_encode_padded_sync_str_short(b: &mut Bencher) {
-    b.iter(|| {
-      let input = b"foo";
-      let mut output = [0u8; 4];
-      base64_std_encode_str_sync(input, &mut output, true);
-    });
-  }
-
-  #[bench]
-  #[cfg(feature = "alloc")]
-  fn b64_std_encode_padded_sync_string_medium(b: &mut Bencher) {
-    b.iter(|| base64_std_encode_string_sync(MEDIUM_RANDOM_TEXT, true));
-  }
-
-  #[bench]
-  fn b64_std_encode_padded_sync_str_medium(b: &mut Bencher) {
-    b.iter(|| {
-      let mut output = [0u8; MEDIUM_RANDOM_TEXT_ENCODED_LENGTH];
-      base64_std_encode_str_sync(MEDIUM_RANDOM_TEXT, &mut output, true);
-    });
-  }
-
-  #[bench]
-  #[cfg(feature = "alloc")]
-  fn b64_std_encode_padded_sync_string_long(b: &mut Bencher) {
-    b.iter(|| base64_std_encode_string_sync(LONG_RANDOM_TEXT, true));
-  }
-
-  #[bench]
-  fn b64_std_encode_padded_sync_str_long(b: &mut Bencher) {
-    b.iter(|| {
-      let mut output = [0u8; LONG_RANDOM_TEXT_ENCODED_LENGTH];
-      base64_std_encode_str_sync(LONG_RANDOM_TEXT, &mut output, true);
-    });
-  }
-
-  #[bench]
-  #[cfg(feature = "alloc")]
-  fn b64_url_encode_padded_sync_string_short(b: &mut Bencher) {
-    b.iter(|| base64_url_encode_string_sync(b"Hello, world!", true));
-  }
-
-  #[bench]
-  #[cfg(feature = "alloc")]
-  fn b64_url_encode_padded_sync_string_medium(b: &mut Bencher) {
-    b.iter(|| base64_url_encode_string_sync(MEDIUM_RANDOM_TEXT, true));
-  }
-
-  #[bench]
-  #[cfg(feature = "alloc")]
-  fn b64_url_encode_padded_sync_string_long(b: &mut Bencher) {
-    b.iter(|| base64_url_encode_string_sync(LONG_RANDOM_TEXT, true));
-  }
-
   #[test]
   #[cfg(all(feature = "simd", feature = "alloc"))]
   fn b64_std_encode_string_simd() {
@@ -499,66 +432,5 @@ mod tests {
     assert_eq!(base64_std_encode_string_simd(b"fo", true), "Zm8=");
     assert_eq!(base64_std_encode_string_simd(b"fo", false), "Zm8");
     assert_eq!(base64_std_encode_string_simd(b"foo", true), "Zm9v");
-  }
-
-  #[bench]
-  #[cfg(all(feature = "simd", feature = "alloc"))]
-  fn b64_std_encode_padded_simd_string_short(b: &mut Bencher) {
-    b.iter(|| base64_std_encode_string_simd(b"Hello, world!", true));
-  }
-
-  #[bench]
-  fn b64_std_encode_padded_simd_str_short(b: &mut Bencher) {
-    b.iter(|| {
-      let input = b"foo";
-      let mut output = [0u8; 4];
-      base64_std_encode_str_simd(input, &mut output, true);
-    });
-  }
-
-  #[bench]
-  #[cfg(all(feature = "simd", feature = "alloc"))]
-  fn b64_std_encode_padded_simd_string_medium(b: &mut Bencher) {
-    b.iter(|| base64_std_encode_string_simd(MEDIUM_RANDOM_TEXT, true));
-  }
-
-  #[bench]
-  fn b64_std_encode_padded_simd_str_medium(b: &mut Bencher) {
-    b.iter(|| {
-      let mut output = [0u8; MEDIUM_RANDOM_TEXT_ENCODED_LENGTH];
-      base64_std_encode_str_simd(MEDIUM_RANDOM_TEXT, &mut output, true);
-    });
-  }
-
-  #[bench]
-  #[cfg(all(feature = "simd", feature = "alloc"))]
-  fn b64_std_encode_padded_simd_string_long(b: &mut Bencher) {
-    b.iter(|| base64_std_encode_string_simd(LONG_RANDOM_TEXT, true));
-  }
-
-  #[bench]
-  fn b64_std_encode_padded_simd_str_long(b: &mut Bencher) {
-    b.iter(|| {
-      let mut output = [0u8; LONG_RANDOM_TEXT_ENCODED_LENGTH];
-      base64_std_encode_str_simd(LONG_RANDOM_TEXT, &mut output, true);
-    });
-  }
-
-  #[bench]
-  #[cfg(all(feature = "simd", feature = "alloc"))]
-  fn b64_url_encode_padded_simd_string_short(b: &mut Bencher) {
-    b.iter(|| base64_url_encode_string_simd(b"Hello, world!", true));
-  }
-
-  #[bench]
-  #[cfg(all(feature = "simd", feature = "alloc"))]
-  fn b64_url_encode_padded_simd_string_medium(b: &mut Bencher) {
-    b.iter(|| base64_url_encode_string_simd(MEDIUM_RANDOM_TEXT, true));
-  }
-
-  #[bench]
-  #[cfg(all(feature = "simd", feature = "alloc"))]
-  fn b64_url_encode_padded_simd_string_long(b: &mut Bencher) {
-    b.iter(|| base64_url_encode_string_simd(LONG_RANDOM_TEXT, true));
   }
 }

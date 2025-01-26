@@ -154,7 +154,10 @@ testlogger {
   showPassed = true
   showSkipped = true
   showFailedStandardStreams = true
+  showStandardStreams = true
   showFullStackTraces = true
+  showPassedStandardStreams = false
+  showSkippedStandardStreams = false
   slowThreshold = 30000L
 }
 

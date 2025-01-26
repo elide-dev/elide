@@ -13,16 +13,8 @@
 
 use bindgen::Builder;
 use builder::{
-  build_bindings,
-  build_dual_cc,
-  header_file,
-  if_not_exists,
-  makefile_sub_run,
-  setup,
-  setup_cc,
-  src_file,
-  third_party_project,
-  third_party_src_file,
+  build_bindings, build_dual_cc, header_file, if_not_exists, makefile_sub_run, setup, setup_cc,
+  src_file, third_party_project, third_party_src_file,
 };
 
 fn main() {

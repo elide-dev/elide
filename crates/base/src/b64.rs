@@ -17,8 +17,7 @@ use base64::{
   engine::general_purpose::STANDARD as BASE64_STANDARD,
   engine::general_purpose::STANDARD_NO_PAD as BASE64_STANDARD_NOPAD,
   engine::general_purpose::URL_SAFE as BASE64_URLSAFE,
-  engine::general_purpose::URL_SAFE_NO_PAD as BASE64_URLSAFE_NOPAD,
-  Engine as B64Engine,
+  engine::general_purpose::URL_SAFE_NO_PAD as BASE64_URLSAFE_NOPAD, Engine as B64Engine,
 };
 
 #[cfg(feature = "alloc")]
@@ -29,10 +28,8 @@ use {crate::prelude::*, alloc::string::String as StdString, alloc::vec::Vec};
 
 #[cfg(feature = "simd")]
 use base64_simd::{
-  Out as Base64Out,
-  STANDARD as BASE64_STANDARD_SIMD,
-  STANDARD_NO_PAD as BASE64_STANDARD_NOPAD_SIMD,
-  URL_SAFE as BASE64_URLSAFE_SIMD,
+  Out as Base64Out, STANDARD as BASE64_STANDARD_SIMD,
+  STANDARD_NO_PAD as BASE64_STANDARD_NOPAD_SIMD, URL_SAFE as BASE64_URLSAFE_SIMD,
   URL_SAFE_NO_PAD as BASE64_URLSAFE_NOPAD_SIMD,
 };
 

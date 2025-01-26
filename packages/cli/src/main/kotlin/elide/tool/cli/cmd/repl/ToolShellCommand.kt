@@ -1769,7 +1769,7 @@ private typealias ContextAccessor = () -> PolyglotContext
           resourcesPath = GVM_RESOURCES
         }
 
-         RUBY -> ignoreNotInstalled {
+        RUBY -> ignoreNotInstalled {
            install(elide.runtime.plugins.ruby.Ruby) {
              logging.debug("Configuring Ruby VM")
              resourcesPath = GVM_RESOURCES

@@ -7,6 +7,9 @@ plugins {
   alias(libs.plugins.elide.conventions)
 }
 
+private fun <T> onlyIf(flag: Boolean, value: T): T? = value.takeIf { flag }
+private fun <T> List<T>.onlyIf(flag: Boolean): List<T> = if (flag) this else emptyList()
+
 /** Whether to enable Panama-based tests for the shared native binary. */
 val nativeTest = findProperty("elide.embedded.tests.native")?.toString()?.toBooleanStrictOrNull() == true
 
@@ -30,6 +33,16 @@ val isRelease = !quickbuild && (
 val isDebug = !isRelease && (
   project.properties["elide.buildMode"] == "debug"
 )
+
+val nativesType = if (isRelease) "release" else "debug"
+val targetPath = rootProject.layout.projectDirectory.dir("target/$nativesType")
+
+val rootPath: String = rootProject.layout.projectDirectory.asFile.path
+val thirdPartyPath: String = rootProject.layout.projectDirectory.dir("third_party").asFile.path
+val sqliteLibPath: String = rootProject.layout.projectDirectory.dir("third_party/sqlite/install/lib").asFile.path
+
+val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
+val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 
 val nativesRootTemplate: (String) -> String = { version ->
   "/tmp/elide-runtime/v$version/native"
@@ -63,7 +76,7 @@ val sharedLibArgs = sequenceOf(
   "--enable-http",
   "--enable-https",
   "--enable-all-security-services",
-  "--macro:truffle-svm",
+  "--color=always",
   "-H:CStandard=C11",
   "-H:+ReportExceptionStackTraces",
   "-H:+UnlockExperimentalVMOptions",
@@ -78,7 +91,7 @@ val sharedLibArgs = sequenceOf(
 )
 
 val releaseArgs = sequenceOf(
-  "-O4",
+  "-O2",
 )
 
 val debugArgs = sequenceOf(
@@ -178,6 +191,23 @@ fun nativeImageArgs(release: Boolean = isRelease, debug: Boolean = isDebug): Lis
       debug -> debugArgs
       else -> sequenceOf()
     }
+  ).plus(
+    listOf("--debug-attach").onlyIf(nativeImageBuildDebug)
+  ).plus(
+    listOf(
+      targetPath,
+      sqliteLibPath,
+    ).plus(
+      System.getProperty("java.library.path", "")
+        .split(File.pathSeparator)
+        .filter { it.isNotEmpty() }
+    ).distinct().joinToString(
+      File.pathSeparator
+    ).let {
+      listOf(
+        "-Djava.library.path=$it",
+      )
+    }
   ).toList()
 }
 
@@ -228,6 +258,8 @@ dependencies {
   implementation(libs.graalvm.js.language)
   implementation(libs.graalvm.wasm.language)
   implementation(projects.packages.graalvmTs)
+  implementation(projects.packages.graalvmPy)
+  implementation(projects.packages.graalvmRb)
 
   // micronaut
   implementation(mn.micronaut.core)

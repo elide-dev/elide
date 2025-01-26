@@ -489,13 +489,9 @@ pub fn setup_cc() -> Build {
   // add os-specific flags
   match os {
     TargetOs::Darwin => match arch {
-      TargetArch::Amd64 => build
-        // C Flags: macOS
-        .flag("-mmacosx-version-min=12.3"),
-
+      TargetArch::Amd64 => &mut build,
       TargetArch::Arm64 => build
         // C Flags: macOS
-        .flag("-mmacosx-version-min=12.3")
         .flag("-march=armv8-a+crypto+crc+simd")
         .flag("-mbranch-protection=standard")
         .define("__ARM_NEON", "1")

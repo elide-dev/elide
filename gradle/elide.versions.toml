@@ -35,7 +35,7 @@ byteunits = "0.9.1"
 caffeine = "3.1.8"
 capnproto = "0.1.18-elide"
 cite = "0.2.0"
-clikt = "4.4.0.20-SNAPSHOT"
+clikt = "5.0.2"
 closure = "v20221004"
 closure-stylesheets = "1.5.0"
 commons-codec = "1.17.1"
@@ -71,7 +71,7 @@ github-api = "1.321"
 google-api-common = "2.30.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
-graalvm = "24.1.1"
+graalvm = "24.1.2"
 graalvm-metadata = "0.3.8"
 graalvm-pin = "24.1.1"
 graalvm-plugin = "0.10.2"
@@ -249,7 +249,7 @@ parallelGzip = "1.0.5"
 picnic = "0.7.0"
 picocli = "4.7.6"
 picocli-jansi-graalvm = "1.2.0"
-pkl = "0.25.3"
+pkl = "0.28.0-SNAPSHOT"
 pluginBuf = "0.8.5"
 pluginProtobuf = "0.9.4"
 pluginPublish = "1.2.1"
@@ -481,6 +481,7 @@ graalvm-shadowed-antlr4 = { group = "org.graalvm.shadowed", name = "antlr4", ver
 graalvm-shadowed-icu4j = { group = "org.graalvm.shadowed", name = "icu4j", version.ref = "graalvm" }
 graalvm-shadowed-jline = { group = "org.graalvm.shadowed", name = "jline", version.ref = "graalvm" }
 graalvm-shadowed-json = { group = "org.graalvm.shadowed", name = "json", version.ref = "graalvm" }
+graalvm-sdk = { group = "org.graalvm.sdk", name = "sdk", version.ref = "graalvm" }
 graalvm-svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm" }
 graalvm-svm-driver = { group = "org.graalvm.nativeimage", name = "svm_driver", version.ref = "graalvm-svm-driver" }
 graalvm-svm-nativeImage-base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm" }

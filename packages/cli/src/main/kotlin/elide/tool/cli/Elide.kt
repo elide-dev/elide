@@ -42,6 +42,7 @@ import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
+import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.state.CommandState
@@ -63,6 +64,7 @@ import elide.tool.io.RuntimeWorkdirManager
     ToolInvokeCommand::class,
     HelpCommand::class,
     ToolShellCommand::class,
+    ToolPklCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
           "   ______     __         __     _____     ______%n" +

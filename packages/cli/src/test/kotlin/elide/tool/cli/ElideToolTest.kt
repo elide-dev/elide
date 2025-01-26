@@ -125,6 +125,18 @@ import elide.testing.annotations.TestCase
     }
   }
 
+  @Test fun testRootEntrypointExecuteRbFile() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        scriptPath.toString(),
+      )
+    }
+  }
+
   @Test fun testRootEntrypointExecuteJsFileWithRun() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.js").toAbsolutePath()
@@ -141,6 +153,19 @@ import elide.testing.annotations.TestCase
   @Test fun testRootEntrypointExecutePyFileWithRun() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        "run",
+        scriptPath.toString(),
+      )
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteRbFileWithRun() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
@@ -181,6 +206,21 @@ import elide.testing.annotations.TestCase
     }
   }
 
+  @Test fun testRootEntrypointExecuteRbFileExplicit() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      // `elide run --ruby tools/scripts/hello.rb`
+      assertToolRunsWith(
+        "run",
+        "--ruby",
+        scriptPath.toString(),
+      )
+    }
+  }
+
   @Test fun testRootEntrypointExecutePyFileAlias() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
@@ -190,6 +230,20 @@ import elide.testing.annotations.TestCase
       // `elide python tools/scripts/hello.py`
       assertToolRunsWith(
         "python",
+        scriptPath.toString(),
+      )
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteRbFileAlias() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      // `elide ruby tools/scripts/hello.rb`
+      assertToolRunsWith(
+        "ruby",
         scriptPath.toString(),
       )
     }
@@ -213,6 +267,17 @@ import elide.testing.annotations.TestCase
         "--python",
         "-c",
         "'print(\"Hello!\")'",
+      )
+    }
+  }
+
+  @Test fun testEntrypointExecuteSimpleRbCode() {
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        "run",
+        "--ruby",
+        "-c",
+        "'puts \"Hello!\"'",
       )
     }
   }

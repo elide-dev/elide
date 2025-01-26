@@ -11,7 +11,7 @@
     "build": "bun build --compile --bytecode --outfile ./dist/hakuna ./src/entry.mjs"
   },
   "dependencies": {
-    "commander": "13.0.0",
+    "commander": "13.1.0",
     "glob": "11.0.1",
     "which": "5.0.0"
   },

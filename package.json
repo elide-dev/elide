@@ -13,7 +13,9 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "workspaces": [
     "packages/base",
@@ -45,18 +47,18 @@
     "@mitata/counters": "0.0.8",
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
-    "@types/node": "22.10.7",
-    "@typescript-eslint/eslint-plugin": "8.20.0",
-    "@typescript-eslint/parser": "8.20.0",
+    "@types/node": "22.10.10",
+    "@typescript-eslint/eslint-plugin": "8.21.0",
+    "@typescript-eslint/parser": "8.21.0",
     "commitlint": "19.6.1",
     "esbuild": "0.24.2",
-    "eslint": "9.18.0",
+    "eslint": "9.19.0",
     "husky": "9.1.7",
-    "lint-staged": "15.4.1",
-    "mitata": "1.0.30",
+    "lint-staged": "15.4.3",
+    "mitata": "1.0.32",
     "postcss-cli": "11.0.0",
     "prettier": "3.4.2",
-    "prettier-plugin-java": "2.6.6",
+    "prettier-plugin-java": "2.6.7",
     "prettier-plugin-properties": "0.3.0",
     "prettier-plugin-sh": "0.14.0",
     "prettier-plugin-toml": "2.0.1",

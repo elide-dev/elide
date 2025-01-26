@@ -13,6 +13,7 @@
 @file:Suppress(
   "DSL_SCOPE_VIOLATION",
   "UnstableApiUsage",
+  "UNUSED_PARAMETER",
 )
 
 import io.micronaut.gradle.MicronautRuntime
@@ -20,7 +21,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_23
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
@@ -203,9 +204,6 @@ val jvmOnlyCompileArgs: List<String> = listOfNotNull(
 val jvmCompileArgs = listOfNotNull(
   "--enable-preview",
   "--add-modules=jdk.incubator.vector",
-  "--enable-native-access=" + listOfNotNull(
-    "ALL-UNNAMED",
-  ).joinToString(","),
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
@@ -222,7 +220,11 @@ val jvmRuntimeArgs = listOf(
   "-XX:ReservedCodeCacheSize=512m",
 )
 
-val nativeCompileJvmArgs = listOf<String>().plus(jvmCompileArgs.map {
+val nativeCompileJvmArgs = listOf(
+  "--enable-native-access=" + listOfNotNull(
+    "ALL-UNNAMED",
+  ).joinToString(","),
+).plus(jvmCompileArgs.map {
   "-J$it"
 })
 
@@ -254,7 +256,7 @@ elide {
   }
 
   jvm {
-    target = JVM_21
+    target = JVM_23
   }
 
   java {

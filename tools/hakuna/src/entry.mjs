@@ -1,2 +1,2 @@
-import main, { handleError, handleFinished } from "./crossrunner.mjs";
-main().then(handleFinished, handleError);
+import main, { handleError, handleFinished } from "./crossrunner.mjs"
+main().then(handleFinished, handleError)

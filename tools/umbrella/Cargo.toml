@@ -19,6 +19,7 @@ jvm = []
 lib = ["jni/default"]
 entry = ["jni/invocation"]
 python = ["ruff"]
+jemalloc = []
 ruby = []
 wasm = []
 biome = [

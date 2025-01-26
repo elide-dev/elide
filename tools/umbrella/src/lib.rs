@@ -20,6 +20,7 @@ extern crate core;
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[cfg(all(
+  feature = "jemalloc",
   not(target_os = "windows"),
   not(target_os = "openbsd"),
   any(

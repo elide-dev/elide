@@ -1218,6 +1218,7 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--gc=serial",
   "-R:MaximumHeapSizePercent=80",
+  "--initialize-at-build-time=sun.awt.resources.awtosx",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
 ) else listOf(

@@ -186,6 +186,10 @@ jobs:
           distribution: "graalvm"
           java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Bun"
+        uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.1
+        with:
+          bun-version-file: .bun-version
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
@@ -198,10 +202,6 @@ jobs:
         with:
           node-version: 22
           cache: "pnpm"
-      - name: "Setup: Bun"
-        uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.1
-        with:
-          bun-version-file: .bun-version
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"

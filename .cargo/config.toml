@@ -14,8 +14,8 @@
 [build]
 rustflags = [
   # Enable Tokio unstable.
-  "--cfg",
-  "tokio_unstable",
+  # "--cfg",
+  # "tokio_unstable",
 
   # Enforce completely position-independent executables.
   "-Crelocation-model=pic",

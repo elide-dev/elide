@@ -23,6 +23,7 @@ import com.google.common.collect.Sets
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
@@ -57,6 +58,9 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
 import javax.script.ScriptEngineManager
+import javax.tools.JavaCompiler
+import javax.tools.Tool
+import javax.tools.ToolProvider
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -92,6 +96,11 @@ import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectInfo
 import elide.tool.project.ProjectManager
+
+/**
+ * Type alias for an accessor method which allows an optional builder amendment.
+ */
+private typealias ContextAccessor = () -> PolyglotContext
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
@@ -131,7 +140,7 @@ import elide.tool.project.ProjectManager
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
     // Whether to enable extended language plugins.
-    private const val ENABLE_JVM = false
+    private const val ENABLE_JVM = true
     private const val ENABLE_RUBY = true
     private const val ENABLE_PYTHON = true
     private const val ENABLE_TYPESCRIPT = true
@@ -808,7 +817,7 @@ import elide.tool.project.ProjectManager
   @Suppress("SameParameterValue") private fun executeOneChunk(
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
-    ctx: PolyglotContext,
+    ctxAccessor: ContextAccessor,
     origin: String,
     code: String,
     interactive: Boolean = false,
@@ -831,6 +840,7 @@ import elide.tool.project.ProjectManager
       source,
     )
 
+    val ctx = ctxAccessor.invoke()
     logging.trace("Code chunk built. Evaluating")
     ctx.enter()
     val result = try {
@@ -858,16 +868,16 @@ import elide.tool.project.ProjectManager
   private fun executeSingleStatement(
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
-    ctx: PolyglotContext,
+    ctxAccessor: ContextAccessor,
     code: String,
   ) {
     if (serveMode()) {
       serverRunning.set(true)
-      readExecuteCode(
+      executeSource(
         "stdin",
         languages,
         primaryLanguage,
-        ctx,
+        ctxAccessor,
         Source.newBuilder(primaryLanguage.symbol, code, "stdin")
           .encoding(StandardCharsets.UTF_8)
           .internal(false)
@@ -876,7 +886,7 @@ import elide.tool.project.ProjectManager
     } else executeOneChunk(
       languages,
       primaryLanguage,
-      ctx,
+      ctxAccessor,
       "stdin",
       code,
       interactive = false,
@@ -1069,8 +1079,10 @@ import elide.tool.project.ProjectManager
 
   // Redirect logging calls to JLine for output.
   private fun redirectLoggingToJLine(lineReader: LineReader) {
-    val rootLogger = LoggerFactory.getLogger(TOOL_LOGGER_NAME) as ch.qos.logback.classic.Logger
-    val current = rootLogger.getAppender(TOOL_LOGGER_APPENDER) as ConsoleAppender<ILoggingEvent>
+    val rootLogger = LoggerFactory.getLogger(TOOL_LOGGER_NAME) as? ch.qos.logback.classic.Logger
+      ?: return
+    val current = rootLogger.getAppender(TOOL_LOGGER_APPENDER) as? ConsoleAppender<ILoggingEvent>
+      ?: return
     val ctx = current.context
     val appender = JLineLogbackAppender(ctx, lineReader)
     rootLogger.detachAndStopAllAppenders()
@@ -1104,10 +1116,9 @@ import elide.tool.project.ProjectManager
           ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
           (errorBase + 1) to ctxLines
         } else when (val target = runnable?.ifBlank { null }) {
+          // @TODO implement
           null -> (errorBase + 1) to emptyList()
-          else -> {
-            TODO("not yet implemented: context from error in file")
-          }
+          else -> (-1) to emptyList()
         }
       }
     }
@@ -1352,7 +1363,7 @@ import elide.tool.project.ProjectManager
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
     engine: PolyglotEngine,
-    ctx: PolyglotContext,
+    ctxAccessor: ContextAccessor,
   ) {
     // resolve working directory
     val workDir = Supplier { Paths.get(System.getProperty("user.dir")) }
@@ -1391,7 +1402,7 @@ import elide.tool.project.ProjectManager
             val result = executeOneChunk(
               languages,
               primaryLanguage,
-              ctx,
+              ctxAccessor,
               "<shell:${primaryLanguage.symbol}>",
               line,
               interactive = true,
@@ -1450,8 +1461,31 @@ import elide.tool.project.ProjectManager
     }
   }
 
+  // Resolve a compiler for the provided language, compile the entrypoint, and return the resolved executable symbol.
+  private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): Value {
+    when (language) {
+      // use the host java compiler, which supports up to the maximum JVM bytecode level anyway
+      JAVA -> ToolProvider.getSystemJavaCompiler().let {
+        error("No way to compile pure Java yet")
+      }
+
+      // use the embedded kotlin compiler to compile to java bytecode first
+      KOTLIN -> {
+        error("No Kotlin compilation support on-the-fly yet")
+      }
+
+      else -> error("Compiled sources for language '${language.name}' are not yet supported")
+    }
+  }
+
   // Read an executable script file and return it as a `File` and a `Source`.
-  private fun readExecutableScript(languages: EnumSet<GuestLanguage>, language: GuestLanguage, script: File): Source {
+  @Suppress("ThrowsCount")
+  private fun readExecutableScript(
+    supportedLangs: EnumSet<GuestLanguage>,
+    languages: EnumSet<GuestLanguage>,
+    language: GuestLanguage,
+    script: File,
+  ): Source {
     logging.debug("Reading executable user script at path '${script.path}' (language: ${language.id})")
     if (!script.exists()) {
       logging.debug("Script file does not exist")
@@ -1473,8 +1507,8 @@ import elide.tool.project.ProjectManager
     }
 
     // type check: first, check file extension
-    val allowedMimeTypes = languages.flatMap { it.mimeTypes }.toSortedSet()
-    val allowedExtensions = languages.flatMap { it.extensions }.toSortedSet()
+    val allowedMimeTypes = supportedLangs.flatMap { it.mimeTypes }.toSortedSet()
+    val allowedExtensions = supportedLangs.flatMap { it.extensions }.toSortedSet()
     val openMimeMode = languages.any { it.mimeTypes.isEmpty() }
 
     // @TODO(sgammon): less searching here
@@ -1493,7 +1527,7 @@ import elide.tool.project.ProjectManager
       }
     } else {
       logging.trace("Script check: File extension matches")
-      languages.find {
+      supportedLangs.find {
         it.extensions.contains(script.extension)
       }
     }
@@ -1528,7 +1562,7 @@ import elide.tool.project.ProjectManager
     label: String,
     langs: EnumSet<GuestLanguage>,
     language: GuestLanguage,
-    ctx: PolyglotContext,
+    ctxAccessor: ContextAccessor,
     source: Source,
   ) {
     try {
@@ -1545,25 +1579,47 @@ import elide.tool.project.ProjectManager
     }
   }
 
+  // Invoke an executable entrypoint, having been loaded from compiled VM symbols.
+  private fun executeCompiled(
+    entrypointFile: File,
+    languages: EnumSet<GuestLanguage>,
+    primaryLanguage: GuestLanguage,
+    ctxAccessor: ContextAccessor,
+    entrypoint: Value,
+  ) {
+    when (primaryLanguage) {
+      JAVA -> {
+        error("No ability to execute compiled Java yet")
+      }
+
+      KOTLIN -> {
+        error("No ability to execute compiled entrypoint symbols yet")
+      }
+
+      else -> error("No ability to execute compiled entrypoint symbols yet for language: $primaryLanguage")
+    }
+  }
+
   // Read an executable script, and then execute the script; if it's a server, delegate to `readStartServer`.
-  private fun readExecuteCode(
+  private fun executeSource(
     label: String,
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
-    ctx: PolyglotContext,
+    ctxAccessor: ContextAccessor,
     source: Source,
   ) {
     if (serveMode()) readStartServer(
       label,
       languages,
       primaryLanguage,
-      ctx,
+      ctxAccessor,
       source,
     ) else try {
       // enter VM context
       logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")
 
       // parse the source
+      val ctx = ctxAccessor.invoke()
       val parsed = try {
         ctx.parse(source)
       } catch (exc: Exception) {
@@ -1714,49 +1770,54 @@ import elide.tool.project.ProjectManager
         }
 
         RUBY -> ignoreNotInstalled {
-          install(elide.runtime.plugins.ruby.Ruby) {
-            logging.debug("Configuring Ruby VM")
-            resourcesPath = GVM_RESOURCES
-            executable = cmd
-            executableList = listOf(cmd).plus(args)
-            installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-          }
-        }
+           install(elide.runtime.plugins.ruby.Ruby) {
+             logging.debug("Configuring Ruby VM")
+             resourcesPath = GVM_RESOURCES
+             executable = cmd
+             executableList = listOf(cmd).plus(args)
+             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+           }
+         }
 
-        PYTHON -> ignoreNotInstalled {
-          install(elide.runtime.plugins.python.Python) {
-            logging.debug("Configuring Python VM")
-            installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-            resourcesPath = GVM_RESOURCES
-            executable = cmd
-            executableList = listOf(cmd).plus(args)
-          }
-        }
+         PYTHON -> ignoreNotInstalled {
+           install(elide.runtime.plugins.python.Python) {
+             logging.debug("Configuring Python VM")
+             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+             resourcesPath = GVM_RESOURCES
+             executable = cmd
+             executableList = listOf(cmd).plus(args)
+           }
+         }
 
         // Secondary Engines: JVM
-//        JVM -> ignoreNotInstalled {
-//          install(elide.runtime.plugins.jvm.Jvm) {
-//            logging.debug("Configuring JVM")
-//            multithreading = false
-//          }
-//
-//          install(elide.runtime.plugins.java.Java) {
-//            logging.debug("Configuring Java")
-//          }
-//        }
+        JVM -> ignoreNotInstalled {
+          install(elide.runtime.plugins.jvm.Jvm) {
+            logging.debug("Configuring JVM")
+            multithreading = !langs.contains(JS)
+          }
+
+          install(elide.runtime.plugins.java.Java) {
+            logging.debug("Configuring Java")
+          }
+        }
 
         GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
 
-//        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
-//          val classpathDir = workdir.cacheDirectory()
-//            .resolve("elide-kotlin-runtime")
-//            .absolutePath
-//
-//          logging.debug("Configuring Kotlin with classpath root $classpathDir")
-//          guestClasspathRoot = classpathDir
-//        }
+        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
+          val classpathDir = workdir.cacheDirectory()
+            .resolve("elide-kotlin-runtime")
+            .absolutePath
+
+          logging.debug("Configuring Kotlin with classpath root $classpathDir")
+          guestClasspathRoot = classpathDir
+        }
 
         SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+
+        // Secondary engines: LLVM
+        LLVM -> install(elide.runtime.plugins.llvm.LLVM) {
+          // Nothing at this time.
+        }
 
         else -> {}
       }
@@ -1825,6 +1886,7 @@ import elide.tool.project.ProjectManager
     val project = projectConfigJob.await()
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     val supportedEnginesAndLangs = supported.flatMap { listOf(it.first.engine, it.first.id) }.toSortedSet()
+    val allSupportedLangs = EnumSet.copyOf(supported.map { it.first }.toSortedSet())
     val langs = language.resolveLangs(project, languageHint)
 
     // make sure each requested language is supported
@@ -1840,14 +1902,17 @@ import elide.tool.project.ProjectManager
       // JS engine, so that it can apply relevant options.
       System.setProperty("vm.interactive", "true")
     }
-    val experimentalLangs = langs.filter {
+    val experimentalLangs = allSupportedLangs.filter {
       it.experimental && !it.suppressExperimentalWarning
     }
+    val onByDefaultLangs = EnumSet.copyOf(allSupportedLangs.filter {
+      it.onByDefault
+    })
     val primaryLang: (File?) -> GuestLanguage = { target ->
       resolvePrimaryLanguage(
         project,
         language,
-        langs,
+        allSupportedLangs,
         when {
           // can't guess the language of a script from `stdin`
           useStdin || executeLiteral -> null
@@ -1863,8 +1928,8 @@ import elide.tool.project.ProjectManager
       activeProject.set(prj)
     }
 
-    resolveEngine(langs).unwrap().use {
-      withContext(langs) {
+    resolveEngine(onByDefaultLangs).unwrap().use {
+      withDeferredContext(onByDefaultLangs) {
         // activate interactive behavior
         interactive.compareAndSet(false, true)
 
@@ -1880,9 +1945,9 @@ import elide.tool.project.ProjectManager
           // run in interactive mode
           null, "-" -> if (useStdin || runnable == "-") {
             // consume from stdin
-            primaryLang.invoke(null).let { lang ->
+            primaryLang(null).let { lang ->
               input.buffer.use { buffer ->
-                readExecuteCode(
+                executeSource(
                   "from stdin",
                   langs,
                   lang,
@@ -1895,7 +1960,7 @@ import elide.tool.project.ProjectManager
             logging.debug("Beginning interactive guest session")
             beginInteractiveSession(
               langs,
-              primaryLang.invoke(null),
+              primaryLang(null),
               engine.get(),
               it,
             )
@@ -1908,7 +1973,7 @@ import elide.tool.project.ProjectManager
             logging.trace("Interpreting runnable parameter as code")
             executeSingleStatement(
               langs,
-              primaryLang.invoke(null),
+              primaryLang(null),
               it,
               scriptTargetOrCode,
             )
@@ -1917,18 +1982,35 @@ import elide.tool.project.ProjectManager
             logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
             File(scriptTargetOrCode).let { scriptFile ->
               primaryLang.invoke(scriptFile).let { lang ->
-                logging.debug("Beginning script execution")
-                readExecuteCode(
-                  scriptFile.name,
-                  langs,
-                  lang,
-                  it,
-                  readExecutableScript(
+                when (lang.executionMode) {
+                  // if this engine supports direct execution of source files, execute it that way
+                  ExecutionMode.SOURCE_DIRECT -> executeSource(
+                    scriptFile.name,
                     langs,
                     lang,
+                    it,
+                    readExecutableScript(
+                      allSupportedLangs,
+                      langs,
+                      lang,
+                      scriptFile,
+                    ),
+                  )
+
+                  // otherwise, if we need to "compile" this source first (as is the case for LLVM targets and JVM
+                  // targets like Java and Kotlin), then conduct that phase and load a symbol to begin execution.
+                  ExecutionMode.SOURCE_COMPILED -> executeCompiled(
                     scriptFile,
-                  ),
-                )
+                    langs,
+                    lang,
+                    it,
+                    compileEntrypoint(
+                      lang,
+                      it,
+                      scriptFile,
+                    ),
+                  )
+                }
               }
             }
           }

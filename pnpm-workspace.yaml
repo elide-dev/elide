@@ -13,3 +13,4 @@ packages:
   - tools/scripts
   - tools/tsc
   - tools/plugin/gradle-plugin
+  - tools/hakuna

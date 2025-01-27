@@ -147,6 +147,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     )
 
     setOptions(
+      "js.timer-resolution" to "1",
       "js.commonjs-require-cwd" to (config.npmConfig.modulesPath?.ifBlank { null } ?: "."),
       "js.debug-property-name" to DEBUG_GLOBAL,
       "js.ecmascript-version" to config.language.symbol(),

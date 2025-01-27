@@ -13,13 +13,7 @@
 
 use bindgen::Builder;
 use builder::{
-  build_bindings,
-  build_dual_cc,
-  header_file,
-  setup_cc,
-  src_file,
-  target_os,
-  TargetOs,
+  build_bindings, build_dual_cc, header_file, setup_cc, src_file, target_os, TargetOs,
 };
 
 fn main() {
@@ -69,7 +63,13 @@ fn main() {
         .file(src_file("netty_io_uring_native.c"))
         .file(src_file("syscall.c"));
 
-      Builder::default().header("headers/netty_jni_util.h")
+      Builder::default()
+        .header("headers/netty_jni_util.h")
+        .header(header_file("netty_epoll_linuxsocket.h"))
+        .header(header_file("netty_epoll_vmsocket.h"))
+        .header(header_file("netty_io_uring.h"))
+        .header(header_file("netty_io_uring_linuxsocket.h"))
+        .header(header_file("ssl.h"))
     }
 
     TargetOs::Windows => Builder::default().header("headers/netty_jni_util.h"),

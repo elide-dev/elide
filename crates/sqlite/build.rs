@@ -13,16 +13,8 @@
 
 use bindgen::Builder;
 use builder::{
-  build_bindings,
-  build_dual_cc,
-  header_file,
-  if_not_exists,
-  makefile_sub_run,
-  setup,
-  setup_cc,
-  src_file,
-  third_party_project,
-  third_party_src_file,
+  build_bindings, build_dual_cc, header_file, if_not_exists, makefile_sub_run, setup, setup_cc,
+  src_file, third_party_project, third_party_src_file,
 };
 
 fn main() {
@@ -44,10 +36,8 @@ fn main() {
 
   let sqlite_path = third_party_project("sqlite/install");
   let sqlite_include = format!("-I{}/include", sqlite_path);
-  let sqlite_libpath = format!("-L{}/lib", sqlite_path);
-  let libpath_binding = sqlite_libpath.clone();
   let include_binding = sqlite_include.clone();
-  let extra_args = vec![include_binding.as_str(), libpath_binding.as_str()];
+  let extra_args = vec![include_binding.as_str()];
 
   build
     // Build Hardening & Warning Suppression
@@ -93,7 +83,8 @@ fn main() {
 
   build
     // Source Files
-    .file(src_file("NativeDB.c"));
+    .file(src_file("NativeDB.c"))
+    .file(third_party_src_file("sqlite", "sqlite3.c"));
 
   build_dual_cc(
     build,
@@ -110,7 +101,4 @@ fn main() {
       .clang_arg(sqlite_include.clone())
       .header(header_file("NativeDB.h")),
   );
-
-  println!("cargo::rustc-link-lib=static=sqlite3");
-  println!("cargo::rustc-link-lib=dylib=sqlite3");
 }

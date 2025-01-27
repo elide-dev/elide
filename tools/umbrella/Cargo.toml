@@ -19,6 +19,7 @@ jvm = []
 lib = ["jni/default"]
 entry = ["jni/invocation"]
 python = ["ruff"]
+jemalloc = []
 ruby = []
 wasm = []
 biome = [
@@ -61,7 +62,6 @@ transport = { workspace = true }
 
 ## Compile
 anyhow = { workspace = true }
-bytemuck = { workspace = true }
 clap = { workspace = true, features = ["derive", "string", "wrap_help"] }
 console-subscriber = { workspace = true }
 colored = { workspace = true }

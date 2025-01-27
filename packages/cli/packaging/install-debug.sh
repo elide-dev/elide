@@ -58,7 +58,7 @@
 set -e
 set +x
 
-TOOL_REVISION="1.0.0-alpha10"
+TOOL_REVISION="1.0.0-alpha11"
 INSTALLER_VERSION="v0.13"
 
 TOOL="cli"

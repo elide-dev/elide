@@ -63,6 +63,9 @@ private const val STUBBED_USERINFO_SHELL: String = "/bin/bash"
 private const val STUBBED_USERINFO_HOMEDIR: String = STUBBED_HOMEDIR
 private const val STUBBED_VERSION: String = "5.4.0"
 
+// Generic 'unknown' symbol.
+private const val UNKNOWN: String = "unknown"
+
 // NIC constants.
 private const val NIC_FAMILY_IPV6 = "IPv6"
 private const val NIC_FAMILY_IPV4 = "IPv4"
@@ -87,11 +90,13 @@ private const val OS_TYPE_WINDOWS = "Windows_NT"
 // OS name constants.
 private const val OS_AIX = "aix"
 private const val OS_DARWIN = "darwin"
+private const val OS_MAC_OS_X = "mac os x"
 private const val OS_FREEBSD = "freebsd"
 private const val OS_LINUX = "linux"
 private const val OS_OPENBSD = "openbsd"
 private const val OS_SUNOS = "sunos"
 private const val OS_WIN32 = "win32"
+private const val OS_WINDOWS = "windows"
 
 // Single stubbed CPU type.
 private val STUBBED_CPU = CPUInfo.of(
@@ -287,31 +292,31 @@ internal object NodeOperatingSystem {
       JVM_AMD64 -> NODE_X64
       JVM_ARM -> NODE_ARM
       JVM_AARCH64, JVM_ARM64 -> NODE_ARM64
-      else -> "unknown"
+      else -> UNKNOWN
     }
 
     @VisibleForTesting
     internal fun mapJvmOsToNodeOs(os: String = System.getProperty("os.name")): String = when (os.lowercase().trim()) {
-      "aix" -> OS_AIX
-      "mac os x" -> OS_DARWIN
-      "freebsd" -> OS_FREEBSD
-      "linux" -> OS_LINUX
-      "openbsd" -> OS_OPENBSD
-      "sunos" -> OS_SUNOS
-      "windows", "win32" -> OS_WIN32
-      else -> "unknown"
+      OS_AIX -> OS_AIX
+      OS_MAC_OS_X -> OS_DARWIN
+      OS_FREEBSD -> OS_FREEBSD
+      OS_LINUX -> OS_LINUX
+      OS_OPENBSD -> OS_OPENBSD
+      OS_SUNOS -> OS_SUNOS
+      OS_WINDOWS, OS_WIN32 -> OS_WIN32
+      else -> UNKNOWN
     }
 
     @VisibleForTesting
     internal fun typeForOsName(osName: String?): String = when (osName?.lowercase()?.trim()) {
-      "linux" -> OS_TYPE_LINUX
-      "mac os x" -> OS_TYPE_DARWIN
-      "windows" -> OS_TYPE_WINDOWS
-      else -> "unknown"
+      OS_LINUX -> OS_TYPE_LINUX
+      OS_MAC_OS_X -> OS_TYPE_DARWIN
+      OS_WINDOWS -> OS_TYPE_WINDOWS
+      else -> UNKNOWN
     }
 
     @Polyglot override fun availableParallelism(): Int = systemInfo.hardware.processor.logicalProcessorCount
-    @Polyglot override fun arch(): String = mapJvmArchToNodeArch(System.getProperty("os.arch") ?: "unknown")
+    @Polyglot override fun arch(): String = mapJvmArchToNodeArch(System.getProperty("os.arch") ?: UNKNOWN)
 
     @Polyglot override fun cpus(): List<CPUInfo> {
       val freq = systemInfo.hardware.processor.currentFreq.first()

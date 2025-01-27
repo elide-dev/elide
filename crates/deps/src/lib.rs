@@ -11,8 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-#![feature(test)]
-#![feature(const_trait_impl)]
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
 /// Provides structural definitions for handling dependencies.

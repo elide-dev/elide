@@ -35,7 +35,7 @@ byteunits = "0.9.1"
 caffeine = "3.1.8"
 capnproto = "0.1.18-elide"
 cite = "0.2.0"
-clikt = "4.4.0.20-SNAPSHOT"
+clikt = "5.0.2"
 closure = "v20221004"
 closure-stylesheets = "1.5.0"
 commons-codec = "1.17.1"
@@ -71,7 +71,7 @@ github-api = "1.321"
 google-api-common = "2.30.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
-graalvm = "24.1.1"
+graalvm = "24.1.2"
 graalvm-metadata = "0.3.8"
 graalvm-pin = "24.1.1"
 graalvm-plugin = "0.10.2"
@@ -124,7 +124,7 @@ koin-ksp = "1.2.2"
 konform = "0.4.0"
 kotest = "5.5.4"
 kotest-plugin = "0.8.18"
-kotlin-compile-testing = "1.5.0"
+kotlin-compile-testing = "1.6.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.0"
 kotlin-sdk = "2.1.0"
@@ -212,7 +212,7 @@ node-plugin = "7.0.2"
 npm-buffer = "6.0.3"
 npm-emotion-core = "^11.11.2"
 npm-emotion-server = "11.11.0"
-npm-esbuild = "0.23.0"
+npm-esbuild = "0.24.2"
 npm-google-protobuf = "3.21.2"
 npm-grpcweb = "1.4.2"
 npm-joda = "3.2.0"
@@ -249,7 +249,7 @@ parallelGzip = "1.0.5"
 picnic = "0.7.0"
 picocli = "4.7.6"
 picocli-jansi-graalvm = "1.2.0"
-pkl = "0.25.3"
+pkl = "0.28.0-SNAPSHOT"
 pluginBuf = "0.8.5"
 pluginProtobuf = "0.9.4"
 pluginPublish = "1.2.1"
@@ -429,8 +429,9 @@ graalvm-compiler = { group = "org.graalvm.compiler", name = "compiler", version.
 graalvm-espresso-hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm" }
 graalvm-espresso-language = { group = "org.graalvm.espresso", name = "espresso-language", version.ref = "graalvm" }
 graalvm-espresso-polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm" }
+graalvm-espresso-resources-jdk21 = { group = "org.graalvm.espresso", name = "espresso-runtime-resources-jdk21", version.ref = "graalvm" }
 graalvm-js-benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm" }
-graalvm-js-isolate = { group = "org.graalvm.js", name = "js-isolate", version.ref = "graalvm" }
+graalvm-js-isolate = { group = "org.graalvm.polyglot", name = "js-isolate", version.ref = "graalvm" }
 graalvm-js-language = { group = "org.graalvm.js", name = "js-language", version.ref = "graalvm" }
 graalvm-js-scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm" }
 graalvm-launcher-common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm" }
@@ -480,6 +481,7 @@ graalvm-shadowed-antlr4 = { group = "org.graalvm.shadowed", name = "antlr4", ver
 graalvm-shadowed-icu4j = { group = "org.graalvm.shadowed", name = "icu4j", version.ref = "graalvm" }
 graalvm-shadowed-jline = { group = "org.graalvm.shadowed", name = "jline", version.ref = "graalvm" }
 graalvm-shadowed-json = { group = "org.graalvm.shadowed", name = "json", version.ref = "graalvm" }
+graalvm-sdk = { group = "org.graalvm.sdk", name = "sdk", version.ref = "graalvm" }
 graalvm-svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm" }
 graalvm-svm-driver = { group = "org.graalvm.nativeimage", name = "svm_driver", version.ref = "graalvm-svm-driver" }
 graalvm-svm-nativeImage-base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm" }

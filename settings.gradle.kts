@@ -33,6 +33,7 @@ pluginManagement {
         includeGroup("dev.elide.tools")
         includeGroup("com.google.devtools.ksp")
         includeGroup("org.jetbrains.reflekt")
+        includeGroup("org.pkl-lang")
       }
     }
     maven {
@@ -97,6 +98,7 @@ dependencyResolutionManagement {
         includeGroup("net.java.dev.jna")
         includeGroup("org.jetbrains.reflekt")
         includeGroup("com.google.devtools.ksp")
+        includeGroup("org.pkl-lang")
         includeGroupAndSubgroups("org.graalvm")
         includeGroupByRegex("org.graalvm.*")
 
@@ -256,6 +258,7 @@ include(
   ":packages:transport:transport-common",
   ":packages:transport:transport-epoll",
   ":packages:transport:transport-kqueue",
+  ":packages:transport:transport-unix",
   ":packages:transport:transport-uring",
   ":tools:reports",
   ":tools:umbrella",

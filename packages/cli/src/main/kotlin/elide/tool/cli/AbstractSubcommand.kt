@@ -75,6 +75,16 @@ import org.graalvm.polyglot.Engine as VMEngine
     private val _stderr = System.err
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
+    private val additionalEnginesByLang = mapOf(
+      GuestLanguage.JAVA to listOf(
+        GuestLanguage.JVM,
+        GuestLanguage.KOTLIN,
+      ),
+      GuestLanguage.JVM to listOf(
+        GuestLanguage.KOTLIN,
+        GuestLanguage.JAVA,
+      )
+    )
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
@@ -89,6 +99,10 @@ import org.graalvm.polyglot.Engine as VMEngine
           logging.trace("Language '${it.name}' is supported")
           supported to it
         }
+      }.flatMap { (guest, lang) ->
+        listOf(guest to lang) + additionalEnginesByLang[guest]?.map { additional ->
+          additional to lang
+        }.orEmpty()
       }
     }
   }
@@ -558,6 +572,19 @@ import org.graalvm.polyglot.Engine as VMEngine
           leave()
         }
       }
+    }
+  }
+
+  /**
+   * Run a [block] of code using a [PolyglotContext] accessor factory, configured by the current [engine]. The context
+   * is guaranteed to be exclusive to the accessor caller thread, but it may be reused after this operation completes.
+   *
+   * The first invocation of this method will cause the [engine] to be initialized, triggering the
+   * [configureEngine] event.
+   */
+  protected open fun withDeferredContext(langs: EnumSet<GuestLanguage>, block: (() -> PolyglotContext) -> Unit) {
+    block.invoke {
+      resolvePolyglotContext(langs)
     }
   }
 

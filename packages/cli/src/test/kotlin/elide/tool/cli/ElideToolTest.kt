@@ -14,11 +14,13 @@
 package elide.tool.cli
 
 import io.micronaut.configuration.picocli.PicocliRunner
+import org.apache.commons.io.output.ByteArrayOutputStream
 import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.assertDoesNotThrow
+import java.io.PrintStream
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.test.Ignore
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
@@ -36,6 +38,40 @@ import elide.testing.annotations.TestCase
     .resolve("scripts")
     .toAbsolutePath()
 
+  private fun assertToolExitsWithCode(expected: Int, vararg args: String) {
+    fun block(): Int =
+      PicocliRunner.execute(Elide::class.java, *args)
+
+    // capture stdout and stderr
+    val stubbedOut = ByteArrayOutputStream()
+    val stubbedErr = ByteArrayOutputStream()
+    val originalOut = System.out
+    val originalErr = System.err
+    System.setOut(PrintStream(stubbedOut))
+    System.setErr(PrintStream(stubbedErr))
+    val capturedOut: AtomicReference<ByteArray> = AtomicReference(null)
+    val capturedErr: AtomicReference<ByteArray> = AtomicReference(null)
+
+    val code = try {
+      block()
+    } finally {
+      capturedOut.set(stubbedOut.toByteArray())
+      capturedErr.set(stubbedErr.toByteArray())
+      System.setOut(originalOut)
+      System.setErr(originalErr)
+    }
+    assertEquals(
+      expected,
+      code,
+      "should exit with code $expected, but got $code;\n" +
+              "stdout: ${String(capturedOut.get())}\nstderr: ${String(capturedErr.get())}",
+    )
+  }
+
+  private fun assertToolRunsWith(vararg args: String) {
+    assertToolExitsWithCode(0, *args)
+  }
+
   @Inject lateinit var tool: Elide
 
   @Test fun testEntrypoint() {
@@ -44,21 +80,22 @@ import elide.testing.annotations.TestCase
 
   @Test fun testEntrypointHelp() {
     assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(Elide::class.java, "--help"))
+      assertToolRunsWith("--help")
     }
   }
 
   @Test fun testEntrypointVersion() {
     assertDoesNotThrow {
-      assertEquals(0, PicocliRunner.execute(Elide::class.java, "--version"))
+      assertToolRunsWith("--version")
     }
   }
 
   @Test fun testRootEntrypointExecuteJsCode() {
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        PicocliRunner.execute(Elide::class.java, "run", "-c", "'console.log(\"Hello!\");'"),
+      assertToolRunsWith(
+        "run",
+        "-c",
+        "'console.log(\"Hello!\");'",
       )
     }
   }
@@ -69,24 +106,33 @@ import elide.testing.annotations.TestCase
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
-      assertEquals(
+      assertToolExitsWithCode(
         0,
-        // `elide tools/scripts/hello.js`
-        PicocliRunner.execute(Elide::class.java, scriptPath.toString()),
+        scriptPath.toString(),
       )
     }
   }
 
-  @Ignore @Test fun testRootEntrypointExecutePyFile() {
+  @Test fun testRootEntrypointExecutePyFile() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        // `elide tools/scripts/hello.py`
-        PicocliRunner.execute(Elide::class.java, scriptPath.toString()),
+      assertToolRunsWith(
+        scriptPath.toString(),
+      )
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteRbFile() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        scriptPath.toString(),
       )
     }
   }
@@ -97,24 +143,35 @@ import elide.testing.annotations.TestCase
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        // `elide run tools/scripts/hello.js`
-        PicocliRunner.execute(Elide::class.java, "run", scriptPath.toString()),
+      assertToolRunsWith(
+        "run",
+        scriptPath.toString(),
       )
     }
   }
 
-  @Ignore @Test fun testRootEntrypointExecutePyFileWithRun() {
+  @Test fun testRootEntrypointExecutePyFileWithRun() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        // `elide run tools/scripts/hello.py`
-        PicocliRunner.execute(Elide::class.java, "run", scriptPath.toString()),
+      assertToolRunsWith(
+        "run",
+        scriptPath.toString(),
+      )
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteRbFileWithRun() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        "run",
+        scriptPath.toString(),
       )
     }
   }
@@ -125,24 +182,41 @@ import elide.testing.annotations.TestCase
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        // `elide run --javascript tools/scripts/hello.js`
-        PicocliRunner.execute(Elide::class.java, "run", "--javascript", scriptPath.toString()),
+      // `elide run --javascript tools/scripts/hello.js`
+      assertToolRunsWith(
+        "run",
+        "--javascript",
+        scriptPath.toString(),
       )
     }
   }
 
-  @Ignore @Test fun testRootEntrypointExecutePyFileExplicit() {
+  @Test fun testRootEntrypointExecutePyFileExplicit() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        // `elide run --python tools/scripts/hello.py`
-        PicocliRunner.execute(Elide::class.java, "run", "--python", scriptPath.toString()),
+      // `elide run --python tools/scripts/hello.py`
+      assertToolRunsWith(
+        "run",
+        "--python",
+        scriptPath.toString(),
+      )
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteRbFileExplicit() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      // `elide run --ruby tools/scripts/hello.rb`
+      assertToolRunsWith(
+        "run",
+        "--ruby",
+        scriptPath.toString(),
       )
     }
   }
@@ -153,28 +227,57 @@ import elide.testing.annotations.TestCase
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        // `elide python tools/scripts/hello.py`
-        PicocliRunner.execute(Elide::class.java, "python", scriptPath.toString()),
+      // `elide python tools/scripts/hello.py`
+      assertToolRunsWith(
+        "python",
+        scriptPath.toString(),
+      )
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteRbFileAlias() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      // `elide ruby tools/scripts/hello.rb`
+      assertToolRunsWith(
+        "ruby",
+        scriptPath.toString(),
       )
     }
   }
 
   @Test fun testEntrypointExecuteSimpleJsExplicit() {
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        PicocliRunner.execute(Elide::class.java, "run", "--javascript", "-c", "'console.log(\"Hello!\");'"),
+      assertToolRunsWith(
+        "run",
+        "--javascript",
+        "-c",
+        "'console.log(\"Hello!\");'",
       )
     }
   }
 
   @Test fun testEntrypointExecuteSimplePyCode() {
     assertDoesNotThrow {
-      assertEquals(
-        0,
-        PicocliRunner.execute(Elide::class.java, "run", "--python", "-c", "'print(\"Hello!\")'"),
+      assertToolRunsWith(
+        "run",
+        "--python",
+        "-c",
+        "'print(\"Hello!\")'",
+      )
+    }
+  }
+
+  @Test fun testEntrypointExecuteSimpleRbCode() {
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        "run",
+        "--ruby",
+        "-c",
+        "'puts \"Hello!\"'",
       )
     }
   }

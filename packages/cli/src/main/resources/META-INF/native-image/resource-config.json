@@ -1,6 +1,12 @@
 {
   "resources":{
   "includes":[{
+    "pattern":"org/pkl/core/stdlib/.*.pkl"
+  },{
+    "pattern":"org/jline/utils/.*"
+  },{
+    "pattern":"\\Qorg/pkl/commons/cli/PklCARoots.pem\\E"
+  },{
     "pattern":"\\QElideTool.properties\\E"
   }, {
     "pattern":"\\QElideTool_en.properties\\E"

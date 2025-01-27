@@ -1,12 +1,12 @@
-ARG ALPINE_VERSION=3.17.8
-ARG ALPINE_HASH="@sha256:a6063e988bcd597b4f1f7cfd4ec38402b02edd0c79250f00c9e14dc1e94bebbc"
+ARG ALPINE_VERSION=3.18
+ARG ALPINE_HASH="@sha256:dd60c75fba961ecc5e918961c713f3c42dd5665171c58f9b2ef5aafe081ad5a0"
 
 FROM alpine:${ALPINE_VERSION}${ALPINE_HASH}
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Alpine)"
 LABEL org.opencontainers.image.description="Base image for Elide apps and tools built on top of musl-libc"
-LABEL org.opencontainers.image.version=v1.0.0-alpha10
+LABEL org.opencontainers.image.version=v1.0.0-alpha11
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=alpine:${ALPINE_VERSION}
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/base-alpine/Dockerfile

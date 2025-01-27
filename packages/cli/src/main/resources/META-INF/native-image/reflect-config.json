@@ -3172,10 +3172,8 @@
   "name":"org.graalvm.wasm.WasmLanguageProvider"
 },
 {
-  "name":"org.robolectric.Robolectric"
-},
-{
-  "name":"org.sqlite.JDBC"
+  "name":"org.sqlite.JDBC",
+  "allPublicConstructors": true
 },
 {
   "name":"org.truffleruby.RubyLanguageProvider"
@@ -7587,6 +7585,20 @@
 },
 {
   "name":"tools.elide.vfs.File",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"tools.elide.vfs.File$FileFingerprint",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"tools.elide.vfs.File$FileFingerprint$Builder",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,

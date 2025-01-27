@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("LongParameterList")
+
 package elide.tool.cli
 
 /** Specifies languages supported for REPL access. */
@@ -18,11 +20,13 @@ enum class GuestLanguage (
   internal val id: String,
   override val engine: String = id,
   internal val formalName: String,
+  internal val onByDefault: Boolean = false,
   internal val experimental: Boolean = false,
   internal val suppressExperimentalWarning: Boolean = false,
   internal val extensions: List<String> = emptyList(),
   internal val mimeTypes: List<String> = emptyList(),
   internal val dependsOn: List<GuestLanguage> = emptyList(),
+  internal val executionMode: ExecutionMode = ExecutionMode.SOURCE_DIRECT,
   internal val secondary: Boolean = dependsOn.isNotEmpty(),
 ) : elide.runtime.gvm.GuestLanguage, elide.runtime.core.GuestLanguage {
   /** Interactive JavaScript VM. */
@@ -30,6 +34,7 @@ enum class GuestLanguage (
     id = ENGINE_JS,
     formalName = "JavaScript",
     experimental = false,
+    onByDefault = true,
     extensions = listOf("js", "cjs", "mjs"),
     mimeTypes = listOf("application/javascript", "application/javascript+module", "application/ecmascript"),
   ),
@@ -40,6 +45,7 @@ enum class GuestLanguage (
     engine = ENGINE_JS,
     formalName = "TypeScript",
     experimental = true,
+    onByDefault = true,
     extensions = listOf("ts", "cts", "mts", "tsx"),
     mimeTypes = listOf("application/typescript", "application/x-typescript", "text/typescript"),
   ),
@@ -49,6 +55,7 @@ enum class GuestLanguage (
     id = ENGINE_LLVM,
     formalName = "LLVM",
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("bc"),
   ),
 
@@ -57,7 +64,9 @@ enum class GuestLanguage (
     id = ENGINE_PYTHON,
     formalName = "Python",
     experimental = true,
+    onByDefault = true,
     extensions = listOf("py"),
+    mimeTypes = listOf("application/x-python-code", "text/x-python")
   ),
 
   /** Interactive Python VM. */
@@ -65,6 +74,7 @@ enum class GuestLanguage (
     id = ENGINE_RUBY,
     formalName = "Ruby",
     experimental = true,
+    onByDefault = true,
     extensions = listOf("rb"),
   ),
 
@@ -74,6 +84,7 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     formalName = "JVM",
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("class"),
     mimeTypes = emptyList(),
   ),
@@ -83,6 +94,7 @@ enum class GuestLanguage (
     id = "java",
     formalName = "JVM",
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("java"),
     mimeTypes = emptyList(),
   ),
@@ -93,6 +105,7 @@ enum class GuestLanguage (
     formalName = "Kotlin",
     engine = ENGINE_JVM,
     experimental = true,
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     extensions = listOf("kt", "kts"),
     dependsOn = listOf(JVM),
   ),
@@ -104,6 +117,7 @@ enum class GuestLanguage (
     formalName = "Groovy",
     experimental = true,
     extensions = listOf("groovy"),
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     dependsOn = listOf(JVM),
   ),
 
@@ -114,6 +128,7 @@ enum class GuestLanguage (
     formalName = "Scala",
     experimental = true,
     extensions = listOf("scala"),
+    executionMode = ExecutionMode.SOURCE_COMPILED,
     dependsOn = listOf(JVM),
   ),
 

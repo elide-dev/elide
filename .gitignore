@@ -42,3 +42,4 @@ tools/images/bench/elide-edge.tgz
 /.java-home
 /third_party/oracle/graaljs
 *.profraw
+tools/hakuna/dist

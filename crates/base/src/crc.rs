@@ -68,9 +68,7 @@ pub fn crc64(data: &[u8]) -> u64 {
 
 #[cfg(test)]
 mod tests {
-  extern crate test;
   use super::*;
-  use test::Bencher;
 
   #[test]
   fn crc32_basic() {
@@ -81,19 +79,5 @@ mod tests {
   #[test]
   fn crc64_basic() {
     assert_eq!(crc64(b"hello, world!"), 11638617936805349819);
-  }
-
-  #[bench]
-  fn crc32_bench_u8(b: &mut Bencher) {
-    b.iter(|| {
-      crc32(b"hello, world!");
-    });
-  }
-
-  #[bench]
-  fn crc64_bench_u8(b: &mut Bencher) {
-    b.iter(|| {
-      crc64(b"hello, world!");
-    });
   }
 }

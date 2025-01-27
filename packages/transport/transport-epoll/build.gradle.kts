@@ -12,6 +12,7 @@
 */
 @file:Suppress("UnstableApiUsage")
 
+import elide.internal.conventions.publishing.publish
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -30,6 +31,21 @@ elide {
     alignVersions = true
     target = JvmTarget.JVM_21
   }
+
+  publishing {
+    id = "transport-epoll"
+    name = "Elide Transport: Epoll"
+    description = "Netty native transport support via epoll."
+
+    publish("maven") {
+      from(components["java"])
+    }
+  }
+}
+
+java {
+  withSourcesJar()
+  withJavadocJar()
 }
 
 dependencies {

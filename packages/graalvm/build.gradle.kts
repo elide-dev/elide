@@ -463,10 +463,6 @@ dependencies {
 
   // General
   implementation(libs.jimfs)
-  implementation(libs.jackson.core)
-  implementation(libs.jackson.databind)
-  implementation(libs.jackson.module.kotlin)
-  implementation(mn.micronaut.jackson.databind)
 
   // Compression
   implementation(libs.commons.compress)
@@ -482,10 +478,6 @@ dependencies {
   // Netty
   implementation(libs.netty.codec.http)
   implementation(libs.netty.codec.http2)
-
-  // Micrometer
-  implementation(mn.micrometer.core)
-  implementation(mn.micrometer.observation)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"

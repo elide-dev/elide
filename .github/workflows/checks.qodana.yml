@@ -92,6 +92,6 @@ jobs:
         with:
           args: --baseline,qodana.sarif.json
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@4dd16135b69a43b6c8efb853346f8437d92d3c93 # v3.26.6
+        uses: github/codeql-action/upload-sarif@17a820bf2e43b47be2c72b39cc905417bc1ab6d0 # v3.28.6
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

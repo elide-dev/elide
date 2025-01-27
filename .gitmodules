@@ -7,12 +7,6 @@
 	path = packages/uuid
 	url = https://github.com/elide-dev/uuid.git
 	shallow = true
-[submodule "pkl"]
-	path = third_party/apple/pkl
-	url = https://github.com/elide-dev/pkl.git
-	shallow = true
-	branch = edge
-	ignore = dirty
 [submodule "sqlite"]
 	path = third_party/sqlite
 	url = git@github.com:sqlite/sqlite.git

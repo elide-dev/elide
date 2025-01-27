@@ -64,7 +64,6 @@ System.setProperty("user.dir", rootProject.projectDir.toString())
 System.setProperty("elide.home", rootProject.projectDir.toString())
 
 val buildUuid: String by settings
-val buildPkl: String by settings
 val buildAuxImage: String by settings
 val enableSubstrate: String by settings
 
@@ -192,25 +191,6 @@ if (buildAuxImage == "true") {
   include(
     ":tools:auximage",
   )
-}
-
-// Embedded languages.
-if (buildPkl == "true") {
-  includeBuild("third_party/apple/pkl") {
-    dependencySubstitution {
-      substitute(module("org.pkl-lang:pkl-core")).using(project(":pkl-core"))
-      substitute(module("org.pkl-lang:pkl-executor")).using(project(":pkl-executor"))
-      substitute(module("org.pkl-lang:pkl-commons-cli")).using(project(":pkl-commons-cli"))
-      substitute(module("org.pkl-lang:pkl-codegen-java")).using(project(":pkl-codegen-java"))
-      substitute(module("org.pkl-lang:pkl-codegen-kotlin")).using(project(":pkl-codegen-kotlin"))
-      substitute(module("org.pkl-lang:pkl-config-java")).using(project(":pkl-config-java"))
-      substitute(module("org.pkl-lang:pkl-config-kotlin")).using(project(":pkl-config-kotlin"))
-      substitute(module("org.pkl-lang:pkl-tools")).using(project(":pkl-tools"))
-      substitute(module("org.pkl-lang:pkl-server")).using(project(":pkl-server"))
-      substitute(module("org.pkl-lang:pkl-doc")).using(project(":pkl-doc"))
-      substitute(module("org.pkl-lang:pkl-cli")).using(project(":pkl-cli"))
-    }
-  }
 }
 
 // Build modules.

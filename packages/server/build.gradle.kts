@@ -134,7 +134,6 @@ dependencies {
   // Micronaut
   implementation(mn.micronaut.aop)
   implementation(mn.micronaut.http.netty)
-  implementation(mn.micronaut.jackson.databind)
 
   // General
   implementation(libs.reactivestreams)

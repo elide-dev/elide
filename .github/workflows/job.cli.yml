@@ -218,6 +218,8 @@ jobs:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
+      - name: "Biuld: Natives"
+        run: make -C third_party && cargo build
       - name: "Build: CLI (Native/Debug)"
         run: |
           ./gradlew \
@@ -364,11 +366,14 @@ jobs:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
+      - name: "Biuld: Natives"
+        run: make -C third_party RELEASE=yes && cargo build --release
       - name: "Build: CLI (Native/Release)"
         run: |
           ./gradlew \
             :packages:cli:nativeOptimizedCompile \
-            :packages:cli:dist \
+            :packages:cli:distTar \
+            :packages:cli:distZip \
             -Prelease=true \
             -PbuildMode=release \
             --scan \
@@ -385,3 +390,4 @@ jobs:
           name: cli-release-${{ matrix.tag }}
           path: |
             ./packages/cli/build/distributions/*
+

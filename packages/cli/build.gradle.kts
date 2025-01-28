@@ -368,6 +368,10 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
 
+  // Native-image transitive compile dependencies
+  nativeImageCompileOnly(libs.jakarta.validation)
+  nativeImageCompileOnly(libs.guava)
+
   if (oracleGvm && oracleGvmLibs && enableAuxCache && enableAuxCacheTool) {
     api(":tools:auximage")
   }

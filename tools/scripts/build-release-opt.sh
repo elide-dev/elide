@@ -23,6 +23,9 @@ archive_prefix="elide"
 if [ "$arch" = "arm64" ]; then
   arch="aarch64"
 fi
+if [ "$arch" = "x86_64" ]; then
+  arch="amd64"
+fi
 platform="$platform-$arch"
 
 # echo "platform: $platform"

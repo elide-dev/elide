@@ -18,7 +18,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.13
+# Version: 0.14
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -41,6 +41,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.14 2025-01-26  Sam Gammon  Issuance of alpha11 release
 #   0.13 2024-05-12  Sam Gammon  Fixes for install prefix and alpha9 release
 #   0.12 2024-04-17  Sam Gammon  Cleanups for alpha8 release
 #   0.11 2023-08-01  Sam Gammon  Archive support fixes, fix for uuid package
@@ -59,7 +60,7 @@ set -e
 set +x
 
 TOOL_REVISION="1.0.0-alpha11"
-INSTALLER_VERSION="v0.13"
+INSTALLER_VERSION="v0.14"
 
 TOOL="cli"
 VERSION="v1"
@@ -140,7 +141,7 @@ if [[ "$@" == *"help"* ]]; then
   echo -e "  ${YELLOW}--version${NC}                Show version information"
   echo -e "  ${YELLOW}--help${NC}                   Show this help message"
   echo -e ""
-  echo -e "Copyright 2024, Elide Technologies, Inc."
+  echo -e "Copyright 2025, Elide Technologies, Inc."
   exit 0
 fi
 

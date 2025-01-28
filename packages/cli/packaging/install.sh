@@ -2,7 +2,7 @@
 set -e
 set +x
 TOOL_REVISION="1.0.0-alpha11"
-INSTALLER_VERSION="v0.13"
+INSTALLER_VERSION="v0.14"
 TOOL="cli"
 VERSION="v1"
 RELEASE="snapshot"

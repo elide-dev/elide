@@ -21,18 +21,18 @@ root {
         "@mitata/counters" "0.0.8"
         "@prettier/plugin-xml" "3.4.1"
         "@types/google-protobuf" "3.15.12"
-        "@types/node" "22.10.7"
-        "@typescript-eslint/eslint-plugin" "8.20.0"
-        "@typescript-eslint/parser" "8.20.0"
+        "@types/node" "22.10.10"
+        "@typescript-eslint/eslint-plugin" "8.21.0"
+        "@typescript-eslint/parser" "8.21.0"
         commitlint "19.6.1"
         esbuild "0.24.2"
-        eslint "9.18.0"
+        eslint "9.19.0"
         husky "9.1.7"
-        lint-staged "15.4.1"
-        mitata "1.0.30"
+        lint-staged "15.4.3"
+        mitata "1.0.32"
         postcss-cli "11.0.0"
         prettier "3.4.2"
-        prettier-plugin-java "2.6.6"
+        prettier-plugin-java "2.6.7"
         prettier-plugin-properties "0.3.0"
         prettier-plugin-sh "0.14.0"
         prettier-plugin-toml "2.0.1"
@@ -609,9 +609,9 @@ pkg "@eslint/eslintrc" {
     }
 }
 pkg "@eslint/js" {
-    version "9.18.0"
-    resolved "https://registry.npmjs.org/@eslint/js/-/js-9.18.0.tgz"
-    integrity "sha512-fK6L7rxcq6/z+AaQMtiFTkvbHkBLNlwyRxHpKawP0x3u9+NC6MQTnFW+AdpwC6gfHTW0051cokQgtTN2FqlxQA=="
+    version "9.19.0"
+    resolved "https://registry.npmjs.org/@eslint/js/-/js-9.19.0.tgz"
+    integrity "sha512-rbq9/g38qjfqFLOVPvwjIvFFdNziEC5S65jmjPw5r6A//QH+W91akh9irMwjDN8zKUTak6W9EsAv4m/7Wnw0UQ=="
 }
 pkg "@eslint/object-schema" {
     version "2.1.5"
@@ -773,6 +773,14 @@ pkg "@types/conventional-commits-parser" {
         "@types/node" ">=0.0.0"
     }
 }
+pkg "@types/conventional-commits-parser" "@types/node" {
+    version "22.10.7"
+    resolved "https://registry.npmjs.org/@types/node/-/node-22.10.7.tgz"
+    integrity "sha512-V09KvXxFiutGp6B7XkpaDXlNadZxrzajcY50EuoLIpQ6WWYCSvf19lVIazzfIzQvhUN2HjX12spLojTnhuKlGg=="
+    dependencies {
+        undici-types ">=6.20.0 <6.21.0-0"
+    }
+}
 pkg "@types/debug" {
     version "4.1.12"
     resolved "https://registry.npmjs.org/@types/debug/-/debug-4.1.12.tgz"
@@ -831,9 +839,9 @@ pkg "@types/ms" {
     integrity "sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g=="
 }
 pkg "@types/node" {
-    version "22.10.7"
-    resolved "https://registry.npmjs.org/@types/node/-/node-22.10.7.tgz"
-    integrity "sha512-V09KvXxFiutGp6B7XkpaDXlNadZxrzajcY50EuoLIpQ6WWYCSvf19lVIazzfIzQvhUN2HjX12spLojTnhuKlGg=="
+    version "22.10.10"
+    resolved "https://registry.npmjs.org/@types/node/-/node-22.10.10.tgz"
+    integrity "sha512-X47y/mPNzxviAGY5TcYPtYL8JsY3kAq2n8fMmKoRCxq/c4v4pyGNCzM2R6+M5/umG4ZfHuT+sgqDYqWc9rJ6ww=="
     dependencies {
         undici-types ">=6.20.0 <6.21.0-0"
     }
@@ -844,15 +852,15 @@ pkg "@types/unist" {
     integrity "sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ=="
 }
 pkg "@typescript-eslint/eslint-plugin" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.20.0.tgz"
-    integrity "sha512-naduuphVw5StFfqp4Gq4WhIBE2gN1GEmMUExpJYknZJdRnc+2gDzB8Z3+5+/Kv33hPQRDGzQO/0opHE72lZZ6A=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.21.0.tgz"
+    integrity "sha512-eTH+UOR4I7WbdQnG4Z48ebIA6Bgi7WO8HvFEneeYBxG8qCOYgTOFPSg6ek9ITIDvGjDQzWHcoWHCDO2biByNzA=="
     dependencies {
         "@eslint-community/regexpp" ">=4.10.0 <5.0.0-0"
-        "@typescript-eslint/scope-manager" "8.20.0"
-        "@typescript-eslint/type-utils" "8.20.0"
-        "@typescript-eslint/utils" "8.20.0"
-        "@typescript-eslint/visitor-keys" "8.20.0"
+        "@typescript-eslint/scope-manager" "8.21.0"
+        "@typescript-eslint/type-utils" "8.21.0"
+        "@typescript-eslint/utils" "8.21.0"
+        "@typescript-eslint/visitor-keys" "8.21.0"
         graphemer ">=1.4.0 <2.0.0-0"
         ignore ">=5.3.1 <6.0.0-0"
         natural-compare ">=1.4.0 <2.0.0-0"
@@ -860,49 +868,49 @@ pkg "@typescript-eslint/eslint-plugin" {
     }
 }
 pkg "@typescript-eslint/parser" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-8.20.0.tgz"
-    integrity "sha512-gKXG7A5HMyjDIedBi6bUrDcun8GIjnI8qOwVLiY3rx6T/sHP/19XLJOnIq/FgQvWLHja5JN/LSE7eklNBr612g=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-8.21.0.tgz"
+    integrity "sha512-Wy+/sdEH9kI3w9civgACwabHbKl+qIOu0uFZ9IMKzX3Jpv9og0ZBJrZExGrPpFAY7rWsXuxs5e7CPPP17A4eYA=="
     dependencies {
-        "@typescript-eslint/scope-manager" "8.20.0"
-        "@typescript-eslint/types" "8.20.0"
-        "@typescript-eslint/typescript-estree" "8.20.0"
-        "@typescript-eslint/visitor-keys" "8.20.0"
+        "@typescript-eslint/scope-manager" "8.21.0"
+        "@typescript-eslint/types" "8.21.0"
+        "@typescript-eslint/typescript-estree" "8.21.0"
+        "@typescript-eslint/visitor-keys" "8.21.0"
         debug ">=4.3.4 <5.0.0-0"
     }
 }
 pkg "@typescript-eslint/scope-manager" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-8.20.0.tgz"
-    integrity "sha512-J7+VkpeGzhOt3FeG1+SzhiMj9NzGD/M6KoGn9f4dbz3YzK9hvbhVTmLj/HiTp9DazIzJ8B4XcM80LrR9Dm1rJw=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-8.21.0.tgz"
+    integrity "sha512-G3IBKz0/0IPfdeGRMbp+4rbjfSSdnGkXsM/pFZA8zM9t9klXDnB/YnKOBQ0GoPmoROa4bCq2NeHgJa5ydsQ4mA=="
     dependencies {
-        "@typescript-eslint/types" "8.20.0"
-        "@typescript-eslint/visitor-keys" "8.20.0"
+        "@typescript-eslint/types" "8.21.0"
+        "@typescript-eslint/visitor-keys" "8.21.0"
     }
 }
 pkg "@typescript-eslint/type-utils" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/type-utils/-/type-utils-8.20.0.tgz"
-    integrity "sha512-bPC+j71GGvA7rVNAHAtOjbVXbLN5PkwqMvy1cwGeaxUoRQXVuKCebRoLzm+IPW/NtFFpstn1ummSIasD5t60GA=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/type-utils/-/type-utils-8.21.0.tgz"
+    integrity "sha512-95OsL6J2BtzoBxHicoXHxgk3z+9P3BEcQTpBKriqiYzLKnM2DeSqs+sndMKdamU8FosiadQFT3D+BSL9EKnAJQ=="
     dependencies {
-        "@typescript-eslint/typescript-estree" "8.20.0"
-        "@typescript-eslint/utils" "8.20.0"
+        "@typescript-eslint/typescript-estree" "8.21.0"
+        "@typescript-eslint/utils" "8.21.0"
         debug ">=4.3.4 <5.0.0-0"
         ts-api-utils ">=2.0.0 <3.0.0-0"
     }
 }
 pkg "@typescript-eslint/types" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/types/-/types-8.20.0.tgz"
-    integrity "sha512-cqaMiY72CkP+2xZRrFt3ExRBu0WmVitN/rYPZErA80mHjHx/Svgp8yfbzkJmDoQ/whcytOPO9/IZXnOc+wigRA=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/types/-/types-8.21.0.tgz"
+    integrity "sha512-PAL6LUuQwotLW2a8VsySDBwYMm129vFm4tMVlylzdoTybTHaAi0oBp7Ac6LhSrHHOdLM3efH+nAR6hAWoMF89A=="
 }
 pkg "@typescript-eslint/typescript-estree" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/typescript-estree/-/typescript-estree-8.20.0.tgz"
-    integrity "sha512-Y7ncuy78bJqHI35NwzWol8E0X7XkRVS4K4P4TCyzWkOJih5NDvtoRDW4Ba9YJJoB2igm9yXDdYI/+fkiiAxPzA=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/typescript-estree/-/typescript-estree-8.21.0.tgz"
+    integrity "sha512-x+aeKh/AjAArSauz0GiQZsjT8ciadNMHdkUSwBB9Z6PrKc/4knM4g3UfHml6oDJmKC88a6//cdxnO/+P2LkMcg=="
     dependencies {
-        "@typescript-eslint/types" "8.20.0"
-        "@typescript-eslint/visitor-keys" "8.20.0"
+        "@typescript-eslint/types" "8.21.0"
+        "@typescript-eslint/visitor-keys" "8.21.0"
         debug ">=4.3.4 <5.0.0-0"
         fast-glob ">=3.3.2 <4.0.0-0"
         is-glob ">=4.0.3 <5.0.0-0"
@@ -928,22 +936,22 @@ pkg "@typescript-eslint/typescript-estree" "minimatch" {
     }
 }
 pkg "@typescript-eslint/utils" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/utils/-/utils-8.20.0.tgz"
-    integrity "sha512-dq70RUw6UK9ei7vxc4KQtBRk7qkHZv447OUZ6RPQMQl71I3NZxQJX/f32Smr+iqWrB02pHKn2yAdHBb0KNrRMA=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/utils/-/utils-8.21.0.tgz"
+    integrity "sha512-xcXBfcq0Kaxgj7dwejMbFyq7IOHgpNMtVuDveK7w3ZGwG9owKzhALVwKpTF2yrZmEwl9SWdetf3fxNzJQaVuxw=="
     dependencies {
         "@eslint-community/eslint-utils" ">=4.4.0 <5.0.0-0"
-        "@typescript-eslint/scope-manager" "8.20.0"
-        "@typescript-eslint/types" "8.20.0"
-        "@typescript-eslint/typescript-estree" "8.20.0"
+        "@typescript-eslint/scope-manager" "8.21.0"
+        "@typescript-eslint/types" "8.21.0"
+        "@typescript-eslint/typescript-estree" "8.21.0"
     }
 }
 pkg "@typescript-eslint/visitor-keys" {
-    version "8.20.0"
-    resolved "https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-8.20.0.tgz"
-    integrity "sha512-v/BpkeeYAsPkKCkR8BDwcno0llhzWVqPOamQrAEMdpZav2Y9OVjd9dwJyBLJWwf335B5DmlifECIkZRJCaGaHA=="
+    version "8.21.0"
+    resolved "https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-8.21.0.tgz"
+    integrity "sha512-BkLMNpdV6prozk8LlyK/SOoWLmUFi+ZD+pcqti9ILCbVvHGk1ui1g4jJOc2WDLaeExz2qWwojxlPce5PljcT3w=="
     dependencies {
-        "@typescript-eslint/types" "8.20.0"
+        "@typescript-eslint/types" "8.21.0"
         eslint-visitor-keys ">=4.2.0 <5.0.0-0"
     }
 }
@@ -1324,9 +1332,9 @@ pkg "comma-separated-tokens" {
     integrity "sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg=="
 }
 pkg "commander" {
-    version "12.1.0"
-    resolved "https://registry.npmjs.org/commander/-/commander-12.1.0.tgz"
-    integrity "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA=="
+    version "13.1.0"
+    resolved "https://registry.npmjs.org/commander/-/commander-13.1.0.tgz"
+    integrity "sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw=="
 }
 pkg "commitlint" {
     version "19.6.1"
@@ -1687,16 +1695,16 @@ pkg "escape-string-regexp" {
     integrity "sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA=="
 }
 pkg "eslint" {
-    version "9.18.0"
-    resolved "https://registry.npmjs.org/eslint/-/eslint-9.18.0.tgz"
-    integrity "sha512-+waTfRWQlSbpt3KWE+CjrPPYnbq9kfZIYUqapc0uBXyjTp8aYXZDsUH16m39Ryq3NjAVP4tjuF7KaukeqoCoaA=="
+    version "9.19.0"
+    resolved "https://registry.npmjs.org/eslint/-/eslint-9.19.0.tgz"
+    integrity "sha512-ug92j0LepKlbbEv6hD911THhoRHmbdXt2gX+VDABAW/Ir7D3nqKdv5Pf5vtlyY6HQMTEP2skXY43ueqTCWssEA=="
     dependencies {
         "@eslint-community/eslint-utils" ">=4.2.0 <5.0.0-0"
         "@eslint-community/regexpp" ">=4.12.1 <5.0.0-0"
         "@eslint/config-array" ">=0.19.0 <0.20.0-0"
         "@eslint/core" ">=0.10.0 <0.11.0-0"
         "@eslint/eslintrc" ">=3.2.0 <4.0.0-0"
-        "@eslint/js" "9.18.0"
+        "@eslint/js" "9.19.0"
         "@eslint/plugin-kit" ">=0.2.5 <0.3.0-0"
         "@humanfs/node" ">=0.16.6 <0.17.0-0"
         "@humanwhocodes/module-importer" ">=1.0.1 <2.0.0-0"
@@ -2447,20 +2455,20 @@ pkg "lines-and-columns" {
     integrity "sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg=="
 }
 pkg "lint-staged" {
-    version "15.4.1"
-    resolved "https://registry.npmjs.org/lint-staged/-/lint-staged-15.4.1.tgz"
-    integrity "sha512-P8yJuVRyLrm5KxCtFx+gjI5Bil+wO7wnTl7C3bXhvtTaAFGirzeB24++D0wGoUwxrUKecNiehemgCob9YL39NA=="
+    version "15.4.3"
+    resolved "https://registry.npmjs.org/lint-staged/-/lint-staged-15.4.3.tgz"
+    integrity "sha512-FoH1vOeouNh1pw+90S+cnuoFwRfUD9ijY2GKy5h7HS3OR7JVir2N2xrsa0+Twc1B7cW72L+88geG5cW4wIhn7g=="
     dependencies {
-        chalk ">=5.4.1 <5.5.0-0"
-        commander ">=12.1.0 <12.2.0-0"
-        debug ">=4.4.0 <4.5.0-0"
-        execa ">=8.0.1 <8.1.0-0"
-        lilconfig ">=3.1.3 <3.2.0-0"
-        listr2 ">=8.2.5 <8.3.0-0"
-        micromatch ">=4.0.8 <4.1.0-0"
+        chalk ">=5.4.1 <6.0.0-0"
+        commander ">=13.1.0 <14.0.0-0"
+        debug ">=4.4.0 <5.0.0-0"
+        execa ">=8.0.1 <9.0.0-0"
+        lilconfig ">=3.1.3 <4.0.0-0"
+        listr2 ">=8.2.5 <9.0.0-0"
+        micromatch ">=4.0.8 <5.0.0-0"
         pidtree ">=0.6.0 <0.7.0-0"
         string-argv ">=0.3.2 <0.4.0-0"
-        yaml ">=2.6.1 <2.7.0-0"
+        yaml ">=2.7.0 <3.0.0-0"
     }
 }
 pkg "lint-staged" "chalk" {
@@ -2496,9 +2504,9 @@ pkg "lint-staged" "ms" {
     integrity "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
 }
 pkg "lint-staged" "yaml" {
-    version "2.6.1"
-    resolved "https://registry.npmjs.org/yaml/-/yaml-2.6.1.tgz"
-    integrity "sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg=="
+    version "2.7.0"
+    resolved "https://registry.npmjs.org/yaml/-/yaml-2.7.0.tgz"
+    integrity "sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA=="
 }
 pkg "listr2" {
     version "8.2.5"
@@ -3106,9 +3114,9 @@ pkg "minimist" {
     integrity "sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA=="
 }
 pkg "mitata" {
-    version "1.0.30"
-    resolved "https://registry.npmjs.org/mitata/-/mitata-1.0.30.tgz"
-    integrity "sha512-zefhVHdXznlD92aojkn7sZ+ZUzvbG8vmFvLllIHZZoUwGlO+YMqMbnA3tcutwe/yAVdkL5/3z65isEfvdomoJQ=="
+    version "1.0.32"
+    resolved "https://registry.npmjs.org/mitata/-/mitata-1.0.32.tgz"
+    integrity "sha512-UioSpAqd+QRTzIjtudWKVar3LbNt0jKS6i7S12uvRxr+eiv77TK7oMi8gNRbdNPH1rKWxrA5M48/QqVKigSQ9Q=="
 }
 pkg "ms" {
     version "2.1.2"
@@ -3627,9 +3635,9 @@ pkg "prettier" {
     integrity "sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ=="
 }
 pkg "prettier-plugin-java" {
-    version "2.6.6"
-    resolved "https://registry.npmjs.org/prettier-plugin-java/-/prettier-plugin-java-2.6.6.tgz"
-    integrity "sha512-DGWZPJ5nZg/wcFgJJxxwkzL95G/SrLXJVAcNfZ6ERjw7ha04pk6m1OAWxqhaq29Zl3FYlEjYrW796fFOWUWpnw=="
+    version "2.6.7"
+    resolved "https://registry.npmjs.org/prettier-plugin-java/-/prettier-plugin-java-2.6.7.tgz"
+    integrity "sha512-AVm+X7fhAZpYKiUCdUIGZ8HJbkGkTUgYQIKVuCQEplcqpGw2ewVnNGcPb1Kc3+MYMfiEqzhd8ZYhMGVHw6tZdQ=="
     dependencies {
         java-parser "2.3.3"
         lodash "4.17.21"

@@ -14,7 +14,6 @@
 package elide.server.runtime.jvm
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.conscrypt.Conscrypt
 import java.security.Security
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -25,15 +24,9 @@ public object SecurityProviderConfigurator {
 
   // Register security providers at JVM startup time.
   @JvmStatic @Synchronized private fun registerProviders() {
-    var bcposition = 0
-    if (Conscrypt.isAvailable()) {
-      Security.insertProviderAt(Conscrypt.newProvider(), 0)
-      bcposition = 1
-    }
-
     Security.insertProviderAt(
       BouncyCastleProvider(),
-      bcposition
+      0,
     )
   }
 

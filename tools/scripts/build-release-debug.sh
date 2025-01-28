@@ -23,6 +23,9 @@ archive_prefix="elide-$variant"
 if [ "$arch" = "arm64" ]; then
   arch="aarch64"
 fi
+if [ "$arch" = "x86_64" ]; then
+  arch="amd64"
+fi
 platform="$platform-$arch"
 
 # echo "platform: $platform"
@@ -72,9 +75,9 @@ for archive in ./elide*.{tgz,txz,zip}; do
   echo "-   SHA512..."
   $SHA512SUM "$archive" > "$archive.sha512"
   echo "-   GPG2..."
-  gpg2 --detach-sign --batch --yes --armor "$archive"
+  gpg --detach-sign --batch --yes --armor "$archive"
   echo "-   Sigstore..."
-  cosign sign-blob "$archive" --output-signature="$archive.sig" --output-certificate="$archive.pem" --tlog-upload=true -y
+  yes y | cosign sign-blob "$archive" --output-signature="$archive.sig" --output-certificate="$archive.pem" --tlog-upload=true --bundle="$archive.sigstore" -y
   echo ""
 done
 

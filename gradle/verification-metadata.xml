@@ -5,6 +5,8 @@
       <verify-signatures>true</verify-signatures>
       <trusted-artifacts>
          <trust file="kotlinpoet-jvm-1.18.0.module"/>
+         <trust group="dev.elide" reason="Verified upstream"/>
+         <trust group="dev.javamodules" reason="Verified upstream"/>
          <trust group="org.pkl-lang" reason="Forked and verified"/>
          <trust group="org.apache" reason="Part of Gradle"/>
          <trust group="org.codehaus.groovy" reason="Part of Gradle"/>

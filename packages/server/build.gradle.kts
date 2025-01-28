@@ -106,7 +106,6 @@ dependencies {
 
   // Crypto
   implementation(libs.bouncycastle)
-  implementation(libs.conscrypt)
 
   // KotlinX
   implementation(libs.kotlinx.serialization.json.jvm)
@@ -141,11 +140,6 @@ dependencies {
   implementation(libs.reactivestreams)
 
   // Runtime
-  runtimeOnly(libs.jansi)
-  runtimeOnly(mn.snakeyaml)
-  runtimeOnly(libs.jackson.core)
-  runtimeOnly(libs.jackson.databind)
-  runtimeOnly(libs.jackson.module.kotlin)
   implementation(mn.micronaut.http.server)
   implementation(mn.micronaut.http.server.netty)
 

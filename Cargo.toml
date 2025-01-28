@@ -24,7 +24,7 @@ license = "MIT"
 
 [profile.dev]
 opt-level = 3
-lto = false
+lto = true
 strip = false
 debug = true
 incremental = false
@@ -33,7 +33,7 @@ split-debuginfo = "unpacked"
 
 [profile.release]
 opt-level = 3
-lto = false
+lto = true
 strip = false
 debug = true
 incremental = false

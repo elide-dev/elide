@@ -16,11 +16,7 @@ async function importSpecifiedBenchmarks(files) {
 }
 
 async function runBenchmarks(args) {
-  if (args.length > 2) {
-    await importSpecifiedBenchmarks(args.slice(2))
-  } else {
-    await importAllBenchmarks()
-  }
+  await importAllBenchmarks()
 
   await run({
     units: false, // print small units cheatsheet

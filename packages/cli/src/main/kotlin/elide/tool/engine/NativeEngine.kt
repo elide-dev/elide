@@ -39,7 +39,7 @@ object NativeEngine {
   private val errHolder: AtomicReference<Throwable?> = AtomicReference(null)
   private val missingLibraries: MutableSet<NativeLibInfo> = ConcurrentSkipListSet()
   private val nativeLibraryGroups: MutableMap<String, Boolean> = ConcurrentSkipListMap()
-  private val staticJniMode: Boolean = System.getProperty("elide.staticJni") == "true"
+  private val staticJniMode: Boolean = System.getProperty("elide.staticJni") == "true" && ImageInfo.inImageCode()
 
   internal fun transportEngine(): Pair<String, Boolean> = transportEngine.get() to nativeTransportAvailable.get()
 
@@ -310,7 +310,7 @@ object NativeEngine {
     val resolvedExecPrefix = Path(System.getProperty("user.dir"))
     val libExecPaths = listOf(
       resolvedExecPrefix,
-      resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.0"),
+      resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.1"),
       resolvedExecPrefix.resolve("llvm/libsulong-native"),
       resolvedExecPrefix.resolve("ruby/ruby-home"),
     )

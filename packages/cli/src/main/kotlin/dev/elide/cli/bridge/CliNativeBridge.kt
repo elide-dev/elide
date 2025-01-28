@@ -2,6 +2,8 @@
 
 package dev.elide.cli.bridge
 
+import org.graalvm.nativeimage.ImageInfo
+
 /**
  * # Native Bridge
  *
@@ -19,7 +21,7 @@ object CliNativeBridge {
 
   /** Initialize the native layer. */
   @Synchronized public fun initialize() {
-    if (!initialized) {
+    if (!initialized && ImageInfo.inImageCode()) {
       System.loadLibrary(NATIVE_LIB_NAME)
       initialized = true
       val init = initializeNative()

@@ -11,8 +11,15 @@ name = "umbrella"
 crate-type = ["lib", "staticlib", "cdylib"]
 
 [features]
-default = ["lib", "all", "entry"]
-all = ["js", "python", "jvm"]
+default = [
+  "lib",
+  "all",
+  "entry",
+]
+all = [
+  "js",
+  "jvm",
+]
 diag = []
 js = ["orogene"]
 jvm = []

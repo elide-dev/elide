@@ -19,7 +19,7 @@
 )]
 #![forbid(unsafe_code, dead_code)]
 
-pub use model::{Architecture as TargetArch, OperatingSystem as TargetOs};
+pub use model::{Architecture as TargetArch, OperatingSystem as TargetOs, MACOS_MIN};
 
 use bindgen::Builder;
 use cc::Build;
@@ -494,6 +494,7 @@ pub fn setup_cc() -> Build {
         // C Flags: macOS
         .flag("-march=armv8-a+crypto+crc+simd")
         .flag("-mbranch-protection=standard")
+        .flag(format!("-macos-version-min={}", MACOS_MIN))
         .define("__ARM_NEON", "1")
         .define("__ARM_FEATURE_AES", "1")
         .define("__ARM_FEATURE_SHA2", "1"),
@@ -517,6 +518,7 @@ pub fn build_dual_cc(
   shared_lib_name: &str,
   extra_static_cflags: Option<Vec<&str>>,
   extra_shared_cflags: Option<Vec<&str>>,
+  extra_shared_linkflags: Option<Vec<&str>>,
 ) {
   let os = target_os();
   let link_paths = base_lib_paths();
@@ -562,7 +564,10 @@ pub fn build_dual_cc(
   for flag in extra_shared_cflags.unwrap_or_default() {
     shared_lib.flag(flag);
   }
-
+  // add extra linker flags, if any
+  for flag in extra_shared_linkflags.unwrap_or_default() {
+    shared_lib.flag(flag);
+  }
   match shared_lib
     .get_compiler()
     .to_command()

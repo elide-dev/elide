@@ -57,6 +57,7 @@ internal val automaticModuleConfigurations = sortedSetOf(
 internal val minifiedConfigurations = listOf<String>()
 
 internal val globallyPinnedVersions: Map<String, Pair<String, String>> = sortedMapOf(
+  "com.google.guava:guava" to (Versions.GUAVA to "sensitive compatibility"),
   "com.google.protobuf:protobuf-java" to (Versions.PROTOBUF to "sensitive compatibility"),
   "com.google.protobuf:protobuf-java-util" to (Versions.PROTOBUF to "sensitive compatibility"),
   "com.google.protobuf:protobuf-kotlin" to (Versions.PROTOBUF to "sensitive compatibility"),

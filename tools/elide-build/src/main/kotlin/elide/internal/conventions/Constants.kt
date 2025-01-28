@@ -120,7 +120,7 @@ public object Constants {
     const val JVM_DEFAULT = "21"
 
     /** GraalVM metadata repository version. */
-    const val GRAALVM_METADATA = "0.3.6"
+    const val GRAALVM_METADATA = "0.3.8"
 
     /** Version to pin for Diktat. */
     const val DIKTAT = "2.0.0"
@@ -144,7 +144,7 @@ public object Constants {
     const val NETTY = "4.1.110.Final"
 
     /** Guava version. */
-    const val GUAVA = "33.2.1-jre"
+    const val GUAVA = "33.3.1-jre"
 
     /** gRPC version. */
     const val GRPC = "1.62.2"
@@ -153,10 +153,10 @@ public object Constants {
     const val JLINE = "3.26.1"
 
     /** Okio version. */
-    const val OKIO = "3.7.1"
+    const val OKIO = "3.9.1"
 
     /** GraalVM version. */
-    const val GRAALVM = "24.1.1"
+    const val GRAALVM = "24.1.2"
   }
 
   /** Kotlin conventions. */

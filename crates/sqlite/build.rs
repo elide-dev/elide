@@ -92,6 +92,7 @@ fn main() {
     "sqlitejdbc",
     Some(extra_args.clone()),
     Some(extra_args.clone()),
+    None,
   );
 
   build_bindings(

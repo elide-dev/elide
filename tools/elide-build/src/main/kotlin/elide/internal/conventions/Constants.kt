@@ -144,7 +144,7 @@ public object Constants {
     const val NETTY = "4.1.110.Final"
 
     /** Guava version. */
-    const val GUAVA = "33.2.1-jre"
+    const val GUAVA = "33.3.1-jre"
 
     /** gRPC version. */
     const val GRPC = "1.62.2"

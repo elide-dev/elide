@@ -19,7 +19,7 @@
 )]
 #![forbid(unsafe_code, dead_code)]
 
-pub use model::{MACOS_MIN, Architecture as TargetArch, OperatingSystem as TargetOs};
+pub use model::{Architecture as TargetArch, OperatingSystem as TargetOs, MACOS_MIN};
 
 use bindgen::Builder;
 use cc::Build;

@@ -94,14 +94,7 @@ fn main() {
     .file(src_file("netty_unix_socket.c"))
     .file(src_file("netty_unix_util.c"));
 
-  let shared_cflags = vec![
-    "-nostdlibs",
-    "-lssl",
-    "-lcrypto",
-    "-lapr-2",
-    "-lz",
-    "-lc++"
-  ];
+  let shared_cflags = vec!["-nostdlibs", "-lssl", "-lcrypto", "-lapr-2", "-lz", "-lc++"];
   let shared_linkflags = vec![
     // force resolution of all symbols at build time
     "-Wl,--no-undefined",

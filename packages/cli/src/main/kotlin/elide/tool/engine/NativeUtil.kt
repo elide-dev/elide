@@ -20,7 +20,10 @@ import io.netty.util.internal.PlatformDependent
 import io.netty.util.internal.ThrowableUtil
 import java.io.*
 import java.net.URL
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.*
+import kotlin.collections.ArrayList
 import elide.runtime.Logger
 import elide.tool.cli.Statics
 
@@ -62,7 +65,7 @@ internal object NativeUtil {
     val urls: Enumeration<URL> = try {
       if (loader == null) ClassLoader.getSystemResources(path) else loader.getResources(path)
     } catch (iox: IOException) {
-      throw RuntimeException("An error occurred while getting the resources for $path", iox)
+      throw IOException("An error occurred while getting the resources for $path", iox)
     }
     val urlsList: List<URL> = Collections.list(urls)
 
@@ -101,11 +104,13 @@ internal object NativeUtil {
     }
   }
 
+  @Suppress("LongParameterList")
   @JvmStatic internal fun loadOrCopy(
     workdir: File,
     path: String,
     libName: String,
     loader: ClassLoader,
+    allCandidatePaths: Sequence<Path>,
     forceCopy: Boolean = false,
     forceLoad: Boolean = false,
     loadFromPath: Boolean = true,
@@ -126,7 +131,6 @@ internal object NativeUtil {
             return true to false
           } catch (thr: Throwable) {
             // ignore
-            logger.debug("Failed to load system library TEMP")
           }
         }
         loadNativeLibrary(libTarget.absolutePath, true)
@@ -150,7 +154,33 @@ internal object NativeUtil {
 
     var `in`: InputStream? = null
     var out: OutputStream? = null
+
+    // what about an embedded resource?
     var url = getResource(path, loader)
+
+    if (url == null) {
+      // allow all potential natives candidate paths
+      for (candidatePath in allCandidatePaths) {
+        val expectedTargets: LinkedList<Path> = LinkedList()
+
+        // if it's a directory, resolve lib names within that directory
+        if (Files.isDirectory(candidatePath)) {
+          expectedTargets.add(candidatePath.resolve(libname))
+          if (libname.endsWith(".dylib")) {
+            expectedTargets.add(libname.replace(".dylib", ".jnilib").let { candidatePath.resolve(it) })
+          }
+        } else if (Files.isRegularFile(candidatePath)) {
+          // otherwise, if it's a file, it could be a direct match
+          expectedTargets.add(candidatePath)
+        }
+        expectedTargets.firstOrNull {
+          if (Files.exists(it)) {
+            url = it.toUri().toURL()
+            true
+          } else false
+        }
+      }
+    }
 
     try {
       if (url == null) {
@@ -167,7 +197,7 @@ internal object NativeUtil {
         }
       }
 
-      `in` = url.openStream()
+      `in` = url!!.openStream()
       out = FileOutputStream(libTarget)
       val buffer = ByteArray(8192)
       var length: Int

@@ -100,9 +100,33 @@ import elide.testing.annotations.TestCase
     }
   }
 
+  @Test fun testRootEntrypointExecuteTsCode() {
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        "run",
+        "--typescript",
+        "-c",
+        "'console.log(\"Hello!\");'",
+      )
+    }
+  }
+
   @Test fun testRootEntrypointExecuteJsFile() {
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.js").toAbsolutePath()
+    Assumptions.assumeTrue(Files.exists(scriptPath))
+
+    assertDoesNotThrow {
+      assertToolExitsWithCode(
+        0,
+        scriptPath.toString(),
+      )
+    }
+  }
+
+  @Test fun testRootEntrypointExecuteTsFile() {
+    Assumptions.assumeTrue(Files.exists(testScriptsPath))
+    val scriptPath = testScriptsPath.resolve("hello.ts").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
 
     assertDoesNotThrow {

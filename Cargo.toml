@@ -51,7 +51,6 @@ split-debuginfo = "unpacked"
 ## Version Pins / Overrides
 async-std = { git = "https://github.com/elide-tools/async-std", rev = "0802b3439e42167825359567cffeb35f0f4525af" }
 base64 = { git = "https://github.com/elide-tools/rust-base64", rev = "e14400697453bcc85997119b874bc03d9601d0af" }
-cacache = { git = "https://github.com/elide-tools/cacache-rs", rev = "93f2020d6ccb119b09b01e10f4ad98f6586cb79c" }
 charset = { git = "https://github.com/elide-tools/charset", rev = "62cb8a4f42bf43df7c654da073d106de777252b7" }
 chic = { git = "https://github.com/elide-tools/chic", rev = "a69a935636126d8d758e3952484347ee4cdcee62" }
 libcst = { git = "https://github.com/elide-tools/libcst", rev = "a2dff05ebfd5ccebfa6a57ac4417cccea5a33515" }
@@ -128,7 +127,7 @@ maven-toolbox = { version = "0.0.3" }
 miette = { version = "7.2.0", features = ["fancy", "supports-hyperlinks"] }
 mimalloc = { version = "0.1.43" }
 mvn = { version = "0.2.0" }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "c8dc2a63e67b0984beccfee2b2fa74990bfa9e15" }
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "c62295d37d07743e9c46a66b47cfbc74cfbdf531" }
 panic-abort = { version = "0.3.2" }
 panic-halt = { version = "0.2.0" }
 pkg-config = { version = "0.3.30" }

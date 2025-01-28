@@ -97,6 +97,7 @@ jacoco = "0.8.11"
 jakarta = "2.0.1"
 jakarta-annotation-api = "2.1.1"
 jakarta-persistence = "3.1.0"
+jakarta-validation = "3.1.0"
 jansi = "2.4.1"
 javax-annotations = "1.3.2"
 javax-persistence = "2.2"
@@ -540,6 +541,7 @@ jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackso
 jakarta-annotation-api = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakarta-annotation-api" }
 jakarta-inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
 jakarta-persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta-persistence" }
+jakarta-validation = { group = "jakarta.validation", name = "jakarta.validation-api", version.ref = "jakarta-validation" }
 jansi = { group = "org.fusesource.jansi", name = "jansi", version.ref = "jansi" }
 javax-annotations = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax-annotations" }
 javax-persistence = { group = "javax.persistence", name = "javax.persistence-api", version.ref = "javax-persistence" }

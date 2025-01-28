@@ -944,6 +944,8 @@ val initializeAtBuildtime: List<String> = listOf(
   "oshi",
   "sun.awt.resources.awt",
   "org.pkl.core.runtime.VmLanguageProvider",
+  "elide.runtime.lang.typescript.internals.TypeScriptLanguageProvider",
+  "com.sun.jna.Library",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(

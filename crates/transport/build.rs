@@ -30,14 +30,11 @@ fn main() {
     .define("TCN_BUILD_STATIC", "1")
     .define("NETTY_BUILD_STATIC", "1")
     .define("NETTY_BUILD_GRAALVM", "1")
-    .define("NETTY_GVM_STATIC", "1");
+    .define("NETTY_GVM_STATIC", "1")
+    .define("OPENSSL_IS_BORINGSSL", "1");
 
-  let bindings_builder: Builder = match os {
+  let mut bindings_builder: Builder = match os {
     TargetOs::Darwin => {
-      build
-        // C Flags: macOS
-        .flag("-mmacosx-version-min=12.3");
-
       build
         // Sources: Netty KQueue
         .file(src_file("netty_kqueue_bsdsocket.c"))
@@ -48,7 +45,6 @@ fn main() {
         .header(header_file("netty_jni_util.h"))
         .header(header_file("netty_kqueue_bsdsocket.h"))
         .header(header_file("netty_kqueue_eventarray.h"))
-        .header(header_file("ssl.h"))
     }
 
     TargetOs::Linux => {
@@ -98,7 +94,20 @@ fn main() {
     .file(src_file("netty_unix_socket.c"))
     .file(src_file("netty_unix_util.c"));
 
-  let shared_cflags = vec!["-lssl", "-lcrypto", "-lapr-2", "-lz", "-lc++"];
+  let shared_cflags = vec![
+    "-nostdlibs",
+    "-lssl",
+    "-lcrypto",
+    "-lapr-2",
+    "-lz",
+    "-lc++"
+  ];
+  let shared_linkflags = vec![
+    // force resolution of all symbols at build time
+    "-Wl,--no-undefined",
+    // enable read-only relocations
+    "-Wl,-z,relro,-z,now",
+  ];
 
   build_dual_cc(
     build,
@@ -106,7 +115,16 @@ fn main() {
     "transport",
     None,
     Some(shared_cflags),
+    Some(shared_linkflags),
   );
+
+  bindings_builder = bindings_builder
+    // Defines & Compiler Settings (For the header generator this time)
+    .clang_arg("-DTCN_BUILD_STATIC=1")
+    .clang_arg("-DNETTY_BUILD_STATIC=1")
+    .clang_arg("-DNETTY_BUILD_GRAALVM=1")
+    .clang_arg("-DNETTY_GVM_STATIC=1")
+    .clang_arg("-DOPENSSL_IS_BORINGSSL=1");
 
   build_bindings("transport", "libtransport.rs", bindings_builder);
 }

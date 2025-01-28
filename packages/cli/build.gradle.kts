@@ -145,16 +145,7 @@ val exclusions = listOfNotNull(
 
   // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
   if (enableKotlin) null else libs.kotlin.compiler.embedded,
-).plus(listOf(
-  // disable netty native transports if our own transport libraries are in use
-  libs.netty.transport.native.epoll,
-  libs.netty.transport.native.kqueue,
-  libs.netty.transport.native.iouring,
-
-  // disable netty's exotic libs which don't have static jni support yet
-  libs.netty.resolver.dns.native.macos,
-  libs.netty.incubator.codec.http3,
-).onlyIf(enableNativeTransportV2))
+)
 
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 23

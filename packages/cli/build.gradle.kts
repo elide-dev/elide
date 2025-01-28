@@ -1691,6 +1691,15 @@ tasks {
 
   processResources {
     filterResources()
+
+    // add `[lib]umbrella.{so,dylib,jnilib,dll}` to the jar
+    from(rootProject.layout.projectDirectory.dir("target/${nativesType}")) {
+      include("libumbrella.so")
+      include("libumbrella.dylib")
+      include("libumbrella.jnilib")
+      include("umbrella.dll")
+      into("META-INF/native/")
+    }
   }
 
   jar {

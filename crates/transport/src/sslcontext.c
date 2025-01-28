@@ -205,6 +205,11 @@ TCN_IMPLEMENT_CALL(jlong, SSLContext, make)(TCN_STDARGS, jint protocol, jint mod
     // See https://github.com/google/boringssl/blob/chromium-stable/PORTING.md#crypto_buffer
     ctx = SSL_CTX_new(TLS_with_buffers_method());
 
+    // We need to set the minimum TLS version to TLS1 to be able to enable it explicitly later. By default
+    // TLS1_2_VERSION is the minimum with BoringSSL these days:
+    // See https://github.com/google/boringssl/commit/e95b0cad901abd49755d2a2a2f1f6c3e87d12b94
+    SSL_CTX_set_min_proto_version(ctx, TLS1_VERSION);
+
     // Needed in BoringSSL to be able to use TLSv1.3
     //
     // See http://hg.nginx.org/nginx/rev/7ad0f4ace359
@@ -649,7 +654,7 @@ TCN_IMPLEMENT_CALL(jboolean, SSLContext, setNumTickets)(TCN_STDARGS, jlong ctx, 
     TCN_CHECK_NULL(c, ctx, JNI_FALSE);
 
 #ifdef OPENSSL_IS_BORINGSSL
-    // Not supported by BoringSSL 
+    // Not supported by BoringSSL
     return JNI_FALSE;
 #else
     // Only supported with GCC
@@ -1437,7 +1442,7 @@ tcn_ssl_task_t* tcn_ssl_task_new(JNIEnv* e, jobject task) {
     if (sslTask == NULL) {
         return NULL;
     }
-    
+
     if ((sslTask->task = (*e)->NewGlobalRef(e, task)) == NULL) {
         // NewGlobalRef failed because we ran out of memory, free what we malloc'ed and fail the handshake.
         OPENSSL_free(sslTask);
@@ -1496,7 +1501,7 @@ static jbyteArray get_certs(JNIEnv *e, SSL* ssl, STACK_OF(X509)* chain) {
     jbyteArray bArray = NULL;
     jclass byteArrayClass = tcn_get_byte_array_class();
 
-    // Create the byte[][] array that holds all the certs
+    // Create the byte[][] array that holds all the certs
     if ((array = (*e)->NewObjectArray(e, len, byteArrayClass, NULL)) == NULL) {
         return NULL;
     }
@@ -1680,7 +1685,7 @@ enum ssl_verify_result_t tcn_SSL_cert_custom_verify(SSL* ssl, uint8_t *out_alert
         goto complete;
     }
 
-    // Create the byte[][] array that holds all the certs
+    // Create the byte[][] array that holds all the certs
     if ((array = get_certs(e, ssl, chain)) == NULL) {
         goto complete;
     }
@@ -1986,7 +1991,7 @@ TCN_IMPLEMENT_CALL(void, SSLContext, setCertRequestedCallback)(TCN_STDARGS, jlon
             tcn_throwOutOfMemoryError(e, "Unable to allocate memory for global reference");
             return;
         }
-       
+
         c->cert_requested_callback = cb;
         c->cert_requested_callback_method = method;
 
@@ -2132,7 +2137,7 @@ TCN_IMPLEMENT_CALL(void, SSLContext, setCertificateCallback)(TCN_STDARGS, jlong 
 
         SSL_CTX_set_cert_cb(c->ctx, certificate_cb, NULL);
     }
-        
+
     if (oldCallback != NULL) {
         (*e)->DeleteGlobalRef(e, oldCallback);
      }
@@ -2481,7 +2486,7 @@ TCN_IMPLEMENT_CALL(void, SSLContext, setSSLSessionCache)(TCN_STDARGS, jlong ctx,
     tcn_ssl_ctxt_t *c = J2P(ctx, tcn_ssl_ctxt_t *);
 
     TCN_CHECK_NULL(c, ctx, /* void */);
-    
+
     jobject oldCache = c->ssl_session_cache;
     if (cache == NULL) {
         c->ssl_session_cache = NULL;
@@ -2524,7 +2529,7 @@ TCN_IMPLEMENT_CALL(void, SSLContext, setSSLSessionCache)(TCN_STDARGS, jlong ctx,
     }
     if (oldCache != NULL) {
         (*e)->DeleteGlobalRef(e, oldCache);
-    } 
+    }
 }
 
 static int ssl_servername_cb(SSL *ssl, int *ad, void *arg)
@@ -2627,7 +2632,7 @@ static void keylog_cb(const SSL* ssl, const char *line) {
         return;
     }
     (*e)->SetByteArrayRegion(e, outputLine, 0, len, (const jbyte*) line);
-    
+
     // Execute the java callback
     (*e)->CallVoidMethod(e, state->ctx->keylog_callback, state->ctx->keylog_callback_method,
                 P2J(ssl), outputLine);
@@ -3043,7 +3048,7 @@ static JNINativeMethod* createDynamicMethodsTable(const char* packagePrefix) {
     netty_jni_util_free_dynamic_name(&dynamicTypeName);
     dynamicMethod->name = "setKeyLogCallback";
     dynamicMethod->fnPtr = (void *) TCN_FUNCTION_NAME(SSLContext, setKeyLogCallback);
-  
+
     dynamicMethod = &dynamicMethods[fixed_method_table_size + 5];
     NETTY_JNI_UTIL_PREPEND(packagePrefix, "io/netty/internal/tcnative/AsyncSSLPrivateKeyMethod;)V", dynamicTypeName, error);
     NETTY_JNI_UTIL_PREPEND("(JL", dynamicTypeName,  dynamicMethod->signature, error);
@@ -3052,7 +3057,7 @@ static JNINativeMethod* createDynamicMethodsTable(const char* packagePrefix) {
     dynamicMethod->fnPtr = (void *) TCN_FUNCTION_NAME(SSLContext, setPrivateKeyMethod0);
 
     dynamicMethod = &dynamicMethods[fixed_method_table_size + 6];
-    NETTY_JNI_UTIL_PREPEND(packagePrefix, "io/netty/internal/tcnative/SSLSessionCache;)V", dynamicTypeName, error); 
+    NETTY_JNI_UTIL_PREPEND(packagePrefix, "io/netty/internal/tcnative/SSLSessionCache;)V", dynamicTypeName, error);
     NETTY_JNI_UTIL_PREPEND("(JL", dynamicTypeName,  dynamicMethod->signature, error);
     netty_jni_util_free_dynamic_name(&dynamicTypeName);
     dynamicMethod->name = "setSSLSessionCache";

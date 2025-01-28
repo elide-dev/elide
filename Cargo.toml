@@ -51,18 +51,11 @@ split-debuginfo = "unpacked"
 ## Version Pins / Overrides
 async-std = { git = "https://github.com/elide-tools/async-std", rev = "0802b3439e42167825359567cffeb35f0f4525af" }
 base64 = { git = "https://github.com/elide-tools/rust-base64", rev = "e14400697453bcc85997119b874bc03d9601d0af" }
-cacache = { git = "https://github.com/elide-tools/cacache-rs", rev = "93f2020d6ccb119b09b01e10f4ad98f6586cb79c" }
 charset = { git = "https://github.com/elide-tools/charset", rev = "62cb8a4f42bf43df7c654da073d106de777252b7" }
 chic = { git = "https://github.com/elide-tools/chic", rev = "a69a935636126d8d758e3952484347ee4cdcee62" }
 libcst = { git = "https://github.com/elide-tools/libcst", rev = "a2dff05ebfd5ccebfa6a57ac4417cccea5a33515" }
-reqwest = { git = "https://github.com/elide-tools/reqwest", rev = "cc6b9a9b198033ac3d8161871627a4787cef3aec" }
-rkyv = { git = "https://github.com/elide-tools/rkyv", rev = "7b883203b216fcfc594077a5785555d2b52061c9" }
 ssri = { git = "https://github.com/elide-tools/ssri-rs", rev = "015e101918b6664cbae4c38c6b122db2e76bf9d0" }
 jni = { git = "https://github.com/elide-tools/jni-rs", rev = "b8ec9b0c717833a640de835ab1d91577bfbd6300" }
-
-## Astral Patches
-pep508_rs = { git = "https://github.com/elide-dev/uv", rev = "7c3eb5e431d1fe392f71a21b03e8b6da70f7b451" }
-pep440_rs = { git = "https://github.com/elide-dev/uv", rev = "7c3eb5e431d1fe392f71a21b03e8b6da70f7b451" }
 
 [patch."https://github.com/astral-sh/pubgrub"]
 pubgrub = { git = "https://github.com/elide-tools/pubgrub", rev = "8fd8d1370302508991e1b39ec936c363d582ee4c" }
@@ -88,7 +81,7 @@ arbitrary = { version = "1", features = ["derive"] }
 argfile = { version = "0.2.0" }
 base64 = { version = "0.22.1", default-features = false, features = ["alloc"] }
 base64-simd = { version = "0.8.0" }
-bindgen = { version = "0.69.4" }
+bindgen = { version = "0.71.1" }
 boring = { version = "4.7.0" }
 build_const = { version = "0.2.2", default-features = false }
 bytes = { version = "1.6.0" }
@@ -100,13 +93,9 @@ bytemuck = { version = "1.16.1", features = [
   "nightly_portable_simd",
   "aarch64_simd",
 ] }
-capnp = { version = "0.19.6" }
-capnpc = { version = "0.19.0" }
-capnp-futures = { version = "0.19.0" }
-capnp-rpc = { version = "0.19.2" }
 cc = { version = "1.0.104", features = ["parallel"] }
 clap = { version = "4.5.3", features = ["derive"] }
-colored = { version = "2.1.0" }
+colored = { version = "3.0.0" }
 console-subscriber = { version = "0.3.0" }
 const_fn = { version = "0.4" }
 const_format = { version = "0.2.32" }
@@ -128,7 +117,7 @@ maven-toolbox = { version = "0.0.3" }
 miette = { version = "7.2.0", features = ["fancy", "supports-hyperlinks"] }
 mimalloc = { version = "0.1.43" }
 mvn = { version = "0.2.0" }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "c8dc2a63e67b0984beccfee2b2fa74990bfa9e15" }
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "c62295d37d07743e9c46a66b47cfbc74cfbdf531" }
 panic-abort = { version = "0.3.2" }
 panic-halt = { version = "0.2.0" }
 pkg-config = { version = "0.3.30" }
@@ -149,7 +138,7 @@ serde = { version = "1.0.203", default-features = false }
 simdutf = { version = "0.4.17" }
 smartstring = { version = "1.0.1", default-features = false }
 sysinfo = { version = "0.30.13" }
-tikv-jemallocator = { version = "0.5.4", default-features = false, features = ["disable_initial_exec_tls"] }
+tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
 tokio = { version = "1", default-features = false, features = [
   "fs",
   "io-util",
@@ -198,10 +187,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "ea30aecb676e5cf4e1b2464
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "f068af78f779f4ea3f6629b63ebef39ddc1cf3e3" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "daa5270203156f150c8407e5256827a366656107" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "902f4b913f4eaefa8845232cb2b7bd10368f9faa", default-features = false, features = [
-  "check",
-  "format",
-] }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "9f065f4a340089406eefbb2dde21f8f9e31f8515" }

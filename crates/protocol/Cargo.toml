@@ -23,12 +23,10 @@ crate-type = ["lib"]
 
 [dependencies]
 bytes = { workspace = true }
-capnp = { version = "0.19.6" }
 prost = { workspace = true }
 
 [build-dependencies]
 builder = { workspace = true }
-capnpc = { workspace = true }
 const_format = { workspace = true }
 model = { workspace = true }
 prost-build = { workspace = true }

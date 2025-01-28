@@ -33,8 +33,7 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 use clap::Args as ClapArgs;
-use clap::{Command, Parser};
-use colored::Colorize;
+use clap::Command;
 use java_native::{jni, on_load, on_unload};
 use jni::objects::{JClass, JObjectArray, JString};
 use jni::sys::{jint, jobjectArray, jstring, JavaVM};
@@ -276,12 +275,12 @@ pub fn runOrogene<'local>(
 
 #[jni("dev.elide.cli.bridge.CliNativeBridge")]
 pub fn runRuff<'local>(
-  env: JNIEnv<'local>,
+  _env: JNIEnv<'local>,
   _class: JClass<'local>,
-  args: JObjectArray<'local>,
+  _args: JObjectArray<'local>,
 ) -> jint {
   #[cfg(feature = "ruff")]
-  match run_ruff_entry(decode_tool_args(env, args)) {
+  match run_ruff_entry(decode_tool_args(_env, _args)) {
     ExitStatus::Success => 0,
     ExitStatus::Failure => 1,
     ExitStatus::Error => 2,

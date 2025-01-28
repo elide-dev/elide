@@ -120,7 +120,7 @@ val enablePgo = false
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enablePgoReport = true
-val enableJna = false
+val enableJna = true
 val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
@@ -145,16 +145,7 @@ val exclusions = listOfNotNull(
 
   // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
   if (enableKotlin) null else libs.kotlin.compiler.embedded,
-).plus(listOf(
-  // disable netty native transports if our own transport libraries are in use
-  libs.netty.transport.native.epoll,
-  libs.netty.transport.native.kqueue,
-  libs.netty.transport.native.iouring,
-
-  // disable netty's exotic libs which don't have static jni support yet
-  libs.netty.resolver.dns.native.macos,
-  libs.netty.incubator.codec.http3,
-).onlyIf(enableNativeTransportV2))
+)
 
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 23
@@ -367,6 +358,10 @@ dependencies {
   api(libs.snakeyaml)
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
+
+  // Native-image transitive compile dependencies
+  nativeImageCompileOnly(libs.jakarta.validation)
+  nativeImageCompileOnly(libs.guava)
 
   if (oracleGvm && oracleGvmLibs && enableAuxCache && enableAuxCacheTool) {
     api(":tools:auximage")
@@ -722,6 +717,8 @@ val commonNativeArgs = listOfNotNull(
   "--enable-url-protocols=http,https,jar",
   "--color=always",
   "-H:+UnlockExperimentalVMOptions",
+  "--link-at-build-time=elide",
+  "--link-at-build-time=dev.elide",
   "-H:-ReduceImplicitExceptionStackTraceInformation",
   onlyIf(enableJna, "--enable-native-access=com.sun.jna,ALL-UNNAMED") ?: "--enable-native-access=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
@@ -940,6 +937,8 @@ val initializeAtBuildtime: List<String> = listOf(
   "oshi",
   "sun.awt.resources.awt",
   "org.pkl.core.runtime.VmLanguageProvider",
+  "elide.runtime.lang.typescript.internals.TypeScriptLanguageProvider",
+  "com.sun.jna.Library",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -1017,6 +1016,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "org.jline.terminal.impl.jna.linux.LinuxNativePty${'$'}UtilLibrary",
   "org.jline.terminal.impl.jna.solaris.SolarisNativePty",
   "org.jline.terminal.impl.jna.freebsd.FreeBsdNativePty",
+  "org.jline.terminal.impl.jna.freebsd.FreeBsdNativePty${'$'}UtilLibrary",
   "org.jline.terminal.impl.jna.openbsd.OpenBsdNativePty",
   "org.jline.nativ.Kernel32",
   "org.fusesource.jansi.AnsiConsole",
@@ -1691,6 +1691,15 @@ tasks {
 
   processResources {
     filterResources()
+
+    // add `[lib]umbrella.{so,dylib,jnilib,dll}` to the jar
+    from(rootProject.layout.projectDirectory.dir("target/${nativesType}")) {
+      include("libumbrella.so")
+      include("libumbrella.dylib")
+      include("libumbrella.jnilib")
+      include("umbrella.dll")
+      into("META-INF/native/")
+    }
   }
 
   jar {

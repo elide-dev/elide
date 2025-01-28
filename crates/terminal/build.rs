@@ -59,6 +59,6 @@ fn main() {
     }
   };
 
-  build_dual_cc(build, "terminalcore", "terminal", None, None);
+  build_dual_cc(build, "terminalcore", "terminal", None, None, None);
   build_bindings("terminal", "libterminal.rs", bindings_builder);
 }

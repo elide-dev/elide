@@ -12,6 +12,7 @@
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _settings: ToolState.OutputSettings = _state.output</ID>
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.DefaultOutputController$private val _state: State</ID>
     <ID>ConstructorParameterNaming:AbstractSubcommand.kt$AbstractSubcommand.ToolExecutionContextImpl$private val _state: T</ID>
+    <ID>CyclomaticComplexMethod:NativeUtil.kt$NativeUtil$@Suppress("LongParameterList") @JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, allCandidatePaths: Sequence&lt;Path>, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet&lt;GuestLanguage>)</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$private fun beginInteractiveSession( languages: EnumSet&lt;GuestLanguage>, primaryLanguage: GuestLanguage, engine: PolyglotEngine, ctxAccessor: ContextAccessor, )</ID>
@@ -35,7 +36,7 @@
     <ID>NestedBlockDepth:main.kt$private suspend inline fun runInner(args: Array&lt;String>): Int</ID>
     <ID>ObjectPropertyNaming:Statics.kt$Statics$val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
-    <ID>ReturnCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
+    <ID>ReturnCount:NativeUtil.kt$NativeUtil$@Suppress("LongParameterList") @JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, allCandidatePaths: Sequence&lt;Path>, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: Array&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
     <ID>SpreadOperator:Elide.kt$Elide.Companion$(*args)</ID>
     <ID>SpreadOperator:ToolInvokeCommand.kt$ToolInvokeCommand$(*selectedTools.map { it to buildArgs(action, it) }.toTypedArray())</ID>
@@ -51,8 +52,7 @@
     <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$exc: NoSuchElementException</ID>
     <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$ioe: Exception</ID>
     <ID>SwallowedException:ToolShellCommand.kt$ToolShellCommand$userInterrupt: UserInterruptException</ID>
-    <ID>ThrowsCount:NativeUtil.kt$NativeUtil$@JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
-    <ID>ThrowsCount:ToolShellCommand.kt$ToolShellCommand$private fun readExecutableScript(languages: EnumSet&lt;GuestLanguage>, language: GuestLanguage, script: File): Source</ID>
+    <ID>ThrowsCount:NativeUtil.kt$NativeUtil$@Suppress("LongParameterList") @JvmStatic internal fun loadOrCopy( workdir: File, path: String, libName: String, loader: ClassLoader, allCandidatePaths: Sequence&lt;Path>, forceCopy: Boolean = false, forceLoad: Boolean = false, loadFromPath: Boolean = true, ): Pair&lt;Boolean, Boolean></ID>
     <ID>TooGenericExceptionCaught:AbstractSubcommand.kt$AbstractSubcommand$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractToolCommand.kt$AbstractToolCommand$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:CommandTestRunner.kt$CommandTestRunner$thr: Throwable</ID>
@@ -70,7 +70,6 @@
     <ID>TooGenericExceptionCaught:ToolShellCommand.kt$ToolShellCommand$ioe: Exception</ID>
     <ID>TooGenericExceptionCaught:main.kt$err: RuntimeException</ID>
     <ID>TooGenericExceptionCaught:main.kt$err: Throwable</ID>
-    <ID>TooGenericExceptionThrown:NativeUtil.kt$NativeUtil$throw RuntimeException("An error occurred while getting the resources for $path", iox)</ID>
     <ID>TooManyFunctions:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val jsHint = "package.json"</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val pyHint = "requirements.txt"</ID>
@@ -79,10 +78,6 @@
     <ID>UnusedParameter:NativeEngine.kt$NativeEngine$extraProps: List&lt;Pair&lt;String, String>></ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
-    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val javaLibraryPath = System.getenv("JAVA_HOME")?.ifBlank { null }?.let { Path(it).resolve("lib") }</ID>
-    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val libExecPaths = listOf( resolvedExecPrefix, resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.0"), resolvedExecPrefix.resolve("llvm/libsulong-native"), resolvedExecPrefix.resolve("ruby/ruby-home"), )</ID>
-    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val libraryPath = System.getProperty("java.library.path", "")</ID>
-    <ID>UnusedPrivateProperty:NativeEngine.kt$NativeEngine$val nativesPath = natives.absolutePath</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
     <ID>VariableNaming:AbstractScriptEngineFactory.kt$AbstractScriptEngineFactory.PolyglotContext$private val `in`: PolyglotReader</ID>

@@ -222,7 +222,11 @@ jobs:
           cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
+<<<<<<< HEAD
       - name: "Build: Natives"
+=======
+      - name: "Biuld: Natives"
+>>>>>>> 2b7667c82 (fix(ci): native cli build)
         run: make -C third_party && cargo build
       - name: "Build: CLI (Native/Debug)"
         run: |

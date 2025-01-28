@@ -35,6 +35,9 @@ const ARM64: &str = "aarch64";
 const DEBUG: &str = "debug";
 const RELEASE: &str = "release";
 
+/// Minimum supported version of macOS.
+pub const MACOS_MIN: &str = "12.3";
+
 /// Enumerates the types of build profiles which Elide supports.
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[typeshare]

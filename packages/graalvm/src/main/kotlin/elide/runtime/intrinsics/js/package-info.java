@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides JS intrinsic interface definitions.
- */
+/** Provides JS intrinsic interface definitions. */
 package elide.runtime.intrinsics.js;

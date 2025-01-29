@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides configuration structure for guest VMs.
- */
+/** Provides configuration structure for guest VMs. */
 package elide.runtime.gvm.cfg;

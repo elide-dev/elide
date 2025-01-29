@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides pure-Kotlin intrinsics for use with GraalVM JS.
- */
+/** Provides pure-Kotlin intrinsics for use with GraalVM JS. */
 package elide.runtime.gvm.internals.intrinsics;

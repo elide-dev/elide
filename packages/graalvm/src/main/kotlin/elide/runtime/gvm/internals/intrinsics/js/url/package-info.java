@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides intrinsics for JavaScript's `URL` class.
- */
+/** Provides intrinsics for JavaScript's `URL` class. */
 package elide.runtime.gvm.internals.intrinsics.js.url;

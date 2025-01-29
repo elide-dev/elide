@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Data structures implemented for shared host/guest use.
- */
+/** Data structures implemented for shared host/guest use. */
 package elide.runtime.gvm.internals.intrinsics.js.struct;

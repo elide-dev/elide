@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides intrinsics for JavaScript's `console`.
- */
+/** Provides intrinsics for JavaScript's `console`. */
 package elide.runtime.gvm.internals.intrinsics.js.console;

@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Defines internals for safe and performant operation of guest VMs within Elide applications.
- */
+/** Defines internals for safe and performant operation of guest VMs within Elide applications. */
 package elide.runtime.gvm.internals;

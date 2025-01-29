@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides intrinsic definitions for JavaScript VMs.
- */
+/** Provides intrinsic definitions for JavaScript VMs. */
 package elide.runtime.gvm.internals.intrinsics.js;

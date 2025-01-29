@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides public intrinsic interfaces for use with internal implementations and testing.
- */
+/** Provides public intrinsic interfaces for use with internal implementations and testing. */
 package elide.runtime.intrinsics;

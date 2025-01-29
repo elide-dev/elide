@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Implementations of `Map` structures for shared-use between host and guest code.
- */
+/** Implementations of `Map` structures for shared-use between host and guest code. */
 package elide.runtime.gvm.internals.intrinsics.js.struct.map;

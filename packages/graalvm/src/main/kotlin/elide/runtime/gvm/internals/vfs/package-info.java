@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides a virtual file system implementation for use with Elide guest VMs.
- */
+/** Provides a virtual file system implementation for use with Elide guest VMs. */
 package elide.runtime.gvm.internals.vfs;

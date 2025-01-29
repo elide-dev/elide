@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides intrinsics for JavaScript's `atob` and `btoa`.
- */
+/** Provides intrinsics for JavaScript's `atob` and `btoa`. */
 package elide.runtime.gvm.internals.intrinsics.js.base64;

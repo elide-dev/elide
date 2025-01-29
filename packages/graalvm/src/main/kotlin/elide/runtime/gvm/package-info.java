@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides Elide's integration with GraalVM, including Graal JS.
- */
+/** Provides Elide's integration with GraalVM, including Graal JS. */
 package elide.runtime.gvm;

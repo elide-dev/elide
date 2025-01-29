@@ -11,7 +11,5 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/**
- * Provides intrinsics for Web Streams.
- */
+/** Provides intrinsics for Web Streams. */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams;

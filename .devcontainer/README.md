@@ -20,22 +20,12 @@ This GitHub Codespace comes pre-installed with the latest version of [Elide](htt
 elide info
 ```
 
-**To verify working installation:**
-
-```
-elide selftest
-```
-
 ### JavaScript
 
 **To run a JavaScript terminal:**
 
 ```
 elide
-```
-Or:
-```
-elide repl
 ```
 
 **Encode some JSON:**
@@ -73,7 +63,7 @@ elide serve tools/scripts/server.js
 **To run a Python terminal:**
 
 ```
-elide repl --python
+elide python
 ```
 
 **To see `.env` environment:**
@@ -85,7 +75,7 @@ import os; print(os.environ)
 **To see all environment, including host env:**
 
 ```
-elide repl --python --host:allow-env
+elide run --python --host:allow-env
 ```
 
 ```python
@@ -97,7 +87,7 @@ import os; print(os.environ)
 **To run a Ruby terminal:**
 
 ```
-elide repl --ruby
+elide ruby
 ```
 
 **Say hello:**

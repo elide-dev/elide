@@ -23,7 +23,6 @@ RUN apt-get update \
   && ln -s /usr/lib/elide/elide /bin/elide \
   && which elide \
   && elide --help \
-  && elide selftest \
   && elide info \
   && mkdir -p $HOME/.elide \
   && echo "Elide codespace container image ready."

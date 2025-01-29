@@ -181,6 +181,7 @@ internal object StandardEventName {
 }
 
 // Represents an event listener which is bound to an event-aware target.
+@ConsistentCopyVisibility
 private data class BoundEventListener private constructor(
   val subject: WeakReference<EventTarget>,
   val listener: EventListener,

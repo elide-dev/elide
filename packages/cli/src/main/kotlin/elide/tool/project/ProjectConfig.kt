@@ -44,6 +44,7 @@ sealed interface ProjectConfig {
   }
 
   /** Project configuration modeled from a `package.json` file. */
+  @ExposedCopyVisibility
   @JvmRecord @Serializable data class PackageJsonProjectConfig private constructor (
     override val path: String,
     private val config: NodePackage,

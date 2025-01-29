@@ -84,13 +84,12 @@ public final class Library {
         try {
             // Load the class and also ensure we init it which means its linked etc.
             Class.forName(className, true, classLoader);
-        } catch (ClassNotFoundException ignore) {
-            // Ignore
-        } catch (SecurityException ignore) {
+        } catch (SecurityException | ClassNotFoundException ignore) {
             // Ignore
         }
     }
 
+    @SuppressWarnings({"DEPRECATION", "removal"})
     private Library() throws Exception {
         boolean loaded = false;
         String path = System.getProperty("java.library.path");
@@ -100,9 +99,7 @@ public final class Library {
             try {
                 loadLibrary(NAMES[i]);
                 loaded = true;
-            } catch (ThreadDeath t) {
-                throw t;
-            } catch (VirtualMachineError t) {
+            } catch (VirtualMachineError | ThreadDeath t) {
                 throw t;
             } catch (Throwable t) {
                 String name = System.mapLibraryName(NAMES[i]);

@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.jansi.internal;
-
 /*--------------------------------------------------------------------------
  *  Copyright 2008 Taro L. Saito
  *
@@ -30,6 +28,8 @@ package org.fusesource.jansi.internal;
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *--------------------------------------------------------------------------*/
+
+package org.fusesource.jansi.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

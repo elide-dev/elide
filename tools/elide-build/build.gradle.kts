@@ -41,10 +41,6 @@ gradlePlugin {
       id = "elide.internal.conventions"
       implementationClass = "elide.internal.conventions.ElideConventionPlugin"
     }
-    create("elideInternalCpp") {
-      id = "elide.internal.cpp"
-      implementationClass = "elide.internal.cpp.ElideCppPlugin"
-    }
     create("elideToolchainManager") {
       id = "elide.toolchains.jvm"
       implementationClass = "elide.toolchain.jvm.JvmToolchainResolverPlugin"
@@ -67,7 +63,7 @@ kotlin {
   compilerOptions {
     jvmTarget = JVM_21
     javaParameters = true
-    allWarningsAsErrors = false
+    allWarningsAsErrors = true
     apiVersion = KOTLIN_2_0
     languageVersion = KOTLIN_2_0
     freeCompilerArgs = listOf(
@@ -85,16 +81,10 @@ fun MutableList<String>.addIfNotPresent(arg: String) {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions {
-    apiVersion = "2.0"
-    languageVersion = "2.0"
-    freeCompilerArgs = freeCompilerArgs.toMutableList().apply {
-      addIfNotPresent("-Xcontext-receivers")
-      addIfNotPresent("-Xskip-prerelease-check")
-      addIfNotPresent("-Xsuppress-version-warnings")
-      addIfNotPresent("-Xjvm-default=all")
-      addIfNotPresent("-Xjsr305=strict")
-    }
+  compilerOptions {
+    jvmTarget = JVM_21
+    apiVersion = KOTLIN_2_0
+    languageVersion = KOTLIN_2_0
   }
 }
 

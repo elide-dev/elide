@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutableScript
+import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.GuestScript
 import org.graalvm.polyglot.Context as VMContext
@@ -32,10 +33,10 @@ import org.graalvm.polyglot.Context as VMContext
  * language) and related framework types like [ExecutableScript].
  */
 public abstract class AbstractGVMScript protected constructor (
-  private val language: GraalVMGuest,
-  private val source: ExecutableScript.ScriptSource,
-  protected val spec: String,
-  map: ExecutableScript.SourceMap? = null,
+    private val language: GraalVMGuest,
+    private val source: ExecutableScript.ScriptSource,
+    protected val spec: String,
+    map: ExecutableScript.SourceMap? = null,
 ) : GuestScript {
   internal companion object {
     /** Literal code source file name. */

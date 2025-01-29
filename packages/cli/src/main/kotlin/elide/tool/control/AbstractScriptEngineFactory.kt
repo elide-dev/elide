@@ -19,7 +19,7 @@ import java.io.*
 import javax.script.*
 import kotlin.collections.MutableMap.MutableEntry
 import kotlin.concurrent.Volatile
-import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.GraalVMGuest
 
 /**
  * TBD.

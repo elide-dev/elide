@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,9 +20,9 @@ import kotlinx.coroutines.guava.asDeferred
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.exec.GuestExecutorProvider
-import elide.runtime.gvm.internals.node.fs.NodeFilesystemModule
-import elide.runtime.gvm.internals.node.fs.VfsInitializerListener
-import elide.runtime.gvm.internals.node.path.NodePathsModule
+import elide.runtime.node.fs.NodeFilesystemModule
+import elide.runtime.node.fs.VfsInitializerListener
+import elide.runtime.node.path.NodePathsModule
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.intrinsics.js.deferred
 import elide.runtime.intrinsics.js.node.PathAPI

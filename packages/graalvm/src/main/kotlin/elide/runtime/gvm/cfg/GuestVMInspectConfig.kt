@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.cfg
 
 import io.micronaut.context.annotation.ConfigurationProperties
@@ -48,8 +47,8 @@ import io.micronaut.core.util.Toggleable
  */
 @Suppress("MemberVisibilityCanBePrivate")
 @ConfigurationProperties("elide.gvm.inspect")
-internal interface GuestVMInspectConfig : Toggleable {
-  companion object {
+public interface GuestVMInspectConfig : Toggleable {
+  public companion object {
     /** Default controlling whether the inspector is enabled by default (`false`). */
     private const val DEFAULT_ENABLED: Boolean = false
 
@@ -71,17 +70,17 @@ internal interface GuestVMInspectConfig : Toggleable {
   /**
    * @return Whether to suspend the guest VM at initial invocation. Defaults to `false`.
    */
-  val suspend: Boolean get() = DEFAULT_SUSPEND
+  public val suspend: Boolean get() = DEFAULT_SUSPEND
 
   /**
    * @return Whether the VM should wait until the debugger attaches before beginning execution. Defaults to `false`.
    */
-  val wait: Boolean get() = DEFAULT_WAIT
+  public val wait: Boolean get() = DEFAULT_WAIT
 
   /**
    * @return Whether to configure TLS for the inspector socket. Defaults to `false`, requires configuration.
    */
-  val secure: Boolean get() = DEFAULT_SECURE
+  public val secure: Boolean get() = DEFAULT_SECURE
 
   /**
    * @return From GraalVM: Path to the Chrome Inspector to bind to. This path should be unpredictable. Do note that any
@@ -89,5 +88,5 @@ internal interface GuestVMInspectConfig : Toggleable {
    *  thus be abused by a malicious website to execute arbitrary code on your computer, even if you are behind a
    *  firewall (default: randomly generated).
    */
-  val path: String? get() = DEFAULT_PATH
+  public val path: String? get() = DEFAULT_PATH
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -47,10 +47,10 @@ import elide.annotations.Singleton
 import elide.jvm.LifecycleBoundResources
 import elide.jvm.ResourceManager
 import elide.runtime.core.lib.NativeLibraries
-import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.internals.intrinsics.js.JsError
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.js.JsError
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMap
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.MapLike
@@ -78,7 +78,8 @@ private const val CONFIG_ATTR_CREATE: String = "create"
 private const val CONFIG_ATTR_READONLY: String = "readonly"
 
 // Installs the Elide SQLite bindings.
-@Intrinsic @Factory internal class ElideSqliteModule : AbstractNodeBuiltinModule() {
+@Intrinsic
+@Factory internal class ElideSqliteModule : AbstractNodeBuiltinModule() {
   @Singleton fun provide(): SQLiteAPI = SqliteModule.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
@@ -214,6 +215,7 @@ internal class SqliteDatabaseProxy private constructor (
   private val resources: ResourceManager = ResourceManager(),
   driverOptions: SQLiteDriverOptions? = null,
 ) : LifecycleBoundResources by resources, SQLiteDatabase {
+  @ConsistentCopyVisibility
   @JvmRecord private data class SQLiteColumn private constructor (
     val name: String,
     val type: SQLiteType,
@@ -242,6 +244,7 @@ internal class SqliteDatabaseProxy private constructor (
   }
 
   // Internal SQLite object implementation, backed by a de-serialized map.
+  @ConsistentCopyVisibility
   private data class SQLiteObjectImpl private constructor (
     private val schema: SQLiteObjectSchema,
     private val dataMap: MapLike<String, Any?>,

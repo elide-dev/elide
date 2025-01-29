@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -28,28 +28,28 @@ import jakarta.annotation.Nullable
  */
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 @ConfigurationProperties("elide.gvm")
-internal interface GuestVMConfiguration : Toggleable {
-  companion object {
+public interface GuestVMConfiguration : Toggleable {
+  public companion object {
     /** Default enablement status. */
-    const val DEFAULT_ENABLED: Boolean = true
+    public const val DEFAULT_ENABLED: Boolean = true
 
     /** JavaScript language tag. */
-    const val LANGUAGE_JS: String = "js"
+    public const val LANGUAGE_JS: String = "js"
 
     /** WASM language tag. */
-    const val LANGUAGE_WASM: String = "wasm"
+    public const val LANGUAGE_WASM: String = "wasm"
 
     /** Python language tag. */
-    const val LANGUAGE_PYTHON: String = "python"
+    public const val LANGUAGE_PYTHON: String = "python"
 
     /** Ruby language tag. */
-    const val LANGUAGE_RUBY: String = "ruby"
+    public const val LANGUAGE_RUBY: String = "ruby"
 
     /** Java language tag. */
-    const val LANGUAGE_JAVA: String = "java"
+    public const val LANGUAGE_JAVA: String = "java"
 
     /** Default guest languages. */
-    val DEFAULT_LANGUAGES: List<String> = listOf(
+    public val DEFAULT_LANGUAGES: List<String> = listOf(
       LANGUAGE_JS,
       LANGUAGE_WASM,
       LANGUAGE_PYTHON,
@@ -58,45 +58,45 @@ internal interface GuestVMConfiguration : Toggleable {
     )
 
     /** Default character set to use with raw data exchanged with the JS VM. */
-    val DEFAULT_CHARSET: Charset = StandardCharsets.UTF_8
+    public val DEFAULT_CHARSET: Charset = StandardCharsets.UTF_8
 
     /** Default configuration instance. */
-    val DEFAULTS: GuestVMConfiguration = object : GuestVMConfiguration {}
+    public val DEFAULTS: GuestVMConfiguration = object : GuestVMConfiguration {}
   }
 
   /**
    * @return Permitted guest VM languages. Defaults to the supported set for Elide, which, at the time of this writing,
    *   only includes `js`.
    */
-  @Nullable val languages: List<String>? get() = DEFAULT_LANGUAGES
+  @Nullable public val languages: List<String>? get() = DEFAULT_LANGUAGES
 
   /**
    * @return Primary guest VM to boot and use as a server agent. Defaults to `js`.
    */
-  val primary: EmbeddedScriptLanguage get() = EmbeddedScriptLanguage.JS
+  public val primary: EmbeddedScriptLanguage get() = EmbeddedScriptLanguage.JS
 
   /**
    * @return Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`.
    */
-  val charset: Charset? get() = DEFAULT_CHARSET
+  public val charset: Charset? get() = DEFAULT_CHARSET
 
   /**
    * @return Guest VM locale. Defaults to `en_US`.
    */
-  val locale: Locale? get() = Locale.US
+  public val locale: Locale? get() = Locale.US
 
   /**
    * @return Virtual file system (VFS) configuration for the guest VM.
    */
-  val vfs: GuestIOConfiguration? get() = null
+  public val vfs: GuestIOConfiguration? get() = null
 
   /**
    * @return Debugger configuration (Chrome Inspector).
    */
-  val inspector: GuestVMInspectConfig? get() = null
+  public val inspector: GuestVMInspectConfig? get() = null
 
   /**
    * @return GraalVM Enterprise Edition-specific configuration.
    */
-  val enterprise: GuestVMEEConfig? get() = null
+  public val enterprise: GuestVMEEConfig? get() = null
 }

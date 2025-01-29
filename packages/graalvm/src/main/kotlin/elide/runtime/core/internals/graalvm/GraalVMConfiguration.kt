@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
  * Internal implementation of the [PolyglotEngineConfiguration] abstract class, specialized for the GraalVM engine
  * implementation.
  */
-@DelicateElideApi internal class GraalVMConfiguration(
+@DelicateElideApi public class GraalVMConfiguration(
   /** A [MutableEngineLifecycle] instance that can be used to emit events to registered plugins. */
   private val lifecycle: MutableEngineLifecycle
 ) : PolyglotEngineConfiguration() {
@@ -63,7 +63,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   override val hostRuntime: HostRuntime = GraalVMRuntime()
 
   /** Arguments to provide to guest code. */
-  val arguments: Array<out String> get() = entrypointArgs.get() ?: emptyArray()
+  public val arguments: Array<out String> get() = entrypointArgs.get() ?: emptyArray()
 
   override fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit): I {
     require(plugin.key.id !in plugins) { "A plugin with the provided key is already registered" }

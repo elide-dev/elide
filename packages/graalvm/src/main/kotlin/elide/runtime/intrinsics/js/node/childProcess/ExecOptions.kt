@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ import kotlin.time.Duration
 import kotlin.time.DurationUnit.MILLISECONDS
 import kotlin.time.toDuration
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.JsError
+import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.node.ChildProcessAPI
 import elide.runtime.intrinsics.js.node.childProcess.ChildProcessDefaults.decodeEnvMap

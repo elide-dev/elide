@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,9 +17,9 @@ package elide.runtime.gvm.internals.testing
 import org.graalvm.polyglot.Value
 import elide.annotations.Factory
 import elide.annotations.Singleton
-import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.testing.TestingAPI
 import elide.runtime.intrinsics.testing.TestingAPI.TestGraphNode.*
@@ -29,7 +29,8 @@ import elide.vm.annotations.Polyglot
 private const val TESTING_MODULE_SYMBOL = "elide_testing"
 
 // Installs the Elide test runner and API bindings.
-@Intrinsic @Factory internal class ElideTestingModule : AbstractNodeBuiltinModule() {
+@Intrinsic
+@Factory internal class ElideTestingModule : AbstractNodeBuiltinModule() {
   @Singleton fun provide(): TestingAPI = TestingImpl.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {

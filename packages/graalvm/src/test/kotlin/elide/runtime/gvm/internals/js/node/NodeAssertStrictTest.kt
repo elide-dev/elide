@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,8 +14,8 @@ package elide.runtime.gvm.internals.js.node
 
 import kotlin.test.Test
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.asserts.NodeAssertStrictModule
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.asserts.NodeAssertStrictModule
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.AssertStrictAPI
 import elide.testing.annotations.TestCase
 

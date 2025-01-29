@@ -23,7 +23,6 @@ import com.google.common.collect.Sets
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
@@ -58,8 +57,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
 import javax.script.ScriptEngineManager
-import javax.tools.JavaCompiler
-import javax.tools.Tool
 import javax.tools.ToolProvider
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
@@ -76,7 +73,7 @@ import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
 import elide.runtime.gvm.GuestError
-import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.plugins.debug.debug

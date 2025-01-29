@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,10 +21,10 @@ import java.nio.file.Paths
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.gvm.internals.node.path.*
-import elide.runtime.gvm.internals.node.path.PathStyle.POSIX
-import elide.runtime.gvm.internals.node.path.PathStyle.WIN32
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.path.*
+import elide.runtime.node.path.PathStyle.POSIX
+import elide.runtime.node.path.PathStyle.WIN32
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.PathAPI
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,8 +21,8 @@ import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.InputStream
 import java.nio.charset.Charset
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.JsError
-import elide.runtime.gvm.internals.node.stream.WrappedInputStream
+import elide.runtime.gvm.js.JsError
+import elide.runtime.node.stream.WrappedInputStream
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.events.EventEmitter
 import elide.runtime.intrinsics.js.node.events.EventTarget

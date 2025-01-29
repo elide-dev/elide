@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("WildcardImport")
+
 package elide.runtime.core.internals.graalvm
 
 import org.graalvm.nativeimage.ImageInfo
@@ -20,7 +22,6 @@ import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotAccess
 import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.proxy.Proxy
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.logging.Handler
@@ -41,6 +42,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23_1
+import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
 /**
@@ -50,7 +52,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
  * @see acquire
  * @see create
  */
-@DelicateElideApi internal class GraalVMEngine private constructor(
+@DelicateElideApi public class GraalVMEngine private constructor(
   private val lifecycle: MutableEngineLifecycle,
   private val config: GraalVMConfiguration,
   private val engine: Engine,
@@ -77,7 +79,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   private fun createContext(cfg: Builder.() -> Unit, finalizer: Builder.() -> Context = { build() }): GraalVMContext {
     val contextHostAccess = PolyglotHostAccess.newBuilder(PolyglotHostAccess.ALL)
       .allowImplementationsAnnotatedBy(PolyglotHostAccess.Implementable::class.java)
-      .allowAccessAnnotatedBy(PolyglotHostAccess.Export::class.java)
+      .allowAccessAnnotatedBy(Polyglot::class.java)
       .allowArrayAccess(true)
       .allowBufferAccess(true)
       .allowAccessInheritance(true)
@@ -161,7 +163,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     return createContext(cfg)
   }
 
-  internal companion object {
+  public companion object {
     @JvmStatic private val defaultAuxPath = System.getProperty("elide.natives")
 
     // Names of known-internal members which are yanked before guest code is executed.
@@ -246,7 +248,8 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
      * Creates a new [GraalVMEngine] using the provided [configuration]. This method triggers the [EngineCreated] event
      * for registered plugins.
      */
-    fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
+    @Suppress("SpreadOperator", "LongMethod")
+    public fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
       val nativesPath = System.getProperty("elide.natives")?.ifBlank { null } ?: defaultAuxPath
       val languages = configuration.languages.map { it.languageId }.toTypedArray()
 

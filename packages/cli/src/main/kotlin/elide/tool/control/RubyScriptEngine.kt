@@ -13,7 +13,7 @@
 
 package elide.tool.control
 
-import elide.runtime.gvm.internals.GraalVMGuest.RUBY
+import elide.runtime.gvm.GraalVMGuest.RUBY
 
 /**
  * TBD.

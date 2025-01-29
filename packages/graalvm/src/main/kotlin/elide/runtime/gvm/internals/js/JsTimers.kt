@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -33,9 +33,9 @@ import kotlinx.atomicfu.atomic
 import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
-import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.TimerId
 import elide.runtime.intrinsics.js.Timers
@@ -150,6 +150,7 @@ private const val SHUTDOWN_WAIT: Long = 10L
  * instances of [Throwable]. Because timers are executed from background threads, it is important to handle exceptions
  * from within user code, because they cannot be surfaced to the JavaScript runtime.
  */
+@Suppress("LongParameterList")
 internal class JsTimer private constructor (
   private val timerId: TimerId,
   isScheduled: Boolean = false,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,9 +17,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.process.NodeProcess
-import elide.runtime.gvm.internals.node.process.NodeProcessModule
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.process.NodeProcess
+import elide.runtime.node.process.NodeProcessModule
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.ProcessAPI
 import elide.runtime.intrinsics.js.node.process.ProcessArch
 import elide.runtime.intrinsics.js.node.process.ProcessPlatform

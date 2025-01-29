@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -26,9 +26,9 @@ import jakarta.inject.Inject
 import kotlin.streams.asStream
 import kotlin.test.*
 import kotlin.test.Test
-import elide.runtime.gvm.internals.node.os.NodeOperatingSystem
-import elide.runtime.gvm.internals.node.os.NodeOperatingSystemModule
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.os.NodeOperatingSystem
+import elide.runtime.node.os.NodeOperatingSystemModule
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.OperatingSystemAPI
 import elide.testing.annotations.TestCase
 
@@ -36,8 +36,9 @@ import elide.testing.annotations.TestCase
 @TestCase
 internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>() {
   override val moduleName: String get() = "os"
-  override fun provide(): NodeOperatingSystemModule = NodeOperatingSystemModule()
-  private fun acquire(): OperatingSystemAPI = NodeOperatingSystem.Posix
+  override fun provide(): elide.runtime.node.os.NodeOperatingSystemModule =
+      elide.runtime.node.os.NodeOperatingSystemModule()
+  private fun acquire(): OperatingSystemAPI = elide.runtime.node.os.NodeOperatingSystem.Posix
   @Inject internal lateinit var os: OperatingSystemAPI
 
   override fun requiredMembers(): Sequence<String> = sequence {
@@ -68,9 +69,9 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
 
   @TestFactory fun `api compliance`(): Stream<DynamicTest> {
     return listOf(
-      NodeOperatingSystem.StubbedOs(),
-      NodeOperatingSystem.Posix,
-      NodeOperatingSystem.Win32,
+      elide.runtime.node.os.NodeOperatingSystem.StubbedOs(),
+      elide.runtime.node.os.NodeOperatingSystem.Posix,
+      elide.runtime.node.os.NodeOperatingSystem.Win32,
     ).asSequence().flatMap { impl ->
       @Suppress("UNCHECKED_CAST")
       val implMembers = (impl as ProxyObject).memberKeys as Array<String>
@@ -456,7 +457,7 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   )
   @ParameterizedTest
   fun `os type() should resolve properly given each os name`(name: String, expected: String) {
-    val osType = (acquire() as NodeOperatingSystem.BaseOS).typeForOsName(name)
+    val osType = (acquire() as elide.runtime.node.os.NodeOperatingSystem.BaseOS).typeForOsName(name)
     assertNotNull(osType, "should not get `null` from `os.type()` (os: '$name')")
     assertEquals(expected, osType, "should get expected value from `os.type()` (os: '$name')")
   }
@@ -472,7 +473,7 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   )
   @ParameterizedTest
   fun `os platform() should resolve properly given each os name`(name: String, expected: String) {
-    val osType = (acquire() as NodeOperatingSystem.BaseOS).mapJvmOsToNodeOs(name)
+    val osType = (acquire() as elide.runtime.node.os.NodeOperatingSystem.BaseOS).mapJvmOsToNodeOs(name)
     assertNotNull(osType, "should not get `null` from `os.type()` (os: '$name')")
     assertEquals(expected, osType, "should get expected value from `os.type()` (os: '$name')")
   }

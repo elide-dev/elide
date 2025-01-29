@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,10 +18,10 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.*
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.events.EventAware
-import elide.runtime.gvm.internals.node.events.NodeEventsModule
-import elide.runtime.gvm.internals.node.events.NodeEventsModuleFacade
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.events.EventAware
+import elide.runtime.node.events.NodeEventsModule
+import elide.runtime.node.events.NodeEventsModuleFacade
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.js.node.EventsAPI
 import elide.runtime.intrinsics.js.node.events.CustomEvent
 import elide.runtime.intrinsics.js.node.events.Event

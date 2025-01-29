@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ package elide.runtime.intrinsics.js
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.*
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.gvm.internals.intrinsics.js.JsError
+import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMutableMap
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.runtime.plugins.js.JavaScript

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.core.internals
 
 import elide.runtime.core.DelicateElideApi
@@ -21,7 +20,7 @@ import elide.runtime.core.EngineLifecycleEvent
  * An internal implementation of the [EngineLifecycle] interface that allows emitting events.
  * @see emit
  */
-@DelicateElideApi internal class MutableEngineLifecycle : EngineLifecycle {
+@DelicateElideApi public class MutableEngineLifecycle : EngineLifecycle {
   /** A map associating event keys with a stack of listeners. */
   private val listeners = mutableMapOf<Any, MutableList<Any>>()
 
@@ -33,7 +32,7 @@ import elide.runtime.core.EngineLifecycleEvent
   }
 
   @Suppress("unchecked_cast")
-  fun <T> emit(event: EngineLifecycleEvent<T>, payload: T) {
+  public fun <T> emit(event: EngineLifecycleEvent<T>, payload: T) {
     // trigger the event for each listener in this entry
     listeners[event]?.forEach { (it as (T) -> Unit).invoke(payload) }
   }

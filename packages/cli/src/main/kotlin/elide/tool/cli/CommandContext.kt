@@ -13,7 +13,6 @@
 
 package elide.tool.cli
 
-import com.jakewharton.mosaic.MosaicScope
 import kotlinx.coroutines.CoroutineScope
 import kotlin.coroutines.CoroutineContext
 import elide.runtime.Logger
@@ -66,8 +65,8 @@ sealed interface CommandContext : CoroutineScope {
 
     /** @return Default command context implementation. */
     @JvmStatic @Suppress("unused_parameter")
-    fun default(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope): CommandContext =
-      object : DefaultCommandContext, MosaicScope by mosaic {
+    fun default(state: CommandState, ctx: CoroutineContext, mosaic: CommandScope): CommandContext =
+      object : DefaultCommandContext, CommandScope by mosaic {
         override val coroutineContext: CoroutineContext get() = ctx
         override val logging: Logger get() = Statics.logging
         override val serverLogging: Logger get() = Statics.serverLogger

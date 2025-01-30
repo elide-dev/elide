@@ -14,7 +14,6 @@
 package elide.tool.cli
 
 import com.github.ajalt.clikt.core.BaseCliktCommand
-import com.jakewharton.mosaic.MosaicScope
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -24,6 +23,8 @@ import kotlin.coroutines.CoroutineContext
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
+
+public typealias CommandScope = CoroutineScope
 
 /** Root base for all commands, which defines the structure of interaction with Clikt. */
 abstract class CliCommandInvocation<Context> :
@@ -214,11 +215,11 @@ abstract class AbstractToolCommand<Context>:
    * @param ctx Co-routine context to execute the command in.
    * @return Execution context to use for this command.
    */
-  open fun context(state: CommandState, ctx: CoroutineContext, mosaic: MosaicScope? = null): Context {
+  open fun context(state: CommandState, ctx: CoroutineContext, scope: CommandScope? = null): Context {
     @Suppress("UNCHECKED_CAST")
-    (return when (mosaic) {
+    (return when (scope) {
       null -> CommandContext.default(state, ctx) as Context
-      else -> CommandContext.default(state, ctx, mosaic) as Context
+      else -> CommandContext.default(state, ctx, scope) as Context
     })
   }
 

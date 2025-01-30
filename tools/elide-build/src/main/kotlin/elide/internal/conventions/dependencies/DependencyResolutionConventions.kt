@@ -150,6 +150,12 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
         useVersion(Versions.OKIO)
         because("pin okio")
       }
+
+      // process dependency pins: graalvm
+      if (requested.group.contains("org.graalvm") && !requested.group.contains("buildtools")) {
+        useVersion(Versions.GRAALVM)
+        because("pin graalvm")
+      }
     }
 
     if (isGraalVm && !isEnterprise.invoke(this@configureDependencyResolution)) nonEnterpriseExclusions.forEach {

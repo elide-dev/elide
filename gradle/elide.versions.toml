@@ -16,82 +16,74 @@
 #
 
 [versions]
-aedile = "1.3.1"
-androidx-compose = "1.6.11"
-arrow = "1.2.0"
-asciidata = "1.4.0"
+aedile = "2.0.3"
+arrow = "2.0.1"
 assertk = "0.28.1"
-atomicfu = "0.26.1"
+asm = "9.7.1"
+atomicfu = "0.27.0"
 auto-common = "1.2.2"
-auto-factory = "1.0.1"
+auto-factory = "1.1.0"
 auto-service = "1.1.1"
-auto-value = "1.10.1"
-bouncycastle = "1.79"
-brotli4j = "1.16.0"
+auto-value = "1.11.0"
+bouncycastle = "1.80"
+brotli4j = "1.18.0"
 buf = "1.28.1"
 buildTimeTracker = "4.3.0"
 buildconfig-plugin = "5.5.1"
 byteunits = "0.9.1"
-caffeine = "3.1.8"
+caffeine = "3.2.0"
 capnproto = "0.1.18-elide"
-cite = "0.2.0"
+cite = "0.6.1"
 clikt = "5.0.2"
-closure = "v20221004"
-closure-stylesheets = "1.5.0"
-commons-codec = "1.17.1"
+commons-codec = "1.18.0"
 commons-compress = "1.26.2"
 commons-csv = "1.10.0"
 commons-io = "2.16.1"
 commons-pool = "2.11.1"
 compose-plugin = "1.6.11"
 confundus = "1.0.0"
-conscrypt = "2.5.2"
 consoleui = "0.0.13"
-crossword = "0.3.0"
-cyclonedx = "1.8.2"
+crossword = "0.4.0"
+cyclonedx = "2.0.0"
 dekorate = "3.1.1"
-dependencyAnalysis = "1.32.0"
-detekt = "1.23.6"
+dependencyAnalysis = "2.8.0"
+detekt = "1.23.7"
 diktat = "2.0.0"
 docker-plugin = "9.4.0"
-doctor-plugin = "0.9.1"
-dokka = "1.9.20"
-elide = "1.0.0-alpha11-SNAPSHOT"
+doctor-plugin = "0.10.0"
+dokka = "2.0.0"
+elide = "1.0.0-alpha11"
 elide-uuid = "2.0.0-Beta3-0.20.0-rc1"
-errorprone = "2.27.1"
+errorprone = "2.36.0"
 faker = "1.15.0"
-flatbuffers = "2.0.3"
-flatbuffers-java = "22.12.06"
-flatbuffers-plugin = "1.0.7"
 gauth-plugin = "2.2.1"
-gax = "2.31.1"
-gcloud-native = "0.14.1"
-gcloud-sdk = "26.1.2"
-github-api = "1.321"
-google-api-common = "2.30.0"
+gax = "2.60.0"
+gcloud-sdk = "26.5.3"
+github-api = "1.326"
+google-api-common = "2.43.0"
 google-html-types = "1.0.8"
 gr8 = "0.10"
 graalvm = "24.1.2"
 graalvm-metadata = "0.3.8"
-graalvm-pin = "24.1.1"
-graalvm-plugin = "0.10.2"
-graalvm-stable = "24.0.1"
-graalvm-svm-driver = "24.1.1"
+graalvm-pin = "24.1.2"
+graalvm-plugin = "0.10.4"
+graalvm-stable = "24.1.2"
+graalvm-svm-driver = "24.1.2"
 gradleChecksum = "1.4.0"
-gradleCommonCustomUserData = "1.12.1"
-gradleTestRetry = "1.5.9"
+gradleCommonCustomUserData = "2.1"
+gradleTestRetry = "1.6.1"
 grpc-java = "1.62.2"
 grpc-kotlin = "1.4.1"
 grpc-web = "1.4.2"
 guava = "33.3.1-jre"
-h2 = "2.2.224"
+h2 = "2.3.232"
 hamcrest-core = "2.2"
 hamcrest-junit = "2.0.0.0"
 hibernate = "5.6.11.Final"
 hikari = "4.0.3"
-hoplite = "2.7.5"
+hoplite = "2.9.0"
 inquirer = "0.1.0"
-j4rs = "0.19.0"
+j4rs = "0.22.0"
 jackson = "2.18.2"
 jacoco = "0.8.11"
 jakarta = "2.0.1"
@@ -102,18 +94,18 @@ jansi = "2.4.1"
 javax-annotations = "1.3.2"
 javax-persistence = "2.2"
 jdoctor = "0.1.2"
-jetbrains-annotations = "24.1.0"
+jetbrains-annotations = "26.0.2"
 jetty-alpn = "1.1.3.v20160715"
 jetty-npn = "8.1.2.v20120308"
 jgit = "6.10.0.202406032230-r"
 jib = "3.4.0"
 jimfs = "1.3.0"
-jline = "3.26.1"
+jline = "3.28.0"
 jmh-lib = "1.37"
 jmh-plugin = "0.7.2"
 jna = "5.15.0"
 jprofiler = "14.0.1"
-json = "20240303"
+json = "20250107"
 jsoup = "1.18.3"
 jsr310 = "2.9.8"
 junit-jupiter = "5.10.5"
@@ -129,12 +121,12 @@ kotlin-compile-testing = "1.6.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.0"
 kotlin-sdk = "2.1.0"
-kotlinpoet = "1.18.0"
-kotlinx-abiValidator = "0.16.3"
+kotlinpoet = "2.0.0"
+kotlinx-abiValidator = "0.17.0"
 kotlinx-benchmark = "0.4.11"
 kotlinx-browser = "0.1"
 kotlinx-collections = "0.3.8"
-kotlinx-coroutines = "1.9.0"
+kotlinx-coroutines = "1.10.1"
 kotlinx-datetime = "0.6.1"
 kotlinx-html = "0.11.0"
 kotlinx-io = "0.6.0"
@@ -142,7 +134,7 @@ kotlinx-knit = "0.5.0"
 kotlinx-metadata = "0.9.0"
 kotlinx-metadata-jvm = "0.9.0"
 kotlinx-nodejs = "0.0.7"
-kotlinx-serialization = "1.8.0-RC"
+kotlinx-serialization = "1.8.0"
 kotlinx-wrappers-bom = "1.0.0-pre.754"
 kotlinx-wrappers-browser = "1.0.0-pre.754"
 kotlinx-wrappers-cesium = "1.114.0-pre.754"
@@ -181,13 +173,12 @@ kover = "0.7.5"
 kover-plugin = "0.7.5"
 ksp = "2.1.0-1.0.29"
 ktlint = "1.1.1"
-ktoml = "0.5.1"
+ktoml = "0.5.2"
 larray = "0.2.1"
 lettuce = "6.2.5.RELEASE"
-lmaxDisruptor = "3.4.4"
-lmaxDisruptorProxy = "2.0.7"
-logback = "1.5.12"
-lombok = "8.4"
+lmaxDisruptor = "4.0.0"
+lmaxDisruptorProxy = "3.1.1"
+logback = "1.5.16"
 lz4 = "1.3.0"
 magicProgress = "0.3.2"
 mermaidDokka = "0.6.0"
@@ -199,16 +190,16 @@ micronaut-plugin = "4.4.4"
 micronaut-xml = "3.1.0"
 mockito-bom = "5.10.0"
 mockito-junit = "5.10.0"
-mordant = "2.4.0"
-mosaic = "0.13.0"
+mordant = "3.0.1"
+mosaic = "0.15.0"
 mrjar = "0.1.1"
 msgpack = "0.9.4"
-netty = "4.1.110.Final"
+netty = "4.1.117.Final"
 netty-http3 = "0.0.28.Final"
-netty-iouring = "0.0.25.Final"
+netty-iouring = "0.0.26.Final"
 netty-tcnative = "2.0.69.Final"
 nexusPublishing = "1.3.0"
-node = "20.2.0"
+node = "23.3.0"
 node-plugin = "7.0.2"
 npm-buffer = "6.0.3"
 npm-emotion-core = "^11.11.2"
@@ -240,12 +231,12 @@ npm-types-protobuf = "3.15.6"
 npm-typescript = "5.4.5"
 npm-webstreams = "3.3.3"
 okhttp = "4.12.0"
-okio = "3.9.1"
+okio = "3.10.2"
 openrewrite-bom = "2.10.0"
 openrewrite-lib = "8.1.13"
 openrewrite-plugin = "6.12.0"
-oshi = "6.6.5"
-owasp = "11.1.1"
+oshi = "6.6.6"
+owasp = "12.0.1"
 parallelGzip = "1.0.5"
 picnic = "0.7.0"
 picocli = "4.7.6"
@@ -262,35 +253,32 @@ projectreactor-netty = "1.1.13"
 protobuf = "3.25.2"
 protobufJavalite = "3.0.0"
 qodanaGradle = "2023.3.1"
-react = "19.0.0-beta-26f2496093-20240514"
+react = "19.0.0"
 reactivestreams = "1.0.4"
 redacted-plugin = "1.9.0"
-semver = "3.1.0"
+semver = "5.6.0"
 shadow-plugin = "8.1.1"
 sigstore = "0.7.0"
 slf4j = "2.0.13"
 snakeyaml = "2.3"
-snappy = "1.1.10.3"
+snappy = "1.1.10.7"
 snyk = "0.6.1"
-sonar = "4.4.1.3373"
-soy = "2022-03-07"                                                # next: "2022-07-20"
+sonar = "4.4.1.3373" # next: "2022-07-20"
 spdx = "0.8.0"
 spotless = "6.25.0"
 sqlcommenter = "2.1.1-elide"
-sqlite = "3.46.0.0"
-strikt = "0.34.1"
+sqlite = "3.48.0.0"
+strikt = "0.35.1"
 swagger = "2.2.15"
 testLoggerPlugin = "4.0.0"
-testcontainers = "1.17.6"
-tink = "1.13.0"
+tink = "1.16.0"
 truth = "1.4.4"
-turbine = "1.1.0"
-versionCatalogUpdate = "0.8.4"
-versionCheck = "0.51.0"
-wasmtime = "0.18.0"
+turbine = "1.2.0"
+versionCheck = "0.52.0"
+wasmtime = "0.19.0"
 wrapperUpgrade = "0.11.4"
-xz = "1.9"
-zstd = "1.5.6-3"
+xz = "1.10"
+zstd = "1.5.6-9"
 
 [plugins]
 artifactRegistry = { id = "com.google.cloud.artifactregistry.gradle-plugin", version.ref = "gauth-plugin" }
@@ -305,7 +293,6 @@ doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 cite = { id = "com.jakewharton.cite", version.ref = "cite" }
 elide-conventions = { id = "elide.internal.conventions" }
-flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers-plugin" }
 gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
 graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
 gradle-checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
@@ -334,7 +321,6 @@ kotlinx-plugin-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref
 kotlinx-plugin-knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlinx-knit" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
 micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-plugin" }
 micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-plugin" }
 micronaut-minimal-application = { id = "io.micronaut.minimal.application", version.ref = "micronaut-plugin" }
@@ -360,7 +346,6 @@ sonar = { id = "org.sonarqube", version.ref = "sonar" }
 spdx-sbom = { id = "org.spdx.sbom", version.ref = "spdx" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 testLogger = { id = "com.adarshr.test-logger", version.ref = "testLoggerPlugin" }
-versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
 versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck" }
 
 [libraries]
@@ -371,6 +356,8 @@ arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = 
 arrow-optics-core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
 arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
+asm-core = { group = "org.ow2.asm", name = "asm", version.ref = "asm" }
+asm-tree = { group = "org.ow2.asm", name = "asm-tree", version.ref = "asm" }
 autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.1.0" }
 bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
 bouncycastle-pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
@@ -393,24 +380,16 @@ capnproto-compiler = { group = "org.capnproto", name = "compiler", version.ref =
 capnproto-runtime = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
 capnproto-runtime-rpc = { group = "org.capnproto", name = "runtime-rpc", version.ref = "capnproto" }
 clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
-closure-compiler = { group = "com.google.javascript", name = "closure-compiler", version.ref = "closure" }
-closure-stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure-stylesheets" }
-closure-templates = { group = "com.google.template", name = "soy", version.ref = "soy" }
 commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }
 commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons-csv" }
 commons-io = { group = "commons-io", name = "commons-io", version.ref = "commons-io" }
 commons-pool = { group = "org.apache.commons", name = "commons-pool2", version.ref = "commons-pool" }
 confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
-conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }
-conscrypt-jvm = { group = "org.conscrypt", name = "conscrypt-openjdk", version.ref = "conscrypt" }
 consoleUi = { group = "de.codeshelf.consoleui", name = "consoleui", version.ref = "consoleui" }
 crossword = { group = "com.jakewharton.crossword", name = "crossword", version.ref = "crossword" }
 dekorate-kubernetes = { group = "io.dekorate", name = "kubernetes-annotations", version.ref = "dekorate" }
 errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorprone" }
-flatbuffers-java-core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers-java" }
-flatbuffers-java-grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }
-flatbuffers-parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
 gax-java = { group = "com.google.api", name = "gax", version.ref = "gax" }
 gax-java-grpc = { group = "com.google.api", name = "gax", version.ref = "gax" }
 github-api = { group = "org.kohsuke", name = "github-api", version.ref = "github-api" }
@@ -423,7 +402,6 @@ google-auto-service-annotations = { group = "com.google.auto.service", name = "a
 google-auto-value = { group = "com.google.auto.value", name = "auto-value", version.ref = "auto-value" }
 google-auto-value-annotations = { group = "com.google.auto.value", name = "auto-value-annotations", version.ref = "auto-value" }
 google-cloud-bom = { group = "com.google.cloud", name = "libraries-bom", version.ref = "gcloud-sdk" }
-google-cloud-nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud-native" }
 google-common-html-types-proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google-html-types" }
 google-common-html-types-types = { group = "com.google.common.html.types", name = "types", version.ref = "google-html-types" }
 graalvm-compiler = { group = "org.graalvm.compiler", name = "compiler", version.ref = "graalvm" }
@@ -568,7 +546,6 @@ jna-jpms = { group = "net.java.dev.jna", name = "jna-jpms", version.ref = "jna" 
 jna-graalvm = { group = "net.java.dev.jna", name = "jna-graalvm", version.ref = "jna" }
 json = { group = "org.json", name = "json", version.ref = "json" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
-junit = "junit:junit:4.13.2"
 junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-commons", version.ref = "junit-platform" }
 junit-platform-console = { group = "org.junit.platform", name = "junit-platform-console", version.ref = "junit-platform" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
@@ -738,7 +715,7 @@ reactor-core = { group = "io.projectreactor", name = "reactor-core", version.ref
 reactor-netty = { group = "io.projectreactor.netty", name = "reactor-netty", version.ref = "projectreactor-netty" }
 reactor-netty-core = { group = "io.projectreactor.netty", name = "reactor-netty-core", version.ref = "projectreactor-netty" }
 reactor-netty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "projectreactor-netty" }
-semver = { group = "com.vdurmont", name = "semver4j", version.ref = "semver" }
+semver = { group = "org.semver4j", name = "semver4j", version.ref = "semver" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-logging", version.ref = "slf4j" }
 slf4j-jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
@@ -753,11 +730,6 @@ strikt-jackson = { group = "io.strikt", name = "strikt-jackson", version.ref = "
 strikt-jvm = { group = "io.strikt", name = "strikt-jvm", version.ref = "strikt" }
 swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swagger" }
 swagger-model = { group = "io.swagger.core.v3", name = "swagger-models", version.ref = "swagger" }
-testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
-testcontainers-core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
-testcontainers-gcloud = { group = "org.testcontainers", name = "gcloud", version.ref = "testcontainers" }
-testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
-testcontainers-postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
 tink = { group = "com.google.crypto.tink", name = "tink", version.ref = "tink" }
 tink-aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
 tink-gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref = "tink" }
@@ -809,7 +781,6 @@ plugin-dokka-kotlinAsJava = { group = "org.jetbrains.dokka", name = "kotlin-as-j
 plugin-dokka-mermaid = { group = "com.glureau", name = "html-mermaid-dokka-plugin", version.ref = "mermaidDokka" }
 plugin-dokka-templating = { group = "org.jetbrains.dokka", name = "templating-plugin", version.ref = "dokka" }
 plugin-dokka-versioning = { group = "org.jetbrains.dokka", name = "versioning-plugin", version.ref = "dokka" }
-plugin-flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers-plugin" }
 plugin-graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm-plugin" }
 plugin-gradle-testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
 plugin-kapshot = { group = "io.koalaql", name = "kapshot-plugin-gradle", version.ref = "kapshot" }
@@ -847,13 +818,10 @@ elide-bom-catalog = { group = "dev.elide", name = "elide-bom-catalog", version.r
 elide-core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide-frontend = { group = "dev.elide", name = "elide-frontend", version.ref = "elide" }
 elide-graalvm = { group = "dev.elide", name = "elide-graalvm", version.ref = "elide" }
-elide-graalvm-js = { group = "dev.elide", name = "elide-graalvm-js", version.ref = "elide" }
-elide-graalvm-react = { group = "dev.elide", name = "elide-graalvm-react", version.ref = "elide" }
 elide-kotlin-plugin-redakt = { group = "dev.elide.tools.kotlin.plugin", name = "redakt-plugin", version.ref = "elide" }
 elide-model = { group = "dev.elide", name = "elide-model", version.ref = "elide" }
 elide-platform = { group = "dev.elide.tools", name = "elide-platform", version.ref = "elide" }
 elide-proto = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
-elide-proto-flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }
 elide-proto-kotlinx = { group = "dev.elide", name = "elide-proto-kotlinx", version.ref = "elide" }
 elide-proto-protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
 elide-rpc = { group = "dev.elide", name = "elide-rpc", version.ref = "elide" }

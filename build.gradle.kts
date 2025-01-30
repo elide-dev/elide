@@ -442,7 +442,6 @@ configure<DependencyCheckExtension> {
   analyzers.bundleAuditEnabled = false
   analyzers.centralEnabled = true
   analyzers.jarEnabled = true
-  analyzers.knownExploitedEnabled = true
   analyzers.msbuildEnabled = false
   analyzers.nodeEnabled = false
   analyzers.opensslEnabled = true

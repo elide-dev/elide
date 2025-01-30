@@ -16,7 +16,6 @@ package elide.tool.cli
 import com.github.ajalt.clikt.core.PrintHelpMessage
 import com.github.ajalt.clikt.parsers.CommandLineParser
 import com.github.ajalt.clikt.parsers.flatten
-import com.jakewharton.mosaic.runMosaic
 import dev.elide.cli.bridge.CliNativeBridge
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
@@ -26,9 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
 import elide.annotations.Eager
-
-// Whether to enable Mosaic and Compose.
-private val enableMosaic = System.getProperty("elide.mosaic").toBoolean()
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
 private val ENABLE_CLI_ENTRY_V2 = System.getenv("ELIDE_EXPERIMENTAL")?.ifBlank { null } != null
@@ -48,12 +44,6 @@ private fun sorryIHaveToFactory(args: Array<String>): CommandLine = ApplicationC
   .eagerInitAnnotated(Eager::class.java)
   .args(*args)
   .start().use { CommandLine(Elide::class.java, MicronautFactory(it)) }
-
-// Run the given function, optionally using Mosaic (if enabled).
-private suspend inline fun runEntry(crossinline fn: suspend () -> Unit) = when (enableMosaic) {
-  true -> runMosaic { fn() }
-  false -> fn()
-}
 
 // Run the Clikt or regular entrypoint.
 private suspend inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI_ENTRY_V2) {
@@ -117,19 +107,18 @@ private fun initialize() {
  *
  * @param args Arguments to run with.
  */
+@Suppress("TooGenericExceptionCaught")
 suspend fun main(args: Array<String>): Unit = try {
   // perform early init
   initialize()
 
   // run the entrypoint
-  runEntry {
-    exitCode.set(try {
-      runInner(args)
-    } catch (err: Throwable) {
-      unhandledExc.compareAndSet(null, err)
-      1
-    })
-  }
+  exitCode.set(try {
+    runInner(args)
+  } catch (err: RuntimeException) {
+    unhandledExc.compareAndSet(null, err)
+    1
+  })
 } finally {
   Elide.close()
 }.also {

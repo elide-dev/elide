@@ -29,9 +29,6 @@ public object Constants {
 
   /** Property names and env variables related to credentials. */
   internal object Credentials {
-    /** Environment variable: path to the Google Cloud credentials file. */
-    const val GOOGLE = "GOOGLE_APPLICATION_CREDENTIALS"
-
     /** Environment variable: username to be used when publishing packages. */
     const val PUBLISH_USER = "PUBLISH_USER"
 
@@ -70,9 +67,6 @@ public object Constants {
   internal object Repositories {
     /** Project-specific Maven repository on GitHub. */
     const val GITHUB_MAVEN = "https://maven.pkg.github.com/elide-dev/elide"
-
-    /** Docker container registry. */
-    const val PKG_DOCKER = "https://us-docker.pkg.dev"
   }
 
   /** Values for internal test conventions. */
@@ -93,13 +87,13 @@ public object Constants {
     const val KOTLIN_SDK_PIN = "2.1.0"
 
     /** Constant: pinned version of Kotlin Coroutines. */
-    const val COROUTINES = "1.9.0"
+    const val COROUTINES = "1.10.1"
 
     /** Constant: pinned version of AtomicFU. */
-    const val ATOMICFU = "0.26.1"
+    const val ATOMICFU = "0.27.0"
 
     /** Constant: pinned version of BouncyCastle. */
-    const val BOUNCYCASTLE = "1.79"
+    const val BOUNCYCASTLE = "1.80"
 
     /** Constant: pinned version of Groovy. */
     const val GROOVY = "4.0.18"
@@ -137,11 +131,8 @@ public object Constants {
     /** Pinned Protobuf version. */
     const val PROTOBUF = "3.25.2"
 
-    /** Pinned Jupiter (JUnit5) version. */
-    const val JUPITER = "5.10.2"
-
     /** Static Netty version. */
-    const val NETTY = "4.1.110.Final"
+    const val NETTY = "4.1.117.Final"
 
     /** Guava version. */
     const val GUAVA = "33.3.1-jre"
@@ -150,10 +141,10 @@ public object Constants {
     const val GRPC = "1.62.2"
 
     /** JLine version. */
-    const val JLINE = "3.26.1"
+    const val JLINE = "3.28.0"
 
     /** Okio version. */
-    const val OKIO = "3.9.1"
+    const val OKIO = "3.10.2"
 
     /** GraalVM version. */
     const val GRAALVM = "24.1.2"

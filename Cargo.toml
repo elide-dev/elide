@@ -89,7 +89,7 @@ bytemuck = { version = "1.16.1", features = [
   "nightly_portable_simd",
   "aarch64_simd",
 ] }
-cc = { version = "1.0.104", features = ["parallel"] }
+cc = { version = "=1.1.31", features = ["parallel"] }
 clap = { version = "4.5.3", features = ["derive"] }
 colored = { version = "3.0.0" }
 console-subscriber = { version = "0.4.1" }
@@ -131,7 +131,7 @@ sccache = { version = "0.8.1", default-features = false, features = ["dist-clien
 semver = { version = "1.0.23" }
 sentry = { version = "0.34.0" }
 serde = { version = "1.0.203", default-features = false }
-simdutf = { version = "0.6.0" }
+#simdutf = { version = "0.6.0" }
 smartstring = { version = "1.0.1", default-features = false }
 sysinfo = { version = "0.33.1" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }

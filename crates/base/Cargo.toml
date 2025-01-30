@@ -38,6 +38,6 @@ crc32fast = { workspace = true }
 crc64fast = { workspace = true }
 libabort = { workspace = true }
 #panic-abort = { workspace = true }
-simdutf = { workspace = true }
+#simdutf = { workspace = true }
 smartstring = { workspace = true, default-features = false, features = ["arbitrary", "serde"] }
 uuid = { workspace = true }

@@ -527,7 +527,6 @@ dependencies = [
  "crc32fast",
  "crc64fast",
  "libabort",
- "simdutf",
  "smartstring",
  "uuid",
 ]
@@ -1199,9 +1198,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.10"
+version = "1.1.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13208fcbb66eaeffe09b99fffbe1af420f00a7b35aa99ad683dfc1aa76145229"
+checksum = "c2e7962b54006dcfcc61cb72735f4d89bb97061dd6a7ed882ec6b8ee53714c6f"
 dependencies = [
  "jobserver",
  "libc",
@@ -6615,16 +6614,6 @@ dependencies = [
  "serde_json",
  "simdutf8",
  "value-trait",
-]
-
-[[package]]
-name = "simdutf"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "80b4b772d0e139c8a272c79b6a98af14053c13f05be5ed86d54ee42111f7dc0a"
-dependencies = [
- "bitflags 2.8.0",
- "cc",
 ]
 
 [[package]]

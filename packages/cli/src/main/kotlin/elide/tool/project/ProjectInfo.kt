@@ -25,6 +25,7 @@ import elide.runtime.plugins.env.EnvConfig.EnvVar
  */
 @JvmInline value class ProjectInfo private constructor (private val info: ElideProject) {
   /** Environment settings applied to the project. */
+  @ExposedCopyVisibility
   @JvmRecord @Serializable data class ProjectEnvironment private constructor (
     @Transient val vars: SortedMap<String, EnvVar> = sortedMapOf(),
   ) {

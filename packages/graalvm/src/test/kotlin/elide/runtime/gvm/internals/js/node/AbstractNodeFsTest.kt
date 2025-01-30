@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package elide.runtime.gvm.internals.js.node
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlinx.coroutines.test.runTest
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.runtime.intrinsics.GuestIntrinsic
 
 internal abstract class AbstractNodeFsTest<T> : NodeModuleConformanceTest<T>() where T: GuestIntrinsic {

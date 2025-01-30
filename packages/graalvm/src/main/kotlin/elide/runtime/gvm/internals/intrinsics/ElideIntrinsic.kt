@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,9 +20,11 @@ import java.util.LinkedList
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.GuestLanguage
+import elide.runtime.gvm.api.ElideAPI
+import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
-import elide.runtime.gvm.internals.node.process.NodeProcess
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.node.process.NodeProcess
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ProcessAPI
 import elide.vm.annotations.Polyglot

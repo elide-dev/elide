@@ -61,7 +61,6 @@
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
-    <ID>RethrowCaughtException:ChildProcessNative.kt$ChildProcessNative$throw err</ID>
     <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
     <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
@@ -71,7 +70,6 @@
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredConstructors)</ID>
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredFields)</ID>
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredMethods)</ID>
-    <ID>SpreadOperator:GraalVMEngine.kt$GraalVMEngine.Companion$(*languages)</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_linux_$archTag", *tcnative, builtin = true, )</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "netty_tcnative_osx_$archTag", *tcnative, builtin = true, )</ID>
     <ID>SpreadOperator:NativeCryptoFeature.kt$NativeCryptoFeature$( "transport", *tcnative, builtin = true, initializer = true, absolutePath = Path(System.getProperty("elide.target")).resolve("libtransport.a"), )</ID>
@@ -105,7 +103,6 @@
     <ID>ThrowsCount:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
     <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
-    <ID>TooGenericExceptionCaught:ChildProcessNative.kt$ChildProcessNative$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:JavaScript.kt$JavaScript$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>

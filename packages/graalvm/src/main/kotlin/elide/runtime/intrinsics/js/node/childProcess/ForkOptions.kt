@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,7 +13,7 @@
 package elide.runtime.intrinsics.js.node.childProcess
 
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.JsError
+import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.URL
 import org.graalvm.polyglot.Value
 import kotlin.time.Duration
@@ -70,6 +70,7 @@ internal data object ForkDefaults {
  * @property windowsHide Whether to hide the process window.
  * @property timeout Timeout for the process, in seconds.
  */
+@ExposedCopyVisibility
 @API @JvmRecord public data class ForkOptions private constructor (
   private val parent: ProcessHandle,
   override val cwdString: String? = null,

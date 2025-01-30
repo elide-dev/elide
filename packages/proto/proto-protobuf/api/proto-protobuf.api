@@ -20,14 +20,14 @@ public final class elide/proto/impl/ElideProtoJava : elide/proto/impl/AbstractEl
 
 public final class elide/proto/impl/Protobuf {
 	public static final field INSTANCE Lelide/proto/impl/Protobuf;
-	public final fun buildFrom (Lelide/util/proto/adapters/ProtoConvertible;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Lcom/google/protobuf/Message;
-	public final fun buildFrom (Lelide/util/proto/adapters/ProtoSchemaConvertible;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Lcom/google/protobuf/Message;
-	public final fun buildFrom (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Lcom/google/protobuf/Message;
+	public final fun buildFrom (Lelide/util/proto/adapters/ProtoConvertible;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)Lcom/google/protobuf/Message;
+	public final fun buildFrom (Lelide/util/proto/adapters/ProtoSchemaConvertible;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)Lcom/google/protobuf/Message;
+	public final fun buildFrom (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)Lcom/google/protobuf/Message;
 	public final fun fromMessage (Lkotlinx/datetime/Instant$Companion;Lcom/google/protobuf/Timestamp;)Lkotlinx/datetime/Instant;
 }
 
 public final class elide/proto/impl/Protobuf$ProtoBuilderContext {
-	public static final field Companion Lelide/proto/impl/Protobuf$ProtoBuilderContext$Companion;
+	public static final field INSTANCE Lelide/proto/impl/Protobuf$ProtoBuilderContext;
 	public static final fun create ()Lelide/proto/impl/Protobuf$ProtoBuilderContext;
 	public final fun ifNotBlank (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun ifNotEmpty (Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)V
@@ -36,10 +36,6 @@ public final class elide/proto/impl/Protobuf$ProtoBuilderContext {
 	public final fun timestamp (Lkotlinx/datetime/Instant;)Lcom/google/protobuf/Timestamp;
 	public final fun timestamp (Lkotlinx/datetime/Instant;Lkotlin/jvm/functions/Function1;)V
 	public final fun toMessage (Lkotlin/reflect/KClass;Lelide/util/proto/adapters/ProtoConvertible;)Lcom/google/protobuf/Message;
-}
-
-public final class elide/proto/impl/Protobuf$ProtoBuilderContext$Companion {
-	public final fun create ()Lelide/proto/impl/Protobuf$ProtoBuilderContext;
 }
 
 public final class elide/proto/impl/data/ProtoDataContainer : elide/proto/api/data/DataContainer, tools/elide/data/DataContainerOrBuilder {

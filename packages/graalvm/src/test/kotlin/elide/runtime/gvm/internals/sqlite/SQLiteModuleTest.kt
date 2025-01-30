@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -34,7 +34,7 @@ import kotlin.test.*
 import elide.annotations.Inject
 import elide.core.api.Symbolic.Unresolved
 import elide.jvm.LifecycleBoundResources
-import elide.runtime.gvm.js.node.ElideJsModuleTest
+import elide.runtime.node.ElideJsModuleTest
 import elide.runtime.gvm.sqlite.SQLite
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.sqlite.SQLiteAPI

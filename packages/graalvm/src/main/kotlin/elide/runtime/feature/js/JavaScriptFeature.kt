@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,10 +16,8 @@ import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import elide.annotations.internal.VMFeature
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
-import elide.runtime.core.internals.graalvm.GraalVMConfiguration
-import elide.runtime.core.internals.graalvm.GraalVMEngine
 import elide.runtime.feature.EngineFeature
-import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.plugins.js.JavaScript
 
 /** GraalVM feature which enables reflection required for the Elide JavaScript guest runtime. */

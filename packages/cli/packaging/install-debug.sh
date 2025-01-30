@@ -18,7 +18,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.14
+# Version: 0.15
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -41,6 +41,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.15 2025-01-26  Sam Gammon  Issuance of alpha12 release
 #   0.14 2025-01-26  Sam Gammon  Issuance of alpha11 release
 #   0.13 2024-05-12  Sam Gammon  Fixes for install prefix and alpha9 release
 #   0.12 2024-04-17  Sam Gammon  Cleanups for alpha8 release
@@ -59,8 +60,8 @@
 set -e
 set +x
 
-TOOL_REVISION="1.0.0-alpha11"
-INSTALLER_VERSION="v0.14"
+TOOL_REVISION="1.0.0-alpha12"
+INSTALLER_VERSION="v0.15"
 
 TOOL="cli"
 VERSION="v1"

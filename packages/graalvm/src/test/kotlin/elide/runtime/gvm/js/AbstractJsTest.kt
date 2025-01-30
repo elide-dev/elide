@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,7 +29,7 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.AbstractDualTest
 import elide.runtime.gvm.internals.AbstractDualTest.JavaScript
-import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
@@ -52,6 +52,8 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
      */
     override fun code(@Language("javascript") code: String)
   }
+
+  internal interface PolyglotJsContext : JsTestContext, PolyglotContext
 
   private val initialized: AtomicBoolean = AtomicBoolean(false)
 
@@ -188,12 +190,12 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
     )
   }
 
-  fun test(op: context(PolyglotContext, JsTestContext) () -> Unit) = test(
+  fun test(op: PolyglotJsContext.() -> Unit) = test(
     bind = true,
     op = op,
   )
 
-  fun test(bind: Boolean, op: context(PolyglotContext, JsTestContext) () -> Unit) = GuestTestExecution(::withContext) {
+  fun test(bind: Boolean, op: PolyglotJsContext.() -> Unit) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       this,
       bind,
@@ -201,12 +203,12 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
       esm = false,
     ) {
       val codeToRun = AtomicReference<String>(null)
-      val wrapped = object : JsTestContext {
+      val wrapped = object : PolyglotJsContext, PolyglotContext by this {
         override fun code(code: String) {
           codeToRun.set(code)
         }
       }
-      op.invoke(this, wrapped)
+      op.invoke(wrapped)
       codeToRun.get() ?: error("Failed to resolve guest code for test")
     }
   }

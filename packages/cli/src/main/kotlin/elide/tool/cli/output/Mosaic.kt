@@ -16,7 +16,6 @@ package elide.tool.cli.output
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.modifier.Modifier
@@ -36,17 +35,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import elide.tool.cli.CommandScope
 import elide.tool.cli.output.TestState.*
 import elide.tool.testing.TestInfo
 import elide.tool.testing.TestResult
 
-suspend fun MosaicScope.runCounter() {
+suspend fun CommandScope.runCounter() {
   // TODO https://github.com/JakeWharton/mosaic/issues/3
   var count by mutableIntStateOf(0)
 
-  setContent {
-    Text("The count is: $count")
-  }
+//  setContent {
+//    Text("The count is: $count")
+//  }
 
   for (i in 1..20) {
     delay(250)
@@ -54,7 +54,7 @@ suspend fun MosaicScope.runCounter() {
   }
 }
 
-suspend fun MosaicScope.testRenderer(
+suspend fun CommandScope.testRenderer(
   totalTests: Int,
   allTests: Flow<Pair<TestInfo, suspend () -> Deferred<TestResult>>>,
   workers: Int = 1,
@@ -114,13 +114,13 @@ suspend fun MosaicScope.testRenderer(
       }
     }
 
-    setContent {
-      Column {
-        Log(complete)
-        Status(tests)
-        Summary(start, totalTests, tests)
-      }
-    }
+//    setContent {
+//      Column {
+//        Log(complete)
+//        Status(tests)
+//        Summary(start, totalTests, tests)
+//      }
+//    }
   }
 }
 

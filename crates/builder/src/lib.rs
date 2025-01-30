@@ -494,7 +494,7 @@ pub fn setup_cc() -> Build {
         // C Flags: macOS
         .flag("-march=armv8-a+crypto+crc+simd")
         .flag("-mbranch-protection=standard")
-        .flag(format!("-macos-version-min={}", MACOS_MIN))
+        .flag(format!("-mmacos-version-min={}", MACOS_MIN))
         .define("__ARM_NEON", "1")
         .define("__ARM_FEATURE_AES", "1")
         .define("__ARM_FEATURE_SHA2", "1"),

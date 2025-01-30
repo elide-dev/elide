@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,15 +15,16 @@ package elide.runtime.gvm.internals.js.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.inspector.NodeInspectorPromisesModule
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.inspector.NodeInspectorPromisesModule
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.testing.annotations.TestCase
 
 /** Tests for the built-in [NodeInspectorPromisesModule]. */
 @TestCase internal class NodeInspectorPromisesTest : NodeModuleConformanceTest<NodeInspectorPromisesModule>() {
   override val moduleName: String get() = "inspector/promises"
-  override fun provide(): NodeInspectorPromisesModule = NodeInspectorPromisesModule()
-  @Inject lateinit var inspector: NodeInspectorPromisesModule
+  override fun provide(): elide.runtime.node.inspector.NodeInspectorPromisesModule =
+      elide.runtime.node.inspector.NodeInspectorPromisesModule()
+  @Inject lateinit var inspector: elide.runtime.node.inspector.NodeInspectorPromisesModule
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false

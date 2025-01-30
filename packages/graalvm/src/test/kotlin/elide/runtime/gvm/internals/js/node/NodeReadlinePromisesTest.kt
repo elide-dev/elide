@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,15 +15,16 @@ package elide.runtime.gvm.internals.js.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.node.readline.NodeReadlinePromisesModule
-import elide.runtime.gvm.js.node.NodeModuleConformanceTest
+import elide.runtime.node.readline.NodeReadlinePromisesModule
+import elide.runtime.node.NodeModuleConformanceTest
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `readline/promises` built-in module. */
 @TestCase internal class NodeReadlinePromisesTest : NodeModuleConformanceTest<NodeReadlinePromisesModule>() {
   override val moduleName: String get() = "readline/promises"
-  override fun provide(): NodeReadlinePromisesModule = NodeReadlinePromisesModule()
-  @Inject lateinit var readline: NodeReadlinePromisesModule
+  override fun provide(): elide.runtime.node.readline.NodeReadlinePromisesModule =
+      elide.runtime.node.readline.NodeReadlinePromisesModule()
+  @Inject lateinit var readline: elide.runtime.node.readline.NodeReadlinePromisesModule
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false

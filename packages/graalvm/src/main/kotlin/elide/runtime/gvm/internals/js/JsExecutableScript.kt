@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ import elide.runtime.gvm.ExecutableScript.ScriptSource
 import elide.runtime.gvm.ExecutableScript.ScriptType
 import elide.runtime.gvm.InvocationMode
 import elide.runtime.gvm.internals.AbstractGVMScript
-import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
+import elide.runtime.gvm.GraalVMGuest.JAVASCRIPT
 
 /** Implementation of an [AbstractGVMScript] for JavaScript. */
 internal class JsExecutableScript private constructor (

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Value
 import java.io.OutputStream
 import elide.annotations.API
-import elide.runtime.gvm.internals.node.stream.WrappedOutputStream
+import elide.runtime.node.stream.WrappedOutputStream
 import elide.runtime.intrinsics.js.node.events.EventEmitter
 import elide.runtime.intrinsics.js.node.events.EventTarget
 import elide.vm.annotations.Polyglot

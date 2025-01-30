@@ -398,11 +398,6 @@ if (enableOwasp == "true") apply(plugin = "org.owasp.dependencycheck")
 // --- Node JS --------------------------------------------------------------------------------------------------------
 //
 plugins.withType(NodeJsRootPlugin::class.java) {
-  val nodejs = the<NodeJsRootExtension>()
-  nodejs.apply {
-    download = true
-  }
-
   the<NodeJsRootExtension>().version = nodeVersion
   if (nodeVersion.contains("canary")) {
     the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
@@ -447,7 +442,6 @@ configure<DependencyCheckExtension> {
   analyzers.bundleAuditEnabled = false
   analyzers.centralEnabled = true
   analyzers.jarEnabled = true
-  analyzers.knownExploitedEnabled = true
   analyzers.msbuildEnabled = false
   analyzers.nodeEnabled = false
   analyzers.opensslEnabled = true

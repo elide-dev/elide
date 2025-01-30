@@ -61,7 +61,7 @@ internal val globallyPinnedVersions: Map<String, Pair<String, String>> = sortedM
   "com.google.protobuf:protobuf-java" to (Versions.PROTOBUF to "sensitive compatibility"),
   "com.google.protobuf:protobuf-java-util" to (Versions.PROTOBUF to "sensitive compatibility"),
   "com.google.protobuf:protobuf-kotlin" to (Versions.PROTOBUF to "sensitive compatibility"),
-  "io.opentelemetry:opentelemetry-bom" to (Versions.OPENTELEMETRY to "senstive compatibility"),
+  "io.opentelemetry:opentelemetry-bom" to (Versions.OPENTELEMETRY to "sensitive compatibility"),
   "org.apache.groovy:groovy-bom" to (Versions.GROOVY to "critical dependency"),
   "org.jetbrains.kotlin:kotlin-stdlib" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
   "org.jetbrains.kotlin:kotlin-reflect" to (Versions.KOTLIN_SDK_PIN to "critical dependency"),
@@ -69,8 +69,6 @@ internal val globallyPinnedVersions: Map<String, Pair<String, String>> = sortedM
   "org.jetbrains.kotlinx:kotlinx-coroutines-core" to (Versions.COROUTINES to "critical dependency"),
   "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm" to (Versions.COROUTINES to "critical dependency"),
   "org.jetbrains.kotlinx:atomicfu" to (Versions.ATOMICFU to "critical dependency"),
-  "org.junit:junit-bom" to (Versions.JUPITER to "senstive compatibility"),
-  "org.junit.jupiter:junit-jupiter-api" to (Versions.JUPITER to "senstive compatibility"),
 )
 
 internal val bannedDependencies: SortedSet<String> = sortedSetOf()

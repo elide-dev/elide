@@ -16,7 +16,7 @@ name = "base"
 edition = "2021"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha11-SNAPSHOT"
+version = "1.0.0-alpha12-SNAPSHOT"
 
 [lib]
 crate-type = ["lib"]
@@ -38,6 +38,6 @@ crc32fast = { workspace = true }
 crc64fast = { workspace = true }
 libabort = { workspace = true }
 #panic-abort = { workspace = true }
-simdutf = { workspace = true }
+#simdutf = { workspace = true }
 smartstring = { workspace = true, default-features = false, features = ["arbitrary", "serde"] }
 uuid = { workspace = true }

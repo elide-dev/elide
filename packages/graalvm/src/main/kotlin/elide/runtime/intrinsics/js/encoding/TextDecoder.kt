@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.channels.ReadableByteChannel
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.JsError
+import elide.runtime.gvm.js.JsError
 import elide.vm.annotations.Polyglot
 
 // Properties and methods of `TextDecoder` exported to guest contexts.
@@ -172,6 +172,7 @@ private val TEXT_DECODER_METHODS_AND_PROPS = arrayOf(
    *
    * Specifies options for calls to [TextDecoder.decode].
    */
+  @ExposedCopyVisibility
   @JvmRecord public data class DecodeOptions private constructor (
     /**
      * ## Stream
@@ -215,6 +216,7 @@ private val TEXT_DECODER_METHODS_AND_PROPS = arrayOf(
    * Specifies options for [TextDecoder] instances; instances of these options can be provided to the [TextDecoder]
    * constructor to specify how the decoder should behave.
    */
+  @ExposedCopyVisibility
   @JvmRecord public data class Options private constructor (
     /**
      * ## Fatal

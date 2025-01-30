@@ -174,7 +174,7 @@ public abstract class LockableContainer<T>(initial: T) {
  *   present compiled `/module-info.class`, and any `Automatic-Module-Name` present in the JAR manifest. Without these
  *   attributes, Gradle places it on the classpath instead of the module path. Takes precedence over [modularize].
  */
-@Suppress("DataClassPrivateConstructor")
+@ConsistentCopyVisibility
 public data class ModuleConfiguration private constructor (
   var modularize: Boolean = true,
   var moduleName: String? = null,

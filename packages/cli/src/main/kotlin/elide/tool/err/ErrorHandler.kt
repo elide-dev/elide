@@ -21,7 +21,6 @@ import picocli.CommandLine.IExitCodeExceptionMapper
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -131,6 +130,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    * @param columnNumber Source line column number where this error took place, as applicable.
    * @param isNativeMethod Indicates whether this frame is describing a native method (if not, it is a JVM method).
    */
+  @ConsistentCopyVisibility
   @JvmRecord @Serializable data class ErrorStackFrame private constructor (
     val moduleName: String? = null,
     val moduleVersion: String? = null,
@@ -539,7 +539,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
      *
      * @return Error action strategy.
      */
-    fun suppress(warning: String? = null): ErrorActionStrategy.Suppress
+    fun suppress(warning: String? = null): Suppress
 
     /**
      * Create an [ErrorActionStrategy] response which re-throws the error; optionally, an [override] exception may be
@@ -585,7 +585,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
       return object: ErrorHandlerContext {
         override val event: ErrorEvent get() = event
 
-        override fun suppress(warning: String?): ErrorActionStrategy.Suppress = Suppress(
+        override fun suppress(warning: String?): Suppress = Suppress(
           event = event,
           logger = handler.logging,
           warning = warning,

@@ -118,7 +118,7 @@ public class ProtoDataContainer private constructor (private val container: Data
       TODO("Not yet implemented")
     }
 
-    override fun create(op: context(Builder) () -> Unit): ProtoDataContainer {
+    override fun create(op: Builder.() -> Unit): ProtoDataContainer {
       TODO("Not yet implemented")
     }
   }
@@ -141,7 +141,7 @@ public class ProtoDataContainer private constructor (private val container: Data
     TODO("Not yet implemented")
   }
 
-  override fun mutate(op: context(Builder) () -> Unit): ProtoDataContainer {
+  override fun mutate(op: Builder.() -> Unit): ProtoDataContainer {
     TODO("Not yet implemented")
   }
 }

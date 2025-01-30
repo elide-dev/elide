@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -31,8 +31,8 @@ import elide.runtime.gvm.internals.AbstractDualTest.JavaScript
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
 import elide.runtime.gvm.internals.intrinsics.js.base64.Base64Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
-import elide.runtime.gvm.internals.node.asserts.NodeAssertModule
-import elide.runtime.gvm.internals.node.asserts.NodeAssertStrictModule
+import elide.runtime.node.asserts.NodeAssertModule
+import elide.runtime.node.asserts.NodeAssertStrictModule
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.runtime.plugins.js.JavaScript as JavaScriptPlugin

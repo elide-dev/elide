@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,43 +18,43 @@ import elide.annotations.internal.VMFeature
 import elide.runtime.feature.FrameworkFeature
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
-import elide.runtime.gvm.internals.node.asserts.NodeAssert
-import elide.runtime.gvm.internals.node.buffer.NodeBufferModuleFacade
-import elide.runtime.gvm.internals.node.childProcess.NodeChildProcess
-import elide.runtime.gvm.internals.node.cluster.NodeCluster
-import elide.runtime.gvm.internals.node.console.NodeConsole
-import elide.runtime.gvm.internals.node.crypto.NodeCrypto
-import elide.runtime.gvm.internals.node.dgram.NodeDatagram
-import elide.runtime.gvm.internals.node.diagnostics.NodeDiagnosticsChannel
-import elide.runtime.gvm.internals.node.dns.NodeDNS
-import elide.runtime.gvm.internals.node.dns.NodeDNSPromises
-import elide.runtime.gvm.internals.node.domain.NodeDomain
-import elide.runtime.gvm.internals.node.events.NodeEventsModuleFacade
-import elide.runtime.gvm.internals.node.fs.FilesystemBase
-import elide.runtime.gvm.internals.node.fs.NodeFilesystemProxy
-import elide.runtime.gvm.internals.node.http.NodeHttp
-import elide.runtime.gvm.internals.node.http2.NodeHttp2
-import elide.runtime.gvm.internals.node.https.NodeHttps
-import elide.runtime.gvm.internals.node.inspector.NodeInspector
-import elide.runtime.gvm.internals.node.inspector.NodeInspectorPromises
-import elide.runtime.gvm.internals.node.module.NodeModules
-import elide.runtime.gvm.internals.node.net.NodeNetwork
-import elide.runtime.gvm.internals.node.os.NodeOperatingSystem
-import elide.runtime.gvm.internals.node.path.NodePaths
-import elide.runtime.gvm.internals.node.perfHooks.NodePerformanceHooks
-import elide.runtime.gvm.internals.node.process.NodeProcess
-import elide.runtime.gvm.internals.node.querystring.NodeQuerystring
-import elide.runtime.gvm.internals.node.readline.NodeReadline
-import elide.runtime.gvm.internals.node.readline.NodeReadlinePromises
-import elide.runtime.gvm.internals.node.stream.NodeStream
-import elide.runtime.gvm.internals.node.stream.NodeStreamConsumers
-import elide.runtime.gvm.internals.node.stream.NodeStreamPromises
-import elide.runtime.gvm.internals.node.stream.NodeWebStreams
-import elide.runtime.gvm.internals.node.stringDecoder.NodeStringDecoder
-import elide.runtime.gvm.internals.node.test.NodeTest
-import elide.runtime.gvm.internals.node.url.NodeURL
-import elide.runtime.gvm.internals.node.worker.NodeWorker
-import elide.runtime.gvm.internals.node.zlib.NodeZlib
+import elide.runtime.node.asserts.NodeAssert
+import elide.runtime.node.buffer.NodeBufferModuleFacade
+import elide.runtime.node.childProcess.NodeChildProcess
+import elide.runtime.node.cluster.NodeCluster
+import elide.runtime.node.console.NodeConsole
+import elide.runtime.node.crypto.NodeCrypto
+import elide.runtime.node.dgram.NodeDatagram
+import elide.runtime.node.diagnostics.NodeDiagnosticsChannel
+import elide.runtime.node.dns.NodeDNS
+import elide.runtime.node.dns.NodeDNSPromises
+import elide.runtime.node.domain.NodeDomain
+import elide.runtime.node.events.NodeEventsModuleFacade
+import elide.runtime.node.fs.FilesystemBase
+import elide.runtime.node.fs.NodeFilesystemProxy
+import elide.runtime.node.http.NodeHttp
+import elide.runtime.node.http2.NodeHttp2
+import elide.runtime.node.https.NodeHttps
+import elide.runtime.node.inspector.NodeInspector
+import elide.runtime.node.inspector.NodeInspectorPromises
+import elide.runtime.node.module.NodeModules
+import elide.runtime.node.net.NodeNetwork
+import elide.runtime.node.os.NodeOperatingSystem
+import elide.runtime.node.path.NodePaths
+import elide.runtime.node.perfHooks.NodePerformanceHooks
+import elide.runtime.node.process.NodeProcess
+import elide.runtime.node.querystring.NodeQuerystring
+import elide.runtime.node.readline.NodeReadline
+import elide.runtime.node.readline.NodeReadlinePromises
+import elide.runtime.node.stream.NodeStream
+import elide.runtime.node.stream.NodeStreamConsumers
+import elide.runtime.node.stream.NodeStreamPromises
+import elide.runtime.node.stream.NodeWebStreams
+import elide.runtime.node.stringDecoder.NodeStringDecoder
+import elide.runtime.node.test.NodeTest
+import elide.runtime.node.url.NodeURL
+import elide.runtime.node.worker.NodeWorker
+import elide.runtime.node.zlib.NodeZlib
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.node.*
@@ -149,7 +149,7 @@ import elide.runtime.intrinsics.js.node.stream.Writable
     cls(InspectorAPI::class)
     cls(InspectorPromisesAPI::class)
     cls(NodeInspector::class)
-    cls(NodeInspectorPromises::class)
+    cls(elide.runtime.node.inspector.NodeInspectorPromises::class)
 
     // `module`
     cls(ModuleAPI::class)
@@ -161,9 +161,9 @@ import elide.runtime.intrinsics.js.node.stream.Writable
 
     // `os`
     cls(OperatingSystemAPI::class)
-    cls(NodeOperatingSystem.BaseOS::class)
-    cls(NodeOperatingSystem.Posix::class)
-    cls(NodeOperatingSystem.Win32::class)
+    cls(elide.runtime.node.os.NodeOperatingSystem.BaseOS::class)
+    cls(elide.runtime.node.os.NodeOperatingSystem.Posix::class)
+    cls(elide.runtime.node.os.NodeOperatingSystem.Win32::class)
 
     // `path`
     cls(PathAPI::class)
@@ -190,7 +190,7 @@ import elide.runtime.intrinsics.js.node.stream.Writable
     cls(ReadlineAPI::class)
     cls(ReadlinePromisesAPI::class)
     cls(NodeReadline::class)
-    cls(NodeReadlinePromises::class)
+    cls(elide.runtime.node.readline.NodeReadlinePromises::class)
 
     // `stream` + `stream/consumers` + `stream/promises` + `stream/web`
     cls(StreamAPI::class)

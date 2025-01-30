@@ -49,16 +49,12 @@ split-debuginfo = "unpacked"
 
 [patch.crates-io]
 ## Version Pins / Overrides
-async-std = { git = "https://github.com/elide-tools/async-std", rev = "0802b3439e42167825359567cffeb35f0f4525af" }
-base64 = { git = "https://github.com/elide-tools/rust-base64", rev = "e14400697453bcc85997119b874bc03d9601d0af" }
-charset = { git = "https://github.com/elide-tools/charset", rev = "62cb8a4f42bf43df7c654da073d106de777252b7" }
-chic = { git = "https://github.com/elide-tools/chic", rev = "a69a935636126d8d758e3952484347ee4cdcee62" }
-libcst = { git = "https://github.com/elide-tools/libcst", rev = "a2dff05ebfd5ccebfa6a57ac4417cccea5a33515" }
-ssri = { git = "https://github.com/elide-tools/ssri-rs", rev = "015e101918b6664cbae4c38c6b122db2e76bf9d0" }
+async-std = { git = "https://github.com/elide-tools/async-std", rev = "33f56cce1777319a2c64cac35660f7991262d00c" }
+ssri = { git = "https://github.com/elide-tools/ssri-rs", rev = "57b5790f8d114f5b31a716a81dee6f37c0f96c3e" }
 jni = { git = "https://github.com/elide-tools/jni-rs", rev = "b8ec9b0c717833a640de835ab1d91577bfbd6300" }
 
 [patch."https://github.com/astral-sh/pubgrub"]
-pubgrub = { git = "https://github.com/elide-tools/pubgrub", rev = "8fd8d1370302508991e1b39ec936c363d582ee4c" }
+pubgrub = { git = "https://github.com/elide-tools/pubgrub", rev = "83c0b986493bfabe318c4f8797d5e6b086848977" }
 
 [workspace.dependencies]
 ## Local
@@ -93,10 +89,10 @@ bytemuck = { version = "1.16.1", features = [
   "nightly_portable_simd",
   "aarch64_simd",
 ] }
-cc = { version = "1.0.104", features = ["parallel"] }
+cc = { version = "=1.1.31", features = ["parallel"] }
 clap = { version = "4.5.3", features = ["derive"] }
 colored = { version = "3.0.0" }
-console-subscriber = { version = "0.3.0" }
+console-subscriber = { version = "0.4.1" }
 const_fn = { version = "0.4" }
 const_format = { version = "0.2.32" }
 const-crc32-nostd = { version = "1.3.1" }
@@ -114,10 +110,10 @@ libabort = { version = "0.1.8", features = ["libc"] }
 libloading = { version = "0.8.4" }
 libsqlite3-sys = { version = "0.29.0", default-features = false, features = ["loadable_extension", "openssl-sys"] }
 maven-toolbox = { version = "0.0.3" }
-miette = { version = "7.2.0", features = ["fancy", "supports-hyperlinks"] }
+miette = { version = "7.4.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
 mvn = { version = "0.2.0" }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "c62295d37d07743e9c46a66b47cfbc74cfbdf531" }
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "cbcf969348267ee30452606b152a40edcaf049c4" }
 panic-abort = { version = "0.3.2" }
 panic-halt = { version = "0.2.0" }
 pkg-config = { version = "0.3.30" }
@@ -128,16 +124,16 @@ prost-build = { version = "0.13.1" }
 prost-types = { version = "0.13.1" }
 pubgrub = { version = "0.2.1" }
 purl = { version = "0.1.3" }
-rkyv = { version = "0.7.44", default-features = false }
+rkyv = { version = "0.8.10", default-features = false }
 rusqlite = { version = "0.31.0", default-features = false }
 rustc_version = { version = "0.4.0" }
 sccache = { version = "0.8.1", default-features = false, features = ["dist-client", "gha", "redis", "s3"] }
 semver = { version = "1.0.23" }
 sentry = { version = "0.34.0" }
 serde = { version = "1.0.203", default-features = false }
-simdutf = { version = "0.4.17" }
+#simdutf = { version = "0.6.0" }
 smartstring = { version = "1.0.1", default-features = false }
-sysinfo = { version = "0.30.13" }
+sysinfo = { version = "0.33.1" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
 tokio = { version = "1", default-features = false, features = [
   "fs",
@@ -182,7 +178,7 @@ biome_suppression = "0.5.7"
 biome_unicode_table = "0.5.7"
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "ea30aecb676e5cf4e1b24647d5198e36b39cc22b", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "fb5b1fa0156e501eea17002178e54296f5964ba8", default-features = false, features = [
   #
 ] }
 

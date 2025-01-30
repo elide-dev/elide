@@ -90,7 +90,7 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
    *
    * @see Protobuf for static protocol buffer utilities.
    */
-  class ProtoBuilderContext private constructor () {
+  object ProtoBuilderContext {
     /**
      * ### `ifPresent`
      *
@@ -224,10 +224,8 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
       }
     }
 
-    companion object {
-      /** Static creator. */
-      @JvmStatic fun create(): ProtoBuilderContext = ProtoBuilderContext()
-    }
+    /** Static creator. */
+    @JvmStatic fun create(): ProtoBuilderContext = ProtoBuilderContext
   }
 
   /**
@@ -273,11 +271,10 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
   inline fun <In, M: Message, B: Message.Builder> buildFrom(
     instance: In,
     builder: (B.() -> Unit) -> M,
-    crossinline op: context(ProtoBuilderContext) B.(In) -> Unit,
+    crossinline op: B.(In) -> Unit,
   ): M {
     return builder.invoke {
       op.invoke(
-        ProtoBuilderContext.create(),
         this,
         instance,
       )
@@ -302,11 +299,10 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
   inline fun <In: ProtoSchemaConvertible, M: Message, B: Message.Builder> buildFrom(
     instance: In,
     builder: (B.() -> Unit) -> M,
-    crossinline op: context(ProtoBuilderContext) B.(In) -> Unit,
+    crossinline op: B.(In) -> Unit,
   ): M {
     return builder.invoke {
       op.invoke(
-        ProtoBuilderContext.create(),
         this,
         instance,
       )
@@ -329,11 +325,10 @@ import elide.util.proto.adapters.ProtoSchemaConvertible
    */
   inline fun <M: Message, Model: ProtoConvertible<M>, B> Model.buildFrom(
     builder: (B.() -> Unit) -> M,
-    crossinline op: context(ProtoBuilderContext) B.(Model) -> Unit,
+    crossinline op: B.(Model) -> Unit,
   ): M {
     return builder.invoke {
       op.invoke(
-        ProtoBuilderContext.create(),
         this,
         this@buildFrom,
       )

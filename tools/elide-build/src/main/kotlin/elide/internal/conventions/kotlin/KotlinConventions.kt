@@ -116,7 +116,6 @@ internal fun Project.configureKotlinBuild(
       the<AtomicFUPluginExtension>().apply {
         dependenciesVersion = null
         transformJvm = true
-        transformJs = true
         jvmVariant = "VH"
       }
     }
@@ -290,7 +289,6 @@ internal fun Project.configureKotlinBuild(
   // configure KSP extension
   if (enableKsp) pluginManager.withPlugin(KSP_PLUGIN_ID) {
     extensions.getByType(KspExtension::class.java).apply {
-      allowSourcesFromOtherPlugins = true
       allWarningsAsErrors = useStrictMode
     }
   }

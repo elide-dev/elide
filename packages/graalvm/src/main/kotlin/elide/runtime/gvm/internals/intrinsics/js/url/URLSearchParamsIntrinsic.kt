@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,11 +21,10 @@ import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
 import org.jetbrains.annotations.VisibleForTesting
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.gvm.js.JsError.valueError
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseJsMultiMap
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseMutableJsMultiMap
 import elide.runtime.intrinsics.GuestIntrinsic

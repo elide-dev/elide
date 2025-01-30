@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -21,7 +21,9 @@ import elide.runtime.core.PolyglotContext.EvaluationOptions
 /**
  * An implementation of the [PolyglotContext] interface wrapping a GraalVM context.
  */
-@DelicateElideApi internal class GraalVMContext(val context: Context) : PolyglotContext {
+@DelicateElideApi public class GraalVMContext(
+  public val context: Context
+) : PolyglotContext {
   /** Thread-safe mutable map holding this context's elements. */
   private val elements: MutableMap<PolyglotContextElement<*>, Any?> = ConcurrentHashMap()
 

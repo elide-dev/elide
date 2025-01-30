@@ -21,7 +21,6 @@ Or, from inside `third_party`, you can just run `make`.
 - [Google][12] [BoringSSL][13]: Google's fixed-up fork of OpenSSL.
 - [Apache][14] [APR (Apache Portable Runtime)][15]: Cross-platform runtime utilities
 - [Cloudflare][16]'s fork of [zlib][17]: Fast compression library
-- [Oracle][18] [GraalVM][19]: Used for edge-builds of Elide
 
 [0]: https://apple.com
 [1]: https://github.com/apple/pkl

@@ -75,7 +75,9 @@
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val pyHint = "requirements.txt"</ID>
     <ID>UnusedParameter:AbstractToolCommand.kt$AbstractToolCommand$args: Array&lt;String></ID>
     <ID>UnusedParameter:Elide.kt$Elide.Companion$win32: Boolean = false</ID>
+    <ID>UnusedParameter:Mosaic.kt$totalTests: Int</ID>
     <ID>UnusedParameter:NativeEngine.kt$NativeEngine$extraProps: List&lt;Pair&lt;String, String>></ID>
+    <ID>UnusedPrivateMember:Mosaic.kt$@Composable private fun Summary(start: Long, totalTests: Int, tests: List&lt;Test>)</ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>

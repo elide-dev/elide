@@ -220,11 +220,9 @@ public object Constants {
 
     /** Compiler args to include in all Kotlin targets. */
     private val BaseCompilerArgs = listOf(
-      "-Xcontext-receivers",
       "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
       "-Xsuppress-version-warnings",
-      // "-Xconsistent-data-class-copy-visibility",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */

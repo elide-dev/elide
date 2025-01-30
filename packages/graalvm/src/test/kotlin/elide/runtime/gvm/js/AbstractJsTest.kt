@@ -53,6 +53,8 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
     override fun code(@Language("javascript") code: String)
   }
 
+  internal interface PolyglotJsContext : JsTestContext, PolyglotContext
+
   private val initialized: AtomicBoolean = AtomicBoolean(false)
 
   // Default intrinsics manager.
@@ -188,12 +190,12 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
     )
   }
 
-  fun test(op: context(PolyglotContext, JsTestContext) () -> Unit) = test(
+  fun test(op: PolyglotJsContext.() -> Unit) = test(
     bind = true,
     op = op,
   )
 
-  fun test(bind: Boolean, op: context(PolyglotContext, JsTestContext) () -> Unit) = GuestTestExecution(::withContext) {
+  fun test(bind: Boolean, op: PolyglotJsContext.() -> Unit) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       this,
       bind,
@@ -201,12 +203,12 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
       esm = false,
     ) {
       val codeToRun = AtomicReference<String>(null)
-      val wrapped = object : JsTestContext {
+      val wrapped = object : PolyglotJsContext, PolyglotContext by this {
         override fun code(code: String) {
           codeToRun.set(code)
         }
       }
-      op.invoke(this, wrapped)
+      op.invoke(wrapped)
       codeToRun.get() ?: error("Failed to resolve guest code for test")
     }
   }

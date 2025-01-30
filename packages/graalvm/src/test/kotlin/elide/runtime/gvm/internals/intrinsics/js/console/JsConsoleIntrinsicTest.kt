@@ -169,7 +169,6 @@ import elide.testing.annotations.TestCase
     "WARN,facade",
     "ERROR,facade",
   ])
-  @Suppress("UNUSED_PARAMETER")
   @ParameterizedTest fun testConsole(level: LogLevel, mode: String) = dual {
     // host-side test
     val hostMethod = when (level) {

@@ -536,7 +536,7 @@ internal class SqliteDatabaseProxy private constructor (
   private fun SQLiteConnection.statement(register: Boolean, query: String): Statement {
     return SQLiteStatementImpl.boundTo(
       this@SqliteDatabaseProxy,
-      this@SQLiteConnection.createStatement().also { if (register) resources.register(it) },
+      this.createStatement().also { if (register) resources.register(it) },
       query,
     )
   }

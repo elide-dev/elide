@@ -225,7 +225,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
         with:
           key: elide-framework-v2-tests-${{ github.sha }}
           path: |
@@ -401,7 +401,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Artifact: Caches"
-        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
         with:
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
           path: |
@@ -493,7 +493,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
         with:
           key: elide-framework-v2-tests-${{ github.sha }}
           path: |

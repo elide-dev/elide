@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -28,7 +28,6 @@ import elide.runtime.core.PolyglotValue
  * All Buffer operations are performed using the backing array buffer, however it is up to the implementation to define
  * the nature of the backing buffer itself (e.g. it could be a NIO `ByteBuffer`).
  */
-@DelicateElideApi
 @Suppress("TooManyFunctions")
 public interface BufferInstance : ProxyArray, ProxyObject {
   /**

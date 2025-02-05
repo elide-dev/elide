@@ -43,6 +43,10 @@ pluginManagement {
         includeGroup("org.graalvm.buildtools")
       }
     }
+    maven {
+      name = "jpms-modules"
+      url = uri("https://jpms.pkg.st/repository")
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
@@ -84,9 +88,6 @@ dependencyResolutionManagement {
     maven {
       name = "jpms-modules"
       url = uri("https://jpms.pkg.st/repository")
-      content {
-        includeGroup("dev.javamodules")
-      }
     }
     maven {
       name = "elide-snapshots"
@@ -158,7 +159,7 @@ dependencyResolutionManagement {
       from(files("./gradle/elide.versions.toml"))
     }
     create("attic") {
-      from("dev.javamodules:jpms-catalog:1.0.9")
+      from("dev.javamodules:jpms-catalog:1.0.10")
     }
   }
 }
@@ -197,6 +198,7 @@ if (buildAuxImage == "true") {
 include(
   ":crates:base",
   ":crates:builder",
+  ":crates:compression",
   ":crates:deps",
   ":crates:entry",
   ":crates:model",

@@ -26,6 +26,10 @@ pluginManagement {
         includeGroup("org.jetbrains.reflekt")
       }
     }
+    maven {
+      name = "jpms-modules"
+      url = uri("https://jpms.pkg.st/repository")
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
@@ -47,6 +51,10 @@ dependencyResolutionManagement {
         includeGroup("com.google.devtools.ksp")
         includeGroup("org.jetbrains.reflekt")
       }
+    }
+    maven {
+      name = "jpms-modules"
+      url = uri("https://jpms.pkg.st/repository")
     }
     gradlePluginPortal()
     mavenCentral()

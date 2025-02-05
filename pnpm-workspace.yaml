@@ -4,6 +4,7 @@ packages:
   - packages/frontend
   - packages/graalvm
   - packages/graalvm-js
+  - packages/graalvm-ts
   - packages/graalvm-react
   - packages/model
   - packages/rpc

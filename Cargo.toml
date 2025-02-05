@@ -127,6 +127,7 @@ purl = { version = "0.1.3" }
 rkyv = { version = "0.8.10", default-features = false }
 rusqlite = { version = "0.31.0", default-features = false }
 rustc_version = { version = "0.4.0" }
+rustix = { version = "0.38.44", features = ["process"] }
 sccache = { version = "0.8.1", default-features = false, features = ["dist-client", "gha", "redis", "s3"] }
 semver = { version = "1.0.23" }
 sentry = { version = "0.34.0" }

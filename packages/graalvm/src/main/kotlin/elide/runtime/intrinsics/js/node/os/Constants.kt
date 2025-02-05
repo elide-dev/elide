@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -30,7 +30,7 @@ public const val ENDIAN_BIG: Endianness = "BE"
 /**
  * Priority setting for a given OS task.
  */
-public typealias Priority = Int
+public typealias OSPriority = Int
 
 /**
  * Execution Priority: `PRIORITY_HIGHEST`.
@@ -38,39 +38,39 @@ public typealias Priority = Int
  * Sets the highest possible execution priority for a given OS task; on some platforms (e.g. Windows), this may require
  * elevated privileges.
  */
-public const val PRIORITY_HIGHEST: Priority = -20
+public const val PRIORITY_HIGHEST: OSPriority = -20
 
 /**
  * Execution Priority: `PRIORITY_HIGH`.
  *
  * Sets a high execution priority for a given OS task.
  */
-public const val PRIORITY_HIGH: Priority = -10
+public const val PRIORITY_HIGH: OSPriority = -10
 
 /**
  * Execution Priority: `PRIORITY_ABOVE_NORMAL`.
  *
  * Sets an above-normal execution priority for a given OS task.
  */
-public const val PRIORITY_ABOVE_NORMAL: Priority = -1
+public const val PRIORITY_ABOVE_NORMAL: OSPriority = -1
 
 /**
  * Execution Priority: `PRIORITY_NORMAL`.
  *
  * Sets a normal execution priority for a given OS task.
  */
-public const val PRIORITY_NORMAL: Priority = 0
+public const val PRIORITY_NORMAL: OSPriority = 0
 
 /**
  * Execution Priority: `PRIORITY_BELOW_NORMAL`.
  *
  * Sets a below-normal execution priority for a given OS task.
  */
-public const val PRIORITY_BELOW_NORMAL: Priority = 1
+public const val PRIORITY_BELOW_NORMAL: OSPriority = 1
 
 /**
  * Execution Priority: `PRIORITY_LOW`.
  *
  * Sets a low execution priority for a given OS task.
  */
-public const val PRIORITY_LOW: Priority = 19
+public const val PRIORITY_LOW: OSPriority = 19

@@ -15,6 +15,7 @@
 package elide.runtime.node.fs
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.io.ByteSequence
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.io.BufferedReader
 import java.io.IOException
@@ -195,12 +196,15 @@ internal object FilesystemConstants {
 internal fun guestToStringOrBuffer(value: Any?, encoding: Charset = StandardCharsets.UTF_8): ByteArray = when (value) {
   null -> throw JsError.valueError("Cannot read or write `null` as file data")
   is ByteArray -> value
+  is ByteBuffer -> value.array()
   is String -> value.toByteArray(encoding)
   is BufferInstance -> TODO("Node buffers are not supported for filesystem operations yet")
 
   is Value -> when {
     value.isNull -> throw JsError.valueError("Cannot read or write `null` as file data")
     value.isString -> value.asString().toByteArray(encoding)
+    value.hasBufferElements() -> value.`as`(ByteSequence::class.java).toByteArray()
+    value.isHostObject -> TODO("Host object buffers are not supported yet")
     value.hasMembers() -> value.getMember("toString").execute(value).asString().toByteArray(encoding)
     else -> throw JsError.valueError("Unknown guest type passed as file data: $value")
   }
@@ -257,7 +261,6 @@ private fun doCopyFileGuest(src: Path, dest: Path, mode: Int, callback: Value?):
 }
 
 // Implements common baseline functionality for the Node filesystem modules.
-@OptIn(DelicateElideApi::class)
 internal abstract class FilesystemBase(
   protected val path: PathAPI,
   protected val exec: GuestExecutor,

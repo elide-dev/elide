@@ -50,7 +50,7 @@ pub fn do_makefile_run(subdir: Option<&str>, command_line: &str) {
     let root_subpath = format!("{}/{}", root_project_path, subpath);
     command.arg("-C").arg(root_subpath);
   }
-  command.arg(command_line);
+  command.args(command_line.split(" "));
   println!("Running make: {:?}", command);
   let status = command.status().expect("Failed to execute make");
   assert!(status.success());

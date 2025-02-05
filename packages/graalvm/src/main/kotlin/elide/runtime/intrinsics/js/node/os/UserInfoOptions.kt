@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,9 @@ import org.graalvm.polyglot.proxy.ProxyHashMap
 import elide.vm.annotations.Polyglot
 
 /**
- * TBD.
+ * ## User Info Options
+ *
+ * Describes the structure of options which can be provided to the `os.userInfo(...)` method.
  */
 public interface UserInfoOptions : ProxyHashMap {
   /**

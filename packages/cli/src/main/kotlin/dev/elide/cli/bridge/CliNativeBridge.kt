@@ -2,6 +2,7 @@
 
 package dev.elide.cli.bridge
 
+import com.aayushatharva.brotli4j.Brotli4jLoader
 import org.graalvm.nativeimage.ImageInfo
 
 /**
@@ -27,9 +28,14 @@ object CliNativeBridge {
     if (!initialized && (!EAGER_LOAD_NATIVE_ONLY || ImageInfo.inImageCode())) {
       System.loadLibrary(NATIVE_LIB_NAME)
       initialized = true
-      val init = initializeNative()
+      val init = initializeNative().also { loadThirdPartyNatives() }
       assert(init == 0) { "Failed to initialize native layer; got code $init" }
     }
+  }
+
+  // Load third-party native libraries.
+  private fun loadThirdPartyNatives() {
+    Brotli4jLoader.ensureAvailability()
   }
 
   /** Initialize the native runtime layer; any non-zero return value indicates an error.  */

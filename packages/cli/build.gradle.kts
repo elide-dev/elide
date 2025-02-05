@@ -359,6 +359,16 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
 
+  // Brotli
+  implementation(libs.brotli.native.osx)
+  implementation(libs.brotli.native.osx.amd64)
+  implementation(libs.brotli.native.osx.arm64)
+  implementation(libs.brotli.native.linux)
+  implementation(libs.brotli.native.linux.amd64)
+  implementation(libs.brotli.native.linux.arm64)
+  implementation(libs.brotli.native.windows)
+  implementation(libs.brotli.native.windows.amd64)
+
   // Native-image transitive compile dependencies
   nativeImageCompileOnly(libs.jakarta.validation)
   nativeImageCompileOnly(libs.guava)

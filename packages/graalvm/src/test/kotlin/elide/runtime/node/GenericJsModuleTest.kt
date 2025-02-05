@@ -21,7 +21,7 @@ import kotlin.test.Test
 import kotlin.test.assertContains
 import elide.runtime.intrinsics.GuestIntrinsic
 
-internal abstract class GenericJsModuleTest<T> : AbstractJsModuleTest<T>() where T: GuestIntrinsic {
+internal abstract class GenericJsModuleTest<T> : AbstractJsModuleTest<T>() where T : GuestIntrinsic {
   open fun requiredMembers(): Sequence<String> = emptySequence()
   open fun expectCompliance(): Boolean = true
 

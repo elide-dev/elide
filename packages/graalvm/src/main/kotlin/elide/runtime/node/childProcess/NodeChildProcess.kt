@@ -694,7 +694,7 @@ public class ChildProcessHandle private constructor(
   @Suppress("TooGenericExceptionCaught")
   @Polyglot override fun kill(signal: String?): Unit = (signal ?: pending.execution.options.killSignal).let {
     try {
-      ChildProcessNative.killWith(pid.toInt(), it)
+      ChildProcessNative.killWith(pid, it)
       termination.signal(it)
     } catch (e: Throwable) {
       throw JsError.valueError("Failed to send signal to process: ${e.message}", e)

@@ -41,5 +41,51 @@ internal object ChildProcessNative {
    * @param signal The signal to send to the process.
    * @return The return value of the signal operation.
    */
-  @JvmStatic @JvmName("killWith") internal external fun killWith(pid: Int, signal: String): Int
+  @JvmStatic @JvmName("killWith") internal external fun killWith(pid: Long, signal: String): Int
+
+  /**
+   * ## Current Process Priority
+   *
+   * Retrieve the priority value set for the current process, if supported. If the operation is not supported, the value
+   * `0` is returned as a default.
+   *
+   * @return The priority value of the current process.
+   */
+  @JvmStatic @JvmName("currentProcessPriority") internal external fun currentProcessPriority(): Int
+
+  /**
+   * ## Set Current Process Priority
+   *
+   * Set the priority value set for the current process, if supported; if the operation is not supported, the value `-1`
+   * is returned.
+   *
+   * @param priority The priority value to set for the current process.
+   * @return The priority value of the current process; either the value provided, or `-1` if the operation is not
+   *   supported.
+   */
+  @JvmStatic @JvmName("currentProcessPriority") internal external fun setCurrentProcessPriority(priority: Int): Int
+
+  /**
+   * ## Get Process Priority
+   *
+   * Retrieve the priority value set for the specified process, addressed by its [pid], if supported. If the operation
+   * is not supported, the value `0` is returned as a default.
+   *
+   * @param pid The process ID to retrieve priority for.
+   * @return The priority value of the specified process.
+   */
+  @JvmStatic @JvmName("currentProcessPriority") internal external fun getProcessPriority(pid: Long): Int
+
+  /**
+   * ## Set Process Priority
+   *
+   * Set the [priority] value set for the specified process, addressed by its [pid], if supported; if the operation is
+   * not supported, the value `-1` is returned.
+   *
+   * @param pid The process ID to set priority for.
+   * @param priority The priority value to set for the current process.
+   * @return The priority value of the specified process; either the value provided, or `-1` if the operation is not
+   *   supported.
+   */
+  @JvmStatic @JvmName("setProcessPriority") internal external fun setProcessPriority(pid: Long, priority: Int): Int
 }

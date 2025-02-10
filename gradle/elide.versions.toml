@@ -26,6 +26,7 @@ auto-factory = "1.1.0"
 auto-service = "1.1.1"
 auto-value = "1.11.0"
 bouncycastle = "1.80"
+brotli = "0.1.2"
 brotli4j = "1.18.0"
 buf = "1.28.1"
 buildTimeTracker = "4.3.0"
@@ -36,7 +37,7 @@ capnproto = "0.1.18-elide"
 cite = "0.6.1"
 clikt = "5.0.2"
 commons-codec = "1.18.0"
-commons-compress = "1.26.2"
+commons-compress = "1.27.1"
 commons-csv = "1.13.0"
 commons-io = "2.18.0"
 commons-pool = "2.12.1"
@@ -66,7 +67,7 @@ gr8 = "0.10"
 graalvm = "24.1.2"
 graalvm-metadata = "0.3.8"
 graalvm-pin = "24.1.2"
-graalvm-plugin = "0.10.4"
+graalvm-plugin = "0.10.5"
 graalvm-stable = "24.1.2"
 graalvm-svm-driver = "24.1.2"
 gradleChecksum = "1.4.0"
@@ -75,7 +76,7 @@ gradleTestRetry = "1.6.1"
 grpc-java = "1.62.2"
 grpc-kotlin = "1.4.1"
 grpc-web = "1.4.2"
-guava = "33.3.1-jre"
+guava = "33.4.0-jre-jpms"
 h2 = "2.3.232"
 hamcrest-core = "2.2"
 hamcrest-junit = "2.0.0.0"
@@ -379,6 +380,7 @@ caffeine-jcache = { group = "com.github.ben-manes.caffeine", name = "jcache", ve
 capnproto-compiler = { group = "org.capnproto", name = "compiler", version.ref = "capnproto" }
 capnproto-runtime = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
 capnproto-runtime-rpc = { group = "org.capnproto", name = "runtime-rpc", version.ref = "capnproto" }
+cbrotli = { group = "org.brotli", name = "dec", version.ref = "brotli" }
 clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }

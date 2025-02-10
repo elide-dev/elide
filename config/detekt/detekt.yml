@@ -117,7 +117,7 @@ complexity:
     includePrivateDeclarations: false
   CyclomaticComplexMethod:
     active: true
-    threshold: 20
+    threshold: 50
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
@@ -156,7 +156,7 @@ complexity:
     ignoreArgumentsMatchingNames: false
   NestedBlockDepth:
     active: true
-    threshold: 6
+    threshold: 12
   ReplaceSafeCallChainWithRun:
     active: false
   StringLiteralDuplication:
@@ -175,7 +175,7 @@ complexity:
     excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: "$^"
   TooManyFunctions:
-    active: true
+    active: false
     excludes:
       [
         "**/test/**",

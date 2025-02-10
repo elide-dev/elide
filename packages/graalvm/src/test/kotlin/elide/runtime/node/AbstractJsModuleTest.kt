@@ -22,10 +22,12 @@ import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.intrinsics.js.base64.Base64Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.node.asserts.NodeAssertModule
-import elide.runtime.node.asserts.NodeAssertStrictModule
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
+import elide.runtime.node.asserts.NodeAssertModule
+import elide.runtime.node.asserts.NodeAssertStrictModule
+import elide.runtime.node.buffer.NodeBufferModule
+import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.runtime.plugins.env.EnvConfig
 import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.js.JavaScript
@@ -33,7 +35,7 @@ import elide.runtime.plugins.js.javascript
 import elide.runtime.plugins.vfs.VfsConfig
 import elide.runtime.plugins.vfs.vfs
 
-internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntrinsicTest<T>() {
+internal abstract class AbstractJsModuleTest<T : GuestIntrinsic> : AbstractJsIntrinsicTest<T>() {
   abstract val moduleName: String
 
   open fun EnvConfig.configureEnvironment() {
@@ -65,6 +67,7 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     bindAssert: Boolean = true,
     bindConsole: Boolean = true,
     bindBase64: Boolean = true,
+    bindBuffer: Boolean = true,
   ) {
     // install bindings under test, if directed
     val target = polyglotContext.bindings(JavaScript)
@@ -83,6 +86,11 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
       if (bindAssert && !group.any { it.key.symbol.contains("assert") }) {
         NodeAssertModule().install(binding)
         NodeAssertStrictModule().install(binding)
+      }
+      if (bindBuffer && !group.any { it.key.symbol.contains("buffer") }) {
+        NodeBufferModule().apply {
+          facade = NodeBufferModuleFacade()
+        }.install(binding)
       }
       group
     } else {
@@ -106,7 +114,7 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     }
 
     // shim primordials
-    val primordialsProxy = object: ProxyObject, ProxyHashMap {
+    val primordialsProxy = object : ProxyObject, ProxyHashMap {
       override fun getMemberKeys(): Array<String> = internalBindings.keys.toTypedArray()
       override fun hasMember(key: String?): Boolean = key != null && key in internalBindings
       override fun hasHashEntry(key: Value?): Boolean = key != null && key.asString() in internalBindings
@@ -115,6 +123,7 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
       override fun putMember(key: String?, value: Value?) {
         // no-op
       }
+
       override fun putHashEntry(key: Value?, value: Value?) {
         // no-op
       }
@@ -134,7 +143,7 @@ internal abstract class AbstractJsModuleTest<T: GuestIntrinsic> : AbstractJsIntr
     beforeExec(bind)
     return polyglotContext.javascript(
       // language=js
-      """require("$module");"""
+      """require("$module");""",
     )
   }
 

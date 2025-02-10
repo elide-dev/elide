@@ -121,7 +121,7 @@ internal abstract class AbstractStream<T>(
   protected val streamErr: AtomicReference<Any> = AtomicReference(null)
   protected val highWaterMark: AtomicInteger = AtomicInteger(0)
   protected val bufferSize: AtomicInteger = AtomicInteger(0)
-  protected val linkedQueue: ConcurrentLinkedQueue<Any?> = ConcurrentLinkedQueue()
+  private val linkedQueue: ConcurrentLinkedQueue<Any?> = ConcurrentLinkedQueue()
 
   override val closed: Boolean get() = !open.get()
   override val destroyed: Boolean get() = isDestroyed.get()
@@ -650,6 +650,63 @@ internal abstract class AbstractWritable<T> : AbstractStream<T>(), Writable wher
   internal abstract fun doEnd(chunk: StringOrBufferOrAny?, encoding: Charset? = null, callback: (() -> Unit)? = null)
 }
 
+// Implements a cold input stream, which can accept data from any source.
+internal class ColdInputStream : InputStream() {
+  companion object {
+    @JvmStatic fun create(): ColdInputStream = ColdInputStream()
+  }
+
+  private val dirty: AtomicBoolean = AtomicBoolean(false)
+  private val buffer: ConcurrentLinkedQueue<Byte> = ConcurrentLinkedQueue()
+
+  fun write(chunk: ByteArray) {
+    dirty.set(true)
+    buffer.addAll(chunk.toList())
+  }
+
+  override fun read(): Int {
+    require(dirty.get()) { "Stream is not yet dirty" }
+    return buffer.poll()?.toInt() ?: -1
+  }
+
+  override fun readNBytes(len: Int): ByteArray {
+    require(dirty.get()) { "Stream is not yet dirty" }
+    val arr = ByteArray(len)
+    for (i in 0 until len) {
+      arr[i] = buffer.poll() ?: break
+    }
+    return arr
+  }
+
+  override fun read(b: ByteArray): Int {
+    require(dirty.get()) { "Stream is not yet dirty" }
+    val len = b.size
+    for (i in 0 until len) {
+      b[i] = buffer.poll() ?: break
+    }
+    return len
+  }
+
+  override fun readAllBytes(): ByteArray {
+    require(dirty.get()) { "Stream is not yet dirty" }
+    val arr = ByteArray(buffer.size)
+    for (i in arr.indices) {
+      arr[i] = buffer.poll() ?: break
+    }
+    return arr
+  }
+
+  override fun read(b: ByteArray, off: Int, len: Int): Int {
+    require(dirty.get()) { "Stream is not yet dirty" }
+    for (i in off until off + len) {
+      b[i] = buffer.poll() ?: break
+    }
+    return len
+  }
+
+  override fun available(): Int = buffer.size
+}
+
 // Implementation of a wrapped/proxied `InputStream` as a Node `Readable`.
 internal class WrappedInputStream private constructor(
   private val backing: InputStream,
@@ -704,6 +761,10 @@ internal class WrappedOutputStream private constructor(backing: OutputStream) :
 
   // Callbacks on next flush.
   private val enqueuedCallbacks: ConcurrentLinkedQueue<() -> Unit> = ConcurrentLinkedQueue()
+
+  internal fun flush() {
+    notifyData()
+  }
 
   override fun notifyData() {
     rawBuffer.flush()

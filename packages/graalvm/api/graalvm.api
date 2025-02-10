@@ -2670,6 +2670,82 @@ public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesys
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ZlibAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun brotliCompress (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;)V
+	public fun brotliCompress (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun brotliCompress$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;ILjava/lang/Object;)V
+	public static synthetic fun brotliCompress$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun brotliCompressSync (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;)Ljava/nio/ByteBuffer;
+	public fun brotliCompressSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/nio/ByteBuffer;
+	public static synthetic fun brotliCompressSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public static synthetic fun brotliCompressSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public abstract fun brotliDecompress (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;)V
+	public fun brotliDecompress (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun brotliDecompress$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;ILjava/lang/Object;)V
+	public static synthetic fun brotliDecompress$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun brotliDecompressSync (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;)Ljava/nio/ByteBuffer;
+	public fun brotliDecompressSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/nio/ByteBuffer;
+	public static synthetic fun brotliDecompressSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public static synthetic fun brotliDecompressSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public fun crc32 (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)J
+	public static synthetic fun crc32$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)J
+	public abstract fun crc32-2TYgG_w ([BJ)J
+	public static synthetic fun crc32-2TYgG_w$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;[BJILjava/lang/Object;)J
+	public abstract fun createBrotliCompress (Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;)Lelide/runtime/intrinsics/js/node/zlib/BrotliCompress;
+	public fun createBrotliCompress (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/BrotliCompress;
+	public static synthetic fun createBrotliCompress$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/zlib/BrotliCompress;
+	public abstract fun createBrotliDecompress (Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;)Lelide/runtime/intrinsics/js/node/zlib/BrotliDecompress;
+	public fun createBrotliDecompress (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/BrotliDecompress;
+	public static synthetic fun createBrotliDecompress$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/zlib/BrotliDecompress;
+	public abstract fun createDeflate (Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Lelide/runtime/intrinsics/js/node/zlib/Deflate;
+	public fun createDeflate (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/Deflate;
+	public static synthetic fun createDeflate$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/zlib/Deflate;
+	public abstract fun createInflate (Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Lelide/runtime/intrinsics/js/node/zlib/Inflate;
+	public fun createInflate (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/Inflate;
+	public static synthetic fun createInflate$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/zlib/Inflate;
+	public abstract fun createUnzip (Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Lelide/runtime/intrinsics/js/node/zlib/Unzip;
+	public fun createUnzip (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/Unzip;
+	public static synthetic fun createUnzip$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/zlib/Unzip;
+	public abstract fun deflate (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;)V
+	public fun deflate (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun deflate$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;ILjava/lang/Object;)V
+	public static synthetic fun deflate$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun deflateSync (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Ljava/nio/ByteBuffer;
+	public fun deflateSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/nio/ByteBuffer;
+	public static synthetic fun deflateSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public static synthetic fun deflateSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public abstract fun getConstants ()Lelide/runtime/intrinsics/js/node/zlib/NodeZlibConstants;
+	public abstract fun gunzip (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;)V
+	public fun gunzip (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun gunzip$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;ILjava/lang/Object;)V
+	public static synthetic fun gunzip$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun gunzipSync (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Ljava/nio/ByteBuffer;
+	public fun gunzipSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/nio/ByteBuffer;
+	public static synthetic fun gunzipSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public static synthetic fun gunzipSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public abstract fun gzip (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;)V
+	public fun gzip (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun gzip$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;ILjava/lang/Object;)V
+	public static synthetic fun gzip$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun gzipSync (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Ljava/nio/ByteBuffer;
+	public fun gzipSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/nio/ByteBuffer;
+	public static synthetic fun gzipSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public static synthetic fun gzipSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public abstract fun inflate (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;)V
+	public fun inflate (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun inflate$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;ILjava/lang/Object;)V
+	public static synthetic fun inflate$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun inflateSync (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Ljava/nio/ByteBuffer;
+	public fun inflateSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/nio/ByteBuffer;
+	public static synthetic fun inflateSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public static synthetic fun inflateSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public abstract fun unzip (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;)V
+	public fun unzip (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun unzip$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;ILjava/lang/Object;)V
+	public static synthetic fun unzip$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun unzipSync (Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;)Ljava/nio/ByteBuffer;
+	public fun unzipSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/nio/ByteBuffer;
+	public static synthetic fun unzipSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Ljava/nio/ByteBuffer;Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
+	public static synthetic fun unzipSync$default (Lelide/runtime/intrinsics/js/node/ZlibAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/nio/ByteBuffer;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/asserts/AssertionError : elide/runtime/intrinsics/js/err/JsRegisteredError {
@@ -3517,31 +3593,236 @@ public final class elide/runtime/intrinsics/js/node/os/OSType$Companion {
 	public final fun current ()Lelide/runtime/intrinsics/js/node/os/OSType;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/os/OperatingSystemConstants : org/graalvm/polyglot/proxy/ProxyHashMap {
+public abstract interface class elide/runtime/intrinsics/js/node/os/OperatingSystemConstants : org/graalvm/polyglot/proxy/ProxyObject {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$DlopenFlags : org/graalvm/polyglot/proxy/ProxyObject {
+	public fun all ()Lkotlin/sequences/Sequence;
+	public abstract fun getRTLD_DEEPBIND ()I
+	public abstract fun getRTLD_GLOBAL ()I
+	public abstract fun getRTLD_LAZY ()I
+	public abstract fun getRTLD_LOCAL ()I
+	public abstract fun getRTLD_NOW ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$ErrnoConstants : org/graalvm/polyglot/proxy/ProxyObject {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$PriorityConstants : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun getPRIORITY_ABOVE_NORMAL ()I
+	public abstract fun getPRIORITY_BELOW_NORMAL ()I
+	public abstract fun getPRIORITY_HIGH ()I
+	public abstract fun getPRIORITY_HIGHEST ()I
+	public abstract fun getPRIORITY_LOW ()I
+	public abstract fun getPRIORITY_NORMAL ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$SignalsConstants : org/graalvm/polyglot/proxy/ProxyObject {
+}
+
+public final class elide/runtime/intrinsics/js/node/os/OperatingSystemConstantsKt {
+	public static final field E2BIG_CONST I
+	public static final field EACCES_CONST I
+	public static final field EADDRINUSE_CONST I
+	public static final field EADDRNOTAVAIL_CONST I
+	public static final field EAFNOSUPPORT_CONST I
+	public static final field EAGAIN_CONST I
+	public static final field EALREADY_CONST I
+	public static final field EBADF_CONST I
+	public static final field EBADMSG_CONST I
+	public static final field EBUSY_CONST I
+	public static final field ECANCELED_CONST I
+	public static final field ECHILD_CONST I
+	public static final field ECONNABORTED_CONST I
+	public static final field ECONNREFUSED_CONST I
+	public static final field ECONNRESET_CONST I
+	public static final field EDEADLK_CONST I
+	public static final field EDESTADDRREQ_CONST I
+	public static final field EDOM_CONST I
+	public static final field EDQUOT_CONST I
+	public static final field EEXIST_CONST I
+	public static final field EFAULT_CONST I
+	public static final field EFBIG_CONST I
+	public static final field EHOSTUNREACH_CONST I
+	public static final field EIDRM_CONST I
+	public static final field EILSEQ_CONST I
+	public static final field EINPROGRESS_CONST I
+	public static final field EINTR_CONST I
+	public static final field EINVAL_CONST I
+	public static final field EIO_CONST I
+	public static final field EISCONN_CONST I
+	public static final field EISDIR_CONST I
+	public static final field ELOOP_CONST I
+	public static final field EMFILE_CONST I
+	public static final field EMLINK_CONST I
+	public static final field EMSGSIZE_CONST I
+	public static final field EMULTIHOP_CONST I
+	public static final field ENAMETOOLONG_CONST I
+	public static final field ENETDOWN_CONST I
+	public static final field ENETRESET_CONST I
+	public static final field ENETUNREACH_CONST I
+	public static final field ENFILE_CONST I
+	public static final field ENOBUFS_CONST I
+	public static final field ENODATA_CONST I
+	public static final field ENODEV_CONST I
+	public static final field ENOENT_CONST I
+	public static final field ENOEXEC_CONST I
+	public static final field ENOLCK_CONST I
+	public static final field ENOLINK_CONST I
+	public static final field ENOMEM_CONST I
+	public static final field ENOMSG_CONST I
+	public static final field ENOPROTOOPT_CONST I
+	public static final field ENOSPC_CONST I
+	public static final field ENOSR_CONST I
+	public static final field ENOSTR_CONST I
+	public static final field ENOSYS_CONST I
+	public static final field ENOTCONN_CONST I
+	public static final field ENOTDIR_CONST I
+	public static final field ENOTEMPTY_CONST I
+	public static final field ENOTSOCK_CONST I
+	public static final field ENOTSUP_CONST I
+	public static final field ENOTTY_CONST I
+	public static final field ENXIO_CONST I
+	public static final field EOPNOTSUPP_CONST I
+	public static final field EOVERFLOW_CONST I
+	public static final field EPERM_CONST I
+	public static final field EPIPE_CONST I
+	public static final field EPROTONOSUPPORT_CONST I
+	public static final field EPROTOTYPE_CONST I
+	public static final field EPROTO_CONST I
+	public static final field ERANGE_CONST I
+	public static final field EROFS_CONST I
+	public static final field ESPIPE_CONST I
+	public static final field ESRCH_CONST I
+	public static final field ESTALE_CONST I
+	public static final field ETIMEDOUT_CONST I
+	public static final field ETIME_CONST I
+	public static final field ETXTBSY_CONST I
+	public static final field EWOULDBLOCK_CONST I
+	public static final field EXDEV_CONST I
+	public static final field POSIX_RTLD_DEEPBIND I
+	public static final field POSIX_RTLD_GLOBAL I
+	public static final field POSIX_RTLD_LAZY I
+	public static final field POSIX_RTLD_LOCAL I
+	public static final field POSIX_RTLD_NOW I
+	public static final field SYMBOL_E2BIG Ljava/lang/String;
+	public static final field SYMBOL_EACCES Ljava/lang/String;
+	public static final field SYMBOL_EADDRINUSE Ljava/lang/String;
+	public static final field SYMBOL_EADDRNOTAVAIL Ljava/lang/String;
+	public static final field SYMBOL_EAFNOSUPPORT Ljava/lang/String;
+	public static final field SYMBOL_EAGAIN Ljava/lang/String;
+	public static final field SYMBOL_EALREADY Ljava/lang/String;
+	public static final field SYMBOL_EBADF Ljava/lang/String;
+	public static final field SYMBOL_EBADMSG Ljava/lang/String;
+	public static final field SYMBOL_EBUSY Ljava/lang/String;
+	public static final field SYMBOL_ECANCELED Ljava/lang/String;
+	public static final field SYMBOL_ECHILD Ljava/lang/String;
+	public static final field SYMBOL_ECONNABORTED Ljava/lang/String;
+	public static final field SYMBOL_ECONNREFUSED Ljava/lang/String;
+	public static final field SYMBOL_ECONNRESET Ljava/lang/String;
+	public static final field SYMBOL_EDEADLK Ljava/lang/String;
+	public static final field SYMBOL_EDESTADDRREQ Ljava/lang/String;
+	public static final field SYMBOL_EDOM Ljava/lang/String;
+	public static final field SYMBOL_EDQUOT Ljava/lang/String;
+	public static final field SYMBOL_EEXIST Ljava/lang/String;
+	public static final field SYMBOL_EFAULT Ljava/lang/String;
+	public static final field SYMBOL_EFBIG Ljava/lang/String;
+	public static final field SYMBOL_EHOSTUNREACH Ljava/lang/String;
+	public static final field SYMBOL_EIDRM Ljava/lang/String;
+	public static final field SYMBOL_EILSEQ Ljava/lang/String;
+	public static final field SYMBOL_EINPROGRESS Ljava/lang/String;
+	public static final field SYMBOL_EINTR Ljava/lang/String;
+	public static final field SYMBOL_EINVAL Ljava/lang/String;
+	public static final field SYMBOL_EIO Ljava/lang/String;
+	public static final field SYMBOL_EISCONN Ljava/lang/String;
+	public static final field SYMBOL_EISDIR Ljava/lang/String;
+	public static final field SYMBOL_ELOOP Ljava/lang/String;
+	public static final field SYMBOL_EMFILE Ljava/lang/String;
+	public static final field SYMBOL_EMLINK Ljava/lang/String;
+	public static final field SYMBOL_EMSGSIZE Ljava/lang/String;
+	public static final field SYMBOL_EMULTIHOP Ljava/lang/String;
+	public static final field SYMBOL_ENAMETOOLONG Ljava/lang/String;
+	public static final field SYMBOL_ENETDOWN Ljava/lang/String;
+	public static final field SYMBOL_ENETRESET Ljava/lang/String;
+	public static final field SYMBOL_ENETUNREACH Ljava/lang/String;
+	public static final field SYMBOL_ENFILE Ljava/lang/String;
+	public static final field SYMBOL_ENOBUFS Ljava/lang/String;
+	public static final field SYMBOL_ENODATA Ljava/lang/String;
+	public static final field SYMBOL_ENODEV Ljava/lang/String;
+	public static final field SYMBOL_ENOENT Ljava/lang/String;
+	public static final field SYMBOL_ENOEXEC Ljava/lang/String;
+	public static final field SYMBOL_ENOLCK Ljava/lang/String;
+	public static final field SYMBOL_ENOLINK Ljava/lang/String;
+	public static final field SYMBOL_ENOMEM Ljava/lang/String;
+	public static final field SYMBOL_ENOMSG Ljava/lang/String;
+	public static final field SYMBOL_ENOPROTOOPT Ljava/lang/String;
+	public static final field SYMBOL_ENOSPC Ljava/lang/String;
+	public static final field SYMBOL_ENOSR Ljava/lang/String;
+	public static final field SYMBOL_ENOSTR Ljava/lang/String;
+	public static final field SYMBOL_ENOSYS Ljava/lang/String;
+	public static final field SYMBOL_ENOTCONN Ljava/lang/String;
+	public static final field SYMBOL_ENOTDIR Ljava/lang/String;
+	public static final field SYMBOL_ENOTEMPTY Ljava/lang/String;
+	public static final field SYMBOL_ENOTSOCK Ljava/lang/String;
+	public static final field SYMBOL_ENOTSUP Ljava/lang/String;
+	public static final field SYMBOL_ENOTTY Ljava/lang/String;
+	public static final field SYMBOL_ENXIO Ljava/lang/String;
+	public static final field SYMBOL_EOPNOTSUPP Ljava/lang/String;
+	public static final field SYMBOL_EOVERFLOW Ljava/lang/String;
+	public static final field SYMBOL_EPERM Ljava/lang/String;
+	public static final field SYMBOL_EPIPE Ljava/lang/String;
+	public static final field SYMBOL_EPROTO Ljava/lang/String;
+	public static final field SYMBOL_EPROTONOSUPPORT Ljava/lang/String;
+	public static final field SYMBOL_EPROTOTYPE Ljava/lang/String;
+	public static final field SYMBOL_ERANGE Ljava/lang/String;
+	public static final field SYMBOL_EROFS Ljava/lang/String;
+	public static final field SYMBOL_ESPIPE Ljava/lang/String;
+	public static final field SYMBOL_ESRCH Ljava/lang/String;
+	public static final field SYMBOL_ESTALE Ljava/lang/String;
+	public static final field SYMBOL_ETIME Ljava/lang/String;
+	public static final field SYMBOL_ETIMEDOUT Ljava/lang/String;
+	public static final field SYMBOL_ETXTBSY Ljava/lang/String;
+	public static final field SYMBOL_EWOULDBLOCK Ljava/lang/String;
+	public static final field SYMBOL_EXDEV Ljava/lang/String;
+	public static final field SYMBOL_RTLD_DEEPBIND Ljava/lang/String;
+	public static final field SYMBOL_RTLD_GLOBAL Ljava/lang/String;
+	public static final field SYMBOL_RTLD_LAZY Ljava/lang/String;
+	public static final field SYMBOL_RTLD_LOCAL Ljava/lang/String;
+	public static final field SYMBOL_RTLD_NOW Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/PosixSystemConstants : elide/runtime/intrinsics/js/node/os/OperatingSystemConstants {
+	public abstract fun getDlopen ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$DlopenFlags;
+	public abstract fun getErrno ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$ErrnoConstants;
+	public abstract fun getPriority ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$PriorityConstants;
+	public abstract fun getSignals ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$SignalsConstants;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/os/UserInfo : org/graalvm/polyglot/proxy/ProxyObject {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/os/UserInfo$Companion;
-	public abstract fun getGid ()I
+	public abstract fun getGid ()J
 	public abstract fun getHomedir ()Ljava/lang/Object;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public abstract fun getShell ()Ljava/lang/Object;
-	public abstract fun getUid ()I
+	public abstract fun getUid ()J
 	public abstract fun getUsername ()Ljava/lang/Object;
 	public fun hasMember (Ljava/lang/String;)Z
-	public static fun of (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)Lelide/runtime/intrinsics/js/node/os/UserInfo;
+	public static fun of (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;JJ)Lelide/runtime/intrinsics/js/node/os/UserInfo;
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun removeMember (Ljava/lang/String;)Z
 }
 
 public final class elide/runtime/intrinsics/js/node/os/UserInfo$Companion {
-	public final fun of (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)Lelide/runtime/intrinsics/js/node/os/UserInfo;
+	public final fun of (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;JJ)Lelide/runtime/intrinsics/js/node/os/UserInfo;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/os/UserInfoOptions : org/graalvm/polyglot/proxy/ProxyHashMap {
 	public abstract fun getEncoding ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/os/Win32SystemConstants : elide/runtime/intrinsics/js/node/os/OperatingSystemConstants {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/path/Path : elide/runtime/intrinsics/js/StringLike, java/lang/Comparable {
@@ -4174,6 +4455,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/stream/Stateful
 public abstract interface class elide/runtime/intrinsics/js/node/stream/Stream {
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/stream/Transform : elide/runtime/intrinsics/js/node/stream/Duplex {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/stream/Writable : elide/runtime/intrinsics/js/node/events/EventEmitter, elide/runtime/intrinsics/js/node/events/EventTarget, elide/runtime/intrinsics/js/node/stream/StatefulStream {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/stream/Writable$Companion;
 	public abstract fun cork ()V
@@ -4205,6 +4489,538 @@ public abstract interface class elide/runtime/intrinsics/js/node/stream/Writable
 
 public final class elide/runtime/intrinsics/js/node/stream/Writable$Companion {
 	public final fun wrap (Ljava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/stream/Writable;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/BrotliCompress : elide/runtime/intrinsics/js/node/stream/Writable, elide/runtime/intrinsics/js/node/zlib/Compressor {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/BrotliConstants : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun getBROTLI_DECODER_ERROR_ALLOC_BLOCK_TYPE_TREES ()I
+	public abstract fun getBROTLI_DECODER_ERROR_ALLOC_CONTEXT_MAP ()I
+	public abstract fun getBROTLI_DECODER_ERROR_ALLOC_CONTEXT_MODES ()I
+	public abstract fun getBROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_1 ()I
+	public abstract fun getBROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_2 ()I
+	public abstract fun getBROTLI_DECODER_ERROR_ALLOC_TREE_GROUPS ()I
+	public abstract fun getBROTLI_DECODER_ERROR_DICTIONARY_NOT_SET ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_1 ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_2 ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_CL_SPACE ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_CONTEXT_MAP_REPEAT ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_DICTIONARY ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_DISTANCE ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_EXUBERANT_META_NIBBLE ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_EXUBERANT_NIBBLE ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_HUFFMAN_SPACE ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_PADDING_1 ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_PADDING_2 ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_RESERVED ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_ALPHABET ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_SAME ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_TRANSFORM ()I
+	public abstract fun getBROTLI_DECODER_ERROR_FORMAT_WINDOW_BITS ()I
+	public abstract fun getBROTLI_DECODER_ERROR_INVALID_ARGUMENTS ()I
+	public abstract fun getBROTLI_DECODER_ERROR_UNREACHABLE ()I
+	public abstract fun getBROTLI_DECODER_NEEDS_MORE_INPUT ()I
+	public abstract fun getBROTLI_DECODER_NEEDS_MORE_OUTPUT ()I
+	public abstract fun getBROTLI_DECODER_NO_ERROR ()I
+	public abstract fun getBROTLI_DECODER_PARAM_DISABLE_RING_BUFFER_REALLOCATION ()I
+	public abstract fun getBROTLI_DECODER_PARAM_LARGE_WINDOW ()I
+	public abstract fun getBROTLI_DECODER_RESULT_ERROR ()I
+	public abstract fun getBROTLI_DECODER_RESULT_NEEDS_MORE_INPUT ()I
+	public abstract fun getBROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT ()I
+	public abstract fun getBROTLI_DECODER_RESULT_SUCCESS ()I
+	public abstract fun getBROTLI_DECODER_SUCCESS ()I
+	public abstract fun getBROTLI_DEFAULT_MODE ()I
+	public abstract fun getBROTLI_DEFAULT_QUALITY ()I
+	public abstract fun getBROTLI_DEFAULT_WINDOW ()I
+	public abstract fun getBROTLI_LARGE_MAX_WINDOW_BITS ()I
+	public abstract fun getBROTLI_MAX_INPUT_BLOCK_BITS ()I
+	public abstract fun getBROTLI_MAX_QUALITY ()I
+	public abstract fun getBROTLI_MAX_WINDOW_BITS ()I
+	public abstract fun getBROTLI_MIN_INPUT_BLOCK_BITS ()I
+	public abstract fun getBROTLI_MIN_QUALITY ()I
+	public abstract fun getBROTLI_MIN_WINDOW_BITS ()I
+	public abstract fun getBROTLI_MODE_FONT ()I
+	public abstract fun getBROTLI_MODE_GENERIC ()I
+	public abstract fun getBROTLI_MODE_TEXT ()I
+	public abstract fun getBROTLI_OPERATION_EMIT_METADATA ()I
+	public abstract fun getBROTLI_OPERATION_FINISH ()I
+	public abstract fun getBROTLI_OPERATION_FLUSH ()I
+	public abstract fun getBROTLI_OPERATION_PROCESS ()I
+	public abstract fun getBROTLI_PARAM_DISABLE_LITERAL_CONTEXT_MODELING ()I
+	public abstract fun getBROTLI_PARAM_LARGE_WINDOW ()I
+	public abstract fun getBROTLI_PARAM_LGBLOCK ()I
+	public abstract fun getBROTLI_PARAM_LGWIN ()I
+	public abstract fun getBROTLI_PARAM_MODE ()I
+	public abstract fun getBROTLI_PARAM_NDIRECT ()I
+	public abstract fun getBROTLI_PARAM_NPOSTFIX ()I
+	public abstract fun getBROTLI_PARAM_QUALITY ()I
+	public abstract fun getBROTLI_PARAM_SIZE_HINT ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/BrotliDecompress : elide/runtime/intrinsics/js/node/stream/Readable, elide/runtime/intrinsics/js/node/zlib/Decompressor {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/BrotliOptions {
+	public abstract fun getChunkSize ()I
+	public abstract fun getFinishFlush ()I
+	public abstract fun getFlush ()I
+	public abstract fun getMaxOutputLength ()I
+	public abstract fun getParams ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/CloseStreamCallback {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/zlib/CloseStreamCallback$Companion;
+	public static fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/CloseStreamCallback;
+	public abstract fun invoke ()V
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/CloseStreamCallback$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/CloseStreamCallback;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/CompressActor : elide/runtime/intrinsics/js/node/stream/Transform, elide/runtime/intrinsics/js/node/zlib/CompressorAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/CompressCallback {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/zlib/CompressCallback$Companion;
+	public fun done (Ljava/nio/ByteBuffer;)V
+	public fun failed (Ljava/lang/RuntimeException;)V
+	public static fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;
+	public abstract fun invoke (Ljava/lang/RuntimeException;Ljava/nio/ByteBuffer;)V
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/CompressCallback$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/CompressCallback;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/Compressor : elide/runtime/intrinsics/js/node/zlib/CompressActor {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/CompressorAPI : java/io/Closeable, java/lang/AutoCloseable {
+	public abstract fun close ()V
+	public fun close (Lelide/runtime/intrinsics/js/node/zlib/CloseStreamCallback;)V
+	public fun close (Lorg/graalvm/polyglot/Value;)V
+	public abstract fun flush ()V
+	public fun flush (Lelide/runtime/intrinsics/js/node/zlib/FlushStreamCallback;)V
+	public fun flush (Lorg/graalvm/polyglot/Value;)V
+	public abstract fun getBytesWritten ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/Decompressor : elide/runtime/intrinsics/js/node/zlib/CompressActor {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/Deflate : elide/runtime/intrinsics/js/node/stream/Writable, elide/runtime/intrinsics/js/node/zlib/Compressor {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/FlushStreamCallback {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/zlib/FlushStreamCallback$Companion;
+	public static fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/FlushStreamCallback;
+	public abstract fun invoke ()V
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/FlushStreamCallback$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/FlushStreamCallback;
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions : java/lang/Record, elide/runtime/intrinsics/js/node/zlib/BrotliOptions, elide/runtime/intrinsics/js/node/zlib/BrotliOptionsDefaults {
+	public static final field Factory Lelide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions$Factory;
+	public fun <init> ()V
+	public fun chunkSize ()I
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public static final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun finishFlush ()I
+	public fun flush ()I
+	public static final fun fromValue (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions;
+	public synthetic fun getChunkSize ()I
+	public synthetic fun getFinishFlush ()I
+	public synthetic fun getFlush ()I
+	public synthetic fun getMaxOutputLength ()I
+	public synthetic fun getParams ()I
+	public fun hashCode ()I
+	public fun maxOutputLength ()I
+	public fun params ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;
+	public final fun fromValue (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions : java/lang/Record, elide/runtime/intrinsics/js/node/zlib/ZlibOptions, elide/runtime/intrinsics/js/node/zlib/ZlibOptionsDefaults {
+	public static final field Factory Lelide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions$Factory;
+	public fun <init> ()V
+	public fun chunkSize ()I
+	public final fun component1 ()I
+	public final fun component10 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun component8 ()Ljava/lang/Object;
+	public final fun component9 ()Z
+	public static final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;
+	public fun dictionary ()Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun finishFlush ()I
+	public fun flush ()I
+	public static final fun fromValue (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions;
+	public synthetic fun getChunkSize ()I
+	public synthetic fun getDictionary ()Ljava/lang/Object;
+	public synthetic fun getFinishFlush ()I
+	public synthetic fun getFlush ()I
+	public synthetic fun getInfo ()Ljava/lang/Boolean;
+	public synthetic fun getLevel ()Ljava/lang/Integer;
+	public synthetic fun getMaxOutputLength ()I
+	public synthetic fun getMemLevel ()Ljava/lang/Integer;
+	public synthetic fun getStrategy ()Ljava/lang/Integer;
+	public synthetic fun getWindowBits ()I
+	public fun hashCode ()I
+	public fun info ()Ljava/lang/Boolean;
+	public fun level ()Ljava/lang/Integer;
+	public fun maxOutputLength ()I
+	public fun memLevel ()Ljava/lang/Integer;
+	public fun strategy ()Ljava/lang/Integer;
+	public final fun toMutable ()Lelide/runtime/intrinsics/js/node/zlib/MutableZlibOptions;
+	public fun toString ()Ljava/lang/String;
+	public fun windowBits ()I
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;
+	public final fun fromValue (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/Inflate : elide/runtime/intrinsics/js/node/stream/Readable, elide/runtime/intrinsics/js/node/zlib/Decompressor {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/MutableBrotliOptions {
+	public abstract fun getChunkSize ()I
+	public abstract fun getFinishFlush ()I
+	public abstract fun getFlush ()I
+	public abstract fun getMaxOutputLength ()I
+	public abstract fun getParams ()I
+	public abstract fun setChunkSize (I)V
+	public abstract fun setFinishFlush (I)V
+	public abstract fun setFlush (I)V
+	public abstract fun setMaxOutputLength (I)V
+	public abstract fun setParams (I)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/MutableZlibOptions : elide/runtime/intrinsics/js/node/zlib/ZlibOptions {
+	public abstract fun getChunkSize ()I
+	public abstract fun getDictionary ()Ljava/lang/Object;
+	public abstract fun getFinishFlush ()I
+	public abstract fun getFlush ()I
+	public abstract fun getInfo ()Ljava/lang/Boolean;
+	public abstract fun getLevel ()Ljava/lang/Integer;
+	public abstract fun getMaxOutputLength ()I
+	public abstract fun getMemLevel ()Ljava/lang/Integer;
+	public abstract fun getStrategy ()Ljava/lang/Integer;
+	public abstract fun getWindowBits ()I
+	public abstract fun setChunkSize (I)V
+	public abstract fun setDictionary (Ljava/lang/Object;)V
+	public abstract fun setFinishFlush (I)V
+	public abstract fun setFlush (I)V
+	public abstract fun setInfo (Z)V
+	public abstract fun setLevel (Ljava/lang/Integer;)V
+	public abstract fun setMaxOutputLength (I)V
+	public abstract fun setMemLevel (Ljava/lang/Integer;)V
+	public abstract fun setStrategy (Ljava/lang/Integer;)V
+	public abstract fun setWindowBits (I)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/NodeZlibConstants : elide/runtime/intrinsics/js/node/zlib/BrotliConstants, elide/runtime/intrinsics/js/node/zlib/ZlibConstants {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/Unzip : elide/runtime/intrinsics/js/node/stream/Readable, elide/runtime/intrinsics/js/node/zlib/Decompressor {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/ZlibConstants : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun getDEFLATE ()I
+	public abstract fun getDEFLATERAW ()I
+	public abstract fun getGUNZIP ()I
+	public abstract fun getGZIP ()I
+	public abstract fun getINFLATE ()I
+	public abstract fun getINFLATERAW ()I
+	public abstract fun getUNZIP ()I
+	public abstract fun getZLIB_VERNUM ()I
+	public abstract fun getZ_BEST_COMPRESSION ()I
+	public abstract fun getZ_BEST_SPEED ()I
+	public abstract fun getZ_BLOCK ()I
+	public abstract fun getZ_BUF_ERROR ()I
+	public abstract fun getZ_DATA_ERROR ()I
+	public abstract fun getZ_DEFAULT_CHUNK ()I
+	public abstract fun getZ_DEFAULT_COMPRESSION ()I
+	public abstract fun getZ_DEFAULT_LEVEL ()I
+	public abstract fun getZ_DEFAULT_MEMLEVEL ()I
+	public abstract fun getZ_DEFAULT_STRATEGY ()I
+	public abstract fun getZ_DEFAULT_WINDOWBITS ()I
+	public abstract fun getZ_ERRNO ()I
+	public abstract fun getZ_FILTERED ()I
+	public abstract fun getZ_FINISH ()I
+	public abstract fun getZ_FIXED ()I
+	public abstract fun getZ_FULL_FLUSH ()I
+	public abstract fun getZ_HUFFMAN_ONLY ()I
+	public abstract fun getZ_MAX_CHUNK ()I
+	public abstract fun getZ_MAX_LEVEL ()I
+	public abstract fun getZ_MAX_MEMLEVEL ()I
+	public abstract fun getZ_MAX_WINDOWBITS ()I
+	public abstract fun getZ_MEM_ERROR ()I
+	public abstract fun getZ_MIN_CHUNK ()I
+	public abstract fun getZ_MIN_LEVEL ()I
+	public abstract fun getZ_MIN_MEMLEVEL ()I
+	public abstract fun getZ_MIN_WINDOWBITS ()I
+	public abstract fun getZ_NEED_DICT ()I
+	public abstract fun getZ_NO_COMPRESSION ()I
+	public abstract fun getZ_NO_FLUSH ()I
+	public abstract fun getZ_OK ()I
+	public abstract fun getZ_PARTIAL_FLUSH ()I
+	public abstract fun getZ_RLE ()I
+	public abstract fun getZ_STREAM_END ()I
+	public abstract fun getZ_STREAM_ERROR ()I
+	public abstract fun getZ_SYNC_FLUSH ()I
+	public abstract fun getZ_VERSION_ERROR ()I
+}
+
+public final class elide/runtime/intrinsics/js/node/zlib/ZlibConstantsKt {
+	public static final field BROTLI_DECODER_ERROR_ALLOC_BLOCK_TYPE_TREES_CONST I
+	public static final field BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MAP_CONST I
+	public static final field BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MODES_CONST I
+	public static final field BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_1_CONST I
+	public static final field BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_2_CONST I
+	public static final field BROTLI_DECODER_ERROR_ALLOC_TREE_GROUPS_CONST I
+	public static final field BROTLI_DECODER_ERROR_DICTIONARY_NOT_SET_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_1_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_2_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_CL_SPACE_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_CONTEXT_MAP_REPEAT_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_DICTIONARY_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_DISTANCE_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_META_NIBBLE_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_NIBBLE_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_HUFFMAN_SPACE_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_PADDING_1_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_PADDING_2_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_RESERVED_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_ALPHABET_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_SAME_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_TRANSFORM_CONST I
+	public static final field BROTLI_DECODER_ERROR_FORMAT_WINDOW_BITS_CONST I
+	public static final field BROTLI_DECODER_ERROR_INVALID_ARGUMENTS_CONST I
+	public static final field BROTLI_DECODER_ERROR_UNREACHABLE_CONST I
+	public static final field BROTLI_DECODER_NEEDS_MORE_INPUT_CONST I
+	public static final field BROTLI_DECODER_NEEDS_MORE_OUTPUT_CONST I
+	public static final field BROTLI_DECODER_NO_ERROR_CONST I
+	public static final field BROTLI_DECODER_PARAM_DISABLE_RING_BUFFER_REALLOCATION_CONST I
+	public static final field BROTLI_DECODER_PARAM_LARGE_WINDOW_CONST I
+	public static final field BROTLI_DECODER_RESULT_ERROR_CONST I
+	public static final field BROTLI_DECODER_RESULT_NEEDS_MORE_INPUT_CONST I
+	public static final field BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT_CONST I
+	public static final field BROTLI_DECODER_RESULT_SUCCESS_CONST I
+	public static final field BROTLI_DECODER_SUCCESS_CONST I
+	public static final field BROTLI_DECODE_CONST I
+	public static final field BROTLI_DEFAULT_MODE_CONST I
+	public static final field BROTLI_DEFAULT_QUALITY_CONST I
+	public static final field BROTLI_DEFAULT_WINDOW_CONST I
+	public static final field BROTLI_ENCODE_CONST I
+	public static final field BROTLI_LARGE_MAX_WINDOW_BITS_CONST I
+	public static final field BROTLI_MAX_INPUT_BLOCK_BITS_CONST I
+	public static final field BROTLI_MAX_QUALITY_CONST I
+	public static final field BROTLI_MAX_WINDOW_BITS_CONST I
+	public static final field BROTLI_MIN_INPUT_BLOCK_BITS_CONST I
+	public static final field BROTLI_MIN_QUALITY_CONST I
+	public static final field BROTLI_MIN_WINDOW_BITS_CONST I
+	public static final field BROTLI_MODE_FONT_CONST I
+	public static final field BROTLI_MODE_GENERIC_CONST I
+	public static final field BROTLI_MODE_TEXT_CONST I
+	public static final field BROTLI_OPERATION_EMIT_METADATA_CONST I
+	public static final field BROTLI_OPERATION_FINISH_CONST I
+	public static final field BROTLI_OPERATION_FLUSH_CONST I
+	public static final field BROTLI_OPERATION_PROCESS_CONST I
+	public static final field BROTLI_PARAM_DISABLE_LITERAL_CONTEXT_MODELING_CONST I
+	public static final field BROTLI_PARAM_LARGE_WINDOW_CONST I
+	public static final field BROTLI_PARAM_LGBLOCK_CONST I
+	public static final field BROTLI_PARAM_LGWIN_CONST I
+	public static final field BROTLI_PARAM_MODE_CONST I
+	public static final field BROTLI_PARAM_NDIRECT_CONST I
+	public static final field BROTLI_PARAM_NPOSTFIX_CONST I
+	public static final field BROTLI_PARAM_QUALITY_CONST I
+	public static final field BROTLI_PARAM_SIZE_HINT_CONST I
+	public static final field DEFLATERAW_CONST I
+	public static final field DEFLATE_CONST I
+	public static final field GUNZIP_CONST I
+	public static final field GZIP_CONST I
+	public static final field INFLATERAW_CONST I
+	public static final field INFLATE_CONST I
+	public static final field SYMBOL_BROTLI_DECODE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_ALLOC_BLOCK_TYPE_TREES Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MAP Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MODES Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_1 Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_2 Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_ALLOC_TREE_GROUPS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_DICTIONARY_NOT_SET Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_1 Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_2 Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_CL_SPACE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_CONTEXT_MAP_REPEAT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_DICTIONARY Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_DISTANCE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_META_NIBBLE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_NIBBLE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_HUFFMAN_SPACE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_PADDING_1 Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_PADDING_2 Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_RESERVED Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_ALPHABET Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_SAME Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_TRANSFORM Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_FORMAT_WINDOW_BITS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_INVALID_ARGUMENTS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_ERROR_UNREACHABLE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_NEEDS_MORE_INPUT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_NEEDS_MORE_OUTPUT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_NO_ERROR Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_PARAM_DISABLE_RING_BUFFER_REALLOCATION Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_PARAM_LARGE_WINDOW Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_RESULT_ERROR Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_RESULT_NEEDS_MORE_INPUT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_RESULT_SUCCESS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DECODER_SUCCESS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DEFAULT_MODE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DEFAULT_QUALITY Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_DEFAULT_WINDOW Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_ENCODE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_LARGE_MAX_WINDOW_BITS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MAX_INPUT_BLOCK_BITS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MAX_QUALITY Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MAX_WINDOW_BITS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MIN_INPUT_BLOCK_BITS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MIN_QUALITY Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MIN_WINDOW_BITS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MODE_FONT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MODE_GENERIC Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_MODE_TEXT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_OPERATION_EMIT_METADATA Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_OPERATION_FINISH Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_OPERATION_FLUSH Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_OPERATION_PROCESS Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_DISABLE_LITERAL_CONTEXT_MODELING Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_LARGE_WINDOW Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_LGBLOCK Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_LGWIN Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_MODE Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_NDIRECT Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_NPOSTFIX Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_QUALITY Ljava/lang/String;
+	public static final field SYMBOL_BROTLI_PARAM_SIZE_HINT Ljava/lang/String;
+	public static final field SYMBOL_DEFLATE Ljava/lang/String;
+	public static final field SYMBOL_DEFLATERAW Ljava/lang/String;
+	public static final field SYMBOL_GUNZIP Ljava/lang/String;
+	public static final field SYMBOL_GZIP Ljava/lang/String;
+	public static final field SYMBOL_INFLATE Ljava/lang/String;
+	public static final field SYMBOL_INFLATERAW Ljava/lang/String;
+	public static final field SYMBOL_UNZIP Ljava/lang/String;
+	public static final field SYMBOL_ZLIB_VERNUM Ljava/lang/String;
+	public static final field SYMBOL_Z_BEST_COMPRESSION Ljava/lang/String;
+	public static final field SYMBOL_Z_BEST_SPEED Ljava/lang/String;
+	public static final field SYMBOL_Z_BLOCK Ljava/lang/String;
+	public static final field SYMBOL_Z_BUF_ERROR Ljava/lang/String;
+	public static final field SYMBOL_Z_DATA_ERROR Ljava/lang/String;
+	public static final field SYMBOL_Z_DEFAULT_CHUNK Ljava/lang/String;
+	public static final field SYMBOL_Z_DEFAULT_COMPRESSION Ljava/lang/String;
+	public static final field SYMBOL_Z_DEFAULT_LEVEL Ljava/lang/String;
+	public static final field SYMBOL_Z_DEFAULT_MEMLEVEL Ljava/lang/String;
+	public static final field SYMBOL_Z_DEFAULT_STRATEGY Ljava/lang/String;
+	public static final field SYMBOL_Z_DEFAULT_WINDOWBITS Ljava/lang/String;
+	public static final field SYMBOL_Z_ERRNO Ljava/lang/String;
+	public static final field SYMBOL_Z_FILTERED Ljava/lang/String;
+	public static final field SYMBOL_Z_FINISH Ljava/lang/String;
+	public static final field SYMBOL_Z_FIXED Ljava/lang/String;
+	public static final field SYMBOL_Z_FULL_FLUSH Ljava/lang/String;
+	public static final field SYMBOL_Z_HUFFMAN_ONLY Ljava/lang/String;
+	public static final field SYMBOL_Z_MAX_CHUNK Ljava/lang/String;
+	public static final field SYMBOL_Z_MAX_LEVEL Ljava/lang/String;
+	public static final field SYMBOL_Z_MAX_MEMLEVEL Ljava/lang/String;
+	public static final field SYMBOL_Z_MAX_WINDOWBITS Ljava/lang/String;
+	public static final field SYMBOL_Z_MEM_ERROR Ljava/lang/String;
+	public static final field SYMBOL_Z_MIN_CHUNK Ljava/lang/String;
+	public static final field SYMBOL_Z_MIN_LEVEL Ljava/lang/String;
+	public static final field SYMBOL_Z_MIN_MEMLEVEL Ljava/lang/String;
+	public static final field SYMBOL_Z_MIN_WINDOWBITS Ljava/lang/String;
+	public static final field SYMBOL_Z_NEED_DICT Ljava/lang/String;
+	public static final field SYMBOL_Z_NO_COMPRESSION Ljava/lang/String;
+	public static final field SYMBOL_Z_NO_FLUSH Ljava/lang/String;
+	public static final field SYMBOL_Z_OK Ljava/lang/String;
+	public static final field SYMBOL_Z_PARTIAL_FLUSH Ljava/lang/String;
+	public static final field SYMBOL_Z_RLE Ljava/lang/String;
+	public static final field SYMBOL_Z_STREAM_END Ljava/lang/String;
+	public static final field SYMBOL_Z_STREAM_ERROR Ljava/lang/String;
+	public static final field SYMBOL_Z_SYNC_FLUSH Ljava/lang/String;
+	public static final field SYMBOL_Z_VERSION_ERROR Ljava/lang/String;
+	public static final field UNZIP_CONST I
+	public static final field ZLIB_VERNUM_CONST I
+	public static final field Z_BEST_COMPRESSION_CONST I
+	public static final field Z_BEST_SPEED_CONST I
+	public static final field Z_BLOCK_CONST I
+	public static final field Z_BUF_ERROR_CONST I
+	public static final field Z_DATA_ERROR_CONST I
+	public static final field Z_DEFAULT_CHUNK_CONST I
+	public static final field Z_DEFAULT_COMPRESSION_CONST I
+	public static final field Z_DEFAULT_LEVEL_CONST I
+	public static final field Z_DEFAULT_MEMLEVEL_CONST I
+	public static final field Z_DEFAULT_STRATEGY_CONST I
+	public static final field Z_DEFAULT_WINDOWBITS_CONST I
+	public static final field Z_ERRNO_CONST I
+	public static final field Z_FILTERED_CONST I
+	public static final field Z_FINISH_CONST I
+	public static final field Z_FIXED_CONST I
+	public static final field Z_FULL_FLUSH_CONST I
+	public static final field Z_HUFFMAN_ONLY_CONST I
+	public static final field Z_MAX_CHUNK_CONST I
+	public static final field Z_MAX_LEVEL_CONST I
+	public static final field Z_MAX_MEMLEVEL_CONST I
+	public static final field Z_MAX_WINDOWBITS_CONST I
+	public static final field Z_MEM_ERROR_CONST I
+	public static final field Z_MIN_CHUNK_CONST I
+	public static final field Z_MIN_LEVEL_CONST I
+	public static final field Z_MIN_MEMLEVEL_CONST I
+	public static final field Z_MIN_WINDOWBITS_CONST I
+	public static final field Z_NEED_DICT_CONST I
+	public static final field Z_NO_COMPRESSION_CONST I
+	public static final field Z_NO_FLUSH_CONST I
+	public static final field Z_OK_CONST I
+	public static final field Z_PARTIAL_FLUSH_CONST I
+	public static final field Z_RLE_CONST I
+	public static final field Z_STREAM_END_CONST I
+	public static final field Z_STREAM_ERROR_CONST I
+	public static final field Z_SYNC_FLUSH_CONST I
+	public static final field Z_VERSION_ERROR_CONST I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/zlib/ZlibOptions {
+	public abstract fun getChunkSize ()I
+	public abstract fun getDictionary ()Ljava/lang/Object;
+	public abstract fun getFinishFlush ()I
+	public abstract fun getFlush ()I
+	public abstract fun getInfo ()Ljava/lang/Boolean;
+	public abstract fun getLevel ()Ljava/lang/Integer;
+	public abstract fun getMaxOutputLength ()I
+	public abstract fun getMemLevel ()Ljava/lang/Integer;
+	public abstract fun getStrategy ()Ljava/lang/Integer;
+	public abstract fun getWindowBits ()I
 }
 
 public abstract interface class elide/runtime/intrinsics/js/typed/UUID : elide/runtime/intrinsics/js/StringLike {
@@ -5542,6 +6358,210 @@ public synthetic class elide/runtime/node/os/$NodeOperatingSystemModule$Provide0
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public final class elide/runtime/node/os/PosixConstants : elide/runtime/intrinsics/js/node/os/PosixSystemConstants {
+	public static final field INSTANCE Lelide/runtime/node/os/PosixConstants;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getDlopen ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$DlopenFlags;
+	public fun getDlopen ()Lelide/runtime/node/os/PosixConstants$Dlopen;
+	public synthetic fun getErrno ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$ErrnoConstants;
+	public fun getErrno ()Lelide/runtime/node/os/PosixConstants$Errno;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public synthetic fun getPriority ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$PriorityConstants;
+	public fun getPriority ()Lelide/runtime/node/os/Priority;
+	public synthetic fun getSignals ()Lelide/runtime/intrinsics/js/node/os/OperatingSystemConstants$SignalsConstants;
+	public fun getSignals ()Lelide/runtime/node/os/Signals;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/os/PosixConstants$Dlopen : elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$DlopenFlags, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field INSTANCE Lelide/runtime/node/os/PosixConstants$Dlopen;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getRTLD_DEEPBIND ()I
+	public fun getRTLD_GLOBAL ()I
+	public fun getRTLD_LAZY ()I
+	public fun getRTLD_LOCAL ()I
+	public fun getRTLD_NOW ()I
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/os/PosixConstants$Errno : elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$ErrnoConstants {
+	public static final field E2BIG I
+	public static final field EACCES I
+	public static final field EADDRINUSE I
+	public static final field EADDRNOTAVAIL I
+	public static final field EAFNOSUPPORT I
+	public static final field EAGAIN I
+	public static final field EALREADY I
+	public static final field EBADF I
+	public static final field EBADMSG I
+	public static final field EBUSY I
+	public static final field ECANCELED I
+	public static final field ECHILD I
+	public static final field ECONNABORTED I
+	public static final field ECONNREFUSED I
+	public static final field ECONNRESET I
+	public static final field EDEADLK I
+	public static final field EDESTADDRREQ I
+	public static final field EDOM I
+	public static final field EDQUOT I
+	public static final field EEXIST I
+	public static final field EFAULT I
+	public static final field EFBIG I
+	public static final field EHOSTUNREACH I
+	public static final field EIDRM I
+	public static final field EILSEQ I
+	public static final field EINPROGRESS I
+	public static final field EINTR I
+	public static final field EINVAL I
+	public static final field EIO I
+	public static final field EISCONN I
+	public static final field EISDIR I
+	public static final field ELOOP I
+	public static final field EMFILE I
+	public static final field EMLINK I
+	public static final field EMSGSIZE I
+	public static final field EMULTIHOP I
+	public static final field ENAMETOOLONG I
+	public static final field ENETDOWN I
+	public static final field ENETRESET I
+	public static final field ENETUNREACH I
+	public static final field ENFILE I
+	public static final field ENOBUFS I
+	public static final field ENODATA I
+	public static final field ENODEV I
+	public static final field ENOENT I
+	public static final field ENOEXEC I
+	public static final field ENOLCK I
+	public static final field ENOLINK I
+	public static final field ENOMEM I
+	public static final field ENOMSG I
+	public static final field ENOPROTOOPT I
+	public static final field ENOSPC I
+	public static final field ENOSR I
+	public static final field ENOSTR I
+	public static final field ENOSYS I
+	public static final field ENOTCONN I
+	public static final field ENOTDIR I
+	public static final field ENOTEMPTY I
+	public static final field ENOTSOCK I
+	public static final field ENOTSUP I
+	public static final field ENOTTY I
+	public static final field ENXIO I
+	public static final field EOPNOTSUPP I
+	public static final field EOVERFLOW I
+	public static final field EPERM I
+	public static final field EPIPE I
+	public static final field EPROTO I
+	public static final field EPROTONOSUPPORT I
+	public static final field EPROTOTYPE I
+	public static final field ERANGE I
+	public static final field EROFS I
+	public static final field ESPIPE I
+	public static final field ESRCH I
+	public static final field ESTALE I
+	public static final field ETIME I
+	public static final field ETIMEDOUT I
+	public static final field ETXTBSY I
+	public static final field EWOULDBLOCK I
+	public static final field EXDEV I
+	public static final field INSTANCE Lelide/runtime/node/os/PosixConstants$Errno;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/os/Priority : elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$PriorityConstants {
+	public static final field INSTANCE Lelide/runtime/node/os/Priority;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getPRIORITY_ABOVE_NORMAL ()I
+	public fun getPRIORITY_BELOW_NORMAL ()I
+	public fun getPRIORITY_HIGH ()I
+	public fun getPRIORITY_HIGHEST ()I
+	public fun getPRIORITY_LOW ()I
+	public fun getPRIORITY_NORMAL ()I
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/os/Signals : elide/runtime/intrinsics/js/node/os/OperatingSystemConstants$SignalsConstants {
+	public static final field INSTANCE Lelide/runtime/node/os/Signals;
+	public static final field SIGABRT I
+	public static final field SIGALRM I
+	public static final field SIGBUS I
+	public static final field SIGCHLD I
+	public static final field SIGCONT I
+	public static final field SIGFPE I
+	public static final field SIGHUP I
+	public static final field SIGILL I
+	public static final field SIGINT I
+	public static final field SIGIO I
+	public static final field SIGIOT I
+	public static final field SIGKILL I
+	public static final field SIGPIPE I
+	public static final field SIGPOLL I
+	public static final field SIGPROF I
+	public static final field SIGPWR I
+	public static final field SIGQUIT I
+	public static final field SIGSEGV I
+	public static final field SIGSTKFLT I
+	public static final field SIGSTOP I
+	public static final field SIGSYS I
+	public static final field SIGTERM I
+	public static final field SIGTRAP I
+	public static final field SIGTSTP I
+	public static final field SIGTTIN I
+	public static final field SIGTTOU I
+	public static final field SIGURG I
+	public static final field SIGUSR1 I
+	public static final field SIGUSR2 I
+	public static final field SIGVTALRM I
+	public static final field SIGWINCH I
+	public static final field SIGXCPU I
+	public static final field SIGXFSZ I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/os/Win32Constants : elide/runtime/intrinsics/js/node/os/Win32SystemConstants {
+	public static final field INSTANCE Lelide/runtime/node/os/Win32Constants;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
 public synthetic class elide/runtime/node/path/$NodePathsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -5898,6 +6918,17 @@ public synthetic class elide/runtime/node/worker/$NodeWorkerModule$Provide$graal
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public synthetic class elide/runtime/node/zlib/$NodeZlib$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/runtime/node/zlib/$NodeZlibModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -5918,6 +6949,219 @@ public synthetic class elide/runtime/node/zlib/$NodeZlibModule$Provide$graalvm0$
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/zlib/$NodeZlibModule$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final class elide/runtime/node/zlib/ModernNodeZlibConstants : elide/runtime/intrinsics/js/node/zlib/NodeZlibConstants {
+	public static final field INSTANCE Lelide/runtime/node/zlib/ModernNodeZlibConstants;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getBROTLI_DECODER_ERROR_ALLOC_BLOCK_TYPE_TREES ()I
+	public fun getBROTLI_DECODER_ERROR_ALLOC_CONTEXT_MAP ()I
+	public fun getBROTLI_DECODER_ERROR_ALLOC_CONTEXT_MODES ()I
+	public fun getBROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_1 ()I
+	public fun getBROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_2 ()I
+	public fun getBROTLI_DECODER_ERROR_ALLOC_TREE_GROUPS ()I
+	public fun getBROTLI_DECODER_ERROR_DICTIONARY_NOT_SET ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_1 ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_2 ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_CL_SPACE ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_CONTEXT_MAP_REPEAT ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_DICTIONARY ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_DISTANCE ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_EXUBERANT_META_NIBBLE ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_EXUBERANT_NIBBLE ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_HUFFMAN_SPACE ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_PADDING_1 ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_PADDING_2 ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_RESERVED ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_ALPHABET ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_SAME ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_TRANSFORM ()I
+	public fun getBROTLI_DECODER_ERROR_FORMAT_WINDOW_BITS ()I
+	public fun getBROTLI_DECODER_ERROR_INVALID_ARGUMENTS ()I
+	public fun getBROTLI_DECODER_ERROR_UNREACHABLE ()I
+	public fun getBROTLI_DECODER_NEEDS_MORE_INPUT ()I
+	public fun getBROTLI_DECODER_NEEDS_MORE_OUTPUT ()I
+	public fun getBROTLI_DECODER_NO_ERROR ()I
+	public fun getBROTLI_DECODER_PARAM_DISABLE_RING_BUFFER_REALLOCATION ()I
+	public fun getBROTLI_DECODER_PARAM_LARGE_WINDOW ()I
+	public fun getBROTLI_DECODER_RESULT_ERROR ()I
+	public fun getBROTLI_DECODER_RESULT_NEEDS_MORE_INPUT ()I
+	public fun getBROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT ()I
+	public fun getBROTLI_DECODER_RESULT_SUCCESS ()I
+	public fun getBROTLI_DECODER_SUCCESS ()I
+	public fun getBROTLI_DEFAULT_MODE ()I
+	public fun getBROTLI_DEFAULT_QUALITY ()I
+	public fun getBROTLI_DEFAULT_WINDOW ()I
+	public fun getBROTLI_LARGE_MAX_WINDOW_BITS ()I
+	public fun getBROTLI_MAX_INPUT_BLOCK_BITS ()I
+	public fun getBROTLI_MAX_QUALITY ()I
+	public fun getBROTLI_MAX_WINDOW_BITS ()I
+	public fun getBROTLI_MIN_INPUT_BLOCK_BITS ()I
+	public fun getBROTLI_MIN_QUALITY ()I
+	public fun getBROTLI_MIN_WINDOW_BITS ()I
+	public fun getBROTLI_MODE_FONT ()I
+	public fun getBROTLI_MODE_GENERIC ()I
+	public fun getBROTLI_MODE_TEXT ()I
+	public fun getBROTLI_OPERATION_EMIT_METADATA ()I
+	public fun getBROTLI_OPERATION_FINISH ()I
+	public fun getBROTLI_OPERATION_FLUSH ()I
+	public fun getBROTLI_OPERATION_PROCESS ()I
+	public fun getBROTLI_PARAM_DISABLE_LITERAL_CONTEXT_MODELING ()I
+	public fun getBROTLI_PARAM_LARGE_WINDOW ()I
+	public fun getBROTLI_PARAM_LGBLOCK ()I
+	public fun getBROTLI_PARAM_LGWIN ()I
+	public fun getBROTLI_PARAM_MODE ()I
+	public fun getBROTLI_PARAM_NDIRECT ()I
+	public fun getBROTLI_PARAM_NPOSTFIX ()I
+	public fun getBROTLI_PARAM_QUALITY ()I
+	public fun getBROTLI_PARAM_SIZE_HINT ()I
+	public fun getDEFLATE ()I
+	public fun getDEFLATERAW ()I
+	public fun getGUNZIP ()I
+	public fun getGZIP ()I
+	public fun getINFLATE ()I
+	public fun getINFLATERAW ()I
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getUNZIP ()I
+	public fun getZLIB_VERNUM ()I
+	public fun getZ_BEST_COMPRESSION ()I
+	public fun getZ_BEST_SPEED ()I
+	public fun getZ_BLOCK ()I
+	public fun getZ_BUF_ERROR ()I
+	public fun getZ_DATA_ERROR ()I
+	public fun getZ_DEFAULT_CHUNK ()I
+	public fun getZ_DEFAULT_COMPRESSION ()I
+	public fun getZ_DEFAULT_LEVEL ()I
+	public fun getZ_DEFAULT_MEMLEVEL ()I
+	public fun getZ_DEFAULT_STRATEGY ()I
+	public fun getZ_DEFAULT_WINDOWBITS ()I
+	public fun getZ_ERRNO ()I
+	public fun getZ_FILTERED ()I
+	public fun getZ_FINISH ()I
+	public fun getZ_FIXED ()I
+	public fun getZ_FULL_FLUSH ()I
+	public fun getZ_HUFFMAN_ONLY ()I
+	public fun getZ_MAX_CHUNK ()I
+	public fun getZ_MAX_LEVEL ()I
+	public fun getZ_MAX_MEMLEVEL ()I
+	public fun getZ_MAX_WINDOWBITS ()I
+	public fun getZ_MEM_ERROR ()I
+	public fun getZ_MIN_CHUNK ()I
+	public fun getZ_MIN_LEVEL ()I
+	public fun getZ_MIN_MEMLEVEL ()I
+	public fun getZ_MIN_WINDOWBITS ()I
+	public fun getZ_NEED_DICT ()I
+	public fun getZ_NO_COMPRESSION ()I
+	public fun getZ_NO_FLUSH ()I
+	public fun getZ_OK ()I
+	public fun getZ_PARTIAL_FLUSH ()I
+	public fun getZ_RLE ()I
+	public fun getZ_STREAM_END ()I
+	public fun getZ_STREAM_ERROR ()I
+	public fun getZ_SYNC_FLUSH ()I
+	public fun getZ_VERSION_ERROR ()I
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/zlib/MutableBrotliOptions : elide/runtime/intrinsics/js/node/zlib/BrotliOptionsDefaults, elide/runtime/intrinsics/js/node/zlib/MutableBrotliOptions {
+	public static final field Factory Lelide/runtime/node/zlib/MutableBrotliOptions$Factory;
+	public fun <init> ()V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public static final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getChunkSize ()I
+	public fun getFinishFlush ()I
+	public fun getFlush ()I
+	public fun getMaxOutputLength ()I
+	public fun getParams ()I
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun setChunkSize (I)V
+	public fun setFinishFlush (I)V
+	public fun setFlush (I)V
+	public fun setMaxOutputLength (I)V
+	public fun setParams (I)V
+	public final fun toImmutable ()Lelide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/zlib/MutableBrotliOptions$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/node/zlib/MutableZlibOptions : elide/runtime/intrinsics/js/node/zlib/MutableZlibOptions, elide/runtime/intrinsics/js/node/zlib/ZlibOptionsDefaults {
+	public static final field Factory Lelide/runtime/node/zlib/MutableZlibOptions$Factory;
+	public fun <init> ()V
+	public fun <init> (I)V
+	public fun <init> (II)V
+	public fun <init> (III)V
+	public fun <init> (IIII)V
+	public fun <init> (IIIILjava/lang/Integer;)V
+	public fun <init> (IIIILjava/lang/Integer;Ljava/lang/Integer;)V
+	public fun <init> (IIIILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V
+	public fun <init> (IIIILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Object;)V
+	public fun <init> (IIIILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Object;Z)V
+	public fun <init> (IIIILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Object;ZI)V
+	public synthetic fun <init> (IIIILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Object;ZIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component10 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun component6 ()Ljava/lang/Integer;
+	public final fun component7 ()Ljava/lang/Integer;
+	public final fun component8 ()Ljava/lang/Object;
+	public final fun component9 ()Z
+	public final fun copy (IIIILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Object;ZI)Lelide/runtime/node/zlib/MutableZlibOptions;
+	public static synthetic fun copy$default (Lelide/runtime/node/zlib/MutableZlibOptions;IIIILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Object;ZIILjava/lang/Object;)Lelide/runtime/node/zlib/MutableZlibOptions;
+	public static final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getChunkSize ()I
+	public fun getDictionary ()Ljava/lang/Object;
+	public fun getFinishFlush ()I
+	public fun getFlush ()I
+	public fun getInfo ()Ljava/lang/Boolean;
+	public fun getLevel ()Ljava/lang/Integer;
+	public fun getMaxOutputLength ()I
+	public fun getMemLevel ()Ljava/lang/Integer;
+	public fun getStrategy ()Ljava/lang/Integer;
+	public fun getWindowBits ()I
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun setChunkSize (I)V
+	public fun setDictionary (Ljava/lang/Object;)V
+	public fun setFinishFlush (I)V
+	public fun setFlush (I)V
+	public fun setInfo (Z)V
+	public fun setLevel (Ljava/lang/Integer;)V
+	public fun setMaxOutputLength (I)V
+	public fun setMemLevel (Ljava/lang/Integer;)V
+	public fun setStrategy (Ljava/lang/Integer;)V
+	public fun setWindowBits (I)V
+	public final fun toImmutable ()Lelide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/node/zlib/MutableZlibOptions$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
 public final class elide/runtime/plugins/debug/Debug {

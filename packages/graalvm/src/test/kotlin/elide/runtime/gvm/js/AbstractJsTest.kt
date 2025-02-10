@@ -34,6 +34,7 @@ import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
+import elide.runtime.node.buffer.NodeBufferClass
 import elide.runtime.plugins.vfs.vfs
 import elide.runtime.plugins.js.JavaScript as JavaScriptPlugin
 
@@ -95,6 +96,7 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
     // install utility bindings, if directed
     if (bindUtils) {
       target.putMember("test", AbstractJsIntrinsicTest.CaptureAssertion())
+      target.putMember("Buffer", NodeBufferClass())
     }
 
     // prep for execution

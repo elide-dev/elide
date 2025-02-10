@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -32,7 +32,7 @@ import elide.vm.annotations.Polyglot
  *
  * The default implementation of the `os` module supplies cross-platform logic, which works on POSIX and Win32-style
  * systems. Operating system APIs are called on-demand. Where access is not granted to such APIs, mock or stubbed values
- * are supplied, or errors are thrown, as applicable.
+ * are supplied, or errors throw, as applicable.
  */
 @API public interface OperatingSystemAPI : NodeAPI {
   /**

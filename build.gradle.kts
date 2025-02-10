@@ -18,11 +18,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
-import org.jetbrains.dokka.base.DokkaBase
-import org.jetbrains.dokka.base.DokkaBaseConfiguration
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
-import org.jetbrains.dokka.versioning.VersioningConfiguration
-import org.jetbrains.dokka.versioning.VersioningPlugin
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
@@ -106,6 +101,14 @@ buildscript {
       content {
         includeGroup("dev.elide")
         includeGroup("org.capnproto")
+      }
+    }
+    maven {
+      name = "jpms-modules"
+      url = uri("https://jpms.pkg.st/repository")
+      content {
+        includeGroup("dev.javamodules")
+        includeGroup("com.google.guava")
       }
     }
     maven {
@@ -508,44 +511,50 @@ tasks {
       rootProject.layout.projectDirectory.file("creative/$it").asFile
     }
 
-    val dokkaHtmlMultiModule by getting(DokkaMultiModuleTask::class) {
+    dokka {
       moduleName = "Elide API"
       moduleVersion = project.version as String
-      outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
 
-      suppressInheritedMembers = true
-      suppressObviousFunctions = true
-
-      includes.from(
-        listOf(
-          "docs/docs.md",
-          "docs/includes/resources.md",
-        ).map {
-          layout.projectDirectory.file(it).asFile
-        },
-      )
-
-      pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-        footerMessage = "© 2023—2024 Elide Technologies, Inc."
+      dokkaPublications.configureEach {
+        outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
+        suppressInheritedMembers = true
+        suppressObviousFunctions = true
+      }
+      pluginsConfiguration.html {
+        footerMessage = "© 2023—2025 Elide Technologies, Inc."
         homepageLink = "https://docs.elide.dev"
         templatesDir = rootProject.layout.projectDirectory.dir("docs/templates").asFile
-        customAssets = listOf(
-          creativeAsset("logo/logo-wide-1200-w-r2.png"),
-          creativeAsset("logo/gray-elide-symbol-lg.png"),
+        customAssets.from(
+          listOf(
+            creativeAsset("logo/logo-wide-1200-w-r2.png"),
+            creativeAsset("logo/gray-elide-symbol-lg.png"),
+          ),
         )
-        customStyleSheets = listOf(
-          docAsset("styles/logo-styles.css"),
-          docAsset("styles/theme-styles.css"),
+        customStyleSheets.from(
+          listOf(
+            docAsset("styles/logo-styles.css"),
+            docAsset("styles/theme-styles.css"),
+          ),
         )
       }
-
       val projectVersion = project.version as String
-      pluginConfiguration<VersioningPlugin, VersioningConfiguration> {
+      val allVersions = listOf(
+        "1.0.0-alpha12",
+        "1.0.0-alpha11",
+        "1.0.0-alpha10",
+        "1.0.0-alpha9",
+        "1.0.0-alpha8",
+      )
+      pluginsConfiguration.versioning {
         version = projectVersion
-        versionsOrdering = listOf("1.0.0-alpha8")
+        versionsOrdering = allVersions
         olderVersionsDir = file("docs/versions")
-        olderVersions = listOf(file("docs/versions/1.0.0-alpha8"))
         renderVersionsNavigationOnAllPages = true
+        olderVersions.from(
+          allVersions.drop(1).map {
+            file("docs/versions/$it")
+          },
+        )
       }
     }
   }
@@ -555,10 +564,7 @@ tasks {
   val docs by registering {
     if (buildDocs == "true") {
       dependsOn(
-        listOf(
-          dokkaHtml,
-          dokkaHtmlMultiModule,
-        ),
+        dokkaGenerate,
       )
     }
   }

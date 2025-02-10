@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Stream
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -31,10 +30,8 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlin.streams.asStream
 import kotlin.test.Test
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
 import elide.runtime.gvm.internals.AbstractDualTest
 import elide.runtime.intrinsics.GuestIntrinsic
 
@@ -44,7 +41,7 @@ import elide.runtime.intrinsics.GuestIntrinsic
  * Extends the default JavaScript module test profile to include a Node conformance test; in this mode, the guest code
  * is run against the embedded Elide guest, and also against Node, so the output can be compared.
  */
-internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJsModuleTest<T>() {
+internal abstract class NodeModuleConformanceTest<T : GuestIntrinsic> : GenericJsModuleTest<T>() {
   companion object {
     private const val NODE_BIN = "node"
   }
@@ -59,10 +56,10 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJs
 
   // Run a Node.js subprocess with the provided inputs.
   private fun runConformanceInner(
-      args: List<String>,
-      stdin: String? = null,
-      env: Map<String, String>? = null,
-      bin: String = NODE_BIN,
+    args: List<String>,
+    stdin: String? = null,
+    env: Map<String, String>? = null,
+    bin: String = NODE_BIN,
   ): String {
     // use dynamic path separator by os
     val sysPath = (System.getenv("PATH") ?: "").split(File.pathSeparator ?: ":")
@@ -171,12 +168,16 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJs
         "main" to JsonPrimitive("index.cjs"),
         "module" to JsonPrimitive("index.mjs"),
         "type" to JsonPrimitive("module"),
-        "exports" to JsonObject(mapOf(
-          "." to JsonObject(mapOf(
-            "import" to JsonPrimitive("./index.mjs"),
-            "require" to JsonPrimitive("./index.cjs")
-          )
-        )))
+        "exports" to JsonObject(
+          mapOf(
+            "." to JsonObject(
+              mapOf(
+                "import" to JsonPrimitive("./index.mjs"),
+                "require" to JsonPrimitive("./index.cjs"),
+              ),
+            ),
+          ),
+        ),
       )
 
       Files.write(
@@ -223,11 +224,13 @@ internal abstract class NodeModuleConformanceTest<T: GuestIntrinsic> : GenericJs
   fun node(@Language("js") code: String): String {
     val trimmed = code.trimIndent()
     val rendered = StringBuilder().apply {
-      appendLine("""
+      appendLine(
+        """
         function output(value) {
           console.log(value);
         }
-      """.trimIndent())
+      """.trimIndent(),
+      )
       appendLine(trimmed)
     }
     return runConformance(rendered.toString())

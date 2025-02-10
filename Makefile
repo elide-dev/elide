@@ -1023,6 +1023,10 @@ runtime/bazel-bin:
 
 runtime-update: runtime-build $(RUNTIME_GEN) ## Rebuild and copy the JS runtime facade
 
+runtime-clean:  ## Clean generated runtime artifacts.
+	@echo "" && echo "Cleaning runtime facades..."
+	$(CMD)rm -fv$(POSIX_FLAGS) $(JS_FACADE_BIN) $(JS_FACADE_OUT) $(JS_POLYFILLS_BIN) $(JS_POLYFILLS_OUT) $(JS_MODULE_BIN) $(JS_MODULE_OUT) $(PY_MODULE_BIN) $(PY_MODULE_OUT)
+
 runtime-update-copy:
 	@echo "" && echo "Updating runtime artifacts..."
 	@echo "- Updating 'facade.js'"

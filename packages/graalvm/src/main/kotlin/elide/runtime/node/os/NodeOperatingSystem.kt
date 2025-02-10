@@ -29,12 +29,15 @@ import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
+import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.OperatingSystemAPI
+import elide.runtime.intrinsics.js.node.fs.StringOrBuffer
 import elide.runtime.intrinsics.js.node.os.*
 import elide.runtime.intrinsics.js.node.os.OSType.POSIX
 import elide.runtime.intrinsics.js.node.os.OSType.WIN32
+import elide.runtime.node.childProcess.ChildProcessNative
 import elide.vm.annotations.Polyglot
 
 // Constants for cross-OS values.
@@ -55,10 +58,10 @@ private const val STUBBED_TMPDIR: String = "/tmp"
 private const val STUBBED_TOTALMEM: Long = /* 4gb */ 4 * STUBBED_FREEMEM
 private const val STUBBED_TYPE: String = "Linux"
 private const val STUBBED_UPTIME: Double = 12345.6789
-private const val STUBBED_PRIORITY: Priority = PRIORITY_NORMAL
+private const val STUBBED_PRIORITY: OSPriority = PRIORITY_NORMAL
 private const val STUBBED_USERINFO_USERNAME: String = "user"
-private const val STUBBED_USERINFO_UID: Int = 1000
-private const val STUBBED_USERINFO_GID: Int = 1000
+private const val STUBBED_USERINFO_UID: Long = 1000
+private const val STUBBED_USERINFO_GID: Long = 1000
 private const val STUBBED_USERINFO_SHELL: String = "/bin/bash"
 private const val STUBBED_USERINFO_HOMEDIR: String = STUBBED_HOMEDIR
 private const val STUBBED_VERSION: String = "5.4.0"
@@ -241,7 +244,7 @@ internal object NodeOperatingSystem {
   internal class StubbedOs : ModuleBase(), OperatingSystemAPI {
     override val family: OSType get() = POSIX
     override val EOL: String get() = posixEOL
-    override val constants: OperatingSystemConstants get() = TODO("Not yet implemented: `os.constants`")
+    override val constants: OperatingSystemConstants get() = Posix.constants
     override val devNull: String get() = posixDevNull
     override fun availableParallelism(): Int = STUBBED_CPUS.size * 2
     override fun arch(): String = STUBBED_ARCH
@@ -339,8 +342,15 @@ internal object NodeOperatingSystem {
 
     @Polyglot override fun freemem(): Long = Runtime.getRuntime().freeMemory()
 
-    // @TODO(sgammon): not yet implemented
-    @Polyglot override fun getPriority(pid: Value?): Int = PRIORITY_NORMAL
+    @Suppress("TooGenericExceptionCaught")
+    @Polyglot override fun getPriority(pid: Value?): Int = try {
+      ChildProcessNative.getProcessPriority(when {
+        pid == null || pid.isNull -> ProcessHandle.current().pid()
+        else -> requireNotNull(pid.asLong())
+      })
+    } catch (rxe: RuntimeException) {
+      JsError.error("Failed to get process priority", rxe)
+    }
 
     @Polyglot override fun homedir(): String = wrapCleanup(System.getProperty("user.home"))
     @Polyglot override fun hostname(): String = wrapCleanup(InetAddress.getLocalHost().hostName)
@@ -406,8 +416,31 @@ internal object NodeOperatingSystem {
     @Polyglot override fun platform(): String = mapJvmOsToNodeOs()
     @Polyglot override fun release(): String = systemInfo.operatingSystem.toString()
 
-    // @TODO(sgammon): not yet implemented
-    @Polyglot override fun setPriority(pid: Value?, priority: Value?) = Unit
+    @Suppress("TooGenericExceptionCaught")
+    @Polyglot override fun setPriority(pid: Value?, priority: Value?) {
+      assert(priority != null && !priority.isNull) { "Cannot set `null` as priority for process" }
+
+      val targetPrio = requireNotNull(priority!!.asInt())
+      val targetPid = when {
+        pid == null || pid.isNull -> ProcessHandle.current().pid()
+        else -> requireNotNull(pid.asLong()).let {
+          when (it) {
+            // `0` is a special case for the current process.
+            0L -> ProcessHandle.current().pid()
+            else -> it
+          }
+        }
+      }
+      try {
+        ChildProcessNative.setProcessPriority(
+          targetPid,
+          targetPrio,
+        )
+      } catch (rxe: RuntimeException) {
+        JsError.error("Failed to set process priority", rxe)
+      }
+    }
+
     @Polyglot override fun tmpdir(): String = trimTrailing(wrapCleanup(System.getProperty("java.io.tmpdir")))
     @Polyglot override fun totalmem(): Long = Runtime.getRuntime().totalMemory()
 
@@ -415,8 +448,12 @@ internal object NodeOperatingSystem {
 
     @Polyglot override fun uptime(): Double = systemInfo.operatingSystem.systemUptime.toDouble()
 
-    @Polyglot override fun userInfo(options: UserInfoOptions?): UserInfo {
-      TODO("Not yet implemented: `os.userInfo`")
+    @Polyglot override fun userInfo(options: UserInfoOptions?): UserInfo = object: UserInfo {
+      override val username: String = System.getProperty("user.name")
+      override val uid: Long = -1
+      override val gid: Long = -1
+      override val shell: String = System.getenv("SHELL") ?: ""
+      override val homedir: String = System.getProperty("user.home") ?: ""
     }
 
     @Polyglot override fun version(): String = systemInfo.operatingSystem.versionInfo.version
@@ -426,18 +463,24 @@ internal object NodeOperatingSystem {
   @ReflectiveAccess @Introspected object Win32 : BaseOS(WIN32), OperatingSystemAPI {
     @get:Polyglot override val EOL: String get() = win32EOL
     @get:Polyglot override val devNull: String get() = win32DevNull
-
-    override val constants: OperatingSystemConstants
-      get() = TODO("Not yet implemented: `os.constants` (Win32)")
+    @get:Polyglot override val constants: OperatingSystemConstants get() = Win32Constants
   }
 
   // Implements Operating System API calls for POSIX-style systems.
   @ReflectiveAccess @Introspected object Posix : BaseOS(POSIX), OperatingSystemAPI {
+    private val unixInfo by lazy { com.sun.security.auth.module.UnixSystem() }
     @get:Polyglot override val EOL: String get() = posixEOL
     @get:Polyglot override val devNull: String get() = posixDevNull
-
-    override val constants: OperatingSystemConstants
-      get() = TODO("Not yet implemented: `os.constants` (POSIX)")
+    @get:Polyglot override val constants: OperatingSystemConstants get() = PosixConstants
+    @Polyglot override fun userInfo(options: UserInfoOptions?): UserInfo = super.userInfo(options).let { base ->
+      object: UserInfo {
+        override val username: StringOrBuffer = unixInfo.username
+        override val uid: Long = unixInfo.uid
+        override val gid: Long = unixInfo.gid
+        override val shell: StringOrBuffer? = base.shell
+        override val homedir: StringOrBuffer = base.homedir
+      }
+    }
   }
 
   // Stubbed OS module API singleton.

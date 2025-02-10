@@ -18,22 +18,22 @@ import org.junit.jupiter.api.assertThrows
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.*
 import elide.annotations.Inject
-import elide.runtime.node.events.EventAware
-import elide.runtime.node.events.NodeEventsModule
-import elide.runtime.node.events.NodeEventsModuleFacade
-import elide.runtime.node.events.StandardEventName
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.node.events.AddEventListenerOptions
 import elide.runtime.intrinsics.js.node.events.CustomEvent
 import elide.runtime.intrinsics.js.node.events.Event
 import elide.runtime.intrinsics.js.node.events.EventListener
+import elide.runtime.node.events.EventAware
+import elide.runtime.node.events.NodeEventsModule
+import elide.runtime.node.events.NodeEventsModuleFacade
+import elide.runtime.node.events.StandardEventName
 import elide.testing.annotations.TestCase
 
 /** Generic tests for Elide's implementation of Node-style events and event dispatch. */
 @TestCase internal class NodeEventAwareTest {
   @Inject lateinit var events: NodeEventsModule
 
-  class ExampleEventAware (private val events: EventAware = EventAware.create()) : EventAware by events {
+  class ExampleEventAware(private val events: EventAware = EventAware.create()) : EventAware by events {
     val eventsEmitted = mutableListOf<String>()
     val eventsSeen = mutableListOf<String>()
 
@@ -57,7 +57,7 @@ import elide.testing.annotations.TestCase
     }
   }
 
-  class ExampleRegisteredEvents (
+  class ExampleRegisteredEvents(
     private val events: EventAware = EventAware.create("exampleEvent")
   ) : EventAware by events
 

@@ -1,6 +1,8 @@
 {
   "resources":{
   "includes":[{
+    "pattern":"\\Q/lib/linux-x86_64/libbrotli.so\\E"
+  },{
     "pattern":"org/pkl/core/stdlib/.*.pkl"
   },{
     "pattern":"org/jline/utils/.*"

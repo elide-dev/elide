@@ -461,6 +461,17 @@ dependencies {
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.collections.immutable.jvm)
 
+  // Brotli
+  api(libs.brotli)
+  implementation(libs.brotli.native.osx)
+  implementation(libs.brotli.native.osx.amd64)
+  implementation(libs.brotli.native.osx.arm64)
+  implementation(libs.brotli.native.linux)
+  implementation(libs.brotli.native.linux.amd64)
+  implementation(libs.brotli.native.linux.arm64)
+  implementation(libs.brotli.native.windows)
+  implementation(libs.brotli.native.windows.amd64)
+
   // General
   implementation(libs.jimfs)
   implementation(libs.jackson.core)

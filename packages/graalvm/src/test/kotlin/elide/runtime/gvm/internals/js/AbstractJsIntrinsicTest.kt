@@ -35,6 +35,8 @@ import elide.runtime.node.asserts.NodeAssertModule
 import elide.runtime.node.asserts.NodeAssertStrictModule
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
+import elide.runtime.node.buffer.NodeBufferModule
+import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.runtime.plugins.js.JavaScript as JavaScriptPlugin
 import elide.runtime.plugins.js.javascript
 import elide.runtime.plugins.vfs.vfs
@@ -77,6 +79,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindAssert: Boolean,
       bindConsole: Boolean,
       bindBase64: Boolean,
+      bindBuffer: Boolean,
       op: JavaScript,
   ): GuestValue {
     // resolve the script
@@ -96,6 +99,11 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       }
       if (bindBase64 && !target.any { it.key.symbol.contains("Base64") }) {
         Base64Intrinsic().install(binding)
+      }
+      if (bindBuffer && !target.any { it.key.symbol.contains("Buffer") }) {
+        NodeBufferModule().apply {
+          facade = NodeBufferModuleFacade()
+        }.install(binding)
       }
       target
     } else {
@@ -185,6 +193,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindAssert = true,
       bindConsole = true,
       bindBase64 = true,
+      bindBuffer = true,
       op,
     )
   }
@@ -207,6 +216,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindAssert = true,
       bindConsole = true,
       bindBase64 = true,
+      bindBuffer = true,
       guest,
     )
   }
@@ -228,6 +238,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
           bindAssert = true,
           bindConsole = true,
           bindBase64 = true,
+          bindBuffer = true,
           guestOperation,
         )
       }.doesNotFail()
@@ -241,6 +252,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
           bindAssert = true,
           bindConsole = true,
           bindBase64 = true,
+          bindBuffer = true,
           guestOperation,
         )
       }

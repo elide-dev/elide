@@ -18,7 +18,11 @@ use java_native::jni;
 use jni::objects::{JClass, JString};
 use jni::sys::jint;
 use jni::JNIEnv;
+use jni_sys::jlong;
 use sysinfo::{Pid, Signal, System};
+
+#[cfg(not(target_os = "windows"))]
+use rustix::process::{getpriority_process, setpriority_process, Pid as PosixPid, RawPid};
 
 /// Resolve a signal from its `name`.
 fn resolve_signal(name: &str) -> Signal {
@@ -31,7 +35,7 @@ fn resolve_signal(name: &str) -> Signal {
 }
 
 /// Kill a process at a specific PID with a specific signal.
-fn kill_with_signal(pid: u32, signal: &str) -> i8 {
+fn kill_with_signal(pid: u64, signal: &str) -> i8 {
   let s = System::new_all();
   if let Some(process) = s.process(Pid::from(pid as usize)) {
     let signal = resolve_signal(signal);
@@ -42,13 +46,85 @@ fn kill_with_signal(pid: u32, signal: &str) -> i8 {
   -1
 }
 
+/// Retrieve the priority of the current process, via Posix APIs.
+#[cfg(not(target_os = "windows"))]
+fn current_process_priority() -> i32 {
+  getpriority_process(None).expect("failed to retrieve process priority")
+}
+
+/// Retrieve the priority of the current process, via Windows APIs.
+#[cfg(target_os = "windows")]
+fn current_process_priority() -> i32 {
+  0 // not yet supported on Windows
+}
+
+/// Retrieve the priority of a process at a specific PID, using Posix APIs.
+#[cfg(not(target_os = "windows"))]
+fn process_priority(pid: u64) -> i32 {
+  let target = Some(PosixPid::from_raw(pid as RawPid).expect("not a valid pid"));
+  getpriority_process(target).expect("failed to retrieve process priority")
+}
+
+/// Retrieve the priority of a process at a specific PID, using Windows APIs.
+#[cfg(target_os = "windows")]
+fn process_priority(_pid: u64) -> i32 {
+  0 // not yet supported on Windows
+}
+
+/// Set the priority of the current process.
+#[cfg(not(target_os = "windows"))]
+fn set_current_process_priority(prio: i32) -> i32 {
+  setpriority_process(None, prio).expect("failed to set proc priority");
+  prio
+}
+
+/// Set the priority of a process at a specific PID.
+#[cfg(not(target_os = "windows"))]
+fn set_process_priority(pid: u64, prio: i32) -> i32 {
+  let target = Some(PosixPid::from_raw(pid as RawPid).expect("not a valid pid"));
+  setpriority_process(target, prio).expect("failed to set proc priority");
+  prio
+}
+
+/// Set the priority of the current process.
+#[cfg(target_os = "windows")]
+fn set_current_process_priority(_prio: i32) -> i32 {
+  -1 // not yet supported on Windows
+}
+
+/// Set the priority of a process at a specific PID.
+#[cfg(target_os = "windows")]
+fn set_process_priority(_pid: u64, _prio: i32) -> i32 {
+  -1 // not yet supported on Windows
+}
+
 #[jni("elide.runtime.node.childProcess.ChildProcessNative")]
-pub fn killWith(mut env: JNIEnv, _class: JClass, pid: jint, signal: JString<'_>) -> jint {
+pub fn currentProcessPriority(_env: JNIEnv, _class: JClass) -> jint {
+  current_process_priority()
+}
+
+#[jni("elide.runtime.node.childProcess.ChildProcessNative")]
+pub fn getProcessPriority(_env: JNIEnv, _class: JClass, pid: jlong) -> jint {
+  process_priority(pid as u64)
+}
+
+#[jni("elide.runtime.node.childProcess.ChildProcessNative")]
+pub fn setCurrentProcessPriority(_env: JNIEnv, _class: JClass, prio: jint) -> jint {
+  set_current_process_priority(prio)
+}
+
+#[jni("elide.runtime.node.childProcess.ChildProcessNative")]
+pub fn setProcessPriority(_env: JNIEnv, _class: JClass, pid: jlong, prio: jint) -> jint {
+  set_process_priority(pid as u64, prio)
+}
+
+#[jni("elide.runtime.node.childProcess.ChildProcessNative")]
+pub fn killWith(mut env: JNIEnv, _class: JClass, pid: jlong, signal: JString<'_>) -> jint {
   let signal_name: String = env
     .get_string(&signal)
     .expect("failed to decode signal name")
     .into();
-  kill_with_signal(pid as u32, signal_name.as_str()).into()
+  kill_with_signal(pid as u64, signal_name.as_str()).into()
 }
 
 // add tests block
@@ -101,7 +177,7 @@ mod tests {
     assert!(System::new_all().process(Pid::from(pid as usize)).is_some());
 
     // send a kill signal
-    let result = kill_with_signal(pid, "SIGKILL");
+    let result = kill_with_signal(pid as u64, "SIGKILL");
     assert_eq!(result, 0);
 
     // make sure child is not running anymore
@@ -129,7 +205,7 @@ mod tests {
     assert!(System::new_all().process(Pid::from(pid as usize)).is_some());
 
     // send a kill signal
-    let result = kill_with_signal(pid, "SIGTERM");
+    let result = kill_with_signal(pid as u64, "SIGTERM");
     assert_eq!(result, 0);
 
     // make sure child is not running anymore

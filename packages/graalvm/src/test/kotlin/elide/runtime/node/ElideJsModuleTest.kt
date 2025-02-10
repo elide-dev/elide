@@ -14,7 +14,7 @@ package elide.runtime.node
 
 import elide.runtime.intrinsics.GuestIntrinsic
 
-internal abstract class ElideJsModuleTest<T> : GenericJsModuleTest<T>() where T: GuestIntrinsic {
+internal abstract class ElideJsModuleTest<T> : GenericJsModuleTest<T>() where T : GuestIntrinsic {
   abstract val pureModuleName: String
   override val moduleName: String get() = pureModuleName
 }

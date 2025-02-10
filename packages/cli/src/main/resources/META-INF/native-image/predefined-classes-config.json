@@ -1,9 +1,0 @@
-[
-  {
-    "type":"agent-extracted",
-    "classes":[
-      { "nameInfo":"com/oracle/truffle/runtime/generated/GeneratedModules", "hash":"9c9be412c221f7287c312aa180879c0d629f481462290a293a197c95c247ca4f" },
-      { "nameInfo":"com/oracle/truffle/runtime/generated/GeneratedModules", "hash":"jUfzCanRdP85O7Q5vdxNhA" }
-    ]
-  }
-]

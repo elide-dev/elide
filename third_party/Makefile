@@ -253,12 +253,14 @@ zlib: $(ZLIB_TARGET)
 zlib-clean:
 	$(RULE)cd $(ZLIB_SRC) && $(MAKE) clean && git clean -xdf
 
-$(ZLIB_TARGET):
+$(ZLIB_TARGET): $(TARGET_ROOT)/lib/libz.a
+$(TARGET_ROOT)/lib/libz.a:
 	@echo ""
 	@echo "Configuring zlib..."
 	$(RULE)cd $(ZLIB_SRC) \
 		&& $(ZLIB_PREFIX) ./configure $(ZLIB_CONFIGURE) \
-		&& $(ZLIB_PREFIX) make
+		&& $(ZLIB_PREFIX) $(MAKE) \
+		&& $(ZLIB_PREFIX) $(MAKE) install
 
 SQLITE3_CONFIGURE ?=--enable-all --enable-memsys5 --enable-update-limit --enable-tempstore=yes --enable-debug --enable-static --enable-shared --with-pic
 CFLAGS_SQLITE3 ?=$(CFLAGS_BASE)

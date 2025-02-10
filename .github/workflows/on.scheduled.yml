@@ -152,7 +152,7 @@ jobs:
           components: clippy,rustfmt
           rustflags: ""
       - name: "Setup: SCCache"
-        uses: mozilla-actions/sccache-action@89e9040de88b577a072e3760aaf59f585da083af # v0.0.5
+        uses: mozilla-actions/sccache-action@054db53350805f83040bf3e6e9b8cf5a139aa7c9 # v0.0.7
       - name: "Setup: Rust Caching"
         run: |
           echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV

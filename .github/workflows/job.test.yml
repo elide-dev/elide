@@ -262,7 +262,7 @@ jobs:
           java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Python (3.12)"
-        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: 3.12
       - name: "Setup: Buildless"
@@ -528,7 +528,7 @@ jobs:
           java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Python (3.12)"
-        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: 3.12
       - name: "Setup: Buildless"

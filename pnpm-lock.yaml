@@ -155,7 +155,7 @@ importers:
         version: 11.0.1
       mitata:
         specifier: ^1
-        version: 1.0.33
+        version: 1.0.34
       which:
         specifier: 5.0.0
         version: 5.0.0
@@ -1819,9 +1819,6 @@ packages:
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
-
-  mitata@1.0.33:
-    resolution: {integrity: sha512-ZRbHD4ZGAbC1B9SYCZXjLox2scPCauhTPkXGk2o7CGj/wNeBNjagwFutphDCgJNbEF80fyMBcPdkfr+WFC9cHw==}
 
   mitata@1.0.34:
     resolution: {integrity: sha512-Mc3zrtNBKIMeHSCQ0XqRLo1vbdIx1wvFV9c8NJAiyho6AjNfMY8bVhbS12bwciUdd1t4rj8099CH3N3NFahaUA==}
@@ -4586,8 +4583,6 @@ snapshots:
   minimist@1.2.8: {}
 
   minipass@7.1.2: {}
-
-  mitata@1.0.33: {}
 
   mitata@1.0.34: {}
 

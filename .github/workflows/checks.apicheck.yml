@@ -117,7 +117,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
+        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
         continue-on-error: ${{ inputs.ignore_failures }}
         env:
           CI: true

@@ -207,7 +207,7 @@ public object Constants {
     private const val MAJOR_VERSION = "1.0.0"
 
     /** Major library version tag. */
-    private const val VERSION_TAG = "alpha12"
+    private const val VERSION_TAG = "alpha13"
 
     /** Version string for the library. */
     public const val VERSION: String = "$MAJOR_VERSION-$VERSION_TAG"

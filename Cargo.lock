@@ -517,7 +517,7 @@ dependencies = [
 
 [[package]]
 name = "base"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "arbitrary",
  "base64 0.22.1",
@@ -1033,7 +1033,7 @@ checksum = "b4ae4235e6dac0694637c763029ecea1a2ec9e4e06ec2729bd21ba4d9c863eb7"
 
 [[package]]
 name = "builder"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "base",
  "bindgen 0.71.1",
@@ -1777,7 +1777,7 @@ checksum = "575f75dfd25738df5b91b8e43e14d44bda14637a58fae779fd2b064f8bf3e010"
 
 [[package]]
 name = "deps"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "base",
  "model",
@@ -1985,7 +1985,7 @@ dependencies = [
 
 [[package]]
 name = "entry"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 
 [[package]]
 name = "enumflags2"
@@ -3712,7 +3712,7 @@ dependencies = [
 
 [[package]]
 name = "model"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "build_const",
  "const-crc32-nostd",
@@ -4831,7 +4831,7 @@ dependencies = [
 
 [[package]]
 name = "posix"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "java_native",
  "jni",
@@ -4933,7 +4933,7 @@ dependencies = [
 
 [[package]]
 name = "project"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "builder",
  "model",
@@ -4997,7 +4997,7 @@ dependencies = [
 
 [[package]]
 name = "protocol"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "builder",
  "bytes 1.10.0",
@@ -6753,7 +6753,7 @@ checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
 
 [[package]]
 name = "sqlite"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "bindgen 0.71.1",
  "builder",
@@ -6832,7 +6832,7 @@ dependencies = [
 
 [[package]]
 name = "substrate"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "bindgen 0.71.1",
  "builder",
@@ -7017,7 +7017,7 @@ dependencies = [
 
 [[package]]
 name = "terminal"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "bindgen 0.71.1",
  "builder",
@@ -7547,7 +7547,7 @@ dependencies = [
 
 [[package]]
 name = "transport"
-version = "1.0.0-alpha12-SNAPSHOT"
+version = "1.0.0-alpha13-SNAPSHOT"
 dependencies = [
  "bindgen 0.71.1",
  "boring",

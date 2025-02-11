@@ -2,4 +2,4 @@ version = 1
 
 [project]
 name = "elide"
-version = "1.0.0-alpha12-snapshot"
+version = "1.0.0-alpha13-snapshot"

@@ -22,7 +22,7 @@ object Elide {
   const val majorVersion = "1.0.0"
 
   /** Major library version tag. */
-  const val versionTag = "alpha12"
+  const val versionTag = "alpha13"
 
   /** Version string for the library. */
   const val version = "$majorVersion-$versionTag"

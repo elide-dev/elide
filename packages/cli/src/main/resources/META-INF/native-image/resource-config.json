@@ -3,6 +3,10 @@
   "includes":[{
     "pattern":"\\Q/lib/linux-x86_64/libbrotli.so\\E"
   },{
+    "pattern":"\\Q/lib/osx-aarch64/libbrotli.dylib\\E"
+  },{
+    "pattern":"\\Q/lib/osx-aarch64/libbrotli.jnilib\\E"
+  },{
     "pattern":"org/pkl/core/stdlib/.*.pkl"
   },{
     "pattern":"org/jline/utils/.*"
@@ -14,6 +18,8 @@
     "pattern":"\\QElideTool_en.properties\\E"
   }, {
     "pattern":"\\QElideTool_en_US.properties\\E"
+  }, {
+    "pattern":"\\Qcom/sun/jna/darwin-aarch64/libjnidispatch.jnilib\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"
   }, {

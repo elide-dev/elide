@@ -539,7 +539,7 @@ tasks {
       }
       val projectVersion = project.version as String
       val allVersions = listOf(
-        "1.0.0-alpha12",
+        "1.0.0-alpha13",
         "1.0.0-alpha11",
         "1.0.0-alpha10",
         "1.0.0-alpha9",

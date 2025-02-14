@@ -95,7 +95,7 @@ jobs:
       - name: "Setup: Yarn"
         run: yarn
       - name: "Run Benchmarks"
-        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd578d5ffbc76a5518407e1af0 # v4.2.1
+        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
         id: gradlebench
         continue-on-error: ${{ matrix.experimental }}
         env:
@@ -125,7 +125,7 @@ jobs:
           path: ./benchmark_reports
           key: ${{ runner.os }}-${{ matrix.engine }}-${{ matrix.java }}-benchmark
       - name: "Upload Benchmark Report"
-        uses: benchmark-action/github-action-benchmark@4de1bed97a47495fc4c5404952da0499e31f5c29 # v1.20.3
+        uses: benchmark-action/github-action-benchmark@d48d326b4ca9ba73ca0cd0d59f108f9e02a381c7 # v1.20.4
         continue-on-error: true
         with:
           name: "Elide: Server (${{ matrix.os }}, ${{ matrix.engine }}, JDK ${{ matrix.java }})"

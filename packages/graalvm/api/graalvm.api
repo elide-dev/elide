@@ -661,6 +661,89 @@ public final class elide/runtime/gvm/internals/intrinsics/ElideIntrinsicKt {
 	public static final fun installElideBuiltin (Ljava/lang/String;Ljava/lang/Object;)V
 }
 
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/abort/$AbortControllerIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/abort/$AbortSignalIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortController : elide/runtime/intrinsics/js/AbortController, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Factory Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortController$Factory;
+	public fun <init> ()V
+	public fun abort (Ljava/lang/Object;)V
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortController$Factory : elide/runtime/intrinsics/js/AbortController$Factory {
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortController;
+	public synthetic fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal : elide/runtime/gvm/internals/intrinsics/js/abort/Abortable, elide/runtime/intrinsics/js/node/events/EventTarget, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Companion;
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun addEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun assignAborted (Ljava/lang/Object;)V
+	public fun dispatchEvent (Lelide/runtime/intrinsics/js/node/events/Event;)Z
+	public fun getAborted ()Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getReason ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;)V
+	public fun removeEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeEventListener (Ljava/lang/String;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public fun throwIfAborted ()V
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Companion {
+	public final fun aborted (Ljava/lang/Object;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal;
+	public static synthetic fun aborted$default (Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Companion;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal;
+	public final fun create ()Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal;
+	public final fun delegated (Ljava/lang/Iterable;)Lelide/runtime/gvm/internals/intrinsics/js/abort/Abortable;
+	public final fun factory (Lelide/runtime/exec/GuestExecutor;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory;
+	public final fun timeout (JLjava/util/concurrent/TimeUnit;Lelide/runtime/exec/GuestExecutor;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory : elide/runtime/intrinsics/js/AbortSignal$Factory {
+	public synthetic fun <init> (Lelide/runtime/exec/GuestExecutor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun abort ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public fun any (Ljava/lang/Iterable;)Lelide/runtime/intrinsics/js/AbortSignal;
+	public static final fun bound (Lelide/runtime/exec/GuestExecutor;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory;
+	public fun timeout (I)Lelide/runtime/intrinsics/js/AbortSignal;
+}
+
+public abstract interface class elide/runtime/gvm/internals/intrinsics/js/abort/Abortable : elide/runtime/intrinsics/js/AbortSignal {
+	public abstract fun assignAborted (Ljava/lang/Object;)V
+	public static synthetic fun assignAborted$default (Lelide/runtime/gvm/internals/intrinsics/js/abort/Abortable;Ljava/lang/Object;ILjava/lang/Object;)V
+}
+
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1585,6 +1668,7 @@ public abstract interface class elide/runtime/intrinsics/GuestIntrinsic {
 	public fun isInternal ()Z
 	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
 	public fun supports (Lelide/runtime/gvm/GuestLanguage;)Z
+	public abstract fun symbolicName ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/GuestIntrinsic$IntrinsicBindings : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
@@ -1621,6 +1705,27 @@ public abstract interface class elide/runtime/intrinsics/Symbol : elide/core/api
 	public abstract fun getInternalSymbol ()Ljava/lang/String;
 	public abstract fun getSymbol ()Ljava/lang/String;
 	public abstract fun isInternal ()Z
+}
+
+public abstract interface class elide/runtime/intrinsics/js/AbortController {
+	public abstract fun abort (Ljava/lang/Object;)V
+	public static synthetic fun abort$default (Lelide/runtime/intrinsics/js/AbortController;Ljava/lang/Object;ILjava/lang/Object;)V
+	public abstract fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/AbortController$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/AbortSignal : elide/runtime/intrinsics/js/node/events/EventTarget {
+	public abstract fun getAborted ()Z
+	public abstract fun getReason ()Ljava/lang/Object;
+	public abstract fun throwIfAborted ()V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/AbortSignal$Factory {
+	public abstract fun abort ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public abstract fun any (Ljava/lang/Iterable;)Lelide/runtime/intrinsics/js/AbortSignal;
+	public abstract fun timeout (I)Lelide/runtime/intrinsics/js/AbortSignal;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/Blob {
@@ -2273,9 +2378,6 @@ public abstract interface class elide/runtime/intrinsics/js/express/ExpressRespo
 	public abstract fun send (Lorg/graalvm/polyglot/Value;)V
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/AbortSignal {
-}
-
 public abstract interface class elide/runtime/intrinsics/js/node/AssertAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 	public abstract fun assert (Ljava/lang/Object;Ljava/lang/String;)V
 	public static synthetic fun assert$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
@@ -2387,7 +2489,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/DomainAPI : eli
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/EventsAPI : elide/runtime/intrinsics/js/node/NodeAPI, org/graalvm/polyglot/proxy/ProxyObject {
-	public abstract fun addAbortListener (Lelide/runtime/intrinsics/js/node/AbortSignal;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/Disposable;
+	public abstract fun addAbortListener (Lelide/runtime/intrinsics/js/AbortSignal;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/Disposable;
 	public abstract fun getCaptureRejections ()Z
 	public abstract fun getDefaultMaxListeners ()I
 	public abstract fun getErrorMonitor ()Ljava/lang/Object;
@@ -3244,20 +3346,20 @@ public final class elide/runtime/intrinsics/js/node/childProcess/StdioSymbols {
 public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZ)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ZZZ)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZ)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ZZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;ZZZ)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/AbortSignal;ZZZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;
 	public final fun getCapture ()Z
 	public final fun getOnce ()Z
 	public final fun getPassive ()Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3366,13 +3468,13 @@ public abstract interface class elide/runtime/intrinsics/js/node/events/EventTar
 
 public final class elide/runtime/intrinsics/js/node/events/EventsOnceOptions {
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/events/EventsOnceOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3437,18 +3539,18 @@ public final class elide/runtime/intrinsics/js/node/fs/MkdirOptions$Companion {
 public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/Object;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
+	public final fun component3 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;Ljava/lang/Object;Ljava/lang/String;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/fs/ReadFileOptions;
 	public final fun getEncoding ()Ljava/lang/Object;
 	public final fun getFlag ()Ljava/lang/String;
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3473,19 +3575,19 @@ public abstract interface class elide/runtime/intrinsics/js/node/fs/Stats {
 public final class elide/runtime/intrinsics/js/node/fs/WriteFileOptions {
 	public static final field Companion Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/Object;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/Integer;
-	public final fun component4 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
+	public final fun component4 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Integer;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getEncoding ()Ljava/lang/Object;
 	public final fun getFlag ()Ljava/lang/String;
 	public final fun getMode ()Ljava/lang/Integer;
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -4222,111 +4324,111 @@ public abstract interface class elide/runtime/intrinsics/js/node/stream/Readable
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableComposeOptions {
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableComposeOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableDropOptions {
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableDropOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableEveryOptions {
 	public fun <init> ()V
-	public fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
-	public final fun component2 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (ILelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableEveryOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableEveryOptions;ILelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableEveryOptions;
+	public final fun component2 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (ILelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableEveryOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableEveryOptions;ILelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableEveryOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConcurrency ()I
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public final fun setConcurrency (I)V
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableFindOptions {
 	public fun <init> ()V
-	public fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
-	public final fun component2 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (ILelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableFindOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableFindOptions;ILelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableFindOptions;
+	public final fun component2 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (ILelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableFindOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableFindOptions;ILelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableFindOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConcurrency ()I
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public final fun setConcurrency (I)V
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions {
 	public fun <init> ()V
-	public fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
-	public final fun component2 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (ILelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions;ILelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions;
+	public final fun component2 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (ILelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions;ILelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableFlatMapOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConcurrency ()I
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public final fun setConcurrency (I)V
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableForEachOptions {
 	public fun <init> ()V
-	public fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
-	public final fun component2 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (ILelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableForEachOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableForEachOptions;ILelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableForEachOptions;
+	public final fun component2 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (ILelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableForEachOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableForEachOptions;ILelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableForEachOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConcurrency ()I
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public final fun setConcurrency (I)V
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableFromOptions {
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableFromOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -4346,21 +4448,21 @@ public final class elide/runtime/intrinsics/js/node/stream/ReadableIteratorOptio
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableMapOptions {
 	public fun <init> ()V
-	public fun <init> (IILelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (IILelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (IILelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (IILelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
 	public final fun component2 ()I
-	public final fun component3 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (IILelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;IILelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;
+	public final fun component3 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (IILelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;IILelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableMapOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConcurrency ()I
 	public final fun getHighWaterMark ()I
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public final fun setConcurrency (I)V
 	public final fun setHighWaterMark (I)V
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -4387,60 +4489,60 @@ public final class elide/runtime/intrinsics/js/node/stream/ReadablePipeOptions$C
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableReduceOptions {
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableReduceOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableReduceOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableReduceOptions;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableReduceOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableReduceOptions;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableReduceOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableSomeOptions {
 	public fun <init> ()V
-	public fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (ILelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (ILelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
-	public final fun component2 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (ILelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableSomeOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableSomeOptions;ILelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableSomeOptions;
+	public final fun component2 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (ILelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableSomeOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableSomeOptions;ILelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableSomeOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConcurrency ()I
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
 	public final fun setConcurrency (I)V
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableTakeOptions {
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableTakeOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableTakeOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableTakeOptions;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableTakeOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableTakeOptions;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableTakeOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions {
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/js/node/AbortSignal;
-	public final fun copy (Lelide/runtime/intrinsics/js/node/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions;Lelide/runtime/intrinsics/js/node/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions;
+	public fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/AbortSignal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/js/AbortSignal;
+	public final fun copy (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions;Lelide/runtime/intrinsics/js/AbortSignal;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/stream/ReadableToArrayOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSignal ()Lelide/runtime/intrinsics/js/node/AbortSignal;
+	public final fun getSignal ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun hashCode ()I
-	public final fun setSignal (Lelide/runtime/intrinsics/js/node/AbortSignal;)V
+	public final fun setSignal (Lelide/runtime/intrinsics/js/AbortSignal;)V
 	public fun toString ()Ljava/lang/String;
 }
 

@@ -18,6 +18,7 @@ import org.graalvm.polyglot.Value
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 import elide.runtime.intrinsics.js.err.*
+import elide.runtime.intrinsics.js.err.JsError
 
 /** Utility for wrapping JavaScript error types. */
 @Suppress("unused") public object JsError {
@@ -45,7 +46,7 @@ import elide.runtime.intrinsics.js.err.*
     msg: String,
     errno: Int? = null,
     vararg extraProps: Pair<String, Any>,
-  ): Error = object : Error(extraProps.map { it.first to Value.asValue(it.second) }.toTypedArray()) {
+  ): Error = object : JsError, Error(extraProps.map { it.first to Value.asValue(it.second) }.toTypedArray()) {
     override val message: String get() = msg
     override val errno: Int? get() = errno
     override val name: String get() = cause?.javaClass?.simpleName ?: "Error"

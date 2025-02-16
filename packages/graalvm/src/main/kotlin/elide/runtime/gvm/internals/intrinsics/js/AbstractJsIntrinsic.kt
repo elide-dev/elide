@@ -18,12 +18,10 @@ import elide.runtime.intrinsics.GuestIntrinsic
 
 /** Abstract base class for all intrinsic implementations. */
 internal abstract class AbstractJsIntrinsic : GuestIntrinsic {
-  /** @inheritDoc */
   override fun language(): GuestLanguage = GraalVMGuest.JAVASCRIPT
-
-  /** @inheritDoc */
+  override fun symbolicName(): String = "native code"
+  @Deprecated("Use symbolicName instead", ReplaceWith("symbolicName"))
   override fun displayName(): String = "native code"
 
-  /** @inheritDoc */
-  override fun toString(): String = "[${displayName()}]"
+  override fun toString(): String = "[${symbolicName()}]"
 }

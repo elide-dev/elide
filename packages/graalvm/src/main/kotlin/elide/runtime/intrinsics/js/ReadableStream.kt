@@ -12,11 +12,16 @@
  */
 package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.HostAccess
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.WebStreamsIntrinsic.ReadableStreamImpl
+import elide.runtime.intrinsics.js.stream.QueuingStrategy
+import elide.runtime.intrinsics.js.stream.ReadableStreamSource
+import elide.vm.annotations.Polyglot
 
 /**
  * # Web Streams: Readable Stream.
@@ -25,7 +30,7 @@ import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrin
  * Readable streams implement streams of arbitrary data which can be consumed by an interested developer, and form part
  * of the wider Web Streams API.
  */
-@API public interface ReadableStream {
+@API @HostAccess.Implementable public interface ReadableStream : Stream {
   /**
    * ## Readable Stream: Factory.
    *
@@ -35,57 +40,73 @@ import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrin
    *
    * @param Impl Implementation of [ReadableStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl: ReadableStream {
+  public interface Factory<Impl> : ProxyInstantiable where Impl: ReadableStream {
     /**
-     * TBD.
+     * Constructor for a custom [ReadableStream], which implements the provided [source] and [queueingStrategy], if
+     * provided.
+     *
+     * @param source Source for the [ReadableStream].
+     * @param queueingStrategy Optional [QueuingStrategy] for the [ReadableStream].
+     * @return A new [ReadableStream] instance.
+     */
+    @Polyglot public fun create(source: ReadableStreamSource, queueingStrategy: QueuingStrategy?): ReadableStream
+
+    /**
+     * Constructor for a custom [ReadableStream], which implements the provided [source].
+     *
+     * @param source Source for the [ReadableStream].
+     * @return A new [ReadableStream] instance.
+     */
+    @Polyglot public fun create(source: ReadableStreamSource): ReadableStream = create(source, null)
+
+    /**
+     * Create an empty [ReadableStream] instance of shape [Impl].
+     *
+     * @return New [ReadableStream] instance.
      */
     public fun empty(): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [InputStream].
+     *
+     * @param input [InputStream] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [InputStream].
      */
     public fun wrap(input: InputStream): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [Reader].
+     *
+     * @param reader [Reader] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [Reader].
      */
     public fun wrap(reader: Reader): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [ByteArray].
+     *
+     * @param bytes [ByteArray] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [ByteArray].
      */
     public fun wrap(bytes: ByteArray): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [ByteBuffer].
+     *
+     * @param buffer [ByteBuffer] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [ByteBuffer].
      */
     public fun wrap(buffer: ByteBuffer): Impl
   }
 
-  public companion object DefaultFactory : Factory<ReadableStream> {
-    /**
-     * TBD.
-     */
-    override fun empty(): ReadableStream = ReadableStreamIntrinsic.empty()
-
-    /**
-     * TBD.
-     */
-    override fun wrap(input: InputStream): ReadableStream = ReadableStreamIntrinsic.wrap(input)
-
-    /**
-     * TBD.
-     */
-    override fun wrap(reader: Reader): ReadableStream = ReadableStreamIntrinsic.wrap(reader)
-
-    /**
-     * TBD.
-     */
-    override fun wrap(bytes: ByteArray): ReadableStream = ReadableStreamIntrinsic.wrap(bytes)
-
-    /**
-     * TBD.
-     */
-    override fun wrap(buffer: ByteBuffer): ReadableStream = ReadableStreamIntrinsic.wrap(buffer)
+  /** Default constructors/factory methods for [ReadableStream] instances. */
+  public companion object DefaultFactory : ProxyInstantiable by ReadableStreamImpl.Factory, Factory<ReadableStream> {
+    @Polyglot override fun create(source: ReadableStreamSource, queueingStrategy: QueuingStrategy?): ReadableStream =
+      ReadableStreamImpl.create(source, queueingStrategy)
+    override fun empty(): ReadableStream = ReadableStreamImpl.empty()
+    override fun wrap(input: InputStream): ReadableStream = ReadableStreamImpl.wrap(input)
+    override fun wrap(reader: Reader): ReadableStream = ReadableStreamImpl.wrap(reader)
+    override fun wrap(bytes: ByteArray): ReadableStream = ReadableStreamImpl.wrap(bytes)
+    override fun wrap(buffer: ByteBuffer): ReadableStream = ReadableStreamImpl.wrap(buffer)
   }
 }

@@ -10,21 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.plugins.js
+package elide.runtime.intrinsics.js.stream
 
-import elide.runtime.core.DelicateElideApi
+import elide.annotations.API
 
-@DelicateElideApi public enum class JavaScriptVersion {
-  ES5,
-  ES6,
-  ES2017,
-  ES2018,
-  ES2019,
-  ES2020,
-  ES2021,
-  ES2022,
-  ES2023,
-  ES2024,
-  STABLE,
-  LATEST,
-}
+/**
+ * ## Readable Stream Default Reader
+ */
+@API public interface ReadableStreamDefaultReader

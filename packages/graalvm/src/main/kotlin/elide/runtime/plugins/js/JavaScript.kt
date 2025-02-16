@@ -12,7 +12,6 @@
  */
 package elide.runtime.plugins.js
 
-import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
 import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.LogLevel.DEBUG
@@ -50,9 +49,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     // apply init-time settings
     config.applyTo(context)
-
-    // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
   }
 
   private fun generateImports(name: String): Source = Source.newBuilder("js", StringBuilder().apply {
@@ -116,6 +112,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.strict",
       "js.temporal",
       "js.top-level-await",
+      // "js.stack-trace-api",
+      // "js.script-engine-global-scope-import",
       // Experimental:
       "js.async-context",
       "js.async-iterator-helpers",
@@ -132,22 +130,21 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     disableOptions(
       "js.console",
-      "js.graal-builtin",
+      // "js.graal-builtin",
       "js.interop-complete-promises",
       "js.java-package-globals",
-      "js.load",
-      "js.polyglot-evalfile",
+      // "js.load",
+      // "js.polyglot-evalfile",
       "js.print",
       "js.regexp-static-result",
       "js.scripting",
       "js.syntax-extensions",
       // Experimental:
       "js.operator-overloading",
-      "js.polyglot-builtin",
+      // "js.polyglot-builtin",
     )
 
     setOptions(
-      "js.timer-resolution" to "1",
       "js.commonjs-require-cwd" to (config.npmConfig.modulesPath?.ifBlank { null } ?: "."),
       "js.debug-property-name" to DEBUG_GLOBAL,
       "js.ecmascript-version" to config.language.symbol(),
@@ -157,6 +154,11 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       // Experimental:
       "js.charset" to config.charset.name(),
     )
+    if (config.highResTimers) {
+      setOptions("js.timer-resolution" to "1")
+    } else {
+      setOptions("js.timer-resolution" to "1000")
+    }
 
     setOptions(
       "js.commonjs-require" to config.npmConfig.enabled,
@@ -195,10 +197,10 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     private const val JS_LANGUAGE_ID = "js"
     private const val JS_PLUGIN_ID = "JavaScript"
 
-    private const val EXPERIMENTAL_MODULE_PRELOADING = true
+    private const val EXPERIMENTAL_MODULE_PRELOADING = false
 
     private const val WASI_STD = "wasi_snapshot_preview1"
-    private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
+    private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "512"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "__ElideDebug__"
     private val shouldPreloadModules = System.getProperty("elide.js.preloadModules") != "false"
@@ -238,7 +240,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       ES2020,
       ES2021,
       ES2022,
-      ES2023 -> this.name.drop(2)
+      ES2023,
+      ES2024 -> this.name.drop(2)
 
       STABLE -> "stable"
       LATEST -> "latest"

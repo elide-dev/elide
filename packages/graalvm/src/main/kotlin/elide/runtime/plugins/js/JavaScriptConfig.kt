@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.AbstractLanguageConfig
-import elide.runtime.plugins.js.JavaScriptVersion.ES2022
+import elide.runtime.plugins.js.JavaScriptVersion.ES2024
 
 @DelicateElideApi public class JavaScriptConfig : AbstractLanguageConfig() {
   /** Configuration for NPM features. */
@@ -137,10 +137,13 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   public var wasm: Boolean = true
 
   /** Enable experimental built-in runtime support for TypeScript. Defaults to `false`. */
-  public var typescript: Boolean = false
+  public var typescript: Boolean = true
+
+  /** Enable max-resolution timers for precision benchmarking. */
+  public var highResTimers: Boolean = false
 
   /** ECMA Script language level to apply within the VM; defaults to [JavaScriptVersion.ES2022]. */
-  public var language: JavaScriptVersion = ES2022
+  public var language: JavaScriptVersion = ES2024
 
   /** Default locale to apply to the JS VM. Defaults to the system default. */
   public var defaultLocale: Locale = Locale.getDefault()

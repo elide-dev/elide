@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -251,7 +251,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
       while (entry != null) {
         if (!entry.isDirectory) {
-          assert(bundleStream.canReadEntryData(entry)) { "Bundle '${bundle.location}' cannot read entry '${info.path}'" }
+          assert(bundleStream.canReadEntryData(entry)) {
+            "Bundle '${bundle.location}' cannot read entry '${info.path}'"
+          }
           val bytes = bundleStream.readBytes()
           bundleCache["${bundle.id}:${entry.name}"] = entry to bytes
           if (entry.name == info.path) {
@@ -265,11 +267,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     // run a manual gc after building the index
     assert(found != null) { "Failed to resolve entry for VFS file '${info.path}' in bundle '${bundle.location}'" }
-    return try {
-      found!! to foundBytes!!.inputStream()
-    } finally {
-      System.gc()
-    }
+    return found!! to foundBytes!!.inputStream()
   }
 
   private fun lazyInflateBundleData(

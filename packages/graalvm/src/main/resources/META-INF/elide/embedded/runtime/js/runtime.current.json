@@ -6,9 +6,7 @@
   ],
   "artifacts": [],
   "image": {},
-  "scripts": [
-    { "path": "polyfills.js" }
-  ],
+  "scripts": [],
   "bundles": [
     { "path": "js.modules.tar" }
   ]

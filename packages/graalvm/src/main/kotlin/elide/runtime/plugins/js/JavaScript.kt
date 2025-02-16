@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -215,7 +215,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       // apply the configuration and create the plugin instance
       val config = JavaScriptConfig().apply(configuration)
       configureSharedBindings(scope, config)
-      
+
       val embedded = resolveEmbeddedManifest(scope)
       val instance = JavaScript(config, embedded, env)
 

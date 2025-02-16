@@ -33,9 +33,11 @@ import kotlinx.atomicfu.atomic
 import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.TimerId
 import elide.runtime.intrinsics.js.Timers
@@ -92,29 +94,30 @@ private const val SHUTDOWN_WAIT: Long = 10L
     JsTimerManager(execProvider.provide())
   }
 
+  @OptIn(DelicateElideApi::class)
   override fun install(bindings: MutableIntrinsicBindings) {
     // `setTimeout`
-    bindings[SET_TIMEOUT_SYMBOL.asJsSymbol()] = ProxyExecutable {
+    bindings[SET_TIMEOUT_SYMBOL.asPublicJsSymbol()] = ProxyExecutable {
       val cbk = it.getOrNull(0)
       val delay = it.getOrNull(1)?.asLong() ?: DEFAULT_DELAY
       manager.setTimeout(delay) { cbk?.executeVoid() }
     }
 
     // `setInterval`
-    bindings[SET_INTERVAL_SYMBOL.asJsSymbol()] = ProxyExecutable {
+    bindings[SET_INTERVAL_SYMBOL.asPublicJsSymbol()] = ProxyExecutable {
       val cbk = it.getOrNull(0)
       val delay = it.getOrNull(1)?.asLong() ?: DEFAULT_DELAY
       manager.setInterval(delay) { cbk?.executeVoid() }
     }
 
     // `clearTimeout`
-    bindings[CLEAR_TIMEOUT_SYMBOL.asJsSymbol()] = ProxyExecutable {
+    bindings[CLEAR_TIMEOUT_SYMBOL.asPublicJsSymbol()] = ProxyExecutable {
       val id = it.getOrNull(0)?.asLong() ?: return@ProxyExecutable null
       manager.clearTimeout(id)
     }
 
     // `clearInterval`
-    bindings[CLEAR_INTERVAL_SYMBOL.asJsSymbol()] = ProxyExecutable {
+    bindings[CLEAR_INTERVAL_SYMBOL.asPublicJsSymbol()] = ProxyExecutable {
       val id = it.getOrNull(0)?.asLong() ?: return@ProxyExecutable null
       manager.clearInterval(id)
     }

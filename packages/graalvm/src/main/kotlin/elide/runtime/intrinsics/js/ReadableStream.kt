@@ -15,6 +15,7 @@ package elide.runtime.intrinsics.js
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
+import elide.annotations.API
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
 
 /**
@@ -24,7 +25,7 @@ import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrin
  * Readable streams implement streams of arbitrary data which can be consumed by an interested developer, and form part
  * of the wider Web Streams API.
  */
-public interface ReadableStream {
+@API public interface ReadableStream {
   /**
    * ## Readable Stream: Factory.
    *

@@ -145,5 +145,12 @@ public interface GuestIntrinsic {
    *
    * @return Display name of this guest-intrinsic symbol.
    */
-  public fun displayName(): String
+  public fun symbolicName(): String
+
+  /**
+   * Return the display name of this intrinsic; this is typically the [Symbol] bound to the value.
+   *
+   * @return Display name of this guest-intrinsic symbol.
+   */
+  @Deprecated(message = "Use symbolicName instead") public fun displayName(): String
 }

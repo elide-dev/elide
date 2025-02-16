@@ -36,7 +36,7 @@ import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.Disposable
 import elide.runtime.intrinsics.js.JsPromise
-import elide.runtime.intrinsics.js.node.AbortSignal
+import elide.runtime.intrinsics.js.AbortSignal
 import elide.runtime.intrinsics.js.node.EventsAPI
 import elide.runtime.intrinsics.js.node.events.*
 import elide.runtime.intrinsics.js.node.events.EventListener

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,11 +15,13 @@ package elide.runtime.intrinsics.js.node.events
 import org.graalvm.polyglot.HostAccess.Implementable
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import elide.annotations.API
+import elide.runtime.gvm.js.JsError
 import elide.vm.annotations.Polyglot
 
 // All properties and methods for custom events which are exposed to guest code.
@@ -200,5 +202,19 @@ private val CUSTOM_EVENT_PROPS_AND_METHODS = arrayOf(
     }
 
     else -> null
+  }
+
+  /**
+   * ## Custom Event - Factory
+   *
+   * Describes the interface for constructing [CustomEvent] instances.
+   */
+  public companion object Factory : ProxyInstantiable {
+    override fun newInstance(vararg args: Value?): Any {
+      val type = args.getOrNull(0)?.asString()
+        ?: throw JsError.typeError("CustomEvent type must be provided")
+      val detail = args.getOrNull(1)
+      return CustomEvent(type, detail)
+    }
   }
 }

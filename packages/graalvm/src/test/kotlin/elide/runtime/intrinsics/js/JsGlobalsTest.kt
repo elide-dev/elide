@@ -131,6 +131,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "Buffer",
     "atob",
     "BroadcastChannel",
+    "CustomEvent",
     "btoa",
     "clearImmediate",
     "clearInterval",
@@ -142,7 +143,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "Crypto",
     "crypto",
     "CryptoKey",
-    "CustomEvent",
     "DecompressionStream",
     "Event",
     "EventSource",
@@ -225,7 +225,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "DecompressionStream",  // not yet implemented
     "Crypto",  // not yet implemented
     "CryptoKey", // not yet implemented
-    "CustomEvent",  // not yet implemented
     "Event",  // not yet implemented
     "EventSource",  // not yet implemented
     "FormData",  // not yet implemented

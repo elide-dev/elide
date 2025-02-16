@@ -48,6 +48,9 @@ private const val EVENTS_MODULE_SYMBOL = "node_events"
 // Public symbol where `EventTarget` is installed.
 private const val EVENT_TARGET_SYMBOL = "EventTarget"
 
+// Public symbol where `CustomEvent` is installed.
+private const val CUSTOM_EVENT_SYMBOL = "CustomEvent"
+
 // Maximum number of listeners to set as a default value.
 private const val DEFAULT_DEFAULT_MAX_LISTENERS = 10
 
@@ -60,6 +63,7 @@ private const val DEFAULT_DEFAULT_MAX_LISTENERS = 10
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[EVENTS_MODULE_SYMBOL.asJsSymbol()] = NodeEventsModuleFacade.obtain()
     bindings[EVENT_TARGET_SYMBOL.asPublicJsSymbol()] = EventTarget::class.java
+    bindings[CUSTOM_EVENT_SYMBOL.asPublicJsSymbol()] = CustomEvent.Factory
   }
 }
 

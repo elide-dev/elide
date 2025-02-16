@@ -3370,6 +3370,7 @@ public final class elide/runtime/intrinsics/js/node/events/AddEventListenerOptio
 }
 
 public class elide/runtime/intrinsics/js/node/events/CustomEvent : elide/runtime/intrinsics/js/node/events/Event, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Factory Lelide/runtime/intrinsics/js/node/events/CustomEvent$Factory;
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Ljava/lang/Object;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -3401,6 +3402,10 @@ public class elide/runtime/intrinsics/js/node/events/CustomEvent : elide/runtime
 	public fun removeMember (Ljava/lang/String;)Z
 	public fun stopImmediatePropagation ()V
 	public fun stopPropagation ()V
+}
+
+public final class elide/runtime/intrinsics/js/node/events/CustomEvent$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/events/Event {

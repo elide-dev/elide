@@ -247,7 +247,9 @@ import elide.testing.annotations.TestCase
     val event = CustomEvent("sample")
     assertNotNull(event.timeStamp)
     assertTrue(event.timeStamp > 0)
-    Thread.sleep(1000)
+    while (System.currentTimeMillis().toDouble() == event.timeStamp) {
+      // wait for time to tick
+    }
     val event2 = CustomEvent("sample")
     assertNotNull(event2.timeStamp)
     assertTrue(event2.timeStamp > 0)
@@ -277,5 +279,32 @@ import elide.testing.annotations.TestCase
     assertTrue(event.canDispatch())
     event.stopImmediatePropagation()
     assertFalse(event.canDispatch())
+  }
+
+  @Test fun testCreateCustomEvent() = dual {
+    assertNotNull(CustomEvent("sample"))
+  }.guest {
+    // language=JavaScript
+    """
+      test(new CustomEvent("sample")).isNotNull();
+    """
+  }
+
+  @Test fun testCreateCustomEventWithDetail() = dual {
+    assertNotNull(CustomEvent("sample", mapOf("detail" to true)))
+  }.guest {
+    // language=JavaScript
+    """
+      test(new CustomEvent("sample", { detail: true })).isNotNull();
+    """
+  }
+
+  @Test fun testCreateCustomEventRequiresType() {
+    executeGuest {
+      // language=JavaScript
+      """
+      test(new CustomEvent())
+    """
+    }.fails()
   }
 }

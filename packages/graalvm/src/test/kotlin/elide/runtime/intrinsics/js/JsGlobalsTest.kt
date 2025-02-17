@@ -12,6 +12,7 @@
  */
 package elide.runtime.intrinsics.js
 
+import com.oracle.truffle.js.lang.JavaScriptLanguage
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import org.junit.jupiter.api.Assumptions
@@ -25,9 +26,9 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
 import elide.runtime.gvm.GraalVMGuest
-import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.js.ELIDE_JS_LANGUAGE_ID
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
@@ -47,7 +48,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "Failed to locate JS polyfills"
   }.readText()
 
-  private val polyfillsSrc = Source.create("js", polyfillsContent)
+  private val polyfillsSrc = Source.create(ELIDE_JS_LANGUAGE_ID, polyfillsContent)
 
   @Inject private lateinit var intrinsics: IntrinsicsManager
 
@@ -360,7 +361,7 @@ private const val ENABLE_SUPPRESSIONS = true
       }
     } else withFreshContext {
       if (ENABLE_POLYFILLS) eval(polyfillsSrc)
-      eval(Source.create("js", block.invoke())).let { value ->
+      eval(Source.create(ELIDE_JS_LANGUAGE_ID, block.invoke())).let { value ->
         assertNotNull(value, "should get value from guest execution")
         assertFalse(value.isNull, "value should not be `null`")
         assertFalse(value.isBoolean && !value.asBoolean(), "value should not be `false`")
@@ -382,7 +383,7 @@ private const val ENABLE_SUPPRESSIONS = true
         DynamicTest.dynamicTest(polyfilledName) {
           withFreshContext {
             eval(polyfillsSrc).let { value ->
-              val bindings = value.context.getBindings("js")
+              val bindings = value.context.getBindings(JavaScriptLanguage.ID)
               val obj = assertNotNull(
                 bindings.getMember(polyfilledName),
                 "global symbol '$polyfilledName' is missing from polyfilled bindings",

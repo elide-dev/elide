@@ -56,6 +56,7 @@ dependencies {
   api(libs.graalvm.polyglot)
   api(libs.kotlinx.coroutines.core)
   api(libs.guava)
+  api(libs.graalvm.js.language)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
 

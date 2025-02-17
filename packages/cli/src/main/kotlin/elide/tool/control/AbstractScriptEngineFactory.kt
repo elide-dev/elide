@@ -29,7 +29,8 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
     private val polyglotEngine = Engine.newBuilder().build()
   }
 
-  private val languageId: String = engine.engine
+  private val languageId: String = engine.requestId
+
   private val language by lazy {
     requireNotNull(polyglotEngine.languages[languageId]) {
       "Failed to resolve language implementation with ID $languageId"
@@ -236,7 +237,7 @@ abstract class AbstractScriptEngineFactory protected constructor (val engine: Gr
     }
   }
 
-  private class PolyglotContext (private val languageId: String) : ScriptContext {
+  private class PolyglotContext constructor (private val languageId: String) : ScriptContext {
     private var context: Context? = null
     private val `in`: PolyglotReader
     private val out: PolyglotWriter

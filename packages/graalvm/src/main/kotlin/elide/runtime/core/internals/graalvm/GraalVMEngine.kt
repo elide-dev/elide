@@ -14,6 +14,7 @@
 
 package elide.runtime.core.internals.graalvm
 
+import com.oracle.truffle.js.lang.JavaScriptLanguage
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Context
@@ -42,6 +43,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23_1
+import elide.runtime.gvm.internals.js.ElideJavaScriptLanguage
 import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
@@ -123,7 +125,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
   // Finalize a suite of bindings for a given language (or the main polyglot bindings).
   private fun finalizeBindings(bindings: Value) {
-    if (bindings.hasMembers()) {
+    if (EXPERIMENTAL_DROP_INTERNALS && bindings.hasMembers()) {
       knownInternalMembers.forEach {
         try {
           bindings.removeMember(it)
@@ -150,7 +152,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   private fun GraalVMContext.finalizeContext(): GraalVMContext = apply {
     try {
       context.enter()
-
       // emit context finalization
       lifecycle.emit(ContextFinalized, this)
       doFinalize(this)
@@ -218,7 +219,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     private const val ENABLE_AUX_CACHE = false
 
     /** Whether to drop internals from the polyglot context before finalization completes. */
-    private const val EXPERIMENTAL_DROP_INTERNALS = true
+    private const val EXPERIMENTAL_DROP_INTERNALS = false
 
     /** Whether internal symbols should be withheld from guest code. */
     private val shouldDropInternals = System.getProperty("elide.internals") != "true"
@@ -251,7 +252,19 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     @Suppress("SpreadOperator", "LongMethod")
     public fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
       val nativesPath = System.getProperty("elide.natives")?.ifBlank { null } ?: defaultAuxPath
-      val languages = configuration.languages.map { it.languageId }.toTypedArray()
+      val languages = configuration.languages.flatMap {
+        when (it.languageId) {
+          ElideJavaScriptLanguage.ID,
+          ElideJavaScriptLanguage.TYPESCRIPT,
+          JavaScriptLanguage.ID -> listOf(
+            ElideJavaScriptLanguage.ID,
+            ElideJavaScriptLanguage.TYPESCRIPT,
+            JavaScriptLanguage.ID,
+          )
+
+          else -> listOf(it.languageId)
+        }
+      }.distinct().toTypedArray()
 
       val builder = Engine.newBuilder(*languages).apply {
         useSystemProperties(false)
@@ -329,7 +342,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
         if (useAuxCache && nativesPath != null) {
           // if we're running in a native image, enabled the code compile cache
-          // option("engine.PreinitializeContexts", "js")
+          // option("engine.PreinitializeContexts", "ejs")
           // option("engine.CacheCompile", "hot")
           option("engine.TraceCache", "true")
           disableOption("engine.CachePreinitializeContext")

@@ -27,7 +27,7 @@ import elide.runtime.core.PolyglotContext
  */
 @DelicateElideApi public abstract class AbstractLanguageConfig {
   public companion object {
-    private const val EXPERIMENTAL_SECURE_INTERNALS = true
+    private const val EXPERIMENTAL_SECURE_INTERNALS = false
   }
 
   /** Mutable counterpart to [intrinsicBindings]. */
@@ -80,42 +80,40 @@ import elide.runtime.core.PolyglotContext
 
       // in languages based on JS, we expose a special object, `primordials`, for internal evaluations only
       // @TODO don't hard-code this
-      if (language?.languageId == "js") {
-        putMember("primordials", object : ProxyObject, ProxyHashMap {
-          override fun getMemberKeys(): Array<String> = internalKeys
-          override fun hasMember(key: String?): Boolean = key != null && key in internalKeys
-          override fun hasHashEntry(key: Value?): Boolean = key != null && key.asString() in internalKeys
-          override fun getHashSize(): Long = internalKeys.size.toLong()
+      putMember("primordials", object : ProxyObject, ProxyHashMap {
+        override fun getMemberKeys(): Array<String> = internalKeys
+        override fun hasMember(key: String?): Boolean = key != null && key in internalKeys
+        override fun hasHashEntry(key: Value?): Boolean = key != null && key.asString() in internalKeys
+        override fun getHashSize(): Long = internalKeys.size.toLong()
 
-          override fun putMember(key: String?, value: Value?) {
-            // no-op
-          }
+        override fun putMember(key: String?, value: Value?) {
+          // no-op
+        }
 
-          override fun putHashEntry(key: Value?, value: Value?) {
-            // no-op
-          }
+        override fun putHashEntry(key: Value?, value: Value?) {
+          // no-op
+        }
 
-          override fun removeMember(key: String?): Boolean {
-            return false // not supported
-          }
+        override fun removeMember(key: String?): Boolean {
+          return false // not supported
+        }
 
-          override fun removeHashEntry(key: Value?): Boolean {
-            return false // not supported
-          }
+        override fun removeHashEntry(key: Value?): Boolean {
+          return false // not supported
+        }
 
-          override fun getMember(key: String?): Any? = when (key) {
-            null -> null
-            else -> internals[key]
-          }
+        override fun getMember(key: String?): Any? = when (key) {
+          null -> null
+          else -> internals[key]
+        }
 
-          override fun getHashValue(key: Value?): Any? = when (key) {
-            null -> null
-            else -> internals[key.asString()]
-          }
+        override fun getHashValue(key: Value?): Any? = when (key) {
+          null -> null
+          else -> internals[key.asString()]
+        }
 
-          override fun getHashEntriesIterator(): Any = internals.iterator()
-        })
-      }
+        override fun getHashEntriesIterator(): Any = internals.iterator()
+      })
     }
   }
 }

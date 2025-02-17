@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,6 +23,7 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.js.lang.JavaScriptLanguage;
 import com.oracle.truffle.js.runtime.JSEngine;
 import com.oracle.truffle.js.runtime.JSRealm;
+import elide.runtime.gvm.loader.LoaderRegistry;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.graalvm.polyglot.SandboxPolicy;
@@ -84,7 +85,8 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     }
     var ctx = JSEngine.createJSContext(js, jsEnv);
     var realm = ctx.createRealm(jsEnv);
-    JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
+    final TypeScriptModuleLoader loader = new TypeScriptModuleLoader(realm, tsCompiler);
+    LoaderRegistry.mountPrimary(realm, loader);
     return realm;
   }
 
@@ -118,7 +120,8 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     @TruffleBoundary
     private void setModuleLoader() {
       JSRealm realm = JSRealm.get(delegate);
-      JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
+      final TypeScriptModuleLoader loader = new TypeScriptModuleLoader(realm, tsCompiler);
+      LoaderRegistry.mountPrimary(realm, loader);
     }
 
     @Override

@@ -15,6 +15,8 @@
 
 package elide.tool.cli
 
+import elide.runtime.gvm.internals.js.ELIDE_JS_LANGUAGE_ID
+
 /** Specifies languages supported for REPL access. */
 enum class GuestLanguage (
   internal val id: String,
@@ -28,6 +30,7 @@ enum class GuestLanguage (
   internal val dependsOn: List<GuestLanguage> = emptyList(),
   internal val executionMode: ExecutionMode = ExecutionMode.SOURCE_DIRECT,
   internal val secondary: Boolean = dependsOn.isNotEmpty(),
+  override val requestId: String = engine,
 ) : elide.runtime.gvm.GuestLanguage, elide.runtime.core.GuestLanguage {
   /** Interactive JavaScript VM. */
   JS (
@@ -37,6 +40,7 @@ enum class GuestLanguage (
     onByDefault = true,
     extensions = listOf("js", "cjs", "mjs"),
     mimeTypes = listOf("application/javascript", "application/javascript+module", "application/ecmascript"),
+    requestId = ELIDE_JS_LANGUAGE_ID,
   ),
 
   /** JavaScript VM enabled with TypeScript support. */
@@ -132,7 +136,7 @@ enum class GuestLanguage (
     dependsOn = listOf(JVM),
   ),
 
-  /** Interactive nested JVM. */
+  /** WebAssembly. */
   WASM (
     id = ENGINE_WASM,
     formalName = "WASM",
@@ -140,29 +144,41 @@ enum class GuestLanguage (
     suppressExperimentalWarning = true,
     extensions = listOf("wasm"),
     mimeTypes = listOf("application/wasm"),
+  ),
+
+  /** Apple Pkl. */
+  PKL (
+    id = ENGINE_PKL,
+    formalName = "Pkl",
+    experimental = true,
+    suppressExperimentalWarning = true,
+    extensions = listOf("pkl"),
+    mimeTypes = listOf("application/pkl"),
   );
 
   companion object {
     /** @return Language based on the provided ID, or `null`. */
     internal fun resolveFromEngine(id: String): GuestLanguage? = when (id) {
-      JS.engine -> JS
+      JS.engine, ELIDE_JS_LANGUAGE_ID -> JS
       TYPESCRIPT.engine -> TYPESCRIPT
       PYTHON.engine -> PYTHON
       RUBY.engine -> RUBY
       JVM.engine -> JVM
       WASM.engine -> WASM
       LLVM.engine -> LLVM
+      PKL.engine -> PKL
       else -> null
     }
 
     /** @return Language based on the provided ID, or `null`. */
     internal fun resolveFromId(id: String): GuestLanguage? = when (id) {
-      JS.id -> JS
+      JS.id, ELIDE_JS_LANGUAGE_ID -> JS
       PYTHON.id -> PYTHON
       RUBY.id -> RUBY
       JVM.id -> JVM
       WASM.id -> WASM
       LLVM.id -> LLVM
+      PKL.id -> PKL
       TYPESCRIPT.id -> TYPESCRIPT
 
       // JVM extension guests

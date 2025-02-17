@@ -12,7 +12,6 @@
  */
 package elide.runtime.plugins.js
 
-import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
 import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.LogLevel.DEBUG
@@ -27,6 +26,7 @@ import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.core.plugin
+import elide.runtime.gvm.internals.JavaScriptLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.plugins.env.Environment
@@ -71,6 +71,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   }.build()
 
   @Synchronized private fun finalizeContext(context: PolyglotContext) {
+    // initialize root realm hooks
+    JavaScriptLang.initialize()
     config.builtinModulesConfig.finalize()
     if (EXPERIMENTAL_MODULE_PRELOADING && !modulesInitialized.get() && shouldPreloadModules) {
       modulesInitialized.compareAndSet(false, true)
@@ -195,7 +197,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     private const val JS_LANGUAGE_ID = "js"
     private const val JS_PLUGIN_ID = "JavaScript"
 
-    private const val EXPERIMENTAL_MODULE_PRELOADING = true
+    private const val EXPERIMENTAL_MODULE_PRELOADING = false
 
     private const val WASI_STD = "wasi_snapshot_preview1"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"

@@ -56,7 +56,6 @@ val enableTransportV2 = false
 val ktCompilerArgs = emptyList<String>()
 val javacArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
 )
@@ -431,8 +430,9 @@ if (enableBenchmarks) {
 }
 
 dependencies {
-  // KSP
+  // KSP/KSP
   kapt(mn.micronaut.inject.java)
+  kapt(libs.graalvm.truffle.processor)
 
   // API Deps
   api(libs.jakarta.inject)

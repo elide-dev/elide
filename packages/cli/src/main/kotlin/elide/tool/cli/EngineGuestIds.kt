@@ -14,7 +14,7 @@
 package elide.tool.cli
 
 /** GraalVM engine name for GraalJs. */
-const val ENGINE_JS = "js"
+const val ENGINE_JS = "ejs"
 
 /** GraalVM engine name for GraalPython. */
 const val ENGINE_PYTHON = "python"
@@ -27,6 +27,9 @@ const val ENGINE_JVM = "java"
 
 /** GraalVM engine name for GraalWasm. */
 const val ENGINE_WASM = "wasm"
+
+/** GraalVM engine name for Pkl. */
+const val ENGINE_PKL = "pkl"
 
 /** GraalVM engine name for GraalLLVM. */
 const val ENGINE_LLVM = "llvm"

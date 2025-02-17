@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -20,12 +20,13 @@ import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import elide.runtime.gvm.internals.js.ELIDE_JS_LANGUAGE_ID
 
 @OptIn(DelicateElideApi::class)
 internal class ContextTest {
   /** Simple mock implementation for a JS language marker. */
   private object JavaScript : GuestLanguage {
-    override val languageId: String = "js"
+    override val languageId: String = ELIDE_JS_LANGUAGE_ID
   }
 
   /** Simple mock implementation for a Python language marker. */

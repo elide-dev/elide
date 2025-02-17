@@ -32,6 +32,7 @@ import elide.runtime.gvm.internals.AbstractDualTest.JavaScript
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.runtime.gvm.internals.js.ElideJavaScriptLanguage
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.runtime.node.buffer.NodeBufferClass
@@ -105,7 +106,7 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
 
     // build a source chunk for the test script
     val src = Source.newBuilder(
-      "js",
+      ElideJavaScriptLanguage.ID,
       // trim initial empty line
       if (script[0] == '\n') script.drop(1) else script,
       if (esm) "test.mjs" else "test.js",

@@ -26,6 +26,11 @@ public interface GuestLanguage {
   /**
    * TBD.
    */
+  public val requestId: String
+
+  /**
+   * TBD.
+   */
   public val engine: String
 
   /**

@@ -13,17 +13,19 @@
 package elide.runtime.gvm
 
 import java.util.*
+import elide.runtime.gvm.internals.js.ELIDE_JS_LANGUAGE_ID
 
 /** Enumerates known/supported GraalVM guest languages. */
 public enum class GraalVMGuest (
   override val symbol: String,
   override val engine: String = symbol,
   override val label: String,
+  override val requestId: String = symbol,
 ) : GuestLanguage {
   /**
    * ECMA2022-compliant JavaScript via Graal JS+JVM.
    */
-  JAVASCRIPT(symbol = "js", label = "JavaScript") {
+  JAVASCRIPT(requestId = ELIDE_JS_LANGUAGE_ID, symbol = "js", label = "JavaScript") {
     override val supportsSSR: Boolean get() = true
     override val supportsStreamingSSR: Boolean get() = true
     override val invocationModes: EnumSet<InvocationMode> get() = EnumSet.allOf(InvocationMode::class.java)

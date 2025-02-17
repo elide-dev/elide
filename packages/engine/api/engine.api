@@ -366,6 +366,18 @@ public final class elide/runtime/gvm/cfg/LanguageDefaults {
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
 }
 
+public final class elide/runtime/gvm/loader/JSRealmPatcher {
+	public static final field INSTANCE Lelide/runtime/gvm/loader/JSRealmPatcher;
+	public final fun getModuleLoaderField ()Ljava/lang/reflect/Field;
+}
+
+public final class elide/runtime/gvm/loader/LoaderRegistry {
+	public static final field INSTANCE Lelide/runtime/gvm/loader/LoaderRegistry;
+	public static final fun mountPrimary (Lcom/oracle/truffle/js/runtime/JSRealm;Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;)V
+	public static final fun register (Lcom/oracle/truffle/js/runtime/JSRealm;Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;)V
+	public static final fun register (Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;)V
+}
+
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguageConfig$Companion;
 	public fun <init> ()V

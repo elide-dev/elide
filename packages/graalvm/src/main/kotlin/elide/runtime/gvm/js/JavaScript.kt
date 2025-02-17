@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,6 +12,12 @@
  */
 package elide.runtime.gvm.js
 
+import com.oracle.truffle.api.strings.TruffleString
+import com.oracle.truffle.js.runtime.Strings
+import com.oracle.truffle.js.runtime.Symbol
+import com.oracle.truffle.js.runtime.objects.JSDynamicObject
+import com.oracle.truffle.js.runtime.objects.Null
+import com.oracle.truffle.js.runtime.objects.Undefined
 import io.micronaut.http.HttpRequest
 import java.io.InputStream
 import java.io.Reader
@@ -50,6 +56,14 @@ import elide.ssr.type.RequestState
  * applied guest I/O policy.
  */
 public object JavaScript {
+  /** `Elide` constant. */
+  @JvmStatic public val ELIDE: TruffleString = Strings.constant("Elide")
+
+  /**
+   * [ELIDE] corresponding symbol.
+   */
+  @JvmStatic public val SYMBOL_ELIDE: Symbol = Symbol.createPrivate(ELIDE)
+
   /**
    * ## JavaScript: Literal from string.
    *
@@ -105,3 +119,17 @@ public object JavaScript {
     }
   }
 }
+
+/**
+ * ### JavaScript: Undefined
+ *
+ * Returns the singleton instance describing JavaScript's `undefined` value.
+ */
+public fun undefined(): JSDynamicObject = Undefined.instance
+
+/**
+ * ### JavaScript: Null
+ *
+ * Returns the singleton instance describing JavaScript's `null` value.
+ */
+public fun nullvalue(): JSDynamicObject = Null.instance

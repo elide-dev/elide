@@ -113,5 +113,6 @@
     <ID>UnusedPrivateMember:HttpServerAgent.kt$HttpServerAgent.Companion$private fun resolveLanguage(source: Source): GuestLanguage</ID>
     <ID>UnusedPrivateMember:NativeCryptoFeature.kt$NativeCryptoFeature$private fun renameNativeCryptoLib(lib: String): String</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
+    <ID>UnusedPrivateProperty:JavaScriptLang.kt$JavaScriptLang$/** * TBD. */ @JvmStatic private val SYMBOL_ELIDE: Symbol = Symbol.createPrivate(ELIDE)</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -12,11 +12,14 @@
  */
 package elide.runtime.core.internals.graalvm
 
+import com.oracle.truffle.js.lang.JavaScriptLanguage
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import java.util.concurrent.ConcurrentHashMap
 import elide.runtime.core.*
 import elide.runtime.core.PolyglotContext.EvaluationOptions
+import elide.runtime.gvm.internals.js.ELIDE_JS_LANGUAGE_ID
+import elide.runtime.gvm.internals.js.ELIDE_TS_LANGUAGE_ID
 
 /**
  * An implementation of the [PolyglotContext] interface wrapping a GraalVM context.
@@ -36,7 +39,13 @@ import elide.runtime.core.PolyglotContext.EvaluationOptions
   }
 
   override fun bindings(language: GuestLanguage?): PolyglotValue {
-    return language?.let { context.getBindings(it.languageId) } ?: context.polyglotBindings
+    return language?.let {
+      // special case: if bindings are requested for typescript or elide JS, we return the bindings for pure JS.
+      when (it.languageId) {
+        ELIDE_JS_LANGUAGE_ID, ELIDE_TS_LANGUAGE_ID -> context.getBindings(JavaScriptLanguage.ID)
+        else -> context.getBindings(it.languageId)
+      }
+    } ?: context.polyglotBindings
   }
 
   override fun parse(source: Source): PolyglotValue {

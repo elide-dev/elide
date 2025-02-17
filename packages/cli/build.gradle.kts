@@ -683,6 +683,7 @@ val enabledSecurityProviders = listOfNotNull(
 
 val preinitializedContexts = if (!enablePreinit) emptyList() else listOfNotNull(
   "js",
+  "ejs",  // ElideJS
   onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
   onlyIf(enablePreinitializeAll && enablePython, "python"),
   onlyIf(enablePreinitializeAll && enableJvm, "java"),
@@ -884,7 +885,7 @@ val releaseFlags: List<String> = listOf(
   if (oracleGvm) gvmReleaseFlags else emptyList(),
 ).flatten()).toList()
 
-val jvmDefs = mapOf(
+val jvmDefs = mutableMapOf(
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
   "elide.target" to targetPath.asFile.path,
@@ -915,6 +916,10 @@ val jvmDefs = mapOf(
   // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
   // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
 )
+
+findProperty("elide.logLevel")?.let {
+  jvmDefs["elide.logging.root.level"] = it as String
+}
 
 val hostedRuntimeOptions = mapOf(
   "IncludeLocales" to "en",

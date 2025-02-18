@@ -38,7 +38,9 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine
  * Plugins can interact with each other within the configuration scope, which can be used to establish dependencies
  * between them: for example, the JavaScript plugin may depend on the VFS plugin to load core intrinsics from a bundle.
  */
-@DelicateElideApi public fun PolyglotEngine(configure: PolyglotEngineConfiguration.() -> Unit = { }): PolyglotEngine {
+@DelicateElideApi public fun PolyglotEngine(
+  configure: PolyglotEngineConfiguration.() -> Unit = { }
+): PolyglotEngine {
   val lifecycle = MutableEngineLifecycle()
   val configuration = GraalVMConfiguration(lifecycle).apply(configure)
   return GraalVMEngine.create(configuration, lifecycle)

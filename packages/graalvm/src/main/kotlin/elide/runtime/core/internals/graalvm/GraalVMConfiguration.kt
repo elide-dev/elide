@@ -35,7 +35,9 @@ import elide.runtime.core.internals.MutableEngineLifecycle
    * Represents an [InstallationScope] used by plugins, binding to this configuration's lifecycle and other required
    * properties.
    */
-  private inner class GraalVMInstallationScope(val config: GraalVMConfiguration) : InstallationScope {
+  private inner class GraalVMInstallationScope(
+    val config: GraalVMConfiguration
+  ) : InstallationScope {
     override val configuration: PolyglotEngineConfiguration get() = config
     override val lifecycle: EngineLifecycle get() = config.lifecycle
 

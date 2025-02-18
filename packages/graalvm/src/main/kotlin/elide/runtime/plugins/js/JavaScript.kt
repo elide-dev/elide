@@ -26,7 +26,6 @@ import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.core.plugin
-import elide.runtime.gvm.internals.JavaScriptLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.plugins.env.Environment
@@ -71,8 +70,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   }.build()
 
   @Synchronized private fun finalizeContext(context: PolyglotContext) {
-    // initialize root realm hooks
-    JavaScriptLang.initialize()
     config.builtinModulesConfig.finalize()
     if (EXPERIMENTAL_MODULE_PRELOADING && !modulesInitialized.get() && shouldPreloadModules) {
       modulesInitialized.compareAndSet(false, true)

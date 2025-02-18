@@ -15,14 +15,22 @@ package elide.runtime.gvm.internals.js
 import com.oracle.truffle.api.CallTarget
 import com.oracle.truffle.api.CompilerAsserts
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
+import com.oracle.truffle.api.RootCallTarget
 import com.oracle.truffle.api.TruffleLanguage
 import com.oracle.truffle.api.TruffleLanguage.ContextPolicy
 import com.oracle.truffle.api.TruffleLanguage.Registration
+import com.oracle.truffle.api.frame.VirtualFrame
 import com.oracle.truffle.api.nodes.ExecutableNode
+import com.oracle.truffle.api.nodes.RootNode
+import com.oracle.truffle.api.source.Source
 import com.oracle.truffle.js.lang.JSFileTypeDetector
 import com.oracle.truffle.js.lang.JavaScriptLanguage
 import com.oracle.truffle.js.runtime.JSRealm
 import org.graalvm.polyglot.SandboxPolicy
+import elide.runtime.gvm.internals.ElideEsModuleLoader
+import elide.runtime.gvm.internals.JavaScriptLang
+import elide.runtime.gvm.loader.LoaderRegistry.mountPrimary
 
 // Private engine constants.
 private const val ELIDE_JS_LANGUAGE_NAME = "JavaScript"
@@ -116,14 +124,42 @@ public class ElideJavaScriptLanguage : TruffleLanguage<JSRealm>() {
       rootEnv = currentEnv
       javascript = js
     }
-    return superCreateContext(javascript, jsEnv) as JSRealm
+    return (superCreateContext(javascript, jsEnv) as JSRealm).also {
+      // initialize optional globals
+      it.addOptionalGlobals()
+      // initialize root realm hooks
+      JavaScriptLang.initialize(it)
+    }
   }
 
   override fun parse(request: InlineParsingRequest?): ExecutableNode? {
     return superParseInline(javascript, request) as? ExecutableNode
   }
 
-  override fun parse(request: ParsingRequest?): CallTarget? {
-    return superParse(javascript, request) as? CallTarget
+  override fun parse(request: ParsingRequest): CallTarget? {
+    val source = request.source
+    val sourceOfJs = Source.newBuilder(JavaScriptLanguage.ID, source.characters, source.name)
+      .internal(source.isInternal)
+      .content(source.characters)
+      .mimeType(JavaScriptLanguage.MODULE_MIME_TYPE)
+      .build()
+    val argumentNames: List<String> = request.getArgumentNames()
+    val parsed = superParse(request) as RootCallTarget
+    val wrapper = ElideJsEntryNode(this, parsed.rootNode)
+    return wrapper.callTarget
+  }
+
+  private class ElideJsEntryNode (language: TruffleLanguage<*>, private val delegate: RootNode) :
+    RootNode(language) {
+
+    @TruffleBoundary fun setModuleLoader() {
+      val realm = JSRealm.get(delegate)
+      mountPrimary(realm, ElideEsModuleLoader.obtain(realm))
+    }
+
+    override fun execute(frame: VirtualFrame): Any {
+      setModuleLoader()
+      return delegate.execute(frame)
+    }
   }
 }

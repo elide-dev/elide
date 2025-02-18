@@ -5,6 +5,8 @@
     <ID>ComplexCondition:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$!it.builtin &amp;&amp; !it.registerPrefix &amp;&amp; !it.registerJni &amp;&amp; !it.eager</ID>
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
     <ID>ExplicitGarbageCollectionCall:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$gc()</ID>
+    <ID>ForbiddenComment:ElideEsModuleLoader.kt$ElideEsModuleLoader$// @TODO: code does not work from here to return</ID>
+    <ID>ForbiddenComment:ElideJavaScriptLanguage.kt$// @TODO: symbolic version</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:JsEncoding.kt$TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
@@ -19,6 +21,7 @@
     <ID>ForbiddenComment:NodeZlib.kt$NodeZlib$// @TODO: not yet implemented</ID>
     <ID>ForbiddenComment:NodeZlib.kt$UnzipStream$// @TODO: flushing for readables</ID>
     <ID>ForbiddenComment:TypeError.kt$// @TODO: deprecate and replace with type mapping</ID>
+    <ID>FunctionParameterNaming:AbstractJsModuleLoader.kt$AbstractJsModuleLoader.PackageJson.Companion$`object`: JSDynamicObject</ID>
     <ID>ImplicitDefaultLocale:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$String.format( "%d.%d.%d.%d", (bits and 0x0000000000ff000000L) shr 24, (bits and 0x0000000000ff0000L) shr 16, (bits and 0x0000000000ff00L) shr 8, bits and 0xffL, )</ID>
     <ID>IteratorNotThrowingNoSuchElementException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$&lt;no name provided> : Iterator</ID>
     <ID>IteratorNotThrowingNoSuchElementException:JsIterator.kt$JsIterator&lt;T> : IteratorProxyIteratorProxyIterable</ID>
@@ -54,10 +57,15 @@
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
+    <ID>ReturnCount:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$@TruffleBoundary override fun resolveImportedModule( referencingModule: ScriptOrModule, moduleRequest: ModuleRequest ): JSModuleRecord</ID>
+    <ID>ReturnCount:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$private fun esmFileFormat(url: URI?, env: Env): Format</ID>
+    <ID>ReturnCount:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$private fun loadCoreModuleReplacement( referencingModule: ScriptOrModule, moduleRequest: ModuleRequest, moduleReplacementName: String ): JSModuleRecord</ID>
+    <ID>ReturnCount:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$private fun packageResolve(packageSpecifier: String, parentURL: URI, env: Env): URI</ID>
     <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
     <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$(it.name, *it.deps.toTypedArray())</ID>
+    <ID>SpreadOperator:ElideJavaScriptLanguage.kt$ElideJavaScriptLanguage$(sourceOfJs, *argumentNames.toTypedArray&lt;String>())</ID>
     <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(*supportedFeatures())</ID>
     <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(views.first(), *(views.drop(1).toTypedArray()))</ID>
     <ID>SpreadOperator:FrameworkFeature.kt$FrameworkFeature$(*clazz.declaredConstructors)</ID>
@@ -80,6 +88,9 @@
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asHostObject&lt;Statement>(), *it.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *it.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *rest)</ID>
+    <ID>SwallowedException:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$e: IOException</ID>
+    <ID>SwallowedException:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$e: SecurityException</ID>
+    <ID>SwallowedException:AbstractJsModuleLoader.kt$AbstractJsModuleLoader.Companion$e: URISyntaxException</ID>
     <ID>SwallowedException:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$fnf: FileNotFoundException</ID>
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
     <ID>SwallowedException:GraalVMEngine.kt$GraalVMEngine$uoe: UnsupportedOperationException</ID>
@@ -92,6 +103,8 @@
     <ID>SwallowedException:WebCryptoIntrinsicTest.kt$WebCryptoIntrinsicTest$err: Throwable</ID>
     <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt$AbstractDualTest.TestResultContext$throw AssertionError("Expected failure, but test passed.")</ID>
     <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt$AbstractDualTest.TestResultContext$throw exc.get()!!</ID>
+    <ID>ThrowsCount:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$private fun esmResolve(specifier: String, parentURL: URI, env: Env): URI?</ID>
+    <ID>ThrowsCount:AbstractJsModuleLoader.kt$AbstractJsModuleLoader$private fun packageResolve(packageSpecifier: String, parentURL: URI, env: Env): URI</ID>
     <ID>ThrowsCount:SqliteQueryRenderer.kt$SqliteQueryRenderer$private fun StringBuilder.renderValue( trigger: Char, renderedSoFar: Int, subject: String, position: Int, ctx: QueryTemplateContext?, ): Int</ID>
     <ID>ThrowsCount:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
     <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
@@ -104,6 +117,10 @@
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy.SQLiteTransactionImpl$err: Throwable</ID>
     <ID>TooGenericExceptionThrown:FrameworkFeature.kt$FrameworkFeature$throw RuntimeException( "Failed to find method " + methodName + " for class " + clazz.name, e )</ID>
     <ID>TooGenericExceptionThrown:FrameworkFeature.kt$FrameworkFeature$throw RuntimeException("Failed to load classes under package name.", e)</ID>
+    <ID>UnusedParameter:ElideEsModuleLoader.kt$ElideEsModuleLoader$moduleData: JSModuleData</ID>
+    <ID>UnusedParameter:ElideEsModuleLoader.kt$ElideEsModuleLoader$moduleSource: Source</ID>
+    <ID>UnusedParameter:ElideEsModuleLoader.kt$ElideEsModuleLoader$ref: ScriptOrModule</ID>
+    <ID>UnusedParameter:ElideEsModuleLoader.kt$ElideEsModuleLoader$req: ModuleRequest</ID>
     <ID>UnusedParameter:GraalVMContext.kt$GraalVMContext$options: EvaluationOptions</ID>
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$ctx: QueryTemplateContext? = null</ID>
     <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$position: Int = -1</ID>
@@ -113,6 +130,7 @@
     <ID>UnusedPrivateMember:HttpServerAgent.kt$HttpServerAgent.Companion$private fun resolveLanguage(source: Source): GuestLanguage</ID>
     <ID>UnusedPrivateMember:NativeCryptoFeature.kt$NativeCryptoFeature$private fun renameNativeCryptoLib(lib: String): String</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
-    <ID>UnusedPrivateProperty:JavaScriptLang.kt$JavaScriptLang$/** * TBD. */ @JvmStatic private val SYMBOL_ELIDE: Symbol = Symbol.createPrivate(ELIDE)</ID>
+    <ID>UnusedPrivateProperty:ElideEsModuleLoader.kt$ElideEsModuleLoader.ElideSyntheticModuleRecord$qualifier: ModuleQualifier</ID>
+    <ID>UnusedPrivateProperty:ElideJavaScriptLanguage.kt$ElideJavaScriptLanguage.Companion$private val superParse by lazy { requireNotNull( JavaScriptLanguage::class.java.getDeclaredMethod("parse", ParsingRequest::class.java), ) { "Failed to resolve JavaScriptLanguage::parse(ParsingRequest)" }.also { it.isAccessible = true } }</ID>
   </CurrentIssues>
 </SmellBaseline>

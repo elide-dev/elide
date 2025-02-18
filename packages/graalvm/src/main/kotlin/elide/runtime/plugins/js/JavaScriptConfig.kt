@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -47,12 +47,10 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
     }
 
     /** Injected Elide API modules. */
-    private val elideModules: MutableMap<String, String> = listOf(
-      "sqlite",
-    ).flatMap { listOf(it, "elide:$it") }.associateWith {
-      val mod = if (!it.startsWith("elide:")) "elide:$it" else it
-      "/node_modules/$mod"
-    }.toMutableMap()
+    private val elideModules: MutableMap<String, String> = mutableMapOf(
+      "sqlite" to "/node_modules/elide:sqlite",
+      "elide:sqlite" to "/node_modules/elide:sqlite",
+    )
 
     /** Core module replacement map. */
     private val moduleReplacements: MutableMap<String, String> = listOf(

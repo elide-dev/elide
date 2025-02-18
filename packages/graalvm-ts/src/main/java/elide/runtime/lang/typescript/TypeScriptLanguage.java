@@ -74,9 +74,9 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   @Override
   protected JSRealm createContext(Env currentEnv) {
     CompilerAsserts.neverPartOfCompilation();
-    var js = JavaScriptLanguage.getCurrentLanguage();
     LanguageInfo jsInfo = currentEnv.getInternalLanguages().get("js");
     currentEnv.initializeLanguage(jsInfo);
+    var js = JavaScriptLanguage.getCurrentLanguage();
     var jsEnv = JavaScriptLanguage.getCurrentEnv();
     if (!compilerInitialized.get()) {
       compilerInitialized.compareAndSet(false, true);

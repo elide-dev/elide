@@ -17,6 +17,7 @@ package elide.runtime.gvm.internals.sqlite
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyObject
 import org.sqlite.SQLiteConnection
 import org.sqlite.SQLiteOpenMode
 import org.sqlite.SQLiteOpenMode.CREATE
@@ -52,6 +53,10 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMap
+import elide.runtime.gvm.internals.js.ExportedSymbol
+import elide.runtime.gvm.internals.js.SyntheticJsModule
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.MapLike
 import elide.runtime.intrinsics.sqlite.*
@@ -66,7 +71,10 @@ import java.sql.Statement as SqlStatement
 private const val SQLITE_MODULE_SYMBOL: String = "sqlite"
 
 // Symbol where the database class is installed.
-private const val SQLITE_DATABASE_SYMBOL: String = "sqlite_Database"
+private const val SQLITE_DATABASE_NAME: String = "Database"
+
+// Symbol where the database class is installed.
+private const val SQLITE_DATABASE_SYMBOL: String = "${SQLITE_MODULE_SYMBOL}_$SQLITE_DATABASE_NAME"
 
 // Token for creating in-memory SQLite databases.
 private const val SQLITE_IN_MEMORY_TOKEN: String = ":memory:"
@@ -89,7 +97,7 @@ private const val CONFIG_ATTR_READONLY: String = "readonly"
 }
 
 internal class SqliteModule : SQLiteAPI {
-  companion object {
+  companion object: SyntheticJsModule {
     // Native library to load for SQLite support.
     private const val SQLITE3_LIBRARY: String = "sqlitejdbc"
 
@@ -97,10 +105,19 @@ internal class SqliteModule : SQLiteAPI {
       NativeLibraries.resolve(SQLITE3_LIBRARY) {
         org.sqlite.SQLiteJDBCLoader.initialize()
       }
+
+      // Register with the next-gen module loader.
+      ModuleRegistry.deferred(ModuleInfo.of(SQLITE_MODULE_SYMBOL)) { this }
     }
 
     private val SINGLETON = SqliteModule()
     @JvmStatic fun obtain(): SQLiteAPI = SINGLETON
+
+    override val enableDefaultExport: Boolean get() = false
+    override val intrinsic: String get() = SQLITE_DATABASE_SYMBOL
+    override fun exports(): Array<ExportedSymbol> = arrayOf(
+      ExportedSymbol.cls(SQLITE_DATABASE_NAME, from = intrinsicLocalName),
+    )
   }
 }
 

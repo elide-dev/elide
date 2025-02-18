@@ -84,7 +84,7 @@ public object JSRealmPatcher {
    * @param jsRealm The JS realm to install the module loader into.
    * @throws IllegalStateException If the module loader install step fails.
    */
-  public inline fun <reified Loader : JSModuleLoader> installModuleLoader(jsRealm: JSRealm, moduleLoader: Loader,) {
+  public inline fun <reified Loader : JSModuleLoader> installModuleLoader(jsRealm: JSRealm, moduleLoader: Loader) {
     val current = moduleLoaderField[jsRealm]
     if (current !== moduleLoader) {
       moduleLoaderField[jsRealm] = moduleLoader

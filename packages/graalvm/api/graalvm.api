@@ -271,6 +271,7 @@ public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/
 	public fun getEngine ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLabel ()Ljava/lang/String;
+	public fun getRequestId ()Ljava/lang/String;
 	public fun getSymbol ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/GraalVMGuest;
 	public static fun values ()[Lelide/runtime/gvm/GraalVMGuest;
@@ -284,6 +285,7 @@ public abstract interface class elide/runtime/gvm/GuestLanguage {
 	public abstract fun getEngine ()Ljava/lang/String;
 	public fun getInvocationModes ()Ljava/util/EnumSet;
 	public abstract fun getLabel ()Ljava/lang/String;
+	public abstract fun getRequestId ()Ljava/lang/String;
 	public fun getSupportsSSR ()Z
 	public fun getSupportsStreamingSSR ()Z
 	public abstract fun getSymbol ()Ljava/lang/String;
@@ -473,8 +475,9 @@ public final class elide/runtime/gvm/cfg/GuestIOConfiguration$Mode : java/lang/E
 public abstract interface class elide/runtime/gvm/cfg/GuestVMConfiguration : io/micronaut/core/util/Toggleable {
 	public static final field Companion Lelide/runtime/gvm/cfg/GuestVMConfiguration$Companion;
 	public static final field DEFAULT_ENABLED Z
+	public static final field LANGUAGE_EJS Ljava/lang/String;
 	public static final field LANGUAGE_JAVA Ljava/lang/String;
-	public static final field LANGUAGE_JS Ljava/lang/String;
+	public static final field LANGUAGE_PKL Ljava/lang/String;
 	public static final field LANGUAGE_PYTHON Ljava/lang/String;
 	public static final field LANGUAGE_RUBY Ljava/lang/String;
 	public static final field LANGUAGE_WASM Ljava/lang/String;
@@ -489,8 +492,9 @@ public abstract interface class elide/runtime/gvm/cfg/GuestVMConfiguration : io/
 
 public final class elide/runtime/gvm/cfg/GuestVMConfiguration$Companion {
 	public static final field DEFAULT_ENABLED Z
+	public static final field LANGUAGE_EJS Ljava/lang/String;
 	public static final field LANGUAGE_JAVA Ljava/lang/String;
-	public static final field LANGUAGE_JS Ljava/lang/String;
+	public static final field LANGUAGE_PKL Ljava/lang/String;
 	public static final field LANGUAGE_PYTHON Ljava/lang/String;
 	public static final field LANGUAGE_RUBY Ljava/lang/String;
 	public static final field LANGUAGE_WASM Ljava/lang/String;
@@ -1174,6 +1178,69 @@ public final synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$R
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
+public final class elide/runtime/gvm/internals/js/ElideJavaScriptLanguage : com/oracle/truffle/api/TruffleLanguage {
+	public static final field Companion Lelide/runtime/gvm/internals/js/ElideJavaScriptLanguage$Companion;
+	public static final field ID Ljava/lang/String;
+	public static final field TYPESCRIPT Ljava/lang/String;
+	public fun <init> ()V
+	public synthetic fun createContext (Lcom/oracle/truffle/api/TruffleLanguage$Env;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/internals/js/ElideJavaScriptLanguage$Companion {
+}
+
+public final class elide/runtime/gvm/internals/js/ElideJavaScriptLanguageKt {
+	public static final field ELIDE_HELP_LINK Ljava/lang/String;
+	public static final field ELIDE_JS_LANGUAGE_ID Ljava/lang/String;
+	public static final field ELIDE_TS_LANGUAGE_ID Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/js/ElideJavaScriptLanguageProvider : com/oracle/truffle/api/provider/TruffleLanguageProvider {
+	public fun <init> ()V
+}
+
+public final class elide/runtime/gvm/internals/js/ExportedSymbol : java/lang/Record {
+	public static final field Companion Lelide/runtime/gvm/internals/js/ExportedSymbol$Companion;
+	public fun <init> (Ljava/lang/String;Lelide/runtime/node/asserts/ExportKind;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/node/asserts/ExportKind;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun cls (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lelide/runtime/node/asserts/ExportKind;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Lelide/runtime/node/asserts/ExportKind;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/js/ExportedSymbol;Ljava/lang/String;Lelide/runtime/node/asserts/ExportKind;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public static final fun default (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun from ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun kind ()Lelide/runtime/node/asserts/ExportKind;
+	public static final fun method (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public final fun name ()Ljava/lang/String;
+	public static final fun of (Ljava/lang/String;Lelide/runtime/node/asserts/ExportKind;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/js/ExportedSymbol$Companion {
+	public final fun cls (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public static synthetic fun cls$default (Lelide/runtime/gvm/internals/js/ExportedSymbol$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public final fun default (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public static synthetic fun default$default (Lelide/runtime/gvm/internals/js/ExportedSymbol$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public final fun method (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public static synthetic fun method$default (Lelide/runtime/gvm/internals/js/ExportedSymbol$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public final fun of (Ljava/lang/String;Lelide/runtime/node/asserts/ExportKind;Ljava/lang/String;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public static synthetic fun of$default (Lelide/runtime/gvm/internals/js/ExportedSymbol$Companion;Ljava/lang/String;Lelide/runtime/node/asserts/ExportKind;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/js/ExportedSymbol;
+}
+
+public abstract interface class elide/runtime/gvm/internals/js/SyntheticJsModule {
+	public fun exports ()[Lelide/runtime/gvm/internals/js/ExportedSymbol;
+	public fun facade ()Ljava/lang/String;
+	public fun getEmitDefaultLoad ()Z
+	public fun getEnableDefaultExport ()Z
+	public abstract fun getIntrinsic ()Ljava/lang/String;
+	public fun getIntrinsicLoadFrom ()Ljava/lang/String;
+	public fun getIntrinsicLocalName ()Ljava/lang/String;
+}
+
 public synthetic class elide/runtime/gvm/internals/sqlite/$ElideSqliteModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1476,6 +1543,8 @@ public final class elide/runtime/gvm/intrinsics/ServiceIntrinsicsResolver$Compan
 public final class elide/runtime/gvm/js/JavaScript {
 	public static final field INSTANCE Lelide/runtime/gvm/js/JavaScript;
 	public static final fun embedded (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript;
+	public static final fun getELIDE ()Lcom/oracle/truffle/api/strings/TruffleString;
+	public static final fun getSYMBOL_ELIDE ()Lcom/oracle/truffle/js/runtime/Symbol;
 	public static final fun literal (Ljava/lang/CharSequence;)Lelide/runtime/gvm/ExecutableScript;
 }
 
@@ -1484,6 +1553,11 @@ public final class elide/runtime/gvm/js/JavaScript$Inputs {
 	public static final fun getEMPTY ()Lelide/runtime/gvm/ExecutionInputs;
 	public static final fun requestState (Lelide/ssr/type/RequestState;Ljava/lang/Object;)Lelide/runtime/gvm/RequestExecutionInputs;
 	public static synthetic fun requestState$default (Lelide/ssr/type/RequestState;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/gvm/RequestExecutionInputs;
+}
+
+public final class elide/runtime/gvm/js/JavaScriptKt {
+	public static final fun nullvalue ()Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
+	public static final fun undefined ()Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
 }
 
 public final class elide/runtime/gvm/js/JsError {
@@ -2379,8 +2453,7 @@ public abstract interface class elide/runtime/intrinsics/js/express/ExpressRespo
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/AssertAPI : elide/runtime/intrinsics/js/node/NodeAPI {
-	public abstract fun assert (Ljava/lang/Object;Ljava/lang/String;)V
-	public static synthetic fun assert$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun assert ([Ljava/lang/Object;)V
 	public abstract fun deepEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
 	public static synthetic fun deepEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
 	public abstract fun deepStrictEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
@@ -2415,8 +2488,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/AssertAPI : eli
 	public static synthetic fun notEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
 	public abstract fun notOk (Ljava/lang/Object;Ljava/lang/Object;)V
 	public static synthetic fun notOk$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)V
-	public abstract fun ok (Ljava/lang/Object;Ljava/lang/Object;)V
-	public static synthetic fun ok$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)V
+	public abstract fun ok ([Ljava/lang/Object;)V
 	public abstract fun rejects (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
 	public static synthetic fun rejects$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
 	public abstract fun strict (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
@@ -5504,6 +5576,16 @@ public synthetic class elide/runtime/node/asserts/$NodeAssertStrictModule$Provid
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/node/asserts/ExportKind : java/lang/Enum {
+	public static final field CLASS Lelide/runtime/node/asserts/ExportKind;
+	public static final field DEFAULT Lelide/runtime/node/asserts/ExportKind;
+	public static final field METHOD Lelide/runtime/node/asserts/ExportKind;
+	public static final field PROPERTY Lelide/runtime/node/asserts/ExportKind;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/node/asserts/ExportKind;
+	public static fun values ()[Lelide/runtime/node/asserts/ExportKind;
 }
 
 public final class elide/runtime/node/asserts/NodeAssertKt {

@@ -27,13 +27,8 @@ internal object JavaScriptLang {
   private val initialized = atomic(false)
 
   // Initialize JavaScript language tooling; called early in JavaScript's init lifecycle.
-  fun initialize() {
-    if (initialized.compareAndSet(false, true)) {
-      // force the lang to initialize, as applicable
-      val realm = JavaScriptLanguage.getCurrentJSRealm()
-      assert(realm != null) { "JavaScript language failed to initialize" }
-      realm.bootstrap(root = true)
-    }
+  fun initialize(realm: JSRealm) {
+    realm.bootstrap(root = initialized.compareAndSet(false, true))
   }
 
   /**
@@ -45,7 +40,7 @@ internal object JavaScriptLang {
   @JvmStatic @Suppress("unused") fun obtainRealm(node: Node? = null): JSRealm = JSRealm.get(node)
 
   // Bootstrap a JavaScript realm; if the realm is the root realm, additional setup is performed.
-  private fun JSRealm.bootstrap(root: Boolean) {
+  fun JSRealm.bootstrap(root: Boolean) {
     logging.info("Acquired realm (root: $root) / $this")
     ElideEsModuleLoader.obtain(this).also {
       JSRealmPatcher.installModuleLoader(this, it)

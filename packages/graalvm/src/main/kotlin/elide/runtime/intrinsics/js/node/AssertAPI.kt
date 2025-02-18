@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,10 +29,10 @@ import elide.vm.annotations.Polyglot
    * `message` parameter. If the `message` parameter is undefined, a default error message is assigned. If the `message`
    * parameter is an instance of an `Error` then it will be thrown as the error.
    *
-   * @param value The value to test.
-   * @param message The message to display on error.
+   * @param values Arguments to test; the first is selected as the test value, and the second as the message to fail
+   *   with, if provided. All other arguments are ignored.
    */
-  @Polyglot public fun ok(value: Any?, message: Any? = null)
+  @Polyglot public fun ok(vararg values: Any?)
 
   /**
    * ## Assert: `notOk(value, message)`
@@ -72,7 +72,7 @@ import elide.vm.annotations.Polyglot
   /**
    * ## Assert: `ok(value, message)`
    */
-  @Polyglot public fun assert(value: Any?, message: String? = null)
+  @Polyglot public fun assert(vararg values: Any?)
 
   /**
    * ## Assert: `equal(actual, expected, message)`

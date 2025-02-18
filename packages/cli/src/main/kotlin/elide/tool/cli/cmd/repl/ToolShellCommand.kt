@@ -1130,7 +1130,10 @@ private typealias ContextAccessor = () -> PolyglotContext
     stacktrace: Boolean = internal,
     withCause: Boolean = true,
   ) {
-    if (exc !is PolyglotException) return
+    if (exc !is PolyglotException) {
+      exc.printStackTrace()
+      return
+    }
     val term = terminal.get()
     val reader = lineReader.get()
 
@@ -1164,11 +1167,12 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
 
     // if requested, build a stacktrace for this error
-    val stacktraceContent = if (stacktrace) {
+    val doPrintStack = stacktrace || errRange.count() < 2
+    val stacktraceContent = if (doPrintStack) {
       val stackString = StringWriter()
       val stackPrinter = PrintWriter(stackString)
       exc.printStackTrace(stackPrinter)
-      when (val cause = exc.cause ?: if (exc.isHostException) exc.asHostException() else null) {
+      when (val cause = exc.cause ?: if (exc.isHostException) exc.asHostException() else exc) {
         null -> {}
         else -> if (withCause) {
           stackString.append("\nCause stacktrace: ")
@@ -1183,7 +1187,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     } else {
       ""
     }
-    val stacktraceLines = if (stacktrace) {
+    val stacktraceLines = if (doPrintStack) {
       stacktraceContent.lines()
     } else {
       emptyList()
@@ -1206,10 +1210,10 @@ private typealias ContextAccessor = () -> PolyglotContext
         (advice?.length ?: 0) + pad,
 
       // stacktrace
-      if (stacktrace) stacktraceLines.maxOf { it.length + pad + 2 } else 0,
+      if (doPrintStack) stacktraceLines.maxOf { it.length + pad + 2 } else 0,
     ))
 
-    val textWidth = width - (pad / 2) + if (stacktrace) {
+    val textWidth = width - (pad / 2) + if (doPrintStack) {
       "      ".length
     } else 0
 
@@ -1236,7 +1240,7 @@ private typealias ContextAccessor = () -> PolyglotContext
         append(middlePrefix).append(message.padEnd(textWidth - 1, ' ')).append("║\n")
       }
 
-      if (stacktrace || advice?.isNotBlank() == true) {
+      if (doPrintStack || advice?.isNotBlank() == true) {
         // ╟──────────────────────╢
         if (lineContextRendered.isNotEmpty() && message.isNotBlank()) appendLine(divider)
         else if (message.isNotBlank()) appendLine(divider)
@@ -1248,11 +1252,11 @@ private typealias ContextAccessor = () -> PolyglotContext
           // ║ Example advice.      ║
           append(middlePrefix).append(advice.padEnd(textWidth - 1, ' ') + "║\n")
           // ╟──────────────────────╢
-          if (stacktrace) appendLine(divider)
+          if (doPrintStack) appendLine(divider)
         }
 
         // append stacktrace next
-        if (stacktrace) {
+        if (doPrintStack) {
           // ║ Stacktrace:          ║
           append(middlePrefix).append("Stacktrace:".padEnd(textWidth - 1, ' ') + "║\n")
           appendLine(blankLine)

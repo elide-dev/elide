@@ -378,6 +378,49 @@ public final class elide/runtime/gvm/loader/LoaderRegistry {
 	public static final fun register (Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;)V
 }
 
+public abstract interface class elide/runtime/gvm/loader/ModuleFactory {
+	public abstract fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/loader/ModuleInfo : java/lang/Record, java/lang/Comparable {
+	public static final field Companion Lelide/runtime/gvm/loader/ModuleInfo$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun compareTo (Lelide/runtime/gvm/loader/ModuleInfo;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun dependencies ()Ljava/util/List;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lcom/oracle/js/parser/ir/Module$ModuleRequest;)Lelide/runtime/gvm/loader/ModuleInfo;
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public static final fun of (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/gvm/loader/ModuleInfo;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/loader/ModuleInfo$Companion {
+	public final fun from (Lcom/oracle/js/parser/ir/Module$ModuleRequest;)Lelide/runtime/gvm/loader/ModuleInfo;
+	public final fun of (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/gvm/loader/ModuleInfo;
+}
+
+public abstract interface class elide/runtime/gvm/loader/ModuleRegistrar {
+	public abstract fun deferred (Lelide/runtime/gvm/loader/ModuleInfo;Lelide/runtime/gvm/loader/ModuleFactory;)V
+	public abstract fun register (Lelide/runtime/gvm/loader/ModuleInfo;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/gvm/loader/ModuleRegistry : elide/runtime/gvm/loader/ModuleRegistrar, elide/runtime/gvm/loader/ModuleResolver {
+	public static final field INSTANCE Lelide/runtime/gvm/loader/ModuleRegistry;
+	public fun contains (Lelide/runtime/gvm/loader/ModuleInfo;)Z
+	public fun deferred (Lelide/runtime/gvm/loader/ModuleInfo;Lelide/runtime/gvm/loader/ModuleFactory;)V
+	public fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+	public fun register (Lelide/runtime/gvm/loader/ModuleInfo;Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/gvm/loader/ModuleResolver {
+	public abstract fun contains (Lelide/runtime/gvm/loader/ModuleInfo;)Z
+	public abstract fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+}
+
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguageConfig$Companion;
 	public fun <init> ()V

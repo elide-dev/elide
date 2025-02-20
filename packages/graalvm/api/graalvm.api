@@ -1113,7 +1113,7 @@ public final class elide/runtime/gvm/internals/intrinsics/js/url/URLSearchParams
 	public static final fun urlParams (Ljava/lang/String;)Lelide/runtime/intrinsics/js/URLSearchParams;
 }
 
-public synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$WebStreamsIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
@@ -2036,19 +2036,23 @@ public abstract interface class elide/runtime/intrinsics/js/RandomSource {
 	public abstract fun randomUUID ()Lelide/runtime/intrinsics/js/typed/UUID;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/ReadableStream {
+public abstract interface class elide/runtime/intrinsics/js/ReadableStream : elide/runtime/intrinsics/js/Stream {
 	public static final field DefaultFactory Lelide/runtime/intrinsics/js/ReadableStream$DefaultFactory;
 }
 
-public final class elide/runtime/intrinsics/js/ReadableStream$DefaultFactory : elide/runtime/intrinsics/js/ReadableStream$Factory {
+public final class elide/runtime/intrinsics/js/ReadableStream$DefaultFactory : elide/runtime/intrinsics/js/ReadableStream$Factory, org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public fun create (Lelide/runtime/intrinsics/js/stream/ReadableStreamSource;Lelide/runtime/intrinsics/js/stream/QueuingStrategy;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public fun empty ()Lelide/runtime/intrinsics/js/ReadableStream;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 	public fun wrap (Ljava/io/InputStream;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public fun wrap (Ljava/io/Reader;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public fun wrap (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public fun wrap ([B)Lelide/runtime/intrinsics/js/ReadableStream;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/ReadableStream$Factory {
+public abstract interface class elide/runtime/intrinsics/js/ReadableStream$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public fun create (Lelide/runtime/intrinsics/js/stream/ReadableStreamSource;)Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun create (Lelide/runtime/intrinsics/js/stream/ReadableStreamSource;Lelide/runtime/intrinsics/js/stream/QueuingStrategy;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public abstract fun empty ()Lelide/runtime/intrinsics/js/ReadableStream;
 	public abstract fun wrap (Ljava/io/InputStream;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public abstract fun wrap (Ljava/io/Reader;)Lelide/runtime/intrinsics/js/ReadableStream;
@@ -2058,6 +2062,9 @@ public abstract interface class elide/runtime/intrinsics/js/ReadableStream$Facto
 
 public abstract interface class elide/runtime/intrinsics/js/ServerAgent {
 	public abstract fun initialize (Lorg/graalvm/polyglot/Context;Ljava/util/concurrent/Phaser;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/Stream {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/StringLike : java/lang/CharSequence {
@@ -2077,6 +2084,12 @@ public abstract interface class elide/runtime/intrinsics/js/Timers {
 	public abstract fun setTimeout (Ljava/lang/Long;[Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)J
 	public static synthetic fun setTimeout$default (Lelide/runtime/intrinsics/js/Timers;Ljava/lang/Long;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)J
 	public static synthetic fun setTimeout$default (Lelide/runtime/intrinsics/js/Timers;Ljava/lang/Long;[Ljava/lang/Object;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)J
+}
+
+public abstract interface class elide/runtime/intrinsics/js/TransformStream : elide/runtime/intrinsics/js/Stream {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/TransformStream$Factory {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/URL : java/io/Serializable, org/graalvm/polyglot/proxy/ProxyObject {
@@ -2116,6 +2129,12 @@ public abstract interface class elide/runtime/intrinsics/js/URLSearchParams : el
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public fun hasMember (Ljava/lang/String;)Z
 	public abstract fun sort ()V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/WritableStream : elide/runtime/intrinsics/js/Stream {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/WritableStream$Factory {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/encoding/EncodingUtility : org/graalvm/polyglot/proxy/ProxyObject {
@@ -5130,6 +5149,95 @@ public abstract interface class elide/runtime/intrinsics/js/node/zlib/ZlibOption
 	public abstract fun getWindowBits ()I
 }
 
+public abstract interface class elide/runtime/intrinsics/js/stream/ByteLengthQueuingStrategy : elide/runtime/intrinsics/js/stream/QueuingStrategy, org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun getHighWaterMark ()I
+	public abstract fun size ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/CountQueuingStrategy : elide/runtime/intrinsics/js/stream/QueuingStrategy, org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun getHighWaterMark ()I
+	public fun size ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/QueuingStrategy {
+	public abstract fun size ()I
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/ReadableByteStreamController : elide/runtime/intrinsics/js/stream/ReadableStreamController {
+	public static final field Companion Lelide/runtime/intrinsics/js/stream/ReadableByteStreamController$Companion;
+	public static fun create (Lelide/runtime/intrinsics/js/stream/QueuingStrategy;)Lelide/runtime/intrinsics/js/stream/ReadableByteStreamController;
+}
+
+public final class elide/runtime/intrinsics/js/stream/ReadableByteStreamController$Companion {
+	public final fun create (Lelide/runtime/intrinsics/js/stream/QueuingStrategy;)Lelide/runtime/intrinsics/js/stream/ReadableByteStreamController;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/stream/ReadableByteStreamController$Companion;Lelide/runtime/intrinsics/js/stream/QueuingStrategy;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/stream/ReadableByteStreamController;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/ReadableStreamBYOBReader {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/ReadableStreamBYOBRequest {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/ReadableStreamController {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/ReadableStreamDefaultController : elide/runtime/intrinsics/js/stream/ReadableStreamController {
+	public static final field Companion Lelide/runtime/intrinsics/js/stream/ReadableStreamDefaultController$Companion;
+	public static fun create (Lelide/runtime/intrinsics/js/stream/QueuingStrategy;)Lelide/runtime/intrinsics/js/stream/ReadableStreamDefaultController;
+}
+
+public final class elide/runtime/intrinsics/js/stream/ReadableStreamDefaultController$Companion {
+	public final fun create (Lelide/runtime/intrinsics/js/stream/QueuingStrategy;)Lelide/runtime/intrinsics/js/stream/ReadableStreamDefaultController;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/stream/ReadableStreamDefaultController$Companion;Lelide/runtime/intrinsics/js/stream/QueuingStrategy;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/stream/ReadableStreamDefaultController;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/ReadableStreamDefaultReader {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/ReadableStreamSource {
+	public static final field Companion Lelide/runtime/intrinsics/js/stream/ReadableStreamSource$Companion;
+	public abstract fun cancel (Ljava/lang/String;)Ljava/util/concurrent/Future;
+	public static fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/stream/ReadableStreamSource;
+	public abstract fun getType ()Lelide/runtime/intrinsics/js/stream/StreamSourceType;
+	public abstract fun pull (Lelide/runtime/intrinsics/js/stream/ReadableStreamController;)Ljava/util/concurrent/Future;
+	public abstract fun start (Lelide/runtime/intrinsics/js/stream/ReadableStreamController;)Ljava/util/concurrent/Future;
+}
+
+public final class elide/runtime/intrinsics/js/stream/ReadableStreamSource$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/stream/ReadableStreamSource;
+}
+
+public final class elide/runtime/intrinsics/js/stream/StreamSourceType : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field BYTES Lelide/runtime/intrinsics/js/stream/StreamSourceType;
+	public static final field Companion Lelide/runtime/intrinsics/js/stream/StreamSourceType$Companion;
+	public static final field DEFAULT Lelide/runtime/intrinsics/js/stream/StreamSourceType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/stream/StreamSourceType;
+	public static fun values ()[Lelide/runtime/intrinsics/js/stream/StreamSourceType;
+}
+
+public final class elide/runtime/intrinsics/js/stream/StreamSourceType$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/runtime/intrinsics/js/stream/StreamSourceType;
+}
+
+public final class elide/runtime/intrinsics/js/stream/StreamSourceTypeKt {
+	public static final field STREAM_SOURCE_TYPE_BYTES Ljava/lang/String;
+	public static final field STREAM_SOURCE_TYPE_DEFAULT Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/TransformStreamDefaultController {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/WritableStreamDefaultController {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/stream/WritableStreamDefaultWriter {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/typed/UUID : elide/runtime/intrinsics/js/StringLike {
 	public abstract fun getAsString ()Ljava/lang/String;
 }
@@ -7485,6 +7593,7 @@ public final class elide/runtime/plugins/js/JavaScriptConfig : elide/runtime/plu
 	public final fun getCharset ()Ljava/nio/charset/Charset;
 	public final fun getDefaultLocale ()Ljava/util/Locale;
 	public final fun getEsm ()Z
+	public final fun getHighResTimers ()Z
 	public final fun getInteractive ()Z
 	public final fun getLanguage ()Lelide/runtime/plugins/js/JavaScriptVersion;
 	public final fun getLocale ()Ljava/util/Locale;
@@ -7497,6 +7606,7 @@ public final class elide/runtime/plugins/js/JavaScriptConfig : elide/runtime/plu
 	public final fun setCharset (Ljava/nio/charset/Charset;)V
 	public final fun setDefaultLocale (Ljava/util/Locale;)V
 	public final fun setEsm (Z)V
+	public final fun setHighResTimers (Z)V
 	public final fun setInteractive (Z)V
 	public final fun setLanguage (Lelide/runtime/plugins/js/JavaScriptVersion;)V
 	public final fun setLocale (Ljava/util/Locale;)V
@@ -7528,6 +7638,7 @@ public final class elide/runtime/plugins/js/JavaScriptVersion : java/lang/Enum {
 	public static final field ES2021 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES2022 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES2023 Lelide/runtime/plugins/js/JavaScriptVersion;
+	public static final field ES2024 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES5 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field ES6 Lelide/runtime/plugins/js/JavaScriptVersion;
 	public static final field LATEST Lelide/runtime/plugins/js/JavaScriptVersion;

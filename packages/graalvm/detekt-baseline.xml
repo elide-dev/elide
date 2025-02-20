@@ -4,7 +4,6 @@
   <CurrentIssues>
     <ID>ComplexCondition:AbstractStaticNativeLibraryFeature.kt$AbstractStaticNativeLibraryFeature$!it.builtin &amp;&amp; !it.registerPrefix &amp;&amp; !it.registerJni &amp;&amp; !it.eager</ID>
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
-    <ID>ExplicitGarbageCollectionCall:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$gc()</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:JsEncoding.kt$TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
@@ -41,7 +40,6 @@
     <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
     <ID>MatchingDeclarationName:Types.kt$GuestHandlerFunction</ID>
     <ID>MatchingDeclarationName:VfsPlugin.kt$Vfs</ID>
-    <ID>MaxLineLength:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$assert(bundleStream.canReadEntryData(entry)) { "Bundle '${bundle.location}' cannot read entry '${info.path}'" }</ID>
     <ID>MaxLineLength:JsConcurrentMap.kt$JsConcurrentMap.Factory$*</ID>
     <ID>MaxLineLength:JsMutableMultiMap.kt$JsMutableMultiMap.Factory$@JvmStatic override</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
@@ -113,5 +111,7 @@
     <ID>UnusedPrivateMember:HttpServerAgent.kt$HttpServerAgent.Companion$private fun resolveLanguage(source: Source): GuestLanguage</ID>
     <ID>UnusedPrivateMember:NativeCryptoFeature.kt$NativeCryptoFeature$private fun renameNativeCryptoLib(lib: String): String</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
+    <ID>UnusedPrivateProperty:JavaScript.kt$JavaScript$private val resources: LanguagePluginManifest</ID>
+    <ID>UnusedPrivateProperty:JavaScriptLang.kt$JavaScriptLang$/** * TBD. */ @JvmStatic private val SYMBOL_ELIDE: Symbol = Symbol.createPrivate(ELIDE)</ID>
   </CurrentIssues>
 </SmellBaseline>

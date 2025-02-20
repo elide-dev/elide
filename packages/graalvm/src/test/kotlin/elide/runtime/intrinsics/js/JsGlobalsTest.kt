@@ -25,7 +25,6 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
 import elide.runtime.gvm.GraalVMGuest
-import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.js.AbstractJsTest
@@ -37,17 +36,17 @@ import elide.runtime.plugins.vfs.vfs
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
-private const val ENABLE_POLYFILLS = true
+private const val ENABLE_POLYFILLS = false
 private const val ENABLE_SUPPRESSIONS = true
 
 @TestCase internal class JsGlobalsTest : AbstractJsTest() {
-  private val polyfillsContent = requireNotNull(javaClass.getResource(
+  private val polyfillsContent = javaClass.getResource(
     "/META-INF/elide/embedded/runtime/js/polyfills.js"
-  )) {
-    "Failed to locate JS polyfills"
-  }.readText()
+  )?.readText()
 
-  private val polyfillsSrc = Source.create("js", polyfillsContent)
+  private val polyfillsSrc by lazy {
+    Source.create("js", polyfillsContent)
+  }
 
   @Inject private lateinit var intrinsics: IntrinsicsManager
 
@@ -246,16 +245,7 @@ private const val ENABLE_SUPPRESSIONS = true
   )
 
   // Types which are expected to be provided by JS polyfills.
-  private val expectedPolyfills = streamGlobals.plus(sortedSetOf(
-    "ReadableByteStreamController",
-    "ReadableStreamBYOBReader",
-    "ReadableStreamBYOBRequest",
-    "ReadableStreamDefaultController",
-    "ReadableStreamDefaultReader",
-    "TransformStreamDefaultController",
-    "WritableStreamDefaultController",
-    "WritableStreamDefaultWriter",
-  )).toSortedSet()
+  private val expectedPolyfills: List<String> = emptyList()
 
   // Globals which are expected not to be found host-side.
   private val expectMissingHostGlobals = standardJsGlobals.plus(sortedSetOf(
@@ -283,6 +273,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "Intl.PluralRules",
     "Intl.RelativeTimeFormat",
     "Intl.Segmenter",
+    "crypto.randomUUID",
   )
 
   // Globals which are expected not to be found host-side.
@@ -370,6 +361,8 @@ private const val ENABLE_SUPPRESSIONS = true
 
   @DelicateElideApi
   @Test fun `polyfills script can execute`() {
+    Assumptions.assumeTrue(ENABLE_POLYFILLS)
+
     withFreshContext {
       eval(polyfillsSrc)
     }
@@ -377,6 +370,7 @@ private const val ENABLE_SUPPRESSIONS = true
 
   @DelicateElideApi
   @TestFactory fun `polyfills script provides expected globals`() = sequence<DynamicTest> {
+    Assumptions.assumeTrue(ENABLE_POLYFILLS)
     expectedPolyfills.forEach { polyfilledName ->
       yield(
         DynamicTest.dynamicTest(polyfilledName) {

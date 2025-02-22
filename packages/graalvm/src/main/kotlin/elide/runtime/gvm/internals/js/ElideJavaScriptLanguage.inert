@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.runtime.gvm.internals.js
+
+import com.oracle.truffle.api.CallTarget
+import com.oracle.truffle.api.CompilerAsserts
+import com.oracle.truffle.api.CompilerDirectives.CompilationFinal
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
+import com.oracle.truffle.api.RootCallTarget
+import com.oracle.truffle.api.TruffleLanguage
+import com.oracle.truffle.api.TruffleLanguage.ContextPolicy
+import com.oracle.truffle.api.TruffleLanguage.Registration
+import com.oracle.truffle.api.frame.VirtualFrame
+import com.oracle.truffle.api.nodes.ExecutableNode
+import com.oracle.truffle.api.nodes.RootNode
+import com.oracle.truffle.api.source.Source
+import com.oracle.truffle.js.lang.JSFileTypeDetector
+import com.oracle.truffle.js.lang.JavaScriptLanguage
+import com.oracle.truffle.js.runtime.JSRealm
+import org.graalvm.polyglot.SandboxPolicy
+import elide.runtime.gvm.internals.ElideEsModuleLoader
+import elide.runtime.gvm.internals.JavaScriptLang
+import elide.runtime.gvm.loader.LoaderRegistry.mountPrimary
+
+// Private engine constants.
+private const val ELIDE_JS_LANGUAGE_NAME = "JavaScript"
+private const val ELIDE_JS_LANGUAGE_IMPL = "Elide/GraalJs"
+private const val ELIDE_JS_VERSION = "r3-es2024-gvm24-1.0.0-alpha14"  // @TODO: symbolic version
+
+// Public engine constants.
+public const val ELIDE_JS_LANGUAGE_ID: String = "ejs"
+public const val ELIDE_TS_LANGUAGE_ID: String = "ts"
+public const val ELIDE_HELP_LINK: String = "https://docs.elide.dev"
+
+/**
+ * ## Elide JavaScript
+ */
+/*@Registration(
+  id = ELIDE_JS_LANGUAGE_ID,
+  name = ELIDE_JS_LANGUAGE_NAME,
+  implementationName = ELIDE_JS_LANGUAGE_IMPL,
+  version = ELIDE_JS_VERSION,
+  dependentLanguages = [JavaScriptLanguage.ID],
+  defaultMimeType = JavaScriptLanguage.APPLICATION_MIME_TYPE,
+  website = ELIDE_HELP_LINK,
+  fileTypeDetectors = [
+    //ElideJsFileTypeDetector::class,
+    JSFileTypeDetector::class,
+  ],
+  contextPolicy = ContextPolicy.SHARED,
+  sandbox = SandboxPolicy.TRUSTED,
+  characterMimeTypes = [
+    TYPESCRIPT_TEXT_MIME_TYPE,
+    TYPESCRIPT_MIME_TYPE,
+    TYPESCRIPT_MODULE_MIME_TYPE,
+    JAVASCRIPT_APPLICATION_MIME_TYPE,
+    JAVASCRIPT_MODULE_MIME_TYPE,
+    JAVASCRIPT_TEXT_MIME_TYPE,
+    JAVASCRIPT_JSON_MIME_TYPE,
+  ],
+)
+public class ElideJavaScriptLanguage : TruffleLanguage<JSRealm>() {
+  public companion object {
+    /** ID to use when requesting Elide JS. */
+    public const val ID: String = ELIDE_JS_LANGUAGE_ID
+
+    /** ID to use when requesting Elide TypeScript. */
+    public const val TYPESCRIPT: String = ELIDE_TS_LANGUAGE_ID
+
+    private val superCreateContext by lazy {
+      requireNotNull(
+        JavaScriptLanguage::class.java.getDeclaredMethod("createContext", Env::class.java),
+      ) {
+        "Failed to resolve JavaScriptLanguage::createContext(Env)"
+      }.also {
+        it.isAccessible = true
+      }
+    }
+
+    private val superParseInline by lazy {
+      requireNotNull(
+        JavaScriptLanguage::class.java.getDeclaredMethod("parse", InlineParsingRequest::class.java),
+      ) {
+        "Failed to resolve JavaScriptLanguage::parse(InlineParsingRequest)"
+      }.also {
+        it.isAccessible = true
+      }
+    }
+
+    private val superParse by lazy {
+      requireNotNull(
+        JavaScriptLanguage::class.java.getDeclaredMethod("parse", ParsingRequest::class.java),
+      ) {
+        "Failed to resolve JavaScriptLanguage::parse(ParsingRequest)"
+      }.also {
+        it.isAccessible = true
+      }
+    }
+  }
+
+  // First-seen JavaScript env.
+  @CompilationFinal private lateinit var rootEnv: Env
+
+  // JavaScript language base.
+  @CompilationFinal private lateinit var javascript: JavaScriptLanguage
+
+  override fun createContext(currentEnv: Env): JSRealm {
+    CompilerAsserts.neverPartOfCompilation()
+    val jsInfo = currentEnv.internalLanguages[JavaScriptLanguage.ID]
+    currentEnv.initializeLanguage(jsInfo)
+    val js = JavaScriptLanguage.getCurrentLanguage()
+    val jsEnv = JavaScriptLanguage.getCurrentEnv()
+    if (!this::rootEnv.isInitialized) {
+      rootEnv = currentEnv
+      javascript = js
+    }
+    return (superCreateContext(javascript, jsEnv) as JSRealm).also {
+      // initialize optional globals
+      it.addOptionalGlobals()
+      // initialize root realm hooks
+      JavaScriptLang.initialize(it)
+    }
+  }
+
+  override fun parse(request: InlineParsingRequest?): ExecutableNode? {
+    return superParseInline(javascript, request) as? ExecutableNode
+  }
+
+  override fun parse(request: ParsingRequest): CallTarget? {
+    val source = request.source
+    val sourceOfJs = Source.newBuilder(JavaScriptLanguage.ID, source.characters, source.name)
+      .internal(source.isInternal)
+      .content(source.characters)
+      .mimeType(JavaScriptLanguage.MODULE_MIME_TYPE)
+      .build()
+    val argumentNames: List<String> = request.getArgumentNames()
+    val parsed = superParse(request) as RootCallTarget
+    val wrapper = ElideJsEntryNode(this, parsed.rootNode)
+    return wrapper.callTarget
+  }
+
+  private class ElideJsEntryNode (language: TruffleLanguage<*>, private val delegate: RootNode) :
+    RootNode(language) {
+
+    @TruffleBoundary fun setModuleLoader() {
+      val realm = JSRealm.get(delegate)
+      mountPrimary(realm, ElideEsModuleLoader.obtain(realm))
+    }
+
+    override fun execute(frame: VirtualFrame): Any {
+      setModuleLoader()
+      return delegate.execute(frame)
+    }
+  }
+}*/

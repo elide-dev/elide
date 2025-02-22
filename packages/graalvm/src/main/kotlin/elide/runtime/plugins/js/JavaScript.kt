@@ -26,6 +26,7 @@ import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.core.plugin
+import elide.runtime.gvm.internals.JavaScriptLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.plugins.env.Environment
@@ -206,6 +207,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
+      JavaScriptLang.initialize()
       configureLanguageSupport(scope)
 
       // resolve the env plugin (if present, otherwise ignore silently)

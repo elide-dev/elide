@@ -207,6 +207,8 @@ val jvmRuntimeArgs = listOf(
   "-XX:ParallelGCThreads=2",
   "-XX:ConcGCThreads=2",
   "-XX:ReservedCodeCacheSize=512m",
+  "-XX:+EnableDynamicAgentLoading",
+  // "-Dnet.bytebuddy.dump=/tmp/bytebuddy",
 )
 
 val nativeCompileJvmArgs = listOf(
@@ -220,6 +222,7 @@ val nativeCompileJvmArgs = listOf(
 val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=org.graalvm.js/com.oracle.truffle.js.runtime=ALL-UNNAMED",
 ).plus(jvmCompileArgs).plus(jvmRuntimeArgs)
 
 val ktCompilerArgs = mutableListOf(
@@ -683,7 +686,6 @@ val enabledSecurityProviders = listOfNotNull(
 
 val preinitializedContexts = if (!enablePreinit) emptyList() else listOfNotNull(
   "js",
-  "ejs",  // ElideJS
   onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
   onlyIf(enablePreinitializeAll && enablePython, "python"),
   onlyIf(enablePreinitializeAll && enableJvm, "java"),
@@ -1965,6 +1967,20 @@ listOf(
       exclusion.get().let { dep ->
         exclude(group = dep.group, module = dep.name)
       }
+    }
+  }
+}
+
+// Apply patched GraalJs; this should be centralized somewhere with the same snippet in
+// `packages/graalvm/build.gradle.kts`.
+val (jsGroup, jsName) = libs.graalvm.js.language.get().let {
+  it.group to it.name
+}
+configurations.all {
+  resolutionStrategy.dependencySubstitution {
+    substitute(module("${jsGroup}:${jsName}")).apply {
+      using(project(":packages:graalvm-js"))
+      because("Uses Elide's patched version of GraalJs")
     }
   }
 }

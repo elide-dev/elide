@@ -43,7 +43,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23_1
-import elide.runtime.gvm.internals.js.ElideJavaScriptLanguage
+import elide.runtime.gvm.internals.js.ELIDE_TS_LANGUAGE_ID
 import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
@@ -254,12 +254,10 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       val nativesPath = System.getProperty("elide.natives")?.ifBlank { null } ?: defaultAuxPath
       val languages = configuration.languages.flatMap {
         when (it.languageId) {
-          ElideJavaScriptLanguage.ID,
-          ElideJavaScriptLanguage.TYPESCRIPT,
-          JavaScriptLanguage.ID -> listOf(
-            ElideJavaScriptLanguage.ID,
-            ElideJavaScriptLanguage.TYPESCRIPT,
+          JavaScriptLanguage.ID,
+          ELIDE_TS_LANGUAGE_ID -> listOf(
             JavaScriptLanguage.ID,
+            ELIDE_TS_LANGUAGE_ID,
           )
 
           else -> listOf(it.languageId)

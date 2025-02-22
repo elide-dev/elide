@@ -87,7 +87,6 @@ val sharedLibArgs = sequenceOf(
   "-J-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true",
   "-J-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
     "js",
-    "ejs",
   ).joinToString(","),
 )
 

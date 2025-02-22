@@ -34,7 +34,7 @@ public interface GuestVMConfiguration : Toggleable {
     public const val DEFAULT_ENABLED: Boolean = true
 
     /** JavaScript language tag. */
-    public const val LANGUAGE_EJS: String = "ejs"
+    public const val LANGUAGE_JS: String = "js"
 
     /** WASM language tag. */
     public const val LANGUAGE_WASM: String = "wasm"
@@ -53,7 +53,7 @@ public interface GuestVMConfiguration : Toggleable {
 
     /** Default guest languages. */
     public val DEFAULT_LANGUAGES: List<String> = listOf(
-      LANGUAGE_EJS,
+      LANGUAGE_JS,
       LANGUAGE_WASM,
       LANGUAGE_PYTHON,
       LANGUAGE_RUBY,

@@ -31,6 +31,7 @@ brotli4j = "1.18.0"
 buf = "1.28.1"
 buildTimeTracker = "4.3.0"
 buildconfig-plugin = "5.5.1"
+bytebuddy = "1.17.1"
 byteunits = "0.9.1"
 caffeine = "3.2.0"
 capnproto = "0.1.18-elide"
@@ -373,6 +374,8 @@ brotli-native-osx-amd64 = { group = "com.aayushatharva.brotli4j", name = "native
 brotli-native-osx-arm64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-aarch64", version.ref = "brotli4j" }
 brotli-native-windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 brotli-native-windows-amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+bytebuddy = { group = "net.bytebuddy", name = "byte-buddy", version.ref = "bytebuddy" }
+bytebuddy-agent = { group = "net.bytebuddy", name = "byte-buddy-agent", version.ref = "bytebuddy" }
 byteunits = { group = "com.jakewharton.byteunits", name = "byteunits", version.ref = "byteunits" }
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
 caffeine-guava = { group = "com.github.ben-manes.caffeine", name = "guava", version.ref = "caffeine" }

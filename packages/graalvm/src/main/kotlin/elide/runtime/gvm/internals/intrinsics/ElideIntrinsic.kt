@@ -23,7 +23,6 @@ import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.ElideAPI
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.internals.js.ElideJavaScriptLanguage
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.node.process.NodeProcess
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
@@ -73,8 +72,7 @@ public fun installElideBuiltin(name: String, value: Any) {
     mappedDeferredValue[name] = value
   }
 
-  override fun supports(language: GuestLanguage): Boolean =
-    language.engine == "js" || language.requestId == ElideJavaScriptLanguage.ID
+  override fun supports(language: GuestLanguage): Boolean = language.engine == "js"
 
   @get:Polyglot override val process: ProcessAPI get() = NodeProcess.obtain()
   @get:Polyglot override val version: String get() = ELIDE_VERSION_STUBBED

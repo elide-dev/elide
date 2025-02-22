@@ -461,6 +461,10 @@ dependencies {
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.collections.immutable.jvm)
 
+  // ByteBuddy
+  implementation(libs.bytebuddy)
+  implementation(libs.bytebuddy.agent)
+
   // Brotli
   api(libs.brotli)
   implementation(libs.brotli.native.osx)
@@ -521,6 +525,8 @@ dependencies {
 
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
+  api(libs.graalvm.truffle.api)
+  api(libs.graalvm.truffle.runtime)
   compileOnly(libs.graalvm.svm)
 
   if (oracleGvmLibs) {
@@ -667,5 +673,17 @@ if (enableBenchmarks) afterEvaluate {
         }
       }
     }.toString())
+  }
+}
+
+val (jsGroup, jsName) = libs.graalvm.js.language.get().let {
+  it.group to it.name
+}
+configurations.all {
+  resolutionStrategy.dependencySubstitution {
+    substitute(module("${jsGroup}:${jsName}")).apply {
+      using(project(":packages:graalvm-js"))
+      because("Uses Elide's patched version of GraalJs")
+    }
   }
 }

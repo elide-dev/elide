@@ -25,19 +25,27 @@ import com.oracle.truffle.js.runtime.JSRealm
 import com.oracle.truffle.js.runtime.JavaScriptRootNode
 import com.oracle.truffle.js.runtime.Strings
 import com.oracle.truffle.js.runtime.builtins.JSFunctionData
-import com.oracle.truffle.js.runtime.objects.*
+import com.oracle.truffle.js.runtime.objects.JSModuleData
+import com.oracle.truffle.js.runtime.objects.JSModuleLoader
+import com.oracle.truffle.js.runtime.objects.JSModuleRecord
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
+import com.oracle.truffle.js.runtime.objects.ScriptOrModule
+import com.oracle.truffle.js.runtime.objects.Undefined
+import net.bytebuddy.implementation.bind.annotation.RuntimeType
+import net.bytebuddy.implementation.bind.annotation.SuperCall
+import net.bytebuddy.implementation.bind.annotation.This
+import org.graalvm.polyglot.proxy.ProxyObject
+import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.ConcurrentSkipListMap
+import kotlinx.atomicfu.atomic
 import elide.core.api.Symbolic
+import elide.runtime.Logging
 import elide.runtime.gvm.internals.js.ELIDE_TS_LANGUAGE_ID
+import elide.runtime.gvm.internals.js.SyntheticJsModule
 import elide.runtime.gvm.loader.JSRealmPatcher
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
-import kotlinx.atomicfu.atomic
-import org.graalvm.polyglot.proxy.ProxyObject
-import java.util.LinkedList
-import java.util.concurrent.ConcurrentSkipListMap
-import elide.runtime.Logging
-import elide.runtime.gvm.internals.js.SyntheticJsModule
 
 // Whether assertions are enabled for comparison with regular module imports.
 private const val COMPARE_WITH_BASE = true
@@ -289,15 +297,15 @@ internal class ElideEsModuleLoader private constructor (
             }
             val callTarget: CallTarget = rootNode.callTarget
             val functionData = JSFunctionData.create(
-                realm.context,
-                callTarget,
-                callTarget,
-                0,
-                Strings.EMPTY_STRING,
-                false,
-                false,
-                true,
-                true
+              realm.context,
+              callTarget,
+              callTarget,
+              0,
+              Strings.EMPTY_STRING,
+              false,
+              false,
+              true,
+              true,
             )
             val data = JSModuleData(
                 modRecord,
@@ -310,29 +318,29 @@ internal class ElideEsModuleLoader private constructor (
               when {
                 base.module.localExportEntries.size != modRecord.localExportEntries.size -> error(
                   "Mismatch between expected export count ('${base.module.localExportEntries.size}') and " +
-                  "actual export count ('${modRecord.localExportEntries.size}') for module '$name'"
+                          "actual export count ('${modRecord.localExportEntries.size}') for module '$name'",
                 )
                 base.module.imports.size != modRecord.imports.size -> error(
                   "Mismatch between expected import count ('${base.module.imports.size}') and " +
-                  "actual import count ('${modRecord.imports.size}') for module '$name'"
+                          "actual import count ('${modRecord.imports.size}') for module '$name'",
                 )
                 base.module.indirectExportEntries.size != modRecord.indirectExportEntries.size -> error(
                   "Mismatch between expected indirect export count ('${base.module.indirectExportEntries.size}') and " +
-                  "actual indirect export count ('${modRecord.indirectExportEntries.size}') for module '$name'"
+                          "actual indirect export count ('${modRecord.indirectExportEntries.size}') for module '$name'",
                 )
                 base.module.starExportEntries.size != modRecord.starExportEntries.size -> error(
                   "Mismatch between expected star export count ('${base.module.starExportEntries.size}') and " +
-                  "actual star export count ('${modRecord.starExportEntries.size}') for module '$name'"
+                          "actual star export count ('${modRecord.starExportEntries.size}') for module '$name'",
                 )
                 base.moduleData.frameDescriptor.numberOfSlots != data.frameDescriptor.numberOfSlots -> error(
                   "Mismatch between expected slot count ('${base.moduleData.frameDescriptor.numberOfSlots}') and " +
-                  "actual slot count ('${data.frameDescriptor.numberOfSlots}') for module '$name'"
+                          "actual slot count ('${data.frameDescriptor.numberOfSlots}') for module '$name'",
                 )
                 base.moduleData.frameDescriptor.numberOfAuxiliarySlots
                         != data.frameDescriptor.numberOfAuxiliarySlots -> error(
                   "Mismatch between expected auxiliary slot count " +
-                  "('${base.moduleData.frameDescriptor.numberOfAuxiliarySlots}') and " +
-                  "actual auxiliary slot count ('${data.frameDescriptor.numberOfAuxiliarySlots}') for module '$name'"
+                          "('${base.moduleData.frameDescriptor.numberOfAuxiliarySlots}') and " +
+                          "actual auxiliary slot count ('${data.frameDescriptor.numberOfAuxiliarySlots}') for module '$name'",
                 )
               }
             }
@@ -422,5 +430,37 @@ internal class ElideEsModuleLoader private constructor (
      * @return The ES module loader singleton.
      */
     @JvmStatic fun obtain(realm: JSRealm): ElideEsModuleLoader = install(realm)
+  }
+
+  // Internal patch for module loader method delegation; these methods are bytecode-injected by `JavaScriptLang` in
+  // order to replace the internal module loader init code on `JSRealm`. These methods correspond to methods on that
+  // type, but with super-calls injected to allow for redirection of control flow; both methods offer no parameters in
+  // their original form. The `parentCall` parameter is a `Callable` which can be invoked to call the original method.
+  @Suppress("unused") object Proxy {
+    const val GET_MODULE_LOADER = "getModuleLoader"
+    const val CREATE_MODULE_LOADER = "createModuleLoader"
+
+    // Proxy/delegate method for `JSRealm.getModuleLoader`.
+    @RuntimeType
+    @JvmName(GET_MODULE_LOADER)
+    @JvmStatic fun getModuleLoader(@SuperCall self: Callable<JSModuleLoader?>): JSModuleLoader? {
+      println("!!!!!!! INTERCEPTOR CALLED (get)")
+      return self.call()
+    }
+
+//    @RuntimeType
+//    @JvmName(GET_MODULE_LOADER)
+//    @JvmStatic fun getModuleLoader(@SuperCall self: Callable<JSModuleLoader?>): JSModuleLoader? {
+//      println("!!!!!!! INTERCEPTOR CALLED (get)")
+//      return self.call()
+//    }
+
+    // Proxy/delegate method for `JSRealm.getModuleLoader`.
+//    @RuntimeType
+//    @JvmName(CREATE_MODULE_LOADER)
+//    @JvmStatic fun createModuleLoader(@SuperCall self: Callable<JSModuleLoader?>) {
+//      println("!!!!!!! INTERCEPTOR CALLED (create)")
+//      self.call()
+//    }
   }
 }

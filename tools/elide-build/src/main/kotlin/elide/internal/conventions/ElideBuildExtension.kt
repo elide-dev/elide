@@ -16,10 +16,12 @@
 package elide.internal.conventions
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.native.NativeTarget.APP
+import elide.internal.transforms.JarPatcher
 
 public class ElideBuildExtension internal constructor(internal val project: Project) {
   public sealed class Convention(internal val project: Project) {
@@ -281,7 +283,13 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var pinning: Boolean = true
 
     /** Whether to activate automatic module transforms. */
-    public var automaticModules: Boolean = true
+    public var automaticModules: Boolean = false
+
+    /** Whether to activate automatic patching of modules. */
+    public var jarpatch: Boolean = true
+
+    /** Whether to activate automatic patching of modules. */
+    private var jarpatchParams: JarPatcher.Parameters? = null
 
     /** Whether to activate module minification transforms. */
     public var minification: Boolean = false
@@ -296,7 +304,20 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var jpms: ModularContext = ModularContext()
 
     /** Whether any transforms are enabled (internal use). */
-    internal val enableTransforms: Boolean get() = automaticModules || minification
+    internal val enableTransforms: Boolean get() = automaticModules || minification || jarpatch
+
+    /** Activate and configure JAR patching. */
+    public fun jarpatch(block: JarPatcher.Parameters.() -> Unit) {
+      jarpatch = true
+      val params = object: JarPatcher.Parameters {
+        override var patchedClasses: MutableMap<MinimalExternalModuleDependency, MutableList<String>> = mutableMapOf()
+        override var patchedResources: MutableMap<MinimalExternalModuleDependency, MutableList<String>> = mutableMapOf()
+      }
+      block.invoke(params)
+      jarpatchParams = params
+    }
+
+    internal fun jarpatchParams(): JarPatcher.Parameters? = jarpatchParams
   }
 
   internal val archives = Archives(project)

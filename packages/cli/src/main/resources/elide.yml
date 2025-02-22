@@ -1,7 +1,7 @@
 elide:
   gvm:
     enabled: true
-    languages: ["EJS"]
+    languages: ["JS"]
     defer: true
     js:
       enabled: true

@@ -33,11 +33,11 @@ kover {
 }
 
 val testAggregateTestReport by reporting.reports.creating(AggregateTestReport::class) {
-  testType = TestSuiteType.UNIT_TEST
+  //testType = TestSuiteType.UNIT_TEST
 }
 
 val testCodeCoverageReport by reporting.reports.creating(JacocoCoverageReport::class) {
-  testType = TestSuiteType.UNIT_TEST
+  //testType = TestSuiteType.UNIT_TEST
   reportTask {
     reports {
       xml.required = true

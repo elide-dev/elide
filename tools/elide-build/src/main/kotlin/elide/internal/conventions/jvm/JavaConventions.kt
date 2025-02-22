@@ -40,6 +40,7 @@ import elide.internal.conventions.publishing.publishJavadocJar
 import elide.internal.conventions.publishing.publishSourcesJar
 import elide.internal.transforms.AutomaticModuleTransform
 import elide.internal.transforms.JarMinifier
+import elide.internal.transforms.JarPatcher
 
 private val enableTransforms = false
 
@@ -52,9 +53,14 @@ internal val lockedConfigurations = sortedSetOf(
 internal val automaticModuleConfigurations = sortedSetOf(
   "compileClasspath",
   "runtimeClasspath",
+  "nativeImageCompileClasspath",
 )
 
 internal val minifiedConfigurations = listOf<String>()
+  .plus(automaticModuleConfigurations)
+
+internal val rewriteEligibleConfigurations = listOf<String>()
+  .plus(automaticModuleConfigurations)
 
 internal val globallyPinnedVersions: Map<String, Pair<String, String>> = sortedMapOf(
   "com.google.guava:guava" to (Versions.GUAVA to "sensitive compatibility"),
@@ -277,6 +283,7 @@ internal fun Project.configureJavadoc() {
 
 public val artifactType: Attribute<String> = Attribute.of("artifactType", String::class.java)
 public val minified: Attribute<String> = Attribute.of("minified", String::class.java)
+public val patched: Attribute<String> = Attribute.of("patched", String::class.java)
 public val modularized: Attribute<String> = Attribute.of("modularized", String::class.java)
 
 /** Configure dependency attribute schema. */
@@ -294,7 +301,8 @@ internal fun Project.configureAttributeSchema(conventions: ElideBuildExtension) 
     }
 
     if (conventions.deps.enableTransforms) {
-      val allTransformEligibleConfigurations = automaticModuleConfigurations.plus(minifiedConfigurations)
+      val allTransformEligibleConfigurations =automaticModuleConfigurations
+        .plus(minifiedConfigurations)
       configurations.all {
         if (name in allTransformEligibleConfigurations) {
           val enableAmr = (conventions.deps.automaticModules && automaticModuleConfigurations.contains(name))
@@ -318,13 +326,27 @@ internal fun Project.configureAttributeSchema(conventions: ElideBuildExtension) 
 internal fun Project.configureTransforms(conventions: ElideBuildExtension) {
   if (enableTransforms && conventions.deps.enableTransforms) {
     dependencies {
-      registerTransform(AutomaticModuleTransform::class) {
-        from.attribute(modularized, "nope").attribute(artifactType, "jar")
-        to.attribute(modularized, "yep").attribute(artifactType, "jar")
+      if (conventions.deps.automaticModules) registerTransform(AutomaticModuleTransform::class) {
+        from.attribute(modularized, "nope")
+        to.attribute(modularized, "yep")
       }
-      registerTransform(JarMinifier::class) {
-        from.attribute(minified, "nope").attribute(artifactType, "jar")
-        to.attribute(minified, "yep").attribute(artifactType, "jar")
+      if (conventions.deps.minification) registerTransform(JarMinifier::class) {
+        from.attribute(minified, "nope")
+        to.attribute(minified, "yep")
+      }
+      if (conventions.deps.jarpatch) {
+        val params = conventions.deps.jarpatchParams()
+        if (params != null) {
+          registerTransform(JarPatcher::class) {
+            from.attribute(patched, "nope")
+            to.attribute(patched, "yep")
+
+            parameters {
+              patchedClasses = params.patchedClasses
+              patchedResources = params.patchedResources
+            }
+          }
+        }
       }
     }
   }

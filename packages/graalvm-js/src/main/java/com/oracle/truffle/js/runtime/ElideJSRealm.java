@@ -10,26 +10,25 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+package com.oracle.truffle.js.runtime;
 
-package elide.tool.cli
+/**
+ * Patched version of the {@link JSRealm} class to allow for injection of Elide's JavaScript resources and tools.
+ */
+public class ElideJSRealm extends JSRealm {
+  private final JSRealm base;
 
-/** GraalVM engine name for GraalJs. */
-const val ENGINE_JS = "js"
+  private ElideJSRealm(JSRealm base) {
+    super(base.getContext(), base.getEnv(), base.getParent());
+    this.base = base;
+  }
 
-/** GraalVM engine name for GraalPython. */
-const val ENGINE_PYTHON = "python"
+  public static ElideJSRealm wrapping(JSRealm realm) {
+    return new ElideJSRealm(realm);
+  }
 
-/** GraalVM engine name for TruffleRuby. */
-const val ENGINE_RUBY = "ruby"
-
-/** GraalVM engine name for Espresso. */
-const val ENGINE_JVM = "java"
-
-/** GraalVM engine name for GraalWasm. */
-const val ENGINE_WASM = "wasm"
-
-/** GraalVM engine name for Pkl. */
-const val ENGINE_PKL = "pkl"
-
-/** GraalVM engine name for GraalLLVM. */
-const val ENGINE_LLVM = "llvm"
+  @Override
+  public JSRealm createChildRealm() {
+    return base.createChildRealm();
+  }
+}

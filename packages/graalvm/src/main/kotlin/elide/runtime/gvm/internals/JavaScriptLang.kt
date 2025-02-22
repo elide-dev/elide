@@ -13,8 +13,13 @@
 package elide.runtime.gvm.internals
 
 import com.oracle.truffle.api.nodes.Node
-import com.oracle.truffle.js.lang.JavaScriptLanguage
 import com.oracle.truffle.js.runtime.JSRealm
+import net.bytebuddy.ByteBuddy
+import net.bytebuddy.agent.ByteBuddyAgent
+import net.bytebuddy.agent.builder.AgentBuilder
+import net.bytebuddy.dynamic.loading.ClassReloadingStrategy
+import net.bytebuddy.implementation.MethodDelegation
+import net.bytebuddy.matcher.ElementMatchers
 import kotlinx.atomicfu.atomic
 import elide.runtime.Logging
 import elide.runtime.gvm.loader.JSRealmPatcher
@@ -27,8 +32,31 @@ internal object JavaScriptLang {
   private val initialized = atomic(false)
 
   // Initialize JavaScript language tooling; called early in JavaScript's init lifecycle.
-  fun initialize(realm: JSRealm) {
-    realm.bootstrap(root = initialized.compareAndSet(false, true))
+  fun initialize() {
+    if (initialized.compareAndSet(false, true)) {
+      //initializeJsIntegration()
+    }
+  }
+
+  // Register overrides for the JavaScript language engine.
+  @JvmStatic private fun initializeJsIntegration() {
+    ByteBuddyAgent.install()
+
+    ByteBuddy()
+      // extends standard `JSRealm` class
+      //.redefine(JSRealm::class.java)
+      // replace/patch `JSRealm`
+      .rebase(JSRealm::class.java)
+      // define within the same package
+      //.name("${JSRealm::class.java.packageName}.ElideJSRealmProxy")
+      // override `JSRealm.getModuleLoader` and `JSRealm.createModuleLoader`
+      .method(ElementMatchers.named(ElideEsModuleLoader.Proxy.GET_MODULE_LOADER))
+      // intercept and delegate methods to `ElideEsModuleLoader.Proxy`
+      .intercept(MethodDelegation.to(ElideEsModuleLoader.Proxy::class.java))
+      // generate the dynamic patch class
+      .make()
+      // load it into the vm
+      .load(JSRealm::class.java.classLoader, ClassReloadingStrategy.fromInstalledAgent())
   }
 
   /**

@@ -128,22 +128,23 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.string-lazy-substrings",
       "js.shadow-realm",
       "js.zone-rules-based-time-zones",
+      // Enabled for use by polyfills or for experimental features:
+      "js.java-package-globals",
+      "js.graal-builtin",
+      "js.polyglot-evalfile",
+      "js.load",
+      "js.polyglot-builtin",
     )
 
     disableOptions(
       "js.console",
-      "js.graal-builtin",
       "js.interop-complete-promises",
-      "js.java-package-globals",
-      "js.load",
-      "js.polyglot-evalfile",
       "js.print",
       "js.regexp-static-result",
       "js.scripting",
       "js.syntax-extensions",
       // Experimental:
       "js.operator-overloading",
-      "js.polyglot-builtin",
     )
 
     setOptions(

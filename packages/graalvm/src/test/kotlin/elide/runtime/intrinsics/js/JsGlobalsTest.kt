@@ -241,8 +241,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "TextDecoderStream",  // not yet implemented
     "TextEncoderStream",  // not yet implemented
     "DOMException",  // not yet implemented
-  ).plus(
-    fetchGlobals
   )
 
   // Types which are expected to be provided by JS polyfills.
@@ -255,6 +253,8 @@ private const val ENABLE_SUPPRESSIONS = true
     "TransformStreamDefaultController",
     "WritableStreamDefaultController",
     "WritableStreamDefaultWriter",
+  ).plus(
+    fetchGlobals
   )).toSortedSet()
 
   // Globals which are expected not to be found host-side.

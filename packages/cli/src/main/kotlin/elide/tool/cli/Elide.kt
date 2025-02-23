@@ -115,6 +115,7 @@ import elide.tool.io.RuntimeWorkdirManager
       NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
         listOf(
           "elide.js.vm.enableStreams" to "true",
+          "jdk.httpclient.allowRestrictedHeaders" to "Host,Content-Length",  // needed for fetch
           "io.netty.allocator.maxOrder" to "3",
           "io.netty.serviceThreadPrefix" to "elide-svc",
           "io.netty.native.deleteLibAfterLoading" to "true",  // reversed bc of bug (actually does not delete)

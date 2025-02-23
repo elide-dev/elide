@@ -1745,9 +1745,39 @@ public final class elide/runtime/gvm/js/JavaScript$Inputs {
 	public static synthetic fun requestState$default (Lelide/ssr/type/RequestState;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/gvm/RequestExecutionInputs;
 }
 
+public final class elide/runtime/gvm/js/JavaScriptCompilerConfig : elide/runtime/precompiler/Precompiler$Configuration {
+	public static final field Companion Lelide/runtime/gvm/js/JavaScriptCompilerConfig$Companion;
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/gvm/js/JavaScriptCompilerConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/js/JavaScriptCompilerConfig;ZILjava/lang/Object;)Lelide/runtime/gvm/js/JavaScriptCompilerConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSourceMaps ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/js/JavaScriptCompilerConfig$Companion {
+	public final fun getDEFAULT ()Lelide/runtime/gvm/js/JavaScriptCompilerConfig;
+}
+
 public final class elide/runtime/gvm/js/JavaScriptKt {
 	public static final fun nullvalue ()Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
 	public static final fun undefined ()Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
+}
+
+public final class elide/runtime/gvm/js/JavaScriptPrecompiler : elide/runtime/precompiler/Precompiler$SourcePrecompiler {
+	public static final field INSTANCE Lelide/runtime/gvm/js/JavaScriptPrecompiler;
+	public synthetic fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/js/JavaScriptPrecompiler$Provider : elide/runtime/precompiler/Precompiler$Provider {
+	public fun <init> ()V
+	public fun get ()Lelide/runtime/gvm/js/JavaScriptPrecompiler;
+	public synthetic fun get ()Ljava/lang/Object;
 }
 
 public final class elide/runtime/gvm/js/JsError {

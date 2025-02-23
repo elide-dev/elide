@@ -57,7 +57,9 @@ dead_code = "allow"
 ## Local
 base = { workspace = true }
 deps = { workspace = true }
+diag = { workspace = true }
 entry = { workspace = true }
+js = { workspace = true }
 model = { workspace = true }
 posix = { workspace = true }
 project = { workspace = true }

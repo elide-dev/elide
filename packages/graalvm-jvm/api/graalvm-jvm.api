@@ -2,6 +2,36 @@ public final class elide/runtime/gvm/jvm/JVM {
 	public static final field INSTANCE Lelide/runtime/gvm/jvm/JVM;
 }
 
+public final class elide/runtime/gvm/jvm/JavaCompilerConfig : elide/runtime/precompiler/Precompiler$Configuration {
+	public static final field Companion Lelide/runtime/gvm/jvm/JavaCompilerConfig$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/runtime/gvm/jvm/JavaCompilerConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/jvm/JavaCompilerConfig;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/jvm/JavaCompilerConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRelease ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/jvm/JavaCompilerConfig$Companion {
+	public final fun getDEFAULT ()Lelide/runtime/gvm/jvm/JavaCompilerConfig;
+}
+
+public final class elide/runtime/gvm/jvm/JavaPrecompiler : elide/runtime/precompiler/Precompiler$BytecodePrecompiler {
+	public static final field INSTANCE Lelide/runtime/gvm/jvm/JavaPrecompiler;
+	public synthetic fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/String;)Ljava/nio/ByteBuffer;
+}
+
+public final class elide/runtime/gvm/jvm/JavaPrecompiler$Provider : elide/runtime/precompiler/Precompiler$Provider {
+	public fun <init> ()V
+	public fun get ()Lelide/runtime/gvm/jvm/JavaPrecompiler;
+	public synthetic fun get ()Ljava/lang/Object;
+}
+
 public final class elide/runtime/gvm/jvm/cfg/JvmRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
 	public static final field Companion Lelide/runtime/gvm/jvm/cfg/JvmRuntimeConfig$Companion;
 	public static final field DEFAULT_ENABLED Z

@@ -320,6 +320,309 @@ public final class elide/runtime/core/lib/NativeLibraries {
 	public static synthetic fun resolve$default (Lelide/runtime/core/lib/NativeLibraries;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 }
 
+public final synthetic class elide/runtime/diag/$MutableDiagnostic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/diag/$MutableDiagnostic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public final fun hasBuilder ()Z
+	public final fun hasConstructor ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun instantiateInternal ([Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun isBuildable ()Z
+}
+
+public final synthetic class elide/runtime/diag/$MutableDiagnostic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final class elide/runtime/diag/Diagnostic : java/lang/Record {
+	public static final field Companion Lelide/runtime/diag/Diagnostic$Companion;
+	public final field advice Ljava/lang/String;
+	public final field id Ljava/lang/String;
+	public final field lang Ljava/lang/String;
+	public final field message Ljava/lang/String;
+	public final field position Lelide/runtime/diag/SourceLocation;
+	public final field reference Lelide/runtime/diag/SourceReference;
+	public final field renderedMessage Ljava/lang/String;
+	public final field severity Lelide/runtime/diag/Severity;
+	public final field source Ljava/lang/String;
+	public final field span Lelide/runtime/diag/SourceSpan;
+	public final field tool Ljava/lang/String;
+	public final fun asInfo ()Lelide/runtime/diag/DiagnosticInfo;
+	public final fun component1 ()Lelide/runtime/diag/Severity;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lelide/runtime/diag/SourceLocation;
+	public final fun component6 ()Lelide/runtime/diag/SourceSpan;
+	public final fun component7 ()Lelide/runtime/diag/SourceReference;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lelide/runtime/diag/DiagnosticInfo;)Lelide/runtime/diag/Diagnostic;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class elide/runtime/diag/Diagnostic$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/diag/Diagnostic$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/Diagnostic;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/Diagnostic;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/diag/Diagnostic$Companion {
+	public final fun from (Lelide/runtime/diag/DiagnosticInfo;)Lelide/runtime/diag/Diagnostic;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/diag/DiagnosticExtensionsKt {
+	public static final fun toDiagnostic (Ljavax/tools/Diagnostic;Ljava/lang/String;)Lelide/runtime/diag/Diagnostic;
+	public static synthetic fun toDiagnostic$default (Ljavax/tools/Diagnostic;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/diag/Diagnostic;
+	public static final fun toDiagnosticInfo (Ljavax/tools/Diagnostic;Ljava/lang/String;)Lelide/runtime/diag/DiagnosticInfo;
+	public static synthetic fun toDiagnosticInfo$default (Ljavax/tools/Diagnostic;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/diag/DiagnosticInfo;
+}
+
+public abstract interface class elide/runtime/diag/DiagnosticInfo {
+	public static final field Companion Lelide/runtime/diag/DiagnosticInfo$Companion;
+	public fun getAdvice ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public fun getLang ()Ljava/lang/String;
+	public fun getMessage ()Ljava/lang/String;
+	public fun getPosition ()Lelide/runtime/diag/SourceLocation;
+	public fun getReference ()Lelide/runtime/diag/SourceReference;
+	public fun getRenderedMessage ()Ljava/lang/String;
+	public abstract fun getSeverity ()Lelide/runtime/diag/Severity;
+	public fun getSource ()Ljava/lang/String;
+	public fun getSpan ()Lelide/runtime/diag/SourceSpan;
+	public fun getTool ()Ljava/lang/String;
+}
+
+public final class elide/runtime/diag/DiagnosticInfo$Companion {
+	public final fun mutable ()Lelide/runtime/diag/MutableDiagnostic;
+}
+
+public final class elide/runtime/diag/Diagnostics : elide/runtime/diag/DiagnosticsBuffer, elide/runtime/diag/DiagnosticsReceiver {
+	public static final field INSTANCE Lelide/runtime/diag/Diagnostics;
+	public fun all ()Lkotlin/sequences/Sequence;
+	public fun clear ()V
+	public fun close ()V
+	public fun dirty (Ljava/lang/String;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun lock ()V
+	public final fun mutable ()Lelide/runtime/diag/MutableDiagnostic;
+	public fun query (Ljava/lang/String;Ljava/lang/String;Z)Lkotlin/sequences/Sequence;
+	public fun query (ZLjava/util/function/Predicate;)Lkotlin/sequences/Sequence;
+	public fun report (Lelide/runtime/diag/DiagnosticInfo;)V
+	public fun report (Lelide/runtime/diag/DiagnosticInfo;[Lelide/runtime/diag/DiagnosticInfo;)V
+	public fun report (Ljava/lang/Iterable;)V
+	public fun report (Lkotlin/sequences/Sequence;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/diag/DiagnosticsBuffer : java/io/Closeable, java/lang/AutoCloseable {
+	public abstract fun all ()Lkotlin/sequences/Sequence;
+	public abstract fun clear ()V
+	public abstract fun dirty (Ljava/lang/String;)Z
+	public static synthetic fun dirty$default (Lelide/runtime/diag/DiagnosticsBuffer;Ljava/lang/String;ILjava/lang/Object;)Z
+	public abstract fun query (Ljava/lang/String;Ljava/lang/String;Z)Lkotlin/sequences/Sequence;
+	public abstract fun query (ZLjava/util/function/Predicate;)Lkotlin/sequences/Sequence;
+	public static synthetic fun query$default (Lelide/runtime/diag/DiagnosticsBuffer;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+	public static synthetic fun query$default (Lelide/runtime/diag/DiagnosticsBuffer;ZLjava/util/function/Predicate;ILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+
+public final class elide/runtime/diag/DiagnosticsContainer : elide/runtime/diag/DiagnosticsReceiver, elide/runtime/diag/DiagnosticsSuite {
+	public static final field Companion Lelide/runtime/diag/DiagnosticsContainer$Companion;
+	public synthetic fun <init> (Lkotlin/sequences/Sequence;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun all ()Lkotlin/sequences/Sequence;
+	public fun clear ()V
+	public fun close ()V
+	public static final fun create ()Lelide/runtime/diag/DiagnosticsContainer;
+	public fun dirty (Ljava/lang/String;)Z
+	public static final fun empty ()Lelide/runtime/diag/DiagnosticsSuite;
+	public static final fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/diag/DiagnosticsContainer;
+	public fun getCount-pVg5ArA ()I
+	public fun getSeverity ()Lelide/runtime/diag/Severity;
+	public fun lock ()V
+	public fun query (Ljava/lang/String;Ljava/lang/String;Z)Lkotlin/sequences/Sequence;
+	public fun query (ZLjava/util/function/Predicate;)Lkotlin/sequences/Sequence;
+	public fun report (Lelide/runtime/diag/DiagnosticInfo;)V
+	public fun report (Lelide/runtime/diag/DiagnosticInfo;[Lelide/runtime/diag/DiagnosticInfo;)V
+	public fun report (Ljava/lang/Iterable;)V
+	public fun report (Lkotlin/sequences/Sequence;)V
+}
+
+public final class elide/runtime/diag/DiagnosticsContainer$Companion {
+	public final fun create ()Lelide/runtime/diag/DiagnosticsContainer;
+	public final fun empty ()Lelide/runtime/diag/DiagnosticsSuite;
+	public final fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/diag/DiagnosticsContainer;
+}
+
+public abstract interface class elide/runtime/diag/DiagnosticsReceiver : java/io/Closeable, java/lang/AutoCloseable {
+	public abstract fun lock ()V
+	public abstract fun report (Lelide/runtime/diag/DiagnosticInfo;)V
+	public abstract fun report (Lelide/runtime/diag/DiagnosticInfo;[Lelide/runtime/diag/DiagnosticInfo;)V
+	public abstract fun report (Ljava/lang/Iterable;)V
+	public abstract fun report (Lkotlin/sequences/Sequence;)V
+}
+
+public abstract interface class elide/runtime/diag/DiagnosticsSuite : elide/runtime/diag/DiagnosticsBuffer {
+	public abstract fun getCount-pVg5ArA ()I
+	public fun getFatal ()Z
+	public abstract fun getSeverity ()Lelide/runtime/diag/Severity;
+}
+
+public final class elide/runtime/diag/MutableDiagnostic : elide/runtime/diag/MutableDiagnosticInfo {
+	public static final field Companion Lelide/runtime/diag/MutableDiagnostic$Companion;
+	public final fun build ()Lelide/runtime/diag/Diagnostic;
+	public static final fun create ()Lelide/runtime/diag/MutableDiagnostic;
+	public fun getAdvice ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public fun getLang ()Ljava/lang/String;
+	public fun getMessage ()Ljava/lang/String;
+	public fun getPosition ()Lelide/runtime/diag/SourceLocation;
+	public fun getReference ()Lelide/runtime/diag/SourceReference;
+	public fun getRenderedMessage ()Ljava/lang/String;
+	public fun getSeverity ()Lelide/runtime/diag/Severity;
+	public fun getSource ()Ljava/lang/String;
+	public fun getSpan ()Lelide/runtime/diag/SourceSpan;
+	public fun getTool ()Ljava/lang/String;
+	public fun setAdvice (Ljava/lang/String;)V
+	public fun setId (Ljava/lang/String;)V
+	public fun setLang (Ljava/lang/String;)V
+	public fun setMessage (Ljava/lang/String;)V
+	public fun setPosition (Lelide/runtime/diag/SourceLocation;)V
+	public fun setReference (Lelide/runtime/diag/SourceReference;)V
+	public fun setRenderedMessage (Ljava/lang/String;)V
+	public final fun setSeverity (I)Lelide/runtime/diag/MutableDiagnostic;
+	public fun setSeverity (Lelide/runtime/diag/Severity;)V
+	public fun setSource (Ljava/lang/String;)V
+	public fun setSpan (Lelide/runtime/diag/SourceSpan;)V
+	public fun setTool (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/diag/MutableDiagnostic$Companion {
+	public final fun create ()Lelide/runtime/diag/MutableDiagnostic;
+}
+
+public abstract interface class elide/runtime/diag/MutableDiagnosticInfo : elide/runtime/diag/DiagnosticInfo {
+	public abstract fun getAdvice ()Ljava/lang/String;
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getLang ()Ljava/lang/String;
+	public abstract fun getMessage ()Ljava/lang/String;
+	public abstract fun getPosition ()Lelide/runtime/diag/SourceLocation;
+	public abstract fun getReference ()Lelide/runtime/diag/SourceReference;
+	public abstract fun getRenderedMessage ()Ljava/lang/String;
+	public abstract fun getSeverity ()Lelide/runtime/diag/Severity;
+	public abstract fun getSource ()Ljava/lang/String;
+	public abstract fun getSpan ()Lelide/runtime/diag/SourceSpan;
+	public abstract fun setAdvice (Ljava/lang/String;)V
+	public abstract fun setId (Ljava/lang/String;)V
+	public abstract fun setLang (Ljava/lang/String;)V
+	public abstract fun setMessage (Ljava/lang/String;)V
+	public abstract fun setPosition (Lelide/runtime/diag/SourceLocation;)V
+	public abstract fun setReference (Lelide/runtime/diag/SourceReference;)V
+	public abstract fun setRenderedMessage (Ljava/lang/String;)V
+	public abstract fun setSeverity (Lelide/runtime/diag/Severity;)V
+	public abstract fun setSource (Ljava/lang/String;)V
+	public abstract fun setSpan (Lelide/runtime/diag/SourceSpan;)V
+}
+
+public final class elide/runtime/diag/NativeDiagnostics {
+	public static final field Companion Lelide/runtime/diag/NativeDiagnostics$Companion;
+	public static final fun createDiagnostic ()Lelide/runtime/diag/MutableDiagnostic;
+	public static final fun reportNativeDiagnostic (Lelide/runtime/diag/DiagnosticInfo;)V
+}
+
+public final class elide/runtime/diag/NativeDiagnostics$Companion {
+	public final fun reportNativeDiagnostic (Lelide/runtime/diag/DiagnosticInfo;)V
+}
+
+public final class elide/runtime/diag/Severity : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Companion Lelide/runtime/diag/Severity$Companion;
+	public static final field ERROR Lelide/runtime/diag/Severity;
+	public static final field INFO Lelide/runtime/diag/Severity;
+	public static final field WARN Lelide/runtime/diag/Severity;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/diag/Severity;
+	public static fun values ()[Lelide/runtime/diag/Severity;
+}
+
+public final class elide/runtime/diag/Severity$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/diag/SourceLocation : java/lang/Record {
+	public static final field Companion Lelide/runtime/diag/SourceLocation$Companion;
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun column ()I
+	public final fun component1-pVg5ArA ()I
+	public final fun component2-pVg5ArA ()I
+	public final fun copy-feOb9K0 (II)Lelide/runtime/diag/SourceLocation;
+	public static synthetic fun copy-feOb9K0$default (Lelide/runtime/diag/SourceLocation;IIILjava/lang/Object;)Lelide/runtime/diag/SourceLocation;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun line ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class elide/runtime/diag/SourceLocation$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/diag/SourceLocation$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/SourceLocation;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/SourceLocation;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/diag/SourceLocation$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/runtime/diag/SourceReference {
+}
+
+public final class elide/runtime/diag/SourceSpan : java/lang/Record {
+	public static final field Companion Lelide/runtime/diag/SourceSpan$Companion;
+	public final fun component1-pVg5ArA ()I
+	public final fun component2-pVg5ArA ()I
+	public final fun end ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun start ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class elide/runtime/diag/SourceSpan$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/diag/SourceSpan$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/SourceSpan;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/SourceSpan;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/diag/SourceSpan$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public synthetic class elide/runtime/exec/$GuestExecutorFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -539,6 +842,93 @@ public abstract interface class elide/runtime/plugins/bindings/BindingsResolver 
 public final class elide/runtime/plugins/bindings/BindingsResolver$Empty : elide/runtime/plugins/bindings/BindingsResolver {
 	public static final field INSTANCE Lelide/runtime/plugins/bindings/BindingsResolver$Empty;
 	public fun resolveBindings ()Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler {
+	public abstract fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun precompile (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler$BundleInfo {
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getPath ()Ljava/nio/file/Path;
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler$BundlePrecompiler : elide/runtime/precompiler/Precompiler {
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler$BytecodePrecompiler : elide/runtime/precompiler/Precompiler {
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler$Configuration {
+}
+
+public final class elide/runtime/precompiler/Precompiler$PrecompileSourceInfo : java/lang/Record {
+	public fun <init> (Ljava/lang/String;Ljava/nio/file/Path;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/nio/file/Path;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/nio/file/Path;
+	public final fun copy (Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;
+	public static synthetic fun copy$default (Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public final fun path ()Ljava/nio/file/Path;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/precompiler/Precompiler$PrecompileSourceRequest {
+	public fun <init> (Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;Ljava/lang/Object;)V
+	public final fun getConfig ()Ljava/lang/Object;
+	public final fun getSource ()Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler$Provider : java/util/function/Supplier {
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler$SourcePrecompiler : elide/runtime/precompiler/Precompiler {
+}
+
+public final class elide/runtime/precompiler/PrecompilerError : elide/runtime/precompiler/PrecompilerException {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun getFatal ()Z
+}
+
+public abstract class elide/runtime/precompiler/PrecompilerException : java/lang/RuntimeException {
+	public synthetic fun <init> (Lelide/runtime/diag/Severity;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getFatal ()Z
+	public fun getSeverity ()Lelide/runtime/diag/Severity;
+}
+
+public final class elide/runtime/precompiler/PrecompilerKt {
+	public static final fun precompileSafe (Lelide/runtime/precompiler/Precompiler;Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public class elide/runtime/precompiler/PrecompilerNotice : elide/runtime/precompiler/PrecompilerException {
+	public static final field Companion Lelide/runtime/precompiler/PrecompilerNotice$Companion;
+	public fun <init> (Lelide/runtime/diag/DiagnosticsSuite;Lelide/runtime/diag/Severity;Ljava/lang/String;Ljava/lang/Throwable;Z)V
+	public synthetic fun <init> (Lelide/runtime/diag/DiagnosticsSuite;Lelide/runtime/diag/Severity;Ljava/lang/String;Ljava/lang/Throwable;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun from (Lelide/runtime/diag/DiagnosticsSuite;)Lelide/runtime/precompiler/PrecompilerNotice;
+	public final fun getDiagnostics ()Lelide/runtime/diag/DiagnosticsSuite;
+	public fun getFatal ()Z
+}
+
+public final class elide/runtime/precompiler/PrecompilerNotice$Companion {
+	public final fun from (Lelide/runtime/diag/DiagnosticsSuite;)Lelide/runtime/precompiler/PrecompilerNotice;
+}
+
+public final class elide/runtime/precompiler/PrecompilerNoticeWithOutput : elide/runtime/precompiler/PrecompilerNotice {
+	public static final field Companion Lelide/runtime/precompiler/PrecompilerNoticeWithOutput$Companion;
+	public fun <init> (Lelide/runtime/diag/DiagnosticsSuite;Ljava/lang/Object;Lelide/runtime/diag/Severity;Ljava/lang/String;Ljava/lang/Throwable;Z)V
+	public synthetic fun <init> (Lelide/runtime/diag/DiagnosticsSuite;Ljava/lang/Object;Lelide/runtime/diag/Severity;Ljava/lang/String;Ljava/lang/Throwable;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun from (Lelide/runtime/diag/DiagnosticsSuite;Ljava/lang/Object;)Lelide/runtime/precompiler/PrecompilerNoticeWithOutput;
+	public final fun getOutput ()Ljava/lang/Object;
+}
+
+public final class elide/runtime/precompiler/PrecompilerNoticeWithOutput$Companion {
+	public final fun from (Lelide/runtime/diag/DiagnosticsSuite;Ljava/lang/Object;)Lelide/runtime/precompiler/PrecompilerNoticeWithOutput;
 }
 
 public abstract interface class elide/runtime/vfs/GuestVFS : java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/io/FileSystem {

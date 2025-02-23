@@ -15,7 +15,8 @@
   non_snake_case,
   non_camel_case_types,
   non_upper_case_globals,
-  improper_ctypes
+  improper_ctypes,
+  clippy::missing_safety_doc
 )]
 
 include!(concat!(env!("OUT_DIR"), "/libtransport.rs"));

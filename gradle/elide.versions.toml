@@ -35,7 +35,7 @@ byteunits = "0.9.1"
 caffeine = "3.2.0"
 capnproto = "0.1.18-elide"
 cite = "0.6.1"
-clikt = "5.0.2"
+clikt = "5.0.3"
 commons-codec = "1.18.0"
 commons-compress = "1.27.1"
 commons-csv = "1.13.0"
@@ -566,17 +566,24 @@ koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin"
 koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 konform = { group = "io.konform", name = "konform", version.ref = "konform" }
+kotlin-compiler = { group = "org.jetbrains.kotlin", name = "kotlin-compiler", version.ref = "kotlin-sdk" }
 kotlin-compiler-embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin-sdk" }
+kotlin-compiler-runner = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-runner", version.ref = "kotlin-sdk" }
 kotlin-compiler-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
 kotlin-compiler-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
 kotlin-main-kts = { group = "org.jetbrains.kotlin", name = "kotlin-main-kts", version.ref = "kotlin-sdk" }
 kotlin-scripting-common = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-common", version.ref = "kotlin-sdk" }
+kotlin-scripting-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin-sdk" }
+kotlin-scripting-compiler = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-compiler", version.ref = "kotlin-sdk" }
+kotlin-scripting-compiler-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-compiler-embeddable", version.ref = "kotlin-sdk" }
 kotlin-scripting-dependencies = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-dependencies", version.ref = "kotlin-sdk" }
 kotlin-scripting-dependencies-maven = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-dependencies-maven", version.ref = "kotlin-sdk" }
 kotlin-scripting-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin-sdk" }
 kotlin-scripting-jvm-engine = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jsr223", version.ref = "kotlin-sdk" }
 kotlin-scripting-jvm-host = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm-host", version.ref = "kotlin-sdk" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin-sdk" }
 kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin-sdk" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin-sdk" }
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin-sdk" }
 kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "atomicfu" }

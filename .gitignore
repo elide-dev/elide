@@ -43,3 +43,4 @@ tools/images/bench/elide-edge.tgz
 /third_party/oracle/graaljs
 *.profraw
 tools/hakuna/dist
+coverage-error.log

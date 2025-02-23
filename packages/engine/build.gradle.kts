@@ -60,8 +60,40 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
 
   testApi(projects.packages.base)
+  testImplementation(projects.packages.test)
   testAnnotationProcessor(mn.micronaut.inject.java)
 }
+
+val jniDebug = false
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+    project.properties["elide.buildMode"] == "dev"
+  )
+val isRelease = !quickbuild && (
+  project.properties["elide.release"] == "true" ||
+    project.properties["elide.buildMode"] == "release"
+  )
+val nativesType = if (isRelease) "release" else "debug"
+
+val jvmDefs = StringBuilder().apply {
+  append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+  System.getProperty("java.library.path", "").let {
+    if (it.isNotEmpty()) {
+      append(File.pathSeparator)
+      append(it)
+    }
+  }
+}.toString().let {
+  listOf(
+    "-Djava.library.path=$it"
+  )
+}.plus(
+  listOf(
+    "-verbose:jni",
+    "-Xlog:library=trace",
+    "-Xcheck:jni",
+  ).takeIf { jniDebug } ?: emptyList()
+)
 
 val testInternals by configurations.registering {
   extendsFrom(configurations.testImplementation.get())
@@ -72,6 +104,10 @@ val testInternals by configurations.registering {
 val testJar by tasks.registering(Jar::class) {
   archiveBaseName.set("engine-test")
   from(sourceSets.test.get().output)
+}
+
+tasks.test {
+  jvmArgumentProviders.add(CommandLineArgumentProvider { jvmDefs })
 }
 
 artifacts {

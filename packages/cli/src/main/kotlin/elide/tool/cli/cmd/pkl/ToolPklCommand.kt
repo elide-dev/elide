@@ -2,9 +2,7 @@ package elide.tool.cli.cmd.pkl
 
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
-import org.pkl.cli.commands.AnalyzeCommand
-import org.pkl.cli.commands.EvalCommand
-import org.pkl.cli.commands.RootCommand
+import org.pkl.cli.commands.*
 import org.pkl.core.Release
 import picocli.CommandLine.Command
 import elide.tool.cli.*
@@ -34,6 +32,11 @@ internal class ToolPklCommand : AbstractSubcommand<ToolState, CommandContext>() 
         .subcommands(
           EvalCommand(helpLink),
           AnalyzeCommand(helpLink),
+          DownloadPackageCommand(helpLink),
+          ProjectCommand(helpLink),
+          ReplCommand(helpLink),
+          ServerCommand(helpLink),
+          TestCommand(helpLink),
         )
         .main(args)
       success()

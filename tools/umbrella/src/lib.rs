@@ -45,6 +45,8 @@ use std::ffi::{c_void, OsStr};
 use std::sync::OnceLock;
 use tokio::runtime::Runtime;
 
+pub use diag;
+pub use js;
 pub use posix;
 pub use sqlitejdbc;
 pub use terminal;

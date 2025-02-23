@@ -366,6 +366,50 @@ public final class elide/runtime/gvm/cfg/LanguageDefaults {
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
 }
 
+public abstract interface class elide/runtime/gvm/loader/ModuleFactory {
+	public abstract fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/loader/ModuleInfo : java/lang/Record, java/lang/Comparable {
+	public static final field Companion Lelide/runtime/gvm/loader/ModuleInfo$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun compareTo (Lelide/runtime/gvm/loader/ModuleInfo;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun dependencies ()Ljava/util/List;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun find (Ljava/lang/String;)Lelide/runtime/gvm/loader/ModuleInfo;
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public static final fun of (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/gvm/loader/ModuleInfo;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/loader/ModuleInfo$Companion {
+	public final fun find (Ljava/lang/String;)Lelide/runtime/gvm/loader/ModuleInfo;
+	public final fun getAllModuleInfos ()Ljava/util/Map;
+	public final fun of (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/gvm/loader/ModuleInfo;
+}
+
+public abstract interface class elide/runtime/gvm/loader/ModuleRegistrar {
+	public abstract fun deferred (Lelide/runtime/gvm/loader/ModuleInfo;Lelide/runtime/gvm/loader/ModuleFactory;)V
+	public abstract fun register (Lelide/runtime/gvm/loader/ModuleInfo;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/gvm/loader/ModuleRegistry : elide/runtime/gvm/loader/ModuleRegistrar, elide/runtime/gvm/loader/ModuleResolver {
+	public static final field INSTANCE Lelide/runtime/gvm/loader/ModuleRegistry;
+	public fun contains (Lelide/runtime/gvm/loader/ModuleInfo;)Z
+	public fun deferred (Lelide/runtime/gvm/loader/ModuleInfo;Lelide/runtime/gvm/loader/ModuleFactory;)V
+	public fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+	public fun register (Lelide/runtime/gvm/loader/ModuleInfo;Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/gvm/loader/ModuleResolver {
+	public abstract fun contains (Lelide/runtime/gvm/loader/ModuleInfo;)Z
+	public abstract fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+}
+
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguageConfig$Companion;
 	public fun <init> ()V
@@ -465,21 +509,6 @@ public synthetic class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePlug
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public abstract class elide/runtime/plugins/api/NativePlugin : elide/runtime/plugins/api/NativePluginAPI {
-	protected fun <init> (Ljava/lang/String;)V
-	protected fun apply ([Ljava/lang/String;)V
-	public fun context (Lorg/graalvm/polyglot/Engine;Lorg/graalvm/polyglot/Context$Builder;[Ljava/lang/String;)V
-	public fun getPluginId ()Ljava/lang/String;
-	public fun init ()V
-	public static fun initialize (Lelide/runtime/plugins/api/NativePlugin;)Lorg/graalvm/polyglot/Context$Builder;
-}
-
-public abstract interface class elide/runtime/plugins/api/NativePluginAPI {
-	public abstract fun context (Lorg/graalvm/polyglot/Engine;Lorg/graalvm/polyglot/Context$Builder;[Ljava/lang/String;)V
-	public abstract fun getPluginId ()Ljava/lang/String;
-	public abstract fun init ()V
 }
 
 public final class elide/runtime/plugins/bindings/Bindings {

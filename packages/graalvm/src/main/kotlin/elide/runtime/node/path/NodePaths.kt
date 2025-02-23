@@ -18,13 +18,18 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.File
+import elide.annotations.Factory
+import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.PathAPI
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.runtime.intrinsics.js.node.path.PathFactory
+import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.path.NodePaths.SYMBOL
 import elide.runtime.node.path.PathStyle.POSIX
 import elide.runtime.node.path.PathStyle.WIN32
@@ -235,15 +240,23 @@ public class PathBuf private constructor(
 }
 
 // Installs the Node paths module into the intrinsic bindings.
-@Intrinsic
-internal class NodePathsModule : AbstractNodeBuiltinModule() {
-  private val instance = NodePaths.create()
+@Intrinsic @Factory internal class NodePathsModule : SyntheticJSModule<PathAPI>, AbstractNodeBuiltinModule() {
+  companion object {
+    // Singleton instance.
+    private val instance = NodePaths.create()
+
+    init {
+      ModuleRegistry.deferred(ModuleInfo.of("path")) { instance }
+    }
+  }
 
   val paths: PathAPI get() = instance
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[SYMBOL.asJsSymbol()] = NodePaths.create()
   }
+
+  @Singleton override fun provide(): PathAPI = instance
 }
 
 /**

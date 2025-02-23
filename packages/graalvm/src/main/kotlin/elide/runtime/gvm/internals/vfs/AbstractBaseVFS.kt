@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -39,7 +39,7 @@ import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.VfsObjectInfo
  * @param VFS Concrete virtual file system type under implementation.
  * @param config Effective guest VFS configuration to apply.
  */
-internal abstract class AbstractBaseVFS<VFS> protected constructor (
+public abstract class AbstractBaseVFS<VFS> protected constructor (
   internal val config: EffectiveGuestVFSConfig,
 ) : GuestVFS where VFS: AbstractBaseVFS<VFS> {
   internal companion object {
@@ -59,7 +59,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @param VFS Concrete virtual file system type under implementation.
    */
-  interface VFSBuilder<VFS> where VFS: AbstractBaseVFS<VFS> {
+  public interface VFSBuilder<VFS> where VFS: AbstractBaseVFS<VFS> {
     /**
      * ### Deferred mode
      *
@@ -70,7 +70,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setDeferred for the builder-method equivalent.
      */
-    var deferred: Boolean
+    public var deferred: Boolean
 
     /**
      * ### Path Registry
@@ -82,7 +82,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setRegistry for the builder-method equivalent.
      */
-    var registry: MutableMap<String, VfsObjectInfo>
+    public var registry: MutableMap<String, VfsObjectInfo>
 
     /**
      * ### Bundle Mapping
@@ -94,7 +94,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setBundleMapping for the builder-method equivalent.
      */
-    var bundleMapping: MutableMap<Int, BundleInfo>
+    public var bundleMapping: MutableMap<Int, BundleInfo>
 
     /**
      * ### Read-only status
@@ -106,7 +106,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setReadOnly for the builder-method equivalent.
      */
-    var readOnly: Boolean
+    public var readOnly: Boolean
 
     /**
      * ### Case-sensitivity
@@ -118,7 +118,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setCaseSensitive for the builder-method equivalent.
      */
-    var caseSensitive: Boolean
+    public var caseSensitive: Boolean
 
     /**
      * ### Symlink support
@@ -131,7 +131,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setEnableSymlinks for the builder-method equivalent.
      */
-    var enableSymlinks: Boolean
+    public var enableSymlinks: Boolean
 
     /**
      * ### Root path
@@ -143,7 +143,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setRoot for the builder-method equivalent.
      */
-    var root: String
+    public var root: String
 
     /**
      * ### Working directory
@@ -155,7 +155,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setWorkingDirectory for the builder-method equivalent.
      */
-    var workingDirectory: String
+    public var workingDirectory: String
 
     /**
      * ### Guest I/O policy
@@ -168,7 +168,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @see setPolicy for the builder-method equivalent.
      */
-    var policy: GuestVFSPolicy
+    public var policy: GuestVFSPolicy
 
     /**
      * Set the [deferred] status of the file-system managed by this VFS implementation.
@@ -177,7 +177,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param deferred Whether the file-system should be considered read-only.
      * @return This builder.
      */
-    fun setDeferred(deferred: Boolean): VFSBuilder<VFS> {
+    public fun setDeferred(deferred: Boolean): VFSBuilder<VFS> {
       this.deferred = deferred
       return this
     }
@@ -189,7 +189,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param registry Registry of known file paths, produced by indexing bundles.
      * @return This builder.
      */
-    fun setRegistry(registry: MutableMap<String, VfsObjectInfo>): VFSBuilder<VFS> {
+    public fun setRegistry(registry: MutableMap<String, VfsObjectInfo>): VFSBuilder<VFS> {
       this.registry = registry
       return this
     }
@@ -201,7 +201,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param bundles Map of indexed bundles for deferred reads.
      * @return This builder.
      */
-    fun setBundleMapping(bundles: Map<Int, BundleInfo>): VFSBuilder<VFS> {
+    public fun setBundleMapping(bundles: Map<Int, BundleInfo>): VFSBuilder<VFS> {
       this.bundleMapping = bundles.toMutableMap()
       return this
     }
@@ -213,7 +213,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param readOnly Whether the file-system should be considered read-only.
      * @return This builder.
      */
-    fun setReadOnly(readOnly: Boolean): VFSBuilder<VFS> {
+    public fun setReadOnly(readOnly: Boolean): VFSBuilder<VFS> {
       this.readOnly = readOnly
       return this
     }
@@ -225,7 +225,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param caseSensitive Whether the file-system should be considered case-sensitive.
      * @return This builder.
      */
-    fun setCaseSensitive(caseSensitive: Boolean): VFSBuilder<VFS> {
+    public fun setCaseSensitive(caseSensitive: Boolean): VFSBuilder<VFS> {
       this.caseSensitive = caseSensitive
       return this
     }
@@ -237,7 +237,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param enableSymlinks Whether the file-system should expect symbolic link support.
      * @return This builder.
      */
-    fun setEnableSymlinks(enableSymlinks: Boolean): VFSBuilder<VFS> {
+    public fun setEnableSymlinks(enableSymlinks: Boolean): VFSBuilder<VFS> {
       this.enableSymlinks = enableSymlinks
       return this
     }
@@ -249,7 +249,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param root Root file path to apply.
      * @return This builder.
      */
-    fun setRoot(root: String): VFSBuilder<VFS> {
+    public fun setRoot(root: String): VFSBuilder<VFS> {
       this.root = root
       return this
     }
@@ -261,7 +261,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param workingDirectory Current-working-directory file path to apply.
      * @return This builder.
      */
-    fun setWorkingDirectory(workingDirectory: String): VFSBuilder<VFS> {
+    public fun setWorkingDirectory(workingDirectory: String): VFSBuilder<VFS> {
       this.workingDirectory = workingDirectory
       return this
     }
@@ -273,7 +273,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param policy Policy to apply.
      * @return This builder.
      */
-    fun setPolicy(policy: GuestVFSPolicy): VFSBuilder<VFS> {
+    public fun setPolicy(policy: GuestVFSPolicy): VFSBuilder<VFS> {
       this.policy = policy
       return this
     }
@@ -283,7 +283,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      *
      * @return Built VFS implementation.
      */
-    fun build(): VFS
+    public fun build(): VFS
   }
 
   /**
@@ -294,20 +294,20 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @see newBuilder to create an empty VFS implementation builder, or to clone an existing builder.
    */
-  interface VFSBuilderFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
+  public interface VFSBuilderFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
     /**
      * Create a new VFS implementation builder, of type [VFS].
      *
      * @return Empty VFS implementation builder.
      */
-    fun newBuilder(): Builder
+    public fun newBuilder(): Builder
 
     /**
      * Clone the provided [builder] to create a new builder.
      *
      * @return Cloned VFS implementation builder.
      */
-    fun newBuilder(builder: Builder): Builder
+    public fun newBuilder(builder: Builder): Builder
   }
 
   /**
@@ -316,13 +316,13 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * Specifies the expected API surface of a VFS implementation's companion object, which should be equipped to create
    * and resolve VFS implementations using the [VFSBuilder] and [VFSBuilderFactory].
    */
-  interface VFSFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
+  public interface VFSFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
     /**
      * Create a [VFS] implementation with no backing data, and configured with defaults.
      *
      * @return Empty and default-configured [VFS] implementation.
      */
-    fun create(): VFS
+    public fun create(): VFS
 
     /**
      * Create a [VFS] implementation configured with the provided [configurator].
@@ -332,7 +332,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param configurator Function to execute, in the context of [Builder], which prepares the VFS implementation.
      * @return Build implementation of type [VFS].
      */
-    fun create(configurator: Builder.() -> Unit): VFS
+    public fun create(configurator: Builder.() -> Unit): VFS
 
     /**
      * Create a [VFS] implementation configured with the provided effective [config].
@@ -340,7 +340,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param config Configuration to provide to the VFS implementation.
      * @return VFS implementation built with the provided [config].
      */
-    fun create(config: EffectiveGuestVFSConfig): VFS
+    public fun create(config: EffectiveGuestVFSConfig): VFS
 
     /**
      * Create a [VFS] implementation from the provided [builder].
@@ -348,7 +348,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
      * @param builder Builder to create the VFS implementation from.
      * @return VFS implementation built with the provided [builder].
      */
-    fun create(builder: VFSBuilder<VFS>): VFS
+    public fun create(builder: VFSBuilder<VFS>): VFS
   }
 
   /**
@@ -356,7 +356,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @return [Logger] that should be used for debug messages emitted from this VFS implementation.
    */
-  abstract val logging: Logger
+  public abstract val logging: Logger
 
   /**
    * Subclass API: Enforcement.
@@ -428,7 +428,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @param scope Whether this path is known to be a file, or directory, or it is not known.
    * @return Response from the policy check, indicating whether the request is allowed.
    */
-  fun checkPolicy(
+  public fun checkPolicy(
     type: AccessType,
     domain: AccessDomain,
     path: Path,
@@ -475,7 +475,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @param request Materialized I/O policy check request.
    * @return Response from the policy check, indicating whether the request is allowed.
    */
-  abstract fun checkPolicy(request: AccessRequest): AccessResponse
+  public abstract fun checkPolicy(request: AccessRequest): AccessResponse
 
   /**
    * Subclass API: Parse a path.
@@ -487,7 +487,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @param segments Path segments to parse.
    * @return Parsed path.
    */
-  internal abstract fun getPath(vararg segments: String): Path
+  public abstract fun getPath(vararg segments: String): Path
 
   /**
    * Subclass API: Read a file.
@@ -498,7 +498,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * Host reads are still subject to any policy restrictions and isolation: for example, if an embedded VFS backed by a
    * file or jailed directory is used, the host reads are still scoped to these policies. To control host reads within
-   * the scope of the VFS system, a sub-class may override this method or [checkPolicy].
+   * the scope of the VFS system, a subclass may override this method or [checkPolicy].
    *
    * @param path Path of the file to read.
    * @param options Open options to use when reading the file.
@@ -507,7 +507,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @throws AccessDeniedException if the read operation cannot be completed because of a policy violation.
    */
   @Throws(IOException::class)
-  internal abstract fun readStream(path: Path, vararg options: OpenOption): InputStream
+  public abstract fun readStream(path: Path, vararg options: OpenOption): InputStream
 
   /**
    * Subclass API: Write a file.
@@ -518,7 +518,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * Host writes are still subject to any policy restrictions and isolation: for example, if an embedded VFS backed by a
    * file or jailed directory is used, the host writes are still scoped to these policies. To control host writes within
-   * the scope of the VFS system, a sub-class may override this method or [checkPolicy].
+   * the scope of the VFS system, a subclass may override this method or [checkPolicy].
    *
    * @param path Path of the file we intend to write to.
    * @param options Open options to use when writing to the file.
@@ -526,5 +526,5 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * @throws IOException if the write operation cannot be completed.
    * @throws AccessDeniedException if the write operation cannot be completed because of a policy violation.
    */
-  internal abstract fun writeStream(path: Path, vararg options: OpenOption): OutputStream
+  public abstract fun writeStream(path: Path, vararg options: OpenOption): OutputStream
 }

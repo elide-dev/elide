@@ -27,7 +27,7 @@ import elide.runtime.core.PolyglotContext
  */
 @DelicateElideApi public abstract class AbstractLanguageConfig {
   public companion object {
-    private const val EXPERIMENTAL_SECURE_INTERNALS = true
+    private const val EXPERIMENTAL_SECURE_INTERNALS = false
   }
 
   /** Mutable counterpart to [intrinsicBindings]. */

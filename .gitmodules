@@ -31,4 +31,12 @@
 	path = third_party/madler/zlib
 	url = git@github.com:madler/zlib.git
 	ignore = dirty
-
+	shallow = true
+[submodule "graalvm"]
+	path = third_party/oracle/graalvm/graal
+	url = git@github.com:oracle/graal.git
+	shallow = true
+[submodule "graaljs"]
+	path = third_party/oracle/graalvm/graaljs
+	url = git@github.com:elide-dev/graaljs.git
+	shallow = true

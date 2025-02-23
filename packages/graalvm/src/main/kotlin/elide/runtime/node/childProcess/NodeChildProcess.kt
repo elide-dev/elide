@@ -61,14 +61,18 @@ import elide.runtime.intrinsics.js.node.events.EventEmitter
 import elide.runtime.intrinsics.js.node.events.EventTarget
 import elide.runtime.intrinsics.js.node.fs.StringOrBuffer
 import elide.runtime.intrinsics.js.node.path.Path
+import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.events.EventAware
 import elide.runtime.node.fs.NodeFilesystemModule
 import elide.runtime.node.fs.resolveEncodingString
 import elide.vm.annotations.Polyglot
 import com.google.common.util.concurrent.ListenableFuture as Future
 
+// Name of the child process module.
+private const val CHILD_PROCESS_MODULE_NAME = "child_process"
+
 // Internal symbol where the Node built-in module is installed.
-private const val CHILD_PROCESS_MODULE_SYMBOL = "node_child_process"
+private const val CHILD_PROCESS_MODULE_SYMBOL = "node_${CHILD_PROCESS_MODULE_NAME}"
 
 // Internal symbol where the Node `ChildProcess` class is installed.
 private const val CHILD_PROCESS_CLASS_SYMBOL = "NodeChildProcess"
@@ -91,22 +95,23 @@ private val globalIpcServer by lazy { InterElideIPCServer() }
 // Installs the Node child process module into the intrinsic bindings.
 @Intrinsic
 @Factory internal class NodeChildProcessModule(
-  private val filesystem: Optional<Supplier<NodeFilesystemModule>>,
-  private val executorProvider: GuestExecutorProvider,
-) : AbstractNodeBuiltinModule() {
+  filesystem: NodeFilesystemModule,
+  executorProvider: GuestExecutorProvider,
+) : SyntheticJSModule<ChildProcessAPI>, AbstractNodeBuiltinModule() {
   private val defaultStandardStreams = object : StandardStreamsProvider {
     override fun stdin(): InputStream? = System.`in`
     override fun stdout(): OutputStream? = System.out
     override fun stderr(): OutputStream? = System.err
   }
 
-  @Singleton internal fun provide(): ChildProcessAPI = NodeChildProcess.obtain(
+  private val instance = NodeChildProcess.obtain(
     { globalIpcServer },
     filesystem,
     executorProvider,
     defaultStandardStreams,
   )
 
+  @Singleton override fun provide(): ChildProcessAPI = instance
   @Singleton internal fun ipcServer(): InterElideIPCServer = globalIpcServer
 
   override fun install(bindings: MutableIntrinsicBindings) {
@@ -1083,14 +1088,14 @@ internal class NodeChildProcess(
     /** @return Singleton instance of the [NodeChildProcess] module; it is initialized if not yet available. */
     internal fun obtain(
       ipcSupplier: Supplier<InterElideIPCServer>,
-      fs: Optional<Supplier<NodeFilesystemModule>>,
+      fs: NodeFilesystemModule,
       executorProvider: GuestExecutorProvider,
       standardStreams: StandardStreamsProvider,
     ): NodeChildProcess = SINGLETON.get().let {
       when (it) {
         null -> NodeChildProcess(
           ipcSupplier,
-          fs,
+          Optional.of(Supplier { fs }),
           standardStreams,
           executorProvider,
         ).also { childProc -> SINGLETON.set(childProc) }

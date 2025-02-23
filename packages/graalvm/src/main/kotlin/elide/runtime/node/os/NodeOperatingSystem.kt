@@ -31,14 +31,23 @@ import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.OperatingSystemAPI
 import elide.runtime.intrinsics.js.node.fs.StringOrBuffer
 import elide.runtime.intrinsics.js.node.os.*
 import elide.runtime.intrinsics.js.node.os.OSType.POSIX
 import elide.runtime.intrinsics.js.node.os.OSType.WIN32
+import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.childProcess.ChildProcessNative
 import elide.vm.annotations.Polyglot
+
+// Name of this module.
+internal const val NODE_OS_NAME: String = "os"
+
+// Original primordial symbol for this module.
+internal const val NODE_OS_SYMBOL: String = "node_${NODE_OS_NAME}"
 
 // Constants for cross-OS values.
 private const val win32EOL: String = "\r\n"
@@ -184,13 +193,16 @@ private val moduleMembers = arrayOf(
 
 // Installs the Node OS module into the intrinsic bindings.
 @Intrinsic
-@Factory internal class NodeOperatingSystemModule : AbstractNodeBuiltinModule() {
+@Factory internal class NodeOperatingSystemModule : SyntheticJSModule<OperatingSystemAPI>, AbstractNodeBuiltinModule() {
   // Provide a compliant instance of the OS API to the DI context.
-  @Singleton fun provide(): OperatingSystemAPI = NodeOperatingSystem.obtain()
+  @Singleton override fun provide(): OperatingSystemAPI = NodeOperatingSystem.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[NodeOperatingSystem.SYMBOL.asJsSymbol()] =
-      NodeOperatingSystem.obtain()
+    bindings[NODE_OS_SYMBOL.asJsSymbol()] = NodeOperatingSystem.obtain()
+  }
+
+  init {
+    ModuleRegistry.deferred(ModuleInfo.of(NODE_OS_NAME)) { NodeOperatingSystem.obtain() }
   }
 }
 
@@ -198,9 +210,6 @@ private val moduleMembers = arrayOf(
  * # Node API: `os`
  */
 internal object NodeOperatingSystem {
-  /** Primordial symbol where the OS API implementation is installed. */
-  internal const val SYMBOL: String = "node_os"
-
   internal abstract class ModuleBase : ProxyObject, OperatingSystemAPI {
     override fun getMemberKeys(): Array<String> = moduleMembers
     override fun hasMember(key: String): Boolean = key in moduleMembers

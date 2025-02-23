@@ -131,7 +131,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
             path.toString().startsWith("<frozen ")
           }
 
-          @Suppress("DEPRECATION")
           override val fsProvider: () -> FileSystem get() = {
             org.graalvm.python.embedding.utils.VirtualFileSystem
               .newBuilder()

@@ -21,6 +21,13 @@ public class elide/runtime/lang/typescript/TypeScriptLanguage : com/oracle/truff
 	protected fun parse (Lcom/oracle/truffle/api/TruffleLanguage$ParsingRequest;)Lcom/oracle/truffle/api/CallTarget;
 }
 
+public class elide/runtime/lang/typescript/TypeScriptLanguage$TypeScriptLoaderFactory : elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory {
+	public fun <init> (Lelide/runtime/lang/typescript/TypeScriptLanguage;)V
+	public fun invoke (Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
+	public fun test (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;)Z
+	public synthetic fun test (Ljava/lang/Object;)Z
+}
+
 public final class elide/runtime/lang/typescript/TypeScriptLanguageProvider : com/oracle/truffle/api/provider/TruffleLanguageProvider {
 	public fun <init> ()V
 }

@@ -39,10 +39,3 @@ public final class elide/runtime/plugins/python/features/JNIFeature : org/graalv
 	public fun getDescription ()Ljava/lang/String;
 }
 
-public class elide/runtime/python/ElidePythonLanguage : elide/runtime/plugins/api/NativePlugin {
-	public fun context (Lorg/graalvm/polyglot/Engine;Lorg/graalvm/polyglot/Context$Builder;[Ljava/lang/String;)V
-	public static fun get ()Lelide/runtime/python/ElidePythonLanguage;
-	public static fun init (Lorg/graalvm/word/Pointer;Lorg/graalvm/word/Pointer;J)V
-	public static fun main ([Ljava/lang/String;)V
-}
-

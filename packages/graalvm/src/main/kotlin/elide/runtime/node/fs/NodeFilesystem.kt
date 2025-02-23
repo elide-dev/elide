@@ -42,6 +42,8 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Companion.spawn
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.AbstractJsException
@@ -51,6 +53,8 @@ import elide.runtime.intrinsics.js.node.*
 import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
+import elide.runtime.lang.javascript.NodeModuleName
+import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.path.NodePathsModule
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.vfs.GuestVFS
@@ -58,6 +62,9 @@ import elide.vm.annotations.Polyglot
 
 // Default copy mode value.
 private const val DEFAULT_COPY_MODE: Int = 0
+
+// Whether to enable synthesized modules.
+private const val ENABLE_SYNTHESIZED: Boolean = false
 
 // Listener bean for VFS init.
 @Singleton @Eager public class VfsInitializerListener : VfsListener, Supplier<GuestVFS> {
@@ -72,7 +79,7 @@ private const val DEFAULT_COPY_MODE: Int = 0
 
 // Installs the Node `fs` and `fs/promises` modules into the intrinsic bindings.
 @Intrinsic
-@Factory internal class NodeFilesystemModule(
+@Factory @Singleton internal class NodeFilesystemModule(
   private val pathModule: NodePathsModule,
   private val vfs: VfsInitializerListener,
   private val executorProvider: GuestExecutorProvider,
@@ -91,6 +98,23 @@ private const val DEFAULT_COPY_MODE: Int = 0
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = ProxyExecutable { provideStd() }
     bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = ProxyExecutable { providePromises() }
+  }
+
+  inner class FilesystemApiShim: SyntheticJSModule<FilesystemAPI> {
+    override fun provide(): FilesystemAPI = std
+  }
+
+  inner class FilesystemPromisesApiShim : SyntheticJSModule<FilesystemPromiseAPI> {
+    override fun provide(): FilesystemPromiseAPI = promises
+  }
+
+  init {
+    if (ENABLE_SYNTHESIZED) {
+      val apiShim = FilesystemApiShim()
+      val promisesShim = FilesystemPromisesApiShim()
+      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS)) { apiShim }
+      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS_PROMISES)) { promisesShim }
+    }
   }
 }
 
@@ -149,7 +173,7 @@ internal object FilesystemConstants {
 }
 
 // Context for a file write operation with managed state.
-@OptIn(DelicateElideApi::class) internal interface FileWriterContext {
+internal interface FileWriterContext {
   companion object {
     @JvmStatic fun of(path: java.nio.file.Path, encoding: Charset?, channel: WritableByteChannel): FileWriterContext {
       return object : FileWriterContext {

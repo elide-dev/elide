@@ -101,6 +101,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       .allowCreateProcess(true)
       .allowHostClassLoading(true)
       .allowNativeAccess(true)
+      .allowHostClassLookup { true }
       .engine(engine)
 
     // allow plugins to customize the context on creation

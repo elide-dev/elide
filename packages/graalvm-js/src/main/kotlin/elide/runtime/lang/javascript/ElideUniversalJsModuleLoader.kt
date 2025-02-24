@@ -24,6 +24,7 @@ import com.oracle.js.parser.ir.Module
 import com.oracle.js.parser.ir.Module.ExportEntry
 import com.oracle.js.parser.ir.Module.ModuleRequest
 import com.oracle.truffle.api.CallTarget
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.frame.VirtualFrame
 import com.oracle.truffle.api.source.Source
 import com.oracle.truffle.js.builtins.commonjs.NpmCompatibleESModuleLoader
@@ -38,6 +39,7 @@ import com.oracle.truffle.js.runtime.objects.*
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.File
+import java.net.URI
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import elide.core.api.Symbolic
@@ -175,8 +177,15 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
       return requireNotNull(moduleMap[name])
     }
     return when (val info = ModuleInfo.find(name)) {
-      // not a registered module
-      null -> super.resolveImportedModule(referencingModule, moduleRequest)
+      // not a registered module; fall back but with un-prefixed name, unless the prefix is `node`
+      null -> if (prefix == NODE_MODULE_PREFIX) {
+        super.resolveImportedModule(referencingModule, moduleRequest)
+      } else {
+        // rewrite the module request not to use a prefix unrecognized within graaljs
+        ModuleRequest.create(Strings.constant(name)).let {
+          super.resolveImportedModule(referencingModule, it)
+        }
+      }
 
       // present within module impl registry?
       in ModuleRegistry -> {
@@ -239,6 +248,7 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
           source.createUnavailableSection(),
           frameDescriptor,
         ) {
+          @TruffleBoundary
           override fun execute(frame: VirtualFrame): Any {
             val module = JSArguments.getUserArgument(frame.arguments, 0) as JSModuleRecord
 

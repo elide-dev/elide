@@ -13,6 +13,8 @@
   },{
     "pattern":"\\Qorg/pkl/commons/cli/PklCARoots.pem\\E"
   },{
+    "pattern":"\\Qorg/pkl/commons/cli/commands/IncludedCARoots.pem\\E"
+  },{
     "pattern":"\\QElideTool.properties\\E"
   }, {
     "pattern":"\\QElideTool_en.properties\\E"
@@ -842,6 +844,9 @@
     "name":"ElideTool",
     "locales":["en-US"]
   }, {
+    "name":"org.pkl.core.errorMessages",
+    "locales":["en"]
+  }, {
     "name":"sun.text.resources.BreakIteratorInfo",
     "locales":["und"]
   }, {
@@ -856,5 +861,14 @@
   }, {
     "name":"sun.util.resources.cldr.TimeZoneNames",
     "locales":["en", "en-US", "und"]
+  },{
+    "name": "com.sun.tools.javac.resources.compiler",
+    "locales": ["en"]
+  }, {
+    "name": "sun.tools.jar.resources.jar",
+    "locales": ["en"]
+  }, {
+    "name": "com.sun.tools.javac.resources.javac",
+    "locales": ["en"]
   }]
 }

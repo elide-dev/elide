@@ -15,14 +15,14 @@
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
 use java_native::jni;
+use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use jni::sys::jint;
-use jni::JNIEnv;
 use jni_sys::jlong;
 use sysinfo::{Pid, Signal, System};
 
 #[cfg(not(target_os = "windows"))]
-use rustix::process::{getpriority_process, setpriority_process, Pid as PosixPid, RawPid};
+use rustix::process::{Pid as PosixPid, RawPid, getpriority_process, setpriority_process};
 
 /// Resolve a signal from its `name`.
 fn resolve_signal(name: &str) -> Signal {

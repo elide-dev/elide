@@ -78,9 +78,6 @@ internal fun Project.configureKotlinMultiplatform(
   extensions.getByType(KotlinMultiplatformExtension::class.java).apply {
     // add JVM target
     if (JVM in target) jvm {
-      withJava()
-    }
-    if (JVM in target) jvm {
       // java modules support
       if (configureJavaModules) {
         configureJavaModularity(jvmModuleName)

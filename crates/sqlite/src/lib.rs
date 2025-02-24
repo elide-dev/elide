@@ -28,24 +28,24 @@ include!(concat!(env!("OUT_DIR"), "/libsqlitejdbc.rs"));
 
 #[on_load("sqlitejdbc")]
 pub unsafe fn on_load_static(vm: *mut JavaVM, reserved: *mut c_void) -> jint {
-  sqlite_on_load(vm, reserved)
+  unsafe { sqlite_on_load(vm, reserved) }
 }
 
 #[on_unload("sqlitejdbc")]
 pub unsafe fn on_unload_static(vm: *mut JavaVM, reserved: *mut c_void) {
-  sqlite_on_unload(vm, reserved)
+  unsafe { sqlite_on_unload(vm, reserved) }
 }
 
 /// Determine if the SQLite library is operating in static JNI mode.
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn isStatic(env: *mut JNIEnv, this: *mut c_void) -> jint {
-  sqlite_isStatic(env, this)
+  unsafe { sqlite_isStatic(env, this) }
 }
 
 /// Initialize the SQLite library.
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn initializeStatic(env: *mut JNIEnv, this: *mut c_void) -> jint {
-  sqlite_initializeStatic(env, this)
+  unsafe { sqlite_initializeStatic(env, this) }
 }
 
 // /*
@@ -58,7 +58,7 @@ pub unsafe fn initializeStatic(env: *mut JNIEnv, this: *mut c_void) -> jint {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn openUtf8(env: *mut JNIEnv, this: jobject, jfilename: jbyteArray, flags: jint) {
-  sqlite__1open_1utf8(env, this, jfilename, flags)
+  unsafe { sqlite__1open_1utf8(env, this, jfilename, flags) }
 }
 
 // /*
@@ -71,7 +71,7 @@ pub unsafe fn openUtf8(env: *mut JNIEnv, this: jobject, jfilename: jbyteArray, f
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn _close(env: *mut JNIEnv, this: jobject) {
-  sqlite__1close(env, this)
+  unsafe { sqlite__1close(env, this) }
 }
 
 // /*
@@ -84,7 +84,7 @@ pub unsafe fn _close(env: *mut JNIEnv, this: jobject) {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn _exec_utf8(env: *mut JNIEnv, this: jobject, jsql: jbyteArray) -> jint {
-  sqlite__1exec_1utf8(env, this, jsql)
+  unsafe { sqlite__1exec_1utf8(env, this, jsql) }
 }
 
 // /*
@@ -97,7 +97,7 @@ pub unsafe fn _exec_utf8(env: *mut JNIEnv, this: jobject, jsql: jbyteArray) -> j
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn shared_cache(env: *mut JNIEnv, this: jobject, enable: jboolean) -> jint {
-  sqlite_shared_1cache(env, this, enable)
+  unsafe { sqlite_shared_1cache(env, this, enable) }
 }
 
 // /*
@@ -110,7 +110,7 @@ pub unsafe fn shared_cache(env: *mut JNIEnv, this: jobject, enable: jboolean) ->
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn enable_load_extension(env: *mut JNIEnv, this: jobject, enable: jboolean) -> jint {
-  sqlite_enable_1load_1extension(env, this, enable)
+  unsafe { sqlite_enable_1load_1extension(env, this, enable) }
 }
 
 // /*
@@ -123,7 +123,7 @@ pub unsafe fn enable_load_extension(env: *mut JNIEnv, this: jobject, enable: jbo
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn interrupt(env: *mut JNIEnv, this: jobject) {
-  sqlite_interrupt(env, this)
+  unsafe { sqlite_interrupt(env, this) }
 }
 
 // /*
@@ -136,7 +136,7 @@ pub unsafe fn interrupt(env: *mut JNIEnv, this: jobject) {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn busy_timeout(env: *mut JNIEnv, this: jobject, ms: jint) {
-  sqlite_busy_1timeout(env, this, ms)
+  unsafe { sqlite_busy_1timeout(env, this, ms) }
 }
 
 // /*
@@ -149,7 +149,7 @@ pub unsafe fn busy_timeout(env: *mut JNIEnv, this: jobject, ms: jint) {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn busy_handler(env: *mut JNIEnv, this: jobject, handler: jobject) {
-  sqlite_busy_1handler(env, this, handler)
+  unsafe { sqlite_busy_1handler(env, this, handler) }
 }
 
 // /*
@@ -162,7 +162,7 @@ pub unsafe fn busy_handler(env: *mut JNIEnv, this: jobject, handler: jobject) {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn prepare_utf8(env: *mut JNIEnv, this: jobject, jsql: jbyteArray) -> jlong {
-  sqlite_prepare_1utf8(env, this, jsql)
+  unsafe { sqlite_prepare_1utf8(env, this, jsql) }
 }
 
 // /*
@@ -175,7 +175,7 @@ pub unsafe fn prepare_utf8(env: *mut JNIEnv, this: jobject, jsql: jbyteArray) ->
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn errmsg_utf8(env: *mut JNIEnv, this: jobject) -> jobject {
-  sqlite_errmsg_1utf8(env, this)
+  unsafe { sqlite_errmsg_1utf8(env, this) }
 }
 
 // /*
@@ -188,7 +188,7 @@ pub unsafe fn errmsg_utf8(env: *mut JNIEnv, this: jobject) -> jobject {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn libversion_utf8(env: *mut JNIEnv, this: jobject) -> jobject {
-  sqlite_libversion_1utf8(env, this)
+  unsafe { sqlite_libversion_1utf8(env, this) }
 }
 
 // /*
@@ -201,7 +201,7 @@ pub unsafe fn libversion_utf8(env: *mut JNIEnv, this: jobject) -> jobject {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn changes(env: *mut JNIEnv, this: jobject) -> jlong {
-  sqlite_changes(env, this)
+  unsafe { sqlite_changes(env, this) }
 }
 
 // /*
@@ -214,7 +214,7 @@ pub unsafe fn changes(env: *mut JNIEnv, this: jobject) -> jlong {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn total_changes(env: *mut JNIEnv, this: jobject) -> jlong {
-  sqlite_total_1changes(env, this)
+  unsafe { sqlite_total_1changes(env, this) }
 }
 
 // /*
@@ -227,7 +227,7 @@ pub unsafe fn total_changes(env: *mut JNIEnv, this: jobject) -> jlong {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn finalize(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
-  sqlite_finalize(env, this, stmt)
+  unsafe { sqlite_finalize(env, this, stmt) }
 }
 
 // /*
@@ -240,7 +240,7 @@ pub unsafe fn finalize(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn step(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
-  sqlite_step(env, this, stmt)
+  unsafe { sqlite_step(env, this, stmt) }
 }
 
 // /*
@@ -253,7 +253,7 @@ pub unsafe fn step(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn reset(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
-  sqlite_reset(env, this, stmt)
+  unsafe { sqlite_reset(env, this, stmt) }
 }
 
 // /*
@@ -266,7 +266,7 @@ pub unsafe fn reset(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn clear_bindings(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
-  sqlite_clear_1bindings(env, this, stmt)
+  unsafe { sqlite_clear_1bindings(env, this, stmt) }
 }
 
 // /*
@@ -279,7 +279,7 @@ pub unsafe fn clear_bindings(env: *mut JNIEnv, this: jobject, stmt: jlong) -> ji
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn bind_parameter_count(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
-  sqlite_bind_1parameter_1count(env, this, stmt)
+  unsafe { sqlite_bind_1parameter_1count(env, this, stmt) }
 }
 
 // /*
@@ -292,7 +292,7 @@ pub unsafe fn bind_parameter_count(env: *mut JNIEnv, this: jobject, stmt: jlong)
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_count(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint {
-  sqlite_column_1count(env, this, stmt)
+  unsafe { sqlite_column_1count(env, this, stmt) }
 }
 
 // /*
@@ -305,7 +305,7 @@ pub unsafe fn column_count(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jint
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_type(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint) -> jint {
-  sqlite_column_1type(env, this, stmt, col)
+  unsafe { sqlite_column_1type(env, this, stmt, col) }
 }
 
 // /*
@@ -323,7 +323,7 @@ pub unsafe fn column_decltype_utf8(
   stmt: jlong,
   col: jint,
 ) -> jobject {
-  sqlite_column_1decltype_1utf8(env, this, stmt, col)
+  unsafe { sqlite_column_1decltype_1utf8(env, this, stmt, col) }
 }
 
 // /*
@@ -341,7 +341,7 @@ pub unsafe fn column_table_name_utf8(
   stmt: jlong,
   col: jint,
 ) -> jobject {
-  sqlite_column_1table_1name_1utf8(env, this, stmt, col)
+  unsafe { sqlite_column_1table_1name_1utf8(env, this, stmt, col) }
 }
 
 // /*
@@ -354,7 +354,7 @@ pub unsafe fn column_table_name_utf8(
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_name_utf8(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint) -> jobject {
-  sqlite_column_1name_1utf8(env, this, stmt, col)
+  unsafe { sqlite_column_1name_1utf8(env, this, stmt, col) }
 }
 
 // /*
@@ -367,7 +367,7 @@ pub unsafe fn column_name_utf8(env: *mut JNIEnv, this: jobject, stmt: jlong, col
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_text_utf8(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint) -> jobject {
-  sqlite_column_1text_1utf8(env, this, stmt, col)
+  unsafe { sqlite_column_1text_1utf8(env, this, stmt, col) }
 }
 
 // /*
@@ -380,7 +380,7 @@ pub unsafe fn column_text_utf8(env: *mut JNIEnv, this: jobject, stmt: jlong, col
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_blob(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint) -> jbyteArray {
-  sqlite_column_1blob(env, this, stmt, col)
+  unsafe { sqlite_column_1blob(env, this, stmt, col) }
 }
 
 // /*
@@ -393,7 +393,7 @@ pub unsafe fn column_blob(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jin
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_double(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint) -> jdouble {
-  sqlite_column_1double(env, this, stmt, col)
+  unsafe { sqlite_column_1double(env, this, stmt, col) }
 }
 
 // /*
@@ -406,7 +406,7 @@ pub unsafe fn column_double(env: *mut JNIEnv, this: jobject, stmt: jlong, col: j
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_long(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint) -> jlong {
-  sqlite_column_1long(env, this, stmt, col)
+  unsafe { sqlite_column_1long(env, this, stmt, col) }
 }
 
 // /*
@@ -419,7 +419,7 @@ pub unsafe fn column_long(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jin
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_int(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint) -> jint {
-  sqlite_column_1int(env, this, stmt, col)
+  unsafe { sqlite_column_1int(env, this, stmt, col) }
 }
 
 // /*
@@ -432,7 +432,7 @@ pub unsafe fn column_int(env: *mut JNIEnv, this: jobject, stmt: jlong, col: jint
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn bind_null(env: *mut JNIEnv, this: jobject, stmt: jlong, pos: jint) -> jint {
-  sqlite_bind_1null(env, this, stmt, pos)
+  unsafe { sqlite_bind_1null(env, this, stmt, pos) }
 }
 
 // /*
@@ -445,7 +445,7 @@ pub unsafe fn bind_null(env: *mut JNIEnv, this: jobject, stmt: jlong, pos: jint)
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn bind_int(env: *mut JNIEnv, this: jobject, stmt: jlong, pos: jint, val: jint) -> jint {
-  sqlite_bind_1int(env, this, stmt, pos, val)
+  unsafe { sqlite_bind_1int(env, this, stmt, pos, val) }
 }
 
 // /*
@@ -464,7 +464,7 @@ pub unsafe fn bind_long(
   pos: jint,
   val: jlong,
 ) -> jint {
-  sqlite_bind_1long(env, this, stmt, pos, val)
+  unsafe { sqlite_bind_1long(env, this, stmt, pos, val) }
 }
 
 // /*
@@ -483,7 +483,7 @@ pub unsafe fn bind_double(
   pos: jint,
   val: jdouble,
 ) -> jint {
-  sqlite_bind_1double(env, this, stmt, pos, val)
+  unsafe { sqlite_bind_1double(env, this, stmt, pos, val) }
 }
 
 // /*
@@ -502,7 +502,7 @@ pub unsafe fn bind_text_utf8(
   pos: jint,
   val: jbyteArray,
 ) -> jint {
-  sqlite_bind_1text_1utf8(env, this, stmt, pos, val)
+  unsafe { sqlite_bind_1text_1utf8(env, this, stmt, pos, val) }
 }
 
 // /*
@@ -521,7 +521,7 @@ pub unsafe fn bind_blob(
   pos: jint,
   val: jbyteArray,
 ) -> jint {
-  sqlite_bind_1blob(env, this, stmt, pos, val)
+  unsafe { sqlite_bind_1blob(env, this, stmt, pos, val) }
 }
 
 // /*
@@ -534,7 +534,7 @@ pub unsafe fn bind_blob(
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn result_null(env: *mut JNIEnv, this: jobject, stmt: jlong) {
-  sqlite_result_1null(env, this, stmt)
+  unsafe { sqlite_result_1null(env, this, stmt) }
 }
 
 // /*
@@ -547,7 +547,7 @@ pub unsafe fn result_null(env: *mut JNIEnv, this: jobject, stmt: jlong) {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn result_text_utf8(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jbyteArray) {
-  sqlite_result_1text_1utf8(env, this, stmt, val)
+  unsafe { sqlite_result_1text_1utf8(env, this, stmt, val) }
 }
 
 // /*
@@ -560,7 +560,7 @@ pub unsafe fn result_text_utf8(env: *mut JNIEnv, this: jobject, stmt: jlong, val
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn result_blob(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jbyteArray) {
-  sqlite_result_1blob(env, this, stmt, val)
+  unsafe { sqlite_result_1blob(env, this, stmt, val) }
 }
 
 // /*
@@ -573,7 +573,7 @@ pub unsafe fn result_blob(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jby
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn result_double(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jdouble) {
-  sqlite_result_1double(env, this, stmt, val)
+  unsafe { sqlite_result_1double(env, this, stmt, val) }
 }
 
 // /*
@@ -586,7 +586,7 @@ pub unsafe fn result_double(env: *mut JNIEnv, this: jobject, stmt: jlong, val: j
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn result_long(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jlong) {
-  sqlite_result_1long(env, this, stmt, val)
+  unsafe { sqlite_result_1long(env, this, stmt, val) }
 }
 
 // /*
@@ -599,7 +599,7 @@ pub unsafe fn result_long(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jlo
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn result_int(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jint) {
-  sqlite_result_1int(env, this, stmt, val)
+  unsafe { sqlite_result_1int(env, this, stmt, val) }
 }
 
 // /*
@@ -612,7 +612,7 @@ pub unsafe fn result_int(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jint
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn result_error_utf8(env: *mut JNIEnv, this: jobject, stmt: jlong, val: jbyteArray) {
-  sqlite_result_1error_1utf8(env, this, stmt, val)
+  unsafe { sqlite_result_1error_1utf8(env, this, stmt, val) }
 }
 
 // /*
@@ -630,7 +630,7 @@ pub unsafe fn value_text_utf8(
   func: jobject,
   arg: jint,
 ) -> jobject {
-  sqlite_value_1text_1utf8(env, this, func, arg)
+  unsafe { sqlite_value_1text_1utf8(env, this, func, arg) }
 }
 
 // /*
@@ -643,7 +643,7 @@ pub unsafe fn value_text_utf8(
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn value_blob(env: *mut JNIEnv, this: jobject, func: jobject, arg: jint) -> jbyteArray {
-  sqlite_value_1blob(env, this, func, arg)
+  unsafe { sqlite_value_1blob(env, this, func, arg) }
 }
 
 // /*
@@ -656,7 +656,7 @@ pub unsafe fn value_blob(env: *mut JNIEnv, this: jobject, func: jobject, arg: ji
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn value_double(env: *mut JNIEnv, this: jobject, func: jobject, arg: jint) -> jdouble {
-  sqlite_value_1double(env, this, func, arg)
+  unsafe { sqlite_value_1double(env, this, func, arg) }
 }
 
 // /*
@@ -669,7 +669,7 @@ pub unsafe fn value_double(env: *mut JNIEnv, this: jobject, func: jobject, arg: 
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn value_long(env: *mut JNIEnv, this: jobject, func: jobject, arg: jint) -> jlong {
-  sqlite_value_1long(env, this, func, arg)
+  unsafe { sqlite_value_1long(env, this, func, arg) }
 }
 
 // /*
@@ -682,7 +682,7 @@ pub unsafe fn value_long(env: *mut JNIEnv, this: jobject, func: jobject, arg: ji
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn value_int(env: *mut JNIEnv, this: jobject, func: jobject, arg: jint) -> jint {
-  sqlite_value_1int(env, this, func, arg)
+  unsafe { sqlite_value_1int(env, this, func, arg) }
 }
 
 // /*
@@ -695,7 +695,7 @@ pub unsafe fn value_int(env: *mut JNIEnv, this: jobject, func: jobject, arg: jin
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn value_type(env: *mut JNIEnv, this: jobject, func: jobject, arg: jint) -> jint {
-  sqlite_value_1type(env, this, func, arg)
+  unsafe { sqlite_value_1type(env, this, func, arg) }
 }
 
 // /*
@@ -715,7 +715,7 @@ pub unsafe fn create_function_utf8(
   nargs: jint,
   flags: jint,
 ) -> jint {
-  sqlite_create_1function_1utf8(env, this, jname, func, nargs, flags)
+  unsafe { sqlite_create_1function_1utf8(env, this, jname, func, nargs, flags) }
 }
 
 // /*
@@ -728,7 +728,7 @@ pub unsafe fn create_function_utf8(
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn destroy_function_utf8(env: *mut JNIEnv, this: jobject, jname: jbyteArray) -> jint {
-  sqlite_destroy_1function_1utf8(env, this, jname)
+  unsafe { sqlite_destroy_1function_1utf8(env, this, jname) }
 }
 
 // /*
@@ -746,7 +746,7 @@ pub unsafe fn create_collation_utf8(
   jname: jbyteArray,
   collation: jobject,
 ) -> jint {
-  sqlite_create_1collation_1utf8(env, this, jname, collation)
+  unsafe { sqlite_create_1collation_1utf8(env, this, jname, collation) }
 }
 
 // /*
@@ -759,7 +759,7 @@ pub unsafe fn create_collation_utf8(
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn destroy_collation_utf8(env: *mut JNIEnv, this: jobject, jname: jbyteArray) -> jint {
-  sqlite_destroy_1collation_1utf8(env, this, jname)
+  unsafe { sqlite_destroy_1collation_1utf8(env, this, jname) }
 }
 
 // /*
@@ -772,7 +772,7 @@ pub unsafe fn destroy_collation_utf8(env: *mut JNIEnv, this: jobject, jname: jby
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn limit(env: *mut JNIEnv, this: jobject, id: jint, newVal: jint) -> jint {
-  sqlite_limit(env, this, id, newVal)
+  unsafe { sqlite_limit(env, this, id, newVal) }
 }
 
 // /*
@@ -794,7 +794,7 @@ pub unsafe fn backup(
   sleep: jint,
   step: jint,
 ) -> jint {
-  sqlite_backup(env, this, jfilename, jdest, observer, pages, sleep, step)
+  unsafe { sqlite_backup(env, this, jfilename, jdest, observer, pages, sleep, step) }
 }
 
 // /*
@@ -816,7 +816,7 @@ pub unsafe fn restore(
   sleep: jint,
   step: jint,
 ) -> jint {
-  sqlite_restore(env, this, jfilename, jdest, observer, pages, sleep, step)
+  unsafe { sqlite_restore(env, this, jfilename, jdest, observer, pages, sleep, step) }
 }
 
 // /*
@@ -829,7 +829,7 @@ pub unsafe fn restore(
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn column_metadata(env: *mut JNIEnv, this: jobject, stmt: jlong) -> jobjectArray {
-  sqlite_column_1metadata(env, this, stmt)
+  unsafe { sqlite_column_1metadata(env, this, stmt) }
 }
 
 // /*
@@ -842,7 +842,7 @@ pub unsafe fn column_metadata(env: *mut JNIEnv, this: jobject, stmt: jlong) -> j
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn set_commit_listener(env: *mut JNIEnv, this: jobject, enable: jboolean) {
-  sqlite_set_1commit_1listener(env, this, enable)
+  unsafe { sqlite_set_1commit_1listener(env, this, enable) }
 }
 
 // /*
@@ -855,7 +855,7 @@ pub unsafe fn set_commit_listener(env: *mut JNIEnv, this: jobject, enable: jbool
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn set_update_listener(env: *mut JNIEnv, this: jobject, enable: jboolean) {
-  sqlite_set_1update_1listener(env, this, enable)
+  unsafe { sqlite_set_1update_1listener(env, this, enable) }
 }
 
 // /*
@@ -873,7 +873,7 @@ pub unsafe fn register_progress_handler(
   steps: jint,
   handler: jobject,
 ) {
-  sqlite_register_1progress_1handler(env, this, steps, handler)
+  unsafe { sqlite_register_1progress_1handler(env, this, steps, handler) }
 }
 
 // /*
@@ -886,7 +886,7 @@ pub unsafe fn register_progress_handler(
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn clear_progress_handler(env: *mut JNIEnv, this: jobject) {
-  sqlite_clear_1progress_1handler(env, this)
+  unsafe { sqlite_clear_1progress_1handler(env, this) }
 }
 
 // /*
@@ -899,7 +899,7 @@ pub unsafe fn clear_progress_handler(env: *mut JNIEnv, this: jobject) {
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn serialize(env: *mut JNIEnv, this: jobject, db: jstring) -> jbyteArray {
-  sqlite_serialize(env, this, db)
+  unsafe { sqlite_serialize(env, this, db) }
 }
 
 // /*
@@ -912,5 +912,5 @@ pub unsafe fn serialize(env: *mut JNIEnv, this: jobject, db: jstring) -> jbyteAr
 
 #[jni("org.sqlite.core.NativeDB")]
 pub unsafe fn deserialize(env: *mut JNIEnv, this: jobject, jschema: jstring, jbuff: jbyteArray) {
-  sqlite_deserialize(env, this, jschema, jbuff)
+  unsafe { sqlite_deserialize(env, this, jschema, jbuff) }
 }

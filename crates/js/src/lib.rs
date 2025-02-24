@@ -14,10 +14,10 @@
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe)]
 
 use crate::codegen::{CodegenError, GeneratorOptions};
-use diag::{create_diagnostic, report_diagnostic, DiagnosticBuilder};
+use diag::{DiagnosticBuilder, create_diagnostic, report_diagnostic};
 use java_native::jni;
-use jni::objects::{JClass, JString};
 use jni::JNIEnv;
+use jni::objects::{JClass, JString};
 
 /// Code generation tools for JavaScript; interoperates with `parser` and other exposed modules.
 mod codegen;

@@ -17,8 +17,12 @@ package elide.runtime.node
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assumptions
+import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.util.stream.Stream
@@ -229,7 +233,8 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   }
 
   @Test fun `os cpus() should return expected value for current host`() = conforms {
-    val cpus = assertNotNull(acquire().cpus(), "should not get `null` from `os.cpus()`")
+    val cpus = acquire().cpus()
+    assertNotNull(cpus, "should not get `null` from `os.cpus()`")
     assertTrue(cpus.isNotEmpty())
     cpus.forEach { cpu ->
       assertNotNull(cpu.model, "should not get `null` from `cpu.model`")
@@ -339,7 +344,8 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   }
 
   @Test fun `os networkInterfaces() should return expected value for current host`() = conforms {
-    val nics = assertNotNull(acquire().networkInterfaces(), "should not get `null` from `os.networkInterfaces()`")
+    val nics: Map<String, List<NetworkInterfaceInfo>>? = acquire().networkInterfaces()
+    assertNotNull(nics, "should not get `null` from `os.networkInterfaces()`")
     assertTrue(nics.isNotEmpty())
     nics.entries.forEach { entry ->
       assertNotNull(entry.key, "should not get `null` from NIC name as map key")
@@ -370,7 +376,8 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   }
 
   @Test fun `os userInfo() should return expected value for current host`() = conforms {
-    val userInfo = assertNotNull(acquire().userInfo(), "should not get `null` from `os.userInfo()`")
+    val userInfo = acquire().userInfo()
+    assertNotNull(userInfo, "should not get `null` from `os.userInfo()`")
     assertNotNull(userInfo.username)
     assertNotNull(userInfo.uid)
     assertNotNull(userInfo.gid)
@@ -487,8 +494,9 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   }
 
   @Test fun `os posix constants provide expected objects`() {
-    val constants = assertNotNull(
-      Posix.constants,
+    val constants = Posix.constants
+    assertNotNull(
+      constants,
       "should not get `null` from `Posix.constants`",
     )
     assertIs<PosixSystemConstants>(constants)
@@ -521,13 +529,16 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
     assertNotNull(constants.dlopen, "should not get `null` from `Posix.constants.dlopen`")
     assertTrue(constants.dlopen.hasMember(symbol))
     assertNotNull(constants.dlopen.getMember(symbol))
-    assertIs<Int>(assertNotNull(constants.dlopen.getMember(symbol)))
+    assertNotNull(constants.dlopen.getMember(symbol))
+    assertIs<Int>(constants.dlopen.getMember(symbol))
   }
 
   @Test fun `os posix constants - priority`() {
-    val constants = assertNotNull(Posix.constants, "should not get `null` from `Posix.constants`")
+    val constants = Posix.constants
+    assertNotNull(constants, "should not get `null` from `Posix.constants`")
     assertIs<PosixSystemConstants>(constants)
-    val prio = assertNotNull(constants.priority, "should not get `null` from `Posix.constants.priority`")
+    val prio = constants.priority
+    assertNotNull(prio, "should not get `null` from `Posix.constants.priority`")
     assertEquals(PRIORITY_NORMAL, prio.PRIORITY_NORMAL)
     assertEquals(PRIORITY_LOW, prio.PRIORITY_LOW)
     assertEquals(PRIORITY_HIGH, prio.PRIORITY_HIGH)
@@ -546,13 +557,16 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   )
   @ParameterizedTest
   fun `os posix constants - priority symbols`(symbol: String, expectedPriority: Int) {
-    val constants = assertNotNull(Posix.constants, "should not get `null` from `Posix.constants`")
+    val constants = Posix.constants
+    assertNotNull(constants, "should not get `null` from `Posix.constants`")
     assertIs<PosixSystemConstants>(constants)
-    val prio = assertNotNull(constants.priority, "should not get `null` from `Posix.constants.priority`")
+    val prio = constants.priority
+    assertNotNull(prio, "should not get `null` from `Posix.constants.priority`")
     assertTrue(prio.hasMember(symbol))
     assertNotNull(prio.getMember(symbol))
-    assertIs<Int>(assertNotNull(prio.getMember(symbol)))
-    assertEquals(expectedPriority, assertNotNull(prio.getMember(symbol)))
+    assertNotNull(prio.getMember(symbol))
+    assertIs<Int>(prio.getMember(symbol))
+    assertEquals(expectedPriority, prio.getMember(symbol))
   }
 
   @CsvSource(
@@ -638,13 +652,17 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
   )
   @ParameterizedTest
   fun `os posix constants - errno symbols`(expectedSymbol: String, symbol: String, expectedValue: Int) {
-    val constants = assertNotNull(Posix.constants, "should not get `null` from `Posix.constants`")
+    val constants = Posix.constants
+    assertNotNull(constants, "should not get `null` from `Posix.constants`")
     assertEquals(expectedSymbol, symbol)
     assertIs<PosixSystemConstants>(constants)
-    val errno = assertNotNull(constants.errno, "should not get `null` from `Posix.constants.errno`")
+    val errno = constants.errno
+    assertNotNull(errno, "should not get `null` from `Posix.constants.errno`")
     assertTrue(errno.hasMember(symbol))
     assertNotNull(errno.getMember(symbol))
-    assertIs<Int>(assertNotNull(errno.getMember(symbol)))
-    assertEquals(expectedValue, assertNotNull(errno.getMember(symbol)))
+    val out = errno.getMember(symbol)
+    assertNotNull(out)
+    assertIs<Int>(out)
+    assertEquals(expectedValue, errno.getMember(symbol))
   }
 }

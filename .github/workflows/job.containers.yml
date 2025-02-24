@@ -189,7 +189,7 @@ jobs:
           persist-credentials: false
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - name: "Setup: GraalVM (Java 22)"
+      - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@aafbedb8d382ed0ca6167d3a051415f20c859274 # v1.2.8
         with:
           distribution: "graalvm"
@@ -205,7 +205,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
-          node-version: 22
+          node-version: 23
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
@@ -301,7 +301,7 @@ jobs:
           persist-credentials: false
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - name: "Setup: GraalVM (Java 22)"
+      - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@aafbedb8d382ed0ca6167d3a051415f20c859274 # v1.2.8
         with:
           distribution: "graalvm"
@@ -317,7 +317,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
-          node-version: 22
+          node-version: 23
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:

@@ -73,6 +73,10 @@ public class elide/jvm/ResourceManager : elide/jvm/LifecycleBoundResources, java
 	public fun unregister (Ljava/lang/AutoCloseable;)V
 }
 
+public abstract interface class elide/proto/api/Named {
+	public abstract fun getName ()Ljava/lang/String;
+}
+
 public final class elide/runtime/LogLevel : java/lang/Enum {
 	public static final field DEBUG Lelide/runtime/LogLevel;
 	public static final field ERROR Lelide/runtime/LogLevel;

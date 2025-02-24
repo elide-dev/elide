@@ -14,8 +14,8 @@
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe)]
 
 use java_native::jni;
-use jni::objects::{JClass, JObject, JValue};
 use jni::JNIEnv;
+use jni::objects::{JClass, JObject, JValue};
 
 // Class name for the diagnostics reporter.
 static CLS_DIAGNOSTICS_REPORTER: &str = "elide/runtime/diag/NativeDiagnostics";
@@ -190,9 +190,9 @@ pub fn report_diagnostic(
       METHOD_SIG_REPORT_DIAGNOSTICS,
       &[JValue::Object(&rec)],
     )
-    .or_else(|_| {
+    .map_err(|_| {
       env.exception_describe();
-      Err(DiagnosticError::Fail)
+      DiagnosticError::Fail
     });
   match ret {
     Ok(_) => Ok(()),

@@ -89,7 +89,6 @@ dependencies {
   api(libs.kotlinx.html.jvm)
   api(libs.kotlinx.serialization.core.jvm)
   api(libs.protobuf.java)
-  api(projects.packages.proto.protoProtobuf)
 
   // Modules
   api(projects.packages.base)

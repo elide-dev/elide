@@ -196,6 +196,9 @@ val jvmCompileArgs = listOfNotNull(
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
@@ -428,7 +431,7 @@ dependencies {
   implementation(projects.packages.graalvmWasm)
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
-  compileOnly(libs.graalvm.svm)
+  implementation(libs.graalvm.svm)
 
   if (oracleGvm && oracleGvmLibs) {
     implementation(libs.graalvm.js.isolate)
@@ -885,7 +888,7 @@ val releaseFlags: List<String> = listOf(
   if (oracleGvm) gvmReleaseFlags else emptyList(),
 ).flatten()).toList()
 
-val jvmDefs = mapOf(
+val jvmDefs = mutableMapOf(
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
   "elide.target" to targetPath.asFile.path,
@@ -918,6 +921,10 @@ val jvmDefs = mapOf(
   // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
   // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
 )
+
+findProperty("elide.logLevel")?.let {
+  jvmDefs["elide.logging.root.level"] = it as String
+}
 
 val hostedRuntimeOptions = mapOf(
   "IncludeLocales" to "en",

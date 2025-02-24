@@ -13,7 +13,7 @@
 
 [package]
 name = "base"
-edition = "2021"
+edition = "2024"
 license = "MIT"
 workspace = "../.."
 version = "1.0.0-alpha13-SNAPSHOT"

@@ -195,7 +195,7 @@ jobs:
         with:
           bun-version-file: .bun-version
       - name: "Setup: PNPM"
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "9.2.0"
           run_install: |
@@ -245,21 +245,21 @@ jobs:
           popd;
           echo "Binary compressed.";
       - name: "Artifacts: Debug Binary (Unix)"
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug.xz
       - name: "Artifacts: Debug Binary (Windows)"
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug
       - name: "Artifacts: Dashboard Dump"
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         if: success()
         with:
           name: cli-debug-report-${{ matrix.tag }}
@@ -349,7 +349,7 @@ jobs:
         with:
           bun-version-file: .bun-version
       - name: "Setup: PNPM"
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "9.2.0"
           run_install: |
@@ -390,7 +390,7 @@ jobs:
             -Pversion=${{ inputs.version }} \
             -Pelide.version=${{ inputs.version }}
       - name: "Artifacts: Release Binary (Posix)"
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         if: success() && contains(matrix.runner, 'windows') != true
         with:
           name: cli-release-${{ matrix.tag }}
@@ -400,7 +400,7 @@ jobs:
             ./packages/cli/build/nativeOptimizedCompile/elide-${{ inputs.version }}-${{ matrix.tag }}.*.tgz
             ./packages/cli/build/nativeOptimizedCompile/elide-${{ inputs.version }}-${{ matrix.tag }}.*.txz
       - name: "Artifacts: Release Binary (Windows)"
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-release-${{ matrix.tag }}

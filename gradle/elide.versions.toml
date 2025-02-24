@@ -264,7 +264,8 @@ slf4j = "2.0.16"
 snakeyaml = "2.4"
 snappy = "1.1.10.7"
 snyk = "0.6.1"
-sonar = "4.4.1.3373"                                              # next: "2022-07-20"
+smartexception = "0.2.1"
+sonar = "4.4.1.3373"
 spdx = "0.8.0"
 spotless = "6.25.0"
 sqlcommenter = "2.1.1-elide"
@@ -731,6 +732,7 @@ slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" 
 slf4j-log4j-bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
 snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
 snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
+smartexception = { group = "com.arthenica", name = "smart-exception-java9", version.ref = "smartexception" }
 sqlcommenter-hibernate = { group = "com.google.cloud", name = "sqlcommenter-hibernate", version.ref = "sqlcommenter" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 strikt-bom = { group = "io.strikt", name = "strikt-bom", version.ref = "strikt" }

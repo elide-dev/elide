@@ -84,7 +84,7 @@ jobs:
             -x nativeCompile
             -x nativeOptimizedCompile
       - name: "Analysis: Qodana Scan"
-        uses: JetBrains/qodana-action@12ec1e736e5f012abe0eea9fe83c33d4a88eddd3 # main
+        uses: JetBrains/qodana-action@fe012aed54dc21daa5df0108f7b51305a2877251 # main
         continue-on-error: true
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
@@ -92,6 +92,6 @@ jobs:
         with:
           args: --baseline,qodana.sarif.json
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@dd746615b3b9d728a6a37ca2045b68ca76d4841a # v3.28.8
+        uses: github/codeql-action/upload-sarif@b56ba49b26e50535fa1e7f7db0f4f7b4bf65d80d # v3.28.10
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

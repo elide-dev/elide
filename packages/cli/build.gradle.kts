@@ -196,9 +196,9 @@ val jvmCompileArgs = listOfNotNull(
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
@@ -431,7 +431,7 @@ dependencies {
   implementation(projects.packages.graalvmWasm)
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
-  implementation(libs.graalvm.svm)
+  compileOnly(libs.graalvm.svm)
 
   if (oracleGvm && oracleGvmLibs) {
     implementation(libs.graalvm.js.isolate)
@@ -467,7 +467,8 @@ dependencies {
   api(libs.slf4j)
   api(libs.slf4j.jul)
 
-  // Console UI
+  // General
+  implementation(libs.smartexception)
   implementation(libs.magicProgress)
 
   runtimeOnly(mn.micronaut.graal)
@@ -712,6 +713,7 @@ val experimentalLlvmEdgeArgs = listOfNotNull(
 })
 
 val commonNativeArgs = listOfNotNull(
+  "--trace-object-instantiation=com.github.ajalt.mordant.rendering.TextStyles",
   // Debugging flags:
   // "--verbose",
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
@@ -860,8 +862,8 @@ val profiles: List<String> = listOf(
 
 // GVM release flags
 val gvmReleaseFlags: List<String> = listOf(
-  "-O4",
-).onlyIf(!enablePgo)
+  "-Os",
+)
 
 // Experimental C-compiler flags.
 val experimentalCFlags: List<String> = listOf(
@@ -872,8 +874,6 @@ val experimentalCFlags: List<String> = listOf(
 val releaseFlags: List<String> = listOf(
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
-).plus(
-  listOf("-O3").onlyIf(!enablePgo)
 ).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -934,6 +934,9 @@ val initializeAtBuildtime: List<String> = listOf(
   "ch.qos.logback",
   "com.google.common",
   "com.google.protobuf",
+  "com.sun.tools.javac.resources.compiler",
+  "com.sun.tools.javac.resources.javac",
+  "sun.tools.jar.resources.jar",
   "elide",
   "elide.tool",
   "elide.tool.cli.Elide",
@@ -972,6 +975,8 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.KQueueEventLoop"),
   "org.fusesource.jansi.internal.CLibrary",
+  "com.github.ajalt.mordant.rendering.TextStyles",
+  "elide.tool.err.ErrPrinter",
 
   // @TODO: seal this into formal config
   "elide.tool.err.ErrorHandler${'$'}ErrorContext",
@@ -1200,9 +1205,6 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 )
 
 val pklArgs: List<String> = listOf(
-  "-H:IncludeResources=org/pkl/core/stdlib/.*\\.pkl",
-  "-H:IncludeResources=org/jline/utils/.*",
-  "-H:IncludeResources=org/pkl/commons/cli/commands/IncludedCARoots.pem",
   "-H:IncludeResourceBundles=org.pkl.core.errorMessages",
 ).plus(listOf(
   "org.pkl.core",
@@ -1294,7 +1296,6 @@ val linuxGvmReleaseFlags = listOf(
 val linuxReleaseArgs = linuxOnlyArgs.plus(
   listOf(
     "-R:+WriteableCodeCache",
-    "-H:+StripDebugInfo",
   ).plus(if (oracleGvm) linuxGvmReleaseFlags else emptyList()),
 )
 

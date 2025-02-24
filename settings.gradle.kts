@@ -217,6 +217,7 @@ include(
   ":packages:graalvm",
   ":packages:graalvm-java",
   ":packages:graalvm-jvm",
+  ":packages:graalvm-js",
   ":packages:graalvm-kt",
   ":packages:graalvm-llvm",
   ":packages:graalvm-py",

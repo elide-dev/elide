@@ -464,8 +464,8 @@ fun PathAPI.testExtname(parsed: PathIntrinsic): String? {
   @Test fun `parsing paths should work from javascript`() = executeGuest {
     // language=javascript
     """
-      const { equal } = require("assert");
       const { parse } = require("path");
+      const { equal } = require("assert");
       const parsed1 = parse("/sample/cool/path");
       equal(parsed1.dir, '/sample/cool');
       equal(parsed1.base, 'path');

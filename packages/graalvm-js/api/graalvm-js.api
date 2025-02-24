@@ -1,0 +1,144 @@
+public abstract interface class elide/runtime/lang/javascript/CommonJSModuleProvider {
+	public abstract fun provide ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/lang/javascript/CommonJSModuleResolver {
+	public abstract fun resolve (Lcom/oracle/truffle/js/runtime/JSRealm;Ljava/lang/String;)Lelide/runtime/lang/javascript/CommonJSModuleProvider;
+}
+
+public final class elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry : java/util/function/Predicate {
+	public static final field INSTANCE Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry;
+	public static final fun register (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory;)V
+	public static final fun resolve (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
+	public fun test (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;)Z
+	public synthetic fun test (Ljava/lang/Object;)Z
+}
+
+public abstract interface class elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory : java/util/function/Predicate {
+	public abstract fun invoke (Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
+}
+
+public final class elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest : java/lang/Record {
+	public static final field Companion Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest$Companion;
+	public synthetic fun <init> (Lcom/oracle/truffle/api/source/Source;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/oracle/truffle/api/source/Source;
+	public final fun component2 ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun label ()Ljava/lang/String;
+	public final fun source ()Lcom/oracle/truffle/api/source/Source;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest$Companion {
+	public final fun of (Lcom/oracle/truffle/api/source/Source;)Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;
+	public final fun of (Ljava/lang/String;)Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;
+}
+
+public abstract interface class elide/runtime/lang/javascript/JSModuleProvider {
+	public abstract fun resolve (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+}
+
+public class elide/runtime/lang/javascript/JSRealmPatcher {
+	public fun <init> ()V
+	public static fun setModuleLoader (Lcom/oracle/truffle/js/runtime/JSRealm;Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;)V
+}
+
+public final class elide/runtime/lang/javascript/JavaScriptLang {
+	public static final field INSTANCE Lelide/runtime/lang/javascript/JavaScriptLang;
+	public final fun initialize ()V
+}
+
+public final class elide/runtime/lang/javascript/NodeModuleName {
+	public static final field ASSERT Ljava/lang/String;
+	public static final field ASYNC_HOOKS Ljava/lang/String;
+	public static final field BUFFER Ljava/lang/String;
+	public static final field CHILD_PROCESS Ljava/lang/String;
+	public static final field CLUSTER Ljava/lang/String;
+	public static final field CONSOLE Ljava/lang/String;
+	public static final field CONSTANTS Ljava/lang/String;
+	public static final field CRYPTO Ljava/lang/String;
+	public static final field DGRAM Ljava/lang/String;
+	public static final field DNS Ljava/lang/String;
+	public static final field DOMAIN Ljava/lang/String;
+	public static final field EVENTS Ljava/lang/String;
+	public static final field FS Ljava/lang/String;
+	public static final field FS_PROMISES Ljava/lang/String;
+	public static final field HTTP Ljava/lang/String;
+	public static final field HTTP2 Ljava/lang/String;
+	public static final field HTTPS Ljava/lang/String;
+	public static final field INSPECTOR Ljava/lang/String;
+	public static final field INSTANCE Lelide/runtime/lang/javascript/NodeModuleName;
+	public static final field MODULE Ljava/lang/String;
+	public static final field NET Ljava/lang/String;
+	public static final field OS Ljava/lang/String;
+	public static final field PATH Ljava/lang/String;
+	public static final field PERF_HOOKS Ljava/lang/String;
+	public static final field PROCESS Ljava/lang/String;
+	public static final field PUNYCODE Ljava/lang/String;
+	public static final field QUERYSTRING Ljava/lang/String;
+	public static final field READLINE Ljava/lang/String;
+	public static final field REPL Ljava/lang/String;
+	public static final field STREAM Ljava/lang/String;
+	public static final field STRING_DECODER Ljava/lang/String;
+	public static final field TIMERS Ljava/lang/String;
+	public static final field TLS Ljava/lang/String;
+	public static final field TRACE_EVENTS Ljava/lang/String;
+	public static final field TTY Ljava/lang/String;
+	public static final field URL Ljava/lang/String;
+	public static final field UTIL Ljava/lang/String;
+	public static final field V8 Ljava/lang/String;
+	public static final field VM Ljava/lang/String;
+	public static final field WORKER_THREADS Ljava/lang/String;
+	public static final field ZLIB Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/lang/javascript/SyntheticJSModule : elide/runtime/lang/javascript/CommonJSModuleProvider, elide/runtime/lang/javascript/JSModuleProvider {
+	public fun exports ()[Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public abstract fun provide ()Ljava/lang/Object;
+	public fun provider ()Lelide/runtime/lang/javascript/JSModuleProvider;
+	public fun resolve (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/lang/javascript/SyntheticJSModule$ExportKind : java/lang/Enum {
+	public static final field CLASS Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+	public static final field DEFAULT Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+	public static final field METHOD Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+	public static final field PROPERTY Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+	public static fun values ()[Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+}
+
+public final class elide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol : java/lang/Record {
+	public static final field Companion Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol$Companion;
+	public fun <init> (Ljava/lang/String;Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun cls (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public static synthetic fun copy$default (Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;Ljava/lang/String;Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public static final fun default (Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun from ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun kind ()Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;
+	public static final fun method (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public final fun name ()Ljava/lang/String;
+	public static final fun of (Ljava/lang/String;Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol$Companion {
+	public final fun cls (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public static synthetic fun cls$default (Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public final fun default (Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public static synthetic fun default$default (Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol$Companion;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public final fun method (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public static synthetic fun method$default (Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public final fun of (Ljava/lang/String;Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;Ljava/lang/String;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+	public static synthetic fun of$default (Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol$Companion;Ljava/lang/String;Lelide/runtime/lang/javascript/SyntheticJSModule$ExportKind;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/lang/javascript/SyntheticJSModule$ExportedSymbol;
+}
+

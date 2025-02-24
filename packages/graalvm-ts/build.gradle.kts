@@ -49,9 +49,13 @@ elide {
 dependencies {
   kapt(libs.graalvm.truffle.processor)
   api(projects.packages.engine)
+  api(projects.packages.graalvmJs)
+  api(libs.graalvm.truffle.api)
   implementation(libs.commons.io)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.graalvm.js.language)
+  implementation(libs.graalvm.shadowed.icu4j)
+  implementation(libs.graalvm.regex)
 
   // Testing
   testImplementation(projects.packages.test)
@@ -69,5 +73,18 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+  }
+}
+
+val (jsGroup, jsName) = libs.graalvm.js.language.get()
+  .let {
+    it.group to it.name
+  }
+configurations.all {
+  resolutionStrategy.dependencySubstitution {
+    substitute(module("$jsGroup:$jsName")).apply {
+      using(project(":packages:graalvm-js"))
+      because("Uses Elide's patched version of GraalJs")
+    }
   }
 }

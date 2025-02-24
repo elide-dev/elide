@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -94,7 +94,7 @@ private val bundleCache: MutableMap<String, Pair<ArchiveEntry, ByteArray>> = Has
  */
 @Requires(property = "elide.gvm.vfs.enabled", notEquals = "false")
 @Requires(property = "elide.gvm.vfs.mode", notEquals = "HOST")
-internal class EmbeddedGuestVFSImpl private constructor (
+public class EmbeddedGuestVFSImpl private constructor (
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
   private val tree: FilesystemInfo,
@@ -115,7 +115,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   /** Enumerates supported embedded VFS bundle formats. */
-  enum class BundleFormat {
+  public enum class BundleFormat {
     /** Regular (non-compressed) tarball. */
     TARBALL,
 
@@ -138,39 +138,39 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   // Baseline VFS metadata.
-  sealed interface VfsObjectInfo {
-    val path: String
-    val bundle: Int
+  public sealed interface VfsObjectInfo {
+    public val path: String
+    public val bundle: Int
   }
 
   // VFS metadata for a file.
-  @JvmRecord data class VfsFileInfo(
+  @JvmRecord public data class VfsFileInfo(
     override val path: String,
     override val bundle: Int,
     val info: tools.elide.vfs.File,
   ) : VfsObjectInfo
 
   // VFS metadata for a directory.
-  @JvmRecord data class VfsDirectory(
+  @JvmRecord public data class VfsDirectory(
     override val path: String,
     override val bundle: Int,
     val info: tools.elide.vfs.Directory,
   ) : VfsObjectInfo
 
   // Describes a bundle under access for VFS.
-  @JvmRecord internal data class BundleInfo(
+  @JvmRecord public data class BundleInfo(
     /** Internal (local) ID for the bundle. */
-    val id: Int,
+    public val id: Int,
 
     /** URI or symbolic location for the bundle. */
-    val location: String,
+    public val location: String,
 
     /** Format for the bundle. */
-    val type: BundleFormat,
+    public val type: BundleFormat,
   ) {
-    companion object {
+    public companion object {
       // Build a map of locally-identified bundles.
-      @JvmStatic fun buildFor(bundles: List<Triple<Int, String, BundleFormat>>): Map<Int, BundleInfo> =
+      @JvmStatic public fun buildFor(bundles: List<Triple<Int, String, BundleFormat>>): Map<Int, BundleInfo> =
         bundles.associate { (id, uri, type) -> id to BundleInfo(id, uri, type) }
     }
   }
@@ -463,7 +463,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
    *   resources which should be fetched from the host app class-path.
    * @param files Files to load as file-system bundles.
    */
-  @Suppress("unused") internal data class Builder (
+  @Suppress("unused") public data class Builder (
     override var deferred: Boolean = Settings.DEFAULT_DEFERRED_READS,
     override var readOnly: Boolean = true,
     override var caseSensitive: Boolean = true,
@@ -480,7 +480,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     internal var file: URI? = null,
   ) : VFSBuilder<EmbeddedGuestVFSImpl> {
     /** Factory for embedded VFS implementations. */
-    companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
+    public companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
       override fun newBuilder(): Builder = Builder()
       override fun newBuilder(builder: Builder): Builder = builder.copy()
     }
@@ -494,7 +494,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param bundle [FilesystemInfo] and [FileSystem] pair to use as the bundle.
      * @return This builder.
      */
-    fun setBundle(bundle: Pair<FilesystemInfo, FileSystem>): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setBundle(bundle: Pair<FilesystemInfo, FileSystem>): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.file = null
       this.zip = null
       this.bundle = bundle
@@ -512,7 +512,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param bundle [FilesystemInfo] and [FileSystem] pair to use as the bundle.
      * @return This builder.
      */
-    fun setBundle(bundle: Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>>): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setBundle(
+      bundle: Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>>
+    ): VFSBuilder<EmbeddedGuestVFSImpl> {
       setBundle(
         bundle.first to bundle.second
       )
@@ -532,7 +534,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param paths URI to the bundle file to load.
      * @return This builder.
      */
-    fun setBundlePaths(paths: List<URI>): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setBundlePaths(paths: List<URI>): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.file = null
       this.zip = null
       this.paths = paths
@@ -551,7 +553,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param files File to load bundle data from.
      * @return This builder.
      */
-    fun setBundleFiles(files: List<File>): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setBundleFiles(files: List<File>): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.file = null
       this.zip = null
       this.files = files
@@ -569,7 +571,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @see target Target zip file to use.
      * @return This builder.
      */
-    fun setZipTarget(target: URI): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setZipTarget(target: URI): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.file = null
       this.zip = target
       this.bundle = null
@@ -587,7 +589,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @see target Target zip file to use.
      * @return This builder.
      */
-    fun setFileTarget(target: URI): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setFileTarget(target: URI): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.file = target
       this.zip = null
       this.bundle = null
@@ -605,7 +607,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @see target Target zip file to use.
      * @return This builder.
      */
-    fun setFileTarget(target: Path): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setFileTarget(target: Path): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.file = target.toUri()
       this.zip = null
       this.bundle = null
@@ -623,7 +625,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @see target Target zip file to use.
      * @return This builder.
      */
-    fun setFileTarget(target: File): VFSBuilder<EmbeddedGuestVFSImpl> {
+    public fun setFileTarget(target: File): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.file = target.toPath().toUri()
       this.zip = null
       this.bundle = null
@@ -662,7 +664,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   /** Factory to create new embedded VFS implementations. */
-  companion object EmbeddedVFSFactory : VFSFactory<EmbeddedGuestVFSImpl, Builder> {
+  public companion object EmbeddedVFSFactory : VFSFactory<EmbeddedGuestVFSImpl, Builder> {
     /** Default in-memory filesystem features. */
     private val defaultFeatures = listOf(
       Feature.FILE_CHANNEL,

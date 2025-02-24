@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,16 +16,17 @@ import com.oracle.truffle.api.*;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleLanguage.ContextPolicy;
 import com.oracle.truffle.api.TruffleLanguage.Registration;
-import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.LanguageInfo;
-import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.js.lang.JavaScriptLanguage;
 import com.oracle.truffle.js.runtime.JSEngine;
 import com.oracle.truffle.js.runtime.JSRealm;
+import com.oracle.truffle.js.runtime.objects.JSModuleLoader;
+import elide.runtime.lang.javascript.DelegatedModuleLoaderRegistry;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.graalvm.polyglot.SandboxPolicy;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * TypeScript language implementation for GraalVM, meant for use via Elide.
@@ -70,6 +71,19 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   private final AtomicBoolean compilerInitialized = new AtomicBoolean(false);
   private Env env;
 
+  public class TypeScriptLoaderFactory implements DelegatedModuleLoaderRegistry.DelegateFactory {
+    @Override
+    public @NotNull JSModuleLoader invoke(@NotNull JSRealm realm) {
+      return new TypeScriptModuleLoader(realm, tsCompiler);
+    }
+
+    @Override
+    public boolean test(
+        DelegatedModuleLoaderRegistry.DelegatedModuleRequest delegatedModuleRequest) {
+      return false;
+    }
+  }
+
   @Override
   protected JSRealm createContext(Env currentEnv) {
     CompilerAsserts.neverPartOfCompilation();
@@ -81,11 +95,10 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
       compilerInitialized.compareAndSet(false, true);
       tsCompiler = TypeScriptCompiler.obtain(jsEnv);
       env = jsEnv;
+      DelegatedModuleLoaderRegistry.register(new TypeScriptLoaderFactory());
     }
     var ctx = JSEngine.createJSContext(js, jsEnv);
-    var realm = ctx.createRealm(jsEnv);
-    JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
-    return realm;
+    return ctx.createRealm(jsEnv);
   }
 
   @Override
@@ -103,28 +116,6 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
             tsSource.getCharacters(), tsSource.getName(), true, tsSource.getPath());
     List<String> argumentNames = parsingRequest.getArgumentNames();
     var parsed = (RootCallTarget) env.parseInternal(jsSource, argumentNames.toArray(new String[0]));
-    var wrapper = new TSRootNode(this, parsed.getRootNode());
-    return wrapper.getCallTarget();
-  }
-
-  private class TSRootNode extends RootNode {
-    private final RootNode delegate;
-
-    protected TSRootNode(TruffleLanguage<?> language, RootNode delegate) {
-      super(language);
-      this.delegate = delegate;
-    }
-
-    @TruffleBoundary
-    private void setModuleLoader() {
-      JSRealm realm = JSRealm.get(delegate);
-      JSRealmPatcher.setTSModuleLoader(realm, new TypeScriptModuleLoader(realm, tsCompiler));
-    }
-
-    @Override
-    public Object execute(VirtualFrame frame) {
-      setModuleLoader();
-      return delegate.execute(frame);
-    }
+    return parsed.getRootNode().getCallTarget();
   }
 }

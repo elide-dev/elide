@@ -12,6 +12,7 @@
  */
 package elide.runtime.plugins.js
 
+import com.oracle.truffle.js.runtime.JSContextOptions
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
 import java.util.concurrent.atomic.AtomicBoolean
@@ -27,6 +28,7 @@ import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.core.plugin
+import elide.runtime.lang.javascript.JavaScriptLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.plugins.env.Environment
@@ -157,6 +159,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.unhandled-rejections" to UNHANDLED_REJECTIONS,
       // Experimental:
       "js.charset" to config.charset.name(),
+      "js.module-loader-factory" to JSContextOptions.ModuleLoaderFactoryMode.HANDLER.toString(),
     )
 
     setOptions(
@@ -196,7 +199,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     private const val JS_LANGUAGE_ID = "js"
     private const val JS_PLUGIN_ID = "JavaScript"
 
-    private const val EXPERIMENTAL_MODULE_PRELOADING = true
+    private const val EXPERIMENTAL_MODULE_PRELOADING = false
 
     private const val WASI_STD = "wasi_snapshot_preview1"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
@@ -208,6 +211,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
+      JavaScriptLang.initialize()
       configureLanguageSupport(scope)
 
       // resolve the env plugin (if present, otherwise ignore silently)

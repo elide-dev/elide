@@ -160,7 +160,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
       arg.isNativePointer -> "NativePointer(${arg.asNativePointer()})"
       arg.isIterator -> "Iterator(...)"
       arg.isMetaObject -> {}
-      arg.isBufferWritable -> {}
+      arg.hasBufferElements() -> {}
 
       // temporal types
       arg.isDate -> arg.asDate().toString()

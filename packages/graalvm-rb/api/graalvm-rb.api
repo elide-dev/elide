@@ -60,6 +60,3 @@ public final class elide/runtime/ruby/ElideRuby {
 	public static final fun main ([Ljava/lang/String;)V
 }
 
-public class elide/runtime/ruby/ElideRubyLanguage : elide/runtime/plugins/api/NativePlugin {
-}
-

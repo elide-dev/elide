@@ -44,6 +44,7 @@ import elide.runtime.intrinsics.js.node.ZlibBuffer
 import elide.runtime.intrinsics.js.node.stream.Readable
 import elide.runtime.intrinsics.js.node.stream.Writable
 import elide.runtime.intrinsics.js.node.zlib.*
+import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.stream.AbstractReadable
 import elide.runtime.node.stream.ColdInputStream
 import elide.runtime.node.stream.WrappedInputStream
@@ -430,10 +431,9 @@ public data object ModernNodeZlibConstants : NodeZlibConstants {
 }
 
 // Installs the Node zlib module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeZlibModule : AbstractNodeBuiltinModule() {
+@Intrinsic internal class NodeZlibModule : SyntheticJSModule<NodeZlib>, AbstractNodeBuiltinModule() {
   @Inject private lateinit var zlib: NodeZlib
-  @Singleton internal fun provide(): ZlibAPI = zlib
+  override fun provide(): NodeZlib = zlib
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[ZLIB_MODULE_SYMBOL.asJsSymbol()] = provide()

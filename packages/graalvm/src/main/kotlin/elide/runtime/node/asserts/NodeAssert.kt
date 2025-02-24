@@ -44,18 +44,62 @@ import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.JsException
 import elide.runtime.intrinsics.js.node.AssertAPI
 import elide.runtime.intrinsics.js.node.asserts.AssertionError
+import elide.runtime.lang.javascript.NodeModuleName
+import elide.runtime.lang.javascript.SyntheticJSModule
+import elide.runtime.lang.javascript.SyntheticJSModule.ExportedSymbol
 import elide.vm.annotations.Polyglot
 
 // Symbol where the internal module implementation is installed.
-private const val ASSERT_MODULE_SYMBOL: String = "node_assert"
+private const val ASSERT_MODULE_SYMBOL: String = "node_${NodeModuleName.ASSERT}"
 
 // Symbol where the assertion error type is installed.
 private const val ASSERTION_ERROR_SYMBOL: String = "AssertionError"
 
+private const val METHOD_OK = "ok"
+private const val METHOD_NOT_OK = "notOk"
+private const val METHOD_FAIL = "fail"
+private const val METHOD_ASSERT = "assert"
+private const val METHOD_EQUAL = "equal"
+private const val METHOD_STRICT = "strict"
+private const val METHOD_NOT_EQUAL = "notEqual"
+private const val METHOD_DEEP_EQUAL = "deepEqual"
+private const val METHOD_NOT_DEEP_EQUAL = "notDeepEqual"
+private const val METHOD_DEEP_STRICT_EQUAL = "deepStrictEqual"
+private const val METHOD_NOT_DEEP_STRICT_EQUAL = "notDeepStrictEqual"
+private const val METHOD_MATCH = "match"
+private const val METHOD_DOES_NOT_MATCH = "doesNotMatch"
+private const val METHOD_THROWS = "throws"
+private const val METHOD_DOES_NOT_THROW = "doesNotThrow"
+private const val METHOD_REJECTS = "rejects"
+private const val METHOD_DOES_NOT_REJECT = "doesNotReject"
+
+// Methods provided by the Node assert module.
+private val assertionModuleMethods = arrayOf(
+  METHOD_OK,
+  METHOD_NOT_OK,
+  METHOD_FAIL,
+  METHOD_ASSERT,
+  METHOD_EQUAL,
+  METHOD_STRICT,
+  METHOD_NOT_EQUAL,
+  METHOD_DEEP_EQUAL,
+  METHOD_NOT_DEEP_EQUAL,
+  METHOD_DEEP_STRICT_EQUAL,
+  METHOD_NOT_DEEP_STRICT_EQUAL,
+  METHOD_MATCH,
+  METHOD_DOES_NOT_MATCH,
+  METHOD_THROWS,
+  METHOD_DOES_NOT_THROW,
+  METHOD_REJECTS,
+  METHOD_DOES_NOT_REJECT,
+)
+
+
 // Installs the Node assert module into the intrinsic bindings.
 @Intrinsic
-@Factory internal class NodeAssertModule : AbstractNodeBuiltinModule() {
-  @Singleton fun provide(): AssertAPI = NodeAssert.obtain()
+@Factory internal class NodeAssertModule : SyntheticJSModule<AssertAPI>, AbstractNodeBuiltinModule() {
+  private val instance = NodeAssert.obtain()
+  @Singleton override fun provide(): AssertAPI = instance
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[ASSERT_MODULE_SYMBOL.asJsSymbol()] = provide()
@@ -67,6 +111,12 @@ private const val ASSERTION_ERROR_SYMBOL: String = "AssertionError"
       }
     }
   }
+
+  override fun exports(): Array<ExportedSymbol> = assertionModuleMethods.map {
+    ExportedSymbol.of(it)
+  }.plus(
+    ExportedSymbol.default(METHOD_ASSERT),
+  ).toTypedArray()
 }
 
 // Implements Node's `AssertionError` type, which is thrown for assertion failures.
@@ -229,8 +279,8 @@ internal class NodeAssert : AssertAPI {
     }
   }
 
-  @Polyglot override fun ok(value: Any?, message: Any?) {
-    checkTruthy(false, value, message)
+  @Polyglot override fun ok(vararg values: Any?) {
+    checkTruthy(false, values.firstOrNull(), values.getOrNull(2))
   }
 
   @Polyglot override fun notOk(value: Any?, message: Any?) {

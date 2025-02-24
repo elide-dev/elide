@@ -448,6 +448,10 @@ dependencies {
   api(projects.packages.graalvmTs)
   api(projects.packages.graalvmWasm)
 
+  // GraalVM / Truffle
+  api(libs.graalvm.truffle.api)
+  api(libs.graalvm.truffle.runtime)
+
   // Kotlin / KotlinX
   implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
@@ -667,5 +671,17 @@ if (enableBenchmarks) afterEvaluate {
         }
       }
     }.toString())
+  }
+}
+
+val (jsGroup, jsName) = libs.graalvm.js.language.get().let {
+  it.group to it.name
+}
+configurations.all {
+  resolutionStrategy.dependencySubstitution {
+    substitute(module("${jsGroup}:${jsName}")).apply {
+      using(project(":packages:graalvm-js"))
+      because("Uses Elide's patched version of GraalJs")
+    }
   }
 }

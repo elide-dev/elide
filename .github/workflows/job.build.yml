@@ -369,7 +369,7 @@ jobs:
   ## Report: Provenance
   provenance:
     name: Provenance
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
     if: inputs.provenance
     needs: [gradle]
     permissions:

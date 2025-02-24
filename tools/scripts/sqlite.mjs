@@ -1,5 +1,6 @@
-const { ok } = require("node:assert")
-const { Database } = require("sqlite")
+import { ok } from "node:assert"
+import { Database } from "elide:sqlite"
+
 const db = new Database()
 ok(db)
 db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT);")

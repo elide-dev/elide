@@ -89,6 +89,7 @@ import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
 import elide.tool.cli.options.EngineJavaScriptOptions
 import elide.tool.cli.output.JLineLogbackAppender
+import elide.tool.err.ErrPrinter
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectInfo
@@ -1121,6 +1122,12 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
   }
 
+  // Determine error printer settings for this run.
+  private fun errPrinterSettings(): ErrPrinter.ErrPrinterSettings = ErrPrinter.ErrPrinterSettings(
+    enableColor = pretty,
+    maxLength = terminal.get()?.width ?: ErrPrinter.DEFAULT_MAX_WIDTH,
+  )
+
   // Given an error, render a table explaining the error, along with any source context if we have it.
   private fun displayFormattedError(
     exc: Throwable,
@@ -1130,7 +1137,14 @@ private typealias ContextAccessor = () -> PolyglotContext
     stacktrace: Boolean = internal,
     withCause: Boolean = true,
   ) {
-    if (exc !is PolyglotException) return
+    if (exc !is PolyglotException) {
+      exc.printStackTrace()
+      return
+    }
+    if (debug || verbose) {
+      // print full stack traces raw in debug or verbose mode mode
+      exc.printStackTrace()
+    }
     val term = terminal.get()
     val reader = lineReader.get()
 
@@ -1164,26 +1178,29 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
 
     // if requested, build a stacktrace for this error
-    val stacktraceContent = if (stacktrace) {
-      val stackString = StringWriter()
-      val stackPrinter = PrintWriter(stackString)
-      exc.printStackTrace(stackPrinter)
-      when (val cause = exc.cause ?: if (exc.isHostException) exc.asHostException() else null) {
+    val doPrintStack = stacktrace || errRange.count() < 2
+    val stacktraceContent = if (doPrintStack) {
+      val stackString = ErrPrinter.fmt(
+        exc,
+        settings = errPrinterSettings(),
+      )
+      when (val cause = exc.cause ?: if (exc.isHostException) exc.asHostException() else exc) {
         null -> {}
-        else -> if (withCause) {
-          stackString.append("\nCause stacktrace: ")
-          cause.printStackTrace(stackPrinter)
-        } else if (exc.isHostException) {
-          stackString.append("\nCause: ${cause.message}")
-          stackString.append("   Failed to gather stacktrace for host exception of type ${cause::class.simpleName}.")
+        else -> if (cause !== exc) {
+          if (withCause) {
+            stackString.append("\nCause stacktrace: \n\n")
+            stackString.append(ErrPrinter.fmt(cause))
+          } else if (exc.isHostException) {
+            stackString.append("\nCause: ${cause.message}")
+            stackString.append("   Failed to gather stacktrace for host exception of type ${cause::class.simpleName}.")
+          }
         }
       }
-      stackPrinter.flush()
       stackString.toString()
     } else {
       ""
     }
-    val stacktraceLines = if (stacktrace) {
+    val stacktraceLines = if (doPrintStack) {
       stacktraceContent.lines()
     } else {
       emptyList()
@@ -1193,11 +1210,11 @@ private typealias ContextAccessor = () -> PolyglotContext
     val maxErrLineSize = if (lineContextRendered.isNotEmpty()) lineContextRendered.maxOf { it.length } + pad else 0
 
     // calculate the maximum width needed to display the error box, but don't exceed the width of the terminal.
-    val width = minOf(
-      term?.width ?: 120,
+    val width = maxOf(80, minOf(
+      term?.width ?: ErrPrinter.DEFAULT_MAX_WIDTH,
       maxOf(
         // message plus padding
-        message.length + pad,
+        message.length + pad + 1,
 
         // error context lines
         maxErrLineSize,
@@ -1205,11 +1222,11 @@ private typealias ContextAccessor = () -> PolyglotContext
         // advice
         (advice?.length ?: 0) + pad,
 
-      // stacktrace
-      if (stacktrace) stacktraceLines.maxOf { it.length + pad + 2 } else 0,
-    ))
+        // stacktrace max line size
+        stacktraceLines.maxOfOrNull { it.length } ?: 0,
+    )))
 
-    val textWidth = width - (pad / 2) + if (stacktrace) {
+    val textWidth = width - (pad / 2) + if (doPrintStack) {
       "      ".length
     } else 0
 
@@ -1233,10 +1250,11 @@ private typealias ContextAccessor = () -> PolyglotContext
 
       if (message.isNotBlank()) {
         // ║ SomeError: A message ║
-        append(middlePrefix).append(message.padEnd(textWidth - 1, ' ')).append("║\n")
+        val fmtMsg = ErrPrinter.fmtMessage(message, settings = errPrinterSettings())
+        append(middlePrefix).append(fmtMsg.padEnd(textWidth - 2, ' ')).append(" ║\n")
       }
 
-      if (stacktrace || advice?.isNotBlank() == true) {
+      if (doPrintStack || advice?.isNotBlank() == true) {
         // ╟──────────────────────╢
         if (lineContextRendered.isNotEmpty() && message.isNotBlank()) appendLine(divider)
         else if (message.isNotBlank()) appendLine(divider)
@@ -1248,19 +1266,19 @@ private typealias ContextAccessor = () -> PolyglotContext
           // ║ Example advice.      ║
           append(middlePrefix).append(advice.padEnd(textWidth - 1, ' ') + "║\n")
           // ╟──────────────────────╢
-          if (stacktrace) appendLine(divider)
+          if (doPrintStack) appendLine(divider)
         }
 
         // append stacktrace next
-        if (stacktrace) {
+        if (doPrintStack) {
           // ║ Stacktrace:          ║
           append(middlePrefix).append("Stacktrace:".padEnd(textWidth - 1, ' ') + "║\n")
           appendLine(blankLine)
 
           // ║ ...                  ║
           stacktraceLines.forEach {
-            if (it.startsWith(" ") || it.startsWith('\t')) {
-              // if it's a spaced line, don't add additional end-spacing
+            if (it.startsWith('\t')) {
+              // if it's a spaced line, don't add additional end-spacing (for tab-prefixes)
               append(middlePrefix).append(it.padEnd(textWidth - pad - middlePrefix.length, ' ') + "║\n")
             } else {
               append(middlePrefix).append(it.padEnd(textWidth - 1, ' ') + "║\n")

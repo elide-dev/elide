@@ -3,10 +3,10 @@
   "language": "Kotlin",
   "resources": {
     "classpath": [
-      "classpath/elide-kotlin-runtime.jar",
-      "classpath/kotlin-script-runtime.jar",
-      "classpath/kotlin-reflect.jar",
-      "classpath/kotlin-stdlib.jar"
+      "elide-kotlin-runtime.jar",
+      "kotlin-script-runtime.jar",
+      "kotlin-reflect.jar",
+      "kotlin-stdlib.jar"
     ]
   }
 }

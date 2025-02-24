@@ -466,6 +466,7 @@ if (enableBenchmarks) {
 dependencies {
   // KSP
   kapt(mn.micronaut.inject.java)
+  kapt(libs.graalvm.truffle.processor)
 
   // API Deps
   api(libs.jakarta.inject)

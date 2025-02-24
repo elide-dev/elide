@@ -856,5 +856,14 @@
   }, {
     "name":"sun.util.resources.cldr.TimeZoneNames",
     "locales":["en", "en-US", "und"]
+  },{
+    "name": "com.sun.tools.javac.resources.compiler",
+    "locales": ["en"]
+  }, {
+    "name": "sun.tools.jar.resources.jar",
+    "locales": ["en"]
+  }, {
+    "name": "com.sun.tools.javac.resources.javac",
+    "locales": ["en"]
   }]
 }

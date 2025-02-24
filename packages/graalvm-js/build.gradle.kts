@@ -57,6 +57,7 @@ val patchedDependencies: Configuration by configurations.creating {
 }
 
 dependencies {
+  annotationProcessor(libs.graalvm.truffle.processor)
   api(projects.packages.engine)
   api(patchedLibs)
   api(libs.graalvm.truffle.api)

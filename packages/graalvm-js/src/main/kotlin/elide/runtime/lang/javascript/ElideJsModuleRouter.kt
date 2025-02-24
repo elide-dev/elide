@@ -84,7 +84,6 @@ internal object ElideJsModuleRouter : JSModuleLoaderFactory, CommonJSResolverHoo
 
   // Resolve a CommonJS module require encountered in JavaScript. Called on-demand.
   override fun resolveModule(realm: JSRealm, moduleIdentifier: String, entryPath: TruffleFile): Any? {
-    Logging.root().warn("CJS: require('$moduleIdentifier')")
     return ElideUniversalJsModuleLoader.resolve(realm, moduleIdentifier)
       ?.provide()
       ?.let { realm.env.asGuestValue(it) }

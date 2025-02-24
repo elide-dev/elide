@@ -17,6 +17,8 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import com.google.protobuf.gradle.id
+import com.google.protobuf.gradle.proto
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import kotlinx.benchmark.gradle.benchmark
@@ -30,6 +32,7 @@ plugins {
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
+  alias(libs.plugins.protobuf)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   id("org.graalvm.buildtools.native")
@@ -56,7 +59,7 @@ val enableTransportV2 = false
 val ktCompilerArgs = emptyList<String>()
 val javacArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
 )
@@ -116,6 +119,7 @@ elide {
     spotless = true
     diktat = false
     ktlint = false
+    checkstyle = false  // protobuf files
   }
 }
 
@@ -149,8 +153,16 @@ java {
 sourceSets {
   val main by getting {
     java.srcDirs(
-      layout.projectDirectory.dir("src/main/java9")
+      layout.projectDirectory.dir("src/main/java9"),
+      layout.buildDirectory.dir("generated/proto/main/java"),
     )
+    kotlin.srcDirs(
+      layout.projectDirectory.dir("src/main/kotlin"),
+      layout.buildDirectory.dir("generated/proto/main/kotlin"),
+    )
+    proto {
+      srcDir("${rootProject.projectDir}/proto")
+    }
   }
   if (enableBenchmarks) {
     val benchmarks by creating {
@@ -332,6 +344,19 @@ val testLibArgs = sharedLibArgs.plus(
   "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}3",
 ))
 
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
+  }
+  generateProtoTasks {
+    ofSourceSet("main").forEach {
+      it.builtins {
+        id("kotlin")
+      }
+    }
+  }
+}
+
 graalvmNative {
   testSupport = true
   useArgFile = true
@@ -448,6 +473,16 @@ dependencies {
   api(projects.packages.graalvmTs)
   api(projects.packages.graalvmWasm)
 
+  // Protocol Dependencies
+  implementation(libs.google.common.html.types.proto) {
+    exclude(group = "com.google.protobuf", module = "protobuf-java")
+    exclude(group = "com.google.protobuf", module = "protobuf-util")
+  }
+  api(libs.google.common.html.types.types) {
+    exclude(group = "com.google.protobuf", module = "protobuf-java")
+    exclude(group = "com.google.protobuf", module = "protobuf-util")
+  }
+
   // GraalVM / Truffle
   api(libs.graalvm.truffle.api)
   api(libs.graalvm.truffle.runtime)
@@ -521,7 +556,6 @@ dependencies {
 
   implementation(libs.protobuf.java)
   implementation(libs.protobuf.kotlin)
-  implementation(projects.packages.proto.protoProtobuf)
 
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
@@ -622,7 +656,16 @@ tasks {
     }
   }
 
+  afterEvaluate {
+    listOf(named("kaptKotlin")).forEach { task ->
+      task.configure {
+        dependsOn(generateProto)
+      }
+    }
+  }
+
   compileJava {
+    dependsOn(generateProto)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
@@ -634,6 +677,7 @@ tasks {
   }
 
   compileTestJava {
+    dependsOn(generateProto)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 

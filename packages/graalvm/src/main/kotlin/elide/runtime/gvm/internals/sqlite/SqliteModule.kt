@@ -17,6 +17,7 @@ package elide.runtime.gvm.internals.sqlite
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyObject
 import org.sqlite.SQLiteConnection
 import org.sqlite.SQLiteOpenMode
 import org.sqlite.SQLiteOpenMode.CREATE
@@ -52,10 +53,13 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMap
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.MapLike
 import elide.runtime.intrinsics.sqlite.*
 import elide.runtime.intrinsics.sqlite.SQLiteTransactionType.*
+import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.util.UUID
 import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.sqlite.SQLiteStatement as Statement
@@ -86,9 +90,13 @@ private const val CONFIG_ATTR_READONLY: String = "readonly"
     bindings[SQLITE_MODULE_SYMBOL.asJsSymbol()] = provide()
     bindings[SQLITE_DATABASE_SYMBOL.asJsSymbol()] = SQLiteDatabaseConstructor
   }
+
+  init {
+    ModuleRegistry.deferred(ModuleInfo.of("sqlite")) { provide() }
+  }
 }
 
-internal class SqliteModule : SQLiteAPI {
+internal class SqliteModule : ProxyObject, SyntheticJSModule<SQLiteAPI>, SQLiteAPI {
   companion object {
     // Native library to load for SQLite support.
     private const val SQLITE3_LIBRARY: String = "sqlitejdbc"
@@ -101,6 +109,18 @@ internal class SqliteModule : SQLiteAPI {
 
     private val SINGLETON = SqliteModule()
     @JvmStatic fun obtain(): SQLiteAPI = SINGLETON
+  }
+
+  override fun provide(): SQLiteAPI = SINGLETON
+
+  override fun getMemberKeys(): Array<String> = arrayOf("Database")
+  override fun putMember(key: String?, value: Value?): Unit = Unit
+  override fun removeMember(key: String?): Boolean = false
+  override fun hasMember(key: String): Boolean = key in memberKeys
+
+  override fun getMember(key: String): Any? = when (key) {
+    "Database" -> SQLiteDatabaseConstructor
+    else -> null
   }
 }
 

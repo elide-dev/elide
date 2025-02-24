@@ -196,9 +196,9 @@ val jvmCompileArgs = listOfNotNull(
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
@@ -431,7 +431,7 @@ dependencies {
   implementation(projects.packages.graalvmWasm)
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
-  implementation(libs.graalvm.svm)
+  compileOnly(libs.graalvm.svm)
 
   if (oracleGvm && oracleGvmLibs) {
     implementation(libs.graalvm.js.isolate)
@@ -467,7 +467,8 @@ dependencies {
   api(libs.slf4j)
   api(libs.slf4j.jul)
 
-  // Console UI
+  // General
+  implementation(libs.smartexception)
   implementation(libs.magicProgress)
 
   runtimeOnly(mn.micronaut.graal)
@@ -731,6 +732,7 @@ val commonNativeArgs = listOfNotNull(
   "--enable-url-protocols=http,https,jar",
   "--color=always",
   "-H:+UnlockExperimentalVMOptions",
+  "-H:+PlatformInterfaceCompatibilityMode",
   "--link-at-build-time=elide",
   "--link-at-build-time=dev.elide",
   "-H:-ReduceImplicitExceptionStackTraceInformation",
@@ -972,6 +974,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
   onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.KQueueEventLoop"),
   "org.fusesource.jansi.internal.CLibrary",
+  "com.github.ajalt.mordant.rendering.TextStyles",
 
   // @TODO: seal this into formal config
   "elide.tool.err.ErrorHandler${'$'}ErrorContext",

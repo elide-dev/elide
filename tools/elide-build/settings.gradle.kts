@@ -29,6 +29,10 @@ pluginManagement {
     maven {
       name = "jpms-modules"
       url = uri("https://jpms.pkg.st/repository")
+      content {
+        includeGroup("com.google.guava")
+        includeGroup("dev.javamodules")
+      }
     }
     gradlePluginPortal()
     mavenCentral()
@@ -55,6 +59,10 @@ dependencyResolutionManagement {
     maven {
       name = "jpms-modules"
       url = uri("https://jpms.pkg.st/repository")
+      content {
+        includeGroup("com.google.guava")
+        includeGroup("dev.javamodules")
+      }
     }
     gradlePluginPortal()
     mavenCentral()

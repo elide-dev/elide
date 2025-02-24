@@ -1,4 +1,4 @@
-use builder::{target_os, TargetOs};
+use builder::{TargetOs, target_os};
 
 fn main() {
   match target_os() {

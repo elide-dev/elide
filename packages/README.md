@@ -4,25 +4,17 @@
 
 This directory contains the main framework source code for each distinct package, with each shown below:
 
-| **Package**                       | Artifact                        | Platforms            | Summary                                                   |
-| --------------------------------- | ------------------------------- | -------------------- | --------------------------------------------------------- |
-| [`core`][8] ([docs][18])          | `dev.elide:elide-core`          | Multiplatform        | Core, pure-Kotlin utilities                               |
-| [`uuid`][24] ([docs][25])         | `dev.elide:elide-uuid`          | Multiplatform        | Cross-platform UUID bindings                              |
-| [`base`][1] ([docs][11])          | `dev.elide:elide-base`          | Multiplatform        | Base library (annotations, x-plat code)                   |
-| [`model`][6] ([docs][16])         | `dev.elide:elide-model`         | Multiplatform        | Cross-platform data modeling and RPC API layer            |
-| [`test`][10] ([docs][20])         | `dev.elide:elide-test`          | Multiplatform        | Cross-platform testing utilities                          |
-| [`ssr`][22] ([docs][23])          | `dev.elide:elide-ssr`           | Multiplatform        | Type bindings for SSR / server flows                      |
-| [`rpc`][7] ([docs][17])           | `dev.elide:elide-rpc`           | Multiplatform        | Multiplatform code for RPC services and dispatch          |
-| [`ssg`][34] ([docs][35])          | `dev.elide:elide-ssg`           | JVM/Native           | Static Site Generation (SSG) tooling, used by the bundler |
-| [`frontend`][2] ([docs][12])      | `dev.elide:elide-frontend`      | JavaScript (Browser) | Baseline frontend code, lib bindings (proto, gRPC)        |
-| [`graalvm`][3] ([docs][13])       | `dev.elide:elide-graalvm`       | JVM/Native           | JVM integration code for GraalVM support                  |
-| [`graalvm-py`][32] ([docs][33])   | `dev.elide:elide-graalvm-py`    | Python               | Python runtime tooling and env code for guest VMs         |
-| [`graalvm-js`][4] ([docs][14])    | `dev.elide:elide-graalvm-js`    | JavaScript (SSR)     | JS tooling and env code for in-VM JS SSR                  |
-| [`graalvm-react`][5] ([docs][15]) | `dev.elide:elide-graalvm-react` | JavaScript (SSR)     | React-specific JS VM env extensions and tooling           |
-| [`server`][9] ([docs][19])        | `dev.elide:elide-server`        | JVM/Native           | Server-side JVM application library base                  |
-| [`bom`][28] ([docs][29])          | `dev.elide:elide-bom`           | Gradle Catalog       | Version catalog / BOM for use with Gradle and Maven       |
-| [`platform`][30] ([docs][31])     | `dev.elide:elide-platform`      | Gradle Platform      | Version alignment platform                                |
-| [`cli`][26] ([docs][27])          | Shipped as native binary        | Native               | CLI distribution of the Elide runtime                     |
+| **Package**                   | Artifact                   | Platforms       | Summary                                             |
+|-------------------------------|----------------------------|-----------------|-----------------------------------------------------|
+| [`core`][8] ([docs][18])      | `dev.elide:elide-core`     | Multiplatform   | Core, pure-Kotlin utilities                         |
+| [`base`][1] ([docs][11])      | `dev.elide:elide-base`     | Multiplatform   | Base library (annotations, x-plat code)             |
+| [`test`][10] ([docs][20])     | `dev.elide:elide-test`     | Multiplatform   | Cross-platform testing utilities                    |
+| [`ssr`][22] ([docs][23])      | `dev.elide:elide-ssr`      | Multiplatform   | Type bindings for SSR / server flows                |
+| [`graalvm`][3] ([docs][13])   | `dev.elide:elide-graalvm`  | JVM/Native      | JVM integration code for GraalVM support            |
+| [`server`][9] ([docs][19])    | `dev.elide:elide-server`   | JVM/Native      | Server-side JVM application library base            |
+| [`bom`][28] ([docs][29])      | `dev.elide:elide-bom`      | Gradle Catalog  | Version catalog / BOM for use with Gradle and Maven |
+| [`platform`][30] ([docs][31]) | `dev.elide:elide-platform` | Gradle Platform | Version alignment platform                          |
+| [`cli`][26] ([docs][27])      | Shipped as native binary   | Native          | CLI distribution of the Elide runtime               |
 
 ## Reports
 

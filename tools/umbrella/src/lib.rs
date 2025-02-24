@@ -35,13 +35,13 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 use clap::Args as ClapArgs;
 use clap::Command;
 use java_native::{jni, on_load, on_unload};
-use jni::objects::{JClass, JObjectArray, JString};
-use jni::sys::{jint, jobjectArray, jstring, JavaVM};
 use jni::JNIEnv;
+use jni::objects::{JClass, JObjectArray, JString};
+use jni::sys::{JavaVM, jint, jobjectArray, jstring};
 use jni_sys::JNI_VERSION_21;
 use miette::Result;
 use std::collections::HashMap;
-use std::ffi::{c_void, OsStr};
+use std::ffi::{OsStr, c_void};
 use std::sync::OnceLock;
 use tokio::runtime::Runtime;
 
@@ -58,7 +58,7 @@ use orogene::Orogene;
 #[cfg(feature = "ruff")]
 use ruff::args::Args;
 #[cfg(feature = "ruff")]
-use ruff::{run, ExitStatus};
+use ruff::{ExitStatus, run};
 #[cfg(feature = "uv")]
 use uv::run_uv_entry_with_args;
 
@@ -72,7 +72,7 @@ use crate::tools::OXC_INFO;
 use crate::tools::RUFF_INFO;
 #[cfg(feature = "uv")]
 use crate::tools::UV_INFO;
-use crate::tools::{ToolInfo, API_VERSION, LIB_VERSION};
+use crate::tools::{API_VERSION, LIB_VERSION, ToolInfo};
 
 pub mod diagnostics;
 pub mod nativetransport;

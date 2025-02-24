@@ -18,9 +18,8 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
@@ -397,9 +396,11 @@ if (enableOwasp == "true") apply(plugin = "org.owasp.dependencycheck")
 // --- Node JS --------------------------------------------------------------------------------------------------------
 //
 plugins.withType(NodeJsRootPlugin::class.java) {
-  the<NodeJsRootExtension>().version = nodeVersion
-  if (nodeVersion.contains("canary")) {
-    the<NodeJsRootExtension>().downloadBaseUrl = "https://nodejs.org/download/v8-canary"
+  the<NodeJsEnvSpec>().apply {
+    version = nodeVersion
+    if (nodeVersion.contains("canary")) {
+      downloadBaseUrl = "https://nodejs.org/download/v8-canary"
+    }
   }
 }
 
@@ -456,13 +457,13 @@ configure<DependencyCheckExtension> {
 tasks {
   // --- Tasks: Kotlin/NPM
   //
-  withType(KotlinNpmInstallTask::class.java).configureEach {
-    (packageJsonFiles as MutableList<RegularFile>).addFirst(layout.projectDirectory.file("package.json"))
-    args.add("--ignore-engines")
-    outputs.upToDateWhen {
-      layout.projectDirectory.dir("node_modules").asFile.exists()
-    }
-  }
+  // withType(KotlinNpmInstallTask::class.java).configureEach {
+  //   (packageJsonFiles as MutableList<RegularFile>).addFirst(layout.projectDirectory.file("package.json"))
+  //   args.add("--ignore-engines")
+  //   outputs.upToDateWhen {
+  //     layout.projectDirectory.dir("node_modules").asFile.exists()
+  //   }
+  // }
 
   withType(KotlinPackageJsonTask::class.java).configureEach {
     packageJson = file("package.json")

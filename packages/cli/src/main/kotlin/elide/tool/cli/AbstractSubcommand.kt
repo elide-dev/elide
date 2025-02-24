@@ -99,7 +99,7 @@ import org.graalvm.polyglot.Engine as VMEngine
           logging.trace("Language '${it.name}' is supported")
           supported to it
         }
-      }.flatMap { (guest, lang) ->
+      }.distinctBy { it.first.id }.flatMap { (guest, lang) ->
         listOf(guest to lang) + additionalEnginesByLang[guest]?.map { additional ->
           additional to lang
         }.orEmpty()

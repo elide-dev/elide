@@ -58,9 +58,6 @@ val enableTransportV2 = false
 val ktCompilerArgs = emptyList<String>()
 val javacArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
 )
 
 // Java Launcher (GraalVM at either EA or LTS)

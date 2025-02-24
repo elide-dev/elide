@@ -15,7 +15,7 @@ import java.util.*
 
 plugins {
     java
-    kotlin("kapt") version "2.1.0" apply false
+    kotlin("kapt") version "2.1.20-RC" apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kover)
     alias(libs.plugins.detekt)

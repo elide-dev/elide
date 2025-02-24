@@ -30,3 +30,6 @@ const val ENGINE_WASM = "wasm"
 
 /** GraalVM engine name for GraalLLVM. */
 const val ENGINE_LLVM = "llvm"
+
+/** GraalVM engine name for Pkl. */
+const val ENGINE_PKL = "pkl"

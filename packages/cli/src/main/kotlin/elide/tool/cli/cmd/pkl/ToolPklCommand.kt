@@ -1,9 +1,21 @@
+/*
+ * Copyright (c) 2024 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.tool.cli.cmd.pkl
 
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
 import org.pkl.cli.commands.*
-import org.pkl.core.Release
 import picocli.CommandLine.Command
 import elide.tool.cli.*
 import elide.tool.cli.AbstractSubcommand
@@ -21,22 +33,20 @@ import elide.tool.cli.ToolState
 internal class ToolPklCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @Suppress("TooGenericExceptionCaught")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val version = Release.current().versionInfo()
-    val helpLink = "${Release.current().documentation().homepage()}pkl-cli/index.html#usage"
     val args = Statics.args.get().let { args ->
       args.drop(args.indexOf("pkl") + 1)
     }
 
     return try {
-      RootCommand("pkl", version, helpLink)
+      RootCommand()
         .subcommands(
-          EvalCommand(helpLink),
-          AnalyzeCommand(helpLink),
-          DownloadPackageCommand(helpLink),
-          ProjectCommand(helpLink),
-          ReplCommand(helpLink),
-          ServerCommand(helpLink),
-          TestCommand(helpLink),
+          EvalCommand(),
+          AnalyzeCommand(),
+          DownloadPackageCommand(),
+          ProjectCommand(),
+          ReplCommand(),
+          ServerCommand(),
+          TestCommand(),
         )
         .main(args)
       success()

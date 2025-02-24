@@ -132,7 +132,7 @@ enum class GuestLanguage (
     dependsOn = listOf(JVM),
   ),
 
-  /** Interactive nested JVM. */
+  /** WebAssembly. */
   WASM (
     id = ENGINE_WASM,
     formalName = "WASM",
@@ -140,6 +140,16 @@ enum class GuestLanguage (
     suppressExperimentalWarning = true,
     extensions = listOf("wasm"),
     mimeTypes = listOf("application/wasm"),
+  ),
+
+  /** Apple Pkl. */
+  PKL (
+    id = ENGINE_PKL,
+    formalName = "Pkl",
+    experimental = true,
+    suppressExperimentalWarning = true,
+    extensions = listOf("pkl", "pcl"),
+    mimeTypes = listOf("application/pkl", "text/pkl"),
   );
 
   companion object {
@@ -152,6 +162,7 @@ enum class GuestLanguage (
       JVM.engine -> JVM
       WASM.engine -> WASM
       LLVM.engine -> LLVM
+      PKL.engine -> PKL
       else -> null
     }
 
@@ -164,6 +175,7 @@ enum class GuestLanguage (
       WASM.id -> WASM
       LLVM.id -> LLVM
       TYPESCRIPT.id -> TYPESCRIPT
+      PKL.id -> PKL
 
       // JVM extension guests
       KOTLIN.id -> KOTLIN

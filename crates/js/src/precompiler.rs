@@ -12,12 +12,12 @@
  */
 
 use crate::codegen::GeneratorOptions;
+use oxc::CompilerInterface;
 use oxc::codegen::{CodegenOptions, CodegenReturn, LegalComment};
 use oxc::diagnostics::OxcDiagnostic;
 use oxc::parser::ParseOptions;
 use oxc::span::SourceType;
 use oxc::transformer::TransformOptions;
-use oxc::CompilerInterface;
 use std::mem;
 use std::path::Path;
 

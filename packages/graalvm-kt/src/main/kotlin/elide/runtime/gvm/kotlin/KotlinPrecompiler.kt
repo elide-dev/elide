@@ -41,7 +41,7 @@ import elide.runtime.precompiler.PrecompilerNoticeWithOutput
 // Implements a precompiler which compiles Kotlin to Java bytecode.
 internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinJarBundleInfo> {
   // Embedded Kotlin version.
-  private const val KOTLIN_VERSION = "2.1.0"
+  private const val KOTLIN_VERSION = "2.1.20-RC"
   private val kotlinVerbose by lazy {
     System.getProperty("elide.kotlin.verbose") == "true"
   }

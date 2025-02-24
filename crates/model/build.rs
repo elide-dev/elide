@@ -14,7 +14,7 @@
 use std::env::var;
 
 extern crate rustc_version;
-use rustc_version::{version as rustc_version, version_meta, Channel};
+use rustc_version::{Channel, version as rustc_version, version_meta};
 
 fn main() {
   // Define environment variables for build context.

@@ -14,10 +14,10 @@
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe, dead_code)]
 
 use base64::{
-  engine::general_purpose::STANDARD as BASE64_STANDARD,
+  Engine as B64Engine, engine::general_purpose::STANDARD as BASE64_STANDARD,
   engine::general_purpose::STANDARD_NO_PAD as BASE64_STANDARD_NOPAD,
   engine::general_purpose::URL_SAFE as BASE64_URLSAFE,
-  engine::general_purpose::URL_SAFE_NO_PAD as BASE64_URLSAFE_NOPAD, Engine as B64Engine,
+  engine::general_purpose::URL_SAFE_NO_PAD as BASE64_URLSAFE_NOPAD,
 };
 
 #[cfg(feature = "alloc")]

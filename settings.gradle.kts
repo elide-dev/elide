@@ -46,6 +46,10 @@ pluginManagement {
     maven {
       name = "jpms-modules"
       url = uri("https://jpms.pkg.st/repository")
+      content {
+        includeGroup("com.google.guava")
+        includeGroup("dev.javamodules")
+      }
     }
     gradlePluginPortal()
     mavenCentral()
@@ -57,7 +61,7 @@ pluginManagement {
 
 plugins {
   id("com.gradle.enterprise") version ("3.16.2")
-  id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
+  id("org.gradle.toolchains.foojay-resolver-convention") version ("0.9.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version ("2.1")
   id("io.micronaut.platform.catalog") version (extra.properties["micronautCatalogVersion"] as String)
   id("elide.toolchains.jvm")
@@ -86,10 +90,6 @@ dependencyResolutionManagement {
 
   repositories {
     maven {
-      name = "jpms-modules"
-      url = uri("https://jpms.pkg.st/repository")
-    }
-    maven {
       name = "elide-snapshots"
       url = uri("https://maven.elide.dev")
       content {
@@ -110,6 +110,14 @@ dependencyResolutionManagement {
           "org.graalvm.polyglot",
           "org.graalvm.tools",
         ).forEach(::includeGroupAndSubgroups)
+      }
+    }
+    maven {
+      name = "jpms-modules"
+      url = uri("https://jpms.pkg.st/repository")
+      content {
+        includeGroup("com.google.guava")
+        includeGroup("dev.javamodules")
       }
     }
     maven {
@@ -165,17 +173,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "elide"
-
-// External builds.
-if (buildUuid == "true") {
-  includeBuild("packages/uuid") {
-    dependencySubstitution {
-      substitute(module("dev.elide:uuid")).using(project(":subprojects:uuid-core"))
-      substitute(module("dev.elide:elide-uuid")).using(project(":subprojects:uuid-core"))
-      substitute(module("dev.elide:elide-uuid-kotlinx")).using(project(":subprojects:uuid-kotlinx"))
-    }
-  }
-}
 
 if (enableSubstrate == "true") {
   includeBuild("tools/conventions")

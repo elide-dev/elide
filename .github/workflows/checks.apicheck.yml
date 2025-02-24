@@ -90,7 +90,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
-          node-version: 22
+          node-version: 23
       - name: "Setup: Bun"
         uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.1
         with:
@@ -104,7 +104,7 @@ jobs:
               args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
-      - name: "Setup: GraalVM (Java 22)"
+      - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@aafbedb8d382ed0ca6167d3a051415f20c859274 # v1.2.8
         with:
           distribution: "graalvm"
@@ -131,4 +131,5 @@ jobs:
           ./gradlew apiCheck \
             -x test \
             -x nativeCompile \
-            -x nativeOptimizedCompile
+            -x nativeOptimizedCompile \
+            -x :packages:sqlite:checkNative

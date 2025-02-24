@@ -165,9 +165,6 @@ dependencies {
   kover(projects.packages.graalvmPy)
   kover(projects.packages.graalvmRb)
   kover(projects.packages.http)
-  kover(projects.packages.proto.protoCore)
-  kover(projects.packages.proto.protoKotlinx)
-  kover(projects.packages.proto.protoProtobuf)
   kover(projects.packages.server)
   kover(projects.packages.ssr)
   kover(projects.packages.test)
@@ -355,7 +352,6 @@ apiValidation {
       "transport-kqueue",
       "transport-epoll",
       "transport-uring",
-      "proto",
       "reports",
     ).plus(
       if (buildAuxImage == "true") {

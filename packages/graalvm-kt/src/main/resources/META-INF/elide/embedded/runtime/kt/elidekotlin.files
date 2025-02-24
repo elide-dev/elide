@@ -1,0 +1,4 @@
+META-INF/elide/embedded/runtime/kt/classpath/elide-kotlin-runtime.jar = rw-rw-r--
+META-INF/elide/embedded/runtime/kt/classpath/kotlin-stdlib.jar = rw-rw-r--
+META-INF/elide/embedded/runtime/kt/classpath/kotlin-reflect.jar = rw-rw-r--
+META-INF/elide/embedded/runtime/kt/classpath/kotlin-script-runtime.jar = rw-rw-r--

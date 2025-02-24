@@ -1,3 +1,34 @@
+public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig : elide/runtime/precompiler/Precompiler$Configuration {
+	public static final field Companion Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion;
+	public fun <init> (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;)V
+	public final fun component1 ()Lorg/jetbrains/kotlin/config/ApiVersion;
+	public final fun component2 ()Lorg/jetbrains/kotlin/config/LanguageVersion;
+	public final fun copy (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;)Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiVersion ()Lorg/jetbrains/kotlin/config/ApiVersion;
+	public final fun getLanguageVersion ()Lorg/jetbrains/kotlin/config/LanguageVersion;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion {
+	public final fun getDEFAULT ()Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
+}
+
+public final class elide/runtime/gvm/kotlin/KotlinLanguage : com/oracle/truffle/api/TruffleLanguage {
+	public static final field Companion Lelide/runtime/gvm/kotlin/KotlinLanguage$Companion;
+	public fun <init> ()V
+	public synthetic fun createContext (Lcom/oracle/truffle/api/TruffleLanguage$Env;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/kotlin/KotlinLanguage$Companion {
+}
+
+public final class elide/runtime/gvm/kotlin/KotlinLanguageProvider : com/oracle/truffle/api/provider/TruffleLanguageProvider {
+	public fun <init> ()V
+}
+
 public final class elide/runtime/plugins/kotlin/ExtensionsKt {
 	public static final fun kotlin (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
 	public static synthetic fun kotlin$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;

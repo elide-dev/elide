@@ -43,7 +43,6 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
-val nativesType = "debug"
 val oracleGvm = false
 val oracleGvmLibs = oracleGvm
 val enableJpms = false
@@ -81,6 +80,18 @@ val gvmCompiler = javaToolchains.compilerFor {
   languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
   vendor.set(jvmType)
 }
+
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
+
+val isRelease = !quickbuild && (
+  project.properties["elide.release"] == "true" ||
+  project.properties["elide.buildMode"] == "release"
+)
+
+val nativesType = if (isRelease) "release" else "debug"
 
 elide {
   publishing {

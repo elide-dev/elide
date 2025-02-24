@@ -1,5 +1,15 @@
 [
     {
+      "name": "elide.runtime.diag.MutableDiagnostic",
+      "allDeclaredMethods":true,
+      "allPublicMethods":true,
+      "allDeclaredConstructors":true,
+      "allPublicConstructors":true,
+      "methods":[
+        {"name":"<init>","parameterTypes":[] }
+      ]
+    },
+    {
         "name": "java.lang.Boolean",
         "methods": [
             {

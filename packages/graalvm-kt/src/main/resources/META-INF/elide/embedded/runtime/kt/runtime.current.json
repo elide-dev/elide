@@ -4,8 +4,9 @@
   "resources": {
     "classpath": [
       "classpath/elide-kotlin-runtime.jar",
-      "classpath/kotlin-script-runtime-1.9.20-Beta2.jar",
-      "classpath/kotlin-stdlib-1.9.20-Beta2.jar"
+      "classpath/kotlin-script-runtime.jar",
+      "classpath/kotlin-reflect.jar",
+      "classpath/kotlin-stdlib.jar"
     ]
   }
 }

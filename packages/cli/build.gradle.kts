@@ -619,6 +619,7 @@ val cxxFlags: String? = System.getenv("CXXFLAGS")
 
 val commonGvmArgs = listOfNotNull(
   "-H:+UseCompressedReferences",
+  "--trace-object-instantiation=java.util.concurrent.ForkJoinWorkerThread",
   onlyIf(enableBuildReport, "--emit=build-report"),
 ).onlyIf(oracleGvm)
 
@@ -893,6 +894,8 @@ val jvmDefs = mapOf(
   "elide.mosaic" to enableMosaic.toString(),
   "elide.staticJni" to enableJnaStatic.toString(),
   "elide.js.vm.enableStreams" to "true",
+  "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
+  "elide.kotlin.verbose" to "false",
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
@@ -1274,7 +1277,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
   "-J-Xmx12g",
 ) else listOf(
   "-J-Xmx22g",
-  "--parallelism=12",
+  "--parallelism=24",
 ))
 
 val linuxGvmReleaseFlags = listOf(

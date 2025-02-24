@@ -60,6 +60,7 @@ pubgrub = { git = "https://github.com/elide-tools/pubgrub", rev = "83c0b986493bf
 ## Local
 base = { path = "crates/base" }
 builder = { path = "crates/builder" }
+diag = { path = "crates/diag" }
 deps = { path = "crates/deps" }
 entry = { path = "crates/entry" }
 model = { path = "crates/model" }
@@ -67,6 +68,7 @@ posix = { path = "crates/posix" }
 project = { path = "crates/project" }
 protocol = { path = "crates/protocol" }
 sqlite = { path = "crates/sqlite" }
+js = { path = "crates/js" }
 substrate = { path = "crates/substrate" }
 terminal = { path = "crates/terminal" }
 transport = { path = "crates/transport" }
@@ -179,12 +181,18 @@ biome_suppression = "0.5.7"
 biome_unicode_table = "0.5.7"
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "fb5b1fa0156e501eea17002178e54296f5964ba8", default-features = false, features = [
-  #
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "328972124b39b6af8525ff090cc112ab5fd4d5ce", default-features = false, features = [
+  "full",
+  "codegen",
+  "isolated_declarations",
+  "mangler",
+  "minifier",
+  "semantic",
+  "transformer",
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "daa5270203156f150c8407e5256827a366656107" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "f394f7245377b6368b9412d88575446602f22525" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "9f065f4a340089406eefbb2dde21f8f9e31f8515" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "877c1066d3373f9089e71a15123b769d924ff2a6" }

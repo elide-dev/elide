@@ -44,12 +44,11 @@ fn main() {
     .flag("-w")
     .flag("-fPIC")
     .flag("-fstack-protector-strong")
-    .flag_if_supported("-fstack-clash-protection")
-    .flag_if_supported("-fhardened")
-    .flag_if_supported("-Wl,-z,relro,-z,now")
-    .flag_if_supported("-Wl,-z,noexecstack")
-    .flag_if_supported("-Wl,-z,separate-code")
-    .flag_if_supported("-Wa,--noexecstack");
+    .flag("-fstack-clash-protection")
+    .flag("-Wl,-z,relro,-z,now")
+    .flag("-Wl,-z,noexecstack")
+    .flag("-Wl,-z,separate-code")
+    .flag("-Wa,--noexecstack");
 
   build.flag(sqlite_include.clone());
 
@@ -67,7 +66,7 @@ fn main() {
     .define("SQLITE_ENABLE_FTS3_PARENTHESIS", "1")
     .define("SQLITE_ENABLE_FTS5", "1")
     .define("SQLITE_ENABLE_LOAD_EXTENSION", "1")
-    .define("SQLITE_ENABLE_MATH_FUNCTIONS", "1")
+    .define("SQLITE_ENABLE_MATH_FUNCTIONS", "0")
     .define("SQLITE_ENABLE_RTREE", "1")
     .define("SQLITE_ENABLE_STAT4", "1")
     .define("SQLITE_HAVE_ISNAN", "1")

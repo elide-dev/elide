@@ -54,7 +54,6 @@ object NativeEngine {
     DARWIN -> "jnilib"
     LINUX -> "so"
     WINDOWS -> "dll"
-    else -> null
   }
 
   // Calculate the path to a native resource which needs to be loaded.
@@ -166,7 +165,7 @@ object NativeEngine {
         allCandidatePaths,
         forceLoad = forceLoad,
       )
-    } catch (err: Throwable) {
+    } catch (_: Throwable) {
       missingLibraries.add(it)
       false to false
     }
@@ -263,6 +262,7 @@ object NativeEngine {
   )
 
   // Load natives from the CWD while it is swapped in.
+  @Suppress("TooGenericExceptionCaught")
   @JvmStatic private fun loadAllNatives(
     platform: HostPlatform,
     natives: File,
@@ -332,6 +332,7 @@ object NativeEngine {
    * @param workdir Working directory manager.
    * @param extraProps Extra VM properties to set.
    */
+  @Suppress("UNUSED_PARAMETER")
   @JvmStatic fun load(workdir: WorkdirManager, extraProps: List<Pair<String, String>>) {
     val natives = workdir.nativesDirectory()
     val platform = HostPlatform.resolve()

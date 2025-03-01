@@ -13,7 +13,7 @@
 package elide.runtime.feature.js
 
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.feature.EngineFeature

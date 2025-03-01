@@ -13,6 +13,9 @@
 
 [build]
 rustflags = [
+  # Enforce completely position-independent executables.
+  "-Crelocation-model=pic",
+
   # Enable Tokio unstable.
   "--cfg",
   "tokio_unstable",
@@ -22,6 +25,9 @@ rustflags = [
 
   # Enables Control-Flow Enforcement (CET) on x86 architectures.
   "-Zcf-protection=full",
+
+  # Target CPU.
+  "-Ctarget-cpu=x86-64-v3",
 ]
 
 [env]

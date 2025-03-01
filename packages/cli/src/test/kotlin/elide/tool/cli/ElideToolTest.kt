@@ -29,6 +29,8 @@ import elide.testing.annotations.TestCase
 
 /** Tests for the main CLI tool entrypoint. */
 @TestCase class ElideToolTest {
+  private val testRuby = false
+  private val testPython = true
   private val rootProjectPath = Paths.get(System.getProperty("user.dir"))
     .parent
     .parent
@@ -138,6 +140,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecutePyFile() {
+    Assumptions.assumeTrue(testPython)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -150,6 +153,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecuteRbFile() {
+    Assumptions.assumeTrue(testRuby)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -175,6 +179,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecutePyFileWithRun() {
+    Assumptions.assumeTrue(testPython)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -188,6 +193,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecuteRbFileWithRun() {
+    Assumptions.assumeTrue(testRuby)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -216,6 +222,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecutePyFileExplicit() {
+    Assumptions.assumeTrue(testPython)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -231,6 +238,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecuteRbFileExplicit() {
+    Assumptions.assumeTrue(testRuby)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))

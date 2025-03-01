@@ -15,6 +15,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.konan.target.HostManager
 import elide.internal.conventions.publishing.publish
+import elide.toolchain.host.TargetInfo
 
 plugins {
   `java-library`
@@ -56,13 +57,13 @@ dependencies {
 }
 
 val buildModeStr = (findProperty("elide.buildMode") as? String)?.ifBlank { null } ?: "debug"
-// val buildMode = when (buildModeStr) {
-//   "dev", "debug" -> "debug"
-//   "release" -> "release"
-//   else -> error("Unsupported build mode: '$buildModeStr'")
-// }
+ val buildMode = when (buildModeStr) {
+   "dev", "debug" -> "debug"
+   "release" -> "release"
+   else -> error("Unsupported build mode: '$buildModeStr'")
+ }
 // @TODO: build mode fixes
-val buildMode = "debug"
+//val buildMode = "debug"
 val libPostfix = when {
   HostManager.hostIsMac -> "dylib"
   HostManager.hostIsLinux -> "so"
@@ -92,21 +93,17 @@ val platformLibFileName = StringBuilder().apply {
   append(libPostfix)
 }.toString()
 
+val elideTarget = TargetInfo.current(project)
+
 val sqliteJdbcLib = rootProject
   .layout
   .projectDirectory
-  .file("target/$buildMode/$sqliteJdbcLibName")
-
-val checkNative by tasks.registering {
-  doFirst {
-    if (!sqliteJdbcLib.asFile.exists()) {
-      throw IllegalStateException("SQLite JDBC native library not found at '$sqliteJdbcLib'")
-    }
-  }
-}
+  .file("target/${elideTarget.triple}/$buildMode/$sqliteJdbcLibName")
 
 val copyNative by tasks.registering(Copy::class) {
-  dependsOn(checkNative)
+  dependsOn(
+    ":packages:graalvm:natives",
+  )
   from(sqliteJdbcLib) {
     rename { platformLibFileName }
   }
@@ -114,6 +111,7 @@ val copyNative by tasks.registering(Copy::class) {
   inputs.file(sqliteJdbcLib)
   outputs.file(layout.buildDirectory.file("native-libs/$platformLibFileName"))
 }
+checkNatives(copyNative)
 
 val mountNative by tasks.registering(Copy::class) {
   dependsOn(copyNative)
@@ -138,5 +136,4 @@ tasks.processResources {
 
 tasks.jar {
   archiveClassifier = currentPlatform
-  dependsOn(checkNative)
 }

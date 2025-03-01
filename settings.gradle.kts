@@ -195,7 +195,6 @@ if (buildAuxImage == "true") {
 include(
   ":crates:base",
   ":crates:builder",
-  ":crates:compression",
   ":crates:deps",
   ":crates:diag",
   ":crates:entry",
@@ -265,9 +264,7 @@ if (buildPlugins == "true") {
 
 if (buildBenchmarks == "true") {
   include(
-    ":benchmarks:core",
-    ":benchmarks:graalvm",
-    ":benchmarks:server",
+    ":benchmarks:bench-graalvm",
   )
 }
 

@@ -19,3 +19,6 @@ path = "fuzz_targets/fuzz_target_1.rs"
 test = false
 doc = false
 bench = false
+
+[package.metadata.cargo-machete]
+ignored = ["base"]

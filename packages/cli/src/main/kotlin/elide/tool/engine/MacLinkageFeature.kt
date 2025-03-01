@@ -4,7 +4,7 @@ import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 
 @VMFeature class MacLinkageFeature : Feature {
   private val macFrameworks = listOf(

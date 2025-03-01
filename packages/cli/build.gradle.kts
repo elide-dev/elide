@@ -18,6 +18,7 @@
 
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.graalvm.buildtools.gradle.tasks.BuildNativeImageTask
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
@@ -27,6 +28,9 @@ import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import java.nio.file.Path
 import elide.internal.conventions.kotlin.KotlinTarget
+import elide.toolchain.host.Criteria
+import elide.toolchain.host.TargetCriteria
+import elide.toolchain.host.TargetInfo
 
 plugins {
   java
@@ -38,7 +42,6 @@ plugins {
 
   kotlin("jvm")
   kotlin("kapt")
-  kotlin("plugin.compose")
   kotlin("plugin.serialization")
   alias(libs.plugins.buildConfig)
   alias(libs.plugins.micronaut.minimal.application)
@@ -51,9 +54,19 @@ plugins {
 //
 // - `elide.release`: true/false
 // - `elide.buildMode`: `dev`, `release`, `debug`
+// - `elide.target`: Known target, like `linux-amd64`, `linux-amd64-musl`, `darwin-amd64`, or `windows-amd64`
 // - `elide.targetOs`: `darwin`, `linux`, `windows`
 // - `elide.targetArch`: `amd64`, `arm64`
+// - `elide.targetLibc`: `glibc` or `musl`
 // - `elide.march`: `native`, `compatibility`
+// - `elide.compiler`: Custom compiler name or path
+// - `elide.linker`: Custom linker name or path
+//
+// Environment respected by this script:
+//
+// - `CC`: C compiler
+// - `LD`: Linker
+// - `CFLAGS`: C compiler flags
 
 val quickbuild = (
   project.properties["elide.release"] != "true" ||
@@ -73,23 +86,31 @@ val hostIsLinux = HostManager.hostIsLinux
 val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
 val nativesType = if (isRelease) "release" else "debug"
+val archTripleToken = (findProperty("elide.arch") as? String)
+  ?: if (System.getProperty("os.arch") == "aarch64") "aarch64" else "x86_64"
+val muslTarget = "$archTripleToken-unknown-linux-musl"
+val gnuTarget = "$archTripleToken-unknown-linux-gnu"
+val macTarget = "$archTripleToken-apple-darwin"
+val winTarget = "$archTripleToken-pc-windows-gnu"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
 val entrypoint = "elide.tool.cli.MainKt"
 
 val enablePkl = true
-val enableWasm = true
 val enablePython = true
-val enableRuby = true
-val enableLlvm = true
-val enableJvm = true
-val enableKotlin = true
+val enableRuby = false
+val enableLlvm = false
+val enableJvm = false
+val enableKotlin = false
 val enableSqlite = true
-val enableCustomCompiler = false
+val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = true
 val enableSqliteStatic = true
+val enableStatic = false
 val enableStaticJni = true
+val preferShared = true
 val enableToolchains = false
 val forceFfm = false
+val enableClang = false
 val oracleGvm = true
 val oracleGvmLibs = oracleGvm
 val enableMosaic = false
@@ -99,9 +120,7 @@ val enableNativeTransportV2 = true
 val enableDynamicPlugins = false
 val enableDeprecated = false
 val enableJit = true
-val enablePreinitializeAll = false
-val enableTools = true
-val enableProguard = false
+val enablePreinitializeAll = true
 val enableExperimental = false
 val enableExperimentalLlvmBackend = false
 val enableExperimentalLlvmEdge = false
@@ -112,14 +131,14 @@ val enableAuxCache = true
 val enableAuxCacheTool = false
 val enableJpms = false
 val enableConscrypt = false
+val enableBouncycastle = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
 val enableG1 = oracleGvm && !enableAuxCache
 val enablePreinit = true
-val enablePgo = false
+val enablePgo = true
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
-val enablePgoReport = true
 val enableJna = true
 val enableJnaStatic = false
 val enableSbom = oracleGvm
@@ -127,7 +146,13 @@ val enableSbomStrict = false
 val jniDebug = false
 val glibcTarget = "glibc"
 val dumpPointsTo = false
-val defaultArchTarget = "compatibility"
+val elideTarget = TargetInfo.current(project)
+val defaultArchTarget = when {
+  TargetCriteria.allOf(elideTarget, Criteria.Amd64) -> "x86-64-v3"
+  TargetCriteria.allOf(elideTarget, Criteria.MacArm64) -> "armv8.1-a"
+  else -> "compatibility"
+}
+
 val elideBinaryArch = project.properties["elide.march"] as? String ?: defaultArchTarget
 
 val exclusions = listOfNotNull(
@@ -136,6 +161,7 @@ val exclusions = listOfNotNull(
 
   // always exclude the jline native lib; we provide it ourselves
   libs.jline.native,
+  libs.jline.terminal.jna,
 
   // prefer jpms jna when enabled
   if (enableJna) null else libs.jna.jpms,
@@ -179,12 +205,7 @@ private fun platformConfig(type: String = "resource"): String {
 }
 
 val rootPath: String = rootProject.layout.projectDirectory.asFile.path
-val thirdPartyPath: String = rootProject.layout.projectDirectory.dir("third_party").asFile.path
 val sqliteLibPath: String = rootProject.layout.projectDirectory.dir("third_party/sqlite/install/lib").asFile.path
-
-val nativesRootTemplate: (String) -> String = { version ->
-  "/tmp/elide-runtime/v$version/native"
-}
 
 val jvmOnlyCompileArgs: List<String> = listOfNotNull(
   // Nothing at this time.
@@ -315,9 +336,24 @@ val languagePluginPaths = if (!enableDynamicPlugins) emptyList() else listOf(
   project(":packages:$module").layout.buildDirectory.dir("native/nativeSharedCompile").get().asFile.path
 }
 
-val targetPath = rootProject.layout.projectDirectory.dir("target/$nativesType")
-val nativesPath = nativesRootTemplate(cliVersion)
-val umbrellaNativesPath: String = rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path
+val targetPath: String = when {
+  HostManager.hostIsLinux -> when (enableStatic) {
+    // if we are targeting a fully static environment (i.e. musl), we need to sub in the target name in the path as we
+    // are always technically cross-compiling.
+    true -> rootProject.layout.projectDirectory.dir("target/$muslTarget/$nativesType")
+
+    // otherwise, we use gnu's target.
+    false -> rootProject.layout.projectDirectory.dir("target/$gnuTarget/$nativesType")
+  }.asFile.path
+
+  HostManager.hostIsMac -> rootProject.layout.projectDirectory.dir("target/$macTarget/$nativesType").asFile.path
+  HostManager.hostIsMingw -> rootProject.layout.projectDirectory.dir("target/$winTarget/$nativesType").asFile.path
+  else -> error("Unsupported platform for target path")
+}
+
+val nativesPath = targetPath
+
+val umbrellaNativesPath: String = targetPath
 val gvmResourcesPath: String = layout.buildDirectory.dir("native/nativeCompile/resources")
   .get()
   .asFile
@@ -329,11 +365,9 @@ buildConfig {
   useKotlinOutput()
   buildConfigField("String", "ELIDE_RELEASE_TYPE", if (isRelease) "\"RELEASE\"" else "\"DEV\"")
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"$cliVersion\"")
-  buildConfigField("String", "NATIVES_PATH", "\"${nativesPath}\"")
   buildConfigField("String", "GVM_RESOURCES", "\"${gvmResourcesPath}\"")
 }
 
-val modules: Configuration by configurations.creating
 val pklDependencies: Configuration by configurations.creating
 
 val classpathExtras: Configuration by configurations.creating {
@@ -358,19 +392,9 @@ dependencies {
   api(libs.picocli)
   api(libs.guava)
   api(projects.packages.base)
-  api(libs.snakeyaml)
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
-
-  // Brotli
-  implementation(libs.brotli.native.osx)
-  implementation(libs.brotli.native.osx.amd64)
-  implementation(libs.brotli.native.osx.arm64)
-  implementation(libs.brotli.native.linux)
-  implementation(libs.brotli.native.linux.amd64)
-  implementation(libs.brotli.native.linux.arm64)
-  implementation(libs.brotli.native.windows)
-  implementation(libs.brotli.native.windows.amd64)
+  jvmOnly(libs.snakeyaml)
 
   // Native-image transitive compile dependencies
   nativeImageCompileOnly(libs.jakarta.validation)
@@ -402,15 +426,12 @@ dependencies {
   implementation(mn.micronaut.picocli)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
-  implementation(libs.bouncycastle)
-  implementation(libs.mosaic)
   runtimeOnly(mn.micronaut.runtime)
 
   implementation(libs.jline.reader)
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
   implementation(libs.jline.terminal.jni)
-  implementation(libs.jline.terminal.jna)
   implementation(libs.jline.terminal.ffm)
   implementation(libs.jline.builtins)
   implementation(libs.jline.terminal.jansi) {
@@ -423,6 +444,8 @@ dependencies {
   }
   if (enableNativeCryptoV2) {
     api(project(":packages:tcnative"))
+  } else {
+    implementation(libs.netty.tcnative)
   }
 
   // GraalVM: Engines
@@ -473,14 +496,12 @@ dependencies {
 
   runtimeOnly(mn.micronaut.graal)
   implementation(mn.netty.handler)
-  if (!enableNativeCryptoV2) {
-    implementation(libs.netty.tcnative)
-  }
 
   // JVM-only dependencies which are filtered for native builds.
   if (!enableJna) {
     jvmOnly(libs.jna.jpms)
   } else {
+    // we have to include _some_ support for JNA in order to support oshi et al.
     implementation(libs.jna.jpms)
     if (enableJnaStatic) {
       implementation(libs.jna.graalvm)
@@ -554,7 +575,6 @@ val targetOs = when {
 }
 
 val targetArch: String = System.getProperty("os.arch", "unknown")
-val targetTag = "$targetOs-$targetArch"
 
 signing {
   isRequired = properties["enableSigning"] == "true"
@@ -591,7 +611,7 @@ micronaut {
     optimizeServiceLoading = true
     optimizeClassLoading = true
     optimizeNetty = true
-    possibleEnvironments = listOf("cli", "cloud", "gcp", "aws", "azure")
+    possibleEnvironments = listOf("cli")
 
     netty {
       enabled = true
@@ -616,10 +636,14 @@ private fun <T> List<T>.onlyIf(flag: Boolean): List<T> = if (flag) this else emp
  */
 
 // Compiler environment
-val cCompiler: String? = System.getenv("CC")
+val cCompiler: String? = (findProperty("elide.compiler") as? String ?: System.getenv("CC")).also {
+  if (enableCustomCompiler) require(it != null) { "Custom compiler is enabled, but no compiler is set." }
+}
+val cLinker: String? = (findProperty("elide.linker") as? String ?: System.getenv("LD"))
 val cFlags: String? = System.getenv("CFLAGS")
 val cxxCompiler: String? = System.getenv("CXX")
 val cxxFlags: String? = System.getenv("CXXFLAGS")
+val isClang: Boolean = cCompiler?.contains("clang") == true
 
 val commonGvmArgs = listOfNotNull(
   "-H:+UseCompressedReferences",
@@ -682,14 +706,15 @@ val enabledFeatures = listOfNotNull(
 )
 
 val enabledSecurityProviders = listOfNotNull(
-  "org.bouncycastle.jce.provider.BouncyCastleProvider",
+  onlyIf(enableBouncycastle, "org.bouncycastle.jce.provider.BouncyCastleProvider"),
   onlyIf(enableConscrypt, "org.conscrypt.OpenSSLProvider"),
 )
 
 val preinitializedContexts = if (!enablePreinit) emptyList() else listOfNotNull(
   "js",
-  onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
+  "ts",
   onlyIf(enablePreinitializeAll && enablePython, "python"),
+  onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
   onlyIf(enablePreinitializeAll && enableJvm, "java"),
 )
 
@@ -712,10 +737,13 @@ val experimentalLlvmEdgeArgs = listOfNotNull(
   "--native-compiler-options=$it"
 })
 
+val preinitContextsList = preinitializedContexts.joinToString(",")
+
 val commonNativeArgs = listOfNotNull(
-  "--trace-object-instantiation=com.github.ajalt.mordant.rendering.TextStyles",
   // Debugging flags:
   // "--verbose",
+  // "-H:TempDirectory=/tmp/elide-native",
+  // "-H:+PlatformInterfaceCompatibilityMode",
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
@@ -730,12 +758,18 @@ val commonNativeArgs = listOfNotNull(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
-  "--enable-url-protocols=http,https,jar",
+  // @TODO breaks with old configs, and new configs can't use the agent.
+  // "--exact-reachability-metadata",
+  "--enable-url-protocols=http,https",
   "--color=always",
   "-H:+UnlockExperimentalVMOptions",
   "--link-at-build-time=elide",
   "--link-at-build-time=dev.elide",
-  "-H:-ReduceImplicitExceptionStackTraceInformation",
+  "--link-at-build-time=org.pkl",
+  "--link-at-build-time=kotlin",
+  "--link-at-build-time=kotlinx",
+  "--link-at-build-time=org.graalvm",
+  "--link-at-build-time=picocli",
   onlyIf(enableJna, "--enable-native-access=com.sun.jna,ALL-UNNAMED") ?: "--enable-native-access=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
@@ -745,14 +779,24 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+  "-H:+PreserveFramePointer",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
+  "-H:-ReduceImplicitExceptionStackTraceInformation",
   "-H:MaxRuntimeCompileMethods=20000",
-  "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
+  "-H:ExcludeResources=META-INF/native/libumbrella.so",
+  "-H:ExcludeResources=META-INF/native/libumbrella.a",
+  "-H:ExcludeResources=kotlin/kotlin.kotlin_builtins",
+  "-H:ExcludeResources=META-INF/.*kotlin_module",
+  "-H:ExcludeResources=com/sun/jna/.*",
+  "-H:ExcludeResources=META-INF/native/libsqlite.*",
+  "-H:ExcludeResources=META-INF/micronaut/io.micronaut.core.graal.GraalReflectionConfigurer/.*",
   "-Delide.strict=true",
   "-Delide.js.vm.enableStreams=true",
   "-Delide.mosaic=$enableMosaic",
   "-Delide.staticJni=$enableStaticJni",
+  "-Delide.preferShared=$preferShared",
+  "-Delide.staticUmbrella=false",
   "-Delide.root=$rootPath",
   "-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
@@ -771,12 +815,12 @@ val commonNativeArgs = listOfNotNull(
   "-Dgraalvm.locatorDisabled=false",
   "-Dpolyglotimpl.DisableVersionChecks=false",
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
-  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=${preinitializedContexts.joinToString(",")}"),
+  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=$preinitContextsList"),
   onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
   onlyIf(enablePgoSampling, "--pgo-sampling"),
   onlyIf(enablePgoInstrumentation && enablePgo, "-H:+BuildReportSamplerFlamegraph"),
 ).asSequence().plus(
-  languagePluginPaths.plus(listOf(nativesPath, umbrellaNativesPath)).filter {
+  languagePluginPaths.plus(listOf(umbrellaNativesPath)).filter {
     Files.exists(Path.of(it))
   }.map {
     "-H:CLibraryPath=$it"
@@ -787,22 +831,23 @@ val commonNativeArgs = listOfNotNull(
   listOf("--debug-attach").onlyIf(nativeImageBuildDebug)
 ).plus(
   nativeCompileJvmArgs
+).plus(
+  listOf(
+    "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
+  ).onlyIf(enabledSecurityProviders.isNotEmpty())
 ).toList()
 
 val debugFlags: List<String> = listOfNotNull(
   "--verbose",
+  "-g",
   "-H:+SourceLevelDebug",
-  "-H:-DeleteLocalSymbols",
-  "-H:-RemoveUnusedSymbols",
-  "-H:+PreserveFramePointer",
-  // "-J-Xlog:library=info",
-  // "-H:-ReduceDCE",
+  // "-Dpolyglot.engine.TraceCache=true",
+  // "-J-Dpolyglot.engine.TraceCache=true",
+  // "-H:-DeleteLocalSymbols",
   // "-H:+PrintMethodHistogram",
   // "-H:+PrintPointsToStatistics",
   // "-H:+PrintRuntimeCompileMethods",
   // "-H:+ReportPerformedSubstitutions",
-).plus(
-  listOf("-g").onlyIf(hostIsLinux)
 ).onlyIf(isDebug)
 
 val experimentalFlags = listOf(
@@ -840,6 +885,20 @@ val experimentalFlags = listOf(
 // C compiler flags which are always included.
 val commonCFlags: List<String> = listOf(
   "-DELIDE",
+  "-fstack-clash-protection",
+  "-fstack-protector-strong",
+  "-fexceptions",
+  "-ffunction-sections",
+  "-fdata-sections",
+//  "-fno-omit-frame-pointer",
+//  "-v",
+//  "-fno-strict-aliasing",
+//  "-fno-strict-overflow",
+//  "-fno-delete-null-pointer-checks",
+//  "-DELIDE",
+  // "-Wno-hardened",
+).plus(
+  listOf("-fuse-ld=$cLinker").onlyIf(cLinker != null)
 ).plus(
   System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
 )
@@ -849,25 +908,40 @@ val commonLinkerOptions: List<String> = listOf()
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
+  "-O3",
+  "-fPIC",
+  "-fPIE",
   "-flto",
-).onlyIf(!HostManager.hostIsMac)  // lto flag breaks macos builds
+).plus(
+  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang)
+).plus(
+  // Add protection flags for release.
+  when (targetArch) {
+    "x86_64", "amd64", "x86-64" -> listOf(
+      "-fcf-protection=full",
+    )
+    "arm", "aarch64" -> listOf(
+      "-mbranch-protection=standard",
+    )
+    else -> emptyList()
+  }
+)
 
 // PGO profiles to specify in release mode.
 val profiles: List<String> = listOf(
-  "js-exec.iprof",
-  "js-serve.iprof",
+  "js-path-fs.iprof",
   "js-sqlite.iprof",
-  "js-typescript.iprof",
+  "pkl-eval.iprof",
 )
 
 // GVM release flags
-val gvmReleaseFlags: List<String> = listOf(
-  "-Os",
+val gvmReleaseFlags: List<String> = listOfNotNull(
+  onlyIf(!enablePgo, "-Os"),
 )
 
 // Experimental C-compiler flags.
 val experimentalCFlags: List<String> = listOf(
-  "-flto=thin",
+  // Nothing at this time.
 )
 
 // Full release flags (for all operating systems and platforms).
@@ -891,8 +965,8 @@ val releaseFlags: List<String> = listOf(
 val jvmDefs = mutableMapOf(
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
-  "elide.target" to targetPath.asFile.path,
   "elide.root" to rootPath,
+  "elide.target" to elideTarget.triple,
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.mosaic" to enableMosaic.toString(),
   "elide.staticJni" to enableJnaStatic.toString(),
@@ -947,6 +1021,7 @@ val initializeAtBuildtime: List<String> = listOf(
   "elide.runtime.gvm.internals",
   "elide.runtime.gvm.internals.sqlite",
   "elide.runtime.gvm.internals.sqlite.SqliteModule",
+  "elide.runtime.lang.javascript.JavaScriptPrecompiler",
   "com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls",
   "tools.elide",
   "java.sql",
@@ -961,7 +1036,6 @@ val initializeAtBuildtime: List<String> = listOf(
   "sun.awt.resources.awt",
   "org.pkl.core.runtime.VmLanguageProvider",
   "elide.runtime.lang.typescript.internals.TypeScriptLanguageProvider",
-  "com.sun.jna.Library",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -1260,14 +1334,33 @@ val darwinReleaseArgs = darwinOnlyArgs.toList()
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOf(
-    "-H:NativeLinkerOption=-lm",
-    "-H:NativeLinkerOption=-lssl",
-    "-H:NativeLinkerOption=-lcrypto",
-    "-H:NativeLinkerOption=-lstdc++",
+    "-g",  // always generate debug info on linux
+    "-H:NativeLinkerOption=-flto",
+    "-H:NativeLinkerOption=-Wl,--gc-sections",
+    "-H:NativeLinkerOption=-Wl,--emit-relocs",
+    "-H:ExcludeResources=.*dylib",
+    "-H:ExcludeResources=.*jnilib",
+    "-H:ExcludeResources=.*dll",
+    "-H:ExcludeResources=META-INF/native/libsqlitejdbc-linux-amd64.so",
+    "-H:ExcludeResources=lib/osx-aarch64/libbrotli.dylib",
+    "-H:ExcludeResources=META-INF/native/libnetty_transport_native_epoll_x86_64.so",
+    "-H:ExcludeResources=META-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
-    "--static-nolibc",
+  ).plus(
+    listOfNotNull(
+      onlyIf(enableStatic, "--libc=musl"),
+      onlyIf(enableStatic, "--static"),
+      onlyIf(!enableStatic, "--static-nolibc"),
+    )
+  ).plus(
+    listOf(
+      "-H:NativeLinkerOption=-lm",
+      "-H:NativeLinkerOption=-lssl",
+      "-H:NativeLinkerOption=-lcrypto",
+      "-H:NativeLinkerOption=-lstdc++",
+    ).onlyIf(!enableStatic)
   ),
 ).plus(
   if (enableG1) listOf(
@@ -1285,8 +1378,8 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx22g",
-  "--parallelism=24",
+  "-J-Xmx36g",
+  "--parallelism=30",
 ))
 
 val linuxGvmReleaseFlags = listOf(
@@ -1333,9 +1426,7 @@ fun nativeCliImageArgs(
       System.getProperty("java.library.path", "")
         .split(File.pathSeparator)
         .filter { it.isNotEmpty() }
-    ).distinct().plus(listOf(
-      targetPath,
-    )).joinToString(
+    ).distinct().joinToString(
       File.pathSeparator
     ).let {
       listOf(
@@ -1399,6 +1490,9 @@ graalvmNative {
     trackReflectionMetadata = true
     enableExperimentalPredefinedClasses = true
     enableExperimentalUnsafeAllocationTracing = true
+
+    val userCodeFilter = layout.projectDirectory.file("src/config/user-code-filter.json").asFile.path
+
     enabled = (
       (System.getenv("GRAALVM_AGENT") == "true" || project.properties.containsKey("agent")) &&
       !gradle.startParameter.isProfile  // profiler for build can't also be active
@@ -1406,17 +1500,21 @@ graalvmNative {
 
     modes {
       standard {}
+
+      conditional {
+        userCodeFilterPath = userCodeFilter
+      }
     }
     metadataCopy {
       inputTaskNames.addAll(listOf("run", "optimizedRun"))
-      outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting = true
+      outputDirectories.add("src/main/resources/META-INF/native-image/dev/elide/elide-cli")
+      mergeWithExisting = false
     }
   }
 
   binaries {
     named("main") {
-      imageName = if (quickbuild) "elide.debug" else "elide"
+      imageName = "elide"
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
@@ -1492,38 +1590,7 @@ val excludedStatics = arrayOf(
   "plugin.xml",
 )
 
-interface TargetInfo {
-  val tag: String
-
-  val resources: List<String>
-    get() = listOf(
-      "META-INF/elide/embedded/runtime/*/*-$tag.*",
-    )
-}
-
-enum class ElideTarget(override val tag: String) : TargetInfo {
-  MACOS_AARCH64("darwin-aarch64"),
-  MACOS_AMD64("darwin-amd64"),
-  LINUX_AMD64("linux-amd64"),
-  WINDOWS_AMD64("windows-amd64");
-}
-
-fun resolveTarget(target: String? = properties["elide.targetOs"] as? String): ElideTarget = when {
-  target == "linux-amd64" -> ElideTarget.LINUX_AMD64
-  target == "darwin-amd64" -> ElideTarget.MACOS_AMD64
-  target == "darwin-aarch64" -> ElideTarget.MACOS_AARCH64
-  target == "windows-amd64" -> ElideTarget.WINDOWS_AMD64
-  hostIsLinux -> ElideTarget.LINUX_AMD64
-  hostIsWindows -> ElideTarget.WINDOWS_AMD64
-  hostIsMac -> when (System.getProperty("os.arch")) {
-    "aarch64" -> ElideTarget.MACOS_AARCH64
-    else -> ElideTarget.MACOS_AMD64
-  }
-
-  else -> error("Failed to resolve target platform")
-}
-
-fun hostTargetResources(): Array<String> = resolveTarget().resources.toTypedArray()
+fun hostTargetResources(): Array<String> = TargetInfo.current(project).resources.toTypedArray()
 
 fun AbstractCopyTask.filterResources(targetArch: String? = null) {
   duplicatesStrategy = EXCLUDE
@@ -1681,18 +1748,7 @@ fun Jar.applyJarSettings() {
 }
 
 tasks {
-  val ensureNatives by registering {
-    doLast {
-      val out = layout.buildDirectory.dir(nativesPath).get().asFile
-      if (!out.exists()) {
-        Files.createDirectories(out.toPath())
-      }
-    }
-  }
-
   nativeCompile {
-    dependsOn(ensureNatives)
-
     doFirst {
       val args = nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs)
       if (nativeImageBuildVerbose) {
@@ -1702,8 +1758,6 @@ tasks {
   }
 
   nativeOptimizedCompile {
-    dependsOn(ensureNatives)
-
     if (nativeImageBuildVerbose) doFirst {
       val args = nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs)
       logger.lifecycle("Native Image args (release):\n${args.joinToString("\n")}")
@@ -1711,16 +1765,19 @@ tasks {
   }
 
   processResources {
+    dependsOn(
+      ":packages:graalvm:buildRustNativesForHost",
+    )
     filterResources()
 
     // add `[lib]umbrella.{so,dylib,jnilib,dll}` to the jar
-    from(rootProject.layout.projectDirectory.dir("target/${nativesType}")) {
-      include("libumbrella.so")
-      include("libumbrella.dylib")
-      include("libumbrella.jnilib")
-      include("umbrella.dll")
-      into("META-INF/native/")
-    }
+    // from(targetPath) {
+    //   include("libumbrella.so")
+    //   include("libumbrella.dylib")
+    //   include("libumbrella.jnilib")
+    //   include("umbrella.dll")
+    //   into("META-INF/native/")
+    // }
   }
 
   jar {
@@ -1752,7 +1809,6 @@ tasks {
   }
 
   named("run", JavaExec::class).configure {
-    dependsOn(ensureNatives)
     if (enableToolchains) javaLauncher = gvmLauncher
 
     jvmDefs.forEach {
@@ -1781,10 +1837,6 @@ tasks {
     systemProperty(
       "org.graalvm.language.python.home",
       layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
-    )
-    systemProperty(
-      "elide.natives",
-      nativesPath,
     )
     systemProperty(
       "java.library.path",
@@ -1841,10 +1893,6 @@ tasks {
       layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
     )
     systemProperty(
-      "elide.natives",
-      nativesPath,
-    )
-    systemProperty(
       "java.library.path",
       listOf(
         umbrellaNativesPath,
@@ -1870,8 +1918,6 @@ tasks {
   }
 
   optimizedRun {
-    dependsOn(ensureNatives)
-
     systemProperty(
       "micronaut.environments",
       "dev",
@@ -1885,14 +1931,9 @@ tasks {
       layout.buildDirectory.dir("native/$nativeTargetType/resources/python/python-home").get().asFile.path.toString(),
     )
     systemProperty(
-      "elide.natives",
-      nativesPath,
-    )
-    systemProperty(
       "java.library.path",
       listOf(
         umbrellaNativesPath,
-        nativesPath,
         sqliteLibPath,
       ).plus(
         System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
@@ -1984,5 +2025,15 @@ configurations.all {
       using(project(":packages:graalvm-js"))
       because("Uses Elide's patched version of GraalJs")
     }
+  }
+}
+
+listOf(
+  tasks.withType<BuildNativeImageTask>()
+).forEach {
+  it.configureEach {
+    dependsOn(
+      ":packages:graalvm:natives",
+    )
   }
 }

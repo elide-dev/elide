@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-Latest: <code>1.0.0-alpha13</code>
+Latest: <code>1.0.0-alpha14</code>
 </p>
 
 <hr />
@@ -147,7 +147,7 @@ Elide integrates with [Micronaut]() to provide Server-Side and Hybrid rendering 
 
 ```properties
 // gradle.properties
-elideVersion = 1.0.0-alpha13
+elideVersion = 1.0.0-alpha14
 ```
 
 ```kotlin

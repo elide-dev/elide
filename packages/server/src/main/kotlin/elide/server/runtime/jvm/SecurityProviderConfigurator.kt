@@ -13,8 +13,6 @@
 
 package elide.server.runtime.jvm
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import java.security.Security
 import java.util.concurrent.atomic.AtomicBoolean
 
 /** Initializes JVM security providers at server startup. */
@@ -24,10 +22,10 @@ public object SecurityProviderConfigurator {
 
   // Register security providers at JVM startup time.
   @JvmStatic @Synchronized private fun registerProviders() {
-    Security.insertProviderAt(
-      BouncyCastleProvider(),
-      0,
-    )
+    // Security.insertProviderAt(
+    //  org.bouncycastle.jce.provider.BouncyCastleProvider(),
+    //  0,
+    // )
   }
 
   /**

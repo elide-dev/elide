@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Native (elide.debug)" type="GraalVmRunConfiguration" factoryName="GraalVmBinary">
+    <run-attributes
+      version="1"
+      native-image="$PROJECT_DIR$/packages/cli/build/native/nativeCompile/elide.debug"
+      symbol-info=""
+    >
+      <arguments>
+        <entry name="run" />
+        <entry name="$PROJECT_DIR$/tools/scripts/hello.js" />
+      </arguments>
+      <module name="elide.packages.cli.main" />
+    </run-attributes>
+    <method v="2" />
+  </configuration>
+</component>

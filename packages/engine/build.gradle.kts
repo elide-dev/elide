@@ -12,6 +12,7 @@
  */
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
+import elide.toolchain.host.TargetInfo
 
 plugins {
   kotlin("jvm")
@@ -56,8 +57,10 @@ dependencies {
   api(libs.graalvm.polyglot)
   api(libs.kotlinx.coroutines.core)
   api(libs.guava)
+  implementation(libs.kotlinx.atomicfu)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+  compileOnly(libs.graalvm.svm)
 
   testApi(projects.packages.base)
   testImplementation(projects.packages.test)
@@ -73,10 +76,11 @@ val isRelease = !quickbuild && (
   project.properties["elide.release"] == "true" ||
     project.properties["elide.buildMode"] == "release"
   )
+val elideTarget = TargetInfo.current(project)
 val nativesType = if (isRelease) "release" else "debug"
 
 val jvmDefs = StringBuilder().apply {
-  append(rootProject.layout.projectDirectory.dir("target/$nativesType").asFile.path)
+  append(rootProject.layout.projectDirectory.dir("target/${elideTarget.triple}/$nativesType").asFile.path)
   System.getProperty("java.library.path", "").let {
     if (it.isNotEmpty()) {
       append(File.pathSeparator)
@@ -107,6 +111,7 @@ val testJar by tasks.registering(Jar::class) {
 }
 
 tasks.test {
+  dependsOn(":packages:graalvm:natives")
   jvmArgumentProviders.add(CommandLineArgumentProvider { jvmDefs })
 }
 

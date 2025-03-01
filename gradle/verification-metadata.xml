@@ -40,6 +40,11 @@
          <ignored-key id="CF776DADF519DEE3" reason="Key couldn't be downloaded from any key server"/>
       </ignored-keys>
       <trusted-keys>
+         <trusted-key id="E5C3B1929191DF06136CCB2B164779204E106A76" group="org.javassist"/>
+         <trusted-key id="E3A9F95079E84CE201F7CF60BEDE11EAF1164480" group="org.hamcrest"/>
+         <trusted-key id="DC057BC7F1115D8301C0C0E906E21FAAF25A2C7A" group="com.lmax"/>
+         <trusted-key id="707632EF5010812102610D3A92D12AD6D3AA19C4" group="com.lmax"/>
+         <trusted-key id="76E94E8FF0AB5AF3B6F8366972FEFD1572EB75E1" group="org.spockframework"/>
          <trusted-key id="015479E1055341431B4545AB72475FD306B9CAB7" group="com.googlecode.javaewah" name="JavaEWAH" version="1.2.3"/>
          <trusted-key id="0181A4828FA27B6BE6F1F5A68611CD28F472E006" group="org.jline"/>
          <trusted-key id="019082BC00E0324E2AEF4CF00D3B328562A119A7" group="org.openjdk.jmh"/>

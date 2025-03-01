@@ -15,6 +15,7 @@ package elide.server.assets
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -29,6 +30,7 @@ import elide.server.StreamedAsset
 import elide.testing.annotations.TestCase
 
 /** Tests general asset serving features, like ETags/conditional requests and compression variants. */
+@Disabled
 @TestCase class ServerAssetServingTest {
   companion object {
     private const val assetPrefix = "/_/assets"

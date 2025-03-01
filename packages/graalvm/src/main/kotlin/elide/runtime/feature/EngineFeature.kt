@@ -15,7 +15,7 @@ package elide.runtime.feature
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 import elide.runtime.gvm.GuestLanguage
 
 /**

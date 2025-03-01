@@ -16,13 +16,13 @@ name = "model"
 edition = "2024"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha13-SNAPSHOT"
+version = "1.0.0-alpha14-SNAPSHOT"
 
 [lib]
 crate-type = ["lib"]
 
 [dependencies]
-const-crc32-nostd = { workspace = true }
+# const-crc32-nostd = { workspace = true }
 serde = { workspace = true }
 typeshare = { workspace = true }
 

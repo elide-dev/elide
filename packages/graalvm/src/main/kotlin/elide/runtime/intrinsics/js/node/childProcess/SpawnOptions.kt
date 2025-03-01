@@ -70,8 +70,8 @@ internal data object SpawnDefaults {
  * @property windowsHide Whether to hide the process window.
  * @property timeout Timeout for the process, in seconds.
  */
-@ExposedCopyVisibility
-@API @JvmRecord public data class SpawnOptions private constructor (
+@ConsistentCopyVisibility
+@API @JvmRecord public data class SpawnOptions internal constructor (
   override val cwdString: String? = null,
   public val cwdUrl: URL? = null,
   public val argv0: String? = null,

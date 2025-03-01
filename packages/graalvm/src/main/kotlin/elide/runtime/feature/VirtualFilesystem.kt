@@ -13,7 +13,7 @@
 package elide.runtime.feature
 
 import org.graalvm.nativeimage.hosted.Feature
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 
 /** GraalVM feature which enables reflection required for VFS (Virtual File System) services. */
 @VMFeature

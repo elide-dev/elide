@@ -25,6 +25,13 @@ public object JavaScriptLang {
   // Whether JavaScript has initialized yet.
   private val initialized = atomic(false)
 
+  /**
+   * Obtain an instance of the JavaScript precompiler.
+   *
+   * @return The JavaScript precompiler.
+   */
+  public fun precompiler(): JavaScriptPrecompiler = JavaScriptPrecompiler
+
   /** Initialize the JavaScript language layer. */
   public fun initialize() {
     if (initialized.compareAndSet(expect = false, update = true)) {

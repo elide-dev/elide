@@ -14,7 +14,7 @@ package elide.runtime.feature.js.node
 
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import kotlin.reflect.KClass
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 import elide.runtime.feature.FrameworkFeature
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
@@ -36,16 +36,13 @@ import elide.runtime.node.http.NodeHttp
 import elide.runtime.node.http2.NodeHttp2
 import elide.runtime.node.https.NodeHttps
 import elide.runtime.node.inspector.NodeInspector
-import elide.runtime.node.inspector.NodeInspectorPromises
 import elide.runtime.node.module.NodeModules
 import elide.runtime.node.net.NodeNetwork
-import elide.runtime.node.os.NodeOperatingSystem
 import elide.runtime.node.path.NodePaths
 import elide.runtime.node.perfHooks.NodePerformanceHooks
 import elide.runtime.node.process.NodeProcess
 import elide.runtime.node.querystring.NodeQuerystring
 import elide.runtime.node.readline.NodeReadline
-import elide.runtime.node.readline.NodeReadlinePromises
 import elide.runtime.node.stream.NodeStream
 import elide.runtime.node.stream.NodeStreamConsumers
 import elide.runtime.node.stream.NodeStreamPromises

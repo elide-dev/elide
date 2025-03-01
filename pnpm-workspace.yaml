@@ -15,3 +15,6 @@ packages:
   - tools/tsc
   - tools/plugin/gradle-plugin
   - tools/hakuna
+onlyBuiltDependencies:
+  - "@biomejs/biome"
+  - esbuild

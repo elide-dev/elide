@@ -1,0 +1,9 @@
+[
+  {
+    "type":"agent-extracted",
+    "classes":[
+      { "nameInfo":"com/oracle/truffle/runtime/generated/GeneratedModules", "hash":"gFztcU2kcJ6ldjyYSDynm8" }
+    ]
+  }
+]
+

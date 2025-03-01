@@ -129,7 +129,7 @@ public object Constants {
     const val PRETTIER = "3.2.5"
 
     /** Pinned Protobuf version. */
-    const val PROTOBUF = "3.25.2"
+    const val PROTOBUF = "4.28.2"
 
     /** Static Netty version. */
     const val NETTY = "4.1.118.Final"
@@ -207,7 +207,7 @@ public object Constants {
     private const val MAJOR_VERSION = "1.0.0"
 
     /** Major library version tag. */
-    private const val VERSION_TAG = "alpha13"
+    private const val VERSION_TAG = "alpha14"
 
     /** Version string for the library. */
     public const val VERSION: String = "$MAJOR_VERSION-$VERSION_TAG"

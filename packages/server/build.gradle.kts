@@ -103,9 +103,6 @@ dependencies {
   implementation(libs.graalvm.polyglot)
   implementation(mn.reactor)
 
-  // Crypto
-  implementation(libs.bouncycastle)
-
   // KotlinX
   implementation(libs.kotlinx.serialization.json.jvm)
   implementation(libs.kotlinx.coroutines.core)
@@ -119,24 +116,9 @@ dependencies {
   implementation(libs.protobuf.util)
   implementation(libs.protobuf.kotlin)
 
-  // Brotli (not in use yet)
-  //  implementation(libs.brotli)
-  //  implementation(libs.brotli.native.osx)
-  //  implementation(libs.brotli.native.osx.amd64)
-  //  implementation(libs.brotli.native.osx.arm64)
-  //  implementation(libs.brotli.native.linux)
-  //  implementation(libs.brotli.native.linux.amd64)
-  //  implementation(libs.brotli.native.linux.arm64)
-  //  implementation(libs.brotli.native.windows)
-  //  implementation(libs.brotli.native.windows.amd64)
-
   // Micronaut
   implementation(mn.micronaut.aop)
   implementation(mn.micronaut.http.netty)
-  implementation(mn.micronaut.jackson.databind)
-
-  // General
-  implementation(libs.reactivestreams)
 
   // Runtime
   implementation(mn.micronaut.http.server)

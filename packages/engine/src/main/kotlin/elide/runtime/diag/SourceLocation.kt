@@ -26,7 +26,6 @@ import kotlinx.serialization.Serializable
  * @param column Column number in the source file where the diagnostic was triggered.
  */
 @Serializable
-@ConsistentCopyVisibility
 @JvmRecord public data class SourceLocation (
   public val line: UInt,
   public val column: UInt,

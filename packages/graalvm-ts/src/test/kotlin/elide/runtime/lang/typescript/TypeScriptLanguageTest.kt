@@ -5,6 +5,7 @@ import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.PolyglotAccess
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.io.IOAccess
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.*
 
@@ -76,5 +77,14 @@ class TypeScriptLanguageTest {
     assertNotNull(result, "result should not be null from typescript compile-and-execute")
     assertTrue(result.isNumber, "result should be a number")
     assertEquals(42, result.asInt(), "result should be 42")
+  }
+  companion object {
+    @BeforeAll @JvmStatic fun load() {
+      try {
+        System.loadLibrary("js")
+      } catch (e: UnsatisfiedLinkError) {
+        throw IllegalStateException("Could not load library 'js'", e)
+      }
+    }
   }
 }

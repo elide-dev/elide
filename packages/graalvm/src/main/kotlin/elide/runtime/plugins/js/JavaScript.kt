@@ -13,11 +13,6 @@
 package elide.runtime.plugins.js
 
 import com.oracle.truffle.js.runtime.JSContextOptions
-import org.graalvm.polyglot.Engine
-import org.graalvm.polyglot.Source
-import java.util.concurrent.atomic.AtomicBoolean
-import elide.runtime.LogLevel.DEBUG
-import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.*
 import elide.runtime.core.EnginePlugin.InstallationScope
@@ -40,12 +35,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   private val resources: LanguagePluginManifest,
   private val environment: Environment? = null,
 ) {
-  // Whether modules have initialized.
-  private val modulesInitialized = AtomicBoolean(false)
-
-  // Logger for the JavaScript plugin.
-  private val logging by lazy { Logging.of(JavaScript::class) }
-
   private fun initializeContext(context: PolyglotContext) {
     // if applicable, install the env plugin bindings
     environment?.install(context, JavaScript)
@@ -55,46 +44,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     // run embedded initialization code
     initializeEmbeddedScripts(context, resources)
-  }
-
-  private fun generateImports(name: String): Source = Source.newBuilder("js", StringBuilder().apply {
-    if (name.startsWith("elide:")) {
-      val modname = name.removePrefix("elide:")
-      append("import '$modname';")
-      append("require('$modname');")
-    } else {
-      append("import 'node:$name';")
-      append("require('node:$name');")
-    }
-  }.toString(), "__elide-internal-module-import_$name.mjs").apply {
-    cached(true)
-    interactive(false)
-    internal(true)
-  }.build()
-
-  @Synchronized private fun finalizeContext(context: PolyglotContext) {
-    config.builtinModulesConfig.finalize()
-    if (EXPERIMENTAL_MODULE_PRELOADING && !modulesInitialized.get() && shouldPreloadModules) {
-      modulesInitialized.compareAndSet(false, true)
-      config.builtinModulesConfig.replacements().keys.asSequence().let { mods ->
-        try {
-          val logDebug = logging.isEnabled(DEBUG)
-          context.enter()
-          mods.forEach { name ->
-            if (logDebug) logging.debug("Preloading JS module '$name'")
-
-            try {
-              context.evaluate(generateImports(name))
-            } catch (err: Throwable) {
-              // log but otherwise ignore
-              logging.error("Failed to preload module '$name'", err)
-            }
-          }
-        } finally {
-          context.leave()
-        }
-      }
-    }
   }
 
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
@@ -198,14 +147,10 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   public companion object Plugin : AbstractLanguagePlugin<JavaScriptConfig, JavaScript>() {
     private const val JS_LANGUAGE_ID = "js"
     private const val JS_PLUGIN_ID = "JavaScript"
-
-    private const val EXPERIMENTAL_MODULE_PRELOADING = false
-
     private const val WASI_STD = "wasi_snapshot_preview1"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "__ElideDebug__"
-    private val shouldPreloadModules = System.getProperty("elide.js.preloadModules") != "false"
 
     override val languageId: String = JS_LANGUAGE_ID
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
@@ -230,7 +175,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
-      scope.lifecycle.on(ContextFinalized, instance::finalizeContext)
       return instance
     }
 
@@ -243,7 +187,8 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       ES2020,
       ES2021,
       ES2022,
-      ES2023 -> this.name.drop(2)
+      ES2023,
+      ES2024 -> this.name.drop(2)
 
       STABLE -> "stable"
       LATEST -> "latest"

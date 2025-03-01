@@ -12,6 +12,7 @@
  */
 package elide.runtime.core
 
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import java.net.URI
 
@@ -204,6 +205,9 @@ public interface PolyglotContext {
    * is expected; instead, leave once the last call has been received.
    */
   public fun leave()
+
+  /** @return The underlying GraalVM context. */
+  public fun unwrap(): Context
 
   /** Returns the value associated with a given context [element], or `null` if the element is not present. */
   public operator fun <T> get(element: PolyglotContextElement<T>): T?

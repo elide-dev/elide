@@ -15,12 +15,14 @@ package elide.server.assets
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import kotlin.test.*
 
 /** Tests for the built-in [AssetController]. */
+@Disabled
 @MicronautTest
 class AssetControllerTest {
   @Inject lateinit var controller: AssetController

@@ -16,17 +16,17 @@ name = "protocol"
 edition = "2024"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha13-SNAPSHOT"
+version = "1.0.0-alpha14-SNAPSHOT"
 
 [lib]
 crate-type = ["lib"]
 
 [dependencies]
-bytes = { workspace = true }
-prost = { workspace = true }
+#bytes = { workspace = true }
+#prost = { workspace = true }
 
 [build-dependencies]
-builder = { workspace = true }
-const_format = { workspace = true }
-model = { workspace = true }
-prost-build = { workspace = true }
+#builder = { workspace = true }
+#const_format = { workspace = true }
+#model = { workspace = true }
+#prost-build = { workspace = true }

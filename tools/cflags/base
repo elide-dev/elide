@@ -1,0 +1,16 @@
+-g
+-O3
+-fPIC
+-fPIE
+-fstack-clash-protection
+-fstack-protector-strong
+-fexceptions
+-ffunction-sections
+-fdata-sections
+-fno-omit-frame-pointer
+-fno-strict-aliasing
+-fno-strict-overflow
+-fno-delete-null-pointer-checks
+-DELIDE
+-DHAVE_OPENSSL
+-Wno-hardened

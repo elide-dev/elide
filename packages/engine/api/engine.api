@@ -1,3 +1,6 @@
+public abstract interface annotation class elide/annotations/engine/VMFeature : java/lang/annotation/Annotation {
+}
+
 public abstract interface annotation class elide/runtime/core/DelicateElideApi : java/lang/annotation/Annotation {
 }
 
@@ -174,6 +177,7 @@ public abstract interface class elide/runtime/core/PolyglotContext {
 	public abstract fun leave ()V
 	public abstract fun parse (Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
 	public abstract fun set-HRLGfaQ (Ljava/lang/String;Ljava/lang/Object;)Z
+	public abstract fun unwrap ()Lorg/graalvm/polyglot/Context;
 }
 
 public abstract interface class elide/runtime/core/PolyglotContext$EvaluationOptions {
@@ -657,6 +661,149 @@ public final class elide/runtime/exec/GuestExecutor$DefaultImpls {
 
 public abstract interface class elide/runtime/exec/GuestExecutorProvider {
 	public abstract fun executor ()Lelide/runtime/exec/GuestExecutor;
+}
+
+public abstract interface class elide/runtime/feature/FrameworkFeature : org/graalvm/nativeimage/hosted/Feature {
+	public fun findClassesInJar (Ljava/net/JarURLConnection;Ljava/lang/String;)Ljava/util/List;
+	public abstract fun getDescription ()Ljava/lang/String;
+	public fun getMethodOrFail (Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+	public fun getURL ()Ljava/lang/String;
+	public fun logging ()Lelide/runtime/Logger;
+	public fun registerClassForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
+	public fun registerClassHierarchyForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
+	public fun registerConstructorsForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
+	public fun registerForReflectiveInstantiation (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
+	public fun registerForUnsafeFieldAccess (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;[Ljava/lang/String;)V
+	public fun registerPackageForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
+}
+
+public abstract interface class elide/runtime/feature/NativeLibraryFeature : elide/runtime/feature/FrameworkFeature {
+}
+
+public final class elide/runtime/feature/NativeLibraryFeature$NativeLibInfo : java/lang/Record {
+	public static final field Companion Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun absoluteLibs ()Lkotlin/Pair;
+	public final fun absolutePath ()Ljava/nio/file/Path;
+	public final fun builtin ()Z
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lkotlin/Pair;
+	public final fun component11 ()Z
+	public final fun component12 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun component9 ()Ljava/nio/file/Path;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public static synthetic fun copy$default (Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;Ljava/lang/String;Ljava/util/List;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public final fun deps ()Ljava/util/List;
+	public final fun eager ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun initializer ()Z
+	public final fun linkName ()Ljava/lang/String;
+	public final fun name ()Ljava/lang/String;
+	public static final fun of (Ljava/lang/String;[Ljava/lang/String;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public final fun prefix ()Ljava/util/List;
+	public final fun registerJni ()Z
+	public final fun registerPrefix ()Z
+	public fun toString ()Ljava/lang/String;
+	public final fun type ()Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;
+}
+
+public final class elide/runtime/feature/NativeLibraryFeature$NativeLibInfo$Companion {
+	public final fun of (Ljava/lang/String;[Ljava/lang/String;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public static synthetic fun of$default (Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo$Companion;Ljava/lang/String;[Ljava/lang/String;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+}
+
+public final class elide/runtime/feature/NativeLibraryFeature$NativeLibType : java/lang/Enum {
+	public static final field DUAL Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;
+	public static final field SHARED Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;
+	public static final field STATIC Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;
+	public static fun values ()[Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;
+}
+
+public final class elide/runtime/feature/NativeLibraryFeature$UnpackedNative : java/lang/Record {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)V
+	public final fun arch ()Ljava/lang/String;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/nio/file/Path;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/feature/NativeLibraryFeature$UnpackedNative;
+	public static synthetic fun copy$default (Lelide/runtime/feature/NativeLibraryFeature$UnpackedNative;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$UnpackedNative;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public final fun path ()Ljava/nio/file/Path;
+	public final fun resource ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class elide/runtime/feature/engine/AbstractStaticNativeLibraryFeature : elide/runtime/feature/NativeLibraryFeature {
+	public fun <init> ()V
+	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
+	public final fun fields (Ljava/lang/Class;[Ljava/lang/String;)[Ljava/lang/reflect/Field;
+	public fun getRequiredFeatures ()Ljava/util/List;
+	protected final fun libraryNamed (Ljava/lang/String;[Ljava/lang/String;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public static synthetic fun libraryNamed$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Ljava/lang/String;[Ljava/lang/String;Lelide/runtime/feature/NativeLibraryFeature$NativeLibType;Ljava/lang/String;ZZZZLjava/nio/file/Path;Lkotlin/Pair;ZLjava/util/List;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public final fun method (Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+	protected final fun nativeLibrary (Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	protected final fun nativeLibrary (Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public static synthetic fun nativeLibrary$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public static synthetic fun nativeLibrary$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;ILjava/lang/Object;)Lelide/runtime/feature/NativeLibraryFeature$NativeLibInfo;
+	public abstract fun nativeLibs (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
+	protected final fun unpackLibrary (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)Ljava/util/List;
+	public static synthetic fun unpackLibrary$default (Lelide/runtime/feature/engine/AbstractStaticNativeLibraryFeature;Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/util/List;
+	public fun unpackNatives (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
+}
+
+public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/GuestLanguage {
+	public static final field JAVASCRIPT Lelide/runtime/gvm/GraalVMGuest;
+	public static final field JVM Lelide/runtime/gvm/GraalVMGuest;
+	public static final field PYTHON Lelide/runtime/gvm/GraalVMGuest;
+	public static final field RUBY Lelide/runtime/gvm/GraalVMGuest;
+	public static final field WASM Lelide/runtime/gvm/GraalVMGuest;
+	public fun getEngine ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getLabel ()Ljava/lang/String;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/GraalVMGuest;
+	public static fun values ()[Lelide/runtime/gvm/GraalVMGuest;
+}
+
+public abstract interface class elide/runtime/gvm/GuestLanguage {
+	public static final field Companion Lelide/runtime/gvm/GuestLanguage$Companion;
+	public abstract fun getEngine ()Ljava/lang/String;
+	public fun getInvocationModes ()Ljava/util/EnumSet;
+	public abstract fun getLabel ()Ljava/lang/String;
+	public fun getSupportsSSR ()Z
+	public fun getSupportsStreamingSSR ()Z
+	public abstract fun getSymbol ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/GuestLanguage$Companion {
+	public final fun getJAVASCRIPT ()Lelide/runtime/gvm/GuestLanguage;
+	public final fun getJVM ()Lelide/runtime/gvm/GuestLanguage;
+	public final fun getPYTHON ()Lelide/runtime/gvm/GuestLanguage;
+	public final fun getRUBY ()Lelide/runtime/gvm/GuestLanguage;
+	public final fun getWASM ()Lelide/runtime/gvm/GuestLanguage;
+}
+
+public final class elide/runtime/gvm/InvocationMode : java/lang/Enum {
+	public static final field ASYNC Lelide/runtime/gvm/InvocationMode;
+	public static final field STREAMING Lelide/runtime/gvm/InvocationMode;
+	public static final field SYNC Lelide/runtime/gvm/InvocationMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/InvocationMode;
+	public static fun values ()[Lelide/runtime/gvm/InvocationMode;
 }
 
 public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {

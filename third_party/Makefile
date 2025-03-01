@@ -18,16 +18,17 @@ RELOCK ?= no
 CUSTOM_ZLIB ?= no
 NATIVE ?= no
 RELEASE ?= no
+MUSL ?= no
 USE_NINJA ?= yes
-ENABLE_CCACHE ?= yes
-ENABLE_SCCACHE ?= yes
+ENABLE_CCACHE ?= no
+ENABLE_SCCACHE ?= no
 ELIDE_ROOT ?= $(realpath $(shell pwd)/..)
 MACOS_MIN_VERSION ?= 12.3
 
-NATIVE_TOOLS ?= sqlite boringssl apr
+NATIVE_TOOLS ?= sqlite apr
 LANGS ?= pkl
 
-REQUIRED ?= zlib sqlite boringssl apr
+REQUIRED ?= sqlite apr
 
 ifeq ($(RELEASE),yes)
 TARGET_ROOT ?= $(ELIDE_ROOT)/target/release
@@ -90,27 +91,30 @@ endif
 
 GRADLE ?= ./gradlew
 
-CFLAGS_BASE_ALL ?=-g -O2 -fPIC -fPIE -fno-omit-frame-pointer -DELIDE -DHAVE_OPENSSL -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS $(CFLAGS)
+CFLAGS_BASE_ALL ?=$(shell cat ../tools/cflags/base | xargs) $(CFLAGS)
 CFLAGS_BASE_STRICT ?= -Werror -fsanitize=bounds -fsanitize-undefined-trap-on-error
+CFLAGS_BASE_GCC ?=$(CFLAGS_BASE_ALL) $(shell cat ../tools/cflags/gcc | xargs)
+CFLAGS_BASE_CLANG ?=$(CFLAGS_BASE_ALL) $(shell cat ../tools/cflags/clang | xargs)
 
-CFLAGS_BASE_GCC ?=$(CFLAGS_BASE_ALL)
-CFLAGS_BASE_GCC += -Wall -Wextra -Wpedantic -Wformat=2 -Wformat-overflow=2 -Wformat-truncation=2 -Wformat-security -Wnull-dereference -Wstack-protector -Wtrampolines -Walloca -Wvla -Warray-bounds=2 -Wimplicit-fallthrough=3 -Wtraditional-conversion -Wshift-overflow=2 -Wcast-qual -Wstringop-overflow=4 -Wconversion -Warith-conversion -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wformat-signedness -Wshadow -Wstrict-overflow=4 -Wundef -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wstack-usage=1000000 -Wcast-align=strict
-CFLAGS_BASE_GCC += -fstack-protector-strong -fstack-clash-protection -fhardened -fstrict-flex-arrays=3 -fno-delete-null-pointer-checks -fno-strict-overflow -fno-strict-aliasing -fexceptions
-CFLAGS_BASE_GCC += -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code
-
-CFLAGS_BASE_CLANG ?=$(CFLAGS_BASE_ALL)
-CFLAGS_BASE_CLANG += -fstack-protector-strong -fno-delete-null-pointer-checks -fno-strict-overflow -fno-strict-aliasing -fexceptions
-
-ifeq ($(CC),gcc)
+ifeq ($(COMPILER),gcc)
   CFLAGS_BASE += $(CFLAGS_BASE_GCC)
-else ifeq ($(CC),cc)
+else ifeq ($(COMPILER),clang)
   CFLAGS_BASE += $(CFLAGS_BASE_CLANG)
+  USE_LD ?= lld
+else
+	# default to baseline flags
+	CFLAGS_BASE += $(CFLAGS_BASE_ALL)
 endif
 
 ifeq ($(UNAME_P),x86_64)
 	CFLAGS_BASE += -fcf-protection=full
 else ifeq ($(UNAME_P),arm)
 	CFLAGS_BASE += -mbranch-protection=standard
+endif
+
+ifneq ($(USE_LD),)
+LD = $(USE_LD)
+CFLAGS_BASE += -fuse-ld=$(USE_LD)
 endif
 
 ASMFLAGS_BASE ?=-Wa,--noexecstack $(ASMFLAGS)
@@ -122,14 +126,10 @@ endif
 
 ifeq ($(RELEASE),yes)
 CMAKE_BUILD_TYPE ?= Release
-ifeq ($(OS),Darwin)
-CFLAGS_BASE += -O3
-CFLAGS_LTO ?= -flto=thin
-LDFLAGS_BASE += -flto=thin
+CFLAGS_BASE += -O3 -flto=auto
+
 else
-CFLAGS_BASE += -O3
-endif
-else
+CFLAGS_BASE += -O1 -g -flto=auto
 CMAKE_BUILD_TYPE ?= Debug
 endif
 
@@ -148,7 +148,7 @@ else
 CFLAGS_BASE += -march=native -mtune=native
 endif
 else
-CFLAGS_BASE += -mtune=generic
+CFLAGS_BASE += -mtune=native
 ifeq ($(UNAME_P),x86_64)
 CFLAGS_BASE += -march=x86-64-v3
 endif
@@ -181,7 +181,16 @@ else
 RULE ?= @
 endif
 
+ifeq ($(MUSL),yes)
+TARGET_FLAGS += --host=x86_64-linux-musl
+export CC = x86_64-linux-musl-gcc
+CC_INJECTED = $(CC)
+endif
+
 all: $(ALL_LIBS)
+
+effective-cflags:
+	@echo "$(CFLAGS_BASE)"
 
 pkl: apple/pkl/build
 
@@ -193,14 +202,14 @@ apple/pkl/build:
 apr: apache/apr/.libs
 
 CFLAGS_APR ?=
-CFLAGS_APR +=$(CFLAGS_BASE) $(CFLAGS_LTO) -I$(ELIDE_ROOT)/third_party/google/boringssl/include -Wno-macro-redefined -Wno-tautological-type-limit-compare
-LDFLAGS_APR ?=-L$(ELIDE_ROOT)/third_party/google/boringssl/build -lssl -lcrypto
+CFLAGS_APR +=$(CFLAGS_BASE) -w
+LDFLAGS_APR ?=-lssl -lcrypto
 LDFLAGS_APR +=$(LDFLAGS_BASE)
 
 # APR does not link with LLD.
 APR_PREFIX = CC="$(CC_INJECTED)" CXX="$(CXX)" LD="ld" CFLAGS="$(CFLAGS_APR)" LDFLAGS="$(LDFLAGS_APR)"
 
-apache/apr/.libs: google/boringssl/build
+apache/apr/.libs:
 	@echo ""
 	@echo "Building apache/apr..."
 	$(RULE)cd apache/apr && ./buildconf \
@@ -211,6 +220,7 @@ apache/apr/.libs: google/boringssl/build
 			--enable-threads \
 			--enable-posix-shm \
 			--enable-sysv-shm \
+			$(TARGET_FLAGS) \
 		&& $(APR_PREFIX) make
 
 clean-apr:
@@ -219,7 +229,8 @@ clean-apr:
 boringssl: google/boringssl/build
 
 CMAKE_BORINGSSL ?= -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_LINKER=$(LD) $(EXTRA_CMAKE_FLAGS)
-ifeq ($(OS),Darwin)
+
+ifeq ($(RELEASE),yes)
 CMAKE_BORINGSSL += -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
 endif
 
@@ -237,12 +248,13 @@ google/boringssl/build:
 	$(RULE)cd google/boringssl && mkdir build && cd build \
 		&& $(BORINGSSL_PREFIX) $(CMAKE) $(CMAKE_BORINGSSL) -DCMAKE_INSTALL_PREFIX=$(TARGET_ROOT) .. \
 		&& $(BORINGSSL_PREFIX) $(CMAKE_BUILD) \
-		&& ./ssl_test \
-		&& cd .. \
 		&& echo "BoringSSL is ready."
+ifeq ($(MUSL),no)
+	$(RULE)cd google/boringssl/build && ./ssl_test && echo "BoringSSL test complete."
+endif
 
 CFLAGS_ZLIB ?=
-CFLAGS_ZLIB +=$(CFLAGS_BASE) $(CFLAGS_BASE_STRICT) -std=c11
+CFLAGS_ZLIB +=$(CFLAGS_BASE) $(CFLAGS_BASE_STRICT) -std=c11 -w
 LDFLAGS_ZLIB ?=
 LDFLAGS_ZLIB +=$(LDFLAGS_BASE)
 ZLIB_PREFIX = CC="$(CC_INJECTED)" CXX="$(CXX)" LD="$(LD)" CFLAGS="$(CFLAGS_ZLIB)" LDFLAGS="$(LDFLAGS_ZLIB)"
@@ -258,20 +270,50 @@ $(TARGET_ROOT)/lib/libz.a:
 	@echo ""
 	@echo "Configuring zlib..."
 	$(RULE)cd $(ZLIB_SRC) \
-		&& $(ZLIB_PREFIX) ./configure $(ZLIB_CONFIGURE) \
+		&& $(ZLIB_PREFIX) ./configure $(TARGET_FLAGS) $(ZLIB_CONFIGURE) \
 		&& $(ZLIB_PREFIX) $(MAKE) \
 		&& $(ZLIB_PREFIX) $(MAKE) install
 
-SQLITE3_CONFIGURE ?=--enable-all --enable-memsys5 --enable-update-limit --enable-debug --enable-static --enable-shared
-CFLAGS_SQLITE3 ?=$(CFLAGS_BASE) -fPIC -O2
+SQLITE3_CONFIGURE ?=--enable-all
+SQLITE3_CONFIGURE += --enable-memsys5
+SQLITE3_CONFIGURE += --enable-update-limit
+SQLITE3_CONFIGURE += --disable-debug
+SQLITE3_CONFIGURE += --enable-static
+SQLITE3_CONFIGURE += --enable-shared
 
-SQLITE3_SETTINGS += -DSQLITE_CORE=1 -DSQLITE_DEFAULT_FILE_PERMISSIONS=0666 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DISABLE_PAGECACHE_OVERFLOW_STATS=1 -DSQLITE_ENABLE_API_ARMOR=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_FTS3_PARENTHESIS=1 -DSQLITE_ENABLE_FTS5=1 -DSQLITE_ENABLE_LOAD_EXTENSION=1 -DSQLITE_ENABLE_MATH_FUNCTIONS=1 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_ENABLE_STAT4=1 -DSQLITE_HAVE_ISNAN=1 -DSQLITE_MAX_ATTACHED=125 -DSQLITE_MAX_COLUMN=32767 -DSQLITE_MAX_FUNCTION_ARG=127 -DSQLITE_MAX_LENGTH=2147483647 -DSQLITE_MAX_MMAP_SIZE=1099511627776 -DSQLITE_MAX_PAGE_COUNT=4294967294 -DSQLITE_MAX_SQL_LENGTH=1073741824 -DSQLITE_MAX_VARIABLE_NUMBER=250000 -DSQLITE_THREADSAFE=1
+SQLITE3_FLAGS =SQLITE_CORE=1
+SQLITE3_FLAGS += SQLITE_DEFAULT_FILE_PERMISSIONS=0666
+SQLITE3_FLAGS += SQLITE_DEFAULT_MEMSTATUS=0
+SQLITE3_FLAGS += SQLITE_DISABLE_PAGECACHE_OVERFLOW_STATS=1
+SQLITE3_FLAGS += SQLITE_ENABLE_API_ARMOR=1
+SQLITE3_FLAGS += SQLITE_ENABLE_COLUMN_METADATA=1
+SQLITE3_FLAGS += SQLITE_ENABLE_DBSTAT_VTAB=1
+SQLITE3_FLAGS += SQLITE_ENABLE_FTS3=1
+SQLITE3_FLAGS += SQLITE_ENABLE_FTS3_PARENTHESIS=1
+SQLITE3_FLAGS += SQLITE_ENABLE_FTS5=1
+SQLITE3_FLAGS += SQLITE_ENABLE_LOAD_EXTENSION=1
+SQLITE3_FLAGS += SQLITE_ENABLE_MATH_FUNCTIONS=0
+SQLITE3_FLAGS += SQLITE_ENABLE_RTREE=1
+SQLITE3_FLAGS += SQLITE_ENABLE_STAT4=1
+SQLITE3_FLAGS += SQLITE_HAVE_ISNAN=1
+SQLITE3_FLAGS += SQLITE_MAX_ATTACHED=25
+SQLITE3_FLAGS += SQLITE_MAX_COLUMN=32767
+SQLITE3_FLAGS += SQLITE_MAX_FUNCTION_ARG=127
+SQLITE3_FLAGS += SQLITE_MAX_LENGTH=2147483647
+SQLITE3_FLAGS += SQLITE_MAX_MMAP_SIZE=1099511627776
+SQLITE3_FLAGS += SQLITE_MAX_PAGE_COUNT=4294967294
+SQLITE3_FLAGS += SQLITE_MAX_SQL_LENGTH=1073741824
+SQLITE3_FLAGS += SQLITE_MAX_VARIABLE_NUMBER=250000
+SQLITE3_FLAGS += SQLITE_THREADSAFE=1
 
-ifeq ($(OS),Darwin)
-CFLAGS_SQLITE3 +=$(CFLAGS_BASE) -Wno-array-bounds -Wno-format-nonliteral -Wno-array-bounds-pointer-arithmetic -Wno-assign-enum -Wno-implicit-fallthrough -Wno-tautological-constant-in-range-compare $(SQLITE3_SETTINGS)
-else
-CFLAGS_SQLITE3 +=
-endif
+SQLITE3_SETTINGS ?=$(foreach flag,$(SQLITE3_FLAGS),-D$(flag))
+
+# Force -O3 for sqlite.
+CFLAGS_SQLITE3 ?=$(CFLAGS_BASE) -fPIC -w -O3
+
+sqlite-settings:
+	@echo "Flags: $(SQLITE3_FLAGS)"
+	@echo "Settings: $(SQLITE3_SETTINGS)"
 
 LDFLAGS_SQLITE3 ?=
 LDFLAGS_SQLITE3 +=$(LDFLAGS_BASE)
@@ -287,15 +329,12 @@ sqlite-clean:
 sqlite/Makefile:
 	@echo ""
 	@echo "Configuring sqlite3..."
-	$(RULE)cd sqlite && $(SQLITE3_PREFIX) ./configure --prefix=`pwd`/install $(SQLITE3_CONFIGURE)
+	$(RULE)cd sqlite && $(SQLITE3_PREFIX) ./configure --prefix=`pwd`/install $(TARGET_FLAGS) $(SQLITE3_CONFIGURE) $(SQLITE3_FLAGS)
 
 sqlite/sqlite3.c: sqlite/Makefile
 	@echo ""
 	@echo "Building sqlite3..."
-	$(RULE)cd sqlite \
-		&& $(SQLITE3_PREFIX) $(MAKE) OPTS="$(SQLITE3_SETTINGS)" sqlite3.c \
-		&& $(SQLITE3_PREFIX) $(MAKE) OPTS="$(SQLITE3_SETTINGS)" \
-		&& $(SQLITE3_PREFIX) $(MAKE) OPTS="$(SQLITE3_SETTINGS)" install
+	$(RULE)cd sqlite && $(SQLITE3_PREFIX) $(MAKE) sqlite3.c install
 
 GVM_BUILD_PREFIX ?= JAVA_HOME="$$HOME/.mx/jdks/$(LABS_JDK)/Contents/Home"
 

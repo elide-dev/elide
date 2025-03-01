@@ -1,0 +1,15 @@
+{
+  "engine": "v4",
+  "language": "JAVASCRIPT",
+  "vfs": [
+    { "name": "js.vfs.tar" }
+  ],
+  "artifacts": [],
+  "image": {},
+  "scripts": [
+    { "path": "polyfills.js" }
+  ],
+  "bundles": [
+    { "path": "js.vfs.tar" }
+  ]
+}

@@ -18,10 +18,8 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import dev.elide.buildtools.gradle.plugin.BuildMode
 import kotlinx.benchmark.gradle.*
 import org.jetbrains.kotlin.allopen.gradle.*
-import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
   kotlin("kapt")
@@ -35,9 +33,13 @@ plugins {
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 
+kotlin {
+  jvm()
+}
+
 sourceSets.all {
-  kotlin.setSrcDirs(listOf("jmh/src"))
-  resources.setSrcDirs(listOf("jmh/resources"))
+//  kotlin.srcDirs(listOf("jmh/src"))
+//  resources.srcDirs(listOf("jmh/resources"))
 }
 
 dependencies {
@@ -51,16 +53,16 @@ allOpen {
 
 benchmark {
   configurations {
-    named("main") {
-      warmups = 10
-      iterations = 5
-    }
+//    named("main") {
+//      warmups = 10
+//      iterations = 5
+//    }
   }
   targets {
-    register("main") {
-      this as JvmBenchmarkTarget
-      jmhVersion = libs.versions.jmh.lib.get()
-    }
+//    register("main") {
+//      this as JvmBenchmarkTarget
+//      jmhVersion = libs.versions.jmh.lib.get()
+//    }
   }
 }
 

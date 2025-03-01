@@ -16,7 +16,7 @@ name = "base"
 edition = "2024"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha13-SNAPSHOT"
+version = "1.0.0-alpha14-SNAPSHOT"
 
 [lib]
 crate-type = ["lib"]
@@ -29,15 +29,8 @@ unstable = ["base64-simd/unstable"]
 unsafe = []
 
 [dependencies]
-arbitrary = { workspace = true }
 base64 = { workspace = true }
 base64-simd = { workspace = true }
-const_fn = { workspace = true }
-const_panic = { workspace = true }
 crc32fast = { workspace = true }
 crc64fast = { workspace = true }
-libabort = { workspace = true }
-#panic-abort = { workspace = true }
-#simdutf = { workspace = true }
 smartstring = { workspace = true, default-features = false, features = ["arbitrary", "serde"] }
-uuid = { workspace = true }

@@ -63,6 +63,7 @@ dependencies {
   kapt(libs.graalvm.truffle.processor)
   implementation(projects.packages.graalvmJvm)
 
+  implementation(libs.kotlinx.atomicfu)
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.kotlin.scripting.compiler)

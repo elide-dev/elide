@@ -15,7 +15,7 @@ import java.util.function.Supplier
  * Internal utility for formatting exceptions nicely.
  */
 object ErrPrinter {
-  private const val ENABLE_COLOR_SUPPORT = true
+  private const val ENABLE_COLOR_SUPPORT = false
   internal const val DEFAULT_MAX_WIDTH = 120
   private val classpathCiteRef = Regex("at ([a-zA-Z.:()0-9]*.)$")
   private val classFnSpec = Regex(

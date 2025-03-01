@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("SpreadOperator", "unused")
+
 package elide.runtime.feature.engine
 
 import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl
@@ -17,17 +19,17 @@ import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import kotlin.io.path.Path
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
 
 /** Registers native crypto libraries for static JNI. */
 @VMFeature internal class NativeCryptoFeature : AbstractStaticNativeLibraryFeature() {
   private companion object {
-    private const val STATIC_JNI = true
     private const val PROVIDED = "provided"
     private const val BORINGSSL_STATIC_JAR: String = "netty-tcnative-boringssl-static"
     private const val ARCH_PROP: String = "os.arch"
     private const val OS_PROP: String = "os.name"
+    private val staticJni = java.lang.Boolean.getBoolean("elide.staticJni")
 
     private val tcnative = arrayOf(
       "io.netty.handler.ssl.OpenSsl",
@@ -38,6 +40,10 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
       "io.netty.internal.tcnative.SSLContext",
       "io.netty.internal.tcnative.SSLSession",
     )
+
+    private val libtransport_a = Path(System.getProperty("elide.natives")).resolve("libtransport.a")
+    private val libtransport_dylib = Path(System.getProperty("elide.natives")).resolve("libtransport.dylib")
+    private val libtransport_so = Path(System.getProperty("elide.natives")).resolve("libtransport.so")
   }
 
   override fun getDescription(): String = "Registers native crypto libraries"
@@ -47,9 +53,8 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
     io.netty.internal.tcnative.Library.initialize(PROVIDED, null)
   }
 
-  override fun isInConfiguration(access: IsInConfigurationAccess?): Boolean {
-    return STATIC_JNI  // static mode only; otherwise, standard JNI is used
-  }
+  // static mode only; otherwise, standard JNI is used
+  override fun isInConfiguration(access: IsInConfigurationAccess?): Boolean = staticJni
 
   private fun renameNativeCryptoLib(lib: String): String {
     val filename = lib.split("/").last().substringBeforeLast('.')
@@ -64,7 +69,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
     }
   }
 
-  override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> = if (!STATIC_JNI) when {
+  override fun unpackNatives(access: BeforeAnalysisAccess): List<UnpackedNative> = if (!staticJni) when {
     /* Dynamic JNI */
 
     Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty(ARCH_PROP)) {
@@ -116,7 +121,7 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
     "aarch64", "arm64" -> "aarch_64"
     else -> error("Unsupported architecture: $arch")
   }.let { archTag ->
-    when (STATIC_JNI) {
+    when (staticJni) {
       false -> listOf(
         nativeLibrary(
           darwin = libraryNamed(
@@ -139,14 +144,16 @@ import elide.runtime.feature.NativeLibraryFeature.UnpackedNative
             *tcnative,
             builtin = true,
             initializer = true,
-            absolutePath = Path(System.getProperty("elide.target")).resolve("libtransport.a"),
+            absolutePath = libtransport_a,
+            absoluteLibs = (libtransport_a to libtransport_dylib),
           ),
           linux = libraryNamed(
             "transport",
             *tcnative,
             builtin = true,
             initializer = true,
-            absolutePath = Path(System.getProperty("elide.target")).resolve("libtransport.a"),
+            absolutePath = libtransport_a,
+            absoluteLibs = (libtransport_a to libtransport_so),
           ),
         )
       )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -29,8 +29,7 @@ import org.sqlite.core.NativeDB
 import org.sqlite.jdbc3.JDBC3DatabaseMetaData
 import org.sqlite.util.LibraryLoaderUtil
 import org.sqlite.util.OSInfo
-import java.sql.DriverManager
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
 
@@ -53,8 +52,6 @@ import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
   ) else emptyList()
 
   private fun onDbReachable() {
-    val driver = DriverManager.getDriver("jdbc:sqlite:memory:")
-    requireNotNull(driver) { "Failed to resolve SQLite driver at build-time" }
     RuntimeJNIAccess.register(NativeDB::class.java)
     RuntimeJNIAccess.register(*fields(
       NativeDB::class.java,

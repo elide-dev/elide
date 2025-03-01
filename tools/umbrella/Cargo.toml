@@ -15,57 +15,41 @@ default = [
   "lib",
   "all",
   "entry",
+  "oro",
 ]
+allocator = [
+  "allocator_mimalloc",
+]
+allocator_mimalloc = ["mimalloc/default"]
 all = [
   "js",
   "jvm",
 ]
 diag = []
-js = ["orogene"]
+js = ["oro"]
 jvm = []
 lib = ["jni/default"]
 entry = ["jni/invocation"]
-python = ["ruff"]
-jemalloc = []
+python = []
+uv = ["tokio"]
+oro = ["tokio", "orogene"]
+oxc = []
+ruff = []
+jemalloc = ["tikv-jemallocator"]
+bumpalloc = ["bumpalo"]
 ruby = []
 wasm = []
-biome = [
-  "biome_diagnostics",
-  "biome_diagnostics_categories",
-  "biome_diagnostics_macros",
-  "biome_formatter",
-  "biome_css_formatter",
-  "biome_json_formatter",
-  "biome_js_formatter",
-  "biome_markup",
-  "biome_console",
-  "biome_suppression",
-  "biome_unicode_table",
-]
-experimental = [
-  "oxc",
-  "biome",
-  "ruby",
-  "biome",
-  "uv",
-]
+biome = []
+experimental = ["ruby", "bumpalloc"]
 
 [lints.rust]
 dead_code = "allow"
 
 [dependencies]
 ## Local
-base = { workspace = true }
-deps = { workspace = true }
 diag = { workspace = true }
 entry = { workspace = true }
-js = { workspace = true }
-model = { workspace = true }
 posix = { workspace = true }
-project = { workspace = true }
-protocol = { workspace = true }
-sqlite = { workspace = true }
-substrate = { workspace = true }
 terminal = { workspace = true }
 transport = { workspace = true }
 
@@ -73,39 +57,22 @@ transport = { workspace = true }
 anyhow = { workspace = true }
 clap = { workspace = true, features = ["derive", "string", "wrap_help"] }
 console-subscriber = { workspace = true }
-colored = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 jni-sys = { workspace = true }
 miette = { workspace = true }
-mimalloc = { workspace = true }
+mimalloc = { workspace = true, optional = true }
 serde = { workspace = true }
-tikv-jemallocator = { workspace = true }
-tokio = { workspace = true }
+bumpalo = { workspace = true, optional = true }
+tikv-jemallocator = { workspace = true, optional = true }
+tokio = { workspace = true, optional = true }
 typeshare = { workspace = true }
 
 ## Orogene
 orogene = { workspace = true, optional = true }
 
-## Oxc
-oxc = { workspace = true, optional = true }
-
-## Astral
-ruff = { workspace = true, optional = true }
-uv = { workspace = true, optional = true }
-
-## Biome
-biome_console = { workspace = true, optional = true }
-biome_css_formatter = { workspace = true, optional = true }
-biome_diagnostics = { workspace = true, optional = true }
-biome_diagnostics_categories = { workspace = true, optional = true }
-biome_diagnostics_macros = { workspace = true, optional = true }
-biome_formatter = { workspace = true, optional = true }
-biome_js_formatter = { workspace = true, optional = true }
-biome_json_formatter = { workspace = true, optional = true }
-biome_markup = { workspace = true, optional = true }
-biome_suppression = { workspace = true, optional = true }
-biome_unicode_table = { workspace = true, optional = true }
-
 [build-dependencies]
 builder = { workspace = true }
+
+[package.metadata.cargo-machete]
+ignored = ["anyhow", "entry", "oxc", "sqlite"]

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package elide.runtime.feature.engine
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 
 /** Registers native library for Jansi. */
 @VMFeature internal class NativeConsoleFeature : AbstractStaticNativeLibraryFeature() {

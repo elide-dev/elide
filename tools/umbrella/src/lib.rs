@@ -19,10 +19,16 @@ extern crate core;
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+#[cfg(all(feature = "allocator", target_env = "musl"))]
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 #[cfg(all(
+  feature = "allocator",
   feature = "jemalloc",
   not(target_os = "windows"),
   not(target_os = "openbsd"),
+  not(target_env = "musl"),
   any(
     target_arch = "x86_64",
     target_arch = "aarch64",
@@ -32,23 +38,26 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 #[global_allocator]
 static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
+#[cfg(feature = "orogene")]
 use clap::Args as ClapArgs;
-use clap::Command;
+
+#[cfg(feature = "orogene")]
+use miette::Result;
+
 use java_native::{jni, on_load, on_unload};
 use jni::JNIEnv;
 use jni::objects::{JClass, JObjectArray, JString};
 use jni::sys::{JavaVM, jint, jobjectArray, jstring};
 use jni_sys::JNI_VERSION_21;
-use miette::Result;
 use std::collections::HashMap;
 use std::ffi::{OsStr, c_void};
 use std::sync::OnceLock;
+
+#[cfg(feature = "orogene")]
 use tokio::runtime::Runtime;
 
 pub use diag;
-pub use js;
 pub use posix;
-pub use sqlitejdbc;
 pub use terminal;
 pub use transport;
 
@@ -74,7 +83,6 @@ use crate::tools::RUFF_INFO;
 use crate::tools::UV_INFO;
 use crate::tools::{API_VERSION, LIB_VERSION, ToolInfo};
 
-pub mod diagnostics;
 pub mod nativetransport;
 pub mod tools;
 
@@ -99,6 +107,21 @@ pub fn initialize_elide_native(_env: Option<JNIEnv>) -> u32 {
 fn tool_map() -> &'static HashMap<&'static str, &'static ToolInfo> {
   static TOOL_MAP: OnceLock<HashMap<&'static str, &'static ToolInfo>> = OnceLock::new();
   TOOL_MAP.get_or_init(|| {
+    #[cfg(not(any(
+      feature = "biome",
+      feature = "orogene",
+      feature = "oxc",
+      feature = "ruff",
+      feature = "uv"
+    )))]
+    let m = HashMap::new();
+    #[cfg(any(
+      feature = "biome",
+      feature = "orogene",
+      feature = "oxc",
+      feature = "ruff",
+      feature = "uv"
+    ))]
     let mut m = HashMap::new();
     #[cfg(feature = "biome")]
     m.insert("biome", &BIOME_INFO);
@@ -114,9 +137,11 @@ fn tool_map() -> &'static HashMap<&'static str, &'static ToolInfo> {
   })
 }
 
+#[cfg(any(feature = "orogene", feature = "uv"))]
 static RUNTIME: OnceLock<Runtime> = OnceLock::new();
 
 /// Obtain the active Tokio runtime; if one is not already initialized, a new one will be created.
+#[cfg(any(feature = "orogene", feature = "uv"))]
 fn obtain_runtime() -> &'static Runtime {
   RUNTIME.get_or_init(|| {
     tokio::runtime::Builder::new_multi_thread()
@@ -148,7 +173,7 @@ fn run_ruff_entry(args: Vec<std::ffi::OsString>) -> ExitStatus {
 
 #[cfg(feature = "orogene")]
 pub fn run_oro_with_args(args: Vec<std::ffi::OsString>) -> Result<()> {
-  let cmd = Command::new("orogene");
+  let cmd = clap::Command::new("orogene");
   let again = Orogene::augment_args(cmd);
 
   // Execute the future, blocking the current thread until completion
@@ -260,18 +285,26 @@ fn decode_tool_args(mut env: JNIEnv, args: JObjectArray) -> Vec<std::ffi::OsStri
   tool_args
 }
 
+#[cfg(feature = "orogene")]
 #[jni("dev.elide.cli.bridge.CliNativeBridge")]
 pub fn runOrogene<'local>(
   env: JNIEnv<'local>,
   _class: JClass<'local>,
   args: JObjectArray<'local>,
 ) -> jint {
-  #[cfg(feature = "orogene")]
   match run_oro_with_args(decode_tool_args(env, args)) {
     Ok(_) => 0,
     Err(_) => 1,
   }
-  #[cfg(not(feature = "orogene"))]
+}
+
+#[cfg(not(feature = "orogene"))]
+#[jni("dev.elide.cli.bridge.CliNativeBridge")]
+pub fn runOrogene<'local>(
+  _env: JNIEnv<'local>,
+  _class: JClass<'local>,
+  _args: JObjectArray<'local>,
+) -> jint {
   return -1;
 }
 

@@ -140,10 +140,6 @@ name: Framework
 
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-  # SCCACHE_WEBDAV_ENDPOINT: "https://sccache.less.build"
-  # SCCACHE_WEBDAV_USERNAME: "apikey"
-  # SCCACHE_WEBDAV_PASSWORD: ${{ secrets.BUILDLESS_APIKEY }}
-  # SCCACHE_REDIS: "rediss://apikey:${{ secrets.BUILDLESS_APIKEY }}@redis.less.build:6380"
 
 permissions:
   contents: read
@@ -191,8 +187,6 @@ jobs:
       hashes: ${{ steps.hash.outputs.hashes }}
 
     steps:
-      - name: "Setup: Apt Dependencies"
-        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
         with:
@@ -230,6 +224,26 @@ jobs:
             repo.maven.apache.org:443
             scans-in.gradle.com:443
             services.gradle.org:443
+      - name: "Setup: Apt Dependencies"
+        run: |
+          sudo apt-get install -y libtool-bin build-essential libc6-dev libssl-dev
+      - name: "Setup: LLVM 19"
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo apt-get remove clang clangd lld llvm || echo "No LLVM installed; skipping error."
+          sudo ./llvm.sh 19 all
+          export LLVM_PATH=/usr/lib/llvm-19
+          export PATH="$LLVM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
+          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
+          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
+          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
+          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
+          echo PATH=$PATH >> $GITHUB_ENV
+          sudo apt-get remove clang-18 clangd-18 lld-18 llvm-18 || echo "No LLVM 18 installed; skipping error."
+          sudo apt-get autoremove;
+          sudo apt-get clean;
       - name: "Setup: Clear Tooling Cache"
         run: rm -rf /opt/hostedtoolcache
       - name: "Setup: Checkout"
@@ -241,7 +255,7 @@ jobs:
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@11df97af8e8102fd60b60a77dfbf58d40cd843b8 # v1.10.1
         with:
-          toolchain: nightly
+          toolchain: stable
           components: clippy,rustfmt
           rustflags: ""
       - name: "Setup: SCCache"
@@ -274,23 +288,10 @@ jobs:
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
-          version: "9.2.0"
+          version: "10.5.2"
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-      - name: "Setup: LLVM 18"
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 18 all
-          export LLVM_PATH=/usr/lib/llvm-18
-          export PATH="$LLVM_PATH/bin:$PATH"
-          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
-          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
-          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
-          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
-          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
-          echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Dependencies"
         run: |
           cargo install cargo-fuzz cargo-insta rustfilt
@@ -349,7 +350,8 @@ jobs:
             --stacktrace \
             -Pelide.ci=true \
             -PbuildSamples=false \
-            -PbuildDocs=false
+            -PbuildDocs=false \
+            -Pelide.buildMode=dev
       - name: "Artifact: Build Outputs"
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:

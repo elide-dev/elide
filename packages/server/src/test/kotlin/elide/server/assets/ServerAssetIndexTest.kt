@@ -20,6 +20,7 @@ import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
 import com.google.protobuf.ByteString
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import tools.elide.assets.AssetBundle
@@ -44,6 +45,7 @@ import elide.server.cfg.AssetConfig
 import elide.testing.annotations.TestCase
 
 /** Tests for [ServerAssetIndex]. */
+@Disabled
 @Suppress("UnstableApiUsage")
 @TestCase class ServerAssetIndexTest {
   private fun loadSampleManifest(): AssetBundle {

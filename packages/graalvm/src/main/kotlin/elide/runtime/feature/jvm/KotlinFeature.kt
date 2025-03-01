@@ -12,7 +12,7 @@
  */
 package elide.runtime.feature.jvm
 
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 import elide.runtime.feature.EngineFeature
 import elide.runtime.gvm.GraalVMGuest
 

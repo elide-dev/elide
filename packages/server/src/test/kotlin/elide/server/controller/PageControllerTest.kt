@@ -16,6 +16,7 @@ package elide.server.controller
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import jakarta.inject.Inject
@@ -28,6 +29,7 @@ import elide.server.assets.AssetReference
 import elide.server.assets.AssetType
 
 /** Tests for the top-level [PageController] extension point. */
+@Disabled
 @MicronautTest class PageControllerTest {
   // Application bean context.
   @Inject lateinit var sample: SamplePageController

@@ -123,6 +123,30 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"com.github.ajalt.clikt.core.BaseCliktCommand",
+  "queryAllDeclaredMethods": true,
+  "allDeclaredMethods": true,
+  "allDeclaredFields": true
+},
+{
+  "name":"elide.tool.cli.CliCommandInvocation",
+  "queryAllDeclaredMethods": true,
+  "allDeclaredMethods": true,
+  "allDeclaredFields": true
+},
+{
+  "name":" elide.tool.cli.cmd.pkl.ToolPklCommand",
+  "queryAllDeclaredMethods": true,
+  "allDeclaredMethods": true,
+  "allDeclaredFields": true
+},
+{
+  "name":"elide.tool.cli.cmd.tool.ToolInvokeCommand",
+  "queryAllDeclaredMethods": true,
+  "allDeclaredMethods": true,
+  "allDeclaredFields": true
+},
+{
   "name":"com.github.ajalt.mordant.internal.jna.PosixLibC$winsize",
   "allDeclaredFields":true
 },
@@ -175,6 +199,14 @@
 },
 {
   "name":"com.sun.jna.Native",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.jna.Platform",
   "allDeclaredMethods":true,
   "allPublicMethods":true,
   "allDeclaredConstructors":true,
@@ -780,7 +812,15 @@
   ]
 },
 {
+  "name": "elide.runtime.node.asserts.NodeAssert",
+  "queryAllDeclaredMethods": true,
+  "allDeclaredMethods": true
+},
+{
   "name": "elide.runtime.node.zlib.NodeZlibModule",
+  "queryAllDeclaredMethods": true,
+  "allDeclaredMethods": true,
+  "allDeclaredFields": true,
   "fields": [
     {
       "name": "zlib"

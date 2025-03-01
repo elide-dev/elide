@@ -25,7 +25,7 @@ mod codegen;
 /// Pre-compiler implementation.
 mod precompiler;
 
-#[jni("elide.runtime.gvm.js.JavaScriptPrecompiler")]
+#[jni("elide.runtime.lang.javascript.JavaScriptPrecompiler")]
 pub fn precompile<'a>(
   mut env: JNIEnv<'a>,
   _class: JClass<'a>,

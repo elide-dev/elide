@@ -413,17 +413,21 @@ pub fn target_arch() -> TargetArch {
 }
 
 /// Common C flags applied to all builds which use this builder interface.
-const common_c_flags: [&str; 10] = [
+const common_c_flags: [&str; 14] = [
+  "-g",
   "-O3",
   "-fPIC",
   "-fPIE",
-  "-fno-omit-frame-pointer",
-  "-fstack-protector-strong",
   "-fstack-clash-protection",
+  "-fstack-protector-strong",
+  "-fexceptions",
+  "-ffunction-sections",
+  "-fdata-sections",
+  "-fno-omit-frame-pointer",
   "-fno-delete-null-pointer-checks",
   "-fno-strict-overflow",
   "-fno-strict-aliasing",
-  "-fexceptions",
+  "-DELIDE",
 ];
 
 /// Common ASM flags applied to all builds which use this builder interface.
@@ -435,7 +439,10 @@ pub fn setup_cc() -> Build {
   let os = target_os();
   let arch = target_arch();
   let mut build = Build::new();
-
+  let custom_cc = var("CC");
+  if let Ok(cc) = custom_cc {
+    build.compiler(cc.clone());
+  }
   build
     // Defines & Compiler Settings
     .pic(true)
@@ -457,14 +464,32 @@ pub fn setup_cc() -> Build {
   build
     // General Hardening
     .flag_if_supported("-fhardened")
+    //.flag("-fuse-linker-plugin")
     .flag_if_supported("-fstrict-flex-arrays=3")
     .flag_if_supported("-fno-delete-null-pointer-checks")
     .flag_if_supported("-fno-strict-overflow")
     .flag_if_supported("-fno-strict-aliasing");
 
+  // if we are on x86_64...
+  if arch == TargetArch::Amd64 {
+    build
+      // x86_64-specific Flags
+      .flag("-fcf-protection=full");
+  } else {
+    build
+      // ARM64-specific Flags
+      .flag("-mbranch-protection=standard");
+  }
+
   // add cflags
   for flag in common_c_flags.iter() {
     build.flag(flag);
+  }
+
+  // add libc flags for musl
+  let target = var("TARGET").unwrap();
+  if target.contains("musl") {
+    build.define("__MUSL__", "1");
   }
 
   // add asm flags
@@ -480,8 +505,7 @@ pub fn setup_cc() -> Build {
       .flag("-g"),
     "release" => build
       // Release-only Flags
-      .define("ELIDE_RELEASE", "1")
-      .flag("-flto"),
+      .define("ELIDE_RELEASE", "1"),
 
     _ => &mut build,
   };
@@ -489,11 +513,10 @@ pub fn setup_cc() -> Build {
   // add os-specific flags
   match os {
     TargetOs::Darwin => match arch {
-      TargetArch::Amd64 => &mut build,
+      TargetArch::Amd64 => build.flag("-march=x86-64-v3"),
       TargetArch::Arm64 => build
         // C Flags: macOS
         .flag("-march=armv8-a+crypto+crc+simd")
-        .flag("-mbranch-protection=standard")
         .flag(format!("-mmacos-version-min={}", MACOS_MIN))
         .define("__ARM_NEON", "1")
         .define("__ARM_FEATURE_AES", "1")

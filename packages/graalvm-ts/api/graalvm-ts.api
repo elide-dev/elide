@@ -19,9 +19,18 @@ public class elide/runtime/lang/typescript/TypeScriptLanguage : com/oracle/truff
 	protected fun finalizeContext (Lcom/oracle/truffle/js/runtime/JSRealm;)V
 	protected synthetic fun finalizeContext (Ljava/lang/Object;)V
 	protected fun parse (Lcom/oracle/truffle/api/TruffleLanguage$ParsingRequest;)Lcom/oracle/truffle/api/CallTarget;
+	protected fun patchContext (Lcom/oracle/truffle/js/runtime/JSRealm;Lcom/oracle/truffle/api/TruffleLanguage$Env;)Z
+	protected synthetic fun patchContext (Ljava/lang/Object;Lcom/oracle/truffle/api/TruffleLanguage$Env;)Z
 }
 
-public class elide/runtime/lang/typescript/TypeScriptLanguage$TypeScriptLoaderFactory : elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory {
+public class elide/runtime/lang/typescript/TypeScriptLanguage$TypeScriptCompilerLoaderFactory : elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory {
+	public fun <init> (Lelide/runtime/lang/typescript/TypeScriptLanguage;)V
+	public fun invoke (Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
+	public fun test (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;)Z
+	public synthetic fun test (Ljava/lang/Object;)Z
+}
+
+public class elide/runtime/lang/typescript/TypeScriptLanguage$TypeScriptPrecompiledLoaderFactory : elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory {
 	public fun <init> (Lelide/runtime/lang/typescript/TypeScriptLanguage;)V
 	public fun invoke (Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
 	public fun test (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;)Z
@@ -52,5 +61,12 @@ public final class elide/runtime/typescript/TypeScriptFeature : org/graalvm/nati
 	public fun <init> ()V
 	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
 	public fun getDescription ()Ljava/lang/String;
+}
+
+public final class elide/runtime/typescript/TypeScriptPrecompiler : elide/runtime/precompiler/Precompiler$SourcePrecompiler {
+	public static final field INSTANCE Lelide/runtime/typescript/TypeScriptPrecompiler;
+	public synthetic fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/String;)Ljava/lang/String;
+	public static final fun obtain ()Lelide/runtime/typescript/TypeScriptPrecompiler;
 }
 

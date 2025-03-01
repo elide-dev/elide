@@ -20,9 +20,9 @@
 # fix from:
 # https://github.com/rust-lang/rust/issues/60059#issuecomment-1972748340
 
-# if CC is not defined, force to clang
+# if CC is not defined, force to clang 19
 if [ -z "${CC}" ]; then
-  export CC=clang
+  export CC=clang-19
 fi
 
 declare -a args=()

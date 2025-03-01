@@ -20,8 +20,13 @@ import java.nio.file.Files
 import java.nio.file.Path
 import elide.internal.conventions.ElideBuildExtension
 import elide.internal.conventions.ElideConventionPlugin
+import elide.toolchain.host.TargetInfo
 
-public fun Project.checkNatives(vararg needs: TaskProvider<*>, enforce: Boolean = true) {
+public fun Project.checkNatives(
+  vararg needs: TaskProvider<*>,
+  enforce: Boolean = true,
+  targetInfo: TargetInfo = TargetInfo.current(project),
+) {
   val quickbuild = (
     project.properties["elide.release"] != "true" ||
     project.properties["elide.buildMode"] == "dev"
@@ -33,10 +38,15 @@ public fun Project.checkNatives(vararg needs: TaskProvider<*>, enforce: Boolean 
   val checkNative by tasks.registering {
     group = "build"
     description = "Check native libraries required for build/test"
+    mustRunAfter(
+      ":packages:graalvm:natives"
+    )
     doFirst {
       val targetRoot = Path.of(
-        rootProject.layout.projectDirectory.dir("target").asFile.path
-      ).resolve(if (isRelease) "release" else "debug")
+        rootProject.layout.projectDirectory.dir(
+          "target/${targetInfo.triple}/${if (isRelease) "release" else "debug"}"
+        ).asFile.path
+      )
 
       val sqliteLibRoot = rootProject.layout.projectDirectory.dir("third_party/sqlite/install/lib").asFile.toPath()
       val ext = when {

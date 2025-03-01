@@ -25,19 +25,28 @@ REMOTE ?= no
 PUSH ?= no
 CHECK ?= yes
 NATIVE ?= no
+MUSL ?= no
 COVERAGE ?= yes
 BUILD_NATIVE_IMAGE ?= no
 BUILD_STDLIB ?= no
 RELEASE ?= no
 MACOS_MIN_VERSION ?= 12.3
-ENABLE_CCACHE ?= yes
-ENABLE_SCCACHE ?= yes
+ENABLE_CCACHE ?= no
+ENABLE_SCCACHE ?= no
 CUSTOM_JVM ?= no
 export STRICT ?= yes
 export WASM ?= no
 export RELOCK ?= no
 DEFAULT_REPOSITORY ?= s3://elide-maven
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
+
+ifeq ($(CC),clang)
+export COMPILER ?= clang
+export RUST_CONFIG ?= clang
+else
+export COMPILER ?= gcc
+export RUST_CONFIG ?= default
+endif
 
 # Flags that are exported to the third_party build.
 export CUSTOM_ZLIB ?= no
@@ -224,6 +233,17 @@ export GVM_PROFILE ?= gvm-ce-macos-aarch64
 endif
 ifeq ($(SYSTEM),Linux)
 export GVM_PROFILE ?= gvm-ce-linux-amd64
+endif
+
+ifneq ($(RUST_CONFIG),default)
+ifeq ($(ARCH),x86_64)
+# Render flags for assigning a Cargo config.
+RUST_CONFIG_FLAGS ?= --config=$(ELIDE_ROOT)/.cargo/config.$(RUST_CONFIG)-x86_64.toml
+else
+RUST_CONFIG_FLAGS ?= --config=$(ELIDE_ROOT)/.cargo/config.$(RUST_CONFIG)-$(ARCH).toml
+endif
+else
+RUST_CONFIG_FLAGS ?=
 endif
 
 JS_FACADE_BIN ?= runtime/bazel-bin/elide/runtime/js/runtime.bin.js
@@ -593,6 +613,39 @@ endif
 
 UMBRELLA_TARGET_PATH = target/$(UMBRELLA_TARGET)
 
+cflags-base:
+	@cat $(ELIDE_ROOT)/tools/cflags/base | xargs
+
+cflags-gcc:
+	@cat $(ELIDE_ROOT)/tools/cflags/base $(ELIDE_ROOT)/tools/cflags/gcc | xargs 2> /dev/null
+
+cflags-clang:
+	@cat $(ELIDE_ROOT)/tools/cflags/gcc $(ELIDE_ROOT)/tools/cflags/clang | xargs 2> /dev/null
+
+cflags:  ## Generate cflags for assigned target (pass COMPILER=clang for clang).
+	@cat $(ELIDE_ROOT)/tools/cflags/base $(ELIDE_ROOT)/tools/cflags/$(COMPILER) | xargs 2> /dev/null
+
+env:  ## Show a summary of the build environment.
+	@echo "Elide Build Environment:"
+	@echo "- OS: $(OS)"
+	@echo "- Arch: $(ARCH)"
+	@echo "- Compiler: $(COMPILER)"
+	@echo "- Release: $(RELEASE)"
+	@echo "- Native: $(NATIVE)"
+	@echo "---------------------------------------------"
+	@echo "rustc:" && $(RUSTC) -vV && echo ""
+	@echo "javac:" && $(JAVA) -version && echo ""
+	@echo "clang:" && $(CLANG) -v && echo ""
+	@echo "lld:  " && $(LLD) -v && echo ""
+	@$(MAKE) cenv
+
+cenv:  ## Show the C compiler environment.
+	@echo "CC=$(CC)"
+	@echo "CXX=$(CXX)"
+	@echo "LD=$(LD)"
+	@echo "COMPILER=$(COMPILER)"
+	@echo "CFLAGS=\"$(shell cat $(ELIDE_ROOT)/tools/cflags/base $(ELIDE_ROOT)/tools/cflags/$(COMPILER) | xargs 2> /dev/null)\""
+
 umbrella: third-party $(UMBRELLA_TARGET_PATH)  ## Build the native umbrella tooling library.
 
 $(UMBRELLA_TARGET_PATH): third_party/lib
@@ -633,11 +686,11 @@ clean-natives:  ## Clean local native targets.
 
 natives: $(DEPS)  ## Rebuild natives (C/C++ and Rust).
 ifeq ($(BUILD_STDLIB),yes)
-	@echo "" && echo "Building Rust stdlib (mode: $(BUILD_MODE), native: $(NATIVE))..."
+	@echo "" && echo "Building Rust stdlib (mode: $(BUILD_MODE), native: $(NATIVE))"
 	$(CMD)$(CARGO) run +nightly -Zbuild-std --target $(RUSTC_TARGET)
 endif
-	@echo "" && echo "Building Elide crates..."
-	$(CMD)$(CARGO) build $(CARGO_FLAGS)
+	@echo "" && echo "Building Elide crates (mode: $(BUILD_MODE), native: $(NATIVE), target: $(RUSTC_TARGET), config: $(RUST_CONFIG))"
+	$(CMD)$(CARGO) $(RUST_CONFIG_FLAGS) build $(CARGO_FLAGS) --target $(RUSTC_TARGET) 
 
 third-party: third_party/sqlite third_party/lib  ## Build all third-party embedded projects.
 
@@ -946,7 +999,7 @@ info:  ## Show info about the current codebase and toolchain.
 	$(CMD)-$(RUBY) --version
 	@echo ""
 	@echo "Rust:"
-	$(CMD)-$(RUSTC) --version
+	$(CMD)-$(RUSTC) -vV
 	@echo ""
 	@echo "Cargo:"
 	$(CMD)-$(CARGO) --version

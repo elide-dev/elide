@@ -252,11 +252,16 @@ dependencies {
   implementation(projects.packages.base)
   implementation(projects.packages.engine)
   implementation(projects.packages.graalvm)
-  implementation(projects.packages.proto.protoProtobuf)
+
+  // protobuf
+  api(libs.protobuf.java)
+  api(libs.protobuf.util)
+  api(libs.protobuf.kotlin)
 
   // language engines
   implementation(libs.graalvm.js.language)
   implementation(libs.graalvm.wasm.language)
+  implementation(projects.packages.graalvmJs)
   implementation(projects.packages.graalvmTs)
   implementation(projects.packages.graalvmPy)
   implementation(projects.packages.graalvmRb)

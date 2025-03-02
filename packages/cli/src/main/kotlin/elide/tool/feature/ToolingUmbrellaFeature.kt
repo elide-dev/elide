@@ -12,11 +12,10 @@
  */
 package elide.tool.feature
 
-import dev.elide.cli.bridge.CliNativeBridge
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import org.graalvm.nativeimage.hosted.RuntimeJNIAccess.register
-import elide.annotations.internal.VMFeature
+import elide.annotations.engine.VMFeature
 import elide.runtime.feature.NativeLibraryFeature.NativeLibInfo
 import elide.runtime.feature.NativeLibraryFeature.NativeLibType.STATIC
 import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature

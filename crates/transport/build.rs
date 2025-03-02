@@ -23,7 +23,8 @@ fn main() {
   build
     // Compiler Settings
     .std("gnu99")
-    .flag("-w");
+    .flag("-w")
+    .flag("-Wno-int-conversion");
 
   build
     // Defines & Compiler Settings
@@ -94,7 +95,7 @@ fn main() {
     .file(src_file("netty_unix_socket.c"))
     .file(src_file("netty_unix_util.c"));
 
-  let shared_cflags = vec!["-nostdlibs", "-lssl", "-lcrypto", "-lapr-2", "-lz", "-lc++"];
+  let shared_cflags = vec!["-lssl", "-lcrypto", "-lapr-2", "-lz", "-lc++"];
   let shared_linkflags = vec![
     // force resolution of all symbols at build time
     "-Wl,--no-undefined",

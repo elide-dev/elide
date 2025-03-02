@@ -42,7 +42,7 @@ root=$(pwd)
 echo "- Building release root (variant: $variant / platform: $platform)..."
 pushd packages/cli/build/native/nativeCompile \
   && mkdir -p "$archive_prefix-$version-$platform/" \
-  && cp -fr elide.debug $root/packages/cli/packaging/content/* ./*.{so,dylib,dll} resources "$archive_prefix-$version-$platform/"
+  && cp -fr elide $root/packages/cli/packaging/content/* ./*.{so,dylib,dll} resources "$archive_prefix-$version-$platform/"
 
 echo "- Building tar package (variant: $variant / platform: $platform)..."
 tar -cf "$archive_prefix-$version-$platform.tar" "$archive_prefix-$version-$platform/"

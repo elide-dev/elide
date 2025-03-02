@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -24,6 +24,7 @@ import elide.runtime.core.DelicateElideApi
   ES2021,
   ES2022,
   ES2023,
+  ES2024,
   STABLE,
   LATEST,
 }

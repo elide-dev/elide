@@ -50,22 +50,33 @@ val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
   gvmJarsRoot.file("graaljs.jar"),
+  gvmJarsRoot.file("truffle-api.jar"),
 )
 
-val patchedDependencies: Configuration by configurations.creating {
-  isCanBeResolved = true
-}
+val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
 
 dependencies {
   annotationProcessor(libs.graalvm.truffle.processor)
   api(projects.packages.engine)
   api(patchedLibs)
   api(libs.graalvm.truffle.api)
+  implementation(libs.kotlinx.atomicfu)
   patchedDependencies(patchedLibs)
 }
 
 configurations.all {
-  libs.graalvm.js.language.get().let {
-    exclude(group = it.group, module = it.name)
+  listOf(
+    libs.graalvm.js.language,
+    libs.graalvm.truffle.api,
+  ).forEach {
+    it.get().let {
+      exclude(group = it.group, module = it.name)
+    }
+  }
+}
+
+graalvmNative {
+  agent {
+    enabled = false
   }
 }

@@ -16,13 +16,12 @@ name = "builder"
 edition = "2024"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha13-SNAPSHOT"
+version = "1.0.0-alpha14-SNAPSHOT"
 
 [lib]
 crate-type = ["lib"]
 
 [dependencies]
-base = { workspace = true }
 model = { workspace = true }
 cc = { workspace = true, features = ["parallel"] }
 bindgen = { workspace = true }

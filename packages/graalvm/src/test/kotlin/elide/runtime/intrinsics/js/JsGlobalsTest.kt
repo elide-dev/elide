@@ -25,7 +25,6 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
 import elide.runtime.gvm.GraalVMGuest
-import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.js.AbstractJsTest

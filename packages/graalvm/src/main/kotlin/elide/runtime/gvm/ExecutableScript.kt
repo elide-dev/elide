@@ -15,7 +15,6 @@ package elide.runtime.gvm
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.*
-import elide.runtime.gvm.ExecutableScript.State
 
 /**
  * # Executable Script

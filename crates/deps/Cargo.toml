@@ -16,7 +16,7 @@ name = "deps"
 edition = "2024"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha13-SNAPSHOT"
+version = "1.0.0-alpha14-SNAPSHOT"
 
 [lib]
 crate-type = ["lib"]
@@ -24,13 +24,13 @@ crate-type = ["lib"]
 [dependencies]
 ## Local
 base = { workspace = true }
-model = { workspace = true }
+# model = { workspace = true }
 
 ## Crates
-pubgrub = { workspace = true }
-purl = { workspace = true }
-semver = { workspace = true }
+# pubgrub = { workspace = true }
+# purl = { workspace = true }
+# semver = { workspace = true }
 serde = { workspace = true }
-toml = { workspace = true }
-toml_edit = { workspace = true }
+# toml = { workspace = true }
+# toml_edit = { workspace = true }
 typeshare = { workspace = true }

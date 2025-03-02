@@ -57,6 +57,10 @@ import elide.runtime.core.PolyglotContext.EvaluationOptions
     context.leave()
   }
 
+  override fun unwrap(): Context {
+    return context
+  }
+
   override operator fun <T> get(element: PolyglotContextElement<T>): T? {
     @Suppress("unchecked_cast") return elements[element] as? T
   }

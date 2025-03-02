@@ -78,19 +78,16 @@ val props = Properties().apply {
   }
 }
 
-val isCI = hasProperty("elide.ci") && properties["elide.ci"] == "true"
-
 val javaLanguageVersion = properties["versions.java.language"] as String
-val kotlinLanguageVersion = properties["versions.kotlin.language"] as String
 val nodeVersion: String by properties
 val enableOwasp: String? by properties
 
-val buildSamples: String by properties
 val buildDocs: String by properties
 val buildDeprecated: String by properties
 val buildEmbedded: String by properties
 val buildAuxImage: String by properties
 val buildDocsModules: String by properties
+val buildBenchmarks: String by properties
 
 buildscript {
   repositories {
@@ -353,6 +350,15 @@ apiValidation {
       "transport-uring",
       "reports",
     ).plus(
+      if (buildBenchmarks == "true") {
+        listOf(
+          "benchmarks",
+          "bench-graalvm",
+        )
+      } else {
+        emptyList()
+      },
+    ).plus(
       if (buildAuxImage == "true") {
         listOf(
           "auximage",
@@ -536,6 +542,7 @@ tasks {
       }
       val projectVersion = project.version as String
       val allVersions = listOf(
+        "1.0.0-alpha14",
         "1.0.0-alpha13",
         "1.0.0-alpha11",
         "1.0.0-alpha10",

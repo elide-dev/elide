@@ -63,8 +63,8 @@ internal data object ExecDefaults {
  * @property windowsHide Whether to hide the process window.
  * @property timeout Timeout for the process, in seconds.
  */
-@ExposedCopyVisibility
-@API @JvmRecord public data class ExecOptions private constructor (
+@ConsistentCopyVisibility
+@API @JvmRecord public data class ExecOptions internal constructor (
   override val cwdString: String? = null,
   public val cwdUrl: URL? = null,
   override val env: Map<String, String>? = null,

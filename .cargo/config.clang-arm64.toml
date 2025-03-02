@@ -1,0 +1,33 @@
+#
+# Copyright (c) 2024 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
+[build]
+rustflags = [
+  # Enforce completely position-independent executables.
+  "-Crelocation-model=pic",
+
+  # Target CPU.
+  "-Ctarget-cpu=armv8-a+crypto+crc+simd",
+
+  # Target the native host CPU.
+  "-Ctarget-cpu=apple-m1",
+
+  # Enables NEON support awareness on ARM64 macOS platforms.
+  "-Ctarget-feature=+neon,+aes,+crc,+sha2,+sha3,+mte,+sve,+sm4,+sve2,+sve2-aes,+sve2-bitperm,+sve2-sha3,+sve2-sm4",
+]
+
+[env]
+ELIDE_ROOT = { value = ".", relative = true }
+SQLITE3_STATIC = { value = "1" }
+SQLITE3_LIB_DIR = { value = "third_party/sqlite/install/lib", relative = true }
+SQLITE3_INCLUDE_DIR = { value = "third_party/sqlite/install/include", relative = true }

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 set +x
-TOOL_REVISION="1.0.0-alpha13"
+TOOL_REVISION="1.0.0-alpha14"
 INSTALLER_VERSION="v0.15"
 TOOL="cli"
 VERSION="v1"

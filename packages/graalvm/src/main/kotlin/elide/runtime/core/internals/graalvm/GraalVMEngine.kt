@@ -125,12 +125,13 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   // Finalize a suite of bindings for a given language (or the main polyglot bindings).
+  @Suppress("KotlinConstantConditions")
   private fun finalizeBindings(bindings: Value) {
     if (EXPERIMENTAL_DROP_INTERNALS && bindings.hasMembers()) {
       knownInternalMembers.forEach {
         try {
           bindings.removeMember(it)
-        } catch (uoe: UnsupportedOperationException) {
+        } catch (_: UnsupportedOperationException) {
           // ignore
         }
       }
@@ -138,6 +139,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   // Finalize a context before execution of guest code.
+  @Suppress("KotlinConstantConditions")
   private fun doFinalize(ctx: GraalVMContext) = ctx.apply {
     if (EXPERIMENTAL_DROP_INTERNALS && shouldDropInternals) {
       val polyglot = context.polyglotBindings
@@ -167,7 +169,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   public companion object {
-    @JvmStatic private val defaultAuxPath = System.getProperty("elide.natives")
+    @JvmStatic private val defaultAuxPath = "/tmp/elide-runtime/cache"
 
     // Names of known-internal members which are yanked before guest code is executed.
     private val knownInternalMembers = sortedSetOf(
@@ -218,7 +220,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     private const val ENABLE_ISOLATES = false
 
     /** Whether to enable the auxiliary cache. */
-    private const val ENABLE_AUX_CACHE = false
+    private const val ENABLE_AUX_CACHE = true
 
     /** Whether to drop internals from the polyglot context before finalization completes. */
     private const val EXPERIMENTAL_DROP_INTERNALS = false
@@ -233,7 +235,13 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     private val isNativeImage = ImageInfo.inImageCode()
 
     /** Logger used for engine instances */
-    private val engineLogger = Logging.named("elide:engine")
+    private val engineLogger by lazy { Logging.named("elide:engine") }
+
+    /** Contexts to pre-initialize at image build time. */
+    private val preinitializeContexts = System.getProperty(
+      "polyglot.image-build-time.PreinitializeContexts",
+      "js,python"
+    )
 
     /** Whether the auxiliary cache is actually enabled. */
     private val useAuxCache = (
@@ -253,7 +261,8 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
      */
     @Suppress("SpreadOperator", "LongMethod")
     public fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
-      val nativesPath = System.getProperty("elide.natives")?.ifBlank { null } ?: defaultAuxPath
+      val auxCachePath = System.getProperty("elide.cachePath")?.ifBlank { null } ?: defaultAuxPath
+
       val languages = configuration.languages.flatMap {
         when (it.languageId) {
           JavaScriptLanguage.ID,
@@ -340,16 +349,14 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
           option("engine.MaxIsolateMemory", "2GB")
         }
 
-        if (useAuxCache && nativesPath != null) {
-          // if we're running in a native image, enabled the code compile cache
-          // option("engine.PreinitializeContexts", "js")
-          // option("engine.CacheCompile", "hot")
+        if (useAuxCache && ImageInfo.inImageCode()) {
+          option("engine.PreinitializeContexts", preinitializeContexts)
+          option("engine.CacheCompile", "hot")
           option("engine.TraceCache", "true")
-          disableOption("engine.CachePreinitializeContext")
 
           option(
             "engine.Cache",
-            Path(nativesPath).resolve("elide-img.bin").toAbsolutePath().toString(),
+            Path(auxCachePath).resolve("elide-img.bin").toAbsolutePath().toString(),
           )
         }
       }

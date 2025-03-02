@@ -13,6 +13,7 @@
 
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
+import elide.toolchain.host.TargetInfo
 
 plugins {
   alias(libs.plugins.micronaut.graalvm)
@@ -63,7 +64,45 @@ dependencies {
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 
+val elideTarget = TargetInfo.current(project)
+
+val quickbuild = (
+  properties["elide.release"] != "true" ||
+    properties["elide.buildMode"] == "dev"
+  )
+
+val isRelease = !quickbuild && (
+  properties["elide.release"] == "true" ||
+    properties["elide.buildMode"] == "release"
+  )
+
+val nativesType = if (isRelease) "release" else "debug"
+
+val umbrellaNativesPath: String =
+  rootProject.layout.projectDirectory.dir("target/${elideTarget.triple}/$nativesType")
+    .asFile
+    .path
+val nativesPath = umbrellaNativesPath
+val targetSqliteDir = rootProject.layout.projectDirectory.dir("third_party/sqlite/install")
+val targetSqliteLibDir = targetSqliteDir.dir("lib")
+
+val javaLibPath = provider {
+  StringBuilder().apply {
+    append(nativesPath)
+    append(File.pathSeparator)
+    append(targetSqliteLibDir)
+    System.getProperty("java.library.path", "").let {
+      if (it.isNotEmpty()) {
+        append(File.pathSeparator)
+        append(it)
+      }
+    }
+  }
+}
+
 tasks {
+  checkNatives(test)
+
   jar.configure {
     exclude("**/runtime.current.json")
   }
@@ -73,6 +112,7 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+    systemProperty("java.library.path", javaLibPath.get())
   }
 }
 

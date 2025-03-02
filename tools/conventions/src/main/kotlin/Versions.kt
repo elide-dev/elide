@@ -29,7 +29,7 @@ object Versions {
   const val netty = "4.1.110.Final"
 
   /** Protocol Buffers version. */
-  const val protobuf = "3.25.2"
+  const val protobuf = "4.28.2"
 
   /** Guava version. */
   const val guava = "33.2.1-jre"

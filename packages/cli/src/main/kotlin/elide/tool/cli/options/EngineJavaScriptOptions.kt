@@ -19,7 +19,6 @@ import picocli.CommandLine.Option
 //import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.plugins.js.JavaScriptConfig
-import elide.runtime.plugins.js.JavaScriptVersion
 
 /** JavaScript engine options. */
 @Introspected @ReflectiveAccess class EngineJavaScriptOptions : AbstractEngineOptions() {

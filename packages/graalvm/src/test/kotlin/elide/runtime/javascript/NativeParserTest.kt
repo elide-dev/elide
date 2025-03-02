@@ -14,18 +14,25 @@
 
 package elide.runtime.javascript
 
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*
-import elide.runtime.gvm.js.JavaScriptCompilerConfig
-import elide.runtime.gvm.js.JavaScriptPrecompiler
+import elide.runtime.lang.javascript.JavaScriptCompilerConfig
+import elide.runtime.lang.javascript.JavaScriptPrecompiler
 import elide.runtime.precompiler.Precompiler.PrecompileSourceInfo
 import elide.runtime.precompiler.Precompiler.PrecompileSourceRequest
 import elide.testing.annotations.Test
 
 class NativeParserTest {
-  init {
-    System.loadLibrary("umbrella")
+  companion object {
+    @BeforeAll @JvmStatic fun load() {
+      try {
+        System.loadLibrary("js")
+      } catch (e: UnsatisfiedLinkError) {
+        throw IllegalStateException("Could not load library 'js'", e)
+      }
+    }
   }
 
   // lowering javascript should just return the javascript

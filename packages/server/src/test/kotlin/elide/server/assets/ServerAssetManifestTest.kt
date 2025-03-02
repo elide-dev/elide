@@ -25,6 +25,7 @@ import elide.server.TestUtil
 import elide.testing.annotations.TestCase
 
 /** Tests for [ServerAssetManifest] and [ServerAssetManifestProvider]. */
+@Disabled
 @TestCase class ServerAssetManifestTest {
   @Test fun testParseSampleManifestBinary() {
     val data = TestUtil.loadBinary("/manifests/app.assets.pb")

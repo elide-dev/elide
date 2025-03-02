@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration
+    default="false"
+    name="Native Debug (elide.debug)"
+    type="GraalVmAttachConfiguration"
+    factoryName="GraalVmAttach"
+  >
+    <graalvm-attach
+      attach-string="localhost:5588"
+      module="elide.packages.cli.main"
+      symbol-file="$PROJECT_DIR$/packages/cli/build/native/nativeCompile/elide.debug"
+      system-root=""
+    />
+    <method v="2" />
+  </configuration>
+</component>

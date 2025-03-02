@@ -53,12 +53,6 @@ kotlin {
 dependencies {
   common {
     api(projects.packages.core)
-    api(libs.kotlinx.atomicfu)
-    api(libs.kotlinx.collections.immutable)
-    api(libs.kotlinx.coroutines.core)
-    api(libs.kotlinx.datetime)
-    api(libs.kotlinx.io)
-    api(libs.kotlinx.io.bytestring)
     api(libs.kotlinx.serialization.core)
 
     api(libs.elide.uuid)
@@ -76,7 +70,7 @@ dependencies {
     api(libs.slf4j)
     api(libs.jakarta.inject)
     api(libs.kotlinx.collections.immutable)
-    api(libs.kotlinx.datetime)
+    api(libs.kotlinx.atomicfu)
     api(mn.micronaut.context)
 
     api(libs.commons.compress)

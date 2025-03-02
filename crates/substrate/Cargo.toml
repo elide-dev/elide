@@ -16,17 +16,17 @@ name = "substrate"
 edition = "2024"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha13-SNAPSHOT"
+version = "1.0.0-alpha14-SNAPSHOT"
 
 [lib]
 name = "gvmcapi"
-crate-type = ["lib", "staticlib", "cdylib"]
+crate-type = ["lib", "staticlib"]
 
 [dependencies]
-java_native = { workspace = true }
-jni = { workspace = true, default-features = false }
-jni-sys = { workspace = true }
-libloading = { workspace = true }
+# java_native = { workspace = true }
+# jni = { workspace = true, default-features = false }
+# jni-sys = { workspace = true }
+# libloading = { workspace = true }
 
 [build-dependencies]
 builder = { workspace = true }

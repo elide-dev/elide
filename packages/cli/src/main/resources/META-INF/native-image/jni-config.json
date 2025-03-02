@@ -6,12 +6,6 @@
   "name":"[J"
 },
 {
-  "name":"[Lcom.sun.management.internal.DiagnosticCommandArgumentInfo;"
-},
-{
-  "name":"[Lcom.sun.management.internal.DiagnosticCommandInfo;"
-},
-{
   "name":"[Ljava.lang.String;"
 },
 {
@@ -77,7 +71,14 @@
   "allDeclaredConstructors":true,
   "allPublicConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] }
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"setId","parameterTypes":["java.lang.String"] },
+    {"name":"setLang","parameterTypes":["java.lang.String"] },
+    {"name":"setTool","parameterTypes":["java.lang.String"] },
+    {"name":"setSource","parameterTypes":["java.lang.String"] },
+    {"name":"setMessage","parameterTypes":["java.lang.String"] },
+    {"name":"setAdvice","parameterTypes":["java.lang.String"] },
+    {"name":"setRenderedMessage","parameterTypes":["java.lang.String"] }
   ]
 },
 {

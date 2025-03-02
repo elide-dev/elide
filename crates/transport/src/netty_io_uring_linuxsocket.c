@@ -31,6 +31,19 @@
  * (before including any header files) in order to obtain the
  * definition of the ucred structure. See <a href=https://linux.die.net/man/7/unix>
  */
+
+#define _GNU_SOURCE
+
+#include <features.h>
+#ifndef __USE_GNU
+    #define __MUSL__
+#endif
+
+// if we are on musl, include base types
+#ifdef __MUSL__
+#include <sys/types.h>
+#endif
+
 #define _GNU_SOURCE
 
 #include <stdlib.h>

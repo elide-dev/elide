@@ -16,7 +16,7 @@ name = "entry"
 edition = "2024"
 license = "MIT"
 workspace = "../.."
-version = "1.0.0-alpha13-SNAPSHOT"
+version = "1.0.0-alpha14-SNAPSHOT"
 
 [lib]
 crate-type = ["lib"]

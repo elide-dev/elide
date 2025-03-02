@@ -1,3 +1,4 @@
 [versions]
 micronaut-core = "4.7.1"
 micronaut-platform = "4.7.4"
+micronaut-picocli = "5.7.0"

@@ -200,13 +200,14 @@ jobs:
             sonarcloud.io:443
             storage.googleapis.com:443
       - name: "Setup: Apt Dependencies"
-        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
-      - name: "Setup: LLVM 18"
+        run: sudo apt-get install -y libtool-bin build-essential libc6-dev libssl-dev
+      - name: "Setup: LLVM 19"
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 18 all
-          export LLVM_PATH=/usr/lib/llvm-18
+          sudo apt-get remove clang clangd lld llvm || echo "No LLVM installed; skipping error."
+          sudo ./llvm.sh 19 all
+          export LLVM_PATH=/usr/lib/llvm-19
           export PATH="$LLVM_PATH/bin:$PATH"
           export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
           export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
@@ -214,6 +215,9 @@ jobs:
           echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
           echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
           echo PATH=$PATH >> $GITHUB_ENV
+          sudo apt-get remove clang-18 clangd-18 lld-18 llvm-18 || echo "No LLVM 18 installed; skipping error."
+          sudo apt-get autoremove;
+          sudo apt-get clean;
       - name: "Setup: Clear Tooling Cache"
         run: rm -rf /opt/hostedtoolcache
       - name: "Setup: Checkout"
@@ -244,7 +248,7 @@ jobs:
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@11df97af8e8102fd60b60a77dfbf58d40cd843b8 # v1.10.1
         with:
-          toolchain: nightly
+          toolchain: stable
           target: wasm32-wasip1
           components: clippy,rustfmt
           cache: false
@@ -279,7 +283,7 @@ jobs:
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
-          version: "9.2.0"
+          version: "10.5.2"
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
@@ -469,12 +473,12 @@ jobs:
             storage.googleapis.com:443
       - name: "Setup: Apt Dependencies"
         run: sudo apt-get install -y libtool-bin build-essential libc6-dev
-      - name: "Setup: LLVM 18"
+      - name: "Setup: LLVM 19"
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 18 all
-          export LLVM_PATH=/usr/lib/llvm-18
+          sudo ./llvm.sh 19 all
+          export LLVM_PATH=/usr/lib/llvm-19
           export PATH="$LLVM_PATH/bin:$PATH"
           export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
           export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
@@ -510,7 +514,7 @@ jobs:
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@11df97af8e8102fd60b60a77dfbf58d40cd843b8 # v1.10.1
         with:
-          toolchain: nightly
+          toolchain: stable
           target: wasm32-wasip1
           components: clippy,rustfmt
           cache: false
@@ -541,7 +545,7 @@ jobs:
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
-          version: "9.2.0"
+          version: "10.5.2"
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]

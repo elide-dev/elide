@@ -16,18 +16,8 @@ rustflags = [
   # Enforce completely position-independent executables.
   "-Crelocation-model=pic",
 
-  # Link with LLD through clang; enable linker plugin LTO.
-  "-Clinker=clang-19",
-  "-Clink-arg=-fuse-ld=lld",
-  "-Clinker-plugin-lto",
-
   # Target CPU.
   "-Ctarget-cpu=armv8-a+crypto+crc+simd",
-
-  # Use clang to drive linking via linker plugins, with lld as the linker. Wire in the linker script which fixes LTO
-  # arguments via linker plugins.
-  "-Clinker=$CARGO_MANIFEST_DIR/tools/scripts/macos-linker.sh",
-  "-Clink-arg=-fuse-ld=ld64.lld",
 
   # Target the native host CPU.
   "-Ctarget-cpu=apple-m1",

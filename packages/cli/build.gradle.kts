@@ -1323,7 +1323,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx18g",
+  "-J-Xmx48g",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:+AuxiliaryEngineCache",
 ) else emptyList())

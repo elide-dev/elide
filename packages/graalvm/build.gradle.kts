@@ -773,7 +773,8 @@ val isClang = listOf(
 ).any()
 
 fun resolveCargoConfig(target: TargetInfo): File? = when {
-  target.matches(Criteria.MacArm64) -> "macos-aarch64"
+  // Disabled: causes issues with clang.
+  // target.matches(Criteria.MacArm64) -> "macos-arm64"
   target.matches(Criteria.Amd64) -> if (isClang) "clang-x86_64" else "x86_64"
   target.matches(Criteria.Arm64) -> if (isClang) "clang-arm64" else "arm64"
   else -> null

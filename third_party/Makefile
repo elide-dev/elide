@@ -28,8 +28,6 @@ MACOS_MIN_VERSION ?= 12.3
 NATIVE_TOOLS ?= sqlite apr
 LANGS ?= pkl
 
-REQUIRED ?= sqlite apr
-
 ifeq ($(RELEASE),yes)
 TARGET_ROOT ?= $(ELIDE_ROOT)/target/release
 else
@@ -70,6 +68,9 @@ endif
 
 ifeq ($(OS),Darwin)
 EXTRA_CMAKE_FLAGS += -DCMAKE_OSX_SYSROOT=macosx -DCMAKE_OSX_DEPLOYMENT_TARGET=$(MACOS_MIN_VERSION)
+REQUIRED ?= boringssl sqlite apr
+else
+REQUIRED ?= sqlite apr
 endif
 
 CCACHE ?= $(shell which ccache)
@@ -100,7 +101,7 @@ ifeq ($(COMPILER),gcc)
   CFLAGS_BASE += $(CFLAGS_BASE_GCC)
 else ifeq ($(COMPILER),clang)
   CFLAGS_BASE += $(CFLAGS_BASE_CLANG)
-  USE_LD ?= lld
+  #USE_LD ?= lld
 else
 	# default to baseline flags
 	CFLAGS_BASE += $(CFLAGS_BASE_ALL)
@@ -203,13 +204,17 @@ apr: apache/apr/.libs
 
 CFLAGS_APR ?=
 CFLAGS_APR +=$(CFLAGS_BASE) -w
-LDFLAGS_APR ?=-lssl -lcrypto
+LDFLAGS_APR ?=-L$(ELIDE_ROOT)/third_party/google/boringssl/build  -lssl -lcrypto
 LDFLAGS_APR +=$(LDFLAGS_BASE)
 
 # APR does not link with LLD.
 APR_PREFIX = CC="$(CC_INJECTED)" CXX="$(CXX)" LD="ld" CFLAGS="$(CFLAGS_APR)" LDFLAGS="$(LDFLAGS_APR)"
 
+ifeq ($(OS),Darwin)
+apache/apr/.libs: boringssl
+else
 apache/apr/.libs:
+endif
 	@echo ""
 	@echo "Building apache/apr..."
 	$(RULE)cd apache/apr && ./buildconf \

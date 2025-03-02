@@ -240,7 +240,7 @@ ifeq ($(ARCH),x86_64)
 # Render flags for assigning a Cargo config.
 RUST_CONFIG_FLAGS ?= --config=$(ELIDE_ROOT)/.cargo/config.$(RUST_CONFIG)-x86_64.toml
 else
-RUST_CONFIG_FLAGS ?= --config=$(ELIDE_ROOT)/.cargo/config.$(RUST_CONFIG)-arm64.toml
+RUST_CONFIG_FLAGS ?= --config=$(ELIDE_ROOT)/.cargo/config.$(RUST_CONFIG)-$(ARCH).toml
 endif
 else
 RUST_CONFIG_FLAGS ?=
@@ -690,11 +690,7 @@ ifeq ($(BUILD_STDLIB),yes)
 	$(CMD)$(CARGO) run +nightly -Zbuild-std --target $(RUSTC_TARGET)
 endif
 	@echo "" && echo "Building Elide crates (mode: $(BUILD_MODE), native: $(NATIVE), target: $(RUSTC_TARGET), config: $(RUST_CONFIG))"
-ifeq ($(RELEASE),yes)
-	$(CMD)$(CARGO) $(RUST_CONFIG_FLAGS) build $(CARGO_FLAGS) --target $(RUSTC_TARGET) --release
-else
-	$(CMD)$(CARGO) $(RUST_CONFIG_FLAGS) build $(CARGO_FLAGS) --target $(RUSTC_TARGET)
-endif
+	$(CMD)$(CARGO) $(RUST_CONFIG_FLAGS) build $(CARGO_FLAGS) --target $(RUSTC_TARGET) 
 
 third-party: third_party/sqlite third_party/lib  ## Build all third-party embedded projects.
 

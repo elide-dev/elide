@@ -26,7 +26,7 @@ private const val ELIDE_LIBC = "elide.targetLibc"
 private const val ARM64 = "arm64"
 private const val AMD64 = "amd64"
 private const val X86_64 = "x86_64"
-private const val AARCH64 = "arch64"
+private const val AARCH64 = "aarch64"
 private const val GNU = "gnu"
 private const val MUSL = "musl"
 private const val MSVC = "msvc"
@@ -403,8 +403,8 @@ private fun Project.findTarget(os: String, arch: String, libc: String): ElideTar
 
       // macOS supports only two architectures and no variance in libc.
       HostManager.hostIsMac -> when (System.getProperty("os.arch")) {
-        AARCH64 -> ElideTarget.MACOS_AARCH64
-        else -> ElideTarget.MACOS_AMD64
+        AMD64, X86_64 -> ElideTarget.MACOS_AMD64
+        else -> ElideTarget.MACOS_AARCH64
       }
 
       else -> error(

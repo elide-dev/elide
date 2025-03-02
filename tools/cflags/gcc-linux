@@ -1,0 +1,4 @@
+-Wl,-z,relro
+-Wl,-z,now
+-Wl,-z,noexecstack
+-Wl,-z,separate-code

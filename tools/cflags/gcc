@@ -36,9 +36,4 @@
 -Wstack-usage=1000000
 -Wcast-align=strict
 -Wno-unused-variable
--Wl,-z,relro
--Wl,-z,now
--Wl,-z,noexecstack
--Wl,-z,separate-code
--Wl,--emit-relocs
 -Wa,--noexecstack

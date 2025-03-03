@@ -35,7 +35,7 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.gvm.GraalVMGuest
-import elide.runtime.gvm.internals.sqlite.SqliteModule
+import elide.runtime.gvm.builtins.sqlite.SqliteModule
 import elide.runtime.plugins.js.JavaScript
 
 /** Tests for guest SQLite performance. */

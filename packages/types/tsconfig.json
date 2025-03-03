@@ -1,0 +1,14 @@
+{
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.mdts"],
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}

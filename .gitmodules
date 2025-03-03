@@ -36,3 +36,6 @@
 	path = third_party/oracle/graalvm/graaljs
 	url = git@github.com:elide-dev/graaljs.git
 	shallow = true
+[submodule "llama-cpp"]
+	path = third_party/llama.cpp
+	url = git@github.com:ggml-org/llama.cpp.git

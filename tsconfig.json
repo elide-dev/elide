@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "es2022",
+    "strict": true,
+    "moduleResolution": "nodenext",
+    "types": ["bun", "@elide/types"],
+    "typeRoots": ["node_modules/@types", "packages"]
+  }
+}

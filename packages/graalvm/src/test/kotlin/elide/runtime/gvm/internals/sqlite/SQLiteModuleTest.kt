@@ -34,8 +34,10 @@ import kotlin.test.*
 import elide.annotations.Inject
 import elide.core.api.Symbolic.Unresolved
 import elide.jvm.LifecycleBoundResources
+import elide.runtime.gvm.builtins.sqlite.ElideSqliteModule
+import elide.runtime.gvm.builtins.sqlite.SQLite
+import elide.runtime.gvm.builtins.sqlite.SQLiteDatabaseConstructor
 import elide.runtime.node.ElideJsModuleTest
-import elide.runtime.gvm.sqlite.SQLite
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.sqlite.SQLiteAPI
 import elide.runtime.intrinsics.sqlite.SQLitePrimitiveType

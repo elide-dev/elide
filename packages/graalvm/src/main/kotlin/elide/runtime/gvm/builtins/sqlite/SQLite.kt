@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,12 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.gvm.sqlite
+package elide.runtime.gvm.builtins.sqlite
 
-import java.nio.file.Path
-import elide.runtime.gvm.internals.sqlite.SQLiteCreateDatabaseOptions
-import elide.runtime.gvm.internals.sqlite.SqliteDatabaseProxy
 import elide.runtime.intrinsics.sqlite.SQLiteDatabase
+import java.nio.file.Path
 
 /**
  * # SQLite
@@ -70,7 +68,7 @@ public data object SQLite {
    * @param readonly Whether the database should be read-only.
    * @return The database instance.
    */
-  @JvmStatic public fun inMemory(readonly: Boolean = SQLiteDatabase.DEFAULT_READONLY): SQLiteDatabase =
+  @JvmStatic public fun inMemory(readonly: Boolean = SQLiteDatabase.Defaults.DEFAULT_READONLY): SQLiteDatabase =
     SqliteDatabaseProxy.inMemory(SQLiteCreateDatabaseOptions.defaults().let {
       if (!readonly) it else it.copy(readonly = true)
     })
@@ -86,8 +84,8 @@ public data object SQLite {
    * @return The database instance.
    */
   @JvmStatic public fun atPath(
-    path: Path,
-    options: SQLiteCreateDatabaseOptions = SQLiteCreateDatabaseOptions.defaults(),
+      path: Path,
+      options: SQLiteCreateDatabaseOptions = SQLiteCreateDatabaseOptions.defaults(),
   ): SQLiteDatabase = SqliteDatabaseProxy.atFile(
     path,
     options,
@@ -107,9 +105,9 @@ public data object SQLite {
    * @return The database instance.
    */
   @JvmStatic public fun atPath(
-    path: Path,
-    create: Boolean = SQLiteDatabase.DEFAULT_CREATE,
-    readonly: Boolean = SQLiteDatabase.DEFAULT_READONLY,
+      path: Path,
+      create: Boolean = SQLiteDatabase.Defaults.DEFAULT_CREATE,
+      readonly: Boolean = SQLiteDatabase.Defaults.DEFAULT_READONLY,
   ): SQLiteDatabase = atPath(
     path,
     SQLiteCreateDatabaseOptions.defaults().copy(

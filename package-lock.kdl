@@ -20,6 +20,7 @@ root {
         "@commitlint/config-conventional" "19.7.1"
         "@mdx-js/esbuild" "3.1.0"
         "@mitata/counters" "0.0.8"
+        "@oxc-node/cli" ">=0.0.19 <0.0.20-0"
         "@prettier/plugin-xml" "3.4.1"
         "@types/google-protobuf" "3.15.12"
         "@types/node" "22.13.8"
@@ -377,6 +378,31 @@ pkg "@commitlint/types" {
         chalk ">=5.3.0 <6.0.0-0"
     }
 }
+pkg "@emnapi/core" {
+    version "1.3.1"
+    resolved "https://registry.npmjs.org/@emnapi/core/-/core-1.3.1.tgz"
+    integrity "sha512-pVGjBIt1Y6gg3EJN8jTcfpP/+uuRksIo055oE/OBkDNcjZqVbfkWCksG1Jp4yZnj3iKWyWX8fdG/j6UDYPbFog=="
+    dependencies {
+        "@emnapi/wasi-threads" "1.0.1"
+        tslib ">=2.4.0 <3.0.0-0"
+    }
+}
+pkg "@emnapi/runtime" {
+    version "1.3.1"
+    resolved "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.3.1.tgz"
+    integrity "sha512-kEBmG8KyqtxJZv+ygbEim+KCGtIq1fC22Ms3S4ziXmYKm8uyoLX0MHONVKwp+9opg390VaKRNt4a7A9NwmpNhw=="
+    dependencies {
+        tslib ">=2.4.0 <3.0.0-0"
+    }
+}
+pkg "@emnapi/wasi-threads" {
+    version "1.0.1"
+    resolved "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.0.1.tgz"
+    integrity "sha512-iIBu7mwkq4UQGeMEM8bLwNK962nXdhodeScX4slfQnRhEMMzvYivHhutCIk8uojvmASXXPC2WNEjwxFWk72Oqw=="
+    dependencies {
+        tslib ">=2.4.0 <3.0.0-0"
+    }
+}
 pkg "@esbuild/aix-ppc64" {
     version "0.25.0"
     resolved "https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.25.0.tgz"
@@ -681,6 +707,16 @@ pkg "@mitata/counters" {
     resolved "https://registry.npmjs.org/@mitata/counters/-/counters-0.0.8.tgz"
     integrity "sha512-f11w0Y1ETFlarDP7CePj8Z+y8Gv5Ax4gMxWsEwrqh0kH/YIY030Ezx5SUJeQg0YPTZ2OHKGcLG1oGJbIqHzaJA=="
 }
+pkg "@napi-rs/wasm-runtime" {
+    version "0.2.7"
+    resolved "https://registry.npmjs.org/@napi-rs/wasm-runtime/-/wasm-runtime-0.2.7.tgz"
+    integrity "sha512-5yximcFK5FNompXfJFoWanu5l8v1hNGqNHh9du1xETp9HWk/B/PzvchX55WYOPaIeNglG8++68AAiauBAtbnzw=="
+    dependencies {
+        "@emnapi/core" ">=1.3.1 <2.0.0-0"
+        "@emnapi/runtime" ">=1.3.1 <2.0.0-0"
+        "@tybys/wasm-util" ">=0.9.0 <0.10.0-0"
+    }
+}
 pkg "@nodelib/fs.scandir" {
     version "2.1.5"
     resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -703,6 +739,120 @@ pkg "@nodelib/fs.walk" {
         "@nodelib/fs.scandir" "2.1.5"
         fastq ">=1.6.0 <2.0.0-0"
     }
+}
+pkg "@oxc-node/cli" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/cli/-/cli-0.0.19.tgz"
+    integrity "sha512-5c8W6AZyO+iAPlFJxYoXfHX+ZdLW7upSQWEmFXsvpLDsUHzsCzS0VKT1xbaZZNg/wtcJSjOq0VauPm+15MYgKA=="
+    dependencies {
+        "@oxc-node/core" "0.0.19"
+    }
+}
+pkg "@oxc-node/core" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core/-/core-0.0.19.tgz"
+    integrity "sha512-il+1WoBCUGGmKKtdDIpnqhNSQ+bXblSTmsNuqxucz22cpJU8Q0Q/Kpt9mlVdoJONkuW0QXXiKp6O5hlPJdxEgQ=="
+    optional-dependencies {
+        "@oxc-node/core-android-arm-eabi" "0.0.19"
+        "@oxc-node/core-android-arm64" "0.0.19"
+        "@oxc-node/core-darwin-arm64" "0.0.19"
+        "@oxc-node/core-darwin-x64" "0.0.19"
+        "@oxc-node/core-freebsd-x64" "0.0.19"
+        "@oxc-node/core-linux-arm-gnueabihf" "0.0.19"
+        "@oxc-node/core-linux-arm64-gnu" "0.0.19"
+        "@oxc-node/core-linux-arm64-musl" "0.0.19"
+        "@oxc-node/core-linux-ppc64-gnu" "0.0.19"
+        "@oxc-node/core-linux-s390x-gnu" "0.0.19"
+        "@oxc-node/core-linux-x64-gnu" "0.0.19"
+        "@oxc-node/core-linux-x64-musl" "0.0.19"
+        "@oxc-node/core-wasm32-wasi" "0.0.19"
+        "@oxc-node/core-win32-arm64-msvc" "0.0.19"
+        "@oxc-node/core-win32-ia32-msvc" "0.0.19"
+        "@oxc-node/core-win32-x64-msvc" "0.0.19"
+    }
+}
+pkg "@oxc-node/core-android-arm-eabi" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-android-arm-eabi/-/core-android-arm-eabi-0.0.19.tgz"
+    integrity "sha512-bgjdzHFzyFpL03OE4HcY9VGo9IVPG42fYhV8hrnKDwpZZGQ/9GTeopaAcX3gDNlBSzT5CW4Zf6VNzbAADcYw3Q=="
+}
+pkg "@oxc-node/core-android-arm64" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-android-arm64/-/core-android-arm64-0.0.19.tgz"
+    integrity "sha512-Dc+PMM6ace9tieqrvXTooQ07ZfCEy9rWX7TIWsv5akE3qMzrVLmL5iaDyPsNOyRHPwDxOKoWSYr1G2N8tXkWew=="
+}
+pkg "@oxc-node/core-darwin-arm64" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-darwin-arm64/-/core-darwin-arm64-0.0.19.tgz"
+    integrity "sha512-DM80uP1UD6kCn91wlAUNyznhyVoTIm3S68GCj9ejCCuXKoe8dyFvOe7jrkcIl5rbcmHgd2DNhBDFBAwcu103Jg=="
+}
+pkg "@oxc-node/core-darwin-x64" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-darwin-x64/-/core-darwin-x64-0.0.19.tgz"
+    integrity "sha512-neJxrz3dF/+bYjrK3zhkFsRTKxmcfn1LgfC5nmuxJcgjucfuyALYB+9VNvq21KLgYGjuvmG2v1H/OEbH1Owr0Q=="
+}
+pkg "@oxc-node/core-freebsd-x64" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-freebsd-x64/-/core-freebsd-x64-0.0.19.tgz"
+    integrity "sha512-MZl8tXmwgTm2kZxso+EscoDGbImHVOqouZKXXT9EWWypW2HYRcNJm4cRkfoEyyF3W3LC5an/B9ISOupMWyTeIQ=="
+}
+pkg "@oxc-node/core-linux-arm-gnueabihf" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-linux-arm-gnueabihf/-/core-linux-arm-gnueabihf-0.0.19.tgz"
+    integrity "sha512-27RwcrFb3QouNMPdhvVwaiDnps4Wr4O5b5I1WFAlPSLvgspR+sFCoG2RjU66vqGUkdON93F5pvb4tHIB2OpSTQ=="
+}
+pkg "@oxc-node/core-linux-arm64-gnu" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-linux-arm64-gnu/-/core-linux-arm64-gnu-0.0.19.tgz"
+    integrity "sha512-HcQ1xfV5/uMBSszMCFR9W74XWmVjdkOWaSwISPLuxFaOd0ttPx/bXsOltOte7DT32MV16vP/liPjT3carMkXgA=="
+}
+pkg "@oxc-node/core-linux-arm64-musl" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-linux-arm64-musl/-/core-linux-arm64-musl-0.0.19.tgz"
+    integrity "sha512-OfYv82cbkusP4Dn1EwtH1rTKXDIB+GlZSpV6T3NWTM7uUve/7jgrCF2RBcM8LsJjqSUaS+5WZD/tpaR3DwDWBQ=="
+}
+pkg "@oxc-node/core-linux-ppc64-gnu" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-linux-ppc64-gnu/-/core-linux-ppc64-gnu-0.0.19.tgz"
+    integrity "sha512-AJtYWmDq0Yp0Wav47MGrIZH7Pjul/Or+oioR+4lZB+zKT816cuKRge7trNejEQ00v+JSef4gB4UxiSyMVTdSuQ=="
+}
+pkg "@oxc-node/core-linux-s390x-gnu" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-linux-s390x-gnu/-/core-linux-s390x-gnu-0.0.19.tgz"
+    integrity "sha512-aHpfsf7opQIeniARQCUvWNwSY3WMm+F747DgvXwlz40mX4K4eAb2qAlpurLsE7M5jry2jmlZD6H70iU9MJ5pbA=="
+}
+pkg "@oxc-node/core-linux-x64-gnu" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-linux-x64-gnu/-/core-linux-x64-gnu-0.0.19.tgz"
+    integrity "sha512-i2E7XY4xMgtZOxV/xghKXxX8ThlFfmTG/6sgvS1FqZcuMoO+G/4ramEobfhicjVh497b0Qt1bUsw2H/BidvqDw=="
+}
+pkg "@oxc-node/core-linux-x64-musl" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-linux-x64-musl/-/core-linux-x64-musl-0.0.19.tgz"
+    integrity "sha512-6uWqRw0pVvOJjGIPRIB22Sgp/IrSlRaWYfNn7+3t3maTb8a9QlwMxq7yLqLQsd/eeMvdMogK3w0eRenSEywbvw=="
+}
+pkg "@oxc-node/core-wasm32-wasi" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-wasm32-wasi/-/core-wasm32-wasi-0.0.19.tgz"
+    integrity "sha512-EHeY4FA+M/sW8xWiVufbJ9Hbf84GBhHtX5Re6ZihhwACd2hajurLBDb0hSUDrzx80MbR6xTpsjyiVD/UKbU+1g=="
+    dependencies {
+        "@napi-rs/wasm-runtime" ">=0.2.6 <0.3.0-0"
+    }
+}
+pkg "@oxc-node/core-win32-arm64-msvc" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-win32-arm64-msvc/-/core-win32-arm64-msvc-0.0.19.tgz"
+    integrity "sha512-0DdESsic2Bj0qffE6S0qOLI5L+kIZs4Zfi363PJQqcyMRHhnOjPlLwJYeFxTA8UBi0SD+Dd+FCgArWVJSuKCVQ=="
+}
+pkg "@oxc-node/core-win32-ia32-msvc" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-win32-ia32-msvc/-/core-win32-ia32-msvc-0.0.19.tgz"
+    integrity "sha512-GLdjXSWomIAqvAlhcISFRRWeqb9+02u900EFo6U1qdMajCmxgJMj6vStKnY06FeMgIg3CTCOkO8qqPM5nrZV0w=="
+}
+pkg "@oxc-node/core-win32-x64-msvc" {
+    version "0.0.19"
+    resolved "https://registry.npmjs.org/@oxc-node/core-win32-x64-msvc/-/core-win32-x64-msvc-0.0.19.tgz"
+    integrity "sha512-kLhnGBzT9pDNUGN/STKWxVZIUwpQpwAnHWuJofkFHprGh0CBjGDU8ezSQ6BgkD4HNwD1eOn0zdFl/6QwouY66w=="
 }
 pkg "@prettier/plugin-xml" {
     version "3.4.1"
@@ -734,6 +884,14 @@ pkg "@trysound/sax" {
     version "0.2.0"
     resolved "https://registry.npmjs.org/@trysound/sax/-/sax-0.2.0.tgz"
     integrity "sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA=="
+}
+pkg "@tybys/wasm-util" {
+    version "0.9.0"
+    resolved "https://registry.npmjs.org/@tybys/wasm-util/-/wasm-util-0.9.0.tgz"
+    integrity "sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw=="
+    dependencies {
+        tslib ">=2.4.0 <3.0.0-0"
+    }
 }
 pkg "@types/acorn" {
     version "4.0.6"

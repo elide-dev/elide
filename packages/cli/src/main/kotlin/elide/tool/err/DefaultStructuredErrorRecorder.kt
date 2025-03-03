@@ -17,10 +17,6 @@ import java.io.File
 import java.util.concurrent.atomic.AtomicReference
 import java.util.zip.GZIPOutputStream
 import jakarta.inject.Provider
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToStream

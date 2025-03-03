@@ -19,7 +19,11 @@
 )]
 #![forbid(unsafe_code, dead_code)]
 
-pub use model::{Architecture as TargetArch, MACOS_MIN, OperatingSystem as TargetOs};
+/// Build-time constants describing active Elide features.
+pub mod features;
+
+/// Build-time constants and configurations for Elide's language engines.
+pub mod lang;
 
 use bindgen::Builder;
 use cc::Build;
@@ -27,6 +31,172 @@ use std::env::var;
 use std::env::var_os;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use serde::{Deserialize, Serialize};
+
+// Constants used for OS identification.
+const DARWIN: &str = "darwin";
+const LINUX: &str = "linux";
+const WINDOWS: &str = "windows";
+
+// Constants used for architecture identification.
+const AMD64: &str = "amd64";
+const ARM64: &str = "aarch64";
+
+// Constants used for build profiles.
+const DEBUG: &str = "debug";
+const RELEASE: &str = "release";
+
+/// Minimum supported version of macOS.
+pub const MACOS_MIN: &str = "12.3";
+
+/// Enumerates the types of build profiles which Elide supports.
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub enum BuildMode {
+  Debug,
+  Release,
+}
+
+impl BuildMode {
+  pub const fn as_str(&self) -> &'static str {
+    match self {
+      BuildMode::Debug => DEBUG,
+      BuildMode::Release => RELEASE,
+    }
+  }
+
+  pub const fn current() -> Self {
+    if cfg!(debug_assertions) {
+      BuildMode::Debug
+    } else {
+      BuildMode::Release
+    }
+  }
+}
+
+/// Enumerates supported operating systems.
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub enum OperatingSystem {
+  Darwin,
+  Linux,
+  Windows,
+}
+
+impl OperatingSystem {
+  pub const fn as_str(&self) -> &'static str {
+    match self {
+      OperatingSystem::Darwin => DARWIN,
+      OperatingSystem::Linux => LINUX,
+      OperatingSystem::Windows => WINDOWS,
+    }
+  }
+
+  pub const fn current() -> Self {
+    if cfg!(windows) {
+      OperatingSystem::Windows
+    } else if cfg!(target_os = "macos") {
+      OperatingSystem::Darwin
+    } else {
+      OperatingSystem::Linux
+    }
+  }
+}
+
+/// Enumerates supported target architectures.
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub enum Architecture {
+  Amd64,
+  Arm64, // alias for aarch64 on applicable platforms
+}
+
+impl Architecture {
+  pub const fn as_str(&self) -> &'static str {
+    match self {
+      Architecture::Amd64 => AMD64,
+      Architecture::Arm64 => ARM64,
+    }
+  }
+
+  pub const fn current() -> Self {
+    if cfg!(target_arch = "x86_64") {
+      Architecture::Amd64
+    } else {
+      Architecture::Arm64
+    }
+  }
+}
+
+/// Host Info.
+///
+/// Describes information about the host which Elide was built for; this information is assembled at compile-time.
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct HostInfo {
+  /// Operating system of the host.
+  pub os: OperatingSystem,
+
+  /// Architecture of the host.
+  pub arch: Architecture,
+}
+
+/// Rust Info.
+///
+/// Describes information about the Rust compiler used to build Elide; this information is assembled at compile-time.
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct RustInfo {
+  /// Version of the Rust compiler used to build Elide.
+  pub version: &'static str,
+
+  /// Channel of the Rust compiler used to build Elide.
+  pub channel: &'static str,
+}
+
+/// Elide Info.
+///
+/// Compile-time information about the current build of Elide, including the active version, target, engines, build
+/// profile, and so on.
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ElideInfo {
+  /// Current version string for Elide.
+  pub version: &'static str,
+
+  /// Current target being built.
+  pub target: &'static str,
+
+  /// Current build profile.
+  pub profile: &'static str,
+
+  /// Information about the host OS and architecture which this build of Elide targets.
+  pub host: HostInfo,
+
+  /// Information about the Rust toolchain used to build Elide.
+  pub rust: RustInfo,
+}
+
+impl ElideInfo {
+  /// Create a new instance of ElideInfo.
+  const fn new() -> Self {
+    Self {
+      version: env!("ELIDE_TARGET"),
+      target: env!("ELIDE_TARGET"),
+      profile: env!("ELIDE_PROFILE"),
+      host: HostInfo {
+        os: OperatingSystem::current(),
+        arch: Architecture::current(),
+      },
+      rust: RustInfo {
+        version: env!("RUSTC_VERSION"),
+        channel: env!("RUSTC_CHANNEL"),
+      },
+    }
+  }
+
+  /// Retrieve the current static info about this build of Elide.
+  pub const fn current() -> Self {
+    ELIDE_INFO
+  }
+}
+
+/// Info about the current build of Elide.
+pub const ELIDE_INFO: ElideInfo = ElideInfo::new();
 
 /// Internal function which runs a Makefile command, possibly against a subdirectory.
 ///
@@ -403,13 +573,13 @@ pub fn cargo_lib_metadata(extra_lib_paths: Option<Vec<String>>) -> Vec<String> {
 }
 
 /// Obtain a consistent value identifying the target operating system.
-pub fn target_os() -> TargetOs {
-  TargetOs::current()
+pub fn target_os() -> OperatingSystem {
+  OperatingSystem::current()
 }
 
 /// Obtain a consistent value identifying the target CPU architecture.
-pub fn target_arch() -> TargetArch {
-  TargetArch::current()
+pub fn target_arch() -> Architecture {
+  Architecture::current()
 }
 
 /// Common C flags applied to all builds which use this builder interface.
@@ -471,7 +641,7 @@ pub fn setup_cc() -> Build {
     .flag_if_supported("-fno-strict-aliasing");
 
   // if we are on x86_64...
-  if arch == TargetArch::Amd64 {
+  if arch == Architecture::Amd64 {
     build
       // x86_64-specific Flags
       .flag("-fcf-protection=full");
@@ -512,9 +682,9 @@ pub fn setup_cc() -> Build {
 
   // add os-specific flags
   match os {
-    TargetOs::Darwin => match arch {
-      TargetArch::Amd64 => build.flag("-march=x86-64-v3"),
-      TargetArch::Arm64 => build
+    OperatingSystem::Darwin => match arch {
+      Architecture::Amd64 => build.flag("-march=x86-64-v3"),
+      Architecture::Arm64 => build
         // C Flags: macOS
         .flag("-march=armv8-a+crypto+crc+simd")
         .flag(format!("-mmacos-version-min={}", MACOS_MIN))
@@ -523,9 +693,9 @@ pub fn setup_cc() -> Build {
         .define("__ARM_FEATURE_SHA2", "1"),
     },
 
-    TargetOs::Linux => &mut build,
+    OperatingSystem::Linux => &mut build,
 
-    TargetOs::Windows => &mut build,
+    OperatingSystem::Windows => &mut build,
   };
 
   // always generate cargo metadata
@@ -574,9 +744,9 @@ pub fn build_dual_cc(
   let target_dir = format!("{}/target/{}", elide_root_var, profile);
   let out_dir = Path::new(&target_dir);
   let lib_tail = match os {
-    TargetOs::Darwin => "dylib",
-    TargetOs::Linux => "so",
-    TargetOs::Windows => "dll",
+    OperatingSystem::Darwin => "dylib",
+    OperatingSystem::Linux => "so",
+    OperatingSystem::Windows => "dll",
   };
 
   let outpath = out_dir.join(format!("lib{}.{}", shared_lib_name, lib_tail));
@@ -644,4 +814,67 @@ pub fn build_bindings(lib_name: &str, gen_name: &str, builder: Builder) {
   bindings
     .write_to_file(out_path.join(gen_name))
     .expect("Couldn't write bindings!");
+}
+
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_build_mode() {
+    assert_eq!(BuildMode::Debug.as_str(), DEBUG);
+    assert_eq!(BuildMode::Release.as_str(), RELEASE);
+    assert_eq!(BuildMode::current(), BuildMode::current());
+  }
+
+  #[test]
+  fn test_operating_system() {
+    assert_eq!(OperatingSystem::Darwin.as_str(), DARWIN);
+    assert_eq!(OperatingSystem::Linux.as_str(), LINUX);
+    assert_eq!(OperatingSystem::Windows.as_str(), WINDOWS);
+    assert_eq!(OperatingSystem::current(), OperatingSystem::current());
+  }
+
+  #[test]
+  fn test_architecture() {
+    assert_eq!(Architecture::Amd64.as_str(), AMD64);
+    assert_eq!(Architecture::Arm64.as_str(), ARM64);
+    assert_eq!(Architecture::current(), Architecture::current());
+  }
+
+  #[test]
+  fn test_host_info() {
+    let host = HostInfo {
+      os: OperatingSystem::current(),
+      arch: Architecture::current(),
+    };
+
+    assert_eq!(host.os, OperatingSystem::current());
+    assert_eq!(host.arch, Architecture::current());
+  }
+
+  #[test]
+  fn test_rust_info() {
+    let rust = RustInfo {
+      version: env!("RUSTC_VERSION"),
+      channel: env!("RUSTC_CHANNEL"),
+    };
+
+    assert_eq!(rust.version, env!("RUSTC_VERSION"));
+    assert_eq!(rust.channel, env!("RUSTC_CHANNEL"));
+  }
+
+  #[test]
+  fn test_elide_info() {
+    let elide = ElideInfo::new();
+
+    assert_eq!(elide.version, env!("ELIDE_TARGET"));
+    assert_eq!(elide.target, env!("ELIDE_TARGET"));
+    assert_eq!(elide.profile, env!("ELIDE_PROFILE"));
+    assert_eq!(elide.host.os, OperatingSystem::current());
+    assert_eq!(elide.host.arch, Architecture::current());
+    assert_eq!(elide.rust.version, env!("RUSTC_VERSION"));
+    assert_eq!(elide.rust.channel, env!("RUSTC_CHANNEL"));
+  }
 }

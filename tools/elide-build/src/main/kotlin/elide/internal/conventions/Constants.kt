@@ -105,7 +105,7 @@ public object Constants {
     const val OPENTELEMETRY = "1.32.0"
 
     /** Constant: default Kotlin version. */
-    const val KOTLIN_DEFAULT = "2.0"
+    const val KOTLIN_DEFAULT = "1.9"
 
     /** Property: defines the target JVM version. */
     const val JVM_TARGET = "versions.java.target"
@@ -147,7 +147,7 @@ public object Constants {
     const val OKIO = "3.10.2"
 
     /** GraalVM version. */
-    const val GRAALVM = "24.1.2"
+    const val GRAALVM = "25.0.0-SNAPSHOT"
   }
 
   /** Kotlin conventions. */

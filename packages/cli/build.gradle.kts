@@ -61,6 +61,8 @@ plugins {
 // - `elide.march`: `native`, `compatibility`
 // - `elide.compiler`: Custom compiler name or path
 // - `elide.linker`: Custom linker name or path
+// - `elide.optMode`: Custom optimization mode
+// - `elide.pgo`: Turn on/off Profile Guided Optimization
 //
 // Environment respected by this script:
 //
@@ -96,14 +98,19 @@ val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompi
 val entrypoint = "elide.tool.cli.MainKt"
 
 val enablePkl = true
-val enablePython = true
+val enableJs = true
+val enableJsIsolate = false
+val enableTs = true
+val enablePython = false
+val enablePythonDynamic = true
 val enableRuby = false
 val enableLlvm = false
 val enableJvm = false
 val enableKotlin = false
 val enableSqlite = true
 val enableCustomCompiler = findProperty("elide.compiler") != null
-val enableNativeCryptoV2 = true
+val enableNativeCryptoV2 = false
+val enableNativeTransportV2 = false
 val enableSqliteStatic = true
 val enableStatic = false
 val enableStaticJni = true
@@ -114,9 +121,8 @@ val enableClang = false
 val oracleGvm = true
 val oracleGvmLibs = oracleGvm
 val enableMosaic = false
-val enableEdge = true
+val enableEdge = false
 val enableStage = true
-val enableNativeTransportV2 = true
 val enableDynamicPlugins = false
 val enableDeprecated = false
 val enableJit = true
@@ -134,12 +140,14 @@ val enableConscrypt = false
 val enableBouncycastle = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
+val enableHeapReport = false
 val enableG1 = oracleGvm && !enableAuxCache
 val enablePreinit = true
-val enablePgo = true
+val enablePgo = findProperty("elide.pgo") != "false"
 val enablePgoSampling = false
 val enablePgoInstrumentation = false
 val enableJna = true
+val enableJnaJpms = false
 val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
@@ -153,12 +161,12 @@ val defaultArchTarget = when {
   else -> "compatibility"
 }
 
+val optMode = findProperty("elide.optMode") as? String ?: "3"
+val nativeOptMode = optMode
+
 val elideBinaryArch = project.properties["elide.march"] as? String ?: defaultArchTarget
 
 val exclusions = listOfNotNull(
-  // always exclude non-jpms jna
-  libs.jna.asProvider(),
-
   // always exclude the jline native lib; we provide it ourselves
   libs.jline.native,
   libs.jline.terminal.jna,
@@ -174,12 +182,12 @@ val exclusions = listOfNotNull(
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 23
-val ltsJvmTarget = 21
+val edgeJvmTarget = 25
+val stableJvmTarget = 23
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
-val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)
-val selectedJvmTarget = if (enableEdge) edgeJvmTarget else ltsJvmTarget
-val selectedJvm = if (enableEdge) edgeJvm else ltsJvm
+val stableJvm = JavaVersion.toVersion(stableJvmTarget)
+val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget
+val selectedJvm = if (enableEdge) edgeJvm else stableJvm
 
 val jvmType: JvmVendorSpec =
   if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
@@ -213,7 +221,6 @@ val jvmOnlyCompileArgs: List<String> = listOfNotNull(
 
 val jvmCompileArgs = listOfNotNull(
   "--enable-preview",
-  "--add-modules=jdk.incubator.vector",
   "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
@@ -235,7 +242,7 @@ val jvmRuntimeArgs = listOf(
 
 val nativeCompileJvmArgs = listOf(
   "--enable-native-access=" + listOfNotNull(
-    "ALL-UNNAMED",
+    "org.graalvm.truffle,ALL-UNNAMED",
   ).joinToString(","),
 ).plus(jvmCompileArgs.map {
   "-J$it"
@@ -400,10 +407,6 @@ dependencies {
   nativeImageCompileOnly(libs.jakarta.validation)
   nativeImageCompileOnly(libs.guava)
 
-  if (oracleGvm && oracleGvmLibs && enableAuxCache && enableAuxCacheTool) {
-    api(":tools:auximage")
-  }
-
   implementation(libs.picocli.jansi.graalvm) {
     exclude(group = "org.fusesource.jansi", module = "jansi")
   }
@@ -432,7 +435,9 @@ dependencies {
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
   implementation(libs.jline.terminal.jni)
-  implementation(libs.jline.terminal.ffm)
+  if (enableFfm) {
+    implementation(libs.jline.terminal.ffm)
+  }
   implementation(libs.jline.builtins)
   implementation(libs.jline.terminal.jansi) {
     exclude(group = "org.fusesource.jansi", module = "jansi")
@@ -457,8 +462,10 @@ dependencies {
   compileOnly(libs.graalvm.svm)
 
   if (oracleGvm && oracleGvmLibs) {
-    implementation(libs.graalvm.js.isolate)
     nativeImageClasspath(libs.graalvm.truffle.enterprise)
+    if (enableJsIsolate) {
+      implementation(libs.graalvm.js.isolate)
+    }
   }
 
   // GraalVM: Dynamic Language Engines
@@ -531,9 +538,9 @@ dependencies {
   }
 
   if (enableNativeTransportV2) {
-    implementation(projects.packages.transport.transportEpoll)
-    implementation(projects.packages.transport.transportKqueue)
-    implementation(projects.packages.transport.transportUring)
+    implementation(project(":packages:transport:transport-epoll"))
+    implementation(project(":packages:transport:transport-kqueue"))
+    implementation(project(":packages:transport:transport-uring"))
     implementation(libs.netty.transport.native.classes.epoll)
     implementation(libs.netty.transport.native.classes.kqueue)
     implementation(libs.netty.transport.native.classes.iouring)
@@ -555,10 +562,12 @@ dependencies {
     if (enableExperimental && hostIsLinux) {
       api(libs.graalvm.truffle.nfi.panama)
     }
-    implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
-    implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
-    implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
-    implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
+
+    // Not provided at edge.
+    // implementation(libs.graalvm.truffle.nfi.native.linux.aarch64)
+    // implementation(libs.graalvm.truffle.nfi.native.darwin.amd64)
+    // implementation(libs.graalvm.truffle.nfi.native.darwin.aarch64)
+    // implementation(libs.graalvm.truffle.nfi.native.linux.amd64)
   }
 }
 
@@ -647,7 +656,6 @@ val isClang: Boolean = cCompiler?.contains("clang") == true
 
 val commonGvmArgs = listOfNotNull(
   "-H:+UseCompressedReferences",
-  "--trace-object-instantiation=java.util.concurrent.ForkJoinWorkerThread",
   onlyIf(enableBuildReport, "--emit=build-report"),
 ).onlyIf(oracleGvm)
 
@@ -658,7 +666,7 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+RemoveUnusedSymbols",
   "-H:+ParseRuntimeOptions",
   "-H:+JNIEnhancedErrorCodes",
-  onlyIf(oracleGvm && enableAuxCache, "-H:ReservedAuxiliaryImageBytes=${1024 * 1024}"),
+  onlyIf(oracleGvm && enableAuxCache, "-H:ReservedAuxiliaryImageBytes=${8 * 1024 * 1024}"),
   onlyIf(enableExperimentalLlvmBackend, "-H:CompilerBackend=llvm"),
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
   onlyIf(enableExperimental, "-H:+ProfileCompiledMethods"),
@@ -693,9 +701,9 @@ val deprecatedNativeArgs = listOf(
 val enabledFeatures = listOfNotNull(
   "elide.tool.engine.MacLinkageFeature",
   "elide.tool.feature.ToolingUmbrellaFeature",
-  "elide.runtime.feature.engine.NativeTransportFeature",
   "elide.runtime.feature.engine.NativeConsoleFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
+  onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),
   onlyIf(oracleGvm && oracleGvmLibs, "com.oracle.svm.enterprise.truffle.EnterpriseTruffleFeature"),
   onlyIf(oracleGvm && oracleGvmLibs, "com.oracle.truffle.runtime.enterprise.EnableEnterpriseFeature"),
@@ -739,303 +747,48 @@ val experimentalLlvmEdgeArgs = listOfNotNull(
 
 val preinitContextsList = preinitializedContexts.joinToString(",")
 
-val commonNativeArgs = listOfNotNull(
-  // Debugging flags:
-  // "--verbose",
-  // "-H:TempDirectory=/tmp/elide-native",
-  // "-H:+PlatformInterfaceCompatibilityMode",
-  onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
-  onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
-  onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
-  onlyIf(enableFfm, "-H:+ForeignAPISupport"),
-  onlyIf(dumpPointsTo, "-H:PrintAnalysisCallTreeType=CSV"),
-  onlyIf(dumpPointsTo, "-H:+PrintImageObjectTree"),
-  onlyIf(enabledFeatures.isNotEmpty(), "--features=${enabledFeatures.joinToString(",")}"),
-  // Common flags:
-  "-march=$elideBinaryArch",
-  "--no-fallback",
-  "--enable-preview",
-  "--enable-http",
-  "--enable-https",
-  "--install-exit-handlers",
-  // @TODO breaks with old configs, and new configs can't use the agent.
-  // "--exact-reachability-metadata",
-  "--enable-url-protocols=http,https",
-  "--color=always",
-  "-H:+UnlockExperimentalVMOptions",
-  "--link-at-build-time=elide",
-  "--link-at-build-time=dev.elide",
-  "--link-at-build-time=org.pkl",
-  "--link-at-build-time=kotlin",
-  "--link-at-build-time=kotlinx",
-  "--link-at-build-time=org.graalvm",
-  "--link-at-build-time=picocli",
-  onlyIf(enableJna, "--enable-native-access=com.sun.jna,ALL-UNNAMED") ?: "--enable-native-access=ALL-UNNAMED",
-  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
-  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.jni=ALL-UNNAMED",
-  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
-  "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
-  "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-  "-H:+PreserveFramePointer",
-  "-H:+ReportExceptionStackTraces",
-  "-H:+AddAllCharsets",
-  "-H:-ReduceImplicitExceptionStackTraceInformation",
-  "-H:MaxRuntimeCompileMethods=20000",
-  "-H:ExcludeResources=META-INF/native/libumbrella.so",
-  "-H:ExcludeResources=META-INF/native/libumbrella.a",
-  "-H:ExcludeResources=kotlin/kotlin.kotlin_builtins",
-  "-H:ExcludeResources=META-INF/.*kotlin_module",
-  "-H:ExcludeResources=com/sun/jna/.*",
-  "-H:ExcludeResources=META-INF/native/libsqlite.*",
-  "-H:ExcludeResources=META-INF/micronaut/io.micronaut.core.graal.GraalReflectionConfigurer/.*",
-  "-Delide.strict=true",
-  "-Delide.js.vm.enableStreams=true",
-  "-Delide.mosaic=$enableMosaic",
-  "-Delide.staticJni=$enableStaticJni",
-  "-Delide.preferShared=$preferShared",
-  "-Delide.staticUmbrella=false",
-  "-Delide.root=$rootPath",
-  "-Delide.target=$targetPath",
-  "-Delide.natives=$nativesPath",
-  "-Djna.library.path=$nativesPath",
-  "-Djna.boot.library.path=$nativesPath",
-  "-Dorg.sqlite.lib.path=$nativesPath",
-  "-Dorg.sqlite.lib.exportPath=$nativesPath",
-  "-Dio.netty.native.workdir=$nativesPath",
-  "-Dlibrary.jansi.path=$nativesPath",
-  "-Dlibrary.jline.path=$nativesPath",
-  "-Dio.netty.native.deleteLibAfterLoading=false",
-  "-Dio.netty.allocator.type=adaptive",
-  "-R:MaxDirectMemorySize=32G",
-  "-Delide.nativeTransport.v2=${enableNativeTransportV2}",
-  "-Dtruffle.TrustAllTruffleRuntimeProviders=true",
-  "-Dgraalvm.locatorDisabled=false",
-  "-Dpolyglotimpl.DisableVersionChecks=false",
-  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
-  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=$preinitContextsList"),
-  onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
-  onlyIf(enablePgoSampling, "--pgo-sampling"),
-  onlyIf(enablePgoInstrumentation && enablePgo, "-H:+BuildReportSamplerFlamegraph"),
-).asSequence().plus(
-  languagePluginPaths.plus(listOf(umbrellaNativesPath)).filter {
-    Files.exists(Path.of(it))
-  }.map {
-    "-H:CLibraryPath=$it"
-  }
-).plus(
-  commonGvmArgs.onlyIf(oracleGvm)
-).plus(
-  listOf("--debug-attach").onlyIf(nativeImageBuildDebug)
-).plus(
-  nativeCompileJvmArgs
-).plus(
-  listOf(
-    "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
-  ).onlyIf(enabledSecurityProviders.isNotEmpty())
-).toList()
-
-val debugFlags: List<String> = listOfNotNull(
-  "--verbose",
-  "-g",
-  "-H:+SourceLevelDebug",
-  // "-Dpolyglot.engine.TraceCache=true",
-  // "-J-Dpolyglot.engine.TraceCache=true",
-  // "-H:-DeleteLocalSymbols",
-  // "-H:+PrintMethodHistogram",
-  // "-H:+PrintPointsToStatistics",
-  // "-H:+PrintRuntimeCompileMethods",
-  // "-H:+ReportPerformedSubstitutions",
-).onlyIf(isDebug)
-
-val experimentalFlags = listOf(
-  "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
-  "-H:+UseStringInlining",  // String inlining optimization is not supported when just-in-time compilation is used
-
-  // Not enabled for regular builds yet
-  "-H:±UseExperimentalReachabilityAnalysis",
-  "-H:±UseNewExperimentalClassInitialization",
-  "-H:±UseDedicatedVMOperationThread",
-  "-H:±SupportCompileInIsolates",
-
-  "-R:±AlwaysInlineIntrinsics",
-  "-R:±AlwaysInlineVTableStubs",
-
-  // Profiling
-  "-R:±ProfileMonitors",
-  "-R:±ProfileOptBulkAllocation",
-  "-R:±ProfileCompiledMethods",
-  "-R:±ProfileConstantObjects",
-  "-R:±ProfileLockElimination",
-
-  // Crashes
-  "-H:+ProtectionKeys",
-  "-H:+UseThinLocking",
-
-  // Significant slowdowns
-  "-H:+RunMainInNewThread",
-
-  // Unclear stability
-  "-H:+LSRAOptimization",
-  "-H:+VectorPolynomialIntrinsics",
-)
-
-// C compiler flags which are always included.
-val commonCFlags: List<String> = listOf(
-  "-DELIDE",
-  "-fstack-clash-protection",
-  "-fstack-protector-strong",
-  "-fexceptions",
-  "-ffunction-sections",
-  "-fdata-sections",
-//  "-fno-omit-frame-pointer",
-//  "-v",
-//  "-fno-strict-aliasing",
-//  "-fno-strict-overflow",
-//  "-fno-delete-null-pointer-checks",
-//  "-DELIDE",
-  // "-Wno-hardened",
-).plus(
-  listOf("-fuse-ld=$cLinker").onlyIf(cLinker != null)
-).plus(
-  System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
-)
-
-// Linker flags which are always included.
-val commonLinkerOptions: List<String> = listOf()
-
-// CFlags for release mode.
-val releaseCFlags: List<String> = listOf(
-  "-O3",
-  "-fPIC",
-  "-fPIE",
-  "-flto",
-).plus(
-  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang)
-).plus(
-  // Add protection flags for release.
-  when (targetArch) {
-    "x86_64", "amd64", "x86-64" -> listOf(
-      "-fcf-protection=full",
-    )
-    "arm", "aarch64" -> listOf(
-      "-mbranch-protection=standard",
-    )
-    else -> emptyList()
-  }
-)
-
-// PGO profiles to specify in release mode.
-val profiles: List<String> = listOf(
-  "js-path-fs.iprof",
-  "js-sqlite.iprof",
-  "pkl-eval.iprof",
-)
-
-// GVM release flags
-val gvmReleaseFlags: List<String> = listOfNotNull(
-  onlyIf(!enablePgo, "-Os"),
-)
-
-// Experimental C-compiler flags.
-val experimentalCFlags: List<String> = listOf(
-  // Nothing at this time.
-)
-
-// Full release flags (for all operating systems and platforms).
-val releaseFlags: List<String> = listOf(
-  "-H:+LocalizationOptimizedMode",
-  "-H:+RemoveUnusedSymbols",
-).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
-  listOf(
-    "-H:NativeLinkerOption=$it",
-    "--native-compiler-options=$it",
-  )
-}).plus(
-  listOf("--pgo=${profiles.joinToString(",")}").onlyIf(enablePgo)
-).plus(listOf(
-  if (oracleGvm && enableSbom) listOf(
-    if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
-  ) else emptyList(),
-  if (oracleGvm) gvmReleaseFlags else emptyList(),
-).flatten()).toList()
-
-val jvmDefs = mutableMapOf(
-  "elide.strict" to "true",
-  "elide.natives" to nativesPath,
-  "elide.root" to rootPath,
-  "elide.target" to elideTarget.triple,
-  "elide.graalvm.ee" to oracleGvm.toString(),
-  "elide.mosaic" to enableMosaic.toString(),
-  "elide.staticJni" to enableJnaStatic.toString(),
-  "elide.js.vm.enableStreams" to "true",
-  "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
-  "elide.kotlin.verbose" to "false",
-  "jna.library.path" to nativesPath,
-  "jna.boot.library.path" to nativesPath,
-  "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
-  "io.netty.allocator.type" to "adaptive",
-  "io.netty.native.deleteLibAfterLoading" to "false",
-  "io.netty.native.detectNativeLibraryDuplicates" to "false",
-  "io.netty.native.tryPatchShadedId" to "false",
-  "java.net.preferIPv4Stack" to "true",
-  "logback.statusListenerClass" to "ch.qos.logback.core.status.NopStatusListener",
-  "networkaddress.cache.ttl" to "10",
-  "polyglotimpl.DisableVersionChecks" to "false",
-  "user.country" to "US",
-  "user.language" to "en",
-  "org.sqlite.lib.path" to nativesPath,
-  "org.sqlite.lib.exportPath" to nativesPath,
-  "io.netty.native.workdir" to nativesPath,
-  "io.netty.native.deleteLibAfterLoading" to false.toString(),
-  "java.util.concurrent.ForkJoinPool.common.parallelism" to "4",
-  "java.util.concurrent.ForkJoinPool.common.maximumSpares" to "128",
-  // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
-  // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
-)
-
-findProperty("elide.logLevel")?.let {
-  jvmDefs["elide.logging.root.level"] = it as String
-}
-
-val hostedRuntimeOptions = mapOf(
-  "IncludeLocales" to "en",
-)
+val pluginApiHeader: String =
+  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
 
 val initializeAtBuildtime: List<String> = listOf(
+  "com.google.common.jimfs.SystemJimfsFileSystemProvider",
+  "com.google.common.collect.MapMakerInternalMap\$1",
+  "elide.tool.cli.AbstractToolCommand\$Companion",
+  "elide.tool.cli.Elide\$Companion",
+  "com.google.common.base.Equivalence\$Equals",
+//  "org.xml.sax.helpers.LocatorImpl",
+//  "org.xml.sax.helpers.AttributesImpl",
+  "kotlin",
+  "com.google.common.collect.MapMakerInternalMap",
+  "com.google.common.collect.MapMakerInternalMap\$StrongKeyWeakValueSegment",
+  "com.google.common.collect.MapMakerInternalMap\$StrongKeyWeakValueEntry\$Helper",
   "ch.qos.logback",
-  "com.google.common",
-  "com.google.protobuf",
+//  "com.google.common",
+//  "com.google.protobuf",
   "com.sun.tools.javac.resources.compiler",
   "com.sun.tools.javac.resources.javac",
   "sun.tools.jar.resources.jar",
-  "elide",
-  "elide.tool",
+  "sun.awt.resources.awt",
+//  "elide",
+//  "elide.tool",
   "elide.tool.cli.Elide",
-  "elide.tool.cli.cmd.tool.EmbeddedTool${'$'}Companion",
-  "elide.runtime",
-  "elide.runtime.lang.typescript",
-  "elide.runtime.gvm",
-  "elide.runtime.gvm.internals",
+  "elide.tool.cli.cmd.tool.EmbeddedTool\$Companion",
+//  "elide.runtime",
+//  "elide.runtime.gvm",
+//  "elide.runtime.gvm.internals",
   "elide.runtime.gvm.internals.sqlite",
   "elide.runtime.gvm.internals.sqlite.SqliteModule",
   "elide.runtime.lang.javascript.JavaScriptPrecompiler",
-  "com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls",
-  "tools.elide",
+//  "com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls",
+//  "tools.elide",
+//  "org.fusesource",
+//  "org.jline",
   "java.sql",
-  "kotlin",
-  "kotlinx.atomicfu",
-  "kotlinx.serialization",
-  "org.fusesource",
-  "org.jline",
   "org.slf4j",
   "org.sqlite",
-  "oshi",
-  "sun.awt.resources.awt",
   "org.pkl.core.runtime.VmLanguageProvider",
-  "elide.runtime.lang.typescript.internals.TypeScriptLanguageProvider",
+  "elide.runtime.lang.typescript",
+  "elide.runtime.typescript",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -1051,40 +804,13 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "org.fusesource.jansi.internal.CLibrary",
   "com.github.ajalt.mordant.rendering.TextStyles",
   "elide.tool.err.ErrPrinter",
+  "com.google.protobuf.RuntimeVersion",
 
   // @TODO: seal this into formal config
   "elide.tool.err.ErrorHandler${'$'}ErrorContext",
-  // @TODO: build-time linkage here
-  //"dev.elide.cli.bridge.CliNativeBridge",
-  //onlyIf(HostManager.hostIsLinux, "elide.runtime.gvm.internals.sqlite.SqliteModule"),
 
   // pkl needs this
   "org.msgpack.core.buffer.DirectBufferAccess",
-
-  "java.awt.Desktop",
-  "java.awt.Toolkit",
-  "sun.awt.X11.MotifDnDConstants",
-  "sun.awt.X11.WindowPropertyGetter",
-  "sun.awt.X11.XBaseWindow",
-  "sun.awt.X11.XDataTransferer",
-  "sun.awt.X11.XDnDConstants",
-  "sun.awt.X11.XDragAndDropProtocols",
-  "sun.awt.X11.XRootWindow",
-  "sun.awt.X11.XRootWindow${'$'}LazyHolder",
-  "sun.awt.X11.XSelection",
-  "sun.awt.X11.XSystemTrayPeer",
-  "sun.awt.X11.XToolkit",
-  "sun.awt.X11.XToolkitThreadBlockedHandler",
-  "sun.awt.X11.XWM",
-  "sun.awt.X11.XWindow",
-  "sun.awt.X11GraphicsConfig",
-  "sun.awt.dnd.SunDropTargetContextPeer${'$'}EventDispatcher",
-  "sun.font.PhysicalStrike",
-  "sun.font.StrikeCache",
-  "sun.font.SunFontManager",
-  "sun.java2d.Disposer",
-  "sun.nio.ch.UnixDomainSockets",
-  "sun.security.provider.NativePRNG",
 
   // --- JNA -----
 
@@ -1094,15 +820,6 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "com.sun.jna.platform.mac.IOKitUtil",
   "com.sun.jna.platform.mac.SystemB",
   "com.sun.jna.platform.linux.Udev",
-
-  // --- Self-tests -----
-
-  "elide.tool.engine.JsEngineTest",
-  "elide.tool.engine.JsEngineTest${'$'}Definition",
-  "elide.tool.engine.PythonEngineTest",
-  "elide.tool.engine.PythonEngineTest${'$'}Definition",
-  "elide.tool.engine.RubyEngineTest",
-  "elide.tool.engine.RubyEngineTest${'$'}Definition",
 
   // --- Jansi/JLine -----
 
@@ -1142,6 +859,8 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "oshi.jna.platform.mac.SystemB",
   "oshi.jna.platform.mac.SystemConfiguration",
   "oshi.jna.platform.linux.LinuxLibc",
+  "oshi.util.UserGroupInfo",
+  "oshi.driver.linux.Lshw",
   "com.sun.jna.platform.linux.LibC",
   "oshi.software.os",
   "oshi.software.os.linux",
@@ -1278,6 +997,303 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tool.cli.cmd.selftest.SelfTestCommand",
 )
 
+val initializeAtRuntimeTest: List<String> = emptyList()
+
+val rerunAtRuntimeTest: List<String> = emptyList()
+
+val commonNativeArgs = listOfNotNull(
+  // Debugging flags:
+  "--verbose",
+  "-H:TempDirectory=/tmp/elide-native",
+  // "-H:+PlatformInterfaceCompatibilityMode",
+  // "--trace-object-instantiation=sun.awt.resources.awt",
+  // "--trace-object-instantiation=com.sun.tools.javac.resources.compiler",
+  onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
+  onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
+  onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
+  onlyIf(enableFfm, "-H:+ForeignAPISupport"),
+  onlyIf(dumpPointsTo, "-H:PrintAnalysisCallTreeType=CSV"),
+  onlyIf(dumpPointsTo, "-H:+PrintImageObjectTree"),
+  onlyIf(enabledFeatures.isNotEmpty(), "--features=${enabledFeatures.joinToString(",")}"),
+  // Common flags:
+  "-march=$elideBinaryArch",
+  "--no-fallback",
+  "--enable-preview",
+  "--enable-http",
+  "--enable-https",
+  "--install-exit-handlers",
+  // @TODO breaks with old configs, and new configs can't use the agent.
+  // "--exact-reachability-metadata",
+  "--enable-url-protocols=http,https",
+  "--color=always",
+  "-H:+UnlockExperimentalVMOptions",
+  "--link-at-build-time=elide",
+  "--link-at-build-time=dev.elide",
+  "--link-at-build-time=org.pkl",
+  "--link-at-build-time=picocli",
+  onlyIf(enableJnaJpms, "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED") ?: "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.jni=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
+  "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
+  "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+  "-H:+PreserveFramePointer",
+  "-H:+ReportExceptionStackTraces",
+  "-H:+AddAllCharsets",
+  "-H:-ReduceImplicitExceptionStackTraceInformation",
+  "-H:MaxRuntimeCompileMethods=20000",
+  "-H:ExcludeResources=META-INF/native/libumbrella.so",
+  "-H:ExcludeResources=META-INF/native/libumbrella.a",
+  "-H:ExcludeResources=kotlin/kotlin.kotlin_builtins",
+  "-H:ExcludeResources=META-INF/.*kotlin_module",
+  "-H:ExcludeResources=com/sun/jna/.*",
+  "-H:ExcludeResources=META-INF/native/libsqlite.*",
+  "-H:ExcludeResources=META-INF/micronaut/io.micronaut.core.graal.GraalReflectionConfigurer/.*",
+  "-Delide.strict=true",
+  "-Delide.js.vm.enableStreams=true",
+  "-Delide.mosaic=$enableMosaic",
+  "-Delide.staticJni=$enableStaticJni",
+  "-Delide.preferShared=$preferShared",
+  "-Delide.lang.javascript=$enableJs",
+  "-Delide.lang.typescript=$enableTs",
+  "-Delide.lang.python=$enablePython",
+  "-Delide.lang.ruby=$enableRuby",
+  "-Delide.lang.jvm=$enableJvm",
+  "-Delide.lang.llvm=$enableLlvm",
+  "-Delide.lang.kotlin=$enableKotlin",
+  "-Delide.lang.pkl=$enablePkl",
+  "-Delide.lang.experimental=$enableExperimental",
+  "-Delide.staticUmbrella=false",
+  "-Delide.root=$rootPath",
+  "-Delide.target=$targetPath",
+  "-Delide.natives=$nativesPath",
+  "-Delide.natives.pluginApiHeader=$pluginApiHeader",
+  "-Djna.library.path=$nativesPath",
+  "-Djna.boot.library.path=$nativesPath",
+  "-Dorg.sqlite.lib.path=$nativesPath",
+  "-Dorg.sqlite.lib.exportPath=$nativesPath",
+  "-Dio.netty.native.workdir=$nativesPath",
+  "-Dlibrary.jansi.path=$nativesPath",
+  "-Dlibrary.jline.path=$nativesPath",
+  "-Dio.netty.native.deleteLibAfterLoading=false",
+  "-Dio.netty.allocator.type=adaptive",
+  "-R:MaxDirectMemorySize=32G",
+  "-Delide.nativeTransport.v2=${enableNativeTransportV2}",
+  "-Dtruffle.TrustAllTruffleRuntimeProviders=true",
+  "-Dgraalvm.locatorDisabled=false",
+  "-Dpolyglotimpl.DisableVersionChecks=false",
+  "-Dnetty.default.allocator.max-order=3",
+  "-Dnetty.resource-leak-detector-level=DISABLED",
+  "-Dmicronaut.server.netty.use-native-transport=true",
+  "-Dmicronaut.server.netty.parent.prefer-native-transport=true",
+  "-Dmicronaut.server.netty.worker.prefer-native-transport=true",
+  "-Dmicronaut.netty.event-loops.default.prefer-native-transport=true",
+  "-Dmicronaut.netty.event-loops.default.num-threads=2",
+  "-Dmicronaut.netty.event-loops.parent.num-threads=2",
+  "-Djackson.serialization.ORDER_MAP_ENTRIES_BY_KEYS=true",
+  "-Dmicronaut.application.name=elide",
+  "-Dmicronaut.application.default-charset=utf-8",
+  "-Dmicronaut.executors.default.threads=1",
+  "-Dmicronaut.executors.default.type=VIRTUAL",
+  "-Dmicronaut.executors.io.threads=2",
+  "-Dmicronaut.executors.io.type=VIRTUAL",
+  "-Dmicronaut.executors.scheduled.threads=1",
+  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
+  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=$preinitContextsList"),
+  onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
+  onlyIf(enablePgoSampling, "--pgo-sampling"),
+  onlyIf(enableHeapReport, "-H:+BuildReportMappedCodeSizeBreakdown"),
+  onlyIf(enableHeapReport, "-H:+TrackNodeSourcePosition"),
+  onlyIf(enableHeapReport, "-R:-TrackNodeSourcePosition"),
+).asSequence().plus(
+  languagePluginPaths.plus(listOf(umbrellaNativesPath)).filter {
+    Files.exists(Path.of(it))
+  }.map {
+    "-H:CLibraryPath=$it"
+  }
+).plus(
+  commonGvmArgs.onlyIf(oracleGvm)
+).plus(
+  listOf("--debug-attach").onlyIf(nativeImageBuildDebug)
+).plus(
+  nativeCompileJvmArgs
+).plus(
+  listOf(
+    "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
+  ).onlyIf(enabledSecurityProviders.isNotEmpty())
+).toList()
+
+val debugFlags: List<String> = listOfNotNull(
+  "--verbose",
+  "-g",
+  "-H:+SourceLevelDebug",
+  // "-Dpolyglot.engine.TraceCache=true",
+  // "-J-Dpolyglot.engine.TraceCache=true",
+  // "-H:-DeleteLocalSymbols",
+  // "-H:+PrintMethodHistogram",
+  // "-H:+PrintPointsToStatistics",
+  // "-H:+PrintRuntimeCompileMethods",
+  // "-H:+ReportPerformedSubstitutions",
+).onlyIf(isDebug)
+
+val experimentalFlags = listOf(
+  "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
+  "-H:+UseStringInlining",  // String inlining optimization is not supported when just-in-time compilation is used
+
+  // Not enabled for regular builds yet
+  "-H:±UseExperimentalReachabilityAnalysis",
+  "-H:±UseNewExperimentalClassInitialization",
+  "-H:±UseDedicatedVMOperationThread",
+  "-H:±SupportCompileInIsolates",
+
+  "-R:±AlwaysInlineIntrinsics",
+  "-R:±AlwaysInlineVTableStubs",
+
+  // Profiling
+  "-R:±ProfileMonitors",
+  "-R:±ProfileOptBulkAllocation",
+  "-R:±ProfileCompiledMethods",
+  "-R:±ProfileConstantObjects",
+  "-R:±ProfileLockElimination",
+
+  // Crashes
+  "-H:+ProtectionKeys",
+  "-H:+UseThinLocking",
+
+  // Significant slowdowns
+  "-H:+RunMainInNewThread",
+
+  // Unclear stability
+  "-H:+LSRAOptimization",
+  "-H:+VectorPolynomialIntrinsics",
+)
+
+// C compiler flags which are always included.
+val commonCFlags: List<String> = listOf(
+  "-DELIDE",
+  "-fstack-clash-protection",
+  "-fstack-protector-strong",
+  "-fexceptions",
+  "-ffunction-sections",
+  "-fdata-sections",
+//  "-fno-omit-frame-pointer",
+//  "-v",
+//  "-fno-strict-aliasing",
+//  "-fno-strict-overflow",
+//  "-fno-delete-null-pointer-checks",
+//  "-DELIDE",
+  // "-Wno-hardened",
+).plus(
+  listOf("-fuse-ld=$cLinker").onlyIf(cLinker != null)
+).plus(
+  System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
+)
+
+// Linker flags which are always included.
+val commonLinkerOptions: List<String> = listOf()
+
+// CFlags for release mode.
+val releaseCFlags: List<String> = listOf(
+  "-O$nativeOptMode",
+  "-fPIC",
+  "-fPIE",
+  "-flto",
+).plus(
+  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang)
+).plus(
+  // Add protection flags for release.
+  when (targetArch) {
+    "x86_64", "amd64", "x86-64" -> listOf(
+      "-fcf-protection=full",
+    )
+    "arm", "aarch64" -> listOf(
+      "-mbranch-protection=standard",
+    )
+    else -> emptyList()
+  }
+)
+
+// PGO profiles to specify in release mode.
+val profiles: List<String> = listOf(
+  "js-brotli.iprof",
+  "pkl-eval.iprof",
+  "ts-hello.iprof",
+  "ts-sqlite.iprof",
+)
+
+// GVM release flags
+val gvmReleaseFlags: List<String> = listOfNotNull(
+  onlyIf(!enablePgo, "-O$optMode"),
+)
+
+// Experimental C-compiler flags.
+val experimentalCFlags: List<String> = listOf(
+  // Nothing at this time.
+)
+
+// Full release flags (for all operating systems and platforms).
+val releaseFlags: List<String> = listOf(
+  "-H:+LocalizationOptimizedMode",
+  "-H:+RemoveUnusedSymbols",
+).asSequence().plus(releaseCFlags.plus(if (enableExperimental) experimentalCFlags else emptyList()).flatMap {
+  listOf(
+    "-H:NativeLinkerOption=$it",
+    "--native-compiler-options=$it",
+  )
+}).plus(
+  listOf("--pgo=${profiles.joinToString(",")}").onlyIf(enablePgo)
+).plus(listOf(
+  if (oracleGvm && enableSbom) listOf(
+    if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
+  ) else emptyList(),
+  if (oracleGvm) gvmReleaseFlags else emptyList(),
+).flatten()).toList()
+
+val jvmDefs = mutableMapOf(
+  "elide.strict" to "true",
+  "elide.natives" to nativesPath,
+  "elide.root" to rootPath,
+  "elide.target" to elideTarget.triple,
+  "elide.graalvm.ee" to oracleGvm.toString(),
+  "elide.mosaic" to enableMosaic.toString(),
+  "elide.staticJni" to enableJnaStatic.toString(),
+  "elide.js.vm.enableStreams" to "true",
+  "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
+  "elide.kotlin.verbose" to "false",
+  "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
+  "jna.library.path" to nativesPath,
+  "jna.boot.library.path" to nativesPath,
+  "io.netty.allocator.type" to "adaptive",
+  "io.netty.native.deleteLibAfterLoading" to "false",
+  "io.netty.native.detectNativeLibraryDuplicates" to "false",
+  "io.netty.native.tryPatchShadedId" to "false",
+  "java.net.preferIPv4Stack" to "true",
+  "logback.statusListenerClass" to "ch.qos.logback.core.status.NopStatusListener",
+  "networkaddress.cache.ttl" to "10",
+  "polyglotimpl.DisableVersionChecks" to "false",
+  "user.country" to "US",
+  "user.language" to "en",
+  "org.sqlite.lib.path" to nativesPath,
+  "org.sqlite.lib.exportPath" to nativesPath,
+  "io.netty.native.workdir" to nativesPath,
+  "io.netty.native.deleteLibAfterLoading" to false.toString(),
+  "java.util.concurrent.ForkJoinPool.common.parallelism" to "4",
+  "java.util.concurrent.ForkJoinPool.common.maximumSpares" to "128",
+  // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
+  // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
+)
+
+findProperty("elide.logLevel")?.let {
+  jvmDefs["elide.logging.root.level"] = it as String
+}
+
+val hostedRuntimeOptions = mapOf(
+  "IncludeLocales" to "en",
+)
+
 val pklArgs: List<String> = listOf(
   "-H:IncludeResourceBundles=org.pkl.core.errorMessages",
 ).plus(listOf(
@@ -1291,10 +1307,6 @@ val pklArgs: List<String> = listOf(
 ).map {
   "--initialize-at-build-time=$it"
 })
-
-val initializeAtRuntimeTest: List<String> = emptyList()
-
-val rerunAtRuntimeTest: List<String> = emptyList()
 
 val defaultPlatformArgs: List<String> = listOf()
 
@@ -1338,6 +1350,13 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=-flto",
     "-H:NativeLinkerOption=-Wl,--gc-sections",
     "-H:NativeLinkerOption=-Wl,--emit-relocs",
+    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libdiag.so",
+    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libsqlitejdbc.so",
+    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libumbrella.so",
+    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libjs.so",
+    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libposix.so",
+    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libterminal.so",
+    // "/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/build/terminal-543d7c2278c5a0d2/out/libterminalcore.a",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",
     "-H:ExcludeResources=.*dll",
@@ -1399,10 +1418,7 @@ val muslArgs = listOf(
 
 val testOnlyArgs: List<String> = emptyList()
 
-val nativeOverrideArgs: List<String> = listOf(
-  "--exclude-config",
-  "python-language-${libs.versions.graalvm.pin.get()}.jar", "META-INF\\/native-image\\/.*.properties",
-)
+val nativeOverrideArgs: List<String> = listOf()
 
 fun nativeCliImageArgs(
   platform: String = "generic",

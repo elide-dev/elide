@@ -8,7 +8,7 @@ license = "MIT"
 
 [lib]
 name = "umbrella"
-crate-type = ["lib", "staticlib", "cdylib"]
+crate-type = ["lib", "cdylib"]
 
 [features]
 default = [
@@ -16,6 +16,7 @@ default = [
   "all",
   "entry",
   "oro",
+  "oxc",
 ]
 allocator = [
   "allocator_mimalloc",
@@ -31,10 +32,10 @@ jvm = []
 lib = ["jni/default"]
 entry = ["jni/invocation"]
 python = []
-uv = ["tokio"]
+uv = ["tokio", "dep:uv"]
 oro = ["tokio", "orogene"]
 oxc = []
-ruff = []
+ruff = ["dep:ruff"]
 jemalloc = ["tikv-jemallocator"]
 bumpalloc = ["bumpalo"]
 ruby = []
@@ -48,13 +49,8 @@ dead_code = "allow"
 [dependencies]
 ## Local
 diag = { workspace = true }
-entry = { workspace = true }
-posix = { workspace = true }
-terminal = { workspace = true }
-transport = { workspace = true }
 
 ## Compile
-anyhow = { workspace = true }
 clap = { workspace = true, features = ["derive", "string", "wrap_help"] }
 console-subscriber = { workspace = true }
 java_native = { workspace = true }
@@ -70,6 +66,10 @@ typeshare = { workspace = true }
 
 ## Orogene
 orogene = { workspace = true, optional = true }
+
+## Ruff & Uv
+ruff = { workspace = true, optional = true }
+uv = { workspace = true, optional = true }
 
 [build-dependencies]
 builder = { workspace = true }

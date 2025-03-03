@@ -1336,6 +1336,8 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 	public final fun component7 ()Ljava/lang/Boolean;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/nio/file/Path;
+	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBundle ()Ljava/util/List;
@@ -1713,14 +1715,14 @@ public final class elide/runtime/gvm/js/JsSymbol : elide/runtime/intrinsics/Symb
 	public final synthetic fun unbox-impl ()Lkotlin/Pair;
 }
 
-public synthetic class elide/runtime/gvm/js/JsSymbol$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final class elide/runtime/gvm/js/JsSymbol$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/js/JsSymbol$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-OhSMgGE (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun deserialize-OhSMgGE (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-5EqKVTI (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+	public fun serialize-5EqKVTI (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
 }
 
 public final class elide/runtime/gvm/js/JsSymbol$JsSymbols {
@@ -3112,6 +3114,8 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecOptions : j
 	public final fun component7-FghU774 ()Lkotlin/time/Duration;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()I
+	public final fun copy-tL6_L-A (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
+	public static synthetic fun copy-tL6_L-A$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecOptions;
 	public fun cwdString ()Ljava/lang/String;
 	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
 	public fun encoding ()Ljava/lang/String;
@@ -3167,6 +3171,8 @@ public final class elide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions
 	public final fun component7 ()Ljava/lang/Integer;
 	public final fun component8 ()Ljava/lang/Integer;
 	public final fun component9-FghU774 ()Lkotlin/time/Duration;
+	public final fun copy-Xv9CPWA (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
+	public static synthetic fun copy-Xv9CPWA$default (Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/ExecSyncOptions;
 	public fun cwdString ()Ljava/lang/String;
 	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
 	public fun encoding ()Ljava/lang/String;
@@ -3323,6 +3329,8 @@ public final class elide/runtime/intrinsics/js/node/childProcess/SpawnOptions : 
 	public final fun component7 ()Ljava/lang/Integer;
 	public final fun component8 ()Ljava/lang/Integer;
 	public final fun component9 ()Ljava/lang/String;
+	public final fun copy-8zoS6qQ (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ZLkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
+	public static synthetic fun copy-8zoS6qQ$default (Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/String;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;ZLkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnOptions;
 	public fun cwdString ()Ljava/lang/String;
 	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
 	public final fun detached ()Z
@@ -3381,6 +3389,8 @@ public final class elide/runtime/intrinsics/js/node/childProcess/SpawnSyncOption
 	public final fun component7 ()Ljava/lang/Integer;
 	public final fun component8 ()Ljava/lang/Integer;
 	public final fun component9-FghU774 ()Lkotlin/time/Duration;
+	public final fun copy-Xv9CPWA (Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;Z)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
+	public static synthetic fun copy-Xv9CPWA$default (Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;Ljava/lang/String;Lelide/runtime/intrinsics/js/URL;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/childProcess/StdioConfig;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlin/time/Duration;Ljava/lang/String;ILjava/lang/String;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/childProcess/SpawnSyncOptions;
 	public fun cwdString ()Ljava/lang/String;
 	public final fun cwdUrl ()Lelide/runtime/intrinsics/js/URL;
 	public fun encoding ()Ljava/lang/String;
@@ -4852,6 +4862,8 @@ public final class elide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions 
 	public final fun component3 ()I
 	public final fun component4 ()I
 	public final fun component5 ()I
+	public final fun copy (IIIII)Lelide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions;IIIIIILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/zlib/ImmutableBrotliOptions;
 	public static final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun finishFlush ()I
@@ -4888,6 +4900,8 @@ public final class elide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions : 
 	public final fun component7 ()I
 	public final fun component8 ()Ljava/lang/Object;
 	public final fun component9 ()Z
+	public final fun copy (IIIIIIILjava/lang/Object;ZI)Lelide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions;IIIIIIILjava/lang/Object;ZIILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/zlib/ImmutableZlibOptions;
 	public static final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/ZlibOptions;
 	public fun dictionary ()Ljava/lang/Object;
 	public fun equals (Ljava/lang/Object;)Z
@@ -7302,6 +7316,8 @@ public final class elide/runtime/node/zlib/MutableBrotliOptions : elide/runtime/
 	public final fun component3 ()I
 	public final fun component4 ()I
 	public final fun component5 ()I
+	public final fun copy (IIIII)Lelide/runtime/node/zlib/MutableBrotliOptions;
+	public static synthetic fun copy$default (Lelide/runtime/node/zlib/MutableBrotliOptions;IIIIIILjava/lang/Object;)Lelide/runtime/node/zlib/MutableBrotliOptions;
 	public static final fun defaults ()Lelide/runtime/intrinsics/js/node/zlib/BrotliOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getChunkSize ()I

@@ -13,6 +13,7 @@
 package elide.runtime.intrinsics.sqlite
 
 import io.micronaut.core.annotation.ReflectiveAccess
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
 
 /**
@@ -29,4 +30,4 @@ import elide.annotations.API
  * @see SQLiteTransaction SQLite Transaction API
  * @see SQLitePrimitiveType SQLite Data Types
  */
-@API @ReflectiveAccess public interface SQLiteAPI
+@API @ReflectiveAccess public interface SQLiteAPI : ProxyObject

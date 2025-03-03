@@ -177,7 +177,6 @@ internal sealed interface ChildProcessExecution<T> where T : ProcOptions {
 }
 
 // Describes an execution which is to occur through a command call.
-@ConsistentCopyVisibility
 @JvmRecord private data class CommandExec<T : ProcOptions> private constructor(
   override val command: String,
   override val args: LinkedList<String>,
@@ -194,7 +193,6 @@ internal sealed interface ChildProcessExecution<T> where T : ProcOptions {
 }
 
 // Describes an execution which is to occur through a specific file.
-@ConsistentCopyVisibility
 @JvmRecord private data class FileExec<T : ProcOptions> private constructor(
   // Resolved to the file which is to be executed.
   val path: Path,

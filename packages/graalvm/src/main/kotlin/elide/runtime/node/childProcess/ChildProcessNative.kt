@@ -20,15 +20,7 @@ package elide.runtime.node.childProcess
  */
 internal object ChildProcessNative {
   init {
-    try {
-      System.loadLibrary("umbrella")
-    } catch (err: UnsatisfiedLinkError) {
-      try {
-        System.loadLibrary("posix")
-      } catch (err: UnsatisfiedLinkError) {
-        throw IllegalStateException("Failed to load child process tools", err)
-      }
-    }
+    System.loadLibrary("posix")
   }
 
   /**

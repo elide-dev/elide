@@ -15,6 +15,7 @@ package elide.tool.cli.cmd.pkl
 
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
+import io.micronaut.core.annotation.Introspected
 import org.pkl.cli.commands.*
 import picocli.CommandLine.Command
 import elide.tool.cli.*
@@ -30,7 +31,8 @@ import elide.tool.cli.ToolState
   customSynopsis = [],
   header = [],
 )
-internal class ToolPklCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@Introspected
+class ToolPklCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @Suppress("TooGenericExceptionCaught")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val args = Statics.args.get().let { args ->

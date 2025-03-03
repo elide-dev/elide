@@ -95,8 +95,8 @@ private const val CONFIG_ATTR_READONLY: String = "readonly"
   }
 }
 
-internal class SqliteModule : ProxyObject, SyntheticJSModule<SQLiteAPI>, SQLiteAPI {
-  companion object {
+public class SqliteModule : ProxyObject, SyntheticJSModule<SQLiteAPI>, SQLiteAPI {
+  public companion object {
     // Native library to load for SQLite support.
     private const val SQLITE3_LIBRARY: String = "sqlitejdbc"
 
@@ -107,7 +107,7 @@ internal class SqliteModule : ProxyObject, SyntheticJSModule<SQLiteAPI>, SQLiteA
     }
 
     private val SINGLETON = SqliteModule()
-    @JvmStatic fun obtain(): SQLiteAPI = SINGLETON
+    @JvmStatic public fun obtain(): SQLiteAPI = SINGLETON
   }
 
   override fun provide(): SQLiteAPI = SINGLETON
@@ -234,7 +234,6 @@ internal class SqliteDatabaseProxy private constructor (
   private val resources: ResourceManager = ResourceManager(),
   driverOptions: SQLiteDriverOptions? = null,
 ) : LifecycleBoundResources by resources, SQLiteDatabase {
-  @ConsistentCopyVisibility
   @JvmRecord private data class SQLiteColumn private constructor (
     val name: String,
     val type: SQLiteType,
@@ -263,7 +262,6 @@ internal class SqliteDatabaseProxy private constructor (
   }
 
   // Internal SQLite object implementation, backed by a de-serialized map.
-  @ConsistentCopyVisibility
   private data class SQLiteObjectImpl private constructor (
     private val schema: SQLiteObjectSchema,
     private val dataMap: MapLike<String, Any?>,

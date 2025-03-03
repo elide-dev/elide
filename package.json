@@ -13,27 +13,22 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
-  "workspaces": [
-    "packages/base",
-    "packages/core",
-    "packages/graalvm",
-    "packages/test",
-    "packages/cli",
-    "tools/scripts",
-    "tools/plugin/gradle-plugin",
-    "tools/hakuna"
-  ],
   "dependencies": {
     "browserslist": "4.24.4",
     "cssnano": "7.0.6",
+    "esbuild": "0.25.0",
     "google-protobuf": "3.21.4",
     "jszip": "3.10.1",
+    "lz-string": "1.5.0",
     "postcss": "8.5.3",
     "preact": "10.26.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "readable-stream": "4.5.2",
     "typescript": "5.8.2",
     "web-streams-polyfill": "3.3.3"
   },
@@ -46,16 +41,15 @@
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
     "@types/node": "22.13.8",
-    "@typescript-eslint/eslint-plugin": "8.25.0",
-    "@typescript-eslint/parser": "8.25.0",
     "commitlint": "19.7.1",
     "esbuild": "0.25.0",
     "eslint": "9.21.0",
+    "express": "^4.21.2",
     "husky": "9.1.7",
     "lint-staged": "15.4.3",
     "mitata": "1.0.34",
     "postcss-cli": "11.0.0",
-    "prettier": "3.5.2",
+    "prettier": "3.5.3",
     "prettier-plugin-java": "2.6.7",
     "prettier-plugin-properties": "0.3.0",
     "prettier-plugin-sh": "0.15.0",

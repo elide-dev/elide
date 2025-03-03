@@ -83,9 +83,7 @@ val nodeVersion: String by properties
 val enableOwasp: String? by properties
 
 val buildDocs: String by properties
-val buildDeprecated: String by properties
 val buildEmbedded: String by properties
-val buildAuxImage: String by properties
 val buildDocsModules: String by properties
 val buildBenchmarks: String by properties
 
@@ -164,13 +162,6 @@ dependencies {
   kover(projects.packages.server)
   kover(projects.packages.ssr)
   kover(projects.packages.test)
-
-  if (buildDeprecated == "true") {
-    kover(project(":packages:wasm"))
-    kover(project(":packages:serverless"))
-    kover(project(":packages:embedded"))
-    kover(project(":tools:processor"))
-  }
 
   if (buildDocs == "true") {
     val dokkaPlugin by configurations
@@ -343,11 +334,6 @@ apiValidation {
     listOf(
       "cli",
       "sqlite",
-      "transport",
-      "transport-common",
-      "transport-kqueue",
-      "transport-epoll",
-      "transport-uring",
       "reports",
     ).plus(
       if (buildBenchmarks == "true") {
@@ -359,28 +345,11 @@ apiValidation {
         emptyList()
       },
     ).plus(
-      if (buildAuxImage == "true") {
-        listOf(
-          "auximage",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
       if (buildDocs == "true" && buildDocsModules == "true") {
         listOf(
           "architecture",
           "docs",
           "guide",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
-      if (buildDeprecated == "true") {
-        listOf(
-          "bom",
-          "processor",
         )
       } else {
         emptyList()

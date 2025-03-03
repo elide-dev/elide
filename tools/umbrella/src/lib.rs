@@ -56,11 +56,6 @@ use std::sync::OnceLock;
 #[cfg(feature = "orogene")]
 use tokio::runtime::Runtime;
 
-pub use diag;
-pub use posix;
-pub use terminal;
-pub use transport;
-
 #[cfg(feature = "orogene")]
 use orogene::Orogene;
 
@@ -69,7 +64,7 @@ use ruff::args::Args;
 #[cfg(feature = "ruff")]
 use ruff::{ExitStatus, run};
 #[cfg(feature = "uv")]
-use uv::run_uv_entry_with_args;
+use uv::main as uv_main;
 
 #[cfg(feature = "biome")]
 use crate::tools::BIOME_INFO;
@@ -325,16 +320,23 @@ pub fn runRuff<'local>(
 }
 
 #[cfg(feature = "uv")]
+fn run_uv_main(args: Vec<std::ffi::OsString>) -> std::process::ExitCode {
+  unsafe {
+    return uv_main(args, false);
+  };
+}
+
+#[cfg(feature = "uv")]
 #[jni("dev.elide.cli.bridge.CliNativeBridge")]
 pub fn runUv<'local>(
   env: JNIEnv<'local>,
   _class: JClass<'local>,
   args: JObjectArray<'local>,
 ) -> jint {
-  match run_uv_with_args(decode_tool_args(env, args)) {
-    uv::commands::ExitStatus::Success => 0,
-    uv::commands::ExitStatus::Failure => 1,
-    uv::commands::ExitStatus::Error => 2,
+  match run_uv_main(decode_tool_args(env, args)) {
+    std::process::ExitCode::SUCCESS => 0,
+    std::process::ExitCode::FAILURE => 1,
+    _ => 2,
   }
 }
 
@@ -378,23 +380,6 @@ pub fn on_unload(_vm: JavaVM, _: c_void) {
   // nothing to do at this time
 }
 
-#[cfg(feature = "uv")]
-fn run_uv_with_args(args: Vec<std::ffi::OsString>) -> uv::commands::ExitStatus {
-  eprintln!("checkpoint(uv) args: {:?}", args);
-  eprintln!("checkpoint(uv) {}", 0);
-  let runtime = obtain_runtime();
-  eprintln!("checkpoint(uv) {}", 1);
-  let _guard = runtime.enter();
-  eprintln!("checkpoint(uv) {}", 2);
-  match runtime.block_on(run_uv_entry_with_args(args)) {
-    Ok(_) => uv::commands::ExitStatus::Success,
-    Err(e) => {
-      eprintln!("Error running uv: {:?}", e);
-      return uv::commands::ExitStatus::Error;
-    }
-  }
-}
-
 #[cfg(test)]
 mod tests {
   #[cfg(feature = "uv")]
@@ -405,11 +390,11 @@ mod tests {
   fn test_run_uv_with_args() {
     let args = vec!["uv", "--help"];
     let as_os_strs: Vec<OsString> = args.iter().map(|x| x.to_string().into()).collect();
-    let result = super::run_uv_with_args(as_os_strs);
+    let result = super::run_uv_main(as_os_strs);
     let exit_code = match result {
-      uv::commands::ExitStatus::Success => 0,
-      uv::commands::ExitStatus::Failure => 1,
-      uv::commands::ExitStatus::Error => 2,
+      std::process::ExitCode::SUCCESS => 0,
+      std::process::ExitCode::FAILURE => 1,
+      _ => 2,
     };
     assert_eq!(exit_code, 0);
   }

@@ -13,6 +13,7 @@
 
 package elide.tool.cli.cmd.discord
 
+import io.micronaut.core.annotation.Introspected
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.awt.Desktop
@@ -31,6 +32,7 @@ import elide.tool.cli.ToolState
   description = ["Open or show a Discord invite link"],
   mixinStandardHelpOptions = true,
 )
+@Introspected
 @Singleton internal class ToolDiscordCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private const val REDIRECT_TARGET = "https://elide.dev/discord"

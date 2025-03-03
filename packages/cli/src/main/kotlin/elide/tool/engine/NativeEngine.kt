@@ -352,7 +352,7 @@ object NativeEngine {
     }
     val libExecPaths = listOf<Path>(
       resolvedExecPrefix,
-      resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.1"),
+      resolvedExecPrefix.resolve("python/python-home/lib/graalpy25.0"),
       resolvedExecPrefix.resolve("llvm/libsulong-native"),
       resolvedExecPrefix.resolve("ruby/ruby-home"),
     )

@@ -127,6 +127,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
   ],
 )
+@Introspected
 @Singleton internal class ToolShellCommand @Inject constructor (
   private val projectManager: ProjectManager,
   private val workdir: WorkdirManager,
@@ -138,10 +139,10 @@ private typealias ContextAccessor = () -> PolyglotContext
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
     // Whether to enable extended language plugins.
-    private const val ENABLE_JVM = false
-    private const val ENABLE_RUBY = false
-    private const val ENABLE_PYTHON = true
-    private const val ENABLE_TYPESCRIPT = true
+    private val ENABLE_JVM = System.getProperty("elide.lang.jvm") == "true"
+    private val ENABLE_RUBY = System.getProperty("elide.lang.ruby") == "true"
+    private val ENABLE_PYTHON = System.getProperty("elide.lang.python") == "true"
+    private val ENABLE_TYPESCRIPT = System.getProperty("elide.lang.typescript") == "true"
 
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
@@ -318,6 +319,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     private val ktAliases = setOf("kt", "kotlin")
 
     // Resolve the specified language.
+    @Suppress("ComplexCondition")
     internal fun resolveLangs(project: ProjectInfo? = null, alias: String? = null): EnumSet<GuestLanguage> {
       return EnumSet.noneOf(GuestLanguage::class.java).apply {
         add(JS)
@@ -1794,15 +1796,15 @@ private typealias ContextAccessor = () -> PolyglotContext
 //           }
 //         }
 
-         PYTHON -> ignoreNotInstalled {
-           install(elide.runtime.plugins.python.Python) {
-             logging.debug("Configuring Python VM")
-             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-             resourcesPath = GVM_RESOURCES
-             executable = cmd
-             executableList = listOf(cmd).plus(args)
-           }
-         }
+//         PYTHON -> ignoreNotInstalled {
+//           install(elide.runtime.plugins.python.Python) {
+//             logging.debug("Configuring Python VM")
+//             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+//             resourcesPath = GVM_RESOURCES
+//             executable = cmd
+//             executableList = listOf(cmd).plus(args)
+//           }
+//         }
 
 //        // Secondary Engines: JVM
 //        JVM -> ignoreNotInstalled {

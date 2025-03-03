@@ -21,7 +21,6 @@ plugins {
 
   kotlin("jvm")
   kotlin("kapt")
-  kotlin("plugin.allopen")
 
   alias(libs.plugins.elide.conventions)
 }
@@ -59,33 +58,32 @@ elide {
   }
 }
 
-val oracleGvm = false
+val oracleGvm = true
 val enableEdge = false
 val enableToolchains = true
+
+val pluginApiHeader: String =
+  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
+
 val nativeArgs = listOfNotNull(
-  "--shared",
-  "--verbose",
-  "--initialize-at-build-time=",
+  "-Delide.natives.pluginApiHeader=$pluginApiHeader",
   "-H:+SourceLevelDebug",
   "-H:-JNIExportSymbols",
   "-H:-RemoveUnusedSymbols",
   "-H:-StripDebugInfo",
-  "-H:Class=elide.runtime.python.ElidePythonLanguage",
-  "-H:Method=main",
   "-H:+JNIEnhancedErrorCodes",
   "-H:+JNIVerboseLookupErrors",
   "-H:+UnlockExperimentalVMOptions",
   "-H:+ReportExceptionStackTraces",
-  "-J--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=org.graalvm.truffle.runtime",
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 23
-val ltsJvmTarget = 21
+val edgeJvmTarget = 25
+val stableJvmTarget = 23
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
-val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)
-val selectedJvmTarget = if (enableEdge) edgeJvmTarget else ltsJvmTarget
-val selectedJvm = if (enableEdge) edgeJvm else ltsJvm
+val stableJvm = JavaVersion.toVersion(stableJvmTarget)
+val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget
+val selectedJvm = if (enableEdge) edgeJvm else stableJvm
 
 val jvmType: JvmVendorSpec =
   if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
@@ -100,12 +98,25 @@ val gvmCompiler = javaToolchains.compilerFor {
   vendor.set(jvmType)
 }
 
+val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-python.nil")
+val baseLayer = project(":packages:engine").layout.buildDirectory.file("native/nativeLayerCompile/elide-base.nil")
+
 graalvmNative {
   binaries {
     create("shared") {
       imageName = "libelidepython"
       classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
-      buildArgs(nativeArgs)
+      buildArgs(nativeArgs.plus(listOf(
+        "--shared",
+      )))
+    }
+
+    create("layer") {
+      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
+      buildArgs(nativeArgs.plus(listOf(
+        "-H:LayerUse=${baseLayer.get().asFile.absolutePath}",
+        "-H:LayerCreate=${layerOut.get().asFile.name}"
+      )))
     }
 
     named("test") {
@@ -123,21 +134,12 @@ dependencies {
   api(libs.graalvm.python.language)
   api(libs.graalvm.python.resources)
   api(libs.graalvm.python.embedding)
-
-  if (oracleGvm) {
-    api(libs.graalvm.python.language.enterprise)
-  } else {
-    api(libs.graalvm.polyglot.python.community)
-  }
-
+  api(libs.graalvm.polyglot.python.community)
   implementation(libs.kotlinx.coroutines.core)
 
   compileOnly(libs.graalvm.svm)
-  if (oracleGvm) {
-    compileOnly(libs.graalvm.truffle.enterprise)
-  } else {
-    compileOnly(libs.graalvm.truffle.runtime.svm)
-  }
+  compileOnly(libs.graalvm.truffle.enterprise)
+  compileOnly(libs.graalvm.truffle.runtime.svm)
 
   // Testing
   kaptTest(mn.micronaut.inject.java)
@@ -160,6 +162,10 @@ tasks {
     if (enableToolchains) javaCompiler = gvmCompiler
   }
 
+  named("nativeLayerCompile").configure {
+    dependsOn(":packages:engine:nativeLayerCompile")
+  }
+
   test {
     maxHeapSize = "2G"
     maxParallelForks = 4
@@ -167,5 +173,9 @@ tasks {
     systemProperty("elide.test", "true")
     systemProperty("elide.js.vm.enableStreams", "true")
     if (enableToolchains) javaLauncher = gvmLauncher
+    jvmArgs(listOf(
+      "--add-modules=jdk.unsupported",
+      "--enable-native-access=ALL-UNNAMED"
+    ))
   }
 }

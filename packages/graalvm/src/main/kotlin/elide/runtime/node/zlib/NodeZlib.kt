@@ -30,7 +30,6 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.util.zip.*
-import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.exec.GuestExecutor
@@ -112,7 +111,7 @@ public data class MutableZlibOptions @JvmOverloads public constructor (
     "memLevel" -> memLevel = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_MEMLEVEL
     "strategy" -> strategy = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_STRATEGY
     "dictionary" -> dictionary = value
-    "info" -> info = value?.asBoolean() ?: false
+    "info" -> info = value?.asBoolean() == true
     "maxOutputLength" -> maxOutputLength = value?.asInt() ?: 0
     else -> JsError.error("Cannot set member '$key' on ZlibOptions")
   }
@@ -123,7 +122,6 @@ public data class MutableZlibOptions @JvmOverloads public constructor (
  *
  * Implements an mutable Brotli options object.
  */
-@ConsistentCopyVisibility
 public data class MutableBrotliOptions internal constructor (
   @Polyglot override var flush: Int = ModernNodeZlibConstants.BROTLI_OPERATION_PROCESS,
   @Polyglot override var finishFlush: Int = ModernNodeZlibConstants.BROTLI_OPERATION_FINISH,

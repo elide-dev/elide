@@ -89,7 +89,7 @@ public class ElideEmbedded {
   }
 
   /** Logger used by the embedded runtime. */
-  private val logging = Logging.of(ElideEmbedded::class)
+  private val logging by lazy { Logging.of(ElideEmbedded::class) }
 
   /** Current state of the runtime. */
   private val state = atomic<State>(Uninitialized)

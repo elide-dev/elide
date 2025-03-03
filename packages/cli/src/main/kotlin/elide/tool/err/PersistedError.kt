@@ -41,7 +41,6 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
  * @param args Command-line arguments which were active when this error was produced, as applicable.
  * @param error Information about the error itself -- the stacktrace, exception type, and so on.
  */
-@ExposedCopyVisibility
 @Serializable @JvmRecord data class PersistedError @OptIn(DelicateElideApi::class) private constructor (
   val version: Int = 1,
   val id: String,

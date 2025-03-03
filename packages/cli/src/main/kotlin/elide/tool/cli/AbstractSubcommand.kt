@@ -58,7 +58,7 @@ import org.graalvm.polyglot.Engine as VMEngine
  * @param State Structure used for tooling state, which can be specific to this sub-command type.
  * @param Context Command execution context shape, which can be specific to this sub-command type.
  */
-@Suppress("MemberVisibilityCanBePrivate") internal abstract class AbstractSubcommand<
+@Suppress("MemberVisibilityCanBePrivate") abstract class AbstractSubcommand<
   State: ToolState,
   Context: CommandContext,
 > :
@@ -75,16 +75,18 @@ import org.graalvm.polyglot.Engine as VMEngine
     private val _stderr = System.err
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
-    private val additionalEnginesByLang = mapOf(
-      GuestLanguage.JAVA to listOf(
-        GuestLanguage.JVM,
-        GuestLanguage.KOTLIN,
-      ),
-      GuestLanguage.JVM to listOf(
-        GuestLanguage.KOTLIN,
-        GuestLanguage.JAVA,
+    private val additionalEnginesByLang by lazy {
+      mapOf(
+        GuestLanguage.JAVA to listOf(
+          GuestLanguage.JVM,
+          GuestLanguage.KOTLIN,
+        ),
+        GuestLanguage.JVM to listOf(
+          GuestLanguage.KOTLIN,
+          GuestLanguage.JAVA,
+        )
       )
-    )
+    }
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
@@ -153,67 +155,39 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Output controller base surface. */
-  internal sealed interface OutputController : Logger {
+  sealed interface OutputController : Logger {
     /** Current output settings. */
     val settings: ToolState.OutputSettings
 
     /** Direct access to standard-out. */
     val stdout: PrintStream get() = _stdout
 
-    /**
-     * TBD.
-     */
     fun emit(text: CharSequence)
-
-    /**
-     * TBD.
-     */
     fun line(text: CharSequence)
-
-    /**
-     * TBD.
-     */
     suspend fun pretty(operation: OutputCallable, fallback: OutputCallable)
 
-    /**
-     * TBD.
-     */
     suspend fun pretty(operation: OutputCallable) = pretty(operation) {
       // Do nothing as a fallback.
     }
 
-    /**
-     * TBD.
-     */
     fun verbose(vararg args: Any)
   }
 
   /** Input controller base surface. */
-  @Suppress("unused") internal sealed interface InputController {
+  @Suppress("unused") sealed interface InputController {
     /** Direct access to standard-input. */
     val stdin: InputStream get() = _stdin
 
     /** Buffered access to `stdin`. */
     val buffer: BufferedReader get() = _inbuf
 
-    /**
-     * TBD.
-     */
     fun readLineBlocking(): String?
-
-    /**
-     * TBD.
-     */
     suspend fun readLine(): String?
-
-    /**
-     * TBD.
-     */
     suspend fun readLineAsync(): Deferred<String?>
   }
 
   /** Central task service interface. */
-  internal interface ExecutionService {
+  interface ExecutionService {
     /** Task executor. */
     val taskExecutor: ITaskExecutor
 
@@ -225,7 +199,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Controller for parallel execution. */
-  internal sealed interface ExecutionController {
+  sealed interface ExecutionController {
     /** Co-routine scope of the current execution. */
     val scope: CoroutineScope
 
@@ -240,7 +214,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Execution context for a run of the Elide tool. */
-  internal sealed interface ToolContext<State: ToolState> {
+  sealed interface ToolContext<State: ToolState> {
     /** Output settings and controls. */
     val output: OutputController
 

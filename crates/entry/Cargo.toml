@@ -13,13 +13,22 @@
 
 [package]
 name = "entry"
-edition = "2024"
-license = "MIT"
-workspace = "../.."
-version = "1.0.0-alpha14-SNAPSHOT"
+version = { workspace = true }
+edition = { workspace = true }
+rust-version = { workspace = true }
+homepage = { workspace = true }
+documentation = { workspace = true }
+repository = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
 
 [lib]
 crate-type = ["lib"]
 
 [[bin]]
 name = "elide"
+
+[dependencies]
+substrate = { workspace = true }
+umbrella = { workspace = true }
+libloading = { workspace = true }

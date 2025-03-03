@@ -1,11 +1,5 @@
 [
   {
-    "interfaces":["com.github.ajalt.mordant.internal.jna.MacosLibC"]
-  },
-  {
-    "interfaces":["com.github.ajalt.mordant.internal.jna.PosixLibC"]
-  },
-  {
     "interfaces":["com.sun.jna.platform.linux.Udev"]
   },
   {

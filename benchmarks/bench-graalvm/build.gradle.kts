@@ -18,9 +18,11 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import me.champeau.jmh.JMHTask
 import kotlinx.benchmark.gradle.*
 import org.jetbrains.kotlin.allopen.gradle.*
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import elide.toolchain.host.TargetInfo
 
 plugins {
   kotlin("jvm")
@@ -64,6 +66,11 @@ benchmark {
       warmups = 5
       iterations = 5
     }
+    create("sqlite") {
+      include("*SQLite*")
+      warmups = 5
+      iterations = 5
+    }
   }
   targets {
     register("main") {
@@ -71,6 +78,39 @@ benchmark {
       jmhVersion = libs.versions.jmh.lib.get()
     }
   }
+}
+
+val elideTarget = TargetInfo.current(project)
+val nativesType = "release"
+val umbrellaNativesPath: String =
+  rootProject.layout.projectDirectory.dir("target/${elideTarget.triple}/$nativesType").asFile.path
+val nativesPath = umbrellaNativesPath
+val targetSqliteDir = rootProject.layout.projectDirectory.dir("third_party/sqlite/install")
+val targetSqliteLibDir = targetSqliteDir.dir("lib")
+
+val javaLibPath = provider {
+  StringBuilder().apply {
+    append(nativesPath)
+    append(File.pathSeparator)
+    append(targetSqliteLibDir)
+    System.getProperty("java.library.path", "").let {
+      if (it.isNotEmpty()) {
+        append(File.pathSeparator)
+        append(it)
+      }
+    }
+  }
+}
+
+tasks.withType(JMHTask::class).configureEach {
+  doNotTrackState("always run")
+  outputs.upToDateWhen { false }
+  jvmArgsAppend.addAll(
+    listOf(
+      "-XX:+UnlockExperimentalVMOptions",
+      "-Djava.library.path=${javaLibPath.get()}",
+    ),
+  )
 }
 
 tasks.withType(Jar::class).configureEach {

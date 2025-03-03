@@ -39,7 +39,6 @@ import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
-import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.pkl.ToolPklCommand
@@ -60,11 +59,11 @@ import elide.tool.io.RuntimeWorkdirManager
   scope = ScopeType.INHERIT,
   subcommands = [
     ToolInfoCommand::class,
-    ToolDiscordCommand::class,
     ToolInvokeCommand::class,
     HelpCommand::class,
     ToolShellCommand::class,
     ToolPklCommand::class,
+    //ToolDiscordCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
           "   ______     __         __     _____     ______%n" +
@@ -102,16 +101,24 @@ import elide.tool.io.RuntimeWorkdirManager
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"
 
-    // Maps exceptions to process exit codes.
-    private val exceptionMapper = DefaultErrorHandler.acquire()
+    // Whether to log early init messages.
+    private const val INIT_LOGGING: Boolean = false
 
     // Properties which cannot be set by users.
     private val blocklistedProperties = sortedSetOf(
       "elide.js.vm.enableStreams",
     )
 
+    // Init logging.
+    @JvmStatic private fun initLog(message: String) {
+      if (INIT_LOGGING) {
+        System.err.println("[elide:init] $message")
+      }
+    }
+
     @JvmStatic private fun initializeNatives() {
       // load natives
+      initLog("Initializing natives")
       NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
         listOf(
           "elide.js.vm.enableStreams" to "true",
@@ -128,6 +135,7 @@ import elide.tool.io.RuntimeWorkdirManager
 
     @JvmStatic private fun initializeTerminal() {
       assert(!ImageInfo.inImageBuildtimeCode())
+      initLog("Initializing ANSI system console")
       org.fusesource.jansi.AnsiConsole.systemInstall()
     }
 
@@ -164,10 +172,11 @@ import elide.tool.io.RuntimeWorkdirManager
 
     // Install static classes/perform static initialization.
     fun installStatics(bin: String, args: Array<String>, cwd: String?) {
+      initLog("Initializing statics")
       ProcessManager.initializeStatic(bin, args, cwd ?: "")
       if (ImageInfo.inImageCode()) try {
         ProcessProperties.setArgumentVectorProgramName("elide")
-      } catch (uoe: UnsupportedOperationException) {
+      } catch (_: UnsupportedOperationException) {
         // no-op
       }
 
@@ -217,6 +226,7 @@ import elide.tool.io.RuntimeWorkdirManager
 
       val binPath = ProcessHandle.current().info().command().orElse(null)
       installStatics(binPath, args, System.getProperty("user.dir"))
+      initLog("Firing entrypoint")
       exec(args)
     } finally {
       cleanup()
@@ -231,32 +241,56 @@ import elide.tool.io.RuntimeWorkdirManager
     @JvmStatic fun version(): String = ELIDE_TOOL_VERSION
 
     // Private execution entrypoint for customizing core Picocli settings.
+    @Suppress("SpreadOperator")
     @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext
       .builder()
+      .environments("cli")
+      .defaultEnvironments("cli")
       .eagerInitAnnotated(Eager::class.java)
+      .eagerInitSingletons(false)
+      .eagerInitConfiguration(true)
+      .deduceEnvironment(false)
+      .deduceCloudEnvironment(false)
       .args(*args)
-      .start().use {
-      CommandLine(Elide::class.java, MicronautFactory(it))
-       .setCommandName(TOOL_NAME)
-       .setResourceBundle(ResourceBundle.getBundle("ElideTool"))
-       .setAbbreviatedOptionsAllowed(true)
-       .setAbbreviatedSubcommandsAllowed(true)
-       .setCaseInsensitiveEnumValuesAllowed(true)
-       .setEndOfOptionsDelimiter("--")
-       .setExitCodeExceptionMapper(exceptionMapper)
-       .setPosixClusteredShortOptionsAllowed(true)
-       .setUsageHelpAutoWidth(true)
-       .setColorScheme(
-         Help.defaultColorScheme(
-           if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
-             System.getenv("NO_COLOR") != null) {
-             Help.Ansi.OFF
-           } else {
-             Help.Ansi.ON
-           },
-         ),
-       ).execute(*args)
-    }
+      .also { initLog("Starting application context") }
+      .start()
+      .also { initLog("Application context started; loading tool entrypoint") }
+      .use {
+        val locale = Locale.of("en", "US")
+        Locale.setDefault(locale)
+        initLog("Preparing CLI configuration (locale: $locale)")
+        val bundle = ResourceBundle.getBundle("ElideTool", locale)
+        initLog("Loaded resource bundle")
+        val errHandler = DefaultErrorHandler.acquire()
+        initLog("Constructing CLI and Micronaut factory")
+        CommandLine(Elide::class.java, MicronautFactory(it))
+         .setCommandName(TOOL_NAME)
+         .setResourceBundle(bundle)
+         .setAbbreviatedOptionsAllowed(true)
+         .setAbbreviatedSubcommandsAllowed(true)
+         .setCaseInsensitiveEnumValuesAllowed(true)
+         .setEndOfOptionsDelimiter("--")
+         .setExitCodeExceptionMapper(errHandler)
+         .setPosixClusteredShortOptionsAllowed(true)
+         .setUsageHelpAutoWidth(true)
+         .setColorScheme(
+           Help.defaultColorScheme(
+             if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
+               System.getenv("NO_COLOR") != null) {
+               Help.Ansi.OFF
+             } else {
+               Help.Ansi.ON
+             },
+           ),
+         ).let {
+           initLog("Entering application context")
+           it.execute(*args).also {
+             initLog("Finished execution")
+           }
+         }
+      }.also {
+        initLog("Exiting application context")
+      }
 
     /** Configures the Micronaut binary. */
     @ContextConfigurer internal class ToolConfigurator: ApplicationContextConfigurer {
@@ -266,13 +300,13 @@ import elide.tool.io.RuntimeWorkdirManager
           .deduceEnvironment(false)
           .deduceCloudEnvironment(false)
           .banner(false)
+          .environments("cli")
           .defaultEnvironments("cli")
           .eagerInitAnnotated(Eager::class.java)
           .eagerInitConfiguration(true)
           .eagerInitSingletons(false)
           .environmentPropertySource(false)
           .enableDefaultPropertySources(false)
-          .overrideConfigLocations("classpath:elide.yml")
       }
     }
   }

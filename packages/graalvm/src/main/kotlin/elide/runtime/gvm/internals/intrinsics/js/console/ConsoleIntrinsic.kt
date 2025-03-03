@@ -52,7 +52,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   }
 
   // Logger which receives console calls.
-  private val logging: Logger = Logging.named(LOGGER_NAME)
+  private val logging: Logger by lazy { Logging.named(LOGGER_NAME) }
 
   // Whether to intercept logs.
   private val intercept: AtomicBoolean = AtomicBoolean(false)

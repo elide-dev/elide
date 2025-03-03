@@ -19,9 +19,7 @@ plugins {
   alias(libs.plugins.micronaut.graalvm)
 
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.allopen")
-
   alias(libs.plugins.elide.conventions)
 }
 
@@ -48,7 +46,8 @@ elide {
 }
 
 dependencies {
-  kapt(libs.graalvm.truffle.processor)
+  annotationProcessor(libs.graalvm.truffle.api)
+  annotationProcessor(libs.graalvm.truffle.processor)
   api(projects.packages.engine)
   api(projects.packages.graalvmJs)
   api(libs.graalvm.truffle.api)

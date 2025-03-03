@@ -15,12 +15,10 @@ package elide.runtime.intrinsics.js.node.zlib
 import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Value
 import java.io.Closeable
-import kotlin.AutoCloseable
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.stream.Readable
 import elide.runtime.intrinsics.js.node.stream.Transform
 import elide.runtime.intrinsics.js.node.stream.Writable
-import elide.runtime.intrinsics.js.node.zlib.FlushStreamCallback.Companion
 import elide.vm.annotations.Polyglot
 
 /**

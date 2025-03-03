@@ -1734,15 +1734,6 @@
   ],
   "resources": [
     {
-      "glob": "ElideTool.properties"
-    },
-    {
-      "glob": "ElideTool_en.properties"
-    },
-    {
-      "glob": "ElideTool_en_US.properties"
-    },
-    {
       "glob": "META-INF/graalvm/com.oracle.truffle.enterprise/version"
     },
     {

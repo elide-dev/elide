@@ -71,7 +71,7 @@ version = rootProject.version as String
 val oracleGvm = false
 val oracleGvmLibs = oracleGvm
 val enableJpms = false
-val enableEdge = true
+val enableEdge = false
 val enableSqlite = true
 val enableBenchmarks = false
 val enableStaticJni = true
@@ -83,12 +83,12 @@ val javacArgs = listOf(
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 23
-val ltsJvmTarget = 21
+val edgeJvmTarget = 25
+val stableJvmTarget = 23
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
-val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)
-val selectedJvmTarget = if (enableEdge) edgeJvmTarget else ltsJvmTarget
-val selectedJvm = if (enableEdge) edgeJvm else ltsJvm
+val stableJvm = JavaVersion.toVersion(stableJvmTarget)
+val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget
+val selectedJvm = if (enableEdge) edgeJvm else stableJvm
 val elideTarget = TargetInfo.current(project)
 
 val jvmType: JvmVendorSpec =
@@ -630,8 +630,8 @@ dependencies {
 
   if (enableTransportV2) {
     // Testing: Native Transports
-    testImplementation(projects.packages.transport.transportEpoll)
-    testImplementation(projects.packages.transport.transportKqueue)
+    implementation(project(":packages:transport:transport-epoll"))
+    implementation(project(":packages:transport:transport-kqueue"))
     testImplementation(libs.netty.transport.native.classes.kqueue)
     testImplementation(libs.netty.transport.native.classes.epoll)
   } else {
@@ -645,9 +645,7 @@ val testBase: Configuration by configurations.creating
 
 tasks {
   test {
-    maxHeapSize = "2G"
-    maxParallelForks = 2
-
+    maxHeapSize = "4G"
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.internals", "true")
@@ -656,6 +654,12 @@ tasks {
     systemProperty("elide.js.vm.enableStreams", "true")
     systemProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4")
     systemProperty("java.library.path", javaLibPath.get().toString())
+
+    jvmArgs(listOf(
+      "--add-modules=jdk.unsupported",
+      "--enable-native-access=ALL-UNNAMED",
+      "-XX:+UseG1GC",
+    ))
 
     if (enableToolchains) javaLauncher = gvmLauncher
   }
@@ -816,7 +820,7 @@ val natives by tasks.registering {
   dependsOn(buildThirdPartyNatives, buildRustNativesForHost)
   doLast {
     logger.lifecycle(
-      "Built natives for target '${elideTarget.triple}' (config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
+      "Natives ready for target '${elideTarget.triple}' (config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
     )
   }
 }

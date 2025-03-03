@@ -13,17 +13,21 @@
 
 [package]
 name = "deps"
-edition = "2024"
-license = "MIT"
-workspace = "../.."
-version = "1.0.0-alpha14-SNAPSHOT"
+version = { workspace = true }
+edition = { workspace = true }
+rust-version = { workspace = true }
+homepage = { workspace = true }
+documentation = { workspace = true }
+repository = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
 
 [lib]
 crate-type = ["lib"]
 
 [dependencies]
 ## Local
-base = { workspace = true }
+# base = { workspace = true }
 # model = { workspace = true }
 
 ## Crates

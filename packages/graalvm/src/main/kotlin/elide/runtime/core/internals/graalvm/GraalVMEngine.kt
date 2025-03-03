@@ -231,9 +231,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     /** Whether to enable output/input stream access by guest languages (by default). */
     private val enableStreams = System.getProperty("elide.js.vm.enableStreams", "false")
 
-    /** Whether the runtime is built as a native image. */
-    private val isNativeImage = ImageInfo.inImageCode()
-
     /** Logger used for engine instances */
     private val engineLogger by lazy { Logging.named("elide:engine") }
 
@@ -246,7 +243,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     /** Whether the auxiliary cache is actually enabled. */
     private val useAuxCache = (
       ENABLE_AUX_CACHE &&
-      isNativeImage &&
+      ImageInfo.inImageCode() &&
       System.getProperty("elide.test") != "true" &&
       System.getProperty("ELIDE_TEST") != "true" &&
       System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
@@ -350,13 +347,17 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
         }
 
         if (useAuxCache && ImageInfo.inImageCode()) {
+          val auxCacheActual = Path(auxCachePath).resolve("elide-img.bin").toAbsolutePath().toString()
+          engineLogger.info("Aux cache is active at path: '$auxCacheActual'")
           option("engine.PreinitializeContexts", preinitializeContexts)
           option("engine.CacheCompile", "hot")
-          option("engine.TraceCache", "true")
+          System.getProperty("elide.traceCache", "false").takeIf { it == "true" }?.let {
+            option("engine.TraceCache", "true")
+          }
 
           option(
             "engine.Cache",
-            Path(auxCachePath).resolve("elide-img.bin").toAbsolutePath().toString(),
+            auxCacheActual,
           )
         }
       }

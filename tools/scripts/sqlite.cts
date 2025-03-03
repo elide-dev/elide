@@ -1,6 +1,4 @@
-// noinspection DuplicatedCode,SqlNoDataSourceInspection
-
-import { Database } from "elide:sqlite"
+const { Database } = require("elide:sqlite")
 
 const db: Database = new Database()
 db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT);")

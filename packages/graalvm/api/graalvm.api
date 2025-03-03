@@ -196,6 +196,125 @@ public abstract interface annotation class elide/runtime/gvm/api/Intrinsic : jav
 	public abstract fun language ()Lelide/runtime/gvm/GraalVMGuest;
 }
 
+public synthetic class elide/runtime/gvm/builtins/ai/$ElideAiModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/builtins/ai/$ElideAiModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/builtins/ai/AI {
+	public static final field INSTANCE Lelide/runtime/gvm/builtins/ai/AI;
+}
+
+public abstract interface class elide/runtime/gvm/builtins/ai/AiLlmAPI {
+}
+
+public synthetic class elide/runtime/gvm/builtins/sqlite/$ElideSqliteModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/gvm/builtins/sqlite/$ElideSqliteModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/builtins/sqlite/SQLite {
+	public static final field INSTANCE Lelide/runtime/gvm/builtins/sqlite/SQLite;
+	public static final fun atPath (Ljava/nio/file/Path;Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
+	public static final fun atPath (Ljava/nio/file/Path;ZZ)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
+	public static synthetic fun atPath$default (Ljava/nio/file/Path;Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
+	public static synthetic fun atPath$default (Ljava/nio/file/Path;ZZILjava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
+	public static final fun deserialize ([B)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public static final fun inMemory (Z)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
+	public static synthetic fun inMemory$default (ZILjava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions : java/lang/Record {
+	public static final field Companion Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (ZZ)V
+	public synthetic fun <init> (ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun copy (ZZ)Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;ZZILjava/lang/Object;)Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;
+	public final fun create ()Z
+	public static final fun defaults ()Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Ljava/lang/Object;)Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;
+	public fun hashCode ()I
+	public final fun readonly ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions$Companion {
+	public final fun defaults ()Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;
+	public final fun from (Ljava/lang/Object;)Lelide/runtime/gvm/builtins/sqlite/SQLiteCreateDatabaseOptions;
+}
+
+public final class elide/runtime/gvm/builtins/sqlite/SQLiteDriverOptions : java/lang/Record {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun cache ()Ljava/lang/String;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/runtime/gvm/builtins/sqlite/SQLiteDriverOptions;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/builtins/sqlite/SQLiteDriverOptions;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/builtins/sqlite/SQLiteDriverOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/builtins/sqlite/SqliteModule : elide/runtime/intrinsics/sqlite/SQLiteAPI, elide/runtime/lang/javascript/SyntheticJSModule, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/gvm/builtins/sqlite/SqliteModule$Companion;
+	public fun <init> ()V
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static final fun obtain ()Lelide/runtime/intrinsics/sqlite/SQLiteAPI;
+	public fun provide ()Lelide/runtime/intrinsics/sqlite/SQLiteAPI;
+	public synthetic fun provide ()Ljava/lang/Object;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/gvm/builtins/sqlite/SqliteModule$Companion {
+	public final fun obtain ()Lelide/runtime/intrinsics/sqlite/SQLiteAPI;
+}
+
 public synthetic class elide/runtime/gvm/cfg/$GuestIOConfiguration$Intercepted$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1032,64 +1151,6 @@ public final synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$R
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public synthetic class elide/runtime/gvm/internals/sqlite/$ElideSqliteModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
-	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public synthetic class elide/runtime/gvm/internals/sqlite/$ElideSqliteModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
-	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final class elide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions : java/lang/Record {
-	public static final field Companion Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions$Companion;
-	public fun <init> ()V
-	public fun <init> (ZZ)V
-	public synthetic fun <init> (ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Z
-	public final fun component2 ()Z
-	public final fun copy (ZZ)Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;ZZILjava/lang/Object;)Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;
-	public final fun create ()Z
-	public static final fun defaults ()Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;
-	public fun equals (Ljava/lang/Object;)Z
-	public static final fun from (Ljava/lang/Object;)Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;
-	public fun hashCode ()I
-	public final fun readonly ()Z
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions$Companion {
-	public final fun defaults ()Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;
-	public final fun from (Ljava/lang/Object;)Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;
-}
-
-public final class elide/runtime/gvm/internals/sqlite/SQLiteDriverOptions : java/lang/Record {
-	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun cache ()Ljava/lang/String;
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lelide/runtime/gvm/internals/sqlite/SQLiteDriverOptions;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/sqlite/SQLiteDriverOptions;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/sqlite/SQLiteDriverOptions;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public synthetic class elide/runtime/gvm/internals/testing/$ElideTestingModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1730,20 +1791,6 @@ public final class elide/runtime/gvm/js/JsSymbol$JsSymbols {
 	public static synthetic fun asJsSymbol-u5E06oQ$default (Lelide/runtime/gvm/js/JsSymbol$JsSymbols;Ljava/lang/String;ZILjava/lang/Object;)Lkotlin/Pair;
 	public final fun asPublicJsSymbol-OhSMgGE (Ljava/lang/String;)Lkotlin/Pair;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class elide/runtime/gvm/sqlite/SQLite {
-	public static final field INSTANCE Lelide/runtime/gvm/sqlite/SQLite;
-	public static final fun atPath (Ljava/nio/file/Path;Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
-	public static final fun atPath (Ljava/nio/file/Path;ZZ)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
-	public static synthetic fun atPath$default (Ljava/nio/file/Path;Lelide/runtime/gvm/internals/sqlite/SQLiteCreateDatabaseOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
-	public static synthetic fun atPath$default (Ljava/nio/file/Path;ZZILjava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
-	public static final fun deserialize ([B)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public static final fun inMemory (Z)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
-	public static synthetic fun inMemory$default (ZILjava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/gvm/vfs/EmbeddedGuestVFS {
@@ -5438,7 +5485,7 @@ public final synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactor$R
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteAPI {
+public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteAPI : org/graalvm/polyglot/proxy/ProxyObject {
 }
 
 public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteDatabase : elide/runtime/intrinsics/js/Disposable, java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/proxy/ProxyObject {

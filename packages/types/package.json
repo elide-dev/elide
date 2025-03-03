@@ -1,0 +1,16 @@
+{
+  "name": "@elide-dev/types",
+  "version": "1.0.0-alpha14",
+  "main": "",
+  "types": "src/index.d.ts",
+  "dependencies": {
+    "@types/node": "*"
+  },
+  "devDependencies": {
+    "@definitelytyped/dtslint": "^0.0.199",
+    "@definitelytyped/eslint-plugin": "^0.0.197",
+    "@oxc-node/cli": "^0.0.19",
+    "esbuild": "0.25.0",
+    "typescript": "5.8.2"
+  }
+}

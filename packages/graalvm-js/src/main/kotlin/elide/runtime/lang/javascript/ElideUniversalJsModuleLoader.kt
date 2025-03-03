@@ -39,7 +39,6 @@ import com.oracle.truffle.js.runtime.objects.*
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.File
-import java.net.URI
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import elide.core.api.Symbolic
@@ -58,16 +57,19 @@ private const val ALWAYS_FALLBACK = false
 private const val DENO_MODULE_PREFIX = "deno"
 private const val BUN_MODULE_PREFIX = "bun"
 private const val NODE_MODULE_PREFIX = "node"
+private const val AI_MODULE_PREFIX = "ai"
 private const val ELIDE_MODULE_PREFIX = "elide"
 private const val ELIDE_TS_LANGUAGE_ID = "ts"
 
 // All built-in Elide modules.
 private val allElideModules = sortedSetOf(
+  "llm",
   "sqlite",
 )
 
 // Module prefixes which trigger some kind of behavior.
 private val specialModulePrefixes = sortedSetOf(
+  AI_MODULE_PREFIX,
   DENO_MODULE_PREFIX,
   BUN_MODULE_PREFIX,
   NODE_MODULE_PREFIX,

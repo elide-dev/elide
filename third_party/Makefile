@@ -66,7 +66,7 @@ CMAKE_INSTALL = $(NINJA) install
 endif
 endif
 
-REQUIRED ?= sqlite
+REQUIRED ?= sqlite llama.cpp
 
 CCACHE ?= $(shell which ccache)
 SCCACHE ?= $(shell which sccache)
@@ -146,7 +146,7 @@ endif
 else
 CFLAGS_BASE += -mtune=native
 ifeq ($(UNAME_P),x86_64)
-CFLAGS_BASE += -march=x86-64-v3
+CFLAGS_BASE += -march=x86-64-v3 -mtune=native
 endif
 endif
 
@@ -228,7 +228,7 @@ clean-apr:
 
 boringssl: google/boringssl/build
 
-CMAKE_BORINGSSL ?= -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_LINKER=$(LD) $(EXTRA_CMAKE_FLAGS)
+CMAKE_BORINGSSL ?= -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_LINKER=$(LD) $(EXTRA_CMAKE_FLAGS)
 
 ifeq ($(RELEASE),yes)
 CMAKE_BORINGSSL += -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
@@ -252,6 +252,27 @@ google/boringssl/build:
 ifeq ($(MUSL),no)
 	$(RULE)cd google/boringssl/build && ./ssl_test && echo "BoringSSL test complete."
 endif
+
+CFLAGS_LLAMACPP ?=
+LDFLAGS_LLAMACPP ?=
+ASMFLAGS_LLAMACPP ?=
+LLAMACPP_PREFIX = CC="$(CC)" CXX="$(CXX)" LD="$(LD)" CFLAGS="$(CFLAGS_LLAMACPP)" LDFLAGS="$(LDFLAGS_LLAMACPP)" ASMFLAGS="$(ASMFLAGS_LLAMACPP)"
+CMAKE_LLAMACPP ?= -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) -DCMAKE_INSTALL_PREFIX=$(TARGET_ROOT) -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_LINKER=$(LD) $(EXTRA_CMAKE_FLAGS)
+
+ifeq ($(RELEASE),yes)
+CMAKE_LLAMACPP += -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+endif
+
+llama.cpp: llama.cpp/build  ## Build llama.cpp
+llama.cpp/build:
+	@echo ""
+	@echo "Building llama.cpp..."
+	$(RULE)cd llama.cpp \
+		&& $(LLAMACPP_PREFIX) $(CMAKE) -B build $(CMAKE_LLAMACPP) \
+		&& cd build \
+		&& $(LLAMACPP_PREFIX) $(CMAKE_BUILD) \
+		&& $(LLAMACPP_PREFIX) $(CMAKE_INSTALL) \
+		&& echo "llama.cpp is ready."
 
 CFLAGS_ZLIB ?=
 CFLAGS_ZLIB +=$(CFLAGS_BASE) $(CFLAGS_BASE_STRICT) -std=c11 -w
@@ -413,6 +434,7 @@ clean:
 		$(LIBROOT)
 	$(RULE)-cd sqlite && $(MAKE) clean && rm -fv Makefile sqlite3.c && git clean -xdf
 	$(RULE)-cd google/boringssl && rm -fr build
+	$(RULE)-cd llama.cpp && rm -fr build
 	$(RULE)-cd apache/apr && git clean -xdf
 	$(RULE)-cd cloudflare/zlib && make clean && git clean -xdf
 	$(RULE)-cd madler/zlib && make clean && git clean -xdf

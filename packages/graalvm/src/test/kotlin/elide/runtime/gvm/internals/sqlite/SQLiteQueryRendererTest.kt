@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -15,6 +15,7 @@ package elide.runtime.gvm.internals.sqlite
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.runtime.gvm.builtins.sqlite.SqliteQueryRenderer
 
 class SQLiteQueryRendererTest {
   private val nonDynamic = SqliteQueryRenderer.resolve("SELECT * FROM test;")

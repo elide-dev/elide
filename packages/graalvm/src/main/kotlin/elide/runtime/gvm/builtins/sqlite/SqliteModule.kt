@@ -12,7 +12,7 @@
  */
 @file:Suppress("DataClassPrivateConstructor")
 
-package elide.runtime.gvm.internals.sqlite
+package elide.runtime.gvm.builtins.sqlite
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -61,6 +61,7 @@ import elide.runtime.intrinsics.sqlite.SQLiteTransactionType.*
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.util.UUID
 import elide.vm.annotations.Polyglot
+import org.sqlite.SQLiteJDBCLoader
 import elide.runtime.intrinsics.sqlite.SQLiteStatement as Statement
 import org.sqlite.SQLiteConfig as RawConfig
 import java.sql.Statement as SqlStatement
@@ -102,7 +103,7 @@ public class SqliteModule : ProxyObject, SyntheticJSModule<SQLiteAPI>, SQLiteAPI
 
     init {
       NativeLibraries.resolve(SQLITE3_LIBRARY) {
-        org.sqlite.SQLiteJDBCLoader.initialize()
+        SQLiteJDBCLoader.initialize()
       }
     }
 
@@ -402,7 +403,7 @@ internal class SqliteDatabaseProxy private constructor (
       }
     }
 
-    override fun unwrap(): java.sql.Statement = sql
+    override fun unwrap(): SqlStatement = sql
 
     @Polyglot override fun all(vararg args: Any?): List<SQLiteObject> = withResultSet(args) {
       it.toImmutableList()

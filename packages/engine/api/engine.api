@@ -771,7 +771,7 @@ public abstract class elide/runtime/feature/engine/AbstractStaticNativeLibraryFe
 	public fun unpackNatives (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
 }
 
-public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/GuestLanguage {
+public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/core/GuestLanguage, elide/runtime/gvm/GuestLanguage {
 	public static final field JAVASCRIPT Lelide/runtime/gvm/GraalVMGuest;
 	public static final field JVM Lelide/runtime/gvm/GraalVMGuest;
 	public static final field PYTHON Lelide/runtime/gvm/GraalVMGuest;
@@ -780,6 +780,7 @@ public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/
 	public fun getEngine ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLabel ()Ljava/lang/String;
+	public fun getLanguageId ()Ljava/lang/String;
 	public fun getSymbol ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/GraalVMGuest;
 	public static fun values ()[Lelide/runtime/gvm/GraalVMGuest;

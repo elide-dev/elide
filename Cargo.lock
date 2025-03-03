@@ -118,9 +118,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.96"
+version = "1.0.97"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b964d184e89d9b6b67dd2715bc8e74cf3107fb2b529990c90cf517326150bf4"
+checksum = "dcfed56ad506cb2c684a14971b8861fdc3baaaae314b9e5f9bb532cbe3ba7a4f"
 
 [[package]]
 name = "arcstr"
@@ -348,7 +348,7 @@ checksum = "c7c24de15d275a1ecfd47a380fb4d5ec9bfe0933f309ed5e705b775596a3574d"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -373,13 +373,13 @@ checksum = "8b75356056920673b02621b35afd0f7dda9306d03c79a30f5c56c44cf256e3de"
 
 [[package]]
 name = "async-trait"
-version = "0.1.86"
+version = "0.1.87"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "644dd749086bf3771a2fbc5f256fdb982d53f011c7d5d560304eafeecebce79d"
+checksum = "d556ec1359574147ec0c4fc5eb525f3f23263a592b1a9c07e0a75b427de55c97"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -558,7 +558,7 @@ dependencies = [
  "regex",
  "rustc-hash",
  "shlex",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -667,7 +667,7 @@ checksum = "efb7846e0cb180355c2dec69e721edafa36919850f1a9f52ffba4ebc0393cb71"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -947,7 +947,7 @@ dependencies = [
  "heck",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -964,7 +964,7 @@ checksum = "8c41dc435a7b98e4608224bbf65282309f5403719df9113621b30f8b6f74e2f4"
 dependencies = [
  "nix",
  "terminfo",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "which",
  "windows-sys 0.59.0",
 ]
@@ -1280,7 +1280,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "strsim",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -1291,7 +1291,7 @@ checksum = "d336a2a514f6ccccaa3e09b02d41d35330c07ddf03a62165fcec10bb561c7806"
 dependencies = [
  "darling_core",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -1349,7 +1349,7 @@ dependencies = [
  "darling",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -1359,7 +1359,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ab63b0e2bf4d5928aff72e83a7dace85d7bba5fe12dcc3c5a572d78caffd3f3c"
 dependencies = [
  "derive_builder_core",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -1441,7 +1441,7 @@ checksum = "97369cbbc041bc366949bc74d34658d6cda5621039731c6310521892a3a20ae0"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -1788,7 +1788,7 @@ checksum = "162ee34ebcb7c64a8abebc059ce0fee27c2262618d7b60ed8faf72fef13c3650"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -2150,9 +2150,9 @@ dependencies = [
 
 [[package]]
 name = "httparse"
-version = "1.10.0"
+version = "1.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2d708df4e7140240a16cd6ab0ab65c972d7433ab77819ea693fde9c43811e2a"
+checksum = "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87"
 
 [[package]]
 name = "httpdate"
@@ -2398,7 +2398,7 @@ checksum = "1ec89e9337638ecdc08744df490b221a7399bf8d164eb52a665454e60e075ad6"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -2566,7 +2566,7 @@ dependencies = [
  "heck",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -2642,7 +2642,7 @@ source = "git+https://github.com/elide-tools/jni-macros?rev=7dc95cc2d7534761d0b1
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -2687,7 +2687,7 @@ dependencies = [
  "libloading",
  "log",
  "static_assertions",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "walkdir",
 ]
 
@@ -2828,7 +2828,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3bf66548c351bcaed792ef3e2b430cc840fbde504e09da6b29ed114ca60dcd4b"
 dependencies = [
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -2859,7 +2859,7 @@ checksum = "c0ff37bd590ca25063e35af745c343cb7a0271906fb7b37e4813e8f79f00268d"
 dependencies = [
  "bitflags 2.9.0",
  "libc",
- "redox_syscall 0.5.9",
+ "redox_syscall 0.5.10",
 ]
 
 [[package]]
@@ -3073,7 +3073,7 @@ checksum = "49e7bc1560b95a3c4a25d03de42fe76ca718ab92d1a22a55b9b4cf67b3ae635c"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -3084,7 +3084,7 @@ checksum = "bf45bf44ab49be92fd1227a3be6fc6f617f1a337c06af54981048574d8783147"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -3165,7 +3165,7 @@ checksum = "734799cf91479720b2f970c61a22850940dd91e27d4f02b1c6fc792778df2459"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -3484,7 +3484,7 @@ checksum = "a948666b637a0f465e8564c73e89d4dde00d72d4d473cc972f390fc3dcee7d9c"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -3765,7 +3765,7 @@ dependencies = [
  "rustc-hash",
  "serde",
  "serde_json",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "time",
 ]
 
@@ -3791,7 +3791,7 @@ checksum = "e21f680e8c5f1900297d394627d495351b9e37761f7bbf90116bd5eeb6e80967"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -3828,7 +3828,7 @@ source = "git+https://github.com/elide-dev/oxc?rev=1ed18bdafa3ed7b7fe90939d21123
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -4171,7 +4171,7 @@ checksum = "1e401f977ab385c9e4e3ab30627d6f26d00e2c73eef317493c4ec6d468726cf8"
 dependencies = [
  "cfg-if",
  "libc",
- "redox_syscall 0.5.9",
+ "redox_syscall 0.5.10",
  "smallvec",
  "windows-targets 0.52.6",
 ]
@@ -4330,7 +4330,7 @@ dependencies = [
  "phf_shared",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -4344,22 +4344,22 @@ dependencies = [
 
 [[package]]
 name = "pin-project"
-version = "1.1.9"
+version = "1.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dfe2e71e1471fe07709406bf725f710b02927c9c54b2b5b2ec0e8087d97c327d"
+checksum = "677f1add503faace112b9f1373e43e9e054bfdd22ff1a63c1bc485eaec6a6a8a"
 dependencies = [
  "pin-project-internal",
 ]
 
 [[package]]
 name = "pin-project-internal"
-version = "1.1.9"
+version = "1.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f6e859e6e5bd50440ab63c47e3ebabc90f26251f7c73c3d3e837b74a1cc3fa67"
+checksum = "6e918e4ff8c4549eb882f14b3a4bc8c8bc93de829416eacf579f1207a8fbf861"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -4387,9 +4387,9 @@ dependencies = [
 
 [[package]]
 name = "pkg-config"
-version = "0.3.31"
+version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "953ec861398dccce10c670dfeaf3ec4911ca479e9c02154b3a215178c5f566f2"
+checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
 
 [[package]]
 name = "plain"
@@ -4460,7 +4460,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6924ced06e1f7dfe3fa48d57b9f74f55d8915f5036121bef647ef4b204895fac"
 dependencies = [
  "proc-macro2",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -4476,9 +4476,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.93"
+version = "1.0.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "60946a68e5f9d28b0dc1c21bb8a97ee7d018a8b322fa57838ba31cc878e22d99"
+checksum = "a31971752e70b8b2686d7e46ec17fb38dad4051d94024c88df49b667caea9c84"
 dependencies = [
  "unicode-ident",
 ]
@@ -4536,7 +4536,7 @@ dependencies = [
  "itertools 0.14.0",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -4569,7 +4569,7 @@ checksum = "ca414edb151b4c8d125c12566ab0d74dc9cdba36fb80eb7b848c15f495fd32d1"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -4581,7 +4581,7 @@ dependencies = [
  "log",
  "priority-queue",
  "rustc-hash",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "version-ranges 0.1.1 (git+https://github.com/astral-sh/pubgrub?rev=b70cf707aa43f21b32f3a61b8a0889b15032d5c4)",
 ]
 
@@ -4610,7 +4610,7 @@ dependencies = [
  "newtype-uuid",
  "quick-xml",
  "strip-ansi-escapes",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "uuid",
 ]
 
@@ -4636,7 +4636,7 @@ dependencies = [
  "rustc-hash",
  "rustls",
  "socket2",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tracing",
 ]
@@ -4655,7 +4655,7 @@ dependencies = [
  "rustls",
  "rustls-pki-types",
  "slab",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tinyvec",
  "tracing",
  "web-time",
@@ -4677,9 +4677,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.38"
+version = "1.0.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e4dccaaaf89514f546c693ddc140f729f958c247918a13380cccc6078391acc"
+checksum = "c1f1914ce909e1658d9907913b4b91947430c7d9be598b15a1912935b8c04801"
 dependencies = [
  "proc-macro2",
 ]
@@ -4812,7 +4812,7 @@ dependencies = [
  "strum",
  "strum_macros",
  "test-case",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
 ]
 
@@ -4827,9 +4827,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.5.9"
+version = "0.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "82b568323e98e49e2a0899dcee453dd679fae22d69adf9b11dd508d1549b7e2f"
+checksum = "0b8c0c260b63a8219631167be35e6a988e9554dbd323f8bd08439c8ed1302bd1"
 dependencies = [
  "bitflags 2.9.0",
 ]
@@ -4853,27 +4853,27 @@ checksum = "dd6f9d3d47bdd2ad6945c5015a226ec6155d0bcdfd8f7cd29f86b71f8de99d2b"
 dependencies = [
  "getrandom 0.2.15",
  "libredox",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
 ]
 
 [[package]]
 name = "ref-cast"
-version = "1.0.23"
+version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ccf0a6f84d5f1d581da8b41b47ec8600871962f2a528115b542b362d4b744931"
+checksum = "4a0ae411dbe946a674d89546582cea4ba2bb8defac896622d6496f14c23ba5cf"
 dependencies = [
  "ref-cast-impl",
 ]
 
 [[package]]
 name = "ref-cast-impl"
-version = "1.0.23"
+version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bcc303e793d3734489387d205e9b186fac9c6cfacedd98cbb2e8a5943595f3e6"
+checksum = "1165225c21bff1f3bbce98f5a1f889949bc902d3575308cc7b0de30b4f6d27c7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -5085,7 +5085,7 @@ checksum = "246b40ac189af6c675d124b802e8ef6d5246c53e17367ce9501f8f66a81abb7a"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -5165,7 +5165,7 @@ dependencies = [
  "shellexpand",
  "strum",
  "tempfile",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tikv-jemallocator",
  "toml",
  "tracing",
@@ -5221,7 +5221,7 @@ dependencies = [
  "rustc-hash",
  "salsa",
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "web-time",
  "zip",
@@ -5335,7 +5335,7 @@ dependencies = [
  "smallvec",
  "strum",
  "strum_macros",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "typed-arena",
  "unicode-normalization",
@@ -5353,7 +5353,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "ruff_python_trivia",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -5370,7 +5370,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_with",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "uuid",
 ]
 
@@ -5430,7 +5430,7 @@ dependencies = [
  "serde",
  "smallvec",
  "static_assertions",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
 ]
 
@@ -5544,7 +5544,7 @@ dependencies = [
  "serde",
  "serde_json",
  "shellexpand",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "tracing",
  "tracing-subscriber",
@@ -5766,7 +5766,7 @@ dependencies = [
  "heck",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
  "synstructure",
 ]
 
@@ -5810,7 +5810,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "serde_derive_internals 0.29.1",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -5842,7 +5842,7 @@ checksum = "7f81c2fde025af7e69b1d1420531c8a8811ca898919db177141a85313b1cb932"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -5927,9 +5927,9 @@ dependencies = [
 
 [[package]]
 name = "serde-untagged"
-version = "0.1.6"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2676ba99bd82f75cae5cbd2c8eda6fa0b8760f18978ea840e980dd5567b5c5b6"
+checksum = "299d9c19d7d466db4ab10addd5703e4c615dec2a5a16dbbafe191045e87ee66e"
 dependencies = [
  "erased-serde",
  "serde",
@@ -5966,7 +5966,7 @@ checksum = "f09503e191f4e797cb8aac08e9a4a4695c5edf6a2e70e376d961ddd5c969f82b"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -5977,7 +5977,7 @@ checksum = "e578a843d40b4189a4d66bba51d7684f57da5bd7c304c64e14bd63efbef49509"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -5988,14 +5988,14 @@ checksum = "18d26a20a969b9e3fdf2fc2d9f21eda6c40e2de84c9408bb5d3b05d499aae711"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
 name = "serde_json"
-version = "1.0.139"
+version = "1.0.140"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44f86c3acccc9c65b153fe1b85a3be07fe5515274ec9f0653b4a0875731c72a6"
+checksum = "20068b6e96dc6c9bd23e01df8827e6c7e1f2fddd43c21810382803c136b99373"
 dependencies = [
  "indexmap 2.7.1",
  "itoa",
@@ -6012,7 +6012,7 @@ checksum = "6c64451ba24fc7a6a2d60fc75dd9c83c90903b19028d4eff35e88fc1e86564e9"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -6056,7 +6056,7 @@ dependencies = [
  "darling",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -6309,7 +6309,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "rustversion",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -6360,9 +6360,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.98"
+version = "2.0.99"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "36147f1a48ae0ec2b5b3bc5b537d267457555a10dc06f3dbc8cb11ba3006d3b1"
+checksum = "e02e925281e18ffd9d640e234264753c43edc62d64b2d4cf898f1bc5e75f3fc2"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -6386,7 +6386,7 @@ checksum = "c8af7666ab7b6390ab78131fb5b0fce11d6b7a6951602017c35fa82800708971"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -6532,7 +6532,7 @@ dependencies = [
  "cfg-if",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -6543,19 +6543,19 @@ checksum = "5c89e72a01ed4c579669add59014b9a524d609c0c88c6a585ce37485879f6ffb"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
  "test-case-core",
 ]
 
 [[package]]
 name = "textwrap"
-version = "0.16.1"
+version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23d434d3f8967a09480fb04132ebe0a3e088c173e6d0ee7897abbdf4eab0f8b9"
+checksum = "c13547615a44dc9c452a8a534638acdf07120d4b6847c8178705da06306a3057"
 dependencies = [
  "smawk",
  "unicode-linebreak",
- "unicode-width 0.1.14",
+ "unicode-width 0.2.0",
 ]
 
 [[package]]
@@ -6569,11 +6569,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.11"
+version = "2.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d452f284b73e6d76dd36758a0c8684b1d5be31f92b89d07fd5822175732206fc"
+checksum = "567b8a2dae586314f7be2a752ec7474332959c6460e02bde30d702a66d488708"
 dependencies = [
- "thiserror-impl 2.0.11",
+ "thiserror-impl 2.0.12",
 ]
 
 [[package]]
@@ -6584,18 +6584,18 @@ checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.11"
+version = "2.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "26afc1baea8a989337eeb52b6e72a039780ce45c3edfcc9c5b9d112feeb173c2"
+checksum = "7f7cf42b4507d8ea322120659672cf1b9dbb93f8f2d4ecfd6e51350ff5b17a1d"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -6671,9 +6671,9 @@ dependencies = [
 
 [[package]]
 name = "tinyvec"
-version = "1.8.1"
+version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "022db8904dfa342efe721985167e9fcd16c29b226db4397ed752a761cfce81e8"
+checksum = "09b3661f17e86524eccd4371ab0429194e0d7c008abb45f7a7495b1719463c71"
 dependencies = [
  "tinyvec_macros",
 ]
@@ -6727,7 +6727,7 @@ checksum = "6e06d43f1345a3bcd39f6a56dbb7dcab2ba47e68e8ac134855e7e2bdbaf8cab8"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -6931,7 +6931,7 @@ checksum = "395ae124c09f9e6918a2310af6038fba074bcf474ac352496d5910dd59a2226d"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -7038,7 +7038,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "serde_derive_internals 0.28.0",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -7078,7 +7078,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a615d6c2764852a2e88a4f16e9ce1ea49bb776b5872956309e170d63a042a34f"
 dependencies = [
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -7288,12 +7288,13 @@ checksum = "9521621447c21497fac206ffe6e9f642f977c4f82eeba9201055f64884d9cb01"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
 name = "uv"
 version = "0.6.3"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anstream",
  "anyhow",
@@ -7322,7 +7323,7 @@ dependencies = [
  "serde_json",
  "tempfile",
  "textwrap",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "toml",
  "toml_edit",
@@ -7382,6 +7383,7 @@ dependencies = [
 [[package]]
 name = "uv-auth"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -7403,6 +7405,7 @@ dependencies = [
 [[package]]
 name = "uv-build-backend"
 version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "csv",
  "flate2",
@@ -7413,7 +7416,7 @@ dependencies = [
  "sha2",
  "spdx",
  "tar",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "tracing",
  "uv-distribution-filename",
@@ -7434,6 +7437,7 @@ dependencies = [
 [[package]]
 name = "uv-build-frontend"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anstream",
  "fs-err 3.1.0",
@@ -7445,7 +7449,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tempfile",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "toml_edit",
  "tracing",
@@ -7466,6 +7470,7 @@ dependencies = [
 [[package]]
 name = "uv-cache"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "clap",
  "fs-err 3.1.0",
@@ -7491,12 +7496,13 @@ dependencies = [
 [[package]]
 name = "uv-cache-info"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
  "globwalk",
  "schemars",
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "tracing",
  "walkdir",
@@ -7505,6 +7511,7 @@ dependencies = [
 [[package]]
 name = "uv-cache-key"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "hex",
  "memchr",
@@ -7516,6 +7523,7 @@ dependencies = [
 [[package]]
 name = "uv-cli"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anstream",
  "anyhow",
@@ -7542,6 +7550,7 @@ dependencies = [
 [[package]]
 name = "uv-client"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -7563,7 +7572,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sys-info",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tl",
  "tokio",
  "tokio-util",
@@ -7591,6 +7600,7 @@ dependencies = [
 [[package]]
 name = "uv-configuration"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "clap",
  "either",
@@ -7601,7 +7611,7 @@ dependencies = [
  "serde",
  "serde-untagged",
  "serde_json",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "url",
  "uv-auth",
@@ -7620,6 +7630,7 @@ dependencies = [
 [[package]]
 name = "uv-console"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "console",
  "ctrlc",
@@ -7628,6 +7639,7 @@ dependencies = [
 [[package]]
 name = "uv-dirs"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "etcetera",
  "uv-static",
@@ -7636,12 +7648,13 @@ dependencies = [
 [[package]]
 name = "uv-dispatch"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "futures 0.3.31",
  "itertools 0.14.0",
  "rustc-hash",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tracing",
  "uv-build-backend",
@@ -7666,6 +7679,7 @@ dependencies = [
 [[package]]
 name = "uv-distribution"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "either",
@@ -7679,7 +7693,7 @@ dependencies = [
  "rustc-hash",
  "serde",
  "tempfile",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tokio-util",
  "toml",
@@ -7711,12 +7725,13 @@ dependencies = [
 [[package]]
 name = "uv-distribution-filename"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "memchr",
  "rkyv",
  "serde",
  "smallvec",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "url",
  "uv-cache-key",
  "uv-normalize",
@@ -7728,6 +7743,7 @@ dependencies = [
 [[package]]
 name = "uv-distribution-types"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "arcstr",
  "bitflags 2.9.0",
@@ -7742,7 +7758,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "url",
  "uv-auth",
@@ -7763,6 +7779,7 @@ dependencies = [
 [[package]]
 name = "uv-extract"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "astral-tokio-tar",
  "async-compression",
@@ -7774,7 +7791,7 @@ dependencies = [
  "reqwest",
  "rustc-hash",
  "sha2",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tokio-util",
  "tracing",
@@ -7788,6 +7805,7 @@ dependencies = [
 [[package]]
 name = "uv-fs"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "backon",
  "dunce",
@@ -7811,6 +7829,7 @@ dependencies = [
 [[package]]
 name = "uv-git"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "cargo-util",
@@ -7818,7 +7837,7 @@ dependencies = [
  "fs-err 3.1.0",
  "reqwest",
  "reqwest-middleware",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tracing",
  "url",
@@ -7834,9 +7853,10 @@ dependencies = [
 [[package]]
 name = "uv-git-types"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "url",
 ]
@@ -7844,11 +7864,12 @@ dependencies = [
 [[package]]
 name = "uv-globfilter"
 version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "globset",
  "regex",
  "regex-automata 0.4.9",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "walkdir",
 ]
@@ -7856,6 +7877,7 @@ dependencies = [
 [[package]]
 name = "uv-install-wheel"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "clap",
  "configparser",
@@ -7874,7 +7896,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "tempfile",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "uv-cache-info",
  "uv-distribution-filename",
@@ -7891,6 +7913,7 @@ dependencies = [
 [[package]]
 name = "uv-installer"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -7900,7 +7923,7 @@ dependencies = [
  "rustc-hash",
  "same-file",
  "tempfile",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tracing",
  "url",
@@ -7928,21 +7951,23 @@ dependencies = [
 [[package]]
 name = "uv-macros"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
  "textwrap",
 ]
 
 [[package]]
 name = "uv-metadata"
 version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "async_zip",
  "fs-err 3.1.0",
  "futures 0.3.31",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tokio-util",
  "uv-distribution-filename",
@@ -7954,6 +7979,7 @@ dependencies = [
 [[package]]
 name = "uv-normalize"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "rkyv",
  "schemars",
@@ -7964,6 +7990,7 @@ dependencies = [
 [[package]]
 name = "uv-once-map"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "dashmap",
  "futures 0.3.31",
@@ -7973,6 +8000,7 @@ dependencies = [
 [[package]]
 name = "uv-options-metadata"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "serde",
 ]
@@ -7980,6 +8008,7 @@ dependencies = [
 [[package]]
 name = "uv-pep440"
 version = "0.7.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "rkyv",
  "serde",
@@ -7992,6 +8021,7 @@ dependencies = [
 [[package]]
 name = "uv-pep508"
 version = "0.6.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "arcstr",
  "boxcar",
@@ -8002,7 +8032,7 @@ dependencies = [
  "schemars",
  "serde",
  "smallvec",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "unicode-width 0.1.14",
  "url",
  "uv-fs",
@@ -8014,6 +8044,7 @@ dependencies = [
 [[package]]
 name = "uv-performance-flate2-backend"
 version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "flate2",
  "libz-ng-sys",
@@ -8022,6 +8053,7 @@ dependencies = [
 [[package]]
 name = "uv-performance-memory-allocator"
 version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "mimalloc",
  "tikv-jemallocator",
@@ -8030,18 +8062,20 @@ dependencies = [
 [[package]]
 name = "uv-platform-tags"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "memchr",
  "rkyv",
  "rustc-hash",
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "uv-small-str",
 ]
 
 [[package]]
 name = "uv-publish"
 version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "astral-tokio-tar",
  "async-compression",
@@ -8056,7 +8090,7 @@ dependencies = [
  "rustc-hash",
  "serde",
  "serde_json",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tokio-util",
  "tracing",
@@ -8077,6 +8111,7 @@ dependencies = [
 [[package]]
 name = "uv-pypi-types"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "hashbrown 0.15.2",
  "indexmap 2.7.1",
@@ -8087,7 +8122,7 @@ dependencies = [
  "rkyv",
  "serde",
  "serde-untagged",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "toml_edit",
  "tracing",
@@ -8104,6 +8139,7 @@ dependencies = [
 [[package]]
 name = "uv-python"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "clap",
@@ -8126,7 +8162,7 @@ dependencies = [
  "sys-info",
  "target-lexicon",
  "tempfile",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tokio-util",
  "tracing",
@@ -8157,6 +8193,7 @@ dependencies = [
 [[package]]
 name = "uv-requirements"
 version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "configparser",
@@ -8165,7 +8202,7 @@ dependencies = [
  "futures 0.3.31",
  "rustc-hash",
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "tracing",
  "url",
@@ -8191,12 +8228,13 @@ dependencies = [
 [[package]]
 name = "uv-requirements-txt"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
  "memchr",
  "reqwest",
  "reqwest-middleware",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "unscanny",
  "url",
@@ -8213,6 +8251,7 @@ dependencies = [
 [[package]]
 name = "uv-resolver"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "arcstr",
  "clap",
@@ -8233,7 +8272,7 @@ dependencies = [
  "serde",
  "smallvec",
  "textwrap",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "tokio-stream",
  "toml",
@@ -8268,12 +8307,13 @@ dependencies = [
 [[package]]
 name = "uv-scripts"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
  "indoc",
  "memchr",
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "url",
  "uv-pep440",
@@ -8286,6 +8326,7 @@ dependencies = [
 [[package]]
 name = "uv-settings"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "clap",
  "etcetera",
@@ -8293,7 +8334,7 @@ dependencies = [
  "schemars",
  "serde",
  "textwrap",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "tracing",
  "url",
@@ -8316,6 +8357,7 @@ dependencies = [
 [[package]]
 name = "uv-shell"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "home",
@@ -8331,6 +8373,7 @@ dependencies = [
 [[package]]
 name = "uv-small-str"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "arcstr",
  "rkyv",
@@ -8341,6 +8384,7 @@ dependencies = [
 [[package]]
 name = "uv-state"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
  "tempfile",
@@ -8350,6 +8394,7 @@ dependencies = [
 [[package]]
 name = "uv-static"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "uv-macros",
 ]
@@ -8357,12 +8402,13 @@ dependencies = [
 [[package]]
 name = "uv-tool"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
  "pathdiff",
  "self-replace",
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "toml",
  "toml_edit",
  "tracing",
@@ -8384,9 +8430,10 @@ dependencies = [
 [[package]]
 name = "uv-trampoline-builder"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "uv-fs",
  "zip",
 ]
@@ -8394,10 +8441,11 @@ dependencies = [
 [[package]]
 name = "uv-types"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anyhow",
  "rustc-hash",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "url",
  "uv-cache",
  "uv-configuration",
@@ -8415,16 +8463,18 @@ dependencies = [
 [[package]]
 name = "uv-version"
 version = "0.6.3"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 
 [[package]]
 name = "uv-virtualenv"
 version = "0.0.4"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
  "itertools 0.14.0",
  "pathdiff",
  "self-replace",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tracing",
  "uv-fs",
  "uv-pypi-types",
@@ -8436,6 +8486,7 @@ dependencies = [
 [[package]]
 name = "uv-warnings"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "anstream",
  "owo-colors",
@@ -8445,6 +8496,7 @@ dependencies = [
 [[package]]
 name = "uv-workspace"
 version = "0.0.1"
+source = "git+https://github.com/elide-dev/uv?rev=1492a9a61219bf9195e34899fdf81ba20bb0cac2#1492a9a61219bf9195e34899fdf81ba20bb0cac2"
 dependencies = [
  "fs-err 3.1.0",
  "glob",
@@ -8452,7 +8504,7 @@ dependencies = [
  "owo-colors",
  "rustc-hash",
  "serde",
- "thiserror 2.0.11",
+ "thiserror 2.0.12",
  "tokio",
  "toml",
  "toml_edit",
@@ -8649,7 +8701,7 @@ dependencies = [
  "log",
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
  "wasm-bindgen-shared",
 ]
 
@@ -8684,7 +8736,7 @@ checksum = "8ae87ea40c9f689fc23f209965b6fb8a99ad69aeeb0231408be24920604395de"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
  "wasm-bindgen-backend",
  "wasm-bindgen-shared",
 ]
@@ -8915,7 +8967,7 @@ checksum = "9107ddc059d5b6fbfbffdfa7a7fe3e22a226def0b2608f72e9d552763d3e1ad7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -8926,7 +8978,7 @@ checksum = "2bbd5b46c938e506ecbce286b6628a02171d56153ba733b6c741fc627ec9579b"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -8937,7 +8989,7 @@ checksum = "83577b051e2f49a058c308f17f273b570a6a758386fc291b5f6a934dd84e48c1"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -8948,7 +9000,7 @@ checksum = "29bee4b38ea3cde66011baa44dba677c432a78593e202392d1e9070cf2a7fca7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -8959,7 +9011,7 @@ checksum = "053c4c462dc91d3b1504c6fe5a726dd15e216ba718e84a0e46a88fbe5ded3515"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -8970,7 +9022,7 @@ checksum = "cb26fd936d991781ea39e87c3a27285081e3c0da5ca0fcbc02d368cc6f52ff01"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -9312,7 +9364,7 @@ checksum = "2380878cad4ac9aac1e2435f3eb4020e8374b5f13c296cb75b4620ff8e229154"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
  "synstructure",
 ]
 
@@ -9343,7 +9395,7 @@ checksum = "fa4f8080344d4671fb4e831a13ad1e68092748387dfc4f55e356242fae12ce3e"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -9354,7 +9406,7 @@ checksum = "712c8386f4f4299382c9abee219bee7084f78fb939d88b6840fcc1320d5f6da2"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]
@@ -9374,7 +9426,7 @@ checksum = "d71e5d6e06ab090c67b5e44993ec16b72dcbaabc526db883a360057678b48502"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
  "synstructure",
 ]
 
@@ -9403,7 +9455,7 @@ checksum = "6eafa6dfb17584ea3e2bd6e76e0cc15ad7af12b09abdd1ca55961bed9b1063c6"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.98",
+ "syn 2.0.99",
 ]
 
 [[package]]

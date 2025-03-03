@@ -116,8 +116,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "1ed18bdafa3ed7b7fe90939
 ] }
 
 ## Uv
-# uv = { git = "https://github.com/elide-dev/uv", rev = "b5a0b7b2c391959b526719ea9b2b0c5614e558e4" }
-uv = { path = "../uv/crates/uv" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "1492a9a61219bf9195e34899fdf81ba20bb0cac2" }
 
 ## Ruff
 ruff = { git = "https://github.com/elide-dev/ruff", rev = "e924ecbdac0a12b083222859599dcaa066b4512f" }

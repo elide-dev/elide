@@ -13,12 +13,12 @@
 
 declare module "*.jsonc" {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  const contents: any;
-  export = contents;
+  const contents: any
+  export = contents
 }
 
 declare module "*.json" {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  const contents: any;
-  export = contents;
+  const contents: any
+  export = contents
 }

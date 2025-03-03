@@ -13,9 +13,9 @@
 
 declare module "elide:sqlite" {
   export class Database {
-    constructor(name?: string);
-    exec(sql: string): void;
+    constructor(name?: string)
+    exec(sql: string): void
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    query(sql: string): any;
+    query(sql: string): any
   }
 }

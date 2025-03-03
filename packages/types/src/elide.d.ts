@@ -12,9 +12,9 @@
  */
 
 export interface ElideGlobal {
-  version: string;
+  version: string
 }
 
 declare global {
-  const Elide: ElideGlobal;
+  const Elide: ElideGlobal
 }

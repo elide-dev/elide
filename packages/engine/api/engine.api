@@ -326,7 +326,7 @@ public final class elide/runtime/core/lib/NativeLibraries {
 	public static synthetic fun resolve$default (Lelide/runtime/core/lib/NativeLibraries;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 }
 
-public final synthetic class elide/runtime/diag/$MutableDiagnostic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+public synthetic class elide/runtime/diag/$MutableDiagnostic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
@@ -335,14 +335,12 @@ public final synthetic class elide/runtime/diag/$MutableDiagnostic$Companion$Ref
 public final synthetic class elide/runtime/diag/$MutableDiagnostic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public final fun hasBuilder ()Z
-	public final fun hasConstructor ()Z
+	public fun hasBuilder ()Z
 	public fun instantiate ()Ljava/lang/Object;
-	public fun instantiateInternal ([Ljava/lang/Object;)Ljava/lang/Object;
-	public final fun isBuildable ()Z
+	public fun isBuildable ()Z
 }
 
-public final synthetic class elide/runtime/diag/$MutableDiagnostic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+public synthetic class elide/runtime/diag/$MutableDiagnostic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
@@ -637,7 +635,6 @@ public synthetic class elide/runtime/exec/$GuestExecutorFactory$Definition : io/
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
@@ -646,7 +643,6 @@ public synthetic class elide/runtime/exec/$GuestExecutorFactory$Executor0$Defini
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }

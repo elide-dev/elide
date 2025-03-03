@@ -17,9 +17,9 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.serialization")
-  
+
+  id(libs.plugins.ksp.get().pluginId)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
@@ -39,7 +39,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
-    kapt = true
+    ksp = true
   }
 
   java {
@@ -75,6 +75,7 @@ micronaut {
 dependencies {
   // BOMs
   api(platform(libs.netty.bom))
+  ksp(mn.micronaut.inject.kotlin)
 
   // API Deps
   api(libs.jakarta.inject)

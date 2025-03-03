@@ -269,7 +269,7 @@ jobs:
           echo "Setting up venv..."
           uv venv
           echo "Installing dependencies via Pip..."
-          uv pip install -r requirements.txt
+          #uv pip install -r requirements.txt
           echo "Activating venv..."
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV

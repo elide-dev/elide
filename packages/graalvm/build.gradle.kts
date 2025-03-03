@@ -32,10 +32,10 @@ import elide.toolchain.host.TargetPredicate
 
 plugins {
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
+  id(libs.plugins.ksp.get().pluginId)
   alias(libs.plugins.protobuf)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
@@ -139,7 +139,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
-    kapt = true
+    ksp = true
   }
 
   native {
@@ -504,8 +504,9 @@ if (enableBenchmarks) {
 
 dependencies {
   // KSP
-  kapt(mn.micronaut.inject.java)
-  kapt(libs.graalvm.truffle.processor)
+  ksp(mn.micronaut.inject.kotlin)
+  kspTest(mn.micronaut.inject.kotlin)
+  annotationProcessor(libs.graalvm.truffle.processor)
 
   // API Deps
   api(libs.jakarta.inject)
@@ -668,6 +669,8 @@ tasks {
       "--add-modules=jdk.unsupported",
       "--enable-native-access=ALL-UNNAMED",
       "-XX:+UseG1GC",
+      "-XX:+UnlockExperimentalVMOptions",
+      "-XX:+TrustFinalNonStaticFields",
     ))
 
     if (enableToolchains) javaLauncher = gvmLauncher
@@ -693,7 +696,7 @@ tasks {
   }
 
   afterEvaluate {
-    listOf(named("kaptKotlin")).forEach { task ->
+    listOf(named("kspKotlin")).forEach { task ->
       task.configure {
         dependsOn(generateProto)
       }
@@ -806,6 +809,13 @@ val buildRustNativesForHost by tasks.registering(Exec::class) {
   workingDir = rootProject.layout.projectDirectory.asFile
   dependsOn(buildThirdPartyNatives)
 
+  doFirst {
+    logger.lifecycle(
+      "Compiling natives for target '${elideTarget.triple}' " +
+      "(config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
+    )
+  }
+
   val targetInfo = TargetInfo.current(project)
   executable = "cargo"
   argumentProviders.add(CommandLineArgumentProvider {
@@ -831,6 +841,7 @@ val natives by tasks.registering {
   group = "build"
   description = "Build natives via Make and Cargo"
   dependsOn(buildThirdPartyNatives, buildRustNativesForHost)
+
   doLast {
     logger.lifecycle(
       "Natives ready for target '${elideTarget.triple}' (config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"

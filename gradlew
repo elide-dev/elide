@@ -214,7 +214,7 @@ set -- \
         "-Dorg.gradle.appname=$APP_BASE_NAME" \
         -classpath "$CLASSPATH" \
         org.gradle.wrapper.GradleWrapperMain \
-        "$@"
+        "$@" "--no-problems-report" "--warning-mode=none"
 
 # Stop when "xargs" is not available.
 if ! command -v xargs >/dev/null 2>&1

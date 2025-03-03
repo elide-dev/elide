@@ -238,6 +238,7 @@ val jvmRuntimeArgs = listOf(
   "-XX:ParallelGCThreads=2",
   "-XX:ConcGCThreads=2",
   "-XX:ReservedCodeCacheSize=512m",
+  "-XX:+TrustFinalNonStaticFields",
 )
 
 val nativeEnabledModules = listOf(
@@ -1005,7 +1006,12 @@ val initializeAtRuntimeTest: List<String> = emptyList()
 
 val rerunAtRuntimeTest: List<String> = emptyList()
 
-val gvmJvmHome = requireNotNull(System.getenv("GRAALVM_HOME") ?: System.getenv("JAVA_HOME"))
+val gvmJvmHome = requireNotNull(
+  System.getenv("GRAALVM_HOME") ?:
+  System.getenv("JAVA_HOME") ?:
+  System.getProperty("java.home")
+)
+
 val jniHeaderPaths = listOf(
   gvmJvmHome.let { "$it/include" },
   gvmJvmHome.let {

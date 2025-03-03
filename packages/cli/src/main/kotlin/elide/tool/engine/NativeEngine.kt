@@ -151,14 +151,14 @@ object NativeEngine {
   @JvmStatic private fun ensureLoadableFromNatives(
     group: String,
     libs: List<NativeLibInfo>,
-    workdir: File,
+    workdirProvider: () -> File,
     loader: ClassLoader,
     allCandidatePaths: Sequence<Path>,
     forceLoad: Boolean = false,
   ) = libs.map {
     val (loaded, copied) = try {
       NativeUtil.loadOrCopy(
-        workdir,
+        workdirProvider,
         it.path,
         it.name,
         loader,
@@ -183,7 +183,7 @@ object NativeEngine {
   @JvmStatic private fun HostPlatform.loadByPlatform(
     loader: ClassLoader,
     group: String,
-    workdir: File,
+    workdirProvider: () -> File,
     allCandidatePaths: Sequence<Path>,
     forceLoad: Boolean = !ImageInfo.inImageCode(),
     linux: (() -> List<NativeLibInfo>?)? = null,
@@ -198,7 +198,14 @@ object NativeEngine {
     }.let {
       when (val target = (it?.invoke() ?: default?.invoke())) {
         null -> {}
-        else -> ensureLoadableFromNatives(group, target, workdir, loader, allCandidatePaths, forceLoad).also { result ->
+        else -> ensureLoadableFromNatives(
+          group,
+          target,
+          workdirProvider,
+          loader,
+          allCandidatePaths,
+          forceLoad,
+        ).also { result ->
           if (Statics.logging.isEnabled(DEBUG)) {
             Statics.logging.debug("Native library group $group (loaded=$result)")
           }
@@ -209,13 +216,13 @@ object NativeEngine {
 
   // Load native tooling libraries, based on OS.
   @JvmStatic private fun HostPlatform.loadNativeTooling(
-    workdir: File,
+    workdirProvider: () -> File,
     allCandidatePaths: Sequence<Path>,
     loader: ClassLoader,
   ) = loadByPlatform(
     loader,
     "tools",
-    workdir,
+    workdirProvider,
     allCandidatePaths,
     default = {
       listOf(nativeLib("tools", "umbrella", os))
@@ -224,13 +231,13 @@ object NativeEngine {
 
   // Load native transport libraries, based on OS.
   @JvmStatic private fun HostPlatform.loadNativeTransport(
-    workdir: File,
+    workdirProvider: () -> File,
     allCandidatePaths: Sequence<Path>,
     loader: ClassLoader,
   ) = loadByPlatform(
     loader,
     "transport",
-    workdir,
+    workdirProvider,
     allCandidatePaths,
     linux = { listOf(
       nettyNative("transport", "transport_native_epoll", os),
@@ -245,13 +252,13 @@ object NativeEngine {
 
   // Load native OpenSSL libraries.
   @JvmStatic private fun HostPlatform.loadNativeCrypto(
-    workdir: File,
+    workdirProvider: () -> File,
     allCandidatePaths: Sequence<Path>,
     loader: ClassLoader,
   ) = loadByPlatform(
     loader,
     "crypto",
-    workdir,
+    workdirProvider,
     allCandidatePaths,
     linux = {
       listOf(nettyNative("crypto", "tcnative_linux", os))
@@ -263,9 +270,11 @@ object NativeEngine {
 
   // Load natives from the CWD while it is swapped in.
   @Suppress("TooGenericExceptionCaught")
-  @JvmStatic private fun loadAllNatives(
+  @JvmStatic private fun loadApplicableNatives(
     platform: HostPlatform,
-    natives: File,
+    nativesProvider: () -> File,
+    server: Boolean,
+    tooling: Boolean,
     allCandidatePaths: Sequence<Path>,
     loader: ClassLoader,
   ) = platform.apply {
@@ -273,14 +282,20 @@ object NativeEngine {
     val loadNatives: () -> Unit = if (ImageInfo.inImageCode() && staticJniMode) {
       // nothing to load
       {
-        loadNativeTransport(natives, allCandidatePaths, loader)
+        if (server) {
+          loadNativeTransport(nativesProvider, allCandidatePaths, loader)
+        }
       }
     } else {
       // trigger load of native libs
       {
-        loadNativeTransport(natives, allCandidatePaths, loader)
-        loadNativeCrypto(natives, allCandidatePaths, loader)
-        loadNativeTooling(natives, allCandidatePaths, loader)
+        if (server) {
+          loadNativeTransport(nativesProvider, allCandidatePaths, loader)
+          loadNativeCrypto(nativesProvider, allCandidatePaths, loader)
+        }
+        if (tooling) {
+          loadNativeTooling(nativesProvider, allCandidatePaths, loader)
+        }
       }
     }
 
@@ -329,12 +344,19 @@ object NativeEngine {
    *
    * Prepare VM-level settings and trigger loading of critical native libraries.
    *
-   * @param workdir Working directory manager.
+   * @param workdirProvider Provider which yields a working directory manager.
+   * @param server Whether to initialize server components.
+   * @param tooling Whether to initialize tooling components.
    * @param extraProps Extra VM properties to set.
    */
   @Suppress("UNUSED_PARAMETER")
-  @JvmStatic fun load(workdir: WorkdirManager, extraProps: List<Pair<String, String>>) {
-    val natives = workdir.nativesDirectory()
+  @JvmStatic fun load(
+    workdirProvider: () -> WorkdirManager,
+    server: Boolean,
+    tooling: Boolean,
+    extraProps: List<Pair<String, String>>,
+  ) {
+
     val platform = HostPlatform.resolve()
     val separator = File.separator
     val libraryPath = System.getProperty("java.library.path", "")
@@ -352,7 +374,7 @@ object NativeEngine {
     }
     val libExecPaths = listOf<Path>(
       resolvedExecPrefix,
-      resolvedExecPrefix.resolve("python/python-home/lib/graalpy24.1"),
+      resolvedExecPrefix.resolve("python/python-home/lib/graalpy25.0"),
       resolvedExecPrefix.resolve("llvm/libsulong-native"),
       resolvedExecPrefix.resolve("ruby/ruby-home"),
     )
@@ -360,6 +382,7 @@ object NativeEngine {
       Path(it).resolve("lib")
     }
     val combinedFullPath = sequence<Path> {
+      val natives = workdirProvider.invoke().nativesDirectory()
       yield(natives.toPath())
       yieldAll(libraryPath.split(separator).map { Path.of(it) })
       yieldAll(libExecPaths)
@@ -367,7 +390,14 @@ object NativeEngine {
     }
 
     // load all required native libs for current platform
-    loadAllNatives(platform, natives.toFile(), combinedFullPath, this::class.java.classLoader)
+    loadApplicableNatives(
+      platform,
+      { workdirProvider.invoke().nativesDirectory().toFile() },
+      server = server,
+      tooling = tooling,
+      combinedFullPath,
+      this::class.java.classLoader,
+    )
 
     // in jvm mode, force-load sqlite
     if (!ImageInfo.inImageCode()) {
@@ -403,10 +433,22 @@ object NativeEngine {
    * Early in the static init process for Elide, this method is called to prepare and load native libraries and apply
    * VM-level settings as early as possible.
    *
-   * @param workdir Working directory manager.
+   * @param workdirProvider Provider which yields a working directory manager.
+   * @param server Whether to initialize server components.
+   * @param tooling Whether to initialize tooling components.
    * @param properties Provider of extra VM properties to set.
    */
-  @JvmStatic fun boot(workdir: WorkdirManager, properties: () -> List<Pair<String, String>>) {
-    load(workdir, properties.invoke())
+  @JvmStatic inline fun boot(
+    noinline workdirProvider: () -> WorkdirManager,
+    server: Boolean = true,
+    tooling: Boolean = true,
+    properties: () -> List<Pair<String, String>>
+  ) {
+    load(
+      workdirProvider,
+      server = server,
+      tooling = tooling,
+      properties.invoke(),
+    )
   }
 }

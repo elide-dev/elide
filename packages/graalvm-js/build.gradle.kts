@@ -15,12 +15,8 @@ import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
-  alias(libs.plugins.micronaut.graalvm)
-
   kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.allopen")
-
+  alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
 }
 
@@ -46,11 +42,26 @@ elide {
   }
 }
 
+val enableEdgeJvm = false
+val edgeVersion = "25x"
+val baseVersion = "24x"
+val effectivePatchedVersion = if (enableEdgeJvm) edgeVersion else baseVersion
+
+sourceSets {
+  main {
+    if (enableEdgeJvm) {
+      kotlin.srcDirs("src/main/kotlin$edgeVersion")
+    } else {
+      kotlin.srcDirs("src/main/kotlin$baseVersion")
+    }
+  }
+}
+
 val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
-  gvmJarsRoot.file("graaljs.jar"),
-  gvmJarsRoot.file("truffle-api.jar"),
+  gvmJarsRoot.file("graaljs-$effectivePatchedVersion.jar"),
+  gvmJarsRoot.file("truffle-api-$effectivePatchedVersion.jar"),
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }

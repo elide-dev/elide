@@ -29,18 +29,19 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
 @VMFeature public class OxcParserFeature : AbstractStaticNativeLibraryFeature() {
   private companion object {
     private const val LIB_JS = "js"
-    private val precompiler = arrayOf(
+    private const val staticJni = true
+    @JvmStatic private val precompiler = arrayOf(
       "elide.runtime.lang.javascript.JavaScriptPrecompiler",
     )
 
-    private val libjs_a = Path(System.getProperty("elide.natives")).resolve("lib$LIB_JS.a")
-    private val libjs_so = Path(System.getProperty("elide.natives")).resolve("lib$LIB_JS.so")
-    private val libjs_dylib = Path(System.getProperty("elide.natives")).resolve("lib$LIB_JS.dylib")
+    @JvmStatic private val libjs_a = Path(System.getProperty("elide.natives")).resolve("lib$LIB_JS.a")
+    @JvmStatic private val libjs_so = Path(System.getProperty("elide.natives")).resolve("lib$LIB_JS.so")
+    @JvmStatic private val libjs_dylib = Path(System.getProperty("elide.natives")).resolve("lib$LIB_JS.dylib")
   }
 
   override fun getDescription(): String = "Configures native JavaScript/TypeScript parsing via Oxc"
 
-  override fun nativeLibs(access: Feature.BeforeAnalysisAccess): List<NativeLibInfo?> = listOf(
+  override fun nativeLibs(access: Feature.BeforeAnalysisAccess): List<NativeLibInfo?> = if (staticJni) listOf(
     nativeLibrary(
       darwin = libraryNamed(
         LIB_JS,
@@ -59,7 +60,7 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
         absoluteLibs = (libjs_a to libjs_so),
       ),
     )
-  )
+  ) else emptyList()
 
   override fun beforeAnalysis(access: Feature.BeforeAnalysisAccess) {
     super.beforeAnalysis(access)

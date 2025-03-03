@@ -192,6 +192,8 @@ public final class elide/runtime/core/PolyglotContext$EvaluationOptions$Companio
 
 public final class elide/runtime/core/PolyglotContext$EvaluationOptionsData : java/lang/Record, elide/runtime/core/PolyglotContext$EvaluationOptions {
 	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;
+	public static synthetic fun copy$default (Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;ZILjava/lang/Object;)Lelide/runtime/core/PolyglotContext$EvaluationOptionsData;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getInternals ()Z
 	public fun hashCode ()I
@@ -324,23 +326,13 @@ public final class elide/runtime/core/lib/NativeLibraries {
 	public static synthetic fun resolve$default (Lelide/runtime/core/lib/NativeLibraries;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 }
 
-public final synthetic class elide/runtime/diag/$MutableDiagnostic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+public synthetic class elide/runtime/diag/$MutableDiagnostic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/diag/$MutableDiagnostic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public final fun hasBuilder ()Z
-	public final fun hasConstructor ()Z
-	public fun instantiate ()Ljava/lang/Object;
-	public fun instantiateInternal ([Ljava/lang/Object;)Ljava/lang/Object;
-	public final fun isBuildable ()Z
-}
-
-public final synthetic class elide/runtime/diag/$MutableDiagnostic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+public synthetic class elide/runtime/diag/$MutableDiagnostic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
@@ -371,19 +363,21 @@ public final class elide/runtime/diag/Diagnostic : java/lang/Record {
 	public final fun component7 ()Lelide/runtime/diag/SourceReference;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Lelide/runtime/diag/Severity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/runtime/diag/SourceLocation;Lelide/runtime/diag/SourceSpan;Lelide/runtime/diag/SourceReference;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/diag/Diagnostic;
+	public static synthetic fun copy$default (Lelide/runtime/diag/Diagnostic;Lelide/runtime/diag/Severity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/runtime/diag/SourceLocation;Lelide/runtime/diag/SourceSpan;Lelide/runtime/diag/SourceReference;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/diag/Diagnostic;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun from (Lelide/runtime/diag/DiagnosticInfo;)Lelide/runtime/diag/Diagnostic;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class elide/runtime/diag/Diagnostic$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final class elide/runtime/diag/Diagnostic$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/diag/Diagnostic$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/Diagnostic;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/Diagnostic;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/Diagnostic;)V
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/Diagnostic;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -585,13 +579,13 @@ public final class elide/runtime/diag/SourceLocation : java/lang/Record {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class elide/runtime/diag/SourceLocation$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final class elide/runtime/diag/SourceLocation$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/diag/SourceLocation$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/SourceLocation;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/SourceLocation;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/SourceLocation;)V
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/SourceLocation;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -606,6 +600,8 @@ public final class elide/runtime/diag/SourceSpan : java/lang/Record {
 	public static final field Companion Lelide/runtime/diag/SourceSpan$Companion;
 	public final fun component1-pVg5ArA ()I
 	public final fun component2-pVg5ArA ()I
+	public final fun copy-feOb9K0 (II)Lelide/runtime/diag/SourceSpan;
+	public static synthetic fun copy-feOb9K0$default (Lelide/runtime/diag/SourceSpan;IIILjava/lang/Object;)Lelide/runtime/diag/SourceSpan;
 	public final fun end ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
@@ -613,13 +609,13 @@ public final class elide/runtime/diag/SourceSpan : java/lang/Record {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class elide/runtime/diag/SourceSpan$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final class elide/runtime/diag/SourceSpan$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/diag/SourceSpan$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/SourceSpan;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/diag/SourceSpan;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/SourceSpan;)V
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/diag/SourceSpan;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -631,7 +627,6 @@ public synthetic class elide/runtime/exec/$GuestExecutorFactory$Definition : io/
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
@@ -640,7 +635,6 @@ public synthetic class elide/runtime/exec/$GuestExecutorFactory$Executor0$Defini
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
@@ -765,7 +759,23 @@ public abstract class elide/runtime/feature/engine/AbstractStaticNativeLibraryFe
 	public fun unpackNatives (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
 }
 
-public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/GuestLanguage {
+public abstract interface class elide/runtime/gvm/EngineContextAPI {
+	public abstract fun context ()Lorg/graalvm/polyglot/Context;
+	public abstract fun engine ()Lorg/graalvm/polyglot/Engine;
+	public abstract fun executor ()Lelide/runtime/exec/GuestExecutor;
+}
+
+public abstract interface class elide/runtime/gvm/EngineExecutor : java/util/concurrent/ExecutorService {
+}
+
+public abstract interface class elide/runtime/gvm/EngineThreadAPI {
+	public abstract fun engineContext ()Lelide/runtime/gvm/EngineContextAPI;
+}
+
+public abstract interface class elide/runtime/gvm/EngineThreadFactory : java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory {
+}
+
+public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/core/GuestLanguage, elide/runtime/gvm/GuestLanguage {
 	public static final field JAVASCRIPT Lelide/runtime/gvm/GraalVMGuest;
 	public static final field JVM Lelide/runtime/gvm/GraalVMGuest;
 	public static final field PYTHON Lelide/runtime/gvm/GraalVMGuest;
@@ -774,6 +784,7 @@ public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/
 	public fun getEngine ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLabel ()Ljava/lang/String;
+	public fun getLanguageId ()Ljava/lang/String;
 	public fun getSymbol ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/GraalVMGuest;
 	public static fun values ()[Lelide/runtime/gvm/GraalVMGuest;
@@ -806,6 +817,28 @@ public final class elide/runtime/gvm/InvocationMode : java/lang/Enum {
 	public static fun values ()[Lelide/runtime/gvm/InvocationMode;
 }
 
+public final class elide/runtime/gvm/JNIHeaderDirectives : org/graalvm/nativeimage/c/CContext$Directives {
+	public fun <init> ()V
+	public fun getHeaderFiles ()Ljava/util/List;
+	public static fun getHeaderOptions ()Ljava/util/List;
+	public static fun getHeaders ()Ljava/util/List;
+	public fun getOptions ()Ljava/util/List;
+}
+
+public final class elide/runtime/gvm/RuntimeContext {
+	public static final field INSTANCE Lelide/runtime/gvm/RuntimeContext;
+	public static final fun current ()Lelide/runtime/gvm/EngineContextAPI;
+	public static final fun currentUnsafe ()Lelide/runtime/gvm/EngineContextAPI;
+	public static final fun engineExecutor ()Lelide/runtime/gvm/EngineExecutor;
+	public static final fun inEngineThread (Ljava/lang/Thread;)Z
+	public static synthetic fun inEngineThread$default (Ljava/lang/Thread;ILjava/lang/Object;)Z
+}
+
+public final class elide/runtime/gvm/RuntimeContextKt {
+	public static final fun getEngine (Lkotlinx/coroutines/Dispatchers;)Lkotlinx/coroutines/CoroutineDispatcher;
+	public static final fun getVirtual (Lkotlinx/coroutines/Dispatchers;)Lkotlinx/coroutines/CoroutineDispatcher;
+}
+
 public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
 }
 
@@ -814,6 +847,10 @@ public final class elide/runtime/gvm/cfg/LanguageDefaults {
 	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
 	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
+}
+
+public final class elide/runtime/gvm/internals/MultiThreadedEngine {
+	public static fun newMultiThreadedEngineExecutor ()Lelide/runtime/gvm/EngineExecutor;
 }
 
 public abstract interface class elide/runtime/gvm/loader/ModuleFactory {
@@ -827,6 +864,8 @@ public final class elide/runtime/gvm/loader/ModuleInfo : java/lang/Record, java/
 	public synthetic fun compareTo (Ljava/lang/Object;)I
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lelide/runtime/gvm/loader/ModuleInfo;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/loader/ModuleInfo;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/gvm/loader/ModuleInfo;
 	public final fun dependencies ()Ljava/util/List;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun find (Ljava/lang/String;)Lelide/runtime/gvm/loader/ModuleInfo;
@@ -858,6 +897,87 @@ public final class elide/runtime/gvm/loader/ModuleRegistry : elide/runtime/gvm/l
 public abstract interface class elide/runtime/gvm/loader/ModuleResolver {
 	public abstract fun contains (Lelide/runtime/gvm/loader/ModuleInfo;)Z
 	public abstract fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/interop/InteropProxyObject : org/graalvm/polyglot/proxy/ProxyObject {
+}
+
+public abstract interface class elide/runtime/interop/ReadOnlyProxyObject : elide/runtime/interop/SealedProxyObject {
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public abstract interface class elide/runtime/interop/SealedProxyObject : elide/runtime/interop/InteropProxyObject {
+	public abstract fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+}
+
+public abstract interface class elide/runtime/lang/Language {
+	public abstract fun getLanguageId ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/lang/Language$ContextConfigInvocation : org/graalvm/word/PointerBase {
+	public abstract fun getApiVersion ()I
+	public abstract fun getContextBuilder ()Lorg/graalvm/nativeimage/ObjectHandle;
+	public abstract fun getEngine ()Lorg/graalvm/nativeimage/ObjectHandle;
+}
+
+public abstract interface class elide/runtime/lang/Language$EngineConfigInvocation : org/graalvm/word/PointerBase {
+	public abstract fun getApiVersion ()I
+	public abstract fun getEngineBuilder ()Lorg/graalvm/nativeimage/ObjectHandle;
+}
+
+public abstract interface class elide/runtime/lang/Language$LangContextConfigureFunctionPointer : org/graalvm/nativeimage/c/function/CFunctionPointer {
+	public abstract fun invoke (Lorg/graalvm/nativeimage/IsolateThread;Lorg/graalvm/word/PointerBase;)V
+}
+
+public abstract interface class elide/runtime/lang/Language$LangEngineConfigureFunctionPointer : org/graalvm/nativeimage/c/function/CFunctionPointer {
+	public abstract fun invoke (Lorg/graalvm/nativeimage/IsolateThread;Lorg/graalvm/word/PointerBase;)V
+}
+
+public abstract interface class elide/runtime/lang/Language$LangEntryFunctionPointer : org/graalvm/nativeimage/c/function/CFunctionPointer {
+	public abstract fun invoke (Lorg/graalvm/nativeimage/IsolateThread;Lorg/graalvm/word/PointerBase;)V
+}
+
+public abstract interface class elide/runtime/lang/Language$LangInitFunctionPointer : org/graalvm/nativeimage/c/function/CFunctionPointer {
+	public abstract fun invoke (Lorg/graalvm/nativeimage/IsolateThread;Lorg/graalvm/word/PointerBase;)V
+}
+
+public abstract interface class elide/runtime/lang/Language$NativeLangInvocation : org/graalvm/word/PointerBase {
+	public abstract fun getApiVersion ()I
+	public abstract fun getContext ()Lorg/graalvm/nativeimage/ObjectHandle;
+	public abstract fun getElideDispatch ()Lorg/graalvm/nativeimage/ObjectHandle;
+	public abstract fun getEngine ()Lorg/graalvm/nativeimage/ObjectHandle;
+}
+
+public abstract interface class elide/runtime/lang/Language$NativeLanguageInfo : org/graalvm/word/PointerBase {
+	public abstract fun getApiVersion ()I
+	public abstract fun getContextConfigureFunction ()Lelide/runtime/lang/Language$LangContextConfigureFunctionPointer;
+	public abstract fun getEngineConfigureFunction ()Lelide/runtime/lang/Language$LangEngineConfigureFunctionPointer;
+	public abstract fun getEntryFunction ()Lelide/runtime/lang/Language$LangEntryFunctionPointer;
+	public abstract fun getInitFunction ()Lelide/runtime/lang/Language$LangInitFunctionPointer;
+	public abstract fun getLangId ()Lorg/graalvm/nativeimage/c/type/CCharPointer;
+	public abstract fun setApiVersion (I)V
+	public abstract fun setContextConfigureFunction (Lelide/runtime/lang/Language$LangContextConfigureFunctionPointer;)V
+	public abstract fun setEngineConfigureFunction (Lelide/runtime/lang/Language$LangEngineConfigureFunctionPointer;)V
+	public abstract fun setEntryFunction (Lelide/runtime/lang/Language$LangEntryFunctionPointer;)V
+	public abstract fun setInitFunction (Lelide/runtime/lang/Language$LangInitFunctionPointer;)V
+	public abstract fun setLangId (Lorg/graalvm/nativeimage/c/type/CCharPointer;)V
+}
+
+public abstract interface class elide/runtime/lang/Language$NativeRuntimeInit : org/graalvm/word/PointerBase {
+}
+
+public class elide/runtime/lang/Language$PluginApiDirectives : org/graalvm/nativeimage/c/CContext$Directives {
+	public fun <init> ()V
+	public fun getHeaderFiles ()Ljava/util/List;
+	public static fun getHeaderOptions ()Ljava/util/List;
+	public static fun getHeaders ()Ljava/util/List;
+	public fun getOptions ()Ljava/util/List;
+}
+
+public abstract interface class elide/runtime/lang/LanguagePlugin {
+	public abstract fun getLanguageClass ()Ljava/lang/Class;
 }
 
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
@@ -918,13 +1038,13 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -947,13 +1067,13 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;)V
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 

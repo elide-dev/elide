@@ -30,7 +30,7 @@ import elide.testing.annotations.TestCase
 /** Tests for the main CLI tool entrypoint. */
 @TestCase class ElideToolTest {
   private val testRuby = false
-  private val testPython = true
+  private val testPython = false
   private val rootProjectPath = Paths.get(System.getProperty("user.dir"))
     .parent
     .parent

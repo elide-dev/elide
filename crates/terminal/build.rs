@@ -13,7 +13,8 @@
 
 use bindgen::Builder;
 use builder::{
-  TargetOs, build_bindings, build_dual_cc, header_file, setup_cc, src_file, target_os,
+  OperatingSystem as TargetOs, build_bindings, build_dual_cc, header_file, setup_cc, src_file,
+  target_os,
 };
 
 fn main() {

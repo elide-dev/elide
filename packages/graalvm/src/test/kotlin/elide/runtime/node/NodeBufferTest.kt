@@ -18,21 +18,21 @@ import java.util.*
 import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.intrinsics.js.node.BufferAPI
 import elide.runtime.node.buffer.NodeBlob
 import elide.runtime.node.buffer.NodeBufferModule
+import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
-/** Tests for [Buffer]. */
+/** Tests for `Buffer`. */
 @DelicateElideApi
 @TestCase
-@Suppress("LargeClass")
+@Suppress("LargeClass", "NodeCoreCodingAssistance")
 internal class NodeBufferTest : NodeModuleConformanceTest<NodeBufferModule>() {
-  @Inject internal lateinit var buffer: BufferAPI
-  @Inject internal lateinit var module: NodeBufferModule
+  internal val module: NodeBufferModule = NodeBufferModule()
+  internal val buffer: BufferAPI = NodeBufferModuleFacade.create()
 
   override val moduleName: String get() = "buffer"
   override fun provide(): NodeBufferModule = module
@@ -458,11 +458,12 @@ internal class NodeBufferTest : NodeModuleConformanceTest<NodeBufferModule>() {
   @Test
   @Suppress("LongMethod")
   fun `Buffer (instance members)`() = conforms {
-
+    // no-op
   }.guest {
+    // language=JavaScript
     """
     const assert = require("node:assert");
-    const { Buffer} = require("node:buffer");
+    const { Buffer } = require("node:buffer");
 
     // helper for assertions
     function assertContents(actual, expected) {

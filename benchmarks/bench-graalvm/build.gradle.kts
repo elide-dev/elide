@@ -18,9 +18,10 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import me.champeau.jmh.JMHTask
 import kotlinx.benchmark.gradle.*
-import org.jetbrains.kotlin.allopen.gradle.*
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import elide.toolchain.host.TargetInfo
 
 plugins {
   kotlin("jvm")
@@ -38,6 +39,10 @@ sourceSets.all {
   resources.setSrcDirs(listOf("jmh/resources"))
 }
 
+allOpen {
+  annotation("org.openjdk.jmh.annotations.BenchmarkMode")
+}
+
 dependencies {
   implementation(libs.kotlinx.benchmark.runtime)
   implementation(libs.kotlinx.coroutines.test)
@@ -48,6 +53,8 @@ dependencies {
   implementation(mn.micronaut.inject.java.test)
   implementation(mn.micronaut.runtime)
   implementation(projects.packages.graalvm)
+  implementation(projects.packages.cli)
+  implementation(project(":packages:cli", configuration = "cliNativeOptimized"))
   implementation(libs.lmax.disruptor.core)
   implementation(libs.lmax.disruptor.proxy)
   compileOnly(libs.graalvm.svm)
@@ -64,6 +71,26 @@ benchmark {
       warmups = 5
       iterations = 5
     }
+    create("sqlite") {
+      include("*SQLite*")
+      warmups = 5
+      iterations = 5
+    }
+    create("entry") {
+      include("EntryBenchmark")
+      warmups = 5
+      iterations = 5
+    }
+    create("node") {
+      include("Node*")
+      warmups = 5
+      iterations = 5
+    }
+    create("context") {
+      include(".*Context.*")
+      warmups = 5
+      iterations = 5
+    }
   }
   targets {
     register("main") {
@@ -71,6 +98,40 @@ benchmark {
       jmhVersion = libs.versions.jmh.lib.get()
     }
   }
+}
+
+val elideTarget = TargetInfo.current(project)
+val nativesType = "release"
+val umbrellaNativesPath: String =
+  rootProject.layout.projectDirectory.dir("target/${elideTarget.triple}/$nativesType").asFile.path
+val nativesPath = umbrellaNativesPath
+val targetSqliteDir = rootProject.layout.projectDirectory.dir("third_party/sqlite/install")
+val targetSqliteLibDir = targetSqliteDir.dir("lib")
+
+val javaLibPath = provider {
+  StringBuilder().apply {
+    append(nativesPath)
+    append(File.pathSeparator)
+    append(targetSqliteLibDir)
+    System.getProperty("java.library.path", "").let {
+      if (it.isNotEmpty()) {
+        append(File.pathSeparator)
+        append(it)
+      }
+    }
+  }
+}
+
+tasks.withType(JMHTask::class).configureEach {
+  doNotTrackState("always run")
+  outputs.upToDateWhen { false }
+  jvmArgsAppend.addAll(
+    listOf(
+      "-XX:+UnlockExperimentalVMOptions",
+      "-Djava.util.concurrent.ForkJoinPool.common.parallelism=1",
+      "-Djava.library.path=${javaLibPath.get()}",
+    ),
+  )
 }
 
 tasks.withType(Jar::class).configureEach {
@@ -85,5 +146,33 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     jvmTarget = JvmTarget.fromTarget(javaLanguageVersion)
     javaParameters = true
     incremental = true
+    freeCompilerArgs.add("-Xskip-prerelease-check")
   }
+}
+
+fun checkNatives() {
+  if (!File(nativesPath).exists()) {
+    error("Natives not found at $nativesPath; please run `./gradlew natives -Pelide.release=true`")
+  }
+}
+
+val projectRootPath: String = rootProject.layout.projectDirectory.asFile.absolutePath
+
+tasks.withType<JavaExec>().configureEach {
+  doFirst {
+    checkNatives()
+  }
+  jvmArgs(
+    listOf(
+      "--enable-preview",
+      "--enable-native-access=ALL-UNNAMED",
+      "-XX:+UseG1GC",
+      "-XX:+UnlockExperimentalVMOptions",
+      "-XX:+UnlockExperimentalVMOptions",
+      "-XX:+TrustFinalNonStaticFields",
+      "-Djava.library.path=${javaLibPath.get()}",
+      "-Delide.disableStreams=true",
+      "-Delide.project.root=$projectRootPath",
+    ),
+  )
 }

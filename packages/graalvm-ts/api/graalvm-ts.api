@@ -1,10 +1,3 @@
-public class elide/runtime/lang/typescript/TypeScriptCompiler : java/lang/AutoCloseable {
-	public fun close ()V
-	public fun compileToNewSource (Ljava/lang/CharSequence;Ljava/lang/String;ZLjava/lang/String;)Lcom/oracle/truffle/api/source/Source;
-	public fun compileToString (Ljava/lang/CharSequence;Ljava/lang/String;)Ljava/lang/String;
-	public static fun obtain (Lcom/oracle/truffle/api/TruffleLanguage$Env;)Lelide/runtime/lang/typescript/TypeScriptCompiler;
-}
-
 public class elide/runtime/lang/typescript/TypeScriptLanguage : com/oracle/truffle/api/TruffleLanguage {
 	public static final field APPLICATION_MIME_TYPE Ljava/lang/String;
 	public static final field ID Ljava/lang/String;
@@ -23,15 +16,8 @@ public class elide/runtime/lang/typescript/TypeScriptLanguage : com/oracle/truff
 	protected synthetic fun patchContext (Ljava/lang/Object;Lcom/oracle/truffle/api/TruffleLanguage$Env;)Z
 }
 
-public class elide/runtime/lang/typescript/TypeScriptLanguage$TypeScriptCompilerLoaderFactory : elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory {
-	public fun <init> (Lelide/runtime/lang/typescript/TypeScriptLanguage;)V
-	public fun invoke (Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
-	public fun test (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;)Z
-	public synthetic fun test (Ljava/lang/Object;)Z
-}
-
 public class elide/runtime/lang/typescript/TypeScriptLanguage$TypeScriptPrecompiledLoaderFactory : elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory {
-	public fun <init> (Lelide/runtime/lang/typescript/TypeScriptLanguage;)V
+	public fun <init> ()V
 	public fun invoke (Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
 	public fun test (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;)Z
 	public synthetic fun test (Ljava/lang/Object;)Z
@@ -61,6 +47,7 @@ public final class elide/runtime/typescript/TypeScriptFeature : org/graalvm/nati
 	public fun <init> ()V
 	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
 	public fun getDescription ()Ljava/lang/String;
+	public fun getRequiredFeatures ()Ljava/util/List;
 }
 
 public final class elide/runtime/typescript/TypeScriptPrecompiler : elide/runtime/precompiler/Precompiler$SourcePrecompiler {

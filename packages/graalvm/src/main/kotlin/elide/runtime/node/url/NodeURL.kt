@@ -19,9 +19,10 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.URLAPI
+import elide.runtime.lang.javascript.NodeModuleName
 
 // Internal symbol where the Node built-in module is installed.
-private const val URL_MODULE_SYMBOL = "node_url"
+private const val URL_MODULE_SYMBOL = "node_${NodeModuleName.URL}"
 
 // Installs the Node URL module into the intrinsic bindings.
 @Intrinsic

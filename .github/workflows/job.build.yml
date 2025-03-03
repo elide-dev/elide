@@ -139,6 +139,8 @@ name: Framework
         description: "Gradle cache key"
 
 env:
+  RUST_BACKTRACE: full
+  ELIDE_VERSION: "1.0.0-alpha14"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:
@@ -224,39 +226,12 @@ jobs:
             repo.maven.apache.org:443
             scans-in.gradle.com:443
             services.gradle.org:443
-      - name: "Setup: Apt Dependencies"
-        run: |
-          sudo apt-get install -y libtool-bin build-essential libc6-dev libssl-dev
-      - name: "Setup: LLVM 19"
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo apt-get remove clang clangd lld llvm || echo "No LLVM installed; skipping error."
-          sudo ./llvm.sh 19 all
-          export LLVM_PATH=/usr/lib/llvm-19
-          export PATH="$LLVM_PATH/bin:$PATH"
-          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
-          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
-          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
-          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
-          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
-          echo PATH=$PATH >> $GITHUB_ENV
-          sudo apt-get remove clang-18 clangd-18 lld-18 llvm-18 || echo "No LLVM 18 installed; skipping error."
-          sudo apt-get autoremove;
-          sudo apt-get clean;
-      - name: "Setup: Clear Tooling Cache"
-        run: rm -rf /opt/hostedtoolcache
-      - name: "Setup: Checkout"
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          submodules: true
-          persist-credentials: false
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@11df97af8e8102fd60b60a77dfbf58d40cd843b8 # v1.10.1
         with:
           toolchain: stable
           components: clippy,rustfmt
+          cache: true
           rustflags: ""
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@054db53350805f83040bf3e6e9b8cf5a139aa7c9 # v0.0.7
@@ -270,13 +245,6 @@ jobs:
           distribution: "graalvm"
           java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Python (3.12)"
-        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
-        with:
-          python-version: 3.12
-      - name: "Setup: Buildless"
-        if: false  # temporarily disabled
-        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: Node"
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
@@ -289,21 +257,24 @@ jobs:
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "10.5.2"
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Elide"
+        run: curl -sSL --tlsv1.2 elide.sh | bash -s - --install-rev=${{ env.ELIDE_VERSION }} && echo "$HOME/elide" >> $GITHUB_PATH
       - name: "Setup: Dependencies"
         run: |
-          cargo install cargo-fuzz cargo-insta rustfilt
+          #cargo install cargo-fuzz cargo-insta rustfilt
           pnpm install -g yarn@1.22.19
           python -m pip install uv
           echo "Setting up venv..."
           uv venv
           echo "Installing dependencies via Pip..."
-          uv pip install -r requirements.txt
+          #uv pip install -r requirements.txt
           echo "Activating venv..."
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
+          echo "Installing dependencies..."
+          mkdir -p $HOME/.config/orogene
+          cp -fv ./.github/workflows/oro.kdl $HOME/.config/orogene/oro.kdl
+          elide install
       - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
         id: gradlebuild
@@ -311,6 +282,7 @@ jobs:
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         with:
           cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -326,7 +298,7 @@ jobs:
             wrapper
             yarn
       - name: "Build Environment"
-        run: make info 2>&1 | tee build-info.txt
+        run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
       - name: "🛠️ Build Packages"
         env:
           CI: true
@@ -334,7 +306,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         run: |
-          make setup natives -j`nproc` && ./gradlew \
+          ./gradlew \
             assemble \
             compileKotlin \
             -x check \
@@ -345,8 +317,7 @@ jobs:
             --scan \
             --build-cache \
             --no-daemon \
-            --warning-mode=none \
-            --dependency-verification=lenient \
+            --dependency-verification=off \
             --stacktrace \
             -Pelide.ci=true \
             -PbuildSamples=false \

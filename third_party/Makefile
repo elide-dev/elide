@@ -21,7 +21,7 @@ RELEASE ?= no
 MUSL ?= no
 USE_NINJA ?= yes
 ENABLE_CCACHE ?= no
-ENABLE_SCCACHE ?= no
+ENABLE_SCCACHE ?= yes
 ELIDE_ROOT ?= $(realpath $(shell pwd)/..)
 MACOS_MIN_VERSION ?= 12.3
 
@@ -66,12 +66,7 @@ CMAKE_INSTALL = $(NINJA) install
 endif
 endif
 
-ifeq ($(OS),Darwin)
-EXTRA_CMAKE_FLAGS += -DCMAKE_OSX_SYSROOT=macosx -DCMAKE_OSX_DEPLOYMENT_TARGET=$(MACOS_MIN_VERSION)
-REQUIRED ?= boringssl sqlite apr
-else
-REQUIRED ?= sqlite apr
-endif
+REQUIRED ?= sqlite
 
 CCACHE ?= $(shell which ccache)
 SCCACHE ?= $(shell which sccache)

@@ -13,8 +13,9 @@
 package elide.runtime.node
 
 import kotlin.test.Test
-import elide.annotations.Inject
+import kotlin.test.assertNotNull
 import elide.runtime.intrinsics.js.node.AssertStrictAPI
+import elide.runtime.node.asserts.NodeAssertStrict
 import elide.runtime.node.asserts.NodeAssertStrictModule
 import elide.testing.annotations.TestCase
 
@@ -22,7 +23,7 @@ import elide.testing.annotations.TestCase
 @TestCase internal class NodeAssertStrictTest : NodeModuleConformanceTest<NodeAssertStrictModule>() {
   override val moduleName: String get() = "assert/strict"
   override fun provide(): NodeAssertStrictModule = NodeAssertStrictModule()
-  @Inject lateinit var assert: AssertStrictAPI
+  private val assert: AssertStrictAPI = NodeAssertStrict.create()
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false
@@ -46,6 +47,6 @@ import elide.testing.annotations.TestCase
   }
 
   @Test override fun testInjectable() {
-//    assertNotNull(assert)
+    assertNotNull(assert)
   }
 }

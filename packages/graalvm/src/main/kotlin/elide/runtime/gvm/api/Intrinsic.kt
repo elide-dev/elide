@@ -13,10 +13,8 @@
 package elide.runtime.gvm.api
 
 import io.micronaut.context.annotation.DefaultScope
-import io.micronaut.context.annotation.Infrastructure
-import io.micronaut.core.annotation.ReflectiveAccess
+import io.micronaut.core.annotation.Introspected
 import elide.annotations.Context
-import elide.annotations.Singleton
 import elide.runtime.gvm.GraalVMGuest
 
 /**
@@ -31,10 +29,8 @@ import elide.runtime.gvm.GraalVMGuest
  * @param language Defines the language this intrinsic is implemented for; defaults to JavaScript which is the only
  *   supported guest language at this time.
  */
-@Singleton
-@Infrastructure
 @MustBeDocumented
-@ReflectiveAccess
+@Introspected
 @DefaultScope(Context::class)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

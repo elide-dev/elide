@@ -44,7 +44,7 @@ public abstract class AbstractGVMScript protected constructor (
   }
 
   // Logging support.
-  private val logging: Logger = Logging.of(AbstractGVMScript::class)
+  private val logging: Logger by lazy { Logging.of(AbstractGVMScript::class) }
 
   /** Atomic internal state for this script. */
   private val currentState: AtomicReference<ExecutableScript.State> = AtomicReference(

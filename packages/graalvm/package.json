@@ -1,8 +1,0 @@
-{
-  "name": "@elide-dev/graalvm",
-  "version": "0.0.1",
-  "dependencies": {
-    "readable-stream": "4.5.2",
-    "web-streams-polyfill": "3.3.3"
-  }
-}

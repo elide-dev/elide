@@ -25,8 +25,8 @@ import elide.runtime.node.process.NodeProcessModule
 import elide.testing.annotations.TestCase
 
 @TestCase internal class NodeProcessTest : NodeModuleConformanceTest<NodeProcessModule>() {
-  @Inject internal lateinit var process: ProcessAPI
-  @Inject internal lateinit var module: NodeProcessModule
+  private val process: ProcessAPI = NodeProcess.obtain()
+  @Inject private lateinit var module: NodeProcessModule
 
   override fun provide(): NodeProcessModule = module
   override val moduleName: String get() = "process"

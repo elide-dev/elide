@@ -16,50 +16,79 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.*
-import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.BufferAPI
+import elide.runtime.lang.javascript.NodeModuleName
 
-/** Internal symbol where the bindings for the 'buffer' module are installed. */
-private const val BUFFER_MODULE_SYMBOL_ROOT = "node_buffer"
+// Internal symbol where the bindings for the 'buffer' module are installed.
+private const val BUFFER_MODULE_SYMBOL_ROOT = "node_${NodeModuleName.BUFFER}"
 
-/** Symbol at which the main module intrinsic is installed. */
+// Symbol at which the main module intrinsic is installed.
 private const val BUFFER_MODULE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_module"
 
-/** Symbol at which the [NodeBlob] class is installed. */
+// Symbol at which the [NodeBlob] class is installed.
 private const val BLOB_SYMBOL = "Blob"
 
-/** Symbol at which the [NodeBlob] class is installed. */
+// Symbol at which the [NodeBlob] class is installed.
 private const val FILE_SYMBOL = "File"
 
-/** Symbol at which the [NodeBlob] class is installed. */
+// Symbol at which the [NodeBlob] class is installed.
 private const val BUFFER_TYPE_SYMBOL = "Buffer"
 
+// Symbol at which the `SlowBuffer` class is installed.
+private const val SLOWBUFFER_TYPE_SYMBOL = "SlowBuffer"
+
+private const val F_RESOLVE_OBJECT_URL = "resolveObjectURL"
+private const val F_IS_ASCII = "isAscii"
+private const val F_IS_UTF8 = "isUtf8"
+private const val F_TRANSCODE = "transcode"
+private const val K_MAX_LENGTH_CONST = "kMaxLength"
+private const val K_STRING_MAX_LEGNTH_CONST = "kStringMaxLength"
+private const val K_ATOB = "atob"
+private const val K_BTOA = "btoa"
+private const val K_CONSTANTS = "constants"
+
 // Installs the Node `buffer` built-in module.
-@Intrinsic
-internal class NodeBufferModule : AbstractNodeBuiltinModule() {
-  @Inject lateinit var facade: NodeBufferModuleFacade
+@Intrinsic internal class NodeBufferModule : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeBufferModuleFacade.create() }
 
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[BUFFER_MODULE_SYMBOL.asJsSymbol()] = facade
+    bindings[BUFFER_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
     bindings[BLOB_SYMBOL.asPublicJsSymbol()] = NodeBlob::class.java
     bindings[FILE_SYMBOL.asPublicJsSymbol()] = NodeFile::class.java
 
-    // A single NodeBufferClass instance acts as meta-object for the `Buffer` type;
+    // A single NodeBufferClass instance acts as metaobject for the `Buffer` type;
     // it will also be exposed as part of the `node:buffer` module by guest init code
-    bindings[BUFFER_TYPE_SYMBOL.asPublicJsSymbol()] = NodeBufferClass()
+    bindings[BUFFER_TYPE_SYMBOL.asPublicJsSymbol()] = NodeBufferClass.SINGLETON
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.BUFFER)) { singleton }
+  }
+}
+
+// Constants made available as part of the Buffer module.
+public object NodeBufferConstants : ReadOnlyProxyObject {
+  public const val MAX_LENGTH: Int = 0
+  public const val MAX_STRING_LENGTH: Int = 0
+
+  override fun getMemberKeys(): Array<String> = arrayOf(K_MAX_LENGTH_CONST, K_STRING_MAX_LEGNTH_CONST)
+
+  override fun getMember(key: String): Any? = when (key) {
+    K_MAX_LENGTH_CONST -> MAX_LENGTH
+    K_STRING_MAX_LEGNTH_CONST -> K_MAX_LENGTH_CONST
+    else -> null
   }
 }
 
 // Module facade which satisfies the built-in `Buffer` module.
-@Singleton internal class NodeBufferModuleFacade : BufferAPI, ProxyObject {
+internal class NodeBufferModuleFacade private constructor () : BufferAPI, ProxyObject {
   override fun atob(data: Value): String {
     val base64 = if (data.isString) data.asString() else data.toString()
     val bytes = Base64.getDecoder().decode(base64)
@@ -115,7 +144,7 @@ internal class NodeBufferModule : AbstractNodeBuiltinModule() {
           else -> return false // invalid UTF-8 sequence
         }
 
-        // multi-byte character, each byte after the first starts with 10xxxxxx
+        // multibyte character, each byte after the first starts with 10xxxxxx
         else -> {
           if (byte shr UTF8_PREFIX_MULTIBYTE_OFFSET != UTF8_PREFIX_MULTIBYTE) return false
           expected--
@@ -152,27 +181,29 @@ internal class NodeBufferModule : AbstractNodeBuiltinModule() {
     error("Unable to read buffer elements from the specified value.")
   }
 
-  override fun getMemberKeys(): Any {
-    return moduleMembers
-  }
+  override fun getMemberKeys(): Array<String> = moduleMembers
+  override fun hasMember(key: String): Boolean = moduleMembers.binarySearch(key) >= 0
 
-  override fun hasMember(key: String): Boolean {
-    return moduleMembers.binarySearch(key) >= 0
-  }
-
+  @OptIn(DelicateElideApi::class)
   @Suppress("MagicNumber")
   override fun getMember(key: String?): Any? = when (key) {
-    "atob" -> ProxyExecutable { atob(it.singleOrNull() ?: error("Expected exactly 1 argument for 'atob'")) }
-    "btoa" -> ProxyExecutable { btoa(it.singleOrNull() ?: error("Expected exactly 1 argument for 'btoa'")) }
-    "isAscii" -> ProxyExecutable { isAscii(it.singleOrNull() ?: error("Expected exactly 1 argument for 'isAscii'")) }
-    "isUtf8" -> ProxyExecutable { isUtf8(it.singleOrNull() ?: error("Expected exactly 1 argument for 'isUtf8'")) }
+    K_ATOB -> ProxyExecutable { atob(it.singleOrNull() ?: error("Expected exactly 1 argument for 'atob'")) }
+    K_BTOA -> ProxyExecutable { btoa(it.singleOrNull() ?: error("Expected exactly 1 argument for 'btoa'")) }
+    K_CONSTANTS -> NodeBufferConstants
+    K_MAX_LENGTH_CONST -> NodeBufferConstants.MAX_LENGTH
+    K_STRING_MAX_LEGNTH_CONST -> NodeBufferConstants.MAX_STRING_LENGTH
+    F_IS_ASCII -> ProxyExecutable { isAscii(it.singleOrNull() ?: error("Expected exactly 1 argument for 'isAscii'")) }
+    F_IS_UTF8 -> ProxyExecutable { isUtf8(it.singleOrNull() ?: error("Expected exactly 1 argument for 'isUtf8'")) }
 
-    "transcode" -> ProxyExecutable {
+    F_TRANSCODE -> ProxyExecutable {
       if (it.size != 3) error("Expected exactly 1 argument for 'transcode'")
       transcode(it[0], it[1].asString(), it[2].asString())
     }
 
-    "resolveObjectUrl" -> ProxyExecutable {
+    BLOB_SYMBOL -> NodeBlob::class.java
+    BUFFER_TYPE_SYMBOL -> NodeBufferClass.SINGLETON
+    FILE_SYMBOL -> NodeFile::class.java
+    F_RESOLVE_OBJECT_URL -> ProxyExecutable {
       val id = it.singleOrNull()?.asString() ?: error("Expected exactly 1 argument for 'isUtf8'")
       resolveObjectUrl(id)
     }
@@ -184,7 +215,9 @@ internal class NodeBufferModule : AbstractNodeBuiltinModule() {
     throw UnsupportedOperationException("Cannot modify 'buffer' module")
   }
 
-  private companion object {
+  companion object {
+    @JvmStatic fun create(): NodeBufferModuleFacade = NodeBufferModuleFacade()
+
     /** Single-byte character bit prefix (0xxx xxxx) */
     private const val UTF8_PREFIX_1B = 0
 
@@ -217,12 +250,19 @@ internal class NodeBufferModule : AbstractNodeBuiltinModule() {
 
     /** Static list of members exposed to guest code. */
     private val moduleMembers = arrayOf(
-      "atob",
-      "btoa",
-      "isAscii",
-      "isUtf8",
-      "transcode",
-      "resolveObjectUrl",
+      K_ATOB,
+      K_BTOA,
+      K_CONSTANTS,
+      K_MAX_LENGTH_CONST,
+      K_STRING_MAX_LEGNTH_CONST,
+      F_IS_ASCII,
+      F_IS_UTF8,
+      F_TRANSCODE,
+      F_RESOLVE_OBJECT_URL,
+      BLOB_SYMBOL,
+      BUFFER_TYPE_SYMBOL,
+      FILE_SYMBOL,
+      SLOWBUFFER_TYPE_SYMBOL,
     ).apply { sort() }
   }
 }

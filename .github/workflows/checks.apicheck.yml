@@ -132,7 +132,7 @@ jobs:
             -x test \
             -x nativeCompile \
             -x nativeOptimizedCompile \
-            -x :packages:sqlite:checkNative \
             -x :packages:graalvm:buildThirdPartyNatives \
             -x :packages:graalvm:buildRustNativesForHost \
-            -x :packages:graalvm:natives
+            -x :packages:graalvm:natives \
+            --no-configuration-cache

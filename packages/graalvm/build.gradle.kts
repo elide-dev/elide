@@ -32,18 +32,15 @@ import elide.toolchain.host.TargetPredicate
 
 plugins {
   kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
   alias(libs.plugins.protobuf)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
-  id("org.graalvm.buildtools.native")
-
+  alias(libs.plugins.graalvm)
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
-
+  alias(libs.plugins.ksp)
   alias(libs.plugins.elide.conventions)
 }
 
@@ -71,7 +68,7 @@ version = rootProject.version as String
 val oracleGvm = false
 val oracleGvmLibs = oracleGvm
 val enableJpms = false
-val enableEdge = true
+val enableEdge = false
 val enableSqlite = true
 val enableBenchmarks = false
 val enableStaticJni = true
@@ -83,12 +80,12 @@ val javacArgs = listOf(
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 23
-val ltsJvmTarget = 21
+val edgeJvmTarget = 25
+val stableJvmTarget = 23
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
-val ltsJvm = JavaVersion.toVersion(ltsJvmTarget)
-val selectedJvmTarget = if (enableEdge) edgeJvmTarget else ltsJvmTarget
-val selectedJvm = if (enableEdge) edgeJvm else ltsJvm
+val stableJvm = JavaVersion.toVersion(stableJvmTarget)
+val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget
+val selectedJvm = if (enableEdge) edgeJvm else stableJvm
 val elideTarget = TargetInfo.current(project)
 
 val jvmType: JvmVendorSpec =
@@ -139,7 +136,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
-    kapt = true
+    ksp = true
   }
 
   native {
@@ -171,10 +168,6 @@ kover {
       "elide.runtime.feature.engine",
     )
   }
-}
-
-allOpen {
-  annotation("org.openjdk.jmh.annotations.State")
 }
 
 java {
@@ -330,24 +323,26 @@ val initializeAtRunTime = listOfNotNull(
   "oshi.util.platform.unix.solaris.KstatUtil",
 )
 
-val initializeAtRunTimeTest = listOfNotNull(
-  "org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeServicesMode",
+val initializeAtRunTimeTest = listOfNotNull<String>()
+
+val nativeEnabledModules = listOf(
+  "org.graalvm.truffle",
+  "ALL-UNNAMED",
 )
+
+val pluginApiHeader =
+  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
 
 val sharedLibArgs = listOfNotNull(
   // "--verbose",
   // "-J-Xlog:library=info",
-  "-H:+JNIVerboseLookupErrors",
-  "-H:+JNI",
+  "-H:+UnlockExperimentalVMOptions",
   "-Delide.staticJni=$enableStaticJni",
+  "-Delide.natives.pluginApiHeader=$pluginApiHeader",
   "-J-Delide.staticJni=$enableStaticJni",
   "-Delide.staticUmbrella=$enableStaticJni",
   "-J-Delide.staticUmbrella=$enableStaticJni",
-  "--enable-native-access=com.sun.jna,ALL-UNNAMED",
-  "--initialize-at-build-time=",
-  "--initialize-at-run-time=${initializeAtRunTime.joinToString(",")}",
-  "-H:+ReportExceptionStackTraces",
-  if (oracleGvm) "-H:+AuxiliaryEngineCache" else null,
+  "--enable-native-access=${nativeEnabledModules.joinToString(",")}",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -370,17 +365,14 @@ val sharedLibArgs = listOfNotNull(
       "-J-Djava.library.path=$it",
     )
   },
+).plus(
+  "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
 )
 
-val testLibArgs = sharedLibArgs.plus(
-  "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
-).plus(listOf(
-  // "-H:AbortOnTypeReachable=com.oracle.svm.core.util.UserError",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}1",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}2",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}3",
-))
+val testLibArgs = sharedLibArgs
+
+val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-graalvm.nil")
+val baseLayer = project(":packages:engine").layout.buildDirectory.file("native/nativeLayerCompile/elide-base.nil")
 
 protobuf {
   protoc {
@@ -425,7 +417,17 @@ graalvmNative {
   binaries {
     create("shared") {
       sharedLibrary = true
-      buildArgs(sharedLibArgs)
+      buildArgs(sharedLibArgs.plus("--shared"))
+    }
+
+    create("layer") {
+      imageName = "libelidegraalvm"
+      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
+
+      buildArgs(sharedLibArgs.plus(listOf(
+        // "-H:LayerUse=${baseLayer.get().asFile.absolutePath}",
+        "-H:LayerCreate=${layerOut.get().asFile.name}"
+      )))
     }
 
     named("test") {
@@ -495,8 +497,9 @@ if (enableBenchmarks) {
 
 dependencies {
   // KSP
-  kapt(mn.micronaut.inject.java)
-  kapt(libs.graalvm.truffle.processor)
+  ksp(mn.micronaut.inject.kotlin)
+  kspTest(mn.micronaut.inject.kotlin)
+  annotationProcessor(libs.graalvm.truffle.processor)
 
   // API Deps
   api(libs.jakarta.inject)
@@ -553,13 +556,9 @@ dependencies {
 
   // General
   implementation(libs.jimfs)
-  implementation(libs.jackson.core)
-  implementation(libs.jackson.databind)
-  implementation(libs.jackson.module.kotlin)
-  implementation(mn.micronaut.jackson.databind)
 
   // Compression
-  implementation(libs.commons.compress)
+  api(libs.commons.compress)
 
   // Micronaut
   runtimeOnly(mn.micronaut.graal)
@@ -611,6 +610,10 @@ dependencies {
   testApi(project(":packages:engine", configuration = "testInternals"))
   testApi(libs.graalvm.truffle.api)
   testApi(libs.graalvm.truffle.runtime)
+  testImplementation(libs.jackson.core)
+  testImplementation(libs.jackson.databind)
+  testImplementation(libs.jackson.module.kotlin)
+  testImplementation(mn.micronaut.jackson.databind)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
@@ -630,8 +633,8 @@ dependencies {
 
   if (enableTransportV2) {
     // Testing: Native Transports
-    testImplementation(projects.packages.transport.transportEpoll)
-    testImplementation(projects.packages.transport.transportKqueue)
+    implementation(project(":packages:transport:transport-epoll"))
+    implementation(project(":packages:transport:transport-kqueue"))
     testImplementation(libs.netty.transport.native.classes.kqueue)
     testImplementation(libs.netty.transport.native.classes.epoll)
   } else {
@@ -646,8 +649,6 @@ val testBase: Configuration by configurations.creating
 tasks {
   test {
     maxHeapSize = "2G"
-    maxParallelForks = 2
-
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.internals", "true")
@@ -656,6 +657,14 @@ tasks {
     systemProperty("elide.js.vm.enableStreams", "true")
     systemProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4")
     systemProperty("java.library.path", javaLibPath.get().toString())
+
+    jvmArgs(listOf(
+      "--add-modules=jdk.unsupported",
+      "--enable-native-access=ALL-UNNAMED",
+      "-XX:+UseG1GC",
+      "-XX:+UnlockExperimentalVMOptions",
+      "-XX:+TrustFinalNonStaticFields",
+    ))
 
     if (enableToolchains) javaLauncher = gvmLauncher
   }
@@ -680,7 +689,7 @@ tasks {
   }
 
   afterEvaluate {
-    listOf(named("kaptKotlin")).forEach { task ->
+    listOf(named("kspKotlin")).forEach { task ->
       task.configure {
         dependsOn(generateProto)
       }
@@ -688,25 +697,23 @@ tasks {
   }
 
   compileJava {
-    dependsOn(generateProto)
+    dependsOn(generateProto.name)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
-    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-      javacArgs
-    })
+    options.compilerArgs = (options.compilerArgs ?: emptyList())
+    options.compilerArgs.addAll(javacArgs)
 
     if (enableToolchains) javaCompiler = gvmCompiler
   }
 
   compileTestJava {
-    dependsOn(generateProto)
+    dependsOn(generateProto.name)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
-    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-      javacArgs
-    })
+    options.compilerArgs = (options.compilerArgs ?: emptyList())
+    options.compilerArgs.addAll(javacArgs)
 
     if (enableToolchains) javaCompiler = gvmCompiler
   }
@@ -722,6 +729,10 @@ tasks {
 
   artifacts {
     add("testBase", testJar)
+  }
+
+  named("nativeLayerCompile").configure {
+    dependsOn(":packages:engine:nativeLayerCompile")
   }
 }
 
@@ -743,40 +754,44 @@ configurations.all {
   }
 }
 
-val buildThirdPartyNatives by tasks.registering(Exec::class) {
-  workingDir = rootProject.layout.projectDirectory.asFile
+val jobs = Runtime.getRuntime().availableProcessors() / 2
 
-  val buildForNative = when {
-    (findProperty("elide.native") as? String) != null -> "yes"
-    (findProperty("elide.arch") as? String) != null -> if (project.properties["elide.arch"] as String == "native") {
-      "yes"
-    } else "no"
-    else -> "no"
-  }
+val buildForNative = when {
+  (findProperty("elide.native") as? String) != null -> "yes"
+  (findProperty("elide.arch") as? String) != null -> if (project.properties["elide.arch"] as String == "native") {
+    "yes"
+  } else "no"
+  else -> "no"
+}
+
+val thirdPartyDir: String =
+  rootProject.layout.projectDirectory.dir("third_party").asFile.absolutePath
+
+val buildThirdPartyNatives by tasks.registering(Exec::class) {
+  workingDir(rootProject.layout.projectDirectory.asFile.path)
+
   commandLine(
     "make",
     "-C", "third_party",
     "RELEASE=yes",  // third-party natives are always built in release mode
-    "NATIVE=$buildForNative"
+    "NATIVE=$buildForNative",
+    "-j$jobs",
   )
 
-  outputs.upToDateWhen { targetSqliteDir.asFile.exists() }
-  outputs.dir(targetSqliteDir)
+  outputs.cacheIf { true }
+  outputs.dir(targetSqliteDir.asFile.path)
 }
 
 private fun TargetInfo.matches(criteria: TargetPredicate): Boolean =
   TargetCriteria.allOf(this, criteria)
 
-val isClang = listOf(
-  System.getenv("CC")?.contains("clang") == true,
-  (findProperty("elide.compiler") as? String)?.contains("clang") == true,
-).any()
+val isClang19 = findProperty("elide.compiler") == "clang-19"
 
 fun resolveCargoConfig(target: TargetInfo): File? = when {
   // Disabled: causes issues with clang.
   // target.matches(Criteria.MacArm64) -> "macos-arm64"
-  target.matches(Criteria.Amd64) -> if (isClang) "clang-x86_64" else "x86_64"
-  target.matches(Criteria.Arm64) -> if (isClang) "clang-arm64" else "arm64"
+  target.matches(Criteria.Amd64) -> if (isClang19) "clang-x86_64" else "x86_64"
+  target.matches(Criteria.Arm64) -> if (isClang19) "clang-arm64" else "arm64"
   else -> null
 }?.let { name ->
   rootProject.layout.projectDirectory.file(".cargo/config.$name.toml").asFile.let {
@@ -785,40 +800,66 @@ fun resolveCargoConfig(target: TargetInfo): File? = when {
   }
 }
 
-val buildRustNativesForHost by tasks.registering(Exec::class) {
-  workingDir = rootProject.layout.projectDirectory.asFile
-  dependsOn(buildThirdPartyNatives)
+val targetInfo = TargetInfo.current(project)
+val targetDir: String =
+  rootProject.layout.projectDirectory.dir("target/${targetInfo.triple}/$nativesType").asFile.absolutePath
 
-  val targetInfo = TargetInfo.current(project)
+val rootDir: String = rootProject.layout.projectDirectory.asFile.path
+val cargoConfig: String? = resolveCargoConfig(elideTarget)?.absolutePath
+
+afterEvaluate {
+  logger.lifecycle(
+    "Compiling natives for target '${elideTarget.triple}' " +
+    "(config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
+  )
+}
+
+val baseCargoFlags = listOfNotNull(
+  "--color=always",
+  "build",
+  "--target",
+  targetInfo.triple,
+).plus(
+  cargoConfig?.let {
+    listOf("--config", it)
+  } ?: emptyList()
+)
+
+val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
+  workingDir(rootDir)
+  dependsOn("buildThirdPartyNatives")
+
   executable = "cargo"
-  argumentProviders.add(CommandLineArgumentProvider {
-    listOfNotNull(
-      "--color=always",
-      "build",
-      if (isRelease) "--release" else null,
-      "--target",
-      targetInfo.triple,
-    ).plus(
-      resolveCargoConfig(elideTarget)?.let {
-        listOf("--config", it.absolutePath)
-      } ?: emptyList()
-    )
-  })
+  args(baseCargoFlags.plus("--release"))
 
-  val targetDir = rootProject.layout.projectDirectory.dir("target/${targetInfo.triple}/$nativesType")
-  outputs.upToDateWhen { targetDir.asFile.exists() }
+  outputs.upToDateWhen { true }
   outputs.dir(targetDir)
+}
+
+val buildRustNativesForHost by tasks.registering(Exec::class) {
+  workingDir(rootDir)
+  dependsOn("buildThirdPartyNatives")
+
+  executable = "cargo"
+  args(baseCargoFlags.plus(listOfNotNull(if (isRelease) "--release" else null)))
+
+  outputs.upToDateWhen { true }
+  outputs.dir(targetDir)
+}
+
+val selectedRustNatives: String = if (isRelease)
+  buildRustNativesForHostRelease.name
+else
+  buildRustNativesForHost.name
+
+tasks.jar {
+  exclude("**/*.proto")
 }
 
 val natives by tasks.registering {
   group = "build"
   description = "Build natives via Make and Cargo"
-  dependsOn(buildThirdPartyNatives, buildRustNativesForHost)
-  doLast {
-    logger.lifecycle(
-      "Built natives for target '${elideTarget.triple}' (config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
-    )
-  }
+  dependsOn(buildThirdPartyNatives.name, selectedRustNatives)
 }
 
 listOf(

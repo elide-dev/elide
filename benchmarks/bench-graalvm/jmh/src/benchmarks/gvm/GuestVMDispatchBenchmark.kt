@@ -35,18 +35,18 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
-import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.locks.ReentrantLock
 
 /** Tests for JS VM dispatch performance. */
 @Suppress("DuplicatedCode")
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-@Warmup(iterations = 5)
+@Fork(1)
+@Timeout(time = 15, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 15, timeUnit = TimeUnit.SECONDS)
 class GuestVMDispatchBenchmark {
   companion object {
     const val workloadFactor = 1
@@ -179,7 +179,7 @@ class GuestVMDispatchBenchmark {
     override fun newInstance(): DisruptorGuestInvocationEvent = DisruptorGuestInvocationEvent()
   }
 
-  private class DisruptorTestHandler constructor (
+  private class DisruptorTestHandler (
     val context: VMContext,
     val target: Value,
   ) : EventHandler<DisruptorGuestInvocationEvent>, WorkHandler<DisruptorGuestInvocationEvent> {

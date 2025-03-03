@@ -127,8 +127,6 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "Analysis: Formatting (Prettier)"
-        run: pnpm run prettier --check .
       - name: "Analysis: Formatting (Biome)"
         run: pnpm biome check .
       - name: "Analysis: Formatting (Cargo)"
@@ -139,7 +137,7 @@ jobs:
             spotlessCheck \
             -x nativeCompile \
             -x nativeOptimizedCompile \
-            -x :packages:sqlite:checkNative \
             -x :packages:graalvm:buildThirdPartyNatives \
             -x :packages:graalvm:buildRustNativesForHost \
-            -x :packages:graalvm:natives
+            -x :packages:graalvm:natives \
+            --no-configuration-cache

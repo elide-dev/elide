@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 
 class DiagnosticsTest {
   init {
-    System.loadLibrary("umbrella")
+    System.loadLibrary("diag")
   }
 
   @Test fun testCreateDiagnosticNative() {

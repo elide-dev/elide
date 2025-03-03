@@ -1,0 +1,47 @@
+{
+  "resources": [
+    {
+      "glob": "org/jline/utils/**/*.*"
+    },
+    {
+      "glob": "org/pkl/commons/cli/PklCARoots.pem"
+    },
+    {
+      "glob": "org/pkl/commons/cli/commands/IncludedCARoots.pem"
+    },
+    {
+      "glob": "org/pkl/core/stdlib/*.pkl"
+    },
+    {
+      "glob": "org/pkl/core/stdlib/**/*.pkl"
+    },
+    {
+      "glob": "org/graalvm/shadowed/com/ibm/icu/ICUConfig.properties",
+      "module": "org.graalvm.shadowed.icu4j"
+    },
+    {
+      "glob": "META-INF/services/com.oracle.graal.python.builtins.PythonBuiltins"
+    },
+    {
+      "glob": "META-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider"
+    }
+  ],
+  "bundles": [
+    {
+      "name": "com.sun.tools.javac.resources.compiler",
+      "locales": ["en", "en-US"]
+    },
+    {
+      "name": "sun.tools.jar.resources.jar",
+      "locales": ["en", "en-US"]
+    },
+    {
+      "name": "com.sun.tools.javac.resources.javac",
+      "locales": ["en", "en-US"]
+    },
+    {
+      "name": "org.pkl.core.errorMessages",
+      "locales": ["en", "en-US"]
+    }
+  ]
+}

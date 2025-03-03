@@ -18,7 +18,7 @@ fn main() {
   cargo_lib_metadata(None);
 
   // generate rust bindings
-  let bindings = bindgen::Builder::default().header("headers/substrate.h");
+  let bindings = bindgen::Builder::default().header("headers/elide-plugin.h");
 
   build_bindings("libjvm", "libjvm.rs", bindings);
 }

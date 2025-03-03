@@ -63,7 +63,7 @@ gcloud-sdk = "26.5.3"
 github-api = "1.326"
 google-api-common = "2.43.0"
 google-html-types = "1.0.8"
-gr8 = "0.10"
+gr8 = "0.11.2"
 graalvm = "24.1.2"
 graalvm-metadata = "0.3.16"
 graalvm-pin = "24.1.2"
@@ -85,7 +85,7 @@ hikari = "4.0.3"
 hoplite = "2.9.0"
 inquirer = "0.1.0"
 j4rs = "0.22.0"
-jackson = "2.18.2"
+jackson = "2.18.3"
 jacoco = "0.8.11"
 jakarta = "2.0.1"
 jakarta-annotation-api = "2.1.1"
@@ -93,6 +93,7 @@ jakarta-persistence = "3.1.0"
 jakarta-validation = "3.1.1"
 jansi = "2.4.1"
 javax-annotations = "1.3.2"
+javax-inject = "1"
 javax-persistence = "2.2"
 jdoctor = "0.1.2"
 jetbrains-annotations = "26.0.2"
@@ -100,14 +101,14 @@ jetty-alpn = "1.1.3.v20160715"
 jetty-npn = "8.1.2.v20120308"
 jgit = "6.10.0.202406032230-r"
 jib = "3.4.0"
-jimfs = "1.3.0"
+jimfs = "66161ebdf9"
 jline = "3.28.0"
 jmh-lib = "1.37"
 jmh-plugin = "0.7.3"
 jna = "5.16.0"
 jprofiler = "14.0.1"
 json = "20250107"
-jsoup = "1.18.3"
+jsoup = "1.19.1"
 jsr310 = "2.9.8"
 junit-jupiter = "5.12.0"
 junit-platform = "1.11.4"
@@ -124,13 +125,13 @@ kotlin-language = "2.0"
 kotlin-sdk = "2.1.20-RC"
 kotlinpoet = "2.1.0"
 kotlinx-abiValidator = "0.17.0"
-kotlinx-benchmark = "0.4.11"
+kotlinx-benchmark = "0.4.13"
 kotlinx-browser = "0.1"
 kotlinx-collections = "0.3.8"
 kotlinx-coroutines = "1.10.1"
 kotlinx-datetime = "0.6.2"
 kotlinx-html = "0.12.0"
-kotlinx-io = "0.6.0"
+kotlinx-io = "0.7.0"
 kotlinx-knit = "0.5.0"
 kotlinx-metadata = "0.9.0"
 kotlinx-metadata-jvm = "0.9.0"
@@ -172,7 +173,7 @@ kotlinx-wrappers-web = "1.0.0-pre.754"
 kotlinxWrappers = "pre.754"
 kover = "0.7.5"
 kover-plugin = "0.7.5"
-ksp = "2.1.20-RC-1.0.30"
+ksp = "2.1.20-RC-1.0.31"
 ktlint = "1.1.1"
 ktoml = "0.5.2"
 larray = "0.2.1"
@@ -183,9 +184,9 @@ logback = "1.5.17"
 lz4 = "1.3.0"
 magicProgress = "0.3.2"
 mermaidDokka = "0.6.0"
-micronaut = "4.5.0"
+micronaut = "4.7.6"
 micronaut-aot = "2.6.0"
-micronaut-lib = "4.5.0"
+micronaut-lib = "4.7.6"
 micronaut-liquibase = "5.4.1"
 micronaut-plugin = "4.4.5"
 micronaut-xml = "3.1.0"
@@ -209,51 +210,30 @@ npm-esbuild = "0.24.2"
 npm-google-protobuf = "3.21.2"
 npm-grpcweb = "1.4.2"
 npm-joda = "3.2.0"
-npm-lit = "2.8.0"
-npm-lit-labs-analyzer = "0.9.0"
-npm-lit-labs-context = "0.3.3"
-npm-lit-labs-motion = "1.0.4"
-npm-lit-labs-react = "2.0.0"
-npm-lit-labs-ssr = "3.1.5"
-npm-lit-labs-ssrClient = "1.1.3"
-npm-lit-labs-task = "3.0.0"
-npm-lit-labs-virtualizer = "2.0.5"
-npm-lit-localize = "0.11.4"
-npm-lit-localizeTools = "0.6.9"
-npm-litElement = "3.3.3"
-npm-litHtml = "2.8.0"
-npm-mui = "5.13.6"
-npm-preact-compat = "17.1.2"
-npm-preact-core = "10.16.0"
-npm-preact-renderToString = "6.2.0"
-npm-prepack = "0.2.54"
-npm-stream = "4.5.2"
-npm-types-protobuf = "3.15.6"
-npm-typescript = "5.4.5"
-npm-webstreams = "3.3.3"
 okhttp = "4.12.0"
 okio = "3.10.2"
 openrewrite-bom = "2.10.0"
 openrewrite-lib = "8.1.13"
 openrewrite-plugin = "6.12.0"
-oshi = "6.6.6"
+oshi = "6.7.0"
 owasp = "12.1.0"
 parallelGzip = "1.0.5"
 picnic = "0.7.0"
 picocli = "4.7.6"
 picocli-jansi-graalvm = "1.2.0"
-pkl = "0.28.0-SNAPSHOT"
+pkl = "0.28.1"
 pluginBuf = "0.8.5"
 pluginProtobuf = "0.9.4"
 pluginPublish = "1.2.1"
 postgres = "42.5.1"
-proguard = "7.4.2"
+proguard = "7.6.1"
 projectreactor = "2023.0.5"
 projectreactor-core = "3.7.3"
 projectreactor-netty = "1.1.13"
 protobuf = "4.28.2"
 protobufJavalite = "3.0.0"
 qodanaGradle = "2023.3.1"
+r8 = "1.4.45"
 react = "19.0.0"
 reactivestreams = "1.0.4"
 redacted-plugin = "1.9.0"
@@ -283,26 +263,20 @@ xz = "1.10"
 zstd = "1.5.6-9"
 
 [plugins]
-artifactRegistry = { id = "com.google.cloud.artifactregistry.gradle-plugin", version.ref = "gauth-plugin" }
 buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig-plugin" }
 buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "buildTimeTracker" }
 cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
-dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker-plugin" }
 doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 cite = { id = "com.jakewharton.cite", version.ref = "cite" }
 elide-conventions = { id = "elide.internal.conventions" }
 gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
-graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
+graalvm = { id = "org.graalvm.buildtools.native" }
 gradle-checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
-gradle-commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version.ref = "gradleCommonCustomUserData" }
 gradle-testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
-gradle-wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrapperUpgrade" }
 jetbrains-compose = { id = "org.jetbrains.compose" }
-jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }
 jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }
 kapshot = { id = "io.koalaql.kapshot-plugin", version.ref = "kapshot" }
@@ -322,7 +296,7 @@ kotlinx-plugin-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility
 kotlinx-plugin-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 kotlinx-plugin-knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlinx-knit" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover-plugin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ksp = { id = "com.google.devtools.ksp" }
 micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-plugin" }
 micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-plugin" }
 micronaut-minimal-application = { id = "io.micronaut.minimal.application", version.ref = "micronaut-plugin" }
@@ -524,13 +498,14 @@ jakarta-persistence = { group = "jakarta.persistence", name = "jakarta.persisten
 jakarta-validation = { group = "jakarta.validation", name = "jakarta.validation-api", version.ref = "jakarta-validation" }
 jansi = { group = "org.fusesource.jansi", name = "jansi", version.ref = "jansi" }
 javax-annotations = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax-annotations" }
+javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javax-inject" }
 javax-persistence = { group = "javax.persistence", name = "javax.persistence-api", version.ref = "javax-persistence" }
 jdoctor = { group = "me.champeau.jdoctor", name = "jdoctor-core", version.ref = "jdoctor" }
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
 jetty-alpn = { group = "org.eclipse.jetty.alpn", name = "alpn-api", version.ref = "jetty-alpn" }
 jetty-npn = { group = "org.eclipse.jetty.npn", name = "npn-api", version.ref = "jetty-npn" }
 jgit = { group = "org.eclipse.jgit", name = "org.eclipse.jgit", version.ref = "jgit" }
-jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
+jimfs = { group = "com.github.elide-tools", name = "jimfs", version.ref = "jimfs" }
 jline-all = { module = "org.jline:jline", version.ref = "jline" }
 jline-builtins = { module = "org.jline:jline-builtins", version.ref = "jline" }
 jline-console = { module = "org.jline:jline-console", version.ref = "jline" }

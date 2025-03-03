@@ -1,14 +1,14 @@
-use builder::{TargetOs, target_os};
+use builder::{OperatingSystem, target_os};
 
 fn main() {
   match target_os() {
-    TargetOs::Linux => {
+    OperatingSystem::Linux => {
       println!("cargo:rustc-link-lib=dylib=stdc++");
       println!("cargo:rustc-link-lib=dylib=ssl");
       println!("cargo:rustc-link-lib=dylib=z");
       println!("cargo:rustc-link-lib=dylib=crypto");
     }
-    TargetOs::Darwin => {
+    OperatingSystem::Darwin => {
       println!("cargo:rustc-link-lib=dylib=c++");
     }
     _ => {}

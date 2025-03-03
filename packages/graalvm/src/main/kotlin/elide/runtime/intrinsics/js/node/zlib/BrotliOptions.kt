@@ -90,9 +90,7 @@ import elide.vm.annotations.Polyglot
  *
  * Implements an immutable Brotli options object.
  */
-@JvmRecord
-@ConsistentCopyVisibility
-public data class ImmutableBrotliOptions internal constructor (
+@JvmRecord public data class ImmutableBrotliOptions internal constructor (
   @get:Polyglot override val flush: Int = ModernNodeZlibConstants.BROTLI_OPERATION_PROCESS,
   @get:Polyglot override val finishFlush: Int = ModernNodeZlibConstants.BROTLI_OPERATION_FINISH,
   @get:Polyglot override val chunkSize: Int = ModernNodeZlibConstants.Z_DEFAULT_CHUNK,

@@ -142,7 +142,17 @@ fun PathAPI.testExtname(parsed: PathIntrinsic): String? {
   @Test fun `delimiter length should be 1 for posix`(): Unit = assertTrue(unixPaths().delimiter.length == 1)
   @Test fun `delimiter length should be 1 for win32`(): Unit = assertTrue(windowsPaths().delimiter.length == 1)
 
-  @Test fun `join should work for posix-style paths`(): Unit = unixPaths().let {
+  @Test fun `join should work for posix-style relative paths`(): Unit = unixPaths().let {
+    val parsed = assertNotNull(it.parse("sample/cool/path"))
+    assertNotSame(parsed, it.parse("sample/cool/path"))
+    assertEquals(parsed.toString(), "sample/cool/path")
+    val other = it.parse("other/cool/path")
+    assertNotSame(other, parsed)
+    assertNotEquals(other, parsed)
+    assertEquals("sample/cool/path/other/cool/path", it.join(parsed, other))
+  }
+
+  @Test fun `join should work for posix-style absolute paths`(): Unit = unixPaths().let {
     val parsed = assertNotNull(it.parse("/sample/cool/path"))
     assertNotSame(parsed, it.parse("/sample/cool/path"))
     assertEquals(parsed.toString(), "/sample/cool/path")
@@ -150,6 +160,16 @@ fun PathAPI.testExtname(parsed: PathIntrinsic): String? {
     assertNotSame(other, parsed)
     assertNotEquals(other, parsed)
     assertEquals("/sample/cool/path/other/cool/path", it.join(parsed, other))
+  }
+
+  @Test fun `join should fold relative references`(): Unit = unixPaths().let {
+    val parsed = assertNotNull(it.parse("/sample/cool/path"))
+    assertNotSame(parsed, it.parse("/sample/cool/path"))
+    assertEquals(parsed.toString(), "/sample/cool/path")
+    val other = it.parse("other/cool/path/..")
+    assertNotSame(other, parsed)
+    assertNotEquals(other, parsed)
+    assertEquals("/sample/cool/path/other/cool", it.join(parsed, other))
   }
 
   @Test fun `join should work for windows-style paths`(): Unit = windowsPaths().let {

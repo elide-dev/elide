@@ -95,39 +95,50 @@ val platformLibFileName = StringBuilder().apply {
 
 val elideTarget = TargetInfo.current(project)
 
-val sqliteJdbcLib = rootProject
+val sqliteJdbcLib: String = rootProject
   .layout
   .projectDirectory
   .file("target/${elideTarget.triple}/$buildMode/$sqliteJdbcLibName")
+  .asFile
+  .path
+
+val libsDir: String =
+  layout.buildDirectory.dir("native-libs").get().asFile.path
+
+val libFileName: String =
+  layout.buildDirectory.file("native-libs/$platformLibFileName").get().asFile.path
 
 val copyNative by tasks.registering(Copy::class) {
   dependsOn(
     ":packages:graalvm:natives",
   )
-  from(sqliteJdbcLib) {
-    rename { platformLibFileName }
-  }
-  into(layout.buildDirectory.dir("native-libs"))
+
+  from(sqliteJdbcLib)
+  into(libsDir)
   inputs.file(sqliteJdbcLib)
-  outputs.file(layout.buildDirectory.file("native-libs/$platformLibFileName"))
+  outputs.file(libFileName)
+  dependsOn(":packages:graalvm:buildRustNativesForHost")
 }
-checkNatives(copyNative)
+
+val nativeResources: String =
+  layout.buildDirectory.dir("resources/main/META-INF/native/${elideTarget.triple}").get().asFile.path
+
+val finalLibLocation: String =
+  layout.buildDirectory.file("resources/main/META-INF/native/$platformLibFileName").get().asFile.path
 
 val mountNative by tasks.registering(Copy::class) {
-  dependsOn(copyNative)
-  from(layout.buildDirectory.dir("native-libs"))
-  into(layout.buildDirectory.dir("resources/main/META-INF/native"))
-  inputs.file(layout.buildDirectory.file("native-libs/$platformLibFileName"))
-  outputs.file(layout.buildDirectory.file("resources/main/META-INF/native/$platformLibFileName"))
+  dependsOn(copyNative.name)
+  from(libsDir)
+  into(nativeResources)
+  outputs.file(finalLibLocation)
 }
 
 tasks.compileJava {
-  options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-    listOf(
-      "-nowarn",
-      "-Xlint:none",
-    )
-  })
+  options.compilerArgs = options.compilerArgs ?: mutableListOf()
+  options.compilerArgs.addAll(listOf(
+    "-nowarn",
+    "-Xlint:none",
+  ))
 }
 
 tasks.processResources {

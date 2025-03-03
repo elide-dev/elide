@@ -27,11 +27,11 @@ pub mod lang;
 
 use bindgen::Builder;
 use cc::Build;
+use serde::{Deserialize, Serialize};
 use std::env::var;
 use std::env::var_os;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use serde::{Deserialize, Serialize};
 
 // Constants used for OS identification.
 const DARWIN: &str = "darwin";
@@ -815,7 +815,6 @@ pub fn build_bindings(lib_name: &str, gen_name: &str, builder: Builder) {
     .write_to_file(out_path.join(gen_name))
     .expect("Couldn't write bindings!");
 }
-
 
 #[cfg(test)]
 mod tests {

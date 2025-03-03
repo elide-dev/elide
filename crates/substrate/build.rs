@@ -19,8 +19,8 @@ fn main() {
 
   // generate rust bindings
   let bindings = bindgen::Builder::default()
-          .header("headers/substrate.h")
-          .header("headers/elide-plugin.h");
+    .header("headers/substrate.h")
+    .header("headers/elide-plugin.h");
 
   build_bindings("libjvm", "libjvm.rs", bindings);
 }

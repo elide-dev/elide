@@ -10,9 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.lang;
 
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import org.graalvm.nativeimage.IsolateThread;
 import org.graalvm.nativeimage.ObjectHandle;
 import org.graalvm.nativeimage.c.CContext;
@@ -24,15 +26,10 @@ import org.graalvm.nativeimage.c.type.CCharPointer;
 import org.graalvm.word.PointerBase;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-
-
 /**
  * Language
  *
- * <p>Describes a native language loaded via a {@link LanguagePlugin}.</p>
+ * <p>Describes a native language loaded via a {@link LanguagePlugin}.
  */
 @CContext(Language.PluginApiDirectives.class)
 public interface Language {
@@ -45,8 +42,9 @@ public interface Language {
        * locates the file in our project structure.
        */
       return Collections.singletonList(
-              "\"" + Path.of(System.getProperty("elide.natives.pluginApiHeader")).toAbsolutePath() + "\""
-      );
+          "\""
+              + Path.of(System.getProperty("elide.natives.pluginApiHeader")).toAbsolutePath()
+              + "\"");
     }
   }
 

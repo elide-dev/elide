@@ -25,7 +25,7 @@ exclude = [
   "crates/model",
   "crates/transport",
   "third_party",
-  "runtime"
+  "runtime",
 ]
 
 [workspace.package]

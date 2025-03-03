@@ -1,4 +1,4 @@
 onlyBuiltDependencies:
-  - '@biomejs/biome'
+  - "@biomejs/biome"
   - esbuild
   - hakuna

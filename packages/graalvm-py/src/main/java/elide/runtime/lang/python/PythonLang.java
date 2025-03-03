@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.lang.python;
 
 import elide.runtime.lang.Language;
@@ -22,9 +21,7 @@ import org.graalvm.nativeimage.c.function.CEntryPointLiteral;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Native Python plugin mappings.
- */
+/** Native Python plugin mappings. */
 @CContext(Language.PluginApiDirectives.class)
 public class PythonLang implements Language {
   @CConstant("ELIDE_PLUGIN_API_VERSION")
@@ -32,29 +29,21 @@ public class PythonLang implements Language {
 
   protected static CTypeConversion.CCharPointerHolder langIdHolder;
 
-  protected static final CEntryPointLiteral<LangInitFunctionPointer> langInit = CEntryPointLiteral.create(
-          PythonLang.class,
-          "init",
-          IsolateThread.class,
-          NativeRuntimeInit.class);
+  protected static final CEntryPointLiteral<LangInitFunctionPointer> langInit =
+      CEntryPointLiteral.create(
+          PythonLang.class, "init", IsolateThread.class, NativeRuntimeInit.class);
 
-  protected static final CEntryPointLiteral<LangEngineConfigureFunctionPointer> langEngine = CEntryPointLiteral.create(
-          PythonLang.class,
-          "configureEngine",
-          IsolateThread.class,
-          EngineConfigInvocation.class);
+  protected static final CEntryPointLiteral<LangEngineConfigureFunctionPointer> langEngine =
+      CEntryPointLiteral.create(
+          PythonLang.class, "configureEngine", IsolateThread.class, EngineConfigInvocation.class);
 
-  protected static final CEntryPointLiteral<LangContextConfigureFunctionPointer> langCtx = CEntryPointLiteral.create(
-          PythonLang.class,
-          "configureContext",
-          IsolateThread.class,
-          ContextConfigInvocation.class);
+  protected static final CEntryPointLiteral<LangContextConfigureFunctionPointer> langCtx =
+      CEntryPointLiteral.create(
+          PythonLang.class, "configureContext", IsolateThread.class, ContextConfigInvocation.class);
 
-  protected static final CEntryPointLiteral<LangEntryFunctionPointer> langEntry = CEntryPointLiteral.create(
-          PythonLang.class,
-          "entry",
-          IsolateThread.class,
-          NativeLangInvocation.class);
+  protected static final CEntryPointLiteral<LangEntryFunctionPointer> langEntry =
+      CEntryPointLiteral.create(
+          PythonLang.class, "entry", IsolateThread.class, NativeLangInvocation.class);
 
   @Override
   public @NotNull String getLanguageId() {

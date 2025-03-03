@@ -13,9 +13,7 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "dependencies": {
     "browserslist": "4.24.4",

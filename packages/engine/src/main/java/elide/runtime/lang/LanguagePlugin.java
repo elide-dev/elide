@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.lang;
 
 import org.jetbrains.annotations.NotNull;
@@ -18,9 +17,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Language Plugin
  *
- * <p>Describes the expected interface for language engine plugins; language plugins are loaded by the main engine at
- * runtime. In native circumstances, language plugins are installed on-demand as shared libraries. Plugins are also made
- * available on the classpath via the Service Loader.</p>
+ * <p>Describes the expected interface for language engine plugins; language plugins are loaded by
+ * the main engine at runtime. In native circumstances, language plugins are installed on-demand as
+ * shared libraries. Plugins are also made available on the classpath via the Service Loader.
  */
 public interface LanguagePlugin {
   /**

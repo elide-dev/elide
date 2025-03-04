@@ -320,7 +320,6 @@ jobs:
             -x nativeTest \
             --scan \
             --build-cache \
-            --no-configuration-cache \
             --dependency-verification=off \
             -x apiCheck \
             -x spotlessCheck \

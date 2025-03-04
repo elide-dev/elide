@@ -282,6 +282,7 @@ jobs:
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         with:
           cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -318,7 +319,6 @@ jobs:
             --no-daemon \
             --dependency-verification=off \
             --stacktrace \
-            --no-configuration-cache \
             -Pelide.ci=true \
             -PbuildSamples=false \
             -PbuildDocs=false \

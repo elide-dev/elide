@@ -99,7 +99,7 @@ val gvmCompiler = javaToolchains.compilerFor {
 }
 
 val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-python.nil")
-val baseLayer = project(":packages:engine").layout.buildDirectory.file("native/nativeLayerCompile/elide-base.nil")
+val baseLayer = project(":packages:graalvm").layout.buildDirectory.file("native/nativeLayerCompile/elide-graalvm.nil")
 
 graalvmNative {
   binaries {
@@ -163,7 +163,7 @@ tasks {
   }
 
   named("nativeLayerCompile").configure {
-    dependsOn(":packages:engine:nativeLayerCompile")
+    dependsOn(":packages:graalvm:nativeLayerCompile")
   }
 
   test {

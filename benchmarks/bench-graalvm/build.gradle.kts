@@ -20,7 +20,6 @@
 
 import me.champeau.jmh.JMHTask
 import kotlinx.benchmark.gradle.*
-import org.jetbrains.kotlin.allopen.gradle.*
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import elide.toolchain.host.TargetInfo
 
@@ -50,6 +49,8 @@ dependencies {
   implementation(mn.micronaut.inject.java.test)
   implementation(mn.micronaut.runtime)
   implementation(projects.packages.graalvm)
+  implementation(projects.packages.cli)
+  implementation(project(":packages:cli", configuration = "cliNativeOptimized"))
   implementation(libs.lmax.disruptor.core)
   implementation(libs.lmax.disruptor.proxy)
   compileOnly(libs.graalvm.svm)

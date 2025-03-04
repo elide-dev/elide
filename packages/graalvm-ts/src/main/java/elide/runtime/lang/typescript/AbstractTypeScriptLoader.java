@@ -19,10 +19,12 @@ import com.oracle.truffle.api.strings.TruffleString;
 import com.oracle.truffle.js.builtins.commonjs.NpmCompatibleESModuleLoader;
 import com.oracle.truffle.js.runtime.JSException;
 import com.oracle.truffle.js.runtime.JSRealm;
+import com.oracle.truffle.js.runtime.objects.AbstractModuleRecord;
 import com.oracle.truffle.js.runtime.objects.JSModuleData;
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord;
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
 import java.io.IOException;
+import java.net.URI;
 import org.jetbrains.annotations.NotNull;
 
 abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
@@ -31,60 +33,58 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
   }
 
   @Override
-  @NotNull public JSModuleRecord resolveImportedModule(
+  @NotNull public AbstractModuleRecord resolveImportedModule(
       ScriptOrModule referrer, com.oracle.js.parser.ir.Module.ModuleRequest moduleRequest) {
     try {
       return super.resolveImportedModule(referrer, moduleRequest);
     } catch (JSException e1) {
-      var originalSpecifier = moduleRequest.getSpecifier().toJavaStringUncached();
+      var originalSpecifier = moduleRequest.specifier().toJavaStringUncached();
       var specifier = originalSpecifier + ".ts";
       var specifierTS =
           TruffleString.fromJavaStringUncached(specifier, TruffleString.Encoding.UTF_8);
       var tsModuleRequest =
           com.oracle.js.parser.ir.Module.ModuleRequest.create(
-              specifierTS, moduleRequest.getAttributes());
+              specifierTS, moduleRequest.attributes());
 
       try {
         return super.resolveImportedModule(referrer, tsModuleRequest);
       } catch (JSException e2) {
         specifier = originalSpecifier + "/index.ts";
         specifierTS = TruffleString.fromJavaStringUncached(specifier, TruffleString.Encoding.UTF_8);
-        tsModuleRequest = Module.ModuleRequest.create(specifierTS, moduleRequest.getAttributes());
+        tsModuleRequest = Module.ModuleRequest.create(specifierTS, moduleRequest.attributes());
         return super.resolveImportedModule(referrer, tsModuleRequest);
       }
     }
   }
 
   @Override
-  @NotNull public JSModuleRecord loadModule(Source source, JSModuleData moduleData) {
-    return super.loadModule(source, moduleData);
-  }
-
-  @Override
-  @NotNull protected JSModuleRecord loadModuleFromUrl(
+  protected AbstractModuleRecord loadModuleFromFile(
       ScriptOrModule referrer,
       Module.ModuleRequest moduleRequest,
-      TruffleFile maybeModuleFile,
+      TruffleFile moduleFile,
       String maybeCanonicalPath)
       throws IOException {
-    var maybeModuleFilePath = maybeModuleFile.getPath();
-    //noinspection ConstantValue
-    if (maybeModuleFile != null
-        && maybeModuleFile.exists()
-        && maybeModuleFilePath.endsWith(".ts")) {
-      var canonicalPath = maybeModuleFile.getCanonicalFile().getPath();
+    if (moduleFile != null && moduleFile.exists() && moduleFile.endsWith(".ts")) {
+      var canonicalPath = moduleFile.getCanonicalFile().getPath();
       var maybeModuleMapEntry = moduleMap.get(canonicalPath);
       if (maybeModuleMapEntry != null) {
         return maybeModuleMapEntry;
       }
 
-      Source source = transpileModule(referrer, moduleRequest, maybeModuleFile, canonicalPath);
+      Source source = transpileModule(referrer, moduleRequest, moduleFile, canonicalPath);
       JSModuleData parsedModule = realm.getContext().getEvaluator().envParseModule(realm, source);
       var module = new JSModuleRecord(parsedModule, this);
       moduleMap.put(canonicalPath, module);
       return module;
     }
-    return super.loadModuleFromUrl(referrer, moduleRequest, maybeModuleFile, maybeCanonicalPath);
+    return super.loadModuleFromFile(referrer, moduleRequest, moduleFile, maybeCanonicalPath);
+  }
+
+  @Override
+  @NotNull protected AbstractModuleRecord loadModuleFromURL(
+      ScriptOrModule referrer, Module.ModuleRequest moduleRequest, URI moduleURI)
+      throws IOException {
+    return super.loadModuleFromURL(referrer, moduleRequest, moduleURI);
   }
 
   @NotNull abstract Source transpileModule(

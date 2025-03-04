@@ -330,24 +330,26 @@ val initializeAtRunTime = listOfNotNull(
   "oshi.util.platform.unix.solaris.KstatUtil",
 )
 
-val initializeAtRunTimeTest = listOfNotNull(
-  "org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeServicesMode",
+val initializeAtRunTimeTest = listOfNotNull<String>()
+
+val nativeEnabledModules = listOf(
+  "org.graalvm.truffle",
+  "ALL-UNNAMED",
 )
+
+val pluginApiHeader =
+  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
 
 val sharedLibArgs = listOfNotNull(
   // "--verbose",
   // "-J-Xlog:library=info",
-  "-H:+JNIVerboseLookupErrors",
-  "-H:+JNI",
+  "-H:+UnlockExperimentalVMOptions",
   "-Delide.staticJni=$enableStaticJni",
+  "-Delide.natives.pluginApiHeader=$pluginApiHeader",
   "-J-Delide.staticJni=$enableStaticJni",
   "-Delide.staticUmbrella=$enableStaticJni",
   "-J-Delide.staticUmbrella=$enableStaticJni",
-  "--enable-native-access=com.sun.jna,ALL-UNNAMED",
-  "--initialize-at-build-time=",
-  "--initialize-at-run-time=${initializeAtRunTime.joinToString(",")}",
-  "-H:+ReportExceptionStackTraces",
-  if (oracleGvm) "-H:+AuxiliaryEngineCache" else null,
+  "--enable-native-access=${nativeEnabledModules.joinToString(",")}",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -370,17 +372,14 @@ val sharedLibArgs = listOfNotNull(
       "-J-Djava.library.path=$it",
     )
   },
+).plus(
+  "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
 )
 
-val testLibArgs = sharedLibArgs.plus(
-  "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
-).plus(listOf(
-  // "-H:AbortOnTypeReachable=com.oracle.svm.core.util.UserError",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}1",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}2",
-  "--initialize-at-run-time=org.gradle.internal.nativeintegration.services.NativeServices${'$'}NativeFeatures${'$'}3",
-))
+val testLibArgs = sharedLibArgs
+
+val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-graalvm.nil")
+val baseLayer = project(":packages:engine").layout.buildDirectory.file("native/nativeLayerCompile/elide-base.nil")
 
 protobuf {
   protoc {
@@ -425,7 +424,17 @@ graalvmNative {
   binaries {
     create("shared") {
       sharedLibrary = true
-      buildArgs(sharedLibArgs)
+      buildArgs(sharedLibArgs.plus("--shared"))
+    }
+
+    create("layer") {
+      imageName = "libelidegraalvm"
+      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
+
+      buildArgs(sharedLibArgs.plus(listOf(
+        // "-H:LayerUse=${baseLayer.get().asFile.absolutePath}",
+        "-H:LayerCreate=${layerOut.get().asFile.name}"
+      )))
     }
 
     named("test") {
@@ -726,6 +735,10 @@ tasks {
 
   artifacts {
     add("testBase", testJar)
+  }
+
+  named("nativeLayerCompile").configure {
+    dependsOn(":packages:engine:nativeLayerCompile")
   }
 }
 

@@ -1090,6 +1090,24 @@ public final class elide/runtime/gvm/internals/sqlite/SQLiteDriverOptions : java
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class elide/runtime/gvm/internals/sqlite/SqliteModule : elide/runtime/intrinsics/sqlite/SQLiteAPI, elide/runtime/lang/javascript/SyntheticJSModule, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/gvm/internals/sqlite/SqliteModule$Companion;
+	public fun <init> ()V
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static final fun obtain ()Lelide/runtime/intrinsics/sqlite/SQLiteAPI;
+	public fun provide ()Lelide/runtime/intrinsics/sqlite/SQLiteAPI;
+	public synthetic fun provide ()Ljava/lang/Object;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/gvm/internals/sqlite/SqliteModule$Companion {
+	public final fun obtain ()Lelide/runtime/intrinsics/sqlite/SQLiteAPI;
+}
+
 public synthetic class elide/runtime/gvm/internals/testing/$ElideTestingModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -5438,7 +5456,7 @@ public final synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactor$R
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteAPI {
+public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteAPI : org/graalvm/polyglot/proxy/ProxyObject {
 }
 
 public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteDatabase : elide/runtime/intrinsics/js/Disposable, java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/proxy/ProxyObject {

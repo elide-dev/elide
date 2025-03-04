@@ -154,13 +154,13 @@ val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-base.
 graalvmNative {
   binaries {
     create("shared") {
-      imageName = "libelidengine"
+      imageName = "libelidecore"
       classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
       buildArgs(nativeArgs.plus("--shared"))
     }
 
     create("layer") {
-      imageName = "libelidengine"
+      imageName = "libelidecore"
       classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
       buildArgs(nativeArgs.plus("-H:LayerCreate=${layerOut.get().asFile.name}"))
     }

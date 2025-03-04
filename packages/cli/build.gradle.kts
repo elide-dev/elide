@@ -134,7 +134,7 @@ val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64" && ena
 val enableEmbeddedResources = false
 val enableResourceFilter = false
 val enableAuxCache = true
-val enableAuxCacheTool = false
+val enableAuxCacheTrace = true
 val enableJpms = false
 val enableConscrypt = false
 val enableBouncycastle = false
@@ -240,10 +240,13 @@ val jvmRuntimeArgs = listOf(
   "-XX:ReservedCodeCacheSize=512m",
 )
 
+val nativeEnabledModules = listOf(
+  "org.graalvm.truffle",
+  "ALL-UNNAMED",
+)
+
 val nativeCompileJvmArgs = listOf(
-  "--enable-native-access=" + listOfNotNull(
-    "org.graalvm.truffle,ALL-UNNAMED",
-  ).joinToString(","),
+  "--enable-native-access=" + nativeEnabledModules.joinToString(","),
 ).plus(jvmCompileArgs.map {
   "-J$it"
 })
@@ -376,6 +379,8 @@ buildConfig {
 }
 
 val pklDependencies: Configuration by configurations.creating
+val cliJitOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
+val cliNativeOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
 
 val classpathExtras: Configuration by configurations.creating {
   extendsFrom(configurations.runtimeClasspath.get())
@@ -751,38 +756,27 @@ val pluginApiHeader: String =
   rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
 
 val initializeAtBuildtime: List<String> = listOf(
+  "elide.runtime.core.internals.graalvm.GraalVMEngine\$Companion",
+  "org.fusesource.jansi.io.AnsiOutputStream",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "com.google.common.collect.MapMakerInternalMap\$1",
   "elide.tool.cli.AbstractToolCommand\$Companion",
   "elide.tool.cli.Elide\$Companion",
   "com.google.common.base.Equivalence\$Equals",
-//  "org.xml.sax.helpers.LocatorImpl",
-//  "org.xml.sax.helpers.AttributesImpl",
   "kotlin",
   "com.google.common.collect.MapMakerInternalMap",
   "com.google.common.collect.MapMakerInternalMap\$StrongKeyWeakValueSegment",
   "com.google.common.collect.MapMakerInternalMap\$StrongKeyWeakValueEntry\$Helper",
   "ch.qos.logback",
-//  "com.google.common",
-//  "com.google.protobuf",
   "com.sun.tools.javac.resources.compiler",
   "com.sun.tools.javac.resources.javac",
   "sun.tools.jar.resources.jar",
   "sun.awt.resources.awt",
-//  "elide",
-//  "elide.tool",
   "elide.tool.cli.Elide",
   "elide.tool.cli.cmd.tool.EmbeddedTool\$Companion",
-//  "elide.runtime",
-//  "elide.runtime.gvm",
-//  "elide.runtime.gvm.internals",
   "elide.runtime.gvm.internals.sqlite",
   "elide.runtime.gvm.internals.sqlite.SqliteModule",
   "elide.runtime.lang.javascript.JavaScriptPrecompiler",
-//  "com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls",
-//  "tools.elide",
-//  "org.fusesource",
-//  "org.jline",
   "java.sql",
   "org.slf4j",
   "org.sqlite",
@@ -1006,8 +1000,7 @@ val commonNativeArgs = listOfNotNull(
   "--verbose",
   "-H:TempDirectory=/tmp/elide-native",
   // "-H:+PlatformInterfaceCompatibilityMode",
-  // "--trace-object-instantiation=sun.awt.resources.awt",
-  // "--trace-object-instantiation=com.sun.tools.javac.resources.compiler",
+  "--trace-object-instantiation=java.util.concurrent.ForkJoinWorkerThread\$InnocuousForkJoinWorkerThread",
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
@@ -1071,6 +1064,8 @@ val commonNativeArgs = listOfNotNull(
   "-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
   "-Delide.natives.pluginApiHeader=$pluginApiHeader",
+  "-Delide.auxCache=$enableAuxCache",
+  "-Delide.traceCache=${enableAuxCache && enableAuxCacheTrace}",
   "-Djna.library.path=$nativesPath",
   "-Djna.boot.library.path=$nativesPath",
   "-Dorg.sqlite.lib.path=$nativesPath",
@@ -1101,8 +1096,9 @@ val commonNativeArgs = listOfNotNull(
   "-Dmicronaut.executors.io.threads=2",
   "-Dmicronaut.executors.io.type=VIRTUAL",
   "-Dmicronaut.executors.scheduled.threads=1",
-  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=$preinitContextsList"),
+  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
+  onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeAllowExperimentalOptions=true"),
   onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
   onlyIf(enablePgoSampling, "--pgo-sampling"),
   onlyIf(enableHeapReport, "-H:+BuildReportMappedCodeSizeBreakdown"),
@@ -1534,6 +1530,7 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
+      useArgFile = true
       if (enableToolchains) javaLauncher = gvmLauncher
 
       classpath = files(
@@ -1551,6 +1548,7 @@ graalvmNative {
       sharedLibrary = true
       quickBuild = quickbuild
       fallback = false
+      useArgFile = true
       if (enableToolchains) javaLauncher = gvmLauncher
 
       classpath = files(
@@ -1571,6 +1569,7 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
+      useArgFile = true
       if (enableToolchains) javaLauncher = gvmLauncher
       buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
       classpath = files(
@@ -1590,10 +1589,6 @@ graalvmNative {
       ))
     }
   }
-}
-
-tasks.nativeCompile.configure {
-  useArgFile = true
 }
 
 val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
@@ -2042,6 +2037,11 @@ configurations.all {
       because("Uses Elide's patched version of GraalJs")
     }
   }
+}
+
+artifacts {
+  add(cliNativeOptimized.name, tasks.optimizedNativeJar)
+  add(cliJitOptimized.name, tasks.optimizedJitJar)
 }
 
 listOf(

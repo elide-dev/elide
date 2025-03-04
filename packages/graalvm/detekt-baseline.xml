@@ -6,6 +6,7 @@
     <ID>ExplicitGarbageCollectionCall:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$gc()</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
+    <ID>ForbiddenComment:JavaScript.kt$JavaScript$// @TODO: breakage in graalvm with `en_US`</ID>
     <ID>ForbiddenComment:JsEncoding.kt$TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
@@ -51,7 +52,6 @@
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
     <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
-    <ID>ReturnCount:GraalVMRuntime.kt$GraalVMRuntime.Companion$internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version?</ID>
     <ID>ReturnCount:NodePaths.kt$NodePaths.BasePaths$@Polyglot override fun format(pathObject: Any): String</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(*supportedFeatures())</ID>
@@ -70,7 +70,6 @@
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *it.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *rest)</ID>
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
-    <ID>SwallowedException:GraalVMEngine.kt$GraalVMEngine$uoe: UnsupportedOperationException</ID>
     <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>
     <ID>SwallowedException:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
     <ID>SwallowedException:NodeProcess.kt$NodeProcess.NodeProcessModuleImpl$uoe: UnsupportedOperationException</ID>

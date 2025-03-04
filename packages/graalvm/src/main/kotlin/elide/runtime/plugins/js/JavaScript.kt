@@ -104,7 +104,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.debug-property-name" to DEBUG_GLOBAL,
       "js.ecmascript-version" to config.language.symbol(),
       "js.function-constructor-cache-size" to FUNCTION_CONSTRUCTOR_CACHE_SIZE,
-      "js.locale" to config.locale.toString(),
+      // @TODO: breakage in graalvm with `en_US`
+      // "js.locale" to config.locale.toString(),
+      "js.locale" to "en",
       "js.unhandled-rejections" to UNHANDLED_REJECTIONS,
       // Experimental:
       "js.charset" to config.charset.name(),

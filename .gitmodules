@@ -3,6 +3,7 @@
 	url = https://github.com/elide-dev/runtime.git
 	branch = main
 	shallow = true
+	active = false
 [submodule "sqlite"]
 	path = third_party/sqlite
 	url = git@github.com:sqlite/sqlite.git
@@ -13,26 +14,32 @@
 	url = git@github.com:google/boringssl.git
         shallow = true
 	ignore = dirty
+	active = false
 [submodule "apr"]
 	path = third_party/apache/apr
 	url = git@github.com:apache/apr.git
         shallow = true
 	ignore = dirty
+	active = false
 [submodule "zlib"]
 	path = third_party/cloudflare/zlib
 	url = git@github.com:cloudflare/zlib.git
 	shallow = true
 	ignore = dirty
+	active = false
 [submodule "zlib-upstream"]
 	path = third_party/madler/zlib
 	url = git@github.com:madler/zlib.git
 	ignore = dirty
 	shallow = true
+	active = false
 [submodule "graalvm"]
 	path = third_party/oracle/graalvm/graal
 	url = git@github.com:oracle/graal.git
 	shallow = true
+	active = false
 [submodule "graaljs"]
 	path = third_party/oracle/graalvm/graaljs
 	url = git@github.com:elide-dev/graaljs.git
 	shallow = true
+	active = false

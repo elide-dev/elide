@@ -225,7 +225,6 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@9399c7bb15d4c7d47b27263d024f0a4978346ba4 # v1.11.0
         with:
           toolchain: stable
-          target: wasm32-wasip1
           components: clippy,rustfmt
           cache: true
           rustflags: ""
@@ -241,9 +240,6 @@ jobs:
           distribution: "graalvm"
           java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Buildless"
-        if: false
-        uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
       - name: "Setup: Node"
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:

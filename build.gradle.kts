@@ -79,6 +79,7 @@ val buildDocs: String by properties
 val buildEmbedded: String by properties
 val buildDocsModules: String by properties
 val buildBenchmarks: String by properties
+val isCI = properties["elide.ci"] == "true" || System.getenv("CI") != null
 
 buildscript {
   repositories {
@@ -555,6 +556,7 @@ tasks {
   // --- Task: Copy Coverage Reports
   //
   val copyCoverageReports by registering(Copy::class) {
+    enabled = isCI
     dependsOn(
       koverBinaryReport,
       koverXmlReport,
@@ -615,6 +617,7 @@ tasks {
   // --- Task: Sonar
   //
   sonar.configure {
+    enabled = isCI
     mustRunAfter(
       detekt,
       koverBinaryReport,
@@ -626,6 +629,7 @@ tasks {
   // --- Tasks: Kover Verification
   //
   koverVerify.configure {
+    enabled = isCI
     finalizedBy(copyCoverageReports)
   }
 
@@ -640,6 +644,16 @@ tasks {
       detekt,
       withType(KotlinApiCompareTask::class),
     )
+  }
+}
+
+listOf(
+  tasks.koverBinaryReport,
+  tasks.koverXmlReport,
+  tasks.koverVerify,
+).forEach {
+  it.configure {
+    enabled = isCI
   }
 }
 

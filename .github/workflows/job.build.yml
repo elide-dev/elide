@@ -229,6 +229,7 @@ jobs:
         with:
           toolchain: stable
           components: clippy,rustfmt
+          cache: true
           rustflags: ""
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@054db53350805f83040bf3e6e9b8cf5a139aa7c9 # v0.0.7
@@ -242,10 +243,6 @@ jobs:
           distribution: "graalvm"
           java-version: "23"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Python (3.12)"
-        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
-        with:
-          python-version: 3.12
       - name: "Setup: Node"
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:

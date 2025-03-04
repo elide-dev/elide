@@ -252,9 +252,8 @@ jobs:
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "10.5.2"
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: "Setup: Elide"
+        run: curl -sSL --tlsv1.2 elide.sh | bash -s - && echo "$HOME/elide" >> $GITHUB_PATH
       - name: "Setup: Dependencies"
         run: |
           cargo install cargo-fuzz cargo-insta rustfilt
@@ -267,6 +266,8 @@ jobs:
           echo "Activating venv..."
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
+          echo "Installing dependencies..."
+          elide install
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         continue-on-error: true

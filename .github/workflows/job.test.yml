@@ -199,27 +199,6 @@ jobs:
             services.gradle.org:443
             sonarcloud.io:443
             storage.googleapis.com:443
-      - name: "Setup: Apt Dependencies"
-        run: sudo apt-get install -y libtool-bin build-essential libc6-dev libssl-dev
-      - name: "Setup: LLVM 19"
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo apt-get remove clang clangd lld llvm || echo "No LLVM installed; skipping error."
-          sudo ./llvm.sh 19 all
-          export LLVM_PATH=/usr/lib/llvm-19
-          export PATH="$LLVM_PATH/bin:$PATH"
-          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
-          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
-          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
-          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
-          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
-          echo PATH=$PATH >> $GITHUB_ENV
-          sudo apt-get remove clang-18 clangd-18 lld-18 llvm-18 || echo "No LLVM 18 installed; skipping error."
-          sudo apt-get autoremove;
-          sudo apt-get clean;
-      - name: "Setup: Clear Tooling Cache"
-        run: rm -rf /opt/hostedtoolcache
       - name: "Setup: Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -251,7 +230,7 @@ jobs:
           toolchain: stable
           target: wasm32-wasip1
           components: clippy,rustfmt
-          cache: false
+          cache: true
           rustflags: ""
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@054db53350805f83040bf3e6e9b8cf5a139aa7c9 # v0.0.7
@@ -326,8 +305,6 @@ jobs:
             yarn
       - name: "Build Environment"
         run: make info CI=yes 2>&1 | tee build-info.txt
-      - name: "👨‍🔬️ Test: Native"
-        run: make third-party natives-test COVERAGE=no CI=yes -j`nproc`
       - name: "👨‍🔬 Test: Runtime"
         env:
           CI: true
@@ -335,7 +312,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         run: |
-          cargo build;
           ./gradlew \
             test \
             jvmTest \
@@ -363,7 +339,6 @@ jobs:
         run: |
           ./gradlew \
               sonar \
-              --scan \
               --build-cache \
               --warning-mode=none \
               --dependency-verification=lenient \

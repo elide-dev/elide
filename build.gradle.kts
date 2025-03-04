@@ -18,12 +18,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask
-import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
-import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
-import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format.HTML
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format.SARIF
@@ -79,7 +73,6 @@ val props = Properties().apply {
 }
 
 val javaLanguageVersion = properties["versions.java.language"] as String
-val nodeVersion: String by properties
 val enableOwasp: String? by properties
 
 val buildDocs: String by properties
@@ -368,28 +361,6 @@ apiValidation {
 // Conditional plugins to apply.
 if (enableOwasp == "true") apply(plugin = "org.owasp.dependencycheck")
 
-// --- Node JS --------------------------------------------------------------------------------------------------------
-//
-plugins.withType(NodeJsRootPlugin::class.java) {
-  the<NodeJsEnvSpec>().apply {
-    version = nodeVersion
-    if (nodeVersion.contains("canary")) {
-      downloadBaseUrl = "https://nodejs.org/download/v8-canary"
-    }
-  }
-}
-
-plugins.withType(YarnPlugin::class.java) {
-  val yarn = the<YarnRootExtension>()
-  yarn.apply {
-    yarnLockMismatchReport = YarnLockMismatchReport.WARNING
-    reportNewYarnLock = false
-    yarnLockAutoReplace = false
-    lockFileDirectory = rootDir
-    lockFileName = "gradle-yarn.lock"
-  }
-}
-
 // --- OWASP Dependency Check -----------------------------------------------------------------------------------------
 //
 configure<DependencyCheckExtension> {
@@ -430,20 +401,6 @@ configure<DependencyCheckExtension> {
 // --------------------------------------------------------------------------------------------------------------------
 
 tasks {
-  // --- Tasks: Kotlin/NPM
-  //
-  // withType(KotlinNpmInstallTask::class.java).configureEach {
-  //   (packageJsonFiles as MutableList<RegularFile>).addFirst(layout.projectDirectory.file("package.json"))
-  //   args.add("--ignore-engines")
-  //   outputs.upToDateWhen {
-  //     layout.projectDirectory.dir("node_modules").asFile.exists()
-  //   }
-  // }
-
-  withType(KotlinPackageJsonTask::class.java).configureEach {
-    packageJson = file("package.json")
-  }
-
   // --- Tasks: Detekt
   //
   val detektMergeSarif: TaskProvider<ReportMergeTask> by registering(ReportMergeTask::class) {
@@ -683,5 +640,25 @@ tasks {
       detekt,
       withType(KotlinApiCompareTask::class),
     )
+  }
+}
+
+fun forceDisableTask(task: Task) {
+  task.enabled = false
+  task.onlyIf { false }
+}
+
+fun forceDisableNpmTasks() {
+  tasks.findByName("kotlinNpmInstall")?.let { forceDisableTask(it) }
+  tasks.findByName("setupNodeJs")?.let { forceDisableTask(it) }
+}
+
+forceDisableNpmTasks()
+
+afterEvaluate {
+  forceDisableNpmTasks()
+
+  afterEvaluate {
+    forceDisableNpmTasks()
   }
 }

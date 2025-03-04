@@ -217,9 +217,6 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   /** Configuration for TypeScript */
   public class Typescript(project: Project) : Convention(project)
 
-  /** Configuration for Node.JS */
-  public class NodeJS(project: Project) : Convention(project)
-
   /** Configuration for doc-gen */
   public class Docs(project: Project) : Convention(project) {
     private val docsByDefault = true
@@ -308,7 +305,6 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
   internal val python = Python(project)
   internal val javascript = Javascript(project)
   internal val typescript = Typescript(project)
-  internal val node = NodeJS(project)
   internal val checks = Checks(project)
   internal val jvm = Jvm(project)
   internal val testing = Testing(project)

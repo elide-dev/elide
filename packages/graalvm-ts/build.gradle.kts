@@ -45,6 +45,15 @@ elide {
   }
 }
 
+val enableEdgeJvm = false
+val extraSrcroot = if (enableEdgeJvm) "src/main/java25x" else "src/main/java24x"
+
+sourceSets {
+  main {
+    java.srcDirs(layout.projectDirectory.dir(extraSrcroot))
+  }
+}
+
 dependencies {
   annotationProcessor(libs.graalvm.truffle.api)
   annotationProcessor(libs.graalvm.truffle.processor)

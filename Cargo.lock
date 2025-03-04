@@ -1516,8 +1516,11 @@ dependencies = [
 name = "entry"
 version = "1.0.0-alpha14-SNAPSHOT"
 dependencies = [
+ "bumpalo",
  "libloading",
+ "mimalloc",
  "substrate",
+ "tikv-jemallocator",
  "umbrella",
 ]
 

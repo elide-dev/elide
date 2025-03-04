@@ -62,8 +62,12 @@ val oracleGvm = true
 val enableEdge = false
 val enableToolchains = true
 
-val pluginApiHeader: String =
-  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
+val pluginApiHeader: File =
+  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile
+
+if (!pluginApiHeader.exists()) {
+  error("Failed to locate plugin API header: '$pluginApiHeader'")
+}
 
 val nativeArgs = listOfNotNull(
   "-Delide.natives.pluginApiHeader=$pluginApiHeader",

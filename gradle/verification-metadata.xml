@@ -5,6 +5,7 @@
       <verify-signatures>true</verify-signatures>
       <trusted-artifacts>
          <trust file="kotlinpoet-jvm-1.18.0.module"/>
+	 <trust group="com.google.code.findbugs" reason="Build-time only"/>
          <trust group="com.github.javaparser" reason="Verified as part of Pkl"/>
          <trust group="com.google.code.gson" name="gson" reason="Verified as part of Pkl"/>
          <trust group="com.google.guava" reason="Verified and forked upstream"/>

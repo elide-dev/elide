@@ -34,17 +34,27 @@ import org.jetbrains.annotations.NotNull;
 @CContext(Language.PluginApiDirectives.class)
 public interface Language {
   class PluginApiDirectives implements CContext.Directives {
-
     @Override
     public List<String> getHeaderFiles() {
-      /*
-       * The header file with the C declarations that are imported. We use a helper class that
-       * locates the file in our project structure.
-       */
-      return Collections.singletonList(
-          "\""
-              + Path.of(System.getProperty("elide.natives.pluginApiHeader")).toAbsolutePath()
-              + "\"");
+      return getHeaders();
+    }
+
+    @Override
+    public List<String> getOptions() {
+      return getHeaderOptions();
+    }
+
+    private static @NotNull Path getPluginApiHeaderPath() {
+      return Path.of(System.getProperty("elide.natives.pluginApiHeader"));
+    }
+
+    public static List<String> getHeaderOptions() {
+      Path headerPath = getPluginApiHeaderPath();
+      return List.of("-I" + headerPath.getParent());
+    }
+
+    public static List<String> getHeaders() {
+      return Collections.singletonList("\"" + getPluginApiHeaderPath().toAbsolutePath() + "\"");
     }
   }
 

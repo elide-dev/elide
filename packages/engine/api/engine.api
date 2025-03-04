@@ -771,6 +771,22 @@ public abstract class elide/runtime/feature/engine/AbstractStaticNativeLibraryFe
 	public fun unpackNatives (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)Ljava/util/List;
 }
 
+public abstract interface class elide/runtime/gvm/EngineContextAPI {
+	public abstract fun context ()Lorg/graalvm/polyglot/Context;
+	public abstract fun engine ()Lorg/graalvm/polyglot/Engine;
+	public abstract fun executor ()Lelide/runtime/exec/GuestExecutor;
+}
+
+public abstract interface class elide/runtime/gvm/EngineExecutor : java/util/concurrent/ExecutorService {
+}
+
+public abstract interface class elide/runtime/gvm/EngineThreadAPI {
+	public abstract fun engineContext ()Lelide/runtime/gvm/EngineContextAPI;
+}
+
+public abstract interface class elide/runtime/gvm/EngineThreadFactory : java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory {
+}
+
 public class elide/runtime/gvm/GraalVMGuest : java/lang/Enum, elide/runtime/core/GuestLanguage, elide/runtime/gvm/GuestLanguage {
 	public static final field JAVASCRIPT Lelide/runtime/gvm/GraalVMGuest;
 	public static final field JVM Lelide/runtime/gvm/GraalVMGuest;
@@ -816,7 +832,23 @@ public final class elide/runtime/gvm/InvocationMode : java/lang/Enum {
 public final class elide/runtime/gvm/JNIHeaderDirectives : org/graalvm/nativeimage/c/CContext$Directives {
 	public fun <init> ()V
 	public fun getHeaderFiles ()Ljava/util/List;
+	public static fun getHeaderOptions ()Ljava/util/List;
+	public static fun getHeaders ()Ljava/util/List;
 	public fun getOptions ()Ljava/util/List;
+}
+
+public final class elide/runtime/gvm/RuntimeContext {
+	public static final field INSTANCE Lelide/runtime/gvm/RuntimeContext;
+	public static final fun current ()Lelide/runtime/gvm/EngineContextAPI;
+	public static final fun currentUnsafe ()Lelide/runtime/gvm/EngineContextAPI;
+	public static final fun engineExecutor ()Lelide/runtime/gvm/EngineExecutor;
+	public static final fun inEngineThread (Ljava/lang/Thread;)Z
+	public static synthetic fun inEngineThread$default (Ljava/lang/Thread;ILjava/lang/Object;)Z
+}
+
+public final class elide/runtime/gvm/RuntimeContextKt {
+	public static final fun getEngine (Lkotlinx/coroutines/Dispatchers;)Lkotlinx/coroutines/CoroutineDispatcher;
+	public static final fun getVirtual (Lkotlinx/coroutines/Dispatchers;)Lkotlinx/coroutines/CoroutineDispatcher;
 }
 
 public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
@@ -827,6 +859,10 @@ public final class elide/runtime/gvm/cfg/LanguageDefaults {
 	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
 	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
+}
+
+public final class elide/runtime/gvm/internals/MultiThreadedEngine {
+	public static fun newMultiThreadedEngineExecutor ()Lelide/runtime/gvm/EngineExecutor;
 }
 
 public abstract interface class elide/runtime/gvm/loader/ModuleFactory {
@@ -934,6 +970,9 @@ public abstract interface class elide/runtime/lang/Language$NativeRuntimeInit : 
 public class elide/runtime/lang/Language$PluginApiDirectives : org/graalvm/nativeimage/c/CContext$Directives {
 	public fun <init> ()V
 	public fun getHeaderFiles ()Ljava/util/List;
+	public static fun getHeaderOptions ()Ljava/util/List;
+	public static fun getHeaders ()Ljava/util/List;
+	public fun getOptions ()Ljava/util/List;
 }
 
 public abstract interface class elide/runtime/lang/LanguagePlugin {

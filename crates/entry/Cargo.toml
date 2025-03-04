@@ -28,7 +28,21 @@ crate-type = ["lib"]
 [[bin]]
 name = "elide"
 
+[features]
+default = [
+  "allocator",
+]
+allocator = [
+  "jemalloc",
+]
+jemalloc = ["dep:tikv-jemallocator"]
+mimalloc = ["dep:mimalloc"]
+bumpalloc = ["dep:bumpalo"]
+
 [dependencies]
 substrate = { workspace = true }
 umbrella = { workspace = true }
 libloading = { workspace = true }
+bumpalo = { workspace = true, optional = true }
+mimalloc = { workspace = true, optional = true }
+tikv-jemallocator = { workspace = true, optional = true }

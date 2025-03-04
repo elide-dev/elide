@@ -147,7 +147,7 @@ public object Constants {
     const val OKIO = "3.10.2"
 
     /** GraalVM version. */
-    const val GRAALVM = "25.0.0-SNAPSHOT"
+    const val GRAALVM = "24.1.2"
   }
 
   /** Kotlin conventions. */

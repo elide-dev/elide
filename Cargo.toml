@@ -46,7 +46,7 @@ debug = true
 incremental = true
 
 [profile.release]
-opt-level = "s"
+opt-level = 3
 lto = true
 strip = "debuginfo"
 debug = false

@@ -16,10 +16,9 @@ default = [
   "all",
   "entry",
   "oro",
-  "oxc",
 ]
 allocator = [
-  "allocator_mimalloc",
+  "jemalloc",
 ]
 allocator_mimalloc = ["mimalloc/default"]
 all = [

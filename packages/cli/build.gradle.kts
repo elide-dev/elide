@@ -130,7 +130,7 @@ val enablePreinitializeAll = true
 val enableExperimental = false
 val enableExperimentalLlvmBackend = false
 val enableExperimentalLlvmEdge = false
-val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64" && enableExperimental
+val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64"
 val enableEmbeddedResources = false
 val enableResourceFilter = false
 val enableAuxCache = true
@@ -752,8 +752,18 @@ val experimentalLlvmEdgeArgs = listOfNotNull(
 
 val preinitContextsList = preinitializedContexts.joinToString(",")
 
-val pluginApiHeader: String =
-  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
+val entryApiHeader: File =
+  rootProject.layout.projectDirectory.file("crates/entry/headers/elide-entry.h").asFile
+
+val pluginApiHeader: File =
+  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile
+
+if (!entryApiHeader.exists()) {
+  error("Failed to locate entry API header: '$entryApiHeader'")
+}
+if (!pluginApiHeader.exists()) {
+  error("Failed to locate plugin API header: '$pluginApiHeader'")
+}
 
 val initializeAtBuildtime: List<String> = listOf(
   "elide.runtime.core.internals.graalvm.GraalVMEngine\$Companion",
@@ -995,12 +1005,31 @@ val initializeAtRuntimeTest: List<String> = emptyList()
 
 val rerunAtRuntimeTest: List<String> = emptyList()
 
+val gvmJvmHome = requireNotNull(System.getenv("GRAALVM_HOME") ?: System.getenv("JAVA_HOME"))
+val jniHeaderPaths = listOf(
+  gvmJvmHome.let { "$it/include" },
+  gvmJvmHome.let {
+    val plat = when {
+      HostManager.hostIsLinux -> "linux"
+      HostManager.hostIsMac -> "darwin"
+      HostManager.hostIsMingw -> "windows"
+      else -> error("Unsupported OS for JNI headers: ${System.getProperty("os.name")}")
+    }
+    "$it/include/$plat"
+  }
+)
+
+val sharedLibFlags = listOf(
+  "--shared",
+  "--H:+JNIExportSymbols",
+)
+
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
-  "--verbose",
-  "-H:TempDirectory=/tmp/elide-native",
+  // "--verbose",
+  // "-H:TempDirectory=/tmp/elide-native",
   // "-H:+PlatformInterfaceCompatibilityMode",
-  "--trace-object-instantiation=java.util.concurrent.ForkJoinWorkerThread\$InnocuousForkJoinWorkerThread",
+  // "--trace-object-instantiation=",
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
@@ -1024,7 +1053,7 @@ val commonNativeArgs = listOfNotNull(
   "--link-at-build-time=dev.elide",
   "--link-at-build-time=org.pkl",
   "--link-at-build-time=picocli",
-  onlyIf(enableJnaJpms, "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED") ?: "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
+  "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -1063,6 +1092,7 @@ val commonNativeArgs = listOfNotNull(
   "-Delide.root=$rootPath",
   "-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
+  "-Delide.natives.entryApiHeader=$entryApiHeader",
   "-Delide.natives.pluginApiHeader=$pluginApiHeader",
   "-Delide.auxCache=$enableAuxCache",
   "-Delide.traceCache=${enableAuxCache && enableAuxCacheTrace}",
@@ -1105,7 +1135,7 @@ val commonNativeArgs = listOfNotNull(
   onlyIf(enableHeapReport, "-H:+TrackNodeSourcePosition"),
   onlyIf(enableHeapReport, "-R:-TrackNodeSourcePosition"),
 ).asSequence().plus(
-  languagePluginPaths.plus(listOf(umbrellaNativesPath)).filter {
+  languagePluginPaths.plus(umbrellaNativesPath).plus(jniHeaderPaths).filter {
     Files.exists(Path.of(it))
   }.map {
     "-H:CLibraryPath=$it"
@@ -1489,7 +1519,9 @@ fun nativeCliImageArgs(
   ).plus(listOf(
     // at the end: resource configuration for this OS and arch. default configuration is already implied.
     "-H:ResourceConfigurationFiles=${platformConfig()}",
-  )).toList()
+  )).plus(
+    sharedLibFlags.onlyIf(sharedLib)
+  ).toList()
 
 graalvmNative {
   testSupport = true
@@ -1537,10 +1569,16 @@ graalvmNative {
         tasks.optimizedNativeJar,
         configurations.nativeImageClasspath,
         configurations.runtimeClasspath,
-      )
+      ).filter {
+        // filter out the base jar
+        it.name !== tasks.jar.get().outputs.files.filter { it.path.endsWith(".jar") }.single().name
+      }
 
       // compute main compile args
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
+      buildArgs.add(
+        "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeCompile").get().asFile.path}",
+      )
     }
 
     create("shared") {
@@ -1555,13 +1593,20 @@ graalvmNative {
         tasks.optimizedNativeJar,
         configurations.nativeImageClasspath,
         configurations.runtimeClasspath,
-      )
+      ).filter {
+        // filter out the base jar
+        it.name !== tasks.jar.get().outputs.files.filter { it.path.endsWith(".jar") }.single().name
+      }
 
       buildArgs.addAll(nativeCliImageArgs(
         debug = quickbuild,
         sharedLib = true,
         release = !quickbuild,
-        platform = targetOs))
+        platform = targetOs,
+      ))
+      buildArgs.add(
+        "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeSharedCompile").get().asFile.path}",
+      )
     }
 
     named("optimized") {
@@ -1577,6 +1622,9 @@ graalvmNative {
         configurations.nativeImageClasspath,
         configurations.runtimeClasspath,
       )
+      buildArgs.add(
+        "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeOptimizedCompile").get().asFile.path}",
+      )
     }
 
     named("test") {
@@ -1587,6 +1635,9 @@ graalvmNative {
       buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).plus(
         nativeCompileJvmArgs
       ))
+      buildArgs.add(
+        "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeTestCompile").get().asFile.path}",
+      )
     }
   }
 }

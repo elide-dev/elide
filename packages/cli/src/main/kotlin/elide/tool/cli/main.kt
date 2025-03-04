@@ -23,6 +23,8 @@ import picocli.CommandLine
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 import elide.annotations.Eager
 
@@ -92,6 +94,13 @@ private suspend inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI
         } ?: 1
       }
     }
+}
+
+internal object NativeEntry {
+  @JvmName("enter") @JvmStatic
+  fun enter(args: Array<String>): Int = runBlocking(Dispatchers.Default) {
+    runInner(args)
+  }
 }
 
 // Perform early startup initialization tasks.

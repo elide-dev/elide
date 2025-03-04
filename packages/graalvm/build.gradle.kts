@@ -788,7 +788,6 @@ private fun TargetInfo.matches(criteria: TargetPredicate): Boolean =
   TargetCriteria.allOf(this, criteria)
 
 val isClang = listOf(
-  System.getenv("CC")?.contains("clang") == true,
   (findProperty("elide.compiler") as? String)?.contains("clang") == true,
 ).any()
 

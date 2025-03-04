@@ -139,6 +139,8 @@ name: Framework
         description: "Gradle cache key"
 
 env:
+  RUST_BACKTRACE: full
+  ELIDE_VERSION: "1.0.0-alpha14"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:
@@ -256,7 +258,7 @@ jobs:
         with:
           version: "10.5.2"
       - name: "Setup: Elide"
-        run: curl -sSL --tlsv1.2 elide.sh | bash -s - && echo "$HOME/elide" >> $GITHUB_PATH
+        run: curl -sSL --tlsv1.2 elide.sh | bash -s - --install-rev=${{ env.ELIDE_VERSION }} && echo "$HOME/elide" >> $GITHUB_PATH
       - name: "Setup: Dependencies"
         run: |
           cargo install cargo-fuzz cargo-insta rustfilt

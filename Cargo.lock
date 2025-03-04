@@ -1464,9 +1464,9 @@ checksum = "92773504d58c093f6de2459af4af33faa518c13451eb8f2b5698ed3d36e7c813"
 
 [[package]]
 name = "dyn-clone"
-version = "1.0.18"
+version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "feeef44e73baff3a26d371801df019877a9866a8c493d315ab00177843314f35"
+checksum = "1c7a8fb8a9fbf66c1f703fe16184d10ca0ee9d23be5b4436400408ba54a95005"
 
 [[package]]
 name = "either"
@@ -1538,9 +1538,9 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "erased-serde"
-version = "0.4.5"
+version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24e2389d65ab4fab27dc2a5de7b191e1f6617d1f1c8855c0dc569c94a4cbb18d"
+checksum = "e004d887f51fcb9fef17317a2f3525c887d8aa3f4f50fed920816a688284a5b7"
 dependencies = [
  "serde",
  "typeid",
@@ -2494,9 +2494,9 @@ dependencies = [
 
 [[package]]
 name = "indoc"
-version = "2.0.5"
+version = "2.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b248f5224d1d606005e02c97f5aa4e88eeb230488bcc03bc9ca4d7991399f2b5"
+checksum = "f4c7245a08504955605670dbf141fceab975f15ca21570696aebe9d2e71576bd"
 
 [[package]]
 name = "inotify"
@@ -2625,9 +2625,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "1.0.14"
+version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d75a2a4b1b190afb6f5425f10f6a8f959d2ea0b9c2b1d79553551850539e4674"
+checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 
 [[package]]
 name = "java-locator"
@@ -3183,7 +3183,7 @@ dependencies = [
 [[package]]
 name = "nassun"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "async-compression",
  "async-process",
@@ -3270,7 +3270,7 @@ dependencies = [
 [[package]]
 name = "node-maintainer"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "async-std",
  "colored",
@@ -3536,7 +3536,7 @@ dependencies = [
 [[package]]
 name = "oro-client"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3562,7 +3562,7 @@ dependencies = [
 [[package]]
 name = "oro-common"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "derive_builder",
  "indexmap 2.7.1",
@@ -3580,7 +3580,7 @@ dependencies = [
 [[package]]
 name = "oro-config"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "clap",
  "config",
@@ -3593,7 +3593,7 @@ dependencies = [
 [[package]]
 name = "oro-npm-account"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "async-std",
  "base64 0.22.1",
@@ -3611,7 +3611,7 @@ dependencies = [
 [[package]]
 name = "oro-package-spec"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "bytecount",
  "miette 7.5.0",
@@ -3625,7 +3625,7 @@ dependencies = [
 [[package]]
 name = "oro-pretty-json"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "serde_json",
 ]
@@ -3633,7 +3633,7 @@ dependencies = [
 [[package]]
 name = "oro-script"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "dunce",
  "miette 7.5.0",
@@ -3649,7 +3649,7 @@ dependencies = [
 [[package]]
 name = "oro-shim-bin"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "once_cell",
  "pathdiff",
@@ -3659,7 +3659,7 @@ dependencies = [
 [[package]]
 name = "orogene"
 version = "0.3.35-elide"
-source = "git+https://github.com/elide-dev/orogene?rev=64b06e39b012a61e064bcf6c888afedfdc4e715a#64b06e39b012a61e064bcf6c888afedfdc4e715a"
+source = "git+https://github.com/elide-dev/orogene?rev=abd32d088f5376d4867fa943ce4bdae45c8b1020#abd32d088f5376d4867fa943ce4bdae45c8b1020"
 dependencies = [
  "async-std",
  "async-trait",
@@ -4458,9 +4458,9 @@ dependencies = [
 
 [[package]]
 name = "prettyplease"
-version = "0.2.29"
+version = "0.2.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6924ced06e1f7dfe3fa48d57b9f74f55d8915f5036121bef647ef4b204895fac"
+checksum = "f1ccf34da56fc294e7d4ccf69a85992b7dfb826b7cf57bac6a70bba3494cc08a"
 dependencies = [
  "proc-macro2",
  "syn 2.0.99",
@@ -5719,15 +5719,15 @@ dependencies = [
 
 [[package]]
 name = "rustversion"
-version = "1.0.19"
+version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7c45b9784283f1b2e7fb61b42047c2fd678ef0960d4f6f1eba131594cc369d4"
+checksum = "eded382c5f5f786b989652c49544c4877d9f015cc22e145a5ea8ea66c2921cd2"
 
 [[package]]
 name = "ryu"
-version = "1.0.19"
+version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ea1a2d0a644769cc99faa24c3ad26b379b786fe7c36fd3c546254801650e6dd"
+checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
 
 [[package]]
 name = "ryu-js"
@@ -5909,15 +5909,15 @@ checksum = "c2fdfc24bc566f839a2da4c4295b82db7d25a24253867d5c64355abb5799bdbe"
 
 [[package]]
 name = "semver"
-version = "1.0.25"
+version = "1.0.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f79dfe2d285b0488816f30e700a7438c5a73d816b5b7d3ac72fbc48b0d185e03"
+checksum = "56e6fa9c48d24d85fb3de5ad847117517440f6beceb7798af16b4a87d616b8d0"
 
 [[package]]
 name = "seq-macro"
-version = "0.3.5"
+version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a3f0bf26fd526d2a95683cd0f87bf103b8539e2ca1ef48ce002d67aad59aa0b4"
+checksum = "1bc711410fbe7399f390ca1c3b60ad0f53f80e95c5eb935e52268a0e2cd49acc"
 
 [[package]]
 name = "serde"
@@ -6009,9 +6009,9 @@ dependencies = [
 
 [[package]]
 name = "serde_repr"
-version = "0.1.19"
+version = "0.1.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c64451ba24fc7a6a2d60fc75dd9c83c90903b19028d4eff35e88fc1e86564e9"
+checksum = "175ee3e80ae9982737ca543e96133087cbd9a485eecc3bc4de9c1a37b47ea59c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -7052,9 +7052,9 @@ checksum = "6af6ae20167a9ece4bcb41af5b80f8a1f1df981f6391189ce00fd257af04126a"
 
 [[package]]
 name = "typeid"
-version = "1.0.2"
+version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e13db2e0ccd5e14a544e8a246ba2312cd25223f616442d7f2cb0e3db614236e"
+checksum = "bc7d623258602320d5c55d1bc22793b57daff0ec7efc270ea7d55ce1d5f5471c"
 
 [[package]]
 name = "typenum"
@@ -7163,9 +7163,9 @@ checksum = "2f322b60f6b9736017344fa0635d64be2f458fbc04eef65f6be22976dd1ffd5b"
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.17"
+version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00e2473a93778eb0bad35909dff6a10d28e63f792f16ed15e404fca9d5eeedbe"
+checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
 
 [[package]]
 name = "unicode-linebreak"

@@ -261,7 +261,7 @@ jobs:
         run: curl -sSL --tlsv1.2 elide.sh | bash -s - --install-rev=${{ env.ELIDE_VERSION }} && echo "$HOME/elide" >> $GITHUB_PATH
       - name: "Setup: Dependencies"
         run: |
-          cargo install cargo-fuzz cargo-insta rustfilt
+          #cargo install cargo-fuzz cargo-insta rustfilt
           pnpm install -g yarn@1.22.19
           python -m pip install uv
           echo "Setting up venv..."
@@ -272,6 +272,8 @@ jobs:
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
           echo "Installing dependencies..."
+          mkdir -p $HOME/.config/orogene
+          cp -fv ./.github/workflows/oro.kdl $HOME/.config/orogene/oro.kdl
           elide install
       - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0

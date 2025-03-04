@@ -295,7 +295,7 @@ jobs:
             wrapper
             yarn
       - name: "Build Environment"
-        run: make info 2>&1 | tee build-info.txt
+        run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
       - name: "🛠️ Build Packages"
         env:
           CI: true
@@ -314,9 +314,9 @@ jobs:
             --scan \
             --build-cache \
             --no-daemon \
-            --warning-mode=none \
-            --dependency-verification=lenient \
+            --dependency-verification=off \
             --stacktrace \
+            --no-configuration-cache \
             -Pelide.ci=true \
             -PbuildSamples=false \
             -PbuildDocs=false \

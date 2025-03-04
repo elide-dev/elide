@@ -169,7 +169,7 @@ graalvmNative {
 
 tasks.test {
   dependsOn(":packages:graalvm:natives")
-  jvmArgumentProviders.add(CommandLineArgumentProvider { jvmDefs })
+  jvmArgs = jvmDefs
 }
 
 artifacts {

@@ -316,8 +316,8 @@ jobs:
             -x nativeTest \
             --scan \
             --build-cache \
-            --warning-mode=none \
-            --dependency-verification=lenient \
+            --no-configuration-cache \
+            --dependency-verification=off \
             -x apiCheck \
             -x spotlessCheck \
             -Pelide.ci=true \

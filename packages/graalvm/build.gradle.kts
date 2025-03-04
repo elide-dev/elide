@@ -704,25 +704,23 @@ tasks {
   }
 
   compileJava {
-    dependsOn(generateProto)
+    dependsOn(generateProto.name)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
-    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-      javacArgs
-    })
+    options.compilerArgs = (options.compilerArgs ?: emptyList())
+    options.compilerArgs.addAll(javacArgs)
 
     if (enableToolchains) javaCompiler = gvmCompiler
   }
 
   compileTestJava {
-    dependsOn(generateProto)
+    dependsOn(generateProto.name)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
-    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-      javacArgs
-    })
+    options.compilerArgs = (options.compilerArgs ?: emptyList())
+    options.compilerArgs.addAll(javacArgs)
 
     if (enableToolchains) javaCompiler = gvmCompiler
   }
@@ -763,26 +761,32 @@ configurations.all {
   }
 }
 
-val buildThirdPartyNatives by tasks.registering(Exec::class) {
-  workingDir = rootProject.layout.projectDirectory.asFile
+val jobs = Runtime.getRuntime().availableProcessors() / 2
 
-  val buildForNative = when {
-    (findProperty("elide.native") as? String) != null -> "yes"
-    (findProperty("elide.arch") as? String) != null -> if (project.properties["elide.arch"] as String == "native") {
-      "yes"
-    } else "no"
-    else -> "no"
-  }
+val buildForNative = when {
+  (findProperty("elide.native") as? String) != null -> "yes"
+  (findProperty("elide.arch") as? String) != null -> if (project.properties["elide.arch"] as String == "native") {
+    "yes"
+  } else "no"
+  else -> "no"
+}
+
+val thirdPartyDir: String =
+  rootProject.layout.projectDirectory.dir("third_party").asFile.absolutePath
+
+val buildThirdPartyNatives by tasks.registering(Exec::class) {
+  workingDir(rootProject.layout.projectDirectory.asFile.path)
+
   commandLine(
     "make",
     "-C", "third_party",
     "RELEASE=yes",  // third-party natives are always built in release mode
     "NATIVE=$buildForNative",
-    "-j${Runtime.getRuntime().availableProcessors() / 2}",
+    "-j$jobs",
   )
 
-  outputs.upToDateWhen { targetSqliteDir.asFile.exists() }
-  outputs.dir(targetSqliteDir)
+  outputs.cacheIf { true }
+  outputs.dir(targetSqliteDir.asFile.path)
 }
 
 private fun TargetInfo.matches(criteria: TargetPredicate): Boolean =
@@ -805,48 +809,45 @@ fun resolveCargoConfig(target: TargetInfo): File? = when {
   }
 }
 
+val targetInfo = TargetInfo.current(project)
+val targetDir: String =
+  rootProject.layout.projectDirectory.dir("target/${targetInfo.triple}/$nativesType").asFile.absolutePath
+
+val rootDir: String = rootProject.layout.projectDirectory.asFile.path
+val cargoConfig: String? = resolveCargoConfig(elideTarget)?.absolutePath
+
+afterEvaluate {
+  logger.lifecycle(
+    "Compiling natives for target '${elideTarget.triple}' " +
+    "(config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
+  )
+}
+
 val buildRustNativesForHost by tasks.registering(Exec::class) {
-  workingDir = rootProject.layout.projectDirectory.asFile
-  dependsOn(buildThirdPartyNatives)
+  workingDir(rootDir)
+  dependsOn("buildThirdPartyNatives")
 
-  doFirst {
-    logger.lifecycle(
-      "Compiling natives for target '${elideTarget.triple}' " +
-      "(config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
-    )
-  }
-
-  val targetInfo = TargetInfo.current(project)
   executable = "cargo"
-  argumentProviders.add(CommandLineArgumentProvider {
-    listOfNotNull(
-      "--color=always",
-      "build",
-      if (isRelease) "--release" else null,
-      "--target",
-      targetInfo.triple,
-    ).plus(
-      resolveCargoConfig(elideTarget)?.let {
-        listOf("--config", it.absolutePath)
-      } ?: emptyList()
-    )
-  })
+  args(listOfNotNull(
+    "--color=always",
+    "build",
+    if (isRelease) "--release" else null,
+    "--target",
+    targetInfo.triple,
+  ).plus(
+    cargoConfig?.let {
+      listOf("--config", it)
+    } ?: emptyList()
+  ))
 
-  val targetDir = rootProject.layout.projectDirectory.dir("target/${targetInfo.triple}/$nativesType")
-  outputs.upToDateWhen { targetDir.asFile.exists() }
+  outputs.upToDateWhen { true }
   outputs.dir(targetDir)
 }
 
 val natives by tasks.registering {
   group = "build"
   description = "Build natives via Make and Cargo"
-  dependsOn(buildThirdPartyNatives, buildRustNativesForHost)
-
-  doLast {
-    logger.lifecycle(
-      "Natives ready for target '${elideTarget.triple}' (config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
-    )
-  }
+  dependsOn(buildThirdPartyNatives.name, buildRustNativesForHost.name)
 }
 
 listOf(

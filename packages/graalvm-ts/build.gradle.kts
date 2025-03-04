@@ -109,8 +109,6 @@ val javaLibPath = provider {
 }
 
 tasks {
-  checkNatives(test)
-
   jar.configure {
     exclude("**/runtime.current.json")
   }

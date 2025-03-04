@@ -655,7 +655,7 @@ val testBase: Configuration by configurations.creating
 
 tasks {
   test {
-    maxHeapSize = "4G"
+    maxHeapSize = "2G"
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.internals", "true")
@@ -777,7 +777,8 @@ val buildThirdPartyNatives by tasks.registering(Exec::class) {
     "make",
     "-C", "third_party",
     "RELEASE=yes",  // third-party natives are always built in release mode
-    "NATIVE=$buildForNative"
+    "NATIVE=$buildForNative",
+    "-j${Runtime.getRuntime().availableProcessors() / 2}",
   )
 
   outputs.upToDateWhen { targetSqliteDir.asFile.exists() }

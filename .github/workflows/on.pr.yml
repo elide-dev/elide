@@ -224,13 +224,24 @@ jobs:
       contents: "read"
 
   ##
+  ## Job: Dependency Graph
+  ##
+  dependency-graph:
+    name: "Checks"
+    if: fromJson(needs.triage.outputs.packages)
+    uses: ./.github/workflows/job.dependency-graph.yml
+    needs: [triage]
+    permissions:
+      contents: "write"  # needed for graph upload
+
+  ##
   ## Job: Checks for Vulnerabilities/Licensing
   ##
   check-dependencies:
     name: "Checks"
     if: github.event.pull_request.draft == false
     uses: ./.github/workflows/checks.dependency-review.yml
-    needs: [triage, pr-build]
+    needs: [triage, dependency-graph]
     permissions:
       contents: "read"
 
@@ -241,7 +252,7 @@ jobs:
     name: "Checks"
     if: github.event.pull_request.draft == false && fromJson(needs.triage.outputs.packages)
     uses: ./.github/workflows/checks.codeql.yml
-    needs: [triage, pr-build]
+    needs: [triage, dependency-graph]
     secrets:
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
@@ -256,7 +267,7 @@ jobs:
   check-detekt:
     name: "Checks"
     uses: ./.github/workflows/checks.detekt.yml
-    needs: [triage, pr-build]
+    needs: [triage, dependency-graph]
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}

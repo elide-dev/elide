@@ -122,23 +122,23 @@ jobs:
   ##
   ## Job: Multi-platform Build
   ##
-  pr-build:
-    name: "Build"
-    uses: ./.github/workflows/job.build.yml
-    secrets: inherit
-    needs: [triage]
-    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
-    permissions:
-      contents: "write"
-      actions: "read"
-      id-token: "write"
-      checks: "write"
-      pull-requests: "write"
-      packages: "read"
-      security-events: "write"
-    with:
-      provenance: false
-      native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:build-native') || contains(github.event.head_commit.message, 'ci:build-native') }}
+#  pr-build:
+#    name: "Build"
+#    uses: ./.github/workflows/job.build.yml
+#    secrets: inherit
+#    needs: [triage]
+#    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
+#    permissions:
+#      contents: "write"
+#      actions: "read"
+#      id-token: "write"
+#      checks: "write"
+#      pull-requests: "write"
+#      packages: "read"
+#      security-events: "write"
+#    with:
+#      provenance: false
+#      native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:build-native') || contains(github.event.head_commit.message, 'ci:build-native') }}
 
   ##
   ## Job: Multi-platform Build

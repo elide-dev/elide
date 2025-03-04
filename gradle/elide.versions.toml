@@ -209,28 +209,6 @@ npm-esbuild = "0.24.2"
 npm-google-protobuf = "3.21.2"
 npm-grpcweb = "1.4.2"
 npm-joda = "3.2.0"
-npm-lit = "2.8.0"
-npm-lit-labs-analyzer = "0.9.0"
-npm-lit-labs-context = "0.3.3"
-npm-lit-labs-motion = "1.0.4"
-npm-lit-labs-react = "2.0.0"
-npm-lit-labs-ssr = "3.1.5"
-npm-lit-labs-ssrClient = "1.1.3"
-npm-lit-labs-task = "3.0.0"
-npm-lit-labs-virtualizer = "2.0.5"
-npm-lit-localize = "0.11.4"
-npm-lit-localizeTools = "0.6.9"
-npm-litElement = "3.3.3"
-npm-litHtml = "2.8.0"
-npm-mui = "5.13.6"
-npm-preact-compat = "17.1.2"
-npm-preact-core = "10.16.0"
-npm-preact-renderToString = "6.2.0"
-npm-prepack = "0.2.54"
-npm-stream = "4.5.2"
-npm-types-protobuf = "3.15.6"
-npm-typescript = "5.4.5"
-npm-webstreams = "3.3.3"
 okhttp = "4.12.0"
 okio = "3.10.2"
 openrewrite-bom = "2.10.0"
@@ -283,14 +261,11 @@ xz = "1.10"
 zstd = "1.5.6-9"
 
 [plugins]
-artifactRegistry = { id = "com.google.cloud.artifactregistry.gradle-plugin", version.ref = "gauth-plugin" }
 buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig-plugin" }
 buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "buildTimeTracker" }
 cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
-dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker-plugin" }
 doctor = { id = "com.osacky.doctor", version.ref = "doctor-plugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 cite = { id = "com.jakewharton.cite", version.ref = "cite" }
@@ -298,11 +273,8 @@ elide-conventions = { id = "elide.internal.conventions" }
 gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
 graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-plugin" }
 gradle-checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
-gradle-commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version.ref = "gradleCommonCustomUserData" }
 gradle-testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
-gradle-wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrapperUpgrade" }
 jetbrains-compose = { id = "org.jetbrains.compose" }
-jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }
 jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }
 kapshot = { id = "io.koalaql.kapshot-plugin", version.ref = "kapshot" }

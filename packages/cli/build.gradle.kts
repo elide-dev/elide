@@ -19,6 +19,7 @@
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.graalvm.buildtools.gradle.tasks.BuildNativeImageTask
+import org.graalvm.buildtools.gradle.tasks.GenerateResourcesConfigFile
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
@@ -410,8 +411,8 @@ dependencies {
   jvmOnly(libs.snakeyaml)
 
   // Native-image transitive compile dependencies
-  nativeImageCompileOnly(libs.jakarta.validation)
-  nativeImageCompileOnly(libs.guava)
+  implementation(libs.jakarta.validation)
+  implementation(libs.guava)
 
   implementation(libs.picocli.jansi.graalvm) {
     exclude(group = "org.fusesource.jansi", module = "jansi")
@@ -2102,11 +2103,13 @@ artifacts {
 }
 
 listOf(
-  tasks.withType<BuildNativeImageTask>()
+  tasks.withType<BuildNativeImageTask>(),
+  tasks.withType<GenerateResourcesConfigFile>(),
 ).forEach {
   it.configureEach {
     dependsOn(
       ":packages:graalvm:natives",
     )
+    notCompatibleWithConfigurationCache("insanely broken")
   }
 }

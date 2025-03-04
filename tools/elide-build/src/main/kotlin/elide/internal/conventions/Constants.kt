@@ -75,7 +75,7 @@ public object Constants {
     const val SLOW_TEST_THRESHOLD = 30_000L
 
     /** Maximum number of forks allowed during parallel test execution. */
-    const val MAX_PARALLEL_FORKS = 4
+    const val MAX_PARALLEL_FORKS = 2
   }
 
   /** Properties and conventions related to versioning. */

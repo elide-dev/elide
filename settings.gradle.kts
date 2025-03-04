@@ -42,11 +42,24 @@ pluginManagement {
 }
 
 plugins {
+  id("com.autonomousapps.build-health") version ("2.10.1")
   id("com.gradle.enterprise") version ("3.16.2")
   id("org.gradle.toolchains.foojay-resolver-convention") version ("0.9.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version ("2.1")
   id("io.micronaut.platform.catalog") version (extra.properties["micronautCatalogVersion"] as String)
   id("elide.toolchains.jvm")
+}
+
+buildscript {
+  val asm = "9.7.1"
+  val coverage = "1.0.766"
+
+  dependencies {
+    classpath("org.ow2.asm:asm:$asm")
+    classpath("org.ow2.asm:asm-tree:$asm")
+    classpath("org.jetbrains.intellij.deps:intellij-coverage-agent:$coverage")
+    classpath("org.jetbrains.intellij.deps:intellij-coverage-reporter:$coverage")
+  }
 }
 
 // Fix: Force CWD to proper value and store secondary value.

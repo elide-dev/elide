@@ -337,7 +337,6 @@ jobs:
           ./gradlew \
               sonar \
               --build-cache \
-              --warning-mode=none \
               --dependency-verification=lenient \
               -x apiCheck \
               -Pelide.ci=true \

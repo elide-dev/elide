@@ -12,35 +12,42 @@
  */
 package elide.runtime.node.console
 
-import elide.annotations.Factory
-import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ConsoleAPI
+import elide.runtime.lang.javascript.NodeModuleName
 
 // Internal symbol where the Node built-in module is installed.
-private const val CONSOLE_MODULE_SYMBOL = "node_console"
+private const val CONSOLE_MODULE_SYMBOL = "node_${NodeModuleName.CONSOLE}"
 
 // Installs the Node console module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeConsoleModule : AbstractNodeBuiltinModule() {
-  @Singleton internal fun provide(): ConsoleAPI = NodeConsole.obtain()
+@Intrinsic internal class NodeConsoleModule : AbstractNodeBuiltinModule() {
+  internal fun provide(): NodeConsole = NodeConsole.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[CONSOLE_MODULE_SYMBOL.asJsSymbol()] = provide()
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CONSOLE)) { provide() }
   }
 }
 
 /**
  * # Node API: `console`
  */
-internal class NodeConsole : ConsoleAPI {
+internal class NodeConsole : ReadOnlyProxyObject, ConsoleAPI {
   //
 
   internal companion object {
     private val SINGLETON = NodeConsole()
     fun obtain(): NodeConsole = SINGLETON
   }
+
+  // @TODO not implemented
+
+  override fun getMemberKeys(): Array<String> = emptyArray()
+  override fun getMember(key: String?): Any? = null
 }

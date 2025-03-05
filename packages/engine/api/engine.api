@@ -907,6 +907,19 @@ public abstract interface class elide/runtime/gvm/loader/ModuleResolver {
 	public abstract fun load (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
 }
 
+public abstract interface class elide/runtime/interop/InteropProxyObject : org/graalvm/polyglot/proxy/ProxyObject {
+}
+
+public abstract interface class elide/runtime/interop/ReadOnlyProxyObject : elide/runtime/interop/SealedProxyObject {
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public abstract interface class elide/runtime/interop/SealedProxyObject : elide/runtime/interop/InteropProxyObject {
+	public abstract fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+}
+
 public abstract interface class elide/runtime/lang/Language {
 	public abstract fun getLanguageId ()Ljava/lang/String;
 }

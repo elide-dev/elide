@@ -12,6 +12,9 @@
  */
 package elide.runtime.node.childProcess
 
+// Library name for POSIX natives.
+private const val LIB_POSIX = "posix"
+
 /**
  * # Child Process: Native Utilities
  *
@@ -19,8 +22,13 @@ package elide.runtime.node.childProcess
  * by operating system.
  */
 internal object ChildProcessNative {
-  init {
-    System.loadLibrary("posix")
+  @Volatile private var libLoaded = false
+
+  @JvmStatic fun initialize() {
+    if (!libLoaded) {
+      System.loadLibrary(LIB_POSIX)
+      libLoaded = true
+    }
   }
 
   /**

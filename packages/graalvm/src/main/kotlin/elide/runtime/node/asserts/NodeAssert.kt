@@ -21,7 +21,6 @@
 
 package elide.runtime.node.asserts
 
-import io.micronaut.context.annotation.Factory
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.Value.asValue
 import org.graalvm.polyglot.proxy.ProxyArray
@@ -35,7 +34,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
 import kotlin.jvm.optionals.getOrNull
-import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -94,12 +92,10 @@ private val assertionModuleMethods = arrayOf(
   METHOD_DOES_NOT_REJECT,
 )
 
-
 // Installs the Node assert module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeAssertModule : SyntheticJSModule<AssertAPI>, AbstractNodeBuiltinModule() {
+@Intrinsic internal class NodeAssertModule : SyntheticJSModule<AssertAPI>, AbstractNodeBuiltinModule() {
   private val instance = NodeAssert.obtain()
-  @Singleton override fun provide(): AssertAPI = instance
+  override fun provide(): AssertAPI = instance
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[ASSERT_MODULE_SYMBOL.asJsSymbol()] = provide()
@@ -367,7 +363,7 @@ internal class NodeAssert : AssertAPI {
             is Double -> actual.toDouble() == expected.toDouble()  // == Double
             is BigInteger -> BigInteger.valueOf(actual.toLong()) == expected  // == BigInteger
             is String -> actual.toString() == expected  // == String
-            else -> actual == expected
+            else -> false
           }
 
           // UInt == ...
@@ -393,7 +389,7 @@ internal class NodeAssert : AssertAPI {
             is Double -> actual.toDouble() == expected  // == Double
             is BigInteger -> actual.toBigInteger() == expected  // == BigInteger
             is String -> actual.toString() == expected  // == String
-            else -> actual == expected
+            else -> false
           }
 
           // Short == ...
@@ -406,7 +402,7 @@ internal class NodeAssert : AssertAPI {
             is Double -> actual.toDouble() == expected  // == Double
             is BigInteger -> BigInteger.valueOf(actual.toLong()) == expected  // == BigInteger
             is String -> actual.toString() == expected  // == String
-            else -> actual == expected
+            else -> false
           }
 
           // Float == ...
@@ -419,7 +415,7 @@ internal class NodeAssert : AssertAPI {
             is Long -> actual == expected.toFloat()  // == Long
             is BigInteger -> actual == expected.toFloat()  // == BigInteger
             is String -> actual.toString() == expected  // == String
-            else -> actual == expected
+            else -> false
           }
 
           // Double == ...
@@ -432,7 +428,7 @@ internal class NodeAssert : AssertAPI {
             is Float -> actual.toFloat() == expected  // == Float
             is BigInteger -> actual == expected.toDouble()  // == BigInteger
             is String -> actual.toString() == expected  // == String
-            else -> actual == expected
+            else -> false
           }
 
           // BigInteger == ...
@@ -453,14 +449,12 @@ internal class NodeAssert : AssertAPI {
         }
 
         // if only one side is a guest value, wrap the other side as a guest value for comparison
-        actual is Value || expected is Value -> checkEqual(
+        else -> checkEqual(
           condition,
-          if (actual is Value) actual else asValue(actual),
-          if (expected is Value) expected else asValue(expected),
+          actual as? Value ?: asValue(actual),
+          expected as? Value ?: asValue(expected),
           message,
         )
-
-        else -> error("Incomparable guest types")
       }
     }.also {
       if (it != condition)

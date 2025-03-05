@@ -12,35 +12,43 @@
  */
 package elide.runtime.node.cluster
 
-import elide.annotations.Factory
-import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ClusterAPI
+import elide.runtime.lang.javascript.NodeModuleName
 
 // Internal symbol where the Node built-in module is installed.
 private const val CLUSTER_MODULE_SYMBOL = "node_cluster"
 
 // Installs the Node cluster module into the intrinsic bindings.
 @Intrinsic
-@Factory internal class NodeClusterModule : AbstractNodeBuiltinModule() {
-  @Singleton internal fun provide(): ClusterAPI = NodeCluster.obtain()
+internal class NodeClusterModule : AbstractNodeBuiltinModule() {
+  internal fun provide(): NodeCluster = NodeCluster.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[CLUSTER_MODULE_SYMBOL.asJsSymbol()] = provide()
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CLUSTER)) {
+      provide()
+    }
   }
 }
 
 /**
  * # Node API: `cluster`
  */
-internal class NodeCluster : ClusterAPI {
+internal class NodeCluster : ReadOnlyProxyObject, ClusterAPI {
   //
 
   internal companion object {
     private val SINGLETON = NodeCluster()
     fun obtain(): NodeCluster = SINGLETON
   }
+
+  override fun getMemberKeys(): Array<String> = emptyArray()
+  override fun getMember(key: String?): Any? = null
 }

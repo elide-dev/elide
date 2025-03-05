@@ -93,7 +93,9 @@ public final class elide/runtime/lang/javascript/NodeModuleName {
 	public static final field CONSTANTS Ljava/lang/String;
 	public static final field CRYPTO Ljava/lang/String;
 	public static final field DGRAM Ljava/lang/String;
+	public static final field DIAGNOSTICS_CHANNEL Ljava/lang/String;
 	public static final field DNS Ljava/lang/String;
+	public static final field DNS_PROMISES Ljava/lang/String;
 	public static final field DOMAIN Ljava/lang/String;
 	public static final field EVENTS Ljava/lang/String;
 	public static final field FS Ljava/lang/String;

@@ -29,6 +29,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.PathAPI
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.runtime.intrinsics.js.node.path.PathFactory
+import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.path.NodePaths.SYMBOL
 import elide.runtime.node.path.PathStyle.POSIX
@@ -154,7 +155,7 @@ public class PathBuf private constructor(
     @JvmStatic override fun from(first: String, vararg rest: String): Path =
       PathBuf(defaultStyle, KotlinPath(first, *rest))
 
-    @JvmStatic override fun from(path: java.nio.file.Path): Path =
+    @JvmStatic override fun from(path: JavaPath): Path =
       PathBuf(defaultStyle, KotlinPath(path.toString()))
 
     @JvmStatic override fun from(path: File): Path =
@@ -240,23 +241,15 @@ public class PathBuf private constructor(
 }
 
 // Installs the Node paths module into the intrinsic bindings.
-@Intrinsic @Factory internal class NodePathsModule : SyntheticJSModule<PathAPI>, AbstractNodeBuiltinModule() {
-  companion object {
-    // Singleton instance.
-    private val instance = NodePaths.create()
+@Intrinsic internal class NodePathsModule : SyntheticJSModule<PathAPI>, AbstractNodeBuiltinModule() {
+  val paths: PathAPI get() = NodePaths.create()
 
-    init {
-      ModuleRegistry.deferred(ModuleInfo.of("path")) { instance }
-    }
-  }
-
-  val paths: PathAPI get() = instance
+  override fun provide(): PathAPI = paths
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[SYMBOL.asJsSymbol()] = NodePaths.create()
+    bindings[SYMBOL.asJsSymbol()] = provide()
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.PATH)) { provide() }
   }
-
-  @Singleton override fun provide(): PathAPI = instance
 }
 
 /**

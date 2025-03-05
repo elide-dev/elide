@@ -127,8 +127,10 @@ private val allNodeModules = sortedSetOf(
   public const val CONSOLE: String = "console"
   public const val CONSTANTS: String = "constants"
   public const val CRYPTO: String = "crypto"
+  public const val DIAGNOSTICS_CHANNEL: String = "diagnostics_channel"
   public const val DGRAM: String = "dgram"
   public const val DNS: String = "dns"
+  public const val DNS_PROMISES: String = "dns_promises"
   public const val DOMAIN: String = "domain"
   public const val EVENTS: String = "events"
   public const val FS: String = "fs"
@@ -264,16 +266,25 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
 
           private fun setSyntheticModuleExport(module: JSModuleRecord) {
             module.environment.setObject(defaultExportSlot.index, surface)
+            val mountPropsFromProxy = { it: ProxyObject ->
+              for ((slotName, slot) in mappedSlots) {
+                // module.namespace.X
+                val member = it.getMember(slotName)
+                module.environment.setObject(slot.index, realm.env.asGuestValue(member))
+              }
+            }
             when (surface) {
-              is ProxyObject -> {
-                for ((slotName, slot) in mappedSlots) {
-                  // module.namespace.X
-                  val member = surface.getMember(slotName)
-                  module.environment.setObject(slot.index, realm.env.asGuestValue(member))
-                }
+              is ProxyObject -> mountPropsFromProxy(surface)
+              is SyntheticJSModule<*> -> {
+                val prox = surface.provide()
+                if (prox is ProxyObject) {
+                  mountPropsFromProxy(prox)
+                } else error(
+                  "Provided synthetic module from `SyntheticJSModule.provide` is not a `ProxyObject`: $prox"
+                )
               }
 
-              else -> error("Object is usable synthetic module: $surface")
+              else -> error("Object is unusable synthetic module: $surface")
             }
           }
         }

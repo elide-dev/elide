@@ -39,6 +39,15 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
     public var modulesPath: String? = null
   }
 
+  /** Configuration of experimental features. */
+  public inner class LabsConfig {
+    /** Disable polyfills in JavaScript/TypeScript contexts. */
+    public var disablePolyfills: Boolean = false
+
+    /** Disable VFS provided for JavaScript builtins. */
+    public var disableVfs: Boolean = false
+  }
+
   public inner class BuiltInModulesConfig {
     private val closed: AtomicBoolean = AtomicBoolean(false)
 
@@ -124,6 +133,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   /** Internal NPM configuration holder, see the DSL method for entry point. */
   internal val npmConfig: NpmConfig = NpmConfig()
 
+  /** Experimental options for use with JavaScript. */
+  internal val labsConfig: LabsConfig = LabsConfig()
+
   /** Internal NPM configuration holder, see the DSL method for entry point. */
   internal val builtinModulesConfig: BuiltInModulesConfig = BuiltInModulesConfig()
 
@@ -134,10 +146,10 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   public var v8: Boolean = true
 
   /** Enable WASM support and related bindings. Defaults to `true`; only active where supported. */
-  public var wasm: Boolean = true
+  public var wasm: Boolean = false
 
   /** Enable experimental built-in runtime support for TypeScript. Defaults to `false`. */
-  public var typescript: Boolean = false
+  public var typescript: Boolean = true
 
   /** ECMA Script language level to apply within the VM; defaults to [JavaScriptVersion.ES2022]. */
   public var language: JavaScriptVersion = ES2022
@@ -160,6 +172,11 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   /** Configure NPM support. */
   public fun npm(config: NpmConfig.() -> Unit) {
     npmConfig.apply(config)
+  }
+
+  /** Configure experimental options. */
+  public fun experimental(config: LabsConfig.() -> Unit) {
+    labsConfig.apply(config)
   }
 
   /** Configure builtin module replacements. */

@@ -172,7 +172,9 @@ val compileJdkModule by tasks.registering(JavaCompile::class) {
   destinationDirectory = classesOut
 }
 
+val jmodExists = File(jmodOut).exists()
 val compileJmod by tasks.registering(Exec::class) {
+  enabled = enablePackagedJvm && !jmodExists
   executable = jmodPath
   dependsOn(compileJdkModule.name)
   outputs.file(jmodOut)
@@ -213,7 +215,6 @@ val trimPackagedJvm by tasks.registering(Exec::class) {
   executable = "rm"
   args(listOf(
     "-f",
-    "-v",
   ).plus(
     binsToRemove.map { it.absolutePath }
   ).plus(
@@ -234,15 +235,18 @@ val copyNativeImageBuilder by tasks.registering(Copy::class) {
   into(jlinkBinRoot.absolutePath)
 }
 
+val jlinkExists = File(jlinkOut).exists()
+val jmodDirPath: String = jmodDir.get().asFile.path
+
 val buildPackagedJvm by tasks.registering(Exec::class) {
-  enabled = enablePackagedJvm
+  enabled = enablePackagedJvm && !jlinkExists
   executable = jlinkPath
   dependsOn(compileJmod.name)
   finalizedBy(copyNativeImageBuilder.name)
   finalizedBy(trimPackagedJvm.name)
 
   args(buildList {
-    add("--module-path=.${jmodDir.get().asFile.path}:$builderLibsPath:${jlink.joinToString(":") { it.absolutePath }}")
+    add("--module-path=.$jmodDirPath:$builderLibsPath")
     add("--bind-services")
     add("--compress=zip-9")
     add("--no-header-files")

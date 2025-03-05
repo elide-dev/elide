@@ -43,7 +43,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     config.applyTo(context)
 
     // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
+    if (!config.labsConfig.disablePolyfills) {
+      initializeEmbeddedScripts(context, resources)
+    }
   }
 
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
@@ -172,7 +174,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       val instance = JavaScript(config, embedded, env)
 
       // register resources with the VFS
-      installEmbeddedBundles(scope, embedded)
+      if (!config.labsConfig.disableVfs) {
+        installEmbeddedBundles(scope, embedded)
+      }
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)

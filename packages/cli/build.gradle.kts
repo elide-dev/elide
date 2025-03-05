@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.LinkedList
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.toolchain.host.Criteria
 import elide.toolchain.host.TargetCriteria
@@ -139,6 +140,7 @@ val enableAuxCacheTrace = true
 val enableJpms = false
 val enableConscrypt = false
 val enableBouncycastle = false
+val enableEmbeddedJvm = true
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
 val enableHeapReport = false
@@ -2112,4 +2114,45 @@ listOf(
     )
     notCompatibleWithConfigurationCache("insanely broken")
   }
+}
+
+fun spawnEmbeddedJvmCopy(receiver: BuildNativeImageTask): Copy {
+  val outDir = layout.buildDirectory.dir("native/${receiver.name}/jvm")
+    .get()
+    .asFile
+    .absolutePath
+  val jlinkDir = project(":packages:graalvm-jvm").layout.buildDirectory.dir("jlink")
+    .get()
+    .asFile
+    .absolutePath
+
+  return tasks.register("${receiver.name}EmbeddedJvmCopy", Copy::class) {
+    dependsOn(":packages:graalvm-jvm:jvmBundle", ":packages:graalvm-jvm:copyNativeImageBuilder")
+    from(jlinkDir)
+    into(outDir)
+  }.get()
+}
+
+fun Task.configureFinalizer(receiver: BuildNativeImageTask) {
+  group = "build"
+  description = "Finalize Native Image resources for task '${receiver.name}'"
+  dependsOn(receiver.name)
+}
+
+fun BuildNativeImageTask.createFinalizer() {
+  val finalizations = LinkedList<Task>()
+  if (enableEmbeddedJvm) {
+    finalizations.add(spawnEmbeddedJvmCopy(this))
+  }
+  if (finalizations.isNotEmpty()) {
+    val finalizer = tasks.register("${name}Finalize") {
+      configureFinalizer(this@createFinalizer)
+      dependsOn(finalizations.map { it.name })
+    }
+    finalizedBy(finalizer.name)
+  }
+}
+
+tasks.withType<BuildNativeImageTask>().all {
+  createFinalizer()
 }

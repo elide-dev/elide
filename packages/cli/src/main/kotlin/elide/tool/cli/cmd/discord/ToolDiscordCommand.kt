@@ -33,7 +33,7 @@ import elide.tool.cli.ToolState
   mixinStandardHelpOptions = true,
 )
 @Introspected
-@Singleton internal class ToolDiscordCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal open class ToolDiscordCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private const val REDIRECT_TARGET = "https://elide.dev/discord"
     private val REDIRECT_URI = URI(REDIRECT_TARGET)

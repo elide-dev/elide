@@ -11,9 +11,11 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 @file:Suppress(
-  "DSL_SCOPE_VIOLATION",
+  "unused",
   "UnstableApiUsage",
   "UNUSED_PARAMETER",
+  "SpreadOperator",
+  "MagicNumber",
 )
 
 import io.micronaut.gradle.MicronautRuntime
@@ -29,6 +31,7 @@ import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.LinkedList
+import kotlin.collections.listOf
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.toolchain.host.Criteria
 import elide.toolchain.host.TargetCriteria
@@ -50,6 +53,7 @@ plugins {
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.micronaut.aot)
   alias(libs.plugins.elide.conventions)
+  id("com.jprofiler") version ("14.0.6")
 }
 
 // Flags affecting this build script:
@@ -154,6 +158,11 @@ val enableJnaJpms = false
 val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
+val enableJfr = true
+val enableNmt = false
+val enableHeapDump = true
+val enableJmx = false
+val enableVerboseClassLoading = false
 val jniDebug = false
 val glibcTarget = "glibc"
 val dumpPointsTo = false
@@ -187,6 +196,7 @@ val exclusions = listOfNotNull(
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 25
 val stableJvmTarget = 23
+
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val stableJvm = JavaVersion.toVersion(stableJvmTarget)
 val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget
@@ -224,9 +234,7 @@ val jvmOnlyCompileArgs: List<String> = listOfNotNull(
 
 val jvmCompileArgs = listOfNotNull(
   "--enable-preview",
-  "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
-  "--add-opens=java.base/java.lang=ALL-UNNAMED",
-  "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+//  "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -238,10 +246,13 @@ val jvmCompileArgs = listOfNotNull(
 ) else emptyList())
 
 val jvmRuntimeArgs = listOf(
+  "-XX:+UnlockExperimentalVMOptions",
   "-XX:ParallelGCThreads=2",
   "-XX:ConcGCThreads=2",
   "-XX:ReservedCodeCacheSize=512m",
   "-XX:+TrustFinalNonStaticFields",
+  //  "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
+  //  "--add-opens=java.base/java.lang=ALL-UNNAMED",
 )
 
 val nativeEnabledModules = listOf(
@@ -255,19 +266,9 @@ val nativeCompileJvmArgs = listOf(
   "-J$it"
 })
 
-val jvmModuleArgs = listOf(
-  "--add-opens=java.base/java.io=ALL-UNNAMED",
-  "--add-opens=java.base/java.nio=ALL-UNNAMED",
-).plus(jvmCompileArgs).plus(jvmRuntimeArgs)
+val jvmModuleArgs = jvmCompileArgs.plus(jvmRuntimeArgs)
 
 val ktCompilerArgs = mutableListOf(
-  "-Xallow-unstable-dependencies",
-  "-Xcontext-receivers",
-  "-Xemit-jvm-type-annotations",
-  "-Xlambdas=indy",
-  "-Xsam-conversions=indy",
-  "-Xjsr305=strict",
-  "-Xjvm-default=all",
   "-Xjavac-arguments=${jvmCompileArgs.joinToString(",")}}",
 
   // opt-in to Elide's delicate runtime API
@@ -320,11 +321,9 @@ kapt {
 }
 
 kotlin {
-  target.compilations.all {
-    compilerOptions {
-      allWarningsAsErrors = true
-      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
-    }
+  compilerOptions {
+    allWarningsAsErrors = true
+    freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
   }
 }
 
@@ -334,6 +333,10 @@ sourceSets {
       layout.projectDirectory.dir("src/main/java9"),
     )
   }
+}
+
+jprofiler {
+  installDir = file("/opt/jprofiler14/")
 }
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
@@ -735,15 +738,17 @@ val preinitializedContexts = if (!enablePreinit) emptyList() else listOfNotNull(
   onlyIf(enablePreinitializeAll && enableJvm, "java"),
 )
 
+val macOsxPlatform = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"
+
 val experimentalLlvmEdgeArgs = listOfNotNull(
   "-H:-CheckToolchain",
 ).plus(listOfNotNull(
   "-fuse-ld=lld",
-  "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
-  "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
-  "-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib",
-  "-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
-  "-F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
+  "-I$macOsxPlatform/Developer/SDKs/MacOSX.sdk",
+  "-I$macOsxPlatform/Developer/SDKs/MacOSX.sdk/usr/include",
+  "-L$macOsxPlatform/Developer/SDKs/MacOSX.sdk/usr/lib",
+  "-L$macOsxPlatform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
+  "-F$macOsxPlatform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
   "-Wno-nullability-completeness",
   "-Wno-deprecated-declarations",
   "-Wno-availability",
@@ -770,6 +775,13 @@ if (!pluginApiHeader.exists()) {
 }
 
 val initializeAtBuildtime: List<String> = listOf(
+  "elide.tool.io.RuntimeWorkdirManager",
+  "elide.tool.io.RuntimeWorkdirManager\$Companion",
+  "io.micronaut.context.DefaultApplicationContextBuilder",
+  "elide.tool.err.DefaultErrorHandler",
+  "elide.tool.err.DefaultErrorHandler\$Companion",
+  "elide.tool.err.DefaultStructuredErrorRecorder",
+  "elide.tool.err.DefaultStructuredErrorRecorder\$Companion",
   "elide.runtime.core.internals.graalvm.GraalVMEngine\$Companion",
   "org.fusesource.jansi.io.AnsiOutputStream",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
@@ -1033,6 +1045,16 @@ val sharedLibFlags = listOf(
   "--H:+JNIExportSymbols",
 )
 
+val nativeMonitoring = listOfNotNull(
+  onlyIf(enableJfr, "jfr"),
+  onlyIf(enableNmt, "nmt"),
+  onlyIf(enableHeapDump, "heapdump"),
+  "jvmstat",
+  onlyIf(enableJmx, "jmxserver"),
+  onlyIf(enableJmx, "jmxclient"),
+  onlyIf(enableJmx, "threaddump"),
+).joinToString(",")
+
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
@@ -1063,6 +1085,7 @@ val commonNativeArgs = listOfNotNull(
   "--link-at-build-time=org.pkl",
   "--link-at-build-time=picocli",
   "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
+  "--enable-monitoring=${nativeMonitoring}",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -1082,7 +1105,19 @@ val commonNativeArgs = listOfNotNull(
   "-H:ExcludeResources=META-INF/.*kotlin_module",
   "-H:ExcludeResources=com/sun/jna/.*",
   "-H:ExcludeResources=META-INF/native/libsqlite.*",
+  "-H:ExcludeResources=lib/linux-x86_64/libbrotli.so",
+  "-H:ExcludeResources=META-INF/native/x86_64-unknown-linux-gnu/libsqlitejdbc.so",
   "-H:ExcludeResources=META-INF/micronaut/io.micronaut.core.graal.GraalReflectionConfigurer/.*",
+  "-H:ExcludeResources=META-INF/elide/embedded/runtime/wasm/runtime.json",
+  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/.*",
+  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/coll/zh.res",
+  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/coll/ucadata.icu",
+  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/brkitr/khmerdict.dict",
+  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/coll/ko.res",
+  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/brkitr/burmesedict.dict",
+  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/brkitr/thaidict.dict",
+  "-H:ExcludeResources=META-INF/native/libnetty_transport_native_epoll_aarch_64.so",
+  "-H:ExcludeResources=META-INF/native/libnetty_transport_native_io_uring_x86_64.so",
   "-Delide.strict=true",
   "-Delide.js.vm.enableStreams=true",
   "-Delide.mosaic=$enableMosaic",
@@ -1135,6 +1170,11 @@ val commonNativeArgs = listOfNotNull(
   "-Dmicronaut.executors.io.threads=2",
   "-Dmicronaut.executors.io.type=VIRTUAL",
   "-Dmicronaut.executors.scheduled.threads=1",
+  "-Djansi.eager=false",
+  "-Djava.util.concurrent.ForkJoinPool.common.parallelism=1",
+  "-Dkotlinx.coroutines.scheduler.core.pool.size=2",
+  "-Dkotlinx.coroutines.scheduler.max.pool.size=2",
+  "-Dkotlinx.coroutines.scheduler.default.name=ElideDefault",
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=$preinitContextsList"),
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeAllowExperimentalOptions=true"),
@@ -1175,7 +1215,7 @@ val debugFlags: List<String> = listOfNotNull(
 ).onlyIf(isDebug)
 
 val experimentalFlags = listOf(
-  "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
+  "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT...
   "-H:+UseStringInlining",  // String inlining optimization is not supported when just-in-time compilation is used
 
   // Not enabled for regular builds yet
@@ -1252,11 +1292,15 @@ val releaseCFlags: List<String> = listOf(
 )
 
 // PGO profiles to specify in release mode.
-val profiles: List<String> = listOf(
+val profiles: List<String> = if (enableEdge) listOf(
   "js-brotli.iprof",
   "pkl-eval.iprof",
   "ts-hello.iprof",
   "ts-sqlite.iprof",
+) else listOf(
+  "js-path-fs.iprof",
+  "js-sqlite.iprof",
+  "pkl-eval.iprof",
 )
 
 // GVM release flags
@@ -1315,8 +1359,7 @@ val jvmDefs = mutableMapOf(
   "org.sqlite.lib.exportPath" to nativesPath,
   "io.netty.native.workdir" to nativesPath,
   "io.netty.native.deleteLibAfterLoading" to false.toString(),
-  "java.util.concurrent.ForkJoinPool.common.parallelism" to "4",
-  "java.util.concurrent.ForkJoinPool.common.maximumSpares" to "128",
+  "java.util.concurrent.ForkJoinPool.common.parallelism" to "2",
   // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
   // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
 )
@@ -1391,7 +1434,6 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libjs.so",
     "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libposix.so",
     "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libterminal.so",
-    // "/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/build/terminal-543d7c2278c5a0d2/out/libterminalcore.a",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",
     "-H:ExcludeResources=.*dll",
@@ -1932,6 +1974,10 @@ tasks {
         "-verbose:jni",
         "-Xlog:library=trace",
       ).onlyIf(jniDebug)
+    ).plus(
+      listOf(
+        "-verbose:class",
+      ).onlyIf(enableVerboseClassLoading)
     ))
 
     standardInput = System.`in`
@@ -2017,7 +2063,11 @@ tasks {
       systemProperty(it.key, it.value)
     }
 
-    jvmArgs(jvmModuleArgs)
+    jvmArgs(jvmModuleArgs.plus(
+      listOf(
+        "-verbose:class",
+      ).onlyIf(enableVerboseClassLoading)
+    ))
 
     standardInput = System.`in`
     standardOutput = System.out
@@ -2041,6 +2091,7 @@ tasks {
   }
 
   withType<JavaCompile>().configureEach {
+    options.release.set(selectedJvmTarget)
     options.compilerArgs.addAll(jvmCompileArgs.plus(jvmOnlyCompileArgs))
   }
 
@@ -2156,3 +2207,19 @@ fun BuildNativeImageTask.createFinalizer() {
 tasks.withType<BuildNativeImageTask>().all {
   createFinalizer()
 }
+
+//val runProfiled by tasks.registering(com.profiler.gradle.JavaProfile::class.java) {
+//  mainClass = "com.mycorp.MyMainClass"
+//  classpath = sourceSets.main.runtimeClasspath
+//  offline = true
+//  sessionId = 80
+//  configFile = file("path/to/jprofiler_config.xml")
+//}
+
+//task run(type: com.jprofiler.gradle.JavaProfile) {
+//  mainClass = 'com.mycorp.MyMainClass'
+//  classpath sourceSets.main.runtimeClasspath
+//          offline = true
+//  sessionId = 80
+//  configFile = file('path/to/jprofiler_config.xml')
+//}

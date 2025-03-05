@@ -477,7 +477,7 @@ public final class elide/runtime/gvm/internals/GVMInvocationBindings$DispatchSty
 }
 
 public final class elide/runtime/gvm/internals/IntrinsicsManager {
-	public fun <init> (Ljava/util/List;)V
+	public fun <init> (Ljava/util/stream/Stream;)V
 	public final fun resolver ()Lelide/runtime/intrinsics/IntrinsicsResolver;
 }
 
@@ -1561,13 +1561,13 @@ public final class elide/runtime/gvm/intrinsics/CachedIntrinsicsResolver$Compani
 
 public final class elide/runtime/gvm/intrinsics/CompoundIntrinsicsResolver : elide/runtime/intrinsics/IntrinsicsResolver {
 	public static final field Companion Lelide/runtime/gvm/intrinsics/CompoundIntrinsicsResolver$Companion;
-	public synthetic fun <init> (Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/stream/Stream;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun generate (Lelide/runtime/gvm/GuestLanguage;Z)Lkotlin/sequences/Sequence;
-	public static final fun of (Ljava/util/List;)Lelide/runtime/gvm/intrinsics/CompoundIntrinsicsResolver;
+	public static final fun of (Ljava/util/stream/Stream;)Lelide/runtime/gvm/intrinsics/CompoundIntrinsicsResolver;
 }
 
 public final class elide/runtime/gvm/intrinsics/CompoundIntrinsicsResolver$Companion {
-	public final fun of (Ljava/util/List;)Lelide/runtime/gvm/intrinsics/CompoundIntrinsicsResolver;
+	public final fun of (Ljava/util/stream/Stream;)Lelide/runtime/gvm/intrinsics/CompoundIntrinsicsResolver;
 }
 
 public final class elide/runtime/gvm/intrinsics/ServiceIntrinsicsResolver : elide/runtime/intrinsics/IntrinsicsResolver {

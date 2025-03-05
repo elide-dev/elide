@@ -32,8 +32,7 @@ import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadFactory
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import elide.runtime.Logger
@@ -70,7 +69,6 @@ import org.graalvm.polyglot.Engine as VMEngine
     private const val enableVirtualThreads = true
     private const val enableFixedThreadPool = false
     private const val enableFlexibleThreadPool = true
-
     private val _stdout = System.out
     private val _stderr = System.err
     private val _stdin = System.`in`
@@ -111,19 +109,25 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   private val _cpus = Runtime.getRuntime().availableProcessors()
 
-  private val threadFactory: ToolThreadFactory = ToolThreadFactory(
-    enableVirtualThreads,
-    DefaultErrorHandler.acquire(),
-  )
-  private val threadedExecutor: ListeningExecutorService = when {
-    enableVirtualThreads -> MoreExecutors.listeningDecorator(Executors.newThreadPerTaskExecutor(threadFactory))
-    enableFixedThreadPool -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(_cpus, threadFactory))
-    enableFlexibleThreadPool -> MoreExecutors.listeningDecorator(
-      MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory)),
+  private val threadFactory: ToolThreadFactory by lazy {
+    ToolThreadFactory(
+      enableVirtualThreads,
+      DefaultErrorHandler.acquire(),
     )
-    else -> MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(threadFactory))
   }
-  private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
+
+  private val threadedExecutor: ListeningExecutorService by lazy {
+    when {
+      enableVirtualThreads -> MoreExecutors.listeningDecorator(Executors.newThreadPerTaskExecutor(threadFactory))
+      enableFixedThreadPool -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(_cpus, threadFactory))
+      enableFlexibleThreadPool -> MoreExecutors.listeningDecorator(
+        MoreExecutors.getExitingScheduledExecutorService(ScheduledThreadPoolExecutor(_cpus, threadFactory)),
+      )
+      else -> MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(threadFactory))
+    }
+  }
+
+  private val dispatcher: CoroutineDispatcher by lazy { threadedExecutor.asCoroutineDispatcher() }
 
   private val logging: Logger by lazy {
     Statics.logging
@@ -251,6 +255,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Default output controller implementation. */
+  @Suppress("ConstructorParameterNaming")
   protected open class DefaultOutputController<State: ToolState> (
     private val _state: State,
     private val _logger: Logger,
@@ -297,7 +302,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Private implementation of tool execution context. */
-  protected abstract class ToolExecutionContextImpl<T: ToolState> constructor (private val _state: T) : ToolContext<T> {
+  protected abstract class ToolExecutionContextImpl<T: ToolState> (private val data: T) : ToolContext<T> {
     internal companion object {
       @JvmStatic fun <T: ToolState> forSuite(
         state: T,
@@ -314,7 +319,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     }
 
     /** Return the calculated tool state. */
-    override val state: T get() = _state
+    override val state: T get() = data
   }
 
   // Shared resources which should be closed at the conclusion of processing.
@@ -334,7 +339,7 @@ import org.graalvm.polyglot.Engine as VMEngine
    *
    * @see createEngine
    */
-  protected val engine: AtomicReference<PolyglotEngine> = AtomicReference()
+  private val engine = atomic<PolyglotEngine?>(null)
 
   /** Controller for tool output. */
   protected lateinit var out: OutputController
@@ -349,7 +354,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   protected lateinit var context: ToolContext<State>
 
   /** Whether this is an interactive session. */
-  val interactive: AtomicBoolean = AtomicBoolean(false)
+  private var interactive = false
 
   /** Debug flag status. */
   val debug: Boolean get() = commons.debug
@@ -363,8 +368,14 @@ import org.graalvm.polyglot.Engine as VMEngine
   /** Pretty output flag status. */
   val pretty: Boolean get() = commons.pretty
 
+  internal fun enableInteractive() {
+    interactive = true
+  }
+
+  internal fun isInteractive(): Boolean = interactive
+
   // Base execution context.
-  private val baseExecContext: CoroutineContext = Dispatchers.Default + CoroutineName("elide")
+  private val baseExecContext: CoroutineContext = Dispatchers.Unconfined + CoroutineName("elide")
   override val coroutineContext: CoroutineContext get() = baseExecContext
 
   /**
@@ -377,6 +388,10 @@ import org.graalvm.polyglot.Engine as VMEngine
     // allow subclasses to customize the engine
     configureEngine(langs)
   }
+
+  internal fun engineSafe(): PolyglotEngine? = engine.value
+
+  internal fun engine(): PolyglotEngine = engine.value!!
 
   // Build an initial `ToolState` instance from the main tool.
   private fun materializeInitialState(): ToolState {
@@ -431,23 +446,16 @@ import org.graalvm.polyglot.Engine as VMEngine
         close()
 
         // @TODO(sgammon): base injection bug
-        if (!Statics.args.get().contains("--quiet") && interactive.get()) runBlocking {
-          out.pretty(
-            {
-              line("Exiting session. Have a great day! \uD83D\uDC4B")
-            },
-            {
-              line("Exited session")
-            },
-          )
+        if (Statics.args.contains("--verbose") && interactive && !Statics.disableStreams) {
+          println("Exiting session. Have a great day! \uD83D\uDC4B")
         }
       },
     )
   }
 
   @Synchronized protected fun resolveEngine(langs: EnumSet<GuestLanguage>): PolyglotEngine {
-    return when (val ready = engine.get()) {
-      null -> createEngine(langs).also { engine.set(it) }
+    return when (val ready = engine.value) {
+      null -> createEngine(langs).also { engine.value = it }
       else -> ready
     }
   }
@@ -477,10 +485,11 @@ import org.graalvm.polyglot.Engine as VMEngine
   /**
    * TBD.
    */
+  @Suppress("TooGenericExceptionCaught")
   override fun close() {
     sharedResources.forEach {
       try {
-        logging.trace("Cleaning shared resource", it)
+        logging.trace("Cleaning shared resource {}", it)
         it.close()
       } catch (err: Throwable) {
         logging.error("Caught exception while closing shared resource '$it' (ignored)", err)

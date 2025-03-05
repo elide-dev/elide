@@ -220,18 +220,30 @@ public object Constants {
 
     /** Compiler args to include in all Kotlin targets. */
     private val BaseCompilerArgs = listOf(
-      "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
       "-Xsuppress-version-warnings",
+      "-Xconsistent-data-class-copy-visibility",
+      "-Xvalue-classes",
+      "-Xinline-classes",
+      "-Xabi-stability=stable",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */
-    internal val JvmCompilerArgs = BaseCompilerArgs.plus(
+    public val JvmCompilerArgs: List<String> = BaseCompilerArgs.plus(
       listOf(
         "-no-stdlib",
         "-no-reflect",
         "-Xjvm-default=all",
         "-Xjsr305=strict",
+        "-Xvalidate-bytecode",
+        "-Xsam-conversions=indy",
+        "-Xno-receiver-assertions",
+        "-Xno-param-assertions",
+        "-Xlambdas=indy",
+        "-Xenhance-type-parameter-types-to-def-not-null",
+        "-Xemit-jvm-type-annotations",
+        "-Xassertions=jvm",
+        "-Xstring-concat=indy-with-constants",
       ),
     )
 
@@ -246,7 +258,6 @@ public object Constants {
     internal val KaptCompilerArgs = JvmCompilerArgs.plus(
       listOf(
         "-Xallow-unstable-dependencies",
-        "-Xemit-jvm-type-annotations",
       ),
     )
 

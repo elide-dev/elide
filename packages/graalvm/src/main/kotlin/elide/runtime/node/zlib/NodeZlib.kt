@@ -434,7 +434,7 @@ public data object ModernNodeZlibConstants : NodeZlibConstants {
   override fun provide(): NodeZlib = zlib
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[ZLIB_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[ZLIB_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { provide() }
   }
 }
 
@@ -490,6 +490,10 @@ private class UnzipStream(private val wrapped: AbstractReadable<*>) :
  */
 private class BrotliCompressStream(private val wrapped: WrappedOutputStream) :
   Writable by wrapped, BrotliCompress, CompressImpl() {
+  init {
+    Brotli4jLoader.ensureAvailability()
+  }
+
   override fun close() {
     wrapped.close()
   }
@@ -504,6 +508,10 @@ private class BrotliCompressStream(private val wrapped: WrappedOutputStream) :
  */
 private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
   Readable by wrapped, BrotliDecompress, CompressImpl() {
+  init {
+    Brotli4jLoader.ensureAvailability()
+  }
+
   override fun close() {
     wrapped.close()
   }
@@ -519,10 +527,6 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
  * Implements the Node zlib module.
  */
 @Singleton internal class NodeZlib @Inject constructor (private val exec: GuestExecutor) : ProxyObject, ZlibAPI {
-  init {
-    Brotli4jLoader.ensureAvailability()
-  }
-
   private companion object {
     // Decompressor which is enabled for EOF awareness.
     private val compressorFactory by lazy {

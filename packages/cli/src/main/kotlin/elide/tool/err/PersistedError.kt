@@ -49,7 +49,7 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
   val runtime: RuntimeInfo = RuntimeInfo(),
   val os: HostPlatform.OperatingSystem,
   val arch: HostPlatform.Architecture,
-  val args: List<String> = Statics.args.get() ?: emptyList(),
+  val args: List<String> = Statics.args.toList(),
 ) {
   companion object {
     /**

@@ -35,7 +35,7 @@ import elide.tool.cli.ToolState
 class ToolPklCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @Suppress("TooGenericExceptionCaught")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val args = Statics.args.get().let { args ->
+    val args = Statics.args.let { args ->
       args.drop(args.indexOf("pkl") + 1)
     }
 

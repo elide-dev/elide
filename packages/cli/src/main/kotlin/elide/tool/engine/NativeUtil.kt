@@ -23,12 +23,13 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
-import kotlin.collections.ArrayList
 import elide.runtime.Logger
 import elide.tool.cli.Statics
 
 /** Utilities for loading and copied native libraries, inspired by Netty. */
 internal object NativeUtil {
+  private const val COPY_BUFSIZE = 8192
+
   // Logger to use for warnings when unpacking native support libraries.
   @JvmStatic private val logger: Logger by lazy { Statics.logging }
 
@@ -37,7 +38,7 @@ internal object NativeUtil {
     if (c != null) {
       try {
         c.close()
-      } catch (ignore: IOException) {
+      } catch (_: IOException) {
         // ignore
       }
     }
@@ -104,9 +105,9 @@ internal object NativeUtil {
     }
   }
 
-  @Suppress("LongParameterList")
+  @Suppress("LongParameterList", "ReturnCount", "ThrowsCount", "TooGenericExceptionCaught")
   @JvmStatic internal fun loadOrCopy(
-    workdir: File,
+    workdirProvider: () -> File,
     path: String,
     libName: String,
     loader: ClassLoader,
@@ -120,6 +121,7 @@ internal object NativeUtil {
     val index = libname.lastIndexOf('.')
     val prefix = libname.substring(0, index)
     val suffix = libname.substring(index)
+    val workdir = workdirProvider()
     val libTarget = workdir.resolve(prefix + suffix)
 
     // unless we are force-copying, we can skip remaining logic if the file already exists
@@ -129,7 +131,7 @@ internal object NativeUtil {
           try {
             loadNativeLibrary(libName, false)
             return true to false
-          } catch (thr: Throwable) {
+          } catch (_: Throwable) {
             // ignore
           }
         }
@@ -197,9 +199,9 @@ internal object NativeUtil {
         }
       }
 
-      `in` = url!!.openStream()
+      `in` = requireNotNull(url).openStream()
       out = FileOutputStream(libTarget)
-      val buffer = ByteArray(8192)
+      val buffer = ByteArray(COPY_BUFSIZE)
       var length: Int
       while (`in`.read(buffer).also { length = it } > 0) {
         out.write(buffer, 0, length)

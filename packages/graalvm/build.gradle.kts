@@ -821,31 +821,48 @@ afterEvaluate {
   )
 }
 
-val buildRustNativesForHost by tasks.registering(Exec::class) {
+val baseCargoFlags = listOfNotNull(
+  "--color=always",
+  "build",
+  "--target",
+  targetInfo.triple,
+).plus(
+  cargoConfig?.let {
+    listOf("--config", it)
+  } ?: emptyList()
+)
+
+val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")
 
   executable = "cargo"
-  args(listOfNotNull(
-    "--color=always",
-    "build",
-    if (isRelease) "--release" else null,
-    "--target",
-    targetInfo.triple,
-  ).plus(
-    cargoConfig?.let {
-      listOf("--config", it)
-    } ?: emptyList()
-  ))
+  args(baseCargoFlags.plus("--release"))
 
   outputs.upToDateWhen { true }
   outputs.dir(targetDir)
 }
 
+val buildRustNativesForHost by tasks.registering(Exec::class) {
+  workingDir(rootDir)
+  dependsOn("buildThirdPartyNatives")
+
+  executable = "cargo"
+  args(baseCargoFlags.plus(listOfNotNull(if (isRelease) "--release" else null)))
+
+  outputs.upToDateWhen { true }
+  outputs.dir(targetDir)
+}
+
+val selectedRustNatives: String = if (isRelease)
+  buildRustNativesForHostRelease.name
+else
+  buildRustNativesForHost.name
+
 val natives by tasks.registering {
   group = "build"
   description = "Build natives via Make and Cargo"
-  dependsOn(buildThirdPartyNatives.name, buildRustNativesForHost.name)
+  dependsOn(buildThirdPartyNatives.name, selectedRustNatives)
 }
 
 listOf(

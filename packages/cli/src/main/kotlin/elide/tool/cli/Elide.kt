@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("MnInjectionPoints", "MaxLineLength")
+@file:Suppress("MnInjectionPoints", "MaxLineLength", "unused", "NOTHING_TO_INLINE")
 
 package elide.tool.cli
 
@@ -23,7 +23,6 @@ import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.ContextConfigurer
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ProcessProperties
-import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Help
@@ -49,6 +48,18 @@ import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
 import elide.tool.io.RuntimeWorkdirManager
 
+// Default timeout to apply to non-server commands.
+private const val DEFAULT_CMD_TIMEOUT = 30
+
+private val applicationContextBuilder = ApplicationContext
+  .builder()
+  .environments("cli")
+  .defaultEnvironments("cli")
+  .eagerInitAnnotated(Eager::class.java)
+  .eagerInitSingletons(false)
+  .eagerInitConfiguration(true)
+  .deduceEnvironment(false)
+  .deduceCloudEnvironment(false)
 
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
@@ -92,17 +103,37 @@ import elide.tool.io.RuntimeWorkdirManager
 @Suppress("MemberVisibilityCanBePrivate")
 @Context @Singleton class Elide : ToolCommandBase<CommandContext>() {
   companion object {
-    init {
-      SLF4JBridgeHandler.removeHandlersForRootLogger()
-      SLF4JBridgeHandler.install()
-      initializeNatives()
-    }
-
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"
 
     // Whether to log early init messages.
     private const val INIT_LOGGING: Boolean = false
+
+    // Application context; initialized early for CLI use.
+    @Volatile private lateinit var applicationContext: ApplicationContext
+
+    private val bundle = ResourceBundle.getBundle("ElideTool", Locale.US)
+    private val errHandler = DefaultErrorHandler.acquire()
+
+    // Builder for the CLI entrypoint.
+    private val cliBuilder get() = CommandLine(Elide::class.java, object: CommandLine.IFactory {
+      override fun <K : Any?> create(cls: Class<K?>?): K? {
+        return MicronautFactory(applicationContext).create<K>(cls)
+      }
+    }).apply {
+      setResourceBundle(bundle)
+      setExitCodeExceptionMapper(errHandler)
+      setCommandName(TOOL_NAME)
+      setAbbreviatedOptionsAllowed(true)
+      setAbbreviatedSubcommandsAllowed(true)
+      setCaseInsensitiveEnumValuesAllowed(true)
+      setEndOfOptionsDelimiter("--")
+      setPosixClusteredShortOptionsAllowed(true)
+      setUsageHelpAutoWidth(true)
+    }
+
+    // Whether native libraries have loaded.
+    @Volatile private var nativeLibsLoaded: Boolean = false
 
     // Properties which cannot be set by users.
     private val blocklistedProperties = sortedSetOf(
@@ -112,34 +143,47 @@ import elide.tool.io.RuntimeWorkdirManager
     // Init logging.
     @JvmStatic private fun initLog(message: String) {
       if (INIT_LOGGING) {
-        System.err.println("[elide:init] $message")
+        System.err.println("[entry] $message")
       }
     }
 
-    @JvmStatic private fun initializeNatives() {
+    @JvmStatic fun requestNatives(server: Boolean = false, tooling: Boolean = false) {
+      if (!nativeLibsLoaded) {
+        nativeLibsLoaded = true
+        initializeNatives(server, tooling)
+      }
+    }
+
+    @JvmStatic @Synchronized private fun initializeNatives(server: Boolean, tooling: Boolean) {
       // load natives
       initLog("Initializing natives")
-      NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
-        listOf(
-          "elide.js.vm.enableStreams" to "true",
-          "jdk.httpclient.allowRestrictedHeaders" to "Host,Content-Length",  // needed for fetch
-          "io.netty.allocator.maxOrder" to "3",
-          "io.netty.serviceThreadPrefix" to "elide-svc",
-          "io.netty.native.deleteLibAfterLoading" to "true",  // reversed bc of bug (actually does not delete)
-          "io.netty.buffer.bytebuf.checkAccessible" to "false",
-          org.fusesource.jansi.AnsiConsole.JANSI_MODE to org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE,
-          org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL to "false",
-        )
+
+      NativeEngine.boot(
+        { RuntimeWorkdirManager.acquire() },
+        server = server,
+        tooling = tooling,
+      ) {
+        emptyList()
+      }.also {
+        if (tooling) {
+          dev.elide.cli.bridge.CliNativeBridge.initialize()
+        }
       }
     }
 
     @JvmStatic private fun initializeTerminal() {
+      if (Statics.disableStreams) {
+        return
+      }
       assert(!ImageInfo.inImageBuildtimeCode())
       initLog("Initializing ANSI system console")
       org.fusesource.jansi.AnsiConsole.systemInstall()
     }
 
-    @JvmStatic private fun initializeTerminalNative(win32: Boolean = false) {
+    @JvmStatic private fun initializeTerminalNative() {
+      if (Statics.disableStreams) {
+        return
+      }
       // this trick is necessary to capture the out/err streams set up by `AnsiConsole`, which performs those steps in
       // private code; after the streams are captured, they are uninstalled and instead mounted via the native image
       // I/O stream wrappers, which will delegate to the assigned streams anyway.
@@ -199,7 +243,7 @@ import elide.tool.io.RuntimeWorkdirManager
       val runner = {
         when {
           // build-time code cannot swap the out/err streams, but instead must delegate via the native I/O wrapper.
-          ImageInfo.inImageBuildtimeCode() -> initializeTerminalNative(isWindows)
+          ImageInfo.inImageBuildtimeCode() -> initializeTerminalNative()
 
           // otherwise, we can simply swap the streams so that the ANSI terminal takes over.
           !org.fusesource.jansi.AnsiConsole.isInstalled() -> initializeTerminal()
@@ -215,21 +259,10 @@ import elide.tool.io.RuntimeWorkdirManager
       }
     }
 
-    private fun cleanup() {
-      // no-op
-    }
-
     /** CLI entrypoint and [args]. */
-    @JvmStatic fun entry(args: Array<String>): Int = try {
-      // load and install libraries
-      Statics.args.set(args.toList())
-
-      val binPath = ProcessHandle.current().info().command().orElse(null)
-      installStatics(binPath, args, System.getProperty("user.dir"))
+    @JvmStatic fun entry(args: Array<String>): Int {
       initLog("Firing entrypoint")
-      exec(args)
-    } finally {
-      cleanup()
+      return exec(args)
     }
 
     /** Unwind and clean up shared resources on exit. */
@@ -242,55 +275,51 @@ import elide.tool.io.RuntimeWorkdirManager
 
     // Private execution entrypoint for customizing core Picocli settings.
     @Suppress("SpreadOperator")
-    @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext
-      .builder()
-      .environments("cli")
-      .defaultEnvironments("cli")
-      .eagerInitAnnotated(Eager::class.java)
-      .eagerInitSingletons(false)
-      .eagerInitConfiguration(true)
-      .deduceEnvironment(false)
-      .deduceCloudEnvironment(false)
-      .args(*args)
-      .also { initLog("Starting application context") }
-      .start()
-      .also { initLog("Application context started; loading tool entrypoint") }
-      .use {
-        val locale = Locale.of("en", "US")
-        Locale.setDefault(locale)
-        initLog("Preparing CLI configuration (locale: $locale)")
-        val bundle = ResourceBundle.getBundle("ElideTool", locale)
-        initLog("Loaded resource bundle")
-        val errHandler = DefaultErrorHandler.acquire()
-        initLog("Constructing CLI and Micronaut factory")
-        CommandLine(Elide::class.java, MicronautFactory(it))
-         .setCommandName(TOOL_NAME)
-         .setResourceBundle(bundle)
-         .setAbbreviatedOptionsAllowed(true)
-         .setAbbreviatedSubcommandsAllowed(true)
-         .setCaseInsensitiveEnumValuesAllowed(true)
-         .setEndOfOptionsDelimiter("--")
-         .setExitCodeExceptionMapper(errHandler)
-         .setPosixClusteredShortOptionsAllowed(true)
-         .setUsageHelpAutoWidth(true)
-         .setColorScheme(
-           Help.defaultColorScheme(
-             if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
-               System.getenv("NO_COLOR") != null) {
-               Help.Ansi.OFF
-             } else {
-               Help.Ansi.ON
-             },
-           ),
-         ).let {
-           initLog("Entering application context")
-           it.execute(*args).also {
-             initLog("Finished execution")
-           }
-         }
-      }.also {
-        initLog("Exiting application context")
+    @JvmStatic internal inline fun exec(args: Array<String>): Int {
+      // special case: exit immediately with `0` if `--exit` is provided as the first and only argument.
+      if (args.size == 1 && args[0] == "--exit") {
+        return 0
       }
+      initLog("Preparing context")
+      return applicationContextBuilder
+        .args(*args)
+        .also { initLog("Starting application context") }
+        .start()
+        .also { initLog("Application context started; loading tool entrypoint") }
+        .use {
+          val locale = Locale.of("en", "US")
+          Locale.setDefault(locale)
+          initLog("Preparing CLI configuration (locale: $locale)")
+
+          applicationContext = it
+          cliBuilder.apply {
+            setColorScheme(
+              Help.defaultColorScheme(
+                if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
+                  System.getenv("NO_COLOR") != null) {
+                  Help.Ansi.OFF
+                } else {
+                  Help.Ansi.ON
+                },
+              )
+            )
+          }.let {
+            initLog("Entering application context")
+
+            // special case: print `--help` directly to the statically-assigned out-stream; needed for testing and
+            // other monkeypatch-oriented use cases
+            if (args.isNotEmpty() && args[0] == "--help") {
+              it.usage(Statics.err)
+              return 0
+            }
+            it.execute(*args).also {
+              initLog("Finished execution")
+            }
+          }
+        }.also {
+          initLog("Exiting application context")
+        }
+    }
 
     /** Configures the Micronaut binary. */
     @ContextConfigurer internal class ToolConfigurator: ApplicationContextConfigurer {
@@ -321,7 +350,7 @@ import elide.tool.io.RuntimeWorkdirManager
     defaultValue = "30",
     scope = ScopeType.INHERIT,
   )
-  internal var timeout: Int = 30
+  internal var timeout: Int = DEFAULT_CMD_TIMEOUT
 
   /** Source file shortcut alias. */
   @Parameters(
@@ -345,7 +374,7 @@ import elide.tool.io.RuntimeWorkdirManager
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     // proxy to the `shell` command for a naked run
-    return beanContext.getBean(ToolShellCommand::class.java).apply {
+    val bean = beanContext.getBean(ToolShellCommand::class.java).apply {
       this@Elide.srcfile?.let {
         if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
           runnable = it
@@ -356,7 +385,8 @@ import elide.tool.io.RuntimeWorkdirManager
           languageHint = it
         }
       }
-      call()
-    }.commandResult.get()
+    }
+    bean.call()
+    return bean.commandResult.get()
   }
 }

@@ -39,6 +39,10 @@ sourceSets.all {
   resources.setSrcDirs(listOf("jmh/resources"))
 }
 
+allOpen {
+  annotation("org.openjdk.jmh.annotations.BenchmarkMode")
+}
+
 dependencies {
   implementation(libs.kotlinx.benchmark.runtime)
   implementation(libs.kotlinx.coroutines.test)
@@ -69,6 +73,11 @@ benchmark {
     }
     create("sqlite") {
       include("*SQLite*")
+      warmups = 5
+      iterations = 5
+    }
+    create("entry") {
+      include("EntryBenchmark")
       warmups = 5
       iterations = 5
     }
@@ -109,6 +118,7 @@ tasks.withType(JMHTask::class).configureEach {
   jvmArgsAppend.addAll(
     listOf(
       "-XX:+UnlockExperimentalVMOptions",
+      "-Djava.util.concurrent.ForkJoinPool.common.parallelism=1",
       "-Djava.library.path=${javaLibPath.get()}",
     ),
   )
@@ -126,5 +136,33 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     jvmTarget = JvmTarget.fromTarget(javaLanguageVersion)
     javaParameters = true
     incremental = true
+    freeCompilerArgs.add("-Xskip-prerelease-check")
   }
+}
+
+fun checkNatives() {
+  if (!File(nativesPath).exists()) {
+    error("Natives not found at $nativesPath; please run `./gradlew natives -Pelide.release=true`")
+  }
+}
+
+val projectRootPath: String = rootProject.layout.projectDirectory.asFile.absolutePath
+
+tasks.withType<JavaExec>().configureEach {
+  doFirst {
+    checkNatives()
+  }
+  jvmArgs(
+    listOf(
+      "--enable-preview",
+      "--enable-native-access=ALL-UNNAMED",
+      "-XX:+UseG1GC",
+      "-XX:+UnlockExperimentalVMOptions",
+      "-XX:+UnlockExperimentalVMOptions",
+      "-XX:+TrustFinalNonStaticFields",
+      "-Djava.library.path=${javaLibPath.get()}",
+      "-Delide.disableStreams=true",
+      "-Delide.project.root=$projectRootPath",
+    ),
+  )
 }

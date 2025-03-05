@@ -266,7 +266,6 @@ private enum class ToolAction (
     UV -> dev.elide.cli.bridge.CliNativeBridge::runUv
     OXC, BIOME -> error("Tool '$selectedTool' is not supported yet")
   }.let { tool ->
-    dev.elide.cli.bridge.CliNativeBridge.initialize()
     val version = dev.elide.cli.bridge.CliNativeBridge.apiVersion()
 
     if (verbose) output {
@@ -343,7 +342,9 @@ private enum class ToolAction (
   }
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    dev.elide.cli.bridge.CliNativeBridge.initialize()
+    // tools typically require native access; force early init
+    Elide.requestNatives(server = false, tooling = true)
+
     val version = dev.elide.cli.bridge.CliNativeBridge.apiVersion()
     val tools = dev.elide.cli.bridge.CliNativeBridge.supportedTools()
     val versions = tools.associateWith { dev.elide.cli.bridge.CliNativeBridge.toolVersion(it) }

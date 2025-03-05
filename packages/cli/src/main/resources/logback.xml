@@ -68,7 +68,7 @@
 <!--  <logger name="info.picocli" level="error" />-->
 
 <!--  <logger name="elide:flight-recorder" level="warn" />-->
-  <logger name="elide:engine" level="debug" />
+  <logger name="elide:engine" level="off" />
 <!--  <logger name="elide:engine:js" level="debug" />-->
 <!--  <logger name="elide:engine:python" level="debug" />-->
 <!--  <logger name="elide:engine:ruby" level="debug" />-->

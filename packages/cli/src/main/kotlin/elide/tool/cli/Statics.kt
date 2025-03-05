@@ -11,19 +11,24 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("FunctionParameterNaming", "ObjectPropertyNaming")
+
 package elide.tool.cli
 
 import java.io.InputStream
+import java.io.OutputStream
 import java.io.PrintStream
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.atomicfu.atomic
 import elide.runtime.Logger
 import elide.runtime.Logging
 
 /** Internal static tools and utilities used across the Elide CLI. */
 internal object Statics {
-  private val delegatedInStream: AtomicReference<InputStream> = AtomicReference()
-  private val delegatedOutStream: AtomicReference<PrintStream> = AtomicReference()
-  private val delegatedErrStream: AtomicReference<PrintStream> = AtomicReference()
+  val disableStreams = System.getProperty("elide.disableStreams") == "true"
+  private val delegatedInStream = atomic<InputStream?>(null)
+  private val delegatedOutStream = atomic<PrintStream?>(null)
+  private val delegatedErrStream = atomic<PrintStream?>(null)
 
   /** Main tool logger. */
   internal val logging: Logger by lazy {
@@ -37,24 +42,47 @@ internal object Statics {
 
   /** Whether to disable color output and syntax highlighting. */
   internal val noColor: Boolean by lazy {
-    System.getenv("NO_COLOR") != null || args.get().let { args ->
+    System.getenv("NO_COLOR") != null || args.let { args ->
       args.contains("--no-pretty") || args.contains("--no-color")
     }
   }
 
+  private val initialArgs = atomic<Array<String>>(emptyArray())
+
   /** Invocation args. */
-  internal val args: AtomicReference<List<String>> = AtomicReference(emptyList())
+  internal val args: Array<String> = initialArgs.value
 
-  /** Main top-level tool. */
-  val base: AtomicReference<Elide> = AtomicReference()
+  // Stream which drops all data.
+  private val noOpStream by lazy {
+    PrintStream(object : OutputStream() {
+      override fun write(b: Int) = Unit
+    })
+  }
 
-  val `in`: InputStream get() = delegatedInStream.get() ?: System.`in`
-  val out: PrintStream get() = delegatedOutStream.get() ?: System.out
-  val err: PrintStream get() = delegatedErrStream.get() ?: System.err
+  val `in`: InputStream get() =
+    delegatedInStream.value ?: System.`in`
+
+  val out: PrintStream get() =
+    when (disableStreams) {
+      true -> noOpStream
+      else -> delegatedOutStream.value ?: System.out
+    }
+
+  val err: PrintStream get() =
+    when (disableStreams) {
+      true -> noOpStream
+      else -> delegatedErrStream.value ?: System.err
+    }
+
+  internal fun mountArgs(args: Array<String>) {
+    check(initialArgs.value.isEmpty()) { "Args are not initialized yet!" }
+    initialArgs.value = args
+  }
 
   internal fun assignStreams(out: PrintStream, err: PrintStream, `in`: InputStream) {
-    delegatedOutStream.set(out)
-    delegatedErrStream.set(err)
-    delegatedInStream.set(`in`)
+    if (disableStreams) return
+    delegatedOutStream.value = out
+    delegatedErrStream.value = err
+    delegatedInStream.value = `in`
   }
 }

@@ -5,7 +5,10 @@
     <option name="MAIN_CLASS_NAME" value="elide.tool.cli.MainKt" />
     <module name="elide.packages.cli.main" />
     <option name="PROGRAM_PARAMETERS" value="--help" />
-    <option name="VM_PARAMETERS" value="-Djava.library.path=./target/debug:./third_party/sqlite/install:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib -Djava.util.concurrent.ForkJoinPool.common.parallelism=1" />
+    <option
+      name="VM_PARAMETERS"
+      value="-Djava.library.path=./target/debug:./third_party/sqlite/install:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib -Djava.util.concurrent.ForkJoinPool.common.parallelism=1"
+    />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

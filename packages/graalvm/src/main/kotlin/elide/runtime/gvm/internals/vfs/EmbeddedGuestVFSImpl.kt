@@ -107,10 +107,10 @@ public class EmbeddedGuestVFSImpl private constructor (
     const val fileDigestAlgorithm: String = "SHA-1"
 
     /** Hash algorithm to use (symbolic) for file digests. */
-    val fileDigest: HashAlgorithm = HashAlgorithm.SHA256
+    val fileDigest: HashAlgorithm = HashAlgorithm.SHA1
 
     /** Whether to defer reads until needed, or copy files into the VFS eagerly. */
-    const val DEFAULT_DEFERRED_READS = true
+    const val DEFAULT_DEFERRED_READS = false
   }
 
   /** Enumerates supported embedded VFS bundle formats. */

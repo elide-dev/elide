@@ -81,6 +81,11 @@ benchmark {
       warmups = 5
       iterations = 5
     }
+    create("node") {
+      include("Node*")
+      warmups = 5
+      iterations = 5
+    }
   }
   targets {
     register("main") {

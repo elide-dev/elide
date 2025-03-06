@@ -127,8 +127,6 @@ jobs:
         continue-on-error: true
         with:
           merge-multiple: true
-      - name: "Analysis: Formatting (Prettier)"
-        run: pnpm run prettier --check .
       - name: "Analysis: Formatting (Biome)"
         run: pnpm biome check .
       - name: "Analysis: Formatting (Cargo)"

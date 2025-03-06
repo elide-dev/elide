@@ -558,7 +558,7 @@ dependencies {
   implementation(libs.jimfs)
 
   // Compression
-  implementation(libs.commons.compress)
+  api(libs.commons.compress)
 
   // Micronaut
   runtimeOnly(mn.micronaut.graal)
@@ -851,6 +851,10 @@ val selectedRustNatives: String = if (isRelease)
   buildRustNativesForHostRelease.name
 else
   buildRustNativesForHost.name
+
+tasks.jar {
+  exclude("**/*.proto")
+}
 
 val natives by tasks.registering {
   group = "build"

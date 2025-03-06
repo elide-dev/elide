@@ -80,7 +80,7 @@ val quickbuild = (
   project.properties["elide.buildMode"] == "dev"
 )
 
-val isRelease = !quickbuild && (
+val isRelease = (
   project.properties["elide.release"] == "true" ||
   project.properties["elide.buildMode"] == "release"
 )
@@ -92,7 +92,7 @@ val isDebug = !isRelease && (
 val hostIsLinux = HostManager.hostIsLinux
 val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
-val nativesType = if (isRelease) "release" else "debug"
+val nativesType = if (!isRelease) "debug" else "release"
 val archTripleToken = (findProperty("elide.arch") as? String)
   ?: if (System.getProperty("os.arch") == "aarch64") "aarch64" else "x86_64"
 val muslTarget = "$archTripleToken-unknown-linux-musl"
@@ -157,9 +157,9 @@ val enableJnaJpms = false
 val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
-val enableJfr = true
+val enableJfr = false
 val enableNmt = false
-val enableHeapDump = true
+val enableHeapDump = false
 val enableJmx = false
 val enableVerboseClassLoading = false
 val jniDebug = false
@@ -440,13 +440,12 @@ dependencies {
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
   implementation(libs.jline.terminal.jni)
+
   if (enableFfm) {
     implementation(libs.jline.terminal.ffm)
   }
+
   implementation(libs.jline.builtins)
-  implementation(libs.jline.terminal.jansi) {
-    exclude(group = "org.fusesource.jansi", module = "jansi")
-  }
 
   // SQLite Engine
   if (enableSqlite) {
@@ -764,6 +763,7 @@ if (!pluginApiHeader.exists()) {
 }
 
 val initializeAtBuildtime: List<String> = listOf(
+  "kotlinx.atomicfu",
   "elide.tool.io.RuntimeWorkdirManager",
   "elide.tool.io.RuntimeWorkdirManager\$Companion",
   "io.micronaut.context.DefaultApplicationContextBuilder",
@@ -1069,13 +1069,12 @@ val commonNativeArgs = listOfNotNull(
   // "--exact-reachability-metadata",
   "--enable-url-protocols=http,https",
   "--color=always",
-  "-H:+UnlockExperimentalVMOptions",
-  "--link-at-build-time",
+  // "--link-at-build-time",
   "--exact-reachability-metadata",
-//  "--link-at-build-time=elide",
-//  "--link-at-build-time=dev.elide",
-//  "--link-at-build-time=org.pkl",
-//  "--link-at-build-time=picocli",
+  "--link-at-build-time=elide",
+  "--link-at-build-time=dev.elide",
+  "--link-at-build-time=org.pkl",
+  "--link-at-build-time=picocli",
   "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
   "--enable-monitoring=${nativeMonitoring}",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
@@ -1086,6 +1085,7 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio=ALL-UNNAMED",
   "-H:+PreserveFramePointer",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
@@ -1094,10 +1094,38 @@ val commonNativeArgs = listOfNotNull(
   "-H:ExcludeResources=META-INF/native/libumbrella.so",
   "-H:ExcludeResources=META-INF/native/libumbrella.a",
   "-H:ExcludeResources=kotlin/kotlin.kotlin_builtins",
+  "-H:ExcludeResources=kotlin/annotation/annotation.kotlin_builtins",
+  "-H:ExcludeResources=kotlin/collections/collections.kotlin_builtins",
+  "-H:ExcludeResources=kotlin/concurrent/atomics/atomics.kotlin_builtins",
+  "-H:ExcludeResources=kotlin/coroutines/coroutines.kotlin_builtins",
+  "-H:ExcludeResources=kotlin/internal/internal.kotlin_builtins",
+  "-H:ExcludeResources=kotlin/ranges/ranges.kotlin_builtins",
+  "-H:ExcludeResources=kotlin/reflect/reflect.kotlin_builtins",
   "-H:ExcludeResources=META-INF/.*kotlin_module",
   "-H:ExcludeResources=com/sun/jna/.*",
+  "-H:ExcludeResources=.*.proto",
+  "-H:ExcludeResources=elide/app/.*\\.proto",
+  "-H:ExcludeResources=elide/assets/.*\\.proto",
+  "-H:ExcludeResources=elide/base/.*\\.proto",
+  "-H:ExcludeResources=elide/call/.*\\.proto",
+  "-H:ExcludeResources=elide/control/.*\\.proto",
+  "-H:ExcludeResources=elide/crypto/.*\\.proto",
+  "-H:ExcludeResources=elide/data/.*\\.proto",
+  "-H:ExcludeResources=elide/net/.*\\.proto",
+  "-H:ExcludeResources=elide/tools/.*\\.proto",
+  "-H:ExcludeResources=elide/tools/.*/.*\\.proto",
+  "-H:ExcludeResources=elide/std/.*\\.proto",
+  "-H:ExcludeResources=elide/structs/.*\\.proto",
+  "-H:ExcludeResources=elide/stream/.*\\.proto",
+  "-H:ExcludeResources=elide/page/.*\\.proto",
+  "-H:ExcludeResources=elide/vfs/.*\\.proto",
+  "-H:ExcludeResources=org/jline/.*",
+  "-H:ExcludeResources=logback.xml",
   "-H:ExcludeResources=META-INF/native/libsqlite.*",
   "-H:ExcludeResources=lib/linux-x86_64/libbrotli.so",
+  "-H:ExcludeResources=META-INF/elide/embedded/runtime/js/runtime.current.json",
+  "-H:ExcludeResources=META-INF/maven/com.aayushatharva.brotli4j/native-linux-x86_64/pom.xml",
+  "-H:ExcludeResources=META-INF/maven/com.aayushatharva.brotli4j/native-linux-x86_64/pom.properties",
   "-H:ExcludeResources=META-INF/native/x86_64-unknown-linux-gnu/libsqlitejdbc.so",
   "-H:ExcludeResources=META-INF/micronaut/io.micronaut.core.graal.GraalReflectionConfigurer/.*",
   "-H:ExcludeResources=META-INF/elide/embedded/runtime/wasm/runtime.json",
@@ -1406,12 +1434,8 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=-flto",
     "-H:NativeLinkerOption=-Wl,--gc-sections",
     "-H:NativeLinkerOption=-Wl,--emit-relocs",
-    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libdiag.so",
-    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libsqlitejdbc.so",
-    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libumbrella.so",
-    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libjs.so",
-    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libposix.so",
-    "-H:NativeLinkerOption=/home/sam/workspace/elide/target/x86_64-unknown-linux-gnu/debug/libterminal.so",
+    "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.so",
+    "-H:NativeLinkerOption=$nativesPath/libjs.so",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",
     "-H:ExcludeResources=.*dll",
@@ -1456,9 +1480,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
   "--parallelism=30",
 ))
 
-val linuxGvmReleaseFlags = listOf(
-  "-H:+ObjectInlining",
-)
+val linuxGvmReleaseFlags = listOf<String>()
 
 val linuxReleaseArgs = linuxOnlyArgs.plus(
   listOf(
@@ -2154,6 +2176,20 @@ fun spawnEmbeddedJvmCopy(receiver: BuildNativeImageTask): Copy {
   }.get()
 }
 
+fun spawnNativeLibCopy(receiver: BuildNativeImageTask): Copy {
+  val outDir = layout.buildDirectory.dir("native/${receiver.name}")
+    .get()
+    .asFile
+    .absolutePath
+  return tasks.register("${receiver.name}CopyNativeLibs", Copy::class) {
+    dependsOn(":packages:graalvm:natives")
+    from(nativesPath) {
+      include("*.so", "*.dylib", "*.jnilib", "*.dll")
+    }
+    into(outDir)
+  }.get()
+}
+
 fun Task.configureFinalizer(receiver: BuildNativeImageTask) {
   group = "build"
   description = "Finalize Native Image resources for task '${receiver.name}'"
@@ -2165,11 +2201,15 @@ fun BuildNativeImageTask.createFinalizer() {
   if (enableEmbeddedJvm) {
     finalizations.add(spawnEmbeddedJvmCopy(this))
   }
+  if (!enableStaticJni) {
+    finalizations.add(spawnNativeLibCopy(this))
+  }
   if (finalizations.isNotEmpty()) {
     val finalizer = tasks.register("${name}Finalize") {
       configureFinalizer(this@createFinalizer)
       dependsOn(finalizations.map { it.name })
     }
+    finalizedBy(finalizations.map { it.name })
     finalizedBy(finalizer.name)
   }
 }
@@ -2177,19 +2217,3 @@ fun BuildNativeImageTask.createFinalizer() {
 tasks.withType<BuildNativeImageTask>().all {
   createFinalizer()
 }
-
-//val runProfiled by tasks.registering(com.profiler.gradle.JavaProfile::class.java) {
-//  mainClass = "com.mycorp.MyMainClass"
-//  classpath = sourceSets.main.runtimeClasspath
-//  offline = true
-//  sessionId = 80
-//  configFile = file("path/to/jprofiler_config.xml")
-//}
-
-//task run(type: com.jprofiler.gradle.JavaProfile) {
-//  mainClass = 'com.mycorp.MyMainClass'
-//  classpath sourceSets.main.runtimeClasspath
-//          offline = true
-//  sessionId = 80
-//  configFile = file('path/to/jprofiler_config.xml')
-//}

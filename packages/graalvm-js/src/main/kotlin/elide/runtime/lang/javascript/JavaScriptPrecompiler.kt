@@ -34,35 +34,24 @@ private const val TOOL_PRECOMPILER = "precompiler"
 @API
 public object JavaScriptPrecompiler : Precompiler.SourcePrecompiler<JavaScriptCompilerConfig> {
   private const val JS_LIB = "js"
-  private const val EAGER_INIT = true
-  private val initialized = atomic(false)
+  @Volatile private var initialized = false
   @Volatile private var libDidLoad = false
 
   internal fun initialize() {
-    if (!initialized.value) {
-      synchronized(this) {
-        NativeLibraries.resolve(JS_LIB) { didLoad: Boolean ->
-          initialized.value = true
-          libDidLoad = didLoad
-        }
-        if (!libDidLoad) error(
-          "Failed to load JavaScript parser library ('libjs.so' / 'libjs.a')"
-        )
+    if (!initialized) {
+      NativeLibraries.resolve(JS_LIB) { didLoad: Boolean ->
+        initialized = true
+        libDidLoad = didLoad
       }
-    }
-  }
-
-  init {
-    if (EAGER_INIT && ImageInfo.inImageCode()) {
-      initialize()
+      if (!libDidLoad) error(
+        "Failed to load JavaScript parser library ('libjs.so' / 'libjs.a')"
+      )
     }
   }
 
   @Suppress("TooGenericExceptionCaught")
   override fun invoke(req: PrecompileSourceRequest<JavaScriptCompilerConfig>, input: String): String? = try {
-    if (!ImageInfo.inImageCode()) {
-      initialize()
-    }
+    initialize()
     precompile(req.source.name, input).also {
       // after running the precompiler, consume all matching diagnostics (if present), and throw them back to the caller
       if (Diagnostics.dirty(LANG_TAG_JS)) Diagnostics.query(LANG_TAG_JS, TOOL_PRECOMPILER, true).let { diag ->

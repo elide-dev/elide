@@ -26,6 +26,7 @@ import org.graalvm.polyglot.Value
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
+import java.nio.file.Path
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -171,8 +172,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   public companion object {
-    @JvmStatic private val defaultAuxPath = "/tmp/elide-runtime/cache"
-
     // Names of known-internal members which are yanked before guest code is executed.
     private val knownInternalMembers = sortedSetOf(
       "primordials",
@@ -262,7 +261,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
      */
     @Suppress("SpreadOperator", "LongMethod")
     public fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
-      val auxCachePath = System.getProperty("elide.cachePath")?.ifBlank { null } ?: defaultAuxPath
+      val auxCachePath = System.getProperty("elide.cachePath")?.ifBlank { null }
 
       val languages = configuration.languages.flatMap {
         when (it.languageId) {
@@ -355,7 +354,13 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
         if (useAuxCache) {
           var auxCacheReady = true
           var creatingAuxCache = System.getProperty("elide.writeAuxCache") == "true"
-          val auxCacheParent = Path(auxCachePath)
+          val auxCacheParent: Path =
+            auxCachePath?.let { Path(it) }
+              // if no path is specified for the cache, put it next to the binary
+              ?: ProcessHandle.current().info().command().orElse(null)?.let { Path(it).parent }
+              // if we somehow can't resolve the binary, default to /tmp
+              ?: Path("/tmp")
+
           if (!Files.exists(auxCacheParent)) {
             creatingAuxCache = true
             try {
@@ -369,12 +374,11 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
             engineLogger.warn { "Aux cache directory is not writable: $auxCachePath" }
             auxCacheReady = false
           }
-          val auxCacheActual = Path(auxCachePath).resolve("elide-img.bin")
+          val auxCacheActual = auxCacheParent.resolve("elide-img.bin")
           if (!Files.exists(auxCacheActual)) {
             creatingAuxCache = true
           }
           if (auxCacheReady) {
-
             engineLogger.debug { "Aux cache is active at path: '$auxCacheActual' (contexts: '$preinitializeContexts')" }
             option("engine.PreinitializeContexts", preinitializeContexts)
             option("engine.CachePreinitializeContext", "true")

@@ -114,6 +114,9 @@ internal val applicationContextBuilder = ApplicationContext
     // Whether to log early init messages.
     private const val INIT_LOGGING: Boolean = false
 
+    // Global default locale.
+    private val globalLocale = Locale.of("en", "US")
+
     // Application context; initialized early for CLI use.
     @Volatile private lateinit var applicationContext: ApplicationContext
 
@@ -292,9 +295,8 @@ internal val applicationContextBuilder = ApplicationContext
         .start()
         .also { initLog("Application context started; loading tool entrypoint") }
         .use {
-          val locale = Locale.of("en", "US")
-          Locale.setDefault(locale)
-          initLog("Preparing CLI configuration (locale: $locale)")
+          Locale.setDefault(globalLocale)
+          initLog("Preparing CLI configuration (locale: $globalLocale)")
 
           applicationContext = it
           cliBuilder.apply {

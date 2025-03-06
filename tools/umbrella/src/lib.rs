@@ -78,8 +78,7 @@ use crate::tools::RUFF_INFO;
 use crate::tools::UV_INFO;
 use crate::tools::{API_VERSION, LIB_VERSION, ToolInfo};
 
-pub mod nativetransport;
-pub mod tools;
+mod tools;
 
 const DIAG_PORT: u16 = 5555;
 

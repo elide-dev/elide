@@ -151,6 +151,7 @@ dependencyResolutionManagement {
       url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
     }
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
     google()
   }
   versionCatalogs {

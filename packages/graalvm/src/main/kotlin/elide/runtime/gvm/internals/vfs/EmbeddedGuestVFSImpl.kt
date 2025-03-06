@@ -22,7 +22,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import tools.elide.std.HashAlgorithm
 import tools.elide.vfs.TreeEntry
 import tools.elide.vfs.TreeEntry.EntryCase.DIRECTORY
@@ -105,13 +104,13 @@ public class EmbeddedGuestVFSImpl private constructor (
   /** Static settings for the embedded VFS implementation. */
   internal object Settings {
     /** File digest algorithm to use. */
-    const val fileDigestAlgorithm: String = "SHA-256"
+    const val fileDigestAlgorithm: String = "SHA-1"
 
     /** Hash algorithm to use (symbolic) for file digests. */
     val fileDigest: HashAlgorithm = HashAlgorithm.SHA256
 
     /** Whether to defer reads until needed, or copy files into the VFS eagerly. */
-    const val DEFAULT_DEFERRED_READS = false
+    const val DEFAULT_DEFERRED_READS = true
   }
 
   /** Enumerates supported embedded VFS bundle formats. */
@@ -239,9 +238,9 @@ public class EmbeddedGuestVFSImpl private constructor (
     val bundleStream = when (bundleType) {
       BundleFormat.ELIDE_INTERNAL,
       BundleFormat.TARBALL -> TarArchiveInputStream(bundleStreamData)
-      BundleFormat.TARBALL_XZ -> TarArchiveInputStream(XZCompressorInputStream(bundleStreamData))
       BundleFormat.TARBALL_GZIP -> TarArchiveInputStream(GZIPInputStream(bundleStreamData))
       BundleFormat.ZIP -> ZipArchiveInputStream(bundleStreamData)
+      else -> error("Bundle format is unsupported")
     }
     var found: ArchiveEntry? = null
     var foundBytes: ByteArray? = null
@@ -1003,9 +1002,9 @@ public class EmbeddedGuestVFSImpl private constructor (
           when (input.third) {
             BundleFormat.ELIDE_INTERNAL,
             BundleFormat.TARBALL -> TarArchiveInputStream(input.second)
-            BundleFormat.TARBALL_XZ -> TarArchiveInputStream(XZCompressorInputStream(input.second))
             BundleFormat.TARBALL_GZIP -> TarArchiveInputStream(GZIPInputStream(input.second))
             BundleFormat.ZIP -> ZipArchiveInputStream(input.second)
+            else -> error("Unsupported archive")
           },
           input.third
         )

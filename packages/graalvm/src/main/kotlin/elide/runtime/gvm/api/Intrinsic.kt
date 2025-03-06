@@ -13,6 +13,7 @@
 package elide.runtime.gvm.api
 
 import io.micronaut.context.annotation.DefaultScope
+import io.micronaut.core.annotation.Introspected
 import elide.annotations.Context
 import elide.runtime.gvm.GraalVMGuest
 
@@ -29,6 +30,7 @@ import elide.runtime.gvm.GraalVMGuest
  *   supported guest language at this time.
  */
 @MustBeDocumented
+@Introspected
 @DefaultScope(Context::class)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

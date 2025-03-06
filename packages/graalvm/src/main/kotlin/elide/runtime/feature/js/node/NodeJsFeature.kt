@@ -77,6 +77,12 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
   private inline fun <reified T: Any> BeforeAnalysisAccess.cls(kclass: KClass<T>) {
     if (REGISTER_ALL_MODULES_FOR_REFLECTION) {
       RuntimeReflection.register(kclass.java)
+      RuntimeReflection.registerAllClasses(kclass.java)
+      RuntimeReflection.registerAllMethods(kclass.java)
+      RuntimeReflection.registerAllFields(kclass.java)
+      if (kclass.java.isRecord) {
+        RuntimeReflection.registerAllRecordComponents(kclass.java)
+      }
     }
   }
 

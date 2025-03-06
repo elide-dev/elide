@@ -24,6 +24,7 @@ import picocli.CommandLine
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlin.io.path.Path
 import kotlin.system.exitProcess
 import elide.tool.cli.Elide.Companion.installStatics
 
@@ -112,7 +113,14 @@ internal object NativeEntry {
 // Perform early startup initialization tasks.
 @Volatile var entryInitialized: Boolean = false
 
-inline fun setStaticProperties() {
+inline fun setStaticProperties(binPath: String) {
+  // Patch the Java library path to include the binary's own parent directory.
+  val currentJavaPath = System.getProperty("java.library.path")
+  val path = Path(binPath).parent
+  var newJavaPath = currentJavaPath
+  newJavaPath = "$path:$newJavaPath"
+  System.setProperty("java.library.path", newJavaPath)
+
   System.setProperty("elide.js.vm.enableStreams", "true")
   System.setProperty("java.util.logging.config.class", "elide.tool.cli.InertLoggerConfigurator")
   System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Host,Content-Length")
@@ -134,11 +142,11 @@ fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
   entryInitialized = true
 
   earlyLog("Setting static properties")
-  setStaticProperties()
+  val binPath = ProcessHandle.current().info().command().orElse(null)
+  setStaticProperties(binPath)
   if (installStatics) {
     earlyLog("Installing statics")
     Statics.mountArgs(args)
-    val binPath = ProcessHandle.current().info().command().orElse(null)
     installStatics(binPath, args, System.getProperty("user.dir"))
     earlyLog("Installing bridge handler for SLF4j")
     SLF4JBridgeHandler.install()

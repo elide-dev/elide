@@ -1439,7 +1439,7 @@ private typealias ContextAccessor = () -> PolyglotContext
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
-    Elide.requestNatives(server = true, tooling = true)
+    Elide.requestNatives(server = true, tooling = false)
 
     // resolve project configuration
     val projectConfigJob = projectManager.resolveProjectAsync()

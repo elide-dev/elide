@@ -1,6 +1,5 @@
 package elide.runtime.diag
 
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import elide.runtime.diag.Severity.INFO
 

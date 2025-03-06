@@ -4076,6 +4076,7 @@ public final class elide/runtime/intrinsics/js/node/path/Path$Companion : elide/
 	public fun from (Ljava/lang/String;Lelide/runtime/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
 }
 
@@ -4085,6 +4086,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/path/PathFactor
 	public abstract fun from (Ljava/lang/String;Lelide/runtime/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public abstract fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public abstract fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public abstract fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public abstract fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public static synthetic fun from$default (Lelide/runtime/intrinsics/js/node/path/PathFactory;Ljava/lang/String;Lelide/runtime/node/path/PathStyle;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/path/Path;
 }
@@ -6731,7 +6733,13 @@ public synthetic class elide/runtime/node/path/$NodePathsModule$Definition : io/
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/node/path/PathBuf : elide/runtime/intrinsics/js/node/path/Path, org/graalvm/polyglot/proxy/ProxyObject {
+public final class elide/runtime/node/path/NodePaths {
+	public static final field INSTANCE Lelide/runtime/node/path/NodePaths;
+	public static final fun create (Lelide/runtime/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/PathAPI;
+	public static synthetic fun create$default (Lelide/runtime/node/path/PathStyle;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/PathAPI;
+}
+
+public final class elide/runtime/node/path/PathBuf : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/js/node/path/Path {
 	public static final field Companion Lelide/runtime/node/path/PathBuf$Companion;
 	public synthetic fun <init> (Lelide/runtime/node/path/PathStyle;Lkotlinx/io/files/Path;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun charAt (I)C
@@ -6744,6 +6752,7 @@ public final class elide/runtime/node/path/PathBuf : elide/runtime/intrinsics/js
 	public static fun from (Ljava/lang/String;Lelide/runtime/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public static fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public static fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public static fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public static fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public static final fun from$default (Ljava/lang/String;Lelide/runtime/node/path/PathStyle;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public fun get (I)C
@@ -6757,15 +6766,12 @@ public final class elide/runtime/node/path/PathBuf : elide/runtime/intrinsics/js
 	public fun getName ()Ljava/lang/String;
 	public fun getRoot ()Ljava/lang/String;
 	public fun getStyle ()Lelide/runtime/node/path/PathStyle;
-	public fun hasMember (Ljava/lang/String;)Z
 	public fun hashCode ()I
 	public fun isAbsolute ()Z
 	public fun join (Ljava/lang/Iterable;)Ljava/lang/String;
 	public fun join (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
 	public fun join ([Lelide/runtime/intrinsics/js/node/path/Path;)Ljava/lang/String;
 	public final fun length ()I
-	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public fun removeMember (Ljava/lang/String;)Z
 	public fun split ()Lkotlin/sequences/Sequence;
 	public fun subSequence (II)Ljava/lang/CharSequence;
 	public fun toJavaPath ()Ljava/nio/file/Path;
@@ -6779,6 +6785,7 @@ public final class elide/runtime/node/path/PathBuf$Companion : elide/runtime/int
 	public fun from (Ljava/lang/String;Lelide/runtime/node/path/PathStyle;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public fun from (Ljava/lang/String;[Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public fun from (Ljava/nio/file/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
+	public fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/intrinsics/js/node/path/Path;
 	public fun from (Lkotlinx/io/files/Path;)Lelide/runtime/intrinsics/js/node/path/Path;
 }
 

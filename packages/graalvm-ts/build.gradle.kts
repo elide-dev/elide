@@ -16,10 +16,8 @@ import elide.internal.conventions.publishing.publish
 import elide.toolchain.host.TargetInfo
 
 plugins {
-  alias(libs.plugins.micronaut.graalvm)
-
   kotlin("jvm")
-  kotlin("plugin.allopen")
+  alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
 }
 

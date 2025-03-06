@@ -39,21 +39,20 @@ import elide.toolchain.host.TargetInfo
 
 plugins {
   java
-  `java-library`
-  publishing
   jacoco
+  publishing
+  `java-library`
   `jvm-test-suite`
   `maven-publish`
 
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.serialization")
+  alias(libs.plugins.ksp)
   alias(libs.plugins.buildConfig)
   alias(libs.plugins.micronaut.minimal.application)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.micronaut.aot)
   alias(libs.plugins.elide.conventions)
-  id("com.jprofiler") version ("14.0.6")
 }
 
 // Flags affecting this build script:
@@ -234,6 +233,8 @@ val jvmOnlyCompileArgs: List<String> = listOfNotNull(
 
 val jvmCompileArgs = listOfNotNull(
   "--enable-preview",
+  "--add-modules=jdk.unsupported",
+  "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
 //  "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
@@ -262,6 +263,8 @@ val nativeEnabledModules = listOf(
 
 val nativeCompileJvmArgs = listOf(
   "--enable-native-access=" + nativeEnabledModules.joinToString(","),
+).plus(
+  jvmCompileArgs
 ).plus(jvmCompileArgs.map {
   "-J$it"
 })
@@ -280,6 +283,7 @@ elide {
     powerAssert = true
     atomicFu = true
     target = KotlinTarget.JVM
+    ksp = true
     customKotlinCompilerArgs = ktCompilerArgs
   }
 
@@ -313,13 +317,6 @@ java {
   }
 }
 
-kapt {
-  useBuildCache = true
-  includeCompileClasspath = false
-  strictMode = true
-  correctErrorTypes = true
-}
-
 kotlin {
   compilerOptions {
     allWarningsAsErrors = true
@@ -333,10 +330,6 @@ sourceSets {
       layout.projectDirectory.dir("src/main/java9"),
     )
   }
-}
-
-jprofiler {
-  installDir = file("/opt/jprofiler14/")
 }
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
@@ -403,8 +396,8 @@ dependencies {
   aotApplication(libs.graalvm.truffle.runtime.svm)
   aotApplication(libs.graalvm.compiler)
 
-  kapt(mn.micronaut.inject.java)
-  kapt(libs.picocli.codegen)
+  annotationProcessor(libs.picocli.codegen)
+  ksp(mn.micronaut.inject.kotlin)
   classpathExtras(mn.micronaut.core.processor)
 
   api(libs.clikt)
@@ -472,6 +465,7 @@ dependencies {
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
   compileOnly(libs.graalvm.svm)
+  nativeImageCompileOnly(libs.javax.inject)
 
   if (oracleGvm && oracleGvmLibs) {
     nativeImageClasspath(libs.graalvm.truffle.enterprise)
@@ -516,15 +510,10 @@ dependencies {
   runtimeOnly(mn.micronaut.graal)
   implementation(mn.netty.handler)
 
-  // JVM-only dependencies which are filtered for native builds.
-  if (!enableJna) {
-    jvmOnly(libs.jna.jpms)
-  } else {
-    // we have to include _some_ support for JNA in order to support oshi et al.
-    implementation(libs.jna.jpms)
-    if (enableJnaStatic) {
-      implementation(libs.jna.graalvm)
-    }
+// we have to include _some_ support for JNA in order to support oshi et al.
+  implementation(libs.jna)
+  if (enableJnaStatic) {
+    implementation(libs.jna.graalvm)
   }
 
   // Tests
@@ -1061,6 +1050,7 @@ val commonNativeArgs = listOfNotNull(
   // "-H:TempDirectory=/tmp/elide-native",
   // "-H:+PlatformInterfaceCompatibilityMode",
   // "--trace-object-instantiation=",
+  "-H:+UnlockExperimentalVMOptions",
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
@@ -1080,10 +1070,12 @@ val commonNativeArgs = listOfNotNull(
   "--enable-url-protocols=http,https",
   "--color=always",
   "-H:+UnlockExperimentalVMOptions",
-  "--link-at-build-time=elide",
-  "--link-at-build-time=dev.elide",
-  "--link-at-build-time=org.pkl",
-  "--link-at-build-time=picocli",
+  "--link-at-build-time",
+  "--exact-reachability-metadata",
+//  "--link-at-build-time=elide",
+//  "--link-at-build-time=dev.elide",
+//  "--link-at-build-time=org.pkl",
+//  "--link-at-build-time=picocli",
   "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
   "--enable-monitoring=${nativeMonitoring}",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
@@ -1156,20 +1148,6 @@ val commonNativeArgs = listOfNotNull(
   "-Dpolyglotimpl.DisableVersionChecks=false",
   "-Dnetty.default.allocator.max-order=3",
   "-Dnetty.resource-leak-detector-level=DISABLED",
-  "-Dmicronaut.server.netty.use-native-transport=true",
-  "-Dmicronaut.server.netty.parent.prefer-native-transport=true",
-  "-Dmicronaut.server.netty.worker.prefer-native-transport=true",
-  "-Dmicronaut.netty.event-loops.default.prefer-native-transport=true",
-  "-Dmicronaut.netty.event-loops.default.num-threads=2",
-  "-Dmicronaut.netty.event-loops.parent.num-threads=2",
-  "-Djackson.serialization.ORDER_MAP_ENTRIES_BY_KEYS=true",
-  "-Dmicronaut.application.name=elide",
-  "-Dmicronaut.application.default-charset=utf-8",
-  "-Dmicronaut.executors.default.threads=1",
-  "-Dmicronaut.executors.default.type=VIRTUAL",
-  "-Dmicronaut.executors.io.threads=2",
-  "-Dmicronaut.executors.io.type=VIRTUAL",
-  "-Dmicronaut.executors.scheduled.threads=1",
   "-Djansi.eager=false",
   "-Djava.util.concurrent.ForkJoinPool.common.parallelism=1",
   "-Dkotlinx.coroutines.scheduler.core.pool.size=2",
@@ -2079,19 +2057,11 @@ tasks {
     )
   }
 
-  withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
-    compilerOptions {
-      allWarningsAsErrors = true
-      freeCompilerArgs.set(freeCompilerArgs.get().plus(ktCompilerArgs).toSortedSet().toList())
-    }
-  }
-
   nativeOptimizedCompile {
     dependsOn(decompressProfiles)
   }
 
   withType<JavaCompile>().configureEach {
-    options.release.set(selectedJvmTarget)
     options.compilerArgs.addAll(jvmCompileArgs.plus(jvmOnlyCompileArgs))
   }
 

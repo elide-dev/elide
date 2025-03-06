@@ -19,14 +19,12 @@ import com.github.ajalt.clikt.core.PrintHelpMessage
 import com.github.ajalt.clikt.parsers.CommandLineParser
 import com.github.ajalt.clikt.parsers.flatten
 import io.micronaut.configuration.picocli.MicronautFactory
-import io.micronaut.context.ApplicationContext
 import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
-import elide.annotations.Eager
 import elide.tool.cli.Elide.Companion.installStatics
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
@@ -49,10 +47,7 @@ private inline fun earlyLog(msg: String) {
 }
 
 @Suppress("SpreadOperator")
-private fun createApplicationContext(args: Array<String>) = ApplicationContext
-  .builder()
-  .eagerInitAnnotated(Eager::class.java)
-  .args(*args)
+private fun createApplicationContext(args: Array<String>) = applicationContextBuilder.args(*args)
 
 // Read the old entrypoint factory.
 private fun sorryIHaveToFactory(args: Array<String>): CommandLine =

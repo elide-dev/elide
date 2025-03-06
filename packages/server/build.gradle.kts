@@ -18,8 +18,7 @@ import elide.internal.conventions.publishing.publish
 plugins {
   kotlin("jvm")
   kotlin("plugin.serialization")
-
-  id(libs.plugins.ksp.get().pluginId)
+  alias(libs.plugins.ksp)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
@@ -103,6 +102,7 @@ dependencies {
   // General
   implementation(libs.graalvm.polyglot)
   implementation(mn.reactor)
+  implementation(mn.micronaut.serde.jackson)
 
   // KotlinX
   implementation(libs.kotlinx.serialization.json.jvm)

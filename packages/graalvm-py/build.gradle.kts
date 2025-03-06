@@ -16,12 +16,10 @@ import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
+  kotlin("jvm")
   alias(libs.plugins.micronaut.graalvm)
   id(libs.plugins.shadow.get().pluginId)
-
-  kotlin("jvm")
-  kotlin("kapt")
-
+  alias(libs.plugins.ksp)
   alias(libs.plugins.elide.conventions)
 }
 
@@ -39,6 +37,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
+    ksp = true
   }
 
   java {
@@ -133,6 +132,7 @@ graalvmNative {
 }
 
 dependencies {
+  ksp(mn.micronaut.inject.kotlin)
   api(projects.packages.engine)
   api(libs.graalvm.truffle.nfi.libffi)
   api(libs.graalvm.python.language)
@@ -146,7 +146,7 @@ dependencies {
   compileOnly(libs.graalvm.truffle.runtime.svm)
 
   // Testing
-  kaptTest(mn.micronaut.inject.java)
+  testAnnotationProcessor(mn.micronaut.inject.java)
   testImplementation(projects.packages.test)
   testImplementation(projects.packages.graalvm)
   testApi(project(":packages:engine", configuration = "testInternals"))

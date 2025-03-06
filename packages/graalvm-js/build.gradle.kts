@@ -15,12 +15,8 @@ import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
-  alias(libs.plugins.micronaut.graalvm)
-
   kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.allopen")
-
+  alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
 }
 

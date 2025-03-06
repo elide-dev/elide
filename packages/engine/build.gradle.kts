@@ -17,7 +17,7 @@ import elide.toolchain.host.TargetInfo
 plugins {
   kotlin("jvm")
   kotlin("plugin.serialization")
-  kotlin("kapt")
+  alias(libs.plugins.ksp)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
@@ -39,6 +39,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
+    ksp = true
   }
 
   java {
@@ -57,6 +58,7 @@ dependencies {
   api(libs.graalvm.polyglot)
   api(libs.kotlinx.coroutines.core)
   api(libs.guava)
+  ksp(mn.micronaut.inject.kotlin)
   implementation(libs.kotlinx.atomicfu)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)

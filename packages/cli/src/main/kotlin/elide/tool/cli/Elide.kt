@@ -51,7 +51,8 @@ import elide.tool.io.RuntimeWorkdirManager
 // Default timeout to apply to non-server commands.
 private const val DEFAULT_CMD_TIMEOUT = 30
 
-private val applicationContextBuilder = ApplicationContext
+// Pre-initialized application builder.
+internal val applicationContextBuilder = ApplicationContext
   .builder()
   .environments("cli")
   .defaultEnvironments("cli")
@@ -60,6 +61,10 @@ private val applicationContextBuilder = ApplicationContext
   .eagerInitConfiguration(true)
   .deduceEnvironment(false)
   .deduceCloudEnvironment(false)
+  .environmentPropertySource(false)
+  .enableDefaultPropertySources(false)
+  .bootstrapEnvironment(false)
+  .banner(false)
 
 /** Entrypoint for the main Elide command-line tool. */
 @Command(

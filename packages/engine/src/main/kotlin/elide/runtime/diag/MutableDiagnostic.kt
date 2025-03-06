@@ -14,7 +14,7 @@ import elide.runtime.diag.Severity.INFO
  *
  * @see Diagnostic Canonical diagnostic type
  */
-@ReflectiveAccess @Introspected public class MutableDiagnostic internal constructor() : MutableDiagnosticInfo {
+@ReflectiveAccess public class MutableDiagnostic internal constructor() : MutableDiagnosticInfo {
   override var severity: Severity = Severity.WARN
   override var id: String? = null
   override var lang: String? = null

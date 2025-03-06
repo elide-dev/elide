@@ -13,11 +13,13 @@
 package elide.runtime.feature.js.node
 
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
+import org.graalvm.nativeimage.hosted.RuntimeReflection
 import kotlin.reflect.KClass
 import elide.annotations.engine.VMFeature
 import elide.runtime.feature.FrameworkFeature
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
+import elide.runtime.intrinsics.js.JavaScriptConsole
 import elide.runtime.node.asserts.NodeAssert
 import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.runtime.node.childProcess.NodeChildProcess
@@ -66,7 +68,7 @@ import elide.runtime.intrinsics.js.node.stream.StatefulStream
 import elide.runtime.intrinsics.js.node.stream.Writable
 
 // Whether to register modules for reflective access.
-private const val REGISTER_ALL_MODULES_FOR_REFLECTION = false
+private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
 
 /** GraalVM feature which enables reflective access to built-in Node modules. */
 @VMFeature internal class NodeJsFeature : FrameworkFeature {
@@ -74,7 +76,7 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = false
 
   private inline fun <reified T: Any> BeforeAnalysisAccess.cls(kclass: KClass<T>) {
     if (REGISTER_ALL_MODULES_FOR_REFLECTION) {
-      registerClassForReflection(this, kclass.java.name)
+      RuntimeReflection.register(kclass.java)
     }
   }
 
@@ -102,6 +104,7 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = false
 
     // `console`
     cls(ConsoleAPI::class)
+    cls(JavaScriptConsole::class)
     cls(NodeConsole::class)
 
     // `crypto`

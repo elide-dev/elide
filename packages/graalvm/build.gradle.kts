@@ -32,18 +32,15 @@ import elide.toolchain.host.TargetPredicate
 
 plugins {
   kotlin("jvm")
-  kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
-  id(libs.plugins.ksp.get().pluginId)
   alias(libs.plugins.protobuf)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
-  id("org.graalvm.buildtools.native")
-
+  alias(libs.plugins.graalvm)
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
-
+  alias(libs.plugins.ksp)
   alias(libs.plugins.elide.conventions)
 }
 
@@ -171,10 +168,6 @@ kover {
       "elide.runtime.feature.engine",
     )
   }
-}
-
-allOpen {
-  annotation("org.openjdk.jmh.annotations.State")
 }
 
 java {
@@ -563,10 +556,6 @@ dependencies {
 
   // General
   implementation(libs.jimfs)
-  implementation(libs.jackson.core)
-  implementation(libs.jackson.databind)
-  implementation(libs.jackson.module.kotlin)
-  implementation(mn.micronaut.jackson.databind)
 
   // Compression
   implementation(libs.commons.compress)
@@ -621,6 +610,10 @@ dependencies {
   testApi(project(":packages:engine", configuration = "testInternals"))
   testApi(libs.graalvm.truffle.api)
   testApi(libs.graalvm.truffle.runtime)
+  testImplementation(libs.jackson.core)
+  testImplementation(libs.jackson.databind)
+  testImplementation(libs.jackson.module.kotlin)
+  testImplementation(mn.micronaut.jackson.databind)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)

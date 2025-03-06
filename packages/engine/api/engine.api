@@ -332,14 +332,6 @@ public synthetic class elide/runtime/diag/$MutableDiagnostic$Companion$ReflectCo
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final synthetic class elide/runtime/diag/$MutableDiagnostic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun hasBuilder ()Z
-	public fun instantiate ()Ljava/lang/Object;
-	public fun isBuildable ()Z
-}
-
 public synthetic class elide/runtime/diag/$MutableDiagnostic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

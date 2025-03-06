@@ -46,9 +46,6 @@ experimental = ["ruby", "bumpalloc"]
 dead_code = "allow"
 
 [dependencies]
-## Local
-diag = { workspace = true }
-
 ## Compile
 clap = { workspace = true, features = ["derive", "string", "wrap_help"] }
 console-subscriber = { workspace = true }

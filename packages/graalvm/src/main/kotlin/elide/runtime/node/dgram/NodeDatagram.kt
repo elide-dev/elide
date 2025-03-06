@@ -12,6 +12,7 @@
  */
 package elide.runtime.node.dgram
 
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -27,23 +28,23 @@ private const val DATAGRAM_MODULE_SYMBOL = "node_${NodeModuleName.DGRAM}"
 
 // Installs the Node dgram module into the intrinsic bindings.
 @Intrinsic internal class NodeDatagramModule : AbstractNodeBuiltinModule() {
-  internal fun provide(): DatagramAPI = NodeDatagram.obtain()
+  private val singleton by lazy { NodeDatagram.create() }
+  internal fun provide(): DatagramAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[DATAGRAM_MODULE_SYMBOL.asJsSymbol()] = provide()
-    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DGRAM)) { provide() }
+    bindings[DATAGRAM_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DGRAM)) { singleton }
   }
 }
 
 /**
  * # Node API: `datagram`
  */
-internal class NodeDatagram : ReadOnlyProxyObject, DatagramAPI {
+internal class NodeDatagram private constructor () : ReadOnlyProxyObject, DatagramAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeDatagram()
-    fun obtain(): NodeDatagram = SINGLETON
+    @JvmStatic fun create(): NodeDatagram = NodeDatagram()
   }
 
   // @TODO not yet implemented

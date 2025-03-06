@@ -32,7 +32,7 @@ import elide.testing.annotations.TestCase
 @Suppress("LargeClass", "NodeCoreCodingAssistance")
 internal class NodeBufferTest : NodeModuleConformanceTest<NodeBufferModule>() {
   internal val module: NodeBufferModule = NodeBufferModule()
-  internal val buffer: BufferAPI = NodeBufferModuleFacade()
+  internal val buffer: BufferAPI = NodeBufferModuleFacade.create()
 
   override val moduleName: String get() = "buffer"
   override fun provide(): NodeBufferModule = module

@@ -58,22 +58,18 @@ private const val K_CONSTANTS = "constants"
 
 // Installs the Node `buffer` built-in module.
 @Intrinsic internal class NodeBufferModule : AbstractNodeBuiltinModule() {
-  private val singleton by lazy { NodeBufferModuleFacade() }
-  fun provide() = singleton
+  private val singleton by lazy { NodeBufferModuleFacade.create() }
 
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[BUFFER_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[BUFFER_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
     bindings[BLOB_SYMBOL.asPublicJsSymbol()] = NodeBlob::class.java
     bindings[FILE_SYMBOL.asPublicJsSymbol()] = NodeFile::class.java
 
-    // A single NodeBufferClass instance acts as meta-object for the `Buffer` type;
+    // A single NodeBufferClass instance acts as metaobject for the `Buffer` type;
     // it will also be exposed as part of the `node:buffer` module by guest init code
     bindings[BUFFER_TYPE_SYMBOL.asPublicJsSymbol()] = NodeBufferClass.SINGLETON
-
-    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.BUFFER)) {
-      provide()
-    }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.BUFFER)) { singleton }
   }
 }
 
@@ -92,7 +88,7 @@ public object NodeBufferConstants : ReadOnlyProxyObject {
 }
 
 // Module facade which satisfies the built-in `Buffer` module.
-internal class NodeBufferModuleFacade : BufferAPI, ProxyObject {
+internal class NodeBufferModuleFacade private constructor () : BufferAPI, ProxyObject {
   override fun atob(data: Value): String {
     val base64 = if (data.isString) data.asString() else data.toString()
     val bytes = Base64.getDecoder().decode(base64)
@@ -219,7 +215,9 @@ internal class NodeBufferModuleFacade : BufferAPI, ProxyObject {
     throw UnsupportedOperationException("Cannot modify 'buffer' module")
   }
 
-  private companion object {
+  companion object {
+    @JvmStatic fun create(): NodeBufferModuleFacade = NodeBufferModuleFacade()
+
     /** Single-byte character bit prefix (0xxx xxxx) */
     private const val UTF8_PREFIX_1B = 0
 

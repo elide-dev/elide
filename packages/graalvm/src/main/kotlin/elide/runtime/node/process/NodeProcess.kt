@@ -22,7 +22,6 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.Map.Entry
 import kotlin.system.exitProcess
-import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
@@ -39,16 +38,14 @@ import elide.vm.annotations.Polyglot
 
 // Installs the Node process module into the intrinsic bindings.
 @Intrinsic(NodeProcess.PUBLIC_SYMBOL, internal = false)
-@Factory internal class NodeProcessModule @Inject constructor(
+@Singleton internal class NodeProcessModule @Inject constructor(
   private val envConfig: EnvConfig? = null,
 ) : AbstractNodeBuiltinModule() {
-  @Singleton fun provide(): ProcessAPI = if (envConfig == null) NodeProcess.obtain() else NodeProcess.create(
+  fun provide(): ProcessAPI = if (envConfig == null) NodeProcess.obtain() else NodeProcess.create(
     env = EnvAccessor.of(envConfig),
   )
 
-  private val singleton by lazy {
-    provide()
-  }
+  private val singleton by lazy { provide() }
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[NodeProcess.SYMBOL.asJsSymbol()] = singleton
@@ -286,7 +283,7 @@ internal object NodeProcess {
           if (ImageInfo.inImageRuntimeCode()) {
             ProcessProperties.setArgumentVectorProgramName(value)
           }
-        } catch (uoe: UnsupportedOperationException) {
+        } catch (_: UnsupportedOperationException) {
           // no-op (swallow)
         }
       }

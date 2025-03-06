@@ -24,6 +24,7 @@ package elide.runtime.node.asserts
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.Value.asValue
 import org.graalvm.polyglot.proxy.ProxyArray
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
@@ -94,11 +95,12 @@ private val assertionModuleMethods = arrayOf(
 
 // Installs the Node assert module into the intrinsic bindings.
 @Intrinsic internal class NodeAssertModule : SyntheticJSModule<AssertAPI>, AbstractNodeBuiltinModule() {
-  private val instance = NodeAssert.obtain()
+  private val instance by lazy { NodeAssert.create() }
   override fun provide(): AssertAPI = instance
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[ASSERT_MODULE_SYMBOL.asJsSymbol()] = provide()
+    // @TODO: fully support `ProxyObject` so this module can be synthetic
+    bindings[ASSERT_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { provide() }
     bindings[ASSERTION_ERROR_SYMBOL.asJsSymbol()] = ProxyInstantiable {
       val messageOrErr = it.getOrNull(0)
       when {
@@ -193,10 +195,9 @@ public fun assertionError(
   operatorValue,
 )
 
-internal class NodeAssert : AssertAPI {
+internal class NodeAssert private constructor () : AssertAPI {
   companion object {
-    private val SINGLETON = NodeAssert()
-    @JvmStatic fun obtain(): AssertAPI = SINGLETON
+    @JvmStatic fun create(): AssertAPI = NodeAssert()
   }
 
   // Assert that a given `value` is truthy (or falsy, if `reverse` is true).

@@ -12,6 +12,7 @@
  */
 package elide.runtime.node.domain
 
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -27,23 +28,23 @@ private const val DOMAIN_MODULE_SYMBOL = "node_${NodeModuleName.DOMAIN}"
 
 // Installs the Node `domain` module into the intrinsic bindings.
 @Intrinsic internal class NodeDomainModule : AbstractNodeBuiltinModule() {
-  internal fun provide(): DomainAPI = NodeDomain.obtain()
+  private val singleton by lazy { NodeDomain.create() }
+  internal fun provide(): DomainAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[DOMAIN_MODULE_SYMBOL.asJsSymbol()] = provide()
-    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DOMAIN)) { provide() }
+    bindings[DOMAIN_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DOMAIN)) { singleton }
   }
 }
 
 /**
  * # Node API: `domain`
  */
-internal class NodeDomain : ReadOnlyProxyObject, DomainAPI {
+internal class NodeDomain private constructor () : ReadOnlyProxyObject, DomainAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeDomain()
-    fun obtain(): NodeDomain = SINGLETON
+    @JvmStatic fun create(): NodeDomain = NodeDomain()
   }
 
   // @TODO not yet implemented

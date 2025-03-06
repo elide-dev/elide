@@ -12,6 +12,7 @@
  */
 package elide.runtime.node.console
 
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -27,23 +28,23 @@ private const val CONSOLE_MODULE_SYMBOL = "node_${NodeModuleName.CONSOLE}"
 
 // Installs the Node console module into the intrinsic bindings.
 @Intrinsic internal class NodeConsoleModule : AbstractNodeBuiltinModule() {
-  internal fun provide(): NodeConsole = NodeConsole.obtain()
+  private val singleton by lazy { NodeConsole.create() }
+  internal fun provide(): NodeConsole = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[CONSOLE_MODULE_SYMBOL.asJsSymbol()] = provide()
-    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CONSOLE)) { provide() }
+    bindings[CONSOLE_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CONSOLE)) { singleton }
   }
 }
 
 /**
  * # Node API: `console`
  */
-internal class NodeConsole : ReadOnlyProxyObject, ConsoleAPI {
+internal class NodeConsole private constructor () : ReadOnlyProxyObject, ConsoleAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeConsole()
-    fun obtain(): NodeConsole = SINGLETON
+    @JvmStatic fun create(): NodeConsole = NodeConsole()
   }
 
   // @TODO not implemented

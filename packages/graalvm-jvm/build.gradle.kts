@@ -233,6 +233,7 @@ val copyNativeImageBuilder by tasks.registering(Copy::class) {
     include("native-image-inspect")
   }
   into(jlinkBinRoot.absolutePath)
+  doNotTrackState("copying to directory")
 }
 
 val jlinkExists = File(jlinkOut).exists()

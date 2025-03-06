@@ -39,7 +39,6 @@ import com.oracle.truffle.js.runtime.objects.*
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.File
-import java.net.URI
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import elide.core.api.Symbolic
@@ -77,6 +76,7 @@ private val specialModulePrefixes = sortedSetOf(
 // All built-in Node modules in a sorted set.
 private val allNodeModules = sortedSetOf(
   NodeModuleName.ASSERT,
+  NodeModuleName.ASSERT_STRICT,
   NodeModuleName.ASYNC_HOOKS,
   NodeModuleName.BUFFER,
   NodeModuleName.CHILD_PROCESS,
@@ -93,6 +93,7 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.HTTP2,
   NodeModuleName.HTTPS,
   NodeModuleName.INSPECTOR,
+  NodeModuleName.INSPECTOR_PROMISES,
   NodeModuleName.MODULE,
   NodeModuleName.NET,
   NodeModuleName.OS,
@@ -103,9 +104,11 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.TRACE_EVENTS,
   NodeModuleName.QUERYSTRING,
   NodeModuleName.READLINE,
+  NodeModuleName.READLINE_PROMISES,
   NodeModuleName.REPL,
   NodeModuleName.STREAM,
   NodeModuleName.STRING_DECODER,
+  NodeModuleName.TEST,
   NodeModuleName.TIMERS,
   NodeModuleName.TLS,
   NodeModuleName.TTY,
@@ -113,6 +116,7 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.UTIL,
   NodeModuleName.V8,
   NodeModuleName.VM,
+  NodeModuleName.WORKER,
   NodeModuleName.WORKER_THREADS,
   NodeModuleName.ZLIB,
 )
@@ -120,6 +124,7 @@ private val allNodeModules = sortedSetOf(
 // All built-in Node modules.
 @Suppress("VARIABLE_NAME_INCORRECT") public object NodeModuleName {
   public const val ASSERT: String = "assert"
+  public const val ASSERT_STRICT: String = "assert_strict"
   public const val ASYNC_HOOKS: String = "async_hooks"
   public const val BUFFER: String = "buffer"
   public const val CHILD_PROCESS: String = "child_process"
@@ -139,6 +144,7 @@ private val allNodeModules = sortedSetOf(
   public const val HTTP2: String = "http2"
   public const val HTTPS: String = "https"
   public const val INSPECTOR: String = "inspector"
+  public const val INSPECTOR_PROMISES: String = "inspector_promises"
   public const val MODULE: String = "module"
   public const val NET: String = "net"
   public const val OS: String = "os"
@@ -148,9 +154,11 @@ private val allNodeModules = sortedSetOf(
   public const val PUNYCODE: String = "punycode"
   public const val QUERYSTRING: String = "querystring"
   public const val READLINE: String = "readline"
+  public const val READLINE_PROMISES: String = "readline_promises"
   public const val REPL: String = "repl"
   public const val STREAM: String = "stream"
   public const val STRING_DECODER: String = "string_decoder"
+  public const val TEST: String = "test"
   public const val TIMERS: String = "timers"
   public const val TLS: String = "tls"
   public const val TRACE_EVENTS: String = "trace_events"
@@ -159,6 +167,7 @@ private val allNodeModules = sortedSetOf(
   public const val UTIL: String = "util"
   public const val V8: String = "v8"
   public const val VM: String = "vm"
+  public const val WORKER: String = "worker"
   public const val WORKER_THREADS: String = "worker_threads"
   public const val ZLIB: String = "zlib"
 }

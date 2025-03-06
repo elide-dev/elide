@@ -1087,7 +1087,7 @@ internal class NodeChildProcess(
   /** Factory methods for creating and obtaining instances of [NodeChildProcess]. */
   internal companion object {
     // Child process manager singleton.
-    private val SINGLETON = AtomicReference<NodeChildProcess>(null)
+    private val SINGLETON = atomic<NodeChildProcess?>(null)
 
     /** @return Singleton instance of the [NodeChildProcess] module; it is initialized if not yet available. */
     internal fun obtain(
@@ -1095,14 +1095,14 @@ internal class NodeChildProcess(
       fs: NodeFilesystemModule,
       executorProvider: GuestExecutorProvider,
       standardStreams: StandardStreamsProvider,
-    ): NodeChildProcess = SINGLETON.get().let {
+    ): NodeChildProcess = SINGLETON.value.let {
       when (it) {
         null -> NodeChildProcess(
           ipcSupplier,
           Optional.of(Supplier { fs }),
           standardStreams,
           executorProvider,
-        ).also { childProc -> SINGLETON.set(childProc) }
+        ).also { childProc -> SINGLETON.value = childProc }
 
         else -> it
       }

@@ -12,6 +12,7 @@
  */
 package elide.runtime.node.crypto
 
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -27,23 +28,23 @@ private const val CRYPTO_MODULE_SYMBOL = "node_${NodeModuleName.CRYPTO}"
 
 // Installs the Node crypto module into the intrinsic bindings.
 @Intrinsic internal class NodeCryptoModule : AbstractNodeBuiltinModule() {
-  internal fun provide(): NodeCrypto = NodeCrypto.obtain()
+  private val singleton by lazy { NodeCrypto.create() }
+  internal fun provide(): NodeCrypto = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[CRYPTO_MODULE_SYMBOL.asJsSymbol()] = provide()
-    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CRYPTO)) { provide() }
+    bindings[CRYPTO_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CRYPTO)) { singleton }
   }
 }
 
 /**
  * # Node API: `crypto`
  */
-internal class NodeCrypto : ReadOnlyProxyObject, CryptoAPI {
+internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeCrypto()
-    fun obtain(): NodeCrypto = SINGLETON
+    @JvmStatic fun create(): NodeCrypto = NodeCrypto()
   }
 
   // @TODO not yet implemented

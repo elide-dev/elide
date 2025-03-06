@@ -12,6 +12,7 @@
  */
 package elide.runtime.node.diagnostics
 
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -25,23 +26,23 @@ private const val DIAGNOSTICS_CHANNEL_MODULE_SYMBOL = "node_${NodeModuleName.DIA
 
 // Installs the Node `diagnostics_channel` module into the intrinsic bindings.
 @Intrinsic internal class NodeDiagnosticsChannelModule : AbstractNodeBuiltinModule() {
-  internal fun provide(): DiagnosticsChannelAPI = NodeDiagnosticsChannel.obtain()
+  private val singleton by lazy { NodeDiagnosticsChannel.create() }
+  internal fun provide(): DiagnosticsChannelAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[DIAGNOSTICS_CHANNEL_MODULE_SYMBOL.asJsSymbol()] = provide()
-    // ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DIAGNOSTICS_CHANNEL)) { provide() }
+    bindings[DIAGNOSTICS_CHANNEL_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    // ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DIAGNOSTICS_CHANNEL)) { singleton }
   }
 }
 
 /**
  * # Node API: `diagnostics_channel`
  */
-internal class NodeDiagnosticsChannel : ReadOnlyProxyObject, DiagnosticsChannelAPI {
+internal class NodeDiagnosticsChannel private constructor () : ReadOnlyProxyObject, DiagnosticsChannelAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeDiagnosticsChannel()
-    fun obtain(): NodeDiagnosticsChannel = SINGLETON
+    @JvmStatic fun create(): NodeDiagnosticsChannel = NodeDiagnosticsChannel()
   }
 
   // @TODO not yet implemented

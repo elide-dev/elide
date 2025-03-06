@@ -17,7 +17,7 @@ import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.RuntimeClassInitialization
 import elide.annotations.engine.VMFeature
-import elide.runtime.lang.typescript.TypeScriptCompiler
+import elide.runtime.lang.javascript.OxcParserFeature
 import elide.runtime.lang.typescript.TypeScriptLanguage
 
 /**
@@ -28,10 +28,13 @@ import elide.runtime.lang.typescript.TypeScriptLanguage
 @VMFeature public class TypeScriptFeature : Feature {
   override fun getDescription(): String = "Enables TypeScript support in Elide"
 
+  override fun getRequiredFeatures(): List<Class<out Feature?>?>? = listOf(
+    OxcParserFeature::class.java,
+  )
+
   override fun beforeAnalysis(access: BeforeAnalysisAccess?) {
     RuntimeClassInitialization.initializeAtBuildTime(
       TypeScriptLanguage::class.java,
-      TypeScriptCompiler::class.java,
     )
   }
 }

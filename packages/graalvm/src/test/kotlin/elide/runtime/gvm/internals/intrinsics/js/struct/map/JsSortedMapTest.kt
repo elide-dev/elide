@@ -17,10 +17,9 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import elide.runtime.intrinsics.js.MapLike
 import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
 
 /** Tests for the [JsSortedMap] implementation. */
-@TestCase internal class JsSortedMapTest : AbstractJsMapTest<JsSortedMap<String, Any?>>() {
+internal class JsSortedMapTest : AbstractJsMapTest<JsSortedMap<String, Any?>>() {
   /** @inheritDoc */
   override fun empty(): JsSortedMap<String, Any?> = JsSortedMap.empty()
 

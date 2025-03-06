@@ -13,6 +13,7 @@
 
 package elide.tool.cli.cmd.tool
 
+import io.micronaut.core.annotation.Introspected
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
@@ -110,6 +111,8 @@ private val uvActions = sortedSetOf(
     override fun resolve(symbol: String): EmbeddedTool = when (symbol) {
       RUFF_SYMBOL -> RUFF
       OROGENE_SYMBOL -> OROGENE
+      OXC_SYMBOL -> OXC
+      UV_SYMBOL -> UV
       else -> throw unresolved(symbol)
     }
   }
@@ -195,7 +198,7 @@ private enum class ToolAction (
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "tool",
-  aliases = ["lint", "fmt", "check", "install", "update", "oro", "ruff", "uv", "venv", "pip"],
+  aliases = ["lint", "fmt", "check", "install", "i", "update", "oro", "ruff", "uv", "venv", "pip"],
   description = ["%nRun polyglot linters on your code"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
@@ -203,6 +206,7 @@ private enum class ToolAction (
   usageHelpAutoWidth = true,
   hidden = true,
 )
+@Introspected
 @Suppress("unused", "UnusedPrivateProperty")
 @Singleton internal class ToolInvokeCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @Inject lateinit var activeProject: Optional<ProjectManager>
@@ -262,7 +266,6 @@ private enum class ToolAction (
     UV -> dev.elide.cli.bridge.CliNativeBridge::runUv
     OXC, BIOME -> error("Tool '$selectedTool' is not supported yet")
   }.let { tool ->
-    dev.elide.cli.bridge.CliNativeBridge.initialize()
     val version = dev.elide.cli.bridge.CliNativeBridge.apiVersion()
 
     if (verbose) output {
@@ -339,7 +342,9 @@ private enum class ToolAction (
   }
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    dev.elide.cli.bridge.CliNativeBridge.initialize()
+    // tools typically require native access; force early init
+    Elide.requestNatives(server = false, tooling = true)
+
     val version = dev.elide.cli.bridge.CliNativeBridge.apiVersion()
     val tools = dev.elide.cli.bridge.CliNativeBridge.supportedTools()
     val versions = tools.associateWith { dev.elide.cli.bridge.CliNativeBridge.toolVersion(it) }

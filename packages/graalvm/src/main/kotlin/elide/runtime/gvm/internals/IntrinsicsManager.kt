@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm.internals
 
+import java.util.stream.Stream
 import elide.annotations.Context
 import elide.annotations.Singleton
 import elide.runtime.gvm.intrinsics.CompoundIntrinsicsResolver
@@ -20,8 +21,8 @@ import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Resolves intrinsics for use with guest VMs. */
 @Suppress("MnInjectionPoints")
-@Context @Singleton public class IntrinsicsManager (resolvers: List<IntrinsicsResolver>) {
-  private val compound = CompoundIntrinsicsResolver.of(resolvers)
+@Context @Singleton public class IntrinsicsManager (resolvers: Stream<IntrinsicsResolver>) {
+  private val compound by lazy { CompoundIntrinsicsResolver.of(resolvers) }
   private val filters: MutableList<IntrinsicCriteria> = mutableListOf()
 
   /** Resolver stub. */

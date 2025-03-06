@@ -26,19 +26,16 @@ import java.math.BigInteger
 import java.util.stream.Stream
 import kotlin.streams.asStream
 import kotlin.test.Test
-import kotlin.test.assertNotNull
-import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.intrinsics.js.node.AssertAPI
 import elide.runtime.node.asserts.NodeAssertModule
 import elide.runtime.node.asserts.NodeAssertionError
 import elide.testing.annotations.TestCase
 
 /** Tests for the built-in `assert` module. */
-@TestCase internal class NodeAssertTest @Inject constructor(internal val assert: AssertAPI) :
-  NodeModuleConformanceTest<NodeAssertModule>() {
+@TestCase internal class NodeAssertTest : NodeModuleConformanceTest<NodeAssertModule>() {
   override val moduleName: String get() = "assert"
   override fun provide(): NodeAssertModule = NodeAssertModule()
+  private val assert = NodeAssertModule().provide()
 
   override fun expectCompliance(): Boolean = false
 

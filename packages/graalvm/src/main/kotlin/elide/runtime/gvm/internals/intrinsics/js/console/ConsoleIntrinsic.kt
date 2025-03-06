@@ -17,8 +17,7 @@ package elide.runtime.gvm.internals.intrinsics.js.console
 import io.micronaut.core.annotation.ReflectiveAccess
 import java.time.Instant
 import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
+import kotlinx.atomicfu.atomic
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -49,21 +48,20 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
 
     // Name of the primary console logger.
     private const val LOGGER_NAME: String = "gvm:js.console"
+
+    // Logger which receives console calls.
+    private val logging: Logger by lazy { Logging.named(LOGGER_NAME) }
+
+    // Whether to disable console streams.
+    private val disableStreams = System.getProperty("elide.disableStreams") == "true"
   }
 
-  // Logger which receives console calls.
-  private val logging: Logger = Logging.named(LOGGER_NAME)
-
-  // Whether to intercept logs.
-  private val intercept: AtomicBoolean = AtomicBoolean(false)
-
   // Interception logger (mostly for testing).
-  private var interceptor: AtomicReference<Logger> = AtomicReference(null)
+  private var interceptor = atomic<Logger?>(null)
 
   // Set an interceptor which receives a mirror of all logging calls.
   internal fun setInterceptor(interceptor: Logger?) {
-    this.interceptor.set(interceptor)
-    this.intercept.set(interceptor != null)
+    this.interceptor.value = interceptor
   }
 
   /**
@@ -194,10 +192,9 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param args Set of arguments to format and include with the log message.
    */
   private fun handleLog(level: LogLevel, args: Array<out Any?>) {
+    if (disableStreams) return
     val serializedArgs = args.toList().filterNotNull()
-    if (intercept.get()) {
-      interceptor.get().log(level, serializedArgs)
-    }
+    interceptor.value?.log(level, serializedArgs)
     logging.log(level, serializedArgs.map(this::formatLogComponent))
   }
 

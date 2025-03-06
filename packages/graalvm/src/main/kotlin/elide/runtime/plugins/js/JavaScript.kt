@@ -43,7 +43,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     config.applyTo(context)
 
     // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
+    if (!config.labsConfig.disablePolyfills) {
+      initializeEmbeddedScripts(context, resources)
+    }
   }
 
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
@@ -104,7 +106,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.debug-property-name" to DEBUG_GLOBAL,
       "js.ecmascript-version" to config.language.symbol(),
       "js.function-constructor-cache-size" to FUNCTION_CONSTRUCTOR_CACHE_SIZE,
-      "js.locale" to config.locale.toString(),
+      // @TODO: breakage in graalvm with `en_US`
+      // "js.locale" to config.locale.toString(),
+      "js.locale" to "en",
       "js.unhandled-rejections" to UNHANDLED_REJECTIONS,
       // Experimental:
       "js.charset" to config.charset.name(),
@@ -170,7 +174,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       val instance = JavaScript(config, embedded, env)
 
       // register resources with the VFS
-      installEmbeddedBundles(scope, embedded)
+      if (!config.labsConfig.disableVfs) {
+        installEmbeddedBundles(scope, embedded)
+      }
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)

@@ -101,9 +101,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         Base64Intrinsic().install(binding)
       }
       if (bindBuffer && !target.any { it.key.symbol.contains("Buffer") }) {
-        NodeBufferModule().apply {
-          facade = NodeBufferModuleFacade()
-        }.install(binding)
+        NodeBufferModule().install(binding)
       }
       target
     } else {

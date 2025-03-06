@@ -13,15 +13,11 @@
 
 package elide.tool.cli
 
-/**
- * TBD.
- */
-internal sealed class ToolState(
+sealed class ToolState(
   val output: OutputSettings = OutputSettings.DEFAULTS,
 ) {
   /**
    * Output settings for the tool.
-   *
    */
   data class OutputSettings(
     val verbose: Boolean = false,

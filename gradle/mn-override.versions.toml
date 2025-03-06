@@ -1,4 +1,9 @@
 [versions]
-micronaut-core = "4.7.1"
-micronaut-platform = "4.7.4"
+micronaut-core = "4.8.5"
+micronaut-platform = "4.7.6"
 micronaut-picocli = "5.7.0"
+micronaut-graal = "4.8.5"
+micronaut-runtime = "4.8.5"
+micronaut-inject-kotlin = "4.8.5"
+micronaut-test-core = "4.7.0"
+micronaut-test-junit5 = "4.7.0"

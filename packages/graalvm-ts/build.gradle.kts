@@ -19,9 +19,7 @@ plugins {
   alias(libs.plugins.micronaut.graalvm)
 
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.allopen")
-
   alias(libs.plugins.elide.conventions)
 }
 
@@ -47,8 +45,18 @@ elide {
   }
 }
 
+val enableEdgeJvm = false
+val extraSrcroot = if (enableEdgeJvm) "src/main/java25x" else "src/main/java24x"
+
+sourceSets {
+  main {
+    java.srcDirs(layout.projectDirectory.dir(extraSrcroot))
+  }
+}
+
 dependencies {
-  kapt(libs.graalvm.truffle.processor)
+  annotationProcessor(libs.graalvm.truffle.api)
+  annotationProcessor(libs.graalvm.truffle.processor)
   api(projects.packages.engine)
   api(projects.packages.graalvmJs)
   api(libs.graalvm.truffle.api)
@@ -101,8 +109,6 @@ val javaLibPath = provider {
 }
 
 tasks {
-  checkNatives(test)
-
   jar.configure {
     exclude("**/runtime.current.json")
   }

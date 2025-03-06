@@ -141,7 +141,6 @@ import elide.vm.annotations.Polyglot
  * Implements an immutable Zlib options object.
  */
 @JvmRecord
-@ConsistentCopyVisibility
 public data class ImmutableZlibOptions internal constructor (
   @get:Polyglot override val flush: Int = ModernNodeZlibConstants.Z_NO_FLUSH,
   @get:Polyglot override val finishFlush: Int = ModernNodeZlibConstants.Z_FINISH,

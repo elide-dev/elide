@@ -20,8 +20,8 @@ import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
 import jakarta.inject.Provider
+import kotlinx.atomicfu.atomic
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
 import elide.annotations.Context
@@ -36,7 +36,17 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
 /** Main implementation of the runtime working directory manager. */
 internal class RuntimeWorkdirManager : WorkdirManager {
   internal object SingletonManager {
-    @JvmStatic val singleton: AtomicReference<RuntimeWorkdirManager> = AtomicReference(null)
+    @JvmStatic val singleton = atomic<RuntimeWorkdirManager?>(null)
+
+    fun acquire(): RuntimeWorkdirManager {
+      val existing = singleton.value
+      if (existing == null) synchronized(this) {
+        val created = RuntimeWorkdirManager()
+        singleton.value = created
+        return created
+      }
+      return existing
+    }
   }
 
   internal companion object {
@@ -78,11 +88,8 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     }
 
     /** @return Created or acquired [RuntimeWorkdirManager] singleton. */
-    @JvmStatic fun acquire(): RuntimeWorkdirManager = synchronized(this) {
-      if (SingletonManager.singleton.get() == null) {
-        SingletonManager.singleton.set(RuntimeWorkdirManager())
-      }
-      SingletonManager.singleton.get()
+    @JvmStatic fun acquire(): RuntimeWorkdirManager {
+      return SingletonManager.acquire()
     }
   }
 

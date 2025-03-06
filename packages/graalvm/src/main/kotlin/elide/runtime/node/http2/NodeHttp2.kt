@@ -12,35 +12,43 @@
  */
 package elide.runtime.node.http2
 
-import elide.annotations.Factory
-import elide.annotations.Singleton
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.HTTP2API
+import elide.runtime.lang.javascript.NodeModuleName
 
 // Internal symbol where the Node built-in module is installed.
-private const val HTTP2_MODULE_SYMBOL = "node_http2"
+private const val HTTP2_MODULE_SYMBOL = "node_${NodeModuleName.HTTP2}"
 
 // Installs the Node `http2` module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeHttp2Module : AbstractNodeBuiltinModule() {
-  @Singleton internal fun provide(): HTTP2API = NodeHttp2.obtain()
+@Intrinsic internal class NodeHttp2Module : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeHttp2.create() }
+  internal fun provide(): HTTP2API = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[HTTP2_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[HTTP2_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { provide() }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.HTTP2)) { provide() }
   }
 }
 
 /**
  * # Node API: `http2`
  */
-internal class NodeHttp2 : HTTP2API {
+internal class NodeHttp2 private constructor () : ReadOnlyProxyObject, HTTP2API {
   //
 
   internal companion object {
-    private val SINGLETON = NodeHttp2()
-    fun obtain(): NodeHttp2 = SINGLETON
+    @JvmStatic fun create(): NodeHttp2 = NodeHttp2()
   }
+
+  // @TODO not yet implemented
+
+  override fun getMemberKeys(): Array<String> = emptyArray()
+  override fun getMember(key: String?): Any? = null
 }

@@ -2,6 +2,28 @@ public final class elide/runtime/gvm/python/Python {
 	public static final field INSTANCE Lelide/runtime/gvm/python/Python;
 }
 
+public final class elide/runtime/lang/python/NativePythonPlugin : elide/runtime/lang/LanguagePlugin {
+	public fun <init> ()V
+	public fun getLanguageClass ()Ljava/lang/Class;
+}
+
+public class elide/runtime/lang/python/PythonLang : elide/runtime/lang/Language {
+	protected static final field langCtx Lorg/graalvm/nativeimage/c/function/CEntryPointLiteral;
+	protected static final field langEngine Lorg/graalvm/nativeimage/c/function/CEntryPointLiteral;
+	protected static final field langEntry Lorg/graalvm/nativeimage/c/function/CEntryPointLiteral;
+	protected static field langIdHolder Lorg/graalvm/nativeimage/c/type/CTypeConversion$CCharPointerHolder;
+	protected static final field langInit Lorg/graalvm/nativeimage/c/function/CEntryPointLiteral;
+	public fun <init> ()V
+	public static fun configureContext (Lorg/graalvm/nativeimage/IsolateThread;Lelide/runtime/lang/Language$ContextConfigInvocation;)V
+	public static fun configureEngine (Lorg/graalvm/nativeimage/IsolateThread;Lelide/runtime/lang/Language$EngineConfigInvocation;)V
+	public static fun entry (Lorg/graalvm/nativeimage/IsolateThread;Lelide/runtime/lang/Language$NativeLangInvocation;)V
+	public fun getLanguageId ()Ljava/lang/String;
+	protected static fun getPluginApiVersion ()I
+	public static fun getPluginVersion (Lorg/graalvm/nativeimage/IsolateThread;)I
+	public static fun init (Lorg/graalvm/nativeimage/IsolateThread;Lelide/runtime/lang/Language$NativeRuntimeInit;)V
+	public static fun setup (Lorg/graalvm/nativeimage/IsolateThread;Lelide/runtime/lang/Language$NativeLanguageInfo;)V
+}
+
 public final class elide/runtime/plugins/python/ExtensionsKt {
 	public static final fun python (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
 	public static synthetic fun python$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;

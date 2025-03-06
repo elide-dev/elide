@@ -22,7 +22,7 @@ import elide.runtime.gvm.js.JsError.typeError
 import elide.runtime.intrinsics.js.node.buffer.BufferClass
 import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 
-@DelicateElideApi internal class NodeBufferClass : BufferClass {
+@DelicateElideApi internal class NodeBufferClass private constructor () : BufferClass {
   override var poolSize: Int = 8192
 
   private fun PolyglotValue.asBufferOrNull(): BufferInstance? {
@@ -265,7 +265,10 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
     error("Modifying the Buffer prototype is not allowed")
   }
 
-  private companion object {
+  companion object {
+    internal val SINGLETON = NodeBufferClass()
+    @JvmStatic fun obtain(): NodeBufferClass = SINGLETON
+
     private val staticMembers = arrayOf(
       "alloc",
       "allocUnsafe",

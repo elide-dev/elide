@@ -35,6 +35,7 @@ public interface Path : Comparable<Path>, StringLike {
   public companion object : PathFactory {
     override fun from(path: String, style: PathStyle?): Path = PathBuf.from(path, style)
     override fun from(first: String, vararg rest: String): Path = PathBuf.from(first, *rest)
+    override fun from(seq: Sequence<String>): Path = PathBuf.from(seq)
     override fun from(path: kotlinx.io.files.Path): Path = PathBuf.from(path)
     override fun from(path: java.nio.file.Path): Path = PathBuf.from(path)
     override fun from(path: File): Path = PathBuf.from(path.path)

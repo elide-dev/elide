@@ -16,12 +16,8 @@ import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
-  alias(libs.plugins.micronaut.graalvm)
-
   kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.allopen")
-
+  alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
 }
 
@@ -60,7 +56,7 @@ dependencies {
   api(libs.graalvm.truffle.api)
   api(libs.graalvm.espresso.polyglot)
   api(libs.graalvm.espresso.language)
-  kapt(libs.graalvm.truffle.processor)
+  annotationProcessor(libs.graalvm.truffle.processor)
   implementation(projects.packages.graalvmJvm)
 
   implementation(libs.kotlinx.atomicfu)
@@ -160,17 +156,16 @@ tasks.processResources {
   }
 }
 
+val kotlinHomePath: String = kotlinHomeRoot.get().asFile.absolutePath
+val testJvmArgs = defs.get()
+
 tasks.test {
   dependsOn(
-    prepKotlinResources,
-    buildKotlinResourcesArchive,
+    prepKotlinResources.name,
+    buildKotlinResourcesArchive.name,
   )
   environment(
-    "KOTLIN_HOME" to kotlinHomeRoot.get().asFile.absolutePath,
+    "KOTLIN_HOME" to kotlinHomePath,
   )
-  jvmArgumentProviders.add(CommandLineArgumentProvider {
-    buildList {
-      addAll(defs.get())
-    }
-  })
+  requireNotNull(jvmArgs).addAll(testJvmArgs)
 }

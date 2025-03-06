@@ -130,7 +130,6 @@ public interface PolyglotContext {
   }
 
   /** Default implementation of [EvaluationOptions]. */
-  @ConsistentCopyVisibility
   @JvmRecord public data class EvaluationOptionsData internal constructor (
     override val internals: Boolean,
   ) : EvaluationOptions

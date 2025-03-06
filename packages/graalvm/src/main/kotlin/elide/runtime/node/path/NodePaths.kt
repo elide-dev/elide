@@ -18,17 +18,19 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.File
-import elide.annotations.Factory
-import elide.annotations.Singleton
+import java.nio.file.Paths
+import java.util.LinkedList
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.PathAPI
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.runtime.intrinsics.js.node.path.PathFactory
+import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.path.NodePaths.SYMBOL
 import elide.runtime.node.path.PathStyle.POSIX
@@ -52,6 +54,30 @@ private const val win32MinRoot = 4
 // Universal relative path references.
 private const val currentDir = "."
 private const val parentDir = ".."
+
+// Methods and properties.
+private const val F_JOIN = "join"
+private const val F_RESOLVE = "resolve"
+private const val F_FORMAT = "format"
+private const val F_PARSE = "parse"
+private const val F_NORMALIZE = "normalize"
+private const val F_TO_NAMESPACED_PATH = "toNamespacedPath"
+private const val F_BASENAME = "basename"
+private const val F_DIRNAME = "dirname"
+private const val F_EXTNAME = "extname"
+private const val F_IS_ABSOLUTE = "isAbsolute"
+private const val F_RELATIVE = "relative"
+private const val K_SEP = "sep"
+private const val K_DELIM = "delimiter"
+private const val K_POSIX = "posix"
+private const val K_WIN32 = "win32"
+private const val K_BASE = "base"
+private const val K_DIR = "dir"
+private const val K_EXT = "ext"
+private const val K_LENGTH = "length"
+private const val K_NAME = "name"
+private const val K_ROOT = "root"
+private const val F_TO_STRING = "toString"
 
 /**
  * ## Path Style
@@ -77,41 +103,41 @@ public enum class PathStyle {
 
 // All member keys.
 private val pathMemberKeys = arrayOf(
-  "basename",
-  "delimiter",
-  "dirname",
-  "extname",
-  "format",
-  "isAbsolute",
-  "join",
-  "normalize",
-  "parse",
-  "posix",
-  "relative",
-  "resolve",
-  "sep",
-  "toNamespacedPath",
-  "win32",
+  F_BASENAME,
+  K_DELIM,
+  F_DIRNAME,
+  F_EXTNAME,
+  F_FORMAT,
+  F_IS_ABSOLUTE,
+  F_JOIN,
+  F_NORMALIZE,
+  F_PARSE,
+  K_POSIX,
+  F_RELATIVE,
+  F_RESOLVE,
+  K_SEP,
+  F_TO_NAMESPACED_PATH,
+  K_WIN32,
 )
 
 // Member keys of a path buffer object.
 private val pathBufMemberKeys = arrayOf(
-  "base",
-  "dir",
-  "ext",
-  "isAbsolute",
-  "join",
-  "length",
-  "name",
-  "root",
-  "toString",
+  F_IS_ABSOLUTE,
+  F_JOIN,
+  K_BASE,
+  K_DIR,
+  K_EXT,
+  K_LENGTH,
+  K_NAME,
+  K_ROOT,
+  F_TO_STRING,
 )
 
 // Private path utilities.
 internal object PathUtils {
   @JvmStatic fun activePathStyle(osName: String? = System.getProperty("os.name")): PathStyle {
     return when (osName?.lowercase()?.trim() ?: "unknown") {
-      "windows", "win32", "win" -> WIN32
+      "windows", K_WIN32, "win" -> WIN32
       else -> POSIX
     }
   }
@@ -134,7 +160,7 @@ private fun sepFor(style: PathStyle): String = when (style) {
 public class PathBuf private constructor(
   override val style: PathStyle,
   private val path: KotlinPath,
-) : PathIntrinsic, ProxyObject {
+) : PathIntrinsic, ReadOnlyProxyObject {
   override fun toKotlinPath(): KotlinPath = path
   override fun toJavaPath(): JavaPath = JavaPath.of(stringRepr)
   override fun copy(): PathIntrinsic = PathBuf(style, KotlinPath(stringRepr))
@@ -154,7 +180,10 @@ public class PathBuf private constructor(
     @JvmStatic override fun from(first: String, vararg rest: String): Path =
       PathBuf(defaultStyle, KotlinPath(first, *rest))
 
-    @JvmStatic override fun from(path: java.nio.file.Path): Path =
+    @JvmStatic override fun from(seq: Sequence<String>): Path =
+      PathBuf(defaultStyle, KotlinPath(seq.joinToString(sepFor(defaultStyle))))
+
+    @JvmStatic override fun from(path: JavaPath): Path =
       PathBuf(defaultStyle, KotlinPath(path.toString()))
 
     @JvmStatic override fun from(path: File): Path =
@@ -172,7 +201,7 @@ public class PathBuf private constructor(
   @get:Polyglot override val name: String get() = split().last().substringBeforeLast(filenameSep)
   @get:Polyglot override val root: String
     get() = if (!isAbsolute) "" else when (style) {
-      POSIX -> "/"
+      POSIX -> unixPathSep
       WIN32 -> split().firstOrNull { it.contains(win32DriveDelim) }?.let { "$it$win32PathSep" } ?: ""
     }
 
@@ -191,8 +220,9 @@ public class PathBuf private constructor(
     }
 
   @Polyglot override fun toString(): String = stringRepr
-  @Polyglot override fun join(other: Iterable<String>): String =
-    from(split().plus(other).joinToString(sepFor(style))).toString()
+  @Polyglot override fun join(other: Iterable<String>): String {
+    return from(split().plus(other).joinToString(sepFor(style))).toString()
+  }
 
   @Polyglot override fun join(vararg paths: Path): String =
     from(listOf(this).plus(paths).flatMap { it.split() }.joinToString(sepFor(style))).toString()
@@ -212,57 +242,46 @@ public class PathBuf private constructor(
 
   @Polyglot override fun hashCode(): Int = path.hashCode()
 
-  override fun putMember(key: String?, value: Value?) { /* no-op */
-  }
-
-  override fun removeMember(key: String?): Boolean = false
   override fun getMemberKeys(): Array<String> = pathBufMemberKeys
-  override fun hasMember(key: String?): Boolean = key != null && key in pathBufMemberKeys
 
   override fun getMember(key: String?): Any? = when (key) {
-    "base" -> base
-    "dir" -> dir
-    "ext" -> ext
-    "isAbsolute" -> isAbsolute
-    "join" -> ProxyExecutable { args ->
+    K_BASE -> base
+    K_DIR -> dir
+    K_EXT -> ext
+    F_IS_ABSOLUTE -> isAbsolute
+    K_LENGTH -> length
+    K_NAME -> name
+    K_ROOT -> root
+    F_TO_STRING -> ProxyExecutable { toString() }
+    F_JOIN -> ProxyExecutable { args ->
       when (args.size) {
         0 -> ""
-        else -> join(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())
+        else -> join(sequence {
+          yield(args[0].asString())
+          for (i in 1 until args.size) yield(args[i].asString())
+        }.asIterable())
       }
     }
-
-    "length" -> length
-    "name" -> name
-    "root" -> root
-    "toString" -> ProxyExecutable { toString() }
     else -> null
   }
 }
 
 // Installs the Node paths module into the intrinsic bindings.
-@Intrinsic @Factory internal class NodePathsModule : SyntheticJSModule<PathAPI>, AbstractNodeBuiltinModule() {
-  companion object {
-    // Singleton instance.
-    private val instance = NodePaths.create()
+@Intrinsic internal class NodePathsModule : SyntheticJSModule<PathAPI>, AbstractNodeBuiltinModule() {
+  val paths: PathAPI get() = NodePaths.create()
 
-    init {
-      ModuleRegistry.deferred(ModuleInfo.of("path")) { instance }
-    }
-  }
-
-  val paths: PathAPI get() = instance
+  override fun provide(): PathAPI = paths
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[SYMBOL.asJsSymbol()] = NodePaths.create()
+    bindings[SYMBOL.asJsSymbol()] = provide()
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.PATH)) { provide() }
   }
-
-  @Singleton override fun provide(): PathAPI = instance
 }
 
 /**
  * # Node API: `path`
  */
-internal object NodePaths {
+public object NodePaths {
   /** Primordial symbol where the paths API implementation is installed. */
   internal const val SYMBOL: String = "node_path"
 
@@ -275,21 +294,61 @@ internal object NodePaths {
    * @see WindowsPaths for Win32-style paths
    * @see PosixPaths for POSIX-style paths
    */
-  abstract class BasePaths protected constructor(private val mode: PathStyle) : PathAPI, ProxyObject {
+  internal abstract class BasePaths protected constructor(private val mode: PathStyle) : PathAPI, ProxyObject {
     @get:Polyglot override val posix: PathAPI get() = posixPaths
     @get:Polyglot override val win32: PathAPI get() = windowsPaths
 
-    override fun join(sequence: Sequence<Path>): String =
-      sepFor(mode).let { sep ->
-        sequence.flatMap {
-          it.toString().split(sep)
-        }.filterIndexed { index, segment ->
-          index == 0 || segment.isNotEmpty()  // filters out double slashing, except for root slash presence
-        }.joinToString(sep)
+    @Suppress("LoopWithTooManyJumpStatements")
+    private fun joinStrings(sequence: Sequence<String>): String {
+      var isAbsolute = false
+      val seq = sequence.flatMapIndexed { i, s ->
+        if (i == 0 && s.startsWith(sep)) {
+          isAbsolute = true
+        }
+        s.split(sep)
+      }.filter { it.isNotEmpty() }.toCollection(
+        LinkedList()
+      )
+      // iterate in reverse to resolve `.` and `..` references
+      var str = ""
+      var dropNext = false
+      for (i in seq.size - 1 downTo 0) {
+        if (dropNext) {
+          dropNext = false
+          continue
+        }
+        val seg = seq[i]
+        when {
+          seg.isEmpty() && !(i == 0 && isAbsolute) -> continue
+          seg == currentDir -> continue
+          seg == parentDir -> {
+            dropNext = true
+            continue
+          }
+        }
+        // if it's the last segment, it should not automatically have a tail.
+        val tail = when {
+          i == 0 -> if (isAbsolute) sep else ""
+          else -> sep
+        }
+        str = tail + seg + str
       }
+      return str
+    }
+
+    private fun resolveStrings(seq: Sequence<String>): String {
+      val buf = PathBuf.from(joinStrings(seq))
+      if (buf.isAbsolute) return buf.toKotlinPath().toString()
+      val path = buf.toJavaPath()
+      val cwd = System.getProperty("user.dir")
+      return Paths.get(cwd).resolve(path).toString()
+    }
+
+    override fun join(sequence: Sequence<Path>): String =
+      joinStrings(sequence.map { it.toString() })
 
     override fun resolve(sequence: Sequence<Path>): String =
-      PathBuf.from(sequence.map { it.toJavaPath() }.reduce(JavaPath::resolve)).toString()
+      resolveStrings(sequence.map { it.toString() }).toString()
 
     @Polyglot override fun basename(path: PathIntrinsic, ext: String?): String {
       return path.split().last().let {
@@ -309,14 +368,21 @@ internal object NodePaths {
     }
 
     @Polyglot override fun isAbsolute(path: PathIntrinsic): Boolean = path.isAbsolute
-    @Polyglot override fun join(first: Path, vararg rest: Path): String = first.join(*rest)
+
+    @Polyglot override fun join(first: Path, vararg rest: Path): String = join(sequence {
+      yield(first)
+      for (p in rest) yield(p)
+    })
+
     @Polyglot override fun extname(path: PathIntrinsic): String = path.ext
 
     @Polyglot override fun relative(from: PathIntrinsic, to: PathIntrinsic): String =
       PathBuf.from(from.toJavaPath().relativize(to.toJavaPath())).toString()
 
-    @Polyglot override fun resolve(first: PathIntrinsic, vararg rest: PathIntrinsic): String =
-      PathBuf.from(listOf(first).plus(rest).map { it.toJavaPath() }.reduce(JavaPath::resolve)).toString()
+    @Polyglot override fun resolve(first: PathIntrinsic, vararg rest: PathIntrinsic): String = resolve(sequence {
+      yield(first)
+      for (p in rest) yield(p)
+    })
 
     @Polyglot override fun normalize(path: PathIntrinsic): String = when {
       // on the native platform, we can leverage JVM's path normalization
@@ -345,6 +411,7 @@ internal object NodePaths {
       TODO("Not yet implemented")
     }
 
+    @Suppress("ReturnCount")
     @Polyglot override fun format(pathObject: Any): String {
       val sep = sepFor(defaultStyle)
       fun doFormat(base: String?, root: String?, dir: String?, name: String?, ext: String?): String {
@@ -413,26 +480,32 @@ internal object NodePaths {
     override fun getMemberKeys(): Array<String> = pathMemberKeys
 
     override fun getMember(key: String): Any? = when (key) {
-      "sep" -> sep
-      "delimiter" -> delimiter
-      "posix" -> posix
-      "win32" -> win32
+      K_SEP -> sep
+      K_DELIM -> delimiter
+      K_POSIX -> posix
+      K_WIN32 -> win32
 
-      "join" -> ProxyExecutable { args ->
+      F_JOIN -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
-          else -> join(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())
+          else -> joinStrings(sequence {
+            yield(args[0].asString())
+            for (i in 1 until args.size) yield(args[i].asString())
+          })
         }
       }
 
-      "resolve" -> ProxyExecutable { args ->
+      F_RESOLVE -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
-          else -> resolve(args[0].asString(), *args.drop(1).map { it.asString() }.toTypedArray())
+          else -> resolveStrings(sequence {
+            yield(args[0].asString())
+            for (i in 1 until args.size) yield(args[i].asString())
+          })
         }
       }
 
-      "basename" -> ProxyExecutable { args ->
+      F_BASENAME -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           1 -> basename(args[0].asString())
@@ -440,28 +513,28 @@ internal object NodePaths {
         }
       }
 
-      "dirname" -> ProxyExecutable { args ->
+      F_DIRNAME -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           else -> dirname(args[0].asString())
         }
       }
 
-      "isAbsolute" -> ProxyExecutable { args ->
+      F_IS_ABSOLUTE -> ProxyExecutable { args ->
         when (args.size) {
           0 -> false
           else -> isAbsolute(args[0].asString())
         }
       }
 
-      "extname" -> ProxyExecutable { args ->
+      F_EXTNAME -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           else -> extname(args[0].asString())
         }
       }
 
-      "relative" -> ProxyExecutable { args ->
+      F_RELATIVE -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           1 -> ""
@@ -469,28 +542,28 @@ internal object NodePaths {
         }
       }
 
-      "normalize" -> ProxyExecutable { args ->
+      F_NORMALIZE -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           else -> normalize(args[0].asString())
         }
       }
 
-      "toNamespacedPath" -> ProxyExecutable { args ->
+      F_TO_NAMESPACED_PATH -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           else -> toNamespacedPath(args[0].asString())
         }
       }
 
-      "format" -> ProxyExecutable { args ->
+      F_FORMAT -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           else -> format(args[0])
         }
       }
 
-      "parse" -> ProxyExecutable { args ->
+      F_PARSE -> ProxyExecutable { args ->
         when (args.size) {
           0 -> ""
           else -> parse(args[0].asString(), args.getOrNull(1)?.asString()?.let(PathStyle::valueOf))
@@ -510,13 +583,13 @@ internal object NodePaths {
   }
 
   // Implementation of Windows-style paths.
-  class WindowsPaths : BasePaths(WIN32) {
+  internal class WindowsPaths : BasePaths(WIN32) {
     @get:Polyglot override val sep: String get() = win32PathSep
     @get:Polyglot override val delimiter: String get() = win32PathDelim
   }
 
   // Implementation of POSIX-style paths.
-  class PosixPaths : BasePaths(POSIX) {
+  internal class PosixPaths : BasePaths(POSIX) {
     @get:Polyglot override val sep: String get() = unixPathSep
     @get:Polyglot override val delimiter: String get() = unixPathDelim
   }
@@ -533,7 +606,7 @@ internal object NodePaths {
    * @param style Overriding path style to use (optional)
    * @return A new instance of the Node path utilities
    */
-  @JvmStatic fun create(style: PathStyle = defaultStyle): PathAPI {
+  @JvmStatic public fun create(style: PathStyle = defaultStyle): PathAPI {
     return when (style) {
       WIN32 -> windowsPaths
       POSIX -> posixPaths

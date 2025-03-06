@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("unused")
+
 /**
  * Elide Runtime
  */
@@ -18,12 +20,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask
-import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
-import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
-import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format.HTML
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format.SARIF
@@ -79,15 +75,13 @@ val props = Properties().apply {
 }
 
 val javaLanguageVersion = properties["versions.java.language"] as String
-val nodeVersion: String by properties
 val enableOwasp: String? by properties
 
 val buildDocs: String by properties
-val buildDeprecated: String by properties
 val buildEmbedded: String by properties
-val buildAuxImage: String by properties
 val buildDocsModules: String by properties
 val buildBenchmarks: String by properties
+val isCI = properties["elide.ci"] == "true" || System.getenv("CI") != null
 
 buildscript {
   repositories {
@@ -164,13 +158,6 @@ dependencies {
   kover(projects.packages.server)
   kover(projects.packages.ssr)
   kover(projects.packages.test)
-
-  if (buildDeprecated == "true") {
-    kover(project(":packages:wasm"))
-    kover(project(":packages:serverless"))
-    kover(project(":packages:embedded"))
-    kover(project(":tools:processor"))
-  }
 
   if (buildDocs == "true") {
     val dokkaPlugin by configurations
@@ -343,11 +330,6 @@ apiValidation {
     listOf(
       "cli",
       "sqlite",
-      "transport",
-      "transport-common",
-      "transport-kqueue",
-      "transport-epoll",
-      "transport-uring",
       "reports",
     ).plus(
       if (buildBenchmarks == "true") {
@@ -359,28 +341,11 @@ apiValidation {
         emptyList()
       },
     ).plus(
-      if (buildAuxImage == "true") {
-        listOf(
-          "auximage",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
       if (buildDocs == "true" && buildDocsModules == "true") {
         listOf(
           "architecture",
           "docs",
           "guide",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
-      if (buildDeprecated == "true") {
-        listOf(
-          "bom",
-          "processor",
         )
       } else {
         emptyList()
@@ -398,28 +363,6 @@ apiValidation {
 
 // Conditional plugins to apply.
 if (enableOwasp == "true") apply(plugin = "org.owasp.dependencycheck")
-
-// --- Node JS --------------------------------------------------------------------------------------------------------
-//
-plugins.withType(NodeJsRootPlugin::class.java) {
-  the<NodeJsEnvSpec>().apply {
-    version = nodeVersion
-    if (nodeVersion.contains("canary")) {
-      downloadBaseUrl = "https://nodejs.org/download/v8-canary"
-    }
-  }
-}
-
-plugins.withType(YarnPlugin::class.java) {
-  val yarn = the<YarnRootExtension>()
-  yarn.apply {
-    yarnLockMismatchReport = YarnLockMismatchReport.WARNING
-    reportNewYarnLock = false
-    yarnLockAutoReplace = false
-    lockFileDirectory = rootDir
-    lockFileName = "gradle-yarn.lock"
-  }
-}
 
 // --- OWASP Dependency Check -----------------------------------------------------------------------------------------
 //
@@ -461,20 +404,6 @@ configure<DependencyCheckExtension> {
 // --------------------------------------------------------------------------------------------------------------------
 
 tasks {
-  // --- Tasks: Kotlin/NPM
-  //
-  // withType(KotlinNpmInstallTask::class.java).configureEach {
-  //   (packageJsonFiles as MutableList<RegularFile>).addFirst(layout.projectDirectory.file("package.json"))
-  //   args.add("--ignore-engines")
-  //   outputs.upToDateWhen {
-  //     layout.projectDirectory.dir("node_modules").asFile.exists()
-  //   }
-  // }
-
-  withType(KotlinPackageJsonTask::class.java).configureEach {
-    packageJson = file("package.json")
-  }
-
   // --- Tasks: Detekt
   //
   val detektMergeSarif: TaskProvider<ReportMergeTask> by registering(ReportMergeTask::class) {
@@ -629,6 +558,7 @@ tasks {
   // --- Task: Copy Coverage Reports
   //
   val copyCoverageReports by registering(Copy::class) {
+    enabled = isCI
     dependsOn(
       koverBinaryReport,
       koverXmlReport,
@@ -689,6 +619,7 @@ tasks {
   // --- Task: Sonar
   //
   sonar.configure {
+    enabled = isCI
     mustRunAfter(
       detekt,
       koverBinaryReport,
@@ -700,6 +631,7 @@ tasks {
   // --- Tasks: Kover Verification
   //
   koverVerify.configure {
+    enabled = isCI
     finalizedBy(copyCoverageReports)
   }
 
@@ -714,5 +646,35 @@ tasks {
       detekt,
       withType(KotlinApiCompareTask::class),
     )
+  }
+}
+
+listOf(
+  tasks.koverBinaryReport,
+  tasks.koverXmlReport,
+  tasks.koverVerify,
+).forEach {
+  it.configure {
+    enabled = isCI
+  }
+}
+
+fun forceDisableTask(task: Task) {
+  task.enabled = false
+  task.onlyIf { false }
+}
+
+fun forceDisableNpmTasks() {
+  tasks.findByName("kotlinNpmInstall")?.let { forceDisableTask(it) }
+  tasks.findByName("setupNodeJs")?.let { forceDisableTask(it) }
+}
+
+forceDisableNpmTasks()
+
+afterEvaluate {
+  forceDisableNpmTasks()
+
+  afterEvaluate {
+    forceDisableNpmTasks()
   }
 }

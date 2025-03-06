@@ -14,7 +14,7 @@ package elide.runtime.node
 
 import kotlin.test.Test
 import kotlin.test.assertNotNull
-import elide.annotations.Inject
+import elide.runtime.node.net.NodeNetwork
 import elide.runtime.node.net.NodeNetworkModule
 import elide.testing.annotations.TestCase
 
@@ -22,7 +22,7 @@ import elide.testing.annotations.TestCase
 @TestCase internal class NodeNetTest : NodeModuleConformanceTest<NodeNetworkModule>() {
   override val moduleName: String get() = "net"
   override fun provide(): NodeNetworkModule = NodeNetworkModule()
-  @Inject lateinit var net: NodeNetworkModule
+  private val net = NodeNetwork.create()
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false

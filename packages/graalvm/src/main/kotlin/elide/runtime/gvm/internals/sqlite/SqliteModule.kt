@@ -68,6 +68,9 @@ import java.sql.Statement as SqlStatement
 // Symbol where the internal module implementation is installed.
 private const val SQLITE_MODULE_SYMBOL: String = "sqlite"
 
+// Native library to load for SQLite support.
+private const val SQLITE3_LIBRARY: String = "sqlitejdbc"
+
 // Symbol where the database class is installed.
 private const val SQLITE_DATABASE_SYMBOL: String = "sqlite_Database"
 
@@ -91,23 +94,19 @@ private const val CONFIG_ATTR_READONLY: String = "readonly"
   }
 
   init {
-    ModuleRegistry.deferred(ModuleInfo.of("sqlite")) { provide() }
-  }
-}
-
-internal class SqliteModule : ProxyObject, SyntheticJSModule<SQLiteAPI>, SQLiteAPI {
-  companion object {
-    // Native library to load for SQLite support.
-    private const val SQLITE3_LIBRARY: String = "sqlitejdbc"
-
-    init {
+    ModuleRegistry.deferred(ModuleInfo.of(SQLITE_MODULE_SYMBOL)) {
       NativeLibraries.resolve(SQLITE3_LIBRARY) {
         org.sqlite.SQLiteJDBCLoader.initialize()
       }
+      provide()
     }
+  }
+}
 
+public class SqliteModule : ProxyObject, SyntheticJSModule<SQLiteAPI>, SQLiteAPI {
+  public companion object {
     private val SINGLETON = SqliteModule()
-    @JvmStatic fun obtain(): SQLiteAPI = SINGLETON
+    @JvmStatic public fun obtain(): SQLiteAPI = SINGLETON
   }
 
   override fun provide(): SQLiteAPI = SINGLETON
@@ -147,6 +146,7 @@ private suspend fun SequenceScope<String>.addIfSet(key: String, value: String?) 
   public companion object {
     @JvmStatic public fun defaults(): SQLiteCreateDatabaseOptions = SQLiteCreateDatabaseOptions()
 
+    @Suppress("KotlinConstantConditions")
     @JvmStatic public fun from(value: Any?): SQLiteCreateDatabaseOptions {
       return when (value) {
         null -> defaults()
@@ -234,7 +234,6 @@ internal class SqliteDatabaseProxy private constructor (
   private val resources: ResourceManager = ResourceManager(),
   driverOptions: SQLiteDriverOptions? = null,
 ) : LifecycleBoundResources by resources, SQLiteDatabase {
-  @ConsistentCopyVisibility
   @JvmRecord private data class SQLiteColumn private constructor (
     val name: String,
     val type: SQLiteType,
@@ -263,7 +262,6 @@ internal class SqliteDatabaseProxy private constructor (
   }
 
   // Internal SQLite object implementation, backed by a de-serialized map.
-  @ConsistentCopyVisibility
   private data class SQLiteObjectImpl private constructor (
     private val schema: SQLiteObjectSchema,
     private val dataMap: MapLike<String, Any?>,

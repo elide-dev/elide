@@ -31,7 +31,6 @@ import java.nio.file.Path
  * @param deferred Whether to defer reads for guest VM I/O operations.
  * @param workingDirectory Current-working-directory to apply for this virtual filesystem.
  */
-@ConsistentCopyVisibility
 public data class EffectiveGuestVFSConfig internal constructor (
   val readOnly: Boolean = DEFAULT_READ_ONLY,
   val caseSensitive: Boolean = DEFAULT_CASE_SENSITIVE,

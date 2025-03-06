@@ -172,8 +172,7 @@ private val TEXT_DECODER_METHODS_AND_PROPS = arrayOf(
    *
    * Specifies options for calls to [TextDecoder.decode].
    */
-  @ExposedCopyVisibility
-  @JvmRecord public data class DecodeOptions private constructor (
+    @JvmRecord public data class DecodeOptions private constructor (
     /**
      * ## Stream
      *
@@ -216,8 +215,7 @@ private val TEXT_DECODER_METHODS_AND_PROPS = arrayOf(
    * Specifies options for [TextDecoder] instances; instances of these options can be provided to the [TextDecoder]
    * constructor to specify how the decoder should behave.
    */
-  @ExposedCopyVisibility
-  @JvmRecord public data class Options private constructor (
+    @JvmRecord public data class Options private constructor (
     /**
      * ## Fatal
      *

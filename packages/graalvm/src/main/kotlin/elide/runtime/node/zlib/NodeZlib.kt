@@ -30,20 +30,19 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.util.zip.*
-import elide.annotations.Factory
-import elide.annotations.Inject
-import elide.annotations.Singleton
-import elide.runtime.exec.GuestExecutor
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ZlibAPI
 import elide.runtime.intrinsics.js.node.ZlibBuffer
 import elide.runtime.intrinsics.js.node.stream.Readable
 import elide.runtime.intrinsics.js.node.stream.Writable
 import elide.runtime.intrinsics.js.node.zlib.*
+import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.stream.AbstractReadable
 import elide.runtime.node.stream.ColdInputStream
@@ -52,7 +51,65 @@ import elide.runtime.node.stream.WrappedOutputStream
 import elide.vm.annotations.Polyglot
 
 // Internal symbol where the Node built-in module is installed.
-private const val ZLIB_MODULE_SYMBOL = "node_zlib"
+private const val ZLIB_MODULE_SYMBOL = "node_${NodeModuleName.ZLIB}"
+
+private const val K_FLUSH = "flush"
+private const val K_FINISH_FLUSH = "finishFlush"
+private const val K_CHUNK_SIZE = "chunkSize"
+private const val K_PARAMS = "params"
+private const val K_WINDOW_BITS = "windowBits"
+private const val K_LEVEL = "level"
+private const val K_MEM_LEVEL = "memLevel"
+private const val K_STRATEGY = "strategy"
+private const val K_DICTIONARY = "dictionary"
+private const val K_INFO = "info"
+private const val K_MAX_OUTPUT_LENGTH = "maxOutputLength"
+private const val K_CONSTANTS = "constants"
+
+private const val F_BROTLI_COMPRESS = "brotliCompress"
+private const val F_BROTLI_COMPRESS_SYNC = "brotliCompressSync"
+private const val F_BROTLI_DECOMPRESS = "brotliDecompress"
+private const val F_BROTLI_DECOMPRESS_SYNC = "brotliDecompressSync"
+private const val F_CRC32 = "crc32"
+private const val F_CREATE_DEFLATE = "createDeflate"
+private const val F_CREATE_INFLATE = "createInflate"
+private const val F_CREATE_UNZIP = "createUnzip"
+private const val F_DEFLATE = "deflate"
+private const val F_DEFLATE_RAW = "deflateRaw"
+private const val F_DEFLATE_RAW_SYNC = "deflateRawSync"
+private const val F_DEFLATE_SYNC = "deflateSync"
+private const val F_GUNZIP = "gunzip"
+private const val F_GUNZIP_SYNC = "gunzipSync"
+private const val F_GZIP = "gzip"
+private const val F_GZIP_SYNC = "gzipSync"
+private const val F_INFLATE = "inflate"
+private const val F_INFLATE_SYNC = "inflateSync"
+private const val F_UNZIP = "unzip"
+private const val F_UNZIP_SYNC = "unzipSync"
+
+private val moduleMembers = arrayOf(
+  F_BROTLI_COMPRESS,
+  F_BROTLI_COMPRESS_SYNC,
+  F_BROTLI_DECOMPRESS,
+  F_BROTLI_DECOMPRESS_SYNC,
+  K_CONSTANTS,
+  F_CRC32,
+  F_CREATE_DEFLATE,
+  F_CREATE_INFLATE,
+  F_CREATE_UNZIP,
+  F_DEFLATE,
+  F_DEFLATE_RAW,
+  F_DEFLATE_RAW_SYNC,
+  F_DEFLATE_SYNC,
+  F_GUNZIP,
+  F_GUNZIP_SYNC,
+  F_GZIP,
+  F_GZIP_SYNC,
+  F_INFLATE,
+  F_INFLATE_SYNC,
+  F_UNZIP,
+  F_UNZIP_SYNC,
+)
 
 /**
  * ## Zlib Options (Mutable)
@@ -104,16 +161,16 @@ public data class MutableZlibOptions @JvmOverloads public constructor (
   )
 
   override fun putMember(key: String?, value: Value?): Unit = when (key) {
-    "flush" -> flush = value?.asInt() ?: ModernNodeZlibConstants.Z_NO_FLUSH
-    "finishFlush" -> finishFlush = value?.asInt() ?: ModernNodeZlibConstants.Z_FINISH
-    "chunkSize" -> chunkSize = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_CHUNK
-    "windowBits" -> windowBits = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_WINDOWBITS
-    "level" -> level = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_LEVEL
-    "memLevel" -> memLevel = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_MEMLEVEL
-    "strategy" -> strategy = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_STRATEGY
-    "dictionary" -> dictionary = value
-    "info" -> info = value?.asBoolean() ?: false
-    "maxOutputLength" -> maxOutputLength = value?.asInt() ?: 0
+    K_FLUSH -> flush = value?.asInt() ?: ModernNodeZlibConstants.Z_NO_FLUSH
+    K_FINISH_FLUSH -> finishFlush = value?.asInt() ?: ModernNodeZlibConstants.Z_FINISH
+    K_CHUNK_SIZE -> chunkSize = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_CHUNK
+    K_WINDOW_BITS -> windowBits = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_WINDOWBITS
+    K_LEVEL -> level = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_LEVEL
+    K_MEM_LEVEL -> memLevel = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_MEMLEVEL
+    K_STRATEGY -> strategy = value?.asInt() ?: ModernNodeZlibConstants.Z_DEFAULT_STRATEGY
+    K_DICTIONARY -> dictionary = value
+    K_INFO -> info = value?.asBoolean() == true
+    K_MAX_OUTPUT_LENGTH -> maxOutputLength = value?.asInt() ?: 0
     else -> JsError.error("Cannot set member '$key' on ZlibOptions")
   }
 }
@@ -123,7 +180,6 @@ public data class MutableZlibOptions @JvmOverloads public constructor (
  *
  * Implements an mutable Brotli options object.
  */
-@ConsistentCopyVisibility
 public data class MutableBrotliOptions internal constructor (
   @Polyglot override var flush: Int = ModernNodeZlibConstants.BROTLI_OPERATION_PROCESS,
   @Polyglot override var finishFlush: Int = ModernNodeZlibConstants.BROTLI_OPERATION_FINISH,
@@ -159,11 +215,11 @@ public data class MutableBrotliOptions internal constructor (
   )
 
   override fun putMember(key: String?, value: Value?): Unit = when (key) {
-    "flush" -> flush = value?.asInt() ?: ImmutableBrotliOptions.defaults().flush
-    "finishFlush" -> finishFlush = value?.asInt() ?: ImmutableBrotliOptions.defaults().finishFlush
-    "chunkSize" -> chunkSize = value?.asInt() ?: ImmutableBrotliOptions.defaults().chunkSize
-    "params" -> params = value?.asInt() ?: ImmutableBrotliOptions.defaults().params
-    "maxOutputLength" -> maxOutputLength = value?.asInt() ?: ImmutableBrotliOptions.defaults().maxOutputLength
+    K_FLUSH -> flush = value?.asInt() ?: ImmutableBrotliOptions.defaults().flush
+    K_FINISH_FLUSH -> finishFlush = value?.asInt() ?: ImmutableBrotliOptions.defaults().finishFlush
+    K_CHUNK_SIZE -> chunkSize = value?.asInt() ?: ImmutableBrotliOptions.defaults().chunkSize
+    K_PARAMS -> params = value?.asInt() ?: ImmutableBrotliOptions.defaults().params
+    K_MAX_OUTPUT_LENGTH -> maxOutputLength = value?.asInt() ?: ImmutableBrotliOptions.defaults().maxOutputLength
     else -> JsError.error("Cannot set member '$key' on ZlibOptions")
   }
 }
@@ -432,11 +488,12 @@ public data object ModernNodeZlibConstants : NodeZlibConstants {
 
 // Installs the Node zlib module into the intrinsic bindings.
 @Intrinsic internal class NodeZlibModule : SyntheticJSModule<NodeZlib>, AbstractNodeBuiltinModule() {
-  @Inject private lateinit var zlib: NodeZlib
-  override fun provide(): NodeZlib = zlib
+  private val singleton by lazy { NodeZlib.create() }
+  override fun provide(): NodeZlib = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[ZLIB_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[ZLIB_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.ZLIB)) { singleton }
   }
 }
 
@@ -492,6 +549,10 @@ private class UnzipStream(private val wrapped: AbstractReadable<*>) :
  */
 private class BrotliCompressStream(private val wrapped: WrappedOutputStream) :
   Writable by wrapped, BrotliCompress, CompressImpl() {
+  init {
+    Brotli4jLoader.ensureAvailability()
+  }
+
   override fun close() {
     wrapped.close()
   }
@@ -506,6 +567,10 @@ private class BrotliCompressStream(private val wrapped: WrappedOutputStream) :
  */
 private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
   Readable by wrapped, BrotliDecompress, CompressImpl() {
+  init {
+    Brotli4jLoader.ensureAvailability()
+  }
+
   override fun close() {
     wrapped.close()
   }
@@ -520,17 +585,19 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
  *
  * Implements the Node zlib module.
  */
-@Singleton internal class NodeZlib @Inject constructor (private val exec: GuestExecutor) : ProxyObject, ZlibAPI {
-  init {
-    Brotli4jLoader.ensureAvailability()
-  }
+internal class NodeZlib private constructor () : ProxyObject, ZlibAPI {
+  companion object {
+    @JvmStatic fun create(): NodeZlib = NodeZlib()
 
-  private companion object {
     // Decompressor which is enabled for EOF awareness.
     private val compressorFactory by lazy {
       CompressorStreamFactory(true)
     }
   }
+
+  // @TODO guest executor access
+
+  private fun <R> execute(block: () -> R) = block()
 
   // Decompress `buffer` data with the provided decompression `actor` (wraps an `InputStream`).
   private inline fun decompress(
@@ -563,7 +630,7 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
   }
 
   // Run a compression operation asynchronously against the guest executor, and then dispatch the provided callback.
-  private inline fun async(callback: CompressCallback, crossinline actor: () -> ZlibBuffer) = exec.execute {
+  private inline fun async(callback: CompressCallback, crossinline actor: () -> ZlibBuffer) = execute {
     try {
       actor.invoke()
     } catch (err: PolyglotException) {
@@ -695,49 +762,26 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
     BrotliInputStream(it)
   }
 
-  override fun getMemberKeys(): Array<String> = arrayOf(
-    "brotliCompress",
-    "brotliCompressSync",
-    "brotliDecompress",
-    "brotliDecompressSync",
-    "constants",
-    "crc32",
-    "createDeflate",
-    "createInflate",
-    "createUnzip",
-    "deflate",
-    "deflateRaw",
-    "deflateRawSync",
-    "deflateSync",
-    "gunzip",
-    "gunzipSync",
-    "gzip",
-    "gzipSync",
-    "inflate",
-    "inflateSync",
-    "unzip",
-    "unzipSync",
-  )
-
+  override fun getMemberKeys(): Array<String> = moduleMembers
   override fun hasMember(key: String?): Boolean = key != null && key in memberKeys
   override fun putMember(key: String?, value: Value?): Unit = JsError.error("Cannot modify zlib module")
 
   override fun getMember(key: String?): Any? = when (key) {
-    "constants" -> constants
-    "crc32" -> ProxyExecutable { args -> crc32(args.getOrNull(0), args.getOrNull(1)) }
-    "createDeflate" -> ProxyExecutable { args -> createDeflate(args.getOrNull(0)) }
-    "createInflate" -> ProxyExecutable { args -> createInflate(args.getOrNull(0)) }
-    "gzipSync" -> ProxyExecutable { args -> gzipSync(args.getOrNull(0), args.getOrNull(1)) }
-    "gunzipSync" -> ProxyExecutable { args -> gunzipSync(args.getOrNull(0), args.getOrNull(1)) }
-    "deflateSync" -> ProxyExecutable { args -> deflateSync(args.getOrNull(0), args.getOrNull(1)) }
-    "inflateSync" -> ProxyExecutable { args -> inflateSync(args.getOrNull(0), args.getOrNull(1)) }
-    "unzipSync" -> ProxyExecutable { args -> unzipSync(args.getOrNull(0), args.getOrNull(1)) }
-    "brotliCompressSync" ->
+    K_CONSTANTS -> constants
+    F_CRC32 -> ProxyExecutable { args -> crc32(args.getOrNull(0), args.getOrNull(1)) }
+    F_CREATE_DEFLATE -> ProxyExecutable { args -> createDeflate(args.getOrNull(0)) }
+    F_CREATE_INFLATE -> ProxyExecutable { args -> createInflate(args.getOrNull(0)) }
+    F_GZIP_SYNC -> ProxyExecutable { args -> gzipSync(args.getOrNull(0), args.getOrNull(1)) }
+    F_GUNZIP_SYNC -> ProxyExecutable { args -> gunzipSync(args.getOrNull(0), args.getOrNull(1)) }
+    F_DEFLATE_SYNC -> ProxyExecutable { args -> deflateSync(args.getOrNull(0), args.getOrNull(1)) }
+    F_INFLATE_SYNC -> ProxyExecutable { args -> inflateSync(args.getOrNull(0), args.getOrNull(1)) }
+    F_UNZIP_SYNC -> ProxyExecutable { args -> unzipSync(args.getOrNull(0), args.getOrNull(1)) }
+    F_BROTLI_COMPRESS_SYNC ->
       ProxyExecutable { args -> brotliCompressSync(args.getOrNull(0), args.getOrNull(1)) }
-    "brotliDecompressSync" ->
+    F_BROTLI_DECOMPRESS_SYNC ->
       ProxyExecutable { args -> brotliDecompressSync(args.getOrNull(0), args.getOrNull(1)) }
 
-    "deflate" -> ProxyExecutable { args ->
+    F_DEFLATE -> ProxyExecutable { args ->
       when (args.size) {
         2 -> deflate(args[0], options = null, cbk = args[1])
         3 -> deflate(args[0], options = args[1], cbk = args[2])
@@ -745,7 +789,7 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
       }
     }
 
-    "inflate" -> ProxyExecutable { args ->
+    F_INFLATE -> ProxyExecutable { args ->
       when (args.size) {
         2 -> inflate(args[0], options = null, cbk = args[1])
         3 -> inflate(args[0], options = args[1], cbk = args[2])
@@ -753,7 +797,7 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
       }
     }
 
-    "brotliCompress" -> ProxyExecutable { args ->
+    F_BROTLI_COMPRESS -> ProxyExecutable { args ->
       when (args.size) {
         2 -> brotliCompress(args[0], options = null, cbk = args[1])
         3 -> brotliCompress(args[0], options = args[1], cbk = args[2])
@@ -761,7 +805,7 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
       }
     }
 
-    "brotliDecompress" -> ProxyExecutable { args ->
+    F_BROTLI_DECOMPRESS -> ProxyExecutable { args ->
       when (args.size) {
         2 -> brotliDecompress(args[0], options = null, cbk = args[1])
         3 -> brotliDecompress(args[0], options = args[1], cbk = args[2])
@@ -769,7 +813,7 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
       }
     }
 
-    "gzip" -> ProxyExecutable { args ->
+    F_GZIP -> ProxyExecutable { args ->
       when (args.size) {
         2 -> gzip(args[0], options = null, cbk = args[1])
         3 -> gzip(args[0], options = args[1], cbk = args[2])
@@ -778,11 +822,11 @@ private class BrotliDecompressStream(private val wrapped: AbstractReadable<*>) :
     }
 
     // @TODO: not yet implemented
-    "gunzip",
-    "unzip",
-    "createUnzip",
-    "deflateRaw",
-    "deflateRawSync" -> null
+    F_GUNZIP,
+    F_UNZIP,
+    F_CREATE_UNZIP,
+    F_DEFLATE_RAW,
+    F_DEFLATE_RAW_SYNC -> null
     else -> null
   }
 }

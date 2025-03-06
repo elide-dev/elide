@@ -16,11 +16,8 @@ Or, from inside `third_party`, you can just run `make`.
 
 ## Projects
 
-- [Apple][0] [Pkl][1]: Safe, programmable, and scalable configuration language.
 - [SQLite][11]: Pinned version for Elide's use
-- [Google][12] [BoringSSL][13]: Google's fixed-up fork of OpenSSL.
-- [Apache][14] [APR (Apache Portable Runtime)][15]: Cross-platform runtime utilities
-- [Cloudflare][16]'s fork of [zlib][17]: Fast compression library
+- [GraalVM](./oracle): Patches for GraalVM and GraalJs
 
 [0]: https://apple.com
 [1]: https://github.com/apple/pkl

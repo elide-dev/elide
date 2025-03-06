@@ -52,6 +52,7 @@ import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.node.ChildProcessAPI
@@ -61,6 +62,7 @@ import elide.runtime.intrinsics.js.node.events.EventEmitter
 import elide.runtime.intrinsics.js.node.events.EventTarget
 import elide.runtime.intrinsics.js.node.fs.StringOrBuffer
 import elide.runtime.intrinsics.js.node.path.Path
+import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.events.EventAware
 import elide.runtime.node.fs.NodeFilesystemModule
@@ -68,17 +70,17 @@ import elide.runtime.node.fs.resolveEncodingString
 import elide.vm.annotations.Polyglot
 import com.google.common.util.concurrent.ListenableFuture as Future
 
-// Name of the child process module.
-private const val CHILD_PROCESS_MODULE_NAME = "child_process"
-
 // Internal symbol where the Node built-in module is installed.
-private const val CHILD_PROCESS_MODULE_SYMBOL = "node_${CHILD_PROCESS_MODULE_NAME}"
+private const val CHILD_PROCESS_MODULE_SYMBOL = "node_${NodeModuleName.CHILD_PROCESS}"
 
 // Internal symbol where the Node `ChildProcess` class is installed.
 private const val CHILD_PROCESS_CLASS_SYMBOL = "NodeChildProcess"
 
 // Symbol indicating a no-encoding return.
 private const val NO_ENCODING = ChildProcessDefaults.ENCODING
+
+// Whether to enable IPC features.
+private const val ENABLE_ELIDE_IPC_BOOT = false
 
 // Names of events which are emitted for/upon `ChildProcess` objects.
 internal data object ChildProcessEvents {
@@ -104,19 +106,26 @@ private val globalIpcServer by lazy { InterElideIPCServer() }
     override fun stderr(): OutputStream? = System.err
   }
 
-  private val instance = NodeChildProcess.obtain(
-    { globalIpcServer },
-    filesystem,
-    executorProvider,
-    defaultStandardStreams,
-  )
+  private val instance by lazy {
+    NodeChildProcess.obtain(
+      { globalIpcServer },
+      filesystem,
+      executorProvider,
+      defaultStandardStreams,
+    ).also {
+      ChildProcessNative.initialize()
+    }
+  }
 
   @Singleton override fun provide(): ChildProcessAPI = instance
   @Singleton internal fun ipcServer(): InterElideIPCServer = globalIpcServer
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[CHILD_PROCESS_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[CHILD_PROCESS_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { instance }
     bindings[CHILD_PROCESS_CLASS_SYMBOL.asJsSymbol()] = ChildProcessHandle::class.java
+
+    // @TODO: need ProxyObject support for NodeChildProcess
+    // ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CHILD_PROCESS)) { instance }
   }
 }
 
@@ -177,7 +186,6 @@ internal sealed interface ChildProcessExecution<T> where T : ProcOptions {
 }
 
 // Describes an execution which is to occur through a command call.
-@ConsistentCopyVisibility
 @JvmRecord private data class CommandExec<T : ProcOptions> private constructor(
   override val command: String,
   override val args: LinkedList<String>,
@@ -194,7 +202,6 @@ internal sealed interface ChildProcessExecution<T> where T : ProcOptions {
 }
 
 // Describes an execution which is to occur through a specific file.
-@ConsistentCopyVisibility
 @JvmRecord private data class FileExec<T : ProcOptions> private constructor(
   // Resolved to the file which is to be executed.
   val path: Path,
@@ -510,7 +517,7 @@ private fun prepareFileExec(file: Value, args: Value?): Triple<Path, String, Lin
 
     file.isHostObject -> try {
       file.`as`(URL::class.java) to null
-    } catch (e: ClassCastException) {
+    } catch (_: ClassCastException) {
       null to null
     }
 
@@ -665,7 +672,7 @@ public abstract class AbstractChildProcessHandle internal constructor(
 public class ChildProcessHandle private constructor(
   private val proc: Process,
   private val pending: PendingCallResult<*>,
-) : ProxyObject, ChildProcess, AbstractChildProcessHandle() {
+) : ReadOnlyProxyObject, ChildProcess, AbstractChildProcessHandle() {
   // Bound IPC channel for this process handle, if available.
   private val liveIpcChannel: AtomicRef<InterElideIPCClient?> = atomic(null)
 
@@ -743,11 +750,6 @@ public class ChildProcessHandle private constructor(
   }
 
   override fun getMemberKeys(): Array<String> = CHILD_PROCESS_HANDLE_PROPS_AND_METHODS
-  override fun hasMember(key: String?): Boolean = key != null && key in CHILD_PROCESS_HANDLE_PROPS_AND_METHODS
-  override fun putMember(key: String?, value: Value?) {/* no-op */
-  }
-
-  override fun removeMember(key: String?): Boolean = false
 
   override fun getMember(key: String?): Any? = when (key) {
     "pid" -> pid
@@ -968,9 +970,11 @@ internal class NodeChildProcess(
   private val executor by lazy { executorProvider.executor() }
 
   init {
-    Dispatchers.IO.dispatch(EmptyCoroutineContext) {
-      if (shouldStartIpcAtInit()) {
-        ipcSupplier.get().initialize()
+    if (ENABLE_ELIDE_IPC_BOOT) {
+      Dispatchers.Unconfined.dispatch(EmptyCoroutineContext) {
+        if (shouldStartIpcAtInit()) {
+          ipcSupplier.get().initialize()
+        }
       }
     }
   }
@@ -1083,7 +1087,7 @@ internal class NodeChildProcess(
   /** Factory methods for creating and obtaining instances of [NodeChildProcess]. */
   internal companion object {
     // Child process manager singleton.
-    private val SINGLETON = AtomicReference<NodeChildProcess>(null)
+    private val SINGLETON = atomic<NodeChildProcess?>(null)
 
     /** @return Singleton instance of the [NodeChildProcess] module; it is initialized if not yet available. */
     internal fun obtain(
@@ -1091,14 +1095,14 @@ internal class NodeChildProcess(
       fs: NodeFilesystemModule,
       executorProvider: GuestExecutorProvider,
       standardStreams: StandardStreamsProvider,
-    ): NodeChildProcess = SINGLETON.get().let {
+    ): NodeChildProcess = SINGLETON.value.let {
       when (it) {
         null -> NodeChildProcess(
           ipcSupplier,
           Optional.of(Supplier { fs }),
           standardStreams,
           executorProvider,
-        ).also { childProc -> SINGLETON.set(childProc) }
+        ).also { childProc -> SINGLETON.value = childProc }
 
         else -> it
       }

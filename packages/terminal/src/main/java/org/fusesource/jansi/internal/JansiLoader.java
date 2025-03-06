@@ -59,6 +59,7 @@ import org.fusesource.jansi.AnsiConsole;
  * usage: call {@link #initialize()} before using Jansi.
  */
 public class JansiLoader {
+    private static boolean cleanupThread = false;
 
     private static boolean loaded = false;
     private static String nativeLibraryPath;
@@ -72,7 +73,7 @@ public class JansiLoader {
      */
     public static synchronized boolean initialize() {
         // only cleanup before the first extract
-        if (!loaded) {
+        if (!loaded && cleanupThread) {
             Thread cleanup = new Thread(JansiLoader::cleanup, "cleanup");
             cleanup.setPriority(Thread.MIN_PRIORITY);
             cleanup.setDaemon(true);

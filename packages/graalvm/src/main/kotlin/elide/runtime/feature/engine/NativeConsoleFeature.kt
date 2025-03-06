@@ -20,7 +20,7 @@ import elide.annotations.engine.VMFeature
 /** Registers native library for Jansi. */
 @VMFeature internal class NativeConsoleFeature : AbstractStaticNativeLibraryFeature() {
   companion object {
-    private const val STATIC_JNI: Boolean = true
+    private val staticJni: Boolean = System.getProperty("elide.staticJni") == "true"
   }
 
   override fun getDescription(): String = "Registers native console libraries"
@@ -38,11 +38,11 @@ import elide.annotations.engine.VMFeature
       "org.fusesource_jansi_internal_Kernel32",
       "org.jline.nativ.JLineLibrary",
       "org.jline.nativ.CLibrary",
-      builtin = STATIC_JNI,
+      builtin = staticJni,
     ),
   )
 
-  override fun unpackNatives(access: BeforeAnalysisAccess) = if (STATIC_JNI) emptyList() else when {
+  override fun unpackNatives(access: BeforeAnalysisAccess) = if (staticJni) emptyList() else when {
     /* Dynamic JNI */
 
     Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {

@@ -13,7 +13,6 @@
 
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.kotlin.dependencies
-import elide.internal.conventions.kotlin.js
 import elide.internal.conventions.kotlin.jvm
 
 plugins {
@@ -31,20 +30,6 @@ elide {
   kotlin {
     target = KotlinTarget.Default
     explicitApi = true
-  }
-}
-
-kotlin {
-  js {
-    browser {
-      testTask(Action {
-        useKarma {
-          this.webpackConfig.experiments.add("topLevelAwait")
-          useChromeHeadless()
-          useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
-        }
-      })
-    }
   }
 }
 
@@ -79,14 +64,5 @@ dependencies {
 
     runtimeOnly(libs.junit.jupiter.engine)
     runtimeOnly(libs.logback)
-  }
-
-  js {
-    // KT-57235: fix for atomicfu-runtime error
-    api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:${libs.versions.kotlin.sdk.get()}")
-    api(kotlin("stdlib-js"))
-    api(kotlin("test"))
-    api(libs.kotlinx.coroutines.test)
-    api(libs.kotlinx.coroutines.core.js)
   }
 }

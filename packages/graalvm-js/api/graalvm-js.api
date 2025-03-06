@@ -23,6 +23,8 @@ public final class elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$D
 	public synthetic fun <init> (Lcom/oracle/truffle/api/source/Source;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lcom/oracle/truffle/api/source/Source;
 	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lcom/oracle/truffle/api/source/Source;Ljava/lang/String;)Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;
+	public static synthetic fun copy$default (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;Lcom/oracle/truffle/api/source/Source;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun label ()Ljava/lang/String;
@@ -83,6 +85,7 @@ public final class elide/runtime/lang/javascript/JavaScriptPrecompiler$Provider 
 
 public final class elide/runtime/lang/javascript/NodeModuleName {
 	public static final field ASSERT Ljava/lang/String;
+	public static final field ASSERT_STRICT Ljava/lang/String;
 	public static final field ASYNC_HOOKS Ljava/lang/String;
 	public static final field BUFFER Ljava/lang/String;
 	public static final field CHILD_PROCESS Ljava/lang/String;
@@ -91,7 +94,9 @@ public final class elide/runtime/lang/javascript/NodeModuleName {
 	public static final field CONSTANTS Ljava/lang/String;
 	public static final field CRYPTO Ljava/lang/String;
 	public static final field DGRAM Ljava/lang/String;
+	public static final field DIAGNOSTICS_CHANNEL Ljava/lang/String;
 	public static final field DNS Ljava/lang/String;
+	public static final field DNS_PROMISES Ljava/lang/String;
 	public static final field DOMAIN Ljava/lang/String;
 	public static final field EVENTS Ljava/lang/String;
 	public static final field FS Ljava/lang/String;
@@ -100,6 +105,7 @@ public final class elide/runtime/lang/javascript/NodeModuleName {
 	public static final field HTTP2 Ljava/lang/String;
 	public static final field HTTPS Ljava/lang/String;
 	public static final field INSPECTOR Ljava/lang/String;
+	public static final field INSPECTOR_PROMISES Ljava/lang/String;
 	public static final field INSTANCE Lelide/runtime/lang/javascript/NodeModuleName;
 	public static final field MODULE Ljava/lang/String;
 	public static final field NET Ljava/lang/String;
@@ -110,9 +116,11 @@ public final class elide/runtime/lang/javascript/NodeModuleName {
 	public static final field PUNYCODE Ljava/lang/String;
 	public static final field QUERYSTRING Ljava/lang/String;
 	public static final field READLINE Ljava/lang/String;
+	public static final field READLINE_PROMISES Ljava/lang/String;
 	public static final field REPL Ljava/lang/String;
 	public static final field STREAM Ljava/lang/String;
 	public static final field STRING_DECODER Ljava/lang/String;
+	public static final field TEST Ljava/lang/String;
 	public static final field TIMERS Ljava/lang/String;
 	public static final field TLS Ljava/lang/String;
 	public static final field TRACE_EVENTS Ljava/lang/String;
@@ -121,6 +129,7 @@ public final class elide/runtime/lang/javascript/NodeModuleName {
 	public static final field UTIL Ljava/lang/String;
 	public static final field V8 Ljava/lang/String;
 	public static final field VM Ljava/lang/String;
+	public static final field WORKER Ljava/lang/String;
 	public static final field WORKER_THREADS Ljava/lang/String;
 	public static final field ZLIB Ljava/lang/String;
 }

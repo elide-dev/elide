@@ -13,7 +13,7 @@
 
 use bindgen::Builder;
 use builder::{
-  TargetOs, build_bindings, build_dual_cc, header_file, setup_cc, src_file, target_os,
+  OperatingSystem, build_bindings, build_dual_cc, header_file, setup_cc, src_file, target_os,
 };
 
 fn main() {
@@ -35,7 +35,7 @@ fn main() {
     .define("OPENSSL_IS_BORINGSSL", "1");
 
   let mut bindings_builder: Builder = match os {
-    TargetOs::Darwin => {
+    OperatingSystem::Darwin => {
       build
         // Sources: Netty KQueue
         .file(src_file("netty_kqueue_bsdsocket.c"))
@@ -48,7 +48,7 @@ fn main() {
         .header(header_file("netty_kqueue_eventarray.h"))
     }
 
-    TargetOs::Linux => {
+    OperatingSystem::Linux => {
       build
         // Sources: Netty EPoll
         .file(src_file("netty_epoll_linuxsocket.c"))
@@ -69,7 +69,7 @@ fn main() {
         .header(header_file("ssl.h"))
     }
 
-    TargetOs::Windows => Builder::default().header("headers/netty_jni_util.h"),
+    OperatingSystem::Windows => Builder::default().header("headers/netty_jni_util.h"),
   };
 
   build

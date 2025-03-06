@@ -16,10 +16,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.intrinsics.js.MapLike
 import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
 
 /** Tests for the baseline (non-mutable) [JsMap] implementation. */
-@TestCase internal class JsMapTest : AbstractJsMapTest<JsMap<String, Any?>>() {
+internal class JsMapTest : AbstractJsMapTest<JsMap<String, Any?>>() {
   /** @inheritDoc */
   override fun empty(): JsMap<String, Any?> = JsMap.empty()
 

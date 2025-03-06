@@ -12,35 +12,43 @@
  */
 package elide.runtime.node.dns
 
-import elide.annotations.Factory
-import elide.annotations.Singleton
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.DNSAPI
+import elide.runtime.lang.javascript.NodeModuleName
 
 // Internal symbol where the Node built-in module is installed.
-private const val DNS_MODULE_SYMBOL = "node_dns"
+private const val DNS_MODULE_SYMBOL = "node_${NodeModuleName.DNS}"
 
 // Installs the Node `dns` module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeDNSModule : AbstractNodeBuiltinModule() {
-  @Singleton internal fun provide(): DNSAPI = NodeDNS.obtain()
+@Intrinsic internal class NodeDNSModule : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeDNS.create() }
+  internal fun provide(): DNSAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[DNS_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[DNS_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DNS)) { singleton }
   }
 }
 
 /**
  * # Node API: `dns`
  */
-internal class NodeDNS : DNSAPI {
+internal class NodeDNS private constructor () : ReadOnlyProxyObject, DNSAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeDNS()
-    fun obtain(): NodeDNS = SINGLETON
+    @JvmStatic fun create(): NodeDNS = NodeDNS()
   }
+
+  // @TODO not yet implemented
+
+  override fun getMemberKeys(): Array<String> = emptyArray()
+  override fun getMember(key: String?): Any? = null
 }

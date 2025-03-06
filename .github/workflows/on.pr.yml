@@ -54,7 +54,7 @@ jobs:
       srcs: ${{ steps.filter.outputs.srcs }}
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -122,23 +122,23 @@ jobs:
   ##
   ## Job: Multi-platform Build
   ##
-  pr-build:
-    name: "Build"
-    uses: ./.github/workflows/job.build.yml
-    secrets: inherit
-    needs: [triage]
-    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
-    permissions:
-      contents: "write"
-      actions: "read"
-      id-token: "write"
-      checks: "write"
-      pull-requests: "write"
-      packages: "read"
-      security-events: "write"
-    with:
-      provenance: false
-      native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:build-native') || contains(github.event.head_commit.message, 'ci:build-native') }}
+#  pr-build:
+#    name: "Build"
+#    uses: ./.github/workflows/job.build.yml
+#    secrets: inherit
+#    needs: [triage]
+#    if: fromJson(needs.triage.outputs.model) || fromJson(needs.triage.outputs.packages) || fromJson(needs.triage.outputs.tools)
+#    permissions:
+#      contents: "write"
+#      actions: "read"
+#      id-token: "write"
+#      checks: "write"
+#      pull-requests: "write"
+#      packages: "read"
+#      security-events: "write"
+#    with:
+#      provenance: false
+#      native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:build-native') || contains(github.event.head_commit.message, 'ci:build-native') }}
 
   ##
   ## Job: Multi-platform Build
@@ -224,31 +224,26 @@ jobs:
       contents: "read"
 
   ##
+  ## Job: Dependency Graph
+  ##
+  dependency-graph:
+    name: "Checks"
+    if: github.event.pull_request.draft == false && fromJson(needs.triage.outputs.packages)
+    uses: ./.github/workflows/checks.dependency-graph.yml
+    needs: [triage]
+    permissions:
+      contents: "write"  # needed for graph upload
+
+  ##
   ## Job: Checks for Vulnerabilities/Licensing
   ##
   check-dependencies:
     name: "Checks"
     if: github.event.pull_request.draft == false
     uses: ./.github/workflows/checks.dependency-review.yml
-    needs: [triage, pr-build]
+    needs: [triage, dependency-graph]
     permissions:
       contents: "read"
-
-  ##
-  ## Job: Checks with CodeQL
-  ##
-  check-codeql:
-    name: "Checks"
-    if: github.event.pull_request.draft == false && fromJson(needs.triage.outputs.packages)
-    uses: ./.github/workflows/checks.codeql.yml
-    needs: [triage, pr-build]
-    secrets:
-      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-      GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-    permissions:
-      actions: "read"
-      contents: "read"
-      security-events: "write"
 
   ##
   ## Job: Checks with Detekt
@@ -256,7 +251,7 @@ jobs:
   check-detekt:
     name: "Checks"
     uses: ./.github/workflows/checks.detekt.yml
-    needs: [triage, pr-build]
+    needs: [triage]
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}

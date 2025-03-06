@@ -25,7 +25,6 @@ import elide.internal.conventions.kotlin.KotlinTarget.*
 // All source set types.
 private val sourceSetsMpp = listOf(
   "common",
-  "js",
   "jvm",
   "native",
   "wasm",
@@ -103,14 +102,6 @@ private fun SonarExtension.configureSonarForProject(conventions: ElideBuildExten
           "$projectPath/build/reports/kover/report.xml",
           "$projectPath/build/reports/jacoco/test/jacocoTestReport.xml",
         ).joinToString(","))
-      }
-
-      isJavascript -> {
-        project.logger.lifecycle("Configuring Sonar Kotlin/JS for project: ${project.name}")
-        property("sonar.sources", "src/jsMain/kotlin")
-        property("sonar.tests", "src/jsTest/kotlin")
-        property("sonar.java.binaries", "build/classes/kotlin/js/main")
-        property("sonar.coverage.jacoco.xmlReportPaths", "$projectPath/build/reports/kover/report.xml")
       }
 
       isJvm -> {

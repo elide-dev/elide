@@ -68,7 +68,6 @@ sealed interface CommandResult {
    *   ([DEFAULT_ERROR_EXIT_CODE]).
    * @param message Message to communicate for this error; if none is provided, defaults to [DEFAULT_ERROR_MESSAGE].
    */
-  @ConsistentCopyVisibility
   data class Error internal constructor (override val exitCode: Int, val message: String) : CommandResult {
     override val ok: Boolean get() = false
 

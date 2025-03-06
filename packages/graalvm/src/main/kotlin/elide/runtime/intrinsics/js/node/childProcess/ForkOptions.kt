@@ -70,7 +70,6 @@ internal data object ForkDefaults {
  * @property windowsHide Whether to hide the process window.
  * @property timeout Timeout for the process, in seconds.
  */
-@ExposedCopyVisibility
 @API @JvmRecord public data class ForkOptions private constructor (
   private val parent: ProcessHandle,
   override val cwdString: String? = null,

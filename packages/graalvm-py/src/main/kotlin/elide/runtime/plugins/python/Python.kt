@@ -132,9 +132,10 @@ private val BUILTIN_PYTHON_PATHS = listOf(
           }
 
           override val fsProvider: () -> FileSystem get() = {
-            org.graalvm.python.embedding.utils.VirtualFileSystem
-              .newBuilder()
-              .build()
+            TODO("fixup")
+//            org.graalvm.python.embedding.utils.VirtualFileSystem
+//              .newBuilder()
+//              .build()
           }
         }
       }

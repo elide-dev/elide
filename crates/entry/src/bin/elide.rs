@@ -10,22 +10,47 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+use std::env;
+use std::ffi::OsString;
+use umbrella::run_oro_with_args;
 
-pub fn add(left: u64, right: u64) -> u64 {
-  left + right
+#[cfg(target_os = "windows")]
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
+#[cfg(all(feature = "allocator", target_env = "musl"))]
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
+#[cfg(all(
+  feature = "allocator",
+  feature = "jemalloc",
+  not(target_os = "windows"),
+  not(target_os = "openbsd"),
+  not(target_env = "musl"),
+  any(
+    target_arch = "x86_64",
+    target_arch = "aarch64",
+    target_arch = "powerpc64"
+  )
+))]
+#[global_allocator]
+static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
+
+fn run_tool_with_args(tool: &str, args: Vec<OsString>) {
+  match tool {
+    "oro" => {
+      run_oro_with_args(args).expect("failed to run orogene");
+    }
+    _ => {
+      panic!("unknown tool: {}", tool);
+    }
+  }
 }
 
 pub fn main() {
-  println!("Hello, world!");
-}
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn it_works() {
-    let result = add(2, 2);
-    assert_eq!(result, 4);
-  }
+  let args: Vec<String> = env::args().collect();
+  let tool = "oro";
+  let args: Vec<OsString> = args.iter().map(|arg| OsString::from(arg)).collect();
+  run_tool_with_args(tool, args);
 }

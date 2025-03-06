@@ -64,7 +64,6 @@ internal data object ExecSyncDefaults {
  * @property windowsHide Whether to hide the process window.
  * @property timeout Timeout for the process, in seconds.
  */
-@ConsistentCopyVisibility
 @API @JvmRecord public data class ExecSyncOptions internal constructor (
   override val cwdString: String? = null,
   public val cwdUrl: URL? = null,

@@ -14,6 +14,7 @@
 
 package elide.runtime.node
 
+import com.aayushatharva.brotli4j.Brotli4jLoader
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.nio.ByteBuffer
@@ -33,6 +34,10 @@ import elide.testing.annotations.TestCase
   override fun provide(): NodeZlibModule = zlib
   private fun obtain(): ZlibAPI = assertNotNull(zlib.provide())
   @Inject lateinit var zlib: NodeZlibModule
+
+  init {
+    Brotli4jLoader.ensureAvailability()
+  }
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false

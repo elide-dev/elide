@@ -199,10 +199,11 @@ private val moduleMembers = arrayOf(
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[NODE_OS_SYMBOL.asJsSymbol()] = NodeOperatingSystem.obtain()
-  }
 
-  init {
-    ModuleRegistry.deferred(ModuleInfo.of(NODE_OS_NAME)) { NodeOperatingSystem.obtain() }
+    ModuleRegistry.deferred(ModuleInfo.of(NODE_OS_NAME)) {
+      ChildProcessNative.initialize()
+      NodeOperatingSystem.obtain()
+    }
   }
 }
 

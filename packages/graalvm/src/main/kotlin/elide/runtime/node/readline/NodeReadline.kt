@@ -12,35 +12,40 @@
  */
 package elide.runtime.node.readline
 
-import elide.annotations.Factory
-import elide.annotations.Singleton
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ReadlineAPI
+import elide.runtime.lang.javascript.NodeModuleName
 
 // Internal symbol where the Node built-in module is installed.
-private const val READLINE_MODULE_SYMBOL = "node_readline"
+private const val READLINE_MODULE_SYMBOL = "node_${NodeModuleName.READLINE}"
 
 // Installs the Node readline module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeReadlineModule : AbstractNodeBuiltinModule() {
-  @Singleton internal fun provide(): ReadlineAPI = NodeReadline.obtain()
+@Intrinsic internal class NodeReadlineModule : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeReadline.create() }
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[READLINE_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[READLINE_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.READLINE)) { singleton }
   }
 }
 
 /**
  * # Node API: `readline`
  */
-internal class NodeReadline : ReadlineAPI {
+internal class NodeReadline private constructor () : ReadOnlyProxyObject, ReadlineAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeReadline()
-    fun obtain(): NodeReadline = SINGLETON
+    @JvmStatic fun create(): NodeReadline = NodeReadline()
   }
+
+  override fun getMemberKeys(): Array<String> = emptyArray()
+  override fun getMember(key: String?): Any? = null
 }

@@ -118,14 +118,6 @@ internal fun Project.configureKotlinMultiplatform(
         kotlinOptions.moduleKind = "umd"
       }
 
-      if (JsNode in target) nodejs {
-        useEsModules()
-        generateTypeScriptDefinitions()
-      }
-      if (JsBrowser in target) browser {
-        useEsModules()
-        generateTypeScriptDefinitions()
-      }
       tasks.withType(KotlinJsCompile::class.java).configureEach {
         compilerOptions {
           useEsClasses.set(true)
@@ -135,7 +127,6 @@ internal fun Project.configureKotlinMultiplatform(
 
     if (!isWasmDisabled() && WASM in target || WASI in target) {
       if (WASM in target) wasmJs {
-        nodejs()
         browser()
       }
       wasmWasi {
@@ -161,7 +152,7 @@ internal fun Project.configureKotlinMultiplatform(
     if (project.findProperty("publishMainHostLock") == "true") {
       // the "Main Host" (e.g. a Linux-based GitHub runner) will publish the JVM, JS, and Common targets,
       // other hosts will not configure these publications, instead pushing only their platform-specific components
-      val publicationsFromMainHost = listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+      val publicationsFromMainHost = listOf(jvm()).map { it.name } + "kotlinMultiplatform"
 
       project.extensions.getByType(PublishingExtension::class.java).publications.matching {
         it.name in publicationsFromMainHost

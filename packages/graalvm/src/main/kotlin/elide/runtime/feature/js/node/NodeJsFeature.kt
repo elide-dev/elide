@@ -65,12 +65,17 @@ import elide.runtime.intrinsics.js.node.stream.Duplex
 import elide.runtime.intrinsics.js.node.stream.StatefulStream
 import elide.runtime.intrinsics.js.node.stream.Writable
 
+// Whether to register modules for reflective access.
+private const val REGISTER_ALL_MODULES_FOR_REFLECTION = false
+
 /** GraalVM feature which enables reflective access to built-in Node modules. */
 @VMFeature internal class NodeJsFeature : FrameworkFeature {
   override fun getDescription(): String = "Enables support for Node.js built-in modules"
 
   private inline fun <reified T: Any> BeforeAnalysisAccess.cls(kclass: KClass<T>) {
-    registerClassForReflection(this, kclass.java.name)
+    if (REGISTER_ALL_MODULES_FOR_REFLECTION) {
+      registerClassForReflection(this, kclass.java.name)
+    }
   }
 
   private inline fun BeforeAnalysisAccess.registrations(op: BeforeAnalysisAccess.() -> Unit) {

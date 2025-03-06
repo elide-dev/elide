@@ -15,6 +15,3 @@
 
 /// Provides structural definitions for handling dependencies.
 pub mod model;
-
-/// Provides structural definitions for dependency catalogs.
-pub mod catalog;

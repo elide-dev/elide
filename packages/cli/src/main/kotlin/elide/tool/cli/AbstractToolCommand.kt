@@ -190,7 +190,7 @@ abstract class AbstractToolCommand<Context>:
    *
    * @return Exit code from running the command.
    */
-  suspend fun exec(args: Array<String>): CommandResult = execute(Dispatchers.Default) {
+  suspend fun exec(args: Array<String>): CommandResult = execute(Dispatchers.Unconfined) {
     invoke(it).also(commandResult::set)  // enter context and invoke
   }
 
@@ -200,7 +200,7 @@ abstract class AbstractToolCommand<Context>:
    * @return Exit code from running the command.
    */
   override fun call(): Int {
-    return execute(Dispatchers.Default) {
+    return execute(Dispatchers.Unconfined) {
       invoke(it).also(commandResult::set)  // enter context and invoke
     }.exitCode
   }
@@ -235,7 +235,7 @@ abstract class AbstractToolCommand<Context>:
    */
   abstract suspend fun Context.invoke(state: CommandState): CommandResult
 
-  override suspend fun enter(): CommandResult = execute(Dispatchers.Default) {
+  override suspend fun enter(): CommandResult = execute(Dispatchers.Unconfined) {
     invoke(it).also(commandResult::set)  // enter context and invoke
   }
 }

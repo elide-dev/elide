@@ -58,51 +58,26 @@ import org.jetbrains.annotations.NotNull;
       TypeScriptLanguage.MODULE_MIME_TYPE
     })
 public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
-  private static final Boolean USE_NEXTGEN_TYPESCRIPT_PRECOMPILER = true;
   public static final String TEXT_MIME_TYPE = "text/typescript";
   public static final String APPLICATION_MIME_TYPE = "application/typescript";
   public static final String MODULE_MIME_TYPE = "application/typescript+module";
   public static final String NAME = "TypeScript";
   public static final String IMPLEMENTATION_NAME = "TypeScript";
   public static final String ID = "ts";
-  public static final String TYPESCRIPT_VERSION = "5.4.5";
+  public static final String TYPESCRIPT_VERSION = "5.8.2";
 
-  @SuppressWarnings("java:S3077")
-  @CompilerDirectives.CompilationFinal
-  private volatile TypeScriptCompiler tsCompiler = null;
-
-  @CompilerDirectives.CompilationFinal private volatile TypeScriptPrecompiler tsPrecompiler = null;
-
-  @CompilerDirectives.CompilationFinal
-  private volatile TypeScriptPrecompiledLoaderFactory tsLoaderFactory = null;
+  private static final TypeScriptPrecompiler tsPrecompiler = TypeScriptPrecompiler.obtain();
+  private static final TypeScriptPrecompiledLoaderFactory tsLoaderFactory =
+      new TypeScriptPrecompiledLoaderFactory();
 
   @CompilerDirectives.CompilationFinal private volatile TypeScriptPrecompiledLoader tsLoader = null;
 
   private final AtomicBoolean compilerInitialized = new AtomicBoolean(false);
-  private Env env;
 
-  @Deprecated
-  public class TypeScriptCompilerLoaderFactory
+  public static class TypeScriptPrecompiledLoaderFactory
       implements DelegatedModuleLoaderRegistry.DelegateFactory {
     @Override
     public @NotNull JSModuleLoader invoke(@NotNull JSRealm realm) {
-      assert tsCompiler != null;
-      return new TypeScriptModuleLoader(realm, tsCompiler);
-    }
-
-    @Override
-    public boolean test(
-        DelegatedModuleLoaderRegistry.DelegatedModuleRequest delegatedModuleRequest) {
-      var src = delegatedModuleRequest.source();
-      return ((src != null && src.hasCharacters() && ID.equals(src.getLanguage())));
-    }
-  }
-
-  public class TypeScriptPrecompiledLoaderFactory
-      implements DelegatedModuleLoaderRegistry.DelegateFactory {
-    @Override
-    public @NotNull JSModuleLoader invoke(@NotNull JSRealm realm) {
-      assert tsPrecompiler != null;
       return new TypeScriptPrecompiledLoader(realm, tsPrecompiler);
     }
 
@@ -119,20 +94,6 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     currentEnv.initializeLanguage(jsInfo);
   }
 
-  private @NotNull JSRealm createContextForTscBasedEngine(Env currentEnv) {
-    initializeJsRealm(currentEnv);
-    var jsEnv = JavaScriptLanguage.getCurrentEnv();
-    if (!compilerInitialized.get()) {
-      compilerInitialized.compareAndSet(false, true);
-      env = jsEnv;
-      tsCompiler = TypeScriptCompiler.obtain(jsEnv);
-      DelegatedModuleLoaderRegistry.register(new TypeScriptCompilerLoaderFactory());
-    }
-    var js = JavaScriptLanguage.getCurrentLanguage();
-    var ctx = JSEngine.createJSContext(js, jsEnv);
-    return ctx.createRealm(jsEnv);
-  }
-
   private @NotNull JSRealm createContextForNativeEngine(Env currentEnv) {
     initializeJsRealm(currentEnv);
     var jsEnv = JavaScriptLanguage.getCurrentEnv();
@@ -141,10 +102,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     var realm = ctx.createRealm(jsEnv);
     if (!compilerInitialized.get()) {
       compilerInitialized.compareAndSet(false, true);
-      env = jsEnv;
-      tsPrecompiler = TypeScriptPrecompiler.obtain();
       tsLoader = new TypeScriptPrecompiledLoader(realm, tsPrecompiler);
-      tsLoaderFactory = new TypeScriptPrecompiledLoaderFactory();
       DelegatedModuleLoaderRegistry.register(tsLoaderFactory);
     }
     return realm;
@@ -153,37 +111,20 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   @Override
   protected @NotNull JSRealm createContext(Env currentEnv) {
     CompilerAsserts.neverPartOfCompilation();
-    if (USE_NEXTGEN_TYPESCRIPT_PRECOMPILER) {
-      return createContextForNativeEngine(currentEnv);
-    } else {
-      return createContextForTscBasedEngine(currentEnv);
-    }
+    return createContextForNativeEngine(currentEnv);
   }
 
   @Override
   protected void finalizeContext(JSRealm context) {
+    tsLoader = null;
     super.finalizeContext(context);
-    if (tsCompiler != null) {
-      tsCompiler.close();
-    }
   }
 
   private CallTarget parseWithNativeEngine(ParsingRequest parsingRequest) throws IOException {
-    assert tsPrecompiler != null;
     List<String> argumentNames = parsingRequest.getArgumentNames();
     Source tsSource = parsingRequest.getSource();
+    var env = JavaScriptLanguage.getCurrentEnv();
     Source jsSource = tsLoader.transpileSource(tsSource);
-    var parsed = (RootCallTarget) env.parseInternal(jsSource, argumentNames.toArray(new String[0]));
-    return parsed.getRootNode().getCallTarget();
-  }
-
-  private CallTarget parseWithTscEngine(ParsingRequest parsingRequest) {
-    assert tsCompiler != null;
-    Source tsSource = parsingRequest.getSource();
-    Source jsSource =
-        tsCompiler.compileToNewSource(
-            tsSource.getCharacters(), tsSource.getName(), true, tsSource.getPath());
-    List<String> argumentNames = parsingRequest.getArgumentNames();
     var parsed = (RootCallTarget) env.parseInternal(jsSource, argumentNames.toArray(new String[0]));
     return parsed.getRootNode().getCallTarget();
   }
@@ -191,14 +132,13 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   @TruffleBoundary
   @Override
   protected CallTarget parse(ParsingRequest parsingRequest) throws IOException {
-    if (!USE_NEXTGEN_TYPESCRIPT_PRECOMPILER) {
-      return parseWithTscEngine(parsingRequest);
-    }
     return parseWithNativeEngine(parsingRequest);
   }
 
   @Override
   protected boolean patchContext(JSRealm context, Env newEnv) {
+    // Restore the TypeScript loader, which can't be persisted to the aux cache.
+    tsLoader = new TypeScriptPrecompiledLoader(context, tsPrecompiler);
     return true;
   }
 }

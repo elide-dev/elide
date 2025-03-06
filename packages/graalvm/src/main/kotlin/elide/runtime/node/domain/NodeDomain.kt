@@ -12,35 +12,43 @@
  */
 package elide.runtime.node.domain
 
-import elide.annotations.Factory
-import elide.annotations.Singleton
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.DomainAPI
+import elide.runtime.lang.javascript.NodeModuleName
 
 // Internal symbol where the Node built-in module is installed.
-private const val DOMAIN_MODULE_SYMBOL = "node_domain"
+private const val DOMAIN_MODULE_SYMBOL = "node_${NodeModuleName.DOMAIN}"
 
 // Installs the Node `domain` module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeDomainModule : AbstractNodeBuiltinModule() {
-  @Singleton internal fun provide(): DomainAPI = NodeDomain.obtain()
+@Intrinsic internal class NodeDomainModule : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeDomain.create() }
+  internal fun provide(): DomainAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[DOMAIN_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[DOMAIN_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DOMAIN)) { singleton }
   }
 }
 
 /**
  * # Node API: `domain`
  */
-internal class NodeDomain : DomainAPI {
+internal class NodeDomain private constructor () : ReadOnlyProxyObject, DomainAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeDomain()
-    fun obtain(): NodeDomain = SINGLETON
+    @JvmStatic fun create(): NodeDomain = NodeDomain()
   }
+
+  // @TODO not yet implemented
+
+  override fun getMemberKeys(): Array<String> = emptyArray()
+  override fun getMember(key: String?): Any? = null
 }

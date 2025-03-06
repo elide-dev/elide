@@ -56,7 +56,7 @@ public class ServerSSRRenderer (
   }
 
   // Logger.
-  private val logging: Logger = Logging.of(ServerSSRRenderer::class)
+  private val logging: Logger by lazy { Logging.of(ServerSSRRenderer::class) }
 
   /** Execute the provided operation with any prepared SSR execution context. */
   internal suspend fun prepareContext(op: suspend (ExecutionInputs, Any?) -> StringBuilder): String {

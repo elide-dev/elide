@@ -35,7 +35,6 @@ import kotlinx.serialization.Serializable
  * @property renderedMessage Optionally contains a pre-formatted version of the message
  */
 @Serializable
-@ConsistentCopyVisibility
 @JvmRecord public data class Diagnostic internal constructor (
   @JvmField public val severity: Severity,
   @JvmField public val id: String? = null,

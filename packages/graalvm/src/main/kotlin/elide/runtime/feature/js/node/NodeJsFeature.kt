@@ -13,11 +13,13 @@
 package elide.runtime.feature.js.node
 
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
+import org.graalvm.nativeimage.hosted.RuntimeReflection
 import kotlin.reflect.KClass
 import elide.annotations.engine.VMFeature
 import elide.runtime.feature.FrameworkFeature
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
+import elide.runtime.intrinsics.js.JavaScriptConsole
 import elide.runtime.node.asserts.NodeAssert
 import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.runtime.node.childProcess.NodeChildProcess
@@ -65,12 +67,23 @@ import elide.runtime.intrinsics.js.node.stream.Duplex
 import elide.runtime.intrinsics.js.node.stream.StatefulStream
 import elide.runtime.intrinsics.js.node.stream.Writable
 
+// Whether to register modules for reflective access.
+private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
+
 /** GraalVM feature which enables reflective access to built-in Node modules. */
 @VMFeature internal class NodeJsFeature : FrameworkFeature {
   override fun getDescription(): String = "Enables support for Node.js built-in modules"
 
   private inline fun <reified T: Any> BeforeAnalysisAccess.cls(kclass: KClass<T>) {
-    registerClassForReflection(this, kclass.java.name)
+    if (REGISTER_ALL_MODULES_FOR_REFLECTION) {
+      RuntimeReflection.register(kclass.java)
+      RuntimeReflection.registerAllClasses(kclass.java)
+      RuntimeReflection.registerAllMethods(kclass.java)
+      RuntimeReflection.registerAllFields(kclass.java)
+      if (kclass.java.isRecord) {
+        RuntimeReflection.registerAllRecordComponents(kclass.java)
+      }
+    }
   }
 
   private inline fun BeforeAnalysisAccess.registrations(op: BeforeAnalysisAccess.() -> Unit) {
@@ -97,6 +110,7 @@ import elide.runtime.intrinsics.js.node.stream.Writable
 
     // `console`
     cls(ConsoleAPI::class)
+    cls(JavaScriptConsole::class)
     cls(NodeConsole::class)
 
     // `crypto`

@@ -88,9 +88,7 @@ internal abstract class AbstractJsModuleTest<T : GuestIntrinsic> : AbstractJsInt
         NodeAssertStrictModule().install(binding)
       }
       if (bindBuffer && !group.any { it.key.symbol.contains("buffer") }) {
-        NodeBufferModule().apply {
-          facade = NodeBufferModuleFacade()
-        }.install(binding)
+        NodeBufferModule().install(binding)
       }
       group
     } else {

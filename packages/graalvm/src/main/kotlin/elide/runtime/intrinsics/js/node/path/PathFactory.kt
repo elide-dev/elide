@@ -44,6 +44,16 @@ public interface PathFactory {
   public fun from(first: String, vararg rest: String): Path
 
   /**
+   * ## Path from String Sequence
+   *
+   * Create a Node-style parsed [Path] object from string segments in a sequence; this method uses the active path
+   * style.
+   *
+   * @param seq Sequence to parse
+   */
+  public fun from(seq: Sequence<String>): Path
+
+  /**
    * ## Path from Kotlin Path
    *
    * Create a Node-style parsed [Path] object from a Kotlin path.

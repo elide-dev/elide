@@ -16,9 +16,9 @@ package elide.tool.cli.options
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Option
-//import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.plugins.js.JavaScriptConfig
+import elide.runtime.plugins.js.JavaScriptVersion
 
 /** JavaScript engine options. */
 @Introspected @ReflectiveAccess class EngineJavaScriptOptions : AbstractEngineOptions() {
@@ -41,12 +41,12 @@ import elide.runtime.plugins.js.JavaScriptConfig
   internal var strict: Boolean = true
 
   /** Whether to activate JS strict mode. */
-//  @Option(
-//    names = ["--js:ecma"],
-//    description = ["ECMA standard to use for JavaScript."],
-//    defaultValue = "ES2022",
-//  )
-//  internal var ecma: JsLanguageLevel = JsLanguageLevel.ES2023
+  @Option(
+    names = ["--js:ecma"],
+    description = ["ECMA standard to use for JavaScript."],
+    defaultValue = "ES2024",
+  )
+  internal var ecma: JavaScriptVersion = JavaScriptVersion.ES2024
 
   /** Whether to activate NPM support. */
   @Option(
@@ -72,9 +72,32 @@ import elide.runtime.plugins.js.JavaScriptConfig
   )
   internal var wasm: Boolean = true
 
+  /** Whether to activate JS strict mode. */
+  @Option(
+    names = ["--js:experimental-disable-polyfills"],
+    description = ["Disable JavaScript polyfills"],
+    defaultValue = "false",
+  )
+  internal var experimentalDisablePolyfills: Boolean = false
+
+  /** Whether to activate JS strict mode. */
+  @Option(
+    names = ["--js:experimental-disable-vfs"],
+    description = ["Disable JavaScript VFS"],
+    defaultValue = "false",
+  )
+  internal var experimentalDisableVfs: Boolean = false
+
   /** Apply these settings to the configuration for the JavaScript runtime plugin. */
   internal fun apply(config: JavaScriptConfig) {
-//    config.language = JavaScriptVersion.valueOf(ecma.name)
+    config.language = JavaScriptVersion.valueOf(ecma.name)
     config.wasm = wasm
+    config.esm = esm
+    if (experimentalDisableVfs || experimentalDisablePolyfills) {
+      config.experimental {
+        disableVfs = experimentalDisableVfs
+        disablePolyfills = experimentalDisablePolyfills
+      }
+    }
   }
 }

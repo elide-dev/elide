@@ -25,9 +25,12 @@ import org.graalvm.polyglot.PolyglotAccess
 import org.graalvm.polyglot.Value
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
+import kotlinx.io.IOException
 import kotlin.io.path.Path
 import kotlin.math.max
 import kotlin.math.min
@@ -169,8 +172,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   public companion object {
-    @JvmStatic private val defaultAuxPath = "/tmp/elide-runtime/cache"
-
     // Names of known-internal members which are yanked before guest code is executed.
     private val knownInternalMembers = sortedSetOf(
       "primordials",
@@ -231,9 +232,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     /** Whether to enable output/input stream access by guest languages (by default). */
     private val enableStreams = System.getProperty("elide.js.vm.enableStreams", "false")
 
-    /** Whether the runtime is built as a native image. */
-    private val isNativeImage = ImageInfo.inImageCode()
-
     /** Logger used for engine instances */
     private val engineLogger by lazy { Logging.named("elide:engine") }
 
@@ -243,15 +241,17 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       "js,python"
     )
 
+    /** Whether to emit trace messages for aux cache usage. */
+    private val traceCache = System.getProperty("elide.traceCache", "false") == "true"
+
     /** Whether the auxiliary cache is actually enabled. */
     private val useAuxCache = (
       ENABLE_AUX_CACHE &&
-      isNativeImage &&
       System.getProperty("elide.test") != "true" &&
       System.getProperty("ELIDE_TEST") != "true" &&
       System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
+      ImageInfo.inImageCode() &&
       !ImageInfo.isSharedLibrary() &&
-      !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
       !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
     )
 
@@ -261,7 +261,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
      */
     @Suppress("SpreadOperator", "LongMethod")
     public fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
-      val auxCachePath = System.getProperty("elide.cachePath")?.ifBlank { null } ?: defaultAuxPath
+      val auxCachePath = System.getProperty("elide.cachePath")?.ifBlank { null }
 
       val languages = configuration.languages.flatMap {
         when (it.languageId) {
@@ -275,6 +275,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
         }
       }.distinct().toTypedArray()
 
+      engineLogger.debug { "Creating GraalVM engine with languages: ${languages.joinToString(", ")}" }
       val builder = Engine.newBuilder(*languages).apply {
         useSystemProperties(false)
         allowExperimentalOptions(true)
@@ -344,20 +345,63 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
         // isolate options
         if (ENABLE_ISOLATES) {
+          engineLogger.debug { "Isolates are active (lang: 'js')" }
           option("engine.UntrustedCodeMitigation", "none")
           option("engine.SpawnIsolate", "js")
           option("engine.MaxIsolateMemory", "2GB")
         }
 
-        if (useAuxCache && ImageInfo.inImageCode()) {
-          option("engine.PreinitializeContexts", preinitializeContexts)
-          option("engine.CacheCompile", "hot")
-          option("engine.TraceCache", "true")
+        if (useAuxCache) {
+          var auxCacheReady = true
+          var creatingAuxCache = System.getProperty("elide.writeAuxCache") == "true"
+          val auxCacheParent: Path =
+            auxCachePath?.let { Path(it) }
+              // if no path is specified for the cache, put it next to the binary
+              ?: ProcessHandle.current().info().command().orElse(null)?.let { Path(it).parent }
+              // if we somehow can't resolve the binary, default to /tmp
+              ?: Path("/tmp")
 
-          option(
-            "engine.Cache",
-            Path(auxCachePath).resolve("elide-img.bin").toAbsolutePath().toString(),
-          )
+          if (!Files.exists(auxCacheParent)) {
+            creatingAuxCache = true
+            try {
+              Files.createDirectories(auxCacheParent)
+            } catch (e: IOException) {
+              engineLogger.warn { "Failed to create aux cache directory: $auxCachePath (err: '${e.message}')" }
+              auxCacheReady = false
+            }
+          }
+          if (!Files.isWritable(auxCacheParent)) {
+            engineLogger.warn { "Aux cache directory is not writable: $auxCachePath" }
+            auxCacheReady = false
+          }
+          val auxCacheActual = auxCacheParent.resolve("elide-img.bin")
+          if (!Files.exists(auxCacheActual)) {
+            creatingAuxCache = true
+          }
+          if (auxCacheReady) {
+            engineLogger.debug { "Aux cache is active at path: '$auxCacheActual' (contexts: '$preinitializeContexts')" }
+            option("engine.PreinitializeContexts", preinitializeContexts)
+            option("engine.CachePreinitializeContext", "true")
+            option("engine.CacheCompile", "hot")
+
+            if (traceCache) {
+              engineLogger.debug { "Aux cache tracing is active" }
+              option("engine.TraceCache", "true")
+            } else {
+              engineLogger.debug { "Aux cache tracing is inactive" }
+            }
+
+            option(
+              if (creatingAuxCache) "engine.Cache" else "engine.CacheLoad",
+              auxCacheActual.toAbsolutePath().toString(),
+            )
+          }
+        } else {
+          if (!ImageInfo.inImageCode()) {
+            engineLogger.debug { "Running on JVM; aux cache is not supported" }
+          } else {
+            engineLogger.debug { "Aux cache is not enabled" }
+          }
         }
       }
 

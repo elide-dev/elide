@@ -75,7 +75,7 @@ public object Constants {
     const val SLOW_TEST_THRESHOLD = 30_000L
 
     /** Maximum number of forks allowed during parallel test execution. */
-    const val MAX_PARALLEL_FORKS = 4
+    const val MAX_PARALLEL_FORKS = 2
   }
 
   /** Properties and conventions related to versioning. */
@@ -105,7 +105,7 @@ public object Constants {
     const val OPENTELEMETRY = "1.32.0"
 
     /** Constant: default Kotlin version. */
-    const val KOTLIN_DEFAULT = "2.0"
+    const val KOTLIN_DEFAULT = "1.9"
 
     /** Property: defines the target JVM version. */
     const val JVM_TARGET = "versions.java.target"
@@ -220,18 +220,30 @@ public object Constants {
 
     /** Compiler args to include in all Kotlin targets. */
     private val BaseCompilerArgs = listOf(
-      "-Xskip-prerelease-check",
       "-Xexpect-actual-classes",
       "-Xsuppress-version-warnings",
+      "-Xconsistent-data-class-copy-visibility",
+      "-Xvalue-classes",
+      "-Xinline-classes",
+      "-Xabi-stability=stable",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */
-    internal val JvmCompilerArgs = BaseCompilerArgs.plus(
+    public val JvmCompilerArgs: List<String> = BaseCompilerArgs.plus(
       listOf(
         "-no-stdlib",
         "-no-reflect",
         "-Xjvm-default=all",
         "-Xjsr305=strict",
+        "-Xvalidate-bytecode",
+        "-Xsam-conversions=indy",
+        "-Xno-receiver-assertions",
+        "-Xno-param-assertions",
+        "-Xlambdas=indy",
+        "-Xenhance-type-parameter-types-to-def-not-null",
+        "-Xemit-jvm-type-annotations",
+        "-Xassertions=jvm",
+        "-Xstring-concat=indy-with-constants",
       ),
     )
 
@@ -246,7 +258,6 @@ public object Constants {
     internal val KaptCompilerArgs = JvmCompilerArgs.plus(
       listOf(
         "-Xallow-unstable-dependencies",
-        "-Xemit-jvm-type-annotations",
       ),
     )
 

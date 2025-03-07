@@ -33,7 +33,6 @@ public object DelegatedModuleLoaderRegistry : Predicate<DelegatedModuleRequest> 
    * @property label The label of the request (e.g. the module name).
    */
   @JvmRecord
-  @ConsistentCopyVisibility
   public data class DelegatedModuleRequest private constructor (
     val source: Source?,
     val label: String,

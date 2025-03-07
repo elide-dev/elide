@@ -13,6 +13,7 @@
 
 package elide.tool.cli.cmd.info
 
+import io.micronaut.core.annotation.Introspected
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.Engine
 import picocli.CommandLine.Command
@@ -31,6 +32,7 @@ import elide.tool.project.ProjectManager
   description = ["Show info about the current app and environment"],
   mixinStandardHelpOptions = true,
 )
+@Introspected
 @Singleton internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private fun Boolean.label(): String = if (this) "Yes" else "No"

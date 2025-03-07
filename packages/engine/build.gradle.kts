@@ -16,8 +16,8 @@ import elide.toolchain.host.TargetInfo
 
 plugins {
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.serialization")
+  alias(libs.plugins.ksp)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
@@ -39,6 +39,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
+    ksp = true
   }
 
   java {
@@ -57,6 +58,7 @@ dependencies {
   api(libs.graalvm.polyglot)
   api(libs.kotlinx.coroutines.core)
   api(libs.guava)
+  ksp(mn.micronaut.inject.kotlin)
   implementation(libs.kotlinx.atomicfu)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
@@ -110,9 +112,66 @@ val testJar by tasks.registering(Jar::class) {
   from(sourceSets.test.get().output)
 }
 
+val pluginApiHeader =
+  rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
+
+val nativeArgs = listOfNotNull(
+  "-Delide.natives.pluginApiHeader=$pluginApiHeader",
+  "-H:+SourceLevelDebug",
+  "-H:-JNIExportSymbols",
+  "-H:-RemoveUnusedSymbols",
+  "-H:-StripDebugInfo",
+  "-H:+JNIEnhancedErrorCodes",
+  "-H:+JNIVerboseLookupErrors",
+  "-H:+UnlockExperimentalVMOptions",
+  "-H:+ReportExceptionStackTraces",
+)
+
+// Java Launcher (GraalVM at either EA or LTS)
+val edgeJvmTarget = 25
+val stableJvmTarget = 23
+val oracleGvm = true
+val enableEdge = false
+val enableToolchains = true
+val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
+val stableJvm = JavaVersion.toVersion(stableJvmTarget)
+val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget
+val selectedJvm = if (enableEdge) edgeJvm else stableJvm
+
+val jvmType: JvmVendorSpec =
+  if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
+
+val gvmLauncher = javaToolchains.launcherFor {
+  languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+  vendor.set(jvmType)
+}
+
+val gvmCompiler = javaToolchains.compilerFor {
+  languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+  vendor.set(jvmType)
+}
+
+val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-base.nil")
+
+graalvmNative {
+  binaries {
+    create("shared") {
+      imageName = "libelidecore"
+      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
+      buildArgs(nativeArgs.plus("--shared"))
+    }
+
+    create("layer") {
+      imageName = "libelidecore"
+      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
+      buildArgs(nativeArgs.plus("-H:LayerCreate=${layerOut.get().asFile.name}"))
+    }
+  }
+}
+
 tasks.test {
   dependsOn(":packages:graalvm:natives")
-  jvmArgumentProviders.add(CommandLineArgumentProvider { jvmDefs })
+  jvmArgs = jvmDefs
 }
 
 artifacts {

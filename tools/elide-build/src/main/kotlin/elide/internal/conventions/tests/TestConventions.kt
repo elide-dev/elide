@@ -80,12 +80,18 @@ internal fun Project.configureTestLogger() {
     // use mocha-themed output
     theme = ThemeType.MOCHA_PARALLEL
 
+    val testExceptions = System.getenv("TEST_EXCEPTIONS") != null
+    val testVerbose = System.getenv("TEST_VERBOSE") != null
+    val testLogs = System.getenv("TEST_LOGS") != null
+
     // only show errors if specified in the environment
-    showExceptions = System.getenv("TEST_EXCEPTIONS") == "true"
+    showExceptions = testExceptions
+
+    // only show passed + skipped tests in verbose mode
+    showPassed = testVerbose || testLogs
+    showSkipped = testVerbose || testLogs
 
     showFailed = true
-    showPassed = true
-    showSkipped = true
     showFailedStandardStreams = true
     showFullStackTraces = true
     showSimpleNames = true

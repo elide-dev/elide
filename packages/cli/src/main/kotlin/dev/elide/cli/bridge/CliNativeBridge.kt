@@ -2,7 +2,6 @@
 
 package dev.elide.cli.bridge
 
-import com.aayushatharva.brotli4j.Brotli4jLoader
 import org.graalvm.nativeimage.ImageInfo
 
 /**
@@ -13,9 +12,6 @@ import org.graalvm.nativeimage.ImageInfo
 object CliNativeBridge {
   // If flipped, the CLI native bridge will only be eagerly loaded under native conditions.
   private const val EAGER_LOAD_NATIVE_ONLY = false
-
-  /** Token expected for the tooling API at version 1.  */
-  const val VERSION_V1: String = "v1"
 
   /** Native platform-agnostic library name for Elide's umbrella library. */
   private const val NATIVE_LIB_NAME = "umbrella"
@@ -28,14 +24,9 @@ object CliNativeBridge {
     if (!initialized && (!EAGER_LOAD_NATIVE_ONLY || ImageInfo.inImageCode())) {
       System.loadLibrary(NATIVE_LIB_NAME)
       initialized = true
-      val init = initializeNative().also { loadThirdPartyNatives() }
+      val init = initializeNative()
       assert(init == 0) { "Failed to initialize native layer; got code $init" }
     }
-  }
-
-  // Load third-party native libraries.
-  private fun loadThirdPartyNatives() {
-    Brotli4jLoader.ensureAvailability()
   }
 
   /** Initialize the native runtime layer; any non-zero return value indicates an error.  */
@@ -64,8 +55,4 @@ object CliNativeBridge {
 
   /** Run the Uv entrypoint.  */
   external fun runUv(args: Array<String>): Int
-
-  init {
-    initialize()
-  }
 }

@@ -16,14 +16,10 @@ import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 
 plugins {
+  kotlin("jvm")
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   id(libs.plugins.shadow.get().pluginId)
-
-  kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.allopen")
-
   alias(libs.plugins.elide.conventions)
 }
 

@@ -76,7 +76,7 @@ private fun SpotlessExtension.configureSpotlessForProject(conventions: ElideBuil
 
   // ---- Linting: JavaScript/TypeScript
   //
-  if (conventions.javascript.requested || conventions.node.requested || conventions.typescript.requested) {
+  if (conventions.javascript.requested || conventions.typescript.requested) {
     javascript {
       if (conventions.checks.prettier) prettier(Versions.PRETTIER)
       if (conventions.checks.eslint) eslint(Versions.ESLINT)

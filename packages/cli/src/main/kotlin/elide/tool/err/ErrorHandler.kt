@@ -130,7 +130,6 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    * @param columnNumber Source line column number where this error took place, as applicable.
    * @param isNativeMethod Indicates whether this frame is describing a native method (if not, it is a JVM method).
    */
-  @ConsistentCopyVisibility
   @JvmRecord @Serializable data class ErrorStackFrame private constructor (
     val moduleName: String? = null,
     val moduleVersion: String? = null,

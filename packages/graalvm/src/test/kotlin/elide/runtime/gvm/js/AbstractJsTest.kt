@@ -96,7 +96,7 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
     // install utility bindings, if directed
     if (bindUtils) {
       target.putMember("test", AbstractJsIntrinsicTest.CaptureAssertion())
-      target.putMember("Buffer", NodeBufferClass())
+      target.putMember("Buffer", NodeBufferClass.obtain())
     }
 
     // prep for execution

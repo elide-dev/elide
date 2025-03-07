@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -13,15 +13,14 @@
 
 @file:Suppress(
   "UNUSED_PARAMETER",
+  "MaxLineLength",
 )
 
 package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
-import com.google.common.collect.Sets
 import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
@@ -43,7 +42,6 @@ import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.*
-import picocli.CommandLine.Model.CommandSpec
 import java.io.*
 import java.net.URI
 import java.nio.charset.StandardCharsets
@@ -52,12 +50,12 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.Phaser
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.TimeUnit
 import java.util.function.Supplier
-import javax.script.ScriptEngineManager
+import java.util.stream.Stream
 import javax.tools.ToolProvider
+import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -76,14 +74,10 @@ import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.intrinsics.server.http.HttpServerAgent
-import elide.runtime.plugins.debug.debug
-import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.DOTENV
-import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
-import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.cli.cfg.ElideCLITool.GVM_RESOURCES
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
@@ -127,6 +121,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
   ],
 )
+@Introspected
 @Singleton internal class ToolShellCommand @Inject constructor (
   private val projectManager: ProjectManager,
   private val workdir: WorkdirManager,
@@ -138,14 +133,20 @@ private typealias ContextAccessor = () -> PolyglotContext
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
     // Whether to enable extended language plugins.
-    private const val ENABLE_JVM = false
-    private const val ENABLE_RUBY = false
-    private const val ENABLE_PYTHON = true
-    private const val ENABLE_TYPESCRIPT = true
+    private val ENABLE_JVM = System.getProperty("elide.lang.jvm") == "true"
+    private val ENABLE_RUBY = System.getProperty("elide.lang.ruby") == "true"
+    private val ENABLE_PYTHON = System.getProperty("elide.lang.python") == "true"
+    private val ENABLE_TYPESCRIPT = System.getProperty("elide.lang.typescript") == "true"
 
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
     }
+
+    private val tsAliases = setOf("ts", "typescript")
+    private val pyAliases = setOf("py", "python")
+    private val rbAliases = setOf("rb", "ruby")
+    private val jvmAliases = setOf("jvm", "java")
+    private val ktAliases = setOf("kt", "kotlin")
 
     // Maps language aliases to the engine they should invoke.
     internal val languageAliasToEngineId: SortedMap<String, String> = sortedMapOf(
@@ -161,6 +162,34 @@ private typealias ContextAccessor = () -> PolyglotContext
       "kotlin" to "jvm",
       "kt" to "jvm",
     )
+
+    // Whether the last-seen command was a user exit.
+    private val exitSeen = atomic(false)
+
+    // Count of statement lines seen; used as an offset for the length of `allSeenStatements`.
+    private val statementCounter = atomic(0)
+
+    // Language-specific syntax highlighter.
+    private val langSyntax = atomic<SyntaxHighlighter?>(null)
+
+    // Main operating terminal.
+    private val terminal = atomic<Terminal?>(null)
+
+    // Active line reader.
+    private val lineReader = atomic<LineReader?>(null)
+
+    // Server manager
+    private val serverAgent: HttpServerAgent by lazy { HttpServerAgent() }
+
+    // Synchronization primitive used to coordinate server behavior
+    private val phaser = atomic(Phaser(1))
+
+    // Whether a server is running.
+    private val serverRunning = atomic(false)
+
+    // Active project configuration.
+    private val activeProject = atomic<ProjectInfo?>(null)
+
   }
 
   /** [SystemRegistryImpl] that filters for special REPL commands. */
@@ -175,462 +204,37 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
   }
 
-  /** Allows selecting a language by name. */
-  @Introspected @ReflectiveAccess class LanguageSelector {
-    /** Specifies the guest language(s) to support. */
-    @Option(
-      names = ["--language", "-l"],
-      description = ["Specify language by name. Options: \${COMPLETION-CANDIDATES}."],
-    )
-    internal var language: EnumSet<GuestLanguage>? = null
-
-    /** Flag for a JavaScript VM. */
-    @Option(
-      names = ["--js", "--javascript", "-js"],
-      description = ["Equivalent to passing '--language=JS'."],
-    )
-    internal var javascript: Boolean = false
-
-    /** Flag for JavaScript with TypeScript support/ */
-    @Option(
-      names = ["--ts", "--typescript", "-ts"],
-      description = ["Equivalent to passing '--language=TYPESCRIPT'."],
-    )
-    internal var typescript: Boolean = false
-
-    /** Flag for JVM support. */
-    @Option(
-      names = ["--jvm", "--java", "-java"],
-      description = ["Equivalent to passing '--language=JVM'."],
-    )
-    internal var jvm: Boolean = false
-
-    /** Flag for Kotlin support. */
-    @Option(
-      names = ["--kotlin", "--kt", "-kt"],
-      description = ["Equivalent to passing '--language=KOTLIN'."],
-    )
-    internal var kotlin: Boolean = jvm
-
-    /** Flag for Ruby support. */
-    @Option(
-      names = ["--ruby", "--rb", "-rb"],
-      description = ["Equivalent to passing '--language=RUBY'."],
-    )
-    internal var ruby: Boolean = false
-
-    /** Flag for Python support. */
-    @Option(
-      names = ["--python", "--py", "-py"],
-      description = ["Equivalent to passing '--language=PYTHON'."],
-    )
-    internal var python: Boolean = false
-
-    /** Flag for WebAssembly support. */
-    @Option(
-      names = ["--wasm"],
-      description = ["Equivalent to passing '--language=WASM'."],
-    )
-    internal var wasm: Boolean = false
-
-    /** Flag for LLVM support. */
-    @Option(
-      names = ["--llvm"],
-      description = ["Equivalent to passing '--language=LLVM'."],
-    )
-    internal var llvm: Boolean = false
-
-    private fun maybeMatchLanguagesByAlias(
-      first: String?,
-      second: String?,
-      langs: EnumSet<GuestLanguage>,
-    ): GuestLanguage? {
-      val maybeResolvedFirst = first?.ifBlank { null }?.let {
-        languageAliasToEngineId[it.trim().lowercase()]
-      }
-      val maybeResolvedSecond = second?.ifBlank { null }?.let {
-        languageAliasToEngineId[it.trim().lowercase()]
-      }
-      return langs.firstOrNull {
-        it.id == maybeResolvedFirst || it.id == maybeResolvedSecond
-      }
-    }
-
-    // Resolve the primary interactive language.
-    internal fun primary(
-      spec: CommandSpec?,
-      langs: EnumSet<GuestLanguage>,
-      project: ProjectInfo?,
-      languageHint: String?,
-    ): GuestLanguage {
-      // languages by flags
-      val explicitlySelectedLanguagesByBoolean = listOf(
-        JS to javascript,
-        TYPESCRIPT to typescript,
-        RUBY to ruby,
-        PYTHON to python,
-        JVM to jvm,
-        KOTLIN to kotlin,
-        WASM to wasm,
-      ).filter {
-        langs.contains(it.first)  // is it supported?
-      }.filter {
-        it.second  // was it requested?
-      }.map {
-        it.first
-      }.toSet()
-
-      // languages by name
-      val explicitlySelectedLanguagesBySet = Sets.intersection(language ?: emptySet(), langs)
-
-      // language by alias
-      val candidateArgs = spec?.commandLine()?.parseResult?.originalArgs()
-      val languageHintMatch = langs.firstOrNull { it.id == languageHint }
-      val candidateByName = languageHintMatch ?: maybeMatchLanguagesByAlias(
-        candidateArgs?.firstOrNull(),
-        candidateArgs?.getOrNull(1),
-        langs,
-      )
-
-      val selected = (
-        // `elide python` et al take maximum precedence
-        candidateByName ?:
-
-        // then languages specified via the `--languages` flag ("named")
-        explicitlySelectedLanguagesBySet.firstOrNull() ?:
-
-        // then languages specified via boolean flags like `--python`
-        explicitlySelectedLanguagesByBoolean.firstOrNull()
-      )
-      return when {
-        // if there is an explicitly selected language, and it is supported, use it
-        selected != null && langs.contains(selected) -> selected
-
-        // otherwise, we default to javascript
-        else -> JS
-      }
-    }
-
-    private val tsAliases = setOf("ts", "typescript")
-    private val pyAliases = setOf("py", "python")
-    private val rbAliases = setOf("rb", "ruby")
-    private val jvmAliases = setOf("jvm", "java")
-    private val ktAliases = setOf("kt", "kotlin")
-
-    // Resolve the specified language.
-    internal fun resolveLangs(project: ProjectInfo? = null, alias: String? = null): EnumSet<GuestLanguage> {
-      return EnumSet.noneOf(GuestLanguage::class.java).apply {
-        add(JS)
-        add(WASM)
-        if (ENABLE_TYPESCRIPT && (typescript || (alias != null && tsAliases.contains(alias)))) add(TYPESCRIPT)
-        if (ENABLE_PYTHON && (python || (alias != null && pyAliases.contains(alias)))) add(PYTHON)
-        if (ENABLE_RUBY && (ruby || (alias != null && rbAliases.contains(alias)))) add(RUBY)
-        if (ENABLE_JVM && (jvm || kotlin || (alias != null && jvmAliases.contains(alias)))) add(JVM)
-        if (ENABLE_JVM && (kotlin || (alias != null && ktAliases.contains(alias)))) add(KOTLIN)
-      }
+  // Resolve the specified language.
+  @Suppress("ComplexCondition")
+  internal fun resolveLangs(alias: String? = null): EnumSet<GuestLanguage> {
+    return EnumSet.noneOf(GuestLanguage::class.java).apply {
+      add(JS)
+      add(WASM)
+      if (ENABLE_TYPESCRIPT && (language.typescript || (alias != null && tsAliases.contains(alias)))) add(TYPESCRIPT)
+      if (ENABLE_PYTHON && (language.python || (alias != null && pyAliases.contains(alias)))) add(PYTHON)
+      if (ENABLE_RUBY && (language.ruby || (alias != null && rbAliases.contains(alias)))) add(RUBY)
+      if (ENABLE_JVM && (language.jvm || language.kotlin || (alias != null && jvmAliases.contains(alias)))) add(JVM)
+      if (ENABLE_JVM && (language.kotlin || (alias != null && ktAliases.contains(alias)))) add(KOTLIN)
     }
   }
-
-  /** Specifies settings for the Chrome DevTools inspector. */
-  @Introspected @ReflectiveAccess class InspectorConfig {
-    @Option(
-      names = ["--inspect"],
-      description = ["Whether to enable the Chrome Devtools inspector"],
-      defaultValue = "false",
-    )
-    internal var enabled: Boolean = false
-
-    /** Specifies whether the inspector should suspend immediately at execution start. */
-    @Option(
-      names = ["--inspect:suspend"],
-      description = ["Whether the inspector should suspend execution immediately."],
-      defaultValue = "false",
-    )
-    internal var suspend: Boolean = false
-
-    /** Specifies whether the inspector should suspend for internal (facade) sources. */
-    @Option(
-      names = ["--inspect:internal"],
-      description = ["Specifies whether the inspector should suspend for internal (facade) sources"],
-      defaultValue = "false",
-      hidden = false,
-    )
-    internal var `internal`: Boolean = false
-
-    /** Specifies whether the inspector should suspend for internal (facade) sources. */
-    @Option(
-      names = ["--inspect:wait"],
-      description = ["Whether to wait for the inspector to attach before executing any code at all."],
-      defaultValue = "false",
-    )
-    internal var wait: Boolean = false
-
-    /** Specifies the port the inspector should bind to. */
-    @Option(
-      names = ["--inspect:port"],
-      description = ["Set the port the inspector binds to"],
-      defaultValue = "4200",
-    )
-    internal var port: Int = 0
-
-    /** Specifies the host the inspector should bind to. */
-    @Option(
-      names = ["--inspect:host"],
-      description = ["Set the host the inspector binds to"],
-      defaultValue = "localhost",
-    )
-    internal var host: String = ""
-
-    /** Specifies the path the inspector should bind to. */
-    @Option(
-      names = ["--inspect:path"],
-      description = ["Set a custom path for the inspector"],
-    )
-    internal var path: String? = null
-
-    /** Specifies paths where sources are available. */
-    @Option(
-      names = ["--inspect:sources"],
-      arity = "0..N",
-      description = ["Add a source directory to the inspector path. Specify 0-N times."],
-    )
-    internal var sources: List<String> = emptyList()
-
-    /** Apply these settings to the root engine configuration container. */
-    internal fun apply(config: PolyglotEngineConfiguration) {
-      if (!enabled) return
-
-      // install and configure the Debug plugin
-      config.debug {
-        chromeInspector {
-          enabled = this@InspectorConfig.enabled
-
-          suspend = this@InspectorConfig.suspend
-          internal = this@InspectorConfig.internal
-          waitAttached = wait
-
-          host = this@InspectorConfig.host
-          port = this@InspectorConfig.port
-
-          path = this@InspectorConfig.path
-          sourcePaths = sources
-        }
-      }
-    }
-  }
-
-  /** Specifies settings for the Debug Adapter Protocol host. */
-  @Introspected @ReflectiveAccess class DebugConfig {
-    /** Specifies whether the debugger should suspend immediately at execution start. */
-    @Option(
-      names = ["--debug:suspend"],
-      description = ["Whether the debugger should suspend execution immediately."],
-      defaultValue = "false",
-    )
-    internal var suspend: Boolean = false
-
-    /** Specifies whether the debugger should suspend for internal (facade) sources. */
-    @Option(
-      names = ["--debug:wait"],
-      description = ["Whether to wait for the debugger to attach before executing any code at all."],
-      defaultValue = "false",
-    )
-    internal var wait: Boolean = false
-
-    /** Specifies the port the debugger should bind to. */
-    @Option(
-      names = ["--debug:port"],
-      description = ["Set the port the debugger binds to"],
-      defaultValue = "4711",
-    )
-    internal var port: Int = 0
-
-    /** Specifies the host the debugger should bind to. */
-    @Option(
-      names = ["--debug:host"],
-      description = ["Set the host the debugger binds to"],
-      defaultValue = "localhost",
-    )
-    internal var host: String = ""
-
-    /** Apply these settings to the root engine configuration container. */
-    internal fun apply(config: PolyglotEngineConfiguration) {
-      // install and configure the Debug plugin
-      config.debug {
-        debugAdapter {
-          suspend = this@DebugConfig.suspend
-          waitAttached = wait
-
-          host = this@DebugConfig.host
-          port = this@DebugConfig.port
-        }
-      }
-    }
-  }
-
-  /** Specifies settings for application environment. */
-  @Introspected @ReflectiveAccess class EnvironmentConfig {
-    /** Specifies whether the runtime should honor dotenv files. */
-    @Option(
-      names = ["--env:dotenv"],
-      description = ["Whether to honor .env files; defaults to `true`"],
-      defaultValue = "true",
-    )
-    internal var dotenv: Boolean = true
-
-    /** Specifies whether the runtime should honor dotenv files. */
-    @Option(
-      names = ["--env"],
-      description = ["Additional environment variables to set, in x=y format"],
-      arity = "0..N",
-    )
-    internal var envVars: Map<String, String> = emptyMap()
-
-    /** Apply these settings to created execution contexts. */
-    @Suppress("KotlinConstantConditions")
-    internal fun apply(
-      project: ProjectInfo?,
-      config: PolyglotEngineConfiguration,
-      host: Boolean = false,
-      dotenv: Boolean = true,
-    ) = config.environment {
-      // inject `NODE_ENV`
-      environment("NODE_ENV", if (ElideCLITool.ELIDE_RELEASE_TYPE == "DEV") {
-        "development"
-      } else {
-        "production"
-      })
-
-      if (host) System.getenv().entries.forEach {
-        mapToHostEnv(it.key)
-      }
-
-      // apply project-level environment variables first (if applicable)
-      project?.env?.vars?.forEach {
-        if (it.value.isPresent) {
-          if (it.value.source == DOTENV && !dotenv) {
-            return@forEach  // skip .env vars if so instructed
-          }
-          environment(it.key, it.value.value)
-        }
-      }
-
-      // apply manually-installed environment variables
-      envVars.forEach {
-        if (it.value.isNotBlank() && it.value.isNotBlank()) {
-          environment(it.key, it.value)
-        }
-      }
-    }
-  }
-
-  internal sealed class LanguageSettings
-
-  /** Settings which apply to Python only. */
-  @Introspected @ReflectiveAccess class PythonSettings : LanguageSettings() {
-    /** Whether to activate Python debug mode. */
-    @Option(
-      names = ["--py:debug"],
-      description = ["Activate Python debug mode"],
-      defaultValue = "false",
-    )
-    internal var debug: Boolean = false
-  }
-
-  /** Settings which apply to Ruby only. */
-  @Introspected @ReflectiveAccess class RubySettings : LanguageSettings() {
-    /** Whether to activate Ruby debug mode. */
-    @Option(
-      names = ["--rb:debug"],
-      description = ["Activate Ruby debug mode"],
-      defaultValue = "false",
-    )
-    internal var debug: Boolean = false
-  }
-
-  /** Settings which apply to JVM languages only. */
-  @Introspected @ReflectiveAccess class JvmSettings : LanguageSettings() {
-    /** Whether to activate JVM debug mode. */
-    @Option(
-      names = ["--jvm:debug"],
-      description = ["Activate JVM debug mode"],
-      defaultValue = "false",
-    )
-    internal var debug: Boolean = false
-  }
-
-  /** Settings which apply to Kotlin. */
-  @Introspected @ReflectiveAccess class KotlinSettings : LanguageSettings() {
-    /** Whether to activate Kotlin debug mode. */
-    @Option(
-      names = ["--kt:debug"],
-      description = ["Activate Kotlin debug mode"],
-      defaultValue = "false",
-    )
-    internal var debug: Boolean = false
-  }
-
-  /** Settings which apply to Groovy. */
-  @Introspected @ReflectiveAccess class GroovySettings : LanguageSettings() {
-    /** Whether to activate Groovy debug mode. */
-    @Option(
-      names = ["--groovy:debug"],
-      description = ["Activate Groovy debug mode"],
-      defaultValue = "false",
-    )
-    internal var debug: Boolean = false
-  }
-
-  /** Settings which apply to WASM. */
-  @Introspected @ReflectiveAccess class WasmSettings : LanguageSettings() {
-    /** Whether to activate WASM debug mode. */
-    @Option(
-      names = ["--wasm:debug"],
-      description = ["Activate WASM debug mode"],
-      defaultValue = "false",
-    )
-    internal var debug: Boolean = false
-  }
-
-  // Whether the last-seen command was a user exit.
-  private val exitSeen = AtomicBoolean(false)
 
   // Last-seen statement executed by the VM.
   private val allSeenStatements = LinkedList<String>()
 
-  // Count of statement lines seen; used as an offset for the length of `allSeenStatements`.
-  private val statementCounter = AtomicInteger(0)
-
-  // Language-specific syntax highlighter.
-  private val langSyntax: AtomicReference<SyntaxHighlighter?> = AtomicReference(null)
-
-  // Main operating terminal.
-  private val terminal: AtomicReference<Terminal?> = AtomicReference(null)
-
-  // Active line reader.
-  private val lineReader: AtomicReference<LineReader?> = AtomicReference(null)
-
   // Intrinsics manager
-  @Inject internal lateinit var intrinsicsManager: IntrinsicsManager
+  @Inject internal lateinit var mainIntrinsicsManager: Stream<IntrinsicsManager>
 
   // Event listeners for the vfs
-  @Inject internal lateinit var vfsListeners: List<VfsListener>
+  @Inject internal lateinit var registeredVfsListeners: Stream<VfsListener>
 
-  // Server manager
-  private val serverAgent: HttpServerAgent = HttpServerAgent()
+  // Intrinsics manager
+  private val intrinsicsManager: Supplier<IntrinsicsManager> get() = Supplier {
+    mainIntrinsicsManager.findFirst().orElseThrow()
+  }
 
-  // Synchronization primitive used to coordinate server behavior
-  private val phaser: AtomicReference<Phaser> = AtomicReference(Phaser(1))
-
-  // Whether a server is running.
-  private val serverRunning: AtomicBoolean = AtomicBoolean(false)
-
-  // Active project configuration.
-  private val activeProject: AtomicReference<ProjectInfo> = AtomicReference(null)
-
-  // Main script engine manager.
-  private val scriptEngineManager: ScriptEngineManager by lazy {
-    ScriptEngineManager(this::class.java.classLoader)
+  // Event listeners for the vfs
+  private val vfsListeners: Supplier<List<VfsListener>> get() = Supplier {
+    registeredVfsListeners.toList()
   }
 
   /** Specifies the guest language to run. */
@@ -711,42 +315,6 @@ private typealias ContextAccessor = () -> PolyglotContext
     heading = "%nEngine: JavaScript%n",
   ) internal var jsSettings: EngineJavaScriptOptions = EngineJavaScriptOptions()
 
-  /** Settings specific to Python. */
-  @ArgGroup(
-    validate = false,
-    heading = "%nEngine: Python%n",
-  ) internal var pythonSettings: PythonSettings = PythonSettings()
-
-  /** Settings specific to Ruby. */
-  @ArgGroup(
-    validate = false,
-    heading = "%nEngine: Ruby%n",
-  ) internal var rubySettings: RubySettings = RubySettings()
-
-  /** Settings specific to Ruby. */
-  @ArgGroup(
-    validate = false,
-    heading = "%nEngine: JVM%n",
-  ) internal var jvmSettings: JvmSettings = JvmSettings()
-
-  /** Settings specific to Kotlin. */
-  @ArgGroup(
-    validate = false,
-    heading = "%nEngine: Kotlin%n",
-  ) internal var kotlinSettings: KotlinSettings = KotlinSettings()
-
-  /** Settings specific to Groovy. */
-  @ArgGroup(
-    validate = false,
-    heading = "%nEngine: Groovy%n",
-  ) internal var groovySettings: GroovySettings = GroovySettings()
-
-  /** Settings specific to Groovy. */
-  @ArgGroup(
-    validate = false,
-    heading = "%nEngine: WASM%n",
-  ) internal var wasmSettings: WasmSettings = WasmSettings()
-
   /** File to run within the VM. */
   @Parameters(
     index = "0",
@@ -780,8 +348,8 @@ private typealias ContextAccessor = () -> PolyglotContext
   // Executed when a guest statement is entered.
   private fun onStatementEnter(event: ExecutionEvent) {
     if (verbose) {
-      val highlighter = langSyntax.get()
-      val lineReader = lineReader.get()
+      val highlighter = langSyntax.value
+      val lineReader = lineReader.value
 
       val txt: CharSequence? = event.location.characters
       if (!txt.isNullOrBlank()) {
@@ -795,8 +363,8 @@ private typealias ContextAccessor = () -> PolyglotContext
   }
 
   private fun printHighlighted(txt: String) {
-    val highlighter = langSyntax.get()
-    val lineReader = lineReader.get()
+    val highlighter = langSyntax.value
+    val lineReader = lineReader.value
 
     if (txt.isNotBlank()) {
       if (highlighter != null && lineReader != null) {
@@ -807,12 +375,13 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
   }
 
+  @Suppress("unused")
   private fun onUserInteractiveSource(code: String, source: Source) {
     printHighlighted(code)
   }
 
   // Execute a single chunk of code, or literal statement.
-  @Suppress("SameParameterValue") private fun executeOneChunk(
+  @Suppress("SameParameterValue", "unused") private fun executeOneChunk(
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
     ctxAccessor: ContextAccessor,
@@ -849,7 +418,7 @@ private typealias ContextAccessor = () -> PolyglotContext
       }
       when (val throwable = processUserCodeError(primaryLanguage, exc)) {
         null -> {
-          logging.trace("Caught exception from code statement ${statementCounter.get()}", exc)
+          logging.trace("Caught exception from code statement ${statementCounter.value}", exc)
           throw exc
         }
 
@@ -870,7 +439,8 @@ private typealias ContextAccessor = () -> PolyglotContext
     code: String,
   ) {
     if (serveMode()) {
-      serverRunning.set(true)
+      assert(!serverRunning.value) { "Server is already running" }
+      serverRunning.value = true
       executeSource(
         "stdin",
         languages,
@@ -895,6 +465,7 @@ private typealias ContextAccessor = () -> PolyglotContext
   // Build or detect a terminal to use for interactive REPL use.
   private fun buildTerminal(): Terminal {
     return TerminalBuilder.builder()
+      .ffm(true)  // prefer ffm
       .jansi(true)
       .jna(false)  // not supported on M1 (crashes)
       .color(pretty)
@@ -906,7 +477,7 @@ private typealias ContextAccessor = () -> PolyglotContext
         handle(Terminal.Signal.INT) {
           executeThread.interrupt()
         }
-        terminal.set(this)
+        terminal.value = this
       }
   }
 
@@ -982,8 +553,8 @@ private typealias ContextAccessor = () -> PolyglotContext
       .option(LineReader.Option.ERASE_LINE_ON_FINISH, true)
       .build()
 
-    lineReader.set(reader)
-    langSyntax.set(languageHighlighter)
+    lineReader.value =reader
+    langSyntax.value = languageHighlighter
     builtins.setLineReader(reader)
     history.attach(reader)
     reader.apply {
@@ -992,6 +563,7 @@ private typealias ContextAccessor = () -> PolyglotContext
   }
 
   // Initialize nano-rc syntax highlighting configurations.
+  @Suppress("TooGenericExceptionCaught")
   private fun initNanorcConfig(rootPath: Path, userHome: String): File? {
     if (!rootPath.exists() || Statics.noColor) {
       logging.debug("Syntax highlighting disabled by flags, missing root, or NO_COLOR")
@@ -1100,9 +672,9 @@ private typealias ContextAccessor = () -> PolyglotContext
     // otherwise, calculate lines
     val totalLines = endLine - startLine + (contextLines * 2)
     val ctxLines = ArrayList<String>(totalLines)
-    val baseOnHand = minOf(0, statementCounter.get())
+    val baseOnHand = minOf(0, statementCounter.value)
     val errorTail = errorBase + (exc.sourceLocation.endLine - exc.sourceLocation.startLine)
-    val topLine = maxOf(statementCounter.get(), errorTail)
+    val topLine = maxOf(statementCounter.value, errorTail)
 
     return when {
       // cannot resolve: we don't have those lines (they are too early for our buffer)
@@ -1113,7 +685,7 @@ private typealias ContextAccessor = () -> PolyglotContext
         if (allSeenStatements.isNotEmpty()) {
           ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
           (errorBase + 1) to ctxLines
-        } else when (val target = runnable?.ifBlank { null }) {
+        } else when (runnable?.ifBlank { null }) {
           // @TODO implement
           null -> (errorBase + 1) to emptyList()
           else -> (-1) to emptyList()
@@ -1125,7 +697,7 @@ private typealias ContextAccessor = () -> PolyglotContext
   // Determine error printer settings for this run.
   private fun errPrinterSettings(): ErrPrinter.ErrPrinterSettings = ErrPrinter.ErrPrinterSettings(
     enableColor = pretty,
-    maxLength = terminal.get()?.width ?: ErrPrinter.DEFAULT_MAX_WIDTH,
+    maxLength = terminal.value?.width ?: ErrPrinter.DEFAULT_MAX_WIDTH,
   )
 
   // Given an error, render a table explaining the error, along with any source context if we have it.
@@ -1145,8 +717,8 @@ private typealias ContextAccessor = () -> PolyglotContext
       // print full stack traces raw in debug or verbose mode mode
       exc.printStackTrace()
     }
-    val term = terminal.get()
-    val reader = lineReader.get()
+    val term = terminal.value
+    val reader = lineReader.value
 
     // begin calculating with source context
     val middlePrefix = "║ "
@@ -1329,7 +901,7 @@ private typealias ContextAccessor = () -> PolyglotContext
           is GuestError -> displayFormattedError(
             exc,
             exc.message ?: "An error was thrown",
-            stacktrace = !interactive.get(),
+            stacktrace = !isInteractive(),
           )
 
           else -> displayFormattedError(
@@ -1345,7 +917,7 @@ private typealias ContextAccessor = () -> PolyglotContext
       exc.isGuestException -> displayFormattedError(
         exc,
         exc.message ?: "An error was thrown",
-        stacktrace = !interactive.get(),
+        stacktrace = !isInteractive(),
       )
 
       // @TODO(sgammon): interrupts
@@ -1362,7 +934,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
     // in interactive sessions, return `null` if the error is non-fatal; this tells the outer execution loop to ignore
     // the exception (since it has been printed to the user), and continue with the interactive session.
-    return if (interactive.get()) {
+    return if (isInteractive()) {
       null
     } else {
       ShellError.USER_CODE_ERROR.raise(exc)
@@ -1434,12 +1006,12 @@ private typealias ContextAccessor = () -> PolyglotContext
 
             // if the user had broken with ctrl+c before, they've now processed code, so we should reset the `exitSeen`
             // cookie state for the next exit opportunity.
-            if (exitSeen.get()) exitSeen.set(false)
+            if (exitSeen.value) exitSeen.value = false
 
             // if we are running in modes which show the result, print it
             if (!quiet && primaryLanguage.id != RUBY.id) showValue(result)
 
-          } catch (exc: NoSuchElementException) {
+          } catch (_: NoSuchElementException) {
             logging.debug("User expressed no input: exiting.")
             break
           } catch (exc: PolyglotException) {
@@ -1454,19 +1026,19 @@ private typealias ContextAccessor = () -> PolyglotContext
                 else -> throw throwable
               }
             }
-          } catch (userInterrupt: UserInterruptException) {
-            if (exitSeen.get()) {
+          } catch (_: UserInterruptException) {
+            if (exitSeen.value) {
               break  // we've already seen the exit, so we need to break
             } else try {
-              exitSeen.compareAndExchange(false, true)
+              exitSeen.compareAndSet(false, true)
               println("ctrl+c caught; do it again to exit")
               continue
-            } catch (ioe: Exception) {
+            } catch (_: Exception) {
               break  // just in case
             }
-          } catch (eof: EndOfFileException) {
+          } catch (_: EndOfFileException) {
             break  // user sent ctrl+d
-          } catch (interrupt: InterruptedException) {
+          } catch (_: InterruptedException) {
             println("Interrupted (sys)")
             logging.debug("Session interrupted; concluding")
             break  // exit on interrupt
@@ -1501,24 +1073,24 @@ private typealias ContextAccessor = () -> PolyglotContext
     language: GuestLanguage,
     script: File,
   ): Source {
-    logging.debug("Reading executable user script at path '${script.path}' (language: ${language.id})")
+    logging.debug { "Reading executable user script at path '${script.path}' (language: ${language.id})" }
     if (!script.exists()) {
-      logging.debug("Script file does not exist")
+      logging.debug { "Script file does not exist" }
       throw ShellError.FILE_NOT_FOUND.asError()
     } else {
-      logging.trace("Script check: File exists")
+      logging.trace { "Script check: File exists" }
     }
     if (!script.canRead()) {
-      logging.debug("Script file cannot be read")
+      logging.debug { "Script file cannot be read" }
       throw ShellError.FILE_NOT_READABLE.asError()
     } else {
-      logging.trace("Script check: File is readable")
+      logging.trace { "Script check: File is readable" }
     }
     if (!script.isFile) {
-      logging.debug("Script file is not a regular file")
+      logging.debug { "Script file is not a regular file" }
       throw ShellError.NOT_A_FILE.asError()
     } else {
-      logging.trace("Script check: File is a regular file")
+      logging.trace { "Script check: File is a regular file" }
     }
 
     // type check: first, check file extension
@@ -1550,15 +1122,18 @@ private typealias ContextAccessor = () -> PolyglotContext
       "Failed to resolve target language for source file"
     }
 
-    return Source.newBuilder(targetLang.symbol, script)
-      .encoding(StandardCharsets.UTF_8)
-      .internal(false)
-      .cached(true)
-      .build()
+    return script.bufferedReader(StandardCharsets.UTF_8).use { reader ->
+      Source.newBuilder(targetLang.symbol, reader, script.name)
+        .encoding(StandardCharsets.UTF_8)
+        .internal(false)
+        .cached(true)
+        .uri(script.toURI())
+        .build()
+    }
   }
 
   private val commandSpecifiesServer: Boolean by lazy {
-    Statics.args.get().let {
+    Statics.args.let {
       it.contains("serve") || it.contains("start")
     }
   }
@@ -1586,9 +1161,8 @@ private typealias ContextAccessor = () -> PolyglotContext
 
       // initialize the server intrinsic and run using the provided source
       serverAgent.run(entrypoint = source) { resolvePolyglotContext(langs) }
-      phaser.get().register()
-
-      serverRunning.set(true)
+      phaser.value.register()
+      serverRunning.value = true
     } catch (exc: PolyglotException) {
       processUserCodeError(language, exc)?.let { throw it }
     }
@@ -1616,6 +1190,7 @@ private typealias ContextAccessor = () -> PolyglotContext
   }
 
   // Read an executable script, and then execute the script; if it's a server, delegate to `readStartServer`.
+  @Suppress("TooGenericExceptionCaught")
   private fun executeSource(
     label: String,
     languages: EnumSet<GuestLanguage>,
@@ -1668,20 +1243,11 @@ private typealias ContextAccessor = () -> PolyglotContext
     else -> File(bundleSpec).toURI()
   }
 
-  // Resolve the primary interactive language for the provided `file`.
-  @Suppress("UNUSED_VARIABLE")
-  private fun primaryFromFile(file: File): GuestLanguage? {
-    return when (val engine = scriptEngineManager.getEngineByExtension(file.extension)) {
-      null -> null
-      else -> TODO("")
-    }
-  }
-
   // Resolve the default language to use when interpreting a given `fileInput`, or use a sensible fallback from the set
   // of supported languages. If JS is disabled, there can only be one language; otherwise the default language is JS. If
   // a file is provided with a specific matching file extension for a given language, that language is used.
   private fun resolvePrimaryLanguage(
-    project: ProjectInfo?,
+    project: () -> ProjectInfo?,
     languageSelector: LanguageSelector?,
     languages: EnumSet<GuestLanguage>,
     fileInput: File?,
@@ -1699,25 +1265,15 @@ private typealias ContextAccessor = () -> PolyglotContext
     languageSelector != null -> languageSelector.primary(commandSpec, languages, project, languageHint)
 
     // we have to have at least one language
-    languages.size == 0 -> error("Cannot start VM with no enabled guest languages")
+    languages.isEmpty() -> error("Cannot start VM with no enabled guest languages")
 
     // otherwise, if JS is included in the set of languages, that is the default.
     else -> if (languages.contains(JS)) JS else languages.first()
   }
 
-  private fun ignoreNotInstalled(block: () -> Unit) {
-    try {
-      block()
-    } catch (exc: LinkageError) {
-      logging.debug("Failed to link runtime plugin: ${exc.message}")
-    } catch (exc: ClassNotFoundException) {
-      logging.debug("Failed to install runtime plugin: ${exc.message}")
-    }
-  }
-
   override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet<GuestLanguage>) {
     // grab project configurations, if available
-    val project = activeProject.get()
+    val project = activeProject.value
     if (project != null) logging.debug("Resolved project info: {}", project)
 
     // conditionally apply debugging settings
@@ -1756,11 +1312,11 @@ private typealias ContextAccessor = () -> PolyglotContext
 
     // configure support for guest languages
     val versionProp = VERSION_INSTRINSIC_NAME to Elide.version()
-    val intrinsics = intrinsicsManager.resolver()
+    val intrinsics = intrinsicsManager.get().resolver()
 
     // resolve entrypoint arguments
     val cmd = ProcessHandle.current().info().command().orElse("elide")
-    val args = Statics.args.get() ?: emptyList()
+    val args = Statics.args
 
     langs.forEach { lang ->
       when (lang) {
@@ -1794,15 +1350,15 @@ private typealias ContextAccessor = () -> PolyglotContext
 //           }
 //         }
 
-         PYTHON -> ignoreNotInstalled {
-           install(elide.runtime.plugins.python.Python) {
-             logging.debug("Configuring Python VM")
-             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-             resourcesPath = GVM_RESOURCES
-             executable = cmd
-             executableList = listOf(cmd).plus(args)
-           }
-         }
+//         PYTHON -> ignoreNotInstalled {
+//           install(elide.runtime.plugins.python.Python) {
+//             logging.debug("Configuring Python VM")
+//             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+//             resourcesPath = GVM_RESOURCES
+//             executable = cmd
+//             executableList = listOf(cmd).plus(args)
+//           }
+//         }
 
 //        // Secondary Engines: JVM
 //        JVM -> ignoreNotInstalled {
@@ -1861,7 +1417,7 @@ private typealias ContextAccessor = () -> PolyglotContext
           val file = try {
             logging.trace("Checking bundle at URI '{}'", uri)
             File(uri)
-          } catch (err: IOException) {
+          } catch (_: IOException) {
             throw ShellError.BUNDLE_NOT_FOUND.asError()
           }
 
@@ -1877,13 +1433,13 @@ private typealias ContextAccessor = () -> PolyglotContext
       }
 
       // register listeners
-      vfsListeners.forEach(::listener)
+      vfsListeners.get().forEach(::listener)
     }
   }
 
-  /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
+    Elide.requestNatives(server = true, tooling = false)
 
     // resolve project configuration
     val projectConfigJob = projectManager.resolveProjectAsync()
@@ -1898,11 +1454,20 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
 
     // resolve the language to use
-    val project = projectConfigJob.await()
+    val projectFut = projectConfigJob.asCompletableFuture()
+    val project = { projectFut.get(1, TimeUnit.SECONDS) }
+
+    // apply project configurations to context, if needed
+    projectFut.whenComplete { value, err ->
+      if (err == null && value != null) {
+        activeProject.value = value
+      }
+    }
+
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     val supportedEnginesAndLangs = supported.flatMap { listOf(it.first.engine, it.first.id) }.toSortedSet()
     val allSupportedLangs = EnumSet.copyOf(supported.map { it.first }.toSortedSet())
-    val langs = language.resolveLangs(project, languageHint)
+    val langs = resolveLangs(languageHint)
 
     // make sure each requested language is supported
     langs.forEach {
@@ -1938,16 +1503,8 @@ private typealias ContextAccessor = () -> PolyglotContext
       )
     }
 
-    // apply project configurations to context, if needed
-    project?.let { prj ->
-      activeProject.set(prj)
-    }
-
     resolveEngine(onByDefaultLangs).unwrap().use {
       withDeferredContext(onByDefaultLangs) {
-        // activate interactive behavior
-        interactive.compareAndSet(false, true)
-
         // warn about experimental status, as applicable
         if (verbose && experimentalLangs.isNotEmpty()) {
           logging.warn(
@@ -1959,6 +1516,9 @@ private typealias ContextAccessor = () -> PolyglotContext
         when (val scriptTargetOrCode = runnable) {
           // run in interactive mode
           null, "-" -> if (useStdin || runnable == "-") {
+            // activate interactive behavior
+            enableInteractive()
+
             // consume from stdin
             primaryLang(null).let { lang ->
               input.buffer.use { buffer ->
@@ -1967,16 +1527,19 @@ private typealias ContextAccessor = () -> PolyglotContext
                   langs,
                   lang,
                   it,
-                  Source.create(lang.symbol, buffer.readText()),
+                  Source.newBuilder(lang.symbol, buffer, "stdin")
+                    .cached(false)
+                    .buildLiteral(),
                 )
               }
             }
           } else if (!serveMode()) {
             logging.debug("Beginning interactive guest session")
+            enableInteractive()
             beginInteractiveSession(
               langs,
               primaryLang(null),
-              engine.get(),
+              engine(),
               it,
             )
           } else {
@@ -2033,10 +1596,10 @@ private typealias ContextAccessor = () -> PolyglotContext
       }
 
       // don't exit if we have a running server
-      if (serverRunning.get()) {
+      if (serverRunning.value) {
         // wait for all tasks to arrive
         logging.debug("Waiting for long-lived tasks to arrive")
-        phaser.get().arriveAndAwaitAdvance()
+        phaser.value.arriveAndAwaitAdvance()
         logging.debug("Exiting")
       }
       return success()

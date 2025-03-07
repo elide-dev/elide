@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 import kotlin.test.*
-import elide.annotations.Inject
 import elide.runtime.intrinsics.js.node.stream.Readable
 import elide.runtime.intrinsics.js.node.stream.Writable
 import elide.runtime.node.stream.NodeStreamModule
@@ -26,7 +25,7 @@ import elide.testing.annotations.TestCase
 @TestCase internal class NodeStreamTest : NodeModuleConformanceTest<NodeStreamModule>() {
   override val moduleName: String get() = "stream"
   override fun provide(): NodeStreamModule = NodeStreamModule()
-  @Inject lateinit var stream: NodeStreamModule
+  private val stream: NodeStreamModule get() = provide()
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false

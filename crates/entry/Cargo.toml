@@ -13,13 +13,40 @@
 
 [package]
 name = "entry"
-edition = "2024"
-license = "MIT"
-workspace = "../.."
-version = "1.0.0-alpha14-SNAPSHOT"
-
-[lib]
-crate-type = ["lib"]
+version = { workspace = true }
+edition = { workspace = true }
+rust-version = { workspace = true }
+homepage = { workspace = true }
+documentation = { workspace = true }
+repository = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
 
 [[bin]]
 name = "elide"
+
+[features]
+default = [
+  "allocator",
+  "entry-v1",
+]
+entry-v1 = []
+entry-v2 = []
+allocator = [
+  "mimalloc",
+]
+jemalloc = ["dep:tikv-jemallocator"]
+mimalloc = ["dep:mimalloc"]
+bumpalloc = ["dep:bumpalo"]
+
+[build-dependencies]
+bindgen = { workspace = true }
+builder = { workspace = true }
+
+[dependencies]
+substrate = { workspace = true }
+umbrella = { workspace = true }
+libloading = { workspace = true }
+bumpalo = { workspace = true, optional = true }
+mimalloc = { workspace = true, optional = true }
+tikv-jemallocator = { workspace = true, optional = true }

@@ -31,7 +31,7 @@ jobs:
       security-events: write
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           disable-sudo: true
           egress-policy: audit
@@ -40,7 +40,7 @@ jobs:
         with:
           persist-credentials: false
       - name: "Setup: Rust"
-        uses: actions-rust-lang/setup-rust-toolchain@11df97af8e8102fd60b60a77dfbf58d40cd843b8 # v1.10.1
+        uses: actions-rust-lang/setup-rust-toolchain@9399c7bb15d4c7d47b27263d024f0a4978346ba4 # v1.11.0
         with:
           toolchain: stable
           components: clippy,rustfmt

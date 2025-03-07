@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  *  with the License. You may obtain a copy of the License at
@@ -18,24 +18,6 @@
 
 pluginManagement {
   repositories {
-    maven {
-      name = "oss-snapshots"
-      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
-      content {
-        includeGroup("dev.elide")
-      }
-    }
-    maven {
-      name = "elide-snapshots"
-      url = uri("https://maven.elide.dev")
-      content {
-        includeGroup("dev.elide")
-        includeGroup("dev.elide.tools")
-        includeGroup("com.google.devtools.ksp")
-        includeGroup("org.jetbrains.reflekt")
-        includeGroup("org.pkl-lang")
-      }
-    }
     maven {
       name = "gvm-plugin-snapshots"
       url = uri("https://raw.githubusercontent.com/graalvm/native-build-tools/snapshots")
@@ -60,6 +42,7 @@ pluginManagement {
 }
 
 plugins {
+  id("com.autonomousapps.build-health") version ("2.10.1")
   id("com.gradle.enterprise") version ("3.16.2")
   id("org.gradle.toolchains.foojay-resolver-convention") version ("0.9.0")
   id("com.gradle.common-custom-user-data-gradle-plugin") version ("2.1")
@@ -67,13 +50,21 @@ plugins {
   id("elide.toolchains.jvm")
 }
 
+buildscript {
+  val asm = "9.7.1"
+  val coverage = "1.0.766"
+
+  dependencies {
+    classpath("org.ow2.asm:asm:$asm")
+    classpath("org.ow2.asm:asm-tree:$asm")
+    classpath("org.jetbrains.intellij.deps:intellij-coverage-agent:$coverage")
+    classpath("org.jetbrains.intellij.deps:intellij-coverage-reporter:$coverage")
+  }
+}
+
 // Fix: Force CWD to proper value and store secondary value.
 System.setProperty("user.dir", rootProject.projectDir.toString())
 System.setProperty("elide.home", rootProject.projectDir.toString())
-
-val buildUuid: String by settings
-val buildAuxImage: String by settings
-val enableSubstrate: String by settings
 
 toolchainManagement {
   jvm {
@@ -160,6 +151,7 @@ dependencyResolutionManagement {
       url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
     }
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
     google()
   }
   versionCatalogs {
@@ -174,34 +166,14 @@ dependencyResolutionManagement {
 
 rootProject.name = "elide"
 
-if (enableSubstrate == "true") {
-  includeBuild("tools/conventions")
-  includeBuild("tools/substrate") {
-    dependencySubstitution {
-      substitute(module("dev.elide.tools:compiler-util")).using(project(":compiler-util"))
-      substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))
-    }
-  }
-}
-
-// Auxiliary image builder.
-if (buildAuxImage == "true") {
-  include(
-    ":tools:auximage",
-  )
-}
-
 // Build modules.
 include(
-  ":crates:base",
   ":crates:builder",
   ":crates:deps",
   ":crates:diag",
   ":crates:entry",
-  ":crates:model",
   ":crates:js",
   ":crates:posix",
-  ":crates:project",
   ":crates:protocol",
   ":crates:sqlite",
   ":crates:substrate",
@@ -227,39 +199,37 @@ include(
   ":packages:server",
   ":packages:sqlite",
   ":packages:ssr",
-  ":packages:tcnative",
   ":packages:terminal",
   ":packages:test",
   ":packages:tooling",
-  ":packages:transport:transport-common",
-  ":packages:transport:transport-epoll",
-  ":packages:transport:transport-kqueue",
-  ":packages:transport:transport-unix",
-  ":packages:transport:transport-uring",
   ":tools:reports",
   ":tools:umbrella",
 )
 
-val buildDeprecated: String by settings
-val buildDocs: String by settings
 val buildEmbedded: String by settings
-val buildDocsModules: String by settings
-val buildSamples: String by settings
-val buildPlugins: String by settings
 val buildBenchmarks: String by settings
-val buildFlatbuffers: String by settings
+val enableNativeTransport: String by settings
+val buildExperimentalEntrypoint: String by settings
 
-if (buildSamples == "true") {
-  includeBuild("samples")
+if (buildExperimentalEntrypoint == "true") {
+  include(":packages:entry")
 }
+
 if (buildEmbedded == "true") {
   include(
     ":packages:embedded",
   )
 }
 
-if (buildPlugins == "true") {
-  includeBuild("tools/plugin/gradle-plugin")
+if (enableNativeTransport == "true") {
+  include(
+    ":packages:tcnative",
+    ":packages:transport:transport-common",
+    ":packages:transport:transport-epoll",
+    ":packages:transport:transport-kqueue",
+    ":packages:transport:transport-unix",
+    ":packages:transport:transport-uring",
+  )
 }
 
 if (buildBenchmarks == "true") {

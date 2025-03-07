@@ -35,7 +35,6 @@ public typealias SourceRelativePosition = UInt
  * @property end End position of the span, expressed as a relative [SourceRelativePosition].
  */
 @Serializable
-@ConsistentCopyVisibility
 @JvmRecord public data class SourceSpan internal constructor (
   public val start: SourcePosition,
   public val end: SourceRelativePosition,

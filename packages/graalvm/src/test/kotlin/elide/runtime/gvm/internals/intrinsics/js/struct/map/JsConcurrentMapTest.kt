@@ -16,10 +16,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.intrinsics.js.MapLike
 import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
 
 /** Tests for the [JsConcurrentMap] implementation. */
-@TestCase internal class JsConcurrentMapTest : AbstractJsMapTest<JsConcurrentMap<String, Any?>>() {
+internal class JsConcurrentMapTest : AbstractJsMapTest<JsConcurrentMap<String, Any?>>() {
   /** @inheritDoc */
   override fun empty(): JsConcurrentMap<String, Any?> = JsConcurrentMap.empty()
 

@@ -27,7 +27,6 @@ public typealias ModuleId = String
  * @property name The name of the module.
  * @property dependencies The list of module names that this module depends on.
  */
-@ConsistentCopyVisibility
 @JvmRecord public data class ModuleInfo private constructor (
   public val name: ModuleId,
   public val dependencies: List<ModuleId> = emptyList(),

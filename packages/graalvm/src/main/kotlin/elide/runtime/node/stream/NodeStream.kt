@@ -13,6 +13,7 @@
 package elide.runtime.node.stream
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.io.BufferedOutputStream
 import java.io.InputStream
 import java.io.OutputStream
@@ -23,38 +24,41 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
-import elide.annotations.Factory
-import elide.annotations.Singleton
+import kotlinx.io.IOException
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.StreamAPI
 import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 import elide.runtime.intrinsics.js.node.stream.*
+import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.node.events.EventAware
 import elide.runtime.node.events.StandardEventName
 
 // Internal symbol where the Node built-in module is installed.
-private const val STREAM_MODULE_SYMBOL = "node_stream"
+private const val STREAM_MODULE_SYMBOL = "node_${NodeModuleName.STREAM}"
 
 // Installs the Node stream module into the intrinsic bindings.
-@Intrinsic
-@Factory internal class NodeStreamModule : AbstractNodeBuiltinModule() {
-  @Singleton internal fun provide(): StreamAPI = NodeStream.obtain()
+@Intrinsic internal class NodeStreamModule : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeStream.create() }
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[STREAM_MODULE_SYMBOL.asJsSymbol()] = provide()
+    bindings[STREAM_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.STREAM)) { singleton }
   }
 }
 
 /**
  * End-of-stream internal signal.
  */
-internal class EndStreamException : Exception()
+internal class EndStreamException : Exception("End of Stream", null, false, false)
 
 private object NodeEncodingNames {
   const val UTF8 = "utf8"
@@ -239,12 +243,12 @@ internal abstract class AbstractReadable<T>(charset: Charset?) : AbstractStream<
             pipes.forEach { (destination, _) ->
               try {
                 destination.write(chunk)
-              } catch (e: Throwable) {
+              } catch (e: IOException) {
                 emit(StreamEventName.ERROR, e)
               }
             }
           }
-        } catch (ese: EndStreamException) {
+        } catch (_: EndStreamException) {
           didEnd.set(true)
           emit(StreamEventName.END)
           return
@@ -572,7 +576,7 @@ internal abstract class AbstractWritable<T> : AbstractStream<T>(), Writable wher
   private val didFinish: AtomicBoolean = AtomicBoolean(false)
   private val needsDrain: AtomicBoolean = AtomicBoolean(false)
   private val corks: AtomicInteger = AtomicInteger(0)
-  private val pipes: ConcurrentLinkedQueue<Readable> = ConcurrentLinkedQueue()
+  @Suppress("unused") private val pipes: ConcurrentLinkedQueue<Readable> = ConcurrentLinkedQueue()
 
   override val writable: Boolean get() = !isDestroyed.get() && !didError.get() && !didEnd.get()
   override val writableAborted: Boolean get() = !didAbort.get()
@@ -834,11 +838,15 @@ internal class WrappedOutputStream private constructor(backing: OutputStream) :
 /**
  * # Node API: Stream
  */
-internal class NodeStream : StreamAPI {
+internal class NodeStream private constructor () : ReadOnlyProxyObject, StreamAPI {
   //
 
   internal companion object {
-    private val SINGLETON = NodeStream()
-    fun obtain(): NodeStream = SINGLETON
+    @JvmStatic fun create(): NodeStream = NodeStream()
   }
+
+  // @TODO not yet implemented
+
+  override fun getMemberKeys(): Array<String> = emptyArray()
+  override fun getMember(key: String?): Any? = null
 }

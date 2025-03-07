@@ -14,13 +14,15 @@
 package elide.runtime.gvm
 
 import java.util.EnumSet
+import elide.runtime.core.DelicateElideApi
 
 /** Enumerates known/supported GraalVM guest languages. */
+@OptIn(DelicateElideApi::class)
 public enum class GraalVMGuest (
   override val symbol: String,
   override val engine: String = symbol,
   override val label: String,
-) : GuestLanguage {
+) : GuestLanguage, elide.runtime.core.GuestLanguage {
   /**
    * ECMA2022-compliant JavaScript via Graal JS+JVM.
    */
@@ -48,5 +50,7 @@ public enum class GraalVMGuest (
   /**
    * WASM support via GraalWasm
    */
-  WASM(symbol = "wasm", label = "WebAssembly"),
+  WASM(symbol = "wasm", label = "WebAssembly");
+
+  override val languageId: String get() = symbol
 }

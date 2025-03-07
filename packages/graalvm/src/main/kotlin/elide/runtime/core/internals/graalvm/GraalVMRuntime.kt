@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -48,6 +48,7 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
      * versions and the values are the corresponding GraalVM release.
      */
     private val SubstrateVersionMap = sortedMapOf(
+      "25" to "25.0.0",
       "24" to "24.2.0",
       "24.0.0" to "24.2.0",
       "23.0.2" to "24.1.1",
@@ -86,8 +87,8 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
     /** Version constant for GraalVM 24.0.1 */
     public val GVM_24_1_0: Version = Version(24, 1, 0)
 
-    private const val positionalLts = 3
-    private const val positionalNonLts = 2
+    private const val POSITIONAL_LTS = 3
+    private const val POSITIONAL_NON_LTS = 2
 
     /**
      * Detect the current runtime version and return it as a comparable [Version] object. When running from a
@@ -97,6 +98,7 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
      * @return The version of the current runtime, or `null` if the "java.vm.version" property value is not recognized
      * as a valid version or the current SubstrateVM version cannot be mapped to a known GraalVM version.
      */
+    @Suppress("ReturnCount")
     internal fun resolveVersion(source: String = System.getProperty(SYSTEM_JVM_VERSION)): Version? {
       // in a native image, we'll need to translate the SVM release to a known SDK release
       if (ImageInfo.inImageCode()) source.split("+").lastOrNull()?.let { svm ->
@@ -108,7 +110,7 @@ import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.VARIANT_NAT
       if (source.contains("jvmci")) {
         // check for LTS version tag, for example,
         // `21.0.2+13-LTS-jvmci-23.1-b30`
-        val index = if (tag.contains("lts")) positionalLts else positionalNonLts
+        val index = if (tag.contains("lts")) POSITIONAL_LTS else POSITIONAL_NON_LTS
         return source.split("-").getOrNull(index)?.let { jvm ->
           if (!jvm.contains(".")) null else Version.parse(jvm)
         } ?: source.split("+").getOrNull(0)?.let { jvm ->

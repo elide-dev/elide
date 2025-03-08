@@ -319,8 +319,6 @@ jobs:
             -x check \
             -x test \
             -x jvmTest \
-            -x jsTest \
-            -x jsBrowserTest \
             --scan \
             --build-cache \
             --no-daemon \

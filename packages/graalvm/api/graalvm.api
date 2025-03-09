@@ -517,6 +517,14 @@ public final class elide/runtime/gvm/internals/intrinsics/ElideIntrinsicKt {
 	public static final fun installElideBuiltin (Ljava/lang/String;Ljava/lang/Object;)V
 }
 
+public abstract class elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic : elide/runtime/intrinsics/GuestIntrinsic {
+	public fun <init> ()V
+	public fun displayName ()Ljava/lang/String;
+	public fun language ()Lelide/runtime/gvm/GuestLanguage;
+	public fun symbolicName ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
 public synthetic class elide/runtime/gvm/internals/intrinsics/js/abort/$AbortControllerIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -5769,6 +5777,29 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Test
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
+}
+
+public synthetic class elide/runtime/javascript/$QueueMicrotaskCallable$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/javascript/$QueueMicrotaskCallable$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun isBuildable ()Z
+}
+
+public final class elide/runtime/javascript/QueueMicrotaskCallable : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic, org/graalvm/polyglot/proxy/ProxyExecutable {
+	public fun <init> (Lelide/runtime/exec/GuestExecutorProvider;)V
+	public fun execute ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
 }
 
 public synthetic class elide/runtime/node/asserts/$NodeAssertModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

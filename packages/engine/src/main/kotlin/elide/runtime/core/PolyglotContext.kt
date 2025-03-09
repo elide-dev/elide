@@ -176,7 +176,7 @@ public interface PolyglotContext {
    *
    * @param source The guest code to be executed.
    * @param internals Whether to allow access to internal runtime features; the provided [source] must be marked as
-   *   internal to enable this acesss.
+   *   internal to enable this access.
    * @return The result of evaluating the [source].
    */
   public fun evaluate(source: Source, internals: Boolean): PolyglotValue =

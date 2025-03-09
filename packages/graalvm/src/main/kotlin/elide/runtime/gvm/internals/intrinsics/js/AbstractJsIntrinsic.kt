@@ -17,7 +17,7 @@ import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.intrinsics.GuestIntrinsic
 
 /** Abstract base class for all intrinsic implementations. */
-internal abstract class AbstractJsIntrinsic : GuestIntrinsic {
+public abstract class AbstractJsIntrinsic : GuestIntrinsic {
   override fun language(): GuestLanguage = GraalVMGuest.JAVASCRIPT
   override fun symbolicName(): String = "native code"
   @Deprecated("Use symbolicName instead", ReplaceWith("symbolicName"))

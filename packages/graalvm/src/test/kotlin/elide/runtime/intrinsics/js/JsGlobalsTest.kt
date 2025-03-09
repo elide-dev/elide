@@ -59,6 +59,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "isNaN",
     "parseFloat",
     "parseInt",
+    "queueMicrotask",
     "decodeURI",
     "decodeURIComponent",
     "encodeURI",
@@ -158,7 +159,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "PerformanceObserverEntryList",
     "performance",
     "process",
-    "queueMicrotask",
     "ReadableByteStreamController",
     "ReadableStream",
     "ReadableStreamBYOBReader",
@@ -214,7 +214,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "navigator",  // not yet implemented
     "setImmediate",  // not yet implemented
     "clearImmediate",  // not yet implemented
-    "queueMicrotask",  // not yet implemented
     "structuredClone",  // not yet implemented
     "InternalError",  // web-standard only, not present in non-browser runtimes
     "BroadcastChannel",  // not yet implemented

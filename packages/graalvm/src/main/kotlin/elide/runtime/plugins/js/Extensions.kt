@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -61,7 +61,7 @@ import elide.runtime.core.evaluate
  * [PolyglotContext.evaluate] and selecting [JavaScript] as source language.
  *
  * @param source The interpreted JavaScript source code to be executed.
- * @return The result of the invocation. If [esm] is `true`, an object is returned, with exported values as members.
+ * @return The result of the invocation; an object is returned, with exported values as members.
  */
 @DelicateElideApi public fun PolyglotContext.javascript(source: Source): PolyglotValue =
   evaluate(source)

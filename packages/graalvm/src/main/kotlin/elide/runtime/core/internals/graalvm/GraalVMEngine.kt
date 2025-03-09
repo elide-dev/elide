@@ -244,12 +244,16 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     /** Whether to emit trace messages for aux cache usage. */
     private val traceCache = System.getProperty("elide.traceCache", "false") == "true"
 
+    /** Whether to use the auxiliary engine cache. */
+    private val enableAuxCache = System.getProperty("elide.auxCache", "false") == "true"
+
     /** Whether the auxiliary cache is actually enabled. */
     private val useAuxCache = (
       ENABLE_AUX_CACHE &&
+      enableAuxCache &&
       System.getProperty("elide.test") != "true" &&
       System.getProperty("ELIDE_TEST") != "true" &&
-      System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
+      System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual kill-switch
       ImageInfo.inImageCode() &&
       !ImageInfo.isSharedLibrary() &&
       !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported

@@ -139,7 +139,7 @@ val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64"
 val enableEmbeddedResources = false
 val enableResourceFilter = false
 val enableAuxCache = false
-val enableAuxCacheTrace = true
+val enableAuxCacheTrace = false
 val enableJpms = false
 val enableConscrypt = false
 val enableBouncycastle = false
@@ -1121,7 +1121,6 @@ val commonNativeArgs = listOfNotNull(
   "-H:ExcludeResources=elide/stream/.*\\.proto",
   "-H:ExcludeResources=elide/page/.*\\.proto",
   "-H:ExcludeResources=elide/vfs/.*\\.proto",
-  "-H:ExcludeResources=org/jline/.*",
   "-H:ExcludeResources=logback.xml",
   "-H:ExcludeResources=META-INF/native/libsqlite.*",
   "-H:ExcludeResources=lib/linux-x86_64/libbrotli.so",

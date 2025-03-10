@@ -78,6 +78,7 @@ import elide.runtime.plugins.js.JavaScript
   @OptIn(DelicateElideApi::class)
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
     super.beforeAnalysis(access)
+
     PolyglotEngine {
       install(JavaScript)
     }

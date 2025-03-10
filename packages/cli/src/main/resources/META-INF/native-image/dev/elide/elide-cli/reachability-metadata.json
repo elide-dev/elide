@@ -1,6 +1,304 @@
 {
   "reflection": [
     {
+      "type": "java.util.Optional",
+      "methods": [
+        {
+          "name": "get"
+        },
+        {
+          "name": "isPresent"
+        }
+      ]
+    },
+    {
+      "type": "jdk.internal.net.http.HttpResponseImpl",
+      "methods": [
+        {
+          "name": "statusCode"
+        },
+        {
+          "name": "headers"
+        },
+        {
+          "name": "body"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpHeaders",
+      "methods": [
+        {
+          "name": "firstValue"
+        },
+        {
+          "name": "allValues"
+        },
+        {
+          "name": "map"
+        }
+      ]
+    },
+    {
+      "type": "jdk.internal.net.http.HttpClientFacade",
+      "methods": [
+        {
+          "name": "send"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpClient",
+      "methods": [
+        {
+          "name": "send"
+        }
+      ]
+    },
+    {
+      "type": "jdk.internal.net.http.HttpClientBuilderImpl"
+    },
+    {
+      "type": "jdk.internal.net.http.HttpRequestBuilderImpl"
+    },
+    {
+      "type": "java.lang.constant.Constable"
+    },
+    {
+      "type": "java.lang.Throwable",
+      "methods": [
+        {
+          "name": "toString"
+        }
+      ]
+    },
+    {
+      "type": "java.lang.AutoCloseable"
+    },
+    {
+      "type": "java.net.URI",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "isAbsolute"
+        },
+        {
+          "name": "resolve"
+        },
+        {
+          "name": "getUserInfo"
+        },
+        {
+          "name": "getScheme"
+        },
+        {
+          "name": "getFragment"
+        },
+        {
+          "name": "getSchemeSpecificPart"
+        },
+        {
+          "name": "toString"
+        },
+        {
+          "name": "getHost"
+        }
+      ]
+    },
+    {
+      "type": "org.graalvm.nativeimage.MissingReflectionRegistrationError"
+    },
+    {
+      "type": "java.io.Serializable"
+    },
+    {
+      "type": "java.lang.Comparable"
+    },
+    {
+      "type": "java.net.http.HttpClient",
+      "methods": [
+        {
+          "name": "newBuilder"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpClient$Builder",
+      "methods": [
+        {
+          "name": "followRedirects"
+        },
+        {
+          "name": "build"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpClient.Redirect"
+    },
+    {
+      "type": "java.net.http.HttpClient$Redirect"
+    },
+    {
+      "type": "java.net.http.HttpRequest",
+      "methods": [
+        {
+          "name": "newBuilder"
+        },
+        {
+          "name": "uri"
+        },
+        {
+          "name": "method"
+        },
+        {
+          "name": "bodyPublisher"
+        },
+        {
+          "name": "headers"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpRequest.Builder",
+      "methods": [
+        {
+          "name": "setHeader"
+        },
+        {
+          "name": "header"
+        },
+        {
+          "name": "headers"
+        },
+        {
+          "name": "method"
+        },
+        {
+          "name": "build"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpRequest$Builder",
+      "methods": [
+        {
+          "name": "setHeader"
+        },
+        {
+          "name": "header"
+        },
+        {
+          "name": "headers"
+        },
+        {
+          "name": "method"
+        },
+        {
+          "name": "build"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpRequest.BodyPublishers",
+      "methods": [
+        {
+          "name": "ofString"
+        },
+        {
+          "name": "ofByteArray"
+        },
+        {
+          "name": "ofInputStream"
+        },
+        {
+          "name": "ofFile"
+        },
+        {
+          "name": "ofNone"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpRequest$BodyPublishers",
+      "methods": [
+        {
+          "name": "ofString"
+        },
+        {
+          "name": "ofByteArray"
+        },
+        {
+          "name": "ofInputStream"
+        },
+        {
+          "name": "ofFile"
+        },
+        {
+          "name": "noBody"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpResponse",
+      "methods": [
+        {
+          "name": "statusCode"
+        },
+        {
+          "name": "headers"
+        },
+        {
+          "name": "body"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpResponse.BodyHandlers",
+      "methods": [
+        {
+          "name": "ofString"
+        },
+        {
+          "name": "ofByteArray"
+        },
+        {
+          "name": "ofInputStream"
+        },
+        {
+          "name": "ofFile"
+        },
+        {
+          "name": "ofDiscard"
+        }
+      ]
+    },
+    {
+      "type": "java.net.http.HttpResponse$BodyHandlers",
+      "methods": [
+        {
+          "name": "ofString"
+        },
+        {
+          "name": "ofByteArray"
+        },
+        {
+          "name": "ofInputStream"
+        },
+        {
+          "name": "ofFile"
+        }
+      ]
+    },
+    {
+      "type": "java.util.Base64"
+    },
+    {
       "type": "sun.util.logging.resources.logging",
       "methods": [
         {
@@ -2917,6 +3215,9 @@
     }
   ],
   "resources": [
+    {
+      "glob": "META-INF/services/java.net.spi.InetAddressResolverProvider"
+    },
     {
       "glob": "org/jline/utils/*.caps"
     },

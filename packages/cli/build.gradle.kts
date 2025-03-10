@@ -703,6 +703,7 @@ val enabledFeatures = listOfNotNull(
   "elide.tool.engine.MacLinkageFeature",
   "elide.tool.feature.ToolingUmbrellaFeature",
   "elide.runtime.feature.engine.NativeConsoleFeature",
+  "elide.runtime.feature.js.FetchFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
   onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),

@@ -1003,8 +1003,11 @@ public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runti
 	public fun <init> ()V
 	protected final fun configureLanguageSupport (Lelide/runtime/core/EnginePlugin$InstallationScope;)V
 	protected final fun configureSharedBindings (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguageConfig;)V
+	protected final fun executePreambleScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Ljava/util/List;)V
+	public static synthetic fun executePreambleScripts$default (Lelide/runtime/plugins/AbstractLanguagePlugin;Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Ljava/util/List;ILjava/lang/Object;)V
 	protected fun getManifestKey ()Ljava/lang/String;
 	protected final fun initializeEmbeddedScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
+	protected static final fun initializePreambleScripts (Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;
 	protected final fun installEmbeddedBundles (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/EnginePlugin$InstallationScope;Z)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
 	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/HostPlatform;Z)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
@@ -1079,6 +1082,22 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/plugins/AbstractLanguagePlugin$PreinitScript : java/lang/Record {
+	public fun <init> (Ljava/lang/String;Lorg/graalvm/polyglot/Source;Lorg/graalvm/polyglot/Value;)V
+	public synthetic fun <init> (Ljava/lang/String;Lorg/graalvm/polyglot/Source;Lorg/graalvm/polyglot/Value;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lorg/graalvm/polyglot/Source;
+	public final fun component3 ()Lorg/graalvm/polyglot/Value;
+	public final fun copy (Ljava/lang/String;Lorg/graalvm/polyglot/Source;Lorg/graalvm/polyglot/Value;)Lelide/runtime/plugins/AbstractLanguagePlugin$PreinitScript;
+	public static synthetic fun copy$default (Lelide/runtime/plugins/AbstractLanguagePlugin$PreinitScript;Ljava/lang/String;Lorg/graalvm/polyglot/Source;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/plugins/AbstractLanguagePlugin$PreinitScript;
+	public final fun entry ()Lorg/graalvm/polyglot/Value;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public final fun source ()Lorg/graalvm/polyglot/Source;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/plugins/bindings/Bindings {

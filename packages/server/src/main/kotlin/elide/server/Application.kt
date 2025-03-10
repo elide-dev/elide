@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.runBlocking
 import elide.server.annotations.Eager
 import elide.server.runtime.jvm.SecurityProviderConfigurator
-import elide.util.RuntimeFlag
 
 /**
  * Static class interface which equips a Micronaut application with extra initialization features powered by Elide; to
@@ -77,7 +76,7 @@ public interface Application {
     private suspend fun dispatchCallback(pair: Pair<CallbackStage, suspend () -> Unit>) {
       try {
         pair.second.invoke()
-      } catch (e: Exception) {
+      } catch (_: Exception) {
         // Ignore.
       }
     }
@@ -126,10 +125,6 @@ public interface Application {
     override fun onApplicationEvent(event: ServerStartupEvent): Unit = runBlocking {
       Initialization.trigger(
         Initialization.CallbackStage.INIT
-      )
-
-      if (RuntimeFlag.warmup) Initialization.trigger(
-        Initialization.CallbackStage.WARMUP
       )
     }
   }

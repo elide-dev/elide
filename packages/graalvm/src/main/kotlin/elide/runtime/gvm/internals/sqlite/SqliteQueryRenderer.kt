@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -79,6 +79,7 @@ internal class SqliteQueryRenderer private constructor (
 
   // Render a nice query rendering error, which mentions the query itself, the position where the error happened, and
   // any helpful advice to fix the error.
+  @Suppress("UNUSED_PARAMETER")
   private fun queryRenderError(
     subject: String,
     ctx: QueryTemplateContext? = null,

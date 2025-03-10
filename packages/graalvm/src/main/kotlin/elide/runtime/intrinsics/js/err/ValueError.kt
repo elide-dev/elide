@@ -103,7 +103,11 @@ public open class ValueError protected constructor(
    * Public factory for [ValueError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJsException.ErrorFactory<ValueError>, ProxyInstantiable {
+  public class Factory: AbstractJsException.ErrorFactory<ValueError>, ProxyInstantiable {
+    public companion object {
+      @JvmStatic public val INSTANCE: Factory = Factory()
+    }
+
     override fun newInstance(vararg arguments: Value?): Any {
       return create(arguments[0]?.asString() ?: "An error occurred")
     }
@@ -121,5 +125,13 @@ public open class ValueError protected constructor(
         override val name: String get() = cause::class.java.simpleName
       })
     }
+  }
+
+  public companion object {
+    @JvmStatic public fun create(error: Throwable): ValueError =
+      Factory.INSTANCE.create(error)
+
+    @JvmStatic public fun create(message: String, cause: Throwable? = null): ValueError =
+      Factory.INSTANCE.create(message, cause)
   }
 }

@@ -16,8 +16,6 @@ package elide.tool.cli.cmd.discord
 import io.micronaut.core.annotation.Introspected
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import java.awt.Desktop
-import java.net.URI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import elide.annotations.Singleton
@@ -36,7 +34,6 @@ import elide.tool.cli.ToolState
 @Singleton internal open class ToolDiscordCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private const val REDIRECT_TARGET = "https://elide.dev/discord"
-    private val REDIRECT_URI = URI(REDIRECT_TARGET)
   }
 
   /** Whether to open the link in the default browser (defaults to `true`). */
@@ -56,13 +53,10 @@ import elide.tool.cli.ToolState
       val os = System.getProperty("os.name", "unknown").lowercase()
 
       when {
-        Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE) ->
-          Desktop.getDesktop().browse(REDIRECT_URI)
-
         os.contains("windows") -> {
           Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler $REDIRECT_TARGET")
         }
-        os.contains("mac") || os.contains("darwin") -> {
+        os.contains("mac") || os.contains("darwin") || os.contains("linux") -> {
           Runtime.getRuntime().exec("open $REDIRECT_TARGET")
         }
         else -> printLink.invoke()

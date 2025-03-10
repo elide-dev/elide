@@ -19,7 +19,6 @@ plugins {
   kotlin("jvm")
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
-  id(libs.plugins.shadow.get().pluginId)
   alias(libs.plugins.elide.conventions)
 }
 

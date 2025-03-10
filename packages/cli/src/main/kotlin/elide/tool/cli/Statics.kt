@@ -50,7 +50,7 @@ internal object Statics {
   private val initialArgs = atomic<Array<String>>(emptyArray())
 
   /** Invocation args. */
-  internal val args: Array<String> = initialArgs.value
+  internal val args: Array<String> get() = initialArgs.value
 
   // Stream which drops all data.
   private val noOpStream by lazy {

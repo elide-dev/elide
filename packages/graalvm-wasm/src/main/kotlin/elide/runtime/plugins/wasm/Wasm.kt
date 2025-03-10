@@ -14,11 +14,9 @@
 package elide.runtime.plugins.wasm
 
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
@@ -29,13 +27,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
-
-    // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
-  }
-
-  private fun configureContext(builder: PolyglotContextBuilder) {
-    // nothing to configure
   }
 
   public companion object Plugin : AbstractLanguagePlugin<WasmConfig, Wasm>() {
@@ -49,13 +40,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       val config = WasmConfig().apply(configuration)
       val resources = resolveEmbeddedManifest(scope, lenient = true)
       val instance = Wasm(config, resources)
-
-      // subscribe to lifecycle events
-      scope.lifecycle.on(ContextCreated, instance::configureContext)
-
-      // register resources with the VFS
-      installEmbeddedBundles(scope, resources)
-
       return instance
     }
   }

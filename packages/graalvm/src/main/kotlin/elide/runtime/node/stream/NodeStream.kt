@@ -549,9 +549,7 @@ internal abstract class AbstractReadable<T>(charset: Charset?) : AbstractStream<
     TODO("Not yet implemented")
   }
 
-  override fun getMember(key: String): Any? = when (key) {
-    else -> null
-  }
+  override fun getMember(key: String): Any? = null
 
   /**
    * Implementation entrypoint for a stream read operation.

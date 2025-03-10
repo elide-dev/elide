@@ -41,7 +41,7 @@ import elide.internal.conventions.publishing.publishSourcesJar
 import elide.internal.transforms.AutomaticModuleTransform
 import elide.internal.transforms.JarMinifier
 
-private val enableTransforms = false
+private const val enableTransforms = false
 
 internal val lockedConfigurations = sortedSetOf(
   "classpath",

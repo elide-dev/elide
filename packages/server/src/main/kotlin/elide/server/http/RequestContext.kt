@@ -13,8 +13,6 @@
 
 package elide.server.http
 
-import elide.server.assets.AssetManager
-
 /** Effective namespace for request context values and objects. */
 public object RequestContext {
   /**

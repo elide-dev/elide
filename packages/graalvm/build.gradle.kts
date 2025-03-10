@@ -283,7 +283,6 @@ val initializeAtRunTime = listOfNotNull(
   "com.sun.jna.platform.mac.IOKit",
   "com.sun.jna.platform.mac.IOKitUtil",
   "com.sun.jna.platform.mac.SystemB",
-  "oshi.hardware.platform.linux",
   "oshi.hardware.platform.mac",
   "oshi.hardware.platform.mac.MacFirmware",
   "oshi.hardware.platform.unix",
@@ -295,9 +294,6 @@ val initializeAtRunTime = listOfNotNull(
   "oshi.jna.platform.mac.IOKit",
   "oshi.jna.platform.mac.SystemB",
   "oshi.jna.platform.mac.SystemConfiguration",
-  "oshi.software.os",
-  "oshi.software.os.linux",
-  "oshi.software.os.linux.LinuxOperatingSystem",
   "oshi.software.os.mac",
   "oshi.software.os.mac.MacOperatingSystem",
   "oshi.software.os.unix.aix",
@@ -310,9 +306,6 @@ val initializeAtRunTime = listOfNotNull(
   "oshi.software.os.unix.solaris.SolarisOperatingSystem",
   "oshi.software.os.windows",
   "oshi.software.os.windows.WindowsOperatingSystem",
-  "oshi.util.platform.linux.DevPath",
-  "oshi.util.platform.linux.ProcPath",
-  "oshi.util.platform.linux.SysPath",
   "oshi.util.platform.mac.CFUtil",
   "oshi.util.platform.mac.SmcUtil",
   "oshi.util.platform.mac.SysctlUtil",
@@ -321,9 +314,39 @@ val initializeAtRunTime = listOfNotNull(
   "oshi.util.platform.unix.openbsd.FstatUtil",
   "oshi.util.platform.unix.openbsd.OpenBsdSysctlUtil",
   "oshi.util.platform.unix.solaris.KstatUtil",
+  "com.sun.jna.NativeLibrary",
+  "com.sun.jna.NativeLibrary\$1",
+  "com.sun.jna.internal.Cleaner\$CleanerRef",
 )
 
-val initializeAtRunTimeTest = listOfNotNull<String>()
+val initializeAtRunTimeTest = initializeAtRunTime.plus(listOfNotNull<String>())
+
+val initializeAtBuildTime = listOf(
+  "kotlinx.atomicfu",
+  "io.micronaut.context.DefaultApplicationContextBuilder",
+  "elide.runtime.core.internals.graalvm.GraalVMEngine\$Companion",
+  "org.fusesource.jansi.io.AnsiOutputStream",
+  "com.google.common.jimfs.SystemJimfsFileSystemProvider",
+  "com.google.common.collect.MapMakerInternalMap\$1",
+  "com.google.common.base.Equivalence\$Equals",
+  "kotlin",
+  "com.google.common.collect.MapMakerInternalMap",
+  "com.google.common.collect.MapMakerInternalMap\$StrongKeyWeakValueSegment",
+  "com.google.common.collect.MapMakerInternalMap\$StrongKeyWeakValueEntry\$Helper",
+  "ch.qos.logback",
+  "elide.runtime.gvm.internals.sqlite",
+  "elide.runtime.gvm.internals.sqlite.SqliteModule",
+  "elide.runtime.lang.javascript.JavaScriptPrecompiler",
+  "java.sql",
+  "org.slf4j",
+  "org.sqlite",
+  "org.pkl.core.runtime.VmLanguageProvider",
+  "elide.runtime.lang.typescript",
+  "elide.runtime.typescript",
+  "org.xml.sax.helpers.LocatorImpl",
+  "org.xml.sax.helpers.AttributesImpl",
+  "oshi.software.os.linux.LinuxOperatingSystem",
+)
 
 val nativeEnabledModules = listOf(
   "org.graalvm.truffle",
@@ -367,9 +390,22 @@ val sharedLibArgs = listOfNotNull(
   },
 ).plus(
   "--initialize-at-run-time=${initializeAtRunTimeTest.joinToString(",")}",
+).plus(
+  "--initialize-at-build-time=${initializeAtBuildTime.joinToString(",")}"
 )
 
-val testLibArgs = sharedLibArgs
+val testLibArgs = sharedLibArgs.plus(listOf(
+  "--gc=G1",
+  "-R:MaxHeapSize=4g",
+  "-H:+AddAllCharsets",
+  "-H:NativeLinkerOption=-lm",
+  "-H:NativeLinkerOption=$nativesPath/libdiag.so",
+  "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.so",
+  "-H:NativeLinkerOption=$nativesPath/libumbrella.so",
+  "-H:NativeLinkerOption=$nativesPath/libjs.so",
+  "-H:NativeLinkerOption=$nativesPath/libposix.so",
+  "-H:NativeLinkerOption=$nativesPath/libterminal.so",
+))
 
 val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-graalvm.nil")
 val baseLayer = project(":packages:engine").layout.buildDirectory.file("native/nativeLayerCompile/elide-base.nil")
@@ -498,6 +534,7 @@ if (enableBenchmarks) {
 dependencies {
   // KSP
   ksp(mn.micronaut.inject.kotlin)
+  ksp(projects.packages.engine)
   kspTest(mn.micronaut.inject.kotlin)
   annotationProcessor(libs.graalvm.truffle.processor)
 
@@ -815,6 +852,16 @@ afterEvaluate {
     "Compiling natives for target '${elideTarget.triple}' " +
     "(config: ${resolveCargoConfig(elideTarget)?.name ?: "default"})"
   )
+}
+
+tasks.nativeTest.configure {
+  runtimeArgs.add(javaLibPath.get().toString().let {
+      "-Djava.library.path=$it"
+  })
+  runtimeArgs.addAll(listOf(
+    "-Delide.test=true",
+    "-Delide.nativeTest=true",
+  ))
 }
 
 val baseCargoFlags = listOfNotNull(

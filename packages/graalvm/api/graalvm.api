@@ -2568,11 +2568,13 @@ public abstract interface class elide/runtime/intrinsics/js/err/Stacktrace {
 }
 
 public class elide/runtime/intrinsics/js/err/TypeError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException, org/graalvm/polyglot/proxy/ProxyObject {
-	public static final field Factory Lelide/runtime/intrinsics/js/err/TypeError$Factory;
+	public static final field Companion Lelide/runtime/intrinsics/js/err/TypeError$Companion;
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;)V
 	protected fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/err/Error;)V
 	public fun <init> (Lorg/graalvm/polyglot/Value;)V
+	public static final fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
+	public static final fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
 	public fun getCause ()Lelide/runtime/intrinsics/js/err/Error;
 	public synthetic fun getCause ()Ljava/lang/Throwable;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
@@ -2585,20 +2587,35 @@ public class elide/runtime/intrinsics/js/err/TypeError : elide/runtime/intrinsic
 	public fun removeMember (Ljava/lang/String;)Z
 }
 
+public final class elide/runtime/intrinsics/js/err/TypeError$Companion {
+	public final fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
+	public final fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/err/TypeError$Companion;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/TypeError;
+}
+
 public final class elide/runtime/intrinsics/js/err/TypeError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory, org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public static final field Companion Lelide/runtime/intrinsics/js/err/TypeError$Factory$Companion;
+	public fun <init> ()V
 	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
 	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
+	public static final fun getINSTANCE ()Lelide/runtime/intrinsics/js/err/TypeError$Factory;
 	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
+public final class elide/runtime/intrinsics/js/err/TypeError$Factory$Companion {
+	public final fun getINSTANCE ()Lelide/runtime/intrinsics/js/err/TypeError$Factory;
+}
+
 public class elide/runtime/intrinsics/js/err/ValueError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJsException, org/graalvm/polyglot/proxy/ProxyObject {
-	public static final field Factory Lelide/runtime/intrinsics/js/err/ValueError$Factory;
+	public static final field Companion Lelide/runtime/intrinsics/js/err/ValueError$Companion;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/err/Error;)V
 	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/intrinsics/js/err/Error;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lorg/graalvm/polyglot/Value;)V
+	public static final fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
+	public static final fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 	public fun getCause ()Lelide/runtime/intrinsics/js/err/Error;
 	public synthetic fun getCause ()Ljava/lang/Throwable;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
@@ -2611,12 +2628,25 @@ public class elide/runtime/intrinsics/js/err/ValueError : elide/runtime/intrinsi
 	public fun removeMember (Ljava/lang/String;)Z
 }
 
+public final class elide/runtime/intrinsics/js/err/ValueError$Companion {
+	public final fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
+	public final fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/err/ValueError$Companion;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/ValueError;
+}
+
 public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/runtime/intrinsics/js/err/AbstractJsException$ErrorFactory, org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public static final field Companion Lelide/runtime/intrinsics/js/err/ValueError$Factory$Companion;
+	public fun <init> ()V
 	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJsException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
+	public static final fun getINSTANCE ()Lelide/runtime/intrinsics/js/err/ValueError$Factory;
 	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/intrinsics/js/err/ValueError$Factory$Companion {
+	public final fun getINSTANCE ()Lelide/runtime/intrinsics/js/err/ValueError$Factory;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/express/Express : elide/runtime/intrinsics/js/ServerAgent {
@@ -6595,6 +6625,18 @@ public synthetic class elide/runtime/node/fs/$NodeFilesystemModule$ProvideStd0$D
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/node/fs/$NodeFilesystemPromiseProxy$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public synthetic class elide/runtime/node/fs/$NodeFilesystemProxy$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
 public synthetic class elide/runtime/node/fs/$VfsInitializerListener$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

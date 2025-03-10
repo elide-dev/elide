@@ -274,7 +274,18 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
           }
 
           private fun setSyntheticModuleExport(module: JSModuleRecord) {
-            module.environment.setObject(defaultExportSlot.index, surface)
+            when (surface) {
+              is ProxyObject -> module.environment.setObject(defaultExportSlot.index, realm.env.asGuestValue(surface))
+              is SyntheticJSModule<*> -> {
+                val exp = surface.provide()
+                if (exp is ProxyObject) {
+                  module.environment.setObject(defaultExportSlot.index, realm.env.asGuestValue(defaultExport))
+                } else error(
+                  "Provided synthetic module from `SyntheticJSModule.provide` is not a `ProxyObject`: $defaultExport"
+                )
+              }
+            }
+
             val mountPropsFromProxy = { it: ProxyObject ->
               for ((slotName, slot) in mappedSlots) {
                 // module.namespace.X

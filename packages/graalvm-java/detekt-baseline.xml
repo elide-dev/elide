@@ -2,7 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>ThrowingExceptionsWithoutMessageOrCause:GuestJavaEvaluator.kt$GuestJavaEvaluator$exception()</ID>
     <ID>UnusedPrivateMember:GuestExecutionProvider.kt$GuestExecutionProvider.Companion$private fun PolyglotContext.spiClass(name: String): ReadOnlyProperty&lt;Any, PolyglotValue></ID>
   </CurrentIssues>
 </SmellBaseline>

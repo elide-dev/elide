@@ -12,6 +12,8 @@
  */
 package elide.runtime.node.childProcess
 
+import org.graalvm.nativeimage.ImageInfo
+
 // Library name for POSIX natives.
 private const val LIB_POSIX = "posix"
 
@@ -25,7 +27,7 @@ internal object ChildProcessNative {
   @Volatile private var libLoaded = false
 
   @JvmStatic fun initialize() {
-    if (!libLoaded) {
+    if (!libLoaded && (!ImageInfo.inImageCode() || System.getProperty("elide.nativeTest") == "true")) {
       System.loadLibrary(LIB_POSIX)
       libLoaded = true
     }

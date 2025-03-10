@@ -10,9 +10,6 @@ import org.graalvm.nativeimage.ImageInfo
  * Bridges native methods from Elide's `umbrella` library, via JNI access points.
  */
 object CliNativeBridge {
-  // If flipped, the CLI native bridge will only be eagerly loaded under native conditions.
-  private const val EAGER_LOAD_NATIVE_ONLY = false
-
   /** Native platform-agnostic library name for Elide's umbrella library. */
   private const val NATIVE_LIB_NAME = "umbrella"
 
@@ -21,7 +18,7 @@ object CliNativeBridge {
 
   /** Initialize the native layer. */
   @Synchronized public fun initialize() {
-    if (!initialized && (!EAGER_LOAD_NATIVE_ONLY || ImageInfo.inImageCode())) {
+    if (!initialized && !ImageInfo.inImageCode()) {
       System.loadLibrary(NATIVE_LIB_NAME)
       initialized = true
       val init = initializeNative()

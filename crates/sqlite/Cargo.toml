@@ -24,7 +24,7 @@ license = { workspace = true }
 
 [lib]
 name = "sqlitejdbc"
-crate-type = ["lib", "cdylib"]
+crate-type = ["lib", "staticlib", "cdylib"]
 
 [dependencies]
 java_native = { workspace = true }

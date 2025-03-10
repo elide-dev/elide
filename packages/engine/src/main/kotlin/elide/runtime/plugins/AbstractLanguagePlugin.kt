@@ -214,14 +214,10 @@ private val defaultContext = Context.newBuilder()
    * [ContextInitialized][elide.runtime.core.EngineLifecycleEvent.ContextInitialized] event.
    *
    * @param context A [PolyglotContext] used to execute the initialization scripts.
-   * @param resources The embedded resources for this plugin, providing the script sources.
+   * @param sources Sources prepared by [initializePreambleScripts].
    */
   @Suppress("TooGenericExceptionCaught")
-  protected fun executePreambleScripts(
-    context: PolyglotContext,
-    resources: LanguagePluginManifest,
-    sources: List<PreinitScript> = emptyList(),
-  ) {
+  protected fun executePreambleScripts(context: PolyglotContext, sources: List<PreinitScript> = emptyList(),) {
     try {
       context.enter()
       sources.forEach { script ->
@@ -286,18 +282,23 @@ private val defaultContext = Context.newBuilder()
     }
 
     /**
-     * Run the setup scripts specified in this plugin's [resources] in the provided [context].
+     * Run the setup scripts specified in this plugin's [resources].
      *
      * This function will typically be called by plugins in response to the
      * [ContextInitialized][elide.runtime.core.EngineLifecycleEvent.ContextInitialized] event.
      *
      * @param langId ID of the owning language.
+     * @param prewarm Whether to activate pre-warming for these scripts.
      * @param resources The embedded resources for this plugin, providing the script sources.
      */
     @Suppress("TooGenericExceptionCaught")
-    @JvmStatic protected fun initializePreambleScripts(langId: String, vararg scripts: String): List<PreinitScript> {
+    @JvmStatic protected fun initializePreambleScripts(
+      langId: String,
+      vararg scripts: String,
+      prewarm: Boolean = true,
+    ): List<PreinitScript> {
       val path = "META-INF/elide/embedded/runtime/$langId"
-      defaultContext.enter()
+      if (prewarm) defaultContext.enter()
 
       try {
         return scripts.map { script ->
@@ -316,11 +317,11 @@ private val defaultContext = Context.newBuilder()
           PreinitScript(
             name = script,
             source = src,
-            entry = defaultContext.parse(src),
+            entry = if (prewarm) defaultContext.parse(src) else null,
           )
         }
       } finally {
-        defaultContext.leave()
+        if (prewarm) defaultContext.leave()
       }
     }
   }

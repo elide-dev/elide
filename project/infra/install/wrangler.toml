@@ -1,0 +1,22 @@
+name = "elide-install"
+main = "worker.ts"
+compatibility_date = "2025-03-14"
+
+routes = [
+  { pattern = "gha.elide.dev", custom_domain = true },
+  { pattern = "dl.elide.dev", custom_domain = true },
+  { pattern = "dl2.elide.dev", custom_domain = true },
+  { pattern = "elide.zip", custom_domain = true },
+  { pattern = "gha.elide.zip", custom_domain = true },
+]
+
+r2_buckets = [
+  { binding = "STORAGE", bucket_name = "elide-tools" },
+]
+
+analytics_engine_datasets = [
+  { binding = "ANALYTICS", dataset = "elide_install_v1" },
+]
+
+[observability.logs]
+enabled = true

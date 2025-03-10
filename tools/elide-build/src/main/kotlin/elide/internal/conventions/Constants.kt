@@ -84,7 +84,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.1.20-RC"
+    const val KOTLIN_SDK_PIN = "2.1.20-RC3"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.10.1"
@@ -111,10 +111,10 @@ public object Constants {
     const val JVM_TARGET = "versions.java.target"
 
     /** Property: JVM bytecode target if no other version is specified. */
-    const val JVM_DEFAULT = "21"
+    const val JVM_DEFAULT = "23"
 
     /** GraalVM metadata repository version. */
-    const val GRAALVM_METADATA = "0.3.8"
+    const val GRAALVM_METADATA = "0.3.16"
 
     /** Version to pin for Diktat. */
     const val DIKTAT = "2.0.0"
@@ -207,7 +207,7 @@ public object Constants {
     private const val MAJOR_VERSION = "1.0.0"
 
     /** Major library version tag. */
-    private const val VERSION_TAG = "alpha14"
+    private const val VERSION_TAG = "beta1"
 
     /** Version string for the library. */
     public const val VERSION: String = "$MAJOR_VERSION-$VERSION_TAG"

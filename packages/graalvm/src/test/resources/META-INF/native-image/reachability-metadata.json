@@ -1,0 +1,79 @@
+{
+  "reflection": [
+    {
+      "type": "elide.runtime.gvm.internals.AbstractDualTest$TestAssertion"
+    },
+    {
+      "type": "elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest$JsAssertion"
+    },
+    {
+      "type": "elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest$CaptureAssertion",
+      "methods": [
+        {
+          "name": "apply",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.AbstractDualTest$TestContext",
+      "methods": [
+        {
+          "name": "isNotNull"
+        },
+        {
+          "name": "shouldBeTrue"
+        },
+        {
+          "name": "shouldBeFalse"
+        },
+        {
+          "name": "isNull"
+        },
+        {
+          "name": "isEqualTo"
+        },
+        {
+          "name": "isNotEqualTo"
+        },
+        {
+          "name": "fails"
+        },
+        {
+          "name": "doesNotFail"
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.AbstractDualTest$TestResultContext",
+      "methods": [
+        {
+          "name": "isNotNull"
+        },
+        {
+          "name": "shouldBeTrue"
+        },
+        {
+          "name": "shouldBeFalse"
+        },
+        {
+          "name": "isNull"
+        },
+        {
+          "name": "isEqualTo"
+        },
+        {
+          "name": "isNotEqualTo"
+        },
+        {
+          "name": "fails"
+        },
+        {
+          "name": "doesNotFail"
+        }
+      ]
+    }
+  ]
+}

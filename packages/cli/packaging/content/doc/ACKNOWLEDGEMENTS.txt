@@ -1,1 +1,16 @@
-Coming soon.
+Elide would like to thank and acknowledge the following individuals and organizations for their hard work
+upstream, and downstream, without which Elide could not possibly exist:
+
+- GraalVM and Java teams at Oracle and Oracle Labs
+- Sam Lambert, CEO of Planetscale, for a lot of advice and guidance
+- Vic Gundotra, former EVP at Google, for his advice and encouragement
+- Justine Tunney, author of Cosmo, APE, and Llamafile, for her support and sheer brilliance
+- Mike Hearn, Christian Humer, and Fabio Niephaus at Oracle Labs
+- Kat Marchan, the author of Orogene
+- Charlie Marsh, the author of uv and ruff
+- Andrey Breslav, creator of Kotlin, for his advice, guidance, and encouragement
+- Naman Goel, the author of StyleX, for his guidance in all aspects
+- Theo of @t3.gg fame, for a lot of guidance and advice about JS runtimes
+- Norman Maurer for his amazing work on Netty for many years
+- Graeme Rocher, the creator of Grails and Micronaut
+- E.J. Technologies, who contributed a license for JProfiler

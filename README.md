@@ -11,7 +11,7 @@
 <hr />
 
 <p align="center">
-Latest: <code>1.0.0-alpha14</code>
+Latest: <code>1.0.0-beta1</code>
 </p>
 
 <hr />

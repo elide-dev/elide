@@ -200,6 +200,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecutePyFileAlias() {
+    Assumptions.assumeTrue(testPython)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.py").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))
@@ -214,6 +215,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun testRootEntrypointExecuteRbFileAlias() {
+    Assumptions.assumeTrue(testRuby)
     Assumptions.assumeTrue(Files.exists(testScriptsPath))
     val scriptPath = testScriptsPath.resolve("hello.rb").toAbsolutePath()
     Assumptions.assumeTrue(Files.exists(scriptPath))

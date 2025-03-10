@@ -71,7 +71,6 @@ internal fun Project.configureNativeBuild(
       version.set(Versions.GRAALVM_METADATA)
     }
 
-
     // shared libraries and apps have test support enabled (not applied to native samples)
     testSupport.set(target == LIB || target == APP)
 

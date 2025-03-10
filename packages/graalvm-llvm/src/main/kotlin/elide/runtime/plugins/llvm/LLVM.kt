@@ -29,9 +29,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
-
-    // run embedded initialization code
-    initializeEmbeddedScripts(context, resources)
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {
@@ -39,11 +36,11 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     val libpath = requireNotNull(System.getProperty("java.library.path")) { "Failed to resolve native libpath" }
 
     builder.option("llvm.libraryPath", libpath)
-// llvm.C++Interop
-// llvm.libraries
-// llvm.AOTCacheStore
-// llvm.AOTCacheLoad
-// llvm.loadC++Libraries
+    // llvm.C++Interop
+    // llvm.libraries
+    // llvm.AOTCacheStore
+    // llvm.AOTCacheLoad
+    // llvm.loadC++Libraries
   }
 
   public companion object Plugin : AbstractLanguagePlugin<LLVMConfig, LLVM>() {
@@ -64,10 +61,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
-
-      // register resources with the VFS
-      installEmbeddedBundles(scope, resources)
-
       return instance
     }
   }

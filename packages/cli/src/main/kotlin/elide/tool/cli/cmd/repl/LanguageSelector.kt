@@ -28,7 +28,6 @@ import elide.tool.cli.GuestLanguage.RUBY
 import elide.tool.cli.GuestLanguage.TYPESCRIPT
 import elide.tool.cli.GuestLanguage.WASM
 import elide.tool.cli.cmd.repl.ToolShellCommand.Companion.languageAliasToEngineId
-import elide.tool.project.ProjectInfo
 
 /** Allows selecting a language by name. */
 @Introspected @ReflectiveAccess class LanguageSelector {
@@ -115,7 +114,6 @@ import elide.tool.project.ProjectInfo
   internal fun primary(
     spec: CommandSpec?,
     langs: EnumSet<GuestLanguage>,
-    project: () -> ProjectInfo?,
     languageHint: String?,
   ): GuestLanguage {
     // languages by flags

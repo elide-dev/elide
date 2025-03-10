@@ -26,7 +26,6 @@ import org.graalvm.nativeimage.ProcessProperties
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Help
-import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
 import picocli.CommandLine.ScopeType
 import java.util.*
@@ -38,6 +37,7 @@ import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
+import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.pkl.ToolPklCommand
@@ -79,7 +79,7 @@ internal val applicationContextBuilder = ApplicationContext
     HelpCommand::class,
     ToolShellCommand::class,
     ToolPklCommand::class,
-    //ToolDiscordCommand::class,
+    ToolDiscordCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
           "   ______     __         __     _____     ______%n" +
@@ -94,9 +94,9 @@ internal val applicationContextBuilder = ApplicationContext
     "",
     " Usage:  ",
     "    or:  elide @|bold,fg(cyan) info|help|discord|bug...|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(yellow) srcfile.<js|py|rb|kt|java|wasm|...>|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] [FILE] [ARG...]",
-    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
+    "    or:  elide @|bold,fg(yellow) srcfile.<js|ts|...>|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [FILE] [ARG...]",
+    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
     "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ [OPTIONS]",
@@ -350,15 +350,6 @@ internal val applicationContextBuilder = ApplicationContext
   // Bean context.
   @Inject internal lateinit var beanContext: BeanContext
 
-  /** Request timeout value to apply. */
-  @Option(
-    names = ["--timeout"],
-    description = ["Timeout to apply to application requests. Expressed in seconds."],
-    defaultValue = "30",
-    scope = ScopeType.INHERIT,
-  )
-  internal var timeout: Int = DEFAULT_CMD_TIMEOUT
-
   /** Source file shortcut alias. */
   @Parameters(
     index = "0",
@@ -380,20 +371,27 @@ internal val applicationContextBuilder = ApplicationContext
   internal var args: List<String>? = null
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
-    // proxy to the `shell` command for a naked run
-    val bean = beanContext.getBean(ToolShellCommand::class.java).apply {
-      this@Elide.srcfile?.let {
-        if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
-          runnable = it
-          if (this@Elide.args?.isNotEmpty() == true) {
-            arguments = this@Elide.args!!
+    if (srcfile == "discord" || Statics.args.firstOrNull() == "discord") {
+      beanContext.getBean(ToolDiscordCommand::class.java).let {
+        it.call()
+        return it.commandResult.get()
+      }
+    } else {
+      // proxy to the `shell` command for a naked run
+      val bean = beanContext.getBean(ToolShellCommand::class.java).apply {
+        this@Elide.srcfile?.let {
+          if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
+            runnable = it
+            if (this@Elide.args?.isNotEmpty() == true) {
+              arguments = this@Elide.args!!
+            }
+          } else {
+            languageHint = it
           }
-        } else {
-          languageHint = it
         }
       }
+      bean.call()
+      return bean.commandResult.get()
     }
-    bean.call()
-    return bean.commandResult.get()
   }
 }

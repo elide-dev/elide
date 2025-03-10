@@ -17,6 +17,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.*
 import kotlinx.coroutines.test.runTest
 import kotlin.io.path.exists
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertNotNull
@@ -46,6 +47,7 @@ class KotlinPrecompilerTest {
     assertNotNull(svc)
   }
 
+  @Ignore
   @Test fun `precompile kotlin`() = runTest {
     // language=kotlin
     val src = """

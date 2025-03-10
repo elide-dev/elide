@@ -51,8 +51,10 @@ import elide.testing.annotations.TestCase
       testFile("hello.py"),
       testFile("paths.cjs"),
       testFile("paths.mjs"),
+      testFile("paths-default.mjs"),
       testFile("cpu.js"),
       testFile("fs.mjs"),
+      testFile("fs-async.mjs"),
       testFile("brotli.mjs"),
       testFile("sqlite.cjs"),
       testFile("sqlite.mjs"),
@@ -69,8 +71,8 @@ import elide.testing.annotations.TestCase
 
     private val knownBroken = sortedSetOf(
       "brotli",
-      "fs",
       "stdlib",
+      "paths-default",
     )
   }
 

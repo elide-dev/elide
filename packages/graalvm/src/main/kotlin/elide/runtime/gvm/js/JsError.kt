@@ -16,7 +16,6 @@ package elide.runtime.gvm.js
 
 import org.graalvm.polyglot.Value
 import kotlin.reflect.KClass
-import kotlin.reflect.full.companionObjectInstance
 import elide.runtime.intrinsics.js.err.*
 import elide.runtime.intrinsics.js.err.JsError
 
@@ -25,13 +24,21 @@ import elide.runtime.intrinsics.js.err.JsError
   // Wrap a caught `Throwable` in the provided JS error `type`.
   @Suppress("UNCHECKED_CAST")
   private fun <E: AbstractJsException> wrapped(error: Throwable, type: KClass<out E>): E {
-    return (type.companionObjectInstance as AbstractJsException.ErrorFactory<E>).create(error)
+    return when (type) {
+      TypeError::class -> TypeError.Factory.INSTANCE.create(error) as E
+      ValueError::class -> ValueError.Factory.INSTANCE.create(error) as E
+      else -> error("Unknown JS error type: $type")
+    }
   }
 
   // Wrap a string `message` and optional `Throwable` `cause` in the provided JS error `type`.
   @Suppress("UNCHECKED_CAST")
   private fun <E: AbstractJsException> wrapped(message: String, cause: Throwable? = null, type: KClass<out E>): E {
-    return (type.companionObjectInstance as AbstractJsException.ErrorFactory<E>).create(message, cause)
+    return when (type) {
+      TypeError::class -> TypeError.Factory.INSTANCE.create(message, cause) as E
+      ValueError::class -> ValueError.Factory.INSTANCE.create(message, cause) as E
+      else -> error("Unknown JS error type: $type")
+    }
   }
 
   /**

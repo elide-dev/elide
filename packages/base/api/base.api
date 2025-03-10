@@ -545,13 +545,6 @@ public final class elide/util/Hex : elide/util/Encoder {
 	public final fun getCHARACTER_SET ()[C
 }
 
-public final class elide/util/RuntimeFlag {
-	public static final field DEFAULT_INSPECT_PORT I
-	public static final field INSTANCE Lelide/util/RuntimeFlag;
-	public final fun getWarmup ()Z
-	public final fun resolve (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-}
-
 public final class elide/util/UUID {
 	public static final field INSTANCE Lelide/util/UUID;
 	public final fun random ()Ljava/lang/String;

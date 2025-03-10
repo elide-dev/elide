@@ -30,17 +30,17 @@ import elide.internal.conventions.ElideBuildExtension
 private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension, target: Project) {
   if (conventions.docs.requested && conventions.docs.enabled) {
     val docAsset: (String) -> File = {
-      target.rootProject.layout.projectDirectory.file("docs/$it").asFile
+      target.rootProject.layout.projectDirectory.file("project/docs/$it").asFile
     }
     val creativeAsset: (String) -> File = {
-      target.rootProject.layout.projectDirectory.file("creative/$it").asFile
+      target.rootProject.layout.projectDirectory.file("project/creative/$it").asFile
     }
 
     pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
       moduleName = "Elide API"
       moduleVersion = project.version as String
-      footerMessage = "© 2023—2024 Elide Technologies, Inc."
-      templatesDir = target.rootProject.layout.projectDirectory.dir("docs/templates").asFile
+      footerMessage = "© 2023—2025 Elide Technologies, Inc."
+      templatesDir = target.rootProject.layout.projectDirectory.dir("project/docs/templates").asFile
       customAssets = listOf(
         creativeAsset("logo/logo-wide-1200-w-r2.png"),
         creativeAsset("logo/gray-elide-symbol-lg.png"),
@@ -54,9 +54,9 @@ private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension,
     val projectVersion = project.version as String
     pluginConfiguration<VersioningPlugin, VersioningConfiguration> {
       version = projectVersion
-      versionsOrdering = listOf("1.0.0-alpha8")
-      olderVersionsDir = project.file("docs/versions")
-      olderVersions = listOf(project.file("docs/versions/1.0.0-alpha8"))
+      versionsOrdering = listOf("1.0.0-beta1")
+      olderVersionsDir = project.file("project/docs/versions")
+      olderVersions = emptyList()
       renderVersionsNavigationOnAllPages = true
     }
   }

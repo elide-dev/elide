@@ -807,12 +807,12 @@ internal class NodeAssert private constructor () : AssertAPI {
     }
 
     // `out` should be a promise
-    when {
-      out is JsPromise<*> -> {
+    when (out) {
+      is JsPromise<*> -> {
         out.then({}, { didReject.set(true) })
       }
 
-      out is Value -> {
+      is Value -> {
         if (!out.hasMember("then")) {
           throw assertionError("Expected a Promise, but got: $out")
         }

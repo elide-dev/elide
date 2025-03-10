@@ -1,4 +1,0 @@
-options {
-    telemetry false
-    first-time false
-}

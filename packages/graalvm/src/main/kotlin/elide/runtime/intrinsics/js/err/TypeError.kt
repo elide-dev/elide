@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,7 +12,6 @@
  */
 package elide.runtime.intrinsics.js.err
 
-import org.graalvm.polyglot.HostAccess.Implementable
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
@@ -93,7 +92,11 @@ public open class TypeError protected constructor (
    * Public factory for [TypeError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJsException.ErrorFactory<TypeError>, ProxyInstantiable {
+  public class Factory: AbstractJsException.ErrorFactory<TypeError>, ProxyInstantiable {
+    public companion object {
+      @JvmStatic public val INSTANCE: Factory = Factory()
+    }
+
     override fun newInstance(vararg arguments: Value?): Any {
       return create(
         arguments.getOrNull(0)?.asString() ?: ""
@@ -110,5 +113,13 @@ public open class TypeError protected constructor (
         override val name: String get() = cause::class.java.simpleName
       })
     }
+  }
+
+  public companion object {
+    @JvmStatic public fun create(error: Throwable): TypeError =
+      Factory.INSTANCE.create(error)
+
+    @JvmStatic public fun create(message: String, cause: Throwable? = null): TypeError =
+      Factory.INSTANCE.create(message, cause)
   }
 }

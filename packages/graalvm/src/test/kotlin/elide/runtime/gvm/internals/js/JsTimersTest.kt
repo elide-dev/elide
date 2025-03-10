@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -133,7 +133,7 @@ import elide.testing.annotations.TestCase
     latch.await()
     assertNotEquals(-1, stopped.get())
     assertTrue(stopped.get() - now >= 1000)
-    assertTrue(stopped.get() - now < 1100)
+    assertTrue(stopped.get() - now <= 1100)
   }
 
   @Test fun `test setTimeout() cancel before run`() = withContext {

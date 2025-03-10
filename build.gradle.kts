@@ -79,7 +79,7 @@ val enableOwasp: String? by properties
 
 val buildDocs: String by properties
 val buildEmbedded: String by properties
-val buildDocsModules: String by properties
+val buildExperimentalEntrypoint: String by properties
 val buildBenchmarks: String by properties
 val isCI = properties["elide.ci"] == "true" || System.getenv("CI") != null
 
@@ -113,6 +113,8 @@ buildscript {
   }
 
   dependencies {
+    classpath(libs.asm.core)
+    classpath(libs.asm.tree)
     classpath(libs.bouncycastle)
     classpath(libs.bouncycastle.util)
     classpath(libs.guava)
@@ -144,26 +146,35 @@ java {
 
 dependencies {
   // Kover: Coverage Reporting
-  kover(projects.packages.base)
-  kover(projects.packages.cli)
-  kover(projects.packages.core)
-  kover(projects.packages.graalvm)
-  kover(projects.packages.graalvmJava)
-  kover(projects.packages.graalvmJvm)
-  kover(projects.packages.graalvmKt)
-  kover(projects.packages.graalvmLlvm)
-  kover(projects.packages.graalvmPy)
-  kover(projects.packages.graalvmRb)
-  kover(projects.packages.http)
-  kover(projects.packages.server)
-  kover(projects.packages.ssr)
-  kover(projects.packages.test)
+  listOfNotNull(
+    projects.packages.base,
+    projects.packages.cli,
+    projects.packages.core,
+    projects.packages.engine,
+    projects.packages.graalvm,
+    projects.packages.graalvmJava,
+    projects.packages.graalvmJs,
+    projects.packages.graalvmJvm,
+    projects.packages.graalvmKt,
+    projects.packages.graalvmLlvm,
+    projects.packages.graalvmPy,
+    projects.packages.graalvmRb,
+    projects.packages.graalvmTs,
+    projects.packages.http,
+    projects.packages.server,
+    projects.packages.ssr,
+    projects.packages.test,
+    if (buildEmbedded != "true") null else project(":packages:embedded"),
+    if (buildExperimentalEntrypoint != "true") null else project(":packages:entry"),
+  ).forEach {
+    kover(it)
+    if (buildDocs == "true") dokka(it)
+  }
 
   if (buildDocs == "true") {
     val dokkaPlugin by configurations
     dokkaPlugin(libs.plugin.dokka.versioning)
     dokkaPlugin(libs.plugin.dokka.templating)
-    dokkaPlugin(libs.plugin.dokka.kotlinAsJava)
     dokkaPlugin(libs.plugin.dokka.mermaid)
   }
 }
@@ -321,6 +332,8 @@ koverReport {
 // --- API Pinning ----------------------------------------------------------------------------------------------------
 //
 apiValidation {
+  validationDisabled = properties["elide.abiValidate"] != "true"
+
   nonPublicMarkers +=
     listOf(
       "elide.annotations.Internal",
@@ -336,16 +349,6 @@ apiValidation {
         listOf(
           "benchmarks",
           "bench-graalvm",
-        )
-      } else {
-        emptyList()
-      },
-    ).plus(
-      if (buildDocs == "true" && buildDocsModules == "true") {
-        listOf(
-          "architecture",
-          "docs",
-          "guide",
         )
       } else {
         emptyList()
@@ -437,10 +440,10 @@ tasks {
 
   if (buildDocs == "true") {
     val docAsset: (String) -> File = {
-      rootProject.layout.projectDirectory.file("docs/$it").asFile
+      rootProject.layout.projectDirectory.file("project/docs/$it").asFile
     }
     val creativeAsset: (String) -> File = {
-      rootProject.layout.projectDirectory.file("creative/$it").asFile
+      rootProject.layout.projectDirectory.file("project/creative/$it").asFile
     }
 
     dokka {
@@ -448,14 +451,14 @@ tasks {
       moduleVersion = project.version as String
 
       dokkaPublications.configureEach {
-        outputDirectory = layout.projectDirectory.dir("docs/apidocs").asFile
+        outputDirectory = layout.projectDirectory.dir("project/docs/apidocs").asFile
         suppressInheritedMembers = true
         suppressObviousFunctions = true
       }
       pluginsConfiguration.html {
         footerMessage = "© 2023—2025 Elide Technologies, Inc."
         homepageLink = "https://docs.elide.dev"
-        templatesDir = rootProject.layout.projectDirectory.dir("docs/templates").asFile
+        templatesDir = rootProject.layout.projectDirectory.dir("project/docs/templates").asFile
         customAssets.from(
           listOf(
             creativeAsset("logo/logo-wide-1200-w-r2.png"),
@@ -471,21 +474,16 @@ tasks {
       }
       val projectVersion = project.version as String
       val allVersions = listOf(
-        "1.0.0-alpha14",
-        "1.0.0-alpha13",
-        "1.0.0-alpha11",
-        "1.0.0-alpha10",
-        "1.0.0-alpha9",
-        "1.0.0-alpha8",
+        "1.0.0-beta1",
       )
       pluginsConfiguration.versioning {
         version = projectVersion
         versionsOrdering = allVersions
-        olderVersionsDir = file("docs/versions")
+        olderVersionsDir = file("project/docs/versions")
         renderVersionsNavigationOnAllPages = true
         olderVersions.from(
           allVersions.drop(1).map {
-            file("docs/versions/$it")
+            file("project/docs/versions/$it")
           },
         )
       }

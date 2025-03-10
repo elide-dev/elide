@@ -90,6 +90,8 @@ tasks.withType<KotlinCompile>().configureEach {
 
 dependencies {
   implementation(gradleApi())
+  api(libs.asm.core)
+  api(libs.asm.tree)
 
   // included plugins and dependencies
   implementation(libs.bouncycastle)
@@ -104,7 +106,6 @@ dependencies {
   implementation(libs.plugin.dokka.base)
   implementation(libs.plugin.dokka.versioning)
   implementation(libs.plugin.dokka.templating)
-  implementation(libs.plugin.dokka.kotlinAsJava)
   implementation(libs.plugin.dokka.mermaid)
   implementation(libs.plugin.graalvm)
   implementation(libs.plugin.kotlin)
@@ -132,6 +133,10 @@ dependencies {
   implementation(libs.plugin.kotlin.jsObjects)
   implementation(libs.plugin.kotlinx.serialization)
   implementation(libs.plugin.kotlinx.atomicfu)
+  implementation(libs.plugin.kotlinx.abiValidator) {
+    exclude(group = "org.objectweb.asm", module = "asm")
+    exclude(group = "org.objectweb.asm", module = "asm-tree")
+  }
 }
 
 // Plugin: Test Logger
@@ -209,6 +214,16 @@ configurations.all {
     if (lockedConfigs.contains(name) && project.findProperty("elide.lockDeps") == "true") {
       // lock by default
       activateDependencyLocking()
+    }
+  }
+}
+
+configurations.all {
+  resolutionStrategy.eachDependency {
+    val asm = libs.asm.core.get()
+    if (requested.group == asm.group && requested.name == asm.name) {
+      useVersion(libs.versions.asm.get())
+      because("need better bytecode support")
     }
   }
 }

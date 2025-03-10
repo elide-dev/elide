@@ -14,6 +14,7 @@ package elide.runtime.gvm.api
 
 import io.micronaut.context.annotation.DefaultScope
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import elide.annotations.Context
 import elide.runtime.gvm.GraalVMGuest
 
@@ -31,6 +32,7 @@ import elide.runtime.gvm.GraalVMGuest
  */
 @MustBeDocumented
 @Introspected
+@ReflectiveAccess
 @DefaultScope(Context::class)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

@@ -50,7 +50,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.Phaser
-import java.util.concurrent.TimeUnit
 import java.util.function.Supplier
 import java.util.stream.Stream
 import javax.tools.ToolProvider
@@ -117,8 +116,8 @@ private typealias ContextAccessor = () -> PolyglotContext
     "    or:  elide @|bold,fg(cyan) run|shell|@ --js [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --languages",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
+    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] FILE",
   ],
 )
 @Introspected
@@ -1282,7 +1281,6 @@ private typealias ContextAccessor = () -> PolyglotContext
   // of supported languages. If JS is disabled, there can only be one language; otherwise the default language is JS. If
   // a file is provided with a specific matching file extension for a given language, that language is used.
   private fun resolvePrimaryLanguage(
-    project: () -> ProjectInfo?,
     languageSelector: LanguageSelector?,
     languages: EnumSet<GuestLanguage>,
     fileInput: File?,
@@ -1297,7 +1295,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     languages.size == 1 -> languages.first()
 
     // an explicit flag from a user takes top precedence
-    languageSelector != null -> languageSelector.primary(commandSpec, languages, project, languageHint)
+    languageSelector != null -> languageSelector.primary(commandSpec, languages, languageHint)
 
     // we have to have at least one language
     languages.isEmpty() -> error("Cannot start VM with no enabled guest languages")
@@ -1385,15 +1383,15 @@ private typealias ContextAccessor = () -> PolyglotContext
 //           }
 //         }
 
-//         PYTHON -> ignoreNotInstalled {
-//           install(elide.runtime.plugins.python.Python) {
-//             logging.debug("Configuring Python VM")
-//             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-//             resourcesPath = GVM_RESOURCES
-//             executable = cmd
-//             executableList = listOf(cmd).plus(args)
-//           }
-//         }
+         PYTHON -> {
+           install(elide.runtime.plugins.python.Python) {
+             logging.debug("Configuring Python VM")
+             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+             resourcesPath = GVM_RESOURCES
+             executable = cmd
+             executableList = listOf(cmd).plus(args)
+           }
+         }
 
 //        // Secondary Engines: JVM
 //        JVM -> ignoreNotInstalled {
@@ -1490,7 +1488,6 @@ private typealias ContextAccessor = () -> PolyglotContext
 
     // resolve the language to use
     val projectFut = projectConfigJob.asCompletableFuture()
-    val project = { projectFut.get(1, TimeUnit.SECONDS) }
 
     // apply project configurations to context, if needed
     projectFut.whenComplete { value, err ->
@@ -1525,7 +1522,6 @@ private typealias ContextAccessor = () -> PolyglotContext
     })
     val primaryLang: (File?) -> GuestLanguage = { target ->
       resolvePrimaryLanguage(
-        project,
         language,
         allSupportedLangs,
         when {

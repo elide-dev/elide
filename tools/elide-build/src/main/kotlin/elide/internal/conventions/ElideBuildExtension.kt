@@ -70,7 +70,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var ksp: Boolean = false
 
     /** Whether this project should be eligible for strict mode. */
-    public var strict: Boolean = false
+    public var strict: Boolean = true
 
     /** Whether to configure the Kotlin AllOpen plugin with predefined settings. */
     public var allOpen: Boolean = false
@@ -160,13 +160,13 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var spotless: Boolean = true
 
     /** Whether to enable Checkstyle. */
-    public var checkstyle: Boolean = true
+    public var checkstyle: Boolean = false
 
     /** Whether to enable experimental checks. */
     public var experimental: Boolean = false
 
     /** Whether to enable PMD. */
-    public var pmd: Boolean = true
+    public var pmd: Boolean = false
 
     /** Whether to enforce formatting/linting on `check`. */
     public var enforceCheck: Boolean = false

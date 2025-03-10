@@ -45,3 +45,4 @@ tools/images/bench/elide-edge.tgz
 tools/hakuna/dist
 coverage-error.log
 blink.log
+project/docs/apidocs

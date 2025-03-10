@@ -23,7 +23,7 @@ authors = { workspace = true }
 license = { workspace = true }
 
 [lib]
-crate-type = ["lib", "cdylib"]
+crate-type = ["lib", "staticlib", "cdylib"]
 
 [dependencies]
 java_native = { workspace = true }

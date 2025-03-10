@@ -1,0 +1,17 @@
+{
+  "name": "@elide/workers-install",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "bun run wrangler types ./worker-apis.d.ts",
+    "build": "bun run wrangler deploy --dry-run",
+    "deploy": "bun run wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20250313.0",
+    "bun": "1.2.5",
+    "bun-types": "1.2.5",
+    "typescript": "5.8.2",
+    "wrangler": "latest"
+  }
+}

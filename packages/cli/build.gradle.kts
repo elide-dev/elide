@@ -106,7 +106,7 @@ val enablePkl = true
 val enableJs = true
 val enableJsIsolate = false
 val enableTs = true
-val enablePython = false
+val enablePython = true
 val enablePythonDynamic = true
 val enableRuby = false
 val enableLlvm = false
@@ -119,7 +119,7 @@ val enableNativeTransportV2 = false
 val enableSqliteStatic = true
 val enableStatic = false
 val enableStaticJni = true
-val preferShared = true
+val preferShared = false
 val enableToolchains = false
 val forceFfm = false
 val enableClang = false
@@ -143,7 +143,7 @@ val enableAuxCacheTrace = false
 val enableJpms = false
 val enableConscrypt = false
 val enableBouncycastle = false
-val enableEmbeddedJvm = true
+val enableEmbeddedJvm = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
 val enableHeapReport = false
@@ -163,7 +163,7 @@ val enableHeapDump = false
 val enableJmx = false
 val enableVerboseClassLoading = false
 val jniDebug = false
-val glibcTarget = "glibc"
+val glibcTarget = if (enableStatic) "musl" else "glibc"
 val dumpPointsTo = false
 val elideTarget = TargetInfo.current(project)
 val defaultArchTarget = when {
@@ -183,11 +183,8 @@ val exclusions = listOfNotNull(
   libs.jline.native,
   libs.jline.terminal.jna,
 
-  // prefer jpms jna when enabled
-  if (enableJna) null else libs.jna.jpms,
-
   // only include jline jni integration if ffm is disabled
-  if (enableFfm && forceFfm) libs.jline.terminal.jni else null,
+  if (enableFfm) libs.jline.terminal.jni else null,
 
   // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
   if (enableKotlin) null else libs.kotlin.compiler.embedded,
@@ -407,6 +404,7 @@ dependencies {
   api(projects.packages.base)
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
+  implementation(libs.dirs)
   jvmOnly(libs.snakeyaml)
 
   // Native-image transitive compile dependencies
@@ -510,7 +508,7 @@ dependencies {
   runtimeOnly(mn.micronaut.graal)
   implementation(mn.netty.handler)
 
-// we have to include _some_ support for JNA in order to support oshi et al.
+  // we have to include _some_ support for JNA in order to support oshi et al.
   implementation(libs.jna)
   if (enableJnaStatic) {
     implementation(libs.jna.graalvm)
@@ -807,6 +805,42 @@ val initializeAtBuildTimeTest: List<String> = listOf(
   "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
 )
 
+val initializeAtRuntimeNonLinux: List<String> = listOfNotNull(
+  "oshi.hardware.platform.linux",
+  "oshi.jna.platform.linux.LinuxLibc",
+  "oshi.util.UserGroupInfo",
+  "oshi.driver.linux.Lshw",
+  "com.sun.jna.platform.linux.LibC",
+  "oshi.software.os",
+  "oshi.software.os.linux",
+  "oshi.software.os.linux.LinuxOperatingSystem",
+  "oshi.util.platform.linux.DevPath",
+  "oshi.util.platform.linux.ProcPath",
+  "oshi.util.platform.linux.SysPath",
+)
+
+val initializeAtRuntimeNonMac: List<String> = listOfNotNull(
+  "com.sun.jna.platform.mac.CoreFoundation",
+  "oshi.hardware.platform.mac",
+  "oshi.hardware.platform.mac.MacFirmware",
+  "oshi.jna.platform.mac.IOKit",
+  "oshi.jna.platform.mac.SystemB",
+  "oshi.jna.platform.mac.SystemConfiguration",
+  "oshi.software.os.mac",
+  "oshi.software.os.mac.MacOperatingSystem",
+  "oshi.software.os.unix.aix",
+  "oshi.software.os.unix.aix.AixOperatingSystem",
+  "oshi.software.os.unix.freebsd",
+  "oshi.software.os.unix.freebsd.FreeBsdOperatingSystem",
+  "oshi.software.os.unix.openbsd",
+  "oshi.software.os.unix.openbsd.OpenBsdOperatingSystem",
+  "oshi.software.os.unix.solaris",
+  "oshi.software.os.unix.solaris.SolarisOperatingSystem",
+  "oshi.util.platform.mac.CFUtil",
+  "oshi.util.platform.mac.SmcUtil",
+  "oshi.util.platform.mac.SysctlUtil",
+)
+
 val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(!enableSqliteStatic, "org.sqlite.SQLiteJDBCLoader"),
   onlyIf(!enableSqliteStatic, "org.sqlite.core.NativeDB"),
@@ -816,21 +850,18 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "com.github.ajalt.mordant.rendering.TextStyles",
   "elide.tool.err.ErrPrinter",
   "com.google.protobuf.RuntimeVersion",
-
-  // @TODO: seal this into formal config
   "elide.tool.err.ErrorHandler${'$'}ErrorContext",
+  "com.google.protobuf.RuntimeVersion",
 
   // pkl needs this
   "org.msgpack.core.buffer.DirectBufferAccess",
 
   // --- JNA -----
 
-  "com.sun.jna.Native",
   "com.sun.jna.Structure${'$'}FFIType",
   "com.sun.jna.platform.mac.IOKit",
   "com.sun.jna.platform.mac.IOKitUtil",
   "com.sun.jna.platform.mac.SystemB",
-  "com.sun.jna.platform.linux.Udev",
 
   // --- Jansi/JLine -----
 
@@ -856,44 +887,15 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   // --- OSHI -----
 
-  "com.sun.jna.platform.mac.CoreFoundation",
-  "oshi.hardware.platform.linux",
-  "oshi.hardware.platform.mac",
-  "oshi.hardware.platform.mac.MacFirmware",
+  "oshi.util.GlobalConfig",
   "oshi.hardware.platform.unix",
   "oshi.hardware.platform.unix.aix",
   "oshi.hardware.platform.unix.freebsd",
   "oshi.hardware.platform.unix.openbsd",
   "oshi.hardware.platform.unix.solaris",
   "oshi.hardware.platform.windows",
-  "oshi.jna.platform.mac.IOKit",
-  "oshi.jna.platform.mac.SystemB",
-  "oshi.jna.platform.mac.SystemConfiguration",
-  "oshi.jna.platform.linux.LinuxLibc",
-  "oshi.util.UserGroupInfo",
-  "oshi.driver.linux.Lshw",
-  "com.sun.jna.platform.linux.LibC",
-  "oshi.software.os",
-  "oshi.software.os.linux",
-  "oshi.software.os.linux.LinuxOperatingSystem",
-  "oshi.software.os.mac",
-  "oshi.software.os.mac.MacOperatingSystem",
-  "oshi.software.os.unix.aix",
-  "oshi.software.os.unix.aix.AixOperatingSystem",
-  "oshi.software.os.unix.freebsd",
-  "oshi.software.os.unix.freebsd.FreeBsdOperatingSystem",
-  "oshi.software.os.unix.openbsd",
-  "oshi.software.os.unix.openbsd.OpenBsdOperatingSystem",
-  "oshi.software.os.unix.solaris",
-  "oshi.software.os.unix.solaris.SolarisOperatingSystem",
   "oshi.software.os.windows",
   "oshi.software.os.windows.WindowsOperatingSystem",
-  "oshi.util.platform.linux.DevPath",
-  "oshi.util.platform.linux.ProcPath",
-  "oshi.util.platform.linux.SysPath",
-  "oshi.util.platform.mac.CFUtil",
-  "oshi.util.platform.mac.SmcUtil",
-  "oshi.util.platform.mac.SysctlUtil",
   "oshi.util.platform.unix.freebsd.BsdSysctlUtil",
   "oshi.util.platform.unix.freebsd.ProcstatUtil",
   "oshi.util.platform.unix.openbsd.FstatUtil",
@@ -1007,6 +1009,10 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tool.cli.cmd.discord",
   "elide.tool.cli.cmd.discord.ToolDiscordCommand",
   "elide.tool.cli.cmd.selftest.SelfTestCommand",
+).plus(
+  initializeAtRuntimeNonLinux.onlyIf(!HostManager.hostIsLinux)
+).plus(
+  initializeAtRuntimeNonMac.onlyIf(!HostManager.hostIsMac)
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -1096,16 +1102,6 @@ val commonNativeArgs = listOfNotNull(
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:ExcludeResources=META-INF/native/libumbrella.so",
   "-H:ExcludeResources=META-INF/native/libumbrella.a",
-  "-H:ExcludeResources=kotlin/kotlin.kotlin_builtins",
-  "-H:ExcludeResources=kotlin/annotation/annotation.kotlin_builtins",
-  "-H:ExcludeResources=kotlin/collections/collections.kotlin_builtins",
-  "-H:ExcludeResources=kotlin/concurrent/atomics/atomics.kotlin_builtins",
-  "-H:ExcludeResources=kotlin/coroutines/coroutines.kotlin_builtins",
-  "-H:ExcludeResources=kotlin/internal/internal.kotlin_builtins",
-  "-H:ExcludeResources=kotlin/ranges/ranges.kotlin_builtins",
-  "-H:ExcludeResources=kotlin/reflect/reflect.kotlin_builtins",
-  "-H:ExcludeResources=META-INF/.*kotlin_module",
-  "-H:ExcludeResources=com/sun/jna/.*",
   "-H:ExcludeResources=.*.proto",
   "-H:ExcludeResources=elide/app/.*\\.proto",
   "-H:ExcludeResources=elide/assets/.*\\.proto",
@@ -1124,16 +1120,13 @@ val commonNativeArgs = listOfNotNull(
   "-H:ExcludeResources=elide/vfs/.*\\.proto",
   "-H:ExcludeResources=logback.xml",
   "-H:ExcludeResources=META-INF/native/libsqlite.*",
-  "-H:ExcludeResources=lib/linux-x86_64/libbrotli.so",
   "-H:ExcludeResources=META-INF/elide/embedded/runtime/js/runtime.current.json",
   "-H:ExcludeResources=META-INF/maven/com.aayushatharva.brotli4j/native-linux-x86_64/pom.xml",
   "-H:ExcludeResources=META-INF/maven/com.aayushatharva.brotli4j/native-linux-x86_64/pom.properties",
   "-H:ExcludeResources=META-INF/native/x86_64-unknown-linux-gnu/libsqlitejdbc.so",
   "-H:ExcludeResources=META-INF/micronaut/io.micronaut.core.graal.GraalReflectionConfigurer/.*",
   "-H:ExcludeResources=META-INF/elide/embedded/runtime/wasm/runtime.json",
-  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/.*",
   "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/coll/zh.res",
-  "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/coll/ucadata.icu",
   "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/brkitr/khmerdict.dict",
   "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/coll/ko.res",
   "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/brkitr/burmesedict.dict",
@@ -1154,7 +1147,7 @@ val commonNativeArgs = listOfNotNull(
   "-Delide.lang.kotlin=$enableKotlin",
   "-Delide.lang.pkl=$enablePkl",
   "-Delide.lang.experimental=$enableExperimental",
-  "-Delide.staticUmbrella=false",
+  "-Delide.staticUmbrella=true",
   "-Delide.root=$rootPath",
   "-Delide.target=$targetPath",
   "-Delide.natives=$nativesPath",
@@ -1254,10 +1247,14 @@ val experimentalFlags = listOf(
   "-H:+VectorPolynomialIntrinsics",
 )
 
+// C compiler flags to be included on Linux only.
+val linuxOnlyCFlags: List<String> = listOf(
+  "-fstack-clash-protection",
+)
+
 // C compiler flags which are always included.
 val commonCFlags: List<String> = listOf(
   "-DELIDE",
-  "-fstack-clash-protection",
   "-fstack-protector-strong",
   "-fexceptions",
   "-ffunction-sections",
@@ -1273,6 +1270,8 @@ val commonCFlags: List<String> = listOf(
   listOf("-fuse-ld=$cLinker").onlyIf(cLinker != null)
 ).plus(
   System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
+).plus(
+  linuxOnlyCFlags.onlyIf(HostManager.hostIsLinux)
 )
 
 // Linker flags which are always included.
@@ -1306,9 +1305,17 @@ val profiles: List<String> = if (enableEdge) listOf(
   "ts-hello.iprof",
   "ts-sqlite.iprof",
 ) else listOf(
-  "js-path-fs.iprof",
-  "js-sqlite.iprof",
+  "cli-help.iprof",
+  "js-cpu.iprof",
+  "js-fetch.iprof",
+  "js-fs.iprof",
+  "js-hello.iprof",
+  "js-paths.iprof",
   "pkl-eval.iprof",
+  "py-hello.iprof",
+  "py-interop.iprof",
+  "ts-hello.iprof",
+  "ts-sqlite.iprof",
 )
 
 // GVM release flags
@@ -1346,7 +1353,8 @@ val jvmDefs = mutableMapOf(
   "elide.target" to elideTarget.triple,
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.mosaic" to enableMosaic.toString(),
-  "elide.staticJni" to enableJnaStatic.toString(),
+  "elide.staticJni" to enableStaticJni.toString(),
+  "elide.targetLibc" to glibcTarget,
   "elide.js.vm.enableStreams" to "true",
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
   "elide.kotlin.verbose" to "false",
@@ -1414,6 +1422,14 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--gc=serial",
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
+  "-H:NativeLinkerOption=-flto",
+  "-H:NativeLinkerOption=-lm",
+  "-H:NativeLinkerOption=$nativesPath/libdiag.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libumbrella.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libjs.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libposix.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libterminal.dylib",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
 ) else listOf(
@@ -1422,6 +1438,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-J-Xmx12g",
 ) else listOf(
   "-J-Xmx48g",
+  "--parallelism=12",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:+AuxiliaryEngineCache",
 ) else emptyList())
@@ -1436,12 +1453,13 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=-flto",
     "-H:NativeLinkerOption=-Wl,--gc-sections",
     "-H:NativeLinkerOption=-Wl,--emit-relocs",
-    "-H:NativeLinkerOption=$nativesPath/libdiag.so",
-    "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.so",
-    "-H:NativeLinkerOption=$nativesPath/libumbrella.so",
-    "-H:NativeLinkerOption=$nativesPath/libjs.so",
-    "-H:NativeLinkerOption=$nativesPath/libposix.so",
-    "-H:NativeLinkerOption=$nativesPath/libterminal.so",
+    "-H:NativeLinkerOption=-lm",
+    "-H:NativeLinkerOption=$nativesPath/libdiag.a",
+    "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.a",
+    "-H:NativeLinkerOption=$nativesPath/libumbrella.a",
+    "-H:NativeLinkerOption=$nativesPath/libjs.a",
+    "-H:NativeLinkerOption=$nativesPath/libposix.a",
+    "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",
     "-H:ExcludeResources=.*dll",
@@ -1460,7 +1478,6 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     )
   ).plus(
     listOf(
-      "-H:NativeLinkerOption=-lm",
       "-H:NativeLinkerOption=-lssl",
       "-H:NativeLinkerOption=-lcrypto",
       "-H:NativeLinkerOption=-lstdc++",
@@ -1542,7 +1559,10 @@ fun nativeCliImageArgs(
     when (platform) {
       "windows" -> if (release) windowsReleaseArgs else windowsOnlyArgs
       "darwin" -> if (release) darwinReleaseArgs else darwinOnlyArgs
-      "linux" -> if (target == "musl") muslArgs else (if (release) linuxReleaseArgs else linuxOnlyArgs)
+      "linux" ->
+        if (target == "musl")
+          linuxOnlyArgs.plus(muslArgs)
+        else (if (release) linuxReleaseArgs else linuxOnlyArgs)
       else -> defaultPlatformArgs
     },
   ).plus(
@@ -1592,8 +1612,6 @@ graalvmNative {
     enableExperimentalPredefinedClasses = true
     enableExperimentalUnsafeAllocationTracing = true
 
-    val userCodeFilter = layout.projectDirectory.file("src/config/user-code-filter.json").asFile.path
-
     enabled = (
       (System.getenv("GRAALVM_AGENT") == "true" || project.properties.containsKey("agent")) &&
       !gradle.startParameter.isProfile  // profiler for build can't also be active
@@ -1601,10 +1619,6 @@ graalvmNative {
 
     modes {
       standard {}
-
-      conditional {
-        userCodeFilterPath = userCodeFilter
-      }
     }
     metadataCopy {
       inputTaskNames.addAll(listOf("run", "optimizedRun"))

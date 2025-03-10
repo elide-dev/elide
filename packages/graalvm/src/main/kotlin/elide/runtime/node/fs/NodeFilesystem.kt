@@ -14,6 +14,7 @@
 
 package elide.runtime.node.fs
 
+import io.micronaut.core.annotation.ReflectiveAccess
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.io.ByteSequence
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -44,6 +45,7 @@ import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.AbstractJsException
@@ -54,7 +56,6 @@ import elide.runtime.intrinsics.js.node.buffer.BufferInstance
 import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.runtime.lang.javascript.NodeModuleName
-import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.node.path.NodePathsModule
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.vfs.GuestVFS
@@ -64,7 +65,41 @@ import elide.vm.annotations.Polyglot
 private const val DEFAULT_COPY_MODE: Int = 0
 
 // Whether to enable synthesized modules.
-private const val ENABLE_SYNTHESIZED: Boolean = false
+private const val ENABLE_SYNTHESIZED: Boolean = true
+
+// Names of `fs` methods, properties, and constants.
+
+internal const val FS_F_ACCESS = "access"
+private const val FS_F_ACCESS_SYNC = "accessSync"
+internal const val FS_F_EXISTS = "exists"
+private const val FS_F_EXISTS_SYNC = "existsSync"
+internal const val FS_F_READ_FILE = "readFile"
+private const val FS_F_READ_FILE_SYNC = "readFileSync"
+internal const val FS_F_WRITE_FILE = "writeFile"
+private const val FS_F_WRITE_FILE_SYNC = "writeFileSync"
+internal const val FS_F_MKDIR = "mkdir"
+private const val FS_F_MKDIR_SYNC = "mkdirSync"
+internal const val FS_F_COPY_FILE = "copyFile"
+private const val FS_F_COPY_FILE_SYNC = "copyFileSync"
+private const val FS_P_CONSTANTS = "constants"
+private const val FS_ENCODING_UTF8 = "utf8"
+private const val FS_ENCODING_UTF8_ALT = "utf-8"
+private const val FS_ENCODING_UTF16 = "utf16"
+private const val FS_ENCODING_UTF16_ALT = "utf-16"
+private const val FS_ENCODING_UTF32 = "utf32"
+private const val FS_ENCODING_UTF32_ALT = "utf-32"
+private const val FS_ENCODING_ASCII = "ascii"
+private const val FS_ENCODING_US_ASCII = "us-ascii"
+private const val FS_ENCODING_US_ASCII_ALT = "usascii"
+private const val FS_ENCODING_LATIN1 = "latin1"
+private const val FS_ENCODING_BINARY = "binary"
+private const val FS_C_F_OK = "F_OK"
+private const val FS_C_R_OK = "R_OK"
+private const val FS_C_W_OK = "W_OK"
+private const val FS_C_X_OK = "X_OK"
+private const val FS_C_COPYFILE_EXCL = "COPYFILE_EXCL"
+private const val FS_C_COPYFILE_FICLONE = "COPYFILE_FICLONE"
+private const val FS_C_COPYFILE_FICLONE_FORCE = "COPYFILE_FICLONE_FORCE"
 
 // Listener bean for VFS init.
 @Singleton @Eager public class VfsInitializerListener : VfsListener, Supplier<GuestVFS> {
@@ -100,20 +135,10 @@ private const val ENABLE_SYNTHESIZED: Boolean = false
     bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = ProxyExecutable { providePromises() }
   }
 
-  inner class FilesystemApiShim: SyntheticJSModule<FilesystemAPI> {
-    override fun provide(): FilesystemAPI = std
-  }
-
-  inner class FilesystemPromisesApiShim : SyntheticJSModule<FilesystemPromiseAPI> {
-    override fun provide(): FilesystemPromiseAPI = promises
-  }
-
   init {
     if (ENABLE_SYNTHESIZED) {
-      val apiShim = FilesystemApiShim()
-      val promisesShim = FilesystemPromisesApiShim()
-      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS)) { apiShim }
-      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS_PROMISES)) { promisesShim }
+      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS)) { std }
+      ModuleRegistry.deferred(ModuleInfo.of("fs_promises")) { promises }
     }
   }
 }
@@ -125,17 +150,17 @@ private const val ENABLE_SYNTHESIZED: Boolean = false
  * @return The resolved charset.
  */
 internal fun resolveEncodingString(encoding: String): Charset = when (encoding.trim().lowercase()) {
-  "utf8", "utf-8" -> Charsets.UTF_8
-  "utf16", "utf-16" -> Charsets.UTF_16
-  "utf32", "utf-32" -> Charsets.UTF_32
-  "ascii", "us-ascii", "usascii" -> Charsets.US_ASCII
-  "latin1", "binary" -> Charsets.ISO_8859_1
+  FS_ENCODING_UTF8, FS_ENCODING_UTF8_ALT -> Charsets.UTF_8
+  FS_ENCODING_UTF16, FS_ENCODING_UTF16_ALT -> Charsets.UTF_16
+  FS_ENCODING_UTF32, FS_ENCODING_UTF32_ALT -> Charsets.UTF_32
+  FS_ENCODING_ASCII, FS_ENCODING_US_ASCII, FS_ENCODING_US_ASCII_ALT -> Charsets.US_ASCII
+  FS_ENCODING_LATIN1, FS_ENCODING_BINARY -> Charsets.ISO_8859_1
   else -> throw JsError.valueError("Unknown encoding passed to `fs` readFile: $encoding")
 }
 
 // Implements the Node built-in filesystem modules.
 internal object NodeFilesystem {
-  internal const val SYMBOL_STD: String = "node_fs"
+  internal const val SYMBOL_STD: String = "node_${NodeModuleName.FS}"
   internal const val SYMBOL_PROMISES: String = "node_fs_promises"
 
   /** @return Instance of the `fs` module. */
@@ -162,7 +187,7 @@ internal object NodeFilesystem {
 }
 
 // Filesystem constant values used by Node.
-internal object FilesystemConstants {
+internal object FilesystemConstants : ReadOnlyProxyObject {
   const val F_OK: Int = 0
   const val R_OK: Int = 4
   const val W_OK: Int = 2
@@ -170,6 +195,27 @@ internal object FilesystemConstants {
   const val COPYFILE_EXCL: Int = 1
   const val COPYFILE_FICLONE: Int = 2
   const val COPYFILE_FICLONE_FORCE: Int = 4
+
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    FS_C_F_OK,
+    FS_C_R_OK,
+    FS_C_W_OK,
+    FS_C_X_OK,
+    FS_C_COPYFILE_EXCL,
+    FS_C_COPYFILE_FICLONE,
+    FS_C_COPYFILE_FICLONE_FORCE,
+  )
+
+  override fun getMember(key: String?): Any? = when (key) {
+    FS_C_F_OK -> F_OK
+    FS_C_R_OK -> R_OK
+    FS_C_W_OK -> W_OK
+    FS_C_X_OK -> X_OK
+    FS_C_COPYFILE_EXCL -> COPYFILE_EXCL
+    FS_C_COPYFILE_FICLONE -> COPYFILE_FICLONE
+    FS_C_COPYFILE_FICLONE_FORCE -> COPYFILE_FICLONE_FORCE
+    else -> null
+  }
 }
 
 // Context for a file write operation with managed state.
@@ -263,6 +309,7 @@ private fun copyOpts(mode: Value?): Int = when (mode) {
 }
 
 // Perform a file copy operation.
+@Suppress("SpreadOperator")
 private fun doCopyFile(src: Path, dest: Path, mode: Int = 0, callback: ((Throwable?) -> Unit)? = null): Throwable? {
   var exc: Throwable? = null
   try {
@@ -387,7 +434,7 @@ internal abstract class FilesystemBase(
         "EPERM: operation not permitted, access '$path'",
         errno = -1,
         "code" to "EPERM",
-        "syscall" to "access",
+        "syscall" to FS_F_ACCESS,
         "path" to path.toString(),
       )
     }
@@ -490,9 +537,129 @@ internal abstract class FilesystemBase(
 }
 
 // Implements the Node `fs` module.
-internal class NodeFilesystemProxy(path: PathAPI, exec: GuestExecutor, fs: GuestVFS) :
+@ReflectiveAccess internal class NodeFilesystemProxy(path: PathAPI, exec: GuestExecutor, fs: GuestVFS) :
   NodeFilesystemAPI,
+  ReadOnlyProxyObject,
   FilesystemBase(path, exec, fs) {
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    FS_F_ACCESS,
+    FS_F_ACCESS_SYNC,
+    FS_F_EXISTS,
+    FS_F_EXISTS_SYNC,
+    FS_F_READ_FILE,
+    FS_F_READ_FILE_SYNC,
+    FS_F_WRITE_FILE,
+    FS_F_WRITE_FILE_SYNC,
+    FS_F_MKDIR,
+    FS_F_MKDIR_SYNC,
+    FS_F_COPY_FILE,
+    FS_F_COPY_FILE_SYNC,
+    FS_P_CONSTANTS,
+  )
+
+  override fun getMember(key: String?): Any? = when (key) {
+    FS_F_ACCESS -> ProxyExecutable {
+      when (it.size) {
+        2 -> access(it.first(), it[1])
+        3 -> access(it.first(), it[1], it[2])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.access`")
+      }
+    }
+
+    FS_F_ACCESS_SYNC -> ProxyExecutable {
+      when (it.size) {
+        1 -> accessSync(it.first())
+        2 -> accessSync(it.first(), it[1])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.access`")
+      }
+    }
+
+    FS_F_EXISTS -> ProxyExecutable {
+      when (it.size) {
+        2 -> exists(it.first(), it[1])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.exists`")
+      }
+    }
+
+    FS_F_EXISTS_SYNC -> ProxyExecutable {
+      when (it.size) {
+        1 -> existsSync(it.first())
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.existsSync`")
+      }
+    }
+
+    FS_F_READ_FILE -> ProxyExecutable {
+      when (it.size) {
+        2 -> readFile(it.first(), it[1])
+        3 -> readFile(it.first(), it[1]) { err, data ->
+          val cbk = it.getOrNull(2)
+          if (cbk != null && cbk.canExecute()) cbk.executeVoid(err, data)
+        }
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.readFile` (got ${it.size})")
+      }
+    }
+
+    FS_F_READ_FILE_SYNC -> ProxyExecutable {
+      when (it.size) {
+        1 -> readFileSync(it.first())
+        2 -> readFileSync(it.first(), it[1])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.readFileSync`")
+      }
+    }
+
+    FS_F_WRITE_FILE -> ProxyExecutable {
+      when (it.size) {
+        3 -> writeFile(it.first(), it[1], it[2])
+        4 -> writeFile(it.first(), it[1], it[2], it[3])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.writeFile`")
+      }
+    }
+
+    FS_F_WRITE_FILE_SYNC -> ProxyExecutable {
+      when (it.size) {
+        2 -> writeFileSync(it.first(), it[1])
+        3 -> writeFileSync(it.first(), it[1], it[2])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.writeFileSync`")
+      }
+    }
+
+    FS_F_MKDIR -> ProxyExecutable {
+      when (it.size) {
+        2 -> mkdir(it.first(), it[1])
+        3 -> mkdir(it.first(), it[1], it[2])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.mkdir`")
+      }
+    }
+
+    FS_F_MKDIR_SYNC -> ProxyExecutable {
+      when (it.size) {
+        1 -> mkdirSync(it.first())
+        2 -> mkdirSync(it.first(), it[1])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.mkdirSync`")
+      }
+    }
+
+    FS_F_COPY_FILE -> ProxyExecutable {
+      when (it.size) {
+        3 -> copyFile(it.first(), it[1], it[2])
+        4 -> copyFile(it.first(), it[1], it[2], it[3])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.copyFile` (got ${it.size})")
+      }
+    }
+
+    FS_F_COPY_FILE_SYNC -> ProxyExecutable {
+      when (it.size) {
+        2 -> copyFileSync(it.first(), it[1])
+        3 -> copyFileSync(it.first(), it[1], it[2])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.copyFileSync`")
+      }
+    }
+
+    FS_P_CONSTANTS -> FilesystemConstants
+
+    else -> null
+  }
+
   @Polyglot override fun access(path: Value, callback: Value) {
     if (
       !callback.canExecute() &&
@@ -791,9 +958,65 @@ internal class NodeFilesystemProxy(path: PathAPI, exec: GuestExecutor, fs: Guest
 }
 
 // Implements the Node `fs/promises` module.
-private class NodeFilesystemPromiseProxy(path: PathAPI, executor: GuestExecutor, fs: GuestVFS) :
+@ReflectiveAccess private class NodeFilesystemPromiseProxy(path: PathAPI, executor: GuestExecutor, fs: GuestVFS) :
   NodeFilesystemPromiseAPI,
+  ReadOnlyProxyObject,
   FilesystemBase(path, executor, fs) {
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    FS_F_ACCESS,
+    FS_F_READ_FILE,
+    FS_F_WRITE_FILE,
+    FS_F_MKDIR,
+    FS_F_COPY_FILE,
+    FS_P_CONSTANTS,
+  )
+
+  override fun getMember(key: String?): Any? = when (key) {
+    FS_F_ACCESS -> ProxyExecutable {
+      when (it.size) {
+        1 -> access(it.first())
+        2 -> access(it.first(), it[1])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.access`")
+      }
+    }
+
+    FS_F_READ_FILE -> ProxyExecutable {
+      when (it.size) {
+        1 -> readFile(it.first())
+        2 -> readFile(it.first(), it[1])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.readFile`")
+      }
+    }
+
+    FS_F_WRITE_FILE -> ProxyExecutable {
+      when (it.size) {
+        2 -> writeFile(it.first(), it[1])
+        3 -> writeFile(it.first(), it[1], it[2])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.writeFile`")
+      }
+    }
+
+    FS_F_MKDIR -> ProxyExecutable {
+      when (it.size) {
+        1 -> mkdir(it.first())
+        2 -> mkdir(it.first(), it[1])
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.mkdir`")
+      }
+    }
+
+    FS_F_COPY_FILE -> ProxyExecutable {
+      when (it.size) {
+        2 -> copyFile(it.first(), it[1])
+        3 -> copyFile(it.first(), it[1], it[2].asInt())
+        else -> throw JsError.typeError("Invalid number of arguments to `fs.copyFile`")
+      }
+    }
+
+    FS_P_CONSTANTS -> FilesystemConstants
+
+    else -> null
+  }
+
   @Polyglot override fun readFile(path: Value): JsPromise<StringOrBuffer> =
     readFile(resolvePath("readFile", path), ReadFileOptions.DEFAULTS)
 

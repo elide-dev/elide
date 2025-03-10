@@ -21,7 +21,8 @@
       "packages/*/src/*/resources/META-INF/native-image/dev/elide/*/*.json",
       "packages/*/src/*/resources/META-INF/native-image/dev.elide/*/*.json",
       "packages/server/src/test/resources/manifests/app.assets.pb.json",
-      "packages/graalvm/src/test/resources/META-INF/elide/embedded/harness.js"
+      "packages/graalvm/src/test/resources/META-INF/elide/embedded/harness.js",
+      "./project/infra/install/worker-apis.d.ts"
     ]
   },
   "linter": {

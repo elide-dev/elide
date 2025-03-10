@@ -2,7 +2,7 @@
 set -e
 set +x
 TOOL_REVISION="1.0.0-alpha14"
-INSTALLER_VERSION="v0.15"
+INSTALLER_VERSION="v0.16"
 TOOL="cli"
 VERSION="v1"
 RELEASE="snapshot"
@@ -66,13 +66,14 @@ if [[ "$@" == *"help"* ]]; then
   echo -e "  ${YELLOW}--install-rev${NC}=<version>  Install a specific version of Elide"
   echo -e "  ${YELLOW}--${NC}[${YELLOW}no${NC}]${YELLOW}-path${NC}              Whether to add the install directory to the PATH"
   echo -e "  ${YELLOW}--no-banner${NC}              Opt out of the announcement banner after install"
+  echo -e "  ${YELLOW}--gha${NC}                    Prefer to serve the download directly from GitHub"
   echo -e "  ${YELLOW}--no-color${NC}               Disable color output"
   echo -e "  ${YELLOW}--debug${NC}                  Enable debug output"
   echo -e "  ${YELLOW}--trace${NC}                  Enable bash tracing"
   echo -e "  ${YELLOW}--version${NC}                Show version information"
   echo -e "  ${YELLOW}--help${NC}                   Show this help message"
   echo -e ""
-  echo -e "Copyright 2024, Elide Technologies, Inc."
+  echo -e "Copyright 2025, Elide Technologies, Inc."
   exit 0
 fi
 if [[ "$@" == *"version"* ]]; then
@@ -91,6 +92,10 @@ SHOW_BANNER="true"
 if [[ "$@" == *"no-banner"* ]]; then
   debug "Opting out of install banner."
   SHOW_BANNER="false"
+fi
+if [[ "$@" == *"gha"* ]]; then
+  debug "Preferring GHA."
+  DOWNLOAD_BASE="https://gha.elide.zip"
 fi
 if [[ "$@" == *"trace"* ]]; then
   debug "Trace mode is active."

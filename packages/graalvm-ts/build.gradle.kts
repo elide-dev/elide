@@ -66,8 +66,7 @@ dependencies {
 
   // Testing
   testImplementation(projects.packages.test)
-  testImplementation(projects.packages.graalvm)
-  testImplementation(project(":packages:graalvm", configuration = "testBase"))
+  testImplementation(projects.packages.engine)
 }
 
 val elideTarget = TargetInfo.current(project)
@@ -117,6 +116,7 @@ tasks {
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("java.library.path", javaLibPath.get())
+    dependsOn(":packages:graalvm:buildRustNativesForHost")
   }
 }
 

@@ -14,24 +14,18 @@
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: Array&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
     <ID>SpreadOperator:ToolInvokeCommand.kt$ToolInvokeCommand$(*selectedTools.map { it to buildArgs(action, it) }.toTypedArray())</ID>
-    <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$ioe: IOException</ID>
-    <ID>SwallowedException:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
     <ID>SwallowedException:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractToolCommand.kt$AbstractToolCommand$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:CommandTestRunner.kt$CommandTestRunner$thr: Throwable</ID>
-    <ID>TooGenericExceptionCaught:DefaultProjectManager.kt$DefaultProjectManager.Companion$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:TestContext.kt$TestContext.Companion$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:ToolInvokeCommand.kt$ToolInvokeCommand$err: Throwable</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val jsHint = "package.json"</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val pyHint = "requirements.txt"</ID>
-    <ID>UnusedParameter:AbstractToolCommand.kt$AbstractToolCommand$args: Array&lt;String></ID>
-    <ID>UnusedParameter:LanguageSelector.kt$LanguageSelector$project: () -> ProjectInfo?</ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
-    <ID>VariableNaming:AbstractScriptEngineFactory.kt$AbstractScriptEngineFactory.PolyglotContext$private val `in`: PolyglotReader</ID>
     <ID>VariableNaming:InspectorConfig.kt$InspectorConfig$/** Specifies whether the inspector should suspend for internal (facade) sources. */ @Option( names = ["--inspect:internal"], description = ["Specifies whether the inspector should suspend for internal (facade) sources"], defaultValue = "false", hidden = false, ) internal var `internal`: Boolean = false</ID>
   </CurrentIssues>
 </SmellBaseline>

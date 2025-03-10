@@ -8,7 +8,7 @@ license = "MIT"
 
 [lib]
 name = "umbrella"
-crate-type = ["lib", "cdylib"]
+crate-type = ["lib", "staticlib", "cdylib"]
 
 [features]
 default = [
@@ -18,7 +18,7 @@ default = [
   "oro",
 ]
 allocator = [
-  "jemalloc",
+  "allocator_mimalloc",
 ]
 allocator_mimalloc = ["mimalloc/default"]
 all = [

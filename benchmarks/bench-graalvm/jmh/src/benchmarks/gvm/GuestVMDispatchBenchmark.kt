@@ -16,11 +16,18 @@
   ExperimentalCoroutinesApi::class
 )
 
+@file:Suppress(
+  "unused",
+  "TooGenericExceptionCaught",
+  "PrintStackTrace",
+  "MagicNumber",
+  "ForEachOnRange",
+)
+
 package benchmarks.gvm
 
 import com.lmax.disruptor.EventFactory
 import com.lmax.disruptor.EventHandler
-import com.lmax.disruptor.WorkHandler
 import com.lmax.disruptor.dsl.Disruptor
 import com.lmax.disruptor.util.DaemonThreadFactory
 import org.openjdk.jmh.annotations.*
@@ -90,7 +97,7 @@ class GuestVMDispatchBenchmark {
     private val disruptor: Disruptor<DisruptorGuestInvocationEvent> = Disruptor(
       eventFactory,
       1024,
-      executor,
+      DaemonThreadFactory.INSTANCE,
     )
     private val contextLock = Mutex()
     private val contextLock2 = Mutex()
@@ -182,20 +189,12 @@ class GuestVMDispatchBenchmark {
   private class DisruptorTestHandler (
     val context: VMContext,
     val target: Value,
-  ) : EventHandler<DisruptorGuestInvocationEvent>, WorkHandler<DisruptorGuestInvocationEvent> {
+  ) : EventHandler<DisruptorGuestInvocationEvent> {
     // Whether the worker is executing.
     private var locked: Boolean = false
 
     // Processed event count.
     private var processed: Long = 0
-
-    override fun onEvent(event: DisruptorGuestInvocationEvent) {
-      processed += 1
-      context.enter()
-      val result = target.execute(42, 43).asString()
-      context.leave()
-      event.respond(result)
-    }
 
     override fun onEvent(event: DisruptorGuestInvocationEvent, sequence: Long, endOfBatch: Boolean) {
       if (!locked) {
@@ -228,7 +227,7 @@ class GuestVMDispatchBenchmark {
       executor.shutdown()
       Dispatchers.resetMain()
       mainThreadSurrogate.close()
-    } catch (err: Throwable) {
+    } catch (_: Throwable) {
       // ignore
     }
   }
@@ -244,7 +243,7 @@ class GuestVMDispatchBenchmark {
             for (i in 0..workloadFactor) {
               assert("{\"x\":42,\"y\":43}" == json.execute(42, 43).asString())
             }
-          } catch (ise: IllegalStateException) {
+          } catch (_: IllegalStateException) {
             hadException.set(true)
           } finally {
             ctx.leave()
@@ -273,13 +272,13 @@ class GuestVMDispatchBenchmark {
 
       try {
         val buf = disruptor.ringBuffer
-        for (i in 0..workloadFactor) {
+        repeat(workloadFactor) {
           buf.publishEvent { event, _ ->
             event.set(42, 43, validator)
           }
         }
         waiter.await()
-      } catch (ixe: InterruptedException) {
+      } catch (_: InterruptedException) {
         Thread.interrupted()
       }
     } catch (err: Throwable) {

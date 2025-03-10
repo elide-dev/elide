@@ -27,6 +27,7 @@ import elide.runtime.core.PolyglotContext.EvaluationOptions
   /** Thread-safe mutable map holding this context's elements. */
   private val elements: MutableMap<PolyglotContextElement<*>, Any?> = ConcurrentHashMap()
 
+  @Suppress("UNUSED_PARAMETER")
   private fun resolveCustomEvaluator(source: Source, options: EvaluationOptions): GuestLanguageEvaluator? {
     return get(GuestLanguageEvaluator.contextElementFor(source.language))?.takeIf { it.accepts(source) }
   }

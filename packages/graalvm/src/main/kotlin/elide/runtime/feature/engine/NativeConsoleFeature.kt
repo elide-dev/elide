@@ -21,6 +21,7 @@ import elide.annotations.engine.VMFeature
 @VMFeature internal class NativeConsoleFeature : AbstractStaticNativeLibraryFeature() {
   companion object {
     private val staticJni: Boolean = System.getProperty("elide.staticJni") == "true"
+    private val mountNativeConsole: Boolean = "darwin" !in (System.getProperty("os.name")?.trim()?.lowercase() ?: "")
   }
 
   override fun getDescription(): String = "Registers native console libraries"
@@ -31,7 +32,7 @@ import elide.annotations.engine.VMFeature
     )
   }
 
-  override fun nativeLibs(access: BeforeAnalysisAccess) = listOf(
+  override fun nativeLibs(access: BeforeAnalysisAccess) = if (mountNativeConsole) listOf(
     libraryNamed(
       "umbrella",
       "org.fusesource.jansi.internal.CLibrary",
@@ -40,7 +41,7 @@ import elide.annotations.engine.VMFeature
       "org.jline.nativ.CLibrary",
       builtin = staticJni,
     ),
-  )
+  ) else emptyList()
 
   override fun unpackNatives(access: BeforeAnalysisAccess) = if (staticJni) emptyList() else when {
     /* Dynamic JNI */

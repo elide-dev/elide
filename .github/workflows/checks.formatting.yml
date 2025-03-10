@@ -100,7 +100,7 @@ jobs:
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
-          version: "10.5.2"
+          version: "10.6.2"
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]

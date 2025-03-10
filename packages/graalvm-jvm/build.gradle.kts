@@ -47,8 +47,8 @@ elide {
   }
 }
 
-val enablePackagedJvm = true
-val enableGraalEmbedded = true
+val enablePackagedJvm = false
+val enableGraalEmbedded = false
 
 val packagedModules = listOf(
   "java.base",
@@ -204,7 +204,6 @@ val binsToRemove = listOf(
 
 val resourcesToRemove = listOf(
   jlinkConfRoot.resolve("sound.properties"),
-
 )
 
 val trimPackagedJvm by tasks.registering(Exec::class) {

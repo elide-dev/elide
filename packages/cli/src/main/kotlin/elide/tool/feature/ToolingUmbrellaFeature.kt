@@ -15,6 +15,7 @@
 package elide.tool.feature
 
 import dev.elide.cli.bridge.CliNativeBridge
+import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
 import org.graalvm.nativeimage.hosted.Feature.IsInConfigurationAccess
 import org.graalvm.nativeimage.hosted.RuntimeJNIAccess.register
@@ -41,6 +42,66 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
     builtin = true,
     eager = true,
   )) else emptyList()
+
+  override fun unpackNatives(access: BeforeAnalysisAccess) = when {
+    /* Dynamic JNI */
+
+    Platform.includedIn(Platform.LINUX::class.java) -> when (System.getProperty("os.arch")) {
+      "x86_64", "amd64" -> access.unpackLibrary(
+        "jnidispatch",
+        "jnidispatch",
+        "x86-64",
+        "com/sun/jna/linux-x86-64/libjnidispatch.so",
+      )
+
+      "aarch64", "arm64" -> access.unpackLibrary(
+        "jnidispatch",
+        "jnidispatch",
+        "aarch64",
+        "com/sun/jna/linux-aarch64/libjnidispatch.so",
+      )
+
+      else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+    }
+
+    Platform.includedIn(Platform.MACOS::class.java) -> when (System.getProperty("os.arch")) {
+      "x86_64", "amd64" -> access.unpackLibrary(
+        "jnidispatch",
+        "jnidispatch",
+        "x86-64",
+        "com/sun/jna/darwin-x86-64/libjnidispatch.jnilib",
+      )
+
+      "aarch64", "arm64" -> access.unpackLibrary(
+        "jnidispatch",
+        "jnidispatch",
+        "x86-64",
+        "com/sun/jna/darwin-aarch64/libjnidispatch.jnilib",
+      )
+
+      else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+    }
+
+    Platform.includedIn(Platform.WINDOWS::class.java) -> when (System.getProperty("os.arch")) {
+      "x86_64", "amd64" -> access.unpackLibrary(
+        "jnidispatch",
+        "jnidispatch",
+        "x86-64",
+        "com/sun/jna/win32-x86-64/jnidispatch.dll",
+      )
+
+      "aarch64", "arm64" -> access.unpackLibrary(
+        "jnidispatch",
+        "jnidispatch",
+        "x86-64",
+        "com/sun/jna/win32-aarch64/jnidispatch.dll",
+      )
+
+      else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+    }
+
+    else -> error("Unsupported OS: ${System.getProperty("os.name")}")
+  }
 
   private fun registerJniCalls() {
     CliNativeBridge.initialize()

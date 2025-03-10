@@ -26,16 +26,14 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
 @DelicateElideApi public class Ruby(
   private val config: RubyConfig,
-  private val resources: LanguagePluginManifest? = null,
+  @Suppress("unused") private val resources: LanguagePluginManifest? = null,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
 
     // run embedded initialization code
-    resources?.let {
-      initializeEmbeddedScripts(context, resources)
-    }
+    executePreambleScripts(context, rubyPreamble)
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {
@@ -63,9 +61,9 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       "ruby.warn-locale",
     )
 
-// builder.setOptions(
-// "log.level" to "OFF",
-// )
+    // builder.setOptions(
+    // "log.level" to "OFF",
+    // )
   }
 
   public companion object Plugin : AbstractLanguagePlugin<RubyConfig, Ruby>() {
@@ -73,6 +71,10 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     private const val RUBY_PLUGIN_ID = "Ruby"
     override val languageId: String = RUBY_LANGUAGE_ID
     override val key: Key<Ruby> = Key(RUBY_PLUGIN_ID)
+    @JvmStatic private val rubyPreamble = initializePreambleScripts(
+      RUBY_LANGUAGE_ID,
+      "environment.rb",
+    )
 
     override fun install(scope: InstallationScope, configuration: RubyConfig.() -> Unit): Ruby {
       configureLanguageSupport(scope)

@@ -137,7 +137,7 @@ permissions:
 env:
   CI: "true"
   RUST_BACKTRACE: full
-  ELIDE_VERSION: "1.0.0-alpha14"
+  ELIDE_VERSION: "1.0.0-alpha15"
 
 jobs:
   ##
@@ -159,48 +159,90 @@ jobs:
         uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           disable-sudo: false
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
             agent.less.build:443
-            static.rust-lang.org:443
             androidx.dev:443
             api.codecov.io:443
             api.foojay.io:443
             api.github.com:443
+            api.nuget.org:443
+            api.sonarcloud.io:443
+            apt.llvm.org:443
+            apt.llvm.org:80
+            azure.archive.ubuntu.com:80
+            bun.sh:443
             cli.codecov.io:443
             cli.less.build:443
+            crates.io:443
             d3ob9fqp587by1.cloudfront.net:443
             dc.services.visualstudio.com:443
+            dl.elide.dev:443
             dl.google.com:443
             dl.less.build:443
             download-cdn.jetbrains.com:443
             download.jetbrains.com:443
             download.oracle.com:443
+            downloads.gradle.org:443
             ea6ne4j2sb.execute-api.eu-central-1.amazonaws.com:443
             edge.pkg.st:443
-            maven.elide.dev:443
+            elide-snapshots.storage-download.googleapis.com:443
+            elide.sh:80
+            elide.zip:443
+            esm.ubuntu.com:443
+            files.pythonhosted.org:443
             github.com:22
             github.com:443
             global.less.build:443
+            go.dev:443
+            google.com:443
+            gradle.less.build:443
             gradle.pkg.st:443
+            ha.pool.sks-keyservers.net:11371
+            httpbin.org:443
+            index.crates.io:443
+            ingest.codecov.io:443
+            jcenter.bintray.com:443
+            jitpack.io:443
             jpms.pkg.st:443
+            keybase.io:443
             keys.openpgp.org:443
             keyserver.ubuntu.com:443
             local.less.build:443
+            maven.elide.dev:443
             maven.pkg.jetbrains.space:443
             maven.pkg.st:443
+            mirror.bazel.build:443
+            motd.ubuntu.com:443
             nodejs.org:443
             npm.pkg.st:443
+            o26192.ingest.us.sentry.io:443
             objects.githubusercontent.com:443
+            oss.sonatype.org:443
+            packages.microsoft.com:443
             pgp.mit.edu:443
+            plugins-artifacts.gradle.org:443
+            plugins.gradle.org:443
+            projectlombok.org:443
+            proxy.golang.org:443
+            pypi.org:443
+            raw.githubusercontent.com:443
             registry.npmjs.org:443
+            registry.yarnpkg.com:443
+            releases.bazel.build:443
             repo.maven.apache.org:443
+            repo1.maven.org:443
             sc-cleancode-sensorcache-eu-central-1-prod.s3.amazonaws.com:443
             scanner.sonarcloud.io:443
             scans-in.gradle.com:443
             services.gradle.org:443
             sonarcloud.io:443
+            static.crates.io:443
+            static.rust-lang.org:443
             storage.googleapis.com:443
+            www.google.com:443
+            www.googleapis.com:443
+            ziglang.org:443
       - name: "Setup: Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -256,9 +298,11 @@ jobs:
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
-          version: "10.5.2"
+          version: "10.6.2"
       - name: "Setup: Elide"
-        run: curl -sSL --tlsv1.2 elide.sh | bash -s - --install-rev=${{ env.ELIDE_VERSION }} && echo "$HOME/elide" >> $GITHUB_PATH
+        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
+        with:
+          version: "1.0.0-alpha15" # unlisted (interim)
       - name: "Setup: Dependencies"
         run: |
           #cargo install cargo-fuzz cargo-insta rustfilt
@@ -272,8 +316,6 @@ jobs:
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
           echo "Installing dependencies..."
-          mkdir -p $HOME/.config/orogene
-          cp -fv ./.github/workflows/oro.kdl $HOME/.config/orogene/oro.kdl
           elide install
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
@@ -512,7 +554,7 @@ jobs:
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
-          version: "10.5.2"
+          version: "10.6.2"
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]

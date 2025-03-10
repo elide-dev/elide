@@ -18,21 +18,13 @@
 resolver = "2"
 members = ["crates/*", "tools/umbrella"]
 
-exclude = [
-  # Deprecated for removal.
-  "crates/base",
-  "crates/build",
-  "crates/model",
-  "crates/transport",
-  "third_party",
-  "runtime",
-]
+exclude = ["crates/build", "crates/transport", "third_party", "runtime"]
 
 [workspace.package]
 license = "MIT"
 edition = "2024"
 rust-version = "1.85.0"
-version = "1.0.0-alpha14-SNAPSHOT"
+version = "1.0.0-beta1"
 authors = ["Elide Technologies, Inc."]
 homepage = "https://elide.dev"
 documentation = "https://docs.elide.dev"
@@ -85,9 +77,9 @@ jni-sys = { version = "0.4.0" }
 libloading = { version = "0.8.6" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "c74987780c6b81ca3eee5deb863ed3be6424e5df" }
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "024c67173c29ae2de79c4e5e113064bb79a2259a" }
 rustc_version = { version = "0.4.1" }
-rustix = { version = "0.38.44", features = ["process"] }
+rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }
 sysinfo = { version = "0.33.1" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
@@ -108,7 +100,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "64080ee745360b8d33df2ed3882d21125bc3da43", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "2c48fba9f656c14e1032c1a4319f66cf535159dd", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -116,7 +108,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "64080ee745360b8d33df2ed
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "40dce4e00959abc9b598df9e565c0d35dfa5f4c2" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "2f28d60ba3a959101a109d5912f565da08a117ba" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "a25be4610a1fd3f7e9a4e593da9ccb25e1aae49a" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "1fab292ec12bb91308d06e8db24482ea9dc0083a" }

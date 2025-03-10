@@ -32,7 +32,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 /** Engine plugin adding support for JavaScript. */
 @DelicateElideApi public class JavaScript private constructor(
   private val config: JavaScriptConfig,
-  private val resources: LanguagePluginManifest,
+  @Suppress("unused") private val resources: LanguagePluginManifest,
   private val environment: Environment? = null,
 ) {
   private fun initializeContext(context: PolyglotContext) {
@@ -44,7 +44,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     // run embedded initialization code
     if (!config.labsConfig.disablePolyfills) {
-      executePreambleScripts(context, resources, javascriptPreamble)
+      executePreambleScripts(context, javascriptPreamble)
     }
   }
 

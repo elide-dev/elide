@@ -3,6 +3,7 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
+    <ID>CyclomaticComplexMethod:NodeFilesystem.kt$NodeFilesystemProxy$override fun getMember(key: String?): Any?</ID>
     <ID>ExplicitGarbageCollectionCall:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$gc()</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
@@ -62,7 +63,6 @@
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("epoll", "x86-64", *epollImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "aarch64", *kqueueImpls)</ID>
     <ID>SpreadOperator:NativeTransportFeature.kt$NativeTransportFeature$("kqueue", "x86-64", *kqueueImpls)</ID>
-    <ID>SpreadOperator:NodeFilesystem.kt$(src.toJavaPath(), dest.toJavaPath(), *copyOpts(mode))</ID>
     <ID>SpreadOperator:SQLiteTransactor.kt$SQLiteTransactor$(*args)</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(*args)</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asHostObject&lt;Statement>(), *it.drop(1).toTypedArray())</ID>
@@ -71,8 +71,6 @@
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
     <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>
     <ID>SwallowedException:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
-    <ID>SwallowedException:NodeProcess.kt$NodeProcess.NodeProcessModuleImpl$uoe: UnsupportedOperationException</ID>
-    <ID>SwallowedException:NodeStream.kt$AbstractReadable$ese: EndStreamException</ID>
     <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$e: java.net.URISyntaxException</ID>
     <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$syntaxErr: java.net.URISyntaxException</ID>
     <ID>SwallowedException:WebCryptoIntrinsicTest.kt$WebCryptoIntrinsicTest$err: Throwable</ID>
@@ -84,14 +82,8 @@
     <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
-    <ID>TooGenericExceptionCaught:NodeStream.kt$AbstractReadable$e: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy.SQLiteTransactionImpl$err: Throwable</ID>
-    <ID>UnusedParameter:GraalVMContext.kt$GraalVMContext$options: EvaluationOptions</ID>
-    <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$ctx: QueryTemplateContext? = null</ID>
-    <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$position: Int = -1</ID>
-    <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$soFar: Int = -1</ID>
-    <ID>UnusedParameter:SqliteQueryRenderer.kt$SqliteQueryRenderer$subject: String</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
     <ID>UnusedPrivateMember:HttpServerAgent.kt$HttpServerAgent.Companion$private fun resolveLanguage(source: Source): GuestLanguage</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>

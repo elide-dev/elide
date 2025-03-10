@@ -1003,11 +1003,11 @@ public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runti
 	public fun <init> ()V
 	protected final fun configureLanguageSupport (Lelide/runtime/core/EnginePlugin$InstallationScope;)V
 	protected final fun configureSharedBindings (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguageConfig;)V
-	protected final fun executePreambleScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Ljava/util/List;)V
-	public static synthetic fun executePreambleScripts$default (Lelide/runtime/plugins/AbstractLanguagePlugin;Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Ljava/util/List;ILjava/lang/Object;)V
+	protected final fun executePreambleScripts (Lelide/runtime/core/PolyglotContext;Ljava/util/List;)V
+	public static synthetic fun executePreambleScripts$default (Lelide/runtime/plugins/AbstractLanguagePlugin;Lelide/runtime/core/PolyglotContext;Ljava/util/List;ILjava/lang/Object;)V
 	protected fun getManifestKey ()Ljava/lang/String;
 	protected final fun initializeEmbeddedScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
-	protected static final fun initializePreambleScripts (Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;
+	protected static final fun initializePreambleScripts (Ljava/lang/String;[Ljava/lang/String;Z)Ljava/util/List;
 	protected final fun installEmbeddedBundles (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/EnginePlugin$InstallationScope;Z)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
 	protected final fun resolveEmbeddedManifest (Lelide/runtime/core/HostPlatform;Z)Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;
@@ -1016,6 +1016,7 @@ public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runti
 }
 
 protected final class elide/runtime/plugins/AbstractLanguagePlugin$Companion {
+	public static synthetic fun initializePreambleScripts$default (Lelide/runtime/plugins/AbstractLanguagePlugin$Companion;Ljava/lang/String;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/util/List;
 }
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest {

@@ -39,14 +39,19 @@ private val BUILTIN_PYTHON_PATHS = listOf(
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
-  private val resources: LanguagePluginManifest? = null,
+  @Suppress("unused") private val resources: LanguagePluginManifest? = null,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
 
     // run embedded initialization code
-    if (resources != null) initializeEmbeddedScripts(context, resources)
+    if (ENABLE_PREAMBLE_WARM) {
+      executePreambleScripts(context, pythonPreamble)
+    } else {
+      @Suppress("DEPRECATION")
+      if (resources != null) initializeEmbeddedScripts(context, resources)
+    }
   }
 
   private fun resolveGraalPythonVersions(): Pair<String, String> {
@@ -119,10 +124,17 @@ private val BUILTIN_PYTHON_PATHS = listOf(
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
     private const val ENABLE_EXPERIMENTAL = true
+    private const val ENABLE_PREAMBLE_WARM = false
     private const val ENABLE_PANAMA = false
     private const val GPY_LIST_SEPARATOR = "🏆"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
+
+    @JvmStatic private val pythonPreamble = initializePreambleScripts(
+      PYTHON_LANGUAGE_ID,
+      "environment.py",
+      prewarm = ENABLE_PREAMBLE_WARM,
+    )
 
     init {
       registerLanguageVfs(PYTHON_LANGUAGE_ID) {
@@ -132,10 +144,9 @@ private val BUILTIN_PYTHON_PATHS = listOf(
           }
 
           override val fsProvider: () -> FileSystem get() = {
-            TODO("fixup")
-//            org.graalvm.python.embedding.utils.VirtualFileSystem
-//              .newBuilder()
-//              .build()
+            org.graalvm.python.embedding.utils.VirtualFileSystem
+              .newBuilder()
+              .build()
           }
         }
       }

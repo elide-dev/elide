@@ -13,27 +13,12 @@
 
 use bindgen::Builder;
 use builder::{
-  build_bindings, build_dual_cc, header_file, if_not_exists, makefile_sub_run, setup, setup_cc,
-  src_file, third_party_project, third_party_src_file,
+  build_bindings, build_dual_cc, header_file, setup_cc, src_file, third_party_project,
+  third_party_src_file,
 };
 
 fn main() {
-  let profile = std::env::var("PROFILE").expect("No profile variable set");
-  let profile_val = profile.as_str();
-  let cmd_args = match profile_val {
-    "release" => "RELEASE=yes",
-    _ => "RELEASE=no",
-  };
-
-  setup(|| {
-    // we need to build the sqlite amalgamation if it is not present
-    if_not_exists(third_party_src_file("sqlite", "sqlite3.c").as_str(), || {
-      makefile_sub_run("third_party", format!("sqlite {}", cmd_args).as_str());
-    });
-  });
-
   let mut build = setup_cc();
-
   let sqlite_path = third_party_project("sqlite/install");
   let sqlite_include = format!("-I{}/include", sqlite_path);
   let include_binding = sqlite_include.clone();
@@ -56,6 +41,7 @@ fn main() {
     // Defines & Compiler Settings
     .define("SQLITE_GVM_STATIC", "1")
     .define("SQLITE_CORE", "1")
+    .define("SQLITE_USE_MALLOC_H", "1")
     .define("SQLITE_DEFAULT_FILE_PERMISSIONS", "0666")
     .define("SQLITE_DEFAULT_MEMSTATUS", "0")
     .define("SQLITE_DISABLE_PAGECACHE_OVERFLOW_STATS", "1")

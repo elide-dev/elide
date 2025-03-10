@@ -370,8 +370,7 @@ internal object NodeOperatingSystem {
     }
 
     private fun decimalMaskFromSubnetMask(cidrMask: Short): String {
-      var bits: Long = 0
-      bits = (-0x1 xor (1 shl 32 - cidrMask) - 1).toLong()
+      val bits: Long = (-0x1 xor (1 shl 32 - cidrMask) - 1).toLong()
       return String.format(
         "%d.%d.%d.%d",
         (bits and 0x0000000000ff000000L) shr 24,

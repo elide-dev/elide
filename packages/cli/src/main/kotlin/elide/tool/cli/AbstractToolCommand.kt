@@ -24,7 +24,7 @@ import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
 
-public typealias CommandScope = CoroutineScope
+typealias CommandScope = CoroutineScope
 
 /** Root base for all commands, which defines the structure of interaction with Clikt. */
 abstract class CliCommandInvocation<Context> :
@@ -190,6 +190,7 @@ abstract class AbstractToolCommand<Context>:
    *
    * @return Exit code from running the command.
    */
+  @Suppress("UNUSED_PARAMETER")
   suspend fun exec(args: Array<String>): CommandResult = execute(Dispatchers.Unconfined) {
     invoke(it).also(commandResult::set)  // enter context and invoke
   }

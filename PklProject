@@ -2,7 +2,7 @@ amends "pkl:Project"
 
 package {
   name = "elide"
-  version = "1.0.0-alpha14"
+  version = "1.0.0-beta1"
   baseUri = "package://pkl.elide.dev/\(name)"
   packageZipUrl = "https://github.com/elide-dev/elide/releases/download/\(version)/pkl-\(name)-\(version).zip"
 }

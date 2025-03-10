@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright (c) 2024 Elide Technologies, Inc.
+# Copyright (c) 2022-2025 Elide Technologies, Inc.
 #
 # Licensed under the MIT license (the "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.15
+# Version: 0.16
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -33,6 +33,7 @@
 #   --arch=<arch>                Install for a specific architecture (optional, overrides detection)
 #   --os=<os>                    Install for a specific operating system (optional, overrides detection)
 #   --[no]-path                  Whether to add the install directory to the PATH
+#   --gha                        Prefer to serve the download directly from GitHub
 #   --no-banner                  Opt out of the announcement banner after install
 #   --no-color                   Disable color output
 #   --debug                      Enable debug output
@@ -41,6 +42,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.16 2025-03-14  Sam Gammon  Added --gha flag for 1.0.0-beta1 release
 #   0.15 2025-01-26  Sam Gammon  Issuance of alpha12 release
 #   0.14 2025-01-26  Sam Gammon  Issuance of alpha11 release
 #   0.13 2024-05-12  Sam Gammon  Fixes for install prefix and alpha9 release
@@ -61,7 +63,7 @@ set -e
 set +x
 
 TOOL_REVISION="1.0.0-alpha14"
-INSTALLER_VERSION="v0.15"
+INSTALLER_VERSION="v0.16"
 
 TOOL="cli"
 VERSION="v1"
@@ -136,6 +138,7 @@ if [[ "$@" == *"help"* ]]; then
   echo -e "  ${YELLOW}--install-rev${NC}=<version>  Install a specific version of Elide"
   echo -e "  ${YELLOW}--${NC}[${YELLOW}no${NC}]${YELLOW}-path${NC}              Whether to add the install directory to the PATH"
   echo -e "  ${YELLOW}--no-banner${NC}              Opt out of the announcement banner after install"
+  echo -e "  ${YELLOW}--gha${NC}                    Prefer to serve the download directly from GitHub"
   echo -e "  ${YELLOW}--no-color${NC}               Disable color output"
   echo -e "  ${YELLOW}--debug${NC}                  Enable debug output"
   echo -e "  ${YELLOW}--trace${NC}                  Enable bash tracing"
@@ -166,6 +169,11 @@ SHOW_BANNER="true"
 if [[ "$@" == *"no-banner"* ]]; then
   debug "Opting out of install banner."
   SHOW_BANNER="false"
+fi
+
+if [[ "$@" == *"gha"* ]]; then
+  debug "Preferring GHA."
+  DOWNLOAD_BASE="https://gha.elide.zip"
 fi
 
 if [[ "$@" == *"trace"* ]]; then

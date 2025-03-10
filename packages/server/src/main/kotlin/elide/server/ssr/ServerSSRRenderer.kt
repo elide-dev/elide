@@ -114,7 +114,7 @@ public class ServerSSRRenderer (
    */
   public suspend fun renderSuspendAsync(): Deferred<String> = coroutineScope {
     return@coroutineScope async {
-      prepareContext { _, props ->
+      prepareContext { _, _ ->
         TODO("Stubbed for transition to plugin-based VM")
 //        val vm = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
 //          error("Failed to resolve JavaScript runtime provider")

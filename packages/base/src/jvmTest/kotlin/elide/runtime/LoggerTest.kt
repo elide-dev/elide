@@ -17,9 +17,20 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
+import elide.runtime.jvm.jvmLevel
 
 /** Tests for acquiring [Logger] instances on the JVM. */
 class LoggerTest {
+  @Test fun testLoggerLevels() {
+    val levels = LogLevel.entries
+    assertNotNull(levels)
+    levels.forEach {
+      assertNotNull(it.name)
+      assertNotNull(it.ordinal)
+      assertNotNull(it.jvmLevel)
+    }
+  }
+
   @Test fun testLoggerAsSlf4j() {
     val logger = Logging.of(LoggerTest::class)
     assertIs<org.slf4j.Logger>(logger)

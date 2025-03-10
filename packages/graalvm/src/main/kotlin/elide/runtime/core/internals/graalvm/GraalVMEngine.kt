@@ -273,6 +273,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
           TypeScriptLanguage.ID -> listOf(
             JavaScriptLanguage.ID,
             TypeScriptLanguage.ID,
+            "wasm",  // @TODO better reference
           )
 
           else -> listOf(it.languageId)

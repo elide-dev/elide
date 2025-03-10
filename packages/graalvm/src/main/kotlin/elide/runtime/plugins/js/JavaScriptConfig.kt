@@ -146,7 +146,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   public var v8: Boolean = true
 
   /** Enable WASM support and related bindings. Defaults to `true`; only active where supported. */
-  public var wasm: Boolean = false
+  public var wasm: Boolean = true
 
   /** Enable experimental built-in runtime support for TypeScript. Defaults to `false`. */
   public var typescript: Boolean = true

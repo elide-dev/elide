@@ -13,69 +13,15 @@
 
 package elide.tool.cli
 
-import io.micronaut.configuration.picocli.PicocliRunner
-import org.apache.commons.io.output.ByteArrayOutputStream
 import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.assertDoesNotThrow
-import java.io.PrintStream
 import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
 /** Tests for the main CLI tool entrypoint. */
-@TestCase class ElideToolTest {
-  private val testRuby = false
-  private val testPython = false
-  private val rootProjectPath = Paths.get(System.getProperty("user.dir"))
-    .parent
-    .parent
-
-  private val testScriptsPath = rootProjectPath
-    .resolve("tools")
-    .resolve("scripts")
-    .toAbsolutePath()
-
-  private fun assertToolExitsWithCode(expected: Int, vararg args: String) {
-    fun block(): Int =
-      PicocliRunner.execute(Elide::class.java, *args)
-
-    // capture stdout and stderr
-    val stubbedOut = ByteArrayOutputStream()
-    val stubbedErr = ByteArrayOutputStream()
-    val originalOut = System.out
-    val originalErr = System.err
-    System.setOut(PrintStream(stubbedOut))
-    System.setErr(PrintStream(stubbedErr))
-    val capturedOut: AtomicReference<ByteArray> = AtomicReference(null)
-    val capturedErr: AtomicReference<ByteArray> = AtomicReference(null)
-
-    val code = try {
-      block()
-    } finally {
-      capturedOut.set(stubbedOut.toByteArray())
-      capturedErr.set(stubbedErr.toByteArray())
-      System.setOut(originalOut)
-      System.setErr(originalErr)
-    }
-    assertEquals(
-      expected,
-      code,
-      "should exit with code $expected, but got $code;\n" +
-              "stdout: ${String(capturedOut.get())}\nstderr: ${String(capturedErr.get())}",
-    )
-  }
-
-  private fun assertToolRunsWith(vararg args: String) {
-    assertToolExitsWithCode(0, *args)
-  }
-
-  @Inject lateinit var tool: Elide
-
+@TestCase class ElideToolTest : AbstractEntryTest() {
   @Test fun testEntrypoint() {
     assertNotNull(tool, "should be able to init and inject entrypoint")
   }

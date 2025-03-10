@@ -12,6 +12,11 @@
  */
 package elide.runtime.plugins
 
+import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.Value
+import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
@@ -23,10 +28,19 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import kotlin.io.bufferedReader
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.EmbeddedResource
 import elide.runtime.plugins.bindings.Bindings
+
+// Default engine for pre-warming.
+private val defaultEngine = Engine.create()
+
+// Default context for pre-warming.
+private val defaultContext = Context.newBuilder()
+  .engine(defaultEngine)
+  .build()
 
 /**
  * Abstract base class for language plugins.
@@ -39,6 +53,20 @@ import elide.runtime.plugins.bindings.Bindings
    * @see resolveEmbeddedManifest
    */
   protected open val manifestKey: String get() = languageId
+
+  /**
+   * Pre-initialization script built by [initializePreambleScripts], which returns a suite of sources which are
+   * initialized at build time; these scripts should be passed verbatim to [executePreambleScripts] at runtime.
+   *
+   * @property name Given name of the preamble script.
+   * @property source The source of the preamble script.
+   * @property entry Pre-parsed entrypoint for the script.
+   */
+  @JvmRecord public data class PreinitScript(
+    val name: String,
+    val source: Source,
+    val entry: Value? = null,
+  )
 
   /** Provides information about resources embedded into the runtime, used by language plugins. */
   @Serializable public data class LanguagePluginManifest(
@@ -189,6 +217,32 @@ import elide.runtime.plugins.bindings.Bindings
    * @param resources The embedded resources for this plugin, providing the script sources.
    */
   @Suppress("TooGenericExceptionCaught")
+  protected fun executePreambleScripts(
+    context: PolyglotContext,
+    resources: LanguagePluginManifest,
+    sources: List<PreinitScript> = emptyList(),
+  ) {
+    try {
+      context.enter()
+      sources.forEach { script ->
+        context.evaluate(script.source)
+      }
+    } finally {
+      context.leave()
+    }
+  }
+
+  /**
+   * Run the setup scripts specified in this plugin's [resources] in the provided [context].
+   *
+   * This function will typically be called by plugins in response to the
+   * [ContextInitialized][elide.runtime.core.EngineLifecycleEvent.ContextInitialized] event.
+   *
+   * @param context A [PolyglotContext] used to execute the initialization scripts.
+   * @param resources The embedded resources for this plugin, providing the script sources.
+   */
+  @Deprecated("Use initializePreambleScripts instead.")
+  @Suppress("TooGenericExceptionCaught")
   protected fun initializeEmbeddedScripts(context: PolyglotContext, resources: LanguagePluginManifest) {
     try {
       context.enter()
@@ -229,6 +283,44 @@ import elide.runtime.plugins.bindings.Bindings
     /** Lenient variant of the [Json] codec, used for backwards-compatibility reasons. */
     private val LenientJson by lazy {
       Json { ignoreUnknownKeys = true }
+    }
+
+    /**
+     * Run the setup scripts specified in this plugin's [resources] in the provided [context].
+     *
+     * This function will typically be called by plugins in response to the
+     * [ContextInitialized][elide.runtime.core.EngineLifecycleEvent.ContextInitialized] event.
+     *
+     * @param langId ID of the owning language.
+     * @param resources The embedded resources for this plugin, providing the script sources.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    @JvmStatic protected fun initializePreambleScripts(langId: String, vararg scripts: String): List<PreinitScript> {
+      val path = "META-INF/elide/embedded/runtime/$langId"
+      defaultContext.enter()
+
+      try {
+        return scripts.map { script ->
+          val source = this::class.java.classLoader.getResourceAsStream("$path/$script")
+            ?: error("Failed to load embedded resource: $script")
+
+          val src = Source.newBuilder(
+            langId,
+            source.bufferedReader(StandardCharsets.UTF_8), script.substringBefore('.')
+          ).apply {
+            internal(true)
+            cached(true)
+          }.build()
+
+          PreinitScript(
+            name = script,
+            source = src,
+            entry = defaultContext.parse(src),
+          )
+        }
+      } finally {
+        defaultContext.leave()
+      }
     }
   }
 }

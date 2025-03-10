@@ -44,7 +44,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     // run embedded initialization code
     if (!config.labsConfig.disablePolyfills) {
-      initializeEmbeddedScripts(context, resources)
+      executePreambleScripts(context, resources, javascriptPreamble)
     }
   }
 
@@ -159,6 +159,11 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     override val languageId: String = JS_LANGUAGE_ID
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
+
+    @JvmStatic private val javascriptPreamble = initializePreambleScripts(
+      JS_LANGUAGE_ID,
+      "polyfills.js",
+    )
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
       JavaScriptLang.initialize()

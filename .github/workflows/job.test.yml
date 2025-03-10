@@ -234,7 +234,7 @@ jobs:
           cache: true
           rustflags: ""
       - name: "Setup: SCCache"
-        uses: mozilla-actions/sccache-action@054db53350805f83040bf3e6e9b8cf5a139aa7c9 # v0.0.7
+        uses: mozilla-actions/sccache-action@65101d47ea8028ed0c98a1cdea8dd9182e9b5133 # v0.0.8
       - name: "Setup: Rust Caching"
         run: |
           echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
@@ -490,7 +490,7 @@ jobs:
           cache: false
           rustflags: ""
       - name: "Setup: SCCache"
-        uses: mozilla-actions/sccache-action@054db53350805f83040bf3e6e9b8cf5a139aa7c9 # v0.0.7
+        uses: mozilla-actions/sccache-action@65101d47ea8028ed0c98a1cdea8dd9182e9b5133 # v0.0.8
       - name: "Setup: Rust Caching"
         run: |
           echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV

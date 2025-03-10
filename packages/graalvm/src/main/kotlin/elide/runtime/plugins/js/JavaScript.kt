@@ -69,6 +69,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.strict",
       "js.temporal",
       "js.top-level-await",
+      "js.webassembly",
       // Experimental:
       "js.async-context",
       "js.async-iterator-helpers",

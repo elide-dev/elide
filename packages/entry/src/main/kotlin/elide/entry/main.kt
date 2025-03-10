@@ -17,6 +17,7 @@ import java.util.concurrent.ThreadFactory
 
 private val languages = arrayOf(
     "js",
+    "wasm",
 )
 
 private val contextBuilder = Context.newBuilder(*languages)

@@ -121,6 +121,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "Reflect",
     "Proxy",
     "Intl",
+    "WebAssembly",
   )
 
   // Expected Node-specific global symbols.
@@ -181,7 +182,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "TransformStreamDefaultController",
     "URL",
     "URLSearchParams",
-    "WebAssembly",
     "WebSocket",
     "WritableStream",
     "WritableStreamDefaultController",
@@ -227,7 +227,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "EventSource",  // not yet implemented
     "FormData",  // not yet implemented
     "Navigator",  // not yet implemented
-    "WebAssembly",  // not yet implemented
     "WebSocket",  // not yet implemented
     "PerformanceEntry",  // not yet implemented
     "PerformanceMark",  // not yet implemented

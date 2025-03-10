@@ -66,6 +66,8 @@ private const val ENABLE_SUPPRESSIONS = true
     "encodeURIComponent",
     "escape",
     "unescape",
+    "navigator",
+    "Navigator",
     "Object",
     "Function",
     "Boolean",
@@ -151,8 +153,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "fetch",
     "File",
     "FormData",
-    "navigator",
-    "Navigator",
     "PerformanceEntry",
     "PerformanceMark",
     "PerformanceMeasure",
@@ -211,7 +211,6 @@ private const val ENABLE_SUPPRESSIONS = true
 
   // Globals which may fail to be found without failing tests (for instance, still under implementation).
   private val allowMissingGlobals = sortedSetOf(
-    "navigator",  // not yet implemented
     "setImmediate",  // not yet implemented
     "clearImmediate",  // not yet implemented
     "structuredClone",  // not yet implemented
@@ -226,7 +225,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "Event",  // not yet implemented
     "EventSource",  // not yet implemented
     "FormData",  // not yet implemented
-    "Navigator",  // not yet implemented
     "WebSocket",  // not yet implemented
     "PerformanceEntry",  // not yet implemented
     "PerformanceMark",  // not yet implemented

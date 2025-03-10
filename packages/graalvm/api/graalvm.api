@@ -1754,8 +1754,10 @@ public final class elide/runtime/gvm/js/JsError {
 	public static synthetic fun of$default (Lelide/runtime/gvm/js/JsError;Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Integer;[Lkotlin/Pair;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/Error;
 	public final fun rangeError (Ljava/lang/String;Ljava/lang/Throwable;Z)Lelide/runtime/intrinsics/js/err/RangeError;
 	public static synthetic fun rangeError$default (Lelide/runtime/gvm/js/JsError;Ljava/lang/String;Ljava/lang/Throwable;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/RangeError;
+	public final fun typeError (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;Z)Lelide/runtime/intrinsics/js/err/TypeError;
 	public final fun typeError (Ljava/lang/String;Ljava/lang/Throwable;Z)Lelide/runtime/intrinsics/js/err/TypeError;
 	public final fun typeError (Ljava/lang/Throwable;Z)Lelide/runtime/intrinsics/js/err/TypeError;
+	public static synthetic fun typeError$default (Lelide/runtime/gvm/js/JsError;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/TypeError;
 	public static synthetic fun typeError$default (Lelide/runtime/gvm/js/JsError;Ljava/lang/String;Ljava/lang/Throwable;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/TypeError;
 	public static synthetic fun typeError$default (Lelide/runtime/gvm/js/JsError;Ljava/lang/Throwable;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/TypeError;
 	public final fun valueError (Ljava/lang/String;Ljava/lang/Throwable;Z)Lelide/runtime/intrinsics/js/err/ValueError;
@@ -5779,6 +5781,24 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Test
 public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
 }
 
+public synthetic class elide/runtime/javascript/$NavigatorBuiltin$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/javascript/$NavigatorBuiltin$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
 public synthetic class elide/runtime/javascript/$QueueMicrotaskCallable$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -5794,6 +5814,19 @@ public final synthetic class elide/runtime/javascript/$QueueMicrotaskCallable$In
 	public fun <init> ()V
 	public fun hasBuilder ()Z
 	public fun isBuildable ()Z
+}
+
+public final class elide/runtime/javascript/NavigatorBuiltin : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic, elide/runtime/interop/ReadOnlyProxyObject {
+	public fun <init> ()V
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
+}
+
+public final class elide/runtime/javascript/NavigatorBuiltin$Navigator : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public fun <init> ()V
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
 public final class elide/runtime/javascript/QueueMicrotaskCallable : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic, org/graalvm/polyglot/proxy/ProxyExecutable {

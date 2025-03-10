@@ -129,6 +129,22 @@ import elide.runtime.intrinsics.js.err.JsError
   }
 
   /**
+   * [TypeError] constructor for spec-compliant type errors which accept a code and message.
+   *
+   * @param code Code string for the error.
+   * @param message String message for this error.
+   * @param cause Throwable error to wrap and consider the cause of this error.
+   * @param raise Whether to throw the error after wrapping. Defaults to `false`.
+   * @return Wrapped [TypeError], ready to be raised.
+   */
+  @Throws(TypeError::class)
+  public fun typeError(code: String, message: String, cause: Throwable? = null, raise: Boolean = false): TypeError {
+    val exc = wrapped("[$code]: $message", cause, TypeError::class)
+    if (raise) throw exc
+    return exc
+  }
+
+  /**
    * [RangeError] convenience function: wrap the provided [message] and optional [cause]; then, optionally [raise].
    *
    * @param message String message for this error.

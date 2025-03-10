@@ -64,6 +64,7 @@ import elide.testing.annotations.TestCase
       testFile("args.py"),
       testFile("env.py"),
       testFile("env.js"),
+      testFile("fetch.mjs"),
     )
 
     private val knownBroken = sortedSetOf(

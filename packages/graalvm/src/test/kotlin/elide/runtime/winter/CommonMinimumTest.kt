@@ -66,7 +66,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "TextDecoderStream",
     "TextEncoderStream",
     "URLPattern",
-    "structuredClone",
   )
 
   // Minimum Common API §3.1: Interfaces.

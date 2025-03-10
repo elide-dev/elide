@@ -67,6 +67,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "escape",
     "unescape",
     "navigator",
+    "structuredClone",
     "Navigator",
     "Object",
     "Function",
@@ -171,7 +172,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "setInterval",
     "setTimeout",
     "Storage",
-    "structuredClone",
     "SubtleCrypto",
     "DOMException",
     "TextDecoder",
@@ -213,7 +213,6 @@ private const val ENABLE_SUPPRESSIONS = true
   private val allowMissingGlobals = sortedSetOf(
     "setImmediate",  // not yet implemented
     "clearImmediate",  // not yet implemented
-    "structuredClone",  // not yet implemented
     "InternalError",  // web-standard only, not present in non-browser runtimes
     "BroadcastChannel",  // not yet implemented
     "CloseEvent",  // not yet implemented

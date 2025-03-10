@@ -306,7 +306,8 @@ private val defaultContext = Context.newBuilder()
 
           val src = Source.newBuilder(
             langId,
-            source.bufferedReader(StandardCharsets.UTF_8), script.substringBefore('.')
+            source.bufferedReader(StandardCharsets.UTF_8),
+            script.substringBefore('.')
           ).apply {
             internal(true)
             cached(true)

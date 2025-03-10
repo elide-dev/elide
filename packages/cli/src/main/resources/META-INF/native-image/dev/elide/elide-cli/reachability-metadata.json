@@ -1,6 +1,21 @@
 {
   "reflection": [
     {
+      "type": "elide.runtime.gvm.internals.sqlite.SqliteDatabaseProxy"
+    },
+    {
+      "type": "elide.runtime.gvm.internals.sqlite.SqliteDatabaseProxy$SQLiteStatementImpl"
+    },
+    {
+      "type": "java.io.Closeable"
+    },
+    {
+      "type": "elide.runtime.intrinsics.sqlite.SQLiteStatement"
+    },
+    {
+      "type": "elide.runtime.intrinsics.js.node.NodeAPI"
+    },
+    {
       "type": "java.util.Optional",
       "methods": [
         {

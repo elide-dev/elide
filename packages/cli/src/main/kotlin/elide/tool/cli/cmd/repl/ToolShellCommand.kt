@@ -905,13 +905,19 @@ private typealias ContextAccessor = () -> PolyglotContext
           )
 
           else -> displayFormattedError(
-            exc,
-            exc.message ?: "A runtime error was thrown",
+            exc.asHostException(),
+            exc.asHostException().message ?: "A runtime error was thrown",
             advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
             stacktrace = true,
             internal = true,
           )
         }
+      }
+
+      // if this is a guest-side exception, throw it
+      exc.guestObject != null && exc.guestObject.isException -> {
+        logging.debug("Detected guest-side exception; throwing")
+        exc.guestObject.throwException()
       }
 
       exc.isGuestException -> displayFormattedError(
@@ -931,6 +937,8 @@ private typealias ContextAccessor = () -> PolyglotContext
         exc.message ?: "An error was thrown",
         internal = true,
       )
+
+      else -> error("Unhandled polyglot error type: $exc")
     }
     // in interactive sessions, return `null` if the error is non-fatal; this tells the outer execution loop to ignore
     // the exception (since it has been printed to the user), and continue with the interactive session.
@@ -1229,10 +1237,37 @@ private typealias ContextAccessor = () -> PolyglotContext
       parsed.execute()
 
     } catch (exc: PolyglotException) {
+      logging.debug("Caught polyglot exception: $exc")
+      if (logging.isEnabled(LogLevel.DEBUG)) {
+        logging.debug(StringBuilder().apply {
+          append("Error Info: ")
+          append("message{${exc.message}} ")
+          append("source{${exc.sourceLocation}} ")
+          append("isGuestException{${exc.isGuestException}} ")
+          append("isHostException{${exc.isHostException}} ")
+          append("isCancelled{${exc.isCancelled}} ")
+          append("isInterrupted{${exc.isInterrupted}} ")
+          append("isResourceExhausted{${exc.isResourceExhausted}} ")
+          append("isSyntaxError{${exc.isSyntaxError}} ")
+          append("isIncompleteSource{${exc.isIncompleteSource}} ")
+          append("isInternalError{${exc.isInternalError}} ")
+          append("cause{${exc.cause}}")
+          val guestObj = exc.guestObject
+          if (guestObj != null) {
+            append(" // Guest Object: ")
+            append("isHostObject{${guestObj.isHostObject}} ")
+            append("isNull{${guestObj.isNull}} ")
+            append("isException{${guestObj.isException}} ")
+            append("isString{${guestObj.isString}}")
+          }
+        }.toString())
+      }
       when (val throwable = processUserCodeError(primaryLanguage, exc)) {
         null -> {}
         else -> throw throwable
       }
+    } catch (exc: Throwable) {
+      logging.debug("Caught (and re-throwing) exception: $exc")
     }
   }
 

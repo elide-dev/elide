@@ -1254,10 +1254,14 @@ val experimentalFlags = listOf(
   "-H:+VectorPolynomialIntrinsics",
 )
 
+// C compiler flags to be included on Linux only.
+val linuxOnlyCFlags: List<String> = listOf(
+  "-fstack-clash-protection",
+)
+
 // C compiler flags which are always included.
 val commonCFlags: List<String> = listOf(
   "-DELIDE",
-  "-fstack-clash-protection",
   "-fstack-protector-strong",
   "-fexceptions",
   "-ffunction-sections",
@@ -1273,6 +1277,8 @@ val commonCFlags: List<String> = listOf(
   listOf("-fuse-ld=$cLinker").onlyIf(cLinker != null)
 ).plus(
   System.getenv("CFLAGS")?.ifEmpty { null }?.split(" ") ?: emptyList()
+).plus(
+  linuxOnlyCFlags.onlyIf(HostManager.hostIsLinux)
 )
 
 // Linker flags which are always included.
@@ -1414,6 +1420,13 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--gc=serial",
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
+  "-H:NativeLinkerOption=-flto",
+  "-H:NativeLinkerOption=$nativesPath/libdiag.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libumbrella.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libjs.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libposix.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libterminal.dylib",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
 ) else listOf(
@@ -1422,6 +1435,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-J-Xmx12g",
 ) else listOf(
   "-J-Xmx48g",
+  "--parallelism=12",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:+AuxiliaryEngineCache",
 ) else emptyList())

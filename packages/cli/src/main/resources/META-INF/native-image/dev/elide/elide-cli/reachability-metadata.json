@@ -1,6 +1,9 @@
 {
   "reflection": [
     {
+      "type": "elide.runtime.node.asserts.NodeAssert"
+    },
+    {
       "type": "elide.runtime.gvm.internals.sqlite.SqliteDatabaseProxy"
     },
     {

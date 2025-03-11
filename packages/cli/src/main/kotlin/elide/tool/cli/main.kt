@@ -122,6 +122,7 @@ inline fun setStaticProperties(binPath: String) {
   System.setProperty("java.library.path", newJavaPath)
 
   System.setProperty("elide.js.vm.enableStreams", "true")
+  System.setProperty("org.jline.terminal.disableDeprecatedProviderWarning", "true")
   System.setProperty("java.util.logging.config.class", "elide.tool.cli.InertLoggerConfigurator")
   System.setProperty("jdk.httpclient.allowRestrictedHeaders", "Host,Content-Length")
   System.setProperty("jansi.eager", "false")

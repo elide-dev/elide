@@ -48,8 +48,12 @@ public final class JNIHeaderDirectives implements CContext.Directives {
   private static File[] findJNIHeaders() throws IllegalStateException {
     final File jreHome = new File(System.getProperty("java.home"));
     final File include = new File(jreHome, "include");
+    var operatingSystemTag = "linux";
+    if ("Mac OS X".equals(System.getProperty("os.name"))) {
+      operatingSystemTag = "darwin";
+    }
     return new File[] {
-      new File(include, "jni.h"), new File(new File(include, "linux"), "jni_md.h"),
+      new File(include, "jni.h"), new File(new File(include, operatingSystemTag), "jni_md.h"),
     };
   }
 }

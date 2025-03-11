@@ -25,13 +25,6 @@ fn main() {
     _ => "RELEASE=no",
   };
 
-  setup(|| {
-    // we need to build the sqlite amalgamation if it is not present
-    if_not_exists(third_party_src_file("sqlite", "sqlite3.c").as_str(), || {
-      makefile_sub_run("third_party", format!("sqlite {}", cmd_args).as_str());
-    });
-  });
-
   let mut build = setup_cc();
 
   let sqlite_path = third_party_project("sqlite/install");

@@ -1354,7 +1354,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     langs.forEach { lang ->
       when (lang) {
         // Primary Engines
-        JS -> install(elide.runtime.plugins.js.JavaScript) {
+        JS -> configure(elide.runtime.plugins.js.JavaScript) {
           logging.debug("Configuring JS VM")
           resourcesPath = GVM_RESOURCES
           executable = cmd
@@ -1363,12 +1363,12 @@ private typealias ContextAccessor = () -> PolyglotContext
           jsSettings.apply(this)
         }
 
-        WASM -> install(elide.runtime.plugins.wasm.Wasm) {
+        WASM -> configure(elide.runtime.plugins.wasm.Wasm) {
           logging.debug("Configuring WASM VM")
           resourcesPath = GVM_RESOURCES
         }
 
-        TYPESCRIPT -> install(elide.runtime.plugins.typescript.TypeScript) {
+        TYPESCRIPT -> configure(elide.runtime.plugins.typescript.TypeScript) {
           logging.debug("Configuring TypeScript support")
           resourcesPath = GVM_RESOURCES
         }
@@ -1383,14 +1383,12 @@ private typealias ContextAccessor = () -> PolyglotContext
 //           }
 //         }
 
-         PYTHON -> {
-           install(elide.runtime.plugins.python.Python) {
-             logging.debug("Configuring Python VM")
-             installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-             resourcesPath = GVM_RESOURCES
-             executable = cmd
-             executableList = listOf(cmd).plus(args)
-           }
+         PYTHON -> configure(elide.runtime.plugins.python.Python) {
+           logging.debug("Configuring Python VM")
+           installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+           resourcesPath = GVM_RESOURCES
+           executable = cmd
+           executableList = listOf(cmd).plus(args)
          }
 
 //        // Secondary Engines: JVM

@@ -33,7 +33,7 @@ import elide.testing.annotations.TestCase
       "run",
       "--verbose",
       "--host:allow-env",
-      "--env:dotenv"
+      "--env:dotenv",
     ) + extraArgs + listOf(
       file.absolutePathString(),
     )

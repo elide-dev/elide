@@ -24,7 +24,17 @@ package elide.runtime.core
    * @param configure A configuration DSL block to be applied to the plugin on installation.
    * @return A plugin instance added to the registry after installation.
    */
+  @Deprecated("Use installLazy instead", ReplaceWith("installLazy(plugin, configure)"))
   public fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit = { }): I
+
+  /**
+   * Lazily configure a [plugin] for use.
+   *
+   * @param plugin A plugin identifier representing the plugin to be installed.
+   * @param configure A configuration DSL block to be applied to the plugin on installation.
+   * @return A plugin instance added to the registry after installation.
+   */
+  public fun <C : Any, I : Any> configure(plugin: EnginePlugin<C, I>, configure: C.() -> Unit = { })
 
   /**
    * Retrieve a plugin instance identified by the provided [key] from this registry. If no
@@ -63,6 +73,8 @@ package elide.runtime.core
  * Returns the installed [plugin] instance from the registry, or throws [IllegalStateException] of no plugin instance
  * is found.
  */
+@Suppress("DEPRECATION")
+@Deprecated("Use getOrConfigure instead", ReplaceWith("getOrConfigure(plugin, configure)"))
 @DelicateElideApi public fun <C : Any, T : Any> PluginRegistry.getOrInstall(
   plugin: EnginePlugin<C, T>,
   configure: C.() -> Unit = { },

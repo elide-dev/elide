@@ -6,8 +6,7 @@
   ],
   "artifacts": [],
   "scripts": [
-    { "path": "environment.py" },
-    { "path": "preamble.py" }
+    { "path": "environment.py" }
   ],
   "bundles": []
 }

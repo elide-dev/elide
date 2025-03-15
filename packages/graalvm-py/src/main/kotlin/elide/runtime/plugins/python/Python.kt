@@ -44,14 +44,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
-
-    // run embedded initialization code
-    if (ENABLE_PREAMBLE_WARM) {
-      executePreambleScripts(context, pythonPreamble)
-    } else {
-      @Suppress("DEPRECATION")
-      if (resources != null) initializeEmbeddedScripts(context, resources)
-    }
   }
 
   private fun resolveGraalPythonVersions(): Pair<String, String> {
@@ -72,12 +64,16 @@ private val BUILTIN_PYTHON_PATHS = listOf(
   private fun configureContext(builder: PolyglotContextBuilder) {
     builder.disableOptions(
       "python.EmulateJython",
+      "python.DontWriteBytecodeFlag",
     )
 
     builder.enableOptions(
       "python.NativeModules",
       "python.LazyStrings",
       "python.WithTRegex",
+      "python.NoSiteFlag", // @TODO
+      "python.NoUserSiteFlag", // @TODO
+      "python.PythonOptimizeFlag", // @TODO
     )
 
     if (ENABLE_EXPERIMENTAL) {
@@ -124,17 +120,10 @@ private val BUILTIN_PYTHON_PATHS = listOf(
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
     private const val ENABLE_EXPERIMENTAL = true
-    private const val ENABLE_PREAMBLE_WARM = false
-    private const val ENABLE_PANAMA = false
+    private const val ENABLE_PANAMA = true
     private const val GPY_LIST_SEPARATOR = "🏆"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
-
-    @JvmStatic private val pythonPreamble = initializePreambleScripts(
-      PYTHON_LANGUAGE_ID,
-      "environment.py",
-      prewarm = ENABLE_PREAMBLE_WARM,
-    )
 
     init {
       registerLanguageVfs(PYTHON_LANGUAGE_ID) {

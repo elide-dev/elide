@@ -1304,7 +1304,7 @@ val profiles: List<String> = if (enableEdge) listOf(
   "pkl-eval.iprof",
   "ts-hello.iprof",
   "ts-sqlite.iprof",
-) else listOf(
+) else listOfNotNull(
   "cli-help.iprof",
   "js-cpu.iprof",
   "js-fetch.iprof",
@@ -1312,8 +1312,8 @@ val profiles: List<String> = if (enableEdge) listOf(
   "js-hello.iprof",
   "js-paths.iprof",
   "pkl-eval.iprof",
-  "py-hello.iprof",
-  "py-interop.iprof",
+  onlyIf(enablePython, "py-hello.iprof"),
+  onlyIf(enablePython, "py-interop.iprof"),
   "ts-hello.iprof",
   "ts-sqlite.iprof",
 )

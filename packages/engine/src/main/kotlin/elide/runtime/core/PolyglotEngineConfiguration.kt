@@ -67,4 +67,10 @@ public abstract class PolyglotEngineConfiguration : PluginRegistry {
    * @return List of registered bundles
    */
   public abstract fun registeredBundles(): List<URL>
+
+  /**
+   * Block until this configuration has finished bootstrapping the GraalVM guest context; this will wait until all init
+   * tasks for all plugins have completed.
+   */
+  public abstract fun blockUntilReady()
 }

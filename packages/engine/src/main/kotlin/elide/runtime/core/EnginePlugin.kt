@@ -126,6 +126,11 @@ public interface EnginePlugin<Config : Any, Instance : Any> {
     public val configuration: PolyglotEngineConfiguration
 
     /**
+     * Register a deferred block which runs after all other plugin init tasks.
+     */
+    public fun deferred(block: () -> Unit)
+
+    /**
      * Register a VFS bundle which should be made available when this plug-in is operational.
      *
      * @param resource Bundle to register as a VFS layer

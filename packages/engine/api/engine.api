@@ -52,6 +52,7 @@ public abstract interface class elide/runtime/core/EnginePlugin {
 }
 
 public abstract interface class elide/runtime/core/EnginePlugin$InstallationScope {
+	public abstract fun deferred (Lkotlin/jvm/functions/Function0;)V
 	public abstract fun getConfiguration ()Lelide/runtime/core/PolyglotEngineConfiguration;
 	public abstract fun getLifecycle ()Lelide/runtime/core/EngineLifecycle;
 	public abstract fun registerBundle (Ljava/net/URL;)V
@@ -153,6 +154,8 @@ public final class elide/runtime/core/HostRuntimeKt {
 }
 
 public abstract interface class elide/runtime/core/PluginRegistry {
+	public abstract fun configure (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun configure$default (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun install (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun install$default (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun plugin-LqGrbaI (Ljava/lang/String;)Ljava/lang/Object;
@@ -231,6 +234,7 @@ public abstract interface class elide/runtime/core/PolyglotEngine {
 public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/runtime/core/PluginRegistry {
 	public fun <init> ()V
 	public abstract fun args ([Ljava/lang/String;)V
+	public abstract fun blockUntilReady ()V
 	public abstract fun enableLanguage (Lelide/runtime/core/GuestLanguage;)V
 	public final fun getHostAccess ()Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
 	public final fun getHostPlatform ()Lelide/runtime/core/HostPlatform;

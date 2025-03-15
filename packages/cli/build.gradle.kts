@@ -138,8 +138,8 @@ val enableExperimentalLlvmEdge = false
 val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64"
 val enableEmbeddedResources = false
 val enableResourceFilter = false
-val enableAuxCache = false
-val enableAuxCacheTrace = false
+val enableAuxCache = true
+val enableAuxCacheTrace = true
 val enableJpms = false
 val enableConscrypt = false
 val enableBouncycastle = false

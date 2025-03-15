@@ -1128,15 +1128,11 @@ private typealias ContextAccessor = () -> PolyglotContext
     requireNotNull(targetLang) {
       "Failed to resolve target language for source file"
     }
-
-    return script.bufferedReader(StandardCharsets.UTF_8).use { reader ->
-      Source.newBuilder(targetLang.symbol, reader, script.name)
-        .encoding(StandardCharsets.UTF_8)
-        .internal(false)
-        .cached(true)
-        .uri(script.toURI())
-        .build()
-    }
+    return Source.newBuilder(targetLang.symbol, script.absoluteFile)
+      .encoding(StandardCharsets.UTF_8)
+      .internal(false)
+      .cached(true)
+      .build()
   }
 
   private val commandSpecifiesServer: Boolean by lazy {

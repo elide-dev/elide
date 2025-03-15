@@ -218,13 +218,8 @@ private val defaultContext = Context.newBuilder()
    */
   @Suppress("TooGenericExceptionCaught")
   protected fun executePreambleScripts(context: PolyglotContext, sources: List<PreinitScript> = emptyList(),) {
-    try {
-      context.enter()
-      sources.forEach { script ->
-        context.evaluate(script.source)
-      }
-    } finally {
-      context.leave()
+    sources.forEach { script ->
+      context.evaluate(script.source)
     }
   }
 

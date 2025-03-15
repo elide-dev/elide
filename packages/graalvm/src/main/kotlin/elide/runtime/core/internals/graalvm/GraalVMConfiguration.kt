@@ -12,9 +12,20 @@
  */
 package elide.runtime.core.internals.graalvm
 
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
+import com.google.common.util.concurrent.ListeningExecutorService
+import com.google.common.util.concurrent.MoreExecutors
 import java.net.URL
 import java.util.LinkedList
-import java.util.concurrent.atomic.AtomicReference
+import java.util.SortedSet
+import java.util.TreeSet
+import java.util.concurrent.Callable
+import java.util.concurrent.ConcurrentSkipListMap
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import kotlinx.atomicfu.atomic
 import kotlinx.collections.immutable.toImmutableList
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
@@ -28,14 +39,45 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   /** A [MutableEngineLifecycle] instance that can be used to emit events to registered plugins. */
   private val lifecycle: MutableEngineLifecycle
 ) : PolyglotEngineConfiguration() {
+  private companion object {
+    private const val EXPERIMENTAL_INIT_EXECUTOR = false
+    private const val EXPERIMENTAL_MULTITHREAD_INIT = false
+    private const val INIT_CORE_POOL_SIZE = 2
+  }
+
+  // Initialization executor.
+  private lateinit var initExecutor: ListeningExecutorService
+
+  init {
+    if (EXPERIMENTAL_INIT_EXECUTOR) {
+      initExecutor = MoreExecutors.listeningDecorator(
+        when (EXPERIMENTAL_MULTITHREAD_INIT) {
+          true -> Executors.newScheduledThreadPool(INIT_CORE_POOL_SIZE)
+          false -> Executors.newSingleThreadExecutor()
+        }
+      )
+    }
+  }
+
   // Registered VFS bundles from plugins.
   private val registeredBundles = LinkedList<URL>()
+
+  // Whether plugins have finished their async initialization phase; after this is set to `true`, the engine's readiness
+  // latch is assigned and will eventually signal readiness.
+  private val initialized = atomic(false)
+
+  // A latch used to signal readiness of the VM. This value is only initialized after all plugins have enqueued their
+  // asynchronous setup tasks.
+  private val readinessLatch: CountDownLatch = CountDownLatch(1)
 
   /**
    * Represents an [InstallationScope] used by plugins, binding to this configuration's lifecycle and other required
    * properties.
    */
-  private inner class GraalVMInstallationScope(val config: GraalVMConfiguration) : InstallationScope {
+  private inner class GraalVMInstallationScope(
+    val config: GraalVMConfiguration,
+    val exec: () -> ListeningExecutorService,
+  ) : InstallationScope {
     override val configuration: PolyglotEngineConfiguration get() = config
     override val lifecycle: EngineLifecycle get() = config.lifecycle
 
@@ -45,7 +87,17 @@ import elide.runtime.core.internals.MutableEngineLifecycle
 
     override fun registeredBundles(): List<URL> =
       registeredBundles.toImmutableList()
+
+    override fun deferred(block: () -> Unit) {
+      inFlight.computeIfAbsent("", { LinkedList() }).add(exec.invoke().submit { block.invoke() })
+    }
   }
+
+  /** Suite of seen plugin IDs. */
+  private val seenPlugins: SortedSet<String> = TreeSet()
+
+  /** Suite of in-flight initialization tasks. */
+  private val inFlight: ConcurrentSkipListMap<String, LinkedList<ListenableFuture<*>>> = ConcurrentSkipListMap()
 
   /** Internal map holding plugin instances that can be retrieved during engine configuration. */
   private val plugins: MutableMap<String, Any?> = mutableMapOf()
@@ -54,7 +106,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   private val langs: MutableSet<GuestLanguage> = mutableSetOf()
 
   /** All main entrypoint arguments. */
-  private val entrypointArgs: AtomicReference<Array<out String>> = AtomicReference(null)
+  private val entrypointArgs = atomic<Array<String>?>(null)
 
   /** A set of languages enabled for use in the engine. */
   internal val languages: Set<GuestLanguage> get() = langs
@@ -62,16 +114,42 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   /** Runtime info, resolved from GraalVM static properties. */
   override val hostRuntime: HostRuntime = GraalVMRuntime()
 
+  /** Installation scope for plugins. */
+  private val cachedScope by lazy { GraalVMInstallationScope(this, { initExecutor }) }
+
   /** Arguments to provide to guest code. */
-  public val arguments: Array<out String> get() = entrypointArgs.get() ?: emptyArray()
+  public val arguments: Array<out String> get() = entrypointArgs.value ?: emptyArray()
 
+  @Deprecated("Use installLazy instead", replaceWith = ReplaceWith("installLazy(plugin, configure)"))
   override fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit): I {
-    require(plugin.key.id !in plugins) { "A plugin with the provided key is already registered" }
-
-    val instance = plugin.install(GraalVMInstallationScope(this), configure)
+    assert(plugin.key.id !in plugins) { "A plugin with the provided key is already registered" }
+    val instance = plugin.install(GraalVMInstallationScope(this, { initExecutor }), configure)
     plugins[plugin.key.id] = instance
-
     return instance
+  }
+
+  @Suppress("DEPRECATION")
+  override fun <C : Any, I : Any> configure(plugin: EnginePlugin<C, I>, configure: C.() -> Unit) {
+    assert(!initialized.value) { "Cannot configure engine plugins after initialization is complete" }
+    assert(plugin.key.id !in seenPlugins) { "A plugin with the provided key is already registered" }
+    seenPlugins.add(plugin.key.id)
+
+    if (EXPERIMENTAL_INIT_EXECUTOR) {
+      val (assign, futSet) = if (plugin.key.id in inFlight) {
+        false to inFlight[plugin.key.id]!!
+      } else {
+        true to LinkedList()
+      }
+      futSet.add(initExecutor.submit {
+        val instance = plugin.install(cachedScope, configure)
+        plugins[plugin.key.id] = instance
+      })
+      if (assign) {
+        inFlight[plugin.key.id] = futSet
+      }
+    } else {
+      install(plugin, configure)
+    }
   }
 
   override fun <T> plugin(key: EnginePlugin.Key<T>): T? {
@@ -84,9 +162,27 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   }
 
   override fun args(args: Array<String>) {
-    entrypointArgs.set(args)
+    assert(args.isNotEmpty()) { "Entrypoint arguments must not be empty" }
+    entrypointArgs.value = args
   }
 
-  override fun registeredBundles(): List<URL> =
-    registeredBundles.toImmutableList()
+  override fun registeredBundles(): List<URL> = registeredBundles.toImmutableList()
+
+  override fun blockUntilReady() {
+    if (EXPERIMENTAL_INIT_EXECUTOR) {
+      if (initialized.value) {
+        return  // already initialized; no-op
+      }
+      initialized.compareAndSet(expect = false, update = true)
+      Futures.whenAllComplete<Any?>(inFlight.values.flatten()).call(
+        Callable {
+          readinessLatch.countDown()
+        },
+        initExecutor,
+      )
+      readinessLatch.await(1, TimeUnit.SECONDS)
+    } else {
+      initialized.value = true
+    }
+  }
 }

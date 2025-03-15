@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -23,7 +23,10 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 
 /** Configuration DSL for the [Vfs] plugin. */
-@DelicateElideApi public class VfsConfig internal constructor(configuration: PolyglotEngineConfiguration) {
+@DelicateElideApi public class VfsConfig internal constructor(
+  configuration: PolyglotEngineConfiguration,
+  private val bundlesProducer: () -> List<URL>,
+) {
 
   /** Private mutable list of registered bundles. */
   private val bundles: MutableList<URI> = mutableListOf()
@@ -32,7 +35,7 @@ import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
   internal val listeners: MutableList<VfsListener> = mutableListOf()
 
   /** Internal list of bundles registered for use in the VFS. */
-  internal val registeredBundles: List<URI> get() = bundles
+  internal val registeredBundles: List<URI> get() = bundlesProducer.invoke().map { it.toURI() }.plus(bundles)
 
   /** Whether the file system is writable. If false, write operations will throw an exception. */
   public var writable: Boolean = false

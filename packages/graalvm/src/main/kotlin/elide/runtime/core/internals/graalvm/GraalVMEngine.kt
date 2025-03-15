@@ -418,7 +418,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
       // one more event for initialization plugins
       lifecycle.emit(EngineInitialized, engine)
-
       return engine
     }
   }

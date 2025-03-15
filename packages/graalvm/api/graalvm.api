@@ -16,6 +16,8 @@ public final class elide/runtime/core/internals/MutableEngineLifecycle : elide/r
 public final class elide/runtime/core/internals/graalvm/GraalVMConfiguration : elide/runtime/core/PolyglotEngineConfiguration {
 	public fun <init> (Lelide/runtime/core/internals/MutableEngineLifecycle;)V
 	public fun args ([Ljava/lang/String;)V
+	public fun blockUntilReady ()V
+	public fun configure (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)V
 	public fun enableLanguage (Lelide/runtime/core/GuestLanguage;)V
 	public final fun getArguments ()[Ljava/lang/String;
 	public fun getHostRuntime ()Lelide/runtime/core/HostRuntime;

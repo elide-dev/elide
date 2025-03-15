@@ -91,7 +91,6 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
       // register resources with the VFS
-      // if (resources != null) installEmbeddedBundles(scope, resources)
       return instance
     }
   }

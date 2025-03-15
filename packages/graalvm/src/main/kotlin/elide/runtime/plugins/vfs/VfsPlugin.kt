@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -93,9 +93,8 @@ import elide.runtime.vfs.languageVfsRegistry
 
     override fun install(scope: InstallationScope, configuration: VfsConfig.() -> Unit): Vfs {
       // apply the configuration and create the plugin instance
-      val allRegistered = scope.registeredBundles()
-      val config = VfsConfig(scope.configuration)
-      if (allRegistered.isNotEmpty()) allRegistered.forEach { config.include(it) }
+      val allRegisteredProducer = { scope.registeredBundles() }
+      val config = VfsConfig(scope.configuration, allRegisteredProducer)
       config.apply(configuration)
       val instance = Vfs(config)
 

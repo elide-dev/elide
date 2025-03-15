@@ -1082,13 +1082,11 @@ runtime-clean:  ## Clean generated runtime artifacts.
 
 runtime-update-copy:
 	@echo "" && echo "Updating runtime artifacts..."
-	@#echo "- Updating 'facade.js'"
-	@#$(CMD)cp -f$(POSIX_FLAGS) $(JS_FACADE_BIN) $(JS_FACADE_OUT)
 	@echo "- Updating 'polyfills.js'"
 	$(CMD)cp -f$(POSIX_FLAGS) $(JS_POLYFILLS_BIN) $(JS_POLYFILLS_OUT)
 	@echo "- Updating 'js.vfs.tar'"
 	$(CMD)cp -f$(POSIX_FLAGS) $(JS_MODULE_BIN) $(JS_MODULE_OUT)
-	@#echo "- Updating 'py.modules.tar.'"
-	@#$(CMD)cp -f$(POSIX_FLAGS) $(PY_MODULE_BIN) $(PY_MODULE_OUT)
+	@echo "- Updating 'py.modules.tar.'"
+	@$(CMD)cp -f$(POSIX_FLAGS) $(PY_MODULE_BIN) $(PY_MODULE_OUT)
 
 .PHONY: all docs build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-jdk21 image-jdk22 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-runtime-jvm21 image-runtime-jvm21 image-native image-native-alpine runtime runtime-build runtime-update third-party

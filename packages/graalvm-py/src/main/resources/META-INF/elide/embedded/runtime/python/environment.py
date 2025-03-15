@@ -10,9 +10,6 @@
 #  License for the specific language governing permissions and limitations under the License.
 
 def __init_elide_env():
-
-  import polyglot
-
   # noinspection PyPep8Naming
   class _Elide_ApplicationEnvironment(object):
       """Handler for resolving application-level environment, and withholding system environment, as needed."""
@@ -21,6 +18,7 @@ def __init_elide_env():
       __virtual_env = {}
 
       def __init__(self):
+          import polyglot
           data = polyglot.import_value("__Elide_app_env__")
           if data is not None:
               self.__app_environ = {x: data[x] for x in data}

@@ -261,6 +261,10 @@ if (gradle.startParameter.taskNames.size == 1 && gradle.startParameter.taskNames
 
   // force-disable
   gradle.startParameter.isBuildCacheEnabled = false
+} else {
+  buildCache {
+    local.isEnabled = true
+  }
 }
 
 //

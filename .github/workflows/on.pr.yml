@@ -156,6 +156,7 @@ jobs:
       packages: "read"
       pull-requests: "write"
     with:
+      runner: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
       native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:test-native') || contains(github.event.head_commit.message, 'ci:test-native') }}
 
   ##
@@ -244,6 +245,9 @@ jobs:
     needs: [triage, dependency-graph]
     permissions:
       contents: "read"
+    with:
+      base-ref: ${{ github.event.pull_request.base.ref }}
+      head-ref: ${{ github.event.pull_request.head.ref }}
 
   ##
   ## Job: Checks with Detekt

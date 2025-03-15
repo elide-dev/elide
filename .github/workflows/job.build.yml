@@ -141,6 +141,8 @@ name: Framework
 env:
   RUST_BACKTRACE: full
   ELIDE_VERSION: "1.0.0-alpha15"
+  SCCACHE_DIRECT: "true"
+  RUSTC_WRAPPER: "sccache"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:
@@ -284,19 +286,30 @@ jobs:
           submodules: true
           persist-credentials: false
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: buildjet/cache/restore@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
+        with:
+          key: elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          path: |
+            tools/elide-build/build/**/*.*
+            packages/*/build/**/*.*
+            target/
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            third_party/sqlite/install/
+          restore-keys: |
+            elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-v3-
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@9399c7bb15d4c7d47b27263d024f0a4978346ba4 # v1.11.0
         with:
           toolchain: stable
-          components: clippy,rustfmt
-          cache: true
-          rustflags: ""
+          cache: true # handled by sccache
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@65101d47ea8028ed0c98a1cdea8dd9182e9b5133 # v0.0.8
       - name: "Setup: Rust Caching"
-        run: |
-          echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
-          echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
+        run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
         with:
@@ -321,15 +334,12 @@ jobs:
           version: "1.0.0-alpha15" # unlisted (interim)
       - name: "Setup: Dependencies"
         run: |
-          #cargo install cargo-fuzz cargo-insta rustfilt
-          pnpm install -g yarn@1.22.19
-          python -m pip install uv
           echo "Setting up venv..."
           uv venv
-          echo "Installing dependencies via Pip..."
-          #uv pip install -r requirements.txt
           echo "Activating venv..."
           . .venv/bin/activate
+          echo "Installing dependencies via Pip..."
+          uv pip install -r requirements.txt
           echo PATH=$PATH >> $GITHUB_ENV
           echo "Installing dependencies..."
           elide install
@@ -355,6 +365,8 @@ jobs:
             notifications
             wrapper
             yarn
+      - name: "Setup: Gradle Settings"
+        run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
       - name: "Build Environment"
         run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
       - name: "🛠️ Build Packages"
@@ -372,7 +384,7 @@ jobs:
             -x jvmTest \
             --scan \
             --build-cache \
-            --no-daemon \
+            --daemon \
             --dependency-verification=off \
             --stacktrace \
             -Pelide.ci=true \
@@ -394,6 +406,21 @@ jobs:
         if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}
         run: |
           echo "hashes=$(sha256sum ./packages/*/build/libs/* | base64 -w0)" >> "$GITHUB_OUTPUT"
+      - name: "Setup: Cache Save"
+        id: cache-save
+        uses: buildjet/cache/save@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
+        with:
+          key: elide-v3-build-${{ github.sha }}
+          path: |
+            tools/elide-build/build/**/*.*
+            packages/*/build/**/*.*
+            target/
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            third_party/sqlite/install/
+          restore-keys: |
+            elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-v3-
 
   ## Report: Provenance
   provenance:

@@ -14,8 +14,26 @@
 name: "Dependencies"
 
 "on":
-  workflow_dispatch: {}
-  workflow_call: {}
+  workflow_dispatch:
+    inputs:
+      head-ref:
+        required: true
+        type: string
+        description: "Head Ref"
+      base-ref:
+        required: false
+        type: string
+        default: 'main'
+        description: "Main Ref"
+  workflow_call:
+    inputs:
+      head-ref:
+        required: true
+        type: string
+      base-ref:
+        required: false
+        type: string
+        default: 'main'
 
 permissions:
   contents: read
@@ -49,4 +67,5 @@ jobs:
           license-check: true
           vulnerability-check: true
           fail-on-severity: "low"
-          base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || 'v3' }}
+          head-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || inputs.head-ref }}
+          base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || inputs.base-ref }}

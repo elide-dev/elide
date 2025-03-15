@@ -120,7 +120,7 @@ jobs:
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          cache-read-only: true
+          cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9

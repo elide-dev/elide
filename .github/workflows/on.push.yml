@@ -44,6 +44,7 @@ jobs:
       security-events: "write"
     with:
       provenance: true
+      runner: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
 
   ##
   ## Job: Multi-platform Test
@@ -58,6 +59,8 @@ jobs:
       id-token: "write"
       packages: "read"
       pull-requests: "write"
+    with:
+      runner: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
 
   ##
   ## Job: Checks for Models

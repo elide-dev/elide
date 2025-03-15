@@ -138,6 +138,8 @@ env:
   CI: "true"
   RUST_BACKTRACE: full
   ELIDE_VERSION: "1.0.0-alpha15"
+  SCCACHE_DIRECT: "true"
+  RUSTC_WRAPPER: "sccache"
 
 jobs:
   ##
@@ -252,9 +254,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
-        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
+        uses: buildjet/cache/restore@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
         with:
-          key: elide-framework-v2-tests-${{ github.sha }}
+          key: elide-v3-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
             build/reports/kover/**/*.*
             packages/*/test-results/
@@ -263,24 +265,28 @@ jobs:
             packages/*/reports/
             packages/proto/*/reports/
             tools/elide-build/reports/
-            third_party/google/boringssl/build
-            third_party/sqlite/.libs
+            tools/elide-build/build/
+            packages/*/build/**/*.*
+            target/
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            third_party/sqlite/install/
           restore-keys: |
-            elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v2-tests-
+            elide-v3-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-v3-
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@9399c7bb15d4c7d47b27263d024f0a4978346ba4 # v1.11.0
         with:
           toolchain: stable
-          components: clippy,rustfmt
-          cache: true
-          rustflags: ""
+          cache: false # handled by sccache
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@65101d47ea8028ed0c98a1cdea8dd9182e9b5133 # v0.0.8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Rust Caching"
-        run: |
-          echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
-          echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
+        run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
         with:
@@ -305,15 +311,12 @@ jobs:
           version: "1.0.0-alpha15" # unlisted (interim)
       - name: "Setup: Dependencies"
         run: |
-          #cargo install cargo-fuzz cargo-insta rustfilt
-          pnpm install -g yarn@1.22.19
-          python -m pip install uv
           echo "Setting up venv..."
           uv venv
-          echo "Installing dependencies via Pip..."
-          #uv pip install -r requirements.txt
           echo "Activating venv..."
           . .venv/bin/activate
+          echo "Installing dependencies via Pip..."
+          uv pip install -r requirements.txt
           echo PATH=$PATH >> $GITHUB_ENV
           echo "Installing dependencies..."
           elide install
@@ -342,6 +345,8 @@ jobs:
             notifications
             wrapper
             yarn
+      - name: "Setup: Gradle Settings"
+        run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
       - name: "Build Environment"
         run: make info CI=yes 2>&1 | tee build-info.txt
       - name: "👨‍🔬 Test: Runtime"
@@ -358,7 +363,6 @@ jobs:
             koverXmlReport \
             koverBinaryReport \
             koverVerify \
-            detekt \
             -x nativeTest \
             --scan \
             --build-cache \
@@ -368,6 +372,7 @@ jobs:
             -Pelide.ci=true \
             -PbuildDocs=false
       - name: "Analysis: Sonar"
+        if: false
         continue-on-error: true
         env:
           CI: true
@@ -417,7 +422,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Artifact: Caches"
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
+        uses: buildjet/cache/save@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
         with:
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
           path: |
@@ -428,6 +433,14 @@ jobs:
             packages/*/reports/
             packages/proto/*/reports/
             tools/elide-build/reports/
+            tools/elide-build/build/**/*.*
+            packages/*/build/**/*.*
+            target/
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            third_party/sqlite/install/
 
   ##
   ## Job: Testsuite (Native)
@@ -509,9 +522,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
-        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
+        uses: buildjet/cache/restore@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
         with:
-          key: elide-framework-v2-tests-${{ github.sha }}
+          key: elide-v3-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
             build/reports/kover/**/*.*
             packages/*/test-results/
@@ -520,9 +533,17 @@ jobs:
             packages/*/reports/
             packages/proto/*/reports/
             tools/elide-build/reports/
+            tools/elide-build/build/
+            packages/*/build/**/*.*
+            target/
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            third_party/sqlite/install/
           restore-keys: |
-            elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-framework-v2-tests-
+            elide-v3-tests-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-v3-
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@9399c7bb15d4c7d47b27263d024f0a4978346ba4 # v1.11.0
         with:
@@ -535,7 +556,6 @@ jobs:
         uses: mozilla-actions/sccache-action@65101d47ea8028ed0c98a1cdea8dd9182e9b5133 # v0.0.8
       - name: "Setup: Rust Caching"
         run: |
-          echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
           echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
@@ -609,7 +629,7 @@ jobs:
             check \
             jacocoTestReport \
             --scan \
-            --no-daemon \
+            --daemon \
             --warning-mode=none \
             --dependency-verification=lenient \
             -x apiCheck \

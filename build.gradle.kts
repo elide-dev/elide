@@ -458,7 +458,7 @@ tasks {
       pluginsConfiguration.html {
         footerMessage = "© 2023—2025 Elide Technologies, Inc."
         homepageLink = "https://docs.elide.dev"
-        templatesDir = rootProject.layout.projectDirectory.dir("project/docs/templates").asFile
+        templatesDir = rootProject.layout.projectDirectory.dir("project/docs/templates-v2").asFile
         customAssets.from(
           listOf(
             creativeAsset("logo/logo-wide-1200-w-r2.png"),

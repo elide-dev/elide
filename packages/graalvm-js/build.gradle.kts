@@ -72,6 +72,8 @@ dependencies {
   api(patchedLibs)
   api(libs.graalvm.truffle.api)
   implementation(libs.kotlinx.atomicfu)
+  implementation(projects.packages.graalvmPy)
+  implementation(projects.packages.graalvmWasm)
   patchedDependencies(patchedLibs)
 }
 

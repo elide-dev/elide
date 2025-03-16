@@ -166,15 +166,17 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     )
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
-      JavaScriptLang.initialize()
-      configureLanguageSupport(scope)
-
       // resolve the env plugin (if present, otherwise ignore silently)
       val env = scope.configuration.plugin(Environment)
 
       // apply the configuration and create the plugin instance
       val config = JavaScriptConfig().apply(configuration)
       configureSharedBindings(scope, config)
+
+      JavaScriptLang.initialize(
+        interop = config.interop,
+      )
+      configureLanguageSupport(scope)
 
       val embedded = resolveEmbeddedManifest(scope)
       val instance = JavaScript(config, embedded, env)

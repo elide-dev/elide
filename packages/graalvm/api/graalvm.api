@@ -7927,6 +7927,7 @@ public final class elide/runtime/plugins/js/JavaScriptConfig : elide/runtime/plu
 	public final fun getDefaultLocale ()Ljava/util/Locale;
 	public final fun getEsm ()Z
 	public final fun getInteractive ()Z
+	public final fun getInterop ()Z
 	public final fun getLanguage ()Lelide/runtime/plugins/js/JavaScriptVersion;
 	public final fun getLocale ()Ljava/util/Locale;
 	public final fun getSourceMaps ()Z
@@ -7939,6 +7940,7 @@ public final class elide/runtime/plugins/js/JavaScriptConfig : elide/runtime/plu
 	public final fun setDefaultLocale (Ljava/util/Locale;)V
 	public final fun setEsm (Z)V
 	public final fun setInteractive (Z)V
+	public final fun setInterop (Z)V
 	public final fun setLanguage (Lelide/runtime/plugins/js/JavaScriptVersion;)V
 	public final fun setLocale (Ljava/util/Locale;)V
 	public final fun setSourceMaps (Z)V

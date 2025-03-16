@@ -552,6 +552,7 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     }
 
     // Determine the loading strategy to use for a given module request.
+    @Suppress("UNUSED_PARAMETER")
     private fun determineModuleStrategy(requested: String, referrer: ScriptOrModule? = null): ModuleStrategy {
       if (ALWAYS_FALLBACK) {
         return FALLBACK
@@ -562,17 +563,14 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
         prefix == null -> if (!requested.contains(File.separatorChar) && !requested.contains('.')) {
           resolveUnprefixed(unprefixed)
         } else when {
-          // ends in `.mts` or `.cts` or `.ts` or `.tsx` -> is delegated
-          unprefixed.substringAfterLast('.') in tsExtensions -> DELEGATED
-
-          // otherwise, fallback
-          else -> FALLBACK
+          // otherwise, fallback to delegates, which will opt-out if needed
+          else -> DELEGATED
         }
 
         // special prefixes are always synthetic
         else -> when (prefix in specialModulePrefixes) {
           true -> SYNTHETIC
-          else -> FALLBACK
+          else -> DELEGATED
         }
       }
     }

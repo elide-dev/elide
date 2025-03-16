@@ -66,10 +66,13 @@ internal object ElideJsModuleRouter : JSModuleLoaderFactory, CommonJSResolverHoo
    *
    * This method is idempotent; repeated calls to this method are ignored.
    */
-  @JvmStatic fun install() {
+  @JvmStatic fun install(interop: Boolean) {
     if (!initialized.getAndSet(true)) {
       JSEngine.setModuleLoaderFactory(this)
       JSEngine.setCjsResolverHook(this)
+      if (interop) {
+        DelegatedModuleLoaderRegistry.register(ElideInteropModuleLoader)
+      }
     }
   }
 

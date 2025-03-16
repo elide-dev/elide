@@ -17,6 +17,7 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Future
 import java.util.function.Supplier
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
@@ -83,6 +84,8 @@ public interface JsPromise<T> : ListenableFuture<T>, ProxyObject {
   public companion object {
     @JvmStatic public fun <T> GuestExecutor.of(latch: CountDownLatch, producer: Supplier<T>): JsPromise<T> =
       latched(latch) { producer.get() }
+
+    @JvmStatic public fun <T> wrapping(op: ListenableFuture<T>): JsPromise<T> = JsPromiseImpl.wrapping(op)
 
     @JvmStatic public fun <T> resolved(value: T): JsPromise<T> = JsPromiseImpl.resolved(value)
 

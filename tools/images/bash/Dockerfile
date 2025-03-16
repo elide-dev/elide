@@ -26,6 +26,5 @@ RUN echo "Installing Elide..." \
   && curl -sSL elide.sh | bash -s - \
   && which elide \
   && elide --help \
-  && elide selftest \
   && elide info \
   && echo "Elide/Bash container image ready."

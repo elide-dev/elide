@@ -58,6 +58,19 @@ new URL("https://google.com").host;
 elide serve tools/scripts/server.js
 ```
 
+**Elide can run TypeScript directly:**
+
+```typescript
+const x: number = 5;
+console.log("the number is: " + x);
+```
+```
+> elide ./sample.ts
+```
+```
+the number is 5
+```
+
 ### Python
 
 **To run a Python terminal:**
@@ -82,18 +95,31 @@ elide run --python --host:allow-env
 import os; print(os.environ)
 ```
 
-### Ruby
+### Language Interop
 
-**To run a Ruby terminal:**
+Create a Python file:
+```python
+# sample.py
+def say_hello(name = "Python"):
+  return f"Hello, {name}!"
+```
+
+Create a TypeScript file:
+```typescript
+// sample.ts
+import py from "./sample.py";
+
+console.log(`${py.say_hello()} + TypeScript!`);
+```
+
+Run it:
 
 ```
-elide ruby
+> elide ./sample.ts
 ```
 
-**Say hello:**
-
-```ruby
-puts "Hello, Elide!"
+```
+Hello, Python + TypeScript!
 ```
 
 ## Further Reading

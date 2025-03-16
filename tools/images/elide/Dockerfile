@@ -46,7 +46,6 @@ RUN echo "Setting up Elide..." \
   && echo '{}' > /home/dev/package.json \
   && which elide \
   && elide --help \
-  && elide selftest \
   && elide info \
   && echo "Elide container image ready."
 

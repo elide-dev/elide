@@ -617,6 +617,9 @@ public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$F
 	public fun abort ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun any (Ljava/lang/Iterable;)Lelide/runtime/intrinsics/js/AbortSignal;
 	public static final fun bound (Lelide/runtime/exec/GuestExecutor;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
 	public fun timeout (I)Lelide/runtime/intrinsics/js/AbortSignal;
 }
 
@@ -1983,7 +1986,7 @@ public abstract interface class elide/runtime/intrinsics/js/AbortSignal : elide/
 	public abstract fun throwIfAborted ()V
 }
 
-public abstract interface class elide/runtime/intrinsics/js/AbortSignal$Factory {
+public abstract interface class elide/runtime/intrinsics/js/AbortSignal$Factory : elide/runtime/interop/ReadOnlyProxyObject {
 	public abstract fun abort ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public abstract fun any (Ljava/lang/Iterable;)Lelide/runtime/intrinsics/js/AbortSignal;
 	public abstract fun timeout (I)Lelide/runtime/intrinsics/js/AbortSignal;

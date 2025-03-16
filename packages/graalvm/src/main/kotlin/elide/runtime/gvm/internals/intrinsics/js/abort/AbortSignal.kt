@@ -197,5 +197,23 @@ public class AbortSignal private constructor (
 
     // Return an abort signal which aborts after a timeout.
     @Polyglot override fun timeout(time: Int): AbortSignalAPI = timeout(time.toLong(), MILLISECONDS, guestExecutor)
+
+    override fun getMemberKeys(): Array<String> = arrayOf(
+      "abort",
+      "any",
+      "timeout",
+    )
+
+    override fun getMember(key: String?): Any? = when(key) {
+      "abort" -> ProxyExecutable { abort() }
+      "any" -> ProxyExecutable {
+        any(it.map { it.`as`<AbortSignalAPI>(AbortSignalAPI::class.java) })
+      }
+      "timeout" -> ProxyExecutable {
+        val first = it.firstOrNull() ?: throw JsError.typeError("First argument must be a number")
+        timeout(first.asInt())
+      }
+      else -> null
+    }
   }
 }

@@ -355,22 +355,40 @@ async function serveOrSendDownload(
 
 // Record request/response stats to Analytics Engine.
 async function record(
+  env: Env,
   start: number,
   url: URL,
   request: Request,
   response: Promise<Response> | Response,
   success: boolean,
   cached: boolean,
+  params?: ElideInstallParams,
 ): Promise<void> {
   const end = performance.now()
   const duration = end - start
   const resp = response instanceof Response ? response : await response
   const status = resp ? resp.status : 500
+
   console.log(`Completed with status ${status}; duration: ${duration}ms`, {
     success,
     cached,
     url,
     request,
+  })
+
+  const version = params?.version || "version-unknown"
+  const platform = params?.platform || "platform-unknown"
+  const backend = params?.backend || ServingBackend.r2
+
+  env.ANALYTICS.writeDataPoint({
+    "indexes": [version],
+    "doubles": [duration],
+    "blobs": [
+      platform,
+      backend,
+      success ? "success" : "fail",
+      cached ? "cached" : "fresh"
+    ],
   })
 }
 
@@ -403,7 +421,15 @@ export default class extends WorkerEntrypoint<Env> {
       obj.writeHttpMetadata(headers)
       headers.set("ETag", obj.httpEtag)
       const resp = new Response(obj.body, { headers })
-      this.ctx.waitUntil(record(start, url, request, resp, true, false))
+      this.ctx.waitUntil(record(
+        this.env,
+        start,
+        url,
+        request,
+        resp,
+        true,
+        false,
+      ))
       return resp
     }
 
@@ -415,7 +441,15 @@ export default class extends WorkerEntrypoint<Env> {
     // 3. if the http cache matched, serve it directly.
     if (cached) {
       console.log("Match cached response; returning", { url, request })
-      this.ctx.waitUntil(record(start, url, request, cached, true, true))
+      this.ctx.waitUntil(record(
+        this.env,
+        start,
+        url,
+        request,
+        cached,
+        true,
+        true,
+      ))
       return cached
     }
 
@@ -434,11 +468,15 @@ export default class extends WorkerEntrypoint<Env> {
         this.ctx.waitUntil(cache.put(url, response.clone()))
       }
       // 7. all responses should be recorded for metrics.
-      this.ctx.waitUntil(record(start, url, request, response, true, false))
+      this.ctx.waitUntil(
+        record(this.env, start, url, request, response, true, false, params)
+      )
       return response
     } catch (err) {
       if (err instanceof Response) {
-        this.ctx.waitUntil(record(start, url, request, err, false, false))
+        this.ctx.waitUntil(
+          record(this.env, start, url, request, err, false, false)
+        )
         return err
       }
       throw err

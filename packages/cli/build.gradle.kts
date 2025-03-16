@@ -1942,6 +1942,7 @@ tasks {
   }
 
   named("run", JavaExec::class).configure {
+    workingDir = rootProject.layout.projectDirectory.asFile
     if (enableToolchains) javaLauncher = gvmLauncher
 
     jvmDefs.forEach {
@@ -2013,10 +2014,17 @@ tasks {
   test {
     if (enableToolchains) javaLauncher = gvmLauncher
 
+    // must be root project so that test scripts can be resolved during smoke tests
+    workingDir = rootProject.layout.projectDirectory.asFile
+
     jvmDefs.forEach {
       systemProperty(it.key, it.value)
     }
 
+    systemProperty(
+      "elide.rootDir",
+      rootProject.layout.projectDirectory.asFile.absolutePath,
+    )
     systemProperty(
       "micronaut.environments",
       "dev",

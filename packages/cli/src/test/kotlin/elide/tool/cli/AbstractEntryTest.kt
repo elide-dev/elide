@@ -17,9 +17,7 @@ abstract class AbstractEntryTest {
   val testWasm = false
 
   companion object {
-    @JvmStatic protected val rootProjectPath: Path = Paths.get(System.getProperty("user.dir"))
-      .parent
-      .parent
+    @JvmStatic protected val rootProjectPath: Path = Paths.get(System.getProperty("elide.rootDir"))
 
     @JvmStatic  protected val testScriptsPath: Path = rootProjectPath
       .resolve("tools")

@@ -14,6 +14,7 @@ package elide.runtime.intrinsics.js
 
 import org.graalvm.polyglot.HostAccess
 import elide.annotations.API
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.node.events.EventTarget
 import elide.vm.annotations.Polyglot
 
@@ -76,7 +77,7 @@ import elide.vm.annotations.Polyglot
    *
    * [`AbortSignal` static methods on MDN](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal#static_methods)
    */
-  @API public interface Factory {
+  @API public interface Factory : ReadOnlyProxyObject {
     /**
      * Returns an [AbortSignal] instance that is already set as aborted.
      *

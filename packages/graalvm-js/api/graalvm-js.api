@@ -10,6 +10,7 @@ public final class elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry :
 	public static final field INSTANCE Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry;
 	public static final fun register (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegateFactory;)V
 	public static final fun resolve (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
+	public static final fun resolveSafe (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;Lcom/oracle/truffle/js/runtime/JSRealm;)Lcom/oracle/truffle/js/runtime/objects/JSModuleLoader;
 	public fun test (Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;)Z
 	public synthetic fun test (Ljava/lang/Object;)Z
 }
@@ -84,7 +85,7 @@ public final class elide/runtime/lang/javascript/JavaScriptPrecompiler$Provider 
 	public synthetic fun get ()Ljava/lang/Object;
 }
 
-public final class elide/runtime/lang/javascript/NodeModuleName {
+public final class elide/runtime/lang/javascript/NodeModuleName : java/util/function/Predicate {
 	public static final field ASSERT Ljava/lang/String;
 	public static final field ASSERT_STRICT Ljava/lang/String;
 	public static final field ASYNC_HOOKS Ljava/lang/String;
@@ -133,6 +134,8 @@ public final class elide/runtime/lang/javascript/NodeModuleName {
 	public static final field WORKER Ljava/lang/String;
 	public static final field WORKER_THREADS Ljava/lang/String;
 	public static final field ZLIB Ljava/lang/String;
+	public synthetic fun test (Ljava/lang/Object;)Z
+	public fun test (Ljava/lang/String;)Z
 }
 
 public final class elide/runtime/lang/javascript/OxcParserFeature : elide/runtime/feature/engine/AbstractStaticNativeLibraryFeature {

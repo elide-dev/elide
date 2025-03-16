@@ -1,6 +1,37 @@
 {
   "reflection": [
     {
+      "type": "com.google.protobuf.Timestamp$Builder",
+      "methods": [
+        {
+          "name": "<init>"
+        },
+        {
+          "name": "setSeconds"
+        },
+        {
+          "name": "setNanos"
+        },
+        {
+          "name": "build"
+        }
+      ]
+    },
+    {
+      "type": "com.google.protobuf.Timestamp",
+      "methods": [
+        {
+          "name": "getSeconds"
+        },
+        {
+          "name": "getNanos"
+        },
+        {
+          "name": "toBuilder"
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.intrinsics.server.http.HttpRouter"
     },
     {
@@ -3702,16 +3733,53 @@
       "type": "tools.elide.vfs.File$Builder"
     },
     {
+      "type": "tools.elide.vfs.File$Fingerprint",
+      "methods": [
+        {
+          "name": "newBuilder"
+        },
+        {
+          "name": "getFingerprintCase"
+        },
+        {
+          "name": "getHash"
+        },
+        {
+          "name": "getCrc32"
+        },
+        {
+          "name": "getAlgorithmValue"
+        }
+      ]
+    },
+    {
+      "type": "tools.elide.vfs.File$Fingerprint$Builder",
+      "methods": [
+        {
+          "name": "getCrc32"
+        },
+        {
+          "name": "setCrc32",
+          "parameterTypes": [
+            "long"
+          ]
+        },
+        {
+          "name": "build"
+        }
+      ]
+    },
+    {
       "type": "tools.elide.vfs.File$FileFingerprint",
       "methods": [
         {
           "name": "getCompressed"
         },
         {
-          "name": "hasCompressed"
+          "name": "getUncompressed"
         },
         {
-          "name": "getCompressed"
+          "name": "hasCompressed"
         },
         {
           "name": "hasUncompressed"

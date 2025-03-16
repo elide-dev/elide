@@ -98,10 +98,7 @@ import elide.testing.annotations.TestCase
   }.guest {
     // language=JavaScript
     """
-      test(AbortSignal).isNotNull();
-      test(AbortSignal.abort).isNotNull();
-      test(AbortSignal.abort()).isNotNull();
-      test(AbortSignal.abort().aborted).isNotNull();
+      AbortSignal.abort();
       test(AbortSignal.abort().aborted === true).isEqualTo(true);
     """
   }

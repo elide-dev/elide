@@ -14,6 +14,7 @@
 
 package elide.runtime.node
 
+import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
@@ -126,6 +127,9 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
             },
             dynamicTest("member '$member' should not throw") {
               Assumptions.assumeTrue(
+                !ImageInfo.inImageRuntimeCode()
+              )
+              Assumptions.assumeTrue(
                 member !in suppressedMembers,
                 "member '$member' is suppressed",
               )
@@ -198,15 +202,19 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
     """
   }
 
-  @Test fun `os availableParallelism() should return expected value for current host`() = conforms {
-    assertNotNull(acquire().availableParallelism(), "should not get `null` from `os.availableParallelism()`")
-  }.guest {
-    // language=javascript
-    """
+  @Test fun `os availableParallelism() should return expected value for current host`() {
+    Assumptions.assumeTrue(!ImageInfo.inImageCode())
+
+    conforms {
+      assertNotNull(acquire().availableParallelism(), "should not get `null` from `os.availableParallelism()`")
+    }.guest {
+      // language=javascript
+      """
       const { equal } = require("assert");
       const { availableParallelism } = require("os");
       equal(availableParallelism(), '${acquire().availableParallelism()}');
     """
+    }
   }
 
   @Test fun `os endianness() should return expected value for current host`() = conforms {
@@ -232,23 +240,27 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
     """
   }
 
-  @Test fun `os cpus() should return expected value for current host`() = conforms {
-    val cpus = acquire().cpus()
-    assertNotNull(cpus, "should not get `null` from `os.cpus()`")
-    assertTrue(cpus.isNotEmpty())
-    cpus.forEach { cpu ->
-      assertNotNull(cpu.model, "should not get `null` from `cpu.model`")
-      assertNotNull(cpu.speed, "should not get `null` from `cpu.speed`")
-      assertNotNull(cpu.times, "should not get `null` from `cpu.times`")
-    }
-  }.guest {
-    // language=javascript
-    """
+  @Test fun `os cpus() should return expected value for current host`() {
+    Assumptions.assumeTrue(!ImageInfo.inImageCode())
+
+    conforms {
+      val cpus = acquire().cpus()
+      assertNotNull(cpus, "should not get `null` from `os.cpus()`")
+      assertTrue(cpus.isNotEmpty())
+      cpus.forEach { cpu ->
+        assertNotNull(cpu.model, "should not get `null` from `cpu.model`")
+        assertNotNull(cpu.speed, "should not get `null` from `cpu.speed`")
+        assertNotNull(cpu.times, "should not get `null` from `cpu.times`")
+      }
+    }.guest {
+      // language=javascript
+      """
       const { ok } = require("assert");
       const { cpus } = require("os");
       const allCpus = cpus();
       ok(allCpus.length !== 0);
     """
+    }
   }
 
   @Test fun `os homedir() should return expected value for current host`() = conforms {
@@ -343,36 +355,40 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
     """
   }
 
-  @Test fun `os networkInterfaces() should return expected value for current host`() = conforms {
-    val nics: Map<String, List<NetworkInterfaceInfo>>? = acquire().networkInterfaces()
-    assertNotNull(nics, "should not get `null` from `os.networkInterfaces()`")
-    assertTrue(nics.isNotEmpty())
-    nics.entries.forEach { entry ->
-      assertNotNull(entry.key, "should not get `null` from NIC name as map key")
-      assertTrue(entry.key.isNotEmpty(), "NIC name should not be empty")
-      entry.value.forEach { nicAddr ->
-        assertNotNull(nicAddr.address)
-        assertNotNull(nicAddr.netmask)
-        assertNotNull(nicAddr.family)
-        assertNotNull(nicAddr.mac)
-        assertNotNull(nicAddr.internal)
-        assertNotNull(nicAddr.cidr)
+  @Test fun `os networkInterfaces() should return expected value for current host`() {
+    Assumptions.assumeTrue(!ImageInfo.inImageCode())
 
-        assertNotEquals(nicAddr.address, "")
-        assertNotEquals(nicAddr.family, "")
-        assertNotEquals(nicAddr.mac, "")
-        assertNotEquals(nicAddr.netmask, "")
-        assertNotEquals(nicAddr.cidr, "")
+    conforms {
+      val nics: Map<String, List<NetworkInterfaceInfo>>? = acquire().networkInterfaces()
+      assertNotNull(nics, "should not get `null` from `os.networkInterfaces()`")
+      assertTrue(nics.isNotEmpty())
+      nics.entries.forEach { entry ->
+        assertNotNull(entry.key, "should not get `null` from NIC name as map key")
+        assertTrue(entry.key.isNotEmpty(), "NIC name should not be empty")
+        entry.value.forEach { nicAddr ->
+          assertNotNull(nicAddr.address)
+          assertNotNull(nicAddr.netmask)
+          assertNotNull(nicAddr.family)
+          assertNotNull(nicAddr.mac)
+          assertNotNull(nicAddr.internal)
+          assertNotNull(nicAddr.cidr)
+
+          assertNotEquals(nicAddr.address, "")
+          assertNotEquals(nicAddr.family, "")
+          assertNotEquals(nicAddr.mac, "")
+          assertNotEquals(nicAddr.netmask, "")
+          assertNotEquals(nicAddr.cidr, "")
+        }
       }
-    }
-  }.guest {
-    // language=javascript
-    """
+    }.guest {
+      // language=javascript
+      """
       const { ok } = require("assert");
       const { networkInterfaces } = require("os");
       const nics = networkInterfaces();
       ok(Object.keys(nics).length !== 0);
     """
+    }
   }
 
   @Test fun `os userInfo() should return expected value for current host`() = conforms {

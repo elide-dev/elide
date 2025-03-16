@@ -46,32 +46,43 @@ import elide.testing.annotations.TestCase
 
     // All tests to run.
     private val allTests = listOf(
-      testFile("hello.js"),
-      testFile("hello.ts"),
+      testFile("args.py"),
+      testFile("brotli.mjs"),
+      testFile("cpu.js"),
+      testFile("env.js"),
+      testFile("env.py"),
+      testFile("env.rb"),
+      testFile("fetch.mjs"),
+      testFile("fs.mjs"),
+      testFile("fs-async.mjs"),
+      testFile("fs-promises.mjs"),
+      testFile("Hello.java"),
+      testFile("Hello.kts"),
       testFile("hello.py"),
+      testFile("hello.rb"),
+      testFile("hello.js"),
+      testFile("hello.swift"),
+      testFile("hello.swift.wasm"),
+      testFile("hello.ts"),
+      testFile("hello-fn.mts"),
+      testFile("hello-import.mts"),
+      testFile("hello-import-js.mts"),
       testFile("paths.cjs"),
       testFile("paths.mjs"),
       testFile("paths-default.mjs"),
-      testFile("cpu.js"),
-      testFile("fs.mjs"),
-      testFile("fs-async.mjs"),
-      testFile("brotli.mjs"),
+      testFile("simple.js"),
+      testFile("sqlite.mts"),
       testFile("sqlite.cjs"),
       testFile("sqlite.mjs"),
       testFile("sqlite.ts"),
-      testFile("sqlite.mts"),
       testFile("stdlib.cjs"),
       testFile("stdlib.mjs"),
-      testFile("simple.js"),
-      testFile("args.py"),
-      testFile("env.py"),
-      testFile("env.js"),
-      testFile("fetch.mjs"),
     )
 
     private val knownBroken = sortedSetOf(
       "brotli",
       "stdlib",
+      "fs-promises",
       "paths-default",
     )
   }
@@ -81,8 +92,19 @@ import elide.testing.annotations.TestCase
       yield(DynamicTest.dynamicTest(it.file.name) {
         val isPython = it.file.name.endsWith(".py")
         val isRuby = it.file.name.endsWith(".rb")
+        val isJava = it.file.name.endsWith(".java")
+        val isKotlin = it.file.name.endsWith(".kts") || it.file.name.endsWith(".kt")
+        val isSwift = it.file.name.endsWith(".swift")
+        val isWasm = it.file.name.endsWith(".wasm")
+
         Assumptions.assumeTrue(
-          (testPython && isPython) || (testRuby && isRuby) || (!isPython && !isRuby)
+          (testPython && isPython) ||
+          (testRuby && isRuby) ||
+          (testJava && isJava) ||
+          (testKotlin && isKotlin) ||
+          (testSwift && isSwift) ||
+          (testWasm && isWasm) ||
+          (!isPython && !isRuby && !isJava && !isKotlin && !isSwift && !isWasm)
         )
         Assumptions.assumeTrue(
           it.file.nameWithoutExtension !in knownBroken

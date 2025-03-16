@@ -345,10 +345,8 @@ internal abstract class FilesystemBase(
 
   // Obtain current context, if any, and then execute in the background; once execution completes, the context is again
   // entered, and execution continues.
-  //
-  // @TODO make this actually async once the event loop is ready.
   protected inline fun <reified T> withExec(noinline op: () -> T): JsPromise<T> = try {
-    JsPromise.resolved(exec.spawn { op() }.get())
+    exec.spawn<T> { op() }
   } catch (err: Throwable) {
     JsPromise.rejected(err)
   }

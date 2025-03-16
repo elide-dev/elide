@@ -234,7 +234,7 @@ if (enableNativeTransport == "true") {
 
 if (buildBenchmarks == "true") {
   include(
-    ":benchmarks:bench-graalvm",
+    ":tools:benchmarks:bench-graalvm",
   )
 }
 

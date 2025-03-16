@@ -1,5 +1,5 @@
 [submodule "runtime"]
-	path = runtime
+	path = tools/runtime
 	url = https://github.com/elide-dev/runtime.git
 	branch = main
 	shallow = true

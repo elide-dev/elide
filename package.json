@@ -61,11 +61,16 @@
   "scripts": {
     "build": "make build",
     "test": "make test",
+    "fmt:check": "pnpm biome format --config-path=config/biome.jsonc format --check .",
+    "fmt": "pnpm biome format --config-path=config/biome.jsonc format --write .",
     "upgrade-node": "yarn upgrade-interactive",
     "upgrade-gradle": "gradle-upgrade-interactive",
     "prettier": "prettier",
     "husky": "husky",
     "lint": "prettier --write . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java",
     "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
+  },
+  "prettier": {
+    "plugins": ["@prettier/plugin-xml", "prettier-plugin-toml", "prettier-plugin-sh", "prettier-plugin-properties"]
   }
 }

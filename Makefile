@@ -246,15 +246,15 @@ else
 RUST_CONFIG_FLAGS ?=
 endif
 
-JS_FACADE_BIN ?= runtime/bazel-bin/elide/runtime/js/runtime.bin.js
+JS_FACADE_BIN ?= tools/runtime/bazel-bin/elide/runtime/js/runtime.bin.js
 JS_FACADE_OUT ?= packages/graalvm-js/src/main/resources/META-INF/elide/embedded/runtime/js/facade.js
-JS_POLYFILLS_BIN ?= runtime/bazel-bin/elide/runtime/js/polyfills/polyfills.min.js
+JS_POLYFILLS_BIN ?= tools/runtime/bazel-bin/elide/runtime/js/polyfills/polyfills.min.js
 JS_POLYFILLS_OUT ?= packages/graalvm-js/src/main/resources/META-INF/elide/embedded/runtime/js/polyfills.js
-JS_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/js/js.modules.tar
+JS_MODULE_BIN ?= tools/runtime/bazel-bin/elide/runtime/js/js.modules.tar
 JS_MODULE_OUT ?= packages/graalvm-js/src/main/resources/META-INF/elide/embedded/runtime/js/js.vfs.tar
 
 PY_FACADE_BIN ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/preamble.py
-PY_MODULE_BIN ?= runtime/bazel-bin/elide/runtime/python/py.modules.tar
+PY_MODULE_BIN ?= tools/runtime/bazel-bin/elide/runtime/python/py.modules.tar
 PY_MODULE_OUT ?= packages/graalvm-py/src/main/resources/META-INF/elide/embedded/runtime/python/py.modules.tar
 
 POSIX_FLAGS ?=
@@ -416,7 +416,12 @@ else
 	@printf "$(LINUX_PKGS)"
 endif
 
-setup: $(DEPS)  ## Setup development pre-requisites.
+setup: $(DEPS) setup-env  ## Setup development pre-requisites.
+
+setup-env: ./.env
+
+./.env:
+	cp -fv ./config/env ./.env
 
 build: $(DEPS)  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide $(VERSION)...)
@@ -1059,19 +1064,19 @@ endif
 # ---- Runtime submodule ---- #
 # Note: make sure the Git submodule is up to date by running `git submodule update [--init] runtime`
 
-runtime: runtime/WORKSPACE $(RUNTIME_GEN) ## Build and update the JS runtime if needed.
+runtime: tools/runtime/WORKSPACE $(RUNTIME_GEN) ## Build and update the JS runtime if needed.
 
-runtime/WORKSPACE:
+tools/runtime/WORKSPACE:
 	@echo "Setting up submodules..."
 	$(CMD)$(GIT) submodule update --init --recursive
 
-runtime-build: runtime/bazel-bin ## Build the JS runtime facade and the builtin modules bundle
+runtime-build: tools/runtime/bazel-bin ## Build the JS runtime facade and the builtin modules bundle
 
-$(RUNTIME_GEN): runtime/bazel-bin
+$(RUNTIME_GEN): tools/runtime/bazel-bin
 
-runtime/bazel-bin:
+tools/runtime/bazel-bin:
 	@echo "" && echo "Building runtime facades..."
-	$(CMD)cd runtime && $(BAZEL) build -c $(BAZEL_MODE) //...
+	$(CMD)cd tools/runtime && $(BAZEL) build -c $(BAZEL_MODE) //...
 	$(CMD)$(MAKE) runtime-update-copy
 
 runtime-update: runtime-build $(RUNTIME_GEN) ## Rebuild and copy the JS runtime facade

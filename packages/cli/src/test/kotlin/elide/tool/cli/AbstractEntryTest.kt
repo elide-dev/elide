@@ -11,6 +11,10 @@ import jakarta.inject.Inject
 abstract class AbstractEntryTest {
   val testRuby = false
   val testPython = false
+  val testJava = false
+  val testKotlin = false
+  val testSwift = false
+  val testWasm = false
 
   companion object {
     @JvmStatic protected val rootProjectPath: Path = Paths.get(System.getProperty("user.dir"))

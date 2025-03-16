@@ -4,6 +4,7 @@
   <CurrentIssues>
     <ID>ComplexCondition:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$(base != null &amp;&amp; (base.parentFile == null || base.absolutePath == "/")) || files.isEmpty()</ID>
     <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
+    <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
     <ID>MagicNumber:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$15</ID>
     <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$1000L</ID>
@@ -13,6 +14,7 @@
     <ID>MatchingDeclarationName:SanityTests.kt$SanitySelfTest : SelfTest</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: Array&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
+    <ID>ReturnCount:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>SpreadOperator:ToolInvokeCommand.kt$ToolInvokeCommand$(*selectedTools.map { it to buildArgs(action, it) }.toTypedArray())</ID>
     <ID>SwallowedException:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractToolCommand.kt$AbstractToolCommand$err: Throwable</ID>

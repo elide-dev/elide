@@ -90,7 +90,7 @@ jobs:
       - name: "Setup: Bun"
         uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.1
         with:
-          bun-version-file: .bun-version
+          bun-version-file: config/bun-version
       - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
         with:
@@ -128,7 +128,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Analysis: Formatting (Biome)"
-        run: pnpm biome check .
+        run: pnpm run fmt:check
       - name: "Analysis: Formatting (Cargo)"
         run: cargo fmt -- --check
       - name: "Analysis: Formatting (Spotless)"

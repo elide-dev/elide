@@ -5,41 +5,106 @@
 </p>
 
 <p align="center">
+<b>Elide is a fast polyglot runtime, combining support for JavaScript, TypeScript, and Python.</b>
+<br />
+<br />
 <i>elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge.</i>
+<br />
+<br />
 </p>
 
 <hr />
 
 <p align="center">
+  <a href="https://github.com/elide-dev/elide/actions/workflows/build.ci.yml"><img src="https://github.com/elide-dev/elide/actions/workflows/on.push.yml/badge.svg" /></a>
+  <a href="https://codecov.io/gh/elide-dev/elide"><img src="https://codecov.io/gh/elide-dev/elide/branch/main/graph/badge.svg?token=FXxhJlpKG3" /></a>
+  <a href="https://bestpractices.coreinfrastructure.org/projects/7690"><img src="https://bestpractices.coreinfrastructure.org/projects/7690/badge" /></a>
+  <a href="https://github.com/elide-dev/elide"><img src="https://img.shields.io/badge/Contributor%20Covenant-v1.4-ff69b4.svg" alt="Code of Conduct" /></a>
+  <br />
+  <a href="https://elide.dev/discord"><img src="https://img.shields.io/discord/1119121740161884252?b1&logo=discord&logoColor=white&label=Discord" /></a>
+  <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/-ECMA2024-blue.svg?logo=javascript&logoColor=white" /></a>
+  <a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/-TypeScript-blue.svg?logo=typescript&logoColor=white" /></a>
+  <img alt="Python 3.11.x" src="https://img.shields.io/badge/Python%203.11.x-green?style=flat&logo=python&logoColor=white&color=blue">
+  <a href="https://pkl-lang.org"><img src="https://img.shields.io/badge/-Apple%20Pkl-blue.svg?logo=apple&logoColor=white" /></a>
+</p>
+
+<p align="center">
 Latest: <code>1.0.0-beta1</code>
+</p>
+<p align="center">
+  Learn more at <a href="https://elide.dev">elide.dev</a> | <a href="https://docs.elide.dev">Docs, Guides, and Samples</a>
 </p>
 
 <hr />
 
-Elide is a fast polyglot runtime, with support for JavaScript, TypeScript, and Python.
-
 > [!IMPORTANT]
-> Elide is still in alpha, some features are not fully supported and others may fail on certain environments.
+> Careful! Elide is in beta.
+
+## Usage
+
+Elide is like Node or Python. Use it to run things:
+```shell
+> elide ./my-typescript.{ts,js,py}
+```
+
+You can use Node APIs. You can even mix languages:
+```python
+# sample.py
+
+def greeting(name = "Elide"):
+  return f"Hello, {name}!"
+```
+```typescript
+// sample.mts
+import sample from "./sample.py"
+
+// shows that this is typescript
+const x: number = 42;
+
+console.log(sample.greeting() + ` The answer is ${x}`);
+```
+```shell
+> elide ./sample.mts
+Hello, Elide! The answer is 42
+```
+
+Read more about Elide's [feature highlights](https://elide.dev)
 
 ## Installation
 
-You can install the runtime by running:
+You can install Elide on Linux (amd64) or macOS (amd64/arm64) by running:
 
 ```shell
 curl -sSL --tlsv1.2 elide.sh | bash -s -
 ```
 
-After installation, you can run `elide help` or `elide info` to see more information.
+After installation, you can run `elide --help` or `elide info` to see more information.
 
-### Licensing
+### Using Elide via Docker
 
-Elide is licensed [under MIT](LICENSE) as of November 2022. Dependencies are scanned for license compatibility; the
-report is available via FOSSA:
+We provide a container image, hosted on GitHub:
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_large)
+```
+docker run --rm -it ghcr.io/elide-dev/elide
+```
 
-Building and using Elide with Oracle GraalVM requires license compliance through Oracle. For more information, see the
-[GraalVM website](https://graalvm.org).
+### Using Elide in GitHub Actions
+
+We provide a [setup action](https://github.com/marketplace/actions/setup-elide):
+
+```yaml
+- name: "Setup: Elide"
+  uses: elide-dev/setup-elide@v2
+  with:
+    # any tag from the `elide-dev/releases` repo; omit for latest
+    version: 1.0.0-beta1
+```
+
+### Using Elide via GitHub Codespaces
+
+We provide a [GitHub Codespace](https://github.com/features/codespaces) with Elide pre-installed. You can click below to try it out, right from your browser:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/elide-dev/elide?devcontainer_path=.devcontainer%2Fdevcontainer.json)
 
 ## Contributing
 

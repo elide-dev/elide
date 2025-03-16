@@ -2220,6 +2220,7 @@ public abstract interface class elide/runtime/intrinsics/js/JsPromise : com/goog
 	public static synthetic fun then$default (Lelide/runtime/intrinsics/js/JsPromise;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static synthetic fun then$default (Lelide/runtime/intrinsics/js/JsPromise;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static fun wrap (Lcom/google/common/util/concurrent/ListenableFuture;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun wrapping (Lcom/google/common/util/concurrent/ListenableFuture;)Lelide/runtime/intrinsics/js/JsPromise;
 }
 
 public final class elide/runtime/intrinsics/js/JsPromise$Companion {
@@ -2229,6 +2230,7 @@ public final class elide/runtime/intrinsics/js/JsPromise$Companion {
 	public final fun rejected (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun wrap (Lcom/google/common/util/concurrent/ListenableFuture;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun wrapping (Lcom/google/common/util/concurrent/ListenableFuture;)Lelide/runtime/intrinsics/js/JsPromise;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/JsSymbol {

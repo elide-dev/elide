@@ -1,6 +1,61 @@
 {
   "reflection": [
     {
+      "type": "elide.runtime.intrinsics.server.http.HttpRouter"
+    },
+    {
+      "type": "elide.runtime.intrinsics.server.http.internal.ThreadLocalHandlerRegistry"
+    },
+    {
+      "type": "com.oracle.truffle.api.strings.TruffleString"
+    },
+    {
+      "type": "com.oracle.truffle.api.strings.AbstractTruffleString",
+      "methods": [
+        {
+          "name": "toString"
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.intrinsics.server.http.internal.HandlerRegistry",
+      "methods": [
+        {
+          "name": "handle",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "org.graalvm.polyglot.Value"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.intrinsics.server.http.internal.PipelineRouter",
+      "methods": [
+        {
+          "name": "handle",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "org.graalvm.polyglot.Value"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
+      "methods": [
+        {
+          "name": "channelRead",
+          "parameterTypes": [
+            "io.netty.channel.ChannelHandlerContext",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.cmd.discord.$ToolDiscordCommand$Definition",
       "methods": [
         {
@@ -3647,7 +3702,53 @@
       "type": "tools.elide.vfs.File$Builder"
     },
     {
-      "type": "tools.elide.vfs.File$FileFingerprint"
+      "type": "tools.elide.vfs.File$FileFingerprint",
+      "methods": [
+        {
+          "name": "getCompressed"
+        },
+        {
+          "name": "hasCompressed"
+        },
+        {
+          "name": "getCompressed"
+        },
+        {
+          "name": "hasUncompressed"
+        }
+      ]
+    },
+    {
+      "type": "tools.elide.vfs.File$FileFingerprint$Builder",
+      "methods": [
+        {
+          "name": "getCompressed"
+        },
+        {
+          "name": "setCompressed",
+          "parameterTypes": [
+            "long"
+          ]
+        },
+        {
+          "name": "hasCompressed"
+        },
+        {
+          "name": "hasUncompressed"
+        },
+        {
+          "name": "getUncompressed"
+        },
+        {
+          "name": "setUncompressed",
+          "parameterTypes": [
+            "long"
+          ]
+        },
+        {
+          "name": "build"
+        }
+      ]
     },
     {
       "type": "tools.elide.vfs.KnownMimeType"
